@@ -1,56 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regulator: act8865: add input supply handling
-Date: Sat, 7 Mar 2015 16:34:16 +0000
-Message-ID: <20150307163416.GS28806@sirena.org.uk>
-References: <1709506.shJhJsMxOa@phil>
- <20150307143922.GM28806@sirena.org.uk>
- <2033007.teD9r9y7xo@phil>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/8] ARM: dt: Binding documentation for imx25 ADC/TSC
+Date: Sat, 07 Mar 2015 17:31:53 +0000
+Message-ID: <54FB3609.1020207@kernel.org>
+References: <1425369498-25541-1-git-send-email-mpa@pengutronix.de> <1425369498-25541-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tqSMaTz1cCSspCQ4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2033007.teD9r9y7xo@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425369498-25541-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?windows-1252?Q?Eric_B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 03/03/15 07:58, Markus Pargmann wrote:
+> This documentation describes the devicetree bindings for the
+> ADC/Touchscreen unit of the i.MX25 SoC.
+> 
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Straight forward and sensible.
 
---tqSMaTz1cCSspCQ4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On Sat, Mar 07, 2015 at 04:33:53PM +0100, Heiko Stuebner wrote:
-> The act88600/act8846/act8865 regulators have a number of input supplies
-> supplying the individual regulators. This may even be recursively like on
-> most Rockchip boards using the act8846 where REG4 is most of the time
-> connected to the inl1-supply.
-
-Applied, thanks.  The recursive supplies are very common - DCDCs are
-vastly more efficient than LDOs so if you've got the capacity and care
-about power it's much better to drop your main supply voltage down to
-something near the LDO headroom with a DCDC in order to improve system
-performance.
-
---tqSMaTz1cCSspCQ4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU+yiHAAoJECTWi3JdVIfQxo8H/jpemBX11o5Qf2mzYZQToU9s
-vOvdMvt5uUPubOuXnb4XIRCPZt7BoU9j5oFbCeWr6lUs17DpiFargisxcPldJ0K7
-9nxfnG4dBl5nzf/kZTNFzoENSLkDECwXSf8EBpBKEdvYzznkB78kfgBDHdYEwSLj
-9Pyfgd9RPJ4IsIGv4fcxby+ovHaK8nQqwGkuuTymXpin4/kxkiohXx21aESYLACj
-/Z+vtAXu3HtiJuXn8IdN++KCC8pq0K8nmop2YR/ipNF4EijCmIAQP3N1FUZvnE79
-9uPlOuVZXUxis29IxtkIbQ6A69jFOw01EP4nDwIoGK2lYrMw9g+RpqcQ98TG/o0=
-=ue8K
------END PGP SIGNATURE-----
-
---tqSMaTz1cCSspCQ4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> 
+> Notes:
+>     Changes in v6:
+>      - Removed adc-ref property and replaced it with refp and refn for positive and
+>        negative references. The properties are optional now as the default
+>        behaviour is a positive internal reference voltage and ADC GND as negative
+>        reference.
+> 
+>  .../devicetree/bindings/mfd/fsl-imx25-tsadc.txt    | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
+> new file mode 100644
+> index 000000000000..a857af0eb68c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
+> @@ -0,0 +1,46 @@
+> +Freescale mx25 ADC/TSC multifunction device
+> +
+> +This device combines two general purpose conversion queues one used for general
+> +ADC and the other used for touchscreens.
+> +
+> +Required properties:
+> + - compatible: Should be "fsl,imx25-tsadc".
+> + - reg: Memory range of the device.
+> + - interrupts: Interrupt for this device as described in
+> +   interrupts/interrupts.txt
+> + - clocks: An 'ipg' clock defined as described in clocks/clock.txt
+> + - interrupt-controller: This device is an interrupt controller. It controls
+> +   the interrupts of both conversion queues.
+> + - #interrupt-cells: Should be '<1>'.
+> + - #address-cells: Should be '<1>'.
+> + - #size-cells: Should be '<1>'.
+> + - ranges
+> +
+> +This device includes two conversion queues which can be added as subnodes.
+> +The first queue is for the touchscreen, the second for general purpose ADC.
+> +
+> +Example:
+> +	tscadc: tscadc@50030000 {
+> +		compatible = "fsl,imx25-tsadc";
+> +		reg = <0x50030000 0xc>;
+> +		interrupts = <46>;
+> +		clocks = <&clks 119>;
+> +		clock-names = "ipg";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		tsc: tcq@50030400 {
+> +			compatible = "fsl,imx25-tcq";
+> +			reg = <0x50030400 0x60>;
+> +			...
+> +		};
+> +
+> +		adc: gcq@50030800 {
+> +			compatible = "fsl,imx25-gcq";
+> +			reg = <0x50030800 0x60>;
+> +			...
+> +		};
+> +	};
+> 
