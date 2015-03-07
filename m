@@ -1,32 +1,52 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] mtd: nand: add NAND driver for Broadcom STB NAND controller
-Date: Sat, 7 Mar 2015 14:21:26 +0100
-Message-ID: <CACna6rzL2=aUjvDw0ccRCBd1tu2QOavZf15CiZfZeimMDoWEGw@mail.gmail.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
-	<1425691129-1150-4-git-send-email-computersforpeace@gmail.com>
+From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Subject: Re: [PATCH][ASoC]Add DT bindings for generic ASoC AC97 CODEC driver
+Date: Sat, 07 Mar 2015 14:58:53 +0100
+Message-ID: <54FB041D.8010102@maciej.szmigiero.name>
+References: <54F9F81E.8080105@maciej.szmigiero.name> <20150307105201.GB28806@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425691129-1150-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150307105201.GB28806-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 March 2015 at 02:18, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> +       /* NAND register range */
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       ctrl->nand_base = devm_ioremap_resource(dev, res);
-> +       if (!ctrl->nand_base)
-> +               return -ENODEV;
+Thanks for looking into the patch.
 
-This is what I got during my first test:
-brcmstb_nand 11315e0.nand: can't request region for resource [mem
-0x011315e0-0x011325df]
-Unable to handle kernel paging request at virtual address fffffff0
-(not sure why yet).
+W dniu 07.03.2015 11:52, Mark Brown pisze:
+> On Fri, Mar 06, 2015 at 07:55:26PM +0100, Maciej S. Szmigiero wrote:
+> 
+>> Add and document DT bindings for generic ASoC AC97 CODEC driver,
+>> make it selectable in config.
+> 
+> AC'97 shouldn't need DT bindings for the CODEC, it's an enumerable bus.
 
-Hint: devm_ioremap_resource does never return NULL
+What this driver did / does is essentially to allow attaching AC'97 bus
+to ASoC AC'97 controllers which don't do it on its own (from what I can
+see only board files do it).
+
+> 
+>> +  - playback-rates : A list of supported playback rates.
+>> +
+>> +  - capture-rates : A list of supported capture rates.
+> 
+> Why would we need these properties - the sample rate support is defined
+> by the standard, and any extensions can be enumerated from the device.
+
+This driver originally constrained rates to 8000, 11025, 22050, 44100,
+48000.
+
+An alternative would be to remove this constraint at all from this
+driver and leave such constraining for controller and AC'97 bus code.
+
+But since this driver was originally limited to these rates I think it
+would be safer to do it only when instantiated via OF.
+
+Best regards,
+Maciej Szmigiero
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
