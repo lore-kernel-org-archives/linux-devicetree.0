@@ -1,55 +1,65 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC/PATCHv2 2/3] dt-binding: spi: spi-dw: Select 16b or 32b
- access for Designware SPI
-Date: Sat, 7 Mar 2015 21:58:22 +0200
-Message-ID: <CAHp75Vddg3T4oymsixbJWPWnELF3fE5Z4HRe4CxAFd+Eb=VVmA@mail.gmail.com>
-References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
-	<1425685594-26595-3-git-send-email-tthayer@opensource.altera.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Sat, 7 Mar 2015 21:13:40 +0100
+Message-ID: <20150307201340.GF5233@earth>
+References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
+ <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1425685594-26595-3-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, Linux Documentation List <linux-doc@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, Axel Lin <axel.lin@ingics.com>, baruch@tkos.co.il, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dgjlcl3Tl+kb3YDk"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 7, 2015 at 1:46 AM,  <tthayer@opensource.altera.com> wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> Altera's Arria10 architecture requires a 32bit write accesses for
-> APB peripherals. The current spi-dw driver uses 16bit accesses in
-> some locations. This patch updated the bindings with an optional
-> field in the devicetree to select 32bit accesses.
->
 
-One comment below.
+--dgjlcl3Tl+kb3YDk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Docum=
-entation/devicetree/bindings/spi/spi-dw.txt
-> index 7b63ed6..034dbdd 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-dw.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-dw.txt
-> @@ -11,6 +11,7 @@ Required properties:
->
->  Optional properties:
->  - cs-gpios: see spi-bus.txt
-> +- 32bit_access : use 32 bit register accesses
->
+On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
+> From: Beomho Seo <beomho.seo@samsung.com>
+>=20
+> This patch adds device driver of max77843 charger. This driver provide
+> initialize each charging mode(e.g. fast charge, top-off mode and constant
+> charging mode so on.). Additionally, control charging paramters to use
+> i2c interface.
+>=20
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
 
-The most big issue for my opinion with DT is an absence of the
-standard for naming properties.
+Reviewed-By: Sebastian Reichel <sre@kernel.org>
 
-So, why underscore? May be it's a time to append a generic description
-of this field to Documentation/devicetree/=E2=80=A6
+I can't take it as is, since it depends on the private header file
+of PATCHv1.
 
+-- Sebastian
 
---=20
-With Best Regards,
-Andy Shevchenko
+--dgjlcl3Tl+kb3YDk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJU+1vxAAoJENju1/PIO/qaR+sQAKOezF73YNi6TdbcO5ttMyb6
+gJ/hjTImgs6uaa7yk5XzFZilSNEZOJPW7A8Vh7uY55H7YnNezPXkzFxRvXg625ao
+W82l9S3B89skzff6+LwKe05ftxg33UWl1FZ9cwRkxTpAwZveBN42weUI9HORGezz
+qrUFzTD7Nrw4pBWK9F73tydVTdKjuydLgsNeKicrbjPyem/NtLwDqX3IbZDgLMx5
+It1A/N/UKvpnVQzjR1CWY9VtTgDC3FDS7U/YFPT5y/n+5e03U+GT9Tg05GKFDm/E
+2CCCc+eGal4C4naSm6fpWtADW8PqqFDIfEVm34KKsAHZxIw+896jl3jimv9SEAPb
+GnLmFP1ST/jlio6R/LXnBwcw4LW0gMDpiWHQpYC5S1rhjYSc3fEuqkcwTURjwi/3
+ZNuy9A7VWyJQUu30KS8uk9DZSBHYnf92f6U/tqy8HSQrxRe1szSPnytoVg3ss3J9
+k1ryfbu5dnnc1Rn/Tpi5nA3+6KgKFNwZAOas6TdfSuGH37Yg0y5YdF7Az0zVvYig
+qpztELxY07tjmhabt8kpYtL1XSSbZrolSlKazWXZ+LJu4kU2f6laGOFg0cIQaKj4
+/9ogHUuGy1c0tTGdDL/V956TW7qZYfEgnwYJbe8MVlip9uU7PsaBsWwMQD5D7274
+Ez6Y1AatrUQaO/+dEAa5
+=rrc5
+-----END PGP SIGNATURE-----
+
+--dgjlcl3Tl+kb3YDk--
