@@ -1,48 +1,40 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] dt-bindings: Add vendor-prefix for Wexler
-Date: Sun,  8 Mar 2015 14:58:16 +0300
-Message-ID: <1425815896-5798-1-git-send-email-mamlinav@gmail.com>
-References: <1425456947-4152-1-git-send-email-mamlinav@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
+Date: Sun, 8 Mar 2015 14:20:20 +0200
+Message-ID: <CAHp75Vd7+GxT01+X5u4n=tXdBu-gcmdS-AETu0yK6PWFfjzDEA@mail.gmail.com>
+References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
+	<20150307112109.GJ28806@sirena.org.uk>
+	<CAHp75VeYanNJrEyTtcxb5g5DB8=609nebgZm8zVAeJdmSgHjkQ@mail.gmail.com>
+	<54FC30BE.1070606@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIIN47QU4CRUBGORZWAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1425456947-4152-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <54FC30BE.1070606@metafoo.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Mark Brown <broonie@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds vendor-prefix for Wexler.
+On Sun, Mar 8, 2015 at 1:21 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> On 03/07/2015 08:43 PM, Andy Shevchenko wrote:
+>>
+>> On Sat, Mar 7, 2015 at 1:21 PM, Mark Brown <broonie@kernel.org> wrote:
 
-WEXLER trademark owned by AVIRSA Electronics, a member of the
-diversified holding AVIRSA.
+>>> Applied, but why is there no devm_dma_request_slave_channel_reason()?
+>>
+>> I suppose the answer would be "we have a lot of slightly different
+>> cases and we have to get rid of current mess with legacy API calls".
+>> The most problematic stuff now inside DMA slave subsystem is so called
+>> "filter function". It's a main impediment right now as I understand.
+>
+> dma_request_slave_channel_reason() is the sane API though and does not use
+> the filter functions. Adding a devm version of it seems reasonable.
 
-Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes since v1:
-* Change vendor name. Wexler is more known than AVIRSA.
+It would be dma_request_slave_channel() in the first place, but legacy
+stuff didn't allow to do that, so here we are. I wouldn't like the
+idea of creating devm_dma_* before we will have stable function names
+without legacy involving.
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..eb67da4 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -189,6 +189,7 @@ variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
- virtio	Virtual I/O Device Specification, developed by the OASIS consortium
- voipac	Voipac Technologies s.r.o.
-+wexler	Wexler
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
 -- 
-2.0.5
+With Best Regards,
+Andy Shevchenko
