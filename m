@@ -1,57 +1,68 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/10] omap3 crypto fixes
-Date: Sun, 8 Mar 2015 11:01:37 +0100
-Message-ID: <201503081101.37452@pali>
-References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com> <20150306183631.GA13520@atomide.com> <20150306222306.GB587@fuloong-minipc.musicnaut.iki.fi>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1446292.dRi6r1Sc2E";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 1/4] tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev
+Date: Sun,  8 Mar 2015 11:17:13 +0100
+Message-ID: <1425809836-8873-2-git-send-email-christophe-h.ricard@st.com>
+References: <1425809836-8873-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150306222306.GB587-+UqvGBo8NkiJ/SmVcN9c7yH8jP4CeeTLqBW4ids5wwA@public.gmane.org>
+In-Reply-To: <1425809836-8873-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: peterhuewe-Mmb7MZpHnFY@public.gmane.org
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1446292.dRi6r1Sc2E
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+io_lpcpd is accessible from struct tpm_stm_dev.
+struct st33zp24_platform_data is only valid when using static platform
+configuration data, not when using dts.
 
-On Friday 06 March 2015 23:23:06 Aaro Koskinen wrote:
-> Hi,
->=20
-> On Fri, Mar 06, 2015 at 10:36:32AM -0800, Tony Lindgren wrote:
-> > Are there any fixes in this series that should go into
-> > v4.0-rc series, or can it all wait for v4.1?
->=20
-> I think these all should wait for v4.1.
->=20
-> A.
+Reviewed-by: Jason Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-I would suggest to include at least patches 01, 04, 06. Probably=20
-those could go to -stable tree... but this decision is up to you.
+diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
+index 612845b..882c60a 100644
+--- a/drivers/char/tpm/tpm_i2c_stm_st33.c
++++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
+@@ -837,11 +837,14 @@ static int tpm_stm_i2c_remove(struct i2c_client *client)
+  */
+ static int tpm_stm_i2c_pm_suspend(struct device *dev)
+ {
+-	struct st33zp24_platform_data *pin_infos = dev->platform_data;
++	struct tpm_chip *chip = dev_get_drvdata(dev);
++	struct tpm_stm_dev *tpm_dev;
+ 	int ret = 0;
+ 
+-	if (gpio_is_valid(pin_infos->io_lpcpd))
+-		gpio_set_value(pin_infos->io_lpcpd, 0);
++	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
++
++	if (gpio_is_valid(tpm_dev->io_lpcpd))
++		gpio_set_value(tpm_dev->io_lpcpd, 0);
+ 	else
+ 		ret = tpm_pm_suspend(dev);
+ 
+@@ -856,12 +859,13 @@ static int tpm_stm_i2c_pm_suspend(struct device *dev)
+ static int tpm_stm_i2c_pm_resume(struct device *dev)
+ {
+ 	struct tpm_chip *chip = dev_get_drvdata(dev);
+-	struct st33zp24_platform_data *pin_infos = dev->platform_data;
+-
++	struct tpm_stm_dev *tpm_dev;
+ 	int ret = 0;
+ 
+-	if (gpio_is_valid(pin_infos->io_lpcpd)) {
+-		gpio_set_value(pin_infos->io_lpcpd, 1);
++	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
++
++	if (gpio_is_valid(tpm_dev->io_lpcpd)) {
++		gpio_set_value(tpm_dev->io_lpcpd, 1);
+ 		ret = wait_for_stat(chip,
+ 				TPM_STS_VALID, chip->vendor.timeout_b,
+ 				&chip->vendor.read_queue, false);
+-- 
+2.1.0
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-
---nextPart1446292.dRi6r1Sc2E
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEUEABECAAYFAlT8HgEACgkQi/DJPQPkQ1Kr+gCgvFjNKWWpdP43zaEWV5hD8Z9s
-aZkAmL1R+Qtpa0h+Evo7wAoSjeAwFR0=
-=4NaA
------END PGP SIGNATURE-----
-
---nextPart1446292.dRi6r1Sc2E--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
