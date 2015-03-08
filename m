@@ -1,54 +1,167 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 0/3] mtd: nand: add Broadcom NAND controller support
-Date: Sun, 8 Mar 2015 01:01:14 +0100
-Message-ID: <CACna6rykQTjtfL8mqHJ4ZSY9Ci+kVhjDfDkjRpsFvg4YatNATw@mail.gmail.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [RFC 17/18] arm: dts: n950, n9: Add primary camera support
+Date: Sun, 8 Mar 2015 02:03:03 +0200
+Message-ID: <20150308000303.GJ6539@valkosipuli.retiisi.org.uk>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
+ <1425764475-27691-18-git-send-email-sakari.ailus@iki.fi>
+ <5342826.KbVLN7n8xZ@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5342826.KbVLN7n8xZ@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Laurent,
 
-Thanks for your work on this. It looks amazing, nice piece of code :)
+On Sun, Mar 08, 2015 at 01:56:13AM +0200, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> Thank you for the patch.
+> 
+> On Saturday 07 March 2015 23:41:14 Sakari Ailus wrote:
+> > Add support for the primary camera of the Nokia N950 and N9.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/omap3-n9.dts       |   39 +++++++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/omap3-n950-n9.dtsi |    4 ----
+> >  arch/arm/boot/dts/omap3-n950.dts     |   39 +++++++++++++++++++++++++++++++
+> >  3 files changed, 78 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+> > index 9938b5d..05f32ae 100644
+> > --- a/arch/arm/boot/dts/omap3-n9.dts
+> > +++ b/arch/arm/boot/dts/omap3-n9.dts
+> > @@ -16,3 +16,42 @@
+> >  	model = "Nokia N9";
+> >  	compatible = "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
+> >  };
+> > +
+> > +&i2c2 {
+> > +	clock-frequency = <400000>;
+> > +
+> > +	smia_1: camera@10 {
+> > +		compatible = "nokia,smia";
+> > +		reg = <0x10>;
+> > +		/* No reset gpio */
+> > +		vana-supply = <&vaux3>;
+> > +		clocks = <&omap3_isp 0>;
+> > +		clock-frequency = <9600000>;
+> > +		nokia,nvm-size = <1024>; /* 16 * 64 */
+> 
+> You could actually specify that as "<(16 * 64)>".
 
-On 7 March 2015 at 02:18, Brian Norris <computersforpeace@gmail.com> wrote:
-> This adds (long in coming) support for the Broadcom BCM7xxx Set-Top Box NAND
-> controller. This controller has been used in a variety of Broadcom SoCs.
->
-> There are a few more features I'd like add in the near future, mostly to
-> support more SoCs, but this is the base set, which should only need relatively
-> minor additions to support chips like BCM63138, BCM3384, and Cygnus/iProc.
-> Particularly, we may need to straighten out some endianness issues for the data
-> path on iProc, and interrupt enabling/acking on iProc, BCM63xxx, BCM3xxx, and
-> others.
+Will fix.
 
-After applying workaround for not working IRQ, it seems I have some
-problem with endianess on my BCM4708 (SoC with 6.01 controller).
+> > +		link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
+> > +		port {
+> > +			smia_1_1: endpoint {
+> > +				clock-lanes = <0>;
+> > +				data-lanes = <1 2>;
+> > +				remote-endpoint = <&csi2a_ep>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&omap3_isp {
+> > +	vdd-csiphy1-supply = <&vaux2>;
+> > +	vdd-csiphy2-supply = <&vaux2>;
+> > +	ports {
+> > +		port@2 {
+> > +			reg = <2>;
+> > +			csi2a_ep: endpoint {
+> > +				remote-endpoint = <&smia_1_1>;
+> > +				clock-lanes = <2>;
+> > +				data-lanes = <1 3>;
+> > +				crc = <1>;
+> > +				lane-polarity = <1 1 1>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> > b/arch/arm/boot/dts/omap3-n950-n9.dtsi index c41db94..51e5043 100644
+> > --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> > +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> > @@ -86,10 +86,6 @@
+> >  	regulator-max-microvolt = <2800000>;
+> >  };
+> > 
+> > -&i2c2 {
+> > -	clock-frequency = <400000>;
+> > -};
+> > -
+> 
+> What's the reason for moving this to the N9 and N950 DT files as you keep the 
+> same value in both ?
 
-Let me start with dumps of "nvram" MTD partition.
-1) Dumping with Netgear's original firmware:
-# hexdump -C -n 16 mtdblock1.bin
-00000000  46 4c 53 48 40 79 00 00  84 01 00 00 47 01 1c 08  |FLSH@y......G...|
-2) Dumping with OpenWrt and its bcm_nand.c:
-root@OpenWrt:/# hexdump -C -n 16 /dev/mtdblock1
-00000000  46 4c 53 48 38 79 00 00  cb 01 00 00 47 01 1c 08  |FLSH8y......G...|
+Just before submitting the patches I thought someone might ask. :-D
 
-This makes me feel that bcm_nand.c driver is OK.
-Unfortunately when using brcmstb_nand.c my bcm47xxpart partition
-driver didn't detect any partition at all. This means I couldn't use
-any /dev/mtdblockX, not even user space as it wasn't mounted.
+I'll fix that.
 
-So since I didn't have user space, I decided to add some debugging to
-bcm47xxpart itself. There is what I got:
-1) OpenWrt and its bcm_nand.c:
-[bcm47xxpart_parse] 0x80000  46 4c 53 48  38 79 00 00  cb 01 00 00  47 01 1c 08
-2) OpenWrt and brcmstb_nand.c:
-[bcm47xxpart_parse] 0x80000  48 53 4c 46  00 00 79 38  00 00 01 cb  08 1c 01 47
+> >  &i2c3 {
+> >  	clock-frequency = <400000>;
+> >  };
+> > diff --git a/arch/arm/boot/dts/omap3-n950.dts
+> > b/arch/arm/boot/dts/omap3-n950.dts index 261c558..2b2ed9c 100644
+> > --- a/arch/arm/boot/dts/omap3-n950.dts
+> > +++ b/arch/arm/boot/dts/omap3-n950.dts
+> > @@ -16,3 +16,42 @@
+> >  	model = "Nokia N950";
+> >  	compatible = "nokia,omap3-n950", "ti,omap36xx", "ti,omap3";
+> >  };
+> > +
+> > +&i2c2 {
+> > +	clock-frequency = <400000>;
+> > +
+> > +	smia_1: camera@10 {
+> > +		compatible = "nokia,smia";
+> > +		reg = <0x10>;
+> > +		/* No reset gpio */
+> > +		vana-supply = <&vaux3>;
+> > +		clocks = <&omap3_isp 0>;
+> > +		clock-frequency = <9600000>;
+> > +		nokia,nvm-size = <1024>; /* 16 * 64 */
+> > +		link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
+> > +		port {
+> > +			smia_1_1: endpoint {
+> > +				clock-lanes = <0>;
+> > +				data-lanes = <1 2>;
+> > +				remote-endpoint = <&csi2a_ep>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&omap3_isp {
+> > +	vdd-csiphy1-supply = <&vaux2>;
+> > +	vdd-csiphy2-supply = <&vaux2>;
+> > +	ports {
+> > +		port@2 {
+> > +			reg = <2>;
+> > +			csi2a_ep: endpoint {
+> > +				remote-endpoint = <&smia_1_1>;
+> > +				clock-lanes = <2>;
+> > +				data-lanes = <3 1>;
+> > +				crc = <1>;
+> > +				lane-polarity = <1 1 1>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> 
 
-So obviously data returned by brcmstb_nand.c seems to be all
-endianess-flipped. Could you take a loo at this?
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
