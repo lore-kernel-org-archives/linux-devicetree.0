@@ -1,81 +1,57 @@
-From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] wl18xx: add basic device-tree support
-Date: Sun, 8 Mar 2015 13:13:13 +0200
-Message-ID: <CAB3XZEfc3qV_o+0paM=HNdySKWwiJDfH=kJ8u0tz1ae+3ujxVw@mail.gmail.com>
-References: <1424362401-8228-1-git-send-email-eliad@wizery.com>
-	<1424362401-8228-2-git-send-email-eliad@wizery.com>
-	<2194797.iarD5YIxEd@wuerfel>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] mtd: nand: add Broadcom NAND controller support
+Date: Sun, 8 Mar 2015 12:18:39 +0100
+Message-ID: <CACna6rz_iya8UMdDvsOSA0NSvc2YxNJ1GObqBLtr8Xd2-9enCQ@mail.gmail.com>
+References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
+	<CACna6rykQTjtfL8mqHJ4ZSY9Ci+kVhjDfDkjRpsFvg4YatNATw@mail.gmail.com>
+	<20150308005720.GF12966@brian-ubuntu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2194797.iarD5YIxEd@wuerfel>
+In-Reply-To: <20150308005720.GF12966@brian-ubuntu>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 10:26 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 19 February 2015 18:13:21 Eliad Peller wrote:
->> +
->> +static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
->> +{
->> +       struct device_node *np = dev->of_node;
->> +       struct wl12xx_platform_data *pdata;
->> +
->> +       if (!np || !of_match_node(wlcore_sdio_of_match_table, np)) {
->> +               dev_err(dev, "No platform data set\n");
->> +               return NULL;
->> +       }
->> +
->> +       pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
->> +       if (!pdata)
->> +               return NULL;
->> +
->> +       pdata->irq = irq_of_parse_and_map(np, 0);
->> +       if (!pdata->irq) {
->> +               dev_err(dev, "No irq in platform data\n");
->> +               kfree(pdata);
->> +               return NULL;
->> +       }
->> +
->> +       return pdata;
->> +}
->> +#else
->> +static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
->> +{
->> +       return NULL;
->> +}
->> +#endif
->> +
->> +static struct wl12xx_platform_data *
->> +wlcore_get_platform_data(struct device *dev)
->> +{
->> +       struct wl12xx_platform_data *pdata;
->> +
->> +       pdata = wl12xx_get_platform_data();
->> +       if (!IS_ERR(pdata))
->> +               return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
->> +
->> +       return wlcore_probe_of(dev);
->> +}
->
-> I think the probe_of needs to come first here, otherwise you cannot
-> override the pdata quirk with actual DT data.
->
-makes sense. i'll change it.
+On 8 March 2015 at 01:57, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+> 3. I was told that there were only 2 or 3 chips that were released wi=
+th
+> a v6.1 NAND controller, and BCM4708 wasn't one of them. Apparently I =
+was
+> told wrong... I'll have to see if there are any other quirks we shoul=
+d
+> be accounting for.
 
-> I've looked up the what boards actually use this data and found that
-> all of them already support booting from DT: some omap2 boards using
-> arch/arm/mach-omap2/pdata-quirks.c to provide the data, and the
-> davinci 850evm. Can you make sure you add the correct data to all
-> of these dts files as part of your series and remove the
-> wl12xx_platform_data references?
+Please note I'm speaking about 6.01, not 6.10. Maybe it make a differen=
+ce?
 
-AFAICT, these board files add wl12xx platform data, while the new DT
-support is only for wl18xx.
+Buffalo WZR-600DHP2 (BCM47081)
+[    0.325732] [brcmnand_revision_init:371] ctrl->nand_version:0x0601
+[    4.838105] bcma: bus0: Found chip with id 53010, rev 0x00 and packa=
+ge 0x02
 
-Eliad.
+Buffalo WZR-1750DHP (BCM4708)
+[    0.326823] [brcmnand_revision_init:371] ctrl->nand_version:0x0601
+[    6.674288] bcma: bus0: Found chip with id 53010, rev 0x00 and packa=
+ge 0x02
+
+Netgear R6250 V1 (BCM4708)
+[    0.326248] [brcmnand_revision_init:371] ctrl->nand_version:0x0601
+[    8.721335] bcma: bus0: Found chip with id 53010, rev 0x00 and packa=
+ge 0x02
+
+Netgear R8000 (BCM4709)
+[    0.241961] bcma: bus0: Found chip with id 53010, rev 0x00 and packa=
+ge 0x00
+[    1.990330] bcm_nand bcma0:18: NAND Controller rev 6.01
+
+--=20
+Rafa=C5=82
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
