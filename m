@@ -1,73 +1,54 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 0/3] mtd: nand: add Broadcom NAND controller support
-Date: Sun, 8 Mar 2015 11:22:40 +0100
-Message-ID: <CACna6rz656H-K1hPaSGyOE+x4RKfqdUdnWKhff87n=0dvHB+fw@mail.gmail.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
-	<CACna6rykQTjtfL8mqHJ4ZSY9Ci+kVhjDfDkjRpsFvg4YatNATw@mail.gmail.com>
-	<20150308005720.GF12966@brian-ubuntu>
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] wlcore: add basic device-tree support
+Date: Sun, 8 Mar 2015 13:04:11 +0200
+Message-ID: <CAB3XZEcYFd-ho4rTcqT3xgaFn-W876QjLDcTqK96ho9Vaq4iAQ@mail.gmail.com>
+References: <1423998550-8829-1-git-send-email-eliad@wizery.com>
+	<1425022290.11202.1.camel@coelho.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150308005720.GF12966@brian-ubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425022290.11202.1.camel-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luca Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 March 2015 at 01:57, Brian Norris <computersforpeace@gmail.com> wr=
-ote:
-> 2. Endianness is a known issue with at least one other platform. On m=
-any
-> chips (spanning MIPS LE, MIPS BE, and ARM LE), NAND has been integrat=
-ed
-> such that data can just be read/programmed in the native endianness
-> through the FLASH_CACHE registers (as this driver does), but there ar=
-e a
-> few (on ARM, LE) that require a be32_to_cpu()/cpu_to_be32() swap. I'm
-> considering supporting DT properties like one of the following:
+hi Luca,
+
+On Fri, Feb 27, 2015 at 9:31 AM, Luca Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org> wrote:
+> Hi,
 >
->         brcm,nand-cache-be
->         brcm,nand-cache-big-endian
->         brcm,nand-cache-reverse-endian
+> On Sun, 2015-02-15 at 13:09 +0200, Eliad Peller wrote:
+>> When running with device-tree, we no longer have a board file
+>> that can set up the platform data for wlcore.
+>> Allow this data to be passed from DT.
+>>
+>> For now, parse only the irq used. Other (optional) properties
+>> can be added later on.
+>>
+>> Signed-off-by: Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+>> ---
 >
-> You might also check (though I might actually be better equipped for
-> this) if there is a separate register that can tell the NAND data bus=
- to
-> automatically endian-swap data into the native endianness. I know a l=
-ot
-> of the buses and peripherals in BCG, at least, are designed such that
-> either (1) they can work naturally in the CPU's native endianness or
-> else (2) they can be configured to swap endianness into either format=
-=2E
+> I don't really care much, but why not just finalize the work I did a
+> couple of years ago?
 >
-> But if such a register does not exist, then we'll definitely have to =
-do
-> something like the DT property above.
+> http://mid.gmane.org/1375189476-21557-1-git-send-email-coelho-l0cyMroinI0@public.gmane.org
+> http://mid.gmane.org/1375215668-29171-1-git-send-email-coelho-l0cyMroinI0@public.gmane.org
+>
+> IIRC there were just some minor comments there, but I never really got
+> to it because I left TI.
 
-It seems there is such a magic register. Please take a look at bcm_nand=
-=2Ec:
-https://dev.openwrt.org/browser/trunk/target/linux/bcm53xx/patches-3.18=
-/420-mtd-bcm5301x_nand.patch
+I just wanted a small patch to add DT support for wl18xx.
+as there were some issues remaining wrt the correct way to specify the
+clock data, i preferred taking the simpler route (for now), and only
+add the wl18xx part, which doesn't require the clocks definitions.
 
-There are multiple places (data, OOB, reads, writes) with:
+i guess the patches will still be useful (and used) when wl12xx DT
+support will be added.
 
-/* Set controller to Little Endian mode for copying */
-bcmnand_reg_awrite(ctrl, NANDC_IDM_APB_LITTLE_ENDIAN, 1);
-
-/* Return to Big Endian mode for commands etc */
-bcmnand_reg_awrite(ctrl, NANDC_IDM_APB_LITTLE_ENDIAN, 0);
-
-That register is 0x408, but it's in "agent" core (AKA wrapper), so
-it's separated mapping. I'm not sure what address is it right now, as
-we read them from the EROM.
-
-
-> Do the bad block markers look OK without extra endian swapping? I'm
-> wondering whether the swapping will have to occur on both the
-> FLASH_CACHE and SPARE_AREA registers.
-
-I don't know, I didn't try nand-on-flash-bbt.
-
---=20
-Rafa=C5=82
+Eliad.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
