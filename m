@@ -1,1626 +1,243 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH v4] media: i2c: add support for omnivision's ov2659 sensor
-Date: Sun,  8 Mar 2015 11:33:27 +0000
-Message-ID: <1425814407-22766-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>, devicetree@vger.kernel.org
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] ARM: dts: sun7i: Add dts file for Wexler TAB7200
+Date: Sun,  8 Mar 2015 14:57:33 +0300
+Message-ID: <1425815853-5759-1-git-send-email-mamlinav@gmail.com>
+References: <1425456947-4152-1-git-send-email-mamlinav@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEINZ4XQU4CRUBAVGOEN4-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1425456947-4152-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+This patch add support for Wexler TAB7200 tablet.
 
-this patch adds support for omnivision's ov2659
-sensor, the driver supports following features:
-1: Asynchronous probing
-2: DT support
-3: Media controller support
+The Wexler TAB7200 is a A20 based tablet with 7 inch display(800x480),
+capacitive touchscreen(5 fingers), 1G RAM, 4G NAND, micro SD card slot,
+mini HDMI port, 3.5mm audio plug, 1 USB OTG port and 1 USB 2.0 port.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Sorry quick new version, I need to get this merged for next
- merge window.
+Changes since v1:
+* Split to two patches:
+  The first one adds dts file for Wexler TAB7200.
+  The second one adds vendor-prefix for Wexler.
+* Remove include dt-bindings/pinctrl/sun4i-a10.h because we don't use
+  the pinctrl header.
 
- Changes for v4:
- 1: Renamed target frequency property to 'link-frequencies'
-    as per Sakari's suggestion.
- 2: Changed the copyright to "GPL v2"
+ arch/arm/boot/dts/Makefile                     |   3 +-
+ arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 181 +++++++++++++++++++++++++
+ 2 files changed, 183 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
 
- v3: https://patchwork.kernel.org/patch/5959401/
- v2: https://patchwork.kernel.org/patch/5859801/
- v1: https://patchwork.linuxtv.org/patch/27919/
- 
- .../devicetree/bindings/media/i2c/ov2659.txt       |   38 +
- MAINTAINERS                                        |   10 +
- drivers/media/i2c/Kconfig                          |   11 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/ov2659.c                         | 1439 ++++++++++++++++++++
- include/media/ov2659.h                             |   33 +
- 6 files changed, 1532 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2659.txt
- create mode 100644 drivers/media/i2c/ov2659.c
- create mode 100644 include/media/ov2659.h
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index beac15f..f6dc2ac 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -550,7 +550,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+ 	sun7i-a20-pcduino3.dtb \
+-	sun7i-a20-pcduino3-nano.dtb
++	sun7i-a20-pcduino3-nano.dtb \
++	sun7i-a20-wexler-tab7200.dtb
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-ippo-q8h-v5.dtb \
+ 	sun8i-a23-ippo-q8h-v1.2.dtb
+diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
 new file mode 100644
-index 0000000..a655500
+index 0000000..b197d57
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-@@ -0,0 +1,38 @@
-+* OV2659 1/5-Inch 2Mp SOC Camera
++++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+@@ -0,0 +1,180 @@
++/*
++ * Copyright 2015 Aleksei Mamlin
++ * Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+The Omnivision OV2659 is a 1/5-inch SOC camera, with an active array size of
-+1632H x 1212V. It is programmable through a SCCB. The OV2659 sensor supports
-+multiple resolutions output, such as UXGA, SVGA, 720p. It also can support
-+YUV422, RGB565/555 or raw RGB output formats.
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
 +
-+Required Properties:
-+- compatible: Must be "ovti,ov2659"
-+- reg: I2C slave address
-+- clocks: reference to the xvclk input clock.
-+- clock-names: should be "xvclk".
-+- link-frequencies: target pixel clock frequency.
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 +
-+For further reading on port node refer to
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
++/ {
++	model = "Wexler TAB7200";
++	compatible = "wexler,tab7200", "allwinner,sun7i-a20";
++};
 +
-+Example:
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
 +
-+	i2c0@1c22000 {
-+		...
-+		...
-+		 ov2659@30 {
-+			compatible = "ovti,ov2659";
-+			reg = <0x30>;
++&ehci0 {
++	status = "okay";
++};
 +
-+			clocks = <&clk_ov2659 0>;
-+			clock-names = "xvclk";
++&ehci1 {
++	status = "okay";
++};
 +
-+			port {
-+				ov2659_0: endpoint {
-+					remote-endpoint = <&vpfe_ep>;
-+					link-frequencies = <70000000>;
-+				};
-+			};
-+		};
-+		...
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
 +	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ddc5a8c..4006cc8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8910,6 +8910,16 @@ T:	git git://linuxtv.org/mhadli/v4l-dvb-davinci_devices.git
- S:	Maintained
- F:	drivers/media/platform/am437x/
- 
-+OV2659 OMNIVISION SENSOR DRIVER
-+M:	Lad, Prabhakar <prabhakar.csengg@gmail.com>
-+L:	linux-media@vger.kernel.org
-+W:	http://linuxtv.org/
-+Q:	http://patchwork.linuxtv.org/project/linux-media/list/
-+T:	git git://linuxtv.org/mhadli/v4l-dvb-davinci_devices.git
-+S:	Maintained
-+F:	drivers/media/i2c/ov2659.c
-+F:	include/media/ov2659.h
-+
- SIS 190 ETHERNET DRIVER
- M:	Francois Romieu <romieu@fr.zoreil.com>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index da58c9b..6f30ea7 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -466,6 +466,17 @@ config VIDEO_APTINA_PLL
- config VIDEO_SMIAPP_PLL
- 	tristate
- 
-+config VIDEO_OV2659
-+	tristate "OmniVision OV2659 sensor support"
-+	depends on VIDEO_V4L2 && I2C
-+	depends on MEDIA_CAMERA_SUPPORT
-+	---help---
-+	  This is a Video4Linux2 sensor-level driver for the OmniVision
-+	  OV2659 camera.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ov2659.
-+
- config VIDEO_OV7640
- 	tristate "OmniVision OV7640 sensor support"
- 	depends on I2C && VIDEO_V4L2
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 98589001..f165fae 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -77,3 +77,4 @@ obj-$(CONFIG_VIDEO_SMIAPP_PLL)	+= smiapp-pll.o
- obj-$(CONFIG_VIDEO_AK881X)		+= ak881x.o
- obj-$(CONFIG_VIDEO_IR_I2C)  += ir-kbd-i2c.o
- obj-$(CONFIG_VIDEO_ML86V7667)	+= ml86v7667.o
-+obj-$(CONFIG_VIDEO_OV2659)	+= ov2659.o
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-new file mode 100644
-index 0000000..eca96b7
---- /dev/null
-+++ b/drivers/media/i2c/ov2659.c
-@@ -0,0 +1,1439 @@
-+/*
-+ * Omnivision OV2659 CMOS Image Sensor driver
-+ *
-+ * Copyright (C) 2015 Texas Instruments, Inc.
-+ *
-+ * Benoit Parrot <bparrot@ti.com>
-+ * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-+ *
-+ * This program is free software; you may redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/media.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/videodev2.h>
-+
-+#include <media/media-entity.h>
-+#include <media/ov2659.h>
-+#include <media/v4l2-common.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-event.h>
-+#include <media/v4l2-image-sizes.h>
-+#include <media/v4l2-mediabus.h>
-+#include <media/v4l2-of.h>
-+#include <media/v4l2-subdev.h>
-+
-+#define DRIVER_NAME "ov2659"
-+
-+/*
-+ * OV2659 register definitions
-+ */
-+#define REG_SOFTWARE_STANDBY		0x0100
-+#define REG_SOFTWARE_RESET		0x0103
-+#define REG_IO_CTRL00			0x3000
-+#define REG_IO_CTRL01			0x3001
-+#define REG_IO_CTRL02			0x3002
-+#define REG_OUTPUT_VALUE00		0x3008
-+#define REG_OUTPUT_VALUE01		0x3009
-+#define REG_OUTPUT_VALUE02		0x300d
-+#define REG_OUTPUT_SELECT00		0x300e
-+#define REG_OUTPUT_SELECT01		0x300f
-+#define REG_OUTPUT_SELECT02		0x3010
-+#define REG_OUTPUT_DRIVE		0x3011
-+#define REG_INPUT_READOUT00		0x302d
-+#define REG_INPUT_READOUT01		0x302e
-+#define REG_INPUT_READOUT02		0x302f
-+
-+#define REG_SC_PLL_CTRL0		0x3003
-+#define REG_SC_PLL_CTRL1		0x3004
-+#define REG_SC_PLL_CTRL2		0x3005
-+#define REG_SC_PLL_CTRL3		0x3006
-+#define REG_SC_CHIP_ID_H		0x300a
-+#define REG_SC_CHIP_ID_L		0x300b
-+#define REG_SC_PWC			0x3014
-+#define REG_SC_CLKRST0			0x301a
-+#define REG_SC_CLKRST1			0x301b
-+#define REG_SC_CLKRST2			0x301c
-+#define REG_SC_CLKRST3			0x301d
-+#define REG_SC_SUB_ID			0x302a
-+#define REG_SC_SCCB_ID			0x302b
-+
-+#define REG_GROUP_ADDRESS_00		0x3200
-+#define REG_GROUP_ADDRESS_01		0x3201
-+#define REG_GROUP_ADDRESS_02		0x3202
-+#define REG_GROUP_ADDRESS_03		0x3203
-+#define REG_GROUP_ACCESS		0x3208
-+
-+#define REG_AWB_R_GAIN_H		0x3400
-+#define REG_AWB_R_GAIN_L		0x3401
-+#define REG_AWB_G_GAIN_H		0x3402
-+#define REG_AWB_G_GAIN_L		0x3403
-+#define REG_AWB_B_GAIN_H		0x3404
-+#define REG_AWB_B_GAIN_L		0x3405
-+#define REG_AWB_MANUAL_CONTROL		0x3406
-+
-+#define REG_TIMING_HS_H			0x3800
-+#define REG_TIMING_HS_L			0x3801
-+#define REG_TIMING_VS_H			0x3802
-+#define REG_TIMING_VS_L			0x3803
-+#define REG_TIMING_HW_H			0x3804
-+#define REG_TIMING_HW_L			0x3805
-+#define REG_TIMING_VH_H			0x3806
-+#define REG_TIMING_VH_L			0x3807
-+#define REG_TIMING_DVPHO_H		0x3808
-+#define REG_TIMING_DVPHO_L		0x3809
-+#define REG_TIMING_DVPVO_H		0x380a
-+#define REG_TIMING_DVPVO_L		0x380b
-+#define REG_TIMING_HTS_H		0x380c
-+#define REG_TIMING_HTS_L		0x380d
-+#define REG_TIMING_VTS_H		0x380e
-+#define REG_TIMING_VTS_L		0x380f
-+#define REG_TIMING_HOFFS_H		0x3810
-+#define REG_TIMING_HOFFS_L		0x3811
-+#define REG_TIMING_VOFFS_H		0x3812
-+#define REG_TIMING_VOFFS_L		0x3813
-+#define REG_TIMING_XINC			0x3814
-+#define REG_TIMING_YINC			0x3815
-+#define REG_TIMING_VERT_FORMAT		0x3820
-+#define REG_TIMING_HORIZ_FORMAT		0x3821
-+
-+#define REG_FORMAT_CTRL00		0x4300
-+
-+#define REG_VFIFO_READ_START_H		0x4608
-+#define REG_VFIFO_READ_START_L		0x4609
-+
-+#define REG_DVP_CTRL02			0x4708
-+
-+#define REG_ISP_CTRL00			0x5000
-+#define REG_ISP_CTRL01			0x5001
-+#define REG_ISP_CTRL02			0x5002
-+
-+#define REG_LENC_RED_X0_H		0x500c
-+#define REG_LENC_RED_X0_L		0x500d
-+#define REG_LENC_RED_Y0_H		0x500e
-+#define REG_LENC_RED_Y0_L		0x500f
-+#define REG_LENC_RED_A1			0x5010
-+#define REG_LENC_RED_B1			0x5011
-+#define REG_LENC_RED_A2_B2		0x5012
-+#define REG_LENC_GREEN_X0_H		0x5013
-+#define REG_LENC_GREEN_X0_L		0x5014
-+#define REG_LENC_GREEN_Y0_H		0x5015
-+#define REG_LENC_GREEN_Y0_L		0x5016
-+#define REG_LENC_GREEN_A1		0x5017
-+#define REG_LENC_GREEN_B1		0x5018
-+#define REG_LENC_GREEN_A2_B2		0x5019
-+#define REG_LENC_BLUE_X0_H		0x501a
-+#define REG_LENC_BLUE_X0_L		0x501b
-+#define REG_LENC_BLUE_Y0_H		0x501c
-+#define REG_LENC_BLUE_Y0_L		0x501d
-+#define REG_LENC_BLUE_A1		0x501e
-+#define REG_LENC_BLUE_B1		0x501f
-+#define REG_LENC_BLUE_A2_B2		0x5020
-+
-+#define REG_AWB_CTRL00			0x5035
-+#define REG_AWB_CTRL01			0x5036
-+#define REG_AWB_CTRL02			0x5037
-+#define REG_AWB_CTRL03			0x5038
-+#define REG_AWB_CTRL04			0x5039
-+#define REG_AWB_LOCAL_LIMIT		0x503a
-+#define REG_AWB_CTRL12			0x5049
-+#define REG_AWB_CTRL13			0x504a
-+#define REG_AWB_CTRL14			0x504b
-+
-+#define REG_SHARPENMT_THRESH1		0x5064
-+#define REG_SHARPENMT_THRESH2		0x5065
-+#define REG_SHARPENMT_OFFSET1		0x5066
-+#define REG_SHARPENMT_OFFSET2		0x5067
-+#define REG_DENOISE_THRESH1		0x5068
-+#define REG_DENOISE_THRESH2		0x5069
-+#define REG_DENOISE_OFFSET1		0x506a
-+#define REG_DENOISE_OFFSET2		0x506b
-+#define REG_SHARPEN_THRESH1		0x506c
-+#define REG_SHARPEN_THRESH2		0x506d
-+#define REG_CIP_CTRL00			0x506e
-+#define REG_CIP_CTRL01			0x506f
-+
-+#define REG_CMX_SIGN			0x5079
-+#define REG_CMX_MISC_CTRL		0x507a
-+
-+#define REG_NULL			0x0000	/* Array end token */
-+
-+#define OV265X_ID(_msb, _lsb)		((_msb) << 8 | (_lsb))
-+#define OV2659_ID			0x2656
-+
-+struct sensor_register {
-+	u16 addr;
-+	u8 value;
 +};
 +
-+struct ov2659_framesize {
-+	u16 width;
-+	u16 height;
-+	u16 max_exp_lines;
-+	const struct sensor_register *regs;
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
 +};
 +
-+struct ov2659_pll_ctrl {
-+	u8 ctrl1;
-+	u8 ctrl2;
-+	u8 ctrl3;
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
 +};
 +
-+struct ov2659_pixfmt {
-+	u32 code;
-+	u32 colorspace;
-+	/* Output format Register Value (REG_FORMAT_CTRL00) */
-+	struct sensor_register *format_ctrl_regs;
-+};
++&lradc {
++	vref-supply = <&reg_vcc3v0>;
++	status = "okay";
 +
-+struct pll_ctrl_reg {
-+	unsigned int div;
-+	unsigned char reg;
-+};
-+
-+struct ov2659 {
-+	struct v4l2_subdev sd;
-+	struct media_pad pad;
-+	enum v4l2_mbus_type bus_type;
-+	struct v4l2_mbus_framefmt format;
-+	unsigned int xvclk_frequency;
-+	const struct ov2659_platform_data *pdata;
-+	struct mutex lock;
-+	struct i2c_client *client;
-+	const struct ov2659_framesize *frame_size;
-+	struct sensor_register *format_ctrl_regs;
-+	struct ov2659_pll_ctrl pll;
-+	int streaming;
-+};
-+
-+static const struct sensor_register ov2659_init_regs[] = {
-+	{REG_IO_CTRL00, 0x03},
-+	{REG_IO_CTRL01, 0xff},
-+	{REG_IO_CTRL02, 0xe0},
-+	{0x3633, 0x3d},
-+	{0x3620, 0x02},
-+	{0x3631, 0x11},
-+	{0x3612, 0x04},
-+	{0x3630, 0x20},
-+	{0x4702, 0x02},
-+	{0x370c, 0x34},
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xb7},
-+	{REG_TIMING_DVPHO_H, 0x03},
-+	{REG_TIMING_DVPHO_L, 0x20},
-+	{REG_TIMING_DVPVO_H, 0x02},
-+	{REG_TIMING_DVPVO_L, 0x58},
-+	{REG_TIMING_HTS_H, 0x05},
-+	{REG_TIMING_HTS_L, 0x14},
-+	{REG_TIMING_VTS_H, 0x02},
-+	{REG_TIMING_VTS_L, 0x68},
-+	{REG_TIMING_HOFFS_L, 0x08},
-+	{REG_TIMING_VOFFS_L, 0x02},
-+	{REG_TIMING_XINC, 0x31},
-+	{REG_TIMING_YINC, 0x31},
-+	{0x3a02, 0x02},
-+	{0x3a03, 0x68},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0x5c},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x4d},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x02},
-+	{0x3a15, 0x28},
-+	{REG_DVP_CTRL02, 0x01},
-+	{0x3623, 0x00},
-+	{0x3634, 0x76},
-+	{0x3701, 0x44},
-+	{0x3702, 0x18},
-+	{0x3703, 0x24},
-+	{0x3704, 0x24},
-+	{0x3705, 0x0c},
-+	{REG_TIMING_VERT_FORMAT, 0x81},
-+	{REG_TIMING_HORIZ_FORMAT, 0x01},
-+	{0x370a, 0x52},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_FORMAT_CTRL00, 0x30},
-+	{0x5086, 0x02},
-+	{REG_ISP_CTRL00, 0xfb},
-+	{REG_ISP_CTRL01, 0x1f},
-+	{REG_ISP_CTRL02, 0x00},
-+	{0x5025, 0x0e},
-+	{0x5026, 0x18},
-+	{0x5027, 0x34},
-+	{0x5028, 0x4c},
-+	{0x5029, 0x62},
-+	{0x502a, 0x74},
-+	{0x502b, 0x85},
-+	{0x502c, 0x92},
-+	{0x502d, 0x9e},
-+	{0x502e, 0xb2},
-+	{0x502f, 0xc0},
-+	{0x5030, 0xcc},
-+	{0x5031, 0xe0},
-+	{0x5032, 0xee},
-+	{0x5033, 0xf6},
-+	{0x5034, 0x11},
-+	{0x5070, 0x1c},
-+	{0x5071, 0x5b},
-+	{0x5072, 0x05},
-+	{0x5073, 0x20},
-+	{0x5074, 0x94},
-+	{0x5075, 0xb4},
-+	{0x5076, 0xb4},
-+	{0x5077, 0xaf},
-+	{0x5078, 0x05},
-+	{REG_CMX_SIGN, 0x98},
-+	{REG_CMX_MISC_CTRL, 0x21},
-+	{REG_AWB_CTRL00, 0x6a},
-+	{REG_AWB_CTRL01, 0x11},
-+	{REG_AWB_CTRL02, 0x92},
-+	{REG_AWB_CTRL03, 0x21},
-+	{REG_AWB_CTRL04, 0xe1},
-+	{REG_AWB_LOCAL_LIMIT, 0x01},
-+	{0x503c, 0x05},
-+	{0x503d, 0x08},
-+	{0x503e, 0x08},
-+	{0x503f, 0x64},
-+	{0x5040, 0x58},
-+	{0x5041, 0x2a},
-+	{0x5042, 0xc5},
-+	{0x5043, 0x2e},
-+	{0x5044, 0x3a},
-+	{0x5045, 0x3c},
-+	{0x5046, 0x44},
-+	{0x5047, 0xf8},
-+	{0x5048, 0x08},
-+	{REG_AWB_CTRL12, 0x70},
-+	{REG_AWB_CTRL13, 0xf0},
-+	{REG_AWB_CTRL14, 0xf0},
-+	{REG_LENC_RED_X0_H, 0x03},
-+	{REG_LENC_RED_X0_L, 0x20},
-+	{REG_LENC_RED_Y0_H, 0x02},
-+	{REG_LENC_RED_Y0_L, 0x5c},
-+	{REG_LENC_RED_A1, 0x48},
-+	{REG_LENC_RED_B1, 0x00},
-+	{REG_LENC_RED_A2_B2, 0x66},
-+	{REG_LENC_GREEN_X0_H, 0x03},
-+	{REG_LENC_GREEN_X0_L, 0x30},
-+	{REG_LENC_GREEN_Y0_H, 0x02},
-+	{REG_LENC_GREEN_Y0_L, 0x7c},
-+	{REG_LENC_GREEN_A1, 0x40},
-+	{REG_LENC_GREEN_B1, 0x00},
-+	{REG_LENC_GREEN_A2_B2, 0x66},
-+	{REG_LENC_BLUE_X0_H, 0x03},
-+	{REG_LENC_BLUE_X0_L, 0x10},
-+	{REG_LENC_BLUE_Y0_H, 0x02},
-+	{REG_LENC_BLUE_Y0_L, 0x7c},
-+	{REG_LENC_BLUE_A1, 0x3a},
-+	{REG_LENC_BLUE_B1, 0x00},
-+	{REG_LENC_BLUE_A2_B2, 0x66},
-+	{REG_CIP_CTRL00, 0x44},
-+	{REG_SHARPENMT_THRESH1, 0x08},
-+	{REG_SHARPENMT_THRESH2, 0x10},
-+	{REG_SHARPENMT_OFFSET1, 0x12},
-+	{REG_SHARPENMT_OFFSET2, 0x02},
-+	{REG_SHARPEN_THRESH1, 0x08},
-+	{REG_SHARPEN_THRESH2, 0x10},
-+	{REG_CIP_CTRL01, 0xa6},
-+	{REG_DENOISE_THRESH1, 0x08},
-+	{REG_DENOISE_THRESH2, 0x10},
-+	{REG_DENOISE_OFFSET1, 0x04},
-+	{REG_DENOISE_OFFSET2, 0x12},
-+	{0x507e, 0x40},
-+	{0x507f, 0x20},
-+	{0x507b, 0x02},
-+	{REG_CMX_MISC_CTRL, 0x01},
-+	{0x5084, 0x0c},
-+	{0x5085, 0x3e},
-+	{0x5005, 0x80},
-+	{0x3a0f, 0x30},
-+	{0x3a10, 0x28},
-+	{0x3a1b, 0x32},
-+	{0x3a1e, 0x26},
-+	{0x3a11, 0x60},
-+	{0x3a1f, 0x14},
-+	{0x5060, 0x69},
-+	{0x5061, 0x7d},
-+	{0x5062, 0x7d},
-+	{0x5063, 0x69},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 1280X720 720p */
-+static struct sensor_register ov2659_720p[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0xa0},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0xf0},
-+	{REG_TIMING_HW_H, 0x05},
-+	{REG_TIMING_HW_L, 0xbf},
-+	{REG_TIMING_VH_H, 0x03},
-+	{REG_TIMING_VH_L, 0xcb},
-+	{REG_TIMING_DVPHO_H, 0x05},
-+	{REG_TIMING_DVPHO_L, 0x00},
-+	{REG_TIMING_DVPVO_H, 0x02},
-+	{REG_TIMING_DVPVO_L, 0xd0},
-+	{REG_TIMING_HTS_H, 0x06},
-+	{REG_TIMING_HTS_L, 0x4c},
-+	{REG_TIMING_VTS_H, 0x02},
-+	{REG_TIMING_VTS_L, 0xe8},
-+	{REG_TIMING_HOFFS_L, 0x10},
-+	{REG_TIMING_VOFFS_L, 0x06},
-+	{REG_TIMING_XINC, 0x11},
-+	{REG_TIMING_YINC, 0x11},
-+	{REG_TIMING_VERT_FORMAT, 0x80},
-+	{REG_TIMING_HORIZ_FORMAT, 0x00},
-+	{0x3a03, 0xe8},
-+	{0x3a09, 0x6f},
-+	{0x3a0b, 0x5d},
-+	{0x3a15, 0x9a},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 1600X1200 UXGA */
-+static struct sensor_register ov2659_uxga[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xbb},
-+	{REG_TIMING_DVPHO_H, 0x06},
-+	{REG_TIMING_DVPHO_L, 0x40},
-+	{REG_TIMING_DVPVO_H, 0x04},
-+	{REG_TIMING_DVPVO_L, 0xb0},
-+	{REG_TIMING_HTS_H, 0x07},
-+	{REG_TIMING_HTS_L, 0x9f},
-+	{REG_TIMING_VTS_H, 0x04},
-+	{REG_TIMING_VTS_L, 0xd0},
-+	{REG_TIMING_HOFFS_L, 0x10},
-+	{REG_TIMING_VOFFS_L, 0x06},
-+	{REG_TIMING_XINC, 0x11},
-+	{REG_TIMING_YINC, 0x11},
-+	{0x3a02, 0x04},
-+	{0x3a03, 0xd0},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0xb8},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x9a},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x04},
-+	{0x3a15, 0x50},
-+	{0x3623, 0x00},
-+	{0x3634, 0x44},
-+	{0x3701, 0x44},
-+	{0x3702, 0x30},
-+	{0x3703, 0x48},
-+	{0x3704, 0x48},
-+	{0x3705, 0x18},
-+	{REG_TIMING_VERT_FORMAT, 0x80},
-+	{REG_TIMING_HORIZ_FORMAT, 0x00},
-+	{0x370a, 0x12},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_ISP_CTRL02, 0x00},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 1280X1024 SXGA */
-+static struct sensor_register ov2659_sxga[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xb7},
-+	{REG_TIMING_DVPHO_H, 0x05},
-+	{REG_TIMING_DVPHO_L, 0x00},
-+	{REG_TIMING_DVPVO_H, 0x04},
-+	{REG_TIMING_DVPVO_L, 0x00},
-+	{REG_TIMING_HTS_H, 0x07},
-+	{REG_TIMING_HTS_L, 0x9c},
-+	{REG_TIMING_VTS_H, 0x04},
-+	{REG_TIMING_VTS_L, 0xd0},
-+	{REG_TIMING_HOFFS_L, 0x10},
-+	{REG_TIMING_VOFFS_L, 0x06},
-+	{REG_TIMING_XINC, 0x11},
-+	{REG_TIMING_YINC, 0x11},
-+	{0x3a02, 0x02},
-+	{0x3a03, 0x68},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0x5c},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x4d},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x02},
-+	{0x3a15, 0x28},
-+	{0x3623, 0x00},
-+	{0x3634, 0x76},
-+	{0x3701, 0x44},
-+	{0x3702, 0x18},
-+	{0x3703, 0x24},
-+	{0x3704, 0x24},
-+	{0x3705, 0x0c},
-+	{REG_TIMING_VERT_FORMAT, 0x80},
-+	{REG_TIMING_HORIZ_FORMAT, 0x00},
-+	{0x370a, 0x52},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_ISP_CTRL02, 0x00},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 1024X768 SXGA */
-+static struct sensor_register ov2659_xga[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xb7},
-+	{REG_TIMING_DVPHO_H, 0x04},
-+	{REG_TIMING_DVPHO_L, 0x00},
-+	{REG_TIMING_DVPVO_H, 0x03},
-+	{REG_TIMING_DVPVO_L, 0x00},
-+	{REG_TIMING_HTS_H, 0x07},
-+	{REG_TIMING_HTS_L, 0x9c},
-+	{REG_TIMING_VTS_H, 0x04},
-+	{REG_TIMING_VTS_L, 0xd0},
-+	{REG_TIMING_HOFFS_L, 0x10},
-+	{REG_TIMING_VOFFS_L, 0x06},
-+	{REG_TIMING_XINC, 0x11},
-+	{REG_TIMING_YINC, 0x11},
-+	{0x3a02, 0x02},
-+	{0x3a03, 0x68},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0x5c},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x4d},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x02},
-+	{0x3a15, 0x28},
-+	{0x3623, 0x00},
-+	{0x3634, 0x76},
-+	{0x3701, 0x44},
-+	{0x3702, 0x18},
-+	{0x3703, 0x24},
-+	{0x3704, 0x24},
-+	{0x3705, 0x0c},
-+	{REG_TIMING_VERT_FORMAT, 0x80},
-+	{REG_TIMING_HORIZ_FORMAT, 0x00},
-+	{0x370a, 0x52},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_ISP_CTRL02, 0x00},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 800X600 SVGA */
-+static struct sensor_register ov2659_svga[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xb7},
-+	{REG_TIMING_DVPHO_H, 0x03},
-+	{REG_TIMING_DVPHO_L, 0x20},
-+	{REG_TIMING_DVPVO_H, 0x02},
-+	{REG_TIMING_DVPVO_L, 0x58},
-+	{REG_TIMING_HTS_H, 0x05},
-+	{REG_TIMING_HTS_L, 0x14},
-+	{REG_TIMING_VTS_H, 0x02},
-+	{REG_TIMING_VTS_L, 0x68},
-+	{REG_TIMING_HOFFS_L, 0x08},
-+	{REG_TIMING_VOFFS_L, 0x02},
-+	{REG_TIMING_XINC, 0x31},
-+	{REG_TIMING_YINC, 0x31},
-+	{0x3a02, 0x02},
-+	{0x3a03, 0x68},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0x5c},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x4d},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x02},
-+	{0x3a15, 0x28},
-+	{0x3623, 0x00},
-+	{0x3634, 0x76},
-+	{0x3701, 0x44},
-+	{0x3702, 0x18},
-+	{0x3703, 0x24},
-+	{0x3704, 0x24},
-+	{0x3705, 0x0c},
-+	{REG_TIMING_VERT_FORMAT, 0x81},
-+	{REG_TIMING_HORIZ_FORMAT, 0x01},
-+	{0x370a, 0x52},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_ISP_CTRL02, 0x00},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 640X480 VGA */
-+static struct sensor_register ov2659_vga[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xb7},
-+	{REG_TIMING_DVPHO_H, 0x02},
-+	{REG_TIMING_DVPHO_L, 0x80},
-+	{REG_TIMING_DVPVO_H, 0x01},
-+	{REG_TIMING_DVPVO_L, 0xe0},
-+	{REG_TIMING_HTS_H, 0x05},
-+	{REG_TIMING_HTS_L, 0x14},
-+	{REG_TIMING_VTS_H, 0x02},
-+	{REG_TIMING_VTS_L, 0x68},
-+	{REG_TIMING_HOFFS_L, 0x08},
-+	{REG_TIMING_VOFFS_L, 0x02},
-+	{REG_TIMING_XINC, 0x31},
-+	{REG_TIMING_YINC, 0x31},
-+	{0x3a02, 0x02},
-+	{0x3a03, 0x68},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0x5c},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x4d},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x02},
-+	{0x3a15, 0x28},
-+	{0x3623, 0x00},
-+	{0x3634, 0x76},
-+	{0x3701, 0x44},
-+	{0x3702, 0x18},
-+	{0x3703, 0x24},
-+	{0x3704, 0x24},
-+	{0x3705, 0x0c},
-+	{REG_TIMING_VERT_FORMAT, 0x81},
-+	{REG_TIMING_HORIZ_FORMAT, 0x01},
-+	{0x370a, 0x52},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_ISP_CTRL02, 0x10},
-+	{REG_NULL, 0x00}
-+};
-+
-+/* 320X240 QVGA */
-+static  struct sensor_register ov2659_qvga[] = {
-+	{REG_TIMING_HS_H, 0x00},
-+	{REG_TIMING_HS_L, 0x00},
-+	{REG_TIMING_VS_H, 0x00},
-+	{REG_TIMING_VS_L, 0x00},
-+	{REG_TIMING_HW_H, 0x06},
-+	{REG_TIMING_HW_L, 0x5f},
-+	{REG_TIMING_VH_H, 0x04},
-+	{REG_TIMING_VH_L, 0xb7},
-+	{REG_TIMING_DVPHO_H, 0x01},
-+	{REG_TIMING_DVPHO_L, 0x40},
-+	{REG_TIMING_DVPVO_H, 0x00},
-+	{REG_TIMING_DVPVO_L, 0xf0},
-+	{REG_TIMING_HTS_H, 0x05},
-+	{REG_TIMING_HTS_L, 0x14},
-+	{REG_TIMING_VTS_H, 0x02},
-+	{REG_TIMING_VTS_L, 0x68},
-+	{REG_TIMING_HOFFS_L, 0x08},
-+	{REG_TIMING_VOFFS_L, 0x02},
-+	{REG_TIMING_XINC, 0x31},
-+	{REG_TIMING_YINC, 0x31},
-+	{0x3a02, 0x02},
-+	{0x3a03, 0x68},
-+	{0x3a08, 0x00},
-+	{0x3a09, 0x5c},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0x4d},
-+	{0x3a0d, 0x08},
-+	{0x3a0e, 0x06},
-+	{0x3a14, 0x02},
-+	{0x3a15, 0x28},
-+	{0x3623, 0x00},
-+	{0x3634, 0x76},
-+	{0x3701, 0x44},
-+	{0x3702, 0x18},
-+	{0x3703, 0x24},
-+	{0x3704, 0x24},
-+	{0x3705, 0x0c},
-+	{REG_TIMING_VERT_FORMAT, 0x81},
-+	{REG_TIMING_HORIZ_FORMAT, 0x01},
-+	{0x370a, 0x52},
-+	{REG_VFIFO_READ_START_H, 0x00},
-+	{REG_VFIFO_READ_START_L, 0x80},
-+	{REG_ISP_CTRL02, 0x10},
-+	{REG_NULL, 0x00}
-+};
-+
-+static const struct pll_ctrl_reg ctrl3[] = {
-+	{1, 0x00},
-+	{2, 0x02},
-+	{3, 0x03},
-+	{4, 0x06},
-+	{6, 0x0d},
-+	{8, 0x0e},
-+	{12, 0x0f},
-+	{16, 0x12},
-+	{24, 0x13},
-+	{32, 0x16},
-+	{48, 0x1b},
-+	{64, 0x1e},
-+	{96, 0x1f},
-+	{0, 0x00},
-+};
-+
-+static const struct pll_ctrl_reg ctrl1[] = {
-+	{2, 0x10},
-+	{4, 0x20},
-+	{6, 0x30},
-+	{8, 0x40},
-+	{10, 0x50},
-+	{12, 0x60},
-+	{14, 0x70},
-+	{16, 0x80},
-+	{18, 0x90},
-+	{20, 0xa0},
-+	{22, 0xb0},
-+	{24, 0xc0},
-+	{26, 0xd0},
-+	{28, 0xe0},
-+	{30, 0xf0},
-+	{0, 0x00},
-+};
-+
-+static const struct ov2659_framesize ov2659_framesizes[] = {
-+	{ /* QVGA */
-+		.width		= 320,
-+		.height		= 240,
-+		.regs		= ov2659_qvga,
-+		.max_exp_lines	= 248,
-+	}, { /* VGA */
-+		.width		= 640,
-+		.height		= 480,
-+		.regs		= ov2659_vga,
-+		.max_exp_lines	= 498,
-+	}, { /* SVGA */
-+		.width		= 800,
-+		.height		= 600,
-+		.regs		= ov2659_svga,
-+		.max_exp_lines	= 498,
-+	}, { /* XGA */
-+		.width		= 1024,
-+		.height		= 768,
-+		.regs		= ov2659_xga,
-+		.max_exp_lines	= 498,
-+	}, { /* 720P */
-+		.width		= 1280,
-+		.height		= 720,
-+		.regs		= ov2659_720p,
-+		.max_exp_lines	= 498,
-+	}, { /* SXGA */
-+		.width		= 1280,
-+		.height		= 1024,
-+		.regs		= ov2659_sxga,
-+		.max_exp_lines	= 1048,
-+	}, { /* UXGA */
-+		.width		= 1600,
-+		.height		= 1200,
-+		.regs		= ov2659_uxga,
-+		.max_exp_lines	= 498,
-+	},
-+};
-+
-+/* YUV422 YUYV*/
-+static struct sensor_register ov2659_format_yuyv[] = {
-+	{REG_FORMAT_CTRL00, 0x30},
-+	{REG_NULL, 0x0},
-+};
-+
-+/* YUV422 UYVY  */
-+static struct sensor_register ov2659_format_uyvy[] = {
-+	{REG_FORMAT_CTRL00, 0x32},
-+	{REG_NULL, 0x0},
-+};
-+
-+/* Raw Bayer BGGR */
-+static struct sensor_register ov2659_format_bggr[] = {
-+	{REG_FORMAT_CTRL00, 0x00},
-+	{REG_NULL, 0x0}
-+};
-+
-+/* RGB565 */
-+static struct sensor_register ov2659_format_rgb565[] = {
-+	{REG_FORMAT_CTRL00, 0x60},
-+	{REG_NULL, 0x0},
-+};
-+
-+static const struct ov2659_pixfmt ov2659_formats[] = {
-+	{
-+		.code = MEDIA_BUS_FMT_YUYV8_2X8,
-+		.colorspace = V4L2_COLORSPACE_JPEG,
-+		.format_ctrl_regs = ov2659_format_yuyv,
-+	},
-+	{
-+		.code = MEDIA_BUS_FMT_UYVY8_2X8,
-+		.colorspace = V4L2_COLORSPACE_JPEG,
-+		.format_ctrl_regs = ov2659_format_uyvy,
-+	},
-+	{
-+		.code = MEDIA_BUS_FMT_RGB565_2X8_BE,
-+		.colorspace = V4L2_COLORSPACE_JPEG,
-+		.format_ctrl_regs = ov2659_format_rgb565,
-+	},
-+	{
-+		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
-+		.colorspace = V4L2_COLORSPACE_SMPTE170M,
-+		.format_ctrl_regs = ov2659_format_bggr,
-+	},
-+};
-+
-+static inline struct ov2659 *to_ov2659(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct ov2659, sd);
-+}
-+
-+/* sensor register write */
-+static int ov2659_write(struct i2c_client *client, u16 reg, u8 val)
-+{
-+	struct i2c_msg msg;
-+	u8 buf[3];
-+	int ret;
-+
-+	buf[0] = reg >> 8;
-+	buf[1] = reg & 0xFF;
-+	buf[2] = val;
-+
-+	msg.addr = client->addr;
-+	msg.flags = client->flags;
-+	msg.buf = buf;
-+	msg.len = sizeof(buf);
-+
-+	ret = i2c_transfer(client->adapter, &msg, 1);
-+	if (ret >= 0)
-+		return 0;
-+
-+	dev_dbg(&client->dev,
-+		"ov2659 write reg(0x%x val:0x%x) failed !\n", reg, val);
-+
-+	return ret;
-+}
-+
-+/* sensor register read */
-+static int ov2659_read(struct i2c_client *client, u16 reg, u8 *val)
-+{
-+	struct i2c_msg msg[2];
-+	u8 buf[2];
-+	int ret;
-+
-+	buf[0] = reg >> 8;
-+	buf[1] = reg & 0xFF;
-+
-+	msg[0].addr = client->addr;
-+	msg[0].flags = client->flags;
-+	msg[0].buf = buf;
-+	msg[0].len = sizeof(buf);
-+
-+	msg[1].addr = client->addr;
-+	msg[1].flags = client->flags | I2C_M_RD;
-+	msg[1].buf = buf;
-+	msg[1].len = 1;
-+
-+	ret = i2c_transfer(client->adapter, msg, 2);
-+	if (ret >= 0) {
-+		*val = buf[0];
-+		return 0;
-+	}
-+
-+	dev_dbg(&client->dev,
-+		"ov2659 read reg(0x%x val:0x%x) failed !\n", reg, *val);
-+
-+	return ret;
-+}
-+
-+static int ov2659_write_array(struct i2c_client *client,
-+			      const struct sensor_register *regs)
-+{
-+	int i, ret = 0;
-+
-+	for (i = 0; ret == 0 && regs[i].addr; i++)
-+		ret = ov2659_write(client, regs[i].addr, regs[i].value);
-+
-+	return ret;
-+}
-+
-+static unsigned int ov2659_pll_calc_params(struct ov2659 *ov2659)
-+{
-+	const struct ov2659_platform_data *pdata = ov2659->pdata;
-+	u8 ctrl1_reg = 0, ctrl2_reg = 0, ctrl3_reg = 0;
-+	struct i2c_client *client = ov2659->client;
-+	unsigned int desired = pdata->link_frequency;
-+	u32 s_prediv = 1, s_postdiv = 1, s_mult = 1;
-+	u32 prediv, postdiv, mult;
-+	u32 bestdelta = -1;
-+	u32 delta, actual;
-+	int i, j;
-+
-+	for (i = 0; ctrl1[i].div != 0; i++) {
-+		postdiv = ctrl1[i].div;
-+		for (j = 0; ctrl3[j].div != 0; j++) {
-+			prediv = ctrl3[j].div;
-+			for (mult = 1; mult <= 63; mult++) {
-+				actual  = ov2659->xvclk_frequency;
-+				actual *= mult;
-+				actual /= prediv;
-+				actual /= postdiv;
-+				delta = actual - desired;
-+				delta = abs(delta);
-+
-+				if ((delta < bestdelta) || (bestdelta == -1)) {
-+					bestdelta = delta;
-+					s_mult    = mult;
-+					s_prediv  = prediv;
-+					s_postdiv = postdiv;
-+					ctrl1_reg = ctrl1[i].reg;
-+					ctrl2_reg = mult;
-+					ctrl3_reg = ctrl3[j].reg;
-+				}
-+			}
-+		}
-+	}
-+	actual = ov2659->xvclk_frequency * (s_mult);
-+	actual /= (s_prediv) * (s_postdiv);
-+
-+	dev_dbg(&client->dev, "Actual osc: %u pixel_clock: %u\n",
-+		ov2659->xvclk_frequency, actual);
-+
-+	ov2659->pll.ctrl1 = ctrl1_reg;
-+	ov2659->pll.ctrl2 = ctrl2_reg;
-+	ov2659->pll.ctrl3 = ctrl3_reg;
-+
-+	dev_dbg(&client->dev,
-+		"Actual reg config: ctrl1_reg: %02x ctrl2_reg: %02x ctrl3_reg: %02x\n",
-+		ctrl1_reg, ctrl2_reg, ctrl3_reg);
-+
-+	return actual;
-+}
-+
-+static int ov2659_set_pixel_clock(struct ov2659 *ov2659)
-+{
-+	struct i2c_client *client = ov2659->client;
-+	struct sensor_register pll_regs[] = {
-+		{REG_SC_PLL_CTRL1, ov2659->pll.ctrl1},
-+		{REG_SC_PLL_CTRL2, ov2659->pll.ctrl2},
-+		{REG_SC_PLL_CTRL3, ov2659->pll.ctrl3},
-+		{REG_NULL, 0x00},
++	button@571 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <571428>;
 +	};
 +
-+	dev_dbg(&client->dev, "%s\n", __func__);
-+
-+	return ov2659_write_array(client, pll_regs);
++	button@761 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <761904>;
++	};
 +};
 +
-+static void ov2659_get_default_format(struct v4l2_mbus_framefmt *format)
-+{
-+	format->width = ov2659_framesizes[2].width;
-+	format->height = ov2659_framesizes[2].height;
-+	format->colorspace = ov2659_formats[0].colorspace;
-+	format->code = ov2659_formats[0].code;
-+	format->field = V4L2_FIELD_NONE;
-+}
-+
-+static void ov2659_set_streaming(struct ov2659 *ov2659, int on)
-+{
-+	struct i2c_client *client = ov2659->client;
-+	int ret;
-+
-+	on = !!on;
-+
-+	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
-+
-+	ret = ov2659_write(client, REG_SOFTWARE_STANDBY, on);
-+	if (ret)
-+		dev_err(&client->dev, "ov2659 soft standby failed\n");
-+}
-+
-+static int ov2659_init(struct v4l2_subdev *sd, u32 val)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	return ov2659_write_array(client, ov2659_init_regs);
-+}
-+
-+/*
-+ * V4L2 subdev video and pad level operations
-+ */
-+
-+static int ov2659_enum_mbus_code(struct v4l2_subdev *sd,
-+				 struct v4l2_subdev_pad_config *cfg,
-+				 struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	dev_dbg(&client->dev, "%s:\n", __func__);
-+
-+	if (code->index >= ARRAY_SIZE(ov2659_formats))
-+		return -EINVAL;
-+
-+	code->code = ov2659_formats[code->index].code;
-+
-+	return 0;
-+}
-+
-+static int ov2659_enum_frame_sizes(struct v4l2_subdev *sd,
-+				   struct v4l2_subdev_pad_config *cfg,
-+				   struct v4l2_subdev_frame_size_enum *fse)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	int i = ARRAY_SIZE(ov2659_formats);
-+
-+	dev_dbg(&client->dev, "%s:\n", __func__);
-+
-+	if (fse->index >= ARRAY_SIZE(ov2659_framesizes))
-+		return -EINVAL;
-+
-+	while (--i)
-+		if (fse->code == ov2659_formats[i].code)
-+			break;
-+
-+	fse->code = ov2659_formats[i].code;
-+
-+	fse->min_width  = ov2659_framesizes[fse->index].width;
-+	fse->max_width  = fse->min_width;
-+	fse->max_height = ov2659_framesizes[fse->index].height;
-+	fse->min_height = fse->max_height;
-+
-+	return 0;
-+}
-+
-+static int ov2659_get_fmt(struct v4l2_subdev *sd,
-+			  struct v4l2_subdev_pad_config *cfg,
-+			  struct v4l2_subdev_format *fmt)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	struct ov2659 *ov2659 = to_ov2659(sd);
-+	struct v4l2_mbus_framefmt *mf;
-+
-+	dev_dbg(&client->dev, "ov2659_get_fmt\n");
-+
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		mf = v4l2_subdev_get_try_format(sd, cfg, 0);
-+		fmt->format = *mf;
-+		return 0;
-+	}
-+
-+	mutex_lock(&ov2659->lock);
-+	fmt->format = ov2659->format;
-+	mutex_unlock(&ov2659->lock);
-+
-+	dev_dbg(&client->dev, "ov2659_get_fmt: %x %dx%d\n",
-+		ov2659->format.code, ov2659->format.width,
-+		ov2659->format.height);
-+
-+	return 0;
-+}
-+
-+static void __ov2659_try_frame_size(struct v4l2_mbus_framefmt *mf,
-+				    const struct ov2659_framesize **size)
-+{
-+	const struct ov2659_framesize *fsize = &ov2659_framesizes[0];
-+	const struct ov2659_framesize *match = NULL;
-+	int i = ARRAY_SIZE(ov2659_framesizes);
-+	unsigned int min_err = UINT_MAX;
-+
-+	while (i--) {
-+		int err = abs(fsize->width - mf->width)
-+				+ abs(fsize->height - mf->height);
-+		if ((err < min_err) && (fsize->regs[0].addr)) {
-+			min_err = err;
-+			match = fsize;
-+		}
-+		fsize++;
-+	}
-+
-+	if (!match)
-+		match = &ov2659_framesizes[2];
-+
-+	mf->width  = match->width;
-+	mf->height = match->height;
-+
-+	if (size)
-+		*size = match;
-+}
-+
-+static int ov2659_set_fmt(struct v4l2_subdev *sd,
-+			  struct v4l2_subdev_pad_config *cfg,
-+			  struct v4l2_subdev_format *fmt)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	unsigned int index = ARRAY_SIZE(ov2659_formats);
-+	struct v4l2_mbus_framefmt *mf = &fmt->format;
-+	const struct ov2659_framesize *size = NULL;
-+	struct ov2659 *ov2659 = to_ov2659(sd);
-+
-+	dev_dbg(&client->dev, "ov2659_set_fmt\n");
-+
-+	__ov2659_try_frame_size(mf, &size);
-+
-+	while (--index >= 0)
-+		if (ov2659_formats[index].code == mf->code)
-+			break;
-+
-+	if (index < 0)
-+		return -EINVAL;
-+
-+	mf->colorspace	= V4L2_COLORSPACE_JPEG;
-+	mf->code	= ov2659_formats[index].code;
-+	mf->field	= V4L2_FIELD_NONE;
-+
-+	mutex_lock(&ov2659->lock);
-+
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
-+		*mf = fmt->format;
-+	} else {
-+		if (ov2659->streaming) {
-+			mutex_unlock(&ov2659->lock);
-+			return -EBUSY;
-+		}
-+
-+		ov2659->frame_size = size;
-+		ov2659->format = fmt->format;
-+		ov2659->format_ctrl_regs =
-+			ov2659_formats[index].format_ctrl_regs;
-+	}
-+
-+	mutex_unlock(&ov2659->lock);
-+	return 0;
-+}
-+
-+static int ov2659_set_frame_size(struct ov2659 *ov2659)
-+{
-+	struct i2c_client *client = ov2659->client;
-+
-+	dev_dbg(&client->dev, "%s\n", __func__);
-+
-+	return ov2659_write_array(ov2659->client,
-+				  ov2659->frame_size->regs);
-+}
-+
-+static int ov2659_set_format(struct ov2659 *ov2659)
-+{
-+	struct i2c_client *client = ov2659->client;
-+
-+	dev_dbg(&client->dev, "%s\n", __func__);
-+
-+	return ov2659_write_array(ov2659->client,
-+				  ov2659->format_ctrl_regs);
-+}
-+
-+static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	struct ov2659 *ov2659 = to_ov2659(sd);
-+	int ret = 0;
-+
-+	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
-+
-+	mutex_lock(&ov2659->lock);
-+
-+	on = !!on;
-+
-+	if (ov2659->streaming == on)
-+		goto unlock;
-+
-+	if (!on) {
-+		/* Stop Streaming Sequence */
-+		ov2659_set_streaming(ov2659, 0);
-+		ov2659->streaming = on;
-+		goto unlock;
-+	}
-+
-+	ov2659_set_pixel_clock(ov2659);
-+	ov2659_set_frame_size(ov2659);
-+	ov2659_set_format(ov2659);
-+	ov2659_set_streaming(ov2659, 1);
-+	ov2659->streaming = on;
-+
-+unlock:
-+	mutex_unlock(&ov2659->lock);
-+	return ret;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * V4L2 subdev internal operations
-+ */
-+
-+static int ov2659_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	struct v4l2_mbus_framefmt *format =
-+				v4l2_subdev_get_try_format(sd, fh->pad, 0);
-+
-+	dev_dbg(&client->dev, "%s:\n", __func__);
-+
-+	ov2659_get_default_format(format);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_core_ops ov2659_subdev_core_ops = {
-+	.log_status = v4l2_ctrl_subdev_log_status,
-+	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-+	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
 +};
 +
-+static const struct v4l2_subdev_video_ops ov2659_subdev_video_ops = {
-+	.s_stream = ov2659_s_stream,
++&ohci0 {
++	status = "okay";
 +};
 +
-+static const struct v4l2_subdev_pad_ops ov2659_subdev_pad_ops = {
-+	.enum_mbus_code = ov2659_enum_mbus_code,
-+	.enum_frame_size = ov2659_enum_frame_sizes,
-+	.get_fmt = ov2659_get_fmt,
-+	.set_fmt = ov2659_set_fmt,
++&ohci1 {
++	status = "okay";
 +};
 +
-+static const struct v4l2_subdev_ops ov2659_subdev_ops = {
-+	.core  = &ov2659_subdev_core_ops,
-+	.video = &ov2659_subdev_video_ops,
-+	.pad   = &ov2659_subdev_pad_ops,
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1450000>;
++	regulator-name = "vdd-cpu";
 +};
 +
-+static const struct v4l2_subdev_internal_ops ov2659_subdev_internal_ops = {
-+	.open = ov2659_open,
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
 +};
 +
-+static int ov2659_detect(struct v4l2_subdev *sd)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	u8 pid, ver;
-+	int ret;
-+
-+	dev_dbg(&client->dev, "%s:\n", __func__);
-+
-+	ret = ov2659_write(client, REG_SOFTWARE_RESET, 0x01);
-+	if (ret != 0) {
-+		dev_err(&client->dev, "Sensor soft reset failed\n");
-+		return -ENODEV;
-+	}
-+	usleep_range(1000, 2000);
-+
-+	ret = ov2659_init(sd, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Check sensor revision */
-+	ret = ov2659_read(client, REG_SC_CHIP_ID_H, &pid);
-+	if (!ret)
-+		ret = ov2659_read(client, REG_SC_CHIP_ID_L, &ver);
-+
-+	if (!ret) {
-+		unsigned short id;
-+
-+		id = OV265X_ID(pid, ver);
-+		if (id != OV2659_ID)
-+			dev_err(&client->dev,
-+				"Sensor detection failed (%04X, %d)\n",
-+				id, ret);
-+		else
-+			dev_info(&client->dev, "Found OV%04X sensor\n", id);
-+	}
-+
-+	return ret;
-+}
-+
-+static struct ov2659_platform_data *
-+ov2659_get_pdata(struct i2c_client *client)
-+{
-+	struct ov2659_platform_data *pdata;
-+	struct device_node *endpoint;
-+	int ret;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node) {
-+		dev_err(&client->dev, "ov2659_get_pdata: DT Node found\n");
-+		return client->dev.platform_data;
-+	}
-+
-+	endpoint = of_graph_get_next_endpoint(client->dev.of_node, NULL);
-+	if (!endpoint)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		goto done;
-+
-+	ret = of_property_read_u32(endpoint, "link-frequencies",
-+				   &pdata->link_frequency);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "link-frequencies property not found\n");
-+		pdata = NULL;
-+	}
-+
-+done:
-+	of_node_put(endpoint);
-+	return pdata;
-+}
-+
-+static int ov2659_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	const struct ov2659_platform_data *pdata = ov2659_get_pdata(client);
-+	struct v4l2_subdev *sd;
-+	struct ov2659 *ov2659;
-+	struct clk *clk;
-+	int ret;
-+
-+	if (!pdata) {
-+		dev_err(&client->dev, "platform data not specified\n");
-+		return -EINVAL;
-+	}
-+
-+	ov2659 = devm_kzalloc(&client->dev, sizeof(*ov2659), GFP_KERNEL);
-+	if (!ov2659)
-+		return -ENOMEM;
-+
-+	ov2659->pdata = pdata;
-+	ov2659->client = client;
-+
-+	clk = devm_clk_get(&client->dev, "xvclk");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	ov2659->xvclk_frequency = clk_get_rate(clk);
-+	if (ov2659->xvclk_frequency < 6000000 ||
-+	    ov2659->xvclk_frequency > 27000000)
-+		return -EINVAL;
-+
-+	sd = &ov2659->sd;
-+	client->flags |= I2C_CLIENT_SCCB;
-+	v4l2_i2c_subdev_init(sd, client, &ov2659_subdev_ops);
-+
-+	sd->internal_ops = &ov2659_subdev_internal_ops;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
-+		     V4L2_SUBDEV_FL_HAS_EVENTS;
-+
-+#if defined(CONFIG_MEDIA_CONTROLLER)
-+	ov2659->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	sd->entity.type = MEDIA_ENT_T_V4L2_SUBDEV_SENSOR;
-+	ret = media_entity_init(&sd->entity, 1, &ov2659->pad, 0);
-+	if (ret < 0)
-+		return ret;
-+#endif
-+
-+	mutex_init(&ov2659->lock);
-+
-+	ov2659_get_default_format(&ov2659->format);
-+	ov2659->frame_size = &ov2659_framesizes[2];
-+	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
-+
-+	ret = ov2659_detect(sd);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* Calculate the PLL register value needed */
-+	ov2659_pll_calc_params(ov2659);
-+
-+	ret = v4l2_async_register_subdev(&ov2659->sd);
-+	if (ret)
-+		goto error;
-+
-+	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
-+
-+	return 0;
-+
-+error:
-+#if defined(CONFIG_MEDIA_CONTROLLER)
-+	media_entity_cleanup(&sd->entity);
-+#endif
-+	mutex_destroy(&ov2659->lock);
-+	return ret;
-+}
-+
-+static int ov2659_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov2659 *ov2659 = to_ov2659(sd);
-+
-+	v4l2_device_unregister_subdev(sd);
-+#if defined(CONFIG_MEDIA_CONTROLLER)
-+	media_entity_cleanup(&sd->entity);
-+#endif
-+	mutex_destroy(&ov2659->lock);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ov2659_id[] = {
-+	{ "ov2659", 0 },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(i2c, ov2659_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ov2659_of_match[] = {
-+	{ .compatible = "ovti,ov2659", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ov2659_of_match);
-+#endif
-+
-+static struct i2c_driver ov2659_i2c_driver = {
-+	.driver = {
-+		.name	= DRIVER_NAME,
-+		.of_match_table = of_match_ptr(ov2659_of_match),
-+	},
-+	.probe		= ov2659_probe,
-+	.remove		= ov2659_remove,
-+	.id_table	= ov2659_id,
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
 +};
 +
-+module_i2c_driver(ov2659_i2c_driver);
-+
-+MODULE_AUTHOR("Benoit Parrot <bparrot@ti.com>");
-+MODULE_DESCRIPTION("OV2659 CMOS Image Sensor driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/media/ov2659.h b/include/media/ov2659.h
-new file mode 100644
-index 0000000..487cb19
---- /dev/null
-+++ b/include/media/ov2659.h
-@@ -0,0 +1,33 @@
-+/*
-+ * Omnivision OV2659 CMOS Image Sensor driver
-+ *
-+ * Copyright (C) 2015 Texas Instruments, Inc.
-+ *
-+ * Benoit Parrot <bparrot@ti.com>
-+ * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-+ *
-+ * This program is free software; you may redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ */
-+
-+#ifndef OV2659_H
-+#define OV2659_H
-+
-+/**
-+ * struct ov2659_platform_data - ov2659 driver platform data
-+ * @link_frequency: target pixel clock frequency
-+ */
-+struct ov2659_platform_data {
-+	unsigned int link_frequency;
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
 +};
-+#endif /* OV2659_H */
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
 -- 
-2.1.0
+2.0.5
