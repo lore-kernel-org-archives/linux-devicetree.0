@@ -1,55 +1,72 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 0/7] Add initial support for DA9150 Charger & Fuel-Gauge
- IC
-Date: Sun, 08 Mar 2015 11:27:13 +0000
-Message-ID: <54FC3211.2020501@kernel.org>
-References: <cover.1424267009.git.Adam.Thomson.Opensource@diasemi.com> <20150225203307.GC13695@earth>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Enable cap-sdio-irq
+ for bananapro sdio wifi
+Date: Sun, 08 Mar 2015 12:27:53 +0100
+Message-ID: <54FC3239.5030200@redhat.com>
+References: <1425754884-7875-1-git-send-email-hdegoede@redhat.com> <1425754884-7875-7-git-send-email-hdegoede@redhat.com> <CAGb2v65tcCrg3njNN0owLrM-MUepRBwjxpU46dpXkLhy9mceEA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150225203307.GC13695@earth>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBP7E6CTQKGQE57PG4MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65tcCrg3njNN0owLrM-MUepRBwjxpU46dpXkLhy9mceEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/02/15 20:33, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Wed, Feb 18, 2015 at 02:08:19PM +0000, Adam Thomson wrote:
->> This patch set adds initial support for the Dialog DA9150 Integrated Charger &
->> Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
->>
->> In this patch set the following is provided:
->>  - MFD Core support and DT bindings documentation.
->>  - IIO GPADC support and DT bindings documentation.
->>  - Power Supply Charger support and DT bindings documentation.
->>  - Update to MAINTAINERS file to add DA9150 files to Dialog support list.
->>
->> To keep patch submission from being too large, support for GPIO and Fuel-Gauge
->> will come after initial support patches are accepted.
->>
->> This patch set is baselined against the v3.19 kernel version.
-> 
-> I pulled in patches 3-7 into battery-2.6.git (patch 1 was already
-> applied by Lee in 4.0-rc1 and patch 2 can simply be pulled in by
-> Lee).
-> 
-> Jonathan: I have prepared an immutable branch "da9150-charger-fuelgauge"
-> based on 4.0-rc1, which contains the IIO bits, so that you can pull them
-> in, too:
-> 
-> git://git.infradead.org/battery-2.6.git da9150-charger-fuelgauge
-I'll grab these only if I get patches on top of them in this cycle. 
-Things get a little fiddly otherwise with my pull requests to Greg
-and I'm lazy ;)
+Hi,
 
-Thanks for sorting this Sebastian.
+On 08-03-15 03:42, Chen-Yu Tsai wrote:
+> On Sun, Mar 8, 2015 at 3:01 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> The sdio wifi on the Banana Pro does not appear to have an oob irq hooked
+>> up, so enable sdio-irq support to avoid unnecessary polling.
+>
+> I wonder if this is stable enough to put back into the mmc driver, i.e.
+> declare the capability in the driver itself? IIRC at one point it did.
 
-Good to see this series all sorted out at last!
+That is a good question, I believe strongly that the sdio wifi issues we've
+been seeing which were the reason to disable cap-sdio-irq in the driver are
+actually unrelated to the irq delivery mechanism. So IMHO yes we can just enable
+this for all devices in the driver, and yes that would be a better solution.
 
-Jonathan
-> 
-> --Sebastian
-> 
+Maxime, if I send a patch to enable cal-sdio-irq at the driver level ( as it
+really is a hardware feature not a board feature), will you ack it ?
+
+If the answer is yet, then please do NOT apply this patch and I'll send
+a sunxi-mmc.c patch instead.
+
+Regards,
+
+Hans
+
+
+
+>
+> ChenYu
+>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun7i-a20-bananapro.dts | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+>> index fb89fe7..d0cd78f 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+>> @@ -164,6 +164,7 @@
+>>          vmmc-supply = <&reg_vmmc3>;
+>>          bus-width = <4>;
+>>          non-removable;
+>> +       cap-sdio-irq;
+>>          status = "okay";
+>>   };
+>>
+>> --
+>> 2.3.1
+>
