@@ -1,68 +1,65 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: add vendor prefix for cubietech
-Date: Sun, 8 Mar 2015 18:29:26 +0100
-Message-ID: <20150308172926.GJ5085@lukather>
-References: <1425684905-23652-1-git-send-email-tyler.baker@linaro.org>
- <1425684905-23652-3-git-send-email-tyler.baker@linaro.org>
+Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
+Date: Sun, 8 Mar 2015 18:47:21 +0100
+Message-ID: <20150308174721.GL5085@lukather>
+References: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+ <20150303071342.GB4713@lukather>
+ <CAEKpxB=-vtjMckh3ZHoy0mezE9U1EtKzmttdXRD5ZNztZvB_ag@mail.gmail.com>
+ <20150304203400.GR4911@lukather>
+ <CAEKpxBnRyhD8Xiu7uTomM=z4Xm4CH8WVTYjZH73yDgYzwMqn5w@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k1BdFSKqAqVdu8k/"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="gwtGiOGliFx8mAnm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIEY6KTQKGQES2DXR7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425684905-23652-3-git-send-email-tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAEKpxBnRyhD8Xiu7uTomM=z4Xm4CH8WVTYjZH73yDgYzwMqn5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---k1BdFSKqAqVdu8k/
-Content-Type: text/plain; charset=us-ascii
+--gwtGiOGliFx8mAnm
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 06, 2015 at 03:35:05PM -0800, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> Add a cubietech vendor prefix, as it is missing. The cubietruck, cubieboa=
-rd2,
-> and cubieboard all already reference this prefix.
->=20
-> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi,
 
-Applied, thanks!
+On Sat, Mar 07, 2015 at 09:41:54AM +0100, Code Kipper wrote:
+> > Don't your device has any brand on the case or the PCB?
+> 
+> There is nothing on the PCB to reference a manufacturer, the actual packaging
+> and case are from the earlier MK808B and mention A9. There was only a
+> small sticker on the side to show that the contents was a MK808C.
+> I guess 'unknown' isn't a valid vendor name,
 
+Not really.
+
+I really don't know what's the policy to apply in such a case when we
+have a device that has no identified vendor.
+
+We need to give a vendor name, because the compatible is used to tell
+two devices apart, in the case where we would have to apply quirks for
+a particular devices.
+
+And if we have two devices (say a Marvlell and an Allwinner one), with
+the same name, and without any vendor, we're screwed.
+
+Maybe falling back to the SoC vendor, in our case, would make sense?
+
+Arnd? Rob? Mark? An opinion on this?
+
+Thanks,
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---k1BdFSKqAqVdu8k/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU/Ib2AAoJEBx+YmzsjxAg9WwP/3DhyMqdmE7JNeWqNET8Sn4Y
-G5GBo0zvCYK/JiUyrNDYSv2GWCy3VhSySgr9VotmBDKpDrDA3iEoX4xaoQw5Zp4s
-WDkI58g8iPHmO86DQQJKcb42YJkyQT01KZNwx5j9OUsH3swBBZ/eNCm9BSrNyUva
-mhzmNKgUmA734tXb6/G258p6tRRqPBRD8+AvutU4ae1t1+/XOGbcd1xzCvAZvA+5
-vJE194+SGwmxzxTjrIUnDUHOoR/Dlrl9FQKgIR2zTbGN05jv52PnJ7+AyB6ZLGKp
-z0n0IIZI8Mzihz+8IzOUUTelmVAJs168rsiMP4WcRYy+1J7MX13IoDT38a6Bd2he
-PyRO1LJSoXWP9qEStWKpAgdnTPjzi6RwQEX7sKk003PgiLSdHM4jCLTDtoSyZVGA
-CITmq2uQdyPe8dxpUoPgo9A7ovPY4DKmofta2JrzWimqsAOwi+WcUXxzeiz3m/wn
-wayHwW8I58fgCRsBtVJifw/m7xuguLhr8GLe9dCxfxseUIvCMNRb0yM43xo9Eb2F
-uTUVmh20k26CiQl8Ly4ySsGADhAcLkuMFdxmYQQRXJjPgBHRCNRHMiaAYdMGy9VN
-3zZWNUXY/B8Hmn2uVguO7NvRbD/H1GQ4RjW8BMFK/yzWPJd0ELk4t4nagyHRKWyO
-GVLhc7K6fRGvSTqIiWTN
-=rYJg
------END PGP SIGNATURE-----
-
---k1BdFSKqAqVdu8k/--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gwtGiOGliFx8mAnm--
