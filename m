@@ -1,61 +1,76 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] pwm: imx-pwm: add explicit compatible strings and
- required clock properties
-Date: Sun, 8 Mar 2015 17:09:16 -0500
-Message-ID: <CAL_JsqLWjJN7ar99DZAVLHVfUxek8GyApTSGhmRjGrEDzdtCHQ@mail.gmail.com>
-References: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
- <CAL_JsqJ+NL+0Hfu-La=NwzvOEHf0xE-D6EakJv6gnYYOS1oYrA@mail.gmail.com> <20150306163721.GL19577@beef>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: Associating nodes with phandles for pci devices
+Date: Sun, 8 Mar 2015 22:01:17 +0000
+Message-ID: <54FCC6AC.4030202@alliedtelesis.co.nz>
+References: <9bcf67ede60f4567a396c05578cfceb7@svr-chch-ex1.atlnz.lc>
+ <2275507.PY4WZcxUrf@wuerfel>
+ <alpine.DEB.2.10.1501240828280.14228@chrisp-dl.ws.atlnz.lc>
+ <54C2CDE6.8090400@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20150306163721.GL19577@beef>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C2CDE6.8090400-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <20F7BF1E5A87D744A37A27B2D3392872-aR5bhbO/t7M@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2015 at 10:37 AM, Matt Porter <mporter@konsulko.com> wrote:
-> On Fri, Mar 06, 2015 at 09:16:44AM -0600, Rob Herring wrote:
->> On Fri, Mar 6, 2015 at 9:09 AM, Matt Porter <mporter@konsulko.com> wrote:
->> > The imx-pwm binding contains language indicating compatible
->> > strings to be used that is not valid for all supported parts
->> > e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
->> > valid compatible strings that represent the two versions of
->> > this peripheral in use.
->> >
->> > The binding is also missing the clocks/clock-names properties
->> > so document these,the two required ipg and per clocks, and add
->> > add these properties to the example.
->> >
->> > Signed-off-by: Matt Porter <mporter@konsulko.com>
->> > ---
->> >  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 11 ++++++++++-
->> >  1 file changed, 10 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
->> > index b50d7a6d..30d2b82 100644
->> > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
->> > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
->> > @@ -1,10 +1,16 @@
->> >  Freescale i.MX PWM controller
->> >
->> >  Required properties:
->> > -- compatible: should be "fsl,<soc>-pwm"
->> > +- compatible :
->> > +  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
->> > +  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
->>
->> This should be one of these and a more specific value as the example
->> below shows.
->
-> Ok, yes, I wasn't sure if that was expected to be explicit in the bindings
-> or not as others don't seem to represent that properly. What about this?
->
-> - compatible: should be "fsl,<soc>-pwm" and one of the following
->               compatible strings:
->                 "fsl,imx1-pwm" for an iMX1 compatible PWM
->                 "fsl,imx27-pwm" for an iMX27 compatible PWM
-
-Looks fine.
-
-Rob
+SGkgQWxsLA0KDQpCYWNrIG9udG8gdGhpcyBmcm9tIGEgYnJpZWYgaGlhdHVzDQoNCk9uIDAxLzI0
+LzIwMTUgMTE6NDAgQU0sIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6DQo+IE9uIDIzLzAxLzE1IDEx
+OjM4LCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4NCj4+IEhpIEFybmQsDQo+Pg0KPj4gVGhhbmtz
+IGZvciB0aGUgcXVpY2sgcmVzcG9uc2UgKGFuZCBzb3JyeSBmb3IgdGhlIGhvcnJpYmx5IGZvcm1h
+dHRlZA0KPj4gbWVzc2FnZSwgdHJhdmVsbGluZyB3aXRoIG9ubHkgYSB3ZWJtYWlsIGludGVyZmFj
+ZSBhdCB0aGUgbW9tZW50KS4NCj4+DQo+PiBPbiBGcmksIDIzIEphbiAyMDE1LCBBcm5kIEJlcmdt
+YW5uIHdyb3RlOg0KPj4NCj4+PiBPbiBGcmlkYXkgMjMgSmFudWFyeSAyMDE1IDE5OjAyOjMzIENo
+cmlzIFBhY2toYW0gd3JvdGU6DQo+Pj4+IEhpLA0KPj4+Pg0KPj4+PiBJJ20gd29ya2luZyBvbiBh
+IG5ldyBib2FyZCB0aGF0IGhhcyBhIG1hcnZlbGwsZHNhIHN3aXRjaC4gU2ltaWxhciB0bw0KPj4+
+PiB0aGUga2lya3dvb2QtbXY4OGY2MjgxZ3R3LWdlIGJvYXJkLiBIb3dldmVyIHRoZSBtYWpvciBk
+aWZmZXJlbmNlIGlzDQo+Pj4+IHRoYXQgaW5zdGVhZCBvZiBiZWluZyBjb25uZWN0ZWQgdG8gYW4g
+aW50ZWdyYXRlZCBFdGhlcm5ldCBwb3J0IGl0IGlzDQo+Pj4+IGNvbm5lY3RlZCB2aWEgYSBQQ0kt
+ZSBFdGhlcm5ldCBwb3J0IChiYXNpY2FsbHkgYSBOSUMgaGFyZHdpcmVkIG9udG8NCj4+Pj4gdGhl
+IGJvYXJkKS4NCj4+Pj4NCj4+Pj4gR2VuZXJhbGx5IHlvdSBkb24ndCBuZWVkIHRvIGRlZmluZSBQ
+Q0kgZGV2aWNlcyBpbiB0aGUgLmR0cyBiZWNhdXNlDQo+Pj4+IHRoZSBidXMgaXMgc2Nhbm5lZCBh
+dCBydW4gdGltZSBhbmQgdGhlIG1ldGhvZCBmb3IgaWRlbnRpZnlpbmcgZGV2aWNlcw0KPj4+PiBp
+cyB3ZWxsIGRlZmluZWQuIEJ1dCB0byBzYXRpc2Z5IHRoZSBtYXJ2ZWxsLGRzYSBiaW5kaW5nWzFd
+IEkgbmVlZCB0bw0KPj4+PiB0ZWxsIGl0IHRoZSBFdGhlcm5ldCBwb3J0IGl0IGlzIGNvbm5lY3Rl
+ZCB0by4gVGhlIGFuc3dlciBtaWdodCBiZSBpbg0KPj4+PiB0aGUgUENJIGJpbmRpbmdzIGJ1dCB0
+aGUgdXJscyBpbiB0aGUgZG9jdW1lbnRhdGlvblsyXSBkb24ndCBhcHBlYXIgdG8NCj4+Pj4gYmUg
+dmFsaWQgYW55bW9yZS4NCj4+Pj4NCj4+Pj4gSXMgaXQgcG9zc2libGUgdG8gZW51bWVyYXRlIFBD
+SSBkZXZpY2VzIGluIHRoZSAuZHRzPyBPciBpcyB0aGVyZSBhDQo+Pj4+IHdheSBvZiBzYXRpc2Z5
+aW5nIHRoZSBkc2EgcmVxdWlyZW1lbnRzIHdpdGhvdXQga25vd2luZyB0aGUgRXRoZXJuZXQNCj4+
+Pj4gZGV2aWNlPw0KPj4+Pg0KPj4+DQo+Pj4gSW4gZ2VuZXJhbCwgaXQgaXMgcG9zc2libGUsIGFu
+ZCB3ZSBkbyB0aGF0IG9uIFBvd2VyUEMsIGJ1dCBpdCBtYXkgYmUgdGhhdA0KPj4+IHRoZXJlIGFy
+ZSBwYXJ0cyBtaXNzaW5nIG9uIEFSTSBhbmQgeW91IGhhdmUgdG8gdHJ5IGl0IG91dC4NCj4+Pg0K
+Pj4+IEluIHBhcnRpY3VsYXIsIHlvdSBuZWVkIHRvIGtub3cgdGhlIGFkZHJlc3Mgb2YgdGhlIFBD
+SSBkZXZpY2UgYW5kIHRoZW4NCj4+PiBjcmVhdGUgYSBkZXZpY2Ugbm9kZSB0aGF0IHdpbGwgYmUg
+YXNzb2NpYXRlZCB3aXRoIHRoZQ0KPj4+IHBjaV9kZXYtPmRldi5vZl9ub2RlDQo+Pj4gcG9pbnRl
+ci4NCj4+DQo+PiBFbmNvdXJhZ2luZyB0byBrbm93LiBJIHRoaW5rIEkgY2FuIGZpZ3VyZSBvdXQg
+dGhlIHJlbGV2YW50IGFkZHJlc3NlcyBmb3INCj4+IG15IGRldmljZSBiYXNlZCBvbiB0aGUgcnVu
+LXRpbWUgc2Nhbi4NCg0KV2l0aCBBcm5kJ3MgaGVscCBJJ3ZlIGZpZ3VyZWQgb3V0IHRoZSBhcHBy
+b3ByaWF0ZSByZWcgcHJvcGVydHkgZm9yIG15IA0KUENJIGJhc2VkIEV0aGVybmV0IG5vZGVzLg0K
+DQoJcGNpZS1jb250cm9sbGVyIHsNCgkJcGNpZUAxLDAgew0KCQkJZXRoZXJuZXQwOiB0ZzNAMDEs
+MCB7DQoJCQkJcmVnID0gPDB4MDAwMDAwMDAgMCAwIDAgMD47DQoJCQl9Ow0KCQkJZXRoZXJuZXQx
+OiB0ZzNAMDEsMSB7DQoJCQkJcmVnID0gPDB4MDAwMDAxMDAgMCAwIDAgMD47DQoJCQl9Ow0KCQl9
+Ow0KCX07DQoNCj4NCj4gQlRXLCBvbmUgdGhpbmcgdGhhdCBpcyBoaWdoIGluIG15IFRPRE8gbGlz
+dCByZWdhcmRpbmcgRFNBIGlzIHRvIHN0b3ANCj4gdXNpbmcgdGhpcyBwbGF0Zm9ybSBkZXZpY2Uv
+ZHJpdmVyIGFyY2hpdGVjdHVyZSBhbmQgdXNlIHRoZSBhY3R1YWwgZGV2aWNlDQo+IGRyaXZlciBt
+b2RlbC4gWW91ciBzd2l0Y2ggZHJpdmVyIGVudHJ5IHBvaW50IHdvdWxkIGJlIGEgcGNpX2RyaXZl
+DQo+IHByb2JlJ3MgZnVuY3Rpb24gd2hlcmUgeW91IGVuZC11cCByZWdpc3RlcmluZyBhIHN3aXRj
+aCB0aGUgRFNBLiBUaGlzDQo+IHNob3VsZCBzb2x2ZSBwb3J0aW9ucyBvZiB5b3VyIHByb2JsZW0g
+YWx0aG91Z2ggdGhpcyBpcyBhIGxvbmcgc2hvdCBhcyB3ZQ0KPiBuZWVkIHRvIGNvbnZlcnQgZXhp
+c3RpbmcgZHJpdmVycyBhcyB3ZWxsLg0KPg0KDQpNeSBjdXJyZW50IHByb2JsZW0gaXMgdGhhdCBv
+Zl9maW5kX2RldmljZV9ieV9ub2RlKCkgKGNhbGxlZCBieSANCmRzYV9vZl9wcm9iZSkgY2FuJ3Qg
+ZmluZCB0aGUgZGV2aWNlLiBBZnRlciBhIGJpdCBvZiBkZWJ1Z2dpbmcgSSBjYW4gc2VlIA0KdGhh
+dCB0aGUgcG9wdWxhdGVkIHBsYXRmb3JtIGJ1cyBvbmx5IGdvZXMgYXMgZmFyIGFzIA0KL3NvYy9w
+Y2llLWNvbnRyb2xsZXIsIGFueXRoaW5nIGJleW9uZCB0aGF0IHNlZW1zIHRvIGJlIG1pc3Npbmcu
+IEkgY2FuJ3QgDQpzZWUgYW55dGhpbmcgb2J2aW91cyBpbiBvZl9wbGF0Zm9ybV9idXNfY3JlYXRl
+KCkgdGhhdCB3b3VsZCBhY3R1YWxseSANCnN0b3AgaXQgZnJvbSBjb250aW51aW5nIGRvd24gdGhl
+IHBjaWUtY29udHJvbGxlciBicmFuY2ggcHJvdmlkZWQgdGhlIGR0cyANCmFjdHVhbGx5IGVudW1l
+cmF0ZXMgdGhlIGNoaWxkcmVuLg0KDQpBbnkgc3VnZ2VzdGlvbnM/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
