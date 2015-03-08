@@ -1,112 +1,55 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/7] ARM: dts: sun7i: Add OOB irq support to
- boards with broadcom sdio wifi
-Date: Sun, 08 Mar 2015 12:25:38 +0100
-Message-ID: <54FC31B2.3030706@redhat.com>
-References: <1425754884-7875-1-git-send-email-hdegoede@redhat.com> <1425754884-7875-6-git-send-email-hdegoede@redhat.com> <CAGb2v642i_Yg9PAg=iMyVgzm0gNwe6v7wmziYJTZcjoDBAFmcw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/7] Add initial support for DA9150 Charger & Fuel-Gauge
+ IC
+Date: Sun, 08 Mar 2015 11:27:13 +0000
+Message-ID: <54FC3211.2020501@kernel.org>
+References: <cover.1424267009.git.Adam.Thomson.Opensource@diasemi.com> <20150225203307.GC13695@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBPPD6CTQKGQEMN3Q3WY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v642i_Yg9PAg=iMyVgzm0gNwe6v7wmziYJTZcjoDBAFmcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150225203307.GC13695@earth>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08-03-15 04:12, Chen-Yu Tsai wrote:
-> On Sun, Mar 8, 2015 at 3:01 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 11 +++++++++++
->>   arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts  | 11 +++++++++++
->>   2 files changed, 22 insertions(+)
+On 25/02/15 20:33, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Feb 18, 2015 at 02:08:19PM +0000, Adam Thomson wrote:
+>> This patch set adds initial support for the Dialog DA9150 Integrated Charger &
+>> Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
 >>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->> index 0c219a4..8111b0c 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->> @@ -167,12 +167,23 @@
->>   };
+>> In this patch set the following is provided:
+>>  - MFD Core support and DT bindings documentation.
+>>  - IIO GPADC support and DT bindings documentation.
+>>  - Power Supply Charger support and DT bindings documentation.
+>>  - Update to MAINTAINERS file to add DA9150 files to Dialog support list.
 >>
->>   &mmc3 {
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->>          pinctrl-names = "default";
->>          pinctrl-0 = <&mmc3_pins_a>;
->>          vmmc-supply = <&reg_vmmc3>;
->>          bus-width = <4>;
->>          non-removable;
->>          status = "okay";
->> +
->> +       brcmf: bcrmf@1 {
->> +               reg = <1>;
->> +               compatible = "brcm,bcm4329-fmac";
->> +               interrupt-parent = <&pio>;
->> +               interrupts = <10 8>; /* PH10 / EINT10 */
->> +               interrupt-names = "host-wake";
->> +       };
->
-> I gave this a spin on my Cubietruck. (I was running cap-sdio-irq before.)
->
-> Ran a few ping tests with a simple
-> "sudo ping -i 0.1 -I wlan0 -s 65500 192.168.1.1"
-> After a few runs I got
->
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD SBE !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
-> brcmfmac: brcmf_sdio_readframes: RXHEADER FAILED: -110
-> brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
-> brcmfmac: brcmf_sdiod_regrw_helper: failed to write data F1@0x0a040, err: -5
-> brcmfmac: brcmf_sdio_hdparse: seq 226: sequence number error, expect 227
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
-> brcmfmac: brcmf_sdiod_regrw_helper: failed to read data F1@0x0a020, err: -110
-> brcmfmac: brcmf_sdio_dpc: failed backplane access over SDIO, halting operation
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
-> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
-> sunxi-mmc 1c12000.mmc: data error, sending stop command
->
-> The chip is pretty much dead afterwards.
->
-> With cap-sdio-irq it doesn't happen so soon, but it does.
-> Without either, the response time is bad with packet losses,
-> but at least it doesn't die.
+>> To keep patch submission from being too large, support for GPIO and Fuel-Gauge
+>> will come after initial support patches are accepted.
+>>
+>> This patch set is baselined against the v3.19 kernel version.
+> 
+> I pulled in patches 3-7 into battery-2.6.git (patch 1 was already
+> applied by Lee in 4.0-rc1 and patch 2 can simply be pulled in by
+> Lee).
+> 
+> Jonathan: I have prepared an immutable branch "da9150-charger-fuelgauge"
+> based on 4.0-rc1, which contains the IIO bits, so that you can pull them
+> in, too:
+> 
+> git://git.infradead.org/battery-2.6.git da9150-charger-fuelgauge
+I'll grab these only if I get patches on top of them in this cycle. 
+Things get a little fiddly otherwise with my pull requests to Greg
+and I'm lazy ;)
 
-That is not true, without either cap-sdio-irq or oob irq it
-still dies, try doing a scp of a large file, that is a more
-reliable way to trigger it.
+Thanks for sorting this Sebastian.
 
-I've been down this road (blaming the irq) mechanism myself,
-but it is a dead end, the problem you're describing, the CMD 53
-SBE error happens with all 3 irq mechanisms.
+Good to see this series all sorted out at last!
 
-> Is this the problem Arend (CC-ed) was looking into?
-
-Is looking into, yes. He has a Cubietruck now, and he can reproduce
-it, so hopefully we will see some progress on this soon.
-
-Note that as a workaround (for me at least) you can boot into
-the linux on the cubietruck nand, then insert an sdcard with
-upstream kernel, then reboot so that it boots from the sdcard
-without loosing power, and then the problem seems to be gone.
-
-Regards,
-
-Hans
+Jonathan
+> 
+> --Sebastian
+> 
