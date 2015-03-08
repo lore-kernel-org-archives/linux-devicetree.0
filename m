@@ -1,39 +1,112 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
-Date: Sun, 08 Mar 2015 12:21:34 +0100
-Message-ID: <54FC30BE.1070606@metafoo.de>
-References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>	<20150307112109.GJ28806@sirena.org.uk> <CAHp75VeYanNJrEyTtcxb5g5DB8=609nebgZm8zVAeJdmSgHjkQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dts: sun7i: Add OOB irq support to
+ boards with broadcom sdio wifi
+Date: Sun, 08 Mar 2015 12:25:38 +0100
+Message-ID: <54FC31B2.3030706@redhat.com>
+References: <1425754884-7875-1-git-send-email-hdegoede@redhat.com> <1425754884-7875-6-git-send-email-hdegoede@redhat.com> <CAGb2v642i_Yg9PAg=iMyVgzm0gNwe6v7wmziYJTZcjoDBAFmcw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VeYanNJrEyTtcxb5g5DB8=609nebgZm8zVAeJdmSgHjkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Sneddon <dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBPPD6CTQKGQEMN3Q3WY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v642i_Yg9PAg=iMyVgzm0gNwe6v7wmziYJTZcjoDBAFmcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2015 08:43 PM, Andy Shevchenko wrote:
-> On Sat, Mar 7, 2015 at 1:21 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Mar 04, 2015 at 12:02:05PM +0200, Stanimir Varbanov wrote:
->>> From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>
->>> This patch adds DMA capabilities to the spi-qup driver.  If DMA channels are
->>> present, the QUP will use DMA instead of block mode for transfers to/from SPI
->>> peripherals for transactions larger than the length of a block.
+Hi,
+
+On 08-03-15 04:12, Chen-Yu Tsai wrote:
+> On Sun, Mar 8, 2015 at 3:01 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 11 +++++++++++
+>>   arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts  | 11 +++++++++++
+>>   2 files changed, 22 insertions(+)
 >>
->> Applied, but why is there no devm_dma_request_slave_channel_reason()?
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>> index 0c219a4..8111b0c 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>> @@ -167,12 +167,23 @@
+>>   };
+>>
+>>   &mmc3 {
+>> +       #address-cells = <1>;
+>> +       #size-cells = <0>;
+>> +
+>>          pinctrl-names = "default";
+>>          pinctrl-0 = <&mmc3_pins_a>;
+>>          vmmc-supply = <&reg_vmmc3>;
+>>          bus-width = <4>;
+>>          non-removable;
+>>          status = "okay";
+>> +
+>> +       brcmf: bcrmf@1 {
+>> +               reg = <1>;
+>> +               compatible = "brcm,bcm4329-fmac";
+>> +               interrupt-parent = <&pio>;
+>> +               interrupts = <10 8>; /* PH10 / EINT10 */
+>> +               interrupt-names = "host-wake";
+>> +       };
 >
-> I suppose the answer would be "we have a lot of slightly different
-> cases and we have to get rid of current mess with legacy API calls".
-> The most problematic stuff now inside DMA slave subsystem is so called
-> "filter function". It's a main impediment right now as I understand.
+> I gave this a spin on my Cubietruck. (I was running cap-sdio-irq before.)
+>
+> Ran a few ping tests with a simple
+> "sudo ping -i 0.1 -I wlan0 -s 65500 192.168.1.1"
+> After a few runs I got
+>
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD SBE !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+> brcmfmac: brcmf_sdio_readframes: RXHEADER FAILED: -110
+> brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+> brcmfmac: brcmf_sdiod_regrw_helper: failed to write data F1@0x0a040, err: -5
+> brcmfmac: brcmf_sdio_hdparse: seq 226: sequence number error, expect 227
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+> brcmfmac: brcmf_sdiod_regrw_helper: failed to read data F1@0x0a020, err: -110
+> brcmfmac: brcmf_sdio_dpc: failed backplane access over SDIO, halting operation
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+> sunxi-mmc 1c12000.mmc: smc 1 err, cmd 53, RD DTO !!
+> sunxi-mmc 1c12000.mmc: data error, sending stop command
+>
+> The chip is pretty much dead afterwards.
+>
+> With cap-sdio-irq it doesn't happen so soon, but it does.
+> Without either, the response time is bad with packet losses,
+> but at least it doesn't die.
 
-dma_request_slave_channel_reason() is the sane API though and does not use 
-the filter functions. Adding a devm version of it seems reasonable.
+That is not true, without either cap-sdio-irq or oob irq it
+still dies, try doing a scp of a large file, that is a more
+reliable way to trigger it.
 
-- Lars
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've been down this road (blaming the irq) mechanism myself,
+but it is a dead end, the problem you're describing, the CMD 53
+SBE error happens with all 3 irq mechanisms.
+
+> Is this the problem Arend (CC-ed) was looking into?
+
+Is looking into, yes. He has a Cubietruck now, and he can reproduce
+it, so hopefully we will see some progress on this soon.
+
+Note that as a workaround (for me at least) you can boot into
+the linux on the cubietruck nand, then insert an sdcard with
+upstream kernel, then reboot so that it boots from the sdcard
+without loosing power, and then the problem seems to be gone.
+
+Regards,
+
+Hans
