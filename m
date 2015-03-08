@@ -1,40 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] wl18xx: add basic device-tree support
-Date: Sun, 08 Mar 2015 22:53:45 +0100
-Message-ID: <2658240.aoSloEbWge@wuerfel>
-References: <1424362401-8228-1-git-send-email-eliad@wizery.com> <2194797.iarD5YIxEd@wuerfel> <CAB3XZEfc3qV_o+0paM=HNdySKWwiJDfH=kJ8u0tz1ae+3ujxVw@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] pwm: imx-pwm: add explicit compatible strings and
+ required clock properties
+Date: Sun, 8 Mar 2015 17:09:16 -0500
+Message-ID: <CAL_JsqLWjJN7ar99DZAVLHVfUxek8GyApTSGhmRjGrEDzdtCHQ@mail.gmail.com>
+References: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
+ <CAL_JsqJ+NL+0Hfu-La=NwzvOEHf0xE-D6EakJv6gnYYOS1oYrA@mail.gmail.com> <20150306163721.GL19577@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAB3XZEfc3qV_o+0paM=HNdySKWwiJDfH=kJ8u0tz1ae+3ujxVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20150306163721.GL19577@beef>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Matt Porter <mporter@konsulko.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 08 March 2015 13:13:13 Eliad Peller wrote:
-> 
-> > I've looked up the what boards actually use this data and found that
-> > all of them already support booting from DT: some omap2 boards using
-> > arch/arm/mach-omap2/pdata-quirks.c to provide the data, and the
-> > davinci 850evm. Can you make sure you add the correct data to all
-> > of these dts files as part of your series and remove the
-> > wl12xx_platform_data references?
-> 
-> AFAICT, these board files add wl12xx platform data, while the new DT
-> support is only for wl18xx.
-> 
+On Fri, Mar 6, 2015 at 10:37 AM, Matt Porter <mporter@konsulko.com> wrote:
+> On Fri, Mar 06, 2015 at 09:16:44AM -0600, Rob Herring wrote:
+>> On Fri, Mar 6, 2015 at 9:09 AM, Matt Porter <mporter@konsulko.com> wrote:
+>> > The imx-pwm binding contains language indicating compatible
+>> > strings to be used that is not valid for all supported parts
+>> > e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
+>> > valid compatible strings that represent the two versions of
+>> > this peripheral in use.
+>> >
+>> > The binding is also missing the clocks/clock-names properties
+>> > so document these,the two required ipg and per clocks, and add
+>> > add these properties to the example.
+>> >
+>> > Signed-off-by: Matt Porter <mporter@konsulko.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 11 ++++++++++-
+>> >  1 file changed, 10 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+>> > index b50d7a6d..30d2b82 100644
+>> > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+>> > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+>> > @@ -1,10 +1,16 @@
+>> >  Freescale i.MX PWM controller
+>> >
+>> >  Required properties:
+>> > -- compatible: should be "fsl,<soc>-pwm"
+>> > +- compatible :
+>> > +  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
+>> > +  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
+>>
+>> This should be one of these and a more specific value as the example
+>> below shows.
+>
+> Ok, yes, I wasn't sure if that was expected to be explicit in the bindings
+> or not as others don't seem to represent that properly. What about this?
+>
+> - compatible: should be "fsl,<soc>-pwm" and one of the following
+>               compatible strings:
+>                 "fsl,imx1-pwm" for an iMX1 compatible PWM
+>                 "fsl,imx27-pwm" for an iMX27 compatible PWM
 
-How can you tell the difference? What I see is that omap3pandora
-(and nothing else) calls wl1251_set_platform_data(), while 
-da850-evm and all omap3/omap4 boards use wl12xx_set_platform_data().
+Looks fine.
 
-The latter seems to refer to all wl12xx and wl18xx variants except
-for wl1251, based on my (very limited) understanding of that code.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
