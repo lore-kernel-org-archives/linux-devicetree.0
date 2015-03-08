@@ -1,42 +1,64 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] net/macb: merge at91_ether driver into macb
- driver
-Date: Sat, 07 Mar 2015 22:30:20 -0500 (EST)
-Message-ID: <20150307.223020.1400708446360935463.davem@davemloft.net>
-References: <1425709412-4935-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v3 0/8] irqchip: New driver for ST's SysCfg controlled IRQs
+Date: Sun, 8 Mar 2015 04:02:38 +0000
+Message-ID: <20150308040238.GC21207@io.lakedaemon.net>
+References: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425709412-4935-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Date: Sat,  7 Mar 2015 07:23:28 +0100
+Lee,
 
-> The rm9200 boards use the dedicated at91_ether driver instead of the
-> regular macb driver.
+On Wed, Feb 18, 2015 at 03:13:56PM +0000, Lee Jones wrote:
+> Rebased (again) and resending.
+>  
+> This driver enables IRQs which are controlled using System Configuration
+> registers.  Without it Performance Monitoring, Core Sight Tracing and some
+> L2 Caches will fail to function.
+>  
+> v2 => v3:
+>  - Removed filename from header as suggested by Thomas
 > 
-> Both the macb and at91_ether drivers can be compiled as separated
-> modules.
-> Since the at91_ether driver uses code from the macb driver, at91_ether.ko
-> depends on macb.ko.
+> v1 => v2:
+>  - Fixed up Jason's review comments
 > 
-> However the macb.ko module always fails to load on rm9200 boards: the
-> macb_probe() function expects a hclk clock which doesn't exist on rm9200.
-> Then the at91_ether.ko can't be loaded in turn due to unresolved
-> dependencies.
-> 
-> This series of patches fix this issue by merging at91_ether into macb.
-> 
-> Patch 1 is fixing a problem that might happen when enabling ARM
-> multi-platform suppot.
+> Lee Jones (8):
+>   dt: bindings: Supply shared ST IRQ defines
+>   irqchip: Supply new driver for STi based devices
+>   irqchip: irq-st: Add documentation for STi based syscfg IRQs
+...
+>  .../interrupt-controller/st,sti-irq-syscfg.txt     |  35 ++++
+...
+>  drivers/irqchip/Kconfig                            |   7 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-st.c                           | 206 +++++++++++++++++++++
+>  include/dt-bindings/interrupt-controller/irq-st.h  |  30 +++
+...
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+>  create mode 100644 drivers/irqchip/irq-st.c
+>  create mode 100644 include/dt-bindings/interrupt-controller/irq-st.h
 
-Series applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patches 1-3 applied to irqchip/st several days ago.  Sorry for not letting you
+know earlier.  I'm just getting things back in order from hardware failures in
+my build machine *and* my mailserver.  It's been a rough week.  :-/
+
+Let me know if you'd like to use that branch as a stable base.
+
+thx,
+
+Jason.
