@@ -1,40 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
-Date: Sun, 8 Mar 2015 14:20:20 +0200
-Message-ID: <CAHp75Vd7+GxT01+X5u4n=tXdBu-gcmdS-AETu0yK6PWFfjzDEA@mail.gmail.com>
-References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
-	<20150307112109.GJ28806@sirena.org.uk>
-	<CAHp75VeYanNJrEyTtcxb5g5DB8=609nebgZm8zVAeJdmSgHjkQ@mail.gmail.com>
-	<54FC30BE.1070606@metafoo.de>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: mcp3422: Add DT binding documentation
+Date: Sun, 08 Mar 2015 12:35:46 +0000
+Message-ID: <54FC4222.3030206@kernel.org>
+References: <1424085663-21799-1-git-send-email-angelo.compagnucci@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54FC30BE.1070606@metafoo.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Mark Brown <broonie@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424085663-21799-1-git-send-email-angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 8, 2015 at 1:21 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
-> On 03/07/2015 08:43 PM, Andy Shevchenko wrote:
->>
->> On Sat, Mar 7, 2015 at 1:21 PM, Mark Brown <broonie@kernel.org> wrote:
+On 16/02/15 11:21, Angelo Compagnucci wrote:
+> Adding binding documentation for ADC MCP3422.
+Could have gone in the trivial bindings, but I'm happy enough happy enough with it
+here.
 
->>> Applied, but why is there no devm_dma_request_slave_channel_reason()?
->>
->> I suppose the answer would be "we have a lot of slightly different
->> cases and we have to get rid of current mess with legacy API calls".
->> The most problematic stuff now inside DMA slave subsystem is so called
->> "filter function". It's a main impediment right now as I understand.
->
-> dma_request_slave_channel_reason() is the sane API though and does not use
-> the filter functions. Adding a devm version of it seems reasonable.
+Anyhow, no sign off so not applied.  Please repost with a sign off.
 
-It would be dma_request_slave_channel() in the first place, but legacy
-stuff didn't allow to do that, so here we are. I wouldn't like the
-idea of creating devm_dma_* before we will have stable function names
-without legacy involving.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Jonathan
+> ---
+>  Documentation/devicetree/bindings/iio/adc/mcp3422.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3422.txt b/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+> new file mode 100644
+> index 0000000..333139c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+> @@ -0,0 +1,17 @@
+> +* Microchip mcp3422/3/4/6/7/8 chip family (ADC)
+> +
+> +Required properties:
+> + - compatible: Should be
+> +	"microchip,mcp3422" or
+> +	"microchip,mcp3423" or
+> +	"microchip,mcp3424" or
+> +	"microchip,mcp3426" or
+> +	"microchip,mcp3427" or
+> +	"microchip,mcp3428"
+> + - reg: I2C address for the device
+> +
+> +Example:
+> +adc@0 {
+> +	compatible = "microchip,mcp3424";
+> +	reg = <0x68>;
+> +};
+> 
