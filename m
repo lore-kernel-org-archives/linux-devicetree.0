@@ -1,76 +1,46 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: Associating nodes with phandles for pci devices
-Date: Sun, 8 Mar 2015 23:03:26 +0000
-Message-ID: <54FCD53D.7080700@alliedtelesis.co.nz>
-References: <9bcf67ede60f4567a396c05578cfceb7@svr-chch-ex1.atlnz.lc>
- <54C2CDE6.8090400@openwrt.org> <54FCC6AC.4030202@alliedtelesis.co.nz>
- <4974230.GyVpHqdJU9@wuerfel>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v6 0/3] irqchip: vf610-mscm: add MSCM interrupt router
+ driver
+Date: Mon, 09 Mar 2015 00:43:56 +0100
+Message-ID: <a64c8b81761a9886c83128dcf7749b6d@agner.ch>
+References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
+ <20150308053110.GF21207@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4974230.GyVpHqdJU9@wuerfel>
-Content-Language: en-US
-Content-ID: <5B2D21D38F18EA4197C6F897D52B026F-aR5bhbO/t7M@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150308053110.GF21207@io.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: tglx@linutronix.de, mark.rutland@arm.com, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pebolle@tiscali.nl, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/09/2015 11:42 AM, Arnd Bergmann wrote:
-> On Sunday 08 March 2015 22:01:17 Chris Packham wrote:
+On 2015-03-08 06:31, Jason Cooper wrote:
+> On Sun, Mar 01, 2015 at 11:41:26PM +0100, Stefan Agner wrote:
+> ...
+>> Stefan Agner (3):
+>>   irqchip: vf610-mscm-ir: add support for MSCM interrupt router
+>>   irqchip: vf610-mscm: dt-bindings: add MSCM bindings
+>>   ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)
 >>
->>>
->>> BTW, one thing that is high in my TODO list regarding DSA is to stop
->>> using this platform device/driver architecture and use the actual device
->>> driver model. Your switch driver entry point would be a pci_drive
->>> probe's function where you end-up registering a switch the DSA. This
->>> should solve portions of your problem although this is a long shot as we
->>> need to convert existing drivers as well.
->>>
->>
->> My current problem is that of_find_device_by_node() (called by
->> dsa_of_probe) can't find the device. After a bit of debugging I can see
->> that the populated platform bus only goes as far as
->> /soc/pcie-controller, anything beyond that seems to be missing. I can't
->> see anything obvious in of_platform_bus_create() that would actually
->> stop it from continuing down the pcie-controller branch provided the dts
->> actually enumerates the children.
->>
->> Any suggestions?
->
-> The PCI devices are not populated by of_platform_bus_create. Instead,
-> pci_scan_device() calls pci_set_of_node() to set the of_node
-> pointer for each PCI device.
->
-> This would fail for instance if the root bus does not have a correct
-> of_node pointer.
->
+>>  .../arm/freescale/fsl,vf610-mscm-cpucfg.txt        |  14 ++
+>>  .../bindings/arm/freescale/fsl,vf610-mscm-ir.txt   |  33 ++++
+>>  arch/arm/boot/dts/vf500.dtsi                       | 137 +------------
+>>  arch/arm/boot/dts/vfxxx.dtsi                       |  49 +++++
+>>  arch/arm/mach-imx/Kconfig                          |   1 +
+>>  drivers/irqchip/Makefile                           |   1 +
+>>  drivers/irqchip/irq-vf610-mscm-ir.c                | 212 +++++++++++++++++++++
+>>  7 files changed, 314 insertions(+), 133 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
+>>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+>>  create mode 100644 drivers/irqchip/irq-vf610-mscm-ir.c
+> 
+> Applied patches 1 and 2 to irqchip/vybrid.  Please let me know if you need to
+> base other work off of this.
 
-Hmm. I instrumented pci_set_of_node and I do see my 2 network devices.
-
-devfn = 00000000
-of_node = bfff3f90 /soc/pcie-controller/pcie@1,0/tg3@01,0
-
-devfn = 00000001
-of_node = bfff4118 /soc/pcie-controller/pcie@1,0/tg3@01,1
-
-So at least that's happening. I guess the problem is that ultimately 
-they are devices on the pci bus as opposed to the platform bus and 
-of_find_device_by_node() only looks at the platform bus
-
-dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
-
-What I might have to do for now is get the DSA driver code to go looking 
-on the pci bus if of_find_device_by_node() fails to find the named node. 
-Florian mentioned making the DSA code use the device driver model which 
-would help me but I'm kinda stuck with the kernel version I'm using for 
-now at least.
-
+Thx. Some patches in the patchset to run Linux on the Cortex-M4 of
+Vybrid is based on this driver. I will post a rebased version of that
+probably tomorrow.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
