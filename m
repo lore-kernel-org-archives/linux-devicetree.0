@@ -1,33 +1,86 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 5/8] pinctrl: Cygnus: define Broadcom Cygnus
- GPIO/PINCONF binding
-Date: Mon, 9 Mar 2015 17:30:45 +0100
-Message-ID: <CACRpkdYy75-fH29W-pr5ExuQc6dfO1Xe5UtFr49GAdnVHyXuCg@mail.gmail.com>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
-	<1425515756-321-6-git-send-email-rjui@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1425515756-321-6-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>devicetree@
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 0/6] mtd: nand: vf610_nfc: Freescale NFC for VF610
+Date: Mon,  9 Mar 2015 17:38:46 +0100
+Message-ID: <1425919132-13827-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@nbsps.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 5, 2015 at 1:35 AM, Ray Jui <rjui@broadcom.com> wrote:
+This adds support for Freescale NAND flash controller (NFC) found on
+various devices such as Vybrid (VF610), MPC5125, MCF54418 (ColdFire)
+and Kinetis K70.
 
-> Document the GPIO/PINCONF device tree binding for Broadcom Cygnus SoC
->
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-(...)
+The patchset is based on the patchset by Bill Pringlemeir, see:
+http://thread.gmane.org/gmane.linux.ports.arm.kernel/295419
 
-> +- ngpios:
-> +    Total number of GPIOs the controller provides
+A variant of this driver is in upstream U-Boot now. During this
+process, various points have been discussed and changed. Those
+changes are also incorporated in this patchset, including the
+change to the name "vf610_nfc" (discussion in first patchset).
+http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/192465
+http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/193142
+http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/193351
+http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/195441
+http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/195513
 
-Remind me again. Why don't we know this from the compatible string?
+MTD tests worked, except mtd_nandecctest.ko: The test stopped
+already after changing the first bit. I guess this is due to not
+properly working raw page read/write implementation. However,
+implementing those functions is not feasible since ECC is always
+done on-the-fly.
 
-(I paused applying the patches here waiting for the answer.)
+Performance keypoints (slightly less for page write/reads):
+[ 1782.284398] mtd_speedtest: testing eraseblock write speed
+[ 1963.472907] mtd_speedtest: eraseblock write speed is 2877 KiB/s
+[ 1963.478913] mtd_speedtest: testing eraseblock read speed
+[ 2004.906267] mtd_speedtest: eraseblock read speed is 12586 KiB/s
 
-Yours,
-Linus Walleij
+The driver has only been tested on Freescale Vybrid. Tests on other
+platforms welcome, especially on big endian architectures...
+
+Changes since v1:
+- Nest nfc_config struct within the main nfc struct
+- Use assigned clock binding to specify NFC clock
+- Rebased ontop of MSCM IR patchset (driver parts have been merged)
+- Split out arch Kconfig in a seperate config
+- Fix module license
+- Updated MAINTAINERS
+
+Changes since RFC (Bill Pringlemeir):
+- Renamed driver from fsl_nfc to vf610_nfc
+- Use readl/writel for all register in accessor functions
+- Optimized field accessor functions
+- Implemented PM (suspend/resume) functions
+- Implemented basic support for ECC strength/ECC step size from dt
+- Improved performance of count_written_bits by using hweight32
+- Support ECC with 60-bytes to correct up to 32 bit errors
+- Changed to in-band BBT (NAND_BBT_NO_OOB) which also allows ECC modes
+  which uses up to 60 bytes on 64 byte OOB
+- Removed custom (downstream) BBT pattern since BBT table won't be
+  compatible anyway (due to the change above)
+
+Stefan Agner (6):
+  mtd: nand: vf610_nfc: Freescale NFC for VF610, MPC5125 and others
+  mtd: nand: vf610_nfc: add hardware BCH-ECC support
+  mtd: nand: vf610_nfc: add device tree bindings
+  ARM: vf610: enable NAND Flash Controller
+  ARM: dts: vf610: add NAND flash controller peripherial
+  ARM: dts: vf-colibri: enable NAND flash controller
+
+ .../devicetree/bindings/mtd/vf610-nfc.txt          |  39 +
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/vf-colibri.dtsi                  |  32 +
+ arch/arm/boot/dts/vf610-twr.dts                    |  44 ++
+ arch/arm/boot/dts/vfxxx.dtsi                       |   8 +
+ arch/arm/mach-imx/Kconfig                          |   1 +
+ drivers/mtd/nand/Kconfig                           |  14 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/vf610_nfc.c                       | 856 +++++++++++++++++++++
+ 9 files changed, 1001 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+ create mode 100644 drivers/mtd/nand/vf610_nfc.c
+
+-- 
+2.3.1
