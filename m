@@ -1,198 +1,199 @@
-From: =?UTF-8?Q?Carlos_Sanmart=C3=ADn_Bustos?= <carsanbu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] v4l: mt9v032: Add OF support
-Date: Mon, 9 Mar 2015 17:03:46 +0100
-Message-ID: <CAPW4HR0Yqyur2-w3n63G47yuq5Bxfqx3xfnDYd8rBPJdwmcvvw@mail.gmail.com>
-References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com>
-	<CAPW4HR1WJPWg64GwitxCPK2jop0CntS1UtsOu_0VjCz0BEke6A@mail.gmail.com>
-	<2182472.9lHHsiQgiX@avalon>
+From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: add cubietech cubieboard4
+Date: Mon, 9 Mar 2015 09:14:22 -0700
+Message-ID: <CANMBJr4pP957tz7w30mpCSgFbO=9W591wUJ=eiWKYyFtfx=V+g@mail.gmail.com>
+References: <1425684905-23652-1-git-send-email-tyler.baker@linaro.org>
+	<1425684905-23652-2-git-send-email-tyler.baker@linaro.org>
+	<20150308172858.GI5085@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2182472.9lHHsiQgiX@avalon>
+In-Reply-To: <20150308172858.GI5085@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Linux Media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Maxime,
 
-I am agree with your argumentations. I hope for the v2.
+On 8 March 2015 at 10:28, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Tyler,
+>
+> On Fri, Mar 06, 2015 at 03:35:04PM -0800, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Add a Cubietech Cubieboard4 device tree and instruct make to build it. This
+>> device tree has been derived from the sun9i-a80-optimus.dts as they are very
+>> similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LED/PWM
+>> definitions will need to be updated in the future.
+>>
+>> [1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
+>>
+>> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile                  |   3 +-
+>>  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 100 ++++++++++++++++++++++++++++
+>>  2 files changed, 102 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 4837044..0f67dab 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -553,7 +553,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>>       sun8i-a23-ippo-q8h-v5.dtb \
+>>       sun8i-a23-ippo-q8h-v1.2.dtb
+>>  dtb-$(CONFIG_MACH_SUN9I) += \
+>> -     sun9i-a80-optimus.dtb
+>> +     sun9i-a80-optimus.dtb \
+>> +     sun9i-a80-cubieboard4.dtb
+>>  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
+>>       tegra20-harmony.dtb \
+>>       tegra20-iris-512.dtb \
+>> diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+>> new file mode 100644
+>> index 0000000..b239b39
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+>> @@ -0,0 +1,100 @@
+>> +/*
+>> + * Copyright 2015 Tyler Baker
+>> + *
+>> + * Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun9i-a80.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> +     model = "Cubietech Cubieboard4";
+>> +     compatible = "cubietech,a80-cubietruck", "allwinner,sun9i-a80";
 
-Best regards,
+I noticed this should not be a80-cubietruck but instead
+a80-cubieboard4. Will fix in v1.
 
-Carlos Sanmart=C3=ADn
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +     };
+>> +
+>> +     chosen {
+>> +             bootargs = "earlyprintk console=ttyS0,115200";
+>
+> It would be great not to use earlyprintk, just in case we have a
+> kernel compiled with earlyprintk support, but for another SoC.
+>
+> And while we're at it, using stdout-path would allow use to get rid of
+> the bootargs entirely.
 
-2015-03-09 12:19 GMT+01:00 Laurent Pinchart <laurent.pinchart@ideasonbo=
-ard.com>:
-> Hi Carlos,
+Great suggestion. I've removed the bootargs, added stdout-path, and
+have done some testing locally. Working just fine, will be included in
+v1.
+
 >
-> Thank you for the review.
+>> +     };
+>> +
+>> +};
+>> +
+>> +&pio {
+>> +
 >
-> On Monday 09 March 2015 10:45:31 Carlos Sanmart=C3=ADn Bustos wrote:
->> Hi Laurent,
->>
->> Looks good. One question, why not deprecate the platform data? I can=
-'t
->> see any device using the mt9v032 pdata, I was making a similar patch
->> but deprecating pdata.
+> This new line is not needed.
+
+Ack.
+
 >
-> The sensor could be used on non-DT platforms. As keeping platform dat=
-a support
-> doesn't really make the code more complex and doesn't prevent cleanup=
-s or
-> other refactoring, I don't see much harm in keeping it for now.
+>> +     mmc0_cd_pin_cubieboard4: mmc0_cd_pin@0 {
+>> +             allwinner,pins = "PH18";
+>> +             allwinner,function = "gpio_in";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +     };
+>> +};
+>> +
+>> +&mmc0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_cubieboard4>;
+>> +     vmmc-supply = <&reg_vcc3v0>;
+>> +     bus-width = <4>;
+>> +     cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH18 */
+>> +     cd-inverted;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc2 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc2_8bit_pins>;
+>> +     vmmc-supply = <&reg_vcc3v0>;
+>> +     bus-width = <8>;
+>> +     non-removable;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&uart0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&uart0_pins_a>;
+>> +     status = "okay";
+>> +};
 >
-> For DT-based platforms, of course, DT should be used.
+> Looks good otherwise, thanks!
+
+Thanks for the review!
+
 >
->> Some more comment:
->>
->> 2015-03-08 14:45 GMT+01:00 Laurent Pinchart:
->> > Parse DT properties into a platform data structure when a DT node =
-is
->> > available.
->> >
->> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org=
->
->> > ---
->> >
->> >  .../devicetree/bindings/media/i2c/mt9v032.txt      | 41 +++++++++=
-+++++
->> >  MAINTAINERS                                        |  1 +
->> >  drivers/media/i2c/mt9v032.c                        | 66 +++++++++=
-+++++++-
->> >  3 files changed, 107 insertions(+), 1 deletion(-)
->> >  create mode 100644
->> >  Documentation/devicetree/bindings/media/i2c/mt9v032.txt
->
-> [snip]
->
->> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v0=
-32.c
->> > index 3267c18..a6ea091 100644
->> > --- a/drivers/media/i2c/mt9v032.c
->> > +++ b/drivers/media/i2c/mt9v032.c
->
-> [snip]
->
->> > +static struct mt9v032_platform_data *
->> > +mt9v032_get_pdata(struct i2c_client *client)
->> > +{
->> > +       struct mt9v032_platform_data *pdata;
->> > +       struct v4l2_of_endpoint endpoint;
->> > +       struct device_node *np;
->> > +       struct property *prop;
->> > +
->> > +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
->> > +               return client->dev.platform_data;
->> > +
->> > +       np =3D v4l2_of_get_next_endpoint(client->dev.of_node, NULL=
-);
->> > +       if (!np)
->> > +               return NULL;
->> > +
->> > +       if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
->> > +               goto done;
->>
->> Here I have one little testing:
->>
->> if (endpoint.bus_type !=3D V4L2_MBUS_PARALLEL) {
->>         dev_err(dev, "invalid bus type, must be parallel\n");
->>         goto done;
->> }
->
-> Good question, should drivers check DT properties that they don't use=
-, in
-> order to catch errors in DT ? This would slightly increase the kernel=
- size in
-> order to prevent people from connecting a parallel sensor to a CSI-2 =
-bus,
-> which is obviously impossible in hardware :-)
->
->> > +
->> > +       pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_K=
-ERNEL);
->> > +       if (!pdata)
->> > +               goto done;
->> > +
->> > +       prop =3D of_find_property(np, "link-freqs", NULL);
->> > +       if (prop) {
->> > +               size_t size =3D prop->length / 8;
->> > +               u64 *link_freqs;
->> > +
->> > +               link_freqs =3D devm_kzalloc(&client->dev,
->> > +                                         size * sizeof(*link_freq=
-s),
->> > +                                         GFP_KERNEL);
->> > +               if (!link_freqs)
->> > +                       goto done;
->> > +
->> > +               if (of_property_read_u64_array(np, "link-frequenci=
-es",
->> > +                                              link_freqs, size) <=
- 0)
->> > +                       goto done;
->> > +
->> > +               pdata->link_freqs =3D link_freqs;
->> > +               pdata->link_def_freq =3D link_freqs[0];
->> > +       }
->> > +
->> > +       pdata->clk_pol =3D !!(endpoint.bus.parallel.flags &
->> > +                           V4L2_MBUS_PCLK_SAMPLE_RISING);
->> > +
->> > +done:
->> > +       of_node_put(np);
->> > +       return pdata;
->> > +}
->
-> [snip]
->
->> > @@ -1034,9 +1086,21 @@ static const struct i2c_device_id mt9v032_i=
-d[] =3D {
->> >  };
->> >  MODULE_DEVICE_TABLE(i2c, mt9v032_id);
->> >
->> > +#if IS_ENABLED(CONFIG_OF)
->> > +static const struct of_device_id mt9v032_of_match[] =3D {
->> > +       { .compatible =3D "mt9v032" },
->> > +       { .compatible =3D "mt9v032m" },
->> > +       { .compatible =3D "mt9v034" },
->> > +       { .compatible =3D "mt9v034m" },
->> > +       { /* Sentinel */ }
->> > +};
->> > +MODULE_DEVICE_TABLE(of, mt9v032_of_match);
->> > +#endif
->>
->> I have this:
->> #if IS_ENABLED(CONFIG_OF)
->> static const struct of_device_id mt9v032_of_match[] =3D {
->>     { .compatible =3D "aptina,mt9v022", },
->>     { .compatible =3D "aptina,mt9v022m", },
->>     { .compatible =3D "aptina,mt9v024", },
->>     { .compatible =3D "aptina,mt9v024m", },
->>     { .compatible =3D "aptina,mt9v032", },
->>     { .compatible =3D "aptina,mt9v032m", },
->>     { .compatible =3D "aptina,mt9v034", },
->>     { .compatible =3D "aptina,mt9v034m", },
->
-> Looks like I forgot to update my patch for mt9v02* support. Sorry abo=
-ut that,
-> I'll fix it. And the "aptina," prefix of course belongs there.
->
->>     { /* sentinel */ },
->> };
->>
->> MODULE_DEVICE_TABLE(of, mt9v032_of_match);
->> #endi
->
+> Maxime
 >
 > --
-> Regards,
->
-> Laurent Pinchart
->
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+
+Tyler
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
