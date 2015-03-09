@@ -1,60 +1,38 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 1/4] dt-bindings: soc: Add documentation for the MediaTek SCPSYS unit
-Date: Mon,  9 Mar 2015 09:10:00 +0100
-Message-ID: <1425888603-25800-2-git-send-email-s.hauer@pengutronix.de>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 3/4] ARM64: MediaTek: Add generic pm domain support
+Date: Mon,  9 Mar 2015 09:10:02 +0100
+Message-ID: <1425888603-25800-4-git-send-email-s.hauer@pengutronix.de>
 References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425888603-25800-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation for the MediaTek SCPSYS unit found in MT8173 SoCs.
+Enable support for generic power domains in the config.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../devicetree/bindings/soc/mediatek/scpsys.txt    | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-new file mode 100644
-index 0000000..4764a03
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-@@ -0,0 +1,32 @@
-+MediaTek SCPSYS
-+===============
-+
-+The System Control Processor System (SCPSYS) has several power management
-+related tasks in the system. The tasks include thermal measurement, dynamic
-+voltage frequency scaling (DVFS), interrupt filter and lowlevel sleep control.
-+The System Power Manager (SPM) inside the SCPSYS is for the MTCMOS power
-+domain control.
-+
-+The driver implements the Generic PM domain bindings described in
-+power/power_domain.txt. It provides the power domains defined in
-+include/dt-bindings/power/mt8173-power.h.
-+
-+Required properties:
-+- compatible: Must be "mediatek,mt8173-scpsys"
-+- #power-domain-cells: Must be 1
-+- reg: Address range of the SCPSYS unit
-+
-+Example:
-+
-+	scpsys: scpsys@10006000 {
-+		#power-domain-cells = <1>;
-+		compatible = "mediatek,mt8173-scpsys";
-+		reg = <0 0x10006000 0 0x1000>;
-+	};
-+
-+Example consumer:
-+
-+	afe: mt8173-afe-pcm@11220000 {
-+		compatible = "mediatek,mt8173-afe-pcm";
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
-+	};
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 1b8e973..aef77d2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -174,6 +174,7 @@ config ARCH_FSL_LS2085A
+ config ARCH_MEDIATEK
+ 	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
+ 	select ARM_GIC
++	select PM_GENERIC_DOMAINS if PM
+ 	help
+ 	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
+ 
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
