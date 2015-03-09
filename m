@@ -1,63 +1,168 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v5 3/8] pinctrl: cygnus: add initial IOMUX driver support
-Date: Mon, 9 Mar 2015 12:40:30 -0700
-Message-ID: <54FDF72E.2010806@broadcom.com>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>		 <1425515756-321-4-git-send-email-rjui@broadcom.com>		 <1425542612.24292.180.camel@x220>		 <CACRpkdYTDSSSd5oDNXmcav-2ycbki0=K+0Cm6dLSBHUv6UXF9g@mail.gmail.com>	 <1425926456.2317.13.camel@tiscali.nl> <54FDEDBA.1070404@broadcom.com> <1425929442.2317.39.camel@tiscali.nl>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b DesignWare
+ access
+Date: Mon, 9 Mar 2015 14:47:07 -0500
+Message-ID: <54FDF8BB.4050202@opensource.altera.com>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>	<1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>	<CAHp75VcceG2O+YCw4twBzC_2v9+XQRpfBxMqGXERi3amnj3rdA@mail.gmail.com>	<54FDDFE6.8010109@opensource.altera.com> <CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw@mail.gmail.com>
+Reply-To: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1425929442.2317.39.camel@tiscali.nl>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kern>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 3/9/2015 12:30 PM, Paul Bolle wrote:
-> Ray Jui schreef op ma 09-03-2015 om 12:00 [-0700]:
->> I think it depends on how you see it. Based on this logic, then one can
->> also argue comments in the code will be pre-processed away and are not
->> needed. They at least serve the same documentation purpose in a way.
-> 
-> So why not make them comments? And even that might not be needed:
-> - MODULE_LICENSE() only summarizes, in just a few words, what takes a
-> few paragraphs in the customary comment at the top of a file;
-> - MODULE_DESCRIPTION() repeats what, in general, has been said in the
-> Kconfig entry for that driver and in the git commit explanation;
-> - and I'm not sure what the benefit is of MODULE_AUTHOR() in the first
-> place (even for actually modular drivers).
-> 
->> So
->> far I haven't seen other people complaining that having these module
->> based macros in the driver are confusing when the Kconfig has a bool.
-> 
-> Perhaps that's just because review doesn't spot all issues. Patch
-> bandwidth exceeding review bandwidth and all that.
+On 03/09/2015 01:54 PM, Andy Shevchenko wrote:
+> On Mon, Mar 9, 2015 at 8:01 PM, Thor Thayer
+> <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+>>
+>>
+>> On 03/07/2015 01:52 PM, Andy Shevchenko wrote:
+>>>
+>>> On Sat, Mar 7, 2015 at 1:46 AM,  <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wr=
+ote:
+>>>>
+>>>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>>
+>>>> Altera's Arria10 SoC interconnect requires a 32 bit write for APB
+>>>> peripherals. The current spi-dw driver uses 16bit accesses in
+>>>> some locations. Use function pointers to support 32 bit accesses
+>>>> but retain legacy 16 bit access.
+>
+>>>> --- a/drivers/spi/spi-dw-mmio.c
+>>>> +++ b/drivers/spi/spi-dw-mmio.c
+>>>> @@ -76,8 +76,13 @@ static int dw_spi_mmio_probe(struct platform_de=
+vice
+>>>> *pdev)
+>>>>
+>>>>           num_cs =3D 4;
+>>>>
+>>>> -       if (pdev->dev.of_node)
+>>>> +       if (pdev->dev.of_node) {
+>>>>                   of_property_read_u32(pdev->dev.of_node, "num-cs"=
+,
+>>>> &num_cs);
+>>>> +               if (of_property_read_bool(pdev->dev.of_node,
+>>>> "32bit_access")) {
+>
+> "32bit-access"
+>
 
-I don't see this as an "issue" to be quite honest. By saying that, I at
-least agree with you that these are not information that's mandatory to
-be in the driver given what we already have. MODULE_LICENSE is covered
-by license header. MODULE_DESCRIPTION is covered by descriptions in
-Kconfig. MODULE_AUTHOR is much less important than what's in the
-MAINTAINERS list.
+Thanks. I will make the change.
 
-Since I have to submit a new patch series to address the "ngpios" issue
-that Linus mentioned in the other email, I don't mind removing all these
-MODULE_* macros in the driver all together.
+>>>> +                       dws->read_w =3D dw_readw32;
+>>>> +                       dws->write_w =3D dw_writew32;
+>>>
+>>>
+>>> Can we use just  readw/writew (w/o underscores) as names for the
+>>> accessors?
+>>>
+>>
+>> I tried this initially and got a namespace conflict with the readw &=
+ write2
+>> macros.
+>> macro writew passed 3 arguments, but takes just 2
+>> macro readw passed 2 arguments, but takes just 1
+>
+> Might be I wasn't clear enough. I meant
+>
+> dws->readw =3D =E2=80=A6
+> dws->writew =3D =E2=80=A6
+>
 
-> 
-> Anyhow, right now there's another thread discussing the questions my
-> review comments raise. Eg, "The Kconfig symbol is bool, there is module
-> related code in the driver, why note make the Kconfig symbol tristate
-> (and the driver modular)?". I think that is one of the questions mixing
-> built-in and modular semantics raises.
-> 
-> 
-> Paul Bolle
-> 
+Yes, we agree. These are exactly what I was using when I saw the error.
 
-Thanks,
+>>>> --- a/drivers/spi/spi-dw.h
+>>>> +++ b/drivers/spi/spi-dw.h
+>>>> @@ -141,6 +141,8 @@ struct dw_spi {
+>>>>    #ifdef CONFIG_DEBUG_FS
+>>>>           struct dentry *debugfs;
+>>>>    #endif
+>>>> +       u16 (*read_w)(struct dw_spi *dws, u32 offset);
+>>>> +       void (*write_w)(struct dw_spi *dws, u32 offset, u16 val);
+>
+> readw
+> writew
+>
+> As I can see there are no such field names in struct dw_spi.
+>
 
-Ray
+Yes. This seems safe but I still see the macro conflict which is strang=
+e=20
+to me. Like you, I initially used the dws->readw and dws->writew becaus=
+e=20
+I didn't see any conflicting field names.
+
+Are readw & writew reserved variable names?
+
+>>>>    };
+>>>>
+>>>>    static inline u32 dw_readl(struct dw_spi *dws, u32 offset)
+>>>> @@ -163,6 +165,16 @@ static inline void dw_writew(struct dw_spi *d=
+ws, u32
+>>>> offset, u16 val)
+>>>>           __raw_writew(val, dws->regs + offset);
+>>>>    }
+>>>>
+>>>> +static inline u16 dw_readw32(struct dw_spi *dws, u32 offset)
+>>>> +{
+>>>> +       return (u16)__raw_readl(dws->regs + offset)
+>
+> Maybe return dw_readl(dws, offset);
+>
+>>>> +}
+>>>> +
+>>>> +static inline void dw_writew32(struct dw_spi *dws, u32 offset, u1=
+6 val)
+>>>> +{
+>>>> +       __raw_writel((u32)val, dws->regs + offset);
+>
+> dw_writel(dws, offset, val);
+>
+
+Yes, I'll make these two changes - at least the write change. Based on=20
+feedback from your suggestion below, the dw_readw32 may be removed.
+
+>>>> +}
+>>>> +
+>>>
+>>> So, does simple
+>>> dws->readw =3D dw_readl;
+>>> dws->writew =3D dw_writel;
+>>>
+>>> work for you?
+>>>
+>>
+>> Yes, but I get the macro conflict shown above and "assignment from
+>> incompatible pointer type" warnings. If I use the dws->read_w and
+>> dws->write_w names, I get the incompatible pointer type warnings but=
+ it
+>> works.
+>>
+>> Thanks for reviewing.
+>
+> Okay, I guess there are two variants:
+> a) replace u16 by u32 in existing functions;
+> b) introduce new ones like you did.
+>
+> If no other opinions I think we better go b), but see above comments.
+>
+> And one more thing. If dw_readw() works for maybe we leave them as is=
+ for now?
+>
+
+Yes, I just need the 32 bit write. I was trying to remain consistent bu=
+t=20
+I agree that only changing only writes would minimize the changes.
+
+Thanks!
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
