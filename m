@@ -1,42 +1,44 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH 3/3] mtd: nand: add NAND driver for Broadcom STB NAND
- controller
-Date: Mon, 9 Mar 2015 10:31:31 -0700
-Message-ID: <20150309173131.GT18140@ld-irv-0074>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
- <1425691129-1150-4-git-send-email-computersforpeace@gmail.com>
- <CACna6rzL2=aUjvDw0ccRCBd1tu2QOavZf15CiZfZeimMDoWEGw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 2/5] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+Date: Mon, 9 Mar 2015 18:37:07 +0100
+Message-ID: <CACRpkdZq-UA2K8dLjcVR1-ttxdHJRVZHPfjEigKZtMHY+wQ5YQ@mail.gmail.com>
+References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1421818097-9281-3-git-send-email-hongzhou.yang@mediatek.com>
+	<CACRpkdYASTGTiiAF6EA=OCqYepdStf4UO9_qWGg6ACyd8=CaHw@mail.gmail.com>
+	<CABuKBeL0y4OrLCtyV_n0eVsncpo7vT0ZentGC-ZW9YzBYDa1Qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rzL2=aUjvDw0ccRCBd1tu2QOavZf15CiZfZeimMDoWEGw@mail.gmail.com>
+In-Reply-To: <CABuKBeL0y4OrLCtyV_n0eVsncpo7vT0ZentGC-ZW9YzBYDa1Qw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, sbranden@broadcom.com
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Hongzhou Yang <hongzhou.yang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediatek.com, maoguang.meng@mediatek.com, huang eddie <eddie.huang@mediatek.com>, Jean-Christophe
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 07, 2015 at 02:21:26PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
-> On 7 March 2015 at 02:18, Brian Norris <computersforpeace@gmail.com> =
-wrote:
-> > +       /* NAND register range */
-> > +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       ctrl->nand_base =3D devm_ioremap_resource(dev, res);
-> > +       if (!ctrl->nand_base)
-> > +               return -ENODEV;
->=20
-> This is what I got during my first test:
-> brcmstb_nand 11315e0.nand: can't request region for resource [mem
-> 0x011315e0-0x011325df]
-> Unable to handle kernel paging request at virtual address fffffff0
-> (not sure why yet).
->=20
-> Hint: devm_ioremap_resource does never return NULL
+On Sun, Mar 8, 2015 at 9:16 AM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> Hi Linus,
+>
+> 2015-02-10 9:01 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
+>> On Wed, Jan 21, 2015 at 1:28 PM, Hongzhou Yang
+>> <hongzhou.yang@mediatek.com> wrote:
+>>
+>>> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>>>
+>>> Add devicetree bindings for Mediatek SoC pinctrl driver.
+>>>
+>>> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>>
+>> OK applied this patch for v3.21 now, relying on Sascha's ACK.
+>
+> I can see the the pinctrl driver parts in your tree repository [0],
+> but not in linux-next.
+> Do think of merging them in the next merge window?
 
-Thanks, fixed in 3 places.
+Oops too stressed just forgot to merge them into my devel
+branch.
 
-I expect you've figured out your problem here by now.
+Merged now. Will push from devel to for-next when the
+zeroday builders say it all compiles.
 
-Brian
+Yours,
+Linus Walleij
