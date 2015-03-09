@@ -1,228 +1,96 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V3] ASoC: jz4740: Add jz4780 support
-Date: Mon, 9 Mar 2015 12:11:08 +0000
-Message-ID: <1425903068-60790-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Mon, 09 Mar 2015 13:13:19 +0100
+Message-ID: <1425903199.13415.9.camel@AMDC1943>
+References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
+ <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
+ <20150307201340.GF5233@earth> <54FCEABE.9000007@samsung.com>
+ <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
+ <54FD880E.30903@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, lgirdwood@gmail.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <54FD880E.30903@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The jz4780 and jz4740 have very similar i2s blocks.
+On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
+> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
+> > 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+> >> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
+> >>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
+> >>>> From: Beomho Seo <beomho.seo@samsung.com>
+> >>>>
+> >>>> This patch adds device driver of max77843 charger. This driver provide
+> >>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
+> >>>> charging mode so on.). Additionally, control charging paramters to use
+> >>>> i2c interface.
+> >>>>
+> >>>> Cc: Sebastian Reichel <sre@kernel.org>
+> >>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> >>>
+> >>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+> >>>
+> >>> I can't take it as is, since it depends on the private header file
+> >>> of PATCHv1.
+> >>>
+> >>> -- Sebastian
+> >>>
+> >>
+> >> This patch reviewed by Sebastian.
+> >> Could you Please merge that your git tree ?
+> > 
+> > Hi,
+> > 
+> > ... and again we are adding a new driver for very similar chipset to
+> > already supported. I looked at spec and the charger's registers are
+> > almost the same as for max77693. Their layout and addresses are the
+> > same. I see some minor differences, probably the most important would
+> > be different values current (fast-charge, top-off). But still 90% of
+> > registers are the same... Do we really have to add new driver?
+> > 
+> > Best regards,
+> > Krzysztof
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> 
+> Hi,
+> 
+> Thank you for your comment. As you say, both chip set are similar.
+> But new driver need for support max77843. It is support different below
+> - Provide Battery presence information.
 
-The slight difference is in Rx/Tx fifos.
-And the bitclocks for input/output are different.
+Another set of power supply properties could be added for that chip.
+This way the get_property() function would be the same but actually the
+POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
 
-This patch adds jz4780 support to the driver
+> - Can OTG FET control.
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Where the OTG FET feature is it enabled in your driver? I couldn't find
+it.
 
----
-Patch based on 4.0-rc3
-Tested on the MIPS Creator CI20.
+> - Bigger Fast charge current, Top Off current Threshold selection.
+> - Various and bigger OTG current limitation.
+> - Bigger primary charger termination voltage setting.
+> - Different maximum input current limit selection(Different step).
 
-V2 -> V3
-Added struct snd_soc_dai_driver jz4780_i2s_dai instead of modifying
-bit for symmetric_rates.
+Yes, I mentioned some of these differences (the Fast/top-off
+differences). These are differences in values so it does not require new
+driver. There is need to develop new driver just to support different
+current (3.0 A instead of 2.1 A) or voltage threshold.
 
-V1 - > V2
-Removed SND_DMAENGINE_PCM_FLAG_NO_RESIDUE as it is handled by dma driver
-Added a check for symmetric_rates flag for jz4780
----
- .../bindings/sound/ingenic,jz4740-i2s.txt          |  2 +-
- sound/soc/jz4740/jz4740-i2s.c                      | 84 +++++++++++++++++++---
- 2 files changed, 75 insertions(+), 11 deletions(-)
+So the only new feature - battery presence - can be easily added to
+existing driver. The driver can be extended for different
+current/voltage values. Such extension may even be beneficial for new
+Maxim MUIC/PMIC chipsets.
 
-diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
-index b414333..b623d50 100644
---- a/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
-@@ -1,7 +1,7 @@
- Ingenic JZ4740 I2S controller
- 
- Required properties:
--- compatible : "ingenic,jz4740-i2s"
-+- compatible : "ingenic,jz4740-i2s" or "ingenic,jz4780-i2s"
- - reg : I2S registers location and length
- - clocks : AIC and I2S PLL clock specifiers.
- - clock-names: "aic" and "i2s"
-diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
-index 07f7781..b05fb1c 100644
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -58,6 +58,12 @@
- 
- #define JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 12
- #define JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 8
-+#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 24
-+#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 16
-+#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_MASK \
-+			(0xf << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET)
-+#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_MASK \
-+			(0x1f <<  JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET)
- 
- #define JZ_AIC_CTRL_OUTPUT_SAMPLE_SIZE_MASK (0x7 << 19)
- #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK (0x7 << 16)
-@@ -79,6 +85,7 @@
- #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET  16
- 
- #define JZ_AIC_I2S_FMT_DISABLE_BIT_CLK BIT(12)
-+#define JZ_AIC_I2S_FMT_DISABLE_BIT_ICLK BIT(13)
- #define JZ_AIC_I2S_FMT_ENABLE_SYS_CLK BIT(4)
- #define JZ_AIC_I2S_FMT_MSB BIT(0)
- 
-@@ -87,6 +94,13 @@
- #define JZ_AIC_CLK_DIV_MASK 0xf
- #define I2SDIV_DV_SHIFT 8
- #define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
-+#define I2SDIV_IDV_SHIFT 8
-+#define I2SDIV_IDV_MASK (0xf << I2SDIV_IDV_SHIFT)
-+
-+enum jz47xx_i2s_version {
-+	JZ_I2S_JZ4740,
-+	JZ_I2S_JZ4780,
-+};
- 
- struct jz4740_i2s {
- 	struct resource *mem;
-@@ -98,6 +112,8 @@ struct jz4740_i2s {
- 
- 	struct snd_dmaengine_dai_dma_data playback_dma_data;
- 	struct snd_dmaengine_dai_dma_data capture_dma_data;
-+
-+	enum jz47xx_i2s_version version;
- };
- 
- static inline uint32_t jz4740_i2s_read(const struct jz4740_i2s *i2s,
-@@ -267,13 +283,22 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
- 			ctrl |= JZ_AIC_CTRL_MONO_TO_STEREO;
- 		else
- 			ctrl &= ~JZ_AIC_CTRL_MONO_TO_STEREO;
-+
-+		div_reg &= ~I2SDIV_DV_MASK;
-+		div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
- 	} else {
- 		ctrl &= ~JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK;
- 		ctrl |= sample_size << JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET;
-+
-+		if (i2s->version >= JZ_I2S_JZ4780) {
-+			div_reg &= ~I2SDIV_IDV_MASK;
-+			div_reg |= (div - 1) << I2SDIV_IDV_SHIFT;
-+		} else {
-+			div_reg &= ~I2SDIV_DV_MASK;
-+			div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
-+		}
- 	}
- 
--	div_reg &= ~I2SDIV_DV_MASK;
--	div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
- 	jz4740_i2s_write(i2s, JZ_REG_AIC_CTRL, ctrl);
- 	jz4740_i2s_write(i2s, JZ_REG_AIC_CLK_DIV, div_reg);
- 
-@@ -369,11 +394,19 @@ static int jz4740_i2s_dai_probe(struct snd_soc_dai *dai)
- 	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
- 		&i2s->capture_dma_data);
- 
--	conf = (7 << JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
--		(8 << JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
--		JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
--		JZ_AIC_CONF_I2S |
--		JZ_AIC_CONF_INTERNAL_CODEC;
-+	if (i2s->version >= JZ_I2S_JZ4780) {
-+		conf = (7 << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
-+			(8 << JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
-+			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
-+			JZ_AIC_CONF_I2S |
-+			JZ_AIC_CONF_INTERNAL_CODEC;
-+	} else {
-+		conf = (7 << JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
-+			(8 << JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
-+			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
-+			JZ_AIC_CONF_I2S |
-+			JZ_AIC_CONF_INTERNAL_CODEC;
-+	}
- 
- 	jz4740_i2s_write(i2s, JZ_REG_AIC_CONF, JZ_AIC_CONF_RESET);
- 	jz4740_i2s_write(i2s, JZ_REG_AIC_CONF, conf);
-@@ -422,13 +455,34 @@ static struct snd_soc_dai_driver jz4740_i2s_dai = {
- 	.resume = jz4740_i2s_resume,
- };
- 
-+static struct snd_soc_dai_driver jz4780_i2s_dai = {
-+	.probe = jz4740_i2s_dai_probe,
-+	.remove = jz4740_i2s_dai_remove,
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_48000,
-+		.formats = JZ4740_I2S_FMTS,
-+	},
-+	.capture = {
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_48000,
-+		.formats = JZ4740_I2S_FMTS,
-+	},
-+	.ops = &jz4740_i2s_dai_ops,
-+	.suspend = jz4740_i2s_suspend,
-+	.resume = jz4740_i2s_resume,
-+};
-+
- static const struct snd_soc_component_driver jz4740_i2s_component = {
- 	.name		= "jz4740-i2s",
- };
- 
- #ifdef CONFIG_OF
- static const struct of_device_id jz4740_of_matches[] = {
--	{ .compatible = "ingenic,jz4740-i2s" },
-+	{ .compatible = "ingenic,jz4740-i2s", .data = (void *)JZ_I2S_JZ4740 },
-+	{ .compatible = "ingenic,jz4780-i2s", .data = (void *)JZ_I2S_JZ4780 },
- 	{ /* sentinel */ }
- };
- #endif
-@@ -438,11 +492,16 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
- 	struct jz4740_i2s *i2s;
- 	struct resource *mem;
- 	int ret;
-+	const struct of_device_id *match;
- 
- 	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
- 	if (!i2s)
- 		return -ENOMEM;
- 
-+	match = of_match_device(jz4740_of_matches, &pdev->dev);
-+	if (match)
-+		i2s->version = (enum jz47xx_i2s_version)match->data;
-+
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	i2s->base = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(i2s->base))
-@@ -460,8 +519,13 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, i2s);
- 
--	ret = devm_snd_soc_register_component(&pdev->dev,
--		&jz4740_i2s_component, &jz4740_i2s_dai, 1);
-+	if (i2s->version == JZ_I2S_JZ4780)
-+		ret = devm_snd_soc_register_component(&pdev->dev,
-+			&jz4740_i2s_component, &jz4780_i2s_dai, 1);
-+	else
-+		ret = devm_snd_soc_register_component(&pdev->dev,
-+			&jz4740_i2s_component, &jz4740_i2s_dai, 1);
-+
- 	if (ret)
- 		return ret;
- 
--- 
-1.9.1
+
+Best regards,
+Krzysztof
