@@ -1,41 +1,68 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [RFC] Mediatek SCPSYS power domain support
-Date: Mon, 09 Mar 2015 13:43:57 -0700
-Message-ID: <7hoao16gvm.fsf@deeprootsystems.com>
-References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v6 7/8] ARM: dts: enable GPIO for Broadcom Cygnus
+Date: Mon, 9 Mar 2015 13:45:01 -0700
+Message-ID: <1425933902-20652-8-git-send-email-rjui@broadcom.com>
+References: <1425933902-20652-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
-	(Sascha Hauer's message of "Mon, 9 Mar 2015 09:09:59 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, kernel@pengutronix.de
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1425933902-20652-1-git-send-email-rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>
+Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Sascha Hauer <s.hauer@pengutronix.de> writes:
+This enables all 3 GPIO controllers including the ASIU GPIO, the
+chipcommonG GPIO, and the ALWAYS-ON GPIO, for Broadcom Cygnus SoC
 
-> s series adds support for the MediaTek SCPSYS unit.
->
-> The SCPSYS unit handles several power management related tasks such
-> as thermal measurement, DVFS, interrupt filter and low level sleep
-> control.
->
-> The initial support only contains the generic power domain handling.
-> This is needed to turn on power to the different power domains.
->
-> The driver is quite straight forward now. Due to the lack of a better
-> place I have put it to drivers/soc/mediatek. As the SCPSYS unit has
-> several other tasks that also do not fit into some specific subsystem
-> this probably is a good place for this driver.
->
-> What is not clear to me is how the Kconfig dependencies should be
-> handled. Some domains are disabled by bootloader default, so without
-> this driver for example sound won't work. So should PM, PM_GENERIC_DOMAINS
-> and this driver be made mandatory for MT8173? Or should this driver
-> when PM is disabled be compiled as a stub which only enables all
-> domains? I don't have a good idea how things should work out here.
+Signed-off-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Tested-by: Dmitry Torokhov <dtor@chromium.org>
+---
+ arch/arm/boot/dts/bcm-cygnus.dtsi |   30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-IMO, a stub that enables all the domains is what you want.
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 1cbae6a..63b7fed 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -60,6 +60,36 @@
+ 		      <0x0301d24c 0x2c>;
+ 	};
+ 
++	gpio_crmu: gpio@03024800 {
++		compatible = "brcm,cygnus-crmu-gpio";
++		reg = <0x03024800 0x50>,
++		      <0x03024008 0x18>;
++		#gpio-cells = <2>;
++		gpio-controller;
++	};
++
++	gpio_ccm: gpio@1800a000 {
++		compatible = "brcm,cygnus-ccm-gpio";
++		reg = <0x1800a000 0x50>,
++		      <0x0301d164 0x20>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++	};
++
++	gpio_asiu: gpio@180a5000 {
++		compatible = "brcm,cygnus-asiu-gpio";
++		reg = <0x180a5000 0x668>;
++		#gpio-cells = <2>;
++		gpio-controller;
++
++		pinmux = <&pinctrl>;
++
++		interrupt-controller;
++		interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+1.7.9.5
 
-Kevin
