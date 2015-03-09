@@ -1,72 +1,29 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Mon, 9 Mar 2015 16:16:57 +0000
-Message-ID: <20150309161657.GV8656@n2100.arm.linux.org.uk>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
- <1425312688.3092.10.camel@arm.com>
- <54F4B583.4000005@broadcom.com>
- <1425376977.3092.26.camel@arm.com>
- <1425378127.3092.38.camel@arm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/8] pinctrl: bcm: consolidate Broadcom pinctrl drivers
+Date: Mon, 9 Mar 2015 17:20:08 +0100
+Message-ID: <CACRpkdbr0K7M0bY6JYB3rGm2pzevSr7WfQLt-uRP_N-0M1Jo3Q@mail.gmail.com>
+References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
+	<1425515756-321-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425378127.3092.38.camel@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425515756-321-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree@
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2015 at 10:22:07AM +0000, Pawel Moll wrote:
-> On Tue, 2015-03-03 at 10:02 +0000, Pawel Moll wrote:
-> > On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
-> > > > The existing bindings intentionally avoided quoting internal registers -
-> > > > they are supposed to describe how the hardware is wired up...
-> > > >
-> > > > So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
-> > > > sets the bit or not, depending on the property existance?
-> > > >
-> > > Sure, I can change it to two properties called arm,pl11x,tft-invert-clac 
-> > > and arm,pl11x,tft-clksel. Would that be acceptable?
-> > 
-> > That would be fine by me :-)
-> 
-> Or (after having a look at the TRM) I should rather say: the invert-clac
-> is fine by me :-) but the tft-clksel doesn't work, I afraid.
-> 
-> If I'm not mistaken, there are two problems with it.
-> 
-> Number one: it's not TFT-specific, is it? So it certainly should not
-> have the "tft-" bit.
-> 
-> Number two: setting this bit says "do not use CLCDCLK for the logic; use
-> HCLK instead", correct? If so, have a look at the clock properties. They
-> say:
-> 
-> - clock-names: should contain "clcdclk" and "apb_pclk"
-> 
-> - clocks: contains phandle and clock specifier pairs for the entries
->         in the clock-names property. See
-> 
-> So if your hardware has the reference clock wired to HCLK, and you
-> defining the clocks as "clcdclk", you are (no offence meant ;-)
-> lying :-)
+On Thu, Mar 5, 2015 at 1:35 AM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
 
-No.  The CLCD block always takes two clock signals - the AHB bus clock
-(HCLK) for the slave interface, and a CLCD clock.
+> Consolidate Broadcom pinctrl drivers into drivers/pinctrl/bcm/*
+>
+> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-The CLCDCLKSEL is a bit which affects a signal sent to the world outside
-of the CLCD block, which is used to drive an _external_ multiplexer to
-select the CLCD clock source.  (See the description for bit 5 of the
-LCDTiming2 register.)
+Patch applied.
 
-So, the clock is still input to the CLCDCLK input, even if it is ultimately
-derived from HCLK.
-
-Remember, the clock API does not deal with names describing the source of
-the clock, but the consumer of the clock.  The consumer in this case is
-the PL11x CLCD block, which takes a CLCDCLK input.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
