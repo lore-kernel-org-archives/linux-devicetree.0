@@ -1,154 +1,83 @@
-From: tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH v2 1/2] ARM: dts: add cubietech cubieboard4
-Date: Mon,  9 Mar 2015 13:19:57 -0700
-Message-ID: <1425932398-7194-2-git-send-email-tyler.baker@linaro.org>
-References: <1425932398-7194-1-git-send-email-tyler.baker@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425932398-7194-1-git-send-email-tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 01/15] ARM: sunxi: Add register bit definitions
+ for SRAM mapping syscon
+Date: Mon,  9 Mar 2015 21:40:14 +0100
+Message-ID: <1425933628-9672-2-git-send-email-hdegoede@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBSMK7CTQKGQEKUXCYAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1425933628-9672-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Add a Cubietech Cubieboard4 device tree and instruct make to build it. This
-device tree has been derived from the sun9i-a80-optimus.dts as they are very
-similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LED/PWM
-definitions will need to be updated in the future.
-
-[1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
-
-Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                  |  3 +-
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 99 +++++++++++++++++++++++++++++
- 2 files changed, 101 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+ include/linux/mfd/syscon/sun4i-sc.h | 42 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/sun4i-sc.h
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4837044..0f67dab 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -553,7 +553,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-ippo-q8h-v5.dtb \
- 	sun8i-a23-ippo-q8h-v1.2.dtb
- dtb-$(CONFIG_MACH_SUN9I) += \
--	sun9i-a80-optimus.dtb
-+	sun9i-a80-optimus.dtb \
-+	sun9i-a80-cubieboard4.dtb
- dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
- 	tegra20-harmony.dtb \
- 	tegra20-iris-512.dtb \
-diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+diff --git a/include/linux/mfd/syscon/sun4i-sc.h b/include/linux/mfd/syscon/sun4i-sc.h
 new file mode 100644
-index 0000000..6484dcf
+index 0000000..fb970d9
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -0,0 +1,99 @@
-+/*
-+ * Copyright 2015 Tyler Baker
++++ b/include/linux/mfd/syscon/sun4i-sc.h
+@@ -0,0 +1,42 @@
++/**
++ * sun4i-sc.h - Allwinner sun4i system control register bit definitions
 + *
-+ * Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ * Copyright (C) 2014 Chen-Yu Tsai
 + *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
++ * Chen-Yu Tsai  <wens-jdAy2FN1RRM@public.gmane.org>
 + *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+/dts-v1/;
-+#include "sun9i-a80.dtsi"
-+#include "sunxi-common-regulators.dtsi"
++#ifndef __LINUX_SUN4I_SC_H
++#define __LINUX_SUN4I_SC_H
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
++#include <linux/bitops.h>
 +
-+/ {
-+	model = "Cubietech Cubieboard4";
-+	compatible = "cubietech,a80-cubieboard4", "allwinner,sun9i-a80";
++/* Registers */
++#define SUN4I_SC0	0x00
++#define SUN4I_SC1	0x04
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
++/* SRAM control register 0 bits */
++#define SUN4I_SC0_SRAM_C1_MAP_VE	0x7fffffff
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++/* SRAM control register 1 bits */
++#define SUN4I_SC1_BIST_NDMA_CTRL_SEL	BIT(31)
++#define SUN4I_SC1_SRAM_C3_MAP_ISP	BIT(12)
++#define SUN4I_SC1_SRAM_C2_MAP_MASK	0x0300
++#define SUN4I_SC1_SRAM_C2_MAP_AE	0x0100
++#define SUN4I_SC1_SRAM_C2_MAP_CE	0x0200
++#define SUN4I_SC1_SRAM_C2_MAP_ACE	0x0300
++#define SUN4I_SC1_SRAM_A3_A4_MAP_MASK	0x0030
++#define SUN4I_SC1_SRAM_A3_A4_MAP_EMAC	0x0010
++#define SUN4I_SC1_SRAM_D_MAP_USB0	BIT(0)
 +
-+};
-+
-+&pio {
-+	mmc0_cd_pin_cubieboard4: mmc0_cd_pin@0 {
-+		allwinner,pins = "PH18";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_cubieboard4>;
-+	vmmc-supply = <&reg_vcc3v0>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH18 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v0>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
++#endif /* __LINUX_SUN4I_SC_H */
 -- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.3.1
