@@ -1,199 +1,72 @@
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: add cubietech cubieboard4
-Date: Mon, 9 Mar 2015 09:14:22 -0700
-Message-ID: <CANMBJr4pP957tz7w30mpCSgFbO=9W591wUJ=eiWKYyFtfx=V+g@mail.gmail.com>
-References: <1425684905-23652-1-git-send-email-tyler.baker@linaro.org>
-	<1425684905-23652-2-git-send-email-tyler.baker@linaro.org>
-	<20150308172858.GI5085@lukather>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
+Date: Mon, 9 Mar 2015 16:16:57 +0000
+Message-ID: <20150309161657.GV8656@n2100.arm.linux.org.uk>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+ <1425312688.3092.10.camel@arm.com>
+ <54F4B583.4000005@broadcom.com>
+ <1425376977.3092.26.camel@arm.com>
+ <1425378127.3092.38.camel@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150308172858.GI5085@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425378127.3092.38.camel@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Tue, Mar 03, 2015 at 10:22:07AM +0000, Pawel Moll wrote:
+> On Tue, 2015-03-03 at 10:02 +0000, Pawel Moll wrote:
+> > On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
+> > > > The existing bindings intentionally avoided quoting internal registers -
+> > > > they are supposed to describe how the hardware is wired up...
+> > > >
+> > > > So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
+> > > > sets the bit or not, depending on the property existance?
+> > > >
+> > > Sure, I can change it to two properties called arm,pl11x,tft-invert-clac 
+> > > and arm,pl11x,tft-clksel. Would that be acceptable?
+> > 
+> > That would be fine by me :-)
+> 
+> Or (after having a look at the TRM) I should rather say: the invert-clac
+> is fine by me :-) but the tft-clksel doesn't work, I afraid.
+> 
+> If I'm not mistaken, there are two problems with it.
+> 
+> Number one: it's not TFT-specific, is it? So it certainly should not
+> have the "tft-" bit.
+> 
+> Number two: setting this bit says "do not use CLCDCLK for the logic; use
+> HCLK instead", correct? If so, have a look at the clock properties. They
+> say:
+> 
+> - clock-names: should contain "clcdclk" and "apb_pclk"
+> 
+> - clocks: contains phandle and clock specifier pairs for the entries
+>         in the clock-names property. See
+> 
+> So if your hardware has the reference clock wired to HCLK, and you
+> defining the clocks as "clcdclk", you are (no offence meant ;-)
+> lying :-)
 
-On 8 March 2015 at 10:28, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Tyler,
->
-> On Fri, Mar 06, 2015 at 03:35:04PM -0800, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> Add a Cubietech Cubieboard4 device tree and instruct make to build it. This
->> device tree has been derived from the sun9i-a80-optimus.dts as they are very
->> similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LED/PWM
->> definitions will need to be updated in the future.
->>
->> [1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
->>
->> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile                  |   3 +-
->>  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 100 ++++++++++++++++++++++++++++
->>  2 files changed, 102 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 4837044..0f67dab 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -553,7 +553,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->>       sun8i-a23-ippo-q8h-v5.dtb \
->>       sun8i-a23-ippo-q8h-v1.2.dtb
->>  dtb-$(CONFIG_MACH_SUN9I) += \
->> -     sun9i-a80-optimus.dtb
->> +     sun9i-a80-optimus.dtb \
->> +     sun9i-a80-cubieboard4.dtb
->>  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
->>       tegra20-harmony.dtb \
->>       tegra20-iris-512.dtb \
->> diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->> new file mode 100644
->> index 0000000..b239b39
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->> @@ -0,0 +1,100 @@
->> +/*
->> + * Copyright 2015 Tyler Baker
->> + *
->> + * Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun9i-a80.dtsi"
->> +#include "sunxi-common-regulators.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->> +
->> +/ {
->> +     model = "Cubietech Cubieboard4";
->> +     compatible = "cubietech,a80-cubietruck", "allwinner,sun9i-a80";
+No.  The CLCD block always takes two clock signals - the AHB bus clock
+(HCLK) for the slave interface, and a CLCD clock.
 
-I noticed this should not be a80-cubietruck but instead
-a80-cubieboard4. Will fix in v1.
+The CLCDCLKSEL is a bit which affects a signal sent to the world outside
+of the CLCD block, which is used to drive an _external_ multiplexer to
+select the CLCD clock source.  (See the description for bit 5 of the
+LCDTiming2 register.)
 
->> +
->> +     aliases {
->> +             serial0 = &uart0;
->> +     };
->> +
->> +     chosen {
->> +             bootargs = "earlyprintk console=ttyS0,115200";
->
-> It would be great not to use earlyprintk, just in case we have a
-> kernel compiled with earlyprintk support, but for another SoC.
->
-> And while we're at it, using stdout-path would allow use to get rid of
-> the bootargs entirely.
+So, the clock is still input to the CLCDCLK input, even if it is ultimately
+derived from HCLK.
 
-Great suggestion. I've removed the bootargs, added stdout-path, and
-have done some testing locally. Working just fine, will be included in
-v1.
+Remember, the clock API does not deal with names describing the source of
+the clock, but the consumer of the clock.  The consumer in this case is
+the PL11x CLCD block, which takes a CLCDCLK input.
 
->
->> +     };
->> +
->> +};
->> +
->> +&pio {
->> +
->
-> This new line is not needed.
-
-Ack.
-
->
->> +     mmc0_cd_pin_cubieboard4: mmc0_cd_pin@0 {
->> +             allwinner,pins = "PH18";
->> +             allwinner,function = "gpio_in";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +     };
->> +};
->> +
->> +&mmc0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_cubieboard4>;
->> +     vmmc-supply = <&reg_vcc3v0>;
->> +     bus-width = <4>;
->> +     cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH18 */
->> +     cd-inverted;
->> +     status = "okay";
->> +};
->> +
->> +&mmc2 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&mmc2_8bit_pins>;
->> +     vmmc-supply = <&reg_vcc3v0>;
->> +     bus-width = <8>;
->> +     non-removable;
->> +     status = "okay";
->> +};
->> +
->> +&uart0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&uart0_pins_a>;
->> +     status = "okay";
->> +};
->
-> Looks good otherwise, thanks!
-
-Thanks for the review!
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-
-Tyler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
