@@ -1,66 +1,70 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
-Date: Mon, 09 Mar 2015 18:59:37 +0100
-Message-ID: <1425923977.2317.4.camel@tiscali.nl>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-2-git-send-email-yong.wu@mediatek.com>
-	<1425641445.24292.280.camel@x220>
-	<1425902271.13300.18.camel@mhfsdcap03>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 0/3] mtd: nand: add Broadcom NAND controller support
+Date: Mon, 9 Mar 2015 10:59:38 -0700
+Message-ID: <20150309175938.GV18140@ld-irv-0074>
+References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
+ <CACna6rykQTjtfL8mqHJ4ZSY9Ci+kVhjDfDkjRpsFvg4YatNATw@mail.gmail.com>
+ <20150308005720.GF12966@brian-ubuntu>
+ <CACna6rz_iya8UMdDvsOSA0NSvc2YxNJ1GObqBLtr8Xd2-9enCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1425902271.13300.18.camel@mhfsdcap03>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACna6rz_iya8UMdDvsOSA0NSvc2YxNJ1GObqBLtr8Xd2-9enCQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
+On Sun, Mar 08, 2015 at 12:18:39PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> On 8 March 2015 at 01:57, Brian Norris <computersforpeace@gmail.com> =
+wrote:
+> > 3. I was told that there were only 2 or 3 chips that were released =
+with
+> > a v6.1 NAND controller, and BCM4708 wasn't one of them. Apparently =
+I was
+> > told wrong... I'll have to see if there are any other quirks we sho=
+uld
+> > be accounting for.
+>=20
+> Please note I'm speaking about 6.01, not 6.10. Maybe it make a differ=
+ence?
+>=20
+> Buffalo WZR-600DHP2 (BCM47081)
+> [    0.325732] [brcmnand_revision_init:371] ctrl->nand_version:0x0601
+> [    4.838105] bcma: bus0: Found chip with id 53010, rev 0x00 and pac=
+kage 0x02
+>=20
+> Buffalo WZR-1750DHP (BCM4708)
+> [    0.326823] [brcmnand_revision_init:371] ctrl->nand_version:0x0601
+> [    6.674288] bcma: bus0: Found chip with id 53010, rev 0x00 and pac=
+kage 0x02
+>=20
+> Netgear R6250 V1 (BCM4708)
+> [    0.326248] [brcmnand_revision_init:371] ctrl->nand_version:0x0601
+> [    8.721335] bcma: bus0: Found chip with id 53010, rev 0x00 and pac=
+kage 0x02
+>=20
+> Netgear R8000 (BCM4709)
+> [    0.241961] bcma: bus0: Found chip with id 53010, rev 0x00 and pac=
+kage 0x00
+> [    1.990330] bcm_nand bcma0:18: NAND Controller rev 6.01
 
-Yong Wu schreef op ma 09-03-2015 om 19:57 [+0800]:
-> On Fri, 2015-03-06 at 12:30 +0100, Paul Bolle wrote:
-> > On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > > --- a/drivers/soc/mediatek/Kconfig
-> > > +++ b/drivers/soc/mediatek/Kconfig
-> > > @@ -20,3 +20,10 @@ config MT8173_PMIC_WRAP
-> > >  	  PMIC wrapper is a proprietary hardware in MT8173 to make
-> > >  	  communication protocols to access PMIC device.
-> > >  	  This driver implement access protocols for MT8173.
-> > > +
-> > > +config MTK_SMI
-> > > +        bool
-> > 
-> > Nit: make this one tab instead of 8 spaces, please.
-> > 
-> > > +	help
-> > > +	  Smi help enable/disable iommu in mt8173 and control the
-> > > +	  clock of each local arbiter.
-> > > +	  It should be true while MTK_IOMMU enable.
-> > 
-> > I don't think anyone using the *config tools will ever see this text, as
-> > there's no prompt. So you might as well make this a comment or drop it
-> > altogether.
-> > 
->      We could search it in the tool even though we don't see it. In next
-> version, I will try to make it a comment.
-> > Is this selected by more than just MTK_IOMMU (see 2/5)? If not, I think
-> > MTK_SMI will be set and unset in lockstep with MTK_IOMMU. In other
-> > words, you could as well use one Kconfig symbol.
-> > 
->     if we disable MTK_IOMMU, the MTK_SMI also should be selected.That is because 
-> if the multimedia h/w want to work, the clock of the local arbiters always should be opened.
+We've never had a MINOR number larger than 4 or 5, I think, so I haven'=
+t
+actually bothered with two digits past the decimal. It's 8 bits of MAJO=
+R
+and 8 bits of MINOR, but we just call it 6.1 in all our documentation.
 
-This is a bit confusing, I'm afraid. Do you mean to say that it ought to
-be possible for MTK_SMI to be 'y' even if MTK_IOMMU would be 'n'?
+0x0601 =3D=3D v6.1
+0x0701 =3D=3D v7.1
 
+I suppose if we ever have to care (e.g., we get past 7.9), we'd probabl=
+y
+call it 7.10 (0x070a). Kinda like kernel versioning (and not like Ubunt=
+u
+versioning).
 
-Paul Bolle
+Brian
