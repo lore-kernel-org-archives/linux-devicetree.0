@@ -1,80 +1,46 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] v4l: mt9v032: Add OF support
-Date: Mon, 09 Mar 2015 13:22:12 +0100
-Message-ID: <54FD9074.8050600@samsung.com>
-References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <54FD7788.2020709@samsung.com> <2320734.ji4C9lV64t@avalon>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [version 2]  amba uarts - arm type uarts fifo size provided by
+ device tree
+Date: Mon, 09 Mar 2015 08:25:19 -0400
+Message-ID: <54FD912F.8080403@linaro.org>
+References: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <20150303165534.GB10239@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <2320734.ji4C9lV64t@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150303165534.GB10239@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/15 12:29, Laurent Pinchart wrote:
-> On Monday 09 March 2015 11:35:52 Sylwester Nawrocki wrote:
->> On 08/03/15 14:45, Laurent Pinchart wrote:
->>> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
->>> @@ -0,0 +1,41 @@
->>> +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
->>> +
->>> +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor
->>> with
->>> +an active array size of 752H x 480V. It is programmable through a simple
->>> +two-wire serial interface.
->>> +
->>> +Required Properties:
->>> +
->>> +- compatible: value should be either one among the following
->>> +	(a) "aptina,mt9v032" for MT9V032 color sensor
->>> +	(b) "aptina,mt9v032m" for MT9V032 monochrome sensor
->>> +	(c) "aptina,mt9v034" for MT9V034 color sensor
->>> +	(d) "aptina,mt9v034m" for MT9V034 monochrome sensor
+On 03/03/2015 11:55 AM, Mark Rutland wrote:
+> On Wed, Feb 18, 2015 at 08:07:47PM +0000, Jorge Ramirez-Ortiz wrote:
+>> [PATCH 1/2] Documentation: bindings: add optional fifo size property
+>> [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present [updated]
 >>
->> It can't be determined at runtime whether the sensor is just monochromatic ?
-> 
-> Unfortunately not. As far as I'm aware the only difference between the 
-> monochromatic and color sensors is the colour filter array. The register set 
-> is identical.
-> 
->> Al in all the color filter array is a physical property of the sensor,
->> still the driver seems to be ignoring the "m" suffix.
-> 
-> No, the driver relies on the I2C core filling returning the I2C device id 
-> instance corresponding to the DT compatible string, and gets sensor model 
-> information from id->driver_data.
+>> These patches aim at resolving an issue present on some of the amba pl011 uarts.
+>>
+>> They were developed for the Hisilicon Hi6220 SoC where the fifo size on the
+>> uarts is 64 despite the amba revision having been set to 1. 
+> Are we certain that the FIFO length is the only difference between the
+> HI6220 PL011 and a regular PL011?
 
-Sorry, I missed the I2C id part.
+you were right.
 
->> Hence I suspect the
->> register interfaces for both color and monochromatic versions are
->> compatible. I'm wondering whether using a boolean property to indicate the
->> color filter array type would do as well.
-> 
-> That's an option as well, yes. I don't have a strong preference at the moment, 
-> but it should be noted that the "m" suffix is contained in the chip's part 
-> number.
-> 
-> MT9V032C12STM
-> MT9V032C12STC
-> MT9V032C12STMD
-> MT9V032C12STMH
-> MT9V032C12STCD
-> MT9V032C12STCH
-> 
-> Granted, they use "c" for colour sensors, which the DT bindings don't use, and 
-> a "C12ST" that we completely ignore.
+I just confirmed that there are a number of differences on top of the fifo size
+requiring many additional software changes.
+This is not great news since the uart announces itself as vendor_arm version 1.
 
-OK, deriving the compatible strings from current I2C device ids seems less
-trouble from the driver's writer POV. However, my feeling is that using same
-compatible and additional property to indicate colour/monochrome is cleaner
-as far as device tree binding is concerned.
-Anyway, I'm not going to object against your current approach, I suppose it's
-acceptable as well.
+so please discard this patch.
 
--- 
-Regards,
-Sylwester
+>
+> It may be worth adding a compatible string in addition, just in case.
+>
+> Mark.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
