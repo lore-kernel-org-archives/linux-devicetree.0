@@ -1,45 +1,70 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v5 5/8] pinctrl: Cygnus: define Broadcom Cygnus GPIO/PINCONF
- binding
-Date: Mon, 9 Mar 2015 09:41:22 -0700
-Message-ID: <54FDCD32.4080701@broadcom.com>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>	<1425515756-321-6-git-send-email-rjui@broadcom.com> <CACRpkdYy75-fH29W-pr5ExuQc6dfO1Xe5UtFr49GAdnVHyXuCg@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 6/7] iio: mlx90614: Add power management
+Date: Mon, 9 Mar 2015 17:43:08 +0100
+Message-ID: <20150309164308.GA2320@katana>
+References: <1424879712-28304-1-git-send-email-vianney.leclement@essensium.com>
+ <1424879712-28304-7-git-send-email-vianney.leclement@essensium.com>
+ <54FDBEB7.8030403@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYy75-fH29W-pr5ExuQc6dfO1Xe5UtFr49GAdnVHyXuCg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>devic
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54FDBEB7.8030403-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vianney le =?utf-8?Q?Cl=C3=A9ment?= de Saint-Marcq <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Arnout Vandecappelle (Essensium/Mind)" <arnout-agwphqFHkxc@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-On 3/9/2015 9:30 AM, Linus Walleij wrote:
-> On Thu, Mar 5, 2015 at 1:35 AM, Ray Jui <rjui@broadcom.com> wrote:
-> 
->> Document the GPIO/PINCONF device tree binding for Broadcom Cygnus SoC
->>
->> Signed-off-by: Ray Jui <rjui@broadcom.com>
->> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-> (...)
-> 
->> +- ngpios:
->> +    Total number of GPIOs the controller provides
-> 
-> Remind me again. Why don't we know this from the compatible string?
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is hard coding the number of GPIO pins in the driver based on compatible
-string the preferred approach? If so, I can make the change. Note the
-current driver only has one compatible string "brcm,cygnus-gpio." To do
-this, I need to introduce 3 compatible strings "brcm,cygnus-asiu-gpio",
-"brcm,cygnus-ccm-gpio", "brcm,cygnus-aon-gpio", and assign hard coded
-ngpios to each of them during probe.
+On Mon, Mar 09, 2015 at 03:39:35PM +0000, Jonathan Cameron wrote:
+> On 25/02/15 15:55, Vianney le Cl=C3=A9ment de Saint-Marcq wrote:
+> > Add support for system sleep and runtime power management.
+> >=20
+> > To wake up the device, the SDA line should be held low for at least 33ms
+> > while SCL is high.  As this is not possible using the i2c API (and not
+> > supported by all i2c adapters), a GPIO connected to the SDA line is
+> > needed.  The GPIO is named "wakeup" and can be specified in a device
+> > tree with the "wakeup-gpios" binding.
+> Needs some i2c specialist input on this!  As you mentioned it is liable
+> to be controversial.  Wolfram, is this a one off special or do
+> any other devices do this sort of magic?
 
-> 
-> (I paused applying the patches here waiting for the answer.)
-> 
-> Yours,
-> Linus Walleij
-> 
+s/magic/insanity/ :)
+
+I have never heard of something like this. Unsuprisingly, I can
+not recommend doing it this way. But we all know hardware...
+
+And while we could think about reusing the bus_recovery_infrastructure,
+I don't think it is worth the hazzle. So, doing this GPIO fallback may
+well be the best we can do now.
+
+
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU/c2cAAoJEBQN5MwUoCm2FkIP/3FI5LL0CgAzQFo6q2fy08yr
+Ee1m2xBWD5rlT8oDtYRrAPq+cz5NU8tvwpxjUiIGwb2D/Gn7F+nCWu4GKFUJ7f48
+041ifDquYqpkfsT5sIILWn2mDJJX7w0KEIF7h/VGoaVSmWTE7UZnrkvk2DKp7lbO
+ZStvhynJ2QNhzETcBcADstwCw/6yq3iEYGAJrqapclUrNkIkicQL27Em6nVdGavY
+9WaGbew2MwJSMKoyAtzrX5jE/LJKfxbtYncLCR0YucPvmQzrB2PyZzZh42HbftqH
+NmNrAQJnFyGOKRCHISyoscM0WnNcbjPhUWlPRWVaQrgUbRQd67jhDUfj5IYxQpnY
+oKKca60h2GagHPGpGo6Lpu0l5yJk8bVDpl281M12S5IWhd/XtH3qEMfcVndcejTl
+90Z8EwBMwFozg9KFFxtMbXa3CHpGeIEKoKuzhYbNsl3fj4gKwjsfgTphlWUzB2DE
+tBdB6DFdEy3BrJBNBpyAgQXFxGa76zPR25rlhA5k3G62mHMbtKhzpGiYw4D9mlxP
+dmVN3aJWT6aMNQtcla2OPfaiI1sX8OXee+HX20b5G0GglStc429iBg4oVfyIukV6
+xYJBo8AIATNIe0TMvhnykGTtN7QAvmlxRWSIXxG1nRWa7aPppYL0KfHs3SgUZmi9
+e21m/ivCI/w3JvEpGQe/
+=GMGj
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
