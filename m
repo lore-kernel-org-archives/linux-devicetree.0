@@ -1,7 +1,7 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 2/2] memory: jz4780-nemc: driver for the NEMC on JZ4780 SoCs
-Date: Mon, 9 Mar 2015 14:29:04 +0000
-Message-ID: <1425911344-29141-3-git-send-email-Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 1/2] dt-bindings: memory-controllers: Add binding for jz4780-nemc
+Date: Mon, 9 Mar 2015 14:29:03 +0000
+Message-ID: <1425911344-29141-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1425911344-29141-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,511 +14,100 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alex Smith <alex.smith@imgtec.com>
 
-Add a driver for the NAND/External Memory Controller (NEMC) on JZ4780
-and later SoCs.
-
-The primary function of this driver is to configure parameters, such
-as timings, for external memory devices using data supplied in the
-device tree. Devices connected to the NEMC are represented in the DT
-as children of the NEMC node, the driver uses optional properties
-specified in these child nodes to configure the parameters of each
-bank.
+Add device tree bindings for the NAND/External Memory Controller (NEMC)
+on Ingenic JZ4780
 
 Signed-off-by: Alex Smith <alex@alex-smith.me.uk>
 Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
 ---
 V1 -> V2
-
-Removed redundant module macros and header
-Fixed some macro definitions and a blooper
-Fix in license
 Rebased to v4.0-rc3
 ---
- drivers/memory/Kconfig       |   9 +
- drivers/memory/Makefile      |   1 +
- drivers/memory/jz4780-nemc.c | 391 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/jz4780-nemc.h  |  43 +++++
- 4 files changed, 444 insertions(+)
- create mode 100644 drivers/memory/jz4780-nemc.c
- create mode 100644 include/linux/jz4780-nemc.h
+ .../memory-controllers/ingenic,jz4780-nemc.txt     | 75 ++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index 191383d8..868036f 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -83,6 +83,15 @@ config FSL_IFC
- 	bool
- 	depends on FSL_SOC
- 
-+config JZ4780_NEMC
-+	bool "Ingenic JZ4780 SoC NEMC driver"
-+	default y
-+	depends on MACH_JZ4780
-+	help
-+	  This driver is for the NAND/External Memory Controller (NEMC) in
-+	  the Ingenic JZ4780. This controller is used to handle external
-+	  memory devices such as NAND and SRAM.
-+
- source "drivers/memory/tegra/Kconfig"
- 
- endif
-diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
-index 6b65481..b670441 100644
---- a/drivers/memory/Makefile
-+++ b/drivers/memory/Makefile
-@@ -13,5 +13,6 @@ obj-$(CONFIG_FSL_CORENET_CF)	+= fsl-corenet-cf.o
- obj-$(CONFIG_FSL_IFC)		+= fsl_ifc.o
- obj-$(CONFIG_MVEBU_DEVBUS)	+= mvebu-devbus.o
- obj-$(CONFIG_TEGRA20_MC)	+= tegra20-mc.o
-+obj-$(CONFIG_JZ4780_NEMC)	+= jz4780-nemc.o
- 
- obj-$(CONFIG_TEGRA_MC)		+= tegra/
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
 new file mode 100644
-index 0000000..919d192
+index 0000000..f936b55
 --- /dev/null
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -0,0 +1,391 @@
-+/*
-+ * JZ4780 NAND/external memory controller (NEMC)
-+ *
-+ * Copyright (c) 2015 Imagination Technologies
-+ * Author: Alex Smith <alex@alex-smith.me.uk>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation.
-+ */
++++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+@@ -0,0 +1,75 @@
++* Ingenic JZ4780 NAND/external memory controller (NEMC)
 +
-+#include <linux/clk.h>
-+#include <linux/init.h>
-+#include <linux/math64.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
++This file documents the device tree bindings for the NEMC external memory
++controller in Ingenic JZ4780
 +
-+#include <linux/jz4780-nemc.h>
++Required properties:
++- compatible: Should be set to one of:
++    "ingenic,jz4780-nemc" (JZ4780)
++- reg: Should specify the NEMC controller registers location and length.
++- clocks: Clock for the NEMC controller.
++- #address-cells: Must be set to 2.
++- #size-cells: Must be set to 1.
++- ranges: A set of ranges for each bank describing the physical memory layout.
++  Each should specify the following 4 integer values:
 +
-+#define NEMC_SMCRn(n)		(0x14 + (((n) - 1) * 4))
-+#define NEMC_NFCSR		0x50
++    <cs number> 0 <physical address of mapping> <size of mapping>
 +
-+#define NEMC_SMCR_SMT		BIT(0)
-+#define NEMC_SMCR_BW_SHIFT	6
-+#define NEMC_SMCR_BW_MASK	(0x3 << NEMC_SMCR_BW_SHIFT)
-+#define NEMC_SMCR_BW_8		(0 << 6)
-+#define NEMC_SMCR_TAS_SHIFT	8
-+#define NEMC_SMCR_TAS_MASK	(0xf << NEMC_SMCR_TAS_SHIFT)
-+#define NEMC_SMCR_TAH_SHIFT	12
-+#define NEMC_SMCR_TAH_MASK	(0xf << NEMC_SMCR_TAH_SHIFT)
-+#define NEMC_SMCR_TBP_SHIFT	16
-+#define NEMC_SMCR_TBP_MASK	(0xf << NEMC_SMCR_TBP_SHIFT)
-+#define NEMC_SMCR_TAW_SHIFT	20
-+#define NEMC_SMCR_TAW_MASK	(0xf << NEMC_SMCR_TAW_SHIFT)
-+#define NEMC_SMCR_TSTRV_SHIFT	24
-+#define NEMC_SMCR_TSTRV_MASK	(0x3f << NEMC_SMCR_TSTRV_SHIFT)
++Each child of the NEMC node describes a device connected to the NEMC.
 +
-+#define NEMC_NFCSR_NFEn(n)	BIT(((n) - 1) << 1)
-+#define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
-+#define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
++Required child node properties:
++- reg: Should contain at least one register specifier, given in the following
++  format:
 +
-+struct jz4780_nemc {
-+	spinlock_t lock;
-+	struct device *dev;
-+	void __iomem *base;
-+	struct clk *clk;
-+	uint32_t clk_period;
-+	unsigned long banks_present;
-+};
++    <cs number> <offset> <size>
 +
-+/**
-+ * jz4780_nemc_num_banks() - count the number of banks referenced by a device
-+ * @dev: device to count banks for, must be a child of the NEMC.
-+ *
-+ * Return: The number of unique NEMC banks referred to by the specified NEMC
-+ * child device. Unique here means that a device that references the same bank
-+ * multiple times in the its "reg" property will only count once.
-+ */
-+unsigned int jz4780_nemc_num_banks(struct device *dev)
-+{
-+	const __be32 *prop;
-+	unsigned int bank, count = 0;
-+	unsigned long referenced = 0;
-+	int i = 0;
++  Multiple registers can be specified across multiple banks. This is needed,
++  for example, for packaged NAND devices with multiple dies. Such devices
++  should be grouped into a single node.
 +
-+	while ((prop = of_get_address(dev->of_node, i++, NULL, NULL))) {
-+		bank = of_read_number(prop, 1);
-+		if (!(referenced & BIT(bank))) {
-+			referenced |= BIT(bank);
-+			count++;
-+		}
-+	}
++Optional child node properties:
++- ingenic,nemc-bus-width: Specifies the bus width in bits. Defaults to 8 bits.
++- ingenic,nemc-tAS: Address setup time in nanoseconds.
++- ingenic,nemc-tAH: Address hold time in nanoseconds.
++- ingenic,nemc-tBP: Burst pitch time in nanoseconds.
++- ingenic,nemc-tAW: Access wait time in nanoseconds.
++- ingenic,nemc-tSTRV: Static memory recovery time in nanoseconds.
 +
-+	return count;
-+}
-+EXPORT_SYMBOL(jz4780_nemc_num_banks);
++If a child node references multiple banks in its "reg" property, the same value
++for all optional parameters will be configured for all banks. If any optional
++parameters are omitted, they will be left unchanged from whatever they are
++configured to when the NEMC device is probed (which may be the reset value as
++given in the hardware reference manual, or a value configured by the boot
++loader).
 +
-+/**
-+ * jz4780_nemc_set_type() - set the type of device connected to a bank
-+ * @dev: child device of the NEMC.
-+ * @bank: bank number to configure.
-+ * @type: type of device connected to the bank.
-+ */
-+void jz4780_nemc_set_type(struct device *dev, unsigned int bank,
-+			  enum jz4780_nemc_bank_type type)
-+{
-+	struct jz4780_nemc *nemc = dev_get_drvdata(dev->parent);
-+	uint32_t nfcsr;
++Example (NEMC node with a NAND child device attached at CS1):
 +
-+	nfcsr = readl(nemc->base + NEMC_NFCSR);
++nemc: nemc@13410000 {
++	compatible = "ingenic,jz4780-nemc";
++	reg = <0x13410000 0x10000>;
 +
-+	/* TODO: Support toggle NAND devices. */
-+	switch (type) {
-+	case JZ4780_NEMC_BANK_SRAM:
-+		nfcsr &= ~(NEMC_NFCSR_TNFEn(bank) | NEMC_NFCSR_NFEn(bank));
-+		break;
-+	case JZ4780_NEMC_BANK_NAND:
-+		nfcsr &= ~NEMC_NFCSR_TNFEn(bank);
-+		nfcsr |= NEMC_NFCSR_NFEn(bank);
-+		break;
-+	}
++	#address-cells = <2>;
++	#size-cells = <1>;
 +
-+	writel(nfcsr, nemc->base + NEMC_NFCSR);
-+}
-+EXPORT_SYMBOL(jz4780_nemc_set_type);
++	ranges = <1 0 0x1b000000 0x1000000
++		  2 0 0x1a000000 0x1000000
++		  3 0 0x19000000 0x1000000
++		  4 0 0x18000000 0x1000000
++		  5 0 0x17000000 0x1000000
++		  6 0 0x16000000 0x1000000>;
 +
-+/**
-+ * jz4780_nemc_assert() - (de-)assert a NAND device's chip enable pin
-+ * @dev: child device of the NEMC.
-+ * @bank: bank number of device.
-+ * @assert: whether the chip enable pin should be asserted.
-+ *
-+ * (De-)asserts the chip enable pin for the NAND device connected to the
-+ * specified bank.
-+ */
-+void jz4780_nemc_assert(struct device *dev, unsigned int bank, bool assert)
-+{
-+	struct jz4780_nemc *nemc = dev_get_drvdata(dev->parent);
-+	uint32_t nfcsr;
++	clocks = <&cgu JZ4780_CLK_NEMC>;
 +
-+	nfcsr = readl(nemc->base + NEMC_NFCSR);
++	nand: nand@1 {
++		compatible = "ingenic,jz4780-nand";
++		reg = <1 0 0x1000000>;
 +
-+	if (assert)
-+		nfcsr |= NEMC_NFCSR_NFCEn(bank);
-+	else
-+		nfcsr &= ~NEMC_NFCSR_NFCEn(bank);
++		ingenic,nemc-tAS = <10>;
++		ingenic,nemc-tAH = <5>;
++		ingenic,nemc-tBP = <10>;
++		ingenic,nemc-tAW = <15>;
++		ingenic,nemc-tSTRV = <100>;
 +
-+	writel(nfcsr, nemc->base + NEMC_NFCSR);
-+}
-+EXPORT_SYMBOL(jz4780_nemc_assert);
-+
-+static uint32_t jz4780_nemc_clk_period(struct jz4780_nemc *nemc)
-+{
-+	unsigned long rate;
-+
-+	rate = clk_get_rate(nemc->clk);
-+	if (!rate)
-+		return 0;
-+
-+	/* Return in picoseconds. */
-+	return div64_ul(1000000000000ull, rate);
-+}
-+
-+static uint32_t jz4780_nemc_ns_to_cycles(struct jz4780_nemc *nemc, uint32_t ns)
-+{
-+	return ((ns * 1000) + nemc->clk_period - 1) / nemc->clk_period;
-+}
-+
-+static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
-+				       unsigned int bank,
-+				       struct device_node *node)
-+{
-+	uint32_t smcr, val, cycles;
-+
-+	/*
-+	 * Conversion of tBP and tAW cycle counts to values supported by the
-+	 * hardware (round up to the next supported value).
-+	 */
-+	static const uint32_t convert_tBP_tAW[] = {
-+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-+
-+		/* 11 - 12 -> 12 cycles */
-+		11, 11,
-+
-+		/* 13 - 15 -> 15 cycles */
-+		12, 12, 12,
-+
-+		/* 16 - 20 -> 20 cycles */
-+		13, 13, 13, 13, 13,
-+
-+		/* 21 - 25 -> 25 cycles */
-+		14, 14, 14, 14, 14,
-+
-+		/* 26 - 31 -> 31 cycles */
-+		15, 15, 15, 15, 15, 15
++		...
 +	};
-+
-+	smcr = readl(nemc->base + NEMC_SMCRn(bank));
-+	smcr &= ~NEMC_SMCR_SMT;
-+
-+	if (!of_property_read_u32(node, "ingenic,nemc-bus-width", &val)) {
-+		smcr &= ~NEMC_SMCR_BW_MASK;
-+		switch (val) {
-+		case 8:
-+			smcr |= NEMC_SMCR_BW_8;
-+			break;
-+		default:
-+			/*
-+			 * Earlier SoCs support a 16 bit bus width (the 4780
-+			 * does not), until those are properly supported, error.
-+			 */
-+			dev_err(nemc->dev, "unsupported bus width: %u\n", val);
-+			return false;
-+		}
-+	}
-+
-+	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) == 0) {
-+		smcr &= ~NEMC_SMCR_TAS_MASK;
-+		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
-+		if (cycles > 15) {
-+			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
-+				val, cycles);
-+			return false;
-+		}
-+
-+		smcr |= cycles << NEMC_SMCR_TAS_SHIFT;
-+	}
-+
-+	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) == 0) {
-+		smcr &= ~NEMC_SMCR_TAH_MASK;
-+		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
-+		if (cycles > 15) {
-+			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
-+				val, cycles);
-+			return false;
-+		}
-+
-+		smcr |= cycles << NEMC_SMCR_TAH_SHIFT;
-+	}
-+
-+	if (of_property_read_u32(node, "ingenic,nemc-tBP", &val) == 0) {
-+		smcr &= ~NEMC_SMCR_TBP_MASK;
-+		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
-+		if (cycles > 31) {
-+			dev_err(nemc->dev, "tBP %u is too high (%u cycles)\n",
-+				val, cycles);
-+			return false;
-+		}
-+
-+		smcr |= convert_tBP_tAW[cycles] << NEMC_SMCR_TBP_SHIFT;
-+	}
-+
-+	if (of_property_read_u32(node, "ingenic,nemc-tAW", &val) == 0) {
-+		smcr &= ~NEMC_SMCR_TAW_MASK;
-+		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
-+		if (cycles > 31) {
-+			dev_err(nemc->dev, "tAW %u is too high (%u cycles)\n",
-+				val, cycles);
-+			return false;
-+		}
-+
-+		smcr |= convert_tBP_tAW[cycles] << NEMC_SMCR_TAW_SHIFT;
-+	}
-+
-+	if (of_property_read_u32(node, "ingenic,nemc-tSTRV", &val) == 0) {
-+		smcr &= ~NEMC_SMCR_TSTRV_MASK;
-+		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
-+		if (cycles > 63) {
-+			dev_err(nemc->dev, "tSTRV %u is too high (%u cycles)\n",
-+				val, cycles);
-+			return false;
-+		}
-+
-+		smcr |= cycles << NEMC_SMCR_TSTRV_SHIFT;
-+	}
-+
-+	writel(smcr, nemc->base + NEMC_SMCRn(bank));
-+	return true;
-+}
-+
-+static int jz4780_nemc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct jz4780_nemc *nemc;
-+	struct resource *res;
-+	struct device_node *child;
-+	const __be32 *prop;
-+	unsigned int bank;
-+	unsigned long referenced;
-+	int i, ret;
-+
-+	nemc = devm_kzalloc(dev, sizeof(*nemc), GFP_KERNEL);
-+	if (!nemc)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&nemc->lock);
-+	nemc->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	nemc->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(nemc->base)) {
-+		dev_err(dev, "failed to get I/O memory\n");
-+		return PTR_ERR(nemc->base);
-+	}
-+
-+	writel(0, nemc->base + NEMC_NFCSR);
-+
-+	nemc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(nemc->clk)) {
-+		dev_err(dev, "failed to get clock\n");
-+		return PTR_ERR(nemc->clk);
-+	}
-+
-+	ret = clk_prepare_enable(nemc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	nemc->clk_period = jz4780_nemc_clk_period(nemc);
-+	if (!nemc->clk_period) {
-+		dev_err(dev, "failed to calculate clock period\n");
-+		clk_disable_unprepare(nemc->clk);
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Iterate over child devices, check that they do not conflict with
-+	 * each other, and register child devices for them. If a child device
-+	 * has invalid properties, it is ignored and no platform device is
-+	 * registered for it.
-+	 */
-+	for_each_child_of_node(nemc->dev->of_node, child) {
-+		referenced = 0;
-+		i = 0;
-+		while ((prop = of_get_address(child, i++, NULL, NULL))) {
-+			bank = of_read_number(prop, 1);
-+			if (bank < 1 || bank >= JZ4780_NEMC_NUM_BANKS) {
-+				dev_err(nemc->dev,
-+					"%s requests invalid bank %u\n",
-+					child->full_name, bank);
-+
-+				/* Will continue the outer loop below. */
-+				referenced = 0;
-+				break;
-+			}
-+
-+			referenced |= BIT(bank);
-+		}
-+
-+		if (!referenced) {
-+			dev_err(nemc->dev, "%s has no addresses\n",
-+				child->full_name);
-+			continue;
-+		} else if (nemc->banks_present & referenced) {
-+			dev_err(nemc->dev, "%s conflicts with another node\n",
-+				child->full_name);
-+			continue;
-+		}
-+
-+		/* Configure bank parameters. */
-+		for_each_set_bit(bank, &referenced, JZ4780_NEMC_NUM_BANKS) {
-+			if (!jz4780_nemc_configure_bank(nemc, bank, child)) {
-+				referenced = 0;
-+				break;
-+			}
-+		}
-+
-+		if (referenced) {
-+			if (of_platform_device_create(child, NULL, nemc->dev))
-+				nemc->banks_present |= referenced;
-+		}
-+	}
-+
-+	platform_set_drvdata(pdev, nemc);
-+	dev_info(dev, "JZ4780 NEMC initialised\n");
-+	return 0;
-+}
-+
-+static int jz4780_nemc_remove(struct platform_device *pdev)
-+{
-+	struct jz4780_nemc *nemc = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(nemc->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id jz4780_nemc_dt_match[] = {
-+	{ .compatible = "ingenic,jz4780-nemc" },
-+	{},
 +};
-+
-+static struct platform_driver jz4780_nemc_driver = {
-+	.probe		= jz4780_nemc_probe,
-+	.remove		= jz4780_nemc_remove,
-+	.driver	= {
-+		.name	= "jz4780-nemc",
-+		.of_match_table = of_match_ptr(jz4780_nemc_dt_match),
-+	},
-+};
-+
-+static int __init jz4780_nemc_init(void)
-+{
-+	return platform_driver_register(&jz4780_nemc_driver);
-+}
-+subsys_initcall(jz4780_nemc_init);
-diff --git a/include/linux/jz4780-nemc.h b/include/linux/jz4780-nemc.h
-new file mode 100644
-index 0000000..e7f1cc7
---- /dev/null
-+++ b/include/linux/jz4780-nemc.h
-@@ -0,0 +1,43 @@
-+/*
-+ * JZ4780 NAND/external memory controller (NEMC)
-+ *
-+ * Copyright (c) 2015 Imagination Technologies
-+ * Author: Alex Smith <alex@alex-smith.me.uk>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#ifndef __LINUX_JZ4780_NEMC_H__
-+#define __LINUX_JZ4780_NEMC_H__
-+
-+#include <linux/types.h>
-+
-+struct device;
-+
-+/*
-+ * Number of NEMC banks. Note that there are actually 6, but they are numbered
-+ * from 1.
-+ */
-+#define JZ4780_NEMC_NUM_BANKS	7
-+
-+/**
-+ * enum jz4780_nemc_bank_type - device types which can be connected to a bank
-+ * @JZ4780_NEMC_BANK_SRAM: SRAM
-+ * @JZ4780_NEMC_BANK_NAND: NAND
-+ */
-+enum jz4780_nemc_bank_type {
-+	JZ4780_NEMC_BANK_SRAM,
-+	JZ4780_NEMC_BANK_NAND,
-+};
-+
-+extern unsigned int jz4780_nemc_num_banks(struct device *dev);
-+
-+extern void jz4780_nemc_set_type(struct device *dev, unsigned int bank,
-+				 enum jz4780_nemc_bank_type type);
-+extern void jz4780_nemc_assert(struct device *dev, unsigned int bank,
-+			       bool assert);
-+
-+#endif /* __LINUX_JZ4780_NEMC_H__ */
 -- 
 1.9.1
