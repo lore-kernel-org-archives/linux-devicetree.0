@@ -1,96 +1,82 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/5] dt-bindings: mediatek: Add smi dts binding
-Date: Mon, 9 Mar 2015 20:55:03 +0800
-Message-ID: <1425905703.13300.48.camel@mhfsdcap03>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-4-git-send-email-yong.wu@mediatek.com>
-	<20150306111338.GD8700@leverpostej>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 0/6] dmaengine/dra7x: DMA router (crossbar support)
+Date: Mon, 9 Mar 2015 15:14:06 +0200
+Message-ID: <54FD9C9E.8000405@ti.com>
+References: <1424787683-19151-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20150306111338.GD8700@leverpostej>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424787683-19151-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Mark,
-      Thanks very much for you suggestion.
+Hi,
 
-On Fri, 2015-03-06 at 11:13 +0000, Mark Rutland wrote:
-> On Fri, Mar 06, 2015 at 10:48:18AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > This patch add smi binding document.
-> 
-> Please move binding documents to the start of the series. It makes
-> things far easier to review.
-> 
-> > 
-> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/soc/mediatek/mediatek,smi.txt   | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> > new file mode 100644
-> > index 0000000..0fc9d1a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
-> > @@ -0,0 +1,17 @@
-> > +SMI hardware block diagram please help check <bindings/iommu/mediatek,iommu.txt>
-> > +
-> > +Required properties:
-> > +- compatible : must be "mediatek,mediatek,mt8173-smi-larb"
-> 
-> Double vendor prefix?
-Yes. I will change this.
-> 
-> What does "larb" mean? It would be nice for the intorductory paragraph
-> in this file to explain.
-That is local arbiter. I will add a link like this, is it ok?
+On 02/24/2015 04:21 PM, Peter Ujfalusi wrote:
+> Hi,
+>=20
+> The series adds support for DMA router type of devices. They are used=
+ in SoCs
+> which has more peripherals with DMA request lines than the DMA contro=
+ller can
+> handle.
+> The router itself is not part of the DMA controller and it's operatio=
+n should be
+> transparent (as it is in the HW) for the SW stack.
+>=20
+> This series takes into accound the comments Sricharan received for hi=
+s version
+> of the crossbar driver:
+> https://lkml.org/lkml/2014/3/7/199
+>=20
+> This implementation is not tied to any DMA driver so it is possible t=
+o use the
+> framework by other vendors, also ACPI version of binding can be easy =
+enough to
+> be added.
+>=20
+> The omap-dma part of changes are based on the dma property name chang=
+e series:
+> https://lkml.org/lkml/2015/2/20/182
+>=20
+> but the code has fallback so it is working w/o the changes in that se=
+ries.
 
-compatible : must be "mediatek,mt8173-smi-larb", about the "larb",
-please check the <bindings/iommu/mediatek,iommu.txt>.
+Gentle ping on this series before I send the V2 with the comments from =
+Russell
+and Paul addressed.
 
-> 
-> > +- reg : the register of each local arbiter
-> > +- clocks : the clocks of each local arbiter
-> > +- clock-name: larb_sub*(3 clockes at most)
-> 
-> The names required _must_ be specified here, or clock-names is
-> pointless.
-> 
-> The clock names should be from the PoV of _this_ device (i.e. they
-> should be the names of the inputs) not from the PoV of the provider
-> (i.e. they should not be the names of the outputs from the provider).
-    I use larb_sub0, larb_sub1,larb_sub2 for more easily to control the
-clocks. if we use the PoV, We should list all the clocks name, it will
-has a little code. Anyway I will change this in the next version.
-> 
-> Mark.
-> 
-> > +
-> > +Example:
-> > +	larb1:larb@16010000 {
-> > +	        compatible = "mediatek,mt8173-smi-larb";
-> > +		reg = <0 0x16010000 0 0x1000>;
-> > +		clocks = <&mmsys MM_SMI_COMMON>,
-> > +		        <&vdecsys VDEC_CKEN>,
-> > +                        <&vdecsys VDEC_LARB_CKEN>;
-> > +		clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-> > +	};
-> > -- 
-> > 1.8.1.1.dirty
-> > 
-> > 
+Kind Regards,
+P=E9ter
+
+>=20
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (6):
+>   dmaengine: of_dma: Support for DMA routers
+>   dmaengine: Add driver for TI DMA crossbar on DRA7x
+>   dmaengine: omap-dma: Use defines for dma channels and request count
+>   dmaengine: omap-dma: Take DMA request number from DT if it is
+>     available
+>   dmaengine: omap-dma: Remove mapping between virtual channels and
+>     requests
+>   ARM: DTS: dra7x: Integrate sDMA crossbar
+>=20
+>  Documentation/devicetree/bindings/dma/dma.txt |  27 ++++
+>  arch/arm/boot/dts/dra7.dtsi                   |  57 ++++----
+>  drivers/dma/Kconfig                           |   4 +
+>  drivers/dma/Makefile                          |   1 +
+>  drivers/dma/dmaengine.c                       |   7 +
+>  drivers/dma/of-dma.c                          |  92 +++++++++++++
+>  drivers/dma/omap-dma.c                        |  24 +++-
+>  drivers/dma/ti-dma-crossbar.c                 | 191 ++++++++++++++++=
+++++++++++
+>  include/linux/dmaengine.h                     |  17 +++
+>  include/linux/of_dma.h                        |  21 +++
+>  10 files changed, 413 insertions(+), 28 deletions(-)
+>  create mode 100644 drivers/dma/ti-dma-crossbar.c
+>=20
