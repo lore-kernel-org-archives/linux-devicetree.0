@@ -1,47 +1,50 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v5 3/8] pinctrl: cygnus: add initial IOMUX driver support
-Date: Mon, 09 Mar 2015 19:40:56 +0100
-Message-ID: <1425926456.2317.13.camel@tiscali.nl>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
-	 <1425515756-321-4-git-send-email-rjui@broadcom.com>
-	 <1425542612.24292.180.camel@x220>
-	 <CACRpkdYTDSSSd5oDNXmcav-2ycbki0=K+0Cm6dLSBHUv6UXF9g@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC/PATCHv2 1/3] spi: dw-spi: Single Register read to clear IRQs
+Date: Mon, 9 Mar 2015 18:43:55 +0000
+Message-ID: <20150309184355.GA28806@sirena.org.uk>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+ <1425685594-26595-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYTDSSSd5oDNXmcav-2ycbki0=K+0Cm6dLSBHUv6UXF9g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uT8OcDz013Sgpw/5"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425685594-26595-2-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: grant.likely@linaro.org, jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, axel.lin@ingics.com, baruch@tkos.co.il, andriy.shevchenko@linux.intel.com, jg1.han@samsung.com, galak@codeaurora.org, Andy Shevchenko <andriy.shevchenko@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Linus Walleij schreef op ma 09-03-2015 om 17:28 [+0100]:
-> I think you're right. Or I fear you're right.
-> 
-> But this problem is present in so many drivers that a generic
-> fixup needs to be done with a script and across an entire subsystem
-> at once,
 
-Why don't we start with checking for similar cases during review, like
-I'm now doing for only a week or two?
+--uT8OcDz013Sgpw/5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  and besides I'm not sure of these macros disturb so much.
+On Fri, Mar 06, 2015 at 05:46:32PM -0600, tthayer@opensource.altera.com wro=
+te:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>=20
+> Instead of clearing the RxU, RxO, and TxO IRQs individually with
+> 3 register reads, a single read of the ICR register will do the
+> same thing.
 
-I think they're confusing at best. Ie, when reading the code and the
-corresponding Kconfig file one has to wonder: should the Kconfig symbol
-actually be tristate or should it stay bool but did someone forget to
-delete the module-specific code?
+Applied, thanks.
 
-> They are documentation in a sense, albeit a kind of documentation
-> we used before we had git to record the actual authors of the
-> code.
+--uT8OcDz013Sgpw/5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-They're useful, mostly, for module utilities. Outside that scope they
-add information that thousands of files (that can also only be built-in
-but do not have these macros) do not have and, apparently, do not need.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thanks,
+iQEcBAEBCAAGBQJU/enrAAoJECTWi3JdVIfQFq4H/2UEa926XetfdbzNYmJMwzxK
+oaTsbUOnH6kcfkSElQb/65UYRHadyg7msXcWjK4T4m8f0l5c25KZaGp5iygZNFAw
+/2klUtXcVG+wd/dwCLuN+oQN6IzIDMl4gL16Jv9uUpCmZFnFqHXjwGovl63pcbW6
+gnM082WDHZS4I9F7vwFmaSzq99QeViNu/8ui8XObtec15+Y15xGz6Pz3ks9W+THy
+BGYsctnTPxxIs5kuh6sEnQtb/3SD3IBRgXDZ0MrbnkOyVfouub9dGlUQ+67tYbRb
++BgVUERAHRBs1MCT3TcQUftl3kmFWLa2ZbdNPCo+UY9IqZHrfz7wYS+quGcXXSQ=
+=Q6eM
+-----END PGP SIGNATURE-----
 
-
-Paul Bolle
+--uT8OcDz013Sgpw/5--
