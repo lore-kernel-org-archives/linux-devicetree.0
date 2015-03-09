@@ -1,327 +1,60 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 2/6] mtd: nand: vf610_nfc: add hardware BCH-ECC support
-Date: Mon,  9 Mar 2015 17:38:48 +0100
-Message-ID: <1425919132-13827-3-git-send-email-stefan@agner.ch>
-References: <1425919132-13827-1-git-send-email-stefan@agner.ch>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: hummingboard: Setup pwm lines
+Date: Mon, 09 Mar 2015 17:39:29 +0100
+Message-ID: <1425919169.3152.63.camel@pengutronix.de>
+References: <E1YSWZL-0002Aw-B5@rmk-PC.arm.linux.org.uk>
+	 <1425379336.3146.38.camel@pengutronix.de>
+	 <20150309154004.GR8656@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425919132-13827-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <20150309154004.GR8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds hardware ECC support using the BCH encoder in the NFC IP.
-The ECC encoder supports up to 32-bit correction by using 60 error
-correction bytes. There is no sub-page ECC step, ECC is calculated
-always accross the whole page (up to 2k pages).
+Am Montag, den 09.03.2015, 15:40 +0000 schrieb Russell King - ARM Linux:
+> On Tue, Mar 03, 2015 at 11:42:16AM +0100, Philipp Zabel wrote:
+> > I wanted to point out these two are superfluous since pwm3/4 are
+> > disabled in the dtsi by default, but I just learned they aren't.
+> > 
+> > Should we add status = "disabled" to unusable (because not externally
+> > connected) PWMs, and if so, shouldn't that be done in the dtsi already?
+> 
+> I guess it should, but we'd first need to ensure that none of the
+> existing platforms would break through changing that (eg, through
+> a missing status = "okay" entry).
 
-Signed-off-by: Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- drivers/mtd/nand/Kconfig     |   6 +-
- drivers/mtd/nand/vf610_nfc.c | 193 +++++++++++++++++++++++++++++++++++++------
- 2 files changed, 172 insertions(+), 27 deletions(-)
+A grep \&pwm arch/arm/boot/dts/imx6* yields:
 
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index 1be30a6..0fb97b3 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -464,8 +464,10 @@ config MTD_NAND_VF610_NFC
- 	help
- 	  Enables support for NAND Flash Controller on some Freescale
- 	  processors like the VF610, MPC5125, MCF54418 or Kinetis K70.
--	  The driver supports a maximum 2k page size. The driver
--	  currently does not support hardware ECC.
-+	  The driver supports a maximum 2k page size. With 2k pages and
-+	  64 bytes or more of OOB, hardware ECC with up to 32-bit error
-+	  correction is supported. Hardware ECC is only enabled through
-+	  device tree.
- 
- config MTD_NAND_MXC
- 	tristate "MXC NAND support"
-diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
-index 5c8be4a..3540168 100644
---- a/drivers/mtd/nand/vf610_nfc.c
-+++ b/drivers/mtd/nand/vf610_nfc.c
-@@ -19,6 +19,7 @@
-  * - Untested on MPC5125 and M54418.
-  * - DMA not used.
-  * - 2K pages or less.
-+ * - Only 2K page w. 64+OOB and hardware ECC.
-  */
- 
- #include <linux/module.h>
-@@ -71,6 +72,8 @@
- 
- /* NFC ECC mode define */
- #define ECC_BYPASS			0
-+#define ECC_45_BYTE			6
-+#define ECC_60_BYTE			7
- 
- /*** Register Mask and bit definitions */
- 
-@@ -103,6 +106,8 @@
- #define STATUS_BYTE1_MASK			0x000000FF
- 
- /* NFC_FLASH_CONFIG Field */
-+#define CONFIG_ECC_SRAM_ADDR_MASK		0x7FC00000
-+#define CONFIG_ECC_SRAM_ADDR_SHIFT		22
- #define CONFIG_ECC_SRAM_REQ_BIT			(1<<21)
- #define CONFIG_DMA_REQ_BIT			(1<<20)
- #define CONFIG_ECC_MODE_MASK			0x000E0000
-@@ -123,12 +128,31 @@
- 
- #define NFC_TIMEOUT		(HZ)
- 
-+/* ECC status placed at end of buffers. */
-+#define ECC_SRAM_ADDR	((PAGE_2K+256-8) >> 3)
-+#define ECC_STATUS_MASK	0x80
-+#define ECC_ERR_COUNT	0x3F
-+
-+/*
-+ * ECC status is stored at NFC_CFG[ECCADD] +4 for little-endian
-+ * and +7 for big-endian SoCs.
-+ */
-+#ifdef CONFIG_SOC_VF610
-+#define ECC_OFFSET	4
-+#else
-+#define ECC_OFFSET	7
-+#endif
-+
- struct vf610_nfc_config {
-+	bool hardware_ecc;
-+	int ecc_strength;
-+	int ecc_step_size;
- 	int width;
- 	int flash_bbt;
-+	u32 ecc_mode;
- };
- 
--struct fsl_nfc {
-+struct vf610_nfc {
- 	struct mtd_info	   mtd;
- 	struct nand_chip   chip;
- 	struct device	  *dev;
-@@ -148,27 +172,32 @@ struct fsl_nfc {
- 
- #define mtd_to_nfc(_mtd) container_of(_mtd, struct vf610_nfc, mtd)
- 
--static u8 bbt_pattern[] = {'B', 'b', 't', '0' };
--static u8 mirror_pattern[] = {'1', 't', 'b', 'B' };
--
--static struct nand_bbt_descr bbt_main_descr = {
--	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE |
--		   NAND_BBT_2BIT | NAND_BBT_VERSION,
--	.offs =	11,
--	.len = 4,
--	.veroffs = 15,
--	.maxblocks = 4,
--	.pattern = bbt_pattern,
-+static struct nand_ecclayout vf610_nfc_ecc45 = {
-+	.eccbytes = 45,
-+	.eccpos = {19, 20, 21, 22, 23,
-+		   24, 25, 26, 27, 28, 29, 30, 31,
-+		   32, 33, 34, 35, 36, 37, 38, 39,
-+		   40, 41, 42, 43, 44, 45, 46, 47,
-+		   48, 49, 50, 51, 52, 53, 54, 55,
-+		   56, 57, 58, 59, 60, 61, 62, 63},
-+	.oobfree = {
-+		{.offset = 2,
-+		 .length = 17} }
- };
- 
--static struct nand_bbt_descr bbt_mirror_descr = {
--	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE |
--		   NAND_BBT_2BIT | NAND_BBT_VERSION,
--	.offs =	11,
--	.len = 4,
--	.veroffs = 15,
--	.maxblocks = 4,
--	.pattern = mirror_pattern,
-+static struct nand_ecclayout vf610_nfc_ecc60 = {
-+	.eccbytes = 60,
-+	.eccpos = { 4,  5,  6,  7,  8,  9, 10, 11,
-+		   12, 13, 14, 15, 16, 17, 18, 19,
-+		   20, 21, 22, 23, 24, 25, 26, 27,
-+		   28, 29, 30, 31, 32, 33, 34, 35,
-+		   36, 37, 38, 39, 40, 41, 42, 43,
-+		   44, 45, 46, 47, 48, 49, 50, 51,
-+		   52, 53, 54, 55, 56, 57, 58, 59,
-+		   60, 61, 62, 63 },
-+	.oobfree = {
-+		{.offset = 2,
-+		 .length = 2} }
- };
- 
- static inline u32 vf610_nfc_read(struct vf610_nfc *nfc, uint reg)
-@@ -469,6 +498,60 @@ static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
- #endif
- }
- 
-+/* Count the number of 0's in buff up to max_bits */
-+static inline int count_written_bits(uint8_t *buff, int size, int max_bits)
-+{
-+	uint32_t *buff32 = (uint32_t *)buff;
-+	int k, written_bits = 0;
-+
-+	for (k = 0; k < (size / 4); k++) {
-+		written_bits += hweight32(~buff32[k]);
-+		if (written_bits > max_bits)
-+			break;
-+	}
-+
-+	return written_bits;
-+}
-+
-+static inline int vf610_nfc_correct_data(struct mtd_info *mtd, uint8_t *dat,
-+					 uint8_t *read_ecc, uint8_t *calc_ecc)
-+{
-+	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-+	u8 ecc_status;
-+	u8 ecc_count;
-+	int flip;
-+
-+	ecc_status = __raw_readb(nfc->regs + ECC_SRAM_ADDR * 8 + ECC_OFFSET);
-+	ecc_count = ecc_status & ECC_ERR_COUNT;
-+	if (!(ecc_status & ECC_STATUS_MASK))
-+		return ecc_count;
-+
-+	/*
-+	 * On an erased page, bit count should be zero or at least
-+	 * less then half of the ECC strength
-+	 */
-+	flip = count_written_bits(dat, nfc->chip.ecc.size, ecc_count);
-+
-+	if (flip > ecc_count && flip > (nfc->chip.ecc.strength / 2)) {
-+		nfc->page = -1;
-+		return -1;
-+	}
-+
-+	/* Erased page. */
-+	memset(dat, 0xff, nfc->chip.ecc.size);
-+	return 0;
-+}
-+
-+static int vf610_nfc_calculate_ecc(struct mtd_info *mtd, const u_char *dat,
-+				   u_char *ecc_code)
-+{
-+	return 0;
-+}
-+
-+static void vf610_nfc_enable_hwecc(struct mtd_info *mtd, int mode)
-+{
-+}
-+
- #ifdef CONFIG_OF_MTD
- static const struct of_device_id vf610_nfc_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-nfc" },
-@@ -485,7 +568,17 @@ static int vf610_nfc_probe_dt(struct device *dev, struct vf610_nfc_config *cfg)
- 	if (!np)
- 		return 1;
- 
-+	if (of_get_nand_ecc_mode(np) >= NAND_ECC_HW)
-+		cfg->hardware_ecc = 1;
-+
- 	cfg->flash_bbt = of_get_nand_on_flash_bbt(np);
-+	cfg->ecc_strength = of_get_nand_ecc_strength(np);
-+	if (cfg->ecc_strength < 0)
-+		cfg->ecc_strength = 0;
-+
-+	cfg->ecc_step_size = of_get_nand_ecc_step_size(np);
-+	if (cfg->ecc_step_size < 0)
-+		cfg->ecc_step_size = 0;
- 
- 	buswidth = of_get_nand_bus_width(np);
- 	if (buswidth < 0)
-@@ -529,6 +622,15 @@ static int vf610_nfc_init_controller(struct vf610_nfc *nfc, int page_sz)
- 
- 	vf610_nfc_write(nfc, NFC_SECTOR_SIZE, page_sz);
- 
-+	if (cfg->hardware_ecc) {
-+		vf610_nfc_set_field(nfc, NFC_FLASH_CONFIG,
-+				    CONFIG_ECC_MODE_MASK,
-+				    CONFIG_ECC_MODE_SHIFT, cfg->ecc_mode);
-+
-+		/* Enable ECC_STATUS */
-+		vf610_nfc_set(nfc, NFC_FLASH_CONFIG, CONFIG_ECC_SRAM_REQ_BIT);
-+	}
-+
- 	return 0;
- }
- 
-@@ -597,10 +699,8 @@ static int vf610_nfc_probe(struct platform_device *pdev)
- 
- 	/* Bad block options. */
- 	if (cfg->flash_bbt)
--		chip->bbt_options = NAND_BBT_USE_FLASH | NAND_BBT_CREATE;
--
--	chip->bbt_td = &bbt_main_descr;
--	chip->bbt_md = &bbt_mirror_descr;
-+		chip->bbt_options = NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB |
-+				    NAND_BBT_CREATE;
- 
- 	init_waitqueue_head(&nfc->irq_waitq);
- 
-@@ -627,13 +727,56 @@ static int vf610_nfc_probe(struct platform_device *pdev)
- 
- 	/* Single buffer only, max 256 OOB minus ECC status */
- 	if (page_sz > PAGE_2K + 256 - 8) {
--		dev_err(nfc->dev, "Unsupported flash size\n");
-+		dev_err(nfc->dev, "Unsupported flash page size\n");
- 		err = -ENXIO;
- 		goto error;
- 	}
- 	page_sz += cfg->width == 16 ? 1 : 0;
- 	vf610_nfc_write(nfc, NFC_SECTOR_SIZE, page_sz);
- 
-+	if (cfg->hardware_ecc) {
-+		if (mtd->writesize != PAGE_2K && mtd->oobsize < 64) {
-+			dev_err(nfc->dev, "Unsupported flash with hwecc\n");
-+			err = -ENXIO;
-+			goto error;
-+		}
-+
-+		if (cfg->ecc_step_size != mtd->writesize) {
-+			dev_err(nfc->dev, "Step size needs to be page size\n");
-+			err = -ENXIO;
-+			goto error;
-+		}
-+
-+		if (cfg->ecc_strength == 32) {
-+			cfg->ecc_mode = ECC_60_BYTE;
-+			chip->ecc.bytes = 60;
-+			chip->ecc.layout = &vf610_nfc_ecc60;
-+		} else if (cfg->ecc_strength == 24) {
-+			cfg->ecc_mode = ECC_45_BYTE;
-+			chip->ecc.bytes = 45;
-+			chip->ecc.layout = &vf610_nfc_ecc45;
-+		} else {
-+			dev_err(nfc->dev, "Unsupported ECC strength\n");
-+			err = -ENXIO;
-+			goto error;
-+		}
-+
-+		/* propagate ecc.layout to mtd_info */
-+		mtd->ecclayout = chip->ecc.layout;
-+		chip->ecc.calculate = vf610_nfc_calculate_ecc;
-+		chip->ecc.hwctl = vf610_nfc_enable_hwecc;
-+		chip->ecc.correct = vf610_nfc_correct_data;
-+		chip->ecc.mode = NAND_ECC_HW;
-+
-+		chip->ecc.size = PAGE_2K;
-+		chip->ecc.strength = cfg->ecc_strength;
-+
-+		/* set ECC mode according to required ECC strength */
-+		vf610_nfc_set_field(nfc, NFC_FLASH_CONFIG,
-+				    CONFIG_ECC_MODE_MASK,
-+				    CONFIG_ECC_MODE_SHIFT, cfg->ecc_mode);
-+	}
-+
- 	/* second phase scan */
- 	if (nand_scan_tail(mtd)) {
- 		err = -ENXIO;
--- 
-2.3.1
+* imx6dl-aristainetos_4.dts - needs pwm1
+* imx6dl-aristainetos_7.dts - needs pwm3
+  imx6dl-riotboard.dts - already enables pwm1-4
+  imx6dl-tx6dl-comtft.dts - already enables pwm2
+  imx6dl-tx6u-801x.dts - pwm2 enabled in imx6qdl-tx6.dtsi
+  imx6dl-tx6u-811x.dts - already enables pwm1, pwm2 enabled in imx6qdl-tx6.dtsi
+* imx6qdl-cubox-i.dtsi - needs pwm1
+  imx6qdl-gw52xx.dtsi - already enables pwm4
+  imx6qdl-gw53xx.dtsi - already enables pwm4
+  imx6qdl-gw54xx.dtsi - already enables pwm4
+  imx6qdl-nitrogen6x.dtsi - already enables pwm1, 3, and 4
+  imx6qdl-sabreauto.dtsi - already enables pwm3
+  imx6qdl-sabrelite.dtsi - already enables pwm1, 3, and 4
+  imx6qdl-sabresd.dtsi - already enables pwm1
+  imx6q-tx6q-1010-comtft.dts - pwm2 enabled in imx6qdl-tx6.dtsi
+  imx6q-tx6q-1010.dts - pwm2 enabled in imx6qdl-tx6.dtsi
+  imx6q-tx6q-1020-comtft.dts - pwm2 enabled in imx6qdl-tx6.dtsi
+  imx6q-tx6q-1020.dts - pwm2 enabled in imx6qdl-tx6.dtsi
+  imx6q-tx6q-1110.dts - enables pwm1, pwm2 enabled in imx6qdl-tx6.dtsi
+  imx6sl-evk.dts - enables pwm1
+  imx6sx-sdb.dts - enables pwm3
+
+Did I miss anything? I'll send a patch for those three.
+
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
