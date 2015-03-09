@@ -1,12 +1,14 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 00/15] musb: Add support for the Allwinner sunxi
- musb controller
-Date: Mon,  9 Mar 2015 21:40:13 +0100
-Message-ID: <1425933628-9672-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 03/15] musb: Make musb_write_rxfun* and
+ musb_write_rxhub* work like their tx versions
+Date: Mon,  9 Mar 2015 21:40:16 +0100
+Message-ID: <1425933628-9672-4-git-send-email-hdegoede@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBSEK7CTQKGQEYUK5GVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBTUK7CTQKGQEDSLUOYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1425933628-9672-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -15,111 +17,177 @@ List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+For some reason the musb_write_rxfun* and musb_write_rxhub* functions had
+a different function prototype and some extra magic needed on the caller side
+compared to their tx counterparts, this commit makes them work the same as
+their tx counterparts.
 
-This patch set has been a while in the making, so I'm very happy to present
-the end result here, and I hope everyone likes it.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/usb/musb/musb_core.c | 11 +++--------
+ drivers/usb/musb/musb_core.h |  2 --
+ drivers/usb/musb/musb_host.c | 12 ++++++------
+ drivers/usb/musb/musb_regs.h | 31 ++++++++++++-------------------
+ 4 files changed, 21 insertions(+), 35 deletions(-)
 
-Before talking about merging this there are 2 things which I would like to
-point out:
-
-a) The musb controller in the sunxi SoCs uses some SRAM which needs to be
-mapped to the musb controller by poking some bits in the SRAM controller,
-just like the EMAC patches which were send a while back I've chosen to use
-syscon for this, actually 2 of the patches in this set come directly from the
-SRAM mapping patchset for the EMAC.
-
-I know that Maxime is not 100% in favor of using syscon:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/320221.html
-
-But I disagree with his arguments for writing a special driver for the SRAM
-controller:
-1) syscon was specifically designed for global system control registers like
-this and is fine to use as long as there are no conflicts where 1 bit is of
-interest to multiple drivers, and there is no such conflict here
-2) Maxime's other arguments seem to boil down to it would be nice / prettier
-to have a specific driver for this, without really proving a hard need for
-such a driver. But writing such a driver is going to be a lot of work, and
-we've a ton of other work to do, and as said there is no real need for a
-separate driver, syscon works fine for this.
-3) I actually believe that having a specific driver for this is a bad idea,
-because that means inventing a whole new cross driver API for this, and
-getting those right is, hard, a lot of work, and even then one is still likely
-to get it wrong. We can avoid all this by going with the proven syscon solution.
-
-Maxime, can we please have your ack for moving forward with this using syscon?
-(see above for my arguments why)
-
-
-b) If you look closely at the new drivers/usb/musb/sunxi.c file you will see
-that there is some register address translation happening in the
-sunxi_musb_readb() function and related functions. This is necessary because
-the registermap of the sunxi musb implementation is different from the other
-musb implementation and sunxi uses multi-platform kernels.
-
-I've considered adding full dynamic register map support to musb but I've
-chosen not to. The problem is that the way the musb code currently works is
-that there are 4 different address spaces used within the musb code:
-
-1) musb->regs, the base address of the controller used for general control
-register access like the DEVCTL and POWER regs
-
-2) The address space at the offset returned by musb_io.ep_offset, which
-contains ep control registers, this may be a different offset per endpoint,
-or indexed by the INDEX register
-
-3) The address space at the offset returned by musb_io.fifo_offset, which
-contains the endpoint fifo data register, this is a different offset per ep.
-
-4) The address space at the offset returned by MUSB_BUSCTL_OFFSET macro
-(which gets repaced by musb_io.busctl_offset in this patchset), this may be a
-different offset per endpoint, or indexed by the INDEX register
-
-Turning this into something using dynamic register mapping is quite hard, esp.
-since some parts of the address range are per endpoint and the number of
-endpoints varies from one implementation to the next.
-
-Besides this there also is the issue that I lack hardware to test invasive
-changes like this for all different musb variants. So I've chosen to do the
-necessary address translation (which really is only necessary for the general
-control registers) in a sunxi specific readb & friends implementation, avoiding
-the need to make invasive chances elsewhere and thus hopefully avoiding any
-regressions.
-
-Note that some small core changes are still necessary, mostly to rationalize
-the busctl register handling, and make it more generic as sunxi has indexed
-busctl registers.
-
-
-So with that all said lets talk about getting this merged upstream, assuming
-that the code passes review :)
-
-The first patch in the set adds a header with defines for the sun4i syscon
-registers. Since this has already been acked by one of the MFD maintainers,
-I suggest we simply merge this through the musb maintainer together with all
-the other musb patches, as this introduces a new file without changing any
-other files collisions are impossible.
-
-The second patch makes some minimal changes to the phy-sun4i-usb driver,
-I believe it is best to merge this through the musb maintainer too, so that
-all buildtime deps go in through one tree. Kishon can you review this patch
-please and let us know if it is ok to merge this through the musb tree?
-
-Then we get 5 musb patches, 4 preparation patches and 1 adding the actual
-sunxi musb support, which should go through the musb tree obviously.
-
-So assuming everyone agrees this means that patches 1 - 7 should be merged
-through Felipe's tree. Felipe, is that ok with you and can you review these
-patches please?
-
-That leaves us with patches 8 - 15 which are all sunxi dts patches and as such
-should go upstream through Maxime's tree once patches 1 - 7 are queued up
-for merging. Maxime can you give these a review so that I can address any
-comments, so that they will be ready to go once patches 1 - 7 are in place ?
-
-Thanks & Regards,
-
-Hans
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index e6f4cbf..2c43b59 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -1546,7 +1546,6 @@ static int musb_core_init(u16 musb_type, struct musb *musb)
+ #endif
+ 
+ 		hw_ep->regs = musb->io.ep_offset(i, 0) + mbase;
+-		hw_ep->target_regs = musb_read_target_reg_base(i, mbase);
+ 		hw_ep->rx_reinit = 1;
+ 		hw_ep->tx_reinit = 1;
+ 
+@@ -2332,7 +2331,6 @@ static void musb_restore_context(struct musb *musb)
+ {
+ 	int i;
+ 	void __iomem *musb_base = musb->mregs;
+-	void __iomem *ep_target_regs;
+ 	void __iomem *epio;
+ 	u8 power;
+ 
+@@ -2400,14 +2398,11 @@ static void musb_restore_context(struct musb *musb)
+ 		musb_write_txhubport(musb_base, i,
+ 				musb->context.index_regs[i].txhubport);
+ 
+-		ep_target_regs =
+-			musb_read_target_reg_base(i, musb_base);
+-
+-		musb_write_rxfunaddr(ep_target_regs,
++		musb_write_rxfunaddr(musb_base, i,
+ 				musb->context.index_regs[i].rxfunaddr);
+-		musb_write_rxhubaddr(ep_target_regs,
++		musb_write_rxhubaddr(musb_base, i,
+ 				musb->context.index_regs[i].rxhubaddr);
+-		musb_write_rxhubport(ep_target_regs,
++		musb_write_rxhubport(musb_base, i,
+ 				musb->context.index_regs[i].rxhubport);
+ 	}
+ 	musb_writeb(musb_base, MUSB_INDEX, musb->context.index);
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 5e65958..a31d709 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -240,8 +240,6 @@ struct musb_hw_ep {
+ 	void __iomem		*fifo_sync_va;
+ #endif
+ 
+-	void __iomem		*target_regs;
+-
+ 	/* currently scheduled peripheral endpoint */
+ 	struct musb_qh		*in_qh;
+ 	struct musb_qh		*out_qh;
+diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
+index 883a9ad..77006ee 100644
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -555,8 +555,9 @@ musb_host_packet_rx(struct musb *musb, struct urb *urb, u8 epnum, u8 iso_err)
+  * the busy/not-empty tests are basically paranoia.
+  */
+ static void
+-musb_rx_reinit(struct musb *musb, struct musb_qh *qh, struct musb_hw_ep *ep)
++musb_rx_reinit(struct musb *musb, struct musb_qh *qh, u8 epnum)
+ {
++	struct musb_hw_ep *ep = musb->endpoints + epnum;
+ 	u16	csr;
+ 
+ 	/* NOTE:  we know the "rx" fifo reinit never triggers for ep0.
+@@ -594,10 +595,9 @@ musb_rx_reinit(struct musb *musb, struct musb_qh *qh, struct musb_hw_ep *ep)
+ 
+ 	/* target addr and (for multipoint) hub addr/port */
+ 	if (musb->is_multipoint) {
+-		musb_write_rxfunaddr(ep->target_regs, qh->addr_reg);
+-		musb_write_rxhubaddr(ep->target_regs, qh->h_addr_reg);
+-		musb_write_rxhubport(ep->target_regs, qh->h_port_reg);
+-
++		musb_write_rxfunaddr(musb->mregs, epnum, qh->addr_reg);
++		musb_write_rxhubaddr(musb->mregs, epnum, qh->h_addr_reg);
++		musb_write_rxhubport(musb->mregs, epnum, qh->h_port_reg);
+ 	} else
+ 		musb_writeb(musb->mregs, MUSB_FADDR, qh->addr_reg);
+ 
+@@ -875,7 +875,7 @@ finish:
+ 		u16	csr;
+ 
+ 		if (hw_ep->rx_reinit) {
+-			musb_rx_reinit(musb, qh, hw_ep);
++			musb_rx_reinit(musb, qh, epnum);
+ 
+ 			/* init new state: toggle and NYET, maybe DMA later */
+ 			if (usb_gettoggle(urb->dev, qh->epnum, 0))
+diff --git a/drivers/usb/musb/musb_regs.h b/drivers/usb/musb/musb_regs.h
+index 11f0be0..edfc730 100644
+--- a/drivers/usb/musb/musb_regs.h
++++ b/drivers/usb/musb/musb_regs.h
+@@ -364,27 +364,25 @@ static inline u16 musb_read_hwvers(void __iomem *mbase)
+ 	return musb_readw(mbase, MUSB_HWVERS);
+ }
+ 
+-static inline void __iomem *musb_read_target_reg_base(u8 i, void __iomem *mbase)
+-{
+-	return (MUSB_BUSCTL_OFFSET(i, 0) + mbase);
+-}
+-
+-static inline void musb_write_rxfunaddr(void __iomem *ep_target_regs,
++static inline void musb_write_rxfunaddr(void __iomem *mbase, u8 epnum,
+ 		u8 qh_addr_reg)
+ {
+-	musb_writeb(ep_target_regs, MUSB_RXFUNCADDR, qh_addr_reg);
++	musb_writeb(mbase, MUSB_BUSCTL_OFFSET(epnum, MUSB_RXFUNCADDR),
++			qh_addr_reg);
+ }
+ 
+-static inline void musb_write_rxhubaddr(void __iomem *ep_target_regs,
++static inline void musb_write_rxhubaddr(void __iomem *mbase, u8 epnum,
+ 		u8 qh_h_addr_reg)
+ {
+-	musb_writeb(ep_target_regs, MUSB_RXHUBADDR, qh_h_addr_reg);
++	musb_writeb(mbase, MUSB_BUSCTL_OFFSET(epnum, MUSB_RXHUBADDR),
++			qh_h_addr_reg);
+ }
+ 
+-static inline void musb_write_rxhubport(void __iomem *ep_target_regs,
++static inline void musb_write_rxhubport(void __iomem *mbase, u8 epnum,
+ 		u8 qh_h_port_reg)
+ {
+-	musb_writeb(ep_target_regs, MUSB_RXHUBPORT, qh_h_port_reg);
++	musb_writeb(mbase, MUSB_BUSCTL_OFFSET(epnum, MUSB_RXHUBPORT),
++			qh_h_port_reg);
+ }
+ 
+ static inline void  musb_write_txfunaddr(void __iomem *mbase, u8 epnum,
+@@ -556,22 +554,17 @@ static inline u16 musb_read_hwvers(void __iomem *mbase)
+ 	return MUSB_HWVERS_1900;
+ }
+ 
+-static inline void __iomem *musb_read_target_reg_base(u8 i, void __iomem *mbase)
+-{
+-	return NULL;
+-}
+-
+-static inline void musb_write_rxfunaddr(void __iomem *ep_target_regs,
++static inline void musb_write_rxfunaddr(void __iomem *mbase, u8 epnum,
+ 		u8 qh_addr_req)
+ {
+ }
+ 
+-static inline void musb_write_rxhubaddr(void __iomem *ep_target_regs,
++static inline void musb_write_rxhubaddr(void __iomem *mbase, u8 epnum,
+ 		u8 qh_h_addr_reg)
+ {
+ }
+ 
+-static inline void musb_write_rxhubport(void __iomem *ep_target_regs,
++static inline void musb_write_rxhubport(void __iomem *mbase, u8 epnum,
+ 		u8 qh_h_port_reg)
+ {
+ }
+-- 
+2.3.1
