@@ -1,81 +1,54 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 1/2] power: rt5033_charger: Add RT5033 charger device
- driver
-Date: Mon, 9 Mar 2015 11:10:12 +0100
-Message-ID: <20150309101012.GA3914@earth>
-References: <1425864191-4121-1-git-send-email-beomho.seo@samsung.com>
- <1425864191-4121-2-git-send-email-beomho.seo@samsung.com>
- <20150309015020.GA941@earth>
- <54FD177B.1050200@samsung.com>
- <54FD2766.2090401@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: sun7i: Add dts file for
+ Wexler TAB7200
+Date: Mon, 9 Mar 2015 11:13:54 +0100
+Message-ID: <20150309101354.GP5085@lukather>
+References: <1425456947-4152-1-git-send-email-mamlinav@gmail.com>
+ <1425815853-5759-1-git-send-email-mamlinav@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="N5iGxCIPT7YMRg16"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJ7F6WTQKGQE66RBCUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54FD2766.2090401@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com, sangbae90.lee@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <1425815853-5759-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
+--N5iGxCIPT7YMRg16
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sun, Mar 08, 2015 at 02:57:33PM +0300, Aleksei Mamlin wrote:
+> This patch add support for Wexler TAB7200 tablet.
+> 
+> The Wexler TAB7200 is a A20 based tablet with 7 inch display(800x480),
+> capacitive touchscreen(5 fingers), 1G RAM, 4G NAND, micro SD card slot,
+> mini HDMI port, 3.5mm audio plug, 1 USB OTG port and 1 USB 2.0 port.
+> 
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes since v1:
+> * Split to two patches:
+>   The first one adds dts file for Wexler TAB7200.
+>   The second one adds vendor-prefix for Wexler.
+> * Remove include dt-bindings/pinctrl/sun4i-a10.h because we don't use
+>   the pinctrl header.
 
-On Mon, Mar 09, 2015 at 01:53:58PM +0900, Beomho Seo wrote:
-> >> remove the special handling of POWER_SUPPLY_PROP_CURRENT_MAX in=20
-> >> rt5033_get_charger_current() and do it like this:
-> >>
-> >> case POWER_SUPPLY_PROP_CURRENT_NOW:
-> >>     val->intval =3D rt5033_get_charger_current(charger);
-> >>     break;
-> >> case POWER_SUPPLY_PROP_CURRENT_MAX:
-> >>     val->intval =3D RT5033_CHG_MAX_CURRENT;
-> >>     break;
-> >>
-> >=20
-> > OK. I will change comply with your comment.
-> >=20
->=20
-> RT5033_CHG_MAX_CURRENT is register value(hex).
-> So It is better:
->=20
-> case POWER_SUPPLY_PROP_CURRENT_MAX:
-> 	val->intval =3D RT5033_CHARGER_FAST_CURRENT_MAX;
->=20
-> And then I will fix rt5033_get_charger_current function more readable.
+Applied the two patches, thanks!
 
-Right, I copied the wrong value.
+Maxime
 
-> [...]
-
--- Sebastian
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJU/XGCAAoJENju1/PIO/qayCIP/0JatnmGnRc5UpVDKGtAFxaJ
-IETP03Rn7zFdfKl0Qbj7GUWPR4JNsxwU+LvQrx2e69q/qVLfJoionouEiHatEJVZ
-ibkKYQ2OVYgrbQCV5PAAi2A5EPvmW2L9aiQXMBaWTscZnGeSNP7PP2JdNZKxpzmE
-0EjhI1NB9fMMjD7aJAfQ6JyoCqwyMvjC4r1pIYOL7m9mZVabmxCQZ/F5M07+jmEL
-7kKcXUkOv/xkSwwb0oLXUVLgNj6QEeFPJqSWkB+609vsPUP4Iim3d1zrm2fVq8UC
-pNDIK9vGNfO2elQ2JuZ9vqvHhqxVnq0Grjun6FRNr0WSnuNeKsyWpnURSRnYneK2
-RxX1jypObnnnwVrxFIpS6ORDhn+ZtVcNpSr+5azzDakwmgNGiVmiDHHN9+HUQxG3
-87wP5MssD+pCxb2zXH8tK8uvCDSLJRNug176VBL4yXlYgZCPhFSONnJ4HLHxziU+
-R+6CLZ3nF+mXnV9YkOJrIHAOgDKi+PeJ0aGH447MLYprXE7e308ebfTCFSBuql53
-vty5UJVqIywqEKPhcJwew3uafezdB1ItTBBKB7hHBPbORaT075/GyBnKBknxvywf
-iGMbZ6KoTtNCc1DHu6ITeY8XZJg58koo1R11sNK92jtgEjuVTn4H8Wv/Kp19o6S5
-o3SlpOB7pdjJleG7zVYV
-=N34s
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--N5iGxCIPT7YMRg16--
