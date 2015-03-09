@@ -1,130 +1,75 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v12 10/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Mon, 9 Mar 2015 14:37:17 +0200
-Message-ID: <20150309123716.GE11954@valkosipuli.retiisi.org.uk>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
- <1425485680-8417-11-git-send-email-j.anaszewski@samsung.com>
- <20150309105404.GC11954@valkosipuli.retiisi.org.uk>
- <54FD8FD4.2010305@samsung.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/5] mtd: nand: =?UTF-8?Q?vf=36=31=30=5Fnfc=3A=20Frees?=
+ =?UTF-8?Q?cale=20NFC=20for=20VF=36=31=30=2C=20MPC=35=31=32=35=20and=20oth?=
+ =?UTF-8?Q?ers?=
+Date: Mon, 09 Mar 2015 13:43:49 +0100
+Message-ID: <975eaa91737584f8b45b36942cece523@agner.ch>
+References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
+ <1425510624-22250-2-git-send-email-stefan@agner.ch>
+ <20150306061502.GB10997@pengutronix.de>
+ <fdfc84d92bbcb8abc98f2c29e1aa368b@agner.ch>
+ <20150309095843.GA31289@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54FD8FD4.2010305@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150309095843.GA31289@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: geert@linux-m68k.org, dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On Mon, Mar 09, 2015 at 01:19:32PM +0100, Jacek Anaszewski wrote:
-> Hi Sakari,
+On 2015-03-09 10:58, Sascha Hauer wrote:
+> On Fri, Mar 06, 2015 at 02:31:51PM +0100, Stefan Agner wrote:
+>> On 2015-03-06 07:15, Sascha Hauer wrote:
+>> > Hi Stefan,
+>> >
+>> > On Thu, Mar 05, 2015 at 12:10:20AM +0100, Stefan Agner wrote:
+>> >> +
+>> >> +static int vf610_nfc_probe_dt(struct device *dev, struct vf610_nfc_config *cfg)
+>> >> +{
+>> >> +	struct device_node *np = dev->of_node;
+>> >> +	int buswidth;
+>> >> +	u32 clkrate;
+>> >> +
+>> >> +	if (!np)
+>> >> +		return 1;
+>> >> +
+>> >> +	cfg->flash_bbt = of_get_nand_on_flash_bbt(np);
+>> >> +
+>> >> +	if (!of_property_read_u32(np, "clock-frequency", &clkrate))
+>> >> +		cfg->clkrate = clkrate;
+>> >
+>> > Normally the clock-frequency property tells the driver at which
+>> > frequency the device actually is running, not to tell the driver at
+>> > which frequency the device *should* run. It's strange to use the value
+>> > of the clock-frequency property as input to clk_set_rate(). Maybe the
+>> > assigned clock binding is more appropriate here, see
+>> > Documentation/devicetree/bindings/clock/clock-bindings.txt.
+>>
+>> What we try to do here is to specify the hardware limitations. There
+>> seem to be some hardware restrictions when it comes to clock
+>> frequencies. There has been a rather long discussion over at Freescales
+>> community about it:
+>> https://community.freescale.com/thread/317074
+>>
+>> Not sure if this is the right way to specify the supported frequencies,
+>> or should we create a custom property for this, something like
+>> fsl,max-nfc-frequency = <33000000>?
 > 
-> Thanks for the review.
-> 
-> On 03/09/2015 11:54 AM, Sakari Ailus wrote:
-> >Hi Jacek,
-> >
-> >On Wed, Mar 04, 2015 at 05:14:31PM +0100, Jacek Anaszewski wrote:
-> >>This patch adds device tree binding documentation for
-> >>the flash cell of the Maxim max77693 multifunctional device.
-> >>
-> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>Cc: Lee Jones <lee.jones@linaro.org>
-> >>Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> >>Cc: Bryan Wu <cooloney@gmail.com>
-> >>Cc: Richard Purdie <rpurdie@rpsys.net>
-> >>---
-> >>  Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
-> >>  1 file changed, 61 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>index 38e6440..ab8fbd5 100644
-> >>--- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>@@ -76,7 +76,53 @@ Optional properties:
-> >>      Valid values: 4300000, 4700000, 4800000, 4900000
-> >>      Default: 4300000
-> >>
-> >>+- led : the LED submodule device node
-> >>+
-> >>+There are two LED outputs available - FLED1 and FLED2. Each of them can
-> >>+control a separate LED or they can be connected together to double
-> >>+the maximum current for a single connected LED. One LED is represented
-> >>+by one child node.
-> >>+
-> >>+Required properties:
-> >>+- compatible : Must be "maxim,max77693-led".
-> >>+
-> >>+Optional properties:
-> >>+- maxim,trigger-type : Flash trigger type.
-> >>+	Possible trigger types:
-> >>+		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
-> >>+			the flash,
-> >>+		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
-> >>+			of the flash.
-> >>+- maxim,boost-mode :
-> >>+	In boost mode the device can produce up to 1.2A of total current
-> >>+	on both outputs. The maximum current on each output is reduced
-> >>+	to 625mA then. If not enabled explicitly, boost setting defaults to
-> >>+	LEDS_BOOST_FIXED in case both current sources are used.
-> >>+	Possible values:
-> >>+		LEDS_BOOST_OFF (0) - no boost,
-> >>+		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-> >>+		LEDS_BOOST_FIXED (2) - fixed mode.
-> >>+- maxim,boost-mvout : Output voltage of the boost module in millivolts.
-> >>+- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
-> >>+	if chip estimates that system voltage could drop below this level due
-> >>+	to flash power consumption.
-> >>+
-> >>+Required properties of the LED child node:
-> >>+- label : see Documentation/devicetree/bindings/leds/common.txt
-> >
-> >According to ePAPR, label is "a human readable string describing a device".
-> >There's no requirement that this would be unique, for instance. If you have
-> >a camera flash LED, there's necessarily no meaningful label for it, as it
-> >doesn't really tell the user anything (vs. HDD activity LED, for instance).
-> >
-> >I think I'd make this optional.
-> 
-> OK.
-> 
-> >What comes to entity naming in Media controller, the label isn't enough. As
-> >we haven't yet fully agreed on how to name the entities in the future, I'd
-> >propose sticking to current practices: chip name (and optional numerical LED
-> >ID) followed by the I2C address. The name should be specified by the driver.
-> >
-> >Do you have other than I2C busses required by the current drivers?
-> 
-> I have AAT1290 device driven through GPIOs. There was also other driver,
-> for a similar device, submitted few days ago to linux-leds list.
+> What's wrong with the assigned clock binding? All you have to do is to
+> add it to the device node. The rest will be done from the generic clock
+> framework with no additional driver code.
 
-The problem indeed is defining a stable and unique identifier for a device
-in a system. In context of your patchset, I think this mostly matters in the
-V4L2 flash API wrapper patch.
+Ah yes, assigned clock bindings seems like a match. So, the NFC node
+would look something like
 
-GPIO controlled devices are little bit more troublesome, as GPIO numbers
-alone aren't necessarily stable, but depend on the probing order. Well, i2c
-controllers could also be registered dynamically. The same goes for PCI
-devices, too, for instance.
+...
+        assigned-clocks = <&clks VF610_CLK_NFC>;
+        assigned-clock-rates = <33000000>;
+...
 
-Most i2c adapters have a static id, and PCI devices have a stable bus
-address (unless system configuration is modified by e.g. adding or removing
-OTHER devices).
+Will try to use that, thx.
 
-I wonder if this could be resolved on OF-based systems by adding a string
-property, say, device name, whenever where are more than one device of a
-kind in the system. The string could just contain a numeric value, say 0 or
-1.
-
-Cc Hans and Laurent.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+Stefan
