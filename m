@@ -1,145 +1,218 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v12 10/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Mon, 09 Mar 2015 13:19:32 +0100
-Message-ID: <54FD8FD4.2010305@samsung.com>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
- <1425485680-8417-11-git-send-email-j.anaszewski@samsung.com>
- <20150309105404.GC11954@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150309105404.GC11954@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child nodes
+Date: Mon,  9 Mar 2015 13:21:05 +0100
+Message-ID: <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425039885-5137-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+I2C mux pinctrl driver currently determines the number of sub-busses by
+counting available pinctrl-names. Unfortunately, this requires each
+incarnation of the devicetree node with different available sub-busses
+to be rewritten.
 
-Thanks for the review.
+This patch reworks i2c-mux-pinctrl driver to count the number of
+available sub-nodes instead. The rework should be compatible to the old
+way of probing for sub-busses and additionally allows to disable unused
+sub-busses with standard DT property status = "disabled".
 
-On 03/09/2015 11:54 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Wed, Mar 04, 2015 at 05:14:31PM +0100, Jacek Anaszewski wrote:
->> This patch adds device tree binding documentation for
->> the flash cell of the Maxim max77693 multifunctional device.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> ---
->>   Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
->> index 38e6440..ab8fbd5 100644
->> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
->> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
->> @@ -76,7 +76,53 @@ Optional properties:
->>       Valid values: 4300000, 4700000, 4800000, 4900000
->>       Default: 4300000
->>
->> +- led : the LED submodule device node
->> +
->> +There are two LED outputs available - FLED1 and FLED2. Each of them can
->> +control a separate LED or they can be connected together to double
->> +the maximum current for a single connected LED. One LED is represented
->> +by one child node.
->> +
->> +Required properties:
->> +- compatible : Must be "maxim,max77693-led".
->> +
->> +Optional properties:
->> +- maxim,trigger-type : Flash trigger type.
->> +	Possible trigger types:
->> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
->> +			the flash,
->> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
->> +			of the flash.
->> +- maxim,boost-mode :
->> +	In boost mode the device can produce up to 1.2A of total current
->> +	on both outputs. The maximum current on each output is reduced
->> +	to 625mA then. If not enabled explicitly, boost setting defaults to
->> +	LEDS_BOOST_FIXED in case both current sources are used.
->> +	Possible values:
->> +		LEDS_BOOST_OFF (0) - no boost,
->> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
->> +		LEDS_BOOST_FIXED (2) - fixed mode.
->> +- maxim,boost-mvout : Output voltage of the boost module in millivolts.
->> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
->> +	if chip estimates that system voltage could drop below this level due
->> +	to flash power consumption.
->> +
->> +Required properties of the LED child node:
->> +- label : see Documentation/devicetree/bindings/leds/common.txt
->
-> According to ePAPR, label is "a human readable string describing a device".
-> There's no requirement that this would be unique, for instance. If you have
-> a camera flash LED, there's necessarily no meaningful label for it, as it
-> doesn't really tell the user anything (vs. HDD activity LED, for instance).
->
-> I think I'd make this optional.
+This also amends the corresponding devicetree binding documentation to
+reflect the new functionality to disable unused sub-nodes. While at it,
+also fix two references to binding documentation files that miss an "i2c-"
+prefix.
 
-OK.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changelog:
 
-> What comes to entity naming in Media controller, the label isn't enough. As
-> we haven't yet fully agreed on how to name the entities in the future, I'd
-> propose sticking to current practices: chip name (and optional numerical LED
-> ID) followed by the I2C address. The name should be specified by the driver.
->
-> Do you have other than I2C busses required by the current drivers?
+v2->v3:
+- remove mention of "I2C bus numbers" (Suggested by Stephen Warren)
+- require pinctrl-names property for "each child" instead of
+  "each enabled child" (Suggested by Stephen Warren)
+- swap enabled/disabled child nodes (Suggested by Stephen Warren)
 
-I have AAT1290 device driven through GPIOs. There was also other driver,
-for a similar device, submitted few days ago to linux-leds list.
+v1->v2:
+- added a Tested-by for i2c-mux-pinctrl changes from Stepen Warren.
+- reworded i2c-mux-pinctrl devicetree doc changes
+  (Suggested by Stephen Warren).
 
->> +- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
->> +		device current output identifiers: 0 - FLED1, 1 - FLED2
->> +
->> +Optional properties of the LED child node:
->> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 15625 - 250000
->> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 15625 - 1000000
->> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 62500 - 1000000
->> +
->>   Example:
->> +#include <dt-bindings/leds/max77693.h>
->> +
->>   	max77693@66 {
->>   		compatible = "maxim,max77693";
->>   		reg = <0x66>;
->> @@ -117,5 +163,20 @@ Example:
->>   			maxim,thermal-regulation-celsius = <75>;
->>   			maxim,battery-overcurrent-microamp = <3000000>;
->>   			maxim,charge-input-threshold-microvolt = <4300000>;
->> +
->> +		led {
->> +			compatible = "maxim,max77693-led";
->> +			maxim,trigger-type = <LEDS_TRIG_TYPE_LEVEL>;
->> +			maxim,boost-mode = <LEDS_BOOST_FIXED>;
->> +			maxim,boost-mvout = <5000>;
->> +			maxim,mvsys-min = <2400>;
->> +
->> +			camera_flash: flash-led {
->> +				label = "max77693-flash1";
->> +				led-sources = <0>, <1>;
->> +				max-microamp = <500000>;
->> +				flash-max-microamp = <1250000>;
->> +				flash-timeout-us = <1000000>;
->> +			};
->>   		};
->>   	};
->
+Patches 2/4 - 4/4 remain unchanged.
 
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/i2c/i2c-mux-pinctrl.txt    | 21 ++++---
+ drivers/i2c/muxes/i2c-mux-pinctrl.c                | 70 ++++++++++++++--------
+ 2 files changed, 58 insertions(+), 33 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt
+index ae8af1694e95..cd94a0f64d76 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt
+@@ -28,17 +28,18 @@ Also required are:
+ * Standard pinctrl properties that specify the pin mux state for each child
+   bus. See ../pinctrl/pinctrl-bindings.txt.
+ 
+-* Standard I2C mux properties. See mux.txt in this directory.
++* Standard I2C mux properties. See i2c-mux.txt in this directory.
+ 
+-* I2C child bus nodes. See mux.txt in this directory.
++* I2C child bus nodes. See i2c-mux.txt in this directory.
+ 
+-For each named state defined in the pinctrl-names property, an I2C child bus
+-will be created. I2C child bus numbers are assigned based on the index into
+-the pinctrl-names property.
++For each enabled child node an I2C child bus will be created.
+ 
+-The only exception is that no bus will be created for a state named "idle". If
+-such a state is defined, it must be the last entry in pinctrl-names. For
+-example:
++There must be a corresponding pinctrl-names entry for each child node at the
++position of the child node's "reg" property.
++
++Also, there can be an idle pinctrl state defined at the end of possible pinctrl
++states. If such a state is defined, it must be the last entry in pinctrl-names.
++For example:
+ 
+ 	pinctrl-names = "ddc", "pta", "idle"  ->  ddc = bus 0, pta = bus 1
+ 	pinctrl-names = "ddc", "idle", "pta"  ->  Invalid ("idle" not last)
+@@ -68,10 +69,12 @@ Example:
+ 		pinctrl-1 = <&state_i2cmux_pta>;
+ 		pinctrl-2 = <&state_i2cmux_idle>;
+ 
++		/* Disabled child bus 0 */
+ 		i2c@0 {
+ 			reg = <0>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "disabled";
+ 
+ 			eeprom {
+ 				compatible = "eeprom";
+@@ -79,10 +82,12 @@ Example:
+ 			};
+ 		};
+ 
++		/* Enabled child bus 1 */
+ 		i2c@1 {
+ 			reg = <1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "okay";
+ 
+ 			eeprom {
+ 				compatible = "eeprom";
+diff --git a/drivers/i2c/muxes/i2c-mux-pinctrl.c b/drivers/i2c/muxes/i2c-mux-pinctrl.c
+index b48378c4b40d..033dacfabfdf 100644
+--- a/drivers/i2c/muxes/i2c-mux-pinctrl.c
++++ b/drivers/i2c/muxes/i2c-mux-pinctrl.c
+@@ -56,9 +56,12 @@ static int i2c_mux_pinctrl_parse_dt(struct i2c_mux_pinctrl *mux,
+ 				struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	int num_names, i, ret;
++	struct device_node *child;
++	struct property *prop;
++	int num_names, num_children, ret;
+ 	struct device_node *adapter_np;
+ 	struct i2c_adapter *adapter;
++	const char *state;
+ 
+ 	if (!np)
+ 		return 0;
+@@ -77,32 +80,16 @@ static int i2c_mux_pinctrl_parse_dt(struct i2c_mux_pinctrl *mux,
+ 		return num_names;
+ 	}
+ 
+-	mux->pdata->pinctrl_states = devm_kzalloc(&pdev->dev,
+-		sizeof(*mux->pdata->pinctrl_states) * num_names,
+-		GFP_KERNEL);
+-	if (!mux->pdata->pinctrl_states) {
+-		dev_err(mux->dev, "Cannot allocate pinctrl_states\n");
+-		return -ENOMEM;
++	num_children = of_get_available_child_count(np);
++	if (num_children < 0) {
++		dev_err(mux->dev, "Unable to count available children: %d\n",
++			num_children);
++		return num_children;
+ 	}
+ 
+-	for (i = 0; i < num_names; i++) {
+-		ret = of_property_read_string_index(np, "pinctrl-names", i,
+-			&mux->pdata->pinctrl_states[mux->pdata->bus_count]);
+-		if (ret < 0) {
+-			dev_err(mux->dev, "Cannot parse pinctrl-names: %d\n",
+-				ret);
+-			return ret;
+-		}
+-		if (!strcmp(mux->pdata->pinctrl_states[mux->pdata->bus_count],
+-			    "idle")) {
+-			if (i != num_names - 1) {
+-				dev_err(mux->dev, "idle state must be last\n");
+-				return -EINVAL;
+-			}
+-			mux->pdata->pinctrl_state_idle = "idle";
+-		} else {
+-			mux->pdata->bus_count++;
+-		}
++	if (num_names < num_children) {
++		dev_err(mux->dev, "Found less pinctrl states than children\n");
++		return -EINVAL;
+ 	}
+ 
+ 	adapter_np = of_parse_phandle(np, "i2c-parent", 0);
+@@ -118,6 +105,39 @@ static int i2c_mux_pinctrl_parse_dt(struct i2c_mux_pinctrl *mux,
+ 	mux->pdata->parent_bus_num = i2c_adapter_id(adapter);
+ 	put_device(&adapter->dev);
+ 
++	mux->pdata->pinctrl_states = devm_kzalloc(&pdev->dev,
++		sizeof(*mux->pdata->pinctrl_states) * num_children,
++		GFP_KERNEL);
++	if (!mux->pdata->pinctrl_states) {
++		dev_err(mux->dev, "Cannot allocate pinctrl_states\n");
++		return -ENOMEM;
++	}
++
++	of_property_for_each_string(np, "pinctrl-names", prop, state)
++		if (!strcmp(state, "idle"))
++			mux->pdata->pinctrl_state_idle = "idle";
++
++	for_each_available_child_of_node(np, child) {
++		u32 reg;
++
++		ret = of_property_read_u32(child, "reg", &reg);
++		if (ret < 0) {
++			dev_err(mux->dev, "Missing reg property for child node: %d\n",
++				ret);
++			return ret;
++		}
++
++		ret = of_property_read_string_index(np,
++				    "pinctrl-names", reg, &state);
++		if (ret < 0) {
++			dev_err(mux->dev, "Cannot parse pinctrl-names for mux %d: %d\n",
++				reg, ret);
++			return ret;
++		}
++
++		mux->pdata->pinctrl_states[mux->pdata->bus_count++] = state;
++	}
++
+ 	return 0;
+ }
+ #else
 -- 
-Best Regards,
-Jacek Anaszewski
+2.1.0
