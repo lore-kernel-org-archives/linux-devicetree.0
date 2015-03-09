@@ -1,63 +1,35 @@
-From: Eliad Peller <eliad@wizery.com>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Mon, 9 Mar 2015 23:03:30 +0200
-Message-ID: <CAB3XZEc_sjpA8kgfYCsO8FjGEc6O0xhE9aKO3VtgVbd+Meaakg@mail.gmail.com>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
-	<1425915402-10012-3-git-send-email-eliad@wizery.com>
-	<9217056.Z3urqp19oZ@wuerfel>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v2 04/18] clocksource: Add ARM System timer driver
+Date: Mon, 09 Mar 2015 22:12:32 +0100
+Message-ID: <1425935552.4244.6.camel@x220>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+	 <1424455277-29983-5-git-send-email-mcoquelin.stm32@gmail.com>
+	 <20150220195437.GT19388@pengutronix.de> <1424468908.24292.10.camel@x220>
+	 <CALszF6Bm_Y4ZLednjpmP-hMix3gA23FwLm5hViEjr1QojUY+Mg@mail.gmail.com>
+	 <1425411786.2606.24.camel@tiscali.nl>
+	 <CALszF6AEThPrRe7c7nJ6q7yb2fhLMFuHJUV10sf=w0TMcqVVaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <9217056.Z3urqp19oZ@wuerfel>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CALszF6AEThPrRe7c7nJ6q7yb2fhLMFuHJUV10sf=w0TMcqVVaw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 9, 2015 at 9:50 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 09 March 2015 17:36:42 Eliad Peller wrote:
->> --- a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
->> +++ b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
->> @@ -64,4 +64,13 @@
->>         vmmc-supply = <&lbep5clwmc_wlen>;
->>         bus-width = <4>;
->>         non-removable;
->> +
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +       wlcore: wlcore@2 {
->> +               compatible = "ti,wl1835";
->> +               reg = <2>;
->> +               interrupt-parent = <&gpio5>;
->> +               interrupts = <8 IRQ_TYPE_NONE>;
->> +       };
->>
->
-> Why IRQ_TYPE_NONE?
->
-i simply mirrored the current board file (which only sets the irq number).
+On Wed, 2015-03-04 at 13:08 +0100, Maxime Coquelin wrote:
+> This is because I added also support for COMPILE_TEST coverage as per
+> Uwe advice,
+> and thought it was necessary to have an entry for this.
+> Maybe I'm just wrong?
 
-> I was expecting you to remove all calls to legacy_init_wl12xx from this file,
-> including the ones for wl12xx aside from the wl18xx ones you removed, but
-> if that's enough to clean out the platform_data handling from the wlcore
-> driver, it's good enough as a start.
-not sure i'm following - can you elaborate?
+I missed that you added COMPILE_TEST.
 
-i'll summarize the way i see it. please correct me if i'm wrong.
+A quick scan of your idea doesn't show any obvious issues. (Note that I
+don't really know how people actually use COMPILE_TEST. I guess things
+like "make allyesconfig" are involved.)
 
-both wl18xx and wl12xx use the platform data to get the irq number.
-wl12xx (only) also needs some additional clock definitions to be
-passed. there's currently some issue with specifying some the of clock
-sources, so i preferred starting only with (the simpler) wl18xx
-bindings.
 
-for platforms with wl18xx, we can remove the pdata-quirk, as all the
-data (i.e. irq) can be passed by the new DT bindings.
-however, for platforms with wl12xx, we still need to pass the clock
-definitions (along with the irq), so we have to keep
-legacy_init_wl12xx for the time being (and that's also why we have to
-currently keep the platform_data handling in the wlcore driver)
+Paul Bolle
 
-do you have something else in mind?
-
-Eliad.
