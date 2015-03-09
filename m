@@ -1,46 +1,38 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v5 3/8] pinctrl: cygnus: add initial IOMUX driver support
-Date: Mon, 09 Mar 2015 20:53:58 +0100
-Message-ID: <1425930838.2317.46.camel@tiscali.nl>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
-			 <1425515756-321-4-git-send-email-rjui@broadcom.com>
-			 <1425542612.24292.180.camel@x220>
-			 <CACRpkdYTDSSSd5oDNXmcav-2ycbki0=K+0Cm6dLSBHUv6UXF9g@mail.gmail.com>
-		 <1425926456.2317.13.camel@tiscali.nl> <54FDEDBA.1070404@broadcom.com>
-	 <1425929442.2317.39.camel@tiscali.nl> <54FDF72E.2010806@broadcom.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b
+ DesignWare access
+Date: Mon, 9 Mar 2015 22:02:54 +0200
+Message-ID: <CAHp75VcmNOaiyRNLFzQT7nKS6piZzpYSoS785J86rKtNXx6KNg@mail.gmail.com>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+	<1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>
+	<CAHp75VcceG2O+YCw4twBzC_2v9+XQRpfBxMqGXERi3amnj3rdA@mail.gmail.com>
+	<54FDDFE6.8010109@opensource.altera.com>
+	<CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw@mail.gmail.com>
+	<54FDF8BB.4050202@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54FDF72E.2010806@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <54FDF8BB.4050202@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, Linux Documentation List <linux-doc@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Thor Thayer <tthayer.linux@gmail.com>, Axel Lin <axel.lin@ingics.com>, baruch@tkos.co.il, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Ray Jui schreef op ma 09-03-2015 om 12:40 [-0700]:
-> I don't see this as an "issue" to be quite honest.
+On Mon, Mar 9, 2015 at 9:47 PM, Thor Thayer
+<tthayer@opensource.altera.com> wrote:
+> On 03/09/2015 01:54 PM, Andy Shevchenko wrote:
 
-(Off topic: is issue a, well, strong word? To my (non-English) mind it's
-rather neutral, carrying by itself less urgency than, say, problem. If
-I'm wrong I might have confused quite a few people by using it quite
-often. And that would be a real issue!)
+> Yes, I just need the 32 bit write. I was trying to remain consistent but I
+> agree that only changing only writes would minimize the changes.
 
-> By saying that, I at
-> least agree with you that these are not information that's mandatory to
-> be in the driver given what we already have. MODULE_LICENSE is covered
-> by license header. MODULE_DESCRIPTION is covered by descriptions in
-> Kconfig. MODULE_AUTHOR is much less important than what's in the
-> MAINTAINERS list.
-> 
-> Since I have to submit a new patch series to address the "ngpios" issue
-> that Linus mentioned in the other email, I don't mind removing all these
-> MODULE_* macros in the driver all together.
+Which is still makes me anxious.
 
-I see.
+I have briefly read a chapter for SPI in pdf you sent link to. I
+didn't find anything except SPI supports 32 bit data width.
 
-Thanks,
+It would be nice if you ping your HW engineers and clarify what
+exactly is happening there.
 
-
-Paul Bolle
-
+-- 
+With Best Regards,
+Andy Shevchenko
