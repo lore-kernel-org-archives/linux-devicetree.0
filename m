@@ -1,123 +1,53 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH] v4l: mt9v032: Add OF support
-Date: Mon, 9 Mar 2015 12:57:45 +0200
-Message-ID: <20150309105744.GD11954@valkosipuli.retiisi.org.uk>
-References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <54FD7788.2020709@samsung.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Mon, 9 Mar 2015 12:02:56 +0100
+Message-ID: <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
+References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
+	<1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
+	<20150307201340.GF5233@earth>
+	<54FCEABE.9000007@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54FD7788.2020709@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <54FCEABE.9000007@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
+>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
+>>> From: Beomho Seo <beomho.seo@samsung.com>
+>>>
+>>> This patch adds device driver of max77843 charger. This driver provide
+>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
+>>> charging mode so on.). Additionally, control charging paramters to use
+>>> i2c interface.
+>>>
+>>> Cc: Sebastian Reichel <sre@kernel.org>
+>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>>
+>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+>>
+>> I can't take it as is, since it depends on the private header file
+>> of PATCHv1.
+>>
+>> -- Sebastian
+>>
+>
+> This patch reviewed by Sebastian.
+> Could you Please merge that your git tree ?
 
-On Mon, Mar 09, 2015 at 11:35:52AM +0100, Sylwester Nawrocki wrote:
-> Hi Laurent,
-> 
-> On 08/03/15 14:45, Laurent Pinchart wrote:
-> > +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> > @@ -0,0 +1,41 @@
-> > +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
-> > +
-> > +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor with
-> > +an active array size of 752H x 480V. It is programmable through a simple
-> > +two-wire serial interface.
-> > +
-> > +Required Properties:
-> > +
-> > +- compatible: value should be either one among the following
-> > +	(a) "aptina,mt9v032" for MT9V032 color sensor
-> > +	(b) "aptina,mt9v032m" for MT9V032 monochrome sensor
-> > +	(c) "aptina,mt9v034" for MT9V034 color sensor
-> > +	(d) "aptina,mt9v034m" for MT9V034 monochrome sensor
-> 
-> It can't be determined at runtime whether the sensor is just monochromatic ?
-> Al in all the color filter array is a physical property of the sensor, still
-> the driver seems to be ignoring the "m" suffix. Hence I suspect the register
-> interfaces for both color and monochromatic versions are compatible.
-> I'm wondering whether using a boolean property to indicate the color filter
-> array type would do as well.
-> 
-> > +static struct mt9v032_platform_data *
-> > +mt9v032_get_pdata(struct i2c_client *client)
-> > +{
-> > +	struct mt9v032_platform_data *pdata;
-> > +	struct v4l2_of_endpoint endpoint;
-> > +	struct device_node *np;
-> > +	struct property *prop;
-> > +
-> > +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> > +		return client->dev.platform_data;
-> > +
-> > +	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> > +	if (!np)
-> > +		return NULL;
-> > +
-> > +	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
-> > +		goto done;
-> > +
-> > +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> > +	if (!pdata)
-> > +		goto done;
-> > +
-> > +	prop = of_find_property(np, "link-freqs", NULL);
-> 
-> I suspect you meant "link-frequencies" here ?
+Hi,
 
-Yes. I wonder if it'd make sense to add this to struct v4l2_of_endpoint. I
-can write a patch for that.
+... and again we are adding a new driver for very similar chipset to
+already supported. I looked at spec and the charger's registers are
+almost the same as for max77693. Their layout and addresses are the
+same. I see some minor differences, probably the most important would
+be different values current (fast-charge, top-off). But still 90% of
+registers are the same... Do we really have to add new driver?
 
-> > +	if (prop) {
-> > +		size_t size = prop->length / 8;
-> > +		u64 *link_freqs;
-> > +
-> > +		link_freqs = devm_kzalloc(&client->dev,
-> > +					  size * sizeof(*link_freqs),
-> > +					  GFP_KERNEL);
-> > +		if (!link_freqs)
-> > +			goto done;
-> > +
-> > +		if (of_property_read_u64_array(np, "link-frequencies",
-> > +					       link_freqs, size) < 0)
-> > +			goto done;
-> > +
-> > +		pdata->link_freqs = link_freqs;
-> > +		pdata->link_def_freq = link_freqs[0];
-> > +	}
-
-If you're interested in just a single value, you can use
-of_property_read_u64().
-
-> > +	pdata->clk_pol = !!(endpoint.bus.parallel.flags &
-> > +			    V4L2_MBUS_PCLK_SAMPLE_RISING);
-> > +
-> > +done:
-> > +	of_node_put(np);
-> > +	return pdata;
-> > +}
-> 
-> > @@ -1034,9 +1086,21 @@ static const struct i2c_device_id mt9v032_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, mt9v032_id);
-> >  
-> > +#if IS_ENABLED(CONFIG_OF)
-> > +static const struct of_device_id mt9v032_of_match[] = {
-> > +	{ .compatible = "mt9v032" },
-> > +	{ .compatible = "mt9v032m" },
-> > +	{ .compatible = "mt9v034" },
-> > +	{ .compatible = "mt9v034m" },
-> > +	{ /* Sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mt9v032_of_match);
-> > +#endif
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Best regards,
+Krzysztof
