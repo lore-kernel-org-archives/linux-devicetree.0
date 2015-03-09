@@ -1,113 +1,61 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 1/2] dt-bindings: memory-controllers: Add binding for jz4780-nemc
-Date: Mon, 9 Mar 2015 14:29:03 +0000
-Message-ID: <1425911344-29141-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1425911344-29141-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
+Date: Mon, 9 Mar 2015 15:35:42 +0100
+Message-ID: <CACRpkdZgiSWezNtPgDsiNw84Q_4KLxet-DhbmZ6-gu=_3DfNpg@mail.gmail.com>
+References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
+	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
+	<CAL_JsqLjooPxPdG2+fqSJToyWCtZHB=FvkqCUt+WgHExNo7D=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425911344-29141-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLjooPxPdG2+fqSJToyWCtZHB=FvkqCUt+WgHExNo7D=A@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+On Tue, Mar 3, 2015 at 6:47 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Mar 3, 2015 at 3:32 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Add device tree bindings for the NAND/External Memory Controller (NEMC)
-on Ingenic JZ4780
+>> +Optional properties:
+>> +
+>> +- compatible : "simple-mfd" - this signifies that the operating system should
+>> +  spawn child devices for all the subnodes of the MFD device akin to how
+>> +  "simple-bus" inidicates when to spawn children for a simple memory-mapped
+>> +  bus. For more complex devices, when the nexus driver has to probe registers
+>> +  to figure out what children exist etc, this should not be used. In the latter
+>> +  case the child devices will be instantiated by the operating system.
+>
+> If you point of_platform_populate to the parent node, it should
+> instantiate all children regardless of "simple-bus" or any other
+> match. The match is to probe the grandchildren.
 
-Signed-off-by: Alex Smith <alex@alex-smith.me.uk>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Yep, if children are only children of the top node, yes.
 
----
-V1 -> V2
-Rebased to v4.0-rc3
----
- .../memory-controllers/ingenic,jz4780-nemc.txt     | 75 ++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+> I could be mistaken,
+> but that's how it works at the root level.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
-new file mode 100644
-index 0000000..f936b55
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
-@@ -0,0 +1,75 @@
-+* Ingenic JZ4780 NAND/external memory controller (NEMC)
-+
-+This file documents the device tree bindings for the NEMC external memory
-+controller in Ingenic JZ4780
-+
-+Required properties:
-+- compatible: Should be set to one of:
-+    "ingenic,jz4780-nemc" (JZ4780)
-+- reg: Should specify the NEMC controller registers location and length.
-+- clocks: Clock for the NEMC controller.
-+- #address-cells: Must be set to 2.
-+- #size-cells: Must be set to 1.
-+- ranges: A set of ranges for each bank describing the physical memory layout.
-+  Each should specify the following 4 integer values:
-+
-+    <cs number> 0 <physical address of mapping> <size of mapping>
-+
-+Each child of the NEMC node describes a device connected to the NEMC.
-+
-+Required child node properties:
-+- reg: Should contain at least one register specifier, given in the following
-+  format:
-+
-+    <cs number> <offset> <size>
-+
-+  Multiple registers can be specified across multiple banks. This is needed,
-+  for example, for packaged NAND devices with multiple dies. Such devices
-+  should be grouped into a single node.
-+
-+Optional child node properties:
-+- ingenic,nemc-bus-width: Specifies the bus width in bits. Defaults to 8 bits.
-+- ingenic,nemc-tAS: Address setup time in nanoseconds.
-+- ingenic,nemc-tAH: Address hold time in nanoseconds.
-+- ingenic,nemc-tBP: Burst pitch time in nanoseconds.
-+- ingenic,nemc-tAW: Access wait time in nanoseconds.
-+- ingenic,nemc-tSTRV: Static memory recovery time in nanoseconds.
-+
-+If a child node references multiple banks in its "reg" property, the same value
-+for all optional parameters will be configured for all banks. If any optional
-+parameters are omitted, they will be left unchanged from whatever they are
-+configured to when the NEMC device is probed (which may be the reset value as
-+given in the hardware reference manual, or a value configured by the boot
-+loader).
-+
-+Example (NEMC node with a NAND child device attached at CS1):
-+
-+nemc: nemc@13410000 {
-+	compatible = "ingenic,jz4780-nemc";
-+	reg = <0x13410000 0x10000>;
-+
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+
-+	ranges = <1 0 0x1b000000 0x1000000
-+		  2 0 0x1a000000 0x1000000
-+		  3 0 0x19000000 0x1000000
-+		  4 0 0x18000000 0x1000000
-+		  5 0 0x17000000 0x1000000
-+		  6 0 0x16000000 0x1000000>;
-+
-+	clocks = <&cgu JZ4780_CLK_NEMC>;
-+
-+	nand: nand@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;
-+
-+		ingenic,nemc-tAS = <10>;
-+		ingenic,nemc-tAH = <5>;
-+		ingenic,nemc-tBP = <10>;
-+		ingenic,nemc-tAW = <15>;
-+		ingenic,nemc-tSTRV = <100>;
-+
-+		...
-+	};
-+};
--- 
-1.9.1
+Yes but only at the root level.
+
+> You don't have a driver
+> probe for the parent, so you want the top level of_platform_populate
+> call to instantiate these devices?
+
+of_platform_populate() only populates one level unless the node has
+something like "simple-bus" or this new "simple-mfd" compatible on
+it.
+
+> Why does simple-bus not work for you? After all, it is not
+> "simple-memory-map-bus."
+
+As Lee says it works (obviously since I'm just adding a oneliner
+doing exactly the same thing as "simple-bus"), but the
+terminology is just wrong. It's not a bus in any hardware sense,
+as MFD is a logical subdevice split, nothing else.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
