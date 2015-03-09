@@ -1,30 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 3/8] pinctrl: cygnus: add initial IOMUX driver support
-Date: Mon, 9 Mar 2015 17:26:26 +0100
-Message-ID: <CACRpkdacEjY3FuczY=tJ26Xpd67m3yYxCKbOVYrRDvjCynwoiw@mail.gmail.com>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
-	<1425515756-321-4-git-send-email-rjui@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425515756-321-4-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>devicetree@
+From: tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: [PATCH v1 0/2] ARM: dts: add dts files for Cubieboard4
+Date: Mon,  9 Mar 2015 09:26:59 -0700
+Message-ID: <1425918421-22876-1-git-send-email-tyler.baker@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 5, 2015 at 1:35 AM, Ray Jui <rjui@broadcom.com> wrote:
+From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> This adds the initial driver support for the Broadcom Cygnus IOMUX
-> controller. The Cygnus IOMUX controller supports group based mux
-> configuration but allows certain pins to be muxed to GPIO individually
->
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-> Tested-by: Dmitry Torokhov <dtor@chromium.org>
+This series adds basic support for the Cubietech Cubieboard4.
 
-Nice and clean.
-Patch applied.
+The Cubietech Cubieboard4 is a A80 based development board with 2GB DDR3, 8GB
+eMMC, Micro SD, HDMI, VGA, 3.5mm audio jack. One USB OTG port and four USB 2.0
+ports.
 
-Yours,
-Linus Walleij
+The sun9i-a80-optimus device tree[1] has been used to boot this board for some
+time now, as the two platforms are very similar. But there are differences, so 
+it deserves it's own device tree. I've tested this series on a 
+Cubieboard4[2][3] and can confirm UART, eMMC, and MMC are working properly.
+
+This patch series is based on arm-soc v4.0-rc2.
+
+[1] http://kernelci.org/boot/sun9i-a80-cubieboard4/ 
+[2] http://lava.kernelci.org/scheduler/job/47969/log_file#L_13_308
+[3] http://lava.kernelci.org/scheduler/job/47969/log_file#L_17_11
+
+Changes v0 -> v1:
+* Corrected typo. a80-cubietruck -> a80-cubieboard4.
+* Removed bootargs node.
+* Added stdout-path for uart0.
+* Removed unneeded newline.
+
+Tyler Baker (2):
+  ARM: dts: add cubietech cubieboard4
+  ARM: dts: add vendor prefix for cubietech
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts        | 100 +++++++++++++++++++++
+ 3 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
