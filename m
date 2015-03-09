@@ -1,140 +1,145 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/5] dts: mt8173: Add iommu/smi nodes for mt8173
-Date: Mon, 9 Mar 2015 20:18:34 +0800
-Message-ID: <1425903514.13300.35.camel@mhfsdcap03>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	 <1425638900-24989-6-git-send-email-yong.wu@mediatek.com>
-	 <CAGS+omDotK45t5a4FKpU9z2Bg=e9aWDpXt+mCX92CM-2ZMQGNg@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v12 10/19] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Mon, 09 Mar 2015 13:19:32 +0100
+Message-ID: <54FD8FD4.2010305@samsung.com>
+References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
+ <1425485680-8417-11-git-send-email-j.anaszewski@samsung.com>
+ <20150309105404.GC11954@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omDotK45t5a4FKpU9z2Bg=e9aWDpXt+mCX92CM-2ZMQGNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150309105404.GC11954@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Daniel,
+Hi Sakari,
 
-     Thanks very much. I will fix this in next version.
+Thanks for the review.
 
-On Sat, 2015-03-07 at 23:20 +0800, Daniel Kurtz wrote:
-> Hi Yong,
-> 
-> On Fri, Mar 6, 2015 at 6:48 PM,  <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> > This patch add the iommu/larbs nodes for mt8173
-> >
-> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi      |  60 ++++++++++++
-> >  include/dt-bindings/iommu/mt8173-iommu-port.h | 127 ++++++++++++++++++++++++++
-> >  2 files changed, 187 insertions(+)
-> >  create mode 100644 include/dt-bindings/iommu/mt8173-iommu-port.h
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index c2a057f..805a7cd 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -16,6 +16,7 @@
-> >  #include <dt-bindings/reset-controller/mt8173-resets.h>
-> >  #include "mt8173-pinfunc.h"
-> >  #include <dt-bindings/clock/mt8173-clk.h>
-> > +#include <dt-bindings/iommu/mt8173-iommu-port.h>
-> >
-> >  / {
-> >         compatible = "mediatek,mt8173";
-> > @@ -249,6 +250,65 @@
-> >                         interrupts = <0 86 8>;
-> >                         clocks = <&uart_clk>;
-> >                 };
-> > +
-> > +               iommu: mmsys_iommu@10205000 {
-> > +                       compatible = "mediatek,mt8173-iommu";
-> > +                       reg = <0 0x10205000 0 0x1000>;
-> > +                       interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clocks = <&infrasys INFRA_M4U>;
-> > +                       clock-names = "infra_m4u";
-> > +                       larb = <&larb0 &larb1 &larb2 &larb3 &larb4 &larb5>;
-> > +                       #iommu-cells = <1>;
-> > +               };
-> > +
-> > +               larb0:larb@14021000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x14021000 0 0x1000>;
-> > +                       clocks = <&mmsys MM_SMI_COMMON>, <&mmsys MM_SMI_LARB0>;
-> > +                       clock-names = "larb_sub0", "larb_sub1";
-> > +               };
-> > +
-> > +               larb1:larb@16010000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x16010000 0 0x1000>;
-> > +                       clocks = <&mmsys MM_SMI_COMMON>,
-> > +                                       <&vdecsys VDEC_CKEN>,
-> > +                                       <&vdecsys VDEC_LARB_CKEN>;
-> > +                       clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-> > +               };
-> > +
-> > +               larb2:larb@16010000 {
-> 
-> I think this one should be:
->    larb2: larb@15001000 {
-> 
-> Also, I am not a devicetree expert, but I believe nodes are usually
-> arranged in register order.
-> If that is the case, the order, as unfortunate as this looks, should be:
-> 
->  larb0: larb@14021000
->  larb4: larb@14027000
->  larb2: larb@15001000
->  larb1: larb@16010000
->  larb3: larb@18001000
->  larb5: larb@19001000
-> 
-> -Dan
-> 
-> 
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x15001000 0 0x1000>;
-> > +                       clocks = <&mmsys MM_SMI_COMMON>,
-> > +                                       <&imgsys IMG_LARB2_SMI>;
-> > +                       clock-names = "larb_sub0", "larb_sub1";
-> > +               };
-> > +
-> > +               larb3:larb@18001000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x18001000 0 0x1000>;
-> > +                       clocks = <&mmsys MM_SMI_COMMON>,
-> > +                                       <&vencsys VENC_CKE0>,
-> > +                                       <&vencsys VENC_CKE1>;
-> > +                       clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-> > +               };
-> > +
-> > +               larb4:larb@14027000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x14027000 0 0x1000>;
-> > +                       clocks = <&mmsys MM_SMI_COMMON>, <&mmsys MM_SMI_LARB4>;
-> > +                       clock-names = "larb_sub0", "larb_sub1";
-> > +               };
-> > +
-> > +               larb5:larb@19001000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x19001000 0 0x1000>;
-> > +                       clocks = <&mmsys MM_SMI_COMMON>,
-> > +                                       <&vencltsys VENCLT_CKE0>,
-> > +                                       <&vencltsys VENCLT_CKE1>;
-> > +                       clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
-> > +               };
-> >         };
-> >
-> >  };
-> > --
-> > 1.8.1.1.dirty
+On 03/09/2015 11:54 AM, Sakari Ailus wrote:
+> Hi Jacek,
+>
+> On Wed, Mar 04, 2015 at 05:14:31PM +0100, Jacek Anaszewski wrote:
+>> This patch adds device tree binding documentation for
+>> the flash cell of the Maxim max77693 multifunctional device.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> ---
+>>   Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
+>>   1 file changed, 61 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+>> index 38e6440..ab8fbd5 100644
+>> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+>> @@ -76,7 +76,53 @@ Optional properties:
+>>       Valid values: 4300000, 4700000, 4800000, 4900000
+>>       Default: 4300000
+>>
+>> +- led : the LED submodule device node
+>> +
+>> +There are two LED outputs available - FLED1 and FLED2. Each of them can
+>> +control a separate LED or they can be connected together to double
+>> +the maximum current for a single connected LED. One LED is represented
+>> +by one child node.
+>> +
+>> +Required properties:
+>> +- compatible : Must be "maxim,max77693-led".
+>> +
+>> +Optional properties:
+>> +- maxim,trigger-type : Flash trigger type.
+>> +	Possible trigger types:
+>> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
+>> +			the flash,
+>> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
+>> +			of the flash.
+>> +- maxim,boost-mode :
+>> +	In boost mode the device can produce up to 1.2A of total current
+>> +	on both outputs. The maximum current on each output is reduced
+>> +	to 625mA then. If not enabled explicitly, boost setting defaults to
+>> +	LEDS_BOOST_FIXED in case both current sources are used.
+>> +	Possible values:
+>> +		LEDS_BOOST_OFF (0) - no boost,
+>> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
+>> +		LEDS_BOOST_FIXED (2) - fixed mode.
+>> +- maxim,boost-mvout : Output voltage of the boost module in millivolts.
+>> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
+>> +	if chip estimates that system voltage could drop below this level due
+>> +	to flash power consumption.
+>> +
+>> +Required properties of the LED child node:
+>> +- label : see Documentation/devicetree/bindings/leds/common.txt
+>
+> According to ePAPR, label is "a human readable string describing a device".
+> There's no requirement that this would be unique, for instance. If you have
+> a camera flash LED, there's necessarily no meaningful label for it, as it
+> doesn't really tell the user anything (vs. HDD activity LED, for instance).
+>
+> I think I'd make this optional.
+
+OK.
+
+> What comes to entity naming in Media controller, the label isn't enough. As
+> we haven't yet fully agreed on how to name the entities in the future, I'd
+> propose sticking to current practices: chip name (and optional numerical LED
+> ID) followed by the I2C address. The name should be specified by the driver.
+>
+> Do you have other than I2C busses required by the current drivers?
+
+I have AAT1290 device driven through GPIOs. There was also other driver,
+for a similar device, submitted few days ago to linux-leds list.
+
+>> +- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
+>> +		device current output identifiers: 0 - FLED1, 1 - FLED2
+>> +
+>> +Optional properties of the LED child node:
+>> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+>> +		Range: 15625 - 250000
+>> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+>> +		Range: 15625 - 1000000
+>> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
+>> +		Range: 62500 - 1000000
+>> +
+>>   Example:
+>> +#include <dt-bindings/leds/max77693.h>
+>> +
+>>   	max77693@66 {
+>>   		compatible = "maxim,max77693";
+>>   		reg = <0x66>;
+>> @@ -117,5 +163,20 @@ Example:
+>>   			maxim,thermal-regulation-celsius = <75>;
+>>   			maxim,battery-overcurrent-microamp = <3000000>;
+>>   			maxim,charge-input-threshold-microvolt = <4300000>;
+>> +
+>> +		led {
+>> +			compatible = "maxim,max77693-led";
+>> +			maxim,trigger-type = <LEDS_TRIG_TYPE_LEVEL>;
+>> +			maxim,boost-mode = <LEDS_BOOST_FIXED>;
+>> +			maxim,boost-mvout = <5000>;
+>> +			maxim,mvsys-min = <2400>;
+>> +
+>> +			camera_flash: flash-led {
+>> +				label = "max77693-flash1";
+>> +				led-sources = <0>, <1>;
+>> +				max-microamp = <500000>;
+>> +				flash-max-microamp = <1250000>;
+>> +				flash-timeout-us = <1000000>;
+>> +			};
+>>   		};
+>>   	};
+>
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
