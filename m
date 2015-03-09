@@ -1,476 +1,71 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v3] ARM64: Add new Xilinx ZynqMP SoC
-Date: Mon,  9 Mar 2015 09:41:04 +0100
-Message-ID: <8dea13bec5470b0b18c586ce62c1fea467f9f647.1425890447.git.michal.simek@xilinx.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] wl18xx: add basic device-tree support
+Date: Mon, 09 Mar 2015 09:50:06 +0100
+Message-ID: <2443534.iHU6YUeZ2u@wuerfel>
+References: <1424362401-8228-1-git-send-email-eliad@wizery.com> <2658240.aoSloEbWge@wuerfel> <CAB3XZEczvZH8rYOD-P7iuU4RSurArpRp6JGYX1X22O8tj7v8Qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>
-Cc: Zach Pfeffer <zachp@xilinx.com>, marc.zynqier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAB3XZEczvZH8rYOD-P7iuU4RSurArpRp6JGYX1X22O8tj7v8Qg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Initial version of device tree for Xilinx ZynqMP SoC.
+On Monday 09 March 2015 09:18:46 Eliad Peller wrote:
+> On Sun, Mar 8, 2015 at 11:53 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Sunday 08 March 2015 13:13:13 Eliad Peller wrote:
+> >>
+> >> > I've looked up the what boards actually use this data and found that
+> >> > all of them already support booting from DT: some omap2 boards using
+> >> > arch/arm/mach-omap2/pdata-quirks.c to provide the data, and the
+> >> > davinci 850evm. Can you make sure you add the correct data to all
+> >> > of these dts files as part of your series and remove the
+> >> > wl12xx_platform_data references?
+> >>
+> >> AFAICT, these board files add wl12xx platform data, while the new DT
+> >> support is only for wl18xx.
+> >>
+> >
+> > How can you tell the difference? What I see is that omap3pandora
+> > (and nothing else) calls wl1251_set_platform_data(), while
+> > da850-evm and all omap3/omap4 boards use wl12xx_set_platform_data().
+> >
+> > The latter seems to refer to all wl12xx and wl18xx variants except
+> > for wl1251, based on my (very limited) understanding of that code.
+> 
+> right.
+> i got mislead because legacy_init_wl12xx() is defined there only for
+> CONFIG_WL12XX (and not for CONFIG_WL18XX).
+> it looks like only "isee,omap3-igep0020-rev-f" and
+> "isee,omap3-igep0020-rev-g" have pdata quirks for wl18xx (and thus
+> initialize the pdata clocks to 0).
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
----
+Ok.
 
-Changes in v3:
-- Add the missing GIC maintenance interrupt
-  Reported-by Marc Zyngier <marc.zyngier@arm.com>
-- Fix PPI interrupt mask to reflect 4 cores
-- Remove cortex-a9-gic compatible string and add arm,gic-400 one
-  Reported-by Mark Rutland
+> sorry for the trivial question, but what's the standard way to submit
+> such patch? should i simply add a third patch to the patchset which
+> removes the pdata quirk and adds the missing dts definition? i don't
+> have such board, so i can only compile-test it.
 
-Changes in v2:
--  move timer out of amba_apu bus because it is not on bus
-   Reported by Mark
-- FIC GICC and GICV addresses - Reported by Rob
-- Fix copyright
-- Enable cadence IP in defconfig
-- Add support for macb multiqueue
+Yes, I think that would be good. Depending on the complexity of the
+patch, you can do it in multiple ways:
 
- arch/arm64/Kconfig                          |   5 +
- arch/arm64/boot/dts/Makefile                |   1 +
- arch/arm64/boot/dts/xilinx/Makefile         |   5 +
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts |  47 +++++
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 305 ++++++++++++++++++++=
-++++++++
- arch/arm64/configs/defconfig                |   3 +
- 6 files changed, 366 insertions(+)
- create mode 100644 arch/arm64/boot/dts/xilinx/Makefile
- create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
- create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+a) one patch to all the dts files, which also removes the
+   legacy_init_wl12xx() infrastructure
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1b8e97331ffb..9f805cf2e0b0 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -228,6 +228,11 @@ config ARCH_XGENE
- 	help
- 	  This enables support for AppliedMicro X-Gene SOC Family
-=20
-+config ARCH_ZYNQMP
-+	bool "Xilinx ZynqMP Family"
-+	help
-+	  This enables support for Xilinx ZynqMP Family
-+
- endmenu
-=20
- menu "Bus support"
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefil=
-e
-index e0350caf049e..ff088ec6ca5f 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -5,5 +5,6 @@ dts-dirs +=3D cavium
- dts-dirs +=3D exynos
- dts-dirs +=3D freescale
- dts-dirs +=3D mediatek
-+dts-dirs +=3D xilinx
-=20
- subdir-y	:=3D $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts/=
-xilinx/Makefile
-new file mode 100644
-index 000000000000..ae16427f6a4a
---- /dev/null
-+++ b/arch/arm64/boot/dts/xilinx/Makefile
-@@ -0,0 +1,5 @@
-+dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-ep108.dtb
-+
-+always		:=3D $(dtb-y)
-+subdir-y	:=3D $(dts-dirs)
-+clean-files	:=3D *.dtb
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/b=
-oot/dts/xilinx/zynqmp-ep108.dts
-new file mode 100644
-index 000000000000..0a3f40ecd06d
---- /dev/null
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -0,0 +1,47 @@
-+/*
-+ * dts file for Xilinx ZynqMP ep108 development board
-+ *
-+ * (C) Copyright 2014 - 2015, Xilinx, Inc.
-+ *
-+ * Michal Simek <michal.simek@xilinx.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "zynqmp.dtsi"
-+
-+/ {
-+	model =3D "ZynqMP EP108";
-+
-+	aliases {
-+		serial0 =3D &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path =3D "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type =3D "memory";
-+		reg =3D <0x0 0x0 0x40000000>;
-+	};
-+};
-+
-+&gem0 {
-+	status =3D "okay";
-+	phy-handle =3D <&phy0>;
-+	phy-mode =3D "rgmii-id";
-+	phy0: phy@0{
-+		reg =3D <0>;
-+		max-speed =3D <100>;
-+	};
-+};
-+
-+&uart0 {
-+	status =3D "okay";
-+};
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/d=
-ts/xilinx/zynqmp.dtsi
-new file mode 100644
-index 000000000000..11e0b00045cf
---- /dev/null
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -0,0 +1,305 @@
-+/*
-+ * dts file for Xilinx ZynqMP
-+ *
-+ * (C) Copyright 2014 - 2015, Xilinx, Inc.
-+ *
-+ * Michal Simek <michal.simek@xilinx.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/ {
-+	compatible =3D "xlnx,zynqmp";
-+	#address-cells =3D <2>;
-+	#size-cells =3D <1>;
-+
-+	cpus {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		cpu@0 {
-+			compatible =3D "arm,cortex-a53", "arm,armv8";
-+			device_type =3D "cpu";
-+			enable-method =3D "psci";
-+			reg =3D <0x0>;
-+		};
-+
-+		cpu@1 {
-+			compatible =3D "arm,cortex-a53", "arm,armv8";
-+			device_type =3D "cpu";
-+			enable-method =3D "psci";
-+			reg =3D <0x1>;
-+		};
-+
-+		cpu@2 {
-+			compatible =3D "arm,cortex-a53", "arm,armv8";
-+			device_type =3D "cpu";
-+			enable-method =3D "psci";
-+			reg =3D <0x2>;
-+		};
-+
-+		cpu@3 {
-+			compatible =3D "arm,cortex-a53", "arm,armv8";
-+			device_type =3D "cpu";
-+			enable-method =3D "psci";
-+			reg =3D <0x3>;
-+		};
-+	};
-+
-+	pmu {
-+		compatible =3D "arm,armv8-pmuv3";
-+		interrupts =3D <0 143 4>,
-+			     <0 144 4>,
-+			     <0 145 4>,
-+			     <0 146 4>;
-+	};
-+
-+	psci {
-+		compatible =3D "arm,psci-0.2";
-+		method =3D "smc";
-+	};
-+
-+	timer {
-+		compatible =3D "arm,armv8-timer";
-+		interrupt-parent =3D <&gic>;
-+		interrupts =3D <1 13 0xf01>,
-+			     <1 14 0xf01>,
-+			     <1 11 0xf01>,
-+			     <1 10 0xf01>;
-+	};
-+
-+	amba_apu {
-+		compatible =3D "simple-bus";
-+		#address-cells =3D <2>;
-+		#size-cells =3D <1>;
-+		ranges;
-+
-+		gic: interrupt-controller@f9010000 {
-+			compatible =3D "arm,gic-400", "arm,cortex-a15-gic";
-+			#interrupt-cells =3D <3>;
-+			reg =3D <0x0 0xf9010000 0x10000>,
-+			      <0x0 0xf902f000 0x2000>,
-+			      <0x0 0xf9040000 0x20000>,
-+			      <0x0 0xf906f000 0x2000>;
-+			interrupt-controller;
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <1 9 0xf04>;
-+		};
-+	};
-+
-+	amba {
-+		compatible =3D "simple-bus";
-+		#address-cells =3D <2>;
-+		#size-cells =3D <1>;
-+		ranges;
-+
-+		misc_clk: misc_clk {
-+			compatible =3D "fixed-clock";
-+			#clock-cells =3D <0>;
-+			clock-frequency =3D <25000000>;
-+		};
-+
-+		ttc0: timer@ff110000 {
-+			compatible =3D "cdns,ttc";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 36 4>, <0 37 4>, <0 38 4>;
-+			reg =3D <0x0 0xff110000 0x1000>;
-+			clocks =3D <&misc_clk>;
-+			timer-width =3D <32>;
-+		};
-+
-+		ttc1: timer@ff120000 {
-+			compatible =3D "cdns,ttc";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 39 4>, <0 40 4>, <0 41 4>;
-+			reg =3D <0x0 0xff120000 0x1000>;
-+			clocks =3D <&misc_clk>;
-+			timer-width =3D <32>;
-+		};
-+
-+		ttc2: timer@ff130000 {
-+			compatible =3D "cdns,ttc";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 42 4>, <0 43 4>, <0 44 4>;
-+			reg =3D <0x0 0xff130000 0x1000>;
-+			clocks =3D <&misc_clk>;
-+			timer-width =3D <32>;
-+		};
-+
-+		ttc3: timer@ff140000 {
-+			compatible =3D "cdns,ttc";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 45 4>, <0 46 4>, <0 47 4>;
-+			reg =3D <0x0 0xff140000 0x1000>;
-+			clocks =3D <&misc_clk>;
-+			timer-width =3D <32>;
-+		};
-+
-+		uart0: serial@ff000000 {
-+			compatible =3D "cdns,uart-r1p8";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 21 4>;
-+			reg =3D <0x0 0xff000000 0x1000>;
-+			clock-names =3D "uart_clk", "pclk";
-+			clocks =3D <&misc_clk &misc_clk>;
-+		};
-+
-+		uart1: serial@ff010000 {
-+			compatible =3D "cdns,uart-r1p8";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 22 4>;
-+			reg =3D <0x0 0xff010000 0x1000>;
-+			clock-names =3D "uart_clk", "pclk";
-+			clocks =3D <&misc_clk &misc_clk>;
-+		};
-+
-+		gpio: gpio@ff0a0000 {
-+			compatible =3D "xlnx,zynq-gpio-1.0";
-+			status =3D "disabled";
-+			#gpio-cells =3D <0x2>;
-+			clocks =3D <&misc_clk>;
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 16 4>;
-+			reg =3D <0x0 0xff0a0000 0x1000>;
-+		};
-+
-+		gem0: ethernet@ff0b0000 {
-+			compatible =3D "cdns,gem";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 57 4>, <0 57 4>;
-+			reg =3D <0x0 0xff0b0000 0x1000>;
-+			clock-names =3D "pclk", "hclk", "tx_clk";
-+			clocks =3D <&misc_clk>, <&misc_clk>, <&misc_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		gem1: ethernet@ff0c0000 {
-+			compatible =3D "cdns,gem";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 59 4>, <0 59 4>;
-+			reg =3D <0x0 0xff0c0000 0x1000>;
-+			clock-names =3D "pclk", "hclk", "tx_clk";
-+			clocks =3D <&misc_clk>, <&misc_clk>, <&misc_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		gem2: ethernet@ff0d0000 {
-+			compatible =3D "cdns,gem";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 61 4>, <0 61 4>;
-+			reg =3D <0x0 0xff0d0000 0x1000>;
-+			clock-names =3D "pclk", "hclk", "tx_clk";
-+			clocks =3D <&misc_clk>, <&misc_clk>, <&misc_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		gem3: ethernet@ff0e0000 {
-+			compatible =3D "cdns,gem";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 63 4>, <0 63 4>;
-+			reg =3D <0x0 0xff0e0000 0x1000>;
-+			clock-names =3D "pclk", "hclk", "tx_clk";
-+			clocks =3D <&misc_clk>, <&misc_clk>, <&misc_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		spi0: spi@ff040000 {
-+			compatible =3D "cdns,spi-r1p6";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 19 4>;
-+			reg =3D <0x0 0xff040000 0x1000>;
-+			clock-names =3D "ref_clk", "pclk";
-+			clocks =3D <&misc_clk &misc_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		spi1: spi@ff050000 {
-+			compatible =3D "cdns,spi-r1p6";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 20 4>;
-+			reg =3D <0x0 0xff050000 0x1000>;
-+			clock-names =3D "ref_clk", "pclk";
-+			clocks =3D <&misc_clk &misc_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		i2c_clk: i2c_clk {
-+			compatible =3D "fixed-clock";
-+			#clock-cells =3D <0x0>;
-+			clock-frequency =3D <111111111>;
-+		};
-+
-+		i2c0: i2c@ff020000 {
-+			compatible =3D "cdns,i2c-r1p10";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 17 4>;
-+			reg =3D <0x0 0xff020000 0x1000>;
-+			clocks =3D <&i2c_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		i2c1: i2c@ff030000 {
-+			compatible =3D "cdns,i2c-r1p10";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 18 4>;
-+			reg =3D <0x0 0xff030000 0x1000>;
-+			clocks =3D <&i2c_clk>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		sdhci0: sdhci@ff160000 {
-+			compatible =3D "arasan,sdhci-8.9a";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 48 4>;
-+			reg =3D <0x0 0xff160000 0x1000>;
-+			clock-names =3D "clk_xin", "clk_ahb";
-+			clocks =3D <&misc_clk>, <&misc_clk>;
-+		};
-+
-+		sdhci1: sdhci@ff170000 {
-+			compatible =3D "arasan,sdhci-8.9a";
-+			status =3D "disabled";
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 49 4>;
-+			reg =3D <0x0 0xff170000 0x1000>;
-+			clock-names =3D "clk_xin", "clk_ahb";
-+			clocks =3D <&misc_clk>, <&misc_clk>;
-+		};
-+
-+		watchdog0: watchdog@fd4d0000 {
-+			compatible =3D "cdns,wdt-r1p2";
-+			status =3D "disabled";
-+			clocks=3D <&misc_clk>;
-+			interrupt-parent =3D <&gic>;
-+			interrupts =3D <0 52 1>;
-+			reg =3D <0x0 0xfd4d0000 0x1000>;
-+			timeout-sec =3D <10>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
-g
-index be1f12a5a5f0..c34bfa002303 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -36,6 +36,7 @@ CONFIG_ARCH_MEDIATEK=3Dy
- CONFIG_ARCH_THUNDER=3Dy
- CONFIG_ARCH_VEXPRESS=3Dy
- CONFIG_ARCH_XGENE=3Dy
-+CONFIG_ARCH_ZYNQMP=3Dy
- CONFIG_PCI=3Dy
- CONFIG_PCI_MSI=3Dy
- CONFIG_PCI_XGENE=3Dy
-@@ -94,6 +95,8 @@ CONFIG_SERIAL_8250_MT6577=3Dy
- CONFIG_SERIAL_AMBA_PL011=3Dy
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=3Dy
- CONFIG_SERIAL_OF_PLATFORM=3Dy
-+CONFIG_SERIAL_XILINX_PS_UART=3Dy
-+CONFIG_SERIAL_XILINX_PS_UART_CONSOLE=3Dy
- CONFIG_VIRTIO_CONSOLE=3Dy
- # CONFIG_HW_RANDOM is not set
- CONFIG_SPI=3Dy
---=20
-1.8.2.3
+b) one patch to add the .dts changes, a second patch to remove the
+   code from pdata-quirks.c and a third to remove the functionality
+   in the driver
+
+c) one patch per board.
+
+I'm fine with any of these, but the omap maintainers might have a
+preference.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
