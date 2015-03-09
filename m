@@ -1,50 +1,33 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC/PATCHv2 1/3] spi: dw-spi: Single Register read to clear IRQs
-Date: Mon, 9 Mar 2015 18:43:55 +0000
-Message-ID: <20150309184355.GA28806@sirena.org.uk>
-References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
- <1425685594-26595-2-git-send-email-tthayer@opensource.altera.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v5 6/8] pinctrl: cygnus: add gpio/pinconf driver
+Date: Mon, 09 Mar 2015 19:47:12 +0100
+Message-ID: <1425926832.2317.16.camel@tiscali.nl>
+References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
+	 <1425515756-321-7-git-send-email-rjui@broadcom.com>
+	 <1425543104.24292.185.camel@x220> <1425544581.24292.194.camel@x220>
+	 <54F88EB8.3020208@broadcom.com>
+	 <CACRpkdbG3t3QEobibbf7wquTtCRm=B0qwivoAp9FTkYpYNL9JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uT8OcDz013Sgpw/5"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425685594-26595-2-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: grant.likely@linaro.org, jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, axel.lin@ingics.com, baruch@tkos.co.il, andriy.shevchenko@linux.intel.com, jg1.han@samsung.com, galak@codeaurora.org, Andy Shevchenko <andriy.shevchenko@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbG3t3QEobibbf7wquTtCRm=B0qwivoAp9FTkYpYNL9JA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list>
 List-Id: devicetree@vger.kernel.org
 
+Linus Walleij schreef op ma 09-03-2015 om 17:41 [+0100]:
+> As pointed out in another mail on similar subject, I think these macros
+> are a kind of obsolete documentation and if they should be dropped we
+> need to go over an entire subsystem at a time and remove all boolean users
+> in a big patch.
 
---uT8OcDz013Sgpw/5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+And, as I stated in that other thread, we could start by first checking
+for things like this during review. (And if people were to do clean up
+patches I'd suggest to do them one driver at a time. Just to keep things
+manageable.)
 
-On Fri, Mar 06, 2015 at 05:46:32PM -0600, tthayer@opensource.altera.com wro=
-te:
-> From: Thor Thayer <tthayer@opensource.altera.com>
->=20
-> Instead of clearing the RxU, RxO, and TxO IRQs individually with
-> 3 register reads, a single read of the ICR register will do the
-> same thing.
 
-Applied, thanks.
+Paul Bolle
 
---uT8OcDz013Sgpw/5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU/enrAAoJECTWi3JdVIfQFq4H/2UEa926XetfdbzNYmJMwzxK
-oaTsbUOnH6kcfkSElQb/65UYRHadyg7msXcWjK4T4m8f0l5c25KZaGp5iygZNFAw
-/2klUtXcVG+wd/dwCLuN+oQN6IzIDMl4gL16Jv9uUpCmZFnFqHXjwGovl63pcbW6
-gnM082WDHZS4I9F7vwFmaSzq99QeViNu/8ui8XObtec15+Y15xGz6Pz3ks9W+THy
-BGYsctnTPxxIs5kuh6sEnQtb/3SD3IBRgXDZ0MrbnkOyVfouub9dGlUQ+67tYbRb
-+BgVUERAHRBs1MCT3TcQUftl3kmFWLa2ZbdNPCo+UY9IqZHrfz7wYS+quGcXXSQ=
-=Q6eM
------END PGP SIGNATURE-----
-
---uT8OcDz013Sgpw/5--
