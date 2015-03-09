@@ -1,50 +1,55 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 1/2] mfd: AXP20x: Add bindings documentation
-Date: Mon, 9 Mar 2015 09:29:31 +0000
-Message-ID: <20150309092931.GC3427@x1>
-References: <1424431168-25157-1-git-send-email-wens@csie.org>
- <1424431168-25157-2-git-send-email-wens@csie.org>
- <CAGb2v65-kq=usC8Xip56p9wbs7RMUd0=sXcjcgY3Ec33bxEUaw@mail.gmail.com>
+Subject: Re: [PATCH/RFC v12 08/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
+ TORCH_EN_SHIFT macros
+Date: Mon, 9 Mar 2015 09:35:16 +0000
+Message-ID: <20150309093516.GF3427@x1>
+References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
+ <1425485680-8417-9-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65-kq=usC8Xip56p9wbs7RMUd0=sXcjcgY3Ec33bxEUaw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+In-Reply-To: <1425485680-8417-9-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 07 Mar 2015, Chen-Yu Tsai wrote:
+On Wed, 04 Mar 2015, Jacek Anaszewski wrote:
 
-> On Fri, Feb 20, 2015 at 7:19 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> > From: Carlo Caione <carlo@caione.org>
-> >
-> > Bindings documentation for the AXP20x driver. In this file also
-> > sub-nodes are documented.
-> >
-> > Signed-off-by: Carlo Caione <carlo@caione.org>
-> > [wens@csie.org: clarify interrupt source for the axp PMIC]
-> > [wens@csie.org: explain dcdc-workmode in detail and trim lines to 8=
-0 chars]
-> > [wens@csie.org: make regulator supplies optional if using unregulat=
-ed input]
-> > [wens@csie.org: use cubieboard2 regulator nodes as example]
-> > [wens@csie.org: x-powers,dcdc-workmode default changed to 'current =
-hardware
-> >                 setting']
-> > [wens@csie.org: reorganized regulator related properties into separ=
-ate
-> >                 section.]
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work properly
+> when passed enum max77693_fled values (0 for FLED1 and 1 for FLED2)
+> from leds-max77693 driver. Previous definitions were compatible with
+> one of the previous RFC versions of leds-max77693.c driver, which was
+> not merged.
 >=20
-> Ping?
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> ---
+>  include/linux/mfd/max77693-private.h |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Don't do that.  It won't speed up the review.
+Applied, thanks.
 
-If you think your set has been fogotten about (this one has not)
-resend with s/PATCH/RESEND/ in the subject line.
+> diff --git a/include/linux/mfd/max77693-private.h b/include/linux/mfd=
+/max77693-private.h
+> index 8770ce1..51633ea 100644
+> --- a/include/linux/mfd/max77693-private.h
+> +++ b/include/linux/mfd/max77693-private.h
+> @@ -114,8 +114,8 @@ enum max77693_pmic_reg {
+>  #define FLASH_EN_FLASH		0x1
+>  #define FLASH_EN_TORCH		0x2
+>  #define FLASH_EN_ON		0x3
+> -#define FLASH_EN_SHIFT(x)	(6 - ((x) - 1) * 2)
+> -#define TORCH_EN_SHIFT(x)	(2 - ((x) - 1) * 2)
+> +#define FLASH_EN_SHIFT(x)	(6 - (x) * 2)
+> +#define TORCH_EN_SHIFT(x)	(2 - (x) * 2)
+> =20
+>  /* MAX77693 MAX_FLASH1 register */
+>  #define MAX_FLASH1_MAX_FL_EN	0x80
 
 --=20
 Lee Jones
