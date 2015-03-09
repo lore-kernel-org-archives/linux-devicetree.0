@@ -1,42 +1,84 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH] mfd: arizona: Update DT binding documentation for inmode
-Date: Mon,  9 Mar 2015 14:48:20 +0000
-Message-ID: <1425912500-28450-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
+Date: Mon, 9 Mar 2015 15:50:44 +0100
+Message-ID: <20150309145044.GS5085@lukather>
+References: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+ <CAEKpxBnRyhD8Xiu7uTomM=z4Xm4CH8WVTYjZH73yDgYzwMqn5w@mail.gmail.com>
+ <20150308174721.GL5085@lukather>
+ <9483321.y7yrfWRaG5@wuerfel>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PkEWctFf+8E2rcii"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBVPJ62TQKGQEKWIW5OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9483321.y7yrfWRaG5@wuerfel>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the DT binding documentation for the inmode binding to mention
-the new defines and clarify the text slightly.
+--PkEWctFf+8E2rcii
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |   11 +++++------
- 1 files changed, 5 insertions(+), 6 deletions(-)
+On Sun, Mar 08, 2015 at 10:18:30PM +0100, Arnd Bergmann wrote:
+> On Sunday 08 March 2015 18:47:21 Maxime Ripard wrote:
+> > 
+> > Not enough information to check signature validity.	Show Details
+> > Hi,
+> > 
+> > On Sat, Mar 07, 2015 at 09:41:54AM +0100, Code Kipper wrote:
+> > > > Don't your device has any brand on the case or the PCB?
+> > > 
+> > > There is nothing on the PCB to reference a manufacturer, the actual packaging
+> > > and case are from the earlier MK808B and mention A9. There was only a
+> > > small sticker on the side to show that the contents was a MK808C.
+> > > I guess 'unknown' isn't a valid vendor name,
+> > 
+> > Not really.
+> > 
+> > I really don't know what's the policy to apply in such a case when we
+> > have a device that has no identified vendor.
+> > 
+> > We need to give a vendor name, because the compatible is used to tell
+> > two devices apart, in the case where we would have to apply quirks for
+> > a particular devices.
+> > 
+> > And if we have two devices (say a Marvlell and an Allwinner one), with
+> > the same name, and without any vendor, we're screwed.
+> > 
+> > Maybe falling back to the SoC vendor, in our case, would make sense?
+> > 
+> > Arnd? Rob? Mark? An opinion on this?
+> > 
+> 
+> I don't really have a good idea. In this case the SoC vendor might
+> not be the worst choice, because it's likely to be very close to
+> some reference design they actually did.
+> 
+> Another possibility would be to use a string that refers to the
+> organization that does the upstream kernel support, but that's
+> harder for individuals that do not work for a company that wants
+> its name used that way.
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 7665aa95..cbcd2d6 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -49,12 +49,11 @@ Optional properties:
-     a value that is out of range for a 16 bit register then the chip default
-     will be used. If present exactly five values must be specified.
- 
--  - wlf,inmode : A list of INn_MODE register values, where n is the number
--    of input signals. Valid values are 0 (Differential), 1 (Single-ended) and
--    2 (Digital Microphone). If absent, INn_MODE registers set to 0 by default.
--    If present, values must be specified less than or equal to the number of
--    input singals. If values less than the number of input signals, elements
--    that has not been specifed are set to 0 by default.
-+  - wlf,inmode : A list of the mode for each input. Each input can be set to
-+    differential, single-ended or a digital microphone. Defines for all values
-+    (ARIZONA_INMODE_xxxx) are located in <dt-bindings/mfd/arizona.txt>. If
-+    present, the number of values should be less than or equal to the number
-+    of inputs, unspecified inputs will use the chip default.
- 
-   - wlf,dmic-ref : DMIC reference voltage source for each input, can be
-     selected from either MICVDD or one of the MICBIAS's, defines
+Yeah, I don't really think that would be applicable for individuals,
+and would understand if people wouldn't like to follow such policy
+(I'm not even sure I would).
+
+At least, the SoC vendor name would be consistent, without being very
+touchy.
+
+Maxime
+
 -- 
-1.7.2.5
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--PkEWctFf+8E2rcii--
