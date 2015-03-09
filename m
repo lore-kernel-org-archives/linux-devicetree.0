@@ -1,75 +1,48 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Mon, 9 Mar 2015 15:49:30 -0700
-Message-ID: <20150309224929.GL5264@atomide.com>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
- <1425915402-10012-3-git-send-email-eliad@wizery.com>
- <9217056.Z3urqp19oZ@wuerfel>
- <CAB3XZEc_sjpA8kgfYCsO8FjGEc6O0xhE9aKO3VtgVbd+Meaakg@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 0/3] add power-supply support to dw_hdmi
+Date: Tue, 10 Mar 2015 00:21:21 +0100
+Message-ID: <1429128.MSqYm0qZ9p@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAB3XZEc_sjpA8kgfYCsO8FjGEc6O0xhE9aKO3VtgVbd+Meaakg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, broonie@kernel.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150309 14:03]:
-> On Mon, Mar 9, 2015 at 9:50 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday 09 March 2015 17:36:42 Eliad Peller wrote:
-> >> --- a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-> >> +++ b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-> >> @@ -64,4 +64,13 @@
-> >>         vmmc-supply = <&lbep5clwmc_wlen>;
-> >>         bus-width = <4>;
-> >>         non-removable;
-> >> +
-> >> +       #address-cells = <1>;
-> >> +       #size-cells = <0>;
-> >> +       wlcore: wlcore@2 {
-> >> +               compatible = "ti,wl1835";
-> >> +               reg = <2>;
-> >> +               interrupt-parent = <&gpio5>;
-> >> +               interrupts = <8 IRQ_TYPE_NONE>;
-> >> +       };
-> >>
-> >
-> > Why IRQ_TYPE_NONE?
-> >
-> i simply mirrored the current board file (which only sets the irq number).
-> 
-> > I was expecting you to remove all calls to legacy_init_wl12xx from this file,
-> > including the ones for wl12xx aside from the wl18xx ones you removed, but
-> > if that's enough to clean out the platform_data handling from the wlcore
-> > driver, it's good enough as a start.
-> not sure i'm following - can you elaborate?
-> 
-> i'll summarize the way i see it. please correct me if i'm wrong.
-> 
-> both wl18xx and wl12xx use the platform data to get the irq number.
-> wl12xx (only) also needs some additional clock definitions to be
-> passed. there's currently some issue with specifying some the of clock
-> sources, so i preferred starting only with (the simpler) wl18xx
-> bindings.
-> 
-> for platforms with wl18xx, we can remove the pdata-quirk, as all the
-> data (i.e. irq) can be passed by the new DT bindings.
-> however, for platforms with wl12xx, we still need to pass the clock
-> definitions (along with the irq), so we have to keep
-> legacy_init_wl12xx for the time being (and that's also why we have to
-> currently keep the platform_data handling in the wlcore driver)
-> 
-> do you have something else in mind?
-
-I think what Arnd is saying is we've now removed all the wl12xx using
-legacy platforms, so all of them can boot with just data from dts.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QXQgbGVhc3QgdGhlIFJvY2tjaGlwIHZhcmlhbnQgb2YgdGhlIGR3X2hkbWkgc2hvdWxkIGNvbnRy
+b2wgaXRzIHN1cHBseWluZwpyZWd1bGF0b3JzLiBBIGN1cnNvcnkgZ2xhbmNlIGF0IHRoZSBpbXgg
+bWFudWFsIGRpZG4ndCBhbnkgZXF1aXZhbGVudCB0aGVyZSwKc28gSSdtIG5vdCBzdXJlIGlmIHRo
+ZXJlIGFyZSBzaW1pbGFyIGNvbnRyb2xsYWJsZSByZWd1bGF0b3JzIHByZXNlbnQuCgpQYXRjaDEg
+aXMgb25seSBhIHNtYWxsIGZpeCB0byBrZWVwIHtkZXZtX31yZWd1bGF0b3JfYnVsa19nZXQgcXVp
+ZXQgaW4KdGhlIGRlZmVycmluZyBjYXNlIGFuZCBjb3VsZCBnbyBkaXJlY3RseSB0byB0aGUgcmVn
+dWxhdG9yIHRyZWUsIGlmIG9rLgoKUGF0Y2gzIGlzIHRoZSBhZGRpdGlvbiBvZiB0aGUgc3VwcGxp
+ZXMgdG8gdGhlIHJrMzI4OCBib2FyZHMgYW5kIEkgd291bGQKdGFrZSBpdCBpbnRvIG15IGR0cyBi
+cmFuY2ggaWYgcGF0Y2gyIGdldHMgZGVlbWVkIGFjY2VwdGFibGUuCgoKSGVpa28gU3R1ZWJuZXIg
+KDMpOgogIHJlZ3VsYXRvcjogZG9uJ3QgZW1pdCBlcnJvcnMgaW4ge2Rldm1ffXJlZ3VsYXRvcl9i
+dWxrX2dldCB3aGVuIGRlZmVyaW5nCiAgZHJtL2JyaWRnZTogZHctaGRtaTogc3VwcG9ydCBvcHRp
+b25hbCBzdXBwbHkgcmVndWxhdG9ycwogIEFSTTogZHRzOiByb2NrY2hpcDogYWRkIGhkbWkgYW5h
+bG9nIHBvd2VyIHN1cHBsaWVzIHRvIHJrMzI4OCBib2FyZHMKCiAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0ICAgICB8ICA1ICsrKysKIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL3JrMzI4OC1ldmIuZHRzaSAgICAgICAgICAgICAgICAgIHwgIDIgKysKIGFyY2gvYXJtL2Jv
+b3QvZHRzL3JrMzI4OC1maXJlZmx5LmR0c2kgICAgICAgICAgICAgIHwgIDIgKysKIGRyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jICAgICAgICAgICAgICAgICAgIHwgMjcgKysrKysrKysr
+KysrKysrKysrKysrLQogZHJpdmVycy9ncHUvZHJtL2lteC9kd19oZG1pLWlteC5jICAgICAgICAg
+ICAgICAgICAgfCAgMyArKy0KIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tj
+aGlwLmMgICAgICAgIHwgMTUgKysrKysrKysrKystCiBkcml2ZXJzL3JlZ3VsYXRvci9jb3JlLmMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA1ICsrLS0KIGRyaXZlcnMvcmVndWxhdG9yL2Rl
+dnJlcy5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDUgKystLQogaW5jbHVkZS9kcm0vYnJp
+ZGdlL2R3X2hkbWkuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgMyArKy0KIDkgZmlsZXMgY2hh
+bmdlZCwgNTkgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKCi0tIAoyLjEuNAoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
