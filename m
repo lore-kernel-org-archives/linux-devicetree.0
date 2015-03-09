@@ -1,73 +1,148 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [RFC/PATCHv2 2/3] dt-binding: spi: spi-dw: Select 16b or 32b
- access for Designware SPI
-Date: Mon, 9 Mar 2015 13:11:28 -0500
-Message-ID: <54FDE250.3050705@opensource.altera.com>
-References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>	<1425685594-26595-3-git-send-email-tthayer@opensource.altera.com> <CAHp75Vddg3T4oymsixbJWPWnELF3fE5Z4HRe4CxAFd+Eb=VVmA@mail.gmail.com>
-Reply-To: <tthayer@opensource.altera.com>
+From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] ARM: dts: add cubietech cubieboard4
+Date: Mon, 9 Mar 2015 11:14:46 -0700
+Message-ID: <CANMBJr5x+ws1i1ScTLqePijcRJpdqRNM00VXdVZO4Dn7Mk5tDw@mail.gmail.com>
+References: <1425918421-22876-1-git-send-email-tyler.baker@linaro.org>
+	<1425918421-22876-2-git-send-email-tyler.baker@linaro.org>
+	<20150309180344.GV5085@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vddg3T4oymsixbJWPWnELF3fE5Z4HRe4CxAFd+Eb=VVmA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, Linux Documentation List <linux-doc@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, Axel Lin <axel.lin@ingics.com>, baruch@tkos.co.il, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150309180344.GV5085@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime,
 
-
-On 03/07/2015 01:58 PM, Andy Shevchenko wrote:
-> On Sat, Mar 7, 2015 at 1:46 AM,  <tthayer@opensource.altera.com> wrot=
-e:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> Altera's Arria10 architecture requires a 32bit write accesses for
->> APB peripherals. The current spi-dw driver uses 16bit accesses in
->> some locations. This patch updated the bindings with an optional
->> field in the devicetree to select 32bit accesses.
->>
+On 9 March 2015 at 11:03, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Tyler,
 >
-> One comment below.
->
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> On Mon, Mar 09, 2015 at 09:27:00AM -0700, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Add a Cubietech Cubieboard4 device tree and instruct make to build it. This
+>> device tree has been derived from the sun9i-a80-optimus.dts as they are very
+>> similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LED/PWM
+>> definitions will need to be updated in the future.
+>>
+>> [1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
+>>
+>> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >> ---
->>   Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
->>   1 file changed, 1 insertion(+)
+>>  arch/arm/boot/dts/Makefile                  |  3 +-
+>>  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 99 +++++++++++++++++++++++++++++
+>>  2 files changed, 101 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
 >>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Docu=
-mentation/devicetree/bindings/spi/spi-dw.txt
->> index 7b63ed6..034dbdd 100644
->> --- a/Documentation/devicetree/bindings/spi/spi-dw.txt
->> +++ b/Documentation/devicetree/bindings/spi/spi-dw.txt
->> @@ -11,6 +11,7 @@ Required properties:
->>
->>   Optional properties:
->>   - cs-gpios: see spi-bus.txt
->> +- 32bit_access : use 32 bit register accesses
->>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 4837044..0f67dab 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -553,7 +553,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>>       sun8i-a23-ippo-q8h-v5.dtb \
+>>       sun8i-a23-ippo-q8h-v1.2.dtb
+>>  dtb-$(CONFIG_MACH_SUN9I) += \
+>> -     sun9i-a80-optimus.dtb
+>> +     sun9i-a80-optimus.dtb \
+>> +     sun9i-a80-cubieboard4.dtb
+>>  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
+>>       tegra20-harmony.dtb \
+>>       tegra20-iris-512.dtb \
+>> diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
 >
-> The most big issue for my opinion with DT is an absence of the
-> standard for naming properties.
+> Good catch on the file name.
 >
-> So, why underscore? May be it's a time to append a generic descriptio=
-n
-> of this field to Documentation/devicetree/=E2=80=A6
+>> new file mode 100644
+>> index 0000000..5cdc165
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+>> @@ -0,0 +1,99 @@
+>> +/*
+>> + * Copyright 2015 Tyler Baker
+>> + *
+>> + * Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun9i-a80.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> +     model = "Cubietech Cubieboard4";
+>> +     compatible = "cubietech,a80-cubieboard4", "allwinner,sun9i-a80";
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +     };
+>> +
+>> +     chosen {
+>> +             linux,stdout-path = &uart0;
 >
+> Actually, you can just use stdout-path, and you can also provide the
+> baudrate configuration (and reuse the alias you just defined) by using
+>
+>                 stdout-path = "serial0:115200n8";
 
-Hi Andy,
+Ah, ok. Your suggested notation is more descriptive, I'll update it in v2.
 
-I'm use the underscore to make it easier to read but I'm open to=20
-suggestions.
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
-I stay away from dashes because these variable names are problematic to=
-=20
-parse in languages like Python which may be used as an external tool.
+Thanks,
 
-I don't mind making it just 32bit if that is preferable or implementing=
-=20
-a better field name.
-
-Thanks for reviewing
-
+Tyler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
