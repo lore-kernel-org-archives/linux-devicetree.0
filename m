@@ -1,148 +1,53 @@
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] ARM: dts: add cubietech cubieboard4
-Date: Mon, 9 Mar 2015 11:14:46 -0700
-Message-ID: <CANMBJr5x+ws1i1ScTLqePijcRJpdqRNM00VXdVZO4Dn7Mk5tDw@mail.gmail.com>
-References: <1425918421-22876-1-git-send-email-tyler.baker@linaro.org>
-	<1425918421-22876-2-git-send-email-tyler.baker@linaro.org>
-	<20150309180344.GV5085@lukather>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCHv2 2/3] dt-binding: spi: spi-dw: Select 16b or 32b
+ access for Designware SPI
+Date: Mon, 9 Mar 2015 18:19:36 +0000
+Message-ID: <20150309181936.GU28806@sirena.org.uk>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+ <1425685594-26595-3-git-send-email-tthayer@opensource.altera.com>
+ <CAHp75Vddg3T4oymsixbJWPWnELF3fE5Z4HRe4CxAFd+Eb=VVmA@mail.gmail.com>
+ <54FDE250.3050705@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150309180344.GV5085@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PseDLKNfj4uXA+Je"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54FDE250.3050705-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-On 9 March 2015 at 11:03, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Tyler,
->
-> On Mon, Mar 09, 2015 at 09:27:00AM -0700, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> Add a Cubietech Cubieboard4 device tree and instruct make to build it. This
->> device tree has been derived from the sun9i-a80-optimus.dts as they are very
->> similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LED/PWM
->> definitions will need to be updated in the future.
->>
->> [1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
->>
->> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile                  |  3 +-
->>  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 99 +++++++++++++++++++++++++++++
->>  2 files changed, 101 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 4837044..0f67dab 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -553,7 +553,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->>       sun8i-a23-ippo-q8h-v5.dtb \
->>       sun8i-a23-ippo-q8h-v1.2.dtb
->>  dtb-$(CONFIG_MACH_SUN9I) += \
->> -     sun9i-a80-optimus.dtb
->> +     sun9i-a80-optimus.dtb \
->> +     sun9i-a80-cubieboard4.dtb
->>  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
->>       tegra20-harmony.dtb \
->>       tegra20-iris-512.dtb \
->> diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->
-> Good catch on the file name.
->
->> new file mode 100644
->> index 0000000..5cdc165
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->> @@ -0,0 +1,99 @@
->> +/*
->> + * Copyright 2015 Tyler Baker
->> + *
->> + * Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun9i-a80.dtsi"
->> +#include "sunxi-common-regulators.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->> +
->> +/ {
->> +     model = "Cubietech Cubieboard4";
->> +     compatible = "cubietech,a80-cubieboard4", "allwinner,sun9i-a80";
->> +
->> +     aliases {
->> +             serial0 = &uart0;
->> +     };
->> +
->> +     chosen {
->> +             linux,stdout-path = &uart0;
->
-> Actually, you can just use stdout-path, and you can also provide the
-> baudrate configuration (and reuse the alias you just defined) by using
->
->                 stdout-path = "serial0:115200n8";
+--PseDLKNfj4uXA+Je
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ah, ok. Your suggested notation is more descriptive, I'll update it in v2.
+On Mon, Mar 09, 2015 at 01:11:28PM -0500, Thor Thayer wrote:
 
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+> I stay away from dashes because these variable names are problematic to
+> parse in languages like Python which may be used as an external tool.
 
-Thanks,
+Dashes are idiomatic for device tree.
 
-Tyler
+--PseDLKNfj4uXA+Je
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU/eQ4AAoJECTWi3JdVIfQdQcH/3bVLG4cEheukAUc5dG0Bn0j
+4DkqWZ4JCLWzF2Bsgdj41mmBU5r+FergtJIW1bNHqcDOn1GPcoD3CrtfcS1tACGq
+4SchHNogYbhAxgJr9bZJ+Z+Px/jxJjBKOTV2JRTQZj8+H8nLjT/nrjlR8iVhLrND
+2zUC1Y1llsG0nS7agn4ioGpSErKs9T824Izrdor+sGo1+kgUydfmUcx1aekDs3zh
+V9NjMfMIfJ1gljv4b7TccqLEu0pw5S2B83k+LUk0x6IAGYjeQ9DfzNp5Qlmnt0Et
+1ytkpdXlq/fbN2NMKn1RzvGNkqveCFYn1TNvzF0G1mtisjG9m3DYACau+xrPG3E=
+=6Nbk
+-----END PGP SIGNATURE-----
+
+--PseDLKNfj4uXA+Je--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
