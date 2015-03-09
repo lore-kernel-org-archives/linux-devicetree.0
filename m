@@ -1,52 +1,96 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V2 0/2] mtd: nand: jz4780: Add nand and bch driver
-Date: Mon, 9 Mar 2015 11:58:17 +0000
-Message-ID: <1425902299-53967-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 1/2] dt-bindings: binding for jz4780-{nand,bch}
+Date: Mon, 9 Mar 2015 11:58:18 +0000
+Message-ID: <1425902299-53967-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1425902299-53967-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425902299-53967-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: Zubair.Kakakhel@imgtec.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Alex Smith <alex.smith@imgtec.com>
 
-Two patches based on 4.0-rc3 that add NAND and BCH controller
-drivers for the Ingenic JZ4780 SoC.
+Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
+as well as the hardware BCH controller, used by the jz4780_{nand,bch}
+drivers.
 
-Core JZ4780 support is still in-flight.
+Signed-off-by: Alex Smith <alex@alex-smith.me.uk>
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-Review and feedback welcome.
-
+---
 V1 - > V2
-Fixed module license macros
 Rebase to 4.0-rc3
-
-
-Thanks,
-ZubairLK
-
-Alex Smith (2):
-  dt-bindings: binding for jz4780-{nand,bch}
-  mtd: nand: jz4780: driver for NAND devices on JZ4780 SoCs
-
- .../bindings/mtd/ingenic,jz4780-nand.txt           |  57 ++++
- drivers/mtd/nand/Kconfig                           |   7 +
- drivers/mtd/nand/Makefile                          |   1 +
- drivers/mtd/nand/jz4780_bch.c                      | 358 ++++++++++++++++++++
- drivers/mtd/nand/jz4780_bch.h                      |  42 +++
- drivers/mtd/nand/jz4780_nand.c                     | 372 +++++++++++++++++++++
- 6 files changed, 837 insertions(+)
+---
+ .../bindings/mtd/ingenic,jz4780-nand.txt           | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
- create mode 100644 drivers/mtd/nand/jz4780_bch.c
- create mode 100644 drivers/mtd/nand/jz4780_bch.h
- create mode 100644 drivers/mtd/nand/jz4780_nand.c
 
+diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+new file mode 100644
+index 0000000..6f2e128
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+@@ -0,0 +1,57 @@
++* Ingenic JZ4780 NAND/BCH
++
++This file documents the device tree bindings for NAND flash devices on the
++JZ4780. NAND devices are connected to the NEMC controller (described in
++memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
++be children of the NEMC node.
++
++Required NAND device properties:
++- compatible: Should be set to "ingenic,jz4780-nand".
++- reg: For each bank with a NAND chip attached, should specify a bank number,
++  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
++
++Optional NAND device properties:
++- ingenic,bch-device: To make use of the hardware BCH controller, this property
++  must contain a phandle for the BCH controller node. The required properties
++  for this node are described below. If this is not specified, software BCH
++  will be used instead.
++- ingenic,ecc-size: ECC block size in bytes.
++- ingenic,ecc-strength: ECC strength (max number of correctable bits).
++- ingenic,busy-gpio: GPIO specifier for the busy pin.
++- ingenic,wp-gpio: GPIO specifier for the write protect pin.
++
++Example:
++
++nemc: nemc@13410000 {
++	...
++
++	nand: nand@1 {
++		compatible = "ingenic,jz4780-nand";
++		reg = <1 0 0x1000000>;	/* Bank 1 */
++
++		ingenic,bch-device = <&bch>;
++		ingenic,ecc-size = <1024>;
++		ingenic,ecc-strength = <24>;
++
++		ingenic,busy-gpio = <&gpa 20 GPIO_ACTIVE_LOW>;
++		ingenic,wp-gpio = <&gpf 22 GPIO_ACTIVE_LOW>;
++	};
++};
++
++The BCH controller is a separate SoC component used for error correction on
++NAND devices. The following is a description of the device properties for a
++BCH controller.
++
++Required BCH properties:
++- compatible: Should be set to "ingenic,jz4780-bch".
++- reg: Should specify the BCH controller registers location and length.
++- clocks: Clock for the BCH controller.
++
++Example:
++
++bch: bch@134d0000 {
++	compatible = "ingenic,jz4780-bch";
++	reg = <0x134d0000 0x10000>;
++
++	clocks = <&cgu JZ4780_CLK_BCH>;
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
