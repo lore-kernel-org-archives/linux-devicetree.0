@@ -1,164 +1,65 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH 2/2] Documentation: Add documentation for rt5033 multifunction
- device
-Date: Mon, 09 Mar 2015 10:23:11 +0900
-Message-ID: <1425864191-4121-3-git-send-email-beomho.seo@samsung.com>
-References: <1425864191-4121-1-git-send-email-beomho.seo@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1425864191-4121-1-git-send-email-beomho.seo@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com, sangbae90.lee@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v6 0/3] irqchip: vf610-mscm: add MSCM interrupt router
+ driver
+Date: Mon, 9 Mar 2015 01:22:53 +0000
+Message-ID: <20150309012253.GI21207@io.lakedaemon.net>
+References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
+ <20150308053110.GF21207@io.lakedaemon.net>
+ <a64c8b81761a9886c83128dcf7749b6d@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <a64c8b81761a9886c83128dcf7749b6d@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pebolle@tiscali.nl, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, galak@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, tglx@linutronix.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch device tree binding documentation for rt5033 multifunction device.
+On Mon, Mar 09, 2015 at 12:43:56AM +0100, Stefan Agner wrote:
+> On 2015-03-08 06:31, Jason Cooper wrote:
+> > On Sun, Mar 01, 2015 at 11:41:26PM +0100, Stefan Agner wrote:
+> > ...
+> >> Stefan Agner (3):
+> >>   irqchip: vf610-mscm-ir: add support for MSCM interrupt router
+> >>   irqchip: vf610-mscm: dt-bindings: add MSCM bindings
+> >>   ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)
+> >>
+> >>  .../arm/freescale/fsl,vf610-mscm-cpucfg.txt        |  14 ++
+> >>  .../bindings/arm/freescale/fsl,vf610-mscm-ir.txt   |  33 ++++
+> >>  arch/arm/boot/dts/vf500.dtsi                       | 137 +------------
+> >>  arch/arm/boot/dts/vfxxx.dtsi                       |  49 +++++
+> >>  arch/arm/mach-imx/Kconfig                          |   1 +
+> >>  drivers/irqchip/Makefile                           |   1 +
+> >>  drivers/irqchip/irq-vf610-mscm-ir.c                | 212 +++++++++++++++++++++
+> >>  7 files changed, 314 insertions(+), 133 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+> >>  create mode 100644 drivers/irqchip/irq-vf610-mscm-ir.c
+> > 
+> > Applied patches 1 and 2 to irqchip/vybrid.  Please let me know if you need to
+> > base other work off of this.
+> 
+> Thx. Some patches in the patchset to run Linux on the Cortex-M4 of
+> Vybrid is based on this driver. I will post a rebased version of that
+> probably tomorrow.
 
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes in v5
-- Remove wrong Acked-by.
-Changes in v4
-- none.
-Changes in v3
-- Add Acked-by
-Changes in v2
-- Fix incorrect typo.
-- Align -uamp and -uvolt names with regulator binding suffixes.
-- Drop incorrect phandle.
-- Fix incorrect example.
----
- Documentation/devicetree/bindings/mfd/rt5033.txt   |  101 ++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 2 files changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+What I meant, is: will you be submitting patches which have build or runtime
+dependencies on this branch?  If so, I'll make sure to leave irqchip/vybrid up
+after I pull it into irqchip/core so that patches going into other trees and
+can depend on it.
 
-diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
-new file mode 100644
-index 0000000..64b23e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
-@@ -0,0 +1,101 @@
-+Richtek RT5033 Power management Integrated Circuit
-+
-+RT5033 is a Multifunction device which includes battery charger, fuel gauge,
-+flash LED current source, LDO and synchronous Buck converter for portable
-+applications. It is interfaced to host controller using i2c interface.
-+
-+Required properties:
-+- compatible : Must be "richtek,rt5033"
-+- reg : Specifies the i2c slave address of general part.
-+- interrupts : This i2c devices has an IRQ line connected to the main SoC.
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional node:
-+Regulators: The regulators of RT5033 have to be instantiated under sub-node
-+named "regulators" using the following format.
-+
-+	regulators {
-+		regulator-name {
-+			regulator-name = LDO/BUCK
-+			regulator subnodes called X, Y and Z
-+		};
-+	};
-+	refer Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+
-+Battery charger: There battery charger of RT5033 have to be instantiated under
-+sub-node named "charger" using the following format.
-+
-+Required properties:
-+- compatible : Must be "richtek,rt5033-charger".
-+- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
-+  are 350 mA to 650 mA programmed by I2C per 100 mA.
-+- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
-+  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
-+- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
-+  to 200 mA.
-+- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
-+  voltage is below pre-charge threshold voltage, the charger is in pre-charge
-+  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
-+  by I2C per 0.1 V.
-+- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
-+  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
-+
-+	charger {
-+		compatible = "richtek,rt5033-charger";
-+		richtek,pre-uamp = <350000>;
-+		richtek,fast-uamp = <2000000>;
-+		richtek,eoc-uamp = <250000>;
-+		richtek,pre-threshold-uvolt = <3400000>;
-+		richtek,const-uvolt = <4350000>;
-+
-+	};
-+
-+
-+Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
-+using the following format.
-+
-+Required properties:
-+- compatible = Must be "richtek,rt5033-battery".
-+
-+	rt5033@35 {
-+		compatible = "richtek,rt5033-battery";
-+		interrupt-parent = <&gpx2>;
-+		interrupts = <3 0>;
-+		reg = <0x35>;
-+	};
-+
-+Example:
-+
-+		rt5033@34 {
-+			compatible = "richtek,rt5033";
-+			reg = <0x34>;
-+			interrupt-parent = <&gpx1>;
-+			interrupts = <5 0>;
-+
-+			regulators {
-+				buck_reg: BUCK {
-+					regulator-name = "BUCK";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+				};
-+			};
-+
-+			charger {
-+				compatible = "richtek,rt5033-charger";
-+				richtek,pre-uamp = <350000>;
-+				richtek,fast-uamp = <2000000>;
-+				richtek,eoc-uamp = <250000>;
-+				richtek,pre-threshold-uvolt = <3400000>;
-+				richtek,const-uvolt = <4350000>;
-+			};
-+
-+		};
-+
-+		rt5033@35 {
-+				compatible = "richtek,rt5033-battery";
-+				interrupt-parent = <&gpx2>;
-+				interrupts = <3 0>;
-+				reg = <0x35>;
-+		};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..73d235a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -149,6 +149,7 @@ ralink	Mediatek/Ralink Technology Corp.
- ramtron	Ramtron International
- realtek Realtek Semiconductor Corp.
- renesas	Renesas Electronics Corporation
-+richtek	Richtek Technology Corporation
- ricoh	Ricoh Co. Ltd.
- rockchip	Fuzhou Rockchip Electronics Co., Ltd
- samsung	Samsung Semiconductor
--- 
-1.7.9.5
+It's no extra work on my part, I just need to know not to clean it up ;-)
+
+thx,
+
+Jason.
