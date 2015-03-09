@@ -1,85 +1,52 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] v4l: mt9v032: Add OF support
-Date: Mon, 09 Mar 2015 12:57:18 +0100
-Message-ID: <54FD8A9E.6040303@samsung.com>
-References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <54FD7788.2020709@samsung.com>
- <20150309105744.GD11954@valkosipuli.retiisi.org.uk>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V2 0/2] mtd: nand: jz4780: Add nand and bch driver
+Date: Mon, 9 Mar 2015 11:58:17 +0000
+Message-ID: <1425902299-53967-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150309105744.GD11954@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi,
 
-On 09/03/15 11:57, Sakari Ailus wrote:
->>> +static struct mt9v032_platform_data *
->>> +mt9v032_get_pdata(struct i2c_client *client)
->>> +{
->>> +	struct mt9v032_platform_data *pdata;
->>> +	struct v4l2_of_endpoint endpoint;
->>> +	struct device_node *np;
->>> +	struct property *prop;
->>> +
->>> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
->>> +		return client->dev.platform_data;
->>> +
->>> +	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
->>> +	if (!np)
->>> +		return NULL;
->>> +
->>> +	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
->>> +		goto done;
->>> +
->>> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
->>> +	if (!pdata)
->>> +		goto done;
->>> +
->>> +	prop = of_find_property(np, "link-freqs", NULL);
->>
->> I suspect you meant "link-frequencies" here ?
-> 
-> Yes. I wonder if it'd make sense to add this to struct v4l2_of_endpoint. I
-> can write a patch for that.
+Two patches based on 4.0-rc3 that add NAND and BCH controller
+drivers for the Ingenic JZ4780 SoC.
 
-I don't have strong preference, sooner or later we will need to
-add it there, so code duplication can be avoided. I guess it makes
-sense to add such code already with a first user of it.
+Core JZ4780 support is still in-flight.
 
->>> +	if (prop) {
->>> +		size_t size = prop->length / 8;
->>> +		u64 *link_freqs;
->>> +
->>> +		link_freqs = devm_kzalloc(&client->dev,
->>> +					  size * sizeof(*link_freqs),
->>> +					  GFP_KERNEL);
->>> +		if (!link_freqs)
->>> +			goto done;
->>> +
->>> +		if (of_property_read_u64_array(np, "link-frequencies",
->>> +					       link_freqs, size) < 0)
->>> +			goto done;
->>> +
->>> +		pdata->link_freqs = link_freqs;
->>> +		pdata->link_def_freq = link_freqs[0];
->>> +	}
-> 
-> If you're interested in just a single value, you can use
-> of_property_read_u64().
-> 
->>> +	pdata->clk_pol = !!(endpoint.bus.parallel.flags &
->>> +			    V4L2_MBUS_PCLK_SAMPLE_RISING);
->>> +
->>> +done:
->>> +	of_node_put(np);
->>> +	return pdata;
->>> +}
+Review and feedback welcome.
+
+V1 - > V2
+Fixed module license macros
+Rebase to 4.0-rc3
+
+
+Thanks,
+ZubairLK
+
+Alex Smith (2):
+  dt-bindings: binding for jz4780-{nand,bch}
+  mtd: nand: jz4780: driver for NAND devices on JZ4780 SoCs
+
+ .../bindings/mtd/ingenic,jz4780-nand.txt           |  57 ++++
+ drivers/mtd/nand/Kconfig                           |   7 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/jz4780_bch.c                      | 358 ++++++++++++++++++++
+ drivers/mtd/nand/jz4780_bch.h                      |  42 +++
+ drivers/mtd/nand/jz4780_nand.c                     | 372 +++++++++++++++++++++
+ 6 files changed, 837 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+ create mode 100644 drivers/mtd/nand/jz4780_bch.c
+ create mode 100644 drivers/mtd/nand/jz4780_bch.h
+ create mode 100644 drivers/mtd/nand/jz4780_nand.c
 
 -- 
-Regards,
-Sylwester
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
