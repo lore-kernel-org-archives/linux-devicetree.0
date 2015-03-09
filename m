@@ -1,168 +1,43 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/5] mtd: nand: =?UTF-8?Q?vf=36=31=30=5Fnfc=3A=20Frees?=
- =?UTF-8?Q?cale=20NFC=20for=20VF=36=31=30=2C=20MPC=35=31=32=35=20and=20oth?=
- =?UTF-8?Q?ers?=
-Date: Mon, 09 Mar 2015 10:05:04 +0100
-Message-ID: <16168d2a42bfbcd91bcd8ca360cc0bda@agner.ch>
-References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
- <1425510624-22250-2-git-send-email-stefan@agner.ch>
- <20150306061502.GB10997@pengutronix.de>
- <fdfc84d92bbcb8abc98f2c29e1aa368b@agner.ch> <87sidi3zw5.fsf@nbsps.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
+Date: Mon, 09 Mar 2015 10:12:49 +0100
+Message-ID: <54FD6411.90401@metafoo.de>
+References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>	<20150307112109.GJ28806@sirena.org.uk>	<CAHp75VeYanNJrEyTtcxb5g5DB8=609nebgZm8zVAeJdmSgHjkQ@mail.gmail.com>	<54FC30BE.1070606@metafoo.de> <CAHp75Vd7+GxT01+X5u4n=tXdBu-gcmdS-AETu0yK6PWFfjzDEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87sidi3zw5.fsf@nbsps.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bill Pringlemeir <bpringlemeir@nbsps.com>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: geert@linux-m68k.org, dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vd7+GxT01+X5u4n=tXdBu-gcmdS-AETu0yK6PWFfjzDEA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-03-06 16:32, Bill Pringlemeir wrote:
-> On  6 Mar 2015, stefan@agner.ch wrote:
-> 
->> On 2015-03-06 07:15, Sascha Hauer wrote:
->>> Hi Stefan,
-> 
->>> On Thu, Mar 05, 2015 at 12:10:20AM +0100, Stefan Agner wrote:
->>>> +
->>>> +static int vf610_nfc_probe_dt(struct device *dev, struct
->>>> vf610_nfc_config *cfg)
->>>> +{
->>>> +	struct device_node *np = dev->of_node;
->>>> +	int buswidth;
->>>> +	u32 clkrate;
->>>> +
->>>> +	if (!np)
->>>> +		return 1;
->>>> +
->>>> +	cfg->flash_bbt = of_get_nand_on_flash_bbt(np);
->>>> +
->>>> +	if (!of_property_read_u32(np, "clock-frequency", &clkrate))
->>>> +		cfg->clkrate = clkrate;
-> 
->>> Normally the clock-frequency property tells the driver at which
->>> frequency the device actually is running, not to tell the driver at
->>> which frequency the device *should* run. It's strange to use the
->>> value of the clock-frequency property as input to
->>> clk_set_rate(). Maybe the assigned clock binding is more appropriate
->>> here, see Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> 
->> What we try to do here is to specify the hardware limitations. There
->> seem to be some hardware restrictions when it comes to clock
->> frequencies. There has been a rather long discussion over at
->> Freescales community about it:
->> https://community.freescale.com/thread/317074
-> 
->> Not sure if this is the right way to specify the supported
->> frequencies, or should we create a custom property for this, something
->> like fsl,max-nfc-frequency = <33000000>?
-> 
-> On most SOC's with this controller, the input clock to the controller
-> affects the NAND flash timing and other factors; so you will want to set
-> it based on the board/NAND stuffed.  The clock is for synchronous logic
-> in the controller and affects many properties.  
-> 
-> I guess Sascha's point is, the board's DT should just have some
-> '&nfc_clk' node and not have this part of the driver?  Either way works.
-> However, this clock is very important to get the driver to function.  It
-> seem better for a user/porter to have this info in the node.  I guess
-> you need to be trained to look at every node in the sub-tree for a
-> device.  I think the other way might be better or a sub-system
-> maintainer.  I looked at 'i2c' and other node which have a
-> 'clock-frequency' parameter. 
-> 
-> In the Documentation/devicetree/bindings/clock/clock-bindings.txt,
-> 
->     uart@a000 {
->         compatible = "fsl,imx-uart";
->         reg = <0xa000 0x1000>;
->         interrupts = <33>;
->         clocks = <&osc 0>, <&pll 1>;
->         clock-names = "baud", "register";
->     };
-> 
-> Here, this uart clock may affect the maximum baud rate supported by the
-> device.  For this controller (vf610_nfc), the clock is like setting the
-> 'baud rate'; it affect the NAND memory cycles.  There is not really any
-> 'wait state' type logic in the controller register set that would allow
-> the driver to work with a 'given clock' rate.  For certain a board
-> should set this clock for the NAND chips they wish to support.
-> 
-> What would the board file look like to use clock node?
-> 
-> [generic]
->         nfc: nand@400e0000 {
->                 compatible = "fsl,vf610-nfc";
->                 reg = <0x400e0000 0x4000>;
->                 clocks = <&clks VF610_CLK_NFC>;
->                 clock-names = "nfc_clk";
->                 status = "disabled";
->         };
-> 
-> [board]
-> 
-> &nfc {
->         nand-bus-width = <16>;
->         nand-ecc-mode = "hw";
->         nand-on-flash-bbt;
->         nand-ecc-strength = <24>;
->         nand-ecc-step-size = <2048>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_nfc_1>;
->         status = "okay";
->         &nfc_clk { frequency = <33000000>}  /* Like this? */
+On 03/08/2015 01:20 PM, Andy Shevchenko wrote:
+> On Sun, Mar 8, 2015 at 1:21 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+>> On 03/07/2015 08:43 PM, Andy Shevchenko wrote:
+>>>
+>>> On Sat, Mar 7, 2015 at 1:21 PM, Mark Brown <broonie@kernel.org> wrote:
+>
+>>>> Applied, but why is there no devm_dma_request_slave_channel_reason()?
+>>>
+>>> I suppose the answer would be "we have a lot of slightly different
+>>> cases and we have to get rid of current mess with legacy API calls".
+>>> The most problematic stuff now inside DMA slave subsystem is so called
+>>> "filter function". It's a main impediment right now as I understand.
+>>
+>> dma_request_slave_channel_reason() is the sane API though and does not use
+>> the filter functions. Adding a devm version of it seems reasonable.
+>
+> It would be dma_request_slave_channel() in the first place, but legacy
+> stuff didn't allow to do that, so here we are. I wouldn't like the
+> idea of creating devm_dma_* before we will have stable function names
+> without legacy involving.
+>
 
-There is a property called "clock-frequency", but this is really for
-static clocks (e.g. external oscillators). I don't think this is the
-right approach.
+At some point when all callers dma_request_slave_channel() have been updated 
+to use dma_request_slave_channel_reason(), the later might be renamed to the 
+former. I don't see the problem with having to do the same for a 
+devm_dma_request_slave_channel_reason().
 
-> };
-> 
-> I don't know how to do the 'Like this?' part.  I don't think the
-> 'clock-bindings.txt' explains it.  I see this is better as the the
-> driver needs no 'clock handling' code.  It is definitely a little more
-> obtuse for the users.
-
-There are drivers which use the clock-frequency property to actually
-specify maximum operating frequencies:
-
-Documentation/devicetree/bindings/i2c/i2c-efm32.txt: - clock-frequency :
-maximal I2C bus clock frequency in Hz.
-Documentation/devicetree/bindings/media/samsung-fimc.txt:-
-clock-frequency: maximum FIMC local clock (LCLK) frequency;
-
-In the MMC subsystem there is a property called max-frequency, the SPI
-subsystem uses the property spi-max-frequency to specify maximum
-operating frequencies of SPI slaves.
-
-How about just max-frequency? Or with vendor prefix, e.g.
-fsl,max-frequency...?
-
-> 
-> [snip]
-> 
->>> Does this driver work without device tree or not? Currently the
->>> driver bails out when device tree support is enabled but no device
->>> node is given. When device tree support is disabled in the kernel
->>> though the driver happily continues here.
-> 
->> Hm, I never tried using this Driver without DT.
-> 
-> [snip]
-> 
-> I also didn't test this.  The driver was ported from Linux versions
-> where DT did not exist.  It is used in some OpenWRT/68k/coldfire
-> (patched) kernels and I wanted it to be useful for them.  However, we
-> could probably remove the 'platform support'.  Other people are using
-> this on PPC platforms and they will also have dt/of.
-> 
-> Currently the platform control has no way to 'pass data', so the driver
-> only works with whatever defaults it has (or that is my belief).  For
-> instance, those OpenWRT kernels have a 'machine file' which will set the
-> 'clock-frequency' and other parameters.  We could remove the platform
-> support completely if it is misleading.  I guess the KConfig would need
-> a 'depends on CONFIG_OF'.
-> 
-> Thanks for the review,
-> Bill Pringlemeir.
+- Lars
