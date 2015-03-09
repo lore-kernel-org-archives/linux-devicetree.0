@@ -1,93 +1,96 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Mon, 9 Mar 2015 09:28:04 +0000
-Message-ID: <20150309092804.GB3427@x1>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
- <20150304120003.GL32624@x1>
- <20150306190812.11109.82130@quantum>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/3] ARM: imx6qdl-sabreauto.dtsi: add max7310 support
+Date: Mon, 9 Mar 2015 17:28:06 +0800
+Message-ID: <1425893288-1517-2-git-send-email-peter.chen@freescale.com>
+References: <1425893288-1517-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150306190812.11109.82130@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425893288-1517-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 06 Mar 2015, Mike Turquette wrote:
+max7310 is an i2c interface gpio expander
 
-> Quoting Lee Jones (2015-03-04 04:00:03)
-> > Mike,
-> >=20
-> > Do you want me to resend this set with Robert's Reviewed-by applied=
-,
-> > or are you happy to apply it yourself?
->=20
-> No need for the resend. I am hoping for a final review from a DT huma=
-n.
->=20
-> This approach looks fine to me. In practice I think it is restricted =
-to
-> hardware blocks that don't exist in DT yet (e.g. no driver, in the ca=
-se
-> of your interconnect) and that restriction is probably for the best.
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 43 ++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-Agreed.
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 009abd6..51acfec 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -28,6 +28,13 @@
+ 		};
+ 	};
+ 
++	max7310_reset: max7310-reset {
++		compatible = "gpio-reset";
++		reset-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
++		reset-delay-us = <1>;
++		#reset-cells = <0>;
++	};
++
+ 	sound-spdif {
+ 		compatible = "fsl,imx-audio-spdif",
+ 			   "fsl,imx-sabreauto-spdif";
+@@ -182,6 +189,35 @@
+ 	};
+ };
+ 
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	pinctrl-assert-gpios = <&gpio5 4 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	max7310_a: gpio@30 {
++		compatible = "maxim,max7310";
++		reg = <0x30>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		resets = <&max7310_reset>;
++	};
++
++	max7310_b: gpio@32 {
++		compatible = "maxim,max7310";
++		reg = <0x32>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	max7310_c: gpio@34 {
++		compatible = "maxim,max7310";
++		reg = <0x34>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_hog>;
+@@ -265,6 +301,13 @@
+ 			>;
+ 		};
+ 
++		pinctrl_i2c3: i2c3grp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_3__I2C3_SCL  0x4001b8b1
++				MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
++			>;
++		};
++
+ 		pinctrl_pwm3: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
+-- 
+1.9.1
 
-> > > v2 =3D> v3:
-> > >   - Ensure DT actually reflects h/w
-> > >     - i.e. Nodes should not contain a mishmash of different IP
-> > >       blocks, but should identify related h/w.  In the current
-> > >       example we use interconnects
-> > >   - Change naming from clkdomain to clk-always-on
-> > >   - Place "do not abuse" warning in documentation
-> > >=20
-> > > v1 =3D> v2:
-> > >   - Turned the ST specific driver into a generic one
-> > >  =20
-> > > Hardware can have a bunch of clocks which must not be turned off.
-> > > If drivers a) fail to obtain a reference to any of these or b) gi=
-ve
-> > > up a previously obtained reference during suspend, the common clk
-> > > framework will attempt to turn them off and the hardware will
-> > > subsequently die.  The only way to recover from this failure is t=
-o
-> > > restart.
-> > >  =20
-> > > To avoid either of these two scenarios from catastrophically
-> > > disabling the running system we have implemented a clock domain
-> > > where clocks are consumed and references are taken, thus preventi=
-ng
-> > > them from being shut down by the framework.
-> > >=20
-> > > *** BLURB HERE ***
-> > >=20
-> > > Lee Jones (4):
-> > >   ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
-> > >   ARM: sti: stih407-family: Add platform interconnects to always-=
-on clk
-> > >     domain
-> > >   clk: Provide an always-on clock domain framework
-> > >   clk: dt: Introduce always-on clock domain documentation
-> > >=20
-> > >  .../devicetree/bindings/clock/clk-always-on.txt    | 35 ++++++++=
-++++
-> > >  arch/arm/boot/dts/stih407-family.dtsi              | 15 ++++++
-> > >  drivers/clk/Makefile                               |  1 +
-> > >  drivers/clk/clk-always-on.c                        | 62 ++++++++=
-++++++++++++++
-> > >  include/dt-bindings/clock/stih407-clks.h           |  4 ++
-> > >  5 files changed, 117 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/clk-a=
-lways-on.txt
-> > >  create mode 100644 drivers/clk/clk-always-on.c
-> > >=20
-> >=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
