@@ -1,33 +1,53 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/2] of: fix handling of '/' in path options
-Date: Mon,  9 Mar 2015 18:03:43 +0000
-Message-ID: <1425924225-22748-1-git-send-email-leif.lindholm@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org
+From: Leif Lindholm <leif.lindholm@linaro.org>
+Subject: [PATCH 2/2] of: unittest: Add options string testcase variants
+Date: Mon,  9 Mar 2015 18:03:45 +0000
+Message-ID: <1425924225-22748-3-git-send-email-leif.lindholm@linaro.org>
+References: <1425924225-22748-1-git-send-email-leif.lindholm@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425924225-22748-1-git-send-email-leif.lindholm@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, peter@hurleysoftware.com
 List-Id: devicetree@vger.kernel.org
 
-Commit 7914a7c5651a ("of: support passing console options with
-stdout-path") neglected to deal with '/'s appearing past the ':'
-terminator.
+From: Peter Hurley <peter@hurleysoftware.com>
 
-This mini-series fixes this oversight and adds the tests to prove it.
+Add testcase variants with '/' in the options string to test for
+scan beyond end path name terminated by ':'.
 
-Leif Lindholm (1):
-  of: fix handling of '/' in options for of_find_node_by_path()
-
-Peter Hurley (1):
-  of: unittest: Add options string testcase variants
-
- drivers/of/base.c     | 23 +++++++++++++++--------
+Signed-off-by: Peter Hurley <peter@hurleysoftware.com>
+---
  drivers/of/unittest.c | 11 +++++++++++
- 2 files changed, 26 insertions(+), 8 deletions(-)
+ 1 file changed, 11 insertions(+)
 
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0cf9a23..b2d7547 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -92,6 +92,11 @@ static void __init of_selftest_find_node_by_name(void)
+ 		 "option path test failed\n");
+ 	of_node_put(np);
+ 
++	np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
++	selftest(np && !strcmp("test/option", options),
++		 "option path test, subcase #1 failed\n");
++	of_node_put(np);
++
+ 	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
+ 	selftest(np, "NULL option path test failed\n");
+ 	of_node_put(np);
+@@ -102,6 +107,12 @@ static void __init of_selftest_find_node_by_name(void)
+ 		 "option alias path test failed\n");
+ 	of_node_put(np);
+ 
++	np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
++				       &options);
++	selftest(np && !strcmp("test/alias/option", options),
++		 "option alias path test, subcase #1 failed\n");
++	of_node_put(np);
++
+ 	np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
+ 	selftest(np, "NULL option alias path test failed\n");
+ 	of_node_put(np);
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
