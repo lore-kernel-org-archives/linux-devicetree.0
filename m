@@ -1,81 +1,254 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v11 6/6] devicetree: Add SKY81452 to the Trivial Devices
- list
-Date: Mon, 9 Mar 2015 09:41:15 +0000
-Message-ID: <20150309094115.GQ3427@x1>
-References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
- <1425019346-4559-7-git-send-email-jack.yoo@skyworksinc.com>
+From: =?UTF-8?Q?Carlos_Sanmart=C3=ADn_Bustos?= <carsanbu@gmail.com>
+Subject: Re: [PATCH] v4l: mt9v032: Add OF support
+Date: Mon, 9 Mar 2015 10:45:31 +0100
+Message-ID: <CAPW4HR1WJPWg64GwitxCPK2jop0CntS1UtsOu_0VjCz0BEke6A@mail.gmail.com>
+References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425019346-4559-7-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, robh+dt@kernel.org, jg1.han@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, broonie@kernel.org, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, treding@nvidia.com, p.zabel@pengutronix.de, arno@natisbad.org, kuninori.morimoto.gx@renesas.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Linux Media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Applied, thanks.
+Hi Laurent,
 
-On Fri, 27 Feb 2015, gyungoh@gmail.com wrote:
+Looks good. One question, why not deprecate the platform data? I can't
+see any device using the mt9v032 pdata, I was making a similar patch
+but deprecating pdata.
+Some more comment:
 
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
->=20
-> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+2015-03-08 14:45 GMT+01:00 Laurent Pinchart <laurent.pinchart@ideasonbo=
+ard.com>:
+> Parse DT properties into a platform data structure when a DT node is
+> available.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
-> Changes v11:
-> Nothing
->=20
-> Changes v10:
-> Nothing
->=20
-> Changes v9:
-> Nothing
->=20
-> Changes v8:
-> Nothing
->=20
-> Changes v7:
-> Nothing
->=20
-> Changes v6:
-> Nothing
->=20
-> Changes v5:
-> Nothing
->=20
-> Changes v4:
-> Nothing
->=20
-> Changes v3:
-> Nothing
->=20
-> Changes v2:
-> Add SKY81452 to the Trivial Devices list
->=20
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
-t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index aaa8325..003bd77 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -89,6 +89,7 @@ ricoh,rv5c386		I2C bus SERIAL INTERFACE REAL-TIME C=
-LOCK IC
->  ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
->  samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Pow=
-er)
->  sii,s35390a		2-wire CMOS real-time clock
-> +skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver wi=
-th Touch Panel Bias Supply
->  st-micro,24c256		i2c serial eeprom  (24cxx)
->  stm,m41t00		Serial Access TIMEKEEPER
->  stm,m41t62		Serial real-time clock (RTC) with alarm
+>  .../devicetree/bindings/media/i2c/mt9v032.txt      | 41 ++++++++++++=
+++
+>  MAINTAINERS                                        |  1 +
+>  drivers/media/i2c/mt9v032.c                        | 66 ++++++++++++=
++++++++++-
+>  3 files changed, 107 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9v0=
+32.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt =
+b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> new file mode 100644
+> index 0000000..75c97de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> @@ -0,0 +1,41 @@
+> +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
+> +
+> +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sen=
+sor with
+> +an active array size of 752H x 480V. It is programmable through a si=
+mple
+> +two-wire serial interface.
+> +
+> +Required Properties:
+> +
+> +- compatible: value should be either one among the following
+> +       (a) "aptina,mt9v032" for MT9V032 color sensor
+> +       (b) "aptina,mt9v032m" for MT9V032 monochrome sensor
+> +       (c) "aptina,mt9v034" for MT9V034 color sensor
+> +       (d) "aptina,mt9v034m" for MT9V034 monochrome sensor
+> +
+> +Optional Properties:
+> +
+> +- link-frequencies: List of allowed link frequencies in Hz. Each fre=
+quency is
+> +       expressed as a 64-bit big-endian integer.
+> +
+> +For further reading on port node refer to
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +       i2c0@1c22000 {
+> +               ...
+> +               ...
+> +               mt9v032@5c {
+> +                       compatible =3D "aptina,mt9v032";
+> +                       reg =3D <0x5c>;
+> +
+> +                       port {
+> +                               mt9v032_1: endpoint {
+> +                                       link-frequencies =3D
+> +                                               <0 13000000>, <0 2660=
+0000>,
+> +                                               <0 27000000>;
+> +                               };
+> +                       };
+> +               };
+> +               ...
+> +       };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ddc5a8c..180f6fb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6535,6 +6535,7 @@ M:        Laurent Pinchart <laurent.pinchart@id=
+easonboard.com>
+>  L:     linux-media@vger.kernel.org
+>  T:     git git://linuxtv.org/media_tree.git
+>  S:     Maintained
+> +F:     Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+>  F:     drivers/media/i2c/mt9v032.c
+>  F:     include/media/mt9v032.h
+>
+> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.=
+c
+> index 3267c18..a6ea091 100644
+> --- a/drivers/media/i2c/mt9v032.c
+> +++ b/drivers/media/i2c/mt9v032.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/i2c.h>
+>  #include <linux/log2.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+>  #include <linux/videodev2.h>
+> @@ -26,6 +28,7 @@
+>  #include <media/mt9v032.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
+>  #include <media/v4l2-subdev.h>
+>
+>  /* The first four rows are black rows. The active area spans 753x481=
+ pixels. */
+> @@ -876,10 +879,59 @@ static const struct regmap_config mt9v032_regma=
+p_config =3D {
+>   * Driver initialization and probing
+>   */
+>
+> +static struct mt9v032_platform_data *
+> +mt9v032_get_pdata(struct i2c_client *client)
+> +{
+> +       struct mt9v032_platform_data *pdata;
+> +       struct v4l2_of_endpoint endpoint;
+> +       struct device_node *np;
+> +       struct property *prop;
+> +
+> +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +               return client->dev.platform_data;
+> +
+> +       np =3D v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +       if (!np)
+> +               return NULL;
+> +
+> +       if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
+> +               goto done;
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Here I have one little testing:
+
+if (endpoint.bus_type !=3D V4L2_MBUS_PARALLEL) {
+        dev_err(dev, "invalid bus type, must be parallel\n");
+        goto done;
+}
+
+> +
+> +       pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERN=
+EL);
+> +       if (!pdata)
+> +               goto done;
+> +
+> +       prop =3D of_find_property(np, "link-freqs", NULL);
+> +       if (prop) {
+> +               size_t size =3D prop->length / 8;
+> +               u64 *link_freqs;
+> +
+> +               link_freqs =3D devm_kzalloc(&client->dev,
+> +                                         size * sizeof(*link_freqs),
+> +                                         GFP_KERNEL);
+> +               if (!link_freqs)
+> +                       goto done;
+> +
+> +               if (of_property_read_u64_array(np, "link-frequencies"=
+,
+> +                                              link_freqs, size) < 0)
+> +                       goto done;
+> +
+> +               pdata->link_freqs =3D link_freqs;
+> +               pdata->link_def_freq =3D link_freqs[0];
+> +       }
+> +
+> +       pdata->clk_pol =3D !!(endpoint.bus.parallel.flags &
+> +                           V4L2_MBUS_PCLK_SAMPLE_RISING);
+> +
+> +done:
+> +       of_node_put(np);
+> +       return pdata;
+> +}
+> +
+>  static int mt9v032_probe(struct i2c_client *client,
+>                 const struct i2c_device_id *did)
+>  {
+> -       struct mt9v032_platform_data *pdata =3D client->dev.platform_=
+data;
+> +       struct mt9v032_platform_data *pdata =3D mt9v032_get_pdata(cli=
+ent);
+>         struct mt9v032 *mt9v032;
+>         unsigned int i;
+>         int ret;
+> @@ -1034,9 +1086,21 @@ static const struct i2c_device_id mt9v032_id[]=
+ =3D {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mt9v032_id);
+>
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id mt9v032_of_match[] =3D {
+> +       { .compatible =3D "mt9v032" },
+> +       { .compatible =3D "mt9v032m" },
+> +       { .compatible =3D "mt9v034" },
+> +       { .compatible =3D "mt9v034m" },
+> +       { /* Sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mt9v032_of_match);
+> +#endif
+
+I have this:
+#if IS_ENABLED(CONFIG_OF)
+static const struct of_device_id mt9v032_of_match[] =3D {
+    { .compatible =3D "aptina,mt9v022", },
+    { .compatible =3D "aptina,mt9v022m", },
+    { .compatible =3D "aptina,mt9v024", },
+    { .compatible =3D "aptina,mt9v024m", },
+    { .compatible =3D "aptina,mt9v032", },
+    { .compatible =3D "aptina,mt9v032m", },
+    { .compatible =3D "aptina,mt9v034", },
+    { .compatible =3D "aptina,mt9v034m", },
+    { /* sentinel */ },
+};
+
+MODULE_DEVICE_TABLE(of, mt9v032_of_match);
+#endi
+> +
+>  static struct i2c_driver mt9v032_driver =3D {
+>         .driver =3D {
+>                 .name =3D "mt9v032",
+> +               .of_match_table =3D of_match_ptr(mt9v032_of_match),
+>         },
+>         .probe          =3D mt9v032_probe,
+>         .remove         =3D mt9v032_remove,
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media=
+" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Regards,
+
+Carlos Sanmart=C3=ADn
