@@ -1,96 +1,86 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Mon, 09 Mar 2015 13:13:19 +0100
-Message-ID: <1425903199.13415.9.camel@AMDC1943>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
- <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
- <20150307201340.GF5233@earth> <54FCEABE.9000007@samsung.com>
- <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
- <54FD880E.30903@samsung.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Mon, 9 Mar 2015 20:16:26 +0800
+Message-ID: <1425903386.13300.33.camel@mhfsdcap03>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
+	<vnkwwq2unj2y.fsf@mitchelh-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54FD880E.30903@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <vnkwwq2unj2y.fsf-Yf+dfxj6toJBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
-> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
-> > 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
-> >> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
-> >>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
-> >>>> From: Beomho Seo <beomho.seo@samsung.com>
-> >>>>
-> >>>> This patch adds device driver of max77843 charger. This driver provide
-> >>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
-> >>>> charging mode so on.). Additionally, control charging paramters to use
-> >>>> i2c interface.
-> >>>>
-> >>>> Cc: Sebastian Reichel <sre@kernel.org>
-> >>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> >>>
-> >>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
-> >>>
-> >>> I can't take it as is, since it depends on the private header file
-> >>> of PATCHv1.
-> >>>
-> >>> -- Sebastian
-> >>>
-> >>
-> >> This patch reviewed by Sebastian.
-> >> Could you Please merge that your git tree ?
-> > 
-> > Hi,
-> > 
-> > ... and again we are adding a new driver for very similar chipset to
-> > already supported. I looked at spec and the charger's registers are
-> > almost the same as for max77693. Their layout and addresses are the
-> > same. I see some minor differences, probably the most important would
-> > be different values current (fast-charge, top-off). But still 90% of
-> > registers are the same... Do we really have to add new driver?
-> > 
-> > Best regards,
-> > Krzysztof
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
+Dear Mitchel,
+     Thanks very much for your review.
+
+On Fri, 2015-03-06 at 09:15 -0800, Mitchel Humpherys wrote:
+> On Fri, Mar 06 2015 at 02:48:17 AM, <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >
+> > This patch adds support for mediatek m4u (MultiMedia Memory Management Unit).
+> > Currently this only supports m4u gen 2 with 2 levels of page table on mt8173.
 > 
-> Hi,
+> [...]
 > 
-> Thank you for your comment. As you say, both chip set are similar.
-> But new driver need for support max77843. It is support different below
-> - Provide Battery presence information.
-
-Another set of power supply properties could be added for that chip.
-This way the get_property() function would be the same but actually the
-POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
-
-> - Can OTG FET control.
-
-Where the OTG FET feature is it enabled in your driver? I couldn't find
-it.
-
-> - Bigger Fast charge current, Top Off current Threshold selection.
-> - Various and bigger OTG current limitation.
-> - Bigger primary charger termination voltage setting.
-> - Different maximum input current limit selection(Different step).
-
-Yes, I mentioned some of these differences (the Fast/top-off
-differences). These are differences in values so it does not require new
-driver. There is need to develop new driver just to support different
-current (3.0 A instead of 2.1 A) or voltage threshold.
-
-So the only new feature - battery presence - can be easily added to
-existing driver. The driver can be extended for different
-current/voltage values. Such extension may even be beneficial for new
-Maxim MUIC/PMIC chipsets.
-
-
-Best regards,
-Krzysztof
+> > +static int mtk_iommu_invalidate_tlb(const struct mtk_iommu_info *piommu,
+> > +				    int isinvall, unsigned int iova_start,
+> > +				    unsigned int iova_end)
+> > +{
+> > +	void __iomem *m4u_base = piommu->m4u_base;
+> > +	u32 val;
+> > +	u64 start, end;
+> > +
+> > +	start = sched_clock();
+> > +
+> > +	if (!isinvall) {
+> > +		iova_start = round_down(iova_start, SZ_4K);
+> > +		iova_end = round_up(iova_end, SZ_4K);
+> > +	}
+> > +
+> > +	val = F_MMU_INV_EN_L2 | F_MMU_INV_EN_L1;
+> > +
+> > +	writel(val, m4u_base + REG_INVLID_SEL);
+> > +
+> > +	if (isinvall) {
+> > +		writel(F_MMU_INV_ALL, m4u_base + REG_MMU_INVLD);
+> > +	} else {
+> > +		writel(iova_start, m4u_base + REG_MMU_INVLD_SA);
+> > +		writel(iova_end, m4u_base + REG_MMU_INVLD_EA);
+> > +		writel(F_MMU_INV_RANGE, m4u_base + REG_MMU_INVLD);
+> > +
+> > +		while (!readl(m4u_base + REG_MMU_CPE_DONE)) {
+> > +			end = sched_clock();
+> > +			if (end - start >= 100000000ULL) {
+> > +				dev_warn(piommu->dev, "invalid don't done\n");
+> > +				writel(F_MMU_INV_ALL, m4u_base + REG_MMU_INVLD);
+> > +			}
+> > +		};
+> 
+> Superfluous `;'.  Also, maybe you should be using readl_poll_timeout?
+   Thanks.
+   For the "readl_poll_timeout", My base is 3.19-rc7 and robin's patch.
+it don't have this interface.  I will try to add it in the next version.
+> 
+> > +		writel(0, m4u_base + REG_MMU_CPE_DONE);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> 
+> 
+> -Mitch
+> 
