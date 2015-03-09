@@ -1,83 +1,75 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 04/18] clocksource: Add ARM System timer driver
-Date: Mon, 9 Mar 2015 23:17:52 +0100
-Message-ID: <20150309221752.GE7525@pengutronix.de>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
- <1424455277-29983-5-git-send-email-mcoquelin.stm32@gmail.com>
- <20150220195437.GT19388@pengutronix.de>
- <1424468908.24292.10.camel@x220>
- <CALszF6Bm_Y4ZLednjpmP-hMix3gA23FwLm5hViEjr1QojUY+Mg@mail.gmail.com>
- <1425411786.2606.24.camel@tiscali.nl>
- <CALszF6AEThPrRe7c7nJ6q7yb2fhLMFuHJUV10sf=w0TMcqVVaw@mail.gmail.com>
- <1425935552.4244.6.camel@x220>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Mon, 9 Mar 2015 15:49:30 -0700
+Message-ID: <20150309224929.GL5264@atomide.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+ <1425915402-10012-3-git-send-email-eliad@wizery.com>
+ <9217056.Z3urqp19oZ@wuerfel>
+ <CAB3XZEc_sjpA8kgfYCsO8FjGEc6O0xhE9aKO3VtgVbd+Meaakg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425935552.4244.6.camel@x220>
-Sender: linux-doc-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun
+In-Reply-To: <CAB3XZEc_sjpA8kgfYCsO8FjGEc6O0xhE9aKO3VtgVbd+Meaakg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150309 14:03]:
+> On Mon, Mar 9, 2015 at 9:50 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Monday 09 March 2015 17:36:42 Eliad Peller wrote:
+> >> --- a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
+> >> +++ b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
+> >> @@ -64,4 +64,13 @@
+> >>         vmmc-supply = <&lbep5clwmc_wlen>;
+> >>         bus-width = <4>;
+> >>         non-removable;
+> >> +
+> >> +       #address-cells = <1>;
+> >> +       #size-cells = <0>;
+> >> +       wlcore: wlcore@2 {
+> >> +               compatible = "ti,wl1835";
+> >> +               reg = <2>;
+> >> +               interrupt-parent = <&gpio5>;
+> >> +               interrupts = <8 IRQ_TYPE_NONE>;
+> >> +       };
+> >>
+> >
+> > Why IRQ_TYPE_NONE?
+> >
+> i simply mirrored the current board file (which only sets the irq number).
+> 
+> > I was expecting you to remove all calls to legacy_init_wl12xx from this file,
+> > including the ones for wl12xx aside from the wl18xx ones you removed, but
+> > if that's enough to clean out the platform_data handling from the wlcore
+> > driver, it's good enough as a start.
+> not sure i'm following - can you elaborate?
+> 
+> i'll summarize the way i see it. please correct me if i'm wrong.
+> 
+> both wl18xx and wl12xx use the platform data to get the irq number.
+> wl12xx (only) also needs some additional clock definitions to be
+> passed. there's currently some issue with specifying some the of clock
+> sources, so i preferred starting only with (the simpler) wl18xx
+> bindings.
+> 
+> for platforms with wl18xx, we can remove the pdata-quirk, as all the
+> data (i.e. irq) can be passed by the new DT bindings.
+> however, for platforms with wl12xx, we still need to pass the clock
+> definitions (along with the irq), so we have to keep
+> legacy_init_wl12xx for the time being (and that's also why we have to
+> currently keep the platform_data handling in the wlcore driver)
+> 
+> do you have something else in mind?
 
-On Mon, Mar 09, 2015 at 10:12:32PM +0100, Paul Bolle wrote:
-> On Wed, 2015-03-04 at 13:08 +0100, Maxime Coquelin wrote:
-> > This is because I added also support for COMPILE_TEST coverage as p=
-er
-> > Uwe advice,
-> > and thought it was necessary to have an entry for this.
-> > Maybe I'm just wrong?
->=20
-> I missed that you added COMPILE_TEST.
->=20
-> A quick scan of your idea doesn't show any obvious issues. (Note that=
- I
-> don't really know how people actually use COMPILE_TEST. I guess thing=
-s
-> like "make allyesconfig" are involved.)
-Maybe this can clearify the purpose of COMPILE_TEST:
+I think what Arnd is saying is we've now removed all the wl12xx using
+legacy platforms, so all of them can boot with just data from dts.
 
-diff --git a/init/Kconfig b/init/Kconfig
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -67,6 +67,26 @@ config COMPILE_TEST
- 	  here. If you are a user/distributor, say N here to exclude useless
- 	  drivers to be distributed.
-=20
-+	# If you are a driver author consider to adjust your driver's
-+	# dependencies to make it buildable with minimal preconditions if
-+	# COMPILE_TEST is enabled. This helps contributers and maintainers
-+	# that might not have the necessary toolchain or kernel config handy =
-and
-+	# also increases compile test coverage. It's your advantage if others=
- can
-+	# build your driver more easily! So for a device that is only found o=
-n the
-+	# foo cpu use:
-+	#
-+	# 	depends on CPU_FOO || COMPILE_TEST
-+	#
-+	# . You might have to use
-+	#
-+	# 	depends on CPU_FOO || (COMPILE_TEST && COOKIE)
-+	#
-+	# or
-+	#
-+	#	depends on COOKIE && (CPU_FOO || COMPILE_TEST)
-+	#
-+	# if your driver uses features that are only available if COOKIE is o=
-n.
-+
- config LOCALVERSION
- 	string "Local version - append to kernel release"
- 	help
+Regards,
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
