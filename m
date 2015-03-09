@@ -1,41 +1,53 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Add CONFIG_GPIO_PCA953X
-Date: Mon, 9 Mar 2015 17:28:08 +0800
-Message-ID: <1425893288-1517-4-git-send-email-peter.chen@freescale.com>
-References: <1425893288-1517-1-git-send-email-peter.chen@freescale.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 1/2] mfd: AXP20x: Add bindings documentation
+Date: Mon, 9 Mar 2015 09:29:31 +0000
+Message-ID: <20150309092931.GC3427@x1>
+References: <1424431168-25157-1-git-send-email-wens@csie.org>
+ <1424431168-25157-2-git-send-email-wens@csie.org>
+ <CAGb2v65-kq=usC8Xip56p9wbs7RMUd0=sXcjcgY3Ec33bxEUaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425893288-1517-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65-kq=usC8Xip56p9wbs7RMUd0=sXcjcgY3Ec33bxEUaw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It is used for max7310 gpio expandor which is used at imx6qdl
-sabreauto board.
+On Sat, 07 Mar 2015, Chen-Yu Tsai wrote:
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> On Fri, Feb 20, 2015 at 7:19 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> > From: Carlo Caione <carlo@caione.org>
+> >
+> > Bindings documentation for the AXP20x driver. In this file also
+> > sub-nodes are documented.
+> >
+> > Signed-off-by: Carlo Caione <carlo@caione.org>
+> > [wens@csie.org: clarify interrupt source for the axp PMIC]
+> > [wens@csie.org: explain dcdc-workmode in detail and trim lines to 8=
+0 chars]
+> > [wens@csie.org: make regulator supplies optional if using unregulat=
+ed input]
+> > [wens@csie.org: use cubieboard2 regulator nodes as example]
+> > [wens@csie.org: x-powers,dcdc-workmode default changed to 'current =
+hardware
+> >                 setting']
+> > [wens@csie.org: reorganized regulator related properties into separ=
+ate
+> >                 section.]
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>=20
+> Ping?
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index cf1e71e..75e7a95 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -168,6 +168,7 @@ CONFIG_SPI=y
- CONFIG_SPI_IMX=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_MC9S08DZ60=y
-+CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_STMPE=y
- CONFIG_POWER_SUPPLY=y
- CONFIG_POWER_RESET=y
--- 
-1.9.1
+Don't do that.  It won't speed up the review.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you think your set has been fogotten about (this one has not)
+resend with s/PATCH/RESEND/ in the subject line.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
