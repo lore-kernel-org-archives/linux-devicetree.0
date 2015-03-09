@@ -1,75 +1,56 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/5] mtd: nand: =?UTF-8?Q?vf=36=31=30=5Fnfc=3A=20Frees?=
- =?UTF-8?Q?cale=20NFC=20for=20VF=36=31=30=2C=20MPC=35=31=32=35=20and=20oth?=
- =?UTF-8?Q?ers?=
-Date: Mon, 09 Mar 2015 13:43:49 +0100
-Message-ID: <975eaa91737584f8b45b36942cece523@agner.ch>
-References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
- <1425510624-22250-2-git-send-email-stefan@agner.ch>
- <20150306061502.GB10997@pengutronix.de>
- <fdfc84d92bbcb8abc98f2c29e1aa368b@agner.ch>
- <20150309095843.GA31289@pengutronix.de>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V2 1/5] dt-bindings: video: Add Ingenic jz4780-drm binding
+Date: Mon, 9 Mar 2015 12:44:01 +0000
+Message-ID: <1425905045-14007-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1425905045-14007-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150309095843.GA31289@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: geert@linux-m68k.org, dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425905045-14007-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-03-09 10:58, Sascha Hauer wrote:
-> On Fri, Mar 06, 2015 at 02:31:51PM +0100, Stefan Agner wrote:
->> On 2015-03-06 07:15, Sascha Hauer wrote:
->> > Hi Stefan,
->> >
->> > On Thu, Mar 05, 2015 at 12:10:20AM +0100, Stefan Agner wrote:
->> >> +
->> >> +static int vf610_nfc_probe_dt(struct device *dev, struct vf610_nfc_config *cfg)
->> >> +{
->> >> +	struct device_node *np = dev->of_node;
->> >> +	int buswidth;
->> >> +	u32 clkrate;
->> >> +
->> >> +	if (!np)
->> >> +		return 1;
->> >> +
->> >> +	cfg->flash_bbt = of_get_nand_on_flash_bbt(np);
->> >> +
->> >> +	if (!of_property_read_u32(np, "clock-frequency", &clkrate))
->> >> +		cfg->clkrate = clkrate;
->> >
->> > Normally the clock-frequency property tells the driver at which
->> > frequency the device actually is running, not to tell the driver at
->> > which frequency the device *should* run. It's strange to use the value
->> > of the clock-frequency property as input to clk_set_rate(). Maybe the
->> > assigned clock binding is more appropriate here, see
->> > Documentation/devicetree/bindings/clock/clock-bindings.txt.
->>
->> What we try to do here is to specify the hardware limitations. There
->> seem to be some hardware restrictions when it comes to clock
->> frequencies. There has been a rather long discussion over at Freescales
->> community about it:
->> https://community.freescale.com/thread/317074
->>
->> Not sure if this is the right way to specify the supported frequencies,
->> or should we create a custom property for this, something like
->> fsl,max-nfc-frequency = <33000000>?
-> 
-> What's wrong with the assigned clock binding? All you have to do is to
-> add it to the device node. The rest will be done from the generic clock
-> framework with no additional driver code.
+This patch adds a display susbsytem for the Ingenic JZ4780 SoC
 
-Ah yes, assigned clock bindings seems like a match. So, the NFC node
-would look something like
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-...
-        assigned-clocks = <&clks VF610_CLK_NFC>;
-        assigned-clock-rates = <33000000>;
-...
+---
+V1 -> V2
+Rebased to 4.0-rc3
+---
+ .../devicetree/bindings/video/ingenic-jz4780-drm.txt    | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-drm.txt
 
-Will try to use that, thx.
+diff --git a/Documentation/devicetree/bindings/video/ingenic-jz4780-drm.txt b/Documentation/devicetree/bindings/video/ingenic-jz4780-drm.txt
+new file mode 100644
+index 0000000..14a65a7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/ingenic-jz4780-drm.txt
+@@ -0,0 +1,17 @@
++Ingenic JZ4780 DRM master device
++================================
++
++The Ingenic JZ4780 DRM master device is a virtual device needed to list all
++devices or other display interface nodes that comprise the graphics subsystem.
++
++Required properties:
++- compatible: Should be "ingenic,jz4780-display-subsystem"
++- ports: Should contain a list of phandles pointing to display interface port
++  as defined in Documentation/devicetree/bindings/video/rockchip-vop.txt
++
++example:
++
++display-subsystem {
++	compatible = "ingenic,jz4780-display-subsystem";
++	ports = <&jz4780_lcd_out>;
++};
+-- 
+1.9.1
 
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
