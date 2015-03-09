@@ -1,185 +1,183 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] v4l: mt9v032: Add OF support
-Date: Mon, 09 Mar 2015 13:19:10 +0200
-Message-ID: <2182472.9lHHsiQgiX@avalon>
-References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com> <CAPW4HR1WJPWg64GwitxCPK2jop0CntS1UtsOu_0VjCz0BEke6A@mail.gmail.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2] ASoC: jz4740: Add jz4780 support
+Date: Mon, 9 Mar 2015 11:23:44 +0000
+Message-ID: <1425900224-52026-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPW4HR1WJPWg64GwitxCPK2jop0CntS1UtsOu_0VjCz0BEke6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlos =?ISO-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linux Media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, lgirdwood@gmail.com
+Cc: lars@metafoo.de, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Carlos,
+The jz4780 and jz4740 have very similar i2s blocks.
 
-Thank you for the review.
+The slight difference is in Rx/Tx fifos.
+And the bitclocks for input/output are different.
 
-On Monday 09 March 2015 10:45:31 Carlos Sanmart=EDn Bustos wrote:
-> Hi Laurent,
->=20
-> Looks good. One question, why not deprecate the platform data? I can'=
-t
-> see any device using the mt9v032 pdata, I was making a similar patch
-> but deprecating pdata.
+This patch adds jz4780 support to the driver
 
-The sensor could be used on non-DT platforms. As keeping platform data =
-support=20
-doesn't really make the code more complex and doesn't prevent cleanups =
-or=20
-other refactoring, I don't see much harm in keeping it for now.
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-=46or DT-based platforms, of course, DT should be used.
+---
+Patch based on 4.0-rc3
+Tested on the MIPS Creator CI20.
 
-> Some more comment:
->=20
-> 2015-03-08 14:45 GMT+01:00 Laurent Pinchart:
-> > Parse DT properties into a platform data structure when a DT node i=
-s
-> > available.
-> >=20
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > ---
-> >=20
-> >  .../devicetree/bindings/media/i2c/mt9v032.txt      | 41 ++++++++++=
-++++
-> >  MAINTAINERS                                        |  1 +
-> >  drivers/media/i2c/mt9v032.c                        | 66 ++++++++++=
-++++++-
-> >  3 files changed, 107 insertions(+), 1 deletion(-)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+V1 - > V2
+Removed SND_DMAENGINE_PCM_FLAG_NO_RESIDUE as it is handled by dma driver
+Added a check for symmetric_rates flag for jz4780
+---
+ .../bindings/sound/ingenic,jz4740-i2s.txt          |  2 +-
+ sound/soc/jz4740/jz4740-i2s.c                      | 58 +++++++++++++++++++---
+ 2 files changed, 51 insertions(+), 9 deletions(-)
 
-[snip]
-
-> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v03=
-2.c
-> > index 3267c18..a6ea091 100644
-> > --- a/drivers/media/i2c/mt9v032.c
-> > +++ b/drivers/media/i2c/mt9v032.c
-
-[snip]
-
-> > +static struct mt9v032_platform_data *
-> > +mt9v032_get_pdata(struct i2c_client *client)
-> > +{
-> > +       struct mt9v032_platform_data *pdata;
-> > +       struct v4l2_of_endpoint endpoint;
-> > +       struct device_node *np;
-> > +       struct property *prop;
-> > +
-> > +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> > +               return client->dev.platform_data;
-> > +
-> > +       np =3D v4l2_of_get_next_endpoint(client->dev.of_node, NULL)=
-;
-> > +       if (!np)
-> > +               return NULL;
-> > +
-> > +       if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
-> > +               goto done;
->=20
-> Here I have one little testing:
->=20
-> if (endpoint.bus_type !=3D V4L2_MBUS_PARALLEL) {
->         dev_err(dev, "invalid bus type, must be parallel\n");
->         goto done;
-> }
-
-Good question, should drivers check DT properties that they don't use, =
-in=20
-order to catch errors in DT ? This would slightly increase the kernel s=
-ize in=20
-order to prevent people from connecting a parallel sensor to a CSI-2 bu=
-s,=20
-which is obviously impossible in hardware :-)
-
-> > +
-> > +       pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KE=
-RNEL);
-> > +       if (!pdata)
-> > +               goto done;
-> > +
-> > +       prop =3D of_find_property(np, "link-freqs", NULL);
-> > +       if (prop) {
-> > +               size_t size =3D prop->length / 8;
-> > +               u64 *link_freqs;
-> > +
-> > +               link_freqs =3D devm_kzalloc(&client->dev,
-> > +                                         size * sizeof(*link_freqs=
-),
-> > +                                         GFP_KERNEL);
-> > +               if (!link_freqs)
-> > +                       goto done;
-> > +
-> > +               if (of_property_read_u64_array(np, "link-frequencie=
-s",
-> > +                                              link_freqs, size) < =
-0)
-> > +                       goto done;
-> > +
-> > +               pdata->link_freqs =3D link_freqs;
-> > +               pdata->link_def_freq =3D link_freqs[0];
-> > +       }
-> > +
-> > +       pdata->clk_pol =3D !!(endpoint.bus.parallel.flags &
-> > +                           V4L2_MBUS_PCLK_SAMPLE_RISING);
-> > +
-> > +done:
-> > +       of_node_put(np);
-> > +       return pdata;
-> > +}
-
-[snip]
-
-> > @@ -1034,9 +1086,21 @@ static const struct i2c_device_id mt9v032_id=
-[] =3D {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, mt9v032_id);
-> >=20
-> > +#if IS_ENABLED(CONFIG_OF)
-> > +static const struct of_device_id mt9v032_of_match[] =3D {
-> > +       { .compatible =3D "mt9v032" },
-> > +       { .compatible =3D "mt9v032m" },
-> > +       { .compatible =3D "mt9v034" },
-> > +       { .compatible =3D "mt9v034m" },
-> > +       { /* Sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mt9v032_of_match);
-> > +#endif
->=20
-> I have this:
-> #if IS_ENABLED(CONFIG_OF)
-> static const struct of_device_id mt9v032_of_match[] =3D {
->     { .compatible =3D "aptina,mt9v022", },
->     { .compatible =3D "aptina,mt9v022m", },
->     { .compatible =3D "aptina,mt9v024", },
->     { .compatible =3D "aptina,mt9v024m", },
->     { .compatible =3D "aptina,mt9v032", },
->     { .compatible =3D "aptina,mt9v032m", },
->     { .compatible =3D "aptina,mt9v034", },
->     { .compatible =3D "aptina,mt9v034m", },
-
-Looks like I forgot to update my patch for mt9v02* support. Sorry about=
- that,=20
-I'll fix it. And the "aptina," prefix of course belongs there.
-
->     { /* sentinel */ },
-> };
->=20
-> MODULE_DEVICE_TABLE(of, mt9v032_of_match);
-> #endi
-
-
---=20
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
+index b414333..b623d50 100644
+--- a/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
+@@ -1,7 +1,7 @@
+ Ingenic JZ4740 I2S controller
+ 
+ Required properties:
+-- compatible : "ingenic,jz4740-i2s"
++- compatible : "ingenic,jz4740-i2s" or "ingenic,jz4780-i2s"
+ - reg : I2S registers location and length
+ - clocks : AIC and I2S PLL clock specifiers.
+ - clock-names: "aic" and "i2s"
+diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
+index 07f7781..08eb823 100644
+--- a/sound/soc/jz4740/jz4740-i2s.c
++++ b/sound/soc/jz4740/jz4740-i2s.c
+@@ -58,6 +58,12 @@
+ 
+ #define JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 12
+ #define JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 8
++#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 24
++#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 16
++#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_MASK \
++			(0xf << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET)
++#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_MASK \
++			(0x1f <<  JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET)
+ 
+ #define JZ_AIC_CTRL_OUTPUT_SAMPLE_SIZE_MASK (0x7 << 19)
+ #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK (0x7 << 16)
+@@ -79,6 +85,7 @@
+ #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET  16
+ 
+ #define JZ_AIC_I2S_FMT_DISABLE_BIT_CLK BIT(12)
++#define JZ_AIC_I2S_FMT_DISABLE_BIT_ICLK BIT(13)
+ #define JZ_AIC_I2S_FMT_ENABLE_SYS_CLK BIT(4)
+ #define JZ_AIC_I2S_FMT_MSB BIT(0)
+ 
+@@ -87,6 +94,13 @@
+ #define JZ_AIC_CLK_DIV_MASK 0xf
+ #define I2SDIV_DV_SHIFT 8
+ #define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
++#define I2SDIV_IDV_SHIFT 8
++#define I2SDIV_IDV_MASK (0xf << I2SDIV_IDV_SHIFT)
++
++enum jz47xx_i2s_version {
++	JZ_I2S_JZ4740,
++	JZ_I2S_JZ4780,
++};
+ 
+ struct jz4740_i2s {
+ 	struct resource *mem;
+@@ -98,6 +112,8 @@ struct jz4740_i2s {
+ 
+ 	struct snd_dmaengine_dai_dma_data playback_dma_data;
+ 	struct snd_dmaengine_dai_dma_data capture_dma_data;
++
++	enum jz47xx_i2s_version version;
+ };
+ 
+ static inline uint32_t jz4740_i2s_read(const struct jz4740_i2s *i2s,
+@@ -267,13 +283,22 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
+ 			ctrl |= JZ_AIC_CTRL_MONO_TO_STEREO;
+ 		else
+ 			ctrl &= ~JZ_AIC_CTRL_MONO_TO_STEREO;
++
++		div_reg &= ~I2SDIV_DV_MASK;
++		div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
+ 	} else {
+ 		ctrl &= ~JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK;
+ 		ctrl |= sample_size << JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET;
++
++		if (i2s->version >= JZ_I2S_JZ4780) {
++			div_reg &= ~I2SDIV_IDV_MASK;
++			div_reg |= (div - 1) << I2SDIV_IDV_SHIFT;
++		} else {
++			div_reg &= ~I2SDIV_DV_MASK;
++			div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
++		}
+ 	}
+ 
+-	div_reg &= ~I2SDIV_DV_MASK;
+-	div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CTRL, ctrl);
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CLK_DIV, div_reg);
+ 
+@@ -369,11 +394,19 @@ static int jz4740_i2s_dai_probe(struct snd_soc_dai *dai)
+ 	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
+ 		&i2s->capture_dma_data);
+ 
+-	conf = (7 << JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
+-		(8 << JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
+-		JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
+-		JZ_AIC_CONF_I2S |
+-		JZ_AIC_CONF_INTERNAL_CODEC;
++	if (i2s->version >= JZ_I2S_JZ4780) {
++		conf = (7 << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
++			(8 << JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
++			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
++			JZ_AIC_CONF_I2S |
++			JZ_AIC_CONF_INTERNAL_CODEC;
++	} else {
++		conf = (7 << JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
++			(8 << JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
++			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
++			JZ_AIC_CONF_I2S |
++			JZ_AIC_CONF_INTERNAL_CODEC;
++	}
+ 
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CONF, JZ_AIC_CONF_RESET);
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CONF, conf);
+@@ -428,7 +461,8 @@ static const struct snd_soc_component_driver jz4740_i2s_component = {
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_of_matches[] = {
+-	{ .compatible = "ingenic,jz4740-i2s" },
++	{ .compatible = "ingenic,jz4740-i2s", .data = (void *)JZ_I2S_JZ4740 },
++	{ .compatible = "ingenic,jz4780-i2s", .data = (void *)JZ_I2S_JZ4780 },
+ 	{ /* sentinel */ }
+ };
+ #endif
+@@ -438,11 +472,16 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 	struct jz4740_i2s *i2s;
+ 	struct resource *mem;
+ 	int ret;
++	const struct of_device_id *match;
+ 
+ 	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
+ 	if (!i2s)
+ 		return -ENOMEM;
+ 
++	match = of_match_device(jz4740_of_matches, &pdev->dev);
++	if (match)
++		i2s->version = (enum jz47xx_i2s_version)match->data;
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	i2s->base = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(i2s->base))
+@@ -460,6 +499,9 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, i2s);
+ 
++	if (i2s->version >= JZ_I2S_JZ4780)
++		jz4740_i2s_dai.symmetric_rates = 0;
++
+ 	ret = devm_snd_soc_register_component(&pdev->dev,
+ 		&jz4740_i2s_component, &jz4740_i2s_dai, 1);
+ 	if (ret)
+-- 
+1.9.1
