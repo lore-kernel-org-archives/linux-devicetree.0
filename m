@@ -1,76 +1,96 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 4/5] dt-bindings: video: Add jz4780-hdmi binding
-Date: Mon, 9 Mar 2015 12:44:04 +0000
-Message-ID: <1425905045-14007-5-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1425905045-14007-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: mediatek: Add smi dts binding
+Date: Mon, 9 Mar 2015 20:55:03 +0800
+Message-ID: <1425905703.13300.48.camel@mhfsdcap03>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	<1425638900-24989-4-git-send-email-yong.wu@mediatek.com>
+	<20150306111338.GD8700@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425905045-14007-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150306111338.GD8700@leverpostej>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
+Dear Mark,
+      Thanks very much for you suggestion.
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+On Fri, 2015-03-06 at 11:13 +0000, Mark Rutland wrote:
+> On Fri, Mar 06, 2015 at 10:48:18AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > This patch add smi binding document.
+> 
+> Please move binding documents to the start of the series. It makes
+> things far easier to review.
+> 
+> > 
+> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/soc/mediatek/mediatek,smi.txt   | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> > new file mode 100644
+> > index 0000000..0fc9d1a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
+> > @@ -0,0 +1,17 @@
+> > +SMI hardware block diagram please help check <bindings/iommu/mediatek,iommu.txt>
+> > +
+> > +Required properties:
+> > +- compatible : must be "mediatek,mediatek,mt8173-smi-larb"
+> 
+> Double vendor prefix?
+Yes. I will change this.
+> 
+> What does "larb" mean? It would be nice for the intorductory paragraph
+> in this file to explain.
+That is local arbiter. I will add a link like this, is it ok?
 
----
-V1 -> V2
+compatible : must be "mediatek,mt8173-smi-larb", about the "larb",
+please check the <bindings/iommu/mediatek,iommu.txt>.
 
-Rebased to 4.0-rc3
----
- .../bindings/video/ingenic-jz4780-hdmi.txt         | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
-
-diff --git a/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt b/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
-new file mode 100644
-index 0000000..f02e59f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
-@@ -0,0 +1,41 @@
-+Device-Tree bindings for Ingenic JZ4780 HDMI Transmitter
-+
-+The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
-+TX controller IP with accompanying PHY IP.
-+
-+Required properties:
-+ - #address-cells : should be <1>
-+ - #size-cells : should be <0>
-+ - compatible : should be "ingenic,jz4780-hdmi"
-+ - reg-io-width: must be <4>
-+ - clocks: phandle to isrf and iahb clocks
-+ - clock-names : must be "isrf" and "iahb"
-+ - ports: Port nodes with endpoint definitions as defined in
-+   Documentation/devicetree/bindings/media/video-interfaces.txt,
-+
-+Optional properties:
-+ - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-+
-+example:
-+
-+hdmi: hdmi@10180000 {
-+	compatible = "ingenic,jz4780-hdmi";
-+	reg = <0x10180000 0x8000>;
-+	reg-io-width = <4>;
-+	ddc-i2c-bus = <&i2c4>;
-+	interrupt-parent = <&intc>;
-+	interrupts = <3>;
-+	clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
-+	clock-names = "isfr", "iahb";
-+
-+	ports {
-+		hdmi_in: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			hdmi_in_lcd: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&jz4780_out_hdmi>;
-+			};
-+		};
-+	};
-+};
--- 
-1.9.1
+> 
+> > +- reg : the register of each local arbiter
+> > +- clocks : the clocks of each local arbiter
+> > +- clock-name: larb_sub*(3 clockes at most)
+> 
+> The names required _must_ be specified here, or clock-names is
+> pointless.
+> 
+> The clock names should be from the PoV of _this_ device (i.e. they
+> should be the names of the inputs) not from the PoV of the provider
+> (i.e. they should not be the names of the outputs from the provider).
+    I use larb_sub0, larb_sub1,larb_sub2 for more easily to control the
+clocks. if we use the PoV, We should list all the clocks name, it will
+has a little code. Anyway I will change this in the next version.
+> 
+> Mark.
+> 
+> > +
+> > +Example:
+> > +	larb1:larb@16010000 {
+> > +	        compatible = "mediatek,mt8173-smi-larb";
+> > +		reg = <0 0x16010000 0 0x1000>;
+> > +		clocks = <&mmsys MM_SMI_COMMON>,
+> > +		        <&vdecsys VDEC_CKEN>,
+> > +                        <&vdecsys VDEC_LARB_CKEN>;
+> > +		clock-names = "larb_sub0", "larb_sub1", "larb_sub2";
+> > +	};
+> > -- 
+> > 1.8.1.1.dirty
+> > 
+> > 
