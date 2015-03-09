@@ -1,72 +1,76 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V2 0/5] drm: jz4780: Add drm driver for Ingenic JZ4780
-Date: Mon, 9 Mar 2015 12:44:00 +0000
-Message-ID: <1425905045-14007-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 4/5] dt-bindings: video: Add jz4780-hdmi binding
+Date: Mon, 9 Mar 2015 12:44:04 +0000
+Message-ID: <1425905045-14007-5-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1425905045-14007-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425905045-14007-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: airlied@linux.ie
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
 
-Here we have 5 patches that add a DRM driver for the LCD
-controller in the Ingenic JZ4780 SoC.
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-The HDMI Controller in the JZ4780 is by Synopsys
-and the dw_hdmi driver is used.
-
-These patches are based on 4.0-rc3
-
+---
 V1 -> V2
-Fixed module licenses
-Fix in makefile and #include drm_flip_work
-Rebased to v4.0-rc3
 
-Feedback welcome
-
-Thank-you
-ZubairLK
-
-
-Zubair Lutfullah Kakakhel (5):
-  dt-bindings: video: Add Ingenic jz4780-drm binding
-  dt-bindings: video: Add jz4780-lcd binding
-  drm: jz4780: Add DRM driver for Ingenic JZ4780
-  dt-bindings: video: Add jz4780-hdmi binding
-  drm: bridge/dw_hdmi: Add jz4780 support
-
- .../bindings/video/ingenic-jz4780-drm.txt          |  17 +
- .../bindings/video/ingenic-jz4780-hdmi.txt         |  41 ++
- .../bindings/video/ingenic-jz4780-lcd.txt          |  39 ++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/jz4780/Kconfig                     |  22 +
- drivers/gpu/drm/jz4780/Makefile                    |   4 +
- drivers/gpu/drm/jz4780/dw_hdmi-jz4780.c            | 235 +++++++
- drivers/gpu/drm/jz4780/jz4780_crtc.c               | 719 +++++++++++++++++++++
- drivers/gpu/drm/jz4780/jz4780_drv.c                | 388 +++++++++++
- drivers/gpu/drm/jz4780/jz4780_drv.h                |  82 +++
- drivers/gpu/drm/jz4780/jz4780_regs.h               | 694 ++++++++++++++++++++
- include/drm/bridge/dw_hdmi.h                       |   1 +
- 13 files changed, 2245 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-drm.txt
+Rebased to 4.0-rc3
+---
+ .../bindings/video/ingenic-jz4780-hdmi.txt         | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
- create mode 100644 drivers/gpu/drm/jz4780/Kconfig
- create mode 100644 drivers/gpu/drm/jz4780/Makefile
- create mode 100644 drivers/gpu/drm/jz4780/dw_hdmi-jz4780.c
- create mode 100644 drivers/gpu/drm/jz4780/jz4780_crtc.c
- create mode 100644 drivers/gpu/drm/jz4780/jz4780_drv.c
- create mode 100644 drivers/gpu/drm/jz4780/jz4780_drv.h
- create mode 100644 drivers/gpu/drm/jz4780/jz4780_regs.h
 
+diff --git a/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt b/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
+new file mode 100644
+index 0000000..f02e59f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
+@@ -0,0 +1,41 @@
++Device-Tree bindings for Ingenic JZ4780 HDMI Transmitter
++
++The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
++TX controller IP with accompanying PHY IP.
++
++Required properties:
++ - #address-cells : should be <1>
++ - #size-cells : should be <0>
++ - compatible : should be "ingenic,jz4780-hdmi"
++ - reg-io-width: must be <4>
++ - clocks: phandle to isrf and iahb clocks
++ - clock-names : must be "isrf" and "iahb"
++ - ports: Port nodes with endpoint definitions as defined in
++   Documentation/devicetree/bindings/media/video-interfaces.txt,
++
++Optional properties:
++ - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
++
++example:
++
++hdmi: hdmi@10180000 {
++	compatible = "ingenic,jz4780-hdmi";
++	reg = <0x10180000 0x8000>;
++	reg-io-width = <4>;
++	ddc-i2c-bus = <&i2c4>;
++	interrupt-parent = <&intc>;
++	interrupts = <3>;
++	clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
++	clock-names = "isfr", "iahb";
++
++	ports {
++		hdmi_in: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			hdmi_in_lcd: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&jz4780_out_hdmi>;
++			};
++		};
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
