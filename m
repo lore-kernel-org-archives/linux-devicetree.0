@@ -1,39 +1,59 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 05/15] musb: Do not use musb_read[b|w] /
- _write[b|w] wrappers in generic fifo functions
-Date: Mon, 09 Mar 2015 22:50:29 +0100
-Message-ID: <4821047.1nqnop93Xh@wuerfel>
-References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-6-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
+Date: Mon, 09 Mar 2015 22:54:36 +0100
+Message-ID: <57664636.GGm8GTyWMF@wuerfel>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	<1425902271.13300.18.camel@mhfsdcap03>
+	<1425923977.2317.4.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBR5L7CTQKGQETP5VMSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1425933628-9672-6-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1425923977.2317.4.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 March 2015 21:40:18 Hans de Goede wrote:
-> The generic fifo functions already use non wrapped accesses in various
-> cases through the iowrite#_rep functions, and all platforms which override
-> the default musb_read[b|w] / _write[b|w] functions also provide their own
-> fifo access functions, so we can safely drop the unnecessary indirection
-> from the fifo access functions.
+On Monday 09 March 2015 18:59:37 Paul Bolle wrote:
+> Hi Yong,
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> 
+> Yong Wu schreef op ma 09-03-2015 om 19:57 [+0800]:
+> > On Fri, 2015-03-06 at 12:30 +0100, Paul Bolle wrote:
+> > > On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > > --- a/drivers/soc/mediatek/Kconfig
+> > > > +++ b/drivers/soc/mediatek/Kconfig
+> > > > @@ -20,3 +20,10 @@ config MT8173_PMIC_WRAP
+> > > >  	  PMIC wrapper is a proprietary hardware in MT8173 to make
+> > > >  	  communication protocols to access PMIC device.
+> > > >  	  This driver implement access protocols for MT8173.
+> > > > +
+> > > > +config MTK_SMI
+> > > > +        bool
+> > > 
+> > > Nit: make this one tab instead of 8 spaces, please.
+> > > 
+> > > > +	help
+> > > > +	  Smi help enable/disable iommu in mt8173 and control the
+> > > > +	  clock of each local arbiter.
+> > > > +	  It should be true while MTK_IOMMU enable.
+> > > 
+> > > I don't think anyone using the *config tools will ever see this text, as
+> > > there's no prompt. So you might as well make this a comment or drop it
+> > > altogether.
+> > > 
+> >      We could search it in the tool even though we don't see it. In next
+> > version, I will try to make it a comment.
 
-The patch looks reasonably, but the description seem misleading.
-I believe the real reason why it's ok to use __raw_writew for the
-FIFO is that a FIFO by definition is using CPU endian access for
-copying byte streams from memory, which is unlike any other MMIO
-register that requires fixed-endian accessors.
+No, please leave it the way it was. I prefer having help texts even
+for silent options over using comments to do the same.
 
 	Arnd
