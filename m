@@ -1,85 +1,95 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: Associating nodes with phandles for pci devices
-Date: Mon, 9 Mar 2015 05:19:35 +0000
-Message-ID: <54FD2D66.2080507@alliedtelesis.co.nz>
-References: <9bcf67ede60f4567a396c05578cfceb7@svr-chch-ex1.atlnz.lc>
- <54C2CDE6.8090400@openwrt.org> <54FCC6AC.4030202@alliedtelesis.co.nz>
- <4974230.GyVpHqdJU9@wuerfel> <54FCD53D.7080700@alliedtelesis.co.nz>
- <CAGVrzcYF266X-mUsfPtAr_jjJ3JW-TTHrKkznsnCCfrCzuf+qw@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH v2] mtd:spi-nor: Add Altera EPCQ Driver
+Date: Mon, 9 Mar 2015 07:31:07 +0100
+Message-ID: <CACna6ryC8TyxvvtztoSgZUXnE+tJdY6tefbXVkaZ60JoZ7ti7A@mail.gmail.com>
+References: <CAN1oZWykZk13yCajiZc-xb5h372MrEP9iOWUqzhrt-feG6pkLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcYF266X-mUsfPtAr_jjJ3JW-TTHrKkznsnCCfrCzuf+qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Content-ID: <90B8EE8BB7FC684F849FA149ABC4239D-aR5bhbO/t7M@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAN1oZWykZk13yCajiZc-xb5h372MrEP9iOWUqzhrt-feG6pkLQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viet Nga Dao <vndao@altera.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmxvcmlhbiwNCg0KT24gMDMvMDkvMjAxNSAwNDo0MCBQTSwgRmxvcmlhbiBGYWluZWxsaSB3
-cm90ZToNCj4gMjAxNS0wMy0wOCAxNjowMyBHTVQtMDc6MDAgQ2hyaXMgUGFja2hhbSA8Q2hyaXMu
-UGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PjoNCj4+DQo+Pg0KPj4gT24gMDMvMDkvMjAxNSAx
-MTo0MiBBTSwgQXJuZCBCZXJnbWFubiB3cm90ZToNCj4+PiBPbiBTdW5kYXkgMDggTWFyY2ggMjAx
-NSAyMjowMToxNyBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4+Pg0KPj4+Pj4NCj4+Pj4+IEJUVywg
-b25lIHRoaW5nIHRoYXQgaXMgaGlnaCBpbiBteSBUT0RPIGxpc3QgcmVnYXJkaW5nIERTQSBpcyB0
-byBzdG9wDQo+Pj4+PiB1c2luZyB0aGlzIHBsYXRmb3JtIGRldmljZS9kcml2ZXIgYXJjaGl0ZWN0
-dXJlIGFuZCB1c2UgdGhlIGFjdHVhbCBkZXZpY2UNCj4+Pj4+IGRyaXZlciBtb2RlbC4gWW91ciBz
-d2l0Y2ggZHJpdmVyIGVudHJ5IHBvaW50IHdvdWxkIGJlIGEgcGNpX2RyaXZlDQo+Pj4+PiBwcm9i
-ZSdzIGZ1bmN0aW9uIHdoZXJlIHlvdSBlbmQtdXAgcmVnaXN0ZXJpbmcgYSBzd2l0Y2ggdGhlIERT
-QS4gVGhpcw0KPj4+Pj4gc2hvdWxkIHNvbHZlIHBvcnRpb25zIG9mIHlvdXIgcHJvYmxlbSBhbHRo
-b3VnaCB0aGlzIGlzIGEgbG9uZyBzaG90IGFzIHdlDQo+Pj4+PiBuZWVkIHRvIGNvbnZlcnQgZXhp
-c3RpbmcgZHJpdmVycyBhcyB3ZWxsLg0KPj4+Pj4NCj4+Pj4NCj4+Pj4gTXkgY3VycmVudCBwcm9i
-bGVtIGlzIHRoYXQgb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSgpIChjYWxsZWQgYnkNCj4+Pj4gZHNh
-X29mX3Byb2JlKSBjYW4ndCBmaW5kIHRoZSBkZXZpY2UuIEFmdGVyIGEgYml0IG9mIGRlYnVnZ2lu
-ZyBJIGNhbiBzZWUNCj4+Pj4gdGhhdCB0aGUgcG9wdWxhdGVkIHBsYXRmb3JtIGJ1cyBvbmx5IGdv
-ZXMgYXMgZmFyIGFzDQo+Pj4+IC9zb2MvcGNpZS1jb250cm9sbGVyLCBhbnl0aGluZyBiZXlvbmQg
-dGhhdCBzZWVtcyB0byBiZSBtaXNzaW5nLiBJIGNhbid0DQo+Pj4+IHNlZSBhbnl0aGluZyBvYnZp
-b3VzIGluIG9mX3BsYXRmb3JtX2J1c19jcmVhdGUoKSB0aGF0IHdvdWxkIGFjdHVhbGx5DQo+Pj4+
-IHN0b3AgaXQgZnJvbSBjb250aW51aW5nIGRvd24gdGhlIHBjaWUtY29udHJvbGxlciBicmFuY2gg
-cHJvdmlkZWQgdGhlIGR0cw0KPj4+PiBhY3R1YWxseSBlbnVtZXJhdGVzIHRoZSBjaGlsZHJlbi4N
-Cj4+Pj4NCj4+Pj4gQW55IHN1Z2dlc3Rpb25zPw0KPj4+DQo+Pj4gVGhlIFBDSSBkZXZpY2VzIGFy
-ZSBub3QgcG9wdWxhdGVkIGJ5IG9mX3BsYXRmb3JtX2J1c19jcmVhdGUuIEluc3RlYWQsDQo+Pj4g
-cGNpX3NjYW5fZGV2aWNlKCkgY2FsbHMgcGNpX3NldF9vZl9ub2RlKCkgdG8gc2V0IHRoZSBvZl9u
-b2RlDQo+Pj4gcG9pbnRlciBmb3IgZWFjaCBQQ0kgZGV2aWNlLg0KPj4+DQo+Pj4gVGhpcyB3b3Vs
-ZCBmYWlsIGZvciBpbnN0YW5jZSBpZiB0aGUgcm9vdCBidXMgZG9lcyBub3QgaGF2ZSBhIGNvcnJl
-Y3QNCj4+PiBvZl9ub2RlIHBvaW50ZXIuDQo+Pj4NCj4+DQo+PiBIbW0uIEkgaW5zdHJ1bWVudGVk
-IHBjaV9zZXRfb2Zfbm9kZSBhbmQgSSBkbyBzZWUgbXkgMiBuZXR3b3JrIGRldmljZXMuDQo+Pg0K
-Pj4gZGV2Zm4gPSAwMDAwMDAwMA0KPj4gb2Zfbm9kZSA9IGJmZmYzZjkwIC9zb2MvcGNpZS1jb250
-cm9sbGVyL3BjaWVAMSwwL3RnM0AwMSwwDQo+Pg0KPj4gZGV2Zm4gPSAwMDAwMDAwMQ0KPj4gb2Zf
-bm9kZSA9IGJmZmY0MTE4IC9zb2MvcGNpZS1jb250cm9sbGVyL3BjaWVAMSwwL3RnM0AwMSwxDQo+
-Pg0KPj4gU28gYXQgbGVhc3QgdGhhdCdzIGhhcHBlbmluZy4gSSBndWVzcyB0aGUgcHJvYmxlbSBp
-cyB0aGF0IHVsdGltYXRlbHkNCj4+IHRoZXkgYXJlIGRldmljZXMgb24gdGhlIHBjaSBidXMgYXMg
-b3Bwb3NlZCB0byB0aGUgcGxhdGZvcm0gYnVzIGFuZA0KPj4gb2ZfZmluZF9kZXZpY2VfYnlfbm9k
-ZSgpIG9ubHkgbG9va3MgYXQgdGhlIHBsYXRmb3JtIGJ1cw0KPj4NCj4+IGRldiA9IGJ1c19maW5k
-X2RldmljZSgmcGxhdGZvcm1fYnVzX3R5cGUsIE5VTEwsIG5wLCBvZl9kZXZfbm9kZV9tYXRjaCk7
-DQo+Pg0KPj4gV2hhdCBJIG1pZ2h0IGhhdmUgdG8gZG8gZm9yIG5vdyBpcyBnZXQgdGhlIERTQSBk
-cml2ZXIgY29kZSB0byBnbyBsb29raW5nDQo+PiBvbiB0aGUgcGNpIGJ1cyBpZiBvZl9maW5kX2Rl
-dmljZV9ieV9ub2RlKCkgZmFpbHMgdG8gZmluZCB0aGUgbmFtZWQgbm9kZS4NCj4NCj4gQ291bGQg
-eW91IHRyeSB0aGVzZSB0d28gcGF0Y2hlczoNCj4gaHR0cHM6Ly9naXRodWIuY29tL2ZmYWluZWxs
-aS9saW51eC9jb21taXQvZjU3YjI4OTFlNjExOGY1NzY5YzlmZTE3ZWQwN2UzMmRlZjRjN2M3NA0K
-PiBodHRwczovL2dpdGh1Yi5jb20vZmZhaW5lbGxpL2xpbnV4L2NvbW1pdC8xY2NkN2IzOGRkZGQ2
-NjdhNmVmNmFmZTFjYzNlOWJiOGM1NTk5YjU4DQoNClllcyB0aGV5IHdvcmsgZm9yIG1lLiBJIGhh
-ZCB0byBwbGF5IHdpdGggdGhlIDJuZCBvbmUgYSBsaXR0bGUgZHVlIHRvIA0KYmVpbmcgYmFjayBv
-biBhbiBvbGRlciBrZXJuZWwuDQoNCkluIHRoZSBtZWFudGltZSBJIGRpZCBnbyBhaGVhZCBhbmQg
-aW1wbGVtZW50IG15IHZlcnNpb24gb2YgdGhlIGNvZGUgDQpmYWxsaW5nIGJhY2sgdG8gUENJIGJ1
-dCB5b3VyIHZlcnNpb24gaXMgbXVjaCBtb3JlIGdlbmVyaWMuDQoNCkFyZSBlaXRoZXIgb2YgdGhl
-c2UgaW4gdGhlIHBpcGVsaW5lIGZvciBpbmNsdXNpb24gaW4gTGludXMnIHRyZWU/IA0KKHByb2Jh
-Ymx5IG5vdCB0aGUgb25lIHRoYXQgaXMgMiBocnMgb2xkKS4NCg0KPg0KPj4gRmxvcmlhbiBtZW50
-aW9uZWQgbWFraW5nIHRoZSBEU0EgY29kZSB1c2UgdGhlIGRldmljZSBkcml2ZXIgbW9kZWwgd2hp
-Y2gNCj4+IHdvdWxkIGhlbHAgbWUgYnV0IEknbSBraW5kYSBzdHVjayB3aXRoIHRoZSBrZXJuZWwg
-dmVyc2lvbiBJJ20gdXNpbmcgZm9yDQo+PiBub3cgYXQgbGVhc3QuDQo+DQo+IFJpZ2h0LCB0aGlz
-IGlzIHN0aWxsIHRha2luZyBhIGJpdCBtb3JlIHRpbWUgdGhhbiBJIGV4cGVjdGVkLCBidXQgdGhl
-DQo+IHR3byBwYXRjaGVzIGFib3ZlIHJlbW92ZSB0aGUgcmVzdHJpY3Rpb24gZm9yIHRoZSBuZXR3
-b3JrIGRldmljZSB0byBiZQ0KPiBiYWNrZWQgYnkgYSBwbGF0Zm9ybV9kZXZpY2UsIHNvIGhvcGVm
-dWxseSB0aGF0IGNhbiBnZXQgeW91IGdvaW5nLiBJDQo+IHdpbGwgQ0MgeW91IG9uIHRoZSBuZXh0
-IHJvdW5kIG9mIHBhdGNoZXMgc28geW91IGNhbiBrZWVwIHRyYWNrIG9mIHRoYXQNCj4gcHJvZ3Jl
-c3MuDQo+DQoNCk9LIHRoYW5rcy4gT25lIG9mIHRoZXNlIGRheXMgSSdsbCBnZXQgdGhlIGJvYXJk
-IEknbSB3b3JraW5nIG9uIA0KdXBzdHJlYW1lZC4gSG9wZWZ1bGx5IEkgY2FuIGF0IGxlYXN0IGtl
-ZXAgc29tZXRoaW5nIG1pbmltYWxseSB3b3JraW5nIA0KYWdhaW5zdCB0aGUgdGlwIG9mIExpbnVz
-JyB0cmVlIGZvciB0ZXN0aW5nLg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Viet,
+
+I'm not too active in mtd subsystem, so I didn't notice your patch
+earlier. However I would like to share few comments.
+
+On 11 February 2015 at 05:53, Viet Nga Dao <vndao@altera.com> wrote:
+> From: Viet Nga Dao <vndao@altera.com>
+>
+> Altera EPCQ Controller is a soft IP which enables access to Altera EPCQ and
+> EPCS flash chips. This patch adds driver for these devices.
+
+First of all, your whole patch is white-space damaged. It can't be
+applied, seems all tabs were replaced with spaces. It's what I got in
+my GMail and what was also received by patchwork, see
+https://patchwork.ozlabs.org/patch/438684/
+
+You'll need to resend using some smarter e-mail client, you may e.g.
+try git send-email.
+
+
+> +#define EPCQ_INFO(_opcode_id, _ext_id, _sector_size, _n_sectors, _page_size) \
+> +    ((kernel_ulong_t)&(struct flash_info) {                \
+> +        .altera_flash_opcode_id = (_opcode_id),            \
+> +        .ext_id = (_ext_id),                    \
+> +        .sector_size = (_sector_size),                \
+> +        .n_sectors = (_n_sectors),                \
+> +        .page_size = (_page_size),                \
+> +    })
+
+Starting with kernel 3.19 we don't have ext_id in struct anymore, see:
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=d928a259385dc6fca3956b7775c588f21c0b50fc
+
+
+>  /* NOTE: double check command sets and memory organization when you add
+>   * more nor chips.  This current list focusses on newer chips, which
+>   * have been converging on command sets which including JEDEC ID.
+> @@ -637,6 +691,17 @@ static const struct spi_device_id spi_nor_ids[] = {
+>      { "cat25c09", CAT25_INFO( 128, 8, 32, 2, SPI_NOR_NO_ERASE |
+> SPI_NOR_NO_FR) },
+>      { "cat25c17", CAT25_INFO( 256, 8, 32, 2, SPI_NOR_NO_ERASE |
+> SPI_NOR_NO_FR) },
+>      { "cat25128", CAT25_INFO(2048, 8, 64, 2, SPI_NOR_NO_ERASE |
+> SPI_NOR_NO_FR) },
+> +
+> +    /* Altera EPCQ/EPCS Flashes */
+> +    { "epcq16"  , EPCQ_INFO(2, 0x15, 0x10000, 32,   0x100) },
+> +    { "epcq32"  , EPCQ_INFO(2, 0x16, 0x10000, 64,   0x100) },
+> +    { "epcq64"  , EPCQ_INFO(2, 0x17, 0x10000, 128,  0x100) },
+> +    { "epcq128" , EPCQ_INFO(2, 0x18, 0x10000, 256,  0x100) },
+> +    { "epcq256" , EPCQ_INFO(2, 0x19, 0x10000, 512,  0x100) },
+> +    { "epcq512" , EPCQ_INFO(2, 0x20, 0x10000, 1024, 0x100) },
+> +    { "epcs16"  , EPCQ_INFO(1, 0x14, 0x10000, 32,   0x100) },
+> +    { "epcs64"  , EPCQ_INFO(1, 0x16, 0x10000, 128,  0x100) },
+> +    { "epcs128" , EPCQ_INFO(1, 0x18, 0x40000, 256,  0x100) },
+>      { },
+>  };
+>
+> @@ -666,6 +731,14 @@ static const struct spi_device_id
+> *spi_nor_read_id(struct spi_nor *nor)
+>          if (info->jedec_id == jedec) {
+>              if (info->ext_id == 0 || info->ext_id == ext_jedec)
+>                  return &spi_nor_ids[tmp];
+> +
+> +        /* altera epcq which is non jedec device
+> +         * use id[4] as opcode id to differentiate
+> +         * epcs and epcq devices
+> +         */
+> +        } else if (info->altera_flash_opcode_id == id[4] &&
+> +              info->ext_id == id[3]) {
+> +                return &spi_nor_ids[tmp];
+
+This is the part I don't like. I think it's fishy, and that this check
+may result in false positives. Looks too generic.
+
+Also the logic of your behavior there seems unclear to me. On the one
+hand you don't have JEDEC, so you provide chip name using DT. But in
+place above you stop trusting DT info and you try to (kind of)
+auto-detect used chip anyway.
+
+I guess we should finally think about some more generic way of passing
+flash info.
