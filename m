@@ -1,190 +1,51 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v12 01/19] leds: flash: Remove synchronized flash
- strobe feature
-Date: Mon, 9 Mar 2015 16:23:24 -0700
-Message-ID: <CAK5ve-K-AGcTDa7RN=-O+We1BXka=gjv8QB7+NJdZaTzpbg6pA@mail.gmail.com>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com> <1425485680-8417-2-git-send-email-j.anaszewski@samsung.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 09/15] ARM: dts: sun4i: Add USB Dual Role Controller
+Date: Tue, 10 Mar 2015 10:31:01 +1100
+Message-ID: <CAGRGNgVsf05rtLC2+yOPrbrPV-ceQzPC=ZX1zX+hfNxdC7OX-A@mail.gmail.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-10-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1425485680-8417-2-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBS627CTQKGQEZY43C4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1425933628-9672-10-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 4, 2015 at 8:14 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> Synchronized flash strobe feature has been considered not fitting
-> for LED subsystem sysfs interface and thus is being removed.
+Hi Hans,
+
+On Tue, Mar 10, 2015 at 7:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Add a node for the otg/drc usb controller to sun4i-a10.dtsi.
 >
-
-OK, I will merge this.
-
--Bryan
-
-
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/leds/led-class-flash.c  |   82 ---------------------------------------
->  include/linux/led-class-flash.h |   14 -------
->  include/linux/leds.h            |    1 -
->  3 files changed, 97 deletions(-)
+>  arch/arm/boot/dts/sun4i-a10.dtsi | 12 ++++++++++++
+>  drivers/usb/musb/Kconfig         |  1 +
+>  2 files changed, 13 insertions(+)
 >
-> diff --git a/drivers/leds/led-class-flash.c b/drivers/leds/led-class-flash.c
-> index 4a19fd4..3b25734 100644
-> --- a/drivers/leds/led-class-flash.c
-> +++ b/drivers/leds/led-class-flash.c
-> @@ -216,75 +216,6 @@ static ssize_t flash_fault_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(flash_fault);
->
-> -static ssize_t available_sync_leds_show(struct device *dev,
-> -               struct device_attribute *attr, char *buf)
-> -{
-> -       struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> -       struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-> -       char *pbuf = buf;
-> -       int i, buf_len;
-> -
-> -       buf_len = sprintf(pbuf, "[0: none] ");
-> -       pbuf += buf_len;
-> -
-> -       for (i = 0; i < fled_cdev->num_sync_leds; ++i) {
-> -               buf_len = sprintf(pbuf, "[%d: %s] ", i + 1,
-> -                                 fled_cdev->sync_leds[i]->led_cdev.name);
-> -               pbuf += buf_len;
-> -       }
-> -
-> -       return sprintf(buf, "%s\n", buf);
-> -}
-> -static DEVICE_ATTR_RO(available_sync_leds);
-> -
-> -static ssize_t flash_sync_strobe_store(struct device *dev,
-> -               struct device_attribute *attr, const char *buf, size_t size)
-> -{
-> -       struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> -       struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-> -       unsigned long led_id;
-> -       ssize_t ret;
-> -
-> -       mutex_lock(&led_cdev->led_access);
-> -
-> -       if (led_sysfs_is_disabled(led_cdev)) {
-> -               ret = -EBUSY;
-> -               goto unlock;
-> -       }
-> -
-> -       ret = kstrtoul(buf, 10, &led_id);
-> -       if (ret)
-> -               goto unlock;
-> -
-> -       if (led_id > fled_cdev->num_sync_leds) {
-> -               ret = -ERANGE;
-> -               goto unlock;
-> -       }
-> -
-> -       fled_cdev->sync_led_id = led_id;
-> -
-> -       ret = size;
-> -unlock:
-> -       mutex_unlock(&led_cdev->led_access);
-> -       return ret;
-> -}
-> -
-> -static ssize_t flash_sync_strobe_show(struct device *dev,
-> -               struct device_attribute *attr, char *buf)
-> -{
-> -       struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> -       struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-> -       int sled_id = fled_cdev->sync_led_id;
-> -       char *sync_led_name = "none";
-> -
-> -       if (fled_cdev->sync_led_id > 0)
-> -               sync_led_name = (char *)
-> -                       fled_cdev->sync_leds[sled_id - 1]->led_cdev.name;
-> -
-> -       return sprintf(buf, "[%d: %s]\n", sled_id, sync_led_name);
-> -}
-> -static DEVICE_ATTR_RW(flash_sync_strobe);
-> -
->  static struct attribute *led_flash_strobe_attrs[] = {
->         &dev_attr_flash_strobe.attr,
->         NULL,
-> @@ -307,12 +238,6 @@ static struct attribute *led_flash_fault_attrs[] = {
->         NULL,
->  };
->
-> -static struct attribute *led_flash_sync_strobe_attrs[] = {
-> -       &dev_attr_available_sync_leds.attr,
-> -       &dev_attr_flash_sync_strobe.attr,
-> -       NULL,
-> -};
-> -
->  static const struct attribute_group led_flash_strobe_group = {
->         .attrs = led_flash_strobe_attrs,
->  };
-> @@ -329,10 +254,6 @@ static const struct attribute_group led_flash_fault_group = {
->         .attrs = led_flash_fault_attrs,
->  };
->
-> -static const struct attribute_group led_flash_sync_strobe_group = {
-> -       .attrs = led_flash_sync_strobe_attrs,
-> -};
-> -
->  static void led_flash_resume(struct led_classdev *led_cdev)
->  {
->         struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-> @@ -361,9 +282,6 @@ static void led_flash_init_sysfs_groups(struct led_classdev_flash *fled_cdev)
->         if (ops->fault_get)
->                 flash_groups[num_sysfs_groups++] = &led_flash_fault_group;
->
-> -       if (led_cdev->flags & LED_DEV_CAP_SYNC_STROBE)
-> -               flash_groups[num_sysfs_groups++] = &led_flash_sync_strobe_group;
-> -
->         led_cdev->groups = flash_groups;
->  }
->
-> diff --git a/include/linux/led-class-flash.h b/include/linux/led-class-flash.h
-> index 3b5b964..21ec91e 100644
-> --- a/include/linux/led-class-flash.h
-> +++ b/include/linux/led-class-flash.h
-> @@ -81,20 +81,6 @@ struct led_classdev_flash {
->
->         /* LED Flash class sysfs groups */
->         const struct attribute_group *sysfs_groups[LED_FLASH_MAX_SYSFS_GROUPS];
-> -
-> -       /* LEDs available for flash strobe synchronization */
-> -       struct led_classdev_flash **sync_leds;
-> -
-> -       /* Number of LEDs available for flash strobe synchronization */
-> -       int num_sync_leds;
-> -
-> -       /*
-> -        * The identifier of the sub-led to synchronize the flash strobe with.
-> -        * Identifiers start from 1, which reflects the first element from the
-> -        * sync_leds array. 0 means that the flash strobe should not be
-> -        * synchronized.
-> -        */
-> -       u32 sync_led_id;
->  };
->
->  static inline struct led_classdev_flash *lcdev_to_flcdev(
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index f70f84f..351bba5 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -47,7 +47,6 @@ struct led_classdev {
->  #define SET_BRIGHTNESS_ASYNC   (1 << 21)
->  #define SET_BRIGHTNESS_SYNC    (1 << 22)
->  #define LED_DEV_CAP_FLASH      (1 << 23)
-> -#define LED_DEV_CAP_SYNC_STROBE        (1 << 24)
->
->         /* Set LED brightness level */
->         /* Must not sleep, use a workqueue if needed */
-> --
-> 1.7.9.5
->
+> diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+> index 8180a3a..fab8e9a 100644
+> --- a/drivers/usb/musb/Kconfig
+> +++ b/drivers/usb/musb/Kconfig
+> @@ -65,6 +65,7 @@ comment "Platform Glue Layer"
+>  config USB_MUSB_SUNXI
+>         tristate "Allwinner (sunxi)"
+>         depends on ARCH_SUNXI
+> +       depends on NOP_USB_XCEIV
+
+Shouldn't this be in a different patch?
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
