@@ -1,163 +1,46 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v6 2/8] pinctrl: Broadcom Cygnus pinctrl device tree binding
-Date: Mon, 9 Mar 2015 13:44:56 -0700
-Message-ID: <1425933902-20652-3-git-send-email-rjui@broadcom.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 4/8] ARM: dts: enable IOMUX for Broadcom Cygnus
+Date: Mon, 9 Mar 2015 13:44:58 -0700
+Message-ID: <1425933902-20652-5-git-send-email-rjui@broadcom.com>
 References: <1425933902-20652-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425933902-20652-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>
-Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425933902-20652-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device tree binding documentation for Broadcom Cygnus IOMUX driver
+This enables the IOMUX support for Broadcom Cygnus SoC
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Tested-by: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- .../bindings/pinctrl/brcm,cygnus-pinmux.txt        |  132 ++++++++++++++++++++
- 1 file changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt
+ arch/arm/boot/dts/bcm-cygnus.dtsi |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt
-new file mode 100644
-index 0000000..3600d5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt
-@@ -0,0 +1,132 @@
-+Broadcom Cygnus IOMUX Controller
-+
-+The Cygnus IOMUX controller supports group based mux configuration. In
-+addition, certain pins can be muxed to GPIO function individually.
-+
-+Required properties:
-+
-+- compatible:
-+    Must be "brcm,cygnus-pinmux"
-+
-+- reg:
-+    Define the base and range of the I/O address space that contains the Cygnus
-+IOMUX registers
-+
-+Properties in subnodes:
-+
-+- function:
-+    The mux function to select
-+
-+- groups:
-+    The list of groups to select with a given function
-+
-+For more details, refer to
-+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+For example:
-+
-+	pinmux: pinmux@0x0301d0c8 {
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index ff5fb6a..1cbae6a 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -54,6 +54,12 @@
+ 
+ 	/include/ "bcm-cygnus-clock.dtsi"
+ 
++	pinctrl: pinctrl@0x0301d0c8 {
 +		compatible = "brcm,cygnus-pinmux";
-+		reg = <0x0301d0c8 0x1b0>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s0_default>;
-+
-+		i2s0_default: i2s0_default {
-+			mux {
-+				function = "i2s0";
-+				groups = "i2s0_0_grp", "i2s0_1_grp";
-+			};
-+		};
++		reg = <0x0301d0c8 0x30>,
++		      <0x0301d24c 0x2c>;
 +	};
 +
-+List of supported functions and groups in Cygnus:
-+
-+"i2s0": "i2s0_0_grp", "i2s0_1_grp"
-+
-+"i2s1": "i2s1_0_grp", "i2s1_1_grp"
-+
-+"i2s2": "i2s2_0_grp", "i2s2_1_grp", "i2s2_2_grp", "i2s2_3_grp", "i2s2_4_grp"
-+
-+"spdif": "spdif_grp"
-+
-+"pwm0": "pwm0_grp"
-+
-+"pwm1": "pwm1_grp"
-+
-+"pwm2": "pwm2_grp"
-+
-+"pwm3": "pwm3_grp"
-+
-+"pwm4": "pwm4_grp"
-+
-+"pwm5": "pwm5_grp"
-+
-+"key": "key0_grp", "key1_grp", "key2_grp", "key3_grp", "key4_grp", "key5_grp",
-+"key6_grp", "key7_grp", "key8_grp", "key9_grp", "key10_grp", "key11_grp",
-+"key12_grp", "key13_grp", "key14_grp", "key15_grp"
-+
-+"audio_dte": "audio_dte0_grp", "audio_dte1_grp", "audio_dte2_grp", "audio_dte3_grp"
-+
-+"smart_card0": "smart_card0_grp", "smart_card0_fcb_grp"
-+
-+"smart_card1": "smart_card1_grp", "smart_card1_fcb_grp"
-+
-+"spi0": "spi0_grp"
-+
-+"spi1": "spi1_grp"
-+
-+"spi2": "spi2_grp"
-+
-+"spi3": "spi3_grp"
-+
-+"spi4": "spi4_0_grp", "spi4_1_grp"
-+
-+"spi5": "spi5_grp"
-+
-+"sw_led0": "sw_led0_0_grp", "sw_led0_1_grp"
-+
-+"sw_led1": "sw_led1_grp"
-+
-+"sw_led2": "sw_led2_0_grp", "sw_led2_1_grp"
-+
-+"d1w": "d1w_grp"
-+
-+"lcd": "lcd_grp"
-+
-+"sram": "sram_0_grp", "sram_1_grp"
-+
-+"uart0": "uart0_grp"
-+
-+"uart1": "uart1_grp", "uart1_dte_grp"
-+
-+"uart2": "uart2_grp"
-+
-+"uart3": "uart3_grp"
-+
-+"uart4": "uart4_grp"
-+
-+"qspi": "qspi_0_grp", "qspi_1_grp"
-+
-+"nand": "nand_grp"
-+
-+"sdio0": "sdio0_grp", "sdio0_cd_grp", "sdio0_mmc_grp"
-+
-+"sdio1": "sdio1_data_0_grp", "sdio1_data_1_grp", "sdio1_cd_grp",
-+"sdio1_led_grp", "sdio1_mmc_grp"
-+
-+"can0": "can0_grp"
-+
-+"can1": "can1_grp"
-+
-+"cam": "cam_led_grp", "cam_0_grp", "cam_1_grp"
-+
-+"bsc1": "bsc1_grp"
-+
-+"pcie_clkreq": "pcie_clkreq_grp"
-+
-+"usb0_oc": "usb0_oc_grp"
-+
-+"usb1_oc": "usb1_oc_grp"
-+
-+"usb2_oc": "usb2_oc_grp"
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
