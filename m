@@ -1,77 +1,80 @@
-From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] wl18xx: add basic device-tree support
-Date: Mon, 9 Mar 2015 17:13:48 +0200
-Message-ID: <CAB3XZEfcTGLL3rT8A+tB=7Op87OThmK6BuVkOj+prjtatxWnqg@mail.gmail.com>
-References: <1424362401-8228-1-git-send-email-eliad@wizery.com>
-	<2658240.aoSloEbWge@wuerfel>
-	<CAB3XZEczvZH8rYOD-P7iuU4RSurArpRp6JGYX1X22O8tj7v8Qg@mail.gmail.com>
-	<2443534.iHU6YUeZ2u@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2443534.iHU6YUeZ2u@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [RFC PATCH v15 00/11] ARM: qcom: cpuidle support for 8064, 8074, 8084
+Date: Mon,  9 Mar 2015 09:16:35 -0600
+Message-ID: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 9, 2015 at 10:50 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 09 March 2015 09:18:46 Eliad Peller wrote:
->> On Sun, Mar 8, 2015 at 11:53 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Sunday 08 March 2015 13:13:13 Eliad Peller wrote:
->> >>
->> >> > I've looked up the what boards actually use this data and found that
->> >> > all of them already support booting from DT: some omap2 boards using
->> >> > arch/arm/mach-omap2/pdata-quirks.c to provide the data, and the
->> >> > davinci 850evm. Can you make sure you add the correct data to all
->> >> > of these dts files as part of your series and remove the
->> >> > wl12xx_platform_data references?
->> >>
->> >> AFAICT, these board files add wl12xx platform data, while the new DT
->> >> support is only for wl18xx.
->> >>
->> >
->> > How can you tell the difference? What I see is that omap3pandora
->> > (and nothing else) calls wl1251_set_platform_data(), while
->> > da850-evm and all omap3/omap4 boards use wl12xx_set_platform_data().
->> >
->> > The latter seems to refer to all wl12xx and wl18xx variants except
->> > for wl1251, based on my (very limited) understanding of that code.
->>
->> right.
->> i got mislead because legacy_init_wl12xx() is defined there only for
->> CONFIG_WL12XX (and not for CONFIG_WL18XX).
->> it looks like only "isee,omap3-igep0020-rev-f" and
->> "isee,omap3-igep0020-rev-g" have pdata quirks for wl18xx (and thus
->> initialize the pdata clocks to 0).
->
-> Ok.
->
->> sorry for the trivial question, but what's the standard way to submit
->> such patch? should i simply add a third patch to the patchset which
->> removes the pdata quirk and adds the missing dts definition? i don't
->> have such board, so i can only compile-test it.
->
-> Yes, I think that would be good. Depending on the complexity of the
-> patch, you can do it in multiple ways:
->
-> a) one patch to all the dts files, which also removes the
->    legacy_init_wl12xx() infrastructure
->
-> b) one patch to add the .dts changes, a second patch to remove the
->    code from pdata-quirks.c and a third to remove the functionality
->    in the driver
->
-> c) one patch per board.
->
-> I'm fine with any of these, but the omap maintainers might have a
-> preference.
->
-thanks. i'll go with a single patch then (unless the maintainers
-prefer otherwise).
+Hi,
 
-Eliad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I was able to use Daniel's series for the cpuidle_ops [5] and test it on QCOM
+SOCs. This alleviates the concerns raised in the previous revision of the QCOM
+cpuidle driver.
+
+The previous revision of the QCOM cpuidle driver [1], creates cpuidle device
+after a successful probe of the SPM device for the CPU.  There was a concern
+regarding the initialization of unnecesary devices on a multi-v7 configuration
+[2]. The solutions proposed to solve this problem didnt turn up elegant either
+because of the restriction with the existing cpuidle framework.
+
+With Daniel's patches [5], I was able to address the concerns with the cpuidle
+driver and devices intialization. Please take a look at this series. The crux
+of the difference from the previous series [1] is in the spm_drv_probe() and
+registering of the cpuidle_ops and use of ARM generic cpuidle driver.
+
+Changes since v14:
+- Support for cpuidle_ops
+- SPM probe changes to register cpuidle
+- Rebase on top of 4.0-rc1
+- Remove SCM patches from series. Rebased on top of Kumar's tree[4]
+- Removed cpuidle-qcom.c in favor of ARM generic cpuidle driver
+- Included Daniel's change for supporting creating cpuidle devices by platform
+
+Tested on: 8074, 8084.
+
+Thanks,
+Lina
+
+[1]. http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/308118.html
+[2]. http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/308465.html
+[3]. http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/311071.html
+[4]. http://www.spinics.net/lists/linux-arm-msm/msg13630.html
+[5]. https://lkml.org/lkml/2015/3/3/271
+
+Daniel Lezcano (1):
+  ARM: cpuidle: Register per cpuidle device
+
+Lina Iyer (10):
+  ARM: qcom: Add Subsystem Power Manager (SPM) driver
+  ARM: cpuidle: qcom: Add documentation for qcom cpuidle states.
+  ARM: cpuidle: Register cpuidle_ops for QCOM cpus
+  ARM: dts: qcom: Add power-controller device node for 8074 Krait CPUs
+  ARM: dts: qcom: Add power-controller device node for 8084 Krait CPUs
+  ARM: dts: qcom: Update power-controller device node for 8064 Krait
+    CPUs
+  ARM: dts: qcom: Add idle states device nodes for 8074
+  ARM: dts: qcom: Add idle states device nodes for 8084
+  ARM: dts: qcom: Add idle state device nodes for 8064
+  ARM: qcom: Update defconfig
+
+ .../bindings/arm/msm/qcom,idle-state.txt           |  81 ++++
+ .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  31 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |  38 +-
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |  48 ++-
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |  48 ++-
+ arch/arm/configs/qcom_defconfig                    |   2 +
+ arch/arm/include/asm/cpuidle_ops.h                 |   5 +
+ drivers/cpuidle/cpuidle-arm.c                      |  34 +-
+ drivers/soc/qcom/Kconfig                           |   7 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/spm.c                             | 422 +++++++++++++++++++++
+ 11 files changed, 700 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
+ create mode 100644 drivers/soc/qcom/spm.c
+
+-- 
+2.1.0
+
