@@ -1,93 +1,228 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Mon, 9 Mar 2015 20:11:43 +0800
-Message-ID: <1425903103.13300.29.camel@mhfsdcap03>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	 <1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
-	 <20150306105821.GE22377@arm.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V3] ASoC: jz4740: Add jz4780 support
+Date: Mon, 9 Mar 2015 12:11:08 +0000
+Message-ID: <1425903068-60790-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150306105821.GE22377-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, lgirdwood@gmail.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Will,
+The jz4780 and jz4740 have very similar i2s blocks.
 
-On Fri, 2015-03-06 at 10:58 +0000, Will Deacon wrote:
-> On Fri, Mar 06, 2015 at 10:48:17AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > This patch adds support for mediatek m4u (MultiMedia Memory Management Unit).
-> > Currently this only supports m4u gen 2 with 2 levels of page table on mt8173.
-> 
-> [...]
-> 
-> > diff --git a/drivers/iommu/mtk_iommu_pagetable.c b/drivers/iommu/mtk_iommu_pagetable.c
-> > new file mode 100644
-> > index 0000000..5fe9640
-> > --- /dev/null
-> > +++ b/drivers/iommu/mtk_iommu_pagetable.c
-> > @@ -0,0 +1,439 @@
-> > +/*
-> > + * Copyright (c) 2014-2015 MediaTek Inc.
-> > + * Author: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +#include <linux/err.h>
-> > +#include <linux/mm.h>
-> > +#include <linux/iommu.h>
-> > +#include <linux/errno.h>
-> > +#include "asm/cacheflush.h"
-> > +
-> > +#include "mtk_iommu.h"
-> > +#include "mtk_iommu_pagetable.h"
-> > +
-> > +/* 2 level pagetable: pgd -> pte */
-> > +#define F_PTE_TYPE_GET(regval)  (regval & 0x3)
-> > +#define F_PTE_TYPE_LARGE         BIT(0)
-> > +#define F_PTE_TYPE_SMALL         BIT(1)
-> > +#define F_PTE_B_BIT              BIT(2)
-> > +#define F_PTE_C_BIT              BIT(3)
-> > +#define F_PTE_BIT32_BIT          BIT(9)
-> > +#define F_PTE_S_BIT              BIT(10)
-> > +#define F_PTE_NG_BIT             BIT(11)
-> > +#define F_PTE_PA_LARGE_MSK            (~0UL << 16)
-> > +#define F_PTE_PA_LARGE_GET(regval)    ((regval >> 16) & 0xffff)
-> > +#define F_PTE_PA_SMALL_MSK            (~0UL << 12)
-> > +#define F_PTE_PA_SMALL_GET(regval)    ((regval >> 12) & (~0))
-> > +#define F_PTE_TYPE_IS_LARGE_PAGE(pte) ((imu_pte_val(pte) & 0x3) == \
-> > +                                       F_PTE_TYPE_LARGE)
-> > +#define F_PTE_TYPE_IS_SMALL_PAGE(pte) ((imu_pte_val(pte) & 0x3) == \
-> > +                                       F_PTE_TYPE_SMALL)
-> 
-> This looks like the ARM short-descriptor format to me. Could you please
-> add a new page table format to the io-pgtable code, so that other IOMMU
-> drivers can make use of this? I know there was some interest in using
-> short descriptor for the ARM SMMU, for example.
-    Currently I not familiar with the io-pgtable,I may need some time
-for it and the ARM short-descriptor. 
-    And there are some difference between mediatek's pagetable with the
-standard short-descriptor, like bit 9. we use it for the dram over 4GB.
-Then how should we do if there are some difference. 
-> 
-> Cheers,
-> 
-> Will
+The slight difference is in Rx/Tx fifos.
+And the bitclocks for input/output are different.
 
+This patch adds jz4780 support to the driver
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+
+---
+Patch based on 4.0-rc3
+Tested on the MIPS Creator CI20.
+
+V2 -> V3
+Added struct snd_soc_dai_driver jz4780_i2s_dai instead of modifying
+bit for symmetric_rates.
+
+V1 - > V2
+Removed SND_DMAENGINE_PCM_FLAG_NO_RESIDUE as it is handled by dma driver
+Added a check for symmetric_rates flag for jz4780
+---
+ .../bindings/sound/ingenic,jz4740-i2s.txt          |  2 +-
+ sound/soc/jz4740/jz4740-i2s.c                      | 84 +++++++++++++++++++---
+ 2 files changed, 75 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
+index b414333..b623d50 100644
+--- a/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
+@@ -1,7 +1,7 @@
+ Ingenic JZ4740 I2S controller
+ 
+ Required properties:
+-- compatible : "ingenic,jz4740-i2s"
++- compatible : "ingenic,jz4740-i2s" or "ingenic,jz4780-i2s"
+ - reg : I2S registers location and length
+ - clocks : AIC and I2S PLL clock specifiers.
+ - clock-names: "aic" and "i2s"
+diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
+index 07f7781..b05fb1c 100644
+--- a/sound/soc/jz4740/jz4740-i2s.c
++++ b/sound/soc/jz4740/jz4740-i2s.c
+@@ -58,6 +58,12 @@
+ 
+ #define JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 12
+ #define JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 8
++#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 24
++#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 16
++#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_MASK \
++			(0xf << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET)
++#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_MASK \
++			(0x1f <<  JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET)
+ 
+ #define JZ_AIC_CTRL_OUTPUT_SAMPLE_SIZE_MASK (0x7 << 19)
+ #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK (0x7 << 16)
+@@ -79,6 +85,7 @@
+ #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET  16
+ 
+ #define JZ_AIC_I2S_FMT_DISABLE_BIT_CLK BIT(12)
++#define JZ_AIC_I2S_FMT_DISABLE_BIT_ICLK BIT(13)
+ #define JZ_AIC_I2S_FMT_ENABLE_SYS_CLK BIT(4)
+ #define JZ_AIC_I2S_FMT_MSB BIT(0)
+ 
+@@ -87,6 +94,13 @@
+ #define JZ_AIC_CLK_DIV_MASK 0xf
+ #define I2SDIV_DV_SHIFT 8
+ #define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
++#define I2SDIV_IDV_SHIFT 8
++#define I2SDIV_IDV_MASK (0xf << I2SDIV_IDV_SHIFT)
++
++enum jz47xx_i2s_version {
++	JZ_I2S_JZ4740,
++	JZ_I2S_JZ4780,
++};
+ 
+ struct jz4740_i2s {
+ 	struct resource *mem;
+@@ -98,6 +112,8 @@ struct jz4740_i2s {
+ 
+ 	struct snd_dmaengine_dai_dma_data playback_dma_data;
+ 	struct snd_dmaengine_dai_dma_data capture_dma_data;
++
++	enum jz47xx_i2s_version version;
+ };
+ 
+ static inline uint32_t jz4740_i2s_read(const struct jz4740_i2s *i2s,
+@@ -267,13 +283,22 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
+ 			ctrl |= JZ_AIC_CTRL_MONO_TO_STEREO;
+ 		else
+ 			ctrl &= ~JZ_AIC_CTRL_MONO_TO_STEREO;
++
++		div_reg &= ~I2SDIV_DV_MASK;
++		div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
+ 	} else {
+ 		ctrl &= ~JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK;
+ 		ctrl |= sample_size << JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET;
++
++		if (i2s->version >= JZ_I2S_JZ4780) {
++			div_reg &= ~I2SDIV_IDV_MASK;
++			div_reg |= (div - 1) << I2SDIV_IDV_SHIFT;
++		} else {
++			div_reg &= ~I2SDIV_DV_MASK;
++			div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
++		}
+ 	}
+ 
+-	div_reg &= ~I2SDIV_DV_MASK;
+-	div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CTRL, ctrl);
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CLK_DIV, div_reg);
+ 
+@@ -369,11 +394,19 @@ static int jz4740_i2s_dai_probe(struct snd_soc_dai *dai)
+ 	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
+ 		&i2s->capture_dma_data);
+ 
+-	conf = (7 << JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
+-		(8 << JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
+-		JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
+-		JZ_AIC_CONF_I2S |
+-		JZ_AIC_CONF_INTERNAL_CODEC;
++	if (i2s->version >= JZ_I2S_JZ4780) {
++		conf = (7 << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
++			(8 << JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
++			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
++			JZ_AIC_CONF_I2S |
++			JZ_AIC_CONF_INTERNAL_CODEC;
++	} else {
++		conf = (7 << JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
++			(8 << JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
++			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
++			JZ_AIC_CONF_I2S |
++			JZ_AIC_CONF_INTERNAL_CODEC;
++	}
+ 
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CONF, JZ_AIC_CONF_RESET);
+ 	jz4740_i2s_write(i2s, JZ_REG_AIC_CONF, conf);
+@@ -422,13 +455,34 @@ static struct snd_soc_dai_driver jz4740_i2s_dai = {
+ 	.resume = jz4740_i2s_resume,
+ };
+ 
++static struct snd_soc_dai_driver jz4780_i2s_dai = {
++	.probe = jz4740_i2s_dai_probe,
++	.remove = jz4740_i2s_dai_remove,
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 2,
++		.rates = SNDRV_PCM_RATE_8000_48000,
++		.formats = JZ4740_I2S_FMTS,
++	},
++	.capture = {
++		.channels_min = 2,
++		.channels_max = 2,
++		.rates = SNDRV_PCM_RATE_8000_48000,
++		.formats = JZ4740_I2S_FMTS,
++	},
++	.ops = &jz4740_i2s_dai_ops,
++	.suspend = jz4740_i2s_suspend,
++	.resume = jz4740_i2s_resume,
++};
++
+ static const struct snd_soc_component_driver jz4740_i2s_component = {
+ 	.name		= "jz4740-i2s",
+ };
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_of_matches[] = {
+-	{ .compatible = "ingenic,jz4740-i2s" },
++	{ .compatible = "ingenic,jz4740-i2s", .data = (void *)JZ_I2S_JZ4740 },
++	{ .compatible = "ingenic,jz4780-i2s", .data = (void *)JZ_I2S_JZ4780 },
+ 	{ /* sentinel */ }
+ };
+ #endif
+@@ -438,11 +492,16 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 	struct jz4740_i2s *i2s;
+ 	struct resource *mem;
+ 	int ret;
++	const struct of_device_id *match;
+ 
+ 	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
+ 	if (!i2s)
+ 		return -ENOMEM;
+ 
++	match = of_match_device(jz4740_of_matches, &pdev->dev);
++	if (match)
++		i2s->version = (enum jz47xx_i2s_version)match->data;
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	i2s->base = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(i2s->base))
+@@ -460,8 +519,13 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, i2s);
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-		&jz4740_i2s_component, &jz4740_i2s_dai, 1);
++	if (i2s->version == JZ_I2S_JZ4780)
++		ret = devm_snd_soc_register_component(&pdev->dev,
++			&jz4740_i2s_component, &jz4780_i2s_dai, 1);
++	else
++		ret = devm_snd_soc_register_component(&pdev->dev,
++			&jz4740_i2s_component, &jz4740_i2s_dai, 1);
++
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+1.9.1
