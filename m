@@ -1,61 +1,60 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Mon, 9 Mar 2015 15:35:42 +0100
-Message-ID: <CACRpkdZgiSWezNtPgDsiNw84Q_4KLxet-DhbmZ6-gu=_3DfNpg@mail.gmail.com>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
-	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
-	<CAL_JsqLjooPxPdG2+fqSJToyWCtZHB=FvkqCUt+WgHExNo7D=A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 16/18] ARM: dts: Introduce STM32F429 MCU
+Date: Mon, 9 Mar 2015 15:39:47 +0100
+Message-ID: <CACRpkdaW-OMgGfw8+ngia8AsmzRpW8z7922=dPpRGjgv79-gqw@mail.gmail.com>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1424455277-29983-17-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLjooPxPdG2+fqSJToyWCtZHB=FvkqCUt+WgHExNo7D=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424455277-29983-17-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2015 at 6:47 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Mar 3, 2015 at 3:32 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Fri, Feb 20, 2015 at 7:01 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
 
->> +Optional properties:
->> +
->> +- compatible : "simple-mfd" - this signifies that the operating system should
->> +  spawn child devices for all the subnodes of the MFD device akin to how
->> +  "simple-bus" inidicates when to spawn children for a simple memory-mapped
->> +  bus. For more complex devices, when the nexus driver has to probe registers
->> +  to figure out what children exist etc, this should not be used. In the latter
->> +  case the child devices will be instantiated by the operating system.
+> The STMicrolectornics's STM32F419 MCU has the following main features:
+>  - Cortex-M4 core running up to @180MHz
+>  - 2MB internal flash, 256KBytes internal RAM
+>  - FMC controller to connect SDRAM, NOR and NAND memories
+>  - SD/MMC/SDIO support
+>  - Ethernet controller
+>  - USB OTFG FS & HS controllers
+>  - I2C, SPI, CAN busses support
+>  - Several 16 & 32 bits general purpose timers
+>  - Serial Audio interface
+>  - LCD controller
 >
-> If you point of_platform_populate to the parent node, it should
-> instantiate all children regardless of "simple-bus" or any other
-> match. The match is to probe the grandchildren.
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+(...)
+> +       soc {
+> +               usart1: usart@40011000 {
+> +                       status = "okay";
+> +               };
+> +
+> +               leds {
+> +                       compatible = "gpio-leds";
+> +                       red {
+> +                               #gpio-cells = <2>;
+> +                               label = "Front Panel LED";
+> +                               gpios = <&gpiog 14 0>;
+> +                               linux,default-trigger = "heartbeat";
+> +                       };
+> +                       green {
+> +                               #gpio-cells = <2>;
+> +                               gpios = <&gpiog 13 0>;
+> +                               default-state = "off";
+> +                       };
+> +               };
+> +       };
 
-Yep, if children are only children of the top node, yes.
+The LEDs are mounted on the board not the SoC, right?
 
-> I could be mistaken,
-> but that's how it works at the root level.
-
-Yes but only at the root level.
-
-> You don't have a driver
-> probe for the parent, so you want the top level of_platform_populate
-> call to instantiate these devices?
-
-of_platform_populate() only populates one level unless the node has
-something like "simple-bus" or this new "simple-mfd" compatible on
-it.
-
-> Why does simple-bus not work for you? After all, it is not
-> "simple-memory-map-bus."
-
-As Lee says it works (obviously since I'm just adding a oneliner
-doing exactly the same thing as "simple-bus"), but the
-terminology is just wrong. It's not a bus in any hardware sense,
-as MFD is a logical subdevice split, nothing else.
+So move them outside of the soc node, to the top level
+of the DTS file.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
