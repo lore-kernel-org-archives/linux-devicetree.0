@@ -1,73 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] pwm: imx-pwm: add explicit compatible strings and
- required clock properties
-Date: Mon, 9 Mar 2015 08:49:05 -0500
-Message-ID: <CAL_JsqLxfVaT26unQKyDu5=oZ7ZZP7-biNmarPm6=2aVHVUX8A@mail.gmail.com>
-References: <1425907461-13538-1-git-send-email-mporter@konsulko.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 0/2] memory: jz4780: Add external memory controller driver
+Date: Mon, 9 Mar 2015 14:29:02 +0000
+Message-ID: <1425911344-29141-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1425907461-13538-1-git-send-email-mporter@konsulko.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 9, 2015 at 8:24 AM, Matt Porter <mporter@konsulko.com> wrote:
-> The imx-pwm binding contains language indicating compatible
-> strings to be used that is not valid for all supported parts
-> e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
-> valid compatible strings that represent the two versions of
-> this peripheral in use.
->
-> The binding is also missing the clocks/clock-names properties
-> so document these,the two required ipg and per clocks, and add
-> add these properties to the example.
->
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
+Hi Greg,
 
-Acked-by: Rob Herring <robh@kernel.org>
+I don't see any maintainer for drivers/memory.
 
-> ---
-> Changes since v1:
-> - compatible strings include the actual soc and one of the two specific
->   compatible parts.
->
->  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> index b50d7a6d..e00c2e9 100644
-> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> @@ -1,10 +1,17 @@
->  Freescale i.MX PWM controller
->
->  Required properties:
-> -- compatible: should be "fsl,<soc>-pwm"
-> +- compatible : should be "fsl,<soc>-pwm" and one of the following
-> +   compatible strings:
-> +  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
-> +  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
->  - reg: physical base address and length of the controller's registers
->  - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
->    the cells format.
-> +- clocks : Clock specifiers for both ipg and per clocks.
-> +- clock-names : Clock names should include both "ipg" and "per"
-> +See the clock consumer binding,
-> +       Documentation/devicetree/bindings/clock/clock-bindings.txt
->  - interrupts: The interrupt for the pwm controller
->
->  Example:
-> @@ -13,5 +20,8 @@ pwm1: pwm@53fb4000 {
->         #pwm-cells = <2>;
->         compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
->         reg = <0x53fb4000 0x4000>;
-> +       clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
-> +                <&clks IMX5_CLK_PWM1_HF_GATE>;
-> +       clock-names = "ipg", "per";
->         interrupts = <61>;
->  };
-> --
-> 1.8.4
->
+And as you are the committer for most of the drivers in there.
+
+Two patches based on 4.0-rc3 that add an external memory controller
+driver for the Ingenic JZ4780 SoC.
+
+Core jz4780 support is still in-flight.
+
+Tested on the MIPS Creator CI20
+
+V1 -> V2
+Removed redundant module macros and header
+Fixed a few macro definitions and a blooper
+Fixed license text
+Rebased to v4.0-rc3
+
+Feedback welcome
+
+Thanks
+ZubairLK
+
+Alex Smith (2):
+  dt-bindings: memory-controllers: Add binding for jz4780-nemc
+  memory: jz4780-nemc: driver for the NEMC on JZ4780 SoCs
+
+ .../memory-controllers/ingenic,jz4780-nemc.txt     |  75 ++++
+ drivers/memory/Kconfig                             |   9 +
+ drivers/memory/Makefile                            |   1 +
+ drivers/memory/jz4780-nemc.c                       | 391 +++++++++++++++++++++
+ include/linux/jz4780-nemc.h                        |  43 +++
+ 5 files changed, 519 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+ create mode 100644 drivers/memory/jz4780-nemc.c
+ create mode 100644 include/linux/jz4780-nemc.h
+
+-- 
+1.9.1
