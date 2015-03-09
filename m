@@ -1,55 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
-Date: Mon, 09 Mar 2015 22:56:27 +0100
-Message-ID: <2583132.xxsZocsQta@wuerfel>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-2-git-send-email-yong.wu@mediatek.com>
-	<1425871612.4871.10.camel@mtksdaap41>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [RFC PATCH v15 01/11] ARM: cpuidle: Register per cpuidle device
+Date: Mon, 9 Mar 2015 17:04:42 -0500
+Message-ID: <20150309220442.GA25292@qualcomm.com>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
+ <1425914206-22295-2-git-send-email-lina.iyer@linaro.org>
+ <20150309212926.GB17839@qualcomm.com>
+ <20150309214006.GA3727@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1425871612.4871.10.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150309214006.GA3727@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 March 2015 11:26:52 Yingjoe Chen wrote:
-> On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
-> > responsible to enable/disable iommu and control the clocks of each
-> > local arbiter.
-> > 
-> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/soc/mediatek/Kconfig      |   7 ++
-> >  drivers/soc/mediatek/Makefile     |   1 +
-> >  drivers/soc/mediatek/mt8173-smi.c | 143 ++++++++++++++++++++++++++++++++++++++
-> >  include/linux/mtk-smi.h           |  40 +++++++++++
-> >  4 files changed, 191 insertions(+)
-> >  create mode 100644 drivers/soc/mediatek/mt8173-smi.c
-> >  create mode 100644 include/linux/mtk-smi.h
-> > 
-> 
-> Hi Arnd, Matthias,
-> 
-> For the SMI driver, we can't find a better place, so we put it in
-> drivers/soc/mediatek now. Please let us know if you have any suggestion
-> or concern. Thanks
+On Mon, Mar 09, 2015 at 03:40:06PM -0600, Lina Iyer wrote:
+<snip>
 
->From what I understand from your description, I think it would better
-fit in drivers/iommu. Another option is drivers/memory, which I think
-is where the respective Tegra driver ended up.
+> >> 	for_each_possible_cpu(cpu) {
+> >>+
+> >> 		ret = arm_cpuidle_init(cpu);
+> >>+		/*
+> >>+		 * This cpu does not support any idle states
+> >>+		 */
+> >>+		if (ret == -ENOSYS)
+> >>+			continue;
+> >>+
+> >> 		if (ret) {
+> >> 			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
+> >> 			return ret;
+> >> 		}
+> >>+
+> >>+		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> >
+> >devm_kzalloc?  Otherwise, failures could lead to lost memory.
+> >
+> I dont have a local device to work with for allocation. May be I can get
+> the cpu device node and the device therefore for allocation. Thoughts?
 
-	Arnd
+Ah, well the cpu device node could be used.  My only concern is that dev cannot
+be referenced after the cpu is removed.
+
+> >>+		if (!dev)
+> >>+			return -ENOMEM;
+> >>+
+> >>+		dev->cpu = cpu;
+> >>+		ret = cpuidle_register_device(dev);
+> >>+		if (ret) {
+> >>+			pr_err("Failed to register cpuidle device for CPU %d\n",
+> >>+			       cpu);
+
+<snip>
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
