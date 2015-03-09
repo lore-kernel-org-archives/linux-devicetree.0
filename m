@@ -1,54 +1,40 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: sun7i: Add dts file for
- Wexler TAB7200
-Date: Mon, 9 Mar 2015 11:13:54 +0100
-Message-ID: <20150309101354.GP5085@lukather>
-References: <1425456947-4152-1-git-send-email-mamlinav@gmail.com>
- <1425815853-5759-1-git-send-email-mamlinav@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?windows-1252?Q?Cl=E9ment_Perrochaud?=
+	<clement.perrochaud@effinnov.com>
+Subject: Re: [PATCH 1/4] NFC: nci: Add FWDL support
+Date: Mon, 09 Mar 2015 11:26:34 +0100
+Message-ID: <54FD755A.3010300@effinnov.com>
+References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com> <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com> <20150129232859.GA20998@ribalta.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="N5iGxCIPT7YMRg16"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJ7F6WTQKGQE66RBCUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425815853-5759-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150129232859.GA20998@ribalta.ger.corp.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-nfc@lists.01.org, =?windows-1252?Q?Cl=E9ment_Perrochaud?= <clement.perrochaud@nxp.com>, sunil.jogi@nxp.com, jerome.pele@nxp.com, Charles.Gorand-Effinnov@nxp.com, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, grant.likely@linaro.org, lefrique@marvell.com, christophe.ricard@gmail.com, cuissard@marvell.com, bzhao@marvell.com, hirent@marvell.com, akarwar@marvell.com, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---N5iGxCIPT7YMRg16
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 01/30/2015 12:28 AM, Samuel Ortiz wrote:
+> - It really is not obvious that FWDL actually means firmware download
+> - A small commit message explaining why you need this (Mostly for the
+>   NXP chipset for now) would be nice.
 
-On Sun, Mar 08, 2015 at 02:57:33PM +0300, Aleksei Mamlin wrote:
-> This patch add support for Wexler TAB7200 tablet.
-> 
-> The Wexler TAB7200 is a A20 based tablet with 7 inch display(800x480),
-> capacitive touchscreen(5 fingers), 1G RAM, 4G NAND, micro SD card slot,
-> mini HDMI port, 3.5mm audio plug, 1 USB OTG port and 1 USB 2.0 port.
-> 
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes since v1:
-> * Split to two patches:
->   The first one adds dts file for Wexler TAB7200.
->   The second one adds vendor-prefix for Wexler.
-> * Remove include dt-bindings/pinctrl/sun4i-a10.h because we don't use
->   the pinctrl header.
+Hi Samuel,
 
-Applied the two patches, thanks!
+Thank you for all your comments, I just sent an improved version of the
+patches taking them into account.
 
-Maxime
+Regards,
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---N5iGxCIPT7YMRg16--
+--=20
+Cl=E9ment Perrochaud
+
+Eff'Innov Technologies
+Caen, Aix-En-Provence, Grenoble
+
+Eff'Innov Technologies
+Campus EffiScience
+2, Esplanade Anton Philips
+14460 Colombelles, FRANCE
+
+http://www.effinnov.com
