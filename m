@@ -1,58 +1,130 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] pci: iproc: Add Broadcom iProc PCIe support
-Date: Mon, 09 Mar 2015 13:35:24 +0100
-Message-ID: <2314573.X8TfIpVCUq@wuerfel>
-References: <1425603699-13416-1-git-send-email-rjui@broadcom.com> <CAE_wzQ_Rq5u83UXOYRLShxuCzcgxA0BSPFZT4RmvDj8nfTSGcg@mail.gmail.com> <54F9EB42.3010804@broadcom.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v12 10/19] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Mon, 9 Mar 2015 14:37:17 +0200
+Message-ID: <20150309123716.GE11954@valkosipuli.retiisi.org.uk>
+References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
+ <1425485680-8417-11-git-send-email-j.anaszewski@samsung.com>
+ <20150309105404.GC11954@valkosipuli.retiisi.org.uk>
+ <54FD8FD4.2010305@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F9EB42.3010804-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54FD8FD4.2010305@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
-On Friday 06 March 2015 10:00:34 Ray Jui wrote:
-> > 
-> 
-> Although I have not tested it, but to my best knowledge there shouldn't
-> be any technical issue by making the PCIe iProc driver a loadable module
-> and installing the module later after the kernel finishes booting.
-> 
-> But I wonder why I haven't seen any PCIe host driver being allowed to be
-> compiled as module? Maybe there's no obvious benefit of doing that.
-> People typically opt to load slave devices as module but tend to keep
-> the bus or host devices compiled in.
-> 
-> And to allow a PCI host driver to be compiled as module, some PCI
-> functions need to have their symbols exported:
-> 
-> ERROR: "pci_common_swizzle" [drivers/pci/host/pcie-iproc.ko] undefined!
-> ERROR: "pci_fixup_irqs" [drivers/pci/host/pcie-iproc.ko] undefined!
-> ERROR: "pci_assign_unassigned_bus_resources"
-> [drivers/pci/host/pcie-iproc.ko] undefined!
-> ERROR: "pci_remove_root_bus" [drivers/pci/host/pcie-iproc.ko] undefined!
-> ERROR: "pci_stop_root_bus" [drivers/pci/host/pcie-iproc.ko] undefined!
-> ERROR: "pci_create_root_bus" [drivers/pci/host/pcie-iproc.ko] undefined!
-> 
-> Maybe Bjorn can help to shed some light here? Should I go ahead and
-> export_symbol these PCI functions and make the iProc PCI driver "tristate"?
+Hi Jacek,
 
-My best guess is that no loadable driver ever tried to use these and
-we should indeed just export them.
+On Mon, Mar 09, 2015 at 01:19:32PM +0100, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> Thanks for the review.
+> 
+> On 03/09/2015 11:54 AM, Sakari Ailus wrote:
+> >Hi Jacek,
+> >
+> >On Wed, Mar 04, 2015 at 05:14:31PM +0100, Jacek Anaszewski wrote:
+> >>This patch adds device tree binding documentation for
+> >>the flash cell of the Maxim max77693 multifunctional device.
+> >>
+> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> >>Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >>Cc: Lee Jones <lee.jones@linaro.org>
+> >>Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> >>Cc: Bryan Wu <cooloney@gmail.com>
+> >>Cc: Richard Purdie <rpurdie@rpsys.net>
+> >>---
+> >>  Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
+> >>  1 file changed, 61 insertions(+)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+> >>index 38e6440..ab8fbd5 100644
+> >>--- a/Documentation/devicetree/bindings/mfd/max77693.txt
+> >>+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+> >>@@ -76,7 +76,53 @@ Optional properties:
+> >>      Valid values: 4300000, 4700000, 4800000, 4900000
+> >>      Default: 4300000
+> >>
+> >>+- led : the LED submodule device node
+> >>+
+> >>+There are two LED outputs available - FLED1 and FLED2. Each of them can
+> >>+control a separate LED or they can be connected together to double
+> >>+the maximum current for a single connected LED. One LED is represented
+> >>+by one child node.
+> >>+
+> >>+Required properties:
+> >>+- compatible : Must be "maxim,max77693-led".
+> >>+
+> >>+Optional properties:
+> >>+- maxim,trigger-type : Flash trigger type.
+> >>+	Possible trigger types:
+> >>+		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
+> >>+			the flash,
+> >>+		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
+> >>+			of the flash.
+> >>+- maxim,boost-mode :
+> >>+	In boost mode the device can produce up to 1.2A of total current
+> >>+	on both outputs. The maximum current on each output is reduced
+> >>+	to 625mA then. If not enabled explicitly, boost setting defaults to
+> >>+	LEDS_BOOST_FIXED in case both current sources are used.
+> >>+	Possible values:
+> >>+		LEDS_BOOST_OFF (0) - no boost,
+> >>+		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
+> >>+		LEDS_BOOST_FIXED (2) - fixed mode.
+> >>+- maxim,boost-mvout : Output voltage of the boost module in millivolts.
+> >>+- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
+> >>+	if chip estimates that system voltage could drop below this level due
+> >>+	to flash power consumption.
+> >>+
+> >>+Required properties of the LED child node:
+> >>+- label : see Documentation/devicetree/bindings/leds/common.txt
+> >
+> >According to ePAPR, label is "a human readable string describing a device".
+> >There's no requirement that this would be unique, for instance. If you have
+> >a camera flash LED, there's necessarily no meaningful label for it, as it
+> >doesn't really tell the user anything (vs. HDD activity LED, for instance).
+> >
+> >I think I'd make this optional.
+> 
+> OK.
+> 
+> >What comes to entity naming in Media controller, the label isn't enough. As
+> >we haven't yet fully agreed on how to name the entities in the future, I'd
+> >propose sticking to current practices: chip name (and optional numerical LED
+> >ID) followed by the I2C address. The name should be specified by the driver.
+> >
+> >Do you have other than I2C busses required by the current drivers?
+> 
+> I have AAT1290 device driven through GPIOs. There was also other driver,
+> for a similar device, submitted few days ago to linux-leds list.
 
-The call to pci_assign_unassigned_bus_resources could be avoided by using
-pci_rescan_bus(), which would simplify the driver a little, but for
-some reason, nothing else uses that, so I'm not sure about it.
+The problem indeed is defining a stable and unique identifier for a device
+in a system. In context of your patchset, I think this mostly matters in the
+V4L2 flash API wrapper patch.
 
-The pci_remove_root_bus/pci_stop_root_bus calls are rarely used anywhere
-else. Are they functional to the point where you could unload a pci
-host driver that is a loadable module? If so, that would be
-wonderful.
+GPIO controlled devices are little bit more troublesome, as GPIO numbers
+alone aren't necessarily stable, but depend on the probing order. Well, i2c
+controllers could also be registered dynamically. The same goes for PCI
+devices, too, for instance.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Most i2c adapters have a static id, and PCI devices have a stable bus
+address (unless system configuration is modified by e.g. adding or removing
+OTHER devices).
+
+I wonder if this could be resolved on OF-based systems by adding a string
+property, say, device name, whenever where are more than one device of a
+kind in the system. The string could just contain a numeric value, say 0 or
+1.
+
+Cc Hans and Laurent.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
