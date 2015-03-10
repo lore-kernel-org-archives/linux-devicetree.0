@@ -1,155 +1,76 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
- property
-Date: Tue, 10 Mar 2015 12:59:16 -0500
-Message-ID: <54FF30F4.10107@ti.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-2-git-send-email-d-gerlach@ti.com> <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com> <20150305184952.GF13520@atomide.com> <54F8B2C7.7060202@ti.com> <20150305201713.GH13520@atomide.com> <20150306004157.GI13520@atomide.com> <54F9E3BF.5010407@ti.com> <20150306174548.GW13520@atomide.com> <54FF2BA5.6070001@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54FF2BA5.6070001@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, KEERTHY <j-keerthy@ti.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Tue, 10 Mar 2015 13:10:08 -0500
+Message-ID: <3A588B25-66ED-4BB5-8C8F-D050D8A2F9F3@codeaurora.org>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com> <F9B276F7-61EF-4406-AB46-97D7F1ECEEFE@codeaurora.org> <89746055.qtEO3GZJmR@wuerfel> <F5017A7F-0EA2-41B3-A9DD-6123CCFD36FA@codeaurora.org> <CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Grygorii,
-On 03/10/2015 12:36 PM, Grygorii Strashko wrote:
-> Hi Dave,
-> 
-> On 03/06/2015 07:45 PM, Tony Lindgren wrote:
->> * Dave Gerlach <d-gerlach@ti.com> [150306 09:28]:
->>> On 03/05/2015 06:41 PM, Tony Lindgren wrote:
->>>> * Tony Lindgren <tony@atomide.com> [150305 12:24]:
->>>>> * Dave Gerlach <d-gerlach@ti.com> [150305 11:53]:
->>>>>> On 03/05/2015 12:49 PM, Tony Lindgren wrote:
->>>>>>> * Paul Walmsley <paul@pwsan.com> [150305 10:16]:
->>>>>>>> On Thu, 5 Mar 2015, Dave Gerlach wrote:
->>>>>>>>
->>>>>>>>> Introduce a dt property, ti,no-init, that prevents hwmod initialization.
->>>>>>>>> Even if a dt node is marked as disabled, hwmod still at least enables
->>>>>>>>> the hwmod and programs the sysconfig before attempting to idle it at
->>>>>>>>> boot. If an IP has been disabled by the hardware configuration on a
->>>>>>>>> platform, this will cause a hang due to writing to inactive registers.
->>>>>>>>> This property prevents that from happening by marking the hwmod as
->>>>>>>>> _HWMOD_STATE_DISABLED during init.
->>>>>>>>
->>>>>>>> I'm kind of wondering if hwmod should even touch a device if it's marked
->>>>>>>> as disabled in the DT.  Tony, what do you think?
->>>>>>>
->>>>>>> Well nothing happens if a device is status = "disabled". No dev entry
->>>>>>> gets created for it at all and hwmod won't have any data for the device
->>>>>>> populated. The only way hwmod code could see that device if the device
->>>>>>> gets it's data from the legacy omap_hwmod_*_data.c instead of DT.
->>>>>>>
->>>>>>
->>>>>> We still need this for the sysconfig programming, correct? hwmod programs that
->>>>>> regardless of dt status and then idles the IP,
->>>>>
->>>>> Well hwmod does not even know about the IP IO addresses if it's marked
->>>>> with status = "disabled".. Which IP are you having problems with?
->>>>>
->>>>>> which is why I needed the ti,no-init for the epos evm. It isn't just a
->>>>>> matter of we shouldnt write to it because we don't want to use it; we
->>>>>> can't write to it because the module is held off so it causes an
->>>>>> external abort if we do.
->>>>>
->>>>> Well hard to say not knowing which module this is.. Pretty much all
->>>>> the modules have drivers and the driver just does pm_runtime_get()
->>>>> on it?
->>>>
->>>> Heh OK this thread is about the RTC driver, so I assume that's the
->>>> problem :) So if you set the rtc to status = "disabled" how can the
->>>> hwmod code do anything as AFAIK it won't even get the rtc IO address?
->>>>
->>>> Or am I missing something here?
->>>
->>> Perhaps I am mistaken, but from what I understand, all hwmods have _init and
->>> _setup called on them, and all hwmods read the IO address regardless of DT
->>> status at this point with _init_mpu_rt_base. In _setup, _setup_reset gets called
->>> which calls _enable for the hwmod, and this calls both _enable_sysc and
->>> _update_sysc_cache which touch the sysconfig register of the IP.
->>
->> Oh OK, I think you're right. I was thinking of omap_device_build_from_dt(),
->> sorry. Looks like the hwmod IO address data does get populated even
->> for status = "disabled" although the dev entry won't get created and
->> omap_device_build_from_dt() never gets called.
->>
->>> Normally this is fine regardless of whether or not we are using an IP because
->>> the module will wake up for a moment, have it's sysc programmed, and then be put
->>> back to sleep later, potentially never to be woken again if we bind no driver
->>> for it, which is fine for 99% of cases. In the case of am43x epos evm, you can
->>> take the same piece of silicon that will boot happily on the gp evm with the rtc
->>> hwmod in place and it will hang during boot on the epos evm because the board
->>> uses a pin to hold the RTC IP in reset. There is no way to detect this in
->>> software, the module can be turned on as normal using the clk_ctrl, but if you
->>> touch any of the IP registers you get an abort.
->>
->> OK sounds like some dts property is needed to signal this.
-> 
-> As I understand, there is device "RTC" and this device has status 'disabled',
-> so there is reasonable question why do we need to touch it at all?
-> The HWMOD is some kind of SoC description, which was needed before DT.
-> Now with DT in place it seems unreasonable to touch any IP block which:
-> - are not defined in DT
-> - has status 'disabled'.
-> in above cases the u-boot has to dial with IP block if it's invisible for Kernel.
-> 
-> The HWMOD framework intended to reset and put in some predefined states IPs which are
-> visible for the Kernel, so then proper driver can start working with IP or IP will be
-> kept in some low-power state if there is no driver.
+>>>>>>>>> The top level qcom,msm-id and qcom,board-id are utilized by b=
+ootloaders
+>>>>>>>>>> on Qualcomm MSM platforms to determine which device tree sho=
+uld be
+>>>>>>>>>> utilized and passed to the kernel.
+>>>>>>>>>>=20
+>>>>>>>>>> Cc: <devicetree@vger.kernel.org>
+>>>>>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+>>>>>>>>>=20
+>>>>>>>>> Is this the special magic that allows qcom bootloaders to tak=
+e a kernel
+>>>>>>>>> plus multiple DTBs and figure out which DTB to pass?
+>>>>>>>>>=20
+>>>>>>>>> Kevin
+>>>>>>>>=20
+>>>>>>>> yes
+>>>>>>>=20
+>>>>>>> That's a bummer.
+>>>>>>>=20
+>>>>>>> Luckily, the solution for upstream is still quite simple: Provi=
+de only
+>>>>>>> one devicetree, and it'll be used, right?
+>>>>>>=20
+>>>>>> We can provide only one, we still need the IDs in the DT.
+>>>>>=20
+>>>>> How are the DTS provided? Concatenated with the kernel, or in a
+>>>>> wrapped data format? Or in a separate partition from the kernel?
+>>>>=20
+>>>> Its a wrapped data format that is than concatenated with the kerne=
+l if I remember correctly.
+>>>=20
+>>> Then you should be able to create a tool that can write this concat=
+enated
+>>> format and insert these properties from a table that matches the bo=
+ot
+>>> loader, right?
+>>>=20
+>>>      Arnd
+>>=20
+>> Are you suggesting the tool insert the properties in the DT?  I=92m =
+not sure I understand what the point of doing that would be.
+>=20
+> To insert platform-local properties that mean nothing outside of the
+> firmware packaging of the device trees, which is the case here?
+>=20
+> I think the idea of having the installer script inserting them is
+> quite reasonable in this case.
+>=20
+>=20
+> -Olof
 
-Currently we still need this hwmod behavior as not all IPs are in an ideal state
-for PM by default. Not sure if you saw my last email in this thread but I gave
-an example for USB hwmod:
+These values are static, so not sure what the point of having the insta=
+ller script do that?
 
-If no USB driver is bound even just letting omap_device idle it using the USB_
-CLKCTRL in the PRCM will not work properly, because the USB on am33xx expects
-it's SYSCONFIG STANDBY_MODE to be software supervised, the default state
-(SMART_STANDBY) does not let the IP go into standby so the IP gets stuck in a
-partially off state but does not actually shut down as expected.
+- k
 
-So we need to be able to touch the dt nodes even if they are marked as disabled
-because we need to get the IO address to have access to the SYSCONFIG register.
-I am not trying to introduce any major new changes to omap_hwmod layer, I am
-just trying to allow it to work in more situations.
-
-This flag would only exist to PREVENT any hwmod action from happening in certain
-cases where we cannot even touch the IP for whatever reason (in the first case
-that this patch intends to be used for, the RTC IP on am43x-epos-evm which is
-disabled by the board configuration).
-
-Regards,
-Dave
-
-> 
-> Such kind of changes really confused :(, because when I'm looking on DT and see - status='disabled'
-> I suppose that such IP will not be touched by Kernel. But it's NOT really 'disabled'.
-> It's kinda 'partially disabled' or 'not present' or 'unused' ..
-> (if someone will decide to continue with such approach - it could be more
-> useful to define new value for 'status' parameter :P).
-> Also, just imaging that OMAP kernel is used with Xen as DomU and how hard will
-> it be to find and cut off all such tricks :( 
-> 
-> Did I miss something?
->
->>   
->>> So we need to prevent this from happening but of course we can't selectively
->>> choose when the rtc hwmod gets added based on which board we are using so it
->>> seemed a DT flag was appropriate to indicate that we do not want to init the rtc
->>> IP at all only on this board.
->>>
->>> Without this flag in place but with the rtc hwmod added, the am43x-epos-evm
->>> fails booting with an imprecise abort.
->>
->> OK thanks for explaining it. I'm fine with this patch, Paul may have
->> other issues. The other option would be to use status = "disabled" to
->> not touch the device at all like Paul suggested. I wonder if that's
->> going to break PM on some devices though..
->>
-> 
-> Regards,
-> -grygorii
-> 
-
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
