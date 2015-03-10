@@ -1,61 +1,69 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/3] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Tue, 10 Mar 2015 10:43:37 +0100
-Message-ID: <79223422.KFbmI1BzE4@phil>
-References: <1429128.MSqYm0qZ9p@phil> <2297963.iMSNqyfSUx@phil>
- <1425979013.3141.17.camel@pengutronix.de>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFC PATCH 0/3] Fix power domains handling on exynos542x
+Date: Tue, 10 Mar 2015 10:48:54 +0100
+Message-ID: <54FEBE06.3000007@collabora.co.uk>
+References: <1423139739-19881-1-git-send-email-a.hajda@samsung.com> <54D381F4.2080701@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1425979013.3141.17.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, broonie@kernel.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54D381F4.2080701@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Liquid.Acid@gmx.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCkFtIERpZW5zdGFnLCAxMC4gTcOkcnogMjAxNSwgMTA6MTY6NTMgc2Nocmll
-YiBQaGlsaXBwIFphYmVsOgoKW2N1dCB0aGUgb2J2aW91cyBzdHVmZiBJIG5lZWQgdG8gZml4XQoK
-PiBBbSBEaWVuc3RhZywgZGVuIDEwLjAzLjIwMTUsIDAwOjIyICswMTAwIHNjaHJpZWIgSGVpa28g
-U3R1ZWJuZXI6Cj4gPiBAQCAtODc5LDYgKzg4MywxMiBAQCBzdGF0aWMgaW50IGR3X2hkbWlfcGh5
-X2luaXQoc3RydWN0IGR3X2hkbWkgKmhkbWkpCj4gPiAKPiA+ICAJaW50IGksIHJldDsKPiA+ICAJ
-Ym9vbCBjc2NvbiA9IGZhbHNlOwo+ID4gCj4gPiArCWlmIChoZG1pLT5uc3VwcGxpZXMgPiAwKSB7
-Cj4gPiArCQlyZXQgPSByZWd1bGF0b3JfYnVsa19lbmFibGUoaGRtaS0+bnN1cHBsaWVzLCBoZG1p
-LT5zdXBwbGllcyk7Cj4gPiArCQlpZiAocmV0KQo+ID4gKwkJCXJldHVybiByZXQ7Cj4gPiArCX0K
-PiA+ICsKPiAKPiBBcmUgdGhlc2UgcmVhbGx5IHN1cHBsaWVzIHRvIHRoZSBQSFkgb3IgaXMgdGhp
-cyBqdXN0IGEgY29udmVuaWVudCBwbGFjZQo+IHRvIGVuYWJsZSB0aGVtPyBMb29raW5nIGF0IHRo
-ZSBpLk1YNiBkb2NzLCBJIHN1cHBvc2UgeWVzLgoKQWNjb3JkaW5nIHRvIHRoZSBUUk0sIHRoZSBz
-dXBwbGllcyBhcmUgIkRDIHN1cHBseSB2b2x0YWdlIGZvciBBbmFsb2cgcGFydCBvZiAKSERNSSIs
-IHNvIEknZCB0aGluayBwaHkgc3VwcGxpZXMuCgo+IAo+ID4gIAkvKmNoZWNrIGNzYyB3aGV0aGVy
-IG5lZWRlZCBhY3RpdmF0ZWQgaW4gSERNSSBtb2RlICovCj4gPiAgCWNzY29uID0gKGlzX2NvbG9y
-X3NwYWNlX2NvbnZlcnNpb24oaGRtaSkgJiYKPiA+ICAJCj4gPiAgCQkJIWhkbWktPmhkbWlfZGF0
-YS52aWRlb19tb2RlLm1kdmkpOwo+ID4gCj4gPiBAQCAtMTEwNSw2ICsxMTE1LDkgQEAgc3RhdGlj
-IHZvaWQgZHdfaGRtaV9waHlfZGlzYWJsZShzdHJ1Y3QgZHdfaGRtaQo+ID4gKmhkbWkpCj4gPiAK
-PiA+ICAJZHdfaGRtaV9waHlfZW5hYmxlX3RtZHMoaGRtaSwgMCk7Cj4gPiAgCWR3X2hkbWlfcGh5
-X2VuYWJsZV9wb3dlcihoZG1pLCAwKTsKPiA+IAo+ID4gKwlpZiAoaGRtaS0+bnN1cHBsaWVzID4g
-MCkKPiA+ICsJCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoaGRtaS0+bnN1cHBsaWVzLCBoZG1pLT5z
-dXBwbGllcyk7Cj4gPiArCj4gPiAKPiA+ICAJaGRtaS0+cGh5X2VuYWJsZWQgPSBmYWxzZTsKPiA+
-ICAKPiA+ICB9Cj4gPiAKPiA+IEBAIC0xNTQ5LDcgKzE1NjIsOCBAQCBzdGF0aWMgaW50IGR3X2hk
-bWlfcmVnaXN0ZXIoc3RydWN0IGRybV9kZXZpY2UgKmRybSwKPiA+IHN0cnVjdCBkd19oZG1pICpo
-ZG1pKT4gCj4gPiAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
-ZXZpY2UgKm1hc3RlciwKPiA+ICAKPiA+ICAJCSB2b2lkICpkYXRhLCBzdHJ1Y3QgZHJtX2VuY29k
-ZXIgKmVuY29kZXIsCj4gPiAgCQkgc3RydWN0IHJlc291cmNlICppb3JlcywgaW50IGlycSwKPiA+
-IAo+ID4gLQkJIGNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxhdF9kYXRhKQo+ID4g
-KwkJIGNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxhdF9kYXRhLAo+ID4gKwkJIHN0
-cnVjdCByZWd1bGF0b3JfYnVsa19kYXRhICpzdXBwbGllcywgaW50IG5zdXBwbGllcykKPiAKPiBJ
-J20gbm90IHN1cmUgSSBsaWtlIHRoaXMgZnVuY3Rpb24gc3Byb3V0aW5nIHNvIG1hbnkgcGFyYW1l
-dGVycy4gSXMgdGhlcmUKPiBhIGdvb2QgcmVhc29uIG5vdCB0byBhZGQgdGhpcyB0byBzdHJ1Y3Qg
-ZHdfaGRtaV9wbGF0X2RhdGE/CgpOb3BlLCBtb3ZpbmcgdGhpcyB0byBwbGF0ZGF0YSBzb3VuZCBz
-ZW5zaWJsZSBhbmQgSSdsbCBnaXZlIHRoaXMgYSB0cnkgOi0pCgoKSGVpa28KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello Kukjin,
+
+On 02/05/2015 03:45 PM, Javier Martinez Canillas wrote:
+> Hello Andrzej,
+> 
+> Thanks a lot for finally finding what was causing the HDMI issue.
+> 
+> On 02/05/2015 01:35 PM, Andrzej Hajda wrote:
+>> Hi,
+>> 
+>> Exynos chipsets since 542x have asynchronous bridges connecting different IPs.
+>> These bridges should be operational during power domain switching, ie associated
+>> clocks cannot be gated.
+>> This patchset adds binding to provide such clocks per power domain and adds code
+>> which enables them during domain on/off operation.
+>> 
+>> This patchset fixes power domain issues with disp1 domain and HDMI (some of them)
+>> on Odroid XU3:
+>> - disp1 power domain can be turned off,
+>> - no more "imprecise external abort" faults.
+>> 
+>> The patchset is based on '[PATCH v5 0/9] Enable HDMI support on Exynos platforms' [1].
+>> 
+> 
+> It also depends on '[PATCH 0/2] Add HDMI support for Exynos5420 platform' [2].
+> 
+>> It was successfully tested on OdroidXU3.
+>> 
+>> [1]: http://permalink.gmane.org/gmane.linux.kernel.samsung-soc/42743
+> 
+> Your patches looks good to me so please feel free to add:
+> 
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> 
+> I also tested on an Exynos5420 Peach Pit Chromebook and both the "Power
+> domain power-domain disable failed" message and the system crash are gone.
+> 
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> 
+> Best regards,
+> Javier
+> 
+> [2]: https://lkml.org/lkml/2015/1/20/235
+> 
+
+Any comments about this series? It fixes system hangs on Exynos
+5420/5422/5800 boards and has been in the list for a while.
+
+Please keep in mind that a v2 of patch 3/3 was posted [0].
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2015/2/6/138
