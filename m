@@ -1,57 +1,49 @@
-From: Robert Smigielski <robert.smigielski-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx: imx6q uart2 pin mux correction
-Date: Tue, 10 Mar 2015 09:45:42 -0400
-Message-ID: <CAPvN=VTSMxtjs6QQ=VFPCDgJ3LJ2xfC+Ryh-rXU4-xnqk+i67w@mail.gmail.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] libfdt: Add fdt_path_offset_namelen()
+Date: Tue, 10 Mar 2015 09:47:44 -0400
+Message-ID: <54FEF600.50402@hurleysoftware.com>
+References: <1425654758-2575-1-git-send-email-peter@hurleysoftware.com> <20150310001711.GB30335@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Robert Smigielski <robert.smigielski-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150310001711.GB30335-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch contains a correction to the file imx6q-pinfunc.h for the
-definition of the UART2 GPIO pin mux setting.
+Hi David,
 
-Issue found when testing UART2 configured as the console in Linux
-GPIO_7 is a transmit pin not a transmit and receive pin
-GPIO_8 is a receive pin not a transmit and receive pin
+On 03/09/2015 08:17 PM, David Gibson wrote:
+> On Fri, Mar 06, 2015 at 10:12:38AM -0500, Peter Hurley wrote:
+>> Properties may contain path names which are not NUL-terminated.
+>> For example, the 'stdout-path' property allows the form 'path:options',
+>> where the ':' character terminates the path specifier.
+>>
+>> Allow these path names to be used in-place for path descending;
+>> add fdt_path_offset_namelen(), which limits the path name to 'namelen'
+>> characters.
+>>
+>> Reimplement fdt_path_offset() as a trivial wrapper.
+>>
+>> Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+> 
+> I think this function is a good idea, however I would like to see a
+> testcase for it.
 
-Verified the correction with Freescale in posting to the Freescale
-forum https://community.freescale.com/thread/343349
+Sure, I can do that.
 
-commit c383bbb4d17037435305858f488db7ae17dc1c85
-Author: robert.smigielski <robert.smigielski-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Date:   Fri Mar 6 11:53:20 2015 -0500
+I assume you mean a path name with non-NUL termination because
+the fdt_path_offset() tests are already exercising the
+fdt_path_offset_name() implementation.
 
-    UART2 Tx and Rx values corrected based on IMX6Q datasheet
+Is there a readme somewhere regarding the test matrix (ie.,
+which dts files go with which tests)?
 
-diff --git a/arch/arm/boot/dts/imx6q-pinfunc.h
-b/arch/arm/boot/dts/imx6q-pinfunc.h
-index c68c21d..4d4cc49 100644
---- a/arch/arm/boot/dts/imx6q-pinfunc.h
-+++ b/arch/arm/boot/dts/imx6q-pinfunc.h
-@@ -696,8 +696,7 @@
- #define MX6QDL_PAD_GPIO_7__ECSPI5_RDY               0x240 0x610 0x000 0x1 0x0
- #define MX6QDL_PAD_GPIO_7__EPIT1_OUT                0x240 0x610 0x000 0x2 0x0
- #define MX6QDL_PAD_GPIO_7__FLEXCAN1_TX              0x240 0x610 0x000 0x3 0x0
--#define MX6QDL_PAD_GPIO_7__UART2_TX_DATA            0x240 0x610 0x000 0x4 0x0
--#define MX6QDL_PAD_GPIO_7__UART2_RX_DATA            0x240 0x610 0x928 0x4 0x2
-+#define MX6QDL_PAD_GPIO_7__UART2_TX_DATA            0x240 0x610 0x928 0x4 0x2
- #define MX6QDL_PAD_GPIO_7__GPIO1_IO07               0x240 0x610 0x000 0x5 0x0
- #define MX6QDL_PAD_GPIO_7__SPDIF_LOCK               0x240 0x610 0x000 0x6 0x0
- #define MX6QDL_PAD_GPIO_7__USB_OTG_HOST_MODE        0x240 0x610 0x000 0x7 0x0
-@@ -706,7 +705,6 @@
- #define MX6QDL_PAD_GPIO_8__EPIT2_OUT                0x244 0x614 0x000 0x2 0x0
- #define MX6QDL_PAD_GPIO_8__FLEXCAN1_RX              0x244 0x614 0x7e4 0x3 0x1
- #define MX6QDL_PAD_GPIO_8__UART2_RX_DATA            0x244 0x614 0x928 0x4 0x3
--#define MX6QDL_PAD_GPIO_8__UART2_TX_DATA            0x244 0x614 0x000 0x4 0x0
- #define MX6QDL_PAD_GPIO_8__GPIO1_IO08               0x244 0x614 0x000 0x5 0x0
- #define MX6QDL_PAD_GPIO_8__SPDIF_SR_CLK             0x244 0x614 0x000 0x6 0x0
- #define MX6QDL_PAD_GPIO_8__USB_OTG_PWR_CTL_WAKE     0x244 0x614 0x000 0x7 0x0
-
-Robert Smigielski
+Regards,
+Peter Hurley
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
