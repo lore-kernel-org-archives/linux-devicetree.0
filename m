@@ -1,233 +1,225 @@
 From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCH 4/5] arm-cci: Split the code for PMU vs driver support
-Date: Tue, 10 Mar 2015 15:18:54 +0000
-Message-ID: <1426000735-14375-5-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 3/5] arm-cci: Get rid of secure transactions for PMU driver
+Date: Tue, 10 Mar 2015 15:18:53 +0000
+Message-ID: <1426000735-14375-4-git-send-email-suzuki.poulose@arm.com>
 References: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Pitre <nico@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "Suzuki K. Poulose" <suzuki.poulose@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Will Deacon <will.deacon@arm.com>, Nicolas Pitre <nico@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Abhilash Kesavan <a.kesavan@samsung.com>, "Suzuki K. Poulose" <suzuki.poulose@arm.com>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 
-This patch separates the PMU driver code from the low level
-CCI driver code and enables the PMU driver for ARM64.
+Avoid secure transactions while probing the CCI PMU. The
+existing code makes use of the Peripheral ID2 (PID2) register
+to determine the revision of the CCI400, which requires a
+secure transaction. This puts a limitation on the usage of the
+driver on systems running non-secure Linux(e.g, ARM64).
 
-Introduces config options for both.
+Updated the device-tree binding for cci pmu node to add the explicit
+revision number for the compatible field.
 
- ARM_CCI400_PORT_CTRL=09- controls the low level driver code for
-=09=09=09  CCI400 ports.
- ARM_CCI400_PMU =09- controls the PMU driver code
- ARM_CCI400_COMMON =09- Common defintions for CCI400
+The supported strings are :
+	arm,cci-400-pmu,r0
+	arm,cci-400-pmu,r1
+	arm,cci-400-pmu - DEPRECATED. See NOTE below
 
-This patch also changes:
- ARM_CCI - common code for probing the CCI devices. This can be
-   used for adding support for newer CCI versions(e.g, CCI-500).
+NOTE: If the revision is not mentioned, we need to probe the cci revision,
+which could be fatal on a platform running non-secure. We need a reliable way
+to know if we can poke the CCI registers at runtime on ARM32. We depend on
+'mcpm_is_available()' when it is available. mcpm_is_available() returns true
+only when there is a registered driver for mcpm. Otherwise, we assume that we
+don't have secure access, and skips probing the revision number(ARM64 case).
+
+The MCPM should figure out if it is safe to access the CCI. Unfortunately
+there isn't a reliable way to indicate the same via dtb. This patch doesn't
+address/change the current situation. It only deals with the CCI-PMU, leaving
+the assumptions about the secure access as it has been, prior to this patch.
 
 Changes since V2:
-  - Make ARM_CCI400_PMU default y (Suggested-by: Sudeep Holla)
-Changes since V1 (Suggestions-by: Nicolas Pitre):
-  - Renames
-=09CONFIG_ARM_CCI400_MCPM =3D> CONFIG_ARM_CCI400_PORT_CTRL
-=09CCI400_MCPM_PORTS_DATA =3D> CCI400_PORTS_DATA
-  - Select ARM_CCI400_COMMON for ARM_CCI400_PORT_CTRL
-  - Better documentation in the git commit log about the ARM_CCI config.
+ - Use 'bool' instead of 'int' for platform_has_secure_cci_access().
+   (Suggested-by: Sudeep Holla)
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Abhilash Kesavan <a.kesavan@samsung.com>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: devicetree@vger.kernel.org
 Cc: Punit Agrawal <punit.agrawal@arm.com>
 Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm/mach-exynos/Kconfig   |    2 +-
- arch/arm/mach-vexpress/Kconfig |    4 ++--
- drivers/bus/Kconfig            |   28 ++++++++++++++++++++++++----
- drivers/bus/arm-cci.c          |   24 ++++++++++++++++++++----
- include/linux/arm-cci.h        |    7 ++++++-
- 5 files changed, 53 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/arm/cci.txt |    7 +++--
+ arch/arm/include/asm/arm-cci.h                |   42 +++++++++++++++++++++++++
+ arch/arm64/include/asm/arm-cci.h              |   27 ++++++++++++++++
+ drivers/bus/arm-cci.c                         |   17 +++++++++-
+ include/linux/arm-cci.h                       |    2 ++
+ 5 files changed, 92 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/include/asm/arm-cci.h
+ create mode 100644 arch/arm64/include/asm/arm-cci.h
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 603820e..81064cd 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -123,7 +123,7 @@ config SOC_EXYNOS5800
- config EXYNOS5420_MCPM
- =09bool "Exynos5420 Multi-Cluster PM support"
- =09depends on MCPM && SOC_EXYNOS5420
--=09select ARM_CCI
-+=09select ARM_CCI400_PORT_CTRL
- =09select ARM_CPU_SUSPEND
- =09help
- =09  This is needed to provide CPU and cluster power management
-diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfi=
-g
-index 3c2509b..daa7ab6 100644
---- a/arch/arm/mach-vexpress/Kconfig
-+++ b/arch/arm/mach-vexpress/Kconfig
-@@ -53,7 +53,7 @@ config ARCH_VEXPRESS_CORTEX_A5_A9_ERRATA
- config ARCH_VEXPRESS_DCSCB
- =09bool "Dual Cluster System Control Block (DCSCB) support"
- =09depends on MCPM
--=09select ARM_CCI
-+=09select ARM_CCI400_PORT_CTRL
- =09help
- =09  Support for the Dual Cluster System Configuration Block (DCSCB).
- =09  This is needed to provide CPU and cluster power management
-@@ -71,7 +71,7 @@ config ARCH_VEXPRESS_SPC
- config ARCH_VEXPRESS_TC2_PM
- =09bool "Versatile Express TC2 power management"
- =09depends on MCPM
--=09select ARM_CCI
-+=09select ARM_CCI400_PORT_CTRL
- =09select ARCH_VEXPRESS_SPC
- =09select ARM_CPU_SUSPEND
- =09help
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index b99729e..79e297b 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -43,12 +43,32 @@ config OMAP_INTERCONNECT
- =09help
- =09  Driver to enable OMAP interconnect error handling driver.
-=20
--config ARM_CCI
--=09bool "ARM CCI driver support"
-+config ARM_CCI400_PORT_CTRL
-+=09bool
- =09depends on ARM && OF && CPU_V7
-+=09select ARM_CCI400_COMMON
-+=09help
-+=09  Low level power management driver for CCI400 cache coherent
-+=09  interconnect for ARM platforms.
+diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
+index f28d82b..0e4b6a7 100644
+--- a/Documentation/devicetree/bindings/arm/cci.txt
++++ b/Documentation/devicetree/bindings/arm/cci.txt
+@@ -94,8 +94,11 @@ specific to ARM.
+ 		- compatible
+ 			Usage: required
+ 			Value type: <string>
+-			Definition: must be "arm,cci-400-pmu"
+-
++			Definition: Supported strings are :
++				 "arm,cci-400-pmu,r0"
++				 "arm,cci-400-pmu,r1"
++				 "arm,cci-400-pmu"  - DEPRECATED, permitted only where OS has
++						      secure acces to CCI registers
+ 		- reg:
+ 			Usage: required
+ 			Value type: Integer cells. A register entry, expressed
+diff --git a/arch/arm/include/asm/arm-cci.h b/arch/arm/include/asm/arm-cci.h
+new file mode 100644
+index 0000000..fe77f7a
+--- /dev/null
++++ b/arch/arm/include/asm/arm-cci.h
+@@ -0,0 +1,42 @@
++/*
++ * arch/arm/include/asm/arm-cci.h
++ *
++ * Copyright (C) 2015 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
 +
-+config ARM_CCI400_PMU
-+=09bool "ARM CCI400 PMU support"
-+=09default y
-+=09depends on ARM || ARM64
-+=09depends on HW_PERF_EVENTS
-+=09select ARM_CCI400_COMMON
- =09help
--=09  Driver supporting the CCI cache coherent interconnect for ARM
--=09  platforms.
-+=09  Support for PMU events monitoring on the ARM CCI cache coherent
-+=09  interconnect.
++#ifndef __ASM_ARM_CCI_H
++#define __ASM_ARM_CCI_H
 +
-+=09  If unsure, say Y
++#ifdef CONFIG_MCPM
++#include <asm/mcpm.h>
 +
-+config ARM_CCI400_COMMON
-+=09bool
-+=09select ARM_CCI
++/*
++ * We don't have a reliable way of detecting whether,
++ * if we have access to secure-only registers, unless
++ * mcpm is registered.
++ */
++static inline bool platform_has_secure_cci_access(void)
++{
++	return mcpm_is_available();
++}
 +
-+config ARM_CCI
-+=09bool
-=20
- config ARM_CCN
- =09bool "ARM CCN driver support"
++#else
++static inline bool platform_has_secure_cci_access(void)
++{
++	return false;
++}
++#endif
++
++#endif
+diff --git a/arch/arm64/include/asm/arm-cci.h b/arch/arm64/include/asm/arm-cci.h
+new file mode 100644
+index 0000000..f0b6371
+--- /dev/null
++++ b/arch/arm64/include/asm/arm-cci.h
+@@ -0,0 +1,27 @@
++/*
++ * arch/arm64/include/asm/arm-cci.h
++ *
++ * Copyright (C) 2015 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __ASM_ARM_CCI_H
++#define __ASM_ARM_CCI_H
++
++static inline bool platform_has_secure_cci_access(void)
++{
++	return false;
++}
++
++#endif
 diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index 70dff09..581190d 100644
+index f88383e..70dff09 100644
 --- a/drivers/bus/arm-cci.c
 +++ b/drivers/bus/arm-cci.c
-@@ -32,6 +32,7 @@
- static void __iomem *cci_ctrl_base;
- static unsigned long cci_ctrl_phys;
-=20
-+#ifdef CONFIG_ARM_CCI400_PORT_CTRL
- struct cci_nb_ports {
- =09unsigned int nb_ace;
- =09unsigned int nb_ace_lite;
-@@ -42,12 +43,19 @@ static const struct cci_nb_ports cci400_ports =3D {
- =09.nb_ace_lite =3D 3
- };
-=20
-+#define CCI400_PORTS_DATA=09(&cci400_ports)
-+#else
-+#define CCI400_PORTS_DATA=09(NULL)
-+#endif
-+
- static const struct of_device_id arm_cci_matches[] =3D {
--=09{.compatible =3D "arm,cci-400", .data =3D &cci400_ports },
-+#ifdef CONFIG_ARM_CCI400_COMMON
-+=09{.compatible =3D "arm,cci-400", .data =3D CCI400_PORTS_DATA },
-+#endif
- =09{},
- };
-=20
--#ifdef CONFIG_HW_PERF_EVENTS
-+#ifdef CONFIG_ARM_CCI400_PMU
-=20
- #define DRIVER_NAME=09=09"CCI-400"
- #define DRIVER_NAME_PMU=09=09DRIVER_NAME " PMU"
-@@ -1013,14 +1021,16 @@ static int __init cci_platform_init(void)
- =09return platform_driver_register(&cci_platform_driver);
- }
-=20
--#else /* !CONFIG_HW_PERF_EVENTS */
-+#else /* !CONFIG_ARM_CCI400_PMU */
-=20
- static int __init cci_platform_init(void)
+@@ -217,7 +217,9 @@ static int probe_cci_revision(void)
+ 
+ static const struct cci_pmu_model *probe_cci_model(struct platform_device *pdev)
  {
- =09return 0;
+-	return &cci_pmu_models[probe_cci_revision()];
++	if (platform_has_secure_cci_access())
++		return &cci_pmu_models[probe_cci_revision()];
++	return NULL;
  }
-=20
--#endif /* CONFIG_HW_PERF_EVENTS */
-+#endif /* CONFIG_ARM_CCI400_PMU */
-+
-+#ifdef CONFIG_ARM_CCI400_PORT_CTRL
-=20
- #define CCI_PORT_CTRL=09=090x0
- #define CCI_CTRL_STATUS=09=090xc
-@@ -1451,6 +1461,12 @@ static int cci_probe_ports(struct device_node *np)
-=20
- =09return 0;
+ 
+ static int pmu_is_valid_counter(struct cci_pmu *cci_pmu, int idx)
+@@ -873,6 +875,15 @@ static struct cci_pmu_model cci_pmu_models[] = {
+ static const struct of_device_id arm_cci_pmu_matches[] = {
+ 	{
+ 		.compatible = "arm,cci-400-pmu",
++		.data	= NULL,
++	},
++	{
++		.compatible = "arm,cci-400-pmu,r0",
++		.data	= &cci_pmu_models[CCI_REV_R0],
++	},
++	{
++		.compatible = "arm,cci-400-pmu,r1",
++		.data	= &cci_pmu_models[CCI_REV_R1],
+ 	},
+ 	{},
+ };
+@@ -883,7 +894,11 @@ static inline const struct cci_pmu_model *get_cci_model(struct platform_device *
+ 							pdev->dev.of_node);
+ 	if (!match)
+ 		return NULL;
++	if (match->data)
++		return match->data;
+ 
++	dev_warn(&pdev->dev, "DEPERCATED compatible property,"
++			 "requires secure access to CCI registers");
+ 	return probe_cci_model(pdev);
  }
-+#else /* !CONFIG_ARM_CCI400_PORT_CTRL */
-+static inline int cci_probe_ports(struct device_node *np)
-+{
-+=09return 0;
-+}
-+#endif /* CONFIG_ARM_CCI400_PORT_CTRL */
-=20
- static int cci_probe(void)
- {
+ 
 diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
-index aede5c7..521ec1f 100644
+index 79d6edf..aede5c7 100644
 --- a/include/linux/arm-cci.h
 +++ b/include/linux/arm-cci.h
-@@ -30,12 +30,16 @@ struct device_node;
-=20
+@@ -24,6 +24,8 @@
+ #include <linux/errno.h>
+ #include <linux/types.h>
+ 
++#include <asm/arm-cci.h>
++
+ struct device_node;
+ 
  #ifdef CONFIG_ARM_CCI
- extern bool cci_probed(void);
-+#else
-+static inline bool cci_probed(void) { return false; }
-+#endif
-+
-+#ifdef CONFIG_ARM_CCI400_PORT_CTRL
- extern int cci_ace_get_port(struct device_node *dn);
- extern int cci_disable_port_by_cpu(u64 mpidr);
- extern int __cci_control_port_by_device(struct device_node *dn, bool enabl=
-e);
- extern int __cci_control_port_by_index(u32 port, bool enable);
- #else
--static inline bool cci_probed(void) { return false; }
- static inline int cci_ace_get_port(struct device_node *dn)
- {
- =09return -ENODEV;
-@@ -51,6 +55,7 @@ static inline int __cci_control_port_by_index(u32 port, b=
-ool enable)
- =09return -ENODEV;
- }
- #endif
-+
- #define cci_disable_port_by_device(dev) \
- =09__cci_control_port_by_device(dev, false)
- #define cci_enable_port_by_device(dev) \
---=20
+-- 
 1.7.9.5
