@@ -1,96 +1,69 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Tue, 10 Mar 2015 10:55:47 -0700
-Message-ID: <CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>
-	<CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com>
-	<F9B276F7-61EF-4406-AB46-97D7F1ECEEFE@codeaurora.org>
-	<89746055.qtEO3GZJmR@wuerfel>
-	<F5017A7F-0EA2-41B3-A9DD-6123CCFD36FA@codeaurora.org>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 6/8] pinctrl: cygnus: add gpio/pinconf driver
+Date: Tue, 10 Mar 2015 10:57:00 -0700
+Message-ID: <54FF306C.7020407@broadcom.com>
+References: <1425933902-20652-1-git-send-email-rjui@broadcom.com>	<1425933902-20652-7-git-send-email-rjui@broadcom.com> <CACRpkdZ1ErfikdF41aANTM-7LE6AExizHtCZTq1_TTxwYjeSQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <F5017A7F-0EA2-41B3-A9DD-6123CCFD36FA-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <CACRpkdZ1ErfikdF41aANTM-7LE6AExizHtCZTq1_TTxwYjeSQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-fe>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 10:13 AM, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wro=
-te:
->
-> On Mar 9, 2015, at 7:11 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->
->> On Friday 06 March 2015 14:37:52 Kumar Gala wrote:
->>> On Mar 6, 2015, at 1:15 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>>
->>>> On Fri, Mar 6, 2015 at 8:08 AM, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> =
-wrote:
->>>>>
->>>>> On Mar 5, 2015, at 7:59 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote=
-:
->>>>>
->>>>>> On Thu, Mar 5, 2015 at 12:23 PM, Kumar Gala <galak-sgV2jX0FEOJiIJoWrK/4GQ@public.gmane.org=
-g> wrote:
->>>>>>>
->>>>>>> On Mar 5, 2015, at 1:42 PM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> w=
-rote:
->>>>>>>
->>>>>>>> Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>>>>>>
->>>>>>>>> The top level qcom,msm-id and qcom,board-id are utilized by b=
-ootloaders
->>>>>>>>> on Qualcomm MSM platforms to determine which device tree shou=
-ld be
->>>>>>>>> utilized and passed to the kernel.
->>>>>>>>>
->>>>>>>>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->>>>>>>>> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>>>>>>
->>>>>>>> Is this the special magic that allows qcom bootloaders to take=
- a kernel
->>>>>>>> plus multiple DTBs and figure out which DTB to pass?
->>>>>>>>
->>>>>>>> Kevin
->>>>>>>
->>>>>>> yes
->>>>>>
->>>>>> That's a bummer.
->>>>>>
->>>>>> Luckily, the solution for upstream is still quite simple: Provid=
-e only
->>>>>> one devicetree, and it'll be used, right?
->>>>>
->>>>> We can provide only one, we still need the IDs in the DT.
->>>>
->>>> How are the DTS provided? Concatenated with the kernel, or in a
->>>> wrapped data format? Or in a separate partition from the kernel?
->>>
->>> Its a wrapped data format that is than concatenated with the kernel=
- if I remember correctly.
+Hi Linus,
+
+On 3/10/2015 3:20 AM, Linus Walleij wrote:
+> On Mon, Mar 9, 2015 at 9:45 PM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> 
+>> This adds the initial support of the Broadcom Cygnus GPIO/PINCONF driver
+>> that supports all 3 GPIO controllers on Cygnus including the ASIU GPIO
+>> controller, the chipCommonG GPIO controller, and the always-on GPIO
+>> controller. Basic PINCONF configurations such as bias pull up/down, and
+>> drive strength are also supported in this driver.
 >>
->> Then you should be able to create a tool that can write this concate=
-nated
->> format and insert these properties from a table that matches the boo=
-t
->> loader, right?
+>> Pins from the ASIU GPIO controller can be individually muxed to GPIO
+>> function, through interaction with the Cygnus IOMUX controller
 >>
->>       Arnd
->
-> Are you suggesting the tool insert the properties in the DT?  I=E2=80=
-=99m not sure I understand what the point of doing that would be.
+>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Tested-by: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> 
+> Patch applied! But please look at this:
+> 
+>> +#include <linux/gpio.h>
+> 
+> Doesn't just #include <linux/gpio/driver.h> work?
+> 
 
-To insert platform-local properties that mean nothing outside of the
-firmware packaging of the device trees, which is the case here?
+I think I need linux/gpio.h for gpiochip_add_pin_range and some related
+APIs.
 
-I think the idea of having the installer script inserting them is
-quite reasonable in this case.
+>> +static int __init cygnus_gpio_init(void)
+>> +{
+>> +       return platform_driver_probe(&cygnus_gpio_driver, cygnus_gpio_probe);
+>> +}
+>> +arch_initcall_sync(cygnus_gpio_init);
+> 
+> arch_initcall_sync() is a bit brutal.
+> 
+> Can you please investigate if you can have this as a normal device_initcall()
+> utilizing deferred probe if necessary?
+> 
+> Follow-up patches accepted!
+> 
 
+I understand. Further investigation is needed and this may take a while,
+since a lot of our Cygnus drivers depend on GPIO and regulators (and all
+need to be converted to check against deferred probe errors). If
+possible, I'll definitely fix this.
 
--Olof
+> Yours,
+> Linus Walleij
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
