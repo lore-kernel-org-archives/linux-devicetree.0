@@ -1,108 +1,55 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v5 1/4] PCI: Export symbols of PCI functions
-Date: Tue, 10 Mar 2015 15:56:51 -0500
-Message-ID: <20150310205651.GA32204@google.com>
-References: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
- <1425947886-23705-2-git-send-email-rjui@broadcom.com>
+Date: Tue, 10 Mar 2015 14:02:37 -0700
+Message-ID: <54FF5BED.9090302@broadcom.com>
+References: <1425947886-23705-1-git-send-email-rjui@broadcom.com> <1425947886-23705-2-git-send-email-rjui@broadcom.com> <20150310205651.GA32204@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425947886-23705-2-git-send-email-rjui@broadcom.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150310205651.GA32204-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2015 at 05:38:03PM -0700, Ray Jui wrote:
-> Export symbols of the following PCI functions so they can be referenced
-> by a PCI driver compiled as a kernel loadable module:
+Hi Bjorn,
+
+On 3/10/2015 1:56 PM, Bjorn Helgaas wrote:
+> On Mon, Mar 09, 2015 at 05:38:03PM -0700, Ray Jui wrote:
+>> Export symbols of the following PCI functions so they can be referenced
+>> by a PCI driver compiled as a kernel loadable module:
+>>
+>> pci_common_swizzle
+>> pci_create_root_bus
+>> pci_stop_root_bus
+>> pci_remove_root_bus
+>> pci_assign_unassigned_bus_resources
+>> pci_fixup_irqs
 > 
-> pci_common_swizzle
-> pci_create_root_bus
-> pci_stop_root_bus
-> pci_remove_root_bus
-> pci_assign_unassigned_bus_resources
-> pci_fixup_irqs
-
-Have you tested your driver as a loadable module?
-
-If it works to load/unload/reload/etc., I'm OK with exporting these
-symbols.  I would prefer EXPORT_SYMBOL_GPL, though, because these don't
-constitute a very coherent interface right now, and they will likely be
-reworked.  For example, see Yijing Wang's work to sort out the
-pci_bus_add_devices() / resource assignment mess.
-
-Bjorn
-
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> ---
->  drivers/pci/pci.c       |    1 +
->  drivers/pci/probe.c     |    1 +
->  drivers/pci/remove.c    |    2 ++
->  drivers/pci/setup-bus.c |    1 +
->  drivers/pci/setup-irq.c |    1 +
->  5 files changed, 6 insertions(+)
+> Have you tested your driver as a loadable module?
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 81f06e8..fb4a3da 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2492,6 +2492,7 @@ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp)
->  	*pinp = pin;
->  	return PCI_SLOT(dev->devfn);
->  }
-> +EXPORT_SYMBOL(pci_common_swizzle);
->  
->  /**
->   *	pci_release_region - Release a PCI bar
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 8d2f400..eb24ef9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1993,6 +1993,7 @@ err_out:
->  	kfree(b);
->  	return NULL;
->  }
-> +EXPORT_SYMBOL(pci_create_root_bus);
->  
->  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
->  {
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index 8bd76c9..c523159 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -139,6 +139,7 @@ void pci_stop_root_bus(struct pci_bus *bus)
->  	/* stop the host bridge */
->  	device_release_driver(&host_bridge->dev);
->  }
-> +EXPORT_SYMBOL(pci_stop_root_bus);
->  
->  void pci_remove_root_bus(struct pci_bus *bus)
->  {
-> @@ -158,3 +159,4 @@ void pci_remove_root_bus(struct pci_bus *bus)
->  	/* remove the host bridge */
->  	device_unregister(&host_bridge->dev);
->  }
-> +EXPORT_SYMBOL(pci_remove_root_bus);
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index e3e17f3..932c9e5 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1750,3 +1750,4 @@ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
->  	__pci_bus_assign_resources(bus, &add_list, NULL);
->  	BUG_ON(!list_empty(&add_list));
->  }
-> +EXPORT_SYMBOL(pci_assign_unassigned_bus_resources);
-> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
-> index 4e2d595..9d2bbb6 100644
-> --- a/drivers/pci/setup-irq.c
-> +++ b/drivers/pci/setup-irq.c
-> @@ -65,3 +65,4 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
->  	for_each_pci_dev(dev)
->  		pdev_fixup_irq(dev, swizzle, map_irq);
->  }
-> +EXPORT_SYMBOL(pci_fixup_irqs);
-> -- 
-> 1.7.9.5
+> If it works to load/unload/reload/etc., I'm OK with exporting these
+> symbols.  I would prefer EXPORT_SYMBOL_GPL, though, because these don't
+> constitute a very coherent interface right now, and they will likely be
+> reworked.  For example, see Yijing Wang's work to sort out the
+> pci_bus_add_devices() / resource assignment mess.
 > 
+> Bjorn
+
+Yes, I tested the driver with load/unload/reload on Cygnus. Console logs
+are included in my reply to Arnd's email from another email thread.
+
+I'll wait for more feedback from you on the iProc PCIe driver itself.
+But if you have reviewed them and think they are okay then I can go
+ahead and submit v6 with changes to use EXPORT_SYMBOL_GPL.
+
+Let me know.
+
+Thanks,
+
+Ray
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
