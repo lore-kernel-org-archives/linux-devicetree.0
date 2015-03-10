@@ -1,43 +1,34 @@
 From: =?ISO-8859-1?Q?S=F8ren?= Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>
-Subject: [patch v2 3/4] dt-bindings Help for pcf85063
-Date: Tue, 10 Mar 2015 21:34:35 +0100
-Message-ID: <1426019675.5476.21.camel@sanws1.rosetechnology.dk>
+Subject: [patch v2 2/4] pcf85063 is not a trivial device
+Date: Tue, 10 Mar 2015 21:31:09 +0100
+Message-ID: <1426019469.5476.18.camel@sanws1.rosetechnology.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh6Zox4op4iWzw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Soeren Andersen <san at rosetechnology.dk>
 ---
- Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-index 0000000..dcda544
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-@@ -0,0 +1,16 @@
-+* NXP PCF85063		Tiny Real-Time Clock
-+
-+Required properties:
-+- compatible: Should contain "nxp,pcf85063".
-+- reg: I2C address for chip
-+
-+Optional properties:
-+- quartz_load : Internal oscillator capacity for quartz crystals
-+	Values usable for pcf85063 load capacitance are 7pF, 12.5pF
-+
-+Example:
-+	pcf85063: rtc@51 {
-+		compatible = "nxp,pcf85063";
-+		quartz_load = "12.5pF";
-+		reg = <0x51>;
-+	};
-
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index aaa8325..3b1a3c5 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -76,7 +76,6 @@ nuvoton,npct501		i2c trusted platform module (TPM)
+ nxp,pca9556		Octal SMBus and I2C registered interface
+ nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
+ nxp,pcf8563		Real-time clock/calendar
+-nxp,pcf85063		Tiny Real-Time Clock
+ ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI and Embedded TrueFocus
+ pericom,pt7c4338	Real-time Clock Module
+ plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
+    
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
