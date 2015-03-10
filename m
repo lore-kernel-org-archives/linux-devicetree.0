@@ -1,73 +1,79 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] power: max77843_battery: Add Max77843 fuel gauge
- device driver
-Date: Tue, 10 Mar 2015 22:44:14 +0900
-Message-ID: <54FEF52E.7060409@samsung.com>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
- <1425291038-18269-4-git-send-email-jaewon02.kim@samsung.com>
- <20150307201426.GG5233@earth> <54FCEB17.70809@samsung.com>
- <CAJKOXPcLa8jGBS9r=iAbuco5+9=XcjsEFazFtAWinYUQDArkUQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 05/15] musb: Do not use musb_read[b|w] / _write[b|w] wrappers in generic fifo functions
+Date: Tue, 10 Mar 2015 14:43:59 +0100
+Message-ID: <3191852.oa4fdTnq6y@wuerfel>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <11429972.krcjty7oKd@wuerfel> <54FEB1D4.3080700@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAJKOXPcLa8jGBS9r=iAbuco5+9=XcjsEFazFtAWinYUQDArkUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, SangBae Lee <sangbae90.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54FEB1D4.3080700-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2015 07:01 PM, Krzysztof Kozlowski wrote:
-> 2015-03-09 1:36 GMT+01:00 Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
->> On 03/08/2015 05:14 AM, Sebastian Reichel wrote:
->>> Hi,
->>>
->>> On Mon, Mar 02, 2015 at 07:10:36PM +0900, Jaewon Kim wrote:
->>>> From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> This patch adds device driver of max77843 fuel gauge.
->>>> The driver support for battery fuel gauge in Maxim Max77843.
->>>> It is fuel-gauge systems for lithuum-ion batteries in handled and
->>>> portable devices.
->>>>
->>>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>
->>> Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>
->>> I can't take it as is, since it depends on the private header file
->>> of PATCH 1.
->>>
->>> -- Sebastian
->>>
->>
->> This patch reviewed by Sebastian.
->> Could you Please merge that your git tree ?
+On Tuesday 10 March 2015 09:56:52 Hans de Goede wrote:
+> On 10-03-15 09:50, Arnd Bergmann wrote:
+> > On Tuesday 10 March 2015 08:43:22 Hans de Goede wrote:
+> >> On 09-03-15 22:50, Arnd Bergmann wrote:
+> >>> On Monday 09 March 2015 21:40:18 Hans de Goede wrote:
+> >>>> The generic fifo functions already use non wrapped accesses in various
+> >>>> cases through the iowrite#_rep functions, and all platforms which override
+> >>>> the default musb_read[b|w] / _write[b|w] functions also provide their own
+> >>>> fifo access functions, so we can safely drop the unnecessary indirection
+> >>>> from the fifo access functions.
+> >>>>
+> >>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>>>
+> >>>
+> >>> The patch looks reasonably, but the description seem misleading.
+> >>> I believe the real reason why it's ok to use __raw_writew for the
+> >>> FIFO is that a FIFO by definition is using CPU endian access for
+> >>> copying byte streams from memory, which is unlike any other MMIO
+> >>> register that requires fixed-endian accessors.
+> >>
+> >> I'm not sure that that is the case here, this fifo allows reading
+> >> 4 bytes at a time using 32 bit word access, so endianness may come
+> >> into play. This patch is safe however since all existing users of
+> >> the generic fifo_read / write helpers which this patch touches, are
+> >> also using the generic musb_read[b|w] / _write[b|w] functions which
+> >> are just __raw_foo wrappers, so there is no functional change, which
+> >> is what the commit message tries to say.
+> >
+> > This probably means that the generic musb helpers are not safe to use
+> > on big-endian ARM systems (but may work on MIPS). The only one currently
+> > not using the generic helpers is blackfin, which is fixed to little
+> > endian.
+> >
+> >> Note that sunxi needs this function because of the register address
+> >> translation the sunxi_musb_readb / writeb wrappers are doing which
+> >> does not know how to deal with fifo data, and besides that it should
+> >> make the generic read / write fifo helpers somewhat faster by removing
+> >> an indirect function call.
+> >
+> > Your sunxi_musb_readw/writew functions however also are endian-safe
+> > and seem to get this part right, unlike all other platforms that use
+> > the generic __raw_*() accessors. With this patch applied, it should
+> > actually work fine, and it would work on other platforms as well
+> > if we change all __raw_*() calls outside of musb_default_write_fifo()
+> > and musb_default_read_fifo() to use *_relaxed() instead.
 > 
-> Hi,
-> 
-> Sorry for late response, but I finally got some time to look at this.
-> This driver looks very similar to max17042_battery.c fuel gauge
-> driver. Obtaining some properties looks exactly the same. The
-> difference seems to be in new properties. The I2C address is the same.
-> 
-> I highly recommend to extend the max17042 driver instead. It already
-> supports also max17047, max17050 and max77693.
-> 
-> Best regards,
-> Krzysztof
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> I think that that change falls outside of the scope of this patchset.
 
-OK. I will follow your opinion about fuel gauge. I will extend the max17042 driver.
-After test on my board, I will send a new patch set.
+Yes, sorry for not being clear about that.
 
-Best regards,
-Beomho Seo
+> I agree that it would be probably a good idea to get rid of the
+> __raw_foo usage in musb, which is why I've used the non __raw
+> versions in the sunxi glue, but as said I believe this falls outside
+> of the scope of this patchset. All my preparation patches for adding
+> sunxi support carefully do not make any functional changes, as I
+> do not want to cause regressions on hardware which I cannot test.
+
+Right.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
