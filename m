@@ -1,94 +1,106 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 12/15] ARM: dts: sun4i: Enable USB DRC on
- Chuwi V7 CW0825
-Date: Tue, 10 Mar 2015 16:23:09 +0100
-Message-ID: <54FF0C5D.3090706@redhat.com>
-References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-13-git-send-email-hdegoede@redhat.com> <20150310150741.GW5085@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
+ samplerate and samplewidth constraints
+Date: Tue, 10 Mar 2015 17:25:30 +0200
+Message-ID: <54FF0CEA.6040007@ti.com>
+References: <cover.1425303942.git.jsarha@ti.com>
+ <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
+ <54F4C0F2.8000201@metafoo.de> <54F5884A.1090702@ti.com>
+ <20150303113041.GM21293@sirena.org.uk> <54F5A25F.6090904@ti.com>
+ <54F5D3C2.20705@metafoo.de> <54F6B8D0.4070904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB2MY7STQKGQEJPKFRSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150310150741.GW5085@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54F6B8D0.4070904@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, peter.ujfalusi@ti.com, moinejf@free.fr, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 03/10/2015 04:07 PM, Maxime Ripard wrote:
-> Hi Hans,
+On 03/04/15 09:48, Jyri Sarha wrote:
+> On 03/03/2015 05:31 PM, Lars-Peter Clausen wrote:
+>> On 03/03/2015 01:00 PM, Jyri Sarha wrote:
+>>> On 03/03/2015 01:30 PM, Mark Brown wrote:
+>>>> On Tue, Mar 03, 2015 at 12:09:14PM +0200, Jyri Sarha wrote:
+>>>>> On 03/02/2015 09:58 PM, Lars-Peter Clausen wrote:
+>>>>
+>>>>>> Can you include a description why this is needed and how and when
+>>>>>> it is
+>>>>>> supposed to be used?
+>>>>
+>>>>> Would this addition do:
+>>>>> ------------------------------------------------------------
+>>>>> These constraints help to disable the sample-format and sample-rate
+>>>>> combinations that do not properly work on a specific HW.
+>>>>> ------------------------------------------------------------
+>>>>
+>>>> Not entirely...
+>>>>
+>>>>> The reason why we need these is coming from limitations in McASP clock
+>>>>> generation. With a simple divider one can only produce certain
+>>>>> bit-clocks.
+>>>>> With those bit-clocks we can only play/capture some sample-rate and
+>>>>> sample-width combinations accurately.
+>>>>
+>>>>> The McASP driver could try to set the constraints automatically.
+>>>>> However,
+>>>>> since the constraint code can not select sample-width and sample-rate
+>>>>> combinations there is a compromise to be made between them. Making
+>>>>> such
+>>>>> compromises automatically does not usually work that well.
+>>>>
+>>>> ...this is more the point.  Perhaps the constraints language needs
+>>>> improvement here?
+>>>>
+>>>
+>>> Improving constraint functionality would certainly help, however the way
+>>> that code works is beyond my understanding and I do not believe such an
+>>> improvement would be coming from anybody else any time soon either.
+>>
+>> Restricting the available sample formats based on the sample rate and
+>> vice versa is possible with the current constraint framework. Take a
+>> look at what Peter Rosin recently did to the pcm512x driver. Your
+>> restrictions sound very similar to what he did.
+>>
 >
-> On Mon, Mar 09, 2015 at 09:40:25PM +0100, Hans de Goede wrote:
->> Enable the otg/drc usb controller on the Chuwi V7 CW0825 tablet.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts | 31 +++++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
->> index 97fca89..034396c 100644
->> --- a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
->> +++ b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
->> @@ -111,6 +111,26 @@
->>   	status = "okay";
->>   };
->>
->> +&pio {
->> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
->> +		allwinner,pins = "PH4";
->> +		allwinner,function = "gpio_in";
->> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +	};
->> +
->> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
->> +		allwinner,pins = "PH5";
->> +		allwinner,function = "gpio_in";
->> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
->> +	};
->> +};
->> +
->> +&reg_usb0_vbus {
->> +	status = "okay";
->> +};
->> +
->>   &reg_usb2_vbus {
->>   	status = "okay";
->>   };
->> @@ -121,7 +141,18 @@
->>   	status = "okay";
->>   };
->>
->> +&usb_otg {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&usb0_id_detect_pin
->> +		     &usb0_vbus_detect_pin>;
->> +	id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
->> +	vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
->> +	dr_mode = "otg";
+> Interesting. It indeed looks like the rule functionality could do what I
+> want. I'll look into than. Thanks!
 >
-> Is there a reason to not put that in the DTSI?
 
-This is not in the dtsi because it is board specific.
+I went ahead and implemented in mcasp driver a similar rule to the one 
+already found from pcm512x. The rule indeed forbids the sample-rate and 
+fame-size combinations that can not be played accurately.
 
-> All the users seem to be wiring it as OTG.
+However, once a user tries to play a bad sample-rate and fame-size 
+combination, aplay greets him with:
 
-Sofar I've only enabled the otg on a handful of boards,
-the otg on the Mele-M9 for example is connected to a usb->sata
-bridge and as such should be brought up in host only mode.
+aplay: pcm_params.c:170: snd1_pcm_hw_param_get_min: Assertion 
+`!snd_interval_empty(i)' failed.
 
-And on the wobo-i5 (which I still need to create a dts file for)
-the otg is connected to an usb wifi module.
+And even worse, playing to plughw gives the same error. So in practice 
+the rule is pretty useless. The user is in the same situation as before: 
+His use-case does not work and he has no idea why.
 
-Regards,
+I guess in the long run the ideal solution would making the user-space 
+behave better in such a situation, but for now I thing a human selected 
+constraints are the only proper way to solve the problem.
 
-Hans
+Putting the constraints into dts may not be the most elegant choice, so 
+I look into adding a new compatible match for each new card and hard 
+code the DAI-link configurations for each match in the code instead of dts.
+
+I'll send the rule patch too (as soon as I have it cleaned it up) as it 
+does hurt to have it, even if it is not enough to make all the 
+configurations properly usable.
+
+Best regards,
+Jyri
