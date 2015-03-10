@@ -1,251 +1,61 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
-Date: Tue, 10 Mar 2015 10:41:42 +0100
-Message-ID: <20150310094142.GD24885@pengutronix.de>
-References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
- <1425888603-25800-3-git-send-email-s.hauer@pengutronix.de>
- <7h61a94zy0.fsf@deeprootsystems.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/3] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Tue, 10 Mar 2015 10:43:37 +0100
+Message-ID: <79223422.KFbmI1BzE4@phil>
+References: <1429128.MSqYm0qZ9p@phil> <2297963.iMSNqyfSUx@phil>
+ <1425979013.3141.17.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7h61a94zy0.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1425979013.3141.17.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, broonie@kernel.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-+Cc James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-On Mon, Mar 09, 2015 at 02:35:03PM -0700, Kevin Hilman wrote:
-> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> 
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> A bit of a changelog here would be useful describing this driver, that
-> it's only covering part of the device (e.g. power controller) with more
-> to come, dependency on the syscon driver, etc.
-> 
-> > +/*
-> > + * The Infracfg unit has bus protection bits. We enable the bus protection
-> > + * for disabled power domains so that the system does not hang when some unit
-> > + * accesses the bus while in power down.
-> > + */
-> 
-> Hmm, why don't you want to know if some device is accessing another
-> device which is in a domain that is powered down?   Seems like this is a
-> good way to hide real bugs.
-
-How I understand it the system just hangs on erroneous accesses without
-these protection bits enabled, so enabling them at least makes sure we
-can output something.
-I must admit though that my understanding of these bits is quite limited
-and the only user of this driver I have available here (audio) doesn't
-make use of these protection bits, so I can't test here.
-
-James, could you shed some light on this issue?
-
-> > +	val = readl(ctl_addr);
-> > +	val |= PWR_ON_BIT;
-> > +	writel(val, ctl_addr);
-> > +	val |= PWR_ON_2ND_BIT;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	/* wait until PWR_ACK = 1 */
-> > +	expired = jiffies + HZ;
-> > +	while (!(readl(scp->base + SPM_PWR_STATUS) & data->sta_mask) ||
-> > +			!(readl(scp->base + SPM_PWR_STATUS_2ND) & data->sta_mask)) {
-> > +		cpu_relax();
-> > +		if (time_after(jiffies, expired))
-> > +			return -EIO;
-> 
-> hmm, seems like you'd want a dev_warn() or simliar here if this times
-> out and fails.  There's a bunch of these below too.
-
-Ok, will add.
-
-> > +	/* Clear bus protection bits */
-> > +	if (data->bus_prot_mask) {
-> > +		u32 mask = data->bus_prot_mask;
-> > +		struct regmap *infracfg = scp->infracfg;
-> > +
-> > +		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
-> > +
-> > +		expired = jiffies + HZ;
-> > +
-> > +		while (1) {
-> > +			u32 val;
-> > +
-> > +			ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> > +			if (ret)
-> > +				return ret;
-> > +
-> > +			if (!(val & mask))
-> > +				break;
-> > +
-> > +			cpu_relax();
-> > +			if (time_after(jiffies, expired))
-> > +				return -EIO;
-> > +		}
-> > +	}
-> 
-> This whole "Clear bus protection bits" part seems like it should be an
-> API in the infracfg driver.
-
-Ok, can do.
-
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +static int scpsys_power_off(struct generic_pm_domain *genpd)
-> > +{
-> > +	struct scp_domain *scpd = container_of(genpd, struct scp_domain, pmd);
-> > +	struct scp *scp = scpd->scp;
-> > +	struct scp_domain_data *data = scpd->data;
-> > +	unsigned long expired;
-> > +	void __iomem *ctl_addr = scpd->scp->base + data->ctl_offs;
-> > +	u32 sram_pdn_ack = data->sram_pdn_ack_bits;
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	/* set bus protection bits */
-> > +	if (data->bus_prot_mask) {
-> > +		struct regmap *infracfg = scp->infracfg;
-> > +		u32 mask = data->bus_prot_mask;
-> > +
-> > +		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
-> > +
-> > +		expired = jiffies + HZ;
-> > +
-> > +		while (1) {
-> > +			ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> > +			if (ret)
-> > +				return ret;
-> > +
-> > +			if ((val & mask) == mask)
-> > +				break;
-> > +
-> > +			cpu_relax();
-> > +			if (time_after(jiffies, expired))
-> > +				return -EIO;
-> > +		}
-> > +	}
-> 
-> As with the 'clear bus protection bits', seems like this should be a
-> call into the infracfg driver.
-> 
-> > +	val = readl(ctl_addr);
-> > +	val |= data->sram_pdn_bits;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	/* wait until SRAM_PDN_ACK all 1 */
-> > +	expired = jiffies + HZ;
-> > +	while ((readl(ctl_addr) & sram_pdn_ack) != sram_pdn_ack) {
-> > +		cpu_relax();
-> > +		if (time_after(jiffies, expired))
-> > +			return -EIO;
-> > +	}
-> > +
-> > +	val |= PWR_ISO_BIT;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	val &= ~PWR_RST_B_BIT;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	val |= PWR_CLK_DIS_BIT;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	val &= ~PWR_ON_BIT;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	val &= ~PWR_ON_2ND_BIT;
-> > +	writel(val, ctl_addr);
-> > +
-> > +	/* wait until PWR_ACK = 0 */
-> > +	expired = jiffies + HZ;
-> > +	while ((readl(scp->base + SPM_PWR_STATUS) & data->sta_mask) ||
-> > +			(readl(scp->base + SPM_PWR_STATUS_2ND) & data->sta_mask)) {
-> > +		cpu_relax();
-> > +		if (time_after(jiffies, expired))
-> > +			return -EIO;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int scpsys_probe(struct platform_device *pdev)
-> > +{
-> > +	struct genpd_onecell_data *pd_data;
-> > +	struct resource *res;
-> > +	int i;
-> > +	struct scp *scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
-> 
-> This might return NULL...
-
-Actually I recently learned that this never fails [1], but the check is
-missing accidently here. Will add it of course.
-
-[1] http://lwn.net/Articles/627419/
-
-> 
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	scp->base = devm_ioremap_resource(&pdev->dev, res);
-> 
-> ... and, boom.
-> 
-> > +	if (IS_ERR(scp->base))
-> > +		return PTR_ERR(scp->base);
-> > +
-> > +	pd_data = &scp->pd_data;
-> > +
-> > +	scp->infracfg = syscon_regmap_lookup_by_compatible("mediatek,mt8173-infracfg");
-> > +	if (IS_ERR(scp->infracfg))
-> > +		return PTR_ERR(scp->infracfg);
-> > +
-> > +	pd_data->domains = scp->pmd;
-> > +	pd_data->num_domains = NUM_DOMAINS;
-> > +
-> > +	for (i = 0; i < NUM_DOMAINS; i++) {
-> > +		struct scp_domain *scpd = &scp->domains[i];
-> > +		struct generic_pm_domain *pmd = &scpd->pmd;
-> > +
-> > +		scp->pmd[i] = pmd;
-> > +		scpd->data = &scp_domain_data[i];
-> > +		scpd->scp = scp;
-> > +
-> > +		pmd->name = scp_domain_data[i].name;
-> > +		pmd->power_off = scpsys_power_off;
-> > +		pmd->power_on = scpsys_power_on;
-> > +		pmd->power_off_latency_ns = 20000;
-> > +		pmd->power_on_latency_ns = 20000;
-> 
-> Are the latencies for all domains really the same?   Seems like the
-> latencies should be part of the per-domain data.
-> 
-> Where did these numbers come from?  HW specs, measurement, etc?
-
-They are from measurement. actually they are around 11us.
-
-> 
-> Also, eventually, these latencies can (and should) come from DT
-> after the support from Geert[1] is merged, so putting them in the data
-> struct for now
-
-I agree for domains created from regulators somewhere on the board, but
-in this case the domains are completely SoC internal. The
-"mediatek,mt8173-scpsys" compatible gives me enough information so I see
-no point adding this to the device tree.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGhpbGlwcCwKCkFtIERpZW5zdGFnLCAxMC4gTcOkcnogMjAxNSwgMTA6MTY6NTMgc2Nocmll
+YiBQaGlsaXBwIFphYmVsOgoKW2N1dCB0aGUgb2J2aW91cyBzdHVmZiBJIG5lZWQgdG8gZml4XQoK
+PiBBbSBEaWVuc3RhZywgZGVuIDEwLjAzLjIwMTUsIDAwOjIyICswMTAwIHNjaHJpZWIgSGVpa28g
+U3R1ZWJuZXI6Cj4gPiBAQCAtODc5LDYgKzg4MywxMiBAQCBzdGF0aWMgaW50IGR3X2hkbWlfcGh5
+X2luaXQoc3RydWN0IGR3X2hkbWkgKmhkbWkpCj4gPiAKPiA+ICAJaW50IGksIHJldDsKPiA+ICAJ
+Ym9vbCBjc2NvbiA9IGZhbHNlOwo+ID4gCj4gPiArCWlmIChoZG1pLT5uc3VwcGxpZXMgPiAwKSB7
+Cj4gPiArCQlyZXQgPSByZWd1bGF0b3JfYnVsa19lbmFibGUoaGRtaS0+bnN1cHBsaWVzLCBoZG1p
+LT5zdXBwbGllcyk7Cj4gPiArCQlpZiAocmV0KQo+ID4gKwkJCXJldHVybiByZXQ7Cj4gPiArCX0K
+PiA+ICsKPiAKPiBBcmUgdGhlc2UgcmVhbGx5IHN1cHBsaWVzIHRvIHRoZSBQSFkgb3IgaXMgdGhp
+cyBqdXN0IGEgY29udmVuaWVudCBwbGFjZQo+IHRvIGVuYWJsZSB0aGVtPyBMb29raW5nIGF0IHRo
+ZSBpLk1YNiBkb2NzLCBJIHN1cHBvc2UgeWVzLgoKQWNjb3JkaW5nIHRvIHRoZSBUUk0sIHRoZSBz
+dXBwbGllcyBhcmUgIkRDIHN1cHBseSB2b2x0YWdlIGZvciBBbmFsb2cgcGFydCBvZiAKSERNSSIs
+IHNvIEknZCB0aGluayBwaHkgc3VwcGxpZXMuCgo+IAo+ID4gIAkvKmNoZWNrIGNzYyB3aGV0aGVy
+IG5lZWRlZCBhY3RpdmF0ZWQgaW4gSERNSSBtb2RlICovCj4gPiAgCWNzY29uID0gKGlzX2NvbG9y
+X3NwYWNlX2NvbnZlcnNpb24oaGRtaSkgJiYKPiA+ICAJCj4gPiAgCQkJIWhkbWktPmhkbWlfZGF0
+YS52aWRlb19tb2RlLm1kdmkpOwo+ID4gCj4gPiBAQCAtMTEwNSw2ICsxMTE1LDkgQEAgc3RhdGlj
+IHZvaWQgZHdfaGRtaV9waHlfZGlzYWJsZShzdHJ1Y3QgZHdfaGRtaQo+ID4gKmhkbWkpCj4gPiAK
+PiA+ICAJZHdfaGRtaV9waHlfZW5hYmxlX3RtZHMoaGRtaSwgMCk7Cj4gPiAgCWR3X2hkbWlfcGh5
+X2VuYWJsZV9wb3dlcihoZG1pLCAwKTsKPiA+IAo+ID4gKwlpZiAoaGRtaS0+bnN1cHBsaWVzID4g
+MCkKPiA+ICsJCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoaGRtaS0+bnN1cHBsaWVzLCBoZG1pLT5z
+dXBwbGllcyk7Cj4gPiArCj4gPiAKPiA+ICAJaGRtaS0+cGh5X2VuYWJsZWQgPSBmYWxzZTsKPiA+
+ICAKPiA+ICB9Cj4gPiAKPiA+IEBAIC0xNTQ5LDcgKzE1NjIsOCBAQCBzdGF0aWMgaW50IGR3X2hk
+bWlfcmVnaXN0ZXIoc3RydWN0IGRybV9kZXZpY2UgKmRybSwKPiA+IHN0cnVjdCBkd19oZG1pICpo
+ZG1pKT4gCj4gPiAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
+ZXZpY2UgKm1hc3RlciwKPiA+ICAKPiA+ICAJCSB2b2lkICpkYXRhLCBzdHJ1Y3QgZHJtX2VuY29k
+ZXIgKmVuY29kZXIsCj4gPiAgCQkgc3RydWN0IHJlc291cmNlICppb3JlcywgaW50IGlycSwKPiA+
+IAo+ID4gLQkJIGNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxhdF9kYXRhKQo+ID4g
+KwkJIGNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxhdF9kYXRhLAo+ID4gKwkJIHN0
+cnVjdCByZWd1bGF0b3JfYnVsa19kYXRhICpzdXBwbGllcywgaW50IG5zdXBwbGllcykKPiAKPiBJ
+J20gbm90IHN1cmUgSSBsaWtlIHRoaXMgZnVuY3Rpb24gc3Byb3V0aW5nIHNvIG1hbnkgcGFyYW1l
+dGVycy4gSXMgdGhlcmUKPiBhIGdvb2QgcmVhc29uIG5vdCB0byBhZGQgdGhpcyB0byBzdHJ1Y3Qg
+ZHdfaGRtaV9wbGF0X2RhdGE/CgpOb3BlLCBtb3ZpbmcgdGhpcyB0byBwbGF0ZGF0YSBzb3VuZCBz
+ZW5zaWJsZSBhbmQgSSdsbCBnaXZlIHRoaXMgYSB0cnkgOi0pCgoKSGVpa28KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
