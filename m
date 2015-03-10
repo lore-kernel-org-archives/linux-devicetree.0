@@ -1,44 +1,95 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 2/2] ARM: dts: rockchip: add hdmi analog power supplies to
- rk3288 boards
-Date: Tue, 10 Mar 2015 22:46:12 +0100
-Message-ID: <8697545.hEXqZSJ3TS@phil>
-References: <2265807.RXHBN9kUi4@phil>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Tue, 10 Mar 2015 18:01:36 -0400
+Message-ID: <CAF6AEGvquV=RMv87CAP4C8JHXjjMk4Xbn1oD4pYcq0YaSFLL+A@mail.gmail.com>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>
+	<CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
+	<3A588B25-66ED-4BB5-8C8F-D050D8A2F9F3@codeaurora.org>
+	<10886228.vUHyKm1ubP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2265807.RXHBN9kUi4@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <10886228.vUHyKm1ubP@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSByZWNlbnRseSBhZGRlZCBoZG1pIHBvd2VyIHN1cHBsaWVzIHRvIGV2YiBhbmQgZmly
-ZWZseSBib2FyZHMuCgpTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
-LmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaSAgICAgfCAyICsrCiBh
-cmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS5kdHNpIHwgMiArKwogMiBmaWxlcyBjaGFu
-Z2VkLCA0IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMy
-ODgtZXZiLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZXZiLmR0c2kKaW5kZXggNWU4
-OTVhNS4uZWRkNDVhMCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWV2Yi5k
-dHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaQpAQCAtMTE4LDYgKzEx
-OCw4IEBACiB9OwogCiAmaGRtaSB7CisJYXZkZDF2MC1zdXBwbHkgPSA8JnZkZDEwX2xjZD47CisJ
-YXZkZDF2OC1zdXBwbHkgPSA8JnZjYzE4X2xjZD47CiAJZGRjLWkyYy1idXMgPSA8JmkyYzU+Owog
-CXN0YXR1cyA9ICJva2F5IjsKIH07CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMy
-ODgtZmlyZWZseS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHkuZHRzaQpp
-bmRleCBlNmY4NzNhLi4wOWZjZGVkIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMy
-ODgtZmlyZWZseS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1maXJlZmx5LmR0
-c2kKQEAgLTE4MCw2ICsxODAsOCBAQAogfTsKIAogJmhkbWkgeworCWF2ZGQxdjAtc3VwcGx5ID0g
-PCZ2ZGQxMF9sY2Q+OworCWF2ZGQxdjgtc3VwcGx5ID0gPCZ2Y2MxOF9sY2Q+OwogCWRkYy1pMmMt
-YnVzID0gPCZpMmM1PjsKIAlzdGF0dXMgPSAib2theSI7CiB9OwotLSAKMi4xLjQKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Mar 10, 2015 at 3:52 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 10 March 2015 13:10:08 Kumar Gala wrote:
+>> >>>>>>>>> The top level qcom,msm-id and qcom,board-id are utilized b=
+y bootloaders
+>> >>>>>>>>>> on Qualcomm MSM platforms to determine which device tree =
+should be
+>> >>>>>>>>>> utilized and passed to the kernel.
+>> >>>>>>>>>>
+>> >>>>>>>>>> Cc: <devicetree@vger.kernel.org>
+>> >>>>>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+>> >>>>>>>>>
+>> >>>>>>>>> Is this the special magic that allows qcom bootloaders to =
+take a kernel
+>> >>>>>>>>> plus multiple DTBs and figure out which DTB to pass?
+>> >>>>>>>>>
+>> >>>>>>>>> Kevin
+>> >>>>>>>>
+>> >>>>>>>> yes
+>> >>>>>>>
+>> >>>>>>> That's a bummer.
+>> >>>>>>>
+>> >>>>>>> Luckily, the solution for upstream is still quite simple: Pr=
+ovide only
+>> >>>>>>> one devicetree, and it'll be used, right?
+>> >>>>>>
+>> >>>>>> We can provide only one, we still need the IDs in the DT.
+>> >>>>>
+>> >>>>> How are the DTS provided? Concatenated with the kernel, or in =
+a
+>> >>>>> wrapped data format? Or in a separate partition from the kerne=
+l?
+>> >>>>
+>> >>>> Its a wrapped data format that is than concatenated with the ke=
+rnel if I remember correctly.
+>> >>>
+>> >>> Then you should be able to create a tool that can write this con=
+catenated
+>> >>> format and insert these properties from a table that matches the=
+ boot
+>> >>> loader, right?
+>> >>>
+>> >>>      Arnd
+>> >>
+>> >> Are you suggesting the tool insert the properties in the DT?  I=E2=
+=80=99m not sure I understand what the point of doing that would be.
+>> >
+>> > To insert platform-local properties that mean nothing outside of t=
+he
+>> > firmware packaging of the device trees, which is the case here?
+>> >
+>> > I think the idea of having the installer script inserting them is
+>> > quite reasonable in this case.
+>> >
+>> >
+>> > -Olof
+>>
+>> These values are static, so not sure what the point of having the in=
+staller script do that?
+>>
+>
+> It combines two hacks to work around a nonstandard boot loader.
+> Once the bootloader is fixed, you can stop using that script.
+>
+
+still sounds like an extra hurdle for distro's..  can't you just add
+the extra entry in the dts files w/ a comment about workaround for
+bootloader (and then possibly *not* document the property)?
+
+BR,
+-R
+
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-m=
+sm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
