@@ -1,73 +1,63 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v5 12/12] ARM: dts: sun6i: hummingbird: Add basic support for the WiFi module
-Date: Tue, 10 Mar 2015 19:59:23 +0800
-Message-ID: <1425988764-23618-13-git-send-email-wens@csie.org>
-References: <1425988764-23618-1-git-send-email-wens@csie.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] regulator: don't emit errors in
+ {devm_}regulator_bulk_get when defering
+Date: Tue, 10 Mar 2015 12:07:50 +0000
+Message-ID: <20150310120750.GE28806@sirena.org.uk>
+References: <1429128.MSqYm0qZ9p@phil>
+ <9261130.uPvufuEFrr@phil>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Wr26kid6E8rFCMyi"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425988764-23618-1-git-send-email-wens@csie.org>
+Content-Disposition: inline
+In-Reply-To: <9261130.uPvufuEFrr@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, djkurtz@chromium.org, Yakir Yang <ykk@rock-chips.com>, Fabio Estevam <fabio.estevam@freescale.com>, dianders@chromium.org, Andy Yan <andy.yan@rock-chips.com>, Mark Yao <mark.yao@rock-chips.com>, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Hummingbird A31 has an AMPAK AP6210 WiFi+Bluetooth module. The
-WiFi part is a BCM43362 IC connected to MMC1 in the A31 SoC via SDIO.
-The IC also takes a power enable signal via GPIO.
 
-The WiFi module supports out-of-band interrupt signaling via GPIO,
-but this is not supported in this patch.
+--Wr26kid6E8rFCMyi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+On Tue, Mar 10, 2015 at 12:22:06AM +0100, Heiko Stuebner wrote:
+> When {devm_}regulator_get returns -EPROBE_DEFER the driver in question will
+> try probing again at a later time. So don't spam the log with failure messages
+> as this is an expected result of probe ordering.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index d13c88c6509a..25a3ef49bb71 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -61,6 +61,11 @@
- 	chosen {
- 		bootargs = "earlyprintk console=ttyS0,115200";
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 */
-+	};
- };
- 
- &ehci0 {
-@@ -127,6 +132,16 @@
- 	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>, <&wifi_reset_pin_hummingbird>;
-+	vmmc-supply = <&vcc_wifi>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
-@@ -138,6 +153,13 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
-+
-+	wifi_reset_pin_hummingbird: wifi_reset_pin@0 {
-+		allwinner,pins = "PG10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
- 
- &p2wi {
--- 
-2.1.4
+> -			dev_err(dev, "Failed to get supply '%s': %d\n",
+> -				consumers[i].supply, ret);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "Failed to get supply '%s': %d\n",
+> +					consumers[i].supply, ret);
+
+No, this is not good - you get a nice quiet boot even if the regulator
+does not appear which means people have no idea why the driver isn't
+loading.  That's not a good user experience, silent error handling is
+the main problem I see people running into trying to get their systems
+up and running these days.
+
+Really deferred probe is just fundamentally noisy since it's
+intentionally tolerating errors like this and of course a lot of the
+noise comes from the deferral messages the core prints.
+
+This is also not really connected to the series you're posting it in...
+
+--Wr26kid6E8rFCMyi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU/t6WAAoJECTWi3JdVIfQ7eEH/2J2gcg/F7qtu2lU8XD1JRJQ
+5LPE2bjm96nmyrH3cge41SicMsemkAakgJN5K18SXigYCW+FPYtBTibwkncSXgJr
+3ljSe6Qiuv9LToz5cIKCjxXZMbA06YGlScpbDl7y0BCBqISZCENklZZrKfM2f4+8
+B9evGBZGqWN2xFsMZz+ZGIMXx47uL2pVH0b0bzJttAlnk+xdpLLdhHfAjl8Y8sdm
+npzyJJ6lHV1ipXLjcoPmfy6UXIdftQ5ztc/QU1q5DeSJL8MwVr1/lS4K6MfFcB5B
+2QgN+Z/0TH/80KUDIZb5E+XTQ6lrjRiSWlA96BogLdWf5v6esD+O27POMtm7wB0=
+=4ehk
+-----END PGP SIGNATURE-----
+
+--Wr26kid6E8rFCMyi--
