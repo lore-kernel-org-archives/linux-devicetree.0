@@ -1,34 +1,33 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 12/18] dt-bindings: Document the STM32 USART bindings
-Date: Tue, 10 Mar 2015 16:45:59 +0100
-Message-ID: <CALszF6BEYTAF9FiQQB9wF74btVbaMYPgSTRz41-LbhDUnY_37w@mail.gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1424455277-29983-13-git-send-email-mcoquelin.stm32@gmail.com>
-	<38153432.AWA0ogMaoK@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Tue, 10 Mar 2015 16:48:31 +0100
+Message-ID: <2300824.dcEMS7aYJa@wuerfel>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com> <2223973.a64rBcZvaA@wuerfel> <20150310142805.GN5264@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <38153432.AWA0ogMaoK@wuerfel>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150310142805.GN5264-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-10 16:08 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
-> On Friday 20 February 2015 19:01:11 Maxime Coquelin wrote:
->> +
->> +Example:
->> +usart1: usart@40011000 {
->> +       compatible = "st,stm32-usart";
->>
->
-> Please use generic node names everywhere. The standard name for a serial
-> port is "serial".
+On Tuesday 10 March 2015 07:28:05 Tony Lindgren wrote:
+> 
+> Oops I forgot about the omap3-sbc-t3730, so yes we have to keep the
+> platform data a little bit longer. But nothing stopping us moving
+> all the other ones to use a proper device tree based configuration.
+> 
 
-I already had the remark, and it is already fixed in the next version.
+For all I can tell, the t3730 board file does not support wl12xx
+at the moment, only the dts file does.
 
-Thanks,
-Maxime
+If we do what Sekhar suggested and drop wl12xx support from
+the DA850 EVM board file, we can fix all wlcore users.
 
->
->         Arnd
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
