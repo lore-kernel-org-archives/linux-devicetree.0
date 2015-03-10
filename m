@@ -1,666 +1,115 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v5 3/4] pci: iproc: Add Broadcom iProc PCIe support
-Date: Tue, 10 Mar 2015 15:22:36 -0700
-Message-ID: <54FF6EAC.90603@broadcom.com>
-References: <1425947886-23705-1-git-send-email-rjui@broadcom.com> <1425947886-23705-4-git-send-email-rjui@broadcom.com> <20150310214010.GB32204@google.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Tue, 10 Mar 2015 23:33:51 +0100
+Message-ID: <54FF714F.4010303@redhat.com>
+References: <1425131285-8640-1-git-send-email-codekipper@gmail.com> <20150303071635.GC4713@lukather> <54F568F8.1040104@redhat.com> <20150303082209.GE4713@lukather> <54F5B51F.6030609@redhat.com> <20150303135847.GH4911@lukather> <54FED277.4040000@redhat.com> <20150310184449.GZ5085@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150310214010.GB32204@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Yijing Wang <wangyijing@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBV7C7WTQKGQECI6ECRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150310184449.GZ5085@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi,
 
-On 3/10/2015 2:40 PM, Bjorn Helgaas wrote:
-> [+cc Rob, Yijing]
-> 
-> On Mon, Mar 09, 2015 at 05:38:05PM -0700, Ray Jui wrote:
->> This adds the support for Broadcom iProc PCIe controller
+On 03/10/2015 07:44 PM, Maxime Ripard wrote:
+> On Tue, Mar 10, 2015 at 12:16:07PM +0100, Hans de Goede wrote:
+>> Hi,
 >>
->> pcie-iproc.c servers as the common core driver, and front-end bus
->> interface needs to be added to support different bus interfaces
+>> On 03-03-15 14:58, Maxime Ripard wrote:
+>>> On Tue, Mar 03, 2015 at 02:20:31PM +0100, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 03-03-15 09:22, Maxime Ripard wrote:
+>>>>> On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
+>>>>>>>> +/ {
+>>>>>>>> +	model = "Mele I7 Quad top set box";
+>>>>>>>> +	compatible = "mele,i7", "allwinner,sun6i-a31";
+>>>>>>>> +
+>>>>>>>> +	chosen {
+>>>>>>>> +		bootargs = "earlyprintk console=ttyS0,115200";
+>>>>>>>
+>>>>>>> Using earlyprintk by default is a bad idea if the kernel is configured
+>>>>>>> with DEBUG_LL support for another SoC.
+>>>>>>
+>>>>>> While on this subject, u-boot now sets the chosen/stdout-path property
+>>>>>> up by default, which means that the kernel will do the right thing by
+>>>>>> default. So we we really do not need any bootargs= in our dts files.
+>>>>>
+>>>>> I just tested that this weekend, and it turned out that the kernel
+>>>>> couldn't use it so far (ie, no output until init takes over and setup
+>>>>> a TTY on ttyS0).
+>>>>>
+>>>>> Was it working for you?
+>>>>
+>>>> Yes, note that the kernel only honors the stdout-path property if
+>>>> there is no console= argument present if there is a console= argument
+>>>> present on the kernel cmdline then that will overrule the stdout-path
+>>>> property
+>>>
+>>> Yeah, I removed the bootargs entirely.
+>>>
+>>>> Which board did you test with, and what u-boot and kernel version ?
+>>>
+>>> I tested it on my A31 hummingbird, with allwinner's u-boot, but with
+>>> /chosen/stdout-path hardcoded to "serial0:115200n8", with a 4.0-rc1
+>>> kernel.
 >>
->> pcie-iproc-pltfm.c contains the support for the platform bus interface
+>> I'm not sure if stdout-path supports aliases this is what u-boot is using,
+>> and which works fine (with 4.0-rc1 kernel): "/soc@01c00000/serial@01c28000:115200"
+>
+> I gave that another try, and it worked like a charm, so it really
+> looks like an instance of PEBKAC.
+>
+>>> But it might very well just be me. We just tested it on a Marvell
+>>> board (that uses the same serial driver) this morning and it was fine,
+>>> so I don't think it's really worth worrying about this :)
+>>>
+>>>>>> Currently we've a random mix where we do have bootargs in some, but
+>>>>>> not in most sunxi dts files. I believe we should simply remove it
+>>>>>> everywhere...
+>>>>>
+>>>>> We used to set them in SoCs that are not supported by U-boot yet, and
+>>>>> where the bootloader won't come and patch the DT (A31, A23, A80).
+>>>>
+>>>> Ah, so that is (was) the logic, following that logic we should probably
+>>>> remove bootargs= from at least the a23 and a31 boards (basically
+>>> >from all boards but a80).
+>>>
+>>> I'm not so sure about the A31, since most boards won't even boot by
+>>> default on the SD card
 >>
->> Signed-off-by: Ray Jui <rjui@broadcom.com>
->> Reviewed-by: Scott Branden <sbraden@broadcom.com>
->> ---
->>  drivers/pci/host/Kconfig            |   17 ++
->>  drivers/pci/host/Makefile           |    2 +
->>  drivers/pci/host/pcie-iproc-pltfm.c |  108 +++++++++++
->>  drivers/pci/host/pcie-iproc.c       |  351 +++++++++++++++++++++++++++++++++++
->>  drivers/pci/host/pcie-iproc.h       |   42 +++++
->>  5 files changed, 520 insertions(+)
->>  create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
->>  create mode 100644 drivers/pci/host/pcie-iproc.c
->>  create mode 100644 drivers/pci/host/pcie-iproc.h
+>> True.
 >>
->> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
->> index 7b892a9..f4d9c90 100644
->> --- a/drivers/pci/host/Kconfig
->> +++ b/drivers/pci/host/Kconfig
->> @@ -106,4 +106,21 @@ config PCI_VERSATILE
->>  	bool "ARM Versatile PB PCI controller"
->>  	depends on ARCH_VERSATILE
->>  
->> +config PCIE_IPROC
->> +	tristate "Broadcom iProc PCIe controller"
->> +	help
->> +	  This enables the iProc PCIe core controller support for Broadcom's
->> +	  iProc family of SoCs. An appropriate bus interface driver also needs
->> +	  to be enabled
->> +
->> +config PCIE_IPROC_PLTFM
->> +	tristate "Broadcom iProc PCIe platform bus driver"
->> +	depends on ARCH_BCM_IPROC || COMPILE_TEST
->> +	depends on OF
->> +	select PCIE_IPROC
->> +	default ARCH_BCM_IPROC
->> +	help
->> +	  Say Y here if you want to use the Broadcom iProc PCIe controller
->> +	  through the generic platform bus interface
-> 
-> Do you anticipate additional front-end bus interfaces?  If not, and maybe
-> even if you do, you might squash everything into pcie-iproc.c.  Then you
-> only need one file (no .h file needed) and the package is a little
-> simpler.  I think it's pretty common to have multiple driver registration
-> methods in the same file (OF, PCI, ACPI, etc.)  And I think it's common to
-> have those methods guarded by the generic config symbol (CONFIG_PCI,
-> CONFIG_OF, etc.) rather than defining new ones specific to the driver.
-> 
-
-Yes I do expect Hauke (CCed) to add BCMA bus front end support later.
-
-I still think having the front end bus driver separated is cleaner and
-may be less troublesome for Hauke to add BCMA support in the future. But
-if you strongly favor having everything stuffed in one single file, I
-can make that change. Please let me know.
-
->> +
->>  endmenu
->> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
->> index e61d91c..2e02d20 100644
->> --- a/drivers/pci/host/Makefile
->> +++ b/drivers/pci/host/Makefile
->> @@ -13,3 +13,5 @@ obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
->>  obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
->>  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
->>  obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
->> +obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
->> +obj-$(CONFIG_PCIE_IPROC_PLTFM) += pcie-iproc-pltfm.o
->> diff --git a/drivers/pci/host/pcie-iproc-pltfm.c b/drivers/pci/host/pcie-iproc-pltfm.c
->> new file mode 100644
->> index 0000000..af935ea
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-iproc-pltfm.c
->> @@ -0,0 +1,108 @@
->> +/*
->> + * Copyright (C) 2015 Broadcom Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/pci.h>
->> +#include <linux/clk.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/phy/phy.h>
->> +
->> +#include "pcie-iproc.h"
->> +
->> +static int __init iproc_pcie_pltfm_probe(struct platform_device *pdev)
->> +{
->> +	struct iproc_pcie *pcie;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	struct resource reg;
->> +	resource_size_t iobase = 0;
->> +	LIST_HEAD(res);
->> +	int ret;
->> +
->> +	pcie = devm_kzalloc(&pdev->dev, sizeof(struct iproc_pcie), GFP_KERNEL);
->> +	if (!pcie)
->> +		return -ENOMEM;
->> +
->> +	pcie->dev = &pdev->dev;
->> +	platform_set_drvdata(pdev, pcie);
->> +
->> +	ret = of_address_to_resource(np, 0, &reg);
->> +	if (ret < 0) {
->> +		dev_err(pcie->dev, "unable to obtain controller resources\n");
->> +		return ret;
->> +	}
->> +
->> +	pcie->base = devm_ioremap(pcie->dev, reg.start, resource_size(&reg));
->> +	if (!pcie->base) {
->> +		dev_err(pcie->dev, "unable to map controller registers\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	/* PHY use is optional */
->> +	pcie->phy = devm_phy_get(&pdev->dev, "pcie-phy");
->> +	if (IS_ERR(pcie->phy)) {
->> +		if (PTR_ERR(pcie->phy) == -EPROBE_DEFER)
->> +			return -EPROBE_DEFER;
->> +		pcie->phy = NULL;
->> +	}
->> +
->> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &iobase);
->> +	if (ret) {
->> +		dev_err(pcie->dev,
->> +			"unable to get PCI host bridge resources\n");
->> +		return ret;
->> +	}
->> +
->> +	pcie->resources = &res;
->> +
->> +	ret = iproc_pcie_setup(pcie);
->> +	if (ret) {
->> +		dev_err(pcie->dev, "PCIe controller setup failed\n");
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int iproc_pcie_pltfm_remove(struct platform_device *pdev)
->> +{
->> +	struct iproc_pcie *pcie = platform_get_drvdata(pdev);
->> +
->> +	return iproc_pcie_remove(pcie);
->> +}
->> +
->> +static const struct of_device_id iproc_pcie_of_match_table[] = {
->> +	{ .compatible = "brcm,iproc-pcie", },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, iproc_pcie_of_match_table);
->> +
->> +static struct platform_driver iproc_pcie_pltfm_driver = {
->> +	.driver = {
->> +		.name = "iproc-pcie",
->> +		.of_match_table = of_match_ptr(iproc_pcie_of_match_table),
->> +	},
->> +	.probe = iproc_pcie_pltfm_probe,
->> +	.remove = iproc_pcie_pltfm_remove,
->> +};
->> +module_platform_driver(iproc_pcie_pltfm_driver);
->> +
->> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
->> +MODULE_DESCRIPTION("Broadcom iPROC PCIe platform driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
->> new file mode 100644
->> index 0000000..ad6c89e
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-iproc.c
->> @@ -0,0 +1,351 @@
->> +/*
->> + * Copyright (C) 2014 Hauke Mehrtens <hauke@hauke-m.de>
->> + * Copyright (C) 2015 Broadcom Corporatcommon ion
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/pci.h>
->> +#include <linux/msi.h>
->> +#include <linux/clk.h>
->> +#include <linux/module.h>
->> +#include <linux/mbus.h>
->> +#include <linux/slab.h>
->> +#include <linux/delay.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/phy/phy.h>
->> +
->> +#include "pcie-iproc.h"
->> +
->> +#define CLK_CONTROL_OFFSET           0x000
->> +#define EP_MODE_SURVIVE_PERST_SHIFT  1
->> +#define EP_MODE_SURVIVE_PERST        BIT(EP_MODE_SURVIVE_PERST_SHIFT)
->> +#define RC_PCIE_RST_OUTPUT_SHIFT     0
->> +#define RC_PCIE_RST_OUTPUT           BIT(RC_PCIE_RST_OUTPUT_SHIFT)
->> +
->> +#define CFG_IND_ADDR_OFFSET          0x120
->> +#define CFG_IND_ADDR_MASK            0x00001ffc
->> +
->> +#define CFG_IND_DATA_OFFSET          0x124
->> +
->> +#define CFG_ADDR_OFFSET              0x1f8
->> +#define CFG_ADDR_BUS_NUM_SHIFT       20
->> +#define CFG_ADDR_BUS_NUM_MASK        0x0ff00000
->> +#define CFG_ADDR_DEV_NUM_SHIFT       15
->> +#define CFG_ADDR_DEV_NUM_MASK        0x000f8000
->> +#define CFG_ADDR_FUNC_NUM_SHIFT      12
->> +#define CFG_ADDR_FUNC_NUM_MASK       0x00007000
->> +#define CFG_ADDR_REG_NUM_SHIFT       2
->> +#define CFG_ADDR_REG_NUM_MASK        0x00000ffc
->> +#define CFG_ADDR_CFG_TYPE_SHIFT      0
->> +#define CFG_ADDR_CFG_TYPE_MASK       0x00000003
->> +
->> +#define CFG_DATA_OFFSET              0x1fc
->> +
->> +#define SYS_RC_INTX_EN               0x330
->> +#define SYS_RC_INTX_MASK             0xf
->> +
->> +static inline struct iproc_pcie *sys_to_pcie(struct pci_sys_data *sys)
->> +{
->> +	return sys->private_data;
->> +}
->> +
->> +#define INVALID_ACCESS_OFFSET 0xffffffff
->> +static u32 iproc_pcie_cfg_base(struct iproc_pcie *pcie, int busno,
->> +			       unsigned int devfn, int where)
->> +{
->> +	int slot = PCI_SLOT(devfn);
->> +	int fn = PCI_FUNC(devfn);
->> +	u32 val;
->> +
-> 
-> Would you mind adding a comment to the effect that
-> CFG_IND_ADDR_OFFSET/CFG_IND_DATA_OFFSET and
-> CFG_ADDR_OFFSET/CFG_DATA_OFFSET are protected by pci_lock?
-> 
-> They obviously need a mutex, and while I don't have any plans to
-> change it, I'm not completely 100% sure that pci_lock is the best
-> place for it.
-> 
-
-Sorry I don't get what you want me to do here. Do you want me to add
-some comment to explain that the struct pci_ops read/write callbacks are
-already protected at the upper layer by the pci_lock spinlock and
-therefore no lock is required in this driver?
-
->> +	/* root complex access */
->> +	if (busno == 0) {
->> +		if (slot >= 1)
->> +			return INVALID_ACCESS_OFFSET;
->> +		writel(where & CFG_IND_ADDR_MASK,
->> +		       pcie->base + CFG_IND_ADDR_OFFSET);
->> +		return CFG_IND_DATA_OFFSET;
->> +	}
->> +
->> +	if (fn > 1)
->> +		return INVALID_ACCESS_OFFSET;
->> +
->> +	/* EP device access */
->> +	val = (busno << CFG_ADDR_BUS_NUM_SHIFT) |
->> +		(slot << CFG_ADDR_DEV_NUM_SHIFT) |
->> +		(fn << CFG_ADDR_FUNC_NUM_SHIFT) |
->> +		(where & CFG_ADDR_REG_NUM_MASK) |
->> +		(1 & CFG_ADDR_CFG_TYPE_MASK);
->> +	writel(val, pcie->base + CFG_ADDR_OFFSET);
->> +
->> +	return CFG_DATA_OFFSET;
->> +}
->> +
->> +#define INVALID_CFG_RD 0xffffffff
->> +static int iproc_pcie_read_conf(struct iproc_pcie *pcie, int busno,
->> +				unsigned int devfn, int where, int size,
->> +				u32 *val)
->> +{
->> +	u32 offset, mask, shift;
->> +
->> +	*val = INVALID_CFG_RD;
->> +
->> +	if (size != 1 && size != 2 && size != 4)
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	else if ((size == 2) && (where & 1))
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	else if ((size == 4) && (where & 3))
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +	offset = iproc_pcie_cfg_base(pcie, busno, devfn, where);
->> +	if (offset == INVALID_ACCESS_OFFSET)
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +	*val = readl(pcie->base + offset);
->> +
->> +	if (size != 4) {
->> +		mask = (1 << (size * BITS_PER_BYTE)) - 1;
->> +		shift = (where % 4) * BITS_PER_BYTE;
->> +		*val = (*val >> shift) & mask;
->> +	}
->> +
->> +	dev_dbg(pcie->dev,
->> +		"conf rd: busn=%d devfn=%u where=%d size=%d val=0x%08x\n",
->> +		busno, devfn, where, size, *val);
->> +
->> +	return PCIBIOS_SUCCESSFUL;
->> +}
-> 
-> This looks like maybe it could use Rob Herring's (CC'd) new generic config
-> accessors?  For example, see these:
-> 
->   1f94a94f67e1 ("PCI: Add generic config accessors")
->   21186728865e ("PCI: generic: Convert to use generic config accessors")
-> 
-
-Okay I will switch to use the generic code for config space access. I'll
-add map_bus callback for address calculation.
-
->> +
->> +static int iproc_pcie_write_conf(struct iproc_pcie *pcie, int busno,
->> +				 unsigned int devfn, int where, int size,
->> +				 u32 val)
->> +{
->> +	u32 offset, mask, shift, data;
->> +
->> +	if (size != 1 && size != 2 && size != 4)
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	else if ((size == 2) && (where & 1))
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	else if ((size == 4) && (where & 3))
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +	offset = iproc_pcie_cfg_base(pcie, busno, devfn, where);
->> +	if (offset == INVALID_ACCESS_OFFSET)
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +	data = readl(pcie->base + offset);
->> +
->> +	if (size != 4) {
->> +		mask = (1 << (size * BITS_PER_BYTE)) - 1;
->> +		shift = (where % 4) * BITS_PER_BYTE;
->> +		data &= ~(mask << shift);
->> +		data |= (val & mask) << shift;
->> +	} else {
->> +		data = val;
->> +	}
->> +
->> +	writel(data, pcie->base + offset);
->> +
->> +	dev_dbg(pcie->dev,
->> +		"conf wr: busn=%d devfn=%u where=%d size=%d data=0x%08x\n",
->> +		busno, devfn, where, size, data);
->> +
->> +	return PCIBIOS_SUCCESSFUL;
->> +}
->> +
->> +static int iproc_pcie_read(struct pci_bus *bus, unsigned int devfn,
->> +			   int where, int size, u32 *val)
->> +{
->> +	struct iproc_pcie *pcie = sys_to_pcie(bus->sysdata);
->> +
->> +	return iproc_pcie_read_conf(pcie, bus->number, devfn, where, size,
->> +				    val);
->> +}
->> +
->> +static int iproc_pcie_write(struct pci_bus *bus, unsigned int devfn,
->> +			    int where, int size, u32 val)
->> +{
->> +	struct iproc_pcie *pcie = sys_to_pcie(bus->sysdata);
->> +
->> +	return iproc_pcie_write_conf(pcie, bus->number, devfn, where, size,
->> +				     val);
->> +}
->> +
->> +static struct pci_ops iproc_pcie_ops = {
->> +	.read = iproc_pcie_read,
->> +	.write = iproc_pcie_write,
->> +};
->> +
->> +static void iproc_pcie_reset(struct iproc_pcie *pcie)
->> +{
->> +	u32 val;
->> +
->> +	/*
->> +	 * Configure the PCIe controller as root complex and send a downstream
->> +	 * reset
->> +	 */
->> +	val = EP_MODE_SURVIVE_PERST | RC_PCIE_RST_OUTPUT;
->> +	writel(val, pcie->base + CLK_CONTROL_OFFSET);
->> +	udelay(250);
->> +	val &= ~EP_MODE_SURVIVE_PERST;
->> +	writel(val, pcie->base + CLK_CONTROL_OFFSET);
->> +	msleep(250);
->> +}
->> +
->> +static int iproc_pcie_check_link(struct iproc_pcie *pcie, struct pci_bus *bus)
->> +{
->> +	u8 hdr_type;
->> +	u32 link_ctrl;
->> +	u16 pos, link_status;
->> +	int link_is_active = 0;
->> +
->> +	/* make sure we are not in EP mode */
->> +	pci_bus_read_config_byte(bus, 0, PCI_HEADER_TYPE, &hdr_type);
->> +	if ((hdr_type & 0x7f) != PCI_HEADER_TYPE_BRIDGE) {
->> +		dev_err(pcie->dev, "in EP mode, hdr=0x08%x\n", hdr_type);
->> +		return -EFAULT;
->> +	}
->> +
->> +	/* force class to PCI_CLASS_BRIDGE_PCI (0x0604) */
->> +	pci_bus_write_config_word(bus, 0, PCI_CLASS_DEVICE,
->> +				  PCI_CLASS_BRIDGE_PCI);
->> +
->> +	/* check link status to see if link is active */
->> +	pos = pci_bus_find_capability(bus, 0, PCI_CAP_ID_EXP);
->> +	pci_bus_read_config_word(bus, 0, pos + PCI_EXP_LNKSTA, &link_status);
->> +	if (link_status & PCI_EXP_LNKSTA_NLW)
->> +		link_is_active = 1;
->> +
->> +	if (!link_is_active) {
->> +		/* try GEN 1 link speed */
->> +#define PCI_LINK_STATUS_CTRL_2_OFFSET 0x0dc
->> +#define PCI_TARGET_LINK_SPEED_MASK    0xf
->> +#define PCI_TARGET_LINK_SPEED_GEN2    0x2
->> +#define PCI_TARGET_LINK_SPEED_GEN1    0x1
->> +		pci_bus_read_config_dword(bus, 0,
->> +					  PCI_LINK_STATUS_CTRL_2_OFFSET,
->> +					  &link_ctrl);
->> +		if ((link_ctrl & PCI_TARGET_LINK_SPEED_MASK) ==
->> +		    PCI_TARGET_LINK_SPEED_GEN2) {
->> +			link_ctrl &= ~PCI_TARGET_LINK_SPEED_MASK;
->> +			link_ctrl |= PCI_TARGET_LINK_SPEED_GEN1;
->> +			pci_bus_write_config_dword(bus, 0,
->> +					   PCI_LINK_STATUS_CTRL_2_OFFSET,
->> +					   link_ctrl);
->> +			msleep(100);
->> +
->> +			pos = pci_bus_find_capability(bus, 0, PCI_CAP_ID_EXP);
->> +			pci_bus_read_config_word(bus, 0, pos + PCI_EXP_LNKSTA,
->> +						 &link_status);
->> +			if (link_status & PCI_EXP_LNKSTA_NLW)
->> +				link_is_active = 1;
->> +		}
->> +	}
->> +
->> +	dev_info(pcie->dev, "link: %s\n", link_is_active ? "UP" : "DOWN");
->> +
->> +	return link_is_active ? 0 : -ENODEV;
->> +}
->> +
->> +static void iproc_pcie_enable(struct iproc_pcie *pcie)
->> +{
->> +	writel(SYS_RC_INTX_MASK, pcie->base + SYS_RC_INTX_EN);
->> +}
->> +
->> +int iproc_pcie_setup(struct iproc_pcie *pcie)
->> +{
->> +	int ret;
->> +	struct pci_bus *bus;
->> +
->> +	if (!pcie || !pcie->dev || !pcie->base)
->> +		return -EINVAL;
->> +
->> +	if (pcie->phy) {
->> +		ret = phy_init(pcie->phy);
->> +		if (ret) {
->> +			dev_err(pcie->dev, "unable to initialize PCIe PHY\n");
->> +			return ret;
->> +		}
->> +
->> +		ret = phy_power_on(pcie->phy);
->> +		if (ret) {
->> +			dev_err(pcie->dev, "unable to power on PCIe PHY\n");
->> +			goto err_exit_phy;
->> +		}
->> +
->> +	}
->> +
->> +	iproc_pcie_reset(pcie);
->> +
->> +	pcie->sysdata.private_data = pcie;
->> +
->> +	bus = pci_create_root_bus(pcie->dev, 0, &iproc_pcie_ops,
->> +				  &pcie->sysdata, pcie->resources);
->> +	if (!bus) {
->> +		dev_err(pcie->dev, "unable to create PCI root bus\n");
->> +		ret = -ENOMEM;
->> +		goto err_power_off_phy;
->> +	}
->> +	pcie->root_bus = bus;
->> +
->> +	ret = iproc_pcie_check_link(pcie, bus);
->> +	if (ret) {
->> +		dev_err(pcie->dev, "no PCIe EP device detected\n");
->> +		goto err_rm_root_bus;
->> +	}
->> +
->> +	iproc_pcie_enable(pcie);
->> +
->> +	pci_scan_child_bus(bus);
->> +	pci_assign_unassigned_bus_resources(bus);
->> +	pci_bus_add_devices(bus);
->> +
->> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> 
-> I think the IRQ fixup should be before pci_bus_add_devices().  CC'd Yijing,
-> who's been fixing similar issues.
-> 
-> pci_bus_add_devices() is the point where drivers can claim these devices,
-> and we don't want to change things after a driver claims the device.
-> 
-
-Right. I will fix this.
-
->> +
->> +	return 0;
->> +
->> +err_rm_root_bus:
->> +	pci_stop_root_bus(bus);
->> +	pci_remove_root_bus(bus);
->> +
->> +err_power_off_phy:
->> +	if (pcie->phy)
->> +		phy_power_off(pcie->phy);
->> +err_exit_phy:
->> +	if (pcie->phy)
->> +		phy_exit(pcie->phy);
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(iproc_pcie_setup);
->> +
->> +int iproc_pcie_remove(struct iproc_pcie *pcie)
->> +{
->> +	pci_stop_root_bus(pcie->root_bus);
->> +	pci_remove_root_bus(pcie->root_bus);
->> +
->> +	if (pcie->phy) {
->> +		phy_power_off(pcie->phy);
->> +		phy_exit(pcie->phy);
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(iproc_pcie_remove);
-> 
-> These exports wouldn't be needed if this were all squashed into one file.
-> 
-
-Understood. Let's decide whether or not to keep everything in one file.
-
->> +
->> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
->> +MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
->> new file mode 100644
->> index 0000000..569bc04
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-iproc.h
->> @@ -0,0 +1,42 @@
->> +/*
->> + * Copyright (C) 2014-2015 Broadcom Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#ifndef _PCIE_IPROC_H
->> +#define _PCIE_IPROC_H
->> +
->> +#define IPROC_PCIE_MAX_NUM_IRQS 6
->> +
->> +/**
->> + * iProc PCIe device
->> + * @dev: pointer to device data structure
->> + * @base: PCIe host controller I/O register base
->> + * @resources: linked list of all PCI resources
->> + * @sysdata: Per PCI controller data
->> + * @root_bus: pointer to root bus
->> + * @phy: optional PHY device that controls the Serdes
->> + * @irqs: interrupt IDs
->> + */
->> +struct iproc_pcie {
->> +	struct device *dev;
->> +	void __iomem *base;
->> +	struct list_head *resources;
->> +	struct pci_sys_data sysdata;
->> +	struct pci_bus *root_bus;
->> +	struct phy *phy;
->> +	int irqs[IPROC_PCIE_MAX_NUM_IRQS];
->> +};
->> +
->> +extern int iproc_pcie_setup(struct iproc_pcie *pcie);
->> +extern int iproc_pcie_remove(struct iproc_pcie *pcie);
-> 
-> Hopefully you can squash this all into one file, but if you can't, my
-> preference is to omit "extern" on function declarations.
-> 
->> +
->> +#endif /* _PCIE_IPROC_H */
->> -- 
->> 1.7.9.5
+>>> and we have no way to replace U-Boot in NAND
+>>> so far (afaik). But replacing them by stdout-path is a very good
+>>> solution too.
 >>
+>> You mean putting stdout-path in the dts, I'm not sure if I like that,
+>> to me both bootargs and stdout-path are something which should be
+>> left to the bootloader to set. But I understand that when not
+>> using upstream u-boot that may be an issue.
+>
+> I know that some other platforms ask for stdout-path when they review
+> it, because iirc, barebox uses it to know on which console to output
+> its log and export its shell, which is also a valid interpretation of
+> that property, and, contrary to bootargs, doesn't really imply that
+> the bootloader should update it.
 
-Thanks for the review!
+Hmm, that is interesting we should probably start doing the same in
+all the sunxi dts files, as eventually I would like to move all u-boot
+board config to devicetree, so that we only need to maintain dts files
+and not both dts files and u-boot board configs.
 
-Ray
+Regards,
+
+Hans
