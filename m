@@ -1,74 +1,59 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: add cubietech cubieboard4
-Date: Tue, 10 Mar 2015 22:26:03 +0100
-Message-ID: <20150310212603.GB5085@lukather>
-References: <1425932398-7194-1-git-send-email-tyler.baker@linaro.org>
- <1425932398-7194-2-git-send-email-tyler.baker@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 05/18] reset: Add reset_controller_of_init() function
+Date: Tue, 10 Mar 2015 16:30:40 -0500
+Message-ID: <CAL_Jsq+_ridpAaUwpqo91xB6Ea1ctCWfYTYUrcZ=gB_0FiBD4g@mail.gmail.com>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <8729383.kvUZDm4dQz@wuerfel> <CALszF6BkTOLR+VNkRKfvEBG5ZyaYL+9fZ4EAPVu5b_imCvEQoQ@mail.gmail.com>
+ <6773745.i9mx5zmPP4@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="iXVVnr8Hn1WiTnFI"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425932398-7194-2-git-send-email-tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <6773745.i9mx5zmPP4@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 10, 2015 at 3:19 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 10 March 2015 16:28:44 Maxime Coquelin wrote:
+>> 2015-03-10 16:00 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
+>> > On Friday 20 February 2015 19:01:04 Maxime Coquelin wrote:
+>> >> Some platforms need to initialize the reset controller before the timers.
+>> >>
+>> >> This patch introduces a reset_controller_of_init() function that can be
+>> >> called before the timers intialization.
+>> >>
+>> >> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> >>
+>> >
+>> > Not sure about this. It seems like the cleanest approach if we get
+>> > a lot of these, but then again it is probably very rare, and I'd
+>> > like to avoid adding such infrastructure if it's just for one
+>> > SoC. Could we add a hack in the machine initialization instead?
+>>
+>> Sun6i also need to initialize the reset controller early. Today, they
+>> hack the machine initialization.
+>> With two SoCs having the same need, what should we do?
+>
+> Good question, I'd like to hear some other opinions on this first.
 
---iXVVnr8Hn1WiTnFI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2 is still far from the common case.
 
-On Mon, Mar 09, 2015 at 01:19:57PM -0700, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> Add a Cubietech Cubieboard4 device tree and instruct make to build it. Th=
-is
-> device tree has been derived from the sun9i-a80-optimus.dts as they are v=
-ery
-> similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LE=
-D/PWM
-> definitions will need to be updated in the future.
->=20
-> [1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
->=20
-> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > I think ideally this would be done in the boot loader before we
+>> > even start Linux, but I don't know if that's possible for you.
+>>
+>> From what I understand, the only constraint is to perform it after the
+>> clock is enabled.
+>> So this should be possible to do it in the bootloader, but it means
+>> also adding timers clocks ungating in the bootloader.
+>
+> Ungating the timer clock input seems like a reasonable thing to
+> do for the bootloader, I think a lot of platforms rely on this
+> elsewhere (but enough of them don't, which is why we have the
+> early clk init).
 
-Applied, thanks!
++1
 
-Maxime
+If the bootloader is u-boot, then you need a timer anyway.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---iXVVnr8Hn1WiTnFI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU/2FrAAoJEBx+YmzsjxAg0oIQAIWXEULgWPh2hoeX7r0woxBC
-SSOViNoX5gfpzwdJtnXVjquS/MMMlwgKZncTs9bYhAaeG6nWVuFZO/oI8NtBLJ93
-QOpNMmaO+uoByR88voD8L+/lJKtie6TDeUoqk8shj73ZMO3JVrfMpsgqF2JFmwaz
-pJIUHZ4Hikob5Tp353UCvM7CohloniqnINWwWplrX5EyFkkoh88NecDyh128pXjb
-ErnVdOgy+NupLXtU914+VaKT5kY0oTSbhvvQLmvsKwJ0E1urZNpWIK/QG40QczxQ
-/fFNbeVHjEnAwY5dUKXbEZ4TgxaMWYUTPDo5o6pck03Wa6/QfRs4T5wek0gb2uhw
-OBKWH37u7ydnpvkZ3/T6Rk4iopD2MXAq+lfVBSOOyemNQXVKvfLNoafkwANkUztm
-XH7N5tDpzhAwpw+77BlxDt308LTBsFiaxqnL/dwXRRgwOT0kHpaD2Y+PFqqNzqDB
-rcAlE3DQdr3bvlnBG274r66p+IffvQFYYwICfF6NlEVFYV7OWJt14Dx2qLabX9Mf
-KOXcDSrvA1lZlf8kjTR034+309cSi9St3oB7peT6hYL6Sey6iEdk2rWsX7SR7pd4
-76xcIPxSF2InnRArkYjvTzWfQHPxYXQTRe5YZQuPXkhYvggVe0CTkqJ71zOAfHCX
-S8VucJl95sAggak4ioRY
-=2NVH
------END PGP SIGNATURE-----
-
---iXVVnr8Hn1WiTnFI--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
