@@ -1,100 +1,89 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
- TAB7200
-Date: Tue, 31 Mar 2015 22:31:20 +0300
-Message-ID: <20150331223120.10199bf9e3fb41b16f879eca@gmail.com>
-References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
-	<20150331144338.GG23664@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150331144338.GG23664@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <gaurav.minocha.os@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJiWhXQqGCik9tDqyaXEqU8+gEdw=FBVL_Fddbk_SjfwQ@mail.gmail.com>
+References: <1425868525-113952-1-git-send-email-long.wanglong@huawei.com>
+	<CAL_JsqLgxCQW==4YQrX193g+x22d1iL2jBGY4CSMnq7cQcSgZQ@mail.gmail.com>
+	<CAL_JsqJiWhXQqGCik9tDqyaXEqU8+gEdw=FBVL_Fddbk_SjfwQ@mail.gmail.com>
+Date: Tue, 10 Mar 2015 08:16:30 -0700
+Message-ID: <CA+rpMb+xL4g5bzGQhUe7kFkCmpH3VwGXsVP3zypW1w6366gAkw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] Documentation: update the of_selftest.txt
+From: Gaurav Minocha <gaurav.minocha.os@gmail.com>
+Content-Type: multipart/alternative; boundary=089e013d0c94a749070510f0a227
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Wang Long <long.wanglong@huawei.com>, peifeiyue@huawei.com
+List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 31 Mar 2015 07:43:38 -0700
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+--089e013d0c94a749070510f0a227
+Content-Type: text/plain; charset=UTF-8
 
-> Hi,
-> 
-> On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
-> > This patch adds nodes for the Goodix GT911 touchscreen controller found
-> > on the Wexler TAB7200 tablet. Controller uses one of following I2C
-> > addresses: 0x5d or 0x14, so just add two nodes.
-> 
-> In which case are these different addresses encountered? Different
-> revisions of the same board?
-> 
-> > Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> > DT support for the Goodix GT911 touchscreen controller has been queued up
-> > by Dmitry Torokhov for merging into 4.1:
-> > https://git.kernel.org/cgit/linux/kernel/git/dtor/input.git/commit/?h=next&id=771d8f1b178e7e09fcc641fccd48852958dbc329
-> > 
-> > IRQ flags are set by the touchscreen controller driver, so use IRQ_TYPE_NONE.
-> > 
-> >  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > index 2ad3b09..34e2bce 100644
-> > --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > @@ -101,6 +101,20 @@
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&i2c2_pins_a>;
-> >  	status = "okay";
-> > +
-> > +	gt911@5d {
-> 
-> The node name should be the class of the device. touchscreen in this
-> case.
-> 
-Ok, I'll fix it.
->
-> > +		compatible = "goodix,gt911";
-> > +		reg = <0x5d>;
-> > +		interrupt-parent = <&pio>;
-> > +		interrupts = <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
-> 
-> Unfortunately, IRQ_TYPE_NONE is not a valid value for the GIC
-> bindings.
-> 
-Hmm. Which value I must use in this case? IRQ type is set by the touchscreen controller driver, so I think that value must be 0.
->
-> You're also not adding a pinctrl group for that pin?
->
-No, because it works fine with this DT nodes. It seems that I should first configure pin to work in interrupt mode. Correct?
->
-> > +	};
-> > +
-> > +	gt911@14 {
-> > +		compatible = "goodix,gt911";
-> > +		reg = <0x14>;
-> > +		interrupt-parent = <&pio>;
-> > +		interrupts = <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
-> > +	};
-> 
-> And nodes should be ordered by addresses ascending order.
->
-I'll fix it too.
->
-> Thanks!
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+Hi Rob,
 
+On Mar 10, 2015 7:51 AM, "Rob Herring" <robherring2@gmail.com> wrote:
+>
+> On Tue, Mar 10, 2015 at 9:44 AM, Rob Herring <robherring2@gmail.com>
+wrote:
+> > On Sun, Mar 8, 2015 at 9:35 PM, Wang Long <long.wanglong@huawei.com>
+wrote:
+> >> Since the directory "drivers/of/testcase-data" is renamed
+> >> to "drivers/of/unittest-data". so we should update the path
+> >> in the of_selftest.txt.
+>
+> [...]
+>
+> >> -Before executing OF selftest, it is required to attach the test data
+to
+> >> +Before executing OF unittest, it is required to attach the test data
+to
+> >>  machine's device tree (if present). So, when selftest_data_add() is
+called,
+> >
+> > This one too.
+>
+> Or not. The functions are all still "selftest". Not sure why Grant
+> left all those...
 
--- 
-Thanks and regards,
-Aleksei Mamlin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will send a patch to replace the selftest with unitest also will update
+the document if required..
+
+>
+> Rob
+
+--089e013d0c94a749070510f0a227
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr">Hi Rob, </p>
+<p dir=3D"ltr">On Mar 10, 2015 7:51 AM, &quot;Rob Herring&quot; &lt;<a href=
+=3D"mailto:robherring2@gmail.com">robherring2@gmail.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; On Tue, Mar 10, 2015 at 9:44 AM, Rob Herring &lt;<a href=3D"mailto:rob=
+herring2@gmail.com">robherring2@gmail.com</a>&gt; wrote:<br>
+&gt; &gt; On Sun, Mar 8, 2015 at 9:35 PM, Wang Long &lt;<a href=3D"mailto:l=
+ong.wanglong@huawei.com">long.wanglong@huawei.com</a>&gt; wrote:<br>
+&gt; &gt;&gt; Since the directory &quot;drivers/of/testcase-data&quot; is r=
+enamed<br>
+&gt; &gt;&gt; to &quot;drivers/of/unittest-data&quot;. so we should update =
+the path<br>
+&gt; &gt;&gt; in the of_selftest.txt.<br>
+&gt;<br>
+&gt; [...]<br>
+&gt;<br>
+&gt; &gt;&gt; -Before executing OF selftest, it is required to attach the t=
+est data to<br>
+&gt; &gt;&gt; +Before executing OF unittest, it is required to attach the t=
+est data to<br>
+&gt; &gt;&gt;=C2=A0 machine&#39;s device tree (if present). So, when selfte=
+st_data_add() is called,<br>
+&gt; &gt;<br>
+&gt; &gt; This one too.<br>
+&gt;<br>
+&gt; Or not. The functions are all still &quot;selftest&quot;. Not sure why=
+ Grant<br>
+&gt; left all those...</p>
+<p dir=3D"ltr">I will send a patch to replace the selftest with unitest als=
+o will update the document if required..</p>
+<p dir=3D"ltr">&gt;<br>
+&gt; Rob<br>
+</p>
+
+--089e013d0c94a749070510f0a227--
