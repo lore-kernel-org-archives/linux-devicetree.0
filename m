@@ -1,39 +1,132 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: soc: Add documentation for the MediaTek
- SCPSYS unit
-Date: Tue, 10 Mar 2015 09:02:47 +0100
-Message-ID: <20150310080246.GC24885@pengutronix.de>
-References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
- <1425888603-25800-2-git-send-email-s.hauer@pengutronix.de>
- <7hegox6gri.fsf@deeprootsystems.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 02/15] phy-sun4i-usb: Add a helper function
+ to update the iscr register
+Date: Tue, 10 Mar 2015 09:04:43 +0100
+Message-ID: <54FEA59B.7020400@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-3-git-send-email-hdegoede@redhat.com> <4772280.xE1WBZVd8Z@wuerfel>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7hegox6gri.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBKWL7KTQKGQEECX6BJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <4772280.xE1WBZVd8Z@wuerfel>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2015 at 01:46:25PM -0700, Kevin Hilman wrote:
-> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> 
-> > This adds documentation for the MediaTek SCPSYS unit found in MT8173 SoCs.
-> 
-> Curious if this IP unique to the 8173?  or maybe also used on 8135? ...
+Hi,
 
-This is indeed found on the MT8135 aswell, but I already spotted the
-first differences, so we'll need the SoC specific compatible anyway.
+On 09-03-15 22:47, Arnd Bergmann wrote:
+> On Monday 09 March 2015 21:40:15 Hans de Goede wrote:
+>> +void sun4i_usb_phy_update_iscr(struct phy *_phy, u32 clr, u32 set)
+>> +{
+>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>> +       u32 iscr;
+>> +
+>> +       iscr = readl(data->base + REG_ISCR);
+>> +       iscr &= ~clr;
+>> +       iscr |= set;
+>> +       writel(iscr, data->base + REG_ISCR);
+>> +}
+>> +EXPORT_SYMBOL(sun4i_usb_phy_update_iscr);
+>> +
+>>
+>
+> I would generally consider this a bad design. What is the purpose of
+> calling sun4i_usb_phy_update_iscr()
 
-Sascha
+There are 2 different use cases for this one is to enable the dataline
+pull-ups at driver init and disable them at driver exit, this could /
+should probably be moved to the phy_init / phy_exit code for the usb0 phy
+removing the need to do this from within the sunxi musb glue.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The second use-case is more tricky, for some reasons Allwinner has decided
+to not use the dedicated id-detect and vusb-sense pins of the phy they are
+using (these pins are not routed to the outside).
+
+Instead id-detect and vusb-sense are done through any $random gpio pins
+(including non irq capable pins on some designs requiring polling).
+
+But the musb-core still needs to know the status of the id and vbus pins,
+and gets this from the usb0-phy iscr register, which reflects the status of
+the not connected dedicated pins of the phy. The reason this can still
+work at all is because the iscr register allows the user to override
+whatever the not connected phy pins are seeing and forcing a value to
+report to the musb core as id and vbus status.
+
+This is done by these 2 functions in the musb sunxi glue:
+
+static void sunxi_musb_force_id(struct musb *musb, u32 val)
+{
+         struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
+
+         if (val)
+                 val = SUNXI_ISCR_FORCE_ID_HIGH;
+         else
+                 val = SUNXI_ISCR_FORCE_ID_LOW;
+
+         sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_ID_MASK, val);
+}
+
+static void sunxi_musb_force_vbus(struct musb *musb, u32 val)
+{
+         struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
+
+         if (val)
+                 val = SUNXI_ISCR_FORCE_VBUS_HIGH;
+         else
+                 val = SUNXI_ISCR_FORCE_VBUS_LOW;
+
+         sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_VBUS_MASK, val);
+}
+
+I will happily admit that these 2 functions are a better API between the sunxi musb
+glue and the sunxi usb phy driver. I started with the minimal sun4i_usb_phy_update_iscr
+approach as I wanted to keep the API as small as possible, but having 2 functions like
+the one above, which actually reflect what is happening would indeed be better.
+
+Note that the polling of the pins cannot (easily) be moved into the phy driver for various
+reasons:
+
+1) It depends on dr_mode, the otg may be used in host only mode in which case there are no
+pins at all.
+2) the musb set_vbus callback needs access to the pins
+3) When id changes some musb core state changes are necessary.
+
+I'll respin the patch set to do things this way as soon as we've agreement on
+your second point.
+
+ > and why can't there be a high-level
+> PHY API for this?
+
+The current generic phy API seems to not have any bus specific methods, I know that
+in the long run people want to get rid of struct usb_phy, so maybe we should consider
+adding bus specific methods to the generic phy API for things like otg.
+
+If we decide to add bus specific methods, then the question becomes if having
+
+int phy_usb_set_id_detect(struct phy *phy, bool val);
+int phy_usb_set_vbus_detect(struct phy *phy, bool val);
+
+Functions in the generic phy API is a good idea, or if this is too sunxi specific,
+I'm fine with doing this either way. If we want to go the generic phy route
+I'll split this in 2 patches, one adding these 2 generic functions & phy-ops, and
+1 doing the sunxi implementation.
+
+If people believe this is too sunxi specific (I believe it is, but as said I'm
+fine with doing this either way). I'll respin this patch to remove the too
+generic sun4i_usb_phy_update_iscr function, and instead add these 2:
+
+void sun4i_usb_phy_set_id_detect(struct phy *phy, bool val);
+void sun4i_usb_phy_set_vbus_detect(struct phy *phy, bool val);
+
+Regards,
+
+Hans
