@@ -1,113 +1,29 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH] dma: Add Xilinx ZDMA device tree Binding Documentation
-Date: Tue, 10 Mar 2015 19:46:23 +0530
-Message-ID: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/2 v3] drivers/core/of: Add symlink to device-tree from
+ devices with an OF node
+Date: Tue, 10 Mar 2015 09:22:51 -0500
+Message-ID: <CAL_JsqJX_uebR7x9xLcksOByH0x_GPVfkscCO86uTBcO+zg7Bg@mail.gmail.com>
+References: <1415342031.4925.27.camel@kernel.crashing.org> <1415342117.4925.29.camel@kernel.crashing.org>
+ <1415596626.5769.14.camel@kernel.crashing.org> <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+ <1424219118.21410.111.camel@kernel.crashing.org> <CAL_JsqJZg9zTjpx6pNxF8yvbTVcXX3cMP=RtEHUaf+E2X3MC_w@mail.gmail.com>
+ <20150218045708.GC3222@kroah.com> <1424253045.26254.2.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, soren.brinkmann@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424253045.26254.2.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation for Xilinx ZDMA Engine
+On Wed, Feb 18, 2015 at 3:50 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Tue, 2015-02-17 at 20:57 -0800, Greg Kroah-Hartman wrote:
+>
+>> > Acked-by: Rob Herring <robh@kernel.org>
+>>
+>> Thanks, I'll queue these up after 3.20-rc1 is out.
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
----
- .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 ++++++++++++++++++++
- 1 files changed, 76 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+It doesn't look like these 2 patches got applied.
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
-new file mode 100644
-index 0000000..399a3bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
-@@ -0,0 +1,76 @@
-+Xilinx ZDMA engine, it does support memory to memory transfers,
-+memory to device and device to memory transfers. It also has flow
-+control and rate control support for slave/peripheral dma access.
-+
-+Xilinx ZynqMP has two instances of general purpose DMA(ZDMA).
-+one is located in FPD(full power domain) and other is located in
-+LPD(low power domain).
-+
-+ZDMA instance located in FPD is referred as FPDMA and instance located
-+in LPD is referred as LPDMA.
-+
-+FPDMA is configured with 8 DMA channels and AXI bus width is 128 byte.
-+LPDMA is configured with 8 DMA channels and AXI bus width is 64 byte.
-+
-+Each channel in a instance has its own address space and interrupt line
-+but shares common reference and APB clock. So, each channel will be treated
-+as a standalone dma device.
-+Since its a general purpose dma controller, it has a rich set of configurable
-+options with respect to data and descriptor attributes.
-+
-+Required properties:
-+- compatible: Should be "xlnx,fpdma-1.0" or "xlnx,lpdma-1.0"
-+- reg: Memory map for dma module access.
-+- interrupt-parent: Interrupt controller the interrupt is routed through
-+- interrupts: Should contain DMA channel interrupt.
-+- xlnx,id: Channel Id
-+
-+Optional properties:
-+- xlnx,include-sg: Indicates the controller to operate in simple or scatter
-+		   gather dma mode
-+- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
-+		 source AXI transaction
-+- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
-+- xlnx,src-issue: Number of AXI outstanding transactions on source side
-+- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			descriptor read are marked Non-coherent
-+- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			source descriptor payload are marked Non-coherent
-+- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			dst descriptor payload are marked Non-coherent
-+- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
-+- xlnx,src-axi-qos: AXI QOS bits to be used for data read
-+- xlnx,dst-axi-qos: Axi QOS bits to be used for data write
-+- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch
-+- xlnx,desc-axi-cache: AXI cache bits to be used for data read
-+- xlnx,desc-axi-cache: AXI cache bits to be used for data write
-+- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
-+		      i.e 1,2,4,8 and 16.
-+- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
-+		      i.e 1,2,4,8 and 16.
-+
-+Example:
-+++++++++
-+fpdma0: dma@fd500000 {
-+	compatible = "xlnx,fpdma-1.0";
-+	reg = <0x0 0xfd500000 0x1000>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 117 4>;
-+	xlnx,include-sg;
-+	xlnx,overfetch;
-+	xlnx,ratectrl = <0>;
-+	xlnx,src-issue = <16>;
-+	xlnx,id = <0>;
-+	xlnx,desc-axi-cohrnt;
-+	xlnx,src-axi-cohrnt;
-+	xlnx,dst-axi-cohrnt;
-+	xlnx,desc-axi-qos = <0>;
-+	xlnx,desc-axi-cache = <0>;
-+	xlnx,src-axi-qos = <0>;
-+	xlnx,src-axi-cache = <2>;
-+	xlnx,dst-axi-qos = <0>;
-+	xlnx,dst-axi-cache = <2>;
-+	xlnx,src-burst-len = <4>;
-+	xlnx,dst-burst-len = <4>;
-+};
-+
--- 
-1.7.4
+Rob
