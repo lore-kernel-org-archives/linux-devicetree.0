@@ -1,103 +1,33 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [RFC PATCH v15 01/11] ARM: cpuidle: Register per cpuidle device
-Date: Tue, 10 Mar 2015 08:57:10 -0600
-Message-ID: <20150310145710.GB3727@linaro.org>
-References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
- <1425914206-22295-2-git-send-email-lina.iyer@linaro.org>
- <20150310103734.GK8656@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 05/18] reset: Add reset_controller_of_init() function
+Date: Tue, 10 Mar 2015 16:00:44 +0100
+Message-ID: <8729383.kvUZDm4dQz@wuerfel>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com> <1424455277-29983-6-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150310103734.GK8656@n2100.arm.linux.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, msivasub@codeaurora.org, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1424455277-29983-6-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>Rus
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10 2015 at 04:37 -0600, Russell King - ARM Linux wrote:
->On Mon, Mar 09, 2015 at 09:16:36AM -0600, Lina Iyer wrote:
->> @@ -105,18 +109,46 @@ static int __init arm_idle_init(void)
->>  	if (ret <= 0)
->>  		return ret ? : -ENODEV;
->>
->> +
->
->A bit better formatting would be nice - you don't need the extra blank
->line here.
->
->> +	ret = cpuidle_register_driver(drv);
->> +	if (ret) {
->> +		pr_err("Failed to register cpuidle driver\n");
->> +		return ret;
->> +	}
->> +
->>  	/*
->>  	 * Call arch CPU operations in order to initialize
->>  	 * idle states suspend back-end specific data
->>  	 */
->>  	for_each_possible_cpu(cpu) {
->> +
->
->This blank line is not necessary either.
->
->>  		ret = arm_cpuidle_init(cpu);
->
->However, a blank line here would be a good thing.
->
-Sure.
->> +		/*
->> +		 * This cpu does not support any idle states
->> +		 */
->
->Also, formatting this as /* This cpu does not support any idle states */ is
->acceptable too, and doesn't waste as many lines.
->
-Will fix.
->> +		if (ret == -ENOSYS)
->> +			continue;
->> +
->>  		if (ret) {
->>  			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
->>  			return ret;
->>  		}
->> +
->> +		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
->> +		if (!dev)
->> +			return -ENOMEM;
->> +
->> +		dev->cpu = cpu;
->> +		ret = cpuidle_register_device(dev);
->> +		if (ret) {
->> +			pr_err("Failed to register cpuidle device for CPU %d\n",
->> +			       cpu);
->> +			return ret;
->
->It looks like we leak the 'dev' allocation here.
->
+On Friday 20 February 2015 19:01:04 Maxime Coquelin wrote:
+> Some platforms need to initialize the reset controller before the timers.
+> 
+> This patch introduces a reset_controller_of_init() function that can be
+> called before the timers intialization.
+> 
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> 
 
-True, I will amend that.
+Not sure about this. It seems like the cleanest approach if we get
+a lot of these, but then again it is probably very rare, and I'd
+like to avoid adding such infrastructure if it's just for one
+SoC. Could we add a hack in the machine initialization instead?
 
->Also, other error paths, it looks like we leave the previously registered
->cpuidle devices in place.  That may be acceptable if the intention is to
->initialise as many CPUs as possible - but we then miss the
->cpuidle_register() call below, which seems to make the registered devices
->useless.  It's a little inconsistent.
->
->Also, it's useful to report why something fails - printing the error code
->can help debugging if it isn't already printed elsewhere.
->
-Fair point.
->> +		}
->> +
->> +		per_cpu(cpuidle_arm_dev, cpu) = dev;
->>  	}
->>
->> -	return cpuidle_register(drv, NULL);
->> +	return 0;
->>  }
->>  device_initcall(arm_idle_init);
->
->-- 
->FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
->according to speedtest.net.
+I think ideally this would be done in the boot loader before we
+even start Linux, but I don't know if that's possible for you.
+
+	Arnd
