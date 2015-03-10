@@ -1,200 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4] SATA: OCTEON: support SATA on OCTEON platform
-Date: Tue, 10 Mar 2015 15:22:45 +0100
-Message-ID: <2705826.IzKxg0MdBH@wuerfel>
-References: <1425993989-22770-1-git-send-email-aleksey.makarov@auriga.com>
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Tue, 10 Mar 2015 16:31:33 +0200
+Message-ID: <CAB3XZEftjwUGS_Kj2dCxYY1m82C+a1_=akbnG3_hLETCr+Dddg@mail.gmail.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+	<20150309224929.GL5264@atomide.com>
+	<CAB3XZEdS+mK1MiB7OWiehFGRBnUzJ84s3rFrCy3-YFYhL-BNWw@mail.gmail.com>
+	<2223973.a64rBcZvaA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425993989-22770-1-git-send-email-aleksey.makarov@auriga.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksey Makarov <aleksey.makarov@auriga.com>
-Cc: linux-ide@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2223973.a64rBcZvaA@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 March 2015 16:26:26 Aleksey Makarov wrote:
-> The OCTEON SATA controller is currently found on cn71XX devices.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
-> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
-> ---
->  .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
->  .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  28 ++++
->  drivers/ata/Kconfig                                |   9 ++
->  drivers/ata/Makefile                               |   1 +
->  drivers/ata/ahci_platform.c                        |   1 +
->  drivers/ata/sata_octeon.c                          | 153 +++++++++++++++++++++
->  6 files changed, 193 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->  create mode 100644 drivers/ata/sata_octeon.c
-> 
-> Version 3:
-> https://lkml.kernel.org/g/<1425567540-31572-1-git-send-email-aleksey.makarov@auriga.com>
-> 
-> Changes in v4:
-> - The call to dma_coerce_mask_and_coherent() was removed as suggested by Arnd Bergmann
->   dma_mask and coherent_dma_mask are actually set in the ahci_platform_init_host()
->   (libahci_platform.c)
+On Tue, Mar 10, 2015 at 4:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 10 March 2015 13:00:19 Eliad Peller wrote:
+>> On Tue, Mar 10, 2015 at 12:49 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> >> > I was expecting you to remove all calls to legacy_init_wl12xx from this file,
+>> >> > including the ones for wl12xx aside from the wl18xx ones you removed, but
+>> >> > if that's enough to clean out the platform_data handling from the wlcore
+>> >> > driver, it's good enough as a start.
+>> >> not sure i'm following - can you elaborate?
+>> >>
+>> >> i'll summarize the way i see it. please correct me if i'm wrong.
+>> >>
+>> >> both wl18xx and wl12xx use the platform data to get the irq number.
+>> >> wl12xx (only) also needs some additional clock definitions to be
+>> >> passed. there's currently some issue with specifying some the of clock
+>> >> sources, so i preferred starting only with (the simpler) wl18xx
+>> >> bindings.
+>> >>
+>> >> for platforms with wl18xx, we can remove the pdata-quirk, as all the
+>> >> data (i.e. irq) can be passed by the new DT bindings.
+>> >> however, for platforms with wl12xx, we still need to pass the clock
+>> >> definitions (along with the irq), so we have to keep
+>> >> legacy_init_wl12xx for the time being (and that's also why we have to
+>> >> currently keep the platform_data handling in the wlcore driver)
+>> >>
+>> >> do you have something else in mind?
+>> >
+>> > I think what Arnd is saying is we've now removed all the wl12xx using
+>> > legacy platforms, so all of them can boot with just data from dts.
+>
+> Right, that was my idea.
+>
+>> I don't think that's the case (unless i'm missing something).
+>> e.g. there's still pdata-quirk for "compulab,omap3-sbc-t3730" which
+>> initializes wl12xx device.
+>
+> This one is just like the igep0030, as Tony was saying: the board
+> boots from device tree already, so now that we have a binding for
+> it, we can remove the wl12xx_set_platform_data() for it.
+>
+i think the wl12xx_set_platform_data() name created some confusion -
+it is used to pass platform data for both wl12xx and wl18xx devices.
+(this confusion is all around the wlcore driver as well, due to the
+code evolution)
 
-Actually I see now that this is a driver for a bus, not a device, so
-you also need to put the dma-ranges property into this device and
-its parent, otherwise the dma_set_mask in ahci_platform_init_host
-will fail (at least once MIPS is fixed and starts honoring the
-dma-ranges).
+the binding i added is for wl18xx only (there is no wl12xx binding yet).
+the remaining boards, AFAICT, have wl12xx (rather than wl18xx) cards.
+so i don't see how we can remove these wl12xx_set_platform_data()
+calls before we have wl12xx bindings in-place as well.
 
-> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-> new file mode 100644
-> index 0000000..59e86a7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-> @@ -0,0 +1,28 @@
-> +* UCTL SATA controller glue
-> +
-> +Properties:
-> +- compatible: "cavium,octeon-7130-sata-uctl"
-> +
-> +  Compatibility with the cn7130 SOC.
-> +
-> +- reg: The base address of the UCTL register bank.
-> +
-> +- #address-cells, #size-cells, and ranges must be present and hold
-> +	suitable values to map all child nodes.
-> +
-> +Example:
-> +
-> +	uctl@118006c000000 {
-> +		compatible = "cavium,octeon-7130-sata-uctl";
-> +		reg = <0x11800 0x6c000000 0x0 0x100>;
-> +		ranges; /* Direct mapping */
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
+> Unfortunately, there is still one machine that uses a board file
+> in combination with this wl12xx: da850-evm calls
+> wl12xx_set_platform_data() from a legacy board file without DT.
+>
+ditto.
 
-What is an uctl? Is that a standard bus device name?
-
-This is also where you should set the dma-ranges for the bus.
-
-> +
-> +/**
-> + * cvmx_sata_uctl_shim_cfg
-> + * from cvmx-sata-defs.h
-> + *
-> + * Accessible by: only when A_CLKDIV_EN
-> + * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
-> + * This register allows configuration of various shim (UCTL) features.
-> + * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
-> + * indicated in INTSTAT and a new OOB error arrives.
-> + * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
-> + * indicated in INTSTAT and a new DMA error arrives.
-> + */
-> +union cvmx_sata_uctl_shim_cfg {
-> +	uint64_t u64;
-> +	struct cvmx_sata_uctl_shim_cfg_s {
-> +	/*
-> +	 * Read/write error log for out-of-bound UAHC register access.
-> +	 * 0 = read, 1 = write.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
-> +	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
-> +	/*
-> +	 * SRCID error log for out-of-bound UAHC register access.
-> +	 * The IOI outbound SRCID for the OOB error.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_osrc              : 9,
-> +	/*
-> +	 * Read/write error log for bad DMA access from UAHC.
-> +	 * 0 = read error log, 1 = write error log.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t xm_bad_dma_wrn               : 1,
-> +	__BITFIELD_FIELD(uint64_t reserved_44_46               : 3,
-> +	/*
-> +	 * ErrType error log for bad DMA access from UAHC. Encodes the type of
-> +	 * error encountered (error largest encoded value has priority).
-> +	 * See SATA_UCTL_XM_BAD_DMA_TYPE_E.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t xm_bad_dma_type              : 4,
-> +	__BITFIELD_FIELD(uint64_t reserved_13_39               : 27,
-> +	/*
-> +	 * Selects the IOI read command used by DMA accesses.
-> +	 * See SATA_UCTL_DMA_READ_CMD_E.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t dma_read_cmd                 : 1,
-> +	__BITFIELD_FIELD(uint64_t reserved_10_11               : 2,
-> +	/*
-> +	 * Selects the endian format for DMA accesses to the L2C.
-> +	 * See SATA_UCTL_ENDIAN_MODE_E.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t dma_endian_mode              : 2,
-> +	__BITFIELD_FIELD(uint64_t reserved_2_7                 : 6,
-> +	/*
-> +	 * Selects the endian format for IOI CSR accesses to the UAHC.
-> +	 * Note that when UAHC CSRs are accessed via RSL, they are returned
-> +	 * as big-endian. See SATA_UCTL_ENDIAN_MODE_E.
-> +	 */
-> +	__BITFIELD_FIELD(uint64_t csr_endian_mode              : 2,
-> +		;))))))))))))
-> +	} s;
-> +};
-
-Try to avoid bit fields, as you can see here, it gets awfully ugly if you
-want to get endianess right, better just use #defines for the bits within
-the u64 word.
-
-
-> +#define CVMX_SATA_UCTL_SHIM_CFG 0xE8
-> +
-> +static int ahci_octeon_probe(struct platform_device *pdev)
-> +{
-> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	/* set-up endian mode */
-> +	shim_cfg.u64 = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
-> +#ifdef __BIG_ENDIAN
-> +	shim_cfg.s.dma_endian_mode = 1;
-> +	shim_cfg.s.csr_endian_mode = 1;
-> +#else
-> +	shim_cfg.s.dma_endian_mode = 0;
-> +	shim_cfg.s.csr_endian_mode = 0;
-> +#endif
-> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
-> +	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
-> +
-> +	if (!node) {
-> +		dev_err(dev, "no device node, failed to add octeon sata\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = of_platform_populate(node, NULL, NULL, dev);
-> +	if (ret) {
-> +		dev_err(dev, "failed to add ahci-platform core\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-
-The current version doesn't really do anything, other than set a single
-register. Are you planning to extend this a lot in the future?
-
-If not, just make this a derived sata driver with an extra set of
-soc-specific registers to set up.
-
-	Arnd
+Eliad.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
