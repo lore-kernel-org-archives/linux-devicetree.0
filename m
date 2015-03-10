@@ -1,58 +1,60 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 05/15] musb: Do not use musb_read[b|w] /
- _write[b|w] wrappers in generic fifo functions
-Date: Tue, 10 Mar 2015 08:43:22 +0100
-Message-ID: <54FEA09A.6040401@redhat.com>
-References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-6-git-send-email-hdegoede@redhat.com> <4821047.1nqnop93Xh@wuerfel>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
+ control
+Date: Tue, 10 Mar 2015 08:55:43 +0100
+Message-ID: <20150310075543.GB24885@pengutronix.de>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+ <20150304112109.GB11010@pengutronix.de>
+ <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+ <20150305074207.GC11010@pengutronix.de>
+ <CALx668V4KJBmpSg3PKfXuzJsMHWgY=RCh8L=TzTC7-fEUh5HBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBKWB7KTQKGQETIBWODA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <4821047.1nqnop93Xh@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALx668V4KJBmpSg3PKfXuzJsMHWgY=RCh8L=TzTC7-fEUh5HBw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Mar 10, 2015 at 09:53:19AM +0800, Pi-Cheng Chen wrote:
+> On 5 March 2015 at 15:42, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> >
+> > My suggestion is to take another approach. Implement clk_set_rate for
+> > these muxes and in the set_rate hook:
+> >
+> > - switch mux to intermediate PLL parent
+> > - call clk_set_rate() for the real parent PLL
+> > - switch mux back to real parent PLL
+> 
+> Hi Sascha,
+> 
+> Thanks for your suggestion. I've tried to take this approach, but there's some
+> issues here.
+> 
+> Calling clk_set_rate() inside the set_rate callback of cpumux will cause
+> an infinite recursive calling in the clock framework:
+> mux.set_rate() -> pll.set_rate() -> mux.set_rate -> ...
 
-On 09-03-15 22:50, Arnd Bergmann wrote:
-> On Monday 09 March 2015 21:40:18 Hans de Goede wrote:
->> The generic fifo functions already use non wrapped accesses in various
->> cases through the iowrite#_rep functions, and all platforms which override
->> the default musb_read[b|w] / _write[b|w] functions also provide their own
->> fifo access functions, so we can safely drop the unnecessary indirection
->> from the fifo access functions.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->
-> The patch looks reasonably, but the description seem misleading.
-> I believe the real reason why it's ok to use __raw_writew for the
-> FIFO is that a FIFO by definition is using CPU endian access for
-> copying byte streams from memory, which is unlike any other MMIO
-> register that requires fixed-endian accessors.
+I don't understand why setting the PLL rate should call into the mux
+set_rate. Are you sure you call clk_set_rate for the mux parent clk?
+I think the general approach should work, drivers/clk/sirf/clk-common.c
+does something similar in cpu_clk_set_rate(). If you like you can send
+me your work in progress state privatly, I'll have a look then.
 
-I'm not sure that that is the case here, this fifo allows reading
-4 bytes at a time using 32 bit word access, so endianness may come
-into play. This patch is safe however since all existing users of
-the generic fifo_read / write helpers which this patch touches, are
-also using the generic musb_read[b|w] / _write[b|w] functions which
-are just __raw_foo wrappers, so there is no functional change, which
-is what the commit message tries to say.
+> 
+> I've also tries to update pll register settings in the set_rate()
+> callback of cpumux,
+> but the PLL clock information will not be correctly updated in this case.
 
-Note that sunxi needs this function because of the register address
-translation the sunxi_musb_readb / writeb wrappers are doing which
-does not know how to deal with fifo data, and besides that it should
-make the generic read / write fifo helpers somewhat faster by removing
-an indirect function call.
+No, that won't work.
 
-Regards,
+Sascha
 
-Hans
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
