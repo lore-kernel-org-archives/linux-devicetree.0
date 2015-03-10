@@ -1,123 +1,69 @@
-From: Viet Nga Dao <vndao@altera.com>
-Subject: Re: [PATCH v2] mtd:spi-nor: Add Altera EPCQ Driver
-Date: Tue, 10 Mar 2015 14:11:51 +0800
-Message-ID: <CAN1oZWw2RUf7jSDGqk5UUrT3DDR2MHD6ORGQ1OLXQyES6+3Cjw@mail.gmail.com>
-References: <CAN1oZWykZk13yCajiZc-xb5h372MrEP9iOWUqzhrt-feG6pkLQ@mail.gmail.com>
-	<CACna6ryC8TyxvvtztoSgZUXnE+tJdY6tefbXVkaZ60JoZ7ti7A@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
+Date: Tue, 10 Mar 2015 14:17:22 +0800
+Message-ID: <1425968242.4871.136.camel@mtksdaap41>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	 <1425638900-24989-2-git-send-email-yong.wu@mediatek.com>
+	 <1425641445.24292.280.camel@x220> <1425902271.13300.18.camel@mhfsdcap03>
+	 <1425923977.2317.4.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACna6ryC8TyxvvtztoSgZUXnE+tJdY6tefbXVkaZ60JoZ7ti7A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Viet Nga Dao <vndao@altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425923977.2317.4.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafal,
-Thanks for your review.
+On Mon, 2015-03-09 at 18:59 +0100, Paul Bolle wrote:
+> Hi Yong,
+> 
+> Yong Wu schreef op ma 09-03-2015 om 19:57 [+0800]:
+> > On Fri, 2015-03-06 at 12:30 +0100, Paul Bolle wrote:
+> > > On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > > --- a/drivers/soc/mediatek/Kconfig
+> > > > +++ b/drivers/soc/mediatek/Kconfig
+> > > > @@ -20,3 +20,10 @@ config MT8173_PMIC_WRAP
+> > > >  	  PMIC wrapper is a proprietary hardware in MT8173 to make
+> > > >  	  communication protocols to access PMIC device.
+> > > >  	  This driver implement access protocols for MT8173.
+> > > > +
+> > > > +config MTK_SMI
+> > > > +        bool
+> > > 
+> > > Nit: make this one tab instead of 8 spaces, please.
+> > > 
+> > > > +	help
+> > > > +	  Smi help enable/disable iommu in mt8173 and control the
+> > > > +	  clock of each local arbiter.
+> > > > +	  It should be true while MTK_IOMMU enable.
+> > > 
+> > > I don't think anyone using the *config tools will ever see this text, as
+> > > there's no prompt. So you might as well make this a comment or drop it
+> > > altogether.
+> > > 
+> >      We could search it in the tool even though we don't see it. In next
+> > version, I will try to make it a comment.
+> > > Is this selected by more than just MTK_IOMMU (see 2/5)? If not, I think
+> > > MTK_SMI will be set and unset in lockstep with MTK_IOMMU. In other
+> > > words, you could as well use one Kconfig symbol.
+> > > 
+> >     if we disable MTK_IOMMU, the MTK_SMI also should be selected.That is because 
+> > if the multimedia h/w want to work, the clock of the local arbiters always should be opened.
+> 
+> This is a bit confusing, I'm afraid. Do you mean to say that it ought to
+> be possible for MTK_SMI to be 'y' even if MTK_IOMMU would be 'n'?
 
-On Mon, Mar 9, 2015 at 2:31 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.c=
-om> wrote:
-> Hi Viet,
->
-> I'm not too active in mtd subsystem, so I didn't notice your patch
-> earlier. However I would like to share few comments.
->
-> On 11 February 2015 at 05:53, Viet Nga Dao <vndao@altera.com> wrote:
->> From: Viet Nga Dao <vndao@altera.com>
->>
->> Altera EPCQ Controller is a soft IP which enables access to Altera E=
-PCQ and
->> EPCS flash chips. This patch adds driver for these devices.
->
-> First of all, your whole patch is white-space damaged. It can't be
-> applied, seems all tabs were replaced with spaces. It's what I got in
-> my GMail and what was also received by patchwork, see
-> https://patchwork.ozlabs.org/patch/438684/
->
-> You'll need to resend using some smarter e-mail client, you may e.g.
-> try git send-email.
->
->
->> +#define EPCQ_INFO(_opcode_id, _ext_id, _sector_size, _n_sectors, _p=
-age_size) \
->> +    ((kernel_ulong_t)&(struct flash_info) {                \
->> +        .altera_flash_opcode_id =3D (_opcode_id),            \
->> +        .ext_id =3D (_ext_id),                    \
->> +        .sector_size =3D (_sector_size),                \
->> +        .n_sectors =3D (_n_sectors),                \
->> +        .page_size =3D (_page_size),                \
->> +    })
->
-> Starting with kernel 3.19 we don't have ext_id in struct anymore, see=
-:
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dd928a259385dc6fca3956b7775c588f21c0b50fc
->
->
+The SMI can be configured to bypass IOMMU and send traffic directly to
+memory interface. It is possible to not use IOMMU and have display/MM to
+use continuous memory only.
 
-Noted. I will make the modification accordingly.
+Besides MTK_IOMMU, we expect DRM, VDEC driver to select MTK_SMI as well.
 
->>  /* NOTE: double check command sets and memory organization when you=
- add
->>   * more nor chips.  This current list focusses on newer chips, whic=
-h
->>   * have been converging on command sets which including JEDEC ID.
->> @@ -637,6 +691,17 @@ static const struct spi_device_id spi_nor_ids[]=
- =3D {
->>      { "cat25c09", CAT25_INFO( 128, 8, 32, 2, SPI_NOR_NO_ERASE |
->> SPI_NOR_NO_FR) },
->>      { "cat25c17", CAT25_INFO( 256, 8, 32, 2, SPI_NOR_NO_ERASE |
->> SPI_NOR_NO_FR) },
->>      { "cat25128", CAT25_INFO(2048, 8, 64, 2, SPI_NOR_NO_ERASE |
->> SPI_NOR_NO_FR) },
->> +
->> +    /* Altera EPCQ/EPCS Flashes */
->> +    { "epcq16"  , EPCQ_INFO(2, 0x15, 0x10000, 32,   0x100) },
->> +    { "epcq32"  , EPCQ_INFO(2, 0x16, 0x10000, 64,   0x100) },
->> +    { "epcq64"  , EPCQ_INFO(2, 0x17, 0x10000, 128,  0x100) },
->> +    { "epcq128" , EPCQ_INFO(2, 0x18, 0x10000, 256,  0x100) },
->> +    { "epcq256" , EPCQ_INFO(2, 0x19, 0x10000, 512,  0x100) },
->> +    { "epcq512" , EPCQ_INFO(2, 0x20, 0x10000, 1024, 0x100) },
->> +    { "epcs16"  , EPCQ_INFO(1, 0x14, 0x10000, 32,   0x100) },
->> +    { "epcs64"  , EPCQ_INFO(1, 0x16, 0x10000, 128,  0x100) },
->> +    { "epcs128" , EPCQ_INFO(1, 0x18, 0x40000, 256,  0x100) },
->>      { },
->>  };
->>
->> @@ -666,6 +731,14 @@ static const struct spi_device_id
->> *spi_nor_read_id(struct spi_nor *nor)
->>          if (info->jedec_id =3D=3D jedec) {
->>              if (info->ext_id =3D=3D 0 || info->ext_id =3D=3D ext_je=
-dec)
->>                  return &spi_nor_ids[tmp];
->> +
->> +        /* altera epcq which is non jedec device
->> +         * use id[4] as opcode id to differentiate
->> +         * epcs and epcq devices
->> +         */
->> +        } else if (info->altera_flash_opcode_id =3D=3D id[4] &&
->> +              info->ext_id =3D=3D id[3]) {
->> +                return &spi_nor_ids[tmp];
->
-> This is the part I don't like. I think it's fishy, and that this chec=
-k
-> may result in false positives. Looks too generic.
->
-> Also the logic of your behavior there seems unclear to me. On the one
-> hand you don't have JEDEC, so you provide chip name using DT. But in
-> place above you stop trusting DT info and you try to (kind of)
-> auto-detect used chip anyway.
->
-> I guess we should finally think about some more generic way of passin=
-g
-> flash info.
+Joe.C
 
-Actually, i just want fo follow the way current spi-nor doing as much
-as possible. Like to read the device id and compare with info table.
-Like double checking from both dtb and the device id. Since the
-flashes i support do not have JEDEC id but only extended id. But the
-problem is that some of them have the same extended id, for example
-epcs64 and epcq32). That is why in my driver, i have to decode 1st
-byte of ext id to differentiate epcs and ecpq.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
