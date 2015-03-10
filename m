@@ -1,95 +1,81 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Tue, 10 Mar 2015 18:01:36 -0400
-Message-ID: <CAF6AEGvquV=RMv87CAP4C8JHXjjMk4Xbn1oD4pYcq0YaSFLL+A@mail.gmail.com>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>
-	<CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
-	<3A588B25-66ED-4BB5-8C8F-D050D8A2F9F3@codeaurora.org>
-	<10886228.vUHyKm1ubP@wuerfel>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b DesignWare
+ access
+Date: Tue, 10 Mar 2015 17:22:09 -0500
+Message-ID: <54FF6E91.1010704@opensource.altera.com>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>	<1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>	<CAHp75VcceG2O+YCw4twBzC_2v9+XQRpfBxMqGXERi3amnj3rdA@mail.gmail.com>	<54FDDFE6.8010109@opensource.altera.com>	<CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw@mail.gmail.com>	<54FDF8BB.4050202@opensource.altera.com>	<CAHp75VcmNOaiyRNLFzQT7nKS6piZzpYSoS785J86rKtNXx6KNg@mail.gmail.com>	<54FF556A.3020408@opensource.altera.com> <CAHp75VcgX8WWPkHVH80eQXGAG76xSG1YpDfb24E6aWA7GZ3OZg@mail.gmail.com>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <10886228.vUHyKm1ubP@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcgX8WWPkHVH80eQXGAG76xSG1YpDfb24E6aWA7GZ3OZg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, dinguyen <dinguyen@opensource.altera.com>, Linux Documentation List <linux-doc@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Thor Thayer <tthayer.linux@gmail.com>, Axel Lin <axel.lin@ingics.com>, baruch <baruch@tkos.co.il>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 3:52 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 10 March 2015 13:10:08 Kumar Gala wrote:
->> >>>>>>>>> The top level qcom,msm-id and qcom,board-id are utilized b=
-y bootloaders
->> >>>>>>>>>> on Qualcomm MSM platforms to determine which device tree =
-should be
->> >>>>>>>>>> utilized and passed to the kernel.
->> >>>>>>>>>>
->> >>>>>>>>>> Cc: <devicetree@vger.kernel.org>
->> >>>>>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->> >>>>>>>>>
->> >>>>>>>>> Is this the special magic that allows qcom bootloaders to =
-take a kernel
->> >>>>>>>>> plus multiple DTBs and figure out which DTB to pass?
->> >>>>>>>>>
->> >>>>>>>>> Kevin
->> >>>>>>>>
->> >>>>>>>> yes
->> >>>>>>>
->> >>>>>>> That's a bummer.
->> >>>>>>>
->> >>>>>>> Luckily, the solution for upstream is still quite simple: Pr=
-ovide only
->> >>>>>>> one devicetree, and it'll be used, right?
->> >>>>>>
->> >>>>>> We can provide only one, we still need the IDs in the DT.
->> >>>>>
->> >>>>> How are the DTS provided? Concatenated with the kernel, or in =
-a
->> >>>>> wrapped data format? Or in a separate partition from the kerne=
-l?
->> >>>>
->> >>>> Its a wrapped data format that is than concatenated with the ke=
-rnel if I remember correctly.
->> >>>
->> >>> Then you should be able to create a tool that can write this con=
-catenated
->> >>> format and insert these properties from a table that matches the=
- boot
->> >>> loader, right?
->> >>>
->> >>>      Arnd
->> >>
->> >> Are you suggesting the tool insert the properties in the DT?  I=E2=
-=80=99m not sure I understand what the point of doing that would be.
->> >
->> > To insert platform-local properties that mean nothing outside of t=
-he
->> > firmware packaging of the device trees, which is the case here?
->> >
->> > I think the idea of having the installer script inserting them is
->> > quite reasonable in this case.
->> >
->> >
->> > -Olof
+
+
+On 03/10/2015 03:44 PM, Andy Shevchenko wrote:
+> On Tue, Mar 10, 2015 at 10:34 PM, Thor Thayer
+> <tthayer@opensource.altera.com> wrote:
+>> On 03/09/2015 03:02 PM, Andy Shevchenko wrote:
+>>>
+>>> On Mon, Mar 9, 2015 at 9:47 PM, Thor Thayer
+>>> <tthayer@opensource.altera.com> wrote:
+>>>>
+>>>> On 03/09/2015 01:54 PM, Andy Shevchenko wrote:
+>>>
+>>>
+>>>> Yes, I just need the 32 bit write. I was trying to remain consistent but
+>>>> I
+>>>> agree that only changing only writes would minimize the changes.
+>>>
+>>>
+>>> Which is still makes me anxious.
+>>>
+>>> I have briefly read a chapter for SPI in pdf you sent link to. I
+>>> didn't find anything except SPI supports 32 bit data width.
+>>>
+>>> It would be nice if you ping your HW engineers and clarify what
+>>> exactly is happening there.
+>>>
 >>
->> These values are static, so not sure what the point of having the in=
-staller script do that?
+>> I confirmed with our HW engineer that writes are required to be 32 bits. We
+>> are in the process of updating our documentation to explicitly say this.
 >>
+>> Since there are no byte enables on our 32 bit APB interface, writing only 1
+>> or 2 bytes could corrupt the other bytes in the 32 bit word. The 32 bit
+>> write enforces requiring an explicit read/modify/write for less than 32 bit
+>> writes.
+>>
+>> Since reads are non-destructive (nothing is being written back into the
+>> register), it is safe for all reads to get promoted to 32 bit reads.
 >
-> It combines two hacks to work around a nonstandard boot loader.
-> Once the bootloader is fixed, you can stop using that script.
+> Thanks for detailed explanation!
+>
+>> Is it preferable to have both 32 bit reads and writes for consistency?
+>>
+>> Or is it preferable to make the minimal number of changes which would be to
+>> only add a 32 bit write function?
+>
+> Both I think just to be more clear.
+>
+> However, I'm now considering what if we just replace
+> dw_{write/read}w() by l-variants without any additional DT property
+> and accessor functions?
+> Would it work for both your cases (old chip, new chip)?
+> On my side I may test this on Intel MID.
 >
 
-still sounds like an extra hurdle for distro's..  can't you just add
-the extra entry in the dts files w/ a comment about workaround for
-bootloader (and then possibly *not* document the property)?
+Yes, this would be the simplest solution. The l-variant certainly works 
+on our legacy SoCs. I'll be curious to hear your testing results.
 
-BR,
--R
+The data sheet mentions that registers are addressed at 32-bit 
+boundaries to remain consistent with the AHB bus (Section 6.1 of 
+dw_apb_ssi_db.pdf).  Additionally unused bits are reserved for writes 
+and 0 for reads so this seems like a good solution.
 
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-m=
-sm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My concern is the presence of legacy devices that I have no way of 
+testing. Is a Request For Test in the body of the patch sufficient?
