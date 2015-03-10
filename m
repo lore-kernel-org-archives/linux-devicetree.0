@@ -1,123 +1,175 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Tue, 10 Mar 2015 19:44:49 +0100
-Message-ID: <20150310184449.GZ5085@lukather>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
- <20150303071635.GC4713@lukather>
- <54F568F8.1040104@redhat.com>
- <20150303082209.GE4713@lukather>
- <54F5B51F.6030609@redhat.com>
- <20150303135847.GH4911@lukather>
- <54FED277.4040000@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [RFC PATCH v15 02/11] ARM: qcom: Add Subsystem Power Manager
+ (SPM) driver
+Date: Tue, 10 Mar 2015 12:51:09 -0600
+Message-ID: <20150310185109.GC3727@linaro.org>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
+ <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
+ <0D04D613-5916-448E-92F3-27C3D25AFE51@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="csehs8AeUiGwWnbr"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBL7X7STQKGQESRGZD6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54FED277.4040000-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <0D04D613-5916-448E-92F3-27C3D25AFE51@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
---csehs8AeUiGwWnbr
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Tue, Mar 10 2015 at 11:26 -0600, Kumar Gala wrote:
+>
+>On Mar 9, 2015, at 10:16 AM, Lina Iyer <lina.iyer@linaro.org> wrote:
+>
+>> SPM is a hardware block that controls the peripheral logic surroundi=
+ng
+>> the application cores (cpu/l$). When the core executes WFI instructi=
+on,
+>> the SPM takes over the putting the core in low power state as
+>> configured. The wake up for the SPM is an interrupt at the GIC, whic=
+h
+>> then completes the rest of low power mode sequence and brings the co=
+re
+>> out of low power mode.
+>>
+>> The SPM has a set of control registers that configure the SPMs
+>> individually based on the type of the core and the runtime condition=
+s.
+>> SPM is a finite state machine block to which a sequence is provided =
+and
+>> it interprets the bytes and executes them in sequence. Each low powe=
+r
+>> mode that the core can enter into is provided to the SPM as a sequen=
+ce.
+>>
+>> Configure the SPM to set the core (cpu or L2) into its low power mod=
+e,
+>> the index of the first command in the sequence is set in the SPM_CTL
+>> register. When the core executes ARM wfi instruction, it triggers th=
+e
+>> SPM state machine to start executing from that index. The SPM state
+>> machine waits until the interrupt occurs and starts executing the re=
+st
+>> of the sequence until it hits the end of the sequence. The end of th=
+e
+>> sequence jumps the core out of its low power mode.
+>>
+>> Add support for an idle driver to set up the SPM to place the core i=
+n
+>> Standby or Standalone power collapse mode when the core is idle.
+>>
+>> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+>> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora=
+=2Eorg>
+>> Original tree available at -
+>> git://codeaurora.org/quic/la/kernel/msm-3.10.git
+>>
+>> Cc: Stephen Boyd <sboyd@codeaurora.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Kevin Hilman <khilman@linaro.org>
+>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>> ---
+>> .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  31 +-
+>> drivers/soc/qcom/Kconfig                           |   7 +
+>> drivers/soc/qcom/Makefile                          |   1 +
+>> drivers/soc/qcom/spm.c                             | 422 +++++++++++=
+++++++++++
+>> 4 files changed, 455 insertions(+), 6 deletions(-)
+>> create mode 100644 drivers/soc/qcom/spm.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt=
+ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>> index 1505fb8..690c3c0 100644
+>> --- a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>> @@ -2,11 +2,20 @@ SPM AVS Wrapper 2 (SAW2)
+>>
+>> The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and t=
+he
+>> Adaptive Voltage Scaling (AVS) hardware. The SPM is a programmable
+>> -micro-controller that transitions a piece of hardware (like a proce=
+ssor or
+>> +power-controller that transitions a piece of hardware (like a proce=
+ssor or
+>> subsystem) into and out of low power modes via a direct connection t=
+o
+>> the PMIC. It can also be wired up to interact with other processors =
+in the
+>> system, notifying them when a low power state is entered or exited.
+>>
+>> +Multiple revisions of the SAW hardware are supported using these De=
+vice Nodes.
+>> +SAW2 revisions differ in the register offset and configuration data=
+=2E Also, the
+>> +same revision of the SAW in different SoCs may have different confi=
+guration
+>> +data due the the differences in hardware capabilities. Hence the So=
+C name, the
+>> +version of the SAW hardware in that SoC and the distinction between=
+ cpu (big
+>> +or Little) or cache, may be needed to uniquely identify the SAW reg=
+ister
+>> +configuration and initialization data. The compatible string is use=
+d to
+>> +indicate this parameter.
+>> +
+>> PROPERTIES
+>>
+>> - compatible:
+>> @@ -14,10 +23,13 @@ PROPERTIES
+>> 	Value type: <string>
+>> 	Definition: shall contain "qcom,saw2". A more specific value should=
+ be
+>> 		    one of:
+>> -			 "qcom,saw2-v1"
+>> -			 "qcom,saw2-v1.1"
+>> -			 "qcom,saw2-v2"
+>> -			 "qcom,saw2-v2.1"
+>> +			"qcom,saw2-v1"
+>> +			"qcom,saw2-v1.1"
+>> +			"qcom,saw2-v2"
+>> +			"qcom,saw2-v2.1"
+>> +			"qcom,apq8064-saw2-v1.1-cpu"
+>> +			"qcom,msm8974-saw2-v2.1-cpu"
+>> +			"qcom,apq8084-saw2-v2.1-cpu=E2=80=9D
+>>
+>
+>We don=E2=80=99t seem to use the "qcom,saw2-v1*=E2=80=9D variants so s=
+hould we just drop them?
 
-On Tue, Mar 10, 2015 at 12:16:07PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 03-03-15 14:58, Maxime Ripard wrote:
-> >On Tue, Mar 03, 2015 at 02:20:31PM +0100, Hans de Goede wrote:
-> >>Hi,
-> >>
-> >>On 03-03-15 09:22, Maxime Ripard wrote:
-> >>>On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
-> >>>>>>+/ {
-> >>>>>>+	model = "Mele I7 Quad top set box";
-> >>>>>>+	compatible = "mele,i7", "allwinner,sun6i-a31";
-> >>>>>>+
-> >>>>>>+	chosen {
-> >>>>>>+		bootargs = "earlyprintk console=ttyS0,115200";
-> >>>>>
-> >>>>>Using earlyprintk by default is a bad idea if the kernel is configured
-> >>>>>with DEBUG_LL support for another SoC.
-> >>>>
-> >>>>While on this subject, u-boot now sets the chosen/stdout-path property
-> >>>>up by default, which means that the kernel will do the right thing by
-> >>>>default. So we we really do not need any bootargs= in our dts files.
-> >>>
-> >>>I just tested that this weekend, and it turned out that the kernel
-> >>>couldn't use it so far (ie, no output until init takes over and setup
-> >>>a TTY on ttyS0).
-> >>>
-> >>>Was it working for you?
-> >>
-> >>Yes, note that the kernel only honors the stdout-path property if
-> >>there is no console= argument present if there is a console= argument
-> >>present on the kernel cmdline then that will overrule the stdout-path
-> >>property
-> >
-> >Yeah, I removed the bootargs entirely.
-> >
-> >>Which board did you test with, and what u-boot and kernel version ?
-> >
-> >I tested it on my A31 hummingbird, with allwinner's u-boot, but with
-> >/chosen/stdout-path hardcoded to "serial0:115200n8", with a 4.0-rc1
-> >kernel.
-> 
-> I'm not sure if stdout-path supports aliases this is what u-boot is using,
-> and which works fine (with 4.0-rc1 kernel): "/soc@01c00000/serial@01c28000:115200"
-
-I gave that another try, and it worked like a charm, so it really
-looks like an instance of PEBKAC.
-
-> >But it might very well just be me. We just tested it on a Marvell
-> >board (that uses the same serial driver) this morning and it was fine,
-> >so I don't think it's really worth worrying about this :)
-> >
-> >>>>Currently we've a random mix where we do have bootargs in some, but
-> >>>>not in most sunxi dts files. I believe we should simply remove it
-> >>>>everywhere...
-> >>>
-> >>>We used to set them in SoCs that are not supported by U-boot yet, and
-> >>>where the bootloader won't come and patch the DT (A31, A23, A80).
-> >>
-> >>Ah, so that is (was) the logic, following that logic we should probably
-> >>remove bootargs= from at least the a23 and a31 boards (basically
-> >>from all boards but a80).
-> >
-> >I'm not so sure about the A31, since most boards won't even boot by
-> >default on the SD card
-> 
-> True.
-> 
-> > and we have no way to replace U-Boot in NAND
-> >so far (afaik). But replacing them by stdout-path is a very good
-> >solution too.
-> 
-> You mean putting stdout-path in the dts, I'm not sure if I like that,
-> to me both bootargs and stdout-path are something which should be
-> left to the bootloader to set. But I understand that when not
-> using upstream u-boot that may be an issue.
-
-I know that some other platforms ask for stdout-path when they review
-it, because iirc, barebox uses it to know on which console to output
-its log and export its shell, which is also a valid interpretation of
-that property, and, contrary to bootargs, doesn't really imply that
-the bootloader should update it.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---csehs8AeUiGwWnbr--
+Sure. Will fix in the next.
+>
+>
+>> - reg:
+>> 	Usage: required
+>> @@ -26,10 +38,17 @@ PROPERTIES
+>> 		    the register region. An optional second element specifies
+>> 		    the base address and size of the alias register region.
+>>
+>> +- regulator:
+>> +	Usage: optional
+>> +	Value type: boolean
+>> +	Definition: Indicates that this SPM device acts as a regulator dev=
+ice
+>> +			device for the core (CPU or Cache) the SPM is attached
+>> +			to.
+>>
+>> Example:
+>>
+>> -	regulator@2099000 {
+>> +	power-controller@2099000 {
+>> 		compatible =3D "qcom,saw2";
+>> 		reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
+>> +		regulator;
+>> 	};
+>
+>- k
+>
+>--=20
+>Qualcomm Innovation Center, Inc.
+>The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Fo=
+rum,
+>a Linux Foundation Collaborative Project
+>
