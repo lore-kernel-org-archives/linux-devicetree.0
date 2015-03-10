@@ -1,29 +1,111 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 14/18] ARM: Add STM32 family machine
-Date: Tue, 10 Mar 2015 16:10:21 +0100
-Message-ID: <2736580.bRymLWnSQl@wuerfel>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com> <1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Tue, 10 Mar 2015 19:01:39 +0200
+Message-ID: <CAB3XZEdK2O7tSSTchvRQtaefzCECjjQ-biQmOBHGdzJaBknSFQ@mail.gmail.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+	<2223973.a64rBcZvaA@wuerfel>
+	<CAB3XZEftjwUGS_Kj2dCxYY1m82C+a1_=akbnG3_hLETCr+Dddg@mail.gmail.com>
+	<5683860.JYkc24rKim@wuerfel>
+	<CAB3XZEfEQnb7qsxuAAr6pUehm1nw6Eu4ZsV1+E477yF5K1hczA@mail.gmail.com>
+	<20150310161801.GR5264@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, N
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150310161801.GR5264-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 February 2015 19:01:13 Maxime Coquelin wrote:
-> +static void __init stm32_timer_init(void)
-> +{
-> +       of_clk_init(NULL);
-> +       reset_controller_of_init();
-> +       clocksource_of_init();
-> +
-> +}
+On Tue, Mar 10, 2015 at 6:18 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150310 09:11]:
+>> On Tue, Mar 10, 2015 at 5:52 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Tuesday 10 March 2015 16:31:33 Eliad Peller wrote:
+>> >> On Tue, Mar 10, 2015 at 4:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> >> > On Tuesday 10 March 2015 13:00:19 Eliad Peller wrote:
+>> >> >> On Tue, Mar 10, 2015 at 12:49 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> >> >> >> > I was expecting you to remove all calls to legacy_init_wl12xx from this file,
+>> >> >> >> > including the ones for wl12xx aside from the wl18xx ones you removed, but
+>> >> >> >> > if that's enough to clean out the platform_data handling from the wlcore
+>> >> >> >> > driver, it's good enough as a start.
+>> >> >> >> not sure i'm following - can you elaborate?
+>> >> >> >>
+>> >> >> >> i'll summarize the way i see it. please correct me if i'm wrong.
+>> >> >> >>
+>> >> >> >> both wl18xx and wl12xx use the platform data to get the irq number.
+>> >> >> >> wl12xx (only) also needs some additional clock definitions to be
+>> >> >> >> passed. there's currently some issue with specifying some the of clock
+>> >> >> >> sources, so i preferred starting only with (the simpler) wl18xx
+>> >> >> >> bindings.
+>> >> >> >>
+>> >> >> >> for platforms with wl18xx, we can remove the pdata-quirk, as all the
+>> >> >> >> data (i.e. irq) can be passed by the new DT bindings.
+>> >> >> >> however, for platforms with wl12xx, we still need to pass the clock
+>> >> >> >> definitions (along with the irq), so we have to keep
+>> >> >> >> legacy_init_wl12xx for the time being (and that's also why we have to
+>> >> >> >> currently keep the platform_data handling in the wlcore driver)
+>> >> >> >>
+>> >> >> >> do you have something else in mind?
+>> >> >> >
+>> >> >> > I think what Arnd is saying is we've now removed all the wl12xx using
+>> >> >> > legacy platforms, so all of them can boot with just data from dts.
+>> >> >
+>> >> > Right, that was my idea.
+>> >> >
+>> >> >> I don't think that's the case (unless i'm missing something).
+>> >> >> e.g. there's still pdata-quirk for "compulab,omap3-sbc-t3730" which
+>> >> >> initializes wl12xx device.
+>> >> >
+>> >> > This one is just like the igep0030, as Tony was saying: the board
+>> >> > boots from device tree already, so now that we have a binding for
+>> >> > it, we can remove the wl12xx_set_platform_data() for it.
+>> >> >
+>> >> i think the wl12xx_set_platform_data() name created some confusion -
+>> >> it is used to pass platform data for both wl12xx and wl18xx devices.
+>> >> (this confusion is all around the wlcore driver as well, due to the
+>> >> code evolution)
+>> >>
+>> >> the binding i added is for wl18xx only (there is no wl12xx binding yet).
+>> >> the remaining boards, AFAICT, have wl12xx (rather than wl18xx) cards.
+>> >> so i don't see how we can remove these wl12xx_set_platform_data()
+>> >> calls before we have wl12xx bindings in-place as well.
+>> >
+>> > What is missing for that binding then? I keep getting confused here,
+>> > but I thought that they share the implementation that looks at the
+>> > platform data.
+>> >
+>> they both get the same wl12xx_platform_data struct, but only wl12xx
+>> cares about the clocks-related fields.
+>> the bindings i added parses only the irq.
+>>
+>> (Luca tried previously to upstream wl12xx DT support along with the
+>> required clock DT changes, but got some rejections, mainly wrt. clock
+>> stuff.
+>> e.g. http://thread.gmane.org/gmane.linux.kernel/1520752
+>> that's why i preferred starting with "easier" wl18xx bindings only)
+>
+> I believe we did not have clock bindings back then, now it's simple
+> to get the clock. If it's some internal clock to the wl12xx, then
+> that's a different story, it should be just hidden behind a compatible
+> flag then.
+>
+i'm really not familiar with the common clock framework, but there
+still doesn't seem to be a way to determine whether a clock is XTAL or
+not (which is what Luca's patch was about). should we use compatible
+flag in such case? i'm not sure it sounds right.
 
-Don't do that. As I said, I'd rather not introduce reset_controller_of_init()
-at all, but if we end up doing it, it should be run by default for
-any machine that has an empty timer_init callback.
+anyway, i'd really prefer, if possible, starting with the wl18xx
+bindings, and defer the wl12xx complications to later on.
+(i also need to find some wl12xx card in order to actually test the
+patches once i'll have them...)
 
-	Arnd
+we do have to make sure these wl18xx bindings are future-compatible
+with the wl12xx ones, but i think the current bindings are pretty much
+standard (and are actually a subset of the bindings needed by wl12xx),
+so it should be fine.
+
+Eliad.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
