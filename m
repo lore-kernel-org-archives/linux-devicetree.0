@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v5 06/12] regulator: axp20x: prepare support for
- multiple AXP chip families
-Date: Tue, 10 Mar 2015 19:59:17 +0800
-Message-ID: <1425988764-23618-7-git-send-email-wens@csie.org>
+Subject: [PATCH v5 11/12] ARM: dts: sun6i: Add pinmux settings
+ for mmc1 to dtsi
+Date: Tue, 10 Mar 2015 19:59:22 +0800
+Message-ID: <1425988764-23618-12-git-send-email-wens@csie.org>
 References: <1425988764-23618-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -17,287 +17,34 @@ List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+mmc1 is used to connect to the WiFi chip on the Hummingbird A31.
 
-Rework the AXP20X_ macros and probe function to support the several chip
-families, so that each family can define it's own set of regulators.
-
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-[wens-jdAy2FN1RRM@public.gmane.org: Support different DC-DC work frequency ranges]
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I realize this patch and the next set off a whole bunch of alarms with
-lines longer than 80 characters, but I really don't want to introduce
-a whole bunch of whitespace changes together.
-
----
- drivers/regulator/axp20x-regulator.c | 143 +++++++++++++++++++++++------------
- 1 file changed, 94 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index e4331f5e5d7d..50ae0b5f2c0c 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -32,15 +32,15 @@
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 92abea20b946..39d87a901b46 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -581,6 +581,14 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
  
- #define AXP20X_FREQ_DCDC_MASK		0x0f
- 
--#define AXP20X_DESC_IO(_id, _match, _supply, _min, _max, _step, _vreg, _vmask,	\
--		       _ereg, _emask, _enable_val, _disable_val)		\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC_IO(_family, _id, _match, _supply, _min, _max, _step, _vreg,	\
-+		    _vmask, _ereg, _emask, _enable_val, _disable_val)		\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.of_match	= of_match_ptr(_match),				\
- 		.regulators_node = of_match_ptr("regulators"),			\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= (((_max) - (_min)) / (_step) + 1),		\
- 		.owner		= THIS_MODULE,					\
- 		.min_uV		= (_min) * 1000,				\
-@@ -54,15 +54,15 @@
- 		.ops		= &axp20x_ops,					\
- 	}
- 
--#define AXP20X_DESC(_id, _match, _supply, _min, _max, _step, _vreg, _vmask,	\
--		    _ereg, _emask)						\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC(_family, _id, _match, _supply, _min, _max, _step, _vreg,	\
-+		 _vmask, _ereg, _emask) 					\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.of_match	= of_match_ptr(_match),				\
- 		.regulators_node = of_match_ptr("regulators"),			\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= (((_max) - (_min)) / (_step) + 1),		\
- 		.owner		= THIS_MODULE,					\
- 		.min_uV		= (_min) * 1000,				\
-@@ -74,29 +74,29 @@
- 		.ops		= &axp20x_ops,					\
- 	}
- 
--#define AXP20X_DESC_FIXED(_id, _match, _supply, _volt)				\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC_FIXED(_family, _id, _match, _supply, _volt)			\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.of_match	= of_match_ptr(_match),				\
- 		.regulators_node = of_match_ptr("regulators"),			\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= 1,						\
- 		.owner		= THIS_MODULE,					\
- 		.min_uV		= (_volt) * 1000,				\
- 		.ops		= &axp20x_ops_fixed				\
- 	}
- 
--#define AXP20X_DESC_TABLE(_id, _match, _supply, _table, _vreg, _vmask, _ereg,	\
--			  _emask)						\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC_TABLE(_family, _id, _match, _supply, _table, _vreg, _vmask,	\
-+		       _ereg, _emask)						\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.of_match	= of_match_ptr(_match),				\
- 		.regulators_node = of_match_ptr("regulators"),			\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= ARRAY_SIZE(_table),				\
- 		.owner		= THIS_MODULE,					\
- 		.vsel_reg	= (_vreg),					\
-@@ -136,37 +136,57 @@ static struct regulator_ops axp20x_ops = {
- };
- 
- static const struct regulator_desc axp20x_regulators[] = {
--	AXP20X_DESC(DCDC2, "dcdc2", "vin2", 700, 2275, 25, AXP20X_DCDC2_V_OUT,
--		    0x3f, AXP20X_PWR_OUT_CTRL, 0x10),
--	AXP20X_DESC(DCDC3, "dcdc3", "vin3", 700, 3500, 25, AXP20X_DCDC3_V_OUT,
--		    0x7f, AXP20X_PWR_OUT_CTRL, 0x02),
--	AXP20X_DESC_FIXED(LDO1, "ldo1", "acin", 1300),
--	AXP20X_DESC(LDO2, "ldo2", "ldo24in", 1800, 3300, 100,
--		    AXP20X_LDO24_V_OUT, 0xf0, AXP20X_PWR_OUT_CTRL, 0x04),
--	AXP20X_DESC(LDO3, "ldo3", "ldo3in", 700, 3500, 25, AXP20X_LDO3_V_OUT,
--		    0x7f, AXP20X_PWR_OUT_CTRL, 0x40),
--	AXP20X_DESC_TABLE(LDO4, "ldo4", "ldo24in", axp20x_ldo4_data,
--			  AXP20X_LDO24_V_OUT, 0x0f, AXP20X_PWR_OUT_CTRL, 0x08),
--	AXP20X_DESC_IO(LDO5, "ldo5", "ldo5in", 1800, 3300, 100,
--		       AXP20X_LDO5_V_OUT, 0xf0, AXP20X_GPIO0_CTRL, 0x07,
--		       AXP20X_IO_ENABLED, AXP20X_IO_DISABLED),
-+	AXP_DESC(AXP20X, DCDC2, "dcdc2", "vin2", 700, 2275, 25,
-+		 AXP20X_DCDC2_V_OUT, 0x3f, AXP20X_PWR_OUT_CTRL, 0x10),
-+	AXP_DESC(AXP20X, DCDC3, "dcdc3", "vin3", 700, 3500, 25,
-+		 AXP20X_DCDC3_V_OUT, 0x7f, AXP20X_PWR_OUT_CTRL, 0x02),
-+	AXP_DESC_FIXED(AXP20X, LDO1, "ldo1", "acin", 1300),
-+	AXP_DESC(AXP20X, LDO2, "ldo2", "ldo24in", 1800, 3300, 100,
-+		 AXP20X_LDO24_V_OUT, 0xf0, AXP20X_PWR_OUT_CTRL, 0x04),
-+	AXP_DESC(AXP20X, LDO3, "ldo3", "ldo3in", 700, 3500, 25,
-+		 AXP20X_LDO3_V_OUT, 0x7f, AXP20X_PWR_OUT_CTRL, 0x40),
-+	AXP_DESC_TABLE(AXP20X, LDO4, "ldo4", "ldo24in", axp20x_ldo4_data,
-+		       AXP20X_LDO24_V_OUT, 0x0f, AXP20X_PWR_OUT_CTRL, 0x08),
-+	AXP_DESC_IO(AXP20X, LDO5, "ldo5", "ldo5in", 1800, 3300, 100,
-+		    AXP20X_LDO5_V_OUT, 0xf0, AXP20X_GPIO0_CTRL, 0x07,
-+		    AXP20X_IO_ENABLED, AXP20X_IO_DISABLED),
- };
- 
- static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- {
- 	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+	u32 min, max, def, step;
++			mmc1_pins_a: mmc1@0 {
++				allwinner,pins = "PG0", "PG1", "PG2", "PG3",
++						 "PG4", "PG5";
++				allwinner,function = "mmc1";
++				allwinner,drive = <2>;
++				allwinner,pull = <0>;
++			};
 +
-+	switch (axp20x->variant) {
-+	case AXP202_ID:
-+	case AXP209_ID:
-+		min = 750;
-+		max = 1875;
-+		def = 1500;
-+		step = 75;
-+		break;
-+	default:
-+		dev_err(&pdev->dev,
-+			"Setting DCDC frequency for unsupported AXP variant\n");
-+		return -EINVAL;
-+	}
-+
-+	if (dcdcfreq == 0)
-+		dcdcfreq = def;
- 
--	if (dcdcfreq < 750) {
--		dcdcfreq = 750;
--		dev_warn(&pdev->dev, "DCDC frequency too low. Set to 750kHz\n");
-+	if (dcdcfreq < min) {
-+		dcdcfreq = min;
-+		dev_warn(&pdev->dev, "DCDC frequency too low. Set to %ukHz\n",
-+			 min);
- 	}
- 
--	if (dcdcfreq > 1875) {
--		dcdcfreq = 1875;
--		dev_warn(&pdev->dev, "DCDC frequency too high. Set to 1875kHz\n");
-+	if (dcdcfreq > max) {
-+		dcdcfreq = max;
-+		dev_warn(&pdev->dev, "DCDC frequency too high. Set to %ukHz\n",
-+			 max);
- 	}
- 
--	dcdcfreq = (dcdcfreq - 750) / 75;
-+	dcdcfreq = (dcdcfreq - min) / step;
- 
- 	return regmap_update_bits(axp20x->regmap, AXP20X_DCDC_FREQ,
- 				  AXP20X_FREQ_DCDC_MASK, dcdcfreq);
-@@ -176,7 +196,7 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
- {
- 	struct device_node *np, *regulators;
- 	int ret;
--	u32 dcdcfreq;
-+	u32 dcdcfreq = 0;
- 
- 	np = of_node_get(pdev->dev.parent->of_node);
- 	if (!np)
-@@ -186,7 +206,6 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
- 	if (!regulators) {
- 		dev_warn(&pdev->dev, "regulators node not found\n");
- 	} else {
--		dcdcfreq = 1500;
- 		of_property_read_u32(regulators, "x-powers,dcdc-freq", &dcdcfreq);
- 		ret = axp20x_set_dcdc_freq(pdev, dcdcfreq);
- 		if (ret < 0) {
-@@ -202,15 +221,27 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
- 
- static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 workmode)
- {
--	unsigned int mask = AXP20X_WORKMODE_DCDC2_MASK;
-+	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
-+	unsigned int mask;
- 
--	if ((id != AXP20X_DCDC2) && (id != AXP20X_DCDC3))
--		return -EINVAL;
-+	switch (axp20x->variant) {
-+	case AXP202_ID:
-+	case AXP209_ID:
-+		if ((id != AXP20X_DCDC2) && (id != AXP20X_DCDC3))
-+			return -EINVAL;
-+
-+		mask = AXP20X_WORKMODE_DCDC2_MASK;
-+		if (id == AXP20X_DCDC3)
-+			mask = AXP20X_WORKMODE_DCDC3_MASK;
- 
--	if (id == AXP20X_DCDC3)
--		mask = AXP20X_WORKMODE_DCDC3_MASK;
-+		workmode <<= ffs(mask) - 1;
-+		break;
- 
--	workmode <<= ffs(mask) - 1;
-+	default:
-+		/* should not happen */
-+		WARN_ON(1);
-+		return -EINVAL;
-+	}
- 
- 	return regmap_update_bits(rdev->regmap, AXP20X_DCDC_MODE, mask, workmode);
- }
-@@ -219,22 +250,36 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- {
- 	struct regulator_dev *rdev;
- 	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+	const struct regulator_desc *regulators;
- 	struct regulator_config config = {
- 		.dev = pdev->dev.parent,
- 		.regmap = axp20x->regmap,
-+		.driver_data = axp20x,
- 	};
--	int ret, i;
-+	int ret, i, nregulators;
- 	u32 workmode;
- 
-+	switch (axp20x->variant) {
-+	case AXP202_ID:
-+	case AXP209_ID:
-+		regulators = axp20x_regulators;
-+		nregulators = AXP20X_REG_ID_MAX;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
-+			axp20x->variant);
-+		return -EINVAL;
-+	}
-+
- 	/* This only sets the dcdc freq. Ignore any errors */
- 	axp20x_regulator_parse_dt(pdev);
- 
--	for (i = 0; i < AXP20X_REG_ID_MAX; i++) {
--		rdev = devm_regulator_register(&pdev->dev, &axp20x_regulators[i],
-+	for (i = 0; i < nregulators; i++) {
-+		rdev = devm_regulator_register(&pdev->dev, &regulators[i],
- 					       &config);
- 		if (IS_ERR(rdev)) {
- 			dev_err(&pdev->dev, "Failed to register %s\n",
--				axp20x_regulators[i].name);
-+				regulators[i].name);
- 
- 			return PTR_ERR(rdev);
- 		}
-@@ -245,7 +290,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		if (!ret) {
- 			if (axp20x_set_dcdc_workmode(rdev, i, workmode))
- 				dev_err(&pdev->dev, "Failed to set workmode on %s\n",
--					axp20x_regulators[i].name);
-+					rdev->desc->name);
- 		}
- 	}
- 
+ 			gmac_pins_mii_a: gmac_mii@0 {
+ 				allwinner,pins = "PA0", "PA1", "PA2", "PA3",
+ 						"PA8", "PA9", "PA11",
 -- 
 2.1.4
