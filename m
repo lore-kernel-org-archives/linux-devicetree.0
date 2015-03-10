@@ -1,138 +1,51 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v5 0/5] Add support for Fujitsu USB host controller
-Date: Tue, 10 Mar 2015 16:30:23 -0500
-Message-ID: <20150310213023.GL25666@saruman.tx.rr.com>
-References: <1424579140-30567-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-Reply-To: <balbi@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 12/12] ARM: dts: sun6i: hummingbird:
+ Enable the onboard WiFi module
+Date: Tue, 10 Mar 2015 22:32:18 +0100
+Message-ID: <20150310213218.GH5085@lukather>
+References: <1425988764-23618-1-git-send-email-wens@csie.org>
+ <1425988764-23618-14-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VBq/nvTu32OVLBUP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="FIfSo9pyi3Jhph90"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBWH7WTQKGQEV2Y4KDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1424579140-30567-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sneeker Yeh <sneeker.yeh@gmail.com>, Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+In-Reply-To: <1425988764-23618-14-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---VBq/nvTu32OVLBUP
-Content-Type: text/plain; charset=us-ascii
+--FIfSo9pyi3Jhph90
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 22, 2015 at 12:25:35PM +0800, Sneeker Yeh wrote:
-> These patches add support for XHCI compliant Host controller found
-> on Fujitsu Socs, and are based on http://lwn.net/Articles/629162/
-> The first patch is to add Fujitsu glue layer of Synopsis DesignWare USB3 =
-driver
-> and last four patch is about quirk implementation of errata in Synopsis
-> DesignWare USB3 IP.
->=20
-> Patch 1 introduces a quirk with device disconnection management necessary
-> Synopsys Designware USB3 IP with versions < 3.00a and hardware configurat=
-ion
-> DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1. It solves a problem where without =
-the
-> quirk, that host controller will die after a usb device is disconnected f=
-rom
-> port of root hub.
->=20
-> Patch 2 is to set Synopsis quirk in xhci platform driver based on xhci pl=
-atform
-> data.
->=20
-> Patch 3 is to add a revison number 2.90a and 3.00a of Synopsis DesignWare=
- USB3
-> IP core driver.
->=20
-> Patch 4 introduces using a quirk based on a errata of Synopsis
-> DesignWare USB3 IP which is versions < 3.00a and has hardware configurati=
-on
-> DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1, which cannot be read from software=
-=2E As a
-> result this quirk has to be enabled via platform data or device tree.
->=20
-> Patch 5 introduces Fujitsu Specific Glue layer in Synopsis DesignWare USB=
-3 IP
-> driver.=20
->=20
-> Successfully tested on Fujitsu mb86s7x board.
->=20
-> Changes since v4 (RFC):
-> [https://lkml.org/lkml/2015/2/17/13]
->  - based on Felipe's comment, rename dwc3-mb86s70.c to dwc3-fujitsu.c whi=
-ch is
->    more generic.
->  - based on Mathias's comment, remove unhelpful comment, and change the
->    function name of xhci_try_to_clear_csc() to xhci_late_csc_clear_quirk()
->    which is more appropriate. =20
->=20
-> Changes since v3 (RFC):
-> [https://lkml.org/lkml/2015/1/25/8]
->  - based on Mathias's comment, fix bug and using xhci_port_state_to_neutr=
-al()
->    helper function to mask out some RW1C bits, prevent writing back all t=
-he
->    bits read from the PORTSC register.
->=20
-> Changes since v2 (RFC):
-> [https://lkml.org/lkml/2015/1/19/55]
->  - based on Felipe's comment, re-order patches to avoid breaking bisectab=
-ility,
->  - based on Felipe's comment, add comment to structure's member, and sort=
- it
->    alphabetically,
->  - based on Felipe's comment, add another v2.90 revision number in dwc3 I=
-P.
->=20
-> Changes since v1 (RFC):
-> [https://lkml.org/lkml/2014/12/15/929]
->  - based on Arnd's comment, remove entire unnecessary Fujitsu EHCI/OHCI g=
-lue,
->  - based on Felipe's comment, fix mis-using of runtime-pm API and setting=
- dma
->    mask, remove unnecessary comment, and refactor suspend/resume handler =
-in
->    Fujitsu Specific Glue layer in dwc3,
->  - based on Felipe's comment, add more commit log and comments in Synopsis
->    quirk implementation, and separate it into four patches.
->=20
-> Sneeker Yeh (5):
->   xhci: add a quirk for device disconnection errata for Synopsis
->     Designware USB3     core
->   xhci: Platform: Set Synopsis device disconnection quirk based on
->     platform data
->   usb: dwc3: add revision number DWC3_REVISION_290A and
->     DWC3_REVISION_300A
->   usb: dwc3: Add quirk for Synopsis device disconnection errata
->   usb: dwc3: add Fujitsu Specific Glue layer
+On Tue, Mar 10, 2015 at 07:59:24PM +0800, Chen-Yu Tsai wrote:
+> The Hummingbird A31 has an AMPAK AP6210 WiFi+Bluetooth module. The
+> WiFi part is a BCM43362 IC connected to MMC1 in the A31 SoC via SDIO.
+> The IC also takes a power enable signal via GPIO. This is supported
+> with the new power sequencing bindings.
+> 
+> The WiFi module supports out-of-band interrupt signaling via GPIO,
+> but this is buggy and not enabled yet.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Mathias, if you want me to take this series I need your Acked-by,
-otherwise I can give you mine, just let me know.
+There's two almost identical patches 12/12. Which one am I suppose to
+apply?
 
---=20
-balbi
+Thanks!
+Maxime
 
---VBq/nvTu32OVLBUP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU/2JvAAoJEIaOsuA1yqREz7EP/3i6fPsRaZg7bwOxL0fDUOGD
-JxaZyvQ95ya7eFtY6OQx9KvQGgtOkB5zqkuB/az1kl29DfjUW/pkMy65xAFW4Klk
-5hAuhCdPzRzZ3op//zbz7JEfpaDVwunS0QHTZC+iDirzqFGIMCC7loNxiI1PRhUW
-W0rfjxoK6sTL3nof+iqBcMU0CmXL01ZsFzljXzP1KNP+FlJSODJuiWcHIgbsUuRS
-yn//2ZZZW57HbTsrubochEzX4ttkUZ0qTfDwfMROCsERJbL4Q3Jlaei7p0h+L6Y2
-O4+OZ05UgKdmdMDxcmWeqPUlDnqH07ibYnolJBnbQUSkE3EDwkd3QUd0EYQXWJ5S
-dlRJ1q6zavh7V4ZweLMDsexKN1kYssd+jG+GtAJPI2OQNQatJPWyJxYZIxvwujYi
-pIPsFSsXBMt0pdgUwgEbbpDoiXazY4VwUHmMNDjWwLC9methJ8UfdOGhX0kSlWx/
-jNfD1gD4dsfBNL5tTQ7JWP0JJ2MDZahk15QAX1E1MkXhLi/pzhL1aDRmHX+OKaLS
-6b1vhmCtX5QWPkqr/FC0Bl9lgMBLRNYtr0os7O2f8p7G5GDlAGaLa8SAgewegtxn
-r9IeJWyV2bgcEVuOh2XT2/hnRz24cHU9rxyJxY0j4kFytvV8Lt36c2o8hzHdEUTS
-7+teQ2ZiDF4ktf/suSZS
-=Qcow
------END PGP SIGNATURE-----
-
---VBq/nvTu32OVLBUP--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--FIfSo9pyi3Jhph90--
