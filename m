@@ -1,84 +1,120 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: am33xx: Move wkup_m3 node to soc node
- and add ranges
-Date: Mon, 9 Mar 2015 18:59:06 -0500
-Message-ID: <54FE33CA.4090709@ti.com>
-References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com> <1425528742-3087-3-git-send-email-d-gerlach@ti.com> <20150305154039.GD13520@atomide.com> <54F88849.1090708@ti.com> <20150305165727.GE13520@atomide.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH/RFC v12 02/19] leds: flash: document sysfs interface
+Date: Mon, 9 Mar 2015 17:17:00 -0700
+Message-ID: <CAK5ve-+JW4+bzxPSHCMBPdEDNWW8yWjgL_QyK+tNG_woTT=tLw@mail.gmail.com>
+References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com> <1425485680-8417-3-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150305165727.GE13520@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Kevin Hilman <khilman@linaro.org>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1425485680-8417-3-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+On Wed, Mar 4, 2015 at 8:14 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Add a documentation of LED Flash class specific sysfs attributes.
+>
 
-On 03/05/2015 10:57 AM, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [150305 08:47]:
->> On 03/05/2015 09:40 AM, Tony Lindgren wrote:
->>> * Dave Gerlach <d-gerlach@ti.com> [150304 20:14]:
->> Dave,
->>
->> Looks like the commit message disappeared during your patch preparation.
->>
->>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>>> ---
->>>>  arch/arm/boot/dts/am33xx.dtsi | 21 +++++++++++++--------
->>>>  1 file changed, 13 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->>>> index acd3705..086415c 100644
->>>> --- a/arch/arm/boot/dts/am33xx.dtsi
->>>> +++ b/arch/arm/boot/dts/am33xx.dtsi
->>>> @@ -77,10 +77,23 @@
->>>>  	 */
->>>>  	soc {
->>>>  		compatible = "ti,omap-infra";
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <1>;
->>>> +		ranges = <0x0     0x44d00000 0x4000>,
->>>> +			 <0x80000 0x44d80000 0x2000>;
->>>> +
->>>
->>> I think putting the ranges here will cause issues for adding
->>> ranges for anything else.
->>>
->>> How about do something like this instead (untested):
->>>
->>> ocp {
->>> 	l4_wkup: l4_wkup@44c00000 {
->>> 		compatible = "am335-l4-wkup", "simple-bus";
->>> 		ranges = <0 0x44c00000 0x3fffff>;
->>>
->>> 		wkup_m3: wkup_m3@44d00000 {
->>> 			compatible = "ti,am3353-wkup-m3";
->>> 			reg = <0x1000000     0x4000>,	/* M3 UMEM */
->>> 			      <0x180000	     0x2000>;	/* M3 DMEM */
->>> 			ti,hwmods = "wkup_m3";
->>> 			ti,pm-firmware = "am335x-pm-firmware.elf";
->>> 		};
->>>
->>> 		...
->>> 	};
->>> };
->>>
->>> That way we can start moving also the other l4_wkup components there
->>> eventuallly without having to redo the ranges again for wkup_m3.
->>>
->>> You can also look at how the scm_conf was done for dm816x.dtsi for an
->>> example, and the recent large set of patches posted by Tero.
+Thanks, merged!
+-Bryan
 
-I have taken a look at both the above. The L4_WKUP range includes the
-PRCM, Control Module, as well as a few peripherals like DMTimer0, UART0
-etc. What all do we want to move here eventually? Depending on that, we
-may have to use 2 address cells like in Tero's PRCM cleanup series
-rather than the single cell translation used by you in dm816x.dtsi so
-that we can retain the relative addresses w.r.t the existing node bases
-in the derivative child nodes.
-
-regards
-Suman
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> ---
+>  Documentation/ABI/testing/sysfs-class-led-flash |   80 +++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-flash
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-flash b/Documentation/ABI/testing/sysfs-class-led-flash
+> new file mode 100644
+> index 0000000..220a027
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-flash
+> @@ -0,0 +1,80 @@
+> +What:          /sys/class/leds/<led>/flash_brightness
+> +Date:          March 2015
+> +KernelVersion: 4.0
+> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:   read/write
+> +               Set the brightness of this LED in the flash strobe mode, in
+> +               microamperes. The file is created only for the flash LED devices
+> +               that support setting flash brightness.
+> +
+> +               The value is between 0 and
+> +               /sys/class/leds/<led>/max_flash_brightness.
+> +
+> +What:          /sys/class/leds/<led>/max_flash_brightness
+> +Date:          March 2015
+> +KernelVersion: 4.0
+> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:   read only
+> +               Maximum brightness level for this LED in the flash strobe mode,
+> +               in microamperes.
+> +
+> +What:          /sys/class/leds/<led>/flash_timeout
+> +Date:          March 2015
+> +KernelVersion: 4.0
+> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:   read/write
+> +               Hardware timeout for flash, in microseconds. The flash strobe
+> +               is stopped after this period of time has passed from the start
+> +               of the strobe. The file is created only for the flash LED
+> +               devices that support setting flash timeout.
+> +
+> +What:          /sys/class/leds/<led>/max_flash_timeout
+> +Date:          March 2015
+> +KernelVersion: 4.0
+> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:   read only
+> +               Maximum flash timeout for this LED, in microseconds.
+> +
+> +What:          /sys/class/leds/<led>/flash_strobe
+> +Date:          March 2015
+> +KernelVersion: 4.0
+> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:   read/write
+> +               Flash strobe state. When written with 1 it triggers flash strobe
+> +               and when written with 0 it turns the flash off.
+> +
+> +               On read 1 means that flash is currently strobing and 0 means
+> +               that flash is off.
+> +
+> +What:          /sys/class/leds/<led>/flash_fault
+> +Date:          March 2015
+> +KernelVersion: 4.0
+> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:   read only
+> +               Space separated list of flash faults that may have occurred.
+> +               Flash faults are re-read after strobing the flash. Possible
+> +               flash faults:
+> +
+> +               * led-over-voltage - flash controller voltage to the flash LED
+> +                       has exceeded the limit specific to the flash controller
+> +               * flash-timeout-exceeded - the flash strobe was still on when
+> +                       the timeout set by the user has expired; not all flash
+> +                       controllers may set this in all such conditions
+> +               * controller-over-temperature - the flash controller has
+> +                       overheated
+> +               * controller-short-circuit - the short circuit protection
+> +                       of the flash controller has been triggered
+> +               * led-power-supply-over-current - current in the LED power
+> +                       supply has exceeded the limit specific to the flash
+> +                       controller
+> +               * indicator-led-fault - the flash controller has detected
+> +                       a short or open circuit condition on the indicator LED
+> +               * led-under-voltage - flash controller voltage to the flash
+> +                       LED has been below the minimum limit specific to
+> +                       the flash
+> +               * controller-under-voltage - the input voltage of the flash
+> +                       controller is below the limit under which strobing the
+> +                       flash at full current will not be possible;
+> +                       the condition persists until this flag is no longer set
+> +               * led-over-temperature - the temperature of the LED has exceeded
+> +                       its allowed upper limit
+> --
+> 1.7.9.5
+>
