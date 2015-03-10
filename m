@@ -1,90 +1,113 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Tue, 10 Mar 2015 15:11:14 +0100
-Message-ID: <2223973.a64rBcZvaA@wuerfel>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com> <20150309224929.GL5264@atomide.com> <CAB3XZEdS+mK1MiB7OWiehFGRBnUzJ84s3rFrCy3-YFYhL-BNWw@mail.gmail.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH] dma: Add Xilinx ZDMA device tree Binding Documentation
+Date: Tue, 10 Mar 2015 19:46:23 +0530
+Message-ID: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAB3XZEdS+mK1MiB7OWiehFGRBnUzJ84s3rFrCy3-YFYhL-BNWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, soren.brinkmann@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 March 2015 13:00:19 Eliad Peller wrote:
-> On Tue, Mar 10, 2015 at 12:49 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > * Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150309 14:03]:
-> >> On Mon, Mar 9, 2015 at 9:50 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> >> > On Monday 09 March 2015 17:36:42 Eliad Peller wrote:
-> >> >> --- a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-> >> >> +++ b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-> >> >> @@ -64,4 +64,13 @@
-> >> >>         vmmc-supply = <&lbep5clwmc_wlen>;
-> >> >>         bus-width = <4>;
-> >> >>         non-removable;
-> >> >> +
-> >> >> +       #address-cells = <1>;
-> >> >> +       #size-cells = <0>;
-> >> >> +       wlcore: wlcore@2 {
-> >> >> +               compatible = "ti,wl1835";
-> >> >> +               reg = <2>;
-> >> >> +               interrupt-parent = <&gpio5>;
-> >> >> +               interrupts = <8 IRQ_TYPE_NONE>;
-> >> >> +       };
-> >> >>
-> >> >
-> >> > Why IRQ_TYPE_NONE?
-> >> >
-> >> i simply mirrored the current board file (which only sets the irq number).
-> >>
-> >> > I was expecting you to remove all calls to legacy_init_wl12xx from this file,
-> >> > including the ones for wl12xx aside from the wl18xx ones you removed, but
-> >> > if that's enough to clean out the platform_data handling from the wlcore
-> >> > driver, it's good enough as a start.
-> >> not sure i'm following - can you elaborate?
-> >>
-> >> i'll summarize the way i see it. please correct me if i'm wrong.
-> >>
-> >> both wl18xx and wl12xx use the platform data to get the irq number.
-> >> wl12xx (only) also needs some additional clock definitions to be
-> >> passed. there's currently some issue with specifying some the of clock
-> >> sources, so i preferred starting only with (the simpler) wl18xx
-> >> bindings.
-> >>
-> >> for platforms with wl18xx, we can remove the pdata-quirk, as all the
-> >> data (i.e. irq) can be passed by the new DT bindings.
-> >> however, for platforms with wl12xx, we still need to pass the clock
-> >> definitions (along with the irq), so we have to keep
-> >> legacy_init_wl12xx for the time being (and that's also why we have to
-> >> currently keep the platform_data handling in the wlcore driver)
-> >>
-> >> do you have something else in mind?
-> >
-> > I think what Arnd is saying is we've now removed all the wl12xx using
-> > legacy platforms, so all of them can boot with just data from dts.
+Device-tree binding documentation for Xilinx ZDMA Engine
 
-Right, that was my idea.
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+ .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 ++++++++++++++++++++
+ 1 files changed, 76 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdma.txt
 
-> I don't think that's the case (unless i'm missing something).
-> e.g. there's still pdata-quirk for "compulab,omap3-sbc-t3730" which
-> initializes wl12xx device.
-
-This one is just like the igep0030, as Tony was saying: the board
-boots from device tree already, so now that we have a binding for
-it, we can remove the wl12xx_set_platform_data() for it.
-
-Unfortunately, there is still one machine that uses a board file
-in combination with this wl12xx: da850-evm calls
-wl12xx_set_platform_data() from a legacy board file without DT.
-
-We have DT support for this file as well, but if I remember correctly,
-it is somewhat incomplete and we don't want to remove the file
-yet. Adding Sekhar and Kevin to Cc here for confirmation.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+new file mode 100644
+index 0000000..399a3bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+@@ -0,0 +1,76 @@
++Xilinx ZDMA engine, it does support memory to memory transfers,
++memory to device and device to memory transfers. It also has flow
++control and rate control support for slave/peripheral dma access.
++
++Xilinx ZynqMP has two instances of general purpose DMA(ZDMA).
++one is located in FPD(full power domain) and other is located in
++LPD(low power domain).
++
++ZDMA instance located in FPD is referred as FPDMA and instance located
++in LPD is referred as LPDMA.
++
++FPDMA is configured with 8 DMA channels and AXI bus width is 128 byte.
++LPDMA is configured with 8 DMA channels and AXI bus width is 64 byte.
++
++Each channel in a instance has its own address space and interrupt line
++but shares common reference and APB clock. So, each channel will be treated
++as a standalone dma device.
++Since its a general purpose dma controller, it has a rich set of configurable
++options with respect to data and descriptor attributes.
++
++Required properties:
++- compatible: Should be "xlnx,fpdma-1.0" or "xlnx,lpdma-1.0"
++- reg: Memory map for dma module access.
++- interrupt-parent: Interrupt controller the interrupt is routed through
++- interrupts: Should contain DMA channel interrupt.
++- xlnx,id: Channel Id
++
++Optional properties:
++- xlnx,include-sg: Indicates the controller to operate in simple or scatter
++		   gather dma mode
++- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
++		 source AXI transaction
++- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
++- xlnx,src-issue: Number of AXI outstanding transactions on source side
++- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
++			descriptor read are marked Non-coherent
++- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
++			source descriptor payload are marked Non-coherent
++- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
++			dst descriptor payload are marked Non-coherent
++- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
++- xlnx,src-axi-qos: AXI QOS bits to be used for data read
++- xlnx,dst-axi-qos: Axi QOS bits to be used for data write
++- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch
++- xlnx,desc-axi-cache: AXI cache bits to be used for data read
++- xlnx,desc-axi-cache: AXI cache bits to be used for data write
++- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
++		      i.e 1,2,4,8 and 16.
++- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
++		      i.e 1,2,4,8 and 16.
++
++Example:
++++++++++
++fpdma0: dma@fd500000 {
++	compatible = "xlnx,fpdma-1.0";
++	reg = <0x0 0xfd500000 0x1000>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 117 4>;
++	xlnx,include-sg;
++	xlnx,overfetch;
++	xlnx,ratectrl = <0>;
++	xlnx,src-issue = <16>;
++	xlnx,id = <0>;
++	xlnx,desc-axi-cohrnt;
++	xlnx,src-axi-cohrnt;
++	xlnx,dst-axi-cohrnt;
++	xlnx,desc-axi-qos = <0>;
++	xlnx,desc-axi-cache = <0>;
++	xlnx,src-axi-qos = <0>;
++	xlnx,src-axi-cache = <2>;
++	xlnx,dst-axi-qos = <0>;
++	xlnx,dst-axi-cache = <2>;
++	xlnx,src-burst-len = <4>;
++	xlnx,dst-burst-len = <4>;
++};
++
+-- 
+1.7.4
