@@ -1,16 +1,14 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Tue, 10 Mar 2015 11:40:46 +0000
-Message-ID: <1425987646.21353.96.camel@hellion.org.uk>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
-	 <20150303071635.GC4713@lukather> <54F568F8.1040104@redhat.com>
-	 <20150303082209.GE4713@lukather> <54F5B51F.6030609@redhat.com>
-	 <20150303135847.GH4911@lukather> <54FED277.4040000@redhat.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v5 02/12] ARM: dts: sun6i: hummingbird: Enable
+ P2WI controller
+Date: Tue, 10 Mar 2015 19:59:13 +0800
+Message-ID: <1425988764-23618-3-git-send-email-wens@csie.org>
+References: <1425988764-23618-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBC4Y5F6PT4PBBQFQ7OTQKGQEPVSOI6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54FED277.4040000-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBK5Z7OTQKGQEIWHC47Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1425988764-23618-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -18,16 +16,31 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-03-10 at 12:16 +0100, Hans de Goede wrote:
+The Hummingbird A31 has an AXP221 PMIC hooked up to the P2WI controller.
 
-> I'm not sure if stdout-path supports aliases
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I thought it did but ePAPR section 3.5 says "A string that specifies the
-full path to the node" which suggests not, and AFAICT the code doesn't
-try to handle alias.
-
-Ian.
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 65ddaf4c72d2..533bedc5dd95 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -140,6 +140,10 @@
+ 	};
+ };
+ 
++&p2wi {
++	status = "okay";
++};
++
+ &reg_usb1_vbus {
+ 	gpio = <&pio 7 24 GPIO_ACTIVE_HIGH>; /* PH24 */
+ 	status = "okay";
+-- 
+2.1.4
