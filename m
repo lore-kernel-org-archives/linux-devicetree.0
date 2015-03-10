@@ -1,67 +1,119 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
-Date: Tue, 10 Mar 2015 14:27:04 +0800
-Message-ID: <1425968824.4871.146.camel@mtksdaap41>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	 <1425638900-24989-2-git-send-email-yong.wu@mediatek.com>
-	 <1425871612.4871.10.camel@mtksdaap41>  <2583132.xxsZocsQta@wuerfel>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH v2] mtd:spi-nor: Add Altera EPCQ Driver
+Date: Tue, 10 Mar 2015 07:55:08 +0100
+Message-ID: <CACna6rzPRKFN+RzoF3TnNrPMy=rci25wb4NFPHZXBu9P61MjLQ@mail.gmail.com>
+References: <CAN1oZWykZk13yCajiZc-xb5h372MrEP9iOWUqzhrt-feG6pkLQ@mail.gmail.com>
+	<CACna6ryC8TyxvvtztoSgZUXnE+tJdY6tefbXVkaZ60JoZ7ti7A@mail.gmail.com>
+	<CAN1oZWw2RUf7jSDGqk5UUrT3DDR2MHD6ORGQ1OLXQyES6+3Cjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2583132.xxsZocsQta@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAN1oZWw2RUf7jSDGqk5UUrT3DDR2MHD6ORGQ1OLXQyES6+3Cjw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viet Nga Dao <vndao@altera.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-09 at 22:56 +0100, Arnd Bergmann wrote:
-> On Monday 09 March 2015 11:26:52 Yingjoe Chen wrote:
-> > On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > 
-> > >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
-> > > responsible to enable/disable iommu and control the clocks of each
-> > > local arbiter.
-> > > 
-> > > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > >  drivers/soc/mediatek/Kconfig      |   7 ++
-> > >  drivers/soc/mediatek/Makefile     |   1 +
-> > >  drivers/soc/mediatek/mt8173-smi.c | 143 ++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mtk-smi.h           |  40 +++++++++++
-> > >  4 files changed, 191 insertions(+)
-> > >  create mode 100644 drivers/soc/mediatek/mt8173-smi.c
-> > >  create mode 100644 include/linux/mtk-smi.h
-> > > 
-> > 
-> > Hi Arnd, Matthias,
-> > 
-> > For the SMI driver, we can't find a better place, so we put it in
-> > drivers/soc/mediatek now. Please let us know if you have any suggestion
-> > or concern. Thanks
-> 
-> From what I understand from your description, I think it would better
-> fit in drivers/iommu. Another option is drivers/memory, which I think
-> is where the respective Tegra driver ended up.
+On 10 March 2015 at 07:11, Viet Nga Dao <vndao@altera.com> wrote:
+> On Mon, Mar 9, 2015 at 2:31 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail=
+=2Ecom> wrote:
+>> On 11 February 2015 at 05:53, Viet Nga Dao <vndao@altera.com> wrote:
+>>>  /* NOTE: double check command sets and memory organization when yo=
+u add
+>>>   * more nor chips.  This current list focusses on newer chips, whi=
+ch
+>>>   * have been converging on command sets which including JEDEC ID.
+>>> @@ -637,6 +691,17 @@ static const struct spi_device_id spi_nor_ids[=
+] =3D {
+>>>      { "cat25c09", CAT25_INFO( 128, 8, 32, 2, SPI_NOR_NO_ERASE |
+>>> SPI_NOR_NO_FR) },
+>>>      { "cat25c17", CAT25_INFO( 256, 8, 32, 2, SPI_NOR_NO_ERASE |
+>>> SPI_NOR_NO_FR) },
+>>>      { "cat25128", CAT25_INFO(2048, 8, 64, 2, SPI_NOR_NO_ERASE |
+>>> SPI_NOR_NO_FR) },
+>>> +
+>>> +    /* Altera EPCQ/EPCS Flashes */
+>>> +    { "epcq16"  , EPCQ_INFO(2, 0x15, 0x10000, 32,   0x100) },
+>>> +    { "epcq32"  , EPCQ_INFO(2, 0x16, 0x10000, 64,   0x100) },
+>>> +    { "epcq64"  , EPCQ_INFO(2, 0x17, 0x10000, 128,  0x100) },
+>>> +    { "epcq128" , EPCQ_INFO(2, 0x18, 0x10000, 256,  0x100) },
+>>> +    { "epcq256" , EPCQ_INFO(2, 0x19, 0x10000, 512,  0x100) },
+>>> +    { "epcq512" , EPCQ_INFO(2, 0x20, 0x10000, 1024, 0x100) },
+>>> +    { "epcs16"  , EPCQ_INFO(1, 0x14, 0x10000, 32,   0x100) },
+>>> +    { "epcs64"  , EPCQ_INFO(1, 0x16, 0x10000, 128,  0x100) },
+>>> +    { "epcs128" , EPCQ_INFO(1, 0x18, 0x40000, 256,  0x100) },
+>>>      { },
+>>>  };
+>>>
+>>> @@ -666,6 +731,14 @@ static const struct spi_device_id
+>>> *spi_nor_read_id(struct spi_nor *nor)
+>>>          if (info->jedec_id =3D=3D jedec) {
+>>>              if (info->ext_id =3D=3D 0 || info->ext_id =3D=3D ext_j=
+edec)
+>>>                  return &spi_nor_ids[tmp];
+>>> +
+>>> +        /* altera epcq which is non jedec device
+>>> +         * use id[4] as opcode id to differentiate
+>>> +         * epcs and epcq devices
+>>> +         */
+>>> +        } else if (info->altera_flash_opcode_id =3D=3D id[4] &&
+>>> +              info->ext_id =3D=3D id[3]) {
+>>> +                return &spi_nor_ids[tmp];
+>>
+>> This is the part I don't like. I think it's fishy, and that this che=
+ck
+>> may result in false positives. Looks too generic.
+>>
+>> Also the logic of your behavior there seems unclear to me. On the on=
+e
+>> hand you don't have JEDEC, so you provide chip name using DT. But in
+>> place above you stop trusting DT info and you try to (kind of)
+>> auto-detect used chip anyway.
+>>
+>> I guess we should finally think about some more generic way of passi=
+ng
+>> flash info.
+>
+> Actually, i just want fo follow the way current spi-nor doing as much
+> as possible. Like to read the device id and compare with info table.
+> Like double checking from both dtb and the device id. Since the
+> flashes i support do not have JEDEC id but only extended id. But the
+> problem is that some of them have the same extended id, for example
+> epcs64 and epcq32). That is why in my driver, i have to decode 1st
+> byte of ext id to differentiate epcs and ecpq.
 
-Hi Arnd,
+I see your point and it makes sense, I just think it shouldn't be part
+of spi-nor. By adding chip specific code to spi-nor we'll end with
+hacky code and possible false chips identifications. I can really
+easily imagine some random chip having the same id[3] and id[4] as one
+of Altera flashes.
 
-The description above only describe what is implemented now. Besides
-that, SMI HW also does:
+Moreover your patch has not working support for epcs16 and epcs64.
+They don't support 0x9f opcode (SPINOR_OP_RDID), so you would need to
+add support for 0xab ("Read silicon ID") to the spi-nor.
 
-- Prioritize/arbitrate memory requests between different ports & larbs.
-- Bandwidth limiter
-- Performance monitor
+It's the same problem I have with Broadcom's "w25q128" that doesn't
+support 0x9f opcode but a 0x90 with 16b reply. You may see my tiny
+bcm53xxspiflash.c driver:
+http://git.openwrt.org/?p=3Dopenwrt.git;a=3Dblob;f=3Dtarget/linux/bcm53=
+xx/files/drivers/mtd/spi-nor/bcm53xxspiflash.c;h=3Df192f4e59b71a2444833=
+b5c62dd2239d28f9435d;hb=3Dd105c51a428a72a9af42759c472df9960c496d67
 
-I think drivers/memory make more sense. I can't find info about
-drivers/memory in MAINTAINERS. Can this go through ARM SoC tree if we
-put SMI driver there?
+So I'm afraid that if spi-nor gets support for:
+1) 0xab opcode
+2) 0x90 opcode
+3) Some uncommon replies for 0x9f opcode (like Altera ones)
+it will quickly get hacky & buggy.
 
-Joe.C
+So what about:
+1) Using 0x9f and 0xab in altera_epcq.c
+2) Finding chip name in altera_epcq.c
+3) Adding Altera chip names & all sizes to spi-nor.c
+4) Just passing a chip name to spi-nor.c
 
+It's something I do in bcm53xxspiflash.c. I detect w25q128 using some
+specific 0x90 opcode and just pass a chip name to the spi-nor.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Rafa=C5=82
