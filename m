@@ -1,54 +1,59 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] PCI: Export symbols of PCI functions
-Date: Tue, 10 Mar 2015 14:02:37 -0700
-Message-ID: <54FF5BED.9090302@broadcom.com>
-References: <1425947886-23705-1-git-send-email-rjui@broadcom.com> <1425947886-23705-2-git-send-email-rjui@broadcom.com> <20150310205651.GA32204@google.com>
+From: =?ISO-8859-1?Q?S=F8ren?= Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>
+Subject: [patch 2/2] dt-bindings Help for MCP ADCs
+Date: Tue, 10 Mar 2015 22:14:57 +0100
+Message-ID: <1426022097.5476.39.camel@sanws1.rosetechnology.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150310205651.GA32204-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Signed-off-by: Soeren Andersen <san at rosetechnology.dk>
+---
+Documentation/devicetree/bindings/iio/adc/mcp320x.txt | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-On 3/10/2015 1:56 PM, Bjorn Helgaas wrote:
-> On Mon, Mar 09, 2015 at 05:38:03PM -0700, Ray Jui wrote:
->> Export symbols of the following PCI functions so they can be referenced
->> by a PCI driver compiled as a kernel loadable module:
->>
->> pci_common_swizzle
->> pci_create_root_bus
->> pci_stop_root_bus
->> pci_remove_root_bus
->> pci_assign_unassigned_bus_resources
->> pci_fixup_irqs
-> 
-> Have you tested your driver as a loadable module?
-> 
-> If it works to load/unload/reload/etc., I'm OK with exporting these
-> symbols.  I would prefer EXPORT_SYMBOL_GPL, though, because these don't
-> constitute a very coherent interface right now, and they will likely be
-> reworked.  For example, see Yijing Wang's work to sort out the
-> pci_bus_add_devices() / resource assignment mess.
-> 
-> Bjorn
+diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+new file mode 100644
+index 0000000..b851843
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+@@ -0,0 +1,30 @@
++* Microchip Analog to Digital Converter (ADC)
++
++The node for this driver must be a child node of a SPI controller, hence
++all mandatory properties described in
++
++        Documentation/devicetree/bindings/spi/spi-bus.txt
++
++must be specified.
++
++Required properties:
++	- compatible:  	Must be one of the following, depending on the
++			model:
++				"mcp3001"
++				"mcp3002"
++				"mcp3004"
++				"mcp3008"
++				"mcp3201"
++				"mcp3202"
++				"mcp3204"
++				"mcp3208"
++
++
++Examples:
++spi_controller {
++	mcp3x0x@0 {
++		compatible = "mcp3002";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
++};
 
-Yes, I tested the driver with load/unload/reload on Cygnus. Console logs
-are included in my reply to Arnd's email from another email thread.
 
-I'll wait for more feedback from you on the iProc PCIe driver itself.
-But if you have reviewed them and think they are okay then I can go
-ahead and submit v6 with changes to use EXPORT_SYMBOL_GPL.
-
-Let me know.
-
-Thanks,
-
-Ray
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
