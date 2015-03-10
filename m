@@ -1,79 +1,108 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b
- DesignWare access
-Date: Tue, 10 Mar 2015 22:44:36 +0200
-Message-ID: <CAHp75VcgX8WWPkHVH80eQXGAG76xSG1YpDfb24E6aWA7GZ3OZg@mail.gmail.com>
-References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
-	<1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>
-	<CAHp75VcceG2O+YCw4twBzC_2v9+XQRpfBxMqGXERi3amnj3rdA@mail.gmail.com>
-	<54FDDFE6.8010109@opensource.altera.com>
-	<CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw@mail.gmail.com>
-	<54FDF8BB.4050202@opensource.altera.com>
-	<CAHp75VcmNOaiyRNLFzQT7nKS6piZzpYSoS785J86rKtNXx6KNg@mail.gmail.com>
-	<54FF556A.3020408@opensource.altera.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v5 1/4] PCI: Export symbols of PCI functions
+Date: Tue, 10 Mar 2015 15:56:51 -0500
+Message-ID: <20150310205651.GA32204@google.com>
+References: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
+ <1425947886-23705-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54FF556A.3020408-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dinguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thor Thayer <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, baruch <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425947886-23705-2-git-send-email-rjui@broadcom.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 10:34 PM, Thor Thayer
-<tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> On 03/09/2015 03:02 PM, Andy Shevchenko wrote:
->>
->> On Mon, Mar 9, 2015 at 9:47 PM, Thor Thayer
->> <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
->>>
->>> On 03/09/2015 01:54 PM, Andy Shevchenko wrote:
->>
->>
->>> Yes, I just need the 32 bit write. I was trying to remain consistent but
->>> I
->>> agree that only changing only writes would minimize the changes.
->>
->>
->> Which is still makes me anxious.
->>
->> I have briefly read a chapter for SPI in pdf you sent link to. I
->> didn't find anything except SPI supports 32 bit data width.
->>
->> It would be nice if you ping your HW engineers and clarify what
->> exactly is happening there.
->>
->
-> I confirmed with our HW engineer that writes are required to be 32 bits. We
-> are in the process of updating our documentation to explicitly say this.
->
-> Since there are no byte enables on our 32 bit APB interface, writing only 1
-> or 2 bytes could corrupt the other bytes in the 32 bit word. The 32 bit
-> write enforces requiring an explicit read/modify/write for less than 32 bit
-> writes.
->
-> Since reads are non-destructive (nothing is being written back into the
-> register), it is safe for all reads to get promoted to 32 bit reads.
+On Mon, Mar 09, 2015 at 05:38:03PM -0700, Ray Jui wrote:
+> Export symbols of the following PCI functions so they can be referenced
+> by a PCI driver compiled as a kernel loadable module:
+> 
+> pci_common_swizzle
+> pci_create_root_bus
+> pci_stop_root_bus
+> pci_remove_root_bus
+> pci_assign_unassigned_bus_resources
+> pci_fixup_irqs
 
-Thanks for detailed explanation!
+Have you tested your driver as a loadable module?
 
-> Is it preferable to have both 32 bit reads and writes for consistency?
->
-> Or is it preferable to make the minimal number of changes which would be to
-> only add a 32 bit write function?
+If it works to load/unload/reload/etc., I'm OK with exporting these
+symbols.  I would prefer EXPORT_SYMBOL_GPL, though, because these don't
+constitute a very coherent interface right now, and they will likely be
+reworked.  For example, see Yijing Wang's work to sort out the
+pci_bus_add_devices() / resource assignment mess.
 
-Both I think just to be more clear.
+Bjorn
 
-However, I'm now considering what if we just replace
-dw_{write/read}w() by l-variants without any additional DT property
-and accessor functions?
-Would it work for both your cases (old chip, new chip)?
-On my side I may test this on Intel MID.
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> ---
+>  drivers/pci/pci.c       |    1 +
+>  drivers/pci/probe.c     |    1 +
+>  drivers/pci/remove.c    |    2 ++
+>  drivers/pci/setup-bus.c |    1 +
+>  drivers/pci/setup-irq.c |    1 +
+>  5 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 81f06e8..fb4a3da 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2492,6 +2492,7 @@ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp)
+>  	*pinp = pin;
+>  	return PCI_SLOT(dev->devfn);
+>  }
+> +EXPORT_SYMBOL(pci_common_swizzle);
+>  
+>  /**
+>   *	pci_release_region - Release a PCI bar
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 8d2f400..eb24ef9 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1993,6 +1993,7 @@ err_out:
+>  	kfree(b);
+>  	return NULL;
+>  }
+> +EXPORT_SYMBOL(pci_create_root_bus);
+>  
+>  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
+>  {
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index 8bd76c9..c523159 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -139,6 +139,7 @@ void pci_stop_root_bus(struct pci_bus *bus)
+>  	/* stop the host bridge */
+>  	device_release_driver(&host_bridge->dev);
+>  }
+> +EXPORT_SYMBOL(pci_stop_root_bus);
+>  
+>  void pci_remove_root_bus(struct pci_bus *bus)
+>  {
+> @@ -158,3 +159,4 @@ void pci_remove_root_bus(struct pci_bus *bus)
+>  	/* remove the host bridge */
+>  	device_unregister(&host_bridge->dev);
+>  }
+> +EXPORT_SYMBOL(pci_remove_root_bus);
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index e3e17f3..932c9e5 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1750,3 +1750,4 @@ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
+>  	__pci_bus_assign_resources(bus, &add_list, NULL);
+>  	BUG_ON(!list_empty(&add_list));
+>  }
+> +EXPORT_SYMBOL(pci_assign_unassigned_bus_resources);
+> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+> index 4e2d595..9d2bbb6 100644
+> --- a/drivers/pci/setup-irq.c
+> +++ b/drivers/pci/setup-irq.c
+> @@ -65,3 +65,4 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+>  	for_each_pci_dev(dev)
+>  		pdev_fixup_irq(dev, swizzle, map_irq);
+>  }
+> +EXPORT_SYMBOL(pci_fixup_irqs);
+> -- 
+> 1.7.9.5
+> 
