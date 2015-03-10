@@ -1,63 +1,72 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH 2/2] dt: power: Add docs for generic SYSCON poweroff driver.
-Date: Tue, 10 Mar 2015 16:23:41 -0700
-Message-ID: <CAAtXAHfhUK-GhQLscfOpyj_3yaNRMWmjU9wDj_TrUqQtLZ5EBQ@mail.gmail.com>
-References: <1426029670-31775-1-git-send-email-moritz.fischer@ettus.com>
-	<1426029670-31775-3-git-send-email-moritz.fischer@ettus.com>
+From: Josh Cartwright <joshc@ni.com>
+Subject: Re: [PATCH] dma: Add Xilinx ZDMA device tree Binding Documentation
+Date: Tue, 10 Mar 2015 18:57:51 -0500
+Message-ID: <20150310235751.GC27583@jcartwri.amer.corp.natinst.com>
+References: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1426029670-31775-3-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, soren.brinkmann@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 4:21 PM, Moritz Fischer
-<moritz.fischer@ettus.com> wrote:
-> Add documentation for generic SYSCON poweroff driver.
->
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+On Tue, Mar 10, 2015 at 07:46:23PM +0530, Punnaiah Choudary Kalluri wrote:
+> Device-tree binding documentation for Xilinx ZDMA Engine
+> 
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 > ---
->  .../bindings/power/reset/syscon-poweroff.txt       | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
+
+Hey Punnaiah-
+
+Was this intended to be sent out with a driver?
+
+>  .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 ++++++++++++++++++++
+>  1 files changed, 76 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
 > new file mode 100644
-> index 0000000..1422cee
+> index 0000000..399a3bc
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
-> @@ -0,0 +1,23 @@
-> +Generic SYSCON mapped register poweroff driver
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+> @@ -0,0 +1,76 @@
+> +Xilinx ZDMA engine, it does support memory to memory transfers,
+> +memory to device and device to memory transfers. It also has flow
+> +control and rate control support for slave/peripheral dma access.
 > +
-> +This is a generic poweroff driver using syscon to map the poweroff register.
-> +The poweroff is generally performed with a write to the poweroff register
-> +defined by the register map pointed by syscon reference plus the offset
-> +with the mask defined in the poweroff node.
+> +Xilinx ZynqMP has two instances of general purpose DMA(ZDMA).
+> +one is located in FPD(full power domain) and other is located in
+> +LPD(low power domain).
+> +
+> +ZDMA instance located in FPD is referred as FPDMA and instance located
+> +in LPD is referred as LPDMA.
+> +
+> +FPDMA is configured with 8 DMA channels and AXI bus width is 128 byte.
+> +LPDMA is configured with 8 DMA channels and AXI bus width is 64 byte.
+> +
+> +Each channel in a instance has its own address space and interrupt line
+                   ^an
+
+> +but shares common reference and APB clock. So, each channel will be treated
+> +as a standalone dma device.
+
+Does your example below then describe only a single channel?  Or, should
+I expect to see sub-nodes representing each of the dma channels?
+
+> +Since its a general purpose dma controller, it has a rich set of configurable
+> +options with respect to data and descriptor attributes.
 > +
 > +Required properties:
-> +- compatible: should contain "syscon-poweroff"
-> +- regmap: this is phandle to the register map node
-> +- offset: offset in the register map for the poweroff register (in bytes)
-> +- mask: the poweroff value written to the poweroff register (32 bit access)
-> +
-> +Default will be little endian mode, 32 bit access only.
-> +
-> +Examples:
-> +
-> +       reboot {
+> +- compatible: Should be "xlnx,fpdma-1.0" or "xlnx,lpdma-1.0"
+> +- reg: Memory map for dma module access.
+> +- interrupt-parent: Interrupt controller the interrupt is routed through
+> +- interrupts: Should contain DMA channel interrupt.
+> +- xlnx,id: Channel Id
 
-Arghhh ...
-> +          compatible = "syscon-reboot";
-Arghhhh.....
-> +          regmap = <&regmapnode>;
-> +          offset = <0x0>;
-> +          mask = <0x7a>;
-> +       };
-> --
-> 1.9.3
->
+I would have expected, as a dma controller, to see a #dma-cells here,
+and a tie-in to the existing Documentation/devicetree/bindings/dma/dma.txt documentation.
 
-Will collect feedback and resubmit, sorry about that.
-
-Moritz
+  Josh
