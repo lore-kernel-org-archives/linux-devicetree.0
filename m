@@ -1,97 +1,75 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Tue, 10 Mar 2015 12:16:07 +0100
-Message-ID: <54FED277.4040000@redhat.com>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com> <20150303071635.GC4713@lukather> <54F568F8.1040104@redhat.com> <20150303082209.GE4713@lukather> <54F5B51F.6030609@redhat.com> <20150303135847.GH4911@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 6/7] drm/tilcdc: Force building of DRM_TILCDC_SLAVE_COMPAT
+Date: Tue, 10 Mar 2015 13:40:09 +0200
+Message-ID: <54FED819.6070003@ti.com>
+References: <cover.1425656120.git.jsarha@ti.com> <59153f75fc48a34c9f36ebfdf7e6efe21bd03866.1425656120.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBANF7OTQKGQEQPUP2PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150303135847.GH4911@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="rQg2SmCNru0gpQ1DJfniqaCQ8UhJ36Dot"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <59153f75fc48a34c9f36ebfdf7e6efe21bd03866.1425656120.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, rmk+kernel@arm.linux.org.uk, robdclark@gmail.com, moinejf@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--rQg2SmCNru0gpQ1DJfniqaCQ8UhJ36Dot
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 03-03-15 14:58, Maxime Ripard wrote:
-> On Tue, Mar 03, 2015 at 02:20:31PM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 03-03-15 09:22, Maxime Ripard wrote:
->>> On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
->>>>>> +/ {
->>>>>> +	model = "Mele I7 Quad top set box";
->>>>>> +	compatible = "mele,i7", "allwinner,sun6i-a31";
->>>>>> +
->>>>>> +	chosen {
->>>>>> +		bootargs = "earlyprintk console=ttyS0,115200";
->>>>>
->>>>> Using earlyprintk by default is a bad idea if the kernel is configured
->>>>> with DEBUG_LL support for another SoC.
->>>>
->>>> While on this subject, u-boot now sets the chosen/stdout-path property
->>>> up by default, which means that the kernel will do the right thing by
->>>> default. So we we really do not need any bootargs= in our dts files.
->>>
->>> I just tested that this weekend, and it turned out that the kernel
->>> couldn't use it so far (ie, no output until init takes over and setup
->>> a TTY on ttyS0).
->>>
->>> Was it working for you?
->>
->> Yes, note that the kernel only honors the stdout-path property if
->> there is no console= argument present if there is a console= argument
->> present on the kernel cmdline then that will overrule the stdout-path
->> property
->
-> Yeah, I removed the bootargs entirely.
->
->> Which board did you test with, and what u-boot and kernel version ?
->
-> I tested it on my A31 hummingbird, with allwinner's u-boot, but with
-> /chosen/stdout-path hardcoded to "serial0:115200n8", with a 4.0-rc1
-> kernel.
+On 06/03/15 17:36, Jyri Sarha wrote:
+> If I read Documentation/kbuild/makefiles.txt section 3.6 right, this
+> patch should not be needed. However, without this patch the objects
+> needed for DRM_TILCDC_SLAVE_COMPAT are not linked, if DRM_TILCDC is
+> built as module.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/gpu/drm/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 2c239b9..ad7f10f 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -60,6 +60,7 @@ obj-$(CONFIG_DRM_RCAR_DU) +=3D rcar-du/
+>  obj-$(CONFIG_DRM_SHMOBILE) +=3Dshmobile/
+>  obj-$(CONFIG_DRM_OMAP)	+=3D omapdrm/
+>  obj-$(CONFIG_DRM_TILCDC)	+=3D tilcdc/
+> +obj-$(CONFIG_DRM_TILCDC_SLAVE_COMPAT) +=3D tilcdc/
+>  obj-$(CONFIG_DRM_QXL) +=3D qxl/
+>  obj-$(CONFIG_DRM_BOCHS) +=3D bochs/
+>  obj-$(CONFIG_DRM_MSM) +=3D msm/
 
-I'm not sure if stdout-path supports aliases this is what u-boot is using,
-and which works fine (with 4.0-rc1 kernel): "/soc@01c00000/serial@01c28000:115200"
+I don't think it's a good idea to enter the directory twice. Maybe it
+works fine, I don't know, but I'd suggest just using "obj-y" above.
 
-> But it might very well just be me. We just tested it on a Marvell
-> board (that uses the same serial driver) this morning and it was fine,
-> so I don't think it's really worth worrying about this :)
->
->>>> Currently we've a random mix where we do have bootargs in some, but
->>>> not in most sunxi dts files. I believe we should simply remove it
->>>> everywhere...
->>>
->>> We used to set them in SoCs that are not supported by U-boot yet, and
->>> where the bootloader won't come and patch the DT (A31, A23, A80).
->>
->> Ah, so that is (was) the logic, following that logic we should probably
->> remove bootargs= from at least the a23 and a31 boards (basically
->> from all boards but a80).
->
-> I'm not so sure about the A31, since most boards won't even boot by
-> default on the SD card
+ Tomi
 
-True.
 
- > and we have no way to replace U-Boot in NAND
-> so far (afaik). But replacing them by stdout-path is a very good
-> solution too.
 
-You mean putting stdout-path in the dts, I'm not sure if I like that,
-to me both bootargs and stdout-path are something which should be
-left to the bootloader to set. But I understand that when not
-using upstream u-boot that may be an issue.
+--rQg2SmCNru0gpQ1DJfniqaCQ8UhJ36Dot
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Hans
+iQIcBAEBAgAGBQJU/tgZAAoJEPo9qoy8lh71G60P/0wi4NS2DnGvnoevGW2IWUYi
+cDP/71XhQyFaGPGS8DP2l7Re+l+6FjnyAHPBql+IRnQAWclhFMfPaMR1xnsQNbO7
+CE534YvC/qCRpKIuBHSpJ27CUJAnyrNPKDKAJBB7zZ2SUPGUqihnetXhIQMeAfuX
+7TzTUAIuYXv/ZyMXPNap7Ye5cNBHW0tgm0GQmNJUKZKKMBD8C7jApY64B/WjkTs/
+Y3FNpqIJQlkXuxnM4RlKzEbGORBgEZQRqEK6An8lVhZ+EL5uf0lz+BHVrurMnC12
+4Qz7FV015jMT4Pl8BeQ33AMTwbUJ/njRpUjhlWv4kdeuQPqB1JhL9fBsEg1iAVeG
+SNqF3z+EMkvf+Fw/ogki0oqD4yltfffeds2riV9WTAwTT5406TZ41jmivOmcNNqw
+CHiylaz57FLcsfNG1q5E60rS3IEj1oMwFtDDIX7C16KJETfmM+gO+TQ4Uu7Nn/li
+XvDeZd+RBzo4LhdPmgAmI4FIE56ZLWch+xjM8uNefrh1OkaisWTt8FTFzXXmJPEZ
+xfZFskqxjXFIbwK1Yu8Hh9x5PmjXZWG04LMqd7IYzrcQpxs+VrBMlojb6yRi9DNJ
+jAXk6RNjGe1jUbZhi8FoGQKgdhXFYOQTUT9yt4S7Q2a7VisvSob3HCtszYYWGKnK
+ZN2i6xmzNUkXf/gzY730
+=yZRa
+-----END PGP SIGNATURE-----
+
+--rQg2SmCNru0gpQ1DJfniqaCQ8UhJ36Dot--
