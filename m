@@ -1,299 +1,73 @@
-From: Aleksey Makarov <aleksey.makarov@auriga.com>
-Subject: [PATCH v4] SATA: OCTEON: support SATA on OCTEON platform
-Date: Tue, 10 Mar 2015 16:26:26 +0300
-Message-ID: <1425993989-22770-1-git-send-email-aleksey.makarov@auriga.com>
+From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] power: max77843_battery: Add Max77843 fuel gauge
+ device driver
+Date: Tue, 10 Mar 2015 22:44:14 +0900
+Message-ID: <54FEF52E.7060409@samsung.com>
+References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
+ <1425291038-18269-4-git-send-email-jaewon02.kim@samsung.com>
+ <20150307201426.GG5233@earth> <54FCEB17.70809@samsung.com>
+ <CAJKOXPcLa8jGBS9r=iAbuco5+9=XcjsEFazFtAWinYUQDArkUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-ide@vger.kernel.org
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Arnd Bergmann <arnd@arndb.de>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAJKOXPcLa8jGBS9r=iAbuco5+9=XcjsEFazFtAWinYUQDArkUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, SangBae Lee <sangbae90.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The OCTEON SATA controller is currently found on cn71XX devices.
+On 03/09/2015 07:01 PM, Krzysztof Kozlowski wrote:
+> 2015-03-09 1:36 GMT+01:00 Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+>> On 03/08/2015 05:14 AM, Sebastian Reichel wrote:
+>>> Hi,
+>>>
+>>> On Mon, Mar 02, 2015 at 07:10:36PM +0900, Jaewon Kim wrote:
+>>>> From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>
+>>>> This patch adds device driver of max77843 fuel gauge.
+>>>> The driver support for battery fuel gauge in Maxim Max77843.
+>>>> It is fuel-gauge systems for lithuum-ion batteries in handled and
+>>>> portable devices.
+>>>>
+>>>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>
+>>> I can't take it as is, since it depends on the private header file
+>>> of PATCH 1.
+>>>
+>>> -- Sebastian
+>>>
+>>
+>> This patch reviewed by Sebastian.
+>> Could you Please merge that your git tree ?
+> 
+> Hi,
+> 
+> Sorry for late response, but I finally got some time to look at this.
+> This driver looks very similar to max17042_battery.c fuel gauge
+> driver. Obtaining some properties looks exactly the same. The
+> difference seems to be in new properties. The I2C address is the same.
+> 
+> I highly recommend to extend the max17042 driver instead. It already
+> supports also max17047, max17050 and max77693.
+> 
+> Best regards,
+> Krzysztof
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: David Daney <david.daney@cavium.com>
-Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
-Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
----
- .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
- .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  28 ++++
- drivers/ata/Kconfig                                |   9 ++
- drivers/ata/Makefile                               |   1 +
- drivers/ata/ahci_platform.c                        |   1 +
- drivers/ata/sata_octeon.c                          | 153 +++++++++++++++++++++
- 6 files changed, 193 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
- create mode 100644 drivers/ata/sata_octeon.c
+OK. I will follow your opinion about fuel gauge. I will extend the max17042 driver.
+After test on my board, I will send a new patch set.
 
-Version 3:
-https://lkml.kernel.org/g/<1425567540-31572-1-git-send-email-aleksey.makarov@auriga.com>
-
-Changes in v4:
-- The call to dma_coerce_mask_and_coherent() was removed as suggested by Arnd Bergmann
-  dma_mask and coherent_dma_mask are actually set in the ahci_platform_init_host()
-  (libahci_platform.c)
-
-Changes in v3:
-- Rebased to v4.0-rc2
-- Cosmetic changes
-
-Changes in v2:
-- The driver was rewritten as a driver for the UCTL SATA controller glue.
-  It allowed to get rid of the most changes in ahci_platform.c
-- Documentation for the device tree bindings was fixed.
-
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index c2340ee..3d84dca 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -11,6 +11,7 @@ Required properties:
- - compatible        : compatible string, one of:
-   - "allwinner,sun4i-a10-ahci"
-   - "hisilicon,hisi-ahci"
-+  - "cavium,octeon-7130-ahci"
-   - "ibm,476gtr-ahci"
-   - "marvell,armada-380-ahci"
-   - "snps,dwc-ahci"
-diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-new file mode 100644
-index 0000000..59e86a7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-@@ -0,0 +1,28 @@
-+* UCTL SATA controller glue
-+
-+Properties:
-+- compatible: "cavium,octeon-7130-sata-uctl"
-+
-+  Compatibility with the cn7130 SOC.
-+
-+- reg: The base address of the UCTL register bank.
-+
-+- #address-cells, #size-cells, and ranges must be present and hold
-+	suitable values to map all child nodes.
-+
-+Example:
-+
-+	uctl@118006c000000 {
-+		compatible = "cavium,octeon-7130-sata-uctl";
-+		reg = <0x11800 0x6c000000 0x0 0x100>;
-+		ranges; /* Direct mapping */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		sata: sata@16c0000000000 {
-+			compatible = "cavium,octeon-7130-ahci";
-+			reg = <0x16c00 0x00000000 0x0 0x200>;
-+			interrupt-parent = <&cibsata>;
-+			interrupts = <2 4>; /* Bit: 2, level */
-+		};
-+	};
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 5f60155..55ad870 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -188,6 +188,15 @@ config SATA_SIL24
- 
- 	  If unsure, say N.
- 
-+config SATA_OCTEON
-+	tristate "Cavium Octeon Soc Serial ATA"
-+	depends on SATA_AHCI_PLATFORM && CAVIUM_OCTEON_SOC
-+	default y
-+	help
-+	  This option enables support for Cavium Octeon SoC Serial ATA.
-+
-+	  If unsure, say N.
-+
- config ATA_SFF
- 	bool "ATA SFF support (for legacy IDE and PATA)"
- 	default y
-diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
-index ae41107..4a0e5e3 100644
---- a/drivers/ata/Makefile
-+++ b/drivers/ata/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_ST)		+= ahci_st.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_TEGRA)	+= ahci_tegra.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_XGENE)	+= ahci_xgene.o libahci.o libahci_platform.o
-+obj-$(CONFIG_SATA_OCTEON)	+= sata_octeon.o
- 
- # SFF w/ custom DMA
- obj-$(CONFIG_PDC_ADMA)		+= pdc_adma.o
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 78d6ae0..2c26cde 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -74,6 +74,7 @@ static const struct of_device_id ahci_of_match[] = {
- 	{ .compatible = "ibm,476gtr-ahci", },
- 	{ .compatible = "snps,dwc-ahci", },
- 	{ .compatible = "hisilicon,hisi-ahci", },
-+	{ .compatible = "cavium,octeon-7130-ahci", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ahci_of_match);
-diff --git a/drivers/ata/sata_octeon.c b/drivers/ata/sata_octeon.c
-new file mode 100644
-index 0000000..7f40ae8
---- /dev/null
-+++ b/drivers/ata/sata_octeon.c
-@@ -0,0 +1,153 @@
-+/*
-+ * SATA glue for Cavium Octeon III SOCs.
-+ *
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ *
-+ * Copyright (C) 2010-2015 Cavium Networks
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_platform.h>
-+
-+#include <asm/octeon/octeon.h>
-+#include <asm/bitfield.h>
-+
-+/**
-+ * cvmx_sata_uctl_shim_cfg
-+ * from cvmx-sata-defs.h
-+ *
-+ * Accessible by: only when A_CLKDIV_EN
-+ * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
-+ * This register allows configuration of various shim (UCTL) features.
-+ * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
-+ * indicated in INTSTAT and a new OOB error arrives.
-+ * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
-+ * indicated in INTSTAT and a new DMA error arrives.
-+ */
-+union cvmx_sata_uctl_shim_cfg {
-+	uint64_t u64;
-+	struct cvmx_sata_uctl_shim_cfg_s {
-+	/*
-+	 * Read/write error log for out-of-bound UAHC register access.
-+	 * 0 = read, 1 = write.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
-+	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
-+	/*
-+	 * SRCID error log for out-of-bound UAHC register access.
-+	 * The IOI outbound SRCID for the OOB error.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xs_ncb_oob_osrc              : 9,
-+	/*
-+	 * Read/write error log for bad DMA access from UAHC.
-+	 * 0 = read error log, 1 = write error log.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xm_bad_dma_wrn               : 1,
-+	__BITFIELD_FIELD(uint64_t reserved_44_46               : 3,
-+	/*
-+	 * ErrType error log for bad DMA access from UAHC. Encodes the type of
-+	 * error encountered (error largest encoded value has priority).
-+	 * See SATA_UCTL_XM_BAD_DMA_TYPE_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xm_bad_dma_type              : 4,
-+	__BITFIELD_FIELD(uint64_t reserved_13_39               : 27,
-+	/*
-+	 * Selects the IOI read command used by DMA accesses.
-+	 * See SATA_UCTL_DMA_READ_CMD_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t dma_read_cmd                 : 1,
-+	__BITFIELD_FIELD(uint64_t reserved_10_11               : 2,
-+	/*
-+	 * Selects the endian format for DMA accesses to the L2C.
-+	 * See SATA_UCTL_ENDIAN_MODE_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t dma_endian_mode              : 2,
-+	__BITFIELD_FIELD(uint64_t reserved_2_7                 : 6,
-+	/*
-+	 * Selects the endian format for IOI CSR accesses to the UAHC.
-+	 * Note that when UAHC CSRs are accessed via RSL, they are returned
-+	 * as big-endian. See SATA_UCTL_ENDIAN_MODE_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t csr_endian_mode              : 2,
-+		;))))))))))))
-+	} s;
-+};
-+
-+#define CVMX_SATA_UCTL_SHIM_CFG 0xE8
-+
-+static int ahci_octeon_probe(struct platform_device *pdev)
-+{
-+	union cvmx_sata_uctl_shim_cfg shim_cfg;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct resource *res;
-+	void __iomem *base;
-+	int ret;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
-+		return -ENODEV;
-+	}
-+
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	/* set-up endian mode */
-+	shim_cfg.u64 = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
-+#ifdef __BIG_ENDIAN
-+	shim_cfg.s.dma_endian_mode = 1;
-+	shim_cfg.s.csr_endian_mode = 1;
-+#else
-+	shim_cfg.s.dma_endian_mode = 0;
-+	shim_cfg.s.csr_endian_mode = 0;
-+#endif
-+	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
-+	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
-+
-+	if (!node) {
-+		dev_err(dev, "no device node, failed to add octeon sata\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_platform_populate(node, NULL, NULL, dev);
-+	if (ret) {
-+		dev_err(dev, "failed to add ahci-platform core\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ahci_octeon_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct of_device_id octeon_ahci_match[] = {
-+	{ .compatible = "cavium,octeon-7130-sata-uctl", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, octeon_ahci_match);
-+
-+static struct platform_driver ahci_octeon_driver = {
-+	.probe          = ahci_octeon_probe,
-+	.remove         = ahci_octeon_remove,
-+	.driver         = {
-+		.name   = "octeon-ahci",
-+		.of_match_table = octeon_ahci_match,
-+	},
-+};
-+
-+module_platform_driver(ahci_octeon_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Cavium, Inc. <support@cavium.com>");
-+MODULE_DESCRIPTION("Cavium Inc. sata config.");
--- 
-2.3.0
-
+Best regards,
+Beomho Seo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
