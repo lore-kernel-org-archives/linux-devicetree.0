@@ -1,76 +1,238 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Tue, 10 Mar 2015 13:10:08 -0500
-Message-ID: <3A588B25-66ED-4BB5-8C8F-D050D8A2F9F3@codeaurora.org>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com> <F9B276F7-61EF-4406-AB46-97D7F1ECEEFE@codeaurora.org> <89746055.qtEO3GZJmR@wuerfel> <F5017A7F-0EA2-41B3-A9DD-6123CCFD36FA@codeaurora.org> <CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMjJXyjNH-Lm66mZXq0X=52DyRtdmpvQ4sFEr0cMAp3b-w@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V1] arm64: dts: add APM Merlin Board device tree
+Date: Tue, 10 Mar 2015 11:18:02 -0700
+Message-ID: <1426011482-13321-1-git-send-email-fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: patches@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
->>>>>>>>> The top level qcom,msm-id and qcom,board-id are utilized by b=
-ootloaders
->>>>>>>>>> on Qualcomm MSM platforms to determine which device tree sho=
-uld be
->>>>>>>>>> utilized and passed to the kernel.
->>>>>>>>>>=20
->>>>>>>>>> Cc: <devicetree@vger.kernel.org>
->>>>>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->>>>>>>>>=20
->>>>>>>>> Is this the special magic that allows qcom bootloaders to tak=
-e a kernel
->>>>>>>>> plus multiple DTBs and figure out which DTB to pass?
->>>>>>>>>=20
->>>>>>>>> Kevin
->>>>>>>>=20
->>>>>>>> yes
->>>>>>>=20
->>>>>>> That's a bummer.
->>>>>>>=20
->>>>>>> Luckily, the solution for upstream is still quite simple: Provi=
-de only
->>>>>>> one devicetree, and it'll be used, right?
->>>>>>=20
->>>>>> We can provide only one, we still need the IDs in the DT.
->>>>>=20
->>>>> How are the DTS provided? Concatenated with the kernel, or in a
->>>>> wrapped data format? Or in a separate partition from the kernel?
->>>>=20
->>>> Its a wrapped data format that is than concatenated with the kerne=
-l if I remember correctly.
->>>=20
->>> Then you should be able to create a tool that can write this concat=
-enated
->>> format and insert these properties from a table that matches the bo=
-ot
->>> loader, right?
->>>=20
->>>      Arnd
->>=20
->> Are you suggesting the tool insert the properties in the DT?  I=92m =
-not sure I understand what the point of doing that would be.
->=20
-> To insert platform-local properties that mean nothing outside of the
-> firmware packaging of the device trees, which is the case here?
->=20
-> I think the idea of having the installer script inserting them is
-> quite reasonable in this case.
->=20
->=20
-> -Olof
+This patch adds the support for APM Merlin board. The Merlin board
+is based on the APM X-Gene Shadowcat SoC. This DTS enables PMU,
+SATA and Serial.
 
-These values are static, so not sure what the point of having the insta=
-ller script do that?
+Signed-off-by: Feng Kan <fkan@apm.com>
+---
+  V1 Change:
+	- add memreserve for spintable.
+        - remove clkfreq attribute
+	- update spin location, although it is done by bootloader.
+	- remove msi reg entry
+	- add chosen for stdout path 
 
-- k
+ arch/arm64/boot/dts/apm/apm-merlin.dts     |  41 ++++++++
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 154 +++++++++++++++++++++++++++++
+ 2 files changed, 195 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/apm/apm-merlin.dts
+ create mode 100644 arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
 
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
+diff --git a/arch/arm64/boot/dts/apm/apm-merlin.dts b/arch/arm64/boot/dts/apm/apm-merlin.dts
+new file mode 100644
+index 0000000..3feefbd
+--- /dev/null
++++ b/arch/arm64/boot/dts/apm/apm-merlin.dts
+@@ -0,0 +1,41 @@
++/*
++ * dts file for AppliedMicro (APM) Merlin Board
++ *
++ * Copyright (C) 2015, Applied Micro Circuits Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++/include/ "apm-shadowcat.dtsi"
++
++/ {
++	model = "APM X-Gene Merlin board";
++	compatible = "apm,merlin", "apm,xgene-shadowcat";
++
++	chosen {
++		linux,stdout-path = &serial0;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = < 0x1 0x00000000 0x0 0x80000000 >;
++	};
++};
++
++&serial0 {
++	status = "ok";
++};
++&sata1 {
++	status = "ok";
++};
++&sata2 {
++	status = "ok";
++};
++&sata3 {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+new file mode 100644
+index 0000000..0dc8127
+--- /dev/null
++++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+@@ -0,0 +1,154 @@
++/*
++ * dts file for AppliedMicro (APM) X-Gene Shadowcat SOC
++ *
++ * Copyright (C) 2015, Applied Micro Circuits Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++/memreserve/ 0x4000000000 0x00010000;
++
++/ {
++	compatible = "apm,xgene-shadowcat";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x100>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x101>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@200 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x200>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@201 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x201>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@300 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x300>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@301 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x301>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++	};
++
++	gic: interrupt-controller@78090000 {
++		compatible = "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		interrupt-controller;
++		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
++		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
++		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
++		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
++		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <1 12 0xff04>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 0 0xff04>,	/* Secure Phys IRQ */
++			     <1 13 0xff04>,	/* Non-secure Phys IRQ */
++			     <1 14 0xff04>,	/* Virt IRQ */
++			     <1 15 0xff04>;	/* Hyp IRQ */
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		serial0: serial@10600000 {
++			device_type = "serial";
++			compatible = "ns16550";
++			reg = <0 0x10600000 0x0 0x1000>;
++			reg-shift = <2>;
++			clock-frequency = <10000000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x4c 0x4>;
++		};
++
++		sata1: sata@1a000000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a000000 0x0 0x1000>,
++			      <0x0 0x1f200000 0x0 0x1000>,
++			      <0x0 0x1f20d000 0x0 0x1000>,
++			      <0x0 0x1f20e000 0x0 0x1000>;
++			interrupts = <0x0 0x5a 0x4>;
++			dma-coherent;
++		};
++
++		sata2: sata@1a200000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a200000 0x0 0x1000>,
++			      <0x0 0x1f210000 0x0 0x1000>,
++			      <0x0 0x1f21d000 0x0 0x1000>,
++			      <0x0 0x1f21e000 0x0 0x1000>;
++			interrupts = <0x0 0x5b 0x4>;
++			dma-coherent;
++		};
++
++		sata3: sata@1a400000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a400000 0x0 0x1000>,
++			      <0x0 0x1f220000 0x0 0x1000>,
++			      <0x0 0x1f22d000 0x0 0x1000>,
++			      <0x0 0x1f22e000 0x0 0x1000>;
++			interrupts = <0x0 0x5c 0x4>;
++			dma-coherent;
++		};
++	};
++};
+-- 
+1.9.1
