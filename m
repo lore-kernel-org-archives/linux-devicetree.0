@@ -1,149 +1,69 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/3] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Tue, 10 Mar 2015 10:16:53 +0100
-Message-ID: <1425979013.3141.17.camel@pengutronix.de>
-References: <1429128.MSqYm0qZ9p@phil> <2297963.iMSNqyfSUx@phil>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
+Date: Tue, 10 Mar 2015 10:24:03 +0100
+Message-ID: <1425979443.6226.4.camel@pengutronix.de>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	 <1425638900-24989-2-git-send-email-yong.wu@mediatek.com>
+	 <1425871612.4871.10.camel@mtksdaap41> <2583132.xxsZocsQta@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2297963.iMSNqyfSUx@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, broonie@kernel.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2583132.xxsZocsQta@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpBbSBEaWVuc3RhZywgZGVuIDEwLjAzLjIwMTUsIDAwOjIyICswMTAwIHNjaHJp
-ZWIgSGVpa28gU3R1ZWJuZXI6Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQKPiBpbmRleCBhOTA1YzE0Li5iYjc0
-NjQwIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0v
-YnJpZGdlL2R3X2hkbWkudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQKPiBAQCAtMjIsNiArMjIsMTEgQEAgT3B0aW9uYWwg
-cHJvcGVydGllcwo+ICAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVy
-IHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiAgLSBjbG9ja3MsIGNsb2NrLW5hbWVzOiBwaGFu
-ZGxlIHRvIHRoZSBIRE1JIENFQyBjbG9jaywgbmFtZSBzaG91bGQgYmUgImNlYyIKPiAgCj4gK1N1
-cHBsaWVzOgoKIk9wdGlvbmFsIHN1cHBsaWVzOiIgPyBJdCBzZWVtcyB0byBiZSBjb21tb24gdG8g
-YWx3YXlzIHN0YXRlIG9wdGlvbmFsIG9yCnJlcXVpcmVkIGZvciB0aGUgcHJvcGVydGllcy4KCj4g
-K3JvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIGhhbmRsZXMgdHdvIG9wdGlvbmFsIHBvd2VyIHN1cHBs
-aWVzOgo+ICstIGF2ZGQxdjAtc3VwcGx5OiAxLjBWIHBvd2VyIHN1cHBseQo+ICstIGF2ZGQxdjgt
-c3VwcGx5OiAxLjhWIHBvd2VyIHN1cHBseQo+ICsKPiAgRXhhbXBsZToKPiAgCWhkbWk6IGhkbWlA
-MDEyMDAwMCB7Cj4gIAkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtaGRtaSI7Cj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9kd19oZG1pLmMKPiBpbmRleCBjZDZhNzA2Li45Zjg5OTlkIDEwMDY0NAo+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9kd19oZG1pLmMKPiBAQCAtMTcsNiArMTcsNyBAQAo+ICAjaW5jbHVkZSA8bGludXgvY2xr
-Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC9oZG1pLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZp
-Y2UuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+ICAKPiAgI2lu
-Y2x1ZGUgPGRybS9kcm1fb2YuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4gQEAgLTExNCw2
-ICsxMTUsOSBAQCBzdHJ1Y3QgZHdfaGRtaSB7Cj4gIAlzdHJ1Y3QgaGRtaV9kYXRhX2luZm8gaGRt
-aV9kYXRhOwo+ICAJY29uc3Qgc3RydWN0IGR3X2hkbWlfcGxhdF9kYXRhICpwbGF0X2RhdGE7Cj4g
-IAoKU3VwZXJmbHVvdXMgZW1wdHkgbGluZS4KCj4gKwlzdHJ1Y3QgcmVndWxhdG9yX2J1bGtfZGF0
-YSAqc3VwcGxpZXM7Cj4gKwlpbnQgbnN1cHBsaWVzOwo+ICsKPiAgCWludCB2aWM7Cj4gIAo+ICAJ
-dTggZWRpZFtIRE1JX0VESURfTEVOXTsKPiBAQCAtODc5LDYgKzg4MywxMiBAQCBzdGF0aWMgaW50
-IGR3X2hkbWlfcGh5X2luaXQoc3RydWN0IGR3X2hkbWkgKmhkbWkpCj4gIAlpbnQgaSwgcmV0Owo+
-ICAJYm9vbCBjc2NvbiA9IGZhbHNlOwo+ICAKPiArCWlmIChoZG1pLT5uc3VwcGxpZXMgPiAwKSB7
-Cj4gKwkJcmV0ID0gcmVndWxhdG9yX2J1bGtfZW5hYmxlKGhkbWktPm5zdXBwbGllcywgaGRtaS0+
-c3VwcGxpZXMpOwo+ICsJCWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwoKQXJl
-IHRoZXNlIHJlYWxseSBzdXBwbGllcyB0byB0aGUgUEhZIG9yIGlzIHRoaXMganVzdCBhIGNvbnZl
-bmllbnQgcGxhY2UKdG8gZW5hYmxlIHRoZW0/IExvb2tpbmcgYXQgdGhlIGkuTVg2IGRvY3MsIEkg
-c3VwcG9zZSB5ZXMuCgo+ICAJLypjaGVjayBjc2Mgd2hldGhlciBuZWVkZWQgYWN0aXZhdGVkIGlu
-IEhETUkgbW9kZSAqLwo+ICAJY3Njb24gPSAoaXNfY29sb3Jfc3BhY2VfY29udmVyc2lvbihoZG1p
-KSAmJgo+ICAJCQkhaGRtaS0+aGRtaV9kYXRhLnZpZGVvX21vZGUubWR2aSk7Cj4gQEAgLTExMDUs
-NiArMTExNSw5IEBAIHN0YXRpYyB2b2lkIGR3X2hkbWlfcGh5X2Rpc2FibGUoc3RydWN0IGR3X2hk
-bWkgKmhkbWkpCj4gIAlkd19oZG1pX3BoeV9lbmFibGVfdG1kcyhoZG1pLCAwKTsKPiAgCWR3X2hk
-bWlfcGh5X2VuYWJsZV9wb3dlcihoZG1pLCAwKTsKPiAgCj4gKwlpZiAoaGRtaS0+bnN1cHBsaWVz
-ID4gMCkKPiArCQlyZWd1bGF0b3JfYnVsa19kaXNhYmxlKGhkbWktPm5zdXBwbGllcywgaGRtaS0+
-c3VwcGxpZXMpOwo+ICsKPiAgCWhkbWktPnBoeV9lbmFibGVkID0gZmFsc2U7Cj4gIH0KPiAgCj4g
-QEAgLTE1NDksNyArMTU2Miw4IEBAIHN0YXRpYyBpbnQgZHdfaGRtaV9yZWdpc3RlcihzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZHJtLCBzdHJ1Y3QgZHdfaGRtaSAqaGRtaSkKPiAgaW50IGR3X2hkbWlfYmlu
-ZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAgCQkgdm9pZCAq
-ZGF0YSwgc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyLAo+ICAJCSBzdHJ1Y3QgcmVzb3VyY2Ug
-KmlvcmVzLCBpbnQgaXJxLAo+IC0JCSBjb25zdCBzdHJ1Y3QgZHdfaGRtaV9wbGF0X2RhdGEgKnBs
-YXRfZGF0YSkKPiArCQkgY29uc3Qgc3RydWN0IGR3X2hkbWlfcGxhdF9kYXRhICpwbGF0X2RhdGEs
-Cj4gKwkJIHN0cnVjdCByZWd1bGF0b3JfYnVsa19kYXRhICpzdXBwbGllcywgaW50IG5zdXBwbGll
-cykKCkknbSBub3Qgc3VyZSBJIGxpa2UgdGhpcyBmdW5jdGlvbiBzcHJvdXRpbmcgc28gbWFueSBw
-YXJhbWV0ZXJzLiBJcyB0aGVyZQphIGdvb2QgcmVhc29uIG5vdCB0byBhZGQgdGhpcyB0byBzdHJ1
-Y3QgZHdfaGRtaV9wbGF0X2RhdGE/Cgo+ICB7Cj4gIAlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtID0g
-ZGF0YTsKPiAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYtPm9mX25vZGU7Cj4gQEAgLTE2
-MDIsNiArMTYxNiwxNyBAQCBpbnQgZHdfaGRtaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3Ry
-dWN0IGRldmljZSAqbWFzdGVyLAo+ICAJaWYgKElTX0VSUihoZG1pLT5yZWdzKSkKPiAgCQlyZXR1
-cm4gUFRSX0VSUihoZG1pLT5yZWdzKTsKPiAgCj4gKwlpZiAobnN1cHBsaWVzID4gMCkgewo+ICsJ
-CXJldCA9IGRldm1fcmVndWxhdG9yX2J1bGtfZ2V0KGhkbWktPmRldiwgbnN1cHBsaWVzLCBzdXBw
-bGllcyk7Cj4gKwkJaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKQo+ICsJCQlyZXR1cm4gcmV0Owo+
-ICsJCWlmIChyZXQpCj4gKwkJCW5zdXBwbGllcyA9IDA7Cj4gKwl9Cj4gKwo+ICsJaGRtaS0+c3Vw
-cGxpZXMgPSBzdXBwbGllczsKPiArCWhkbWktPm5zdXBwbGllcyA9IG5zdXBwbGllczsKPiArCj4g
-IAloZG1pLT5pc2ZyX2NsayA9IGRldm1fY2xrX2dldChoZG1pLT5kZXYsICJpc2ZyIik7Cj4gIAlp
-ZiAoSVNfRVJSKGhkbWktPmlzZnJfY2xrKSkgewo+ICAJCXJldCA9IFBUUl9FUlIoaGRtaS0+aXNm
-cl9jbGspOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaW14L2R3X2hkbWktaW14LmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vaW14L2R3X2hkbWktaW14LmMKPiBpbmRleCAxMjFkMzBjLi4xNTNl
-MjU5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYwo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYwo+IEBAIC0yMTQsNyArMjE0LDgg
-QEAgc3RhdGljIGludCBkd19oZG1pX2lteF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0
-IGRldmljZSAqbWFzdGVyLAo+ICAJZHJtX2VuY29kZXJfaW5pdChkcm0sIGVuY29kZXIsICZkd19o
-ZG1pX2lteF9lbmNvZGVyX2Z1bmNzLAo+ICAJCQkgRFJNX01PREVfRU5DT0RFUl9UTURTKTsKPiAg
-Cj4gLQlyZXR1cm4gZHdfaGRtaV9iaW5kKGRldiwgbWFzdGVyLCBkYXRhLCBlbmNvZGVyLCBpb3Jl
-cywgaXJxLCBwbGF0X2RhdGEpOwo+ICsJcmV0dXJuIGR3X2hkbWlfYmluZChkZXYsIG1hc3Rlciwg
-ZGF0YSwgZW5jb2RlciwgaW9yZXMsIGlycSwgcGxhdF9kYXRhLAo+ICsJCQkgICAgTlVMTCwgMCk7
-Cj4gIH0KPiAgCj4gIHN0YXRpYyB2b2lkIGR3X2hkbWlfaW14X3VuYmluZChzdHJ1Y3QgZGV2aWNl
-ICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9kd19oZG1pLXJvY2tjaGlwLmMKPiBpbmRleCBkMjM2ZmFhLi5jMDg1ZTg4IDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCj4gQEAgLTExLDYgKzEx
-LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICAjaW5jbHVkZSA8
-bGludXgvbWZkL3N5c2Nvbi5oPgo+ICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4gKyNpbmNs
-dWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1fb2Yu
-aD4KPiAgI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVs
-cGVyLmg+Cj4gQEAgLTI0LDYgKzI1LDggQEAKPiAgI2RlZmluZSBHUkZfU09DX0NPTjYgICAgICAg
-ICAgICAgICAgICAgIDB4MDI1Ywo+ICAjZGVmaW5lIEhETUlfU0VMX1ZPUF9MSVQgICAgICAgICAg
-ICAgICAgKDEgPDwgNCkKPiAgCj4gKyNkZWZpbmUgSERNSV9OVU1fUkVHVUxBVE9SUyAgICAgICAg
-ICAgICAyCj4gKwo+ICBzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSB7Cj4gIAlzdHJ1Y3QgZGV2aWNlICpk
-ZXY7Cj4gIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4gQEAgLTI0OCw2ICsyNTEsNyBAQCBzdGF0
-aWMgaW50IGR3X2hkbWlfcm9ja2NoaXBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
-ZXZpY2UgKm1hc3RlciwKPiAgCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0
-Zm9ybV9kZXZpY2UoZGV2KTsKPiAgCWNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqcGxh
-dF9kYXRhOwo+ICAJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2g7Cj4gKwlzdHJ1Y3Qg
-cmVndWxhdG9yX2J1bGtfZGF0YSAqc3VwcGxpZXM7Cj4gIAlzdHJ1Y3QgZHJtX2RldmljZSAqZHJt
-ID0gZGF0YTsKPiAgCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcjsKPiAgCXN0cnVjdCByb2Nr
-Y2hpcF9oZG1pICpoZG1pOwo+IEBAIC0yNzUsNiArMjc5LDE0IEBAIHN0YXRpYyBpbnQgZHdfaGRt
-aV9yb2NrY2hpcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVy
-LAo+ICAJaWYgKCFpb3JlcykKPiAgCQlyZXR1cm4gLUVOWElPOwo+ICAKPiArCXN1cHBsaWVzID0g
-ZGV2bV9rY2FsbG9jKCZwZGV2LT5kZXYsIEhETUlfTlVNX1JFR1VMQVRPUlMsCj4gKwkJCQlzaXpl
-b2YoKnN1cHBsaWVzKSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIXN1cHBsaWVzKQo+ICsJCXJldHVy
-biAtRU5PTUVNOwo+ICsKPiArCXN1cHBsaWVzWzBdLnN1cHBseSA9ICJhdmRkMXYwIjsKPiArCXN1
-cHBsaWVzWzFdLnN1cHBseSA9ICJhdmRkMXY4IjsKPiArCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0
-YShwZGV2LCBoZG1pKTsKPiAgCj4gIAllbmNvZGVyLT5wb3NzaWJsZV9jcnRjcyA9IGRybV9vZl9m
-aW5kX3Bvc3NpYmxlX2NydGNzKGRybSwgZGV2LT5vZl9ub2RlKTsKPiBAQCAtMjk3LDcgKzMwOSw4
-IEBAIHN0YXRpYyBpbnQgZHdfaGRtaV9yb2NrY2hpcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwg
-c3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAJZHJtX2VuY29kZXJfaW5pdChkcm0sIGVuY29kZXIs
-ICZkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfZnVuY3MsCj4gIAkJCSBEUk1fTU9ERV9FTkNPREVS
-X1RNRFMpOwo+ICAKPiAtCXJldHVybiBkd19oZG1pX2JpbmQoZGV2LCBtYXN0ZXIsIGRhdGEsIGVu
-Y29kZXIsIGlvcmVzLCBpcnEsIHBsYXRfZGF0YSk7Cj4gKwlyZXR1cm4gZHdfaGRtaV9iaW5kKGRl
-diwgbWFzdGVyLCBkYXRhLCBlbmNvZGVyLCBpb3JlcywgaXJxLCBwbGF0X2RhdGEsCj4gKwkJCSAg
-ICBzdXBwbGllcywgSERNSV9OVU1fUkVHVUxBVE9SUyk7Cj4gIH0KPiAgCj4gIHN0YXRpYyB2b2lk
-IGR3X2hkbWlfcm9ja2NoaXBfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmlj
-ZSAqbWFzdGVyLAo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oIGIv
-aW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaAo+IGluZGV4IDVhNGY0OTAuLjdiMGZhYzUgMTAw
-NjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaAo+ICsrKyBiL2luY2x1ZGUv
-ZHJtL2JyaWRnZS9kd19oZG1pLmgKPiBAQCAtNTcsNSArNTcsNiBAQCB2b2lkIGR3X2hkbWlfdW5i
-aW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRh
-KTsKPiAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Ug
-Km1hc3RlciwKPiAgCQkgdm9pZCAqZGF0YSwgc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyLAo+
-ICAJCSBzdHJ1Y3QgcmVzb3VyY2UgKmlvcmVzLCBpbnQgaXJxLAo+IC0JCSBjb25zdCBzdHJ1Y3Qg
-ZHdfaGRtaV9wbGF0X2RhdGEgKnBsYXRfZGF0YSk7Cj4gKwkJIGNvbnN0IHN0cnVjdCBkd19oZG1p
-X3BsYXRfZGF0YSAqcGxhdF9kYXRhLAo+ICsJCSBzdHJ1Y3QgcmVndWxhdG9yX2J1bGtfZGF0YSAq
-c3VwcGxpZXMsIGludCBuc3VwcGxpZXMpOwo+ICAjZW5kaWYgLyogX19JTVhfSERNSV9IX18gKi8K
-CnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi Arnd,
+
+Am Montag, den 09.03.2015, 22:56 +0100 schrieb Arnd Bergmann:
+> On Monday 09 March 2015 11:26:52 Yingjoe Chen wrote:
+> > On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > 
+> > >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
+> > > responsible to enable/disable iommu and control the clocks of each
+> > > local arbiter.
+> > > 
+> > > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  drivers/soc/mediatek/Kconfig      |   7 ++
+> > >  drivers/soc/mediatek/Makefile     |   1 +
+> > >  drivers/soc/mediatek/mt8173-smi.c | 143 ++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/mtk-smi.h           |  40 +++++++++++
+> > >  4 files changed, 191 insertions(+)
+> > >  create mode 100644 drivers/soc/mediatek/mt8173-smi.c
+> > >  create mode 100644 include/linux/mtk-smi.h
+> > > 
+> > 
+> > Hi Arnd, Matthias,
+> > 
+> > For the SMI driver, we can't find a better place, so we put it in
+> > drivers/soc/mediatek now. Please let us know if you have any suggestion
+> > or concern. Thanks
+> 
+> From what I understand from your description, I think it would better
+> fit in drivers/iommu. Another option is drivers/memory, which I think
+> is where the respective Tegra driver ended up.
+> 
+Note that this is not the IOMMU driver. M4U is the IOMMU unit. The SMI
+unit is more of a bridge control for the internal buses where you can
+control various properties for the masters on the bus.
+
+One notable property (and why this driver is part of the IOMMU series)
+is the control weather a master should go through the M4U unit for
+translation or bypass it and talk directly to external memory
+controller.
+
+Regards,
+Lucas
+
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
