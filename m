@@ -1,80 +1,74 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v12 04/19] dt-binding: leds: Add common LED DT
- bindings macros
-Date: Mon, 9 Mar 2015 17:33:08 -0700
-Message-ID: <CAK5ve-K15jV0Mvkqkg4dAdBs91iu_iPeuDU3RjYNBOfzNLRmow@mail.gmail.com>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
- <1425485680-8417-5-git-send-email-j.anaszewski@samsung.com> <54F80C2B.20705@samsung.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 0/4] pci: iproc: Add Broadcom iProc PCIe support
+Date: Mon, 9 Mar 2015 17:38:02 -0700
+Message-ID: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <54F80C2B.20705@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 4, 2015 at 11:56 PM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> On 03/04/2015 05:14 PM, Jacek Anaszewski wrote:
->>
->> Add macros for defining boost mode and trigger type properties
->> of flash LED devices.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> ---
->>   include/dt-bindings/leds/max77693.h |   21 +++++++++++++++++++++
->>   1 file changed, 21 insertions(+)
->>   create mode 100644 include/dt-bindings/leds/max77693.h
->
->
-> This should be obviously include/dt-bindings/leds/common.h.
-> It will affect also max77693-led bindings documentation patch.
-> I'll send the update after receiving review remarks related to the
-> remaining part of the mentioned patches.
->
+This patch series adds the support for Broadcom iProc PCIe controller
 
-OK, please update them then I will merge this patch.
+pcie-iproc.c servers as the common core driver, and front-end bus
+interface needs to be added to support different bus interfaces
 
-Thanks,
--Bryan
+pcie-iproc-pltfm.c contains the support for the platform bus interface
 
->
->>
->> diff --git a/include/dt-bindings/leds/max77693.h
->> b/include/dt-bindings/leds/max77693.h
->> new file mode 100644
->> index 0000000..79fcef7
->> --- /dev/null
->> +++ b/include/dt-bindings/leds/max77693.h
->> @@ -0,0 +1,21 @@
->> +/*
->> + * This header provides macros for the common LEDs device tree bindings.
->> + *
->> + * Copyright (C) 2015, Samsung Electronics Co., Ltd.
->> + *
->> + * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
->> + */
->> +
->> +#ifndef __DT_BINDINGS_LEDS_H__
->> +#define __DT_BINDINGS_LEDS_H
->> +
->> +/* External trigger type */
->> +#define LEDS_TRIG_TYPE_EDGE    0
->> +#define LEDS_TRIG_TYPE_LEVEL   1
->> +
->> +/* Boost modes */
->> +#define LEDS_BOOST_OFF         0
->> +#define LEDS_BOOST_ADAPTIVE    1
->> +#define LEDS_BOOST_FIXED       2
->> +
->> +#endif /* __DT_BINDINGS_LEDS_H */
->>
->
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+Changes from v4:
+ - iProc PCIe driver module support was not included in patch series v4.
+   This patch series (v5) fixes it
+
+Changes from v3:
+ - Export symbols of several PCI functions so they can be used by drivers
+   compiled as kernel module
+ - Add additional support to the Broadcom iProc PCIe driver so it can be
+   installed/uninstalled as kernel loadable module
+
+Changes from v2:
+ - Major rework of the PCIe driver to factor out common generic code from
+   front-end bus interface. Support for generic platform bus interface is
+   also added
+ - Adapt to several new PCI APIs that have been introduced lately
+
+Changes from v1:
+ - Add standard PCI interrupt DT properties "#interrupt-cells",
+   "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
+   supported by using standard PCI OF IRQ parsing function
+ - Get rid of custom IRQ mapping function in the driver. Use
+   of_irq_parse_and_map_pci instead
+
+Ray Jui (4):
+  PCI: Export symbols of PCI functions
+  pci: iProc: define iProc PCIe platform bus binding
+  pci: iproc: Add Broadcom iProc PCIe support
+  ARM: dts: enable PCIe support for Cygnus
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 ++++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   42 +++
+ arch/arm/boot/dts/bcm958300k.dts                   |    8 +
+ drivers/pci/host/Kconfig                           |   17 +
+ drivers/pci/host/Makefile                          |    2 +
+ drivers/pci/host/pcie-iproc-pltfm.c                |  108 ++++++
+ drivers/pci/host/pcie-iproc.c                      |  351 ++++++++++++++++++++
+ drivers/pci/host/pcie-iproc.h                      |   42 +++
+ drivers/pci/pci.c                                  |    1 +
+ drivers/pci/probe.c                                |    1 +
+ drivers/pci/remove.c                               |    2 +
+ drivers/pci/setup-bus.c                            |    1 +
+ drivers/pci/setup-irq.c                            |    1 +
+ 13 files changed, 639 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
+ create mode 100644 drivers/pci/host/pcie-iproc.c
+ create mode 100644 drivers/pci/host/pcie-iproc.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
