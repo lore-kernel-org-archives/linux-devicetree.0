@@ -1,81 +1,67 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v4 3/4] arm64:thunder: Add initial dts for Cavium's
- Thunder SoC in 2 Node topology.
-Date: Tue, 10 Mar 2015 14:12:14 +0530
-Message-ID: <CAFpQJXVc5c=YRLw3uS5RiSR13veo_SUiM-aV6hf+diQuWxdfYQ@mail.gmail.com>
-References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1421924755-26029-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<2882934.brFyhkGPyE@wuerfel>
-	<1885509.Z0Gm3e3FlX@wuerfel>
-	<CAFpQJXUvux+b9hYx_ZY-1hor0HRFFgh=e4vCYyJiDHrDC9Y=tQ@mail.gmail.com>
-	<CAFpQJXXkXatxRcfpA1DjuuiUf3vup3DV+dACyGxT=TDkrO8rNQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 05/15] musb: Do not use musb_read[b|w] /
+ _write[b|w] wrappers in generic fifo functions
+Date: Tue, 10 Mar 2015 09:50:44 +0100
+Message-ID: <11429972.krcjty7oKd@wuerfel>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <4821047.1nqnop93Xh@wuerfel> <54FEA09A.6040401@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXXkXatxRcfpA1DjuuiUf3vup3DV+dACyGxT=TDkrO8rNQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRB37A7KTQKGQEJM3XNEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <54FEA09A.6040401-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ping?
+On Tuesday 10 March 2015 08:43:22 Hans de Goede wrote:
+> On 09-03-15 22:50, Arnd Bergmann wrote:
+> > On Monday 09 March 2015 21:40:18 Hans de Goede wrote:
+> >> The generic fifo functions already use non wrapped accesses in various
+> >> cases through the iowrite#_rep functions, and all platforms which override
+> >> the default musb_read[b|w] / _write[b|w] functions also provide their own
+> >> fifo access functions, so we can safely drop the unnecessary indirection
+> >> from the fifo access functions.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>
+> >
+> > The patch looks reasonably, but the description seem misleading.
+> > I believe the real reason why it's ok to use __raw_writew for the
+> > FIFO is that a FIFO by definition is using CPU endian access for
+> > copying byte streams from memory, which is unlike any other MMIO
+> > register that requires fixed-endian accessors.
+> 
+> I'm not sure that that is the case here, this fifo allows reading
+> 4 bytes at a time using 32 bit word access, so endianness may come
+> into play. This patch is safe however since all existing users of
+> the generic fifo_read / write helpers which this patch touches, are
+> also using the generic musb_read[b|w] / _write[b|w] functions which
+> are just __raw_foo wrappers, so there is no functional change, which
+> is what the commit message tries to say.
 
-On Tue, Feb 24, 2015 at 2:22 PM, Ganapatrao Kulkarni
-<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Arnd,
->
-> On Fri, Jan 23, 2015 at 6:07 PM, Ganapatrao Kulkarni
-> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Arnd,
->>
->> On Thu, Jan 22, 2015 at 11:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>> On Thursday 22 January 2015 17:47:13 Arnd Bergmann wrote:
->>>>
->>>> This seems wrong still: The clusters and cores do not have unique
->>>> numbers. I believe the code will not work correctly, and it won't
->>>> be compliant with the binding from patch 2.
->>>>
->>>> I think the right way here would be to use
->>>>
->>>>         arm,associativity = <0 2 47>;
->>>>
->>>> for cpu@20f, and
->>>>
->>>>         arm,associativity = <1 3 48>;
->>>>
->>>> for cpu@10000. Your previous version used the numbers from
->>>> the reg property, which should be fine as well if that helps:
->>>>
->>>>
->>>>         arm,associativity = <0x0 0x200 0x20f>;
->>>>
->>>>         arm,associativity = <0x10000 0x10000 0x10000>;
->>>>
->>>> which should have the same effect as above, as long as the code
->>>> can handle the numbers not being consecutive.
->>>>
->>>>
->>>
->>> Upon further consideration, I think your patch is correct after
->>> all, but let me check again on PowerPC machines.
->> i have removed, board id which was in previous patch, to keep the
->> associativity aligned to mpidr, ie. socket,cluster id and core id.
->> both previous and current mappings holds good for our design.
->> our topology is 2 sockets(aff2=0and 1) , each having 3
->> clusters(aff1=0to2)and each cluster having 16 cores(aff0:0to15)
->> in associativity property, for our case, only first id(socket id) is
->> mapped to numa, others are mentioned only to describe the topology.
->>>
->>>         Arnd
-> any further comments, how we go about these patches?
-> please suggest.
->
->> thanks
->> Ganapat
->
-> thanks
-> Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This probably means that the generic musb helpers are not safe to use
+on big-endian ARM systems (but may work on MIPS). The only one currently
+not using the generic helpers is blackfin, which is fixed to little
+endian.
+ 
+> Note that sunxi needs this function because of the register address
+> translation the sunxi_musb_readb / writeb wrappers are doing which
+> does not know how to deal with fifo data, and besides that it should
+> make the generic read / write fifo helpers somewhat faster by removing
+> an indirect function call.
+
+Your sunxi_musb_readw/writew functions however also are endian-safe
+and seem to get this part right, unlike all other platforms that use
+the generic __raw_*() accessors. With this patch applied, it should
+actually work fine, and it would work on other platforms as well
+if we change all __raw_*() calls outside of musb_default_write_fifo()
+and musb_default_read_fifo() to use *_relaxed() instead.
+
+	Arnd
