@@ -1,186 +1,123 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/2] pinctrl: bindings: pinctrl: Add support for TI's
- IODelay configuration
-Date: Tue, 10 Mar 2015 13:33:23 -0500
-Message-ID: <54FF38F3.2030703@ti.com>
-References: <1425427237-11511-1-git-send-email-nm@ti.com> <1425427237-11511-2-git-send-email-nm@ti.com> <CACRpkdaLEPzBywMnMrteboK7Q4su8PoB0wjnGvVpgUJ=2czVxQ@mail.gmail.com> <20150310153321.GO5264@atomide.com> <54FF28F5.4040707@ti.com> <20150310173115.GS5264@atomide.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Tue, 10 Mar 2015 19:44:49 +0100
+Message-ID: <20150310184449.GZ5085@lukather>
+References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
+ <20150303071635.GC4713@lukather>
+ <54F568F8.1040104@redhat.com>
+ <20150303082209.GE4713@lukather>
+ <54F5B51F.6030609@redhat.com>
+ <20150303135847.GH4911@lukather>
+ <54FED277.4040000@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150310173115.GS5264@atomide.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lokesh Vutla <lokeshvutla@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="csehs8AeUiGwWnbr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBL7X7STQKGQESRGZD6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54FED277.4040000-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2015 12:31 PM, Tony Lindgren wrote:
-> * Nishanth Menon <nm@ti.com> [150310 10:25]:
->> On 03/10/2015 10:33 AM, Tony Lindgren wrote:
->>> * Linus Walleij <linus.walleij@linaro.org> [150310 03:39]:
->>>> On Wed, Mar 4, 2015 at 1:00 AM, Nishanth Menon <nm@ti.com> wrote:
->>>>
->>>>> +Configuration definition follows similar model as the pinctrl-single:
->>>>> +The groups of pin configuration are defined under "pinctrl-single,pins"
->>>>> +
->>>>> +&dra7_iodelay_core {
->>>>> +       mmc2_iodelay_3v3_conf: mmc2_iodelay_3v3_conf {
->>>>> +               pinctrl-single,pins = <
->>>>> +                       0x18c (A_DELAY(0) | G_DELAY(120))       /* CFG_GPMC_A19_IN */
->>>>> +                       0x1a4 (A_DELAY(265) | G_DELAY(360))     /* CFG_GPMC_A20_IN */
->>>>> +                       0x1b0 (A_DELAY(0) | G_DELAY(120))       /* CFG_GPMC_A21_IN */
->>>>> +                       0x1bc (A_DELAY(0) | G_DELAY(120))       /* CFG_GPMC_A22_IN */
->>>>> +                       0x1c8 (A_DELAY(287) | G_DELAY(420))     /* CFG_GPMC_A23_IN */
->>>>> +                       0x1d4 (A_DELAY(144) | G_DELAY(240))     /* CFG_GPMC_A24_IN */
->>>>> +                       0x1e0 (A_DELAY(0) | G_DELAY(0))         /* CFG_GPMC_A25_IN */
->>>>> +                       0x1ec (A_DELAY(120) | G_DELAY(0))       /* CFG_GPMC_A26_IN */
->>>>> +                       0x1f8 (A_DELAY(120) | G_DELAY(180))     /* CFG_GPMC_A27_IN */
->>>>> +                       0x360 (A_DELAY(0) | G_DELAY(0))         /* CFG_GPMC_CS1_IN */
->>>>> +               >;
->>>>> +       };
->>>>> +};
->>>>
->>>> But wait.
->>>>
->>>> The promise when we merged pinctrl-single was that this driver was to be used
->>>> when the system had a one-register-per-pin layout and it was easy to do device
->>>> trees based on that.
->>>>
->>>> We were very reluctant to accept that even though we didn't even have the
->>>> generic pin control bindings in place, the argument being that the driver
->>>> should know the detailed register layout, it should not be described in the
->>>> device tree. We eventually caved in and accepted it as an exception.
->>>
->>> Hey let's get few things straight here. There's nothing stopping the
->>> driver from knowing a detailed register layout with the pinctrl-single
->>> binding. This can be very easily done based on the compatible flag and
->>> match data as needed and check the values provided.
->>>
->>> And let's also recap the reasons for the pinctrl-single binding. The
->>> the main reason for the pinctrl-single binding is to avoid mapping
->>> individual register bits to device tree compatible string properties.
->>>
->>> Imagine doing that for hundreds of similar registers. Believe me, I tried
->>> using device tree properties initially and it just sucked big time. For
->>> larger amounts of dts data, it's best to stick to numeric values and
->>> phandles in the device tree data and rely on the preprocessor for
->>> getting the values right.
->>>
->>> Finally, we don't want to build databases into the kernel drivers for
->>> every SoC. We certainly have plenty fo those already.
->>>  
->>>> Since this pin controller is not using pinctrl-single it does not enjoy that
->>>> privilege and you need to explain why this pin controller cannot use the
->>>> generic bindings like so many other pin controllers have since started
->>>> to do. ("It is in the same SoC" is not an acceptable argument.)
->>>>
->>>> What is wrong with this:
->>>> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>>
->>> Nishanth, care to explain your reasons for using pinctrl-single binding
->>> here vs the generic binding? Is the amount of string parsing with the
->>> data an issue here?
->>
->> Wrong option chosen, I suppose :( - alright, lets discuss the alternative.
+--csehs8AeUiGwWnbr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Tue, Mar 10, 2015 at 12:16:07PM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> Heh well now we know :) 
->   
->>>> We can add generic delay bindings to the list, it even seems like
->>>> a good idea to do so, as it is likely something that will come up in
->>>> other hardware and will be needed for ACPI etc going forward.
->>>
->>> We certainly need to make setting delays (with values) generic, no
->>> doubt about that.
->>>
->>> If the large amount of data is not an issue here, we could maybe set
->>> each iodelay register as a separate device? Then the binding could
->>> be just along the interrupts-extended type binding:
->>>
->>> foo = <&bar 0x18c A_DELAY(0) G_DELAY(120)>;
->>>
->>> Where the 0x18c is the instance offset of the register within the
->>> ti,dra7-iodelay compatible controller.
->>
->> if mmc2_pins_default point at pins for mmc pin configuration for
->> control_core (pinctrl-single), are you proposing the following?
->>
->>  mmc2_pins_default: mmc2_pins_default {
->>          pinctrl-single,pins = <
->>                  0x9c (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a23.mmc2_clk */
->>                  0xb0 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_cs1.mmc2_cmd */
->>                  0xa0 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a24.mmc2_dat0 */
->>                  0xa4 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a25.mmc2_dat1 */
->>                  0xa8 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a26.mmc2_dat2 */
->>                  0xac (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a27.mmc2_dat3 */
->>                  0x8c (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a19.mmc2_dat4 */
->>                  0x90 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a20.mmc2_dat5 */
->>                  0x94 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a21.mmc2_dat6 */
->>                  0x98 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /*
->> gpmc_a22.mmc2_dat7 */
->>          >;
->>  };
+> On 03-03-15 14:58, Maxime Ripard wrote:
+> >On Tue, Mar 03, 2015 at 02:20:31PM +0100, Hans de Goede wrote:
+> >>Hi,
+> >>
+> >>On 03-03-15 09:22, Maxime Ripard wrote:
+> >>>On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
+> >>>>>>+/ {
+> >>>>>>+	model = "Mele I7 Quad top set box";
+> >>>>>>+	compatible = "mele,i7", "allwinner,sun6i-a31";
+> >>>>>>+
+> >>>>>>+	chosen {
+> >>>>>>+		bootargs = "earlyprintk console=ttyS0,115200";
+> >>>>>
+> >>>>>Using earlyprintk by default is a bad idea if the kernel is configured
+> >>>>>with DEBUG_LL support for another SoC.
+> >>>>
+> >>>>While on this subject, u-boot now sets the chosen/stdout-path property
+> >>>>up by default, which means that the kernel will do the right thing by
+> >>>>default. So we we really do not need any bootargs= in our dts files.
+> >>>
+> >>>I just tested that this weekend, and it turned out that the kernel
+> >>>couldn't use it so far (ie, no output until init takes over and setup
+> >>>a TTY on ttyS0).
+> >>>
+> >>>Was it working for you?
+> >>
+> >>Yes, note that the kernel only honors the stdout-path property if
+> >>there is no console= argument present if there is a console= argument
+> >>present on the kernel cmdline then that will overrule the stdout-path
+> >>property
+> >
+> >Yeah, I removed the bootargs entirely.
+> >
+> >>Which board did you test with, and what u-boot and kernel version ?
+> >
+> >I tested it on my A31 hummingbird, with allwinner's u-boot, but with
+> >/chosen/stdout-path hardcoded to "serial0:115200n8", with a 4.0-rc1
+> >kernel.
 > 
-> Yeah so existing pinctrl-single binding above, with additional iodelay
-> binding below..
->  
->> &mmc2 {
->> ...
->>  pinctrl-1 =
->>  	&mmc2_pins_default,	/* points to mmc control core pins */
->>  	<&iodelay 0x18c A_DELAY(0) | G_DELAY(120)>,       /* CFG_GPMC_A19_IN */
->>  	<&iodelay 0x1a4 A_DELAY(265) | G_DELAY(360)>,     /* CFG_GPMC_A20_IN */
->>  	<&iodelay 0x1b0 A_DELAY(0) | G_DELAY(120)>,       /* CFG_GPMC_A21_IN */
->>  	<&iodelay 0x1bc A_DELAY(0) | G_DELAY(120)>,       /* CFG_GPMC_A22_IN */
->>  	<&iodelay 0x1c8 A_DELAY(287) | G_DELAY(420)>,     /* CFG_GPMC_A23_IN */
->>  	<&iodelay 0x1d4 A_DELAY(144) | G_DELAY(240)>,     /* CFG_GPMC_A24_IN */
->>  	<&iodelay 0x1e0 A_DELAY(0) | G_DELAY(0)>,         /* CFG_GPMC_A25_IN */
->>  	<&iodelay 0x1ec A_DELAY(120) | G_DELAY(0)>,       /* CFG_GPMC_A26_IN */
->>  	<&iodelay 0x1f8 A_DELAY(120) | G_DELAY(180)>,     /* CFG_GPMC_A27_IN */
->>  	<&iodelay 0x360 A_DELAY(0) | G_DELAY(0)>;         /* CFG_GPMC_CS1_IN */
->>
->> I have to check if we are capable of parsing that. but if that is the
->> approach chosen, I suppose we might be able to figure something, I
->> suppose..
+> I'm not sure if stdout-path supports aliases this is what u-boot is using,
+> and which works fine (with 4.0-rc1 kernel): "/soc@01c00000/serial@01c28000:115200"
+
+I gave that another try, and it worked like a charm, so it really
+looks like an instance of PEBKAC.
+
+> >But it might very well just be me. We just tested it on a Marvell
+> >board (that uses the same serial driver) this morning and it was fine,
+> >so I don't think it's really worth worrying about this :)
+> >
+> >>>>Currently we've a random mix where we do have bootargs in some, but
+> >>>>not in most sunxi dts files. I believe we should simply remove it
+> >>>>everywhere...
+> >>>
+> >>>We used to set them in SoCs that are not supported by U-boot yet, and
+> >>>where the bootloader won't come and patch the DT (A31, A23, A80).
+> >>
+> >>Ah, so that is (was) the logic, following that logic we should probably
+> >>remove bootargs= from at least the a23 and a31 boards (basically
+> >>from all boards but a80).
+> >
+> >I'm not so sure about the A31, since most boards won't even boot by
+> >default on the SD card
 > 
-> Yes except I'd make use of some kind of #pinctrl-cells here just like
-> interrupt controller has #interrupt-cells. Then you can have the values
-> seprate and the controller knows what to do with them based on the
-> compatible flag and #pinctrl-cells.
+> True.
+> 
+> > and we have no way to replace U-Boot in NAND
+> >so far (afaik). But replacing them by stdout-path is a very good
+> >solution too.
+> 
+> You mean putting stdout-path in the dts, I'm not sure if I like that,
+> to me both bootargs and stdout-path are something which should be
+> left to the bootloader to set. But I understand that when not
+> using upstream u-boot that may be an issue.
 
-Something like the following I suppose, where pinctrl-cells is optional?
+I know that some other platforms ask for stdout-path when they review
+it, because iirc, barebox uses it to know on which console to output
+its log and export its shell, which is also a valid interpretation of
+that property, and, contrary to bootargs, doesn't really imply that
+the bootloader should update it.
 
-dra7_pmx_core: pinmux@4a003400 {
-        compatible = "ti,dra7-padconf", "pinctrl-single";
-        reg = <0x4a003400 0x0464>;
-        #address-cells = <1>;
-        #size-cells = <0>;
-        #interrupt-cells = <1>;
-        interrupt-controller;
-        pinctrl-single,register-width = <32>;
-        pinctrl-single,function-mask = <0x3fffffff>;
-};
-
-dra7_iodelay_core: padconf@4844a000 {
-        compatible = "ti,dra7-iodelay";
-        reg = <0x4844a000 0x0d1c>;
-        #address-cells = <1>;
-        #size-cells = <0>;
-	#pinctrl-cells = <2>;
-};
-
-Linus,
-
-I hope you are ok with the above?
+Maxime
 
 -- 
-Regards,
-Nishanth Menon
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--csehs8AeUiGwWnbr--
