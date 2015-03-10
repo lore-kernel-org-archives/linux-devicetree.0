@@ -1,80 +1,121 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 00/15] musb: Add support for the Allwinner
- sunxi musb controller
-Date: Tue, 10 Mar 2015 09:46:24 +0800
-Message-ID: <CAGb2v67GkL9Mdr98Chf6MhMff7CO8OGgfF2kaB3Xcnz=SkMG3w@mail.gmail.com>
-References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <2227491.z0aBeXi5ZG@wuerfel>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency control
+Date: Tue, 10 Mar 2015 09:53:19 +0800
+Message-ID: <CALx668V4KJBmpSg3PKfXuzJsMHWgY=RCh8L=TzTC7-fEUh5HBw@mail.gmail.com>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+	<20150304112109.GB11010@pengutronix.de>
+	<CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+	<20150305074207.GC11010@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCE27GTQKGQEJVVFT4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <2227491.z0aBeXi5ZG@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150305074207.GC11010@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Tue, Mar 10, 2015 at 5:44 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 09 March 2015 21:40:13 Hans de Goede wrote:
->> Hi All,
->>
->> This patch set has been a while in the making, so I'm very happy to present
->> the end result here, and I hope everyone likes it.
+On 5 March 2015 at 15:42, Sascha Hauer <s.hauer@pengutronix.de> wrote:
 >
-> Awesome work!
+> +Cc Viresh Kumar
 >
->> Before talking about merging this there are 2 things which I would like to
->> point out:
->>
->> a) The musb controller in the sunxi SoCs uses some SRAM which needs to be
->> mapped to the musb controller by poking some bits in the SRAM controller,
->> just like the EMAC patches which were send a while back I've chosen to use
->> syscon for this, actually 2 of the patches in this set come directly from the
->> SRAM mapping patchset for the EMAC.
->>
->> I know that Maxime is not 100% in favor of using syscon:
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/320221.html
->>
->> But I disagree with his arguments for writing a special driver for the SRAM
->> controller:
->> 1) syscon was specifically designed for global system control registers like
->> this and is fine to use as long as there are no conflicts where 1 bit is of
->> interest to multiple drivers, and there is no such conflict here
->> 2) Maxime's other arguments seem to boil down to it would be nice / prettier
->> to have a specific driver for this, without really proving a hard need for
->> such a driver. But writing such a driver is going to be a lot of work, and
->> we've a ton of other work to do, and as said there is no real need for a
->> separate driver, syscon works fine for this.
->> 3) I actually believe that having a specific driver for this is a bad idea,
->> because that means inventing a whole new cross driver API for this, and
->> getting those right is, hard, a lot of work, and even then one is still likely
->> to get it wrong. We can avoid all this by going with the proven syscon solution.
->>
->> Maxime, can we please have your ack for moving forward with this using syscon?
->> (see above for my arguments why)
+> Viresh, this is the patch for the underlying clocks for the Mediatek
+> cpufreq driver.
 >
-> I'd like to understand here why we can't use the existing SRAM DT binding
-> instead of the syscon binding.
+> On Thu, Mar 05, 2015 at 10:43:21AM +0800, Pi-Cheng Chen wrote:
+>> Hi Sascha,
+>>
+>> On 4 March 2015 at 19:21, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>> > On Wed, Mar 04, 2015 at 06:49:11PM +0800, pi-cheng.chen wrote:
+>> >> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
+>> >> for intermediate clock source switching. This patch is based on Mediatek
+>> >> clock driver patches[1].
+>> >>
+>> >> [1] http://thread.gmane.org/gmane.linux.kernel/1892436
+>> >>
+>> >> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
+>> >> ---
+>> >> +static long clk_cpumux_determine_rate(struct clk_hw *hw, unsigned long rate,
+>> >> +                                   unsigned long min_rate,
+>> >> +                                   unsigned long max_rate,
+>> >> +                                   unsigned long *best_parent_rate,
+>> >> +                                   struct clk_hw **best_parent_p)
+>> >> +{
+>> >> +     struct clk *clk = hw->clk, *parent;
+>> >> +     unsigned long parent_rate;
+>> >> +     int i;
+>> >> +
+>> >> +     for (i = MAINPLL_INDEX; i >= ARMPLL_INDEX; i--) {
+>> >> +             parent = clk_get_parent_by_index(clk, i);
+>> >> +             if (!parent)
+>> >> +                     return 0;
+>> >> +
+>> >> +             if (i == MAINPLL_INDEX) {
+>> >> +                     parent_rate = __clk_get_rate(parent);
+>> >> +                     if (parent_rate == rate)
+>> >> +                             break;
+>> >> +             }
+>> >> +
+>> >> +             parent_rate = __clk_round_rate(parent, rate);
+>> >> +     }
+>> >> +
+>> >> +     *best_parent_rate = parent_rate;
+>> >> +     *best_parent_p = __clk_get_hw(parent);
+>> >> +     return parent_rate;
+>> >> +}
+>> >
+>> > Why this determine_rate hook? If you want to switch the clock to some
+>> > intermediate parent I would assume you do this explicitly by setting the
+>> > parent and not implicitly by setting a rate.
+>> >
+>>
+>> I use determine_rate hook here because I am using generic cpufreq-dt
+>> driver and I want to make clock switching transparent to cpufreq-dt.
+>> I.e. when I am trying to switch the clock from ARMPLL to MAINPLL, I
+>> call clk_set_rate() with the rate of MAINPLL, and determine_rate will
+>> select MAINPLL as the new parent.
+>
+> We have clk_set_parent for changing the parent and clk_set_rate to
+> change the rate. Use the former for changing the parent and the latter
+> for changing the rate. What you are interested in is changing the
+> parent, so use clk_set_parent for this and not abuse a side effect
+> of clk_set_rate.
+>
+> My suggestion is to take another approach. Implement clk_set_rate for
+> these muxes and in the set_rate hook:
+>
+> - switch mux to intermediate PLL parent
+> - call clk_set_rate() for the real parent PLL
+> - switch mux back to real parent PLL
 
-I believe you are talking about "mmio-sram"?
+Hi Sascha,
 
-The syscon here represents a switch, to toggle whether a block of SRAM is
-mapped into the CPU memory space, or to a specific devices private address
-space. It is not the actual SRAM.
+Thanks for your suggestion. I've tried to take this approach, but there's some
+issues here.
 
-The SRAM DT binding is orthogonal to this, if not irrelevant when the block
-is mapped privately, as it is no longer visible from the DT's PoV.
+Calling clk_set_rate() inside the set_rate callback of cpumux will cause
+an infinite recursive calling in the clock framework:
+mux.set_rate() -> pll.set_rate() -> mux.set_rate -> ...
 
-Coincidentally, on the A23 this is no longer needed. The SRAM for the FIFO
-is wholly owned by MUSB and not available to the CPU.
+I've also tries to update pll register settings in the set_rate()
+callback of cpumux,
+but the PLL clock information will not be correctly updated in this case.
 
+How do you think to create a new "CPU PLL" type of clock and do underlying
+mux switching in the set_rate callback of "CPU PLL"?
 
-ChenYu
+Best Regards,
+Pi-Cheng
+
+>
+> This way the things happening behind the scenes are completely transparent
+> to the cpufreq driver and you can use cpufreq-dt as is without changes.
+>
+> Sascha
+>
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
