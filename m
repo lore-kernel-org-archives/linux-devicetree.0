@@ -1,77 +1,47 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 07/18] drivers: reset: Add STM32 reset driver
-Date: Tue, 10 Mar 2015 22:20:03 +0100
-Message-ID: <CALszF6DENRS2L8mHD_iPsPwbAZndbHoB10oHaJ8-E4ajhog=8w@mail.gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<2383270.cAJPOxrkvo@wuerfel>
-	<CALszF6D3XMkjkMTdS-1xnVMFzgAW53NNOKOsfztsCboTdsBaaw@mail.gmail.com>
-	<2455342.zT71E5iyaL@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2455342.zT71E5iyaL@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@ar>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH v4 0/6] Convert twl4030_madc_battery to IIO consumer and add DT aupport
+Date: Tue, 10 Mar 2015 22:27:21 +0100
+Message-ID: <1426022847-30912-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-10 21:21 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
-> On Tuesday 10 March 2015 16:44:24 Maxime Coquelin wrote:
->> 2015-03-10 16:02 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
->> > On Friday 20 February 2015 19:01:06 Maxime Coquelin wrote:
->> >> +/* AHB1 */
->> >> +#define GPIOA_RESET    0
->> >> +#define GPIOB_RESET    1
->> >> +#define GPIOC_RESET    2
->> >> +#define GPIOD_RESET    3
->> >> +#define GPIOE_RESET    4
->> >> +#define GPIOF_RESET    5
->> >> +#define GPIOG_RESET    6
->> >> +#define GPIOH_RESET    7
->> >> +#define GPIOI_RESET    8
->> >> +#define GPIOJ_RESET    9
->> >> +#define GPIOK_RESET    10
->> >>
->> >
->> > As these are just the hardware numbers, it's better to not make th=
-em
->> > part of the binding at all. Instead, just document in the binding =
-that
->> > one is supposed to pass the hardware number as the argument.
->>
->> The reset controller is part of the RCC (Reset & Clock Controller) I=
-P.
->> In this version, I only provided the reset registers to the reset
->> controller driver, but as per Andreas F=C3=A4rber remark, I should a=
-vec a
->> single DT node for both the resets and clocks.
->>
->> In the next version I am preparing, the defines doesn't look as
->> trivial as in this version, GPIOA_RESET being 128 for instance.
->>
->> Is it fine for you if I keep the defines part of the binding?
->>
->>
->
-> It's always better to avoid these files entirely, as they are
-> a frequent source of merge dependencies, and they make it less
-> obvious what's going on than having binary values in the dtb
-> that make sense.
+This patches adding support for twl4030_madc_battery to use twl4030_madc iio framework + DT support.
+Patches was tested on gta04 board. twl4030_madc_battery driver is converted in
+first patch to iio consumer and in next patches is added support for devicetree
++ some small fixes for module autoloading.
 
-I agree it is always painful to have to have to manage these merge depe=
-ndencies.
-What I will do, if Philipp agrees, is to list all the values in the
-binding documentation.
+Changes from V3:
+- added ti prefix for volt-to-capacity-discharging/charging-map properties
 
-Doing that, the user of a reset won't have to do the calculation, and
-no more merge dependencies.
+Changes from V2:
+- fix property names
+- add MODULE_DEVICE_TABLE and MODULE_ALIAS
 
-Maxime
->
->         Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from V1:
+- use iio_read_channel_processed instead iio_read_channel_processed
+- convert probe to use devm_ as part of adding error handling for iio
+- free iio channels on error and on module removal
+
+[1] - https://lkml.org/lkml/2014/2/26/482dd
+
+Marek Belisko (6):
+  power: twl4030-madc-battery: Convert to iio consumer.
+  power: twl4030_madc_battery: Add device tree support
+  Documentation: DT: Document twl4030-madc-battery bindings
+  ARM: dts: omap3-gta04: Add battery support
+  power: twl4030_madc_battery: Add of_twl4030_madc_match to
+    MODULE_DEVICE_TABLE
+  power: twl4030_madc_battery: Add missing MODULE_ALIAS
+
+ .../bindings/power_supply/twl4030_madc_battery.txt |  43 +++++
+ arch/arm/boot/dts/omap3-gta04.dtsi                 |  30 ++++
+ drivers/power/twl4030_madc_battery.c               | 183 +++++++++++++++++----
+ 3 files changed, 221 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+
+-- 
+1.9.1
+
