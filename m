@@ -1,14 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 02/15] phy-sun4i-usb: Add a helper function
- to update the iscr register
-Date: Tue, 10 Mar 2015 12:03:59 +0100
-Message-ID: <54FECF9F.7020606@redhat.com>
-References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <4772280.xE1WBZVd8Z@wuerfel> <54FEA59B.7020400@redhat.com> <2515825.598CypcWU3@wuerfel> <54FEC3DD.10108@redhat.com> <54FECD30.6080106@ti.com>
+Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Tue, 10 Mar 2015 12:16:07 +0100
+Message-ID: <54FED277.4040000@redhat.com>
+References: <1425131285-8640-1-git-send-email-codekipper@gmail.com> <20150303071635.GC4713@lukather> <54F568F8.1040104@redhat.com> <20150303082209.GE4713@lukather> <54F5B51F.6030609@redhat.com> <20150303135847.GH4911@lukather>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBMU77OTQKGQEIM6PS2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54FECD30.6080106-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBANF7OTQKGQEQPUP2PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150303135847.GH4911@lukather>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -16,168 +15,82 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 10-03-15 11:53, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Tuesday 10 March 2015 03:43 PM, Hans de Goede wrote:
+On 03-03-15 14:58, Maxime Ripard wrote:
+> On Tue, Mar 03, 2015 at 02:20:31PM +0100, Hans de Goede wrote:
 >> Hi,
 >>
->> On 10-03-15 09:57, Arnd Bergmann wrote:
->>> On Tuesday 10 March 2015 09:04:43 Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 09-03-15 22:47, Arnd Bergmann wrote:
->>>>> On Monday 09 March 2015 21:40:15 Hans de Goede wrote:
->>>>>> +void sun4i_usb_phy_update_iscr(struct phy *_phy, u32 clr, u32 set)
->>>>>> +{
->>>>>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
->>>>>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
->>>>>> +       u32 iscr;
+>> On 03-03-15 09:22, Maxime Ripard wrote:
+>>> On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
+>>>>>> +/ {
+>>>>>> +	model = "Mele I7 Quad top set box";
+>>>>>> +	compatible = "mele,i7", "allwinner,sun6i-a31";
 >>>>>> +
->>>>>> +       iscr = readl(data->base + REG_ISCR);
->>>>>> +       iscr &= ~clr;
->>>>>> +       iscr |= set;
->>>>>> +       writel(iscr, data->base + REG_ISCR);
->>>>>> +}
->>>>>> +EXPORT_SYMBOL(sun4i_usb_phy_update_iscr);
->>>>>> +
->>>>>>
+>>>>>> +	chosen {
+>>>>>> +		bootargs = "earlyprintk console=ttyS0,115200";
 >>>>>
->>>>> I would generally consider this a bad design. What is the purpose of
->>>>> calling sun4i_usb_phy_update_iscr()
->
-> right. That would bind the PHY driver and the controller driver and would
-> start creating problems when a different PHY is connected with the
-> controller.
+>>>>> Using earlyprintk by default is a bad idea if the kernel is configured
+>>>>> with DEBUG_LL support for another SoC.
 >>>>
->>>> There are 2 different use cases for this one is to enable the dataline
->>>> pull-ups at driver init and disable them at driver exit, this could /
->>>> should probably be moved to the phy_init / phy_exit code for the usb0 phy
->>>> removing the need to do this from within the sunxi musb glue.
->>>>
->>>> The second use-case is more tricky, for some reasons Allwinner has decided
->>>> to not use the dedicated id-detect and vusb-sense pins of the phy they are
->>>> using (these pins are not routed to the outside).
->>>>
->>>> Instead id-detect and vusb-sense are done through any $random gpio pins
->>>> (including non irq capable pins on some designs requiring polling).
->
-> The polling can still be done in PHY driver and can use the extcon framework
-> to report the status to controller driver no?
-
-Technically the polling can be moved to the phy driver yes, but it is not easy,
-e.g. we only need to poll when we're in otg mode rather then host-only
-or peripheral-only mode, and the mode gets set by the musb driver not phy
-the phy driver. The sunxi musb implementation uses an integrated phy, so it
-is just much easier and more logical to have all control / polling happening
-from a single module rather then from 2 different modules.
-
->>>>
->>>> But the musb-core still needs to know the status of the id and vbus pins,
->
-> musb-core or the musb-glue (musb/sunxi.c in this case)?
->>>> and gets this from the usb0-phy iscr register, which reflects the status of
->>>> the not connected dedicated pins of the phy. The reason this can still
->>>> work at all is because the iscr register allows the user to override
->>>> whatever the not connected phy pins are seeing and forcing a value to
->>>> report to the musb core as id and vbus status.
->>>>
->>>> This is done by these 2 functions in the musb sunxi glue:
->>>>
->>>> static void sunxi_musb_force_id(struct musb *musb, u32 val)
->>>> {
->>>>           struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
->>>>
->>>>           if (val)
->>>>                   val = SUNXI_ISCR_FORCE_ID_HIGH;
->>>>           else
->>>>                   val = SUNXI_ISCR_FORCE_ID_LOW;
->>>>
->>>>           sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_ID_MASK, val);
->
-> What will writing to this register lead to? call to sunxi_musb_id_vbus_det_irq
-> interrupt handler?
-
-No this changes the vbus and id status as seen by the musb core, and the musb
-responds to this, by e.g. starting a session, or when vbus does not get high
-after a session request by reporting a vbus-error interrupt.
-
-The sunxi_musb_id_vbus_det_irq handler gets triggered by edges on the gpio
-pins which are used to monitor the id and vbus status.
-
-
->>>> }
->>>>
->>>> static void sunxi_musb_force_vbus(struct musb *musb, u32 val)
->>>> {
->>>>           struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
->>>>
->>>>           if (val)
->>>>                   val = SUNXI_ISCR_FORCE_VBUS_HIGH;
->>>>           else
->>>>                   val = SUNXI_ISCR_FORCE_VBUS_LOW;
->>>>
->>>>           sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_VBUS_MASK,
->>>> val);
->>>> }
->>>>
->>>> I will happily admit that these 2 functions are a better API between the
->>>> sunxi musb
->>>> glue and the sunxi usb phy driver. I started with the minimal
->>>> sun4i_usb_phy_update_iscr
->>>> approach as I wanted to keep the API as small as possible, but having 2
->>>> functions like
->>>> the one above, which actually reflect what is happening would indeed be better.
+>>>> While on this subject, u-boot now sets the chosen/stdout-path property
+>>>> up by default, which means that the kernel will do the right thing by
+>>>> default. So we we really do not need any bootargs= in our dts files.
 >>>
->>> Ok, that would definitely improve things.
+>>> I just tested that this weekend, and it turned out that the kernel
+>>> couldn't use it so far (ie, no output until init takes over and setup
+>>> a TTY on ttyS0).
 >>>
->>>> Note that the polling of the pins cannot (easily) be moved into the phy
->>>> driver for various
->>>> reasons:
->>>>
->>>> 1) It depends on dr_mode, the otg may be used in host only mode in which
->>>> case there are no
->>>> pins at all.
->>>> 2) the musb set_vbus callback needs access to the pins
->>>> 3) When id changes some musb core state changes are necessary.
->>>>
->>>> I'll respin the patch set to do things this way as soon as we've agreement on
->>>> your second point.
->>>>
->>>>   > and why can't there be a high-level
->>>>> PHY API for this?
->>>>
->>>> The current generic phy API seems to not have any bus specific methods, I
->>>> know that
->>>> in the long run people want to get rid of struct usb_phy, so maybe we should
->>>> consider
->>>> adding bus specific methods to the generic phy API for things like otg.
->>>>
->>>> If we decide to add bus specific methods, then the question becomes if having
->>>>
->>>> int phy_usb_set_id_detect(struct phy *phy, bool val);
->>>> int phy_usb_set_vbus_detect(struct phy *phy, bool val);
->>>>
->>>> Functions in the generic phy API is a good idea, or if this is too sunxi
->>>> specific,
->>>> I'm fine with doing this either way. If we want to go the generic phy route
->>>> I'll split this in 2 patches, one adding these 2 generic functions &
->>>> phy-ops, and
->>>> 1 doing the sunxi implementation.
+>>> Was it working for you?
+>>
+>> Yes, note that the kernel only honors the stdout-path property if
+>> there is no console= argument present if there is a console= argument
+>> present on the kernel cmdline then that will overrule the stdout-path
+>> property
 >
-> Please don't do that. We don't want to be bloating phy framework with platform
-> specific hooks.
+> Yeah, I removed the bootargs entirely.
+>
+>> Which board did you test with, and what u-boot and kernel version ?
+>
+> I tested it on my A31 hummingbird, with allwinner's u-boot, but with
+> /chosen/stdout-path hardcoded to "serial0:115200n8", with a 4.0-rc1
+> kernel.
 
-Right, that was my feeling too. I believe that using sunxi specific phy functions
-here is best given that we're dealing with an otg controller + phy both if which
-are integrated in the same SoC, so we will never seen one used without the other
-or vice versa.
+I'm not sure if stdout-path supports aliases this is what u-boot is using,
+and which works fine (with 4.0-rc1 kernel): "/soc@01c00000/serial@01c28000:115200"
+
+> But it might very well just be me. We just tested it on a Marvell
+> board (that uses the same serial driver) this morning and it was fine,
+> so I don't think it's really worth worrying about this :)
+>
+>>>> Currently we've a random mix where we do have bootargs in some, but
+>>>> not in most sunxi dts files. I believe we should simply remove it
+>>>> everywhere...
+>>>
+>>> We used to set them in SoCs that are not supported by U-boot yet, and
+>>> where the bootloader won't come and patch the DT (A31, A23, A80).
+>>
+>> Ah, so that is (was) the logic, following that logic we should probably
+>> remove bootargs= from at least the a23 and a31 boards (basically
+>> from all boards but a80).
+>
+> I'm not so sure about the A31, since most boards won't even boot by
+> default on the SD card
+
+True.
+
+ > and we have no way to replace U-Boot in NAND
+> so far (afaik). But replacing them by stdout-path is a very good
+> solution too.
+
+You mean putting stdout-path in the dts, I'm not sure if I like that,
+to me both bootargs and stdout-path are something which should be
+left to the bootloader to set. But I understand that when not
+using upstream u-boot that may be an issue.
 
 Regards,
 
