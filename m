@@ -1,636 +1,87 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v5 3/4] pci: iproc: Add Broadcom iProc PCIe support
-Date: Tue, 10 Mar 2015 16:40:10 -0500
-Message-ID: <20150310214010.GB32204@google.com>
-References: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
- <1425947886-23705-4-git-send-email-rjui@broadcom.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 1/2] drm/bridge: dw-hdmi: support optional supply regulators
+Date: Tue, 10 Mar 2015 22:45:29 +0100
+Message-ID: <2265807.RXHBN9kUi4@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425947886-23705-4-git-send-email-rjui@broadcom.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Yijing Wang <wangyijing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Mark Yao <mark.yao@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Rob, Yijing]
-
-On Mon, Mar 09, 2015 at 05:38:05PM -0700, Ray Jui wrote:
-> This adds the support for Broadcom iProc PCIe controller
-> 
-> pcie-iproc.c servers as the common core driver, and front-end bus
-> interface needs to be added to support different bus interfaces
-> 
-> pcie-iproc-pltfm.c contains the support for the platform bus interface
-> 
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbraden@broadcom.com>
-> ---
->  drivers/pci/host/Kconfig            |   17 ++
->  drivers/pci/host/Makefile           |    2 +
->  drivers/pci/host/pcie-iproc-pltfm.c |  108 +++++++++++
->  drivers/pci/host/pcie-iproc.c       |  351 +++++++++++++++++++++++++++++++++++
->  drivers/pci/host/pcie-iproc.h       |   42 +++++
->  5 files changed, 520 insertions(+)
->  create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
->  create mode 100644 drivers/pci/host/pcie-iproc.c
->  create mode 100644 drivers/pci/host/pcie-iproc.h
-> 
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index 7b892a9..f4d9c90 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -106,4 +106,21 @@ config PCI_VERSATILE
->  	bool "ARM Versatile PB PCI controller"
->  	depends on ARCH_VERSATILE
->  
-> +config PCIE_IPROC
-> +	tristate "Broadcom iProc PCIe controller"
-> +	help
-> +	  This enables the iProc PCIe core controller support for Broadcom's
-> +	  iProc family of SoCs. An appropriate bus interface driver also needs
-> +	  to be enabled
-> +
-> +config PCIE_IPROC_PLTFM
-> +	tristate "Broadcom iProc PCIe platform bus driver"
-> +	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> +	depends on OF
-> +	select PCIE_IPROC
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  Say Y here if you want to use the Broadcom iProc PCIe controller
-> +	  through the generic platform bus interface
-
-Do you anticipate additional front-end bus interfaces?  If not, and maybe
-even if you do, you might squash everything into pcie-iproc.c.  Then you
-only need one file (no .h file needed) and the package is a little
-simpler.  I think it's pretty common to have multiple driver registration
-methods in the same file (OF, PCI, ACPI, etc.)  And I think it's common to
-have those methods guarded by the generic config symbol (CONFIG_PCI,
-CONFIG_OF, etc.) rather than defining new ones specific to the driver.
-
-> +
->  endmenu
-> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-> index e61d91c..2e02d20 100644
-> --- a/drivers/pci/host/Makefile
-> +++ b/drivers/pci/host/Makefile
-> @@ -13,3 +13,5 @@ obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
->  obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
->  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
->  obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
-> +obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
-> +obj-$(CONFIG_PCIE_IPROC_PLTFM) += pcie-iproc-pltfm.o
-> diff --git a/drivers/pci/host/pcie-iproc-pltfm.c b/drivers/pci/host/pcie-iproc-pltfm.c
-> new file mode 100644
-> index 0000000..af935ea
-> --- /dev/null
-> +++ b/drivers/pci/host/pcie-iproc-pltfm.c
-> @@ -0,0 +1,108 @@
-> +/*
-> + * Copyright (C) 2015 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#include "pcie-iproc.h"
-> +
-> +static int __init iproc_pcie_pltfm_probe(struct platform_device *pdev)
-> +{
-> +	struct iproc_pcie *pcie;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct resource reg;
-> +	resource_size_t iobase = 0;
-> +	LIST_HEAD(res);
-> +	int ret;
-> +
-> +	pcie = devm_kzalloc(&pdev->dev, sizeof(struct iproc_pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	pcie->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	ret = of_address_to_resource(np, 0, &reg);
-> +	if (ret < 0) {
-> +		dev_err(pcie->dev, "unable to obtain controller resources\n");
-> +		return ret;
-> +	}
-> +
-> +	pcie->base = devm_ioremap(pcie->dev, reg.start, resource_size(&reg));
-> +	if (!pcie->base) {
-> +		dev_err(pcie->dev, "unable to map controller registers\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* PHY use is optional */
-> +	pcie->phy = devm_phy_get(&pdev->dev, "pcie-phy");
-> +	if (IS_ERR(pcie->phy)) {
-> +		if (PTR_ERR(pcie->phy) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		pcie->phy = NULL;
-> +	}
-> +
-> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &iobase);
-> +	if (ret) {
-> +		dev_err(pcie->dev,
-> +			"unable to get PCI host bridge resources\n");
-> +		return ret;
-> +	}
-> +
-> +	pcie->resources = &res;
-> +
-> +	ret = iproc_pcie_setup(pcie);
-> +	if (ret) {
-> +		dev_err(pcie->dev, "PCIe controller setup failed\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int iproc_pcie_pltfm_remove(struct platform_device *pdev)
-> +{
-> +	struct iproc_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	return iproc_pcie_remove(pcie);
-> +}
-> +
-> +static const struct of_device_id iproc_pcie_of_match_table[] = {
-> +	{ .compatible = "brcm,iproc-pcie", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, iproc_pcie_of_match_table);
-> +
-> +static struct platform_driver iproc_pcie_pltfm_driver = {
-> +	.driver = {
-> +		.name = "iproc-pcie",
-> +		.of_match_table = of_match_ptr(iproc_pcie_of_match_table),
-> +	},
-> +	.probe = iproc_pcie_pltfm_probe,
-> +	.remove = iproc_pcie_pltfm_remove,
-> +};
-> +module_platform_driver(iproc_pcie_pltfm_driver);
-> +
-> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-> +MODULE_DESCRIPTION("Broadcom iPROC PCIe platform driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-> new file mode 100644
-> index 0000000..ad6c89e
-> --- /dev/null
-> +++ b/drivers/pci/host/pcie-iproc.c
-> @@ -0,0 +1,351 @@
-> +/*
-> + * Copyright (C) 2014 Hauke Mehrtens <hauke@hauke-m.de>
-> + * Copyright (C) 2015 Broadcom Corporatcommon ion
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/msi.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/mbus.h>
-> +#include <linux/slab.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#include "pcie-iproc.h"
-> +
-> +#define CLK_CONTROL_OFFSET           0x000
-> +#define EP_MODE_SURVIVE_PERST_SHIFT  1
-> +#define EP_MODE_SURVIVE_PERST        BIT(EP_MODE_SURVIVE_PERST_SHIFT)
-> +#define RC_PCIE_RST_OUTPUT_SHIFT     0
-> +#define RC_PCIE_RST_OUTPUT           BIT(RC_PCIE_RST_OUTPUT_SHIFT)
-> +
-> +#define CFG_IND_ADDR_OFFSET          0x120
-> +#define CFG_IND_ADDR_MASK            0x00001ffc
-> +
-> +#define CFG_IND_DATA_OFFSET          0x124
-> +
-> +#define CFG_ADDR_OFFSET              0x1f8
-> +#define CFG_ADDR_BUS_NUM_SHIFT       20
-> +#define CFG_ADDR_BUS_NUM_MASK        0x0ff00000
-> +#define CFG_ADDR_DEV_NUM_SHIFT       15
-> +#define CFG_ADDR_DEV_NUM_MASK        0x000f8000
-> +#define CFG_ADDR_FUNC_NUM_SHIFT      12
-> +#define CFG_ADDR_FUNC_NUM_MASK       0x00007000
-> +#define CFG_ADDR_REG_NUM_SHIFT       2
-> +#define CFG_ADDR_REG_NUM_MASK        0x00000ffc
-> +#define CFG_ADDR_CFG_TYPE_SHIFT      0
-> +#define CFG_ADDR_CFG_TYPE_MASK       0x00000003
-> +
-> +#define CFG_DATA_OFFSET              0x1fc
-> +
-> +#define SYS_RC_INTX_EN               0x330
-> +#define SYS_RC_INTX_MASK             0xf
-> +
-> +static inline struct iproc_pcie *sys_to_pcie(struct pci_sys_data *sys)
-> +{
-> +	return sys->private_data;
-> +}
-> +
-> +#define INVALID_ACCESS_OFFSET 0xffffffff
-> +static u32 iproc_pcie_cfg_base(struct iproc_pcie *pcie, int busno,
-> +			       unsigned int devfn, int where)
-> +{
-> +	int slot = PCI_SLOT(devfn);
-> +	int fn = PCI_FUNC(devfn);
-> +	u32 val;
-> +
-
-Would you mind adding a comment to the effect that
-CFG_IND_ADDR_OFFSET/CFG_IND_DATA_OFFSET and
-CFG_ADDR_OFFSET/CFG_DATA_OFFSET are protected by pci_lock?
-
-They obviously need a mutex, and while I don't have any plans to
-change it, I'm not completely 100% sure that pci_lock is the best
-place for it.
-
-> +	/* root complex access */
-> +	if (busno == 0) {
-> +		if (slot >= 1)
-> +			return INVALID_ACCESS_OFFSET;
-> +		writel(where & CFG_IND_ADDR_MASK,
-> +		       pcie->base + CFG_IND_ADDR_OFFSET);
-> +		return CFG_IND_DATA_OFFSET;
-> +	}
-> +
-> +	if (fn > 1)
-> +		return INVALID_ACCESS_OFFSET;
-> +
-> +	/* EP device access */
-> +	val = (busno << CFG_ADDR_BUS_NUM_SHIFT) |
-> +		(slot << CFG_ADDR_DEV_NUM_SHIFT) |
-> +		(fn << CFG_ADDR_FUNC_NUM_SHIFT) |
-> +		(where & CFG_ADDR_REG_NUM_MASK) |
-> +		(1 & CFG_ADDR_CFG_TYPE_MASK);
-> +	writel(val, pcie->base + CFG_ADDR_OFFSET);
-> +
-> +	return CFG_DATA_OFFSET;
-> +}
-> +
-> +#define INVALID_CFG_RD 0xffffffff
-> +static int iproc_pcie_read_conf(struct iproc_pcie *pcie, int busno,
-> +				unsigned int devfn, int where, int size,
-> +				u32 *val)
-> +{
-> +	u32 offset, mask, shift;
-> +
-> +	*val = INVALID_CFG_RD;
-> +
-> +	if (size != 1 && size != 2 && size != 4)
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	else if ((size == 2) && (where & 1))
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	else if ((size == 4) && (where & 3))
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +
-> +	offset = iproc_pcie_cfg_base(pcie, busno, devfn, where);
-> +	if (offset == INVALID_ACCESS_OFFSET)
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +
-> +	*val = readl(pcie->base + offset);
-> +
-> +	if (size != 4) {
-> +		mask = (1 << (size * BITS_PER_BYTE)) - 1;
-> +		shift = (where % 4) * BITS_PER_BYTE;
-> +		*val = (*val >> shift) & mask;
-> +	}
-> +
-> +	dev_dbg(pcie->dev,
-> +		"conf rd: busn=%d devfn=%u where=%d size=%d val=0x%08x\n",
-> +		busno, devfn, where, size, *val);
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-
-This looks like maybe it could use Rob Herring's (CC'd) new generic config
-accessors?  For example, see these:
-
-  1f94a94f67e1 ("PCI: Add generic config accessors")
-  21186728865e ("PCI: generic: Convert to use generic config accessors")
-
-> +
-> +static int iproc_pcie_write_conf(struct iproc_pcie *pcie, int busno,
-> +				 unsigned int devfn, int where, int size,
-> +				 u32 val)
-> +{
-> +	u32 offset, mask, shift, data;
-> +
-> +	if (size != 1 && size != 2 && size != 4)
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	else if ((size == 2) && (where & 1))
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	else if ((size == 4) && (where & 3))
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +
-> +	offset = iproc_pcie_cfg_base(pcie, busno, devfn, where);
-> +	if (offset == INVALID_ACCESS_OFFSET)
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +
-> +	data = readl(pcie->base + offset);
-> +
-> +	if (size != 4) {
-> +		mask = (1 << (size * BITS_PER_BYTE)) - 1;
-> +		shift = (where % 4) * BITS_PER_BYTE;
-> +		data &= ~(mask << shift);
-> +		data |= (val & mask) << shift;
-> +	} else {
-> +		data = val;
-> +	}
-> +
-> +	writel(data, pcie->base + offset);
-> +
-> +	dev_dbg(pcie->dev,
-> +		"conf wr: busn=%d devfn=%u where=%d size=%d data=0x%08x\n",
-> +		busno, devfn, where, size, data);
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static int iproc_pcie_read(struct pci_bus *bus, unsigned int devfn,
-> +			   int where, int size, u32 *val)
-> +{
-> +	struct iproc_pcie *pcie = sys_to_pcie(bus->sysdata);
-> +
-> +	return iproc_pcie_read_conf(pcie, bus->number, devfn, where, size,
-> +				    val);
-> +}
-> +
-> +static int iproc_pcie_write(struct pci_bus *bus, unsigned int devfn,
-> +			    int where, int size, u32 val)
-> +{
-> +	struct iproc_pcie *pcie = sys_to_pcie(bus->sysdata);
-> +
-> +	return iproc_pcie_write_conf(pcie, bus->number, devfn, where, size,
-> +				     val);
-> +}
-> +
-> +static struct pci_ops iproc_pcie_ops = {
-> +	.read = iproc_pcie_read,
-> +	.write = iproc_pcie_write,
-> +};
-> +
-> +static void iproc_pcie_reset(struct iproc_pcie *pcie)
-> +{
-> +	u32 val;
-> +
-> +	/*
-> +	 * Configure the PCIe controller as root complex and send a downstream
-> +	 * reset
-> +	 */
-> +	val = EP_MODE_SURVIVE_PERST | RC_PCIE_RST_OUTPUT;
-> +	writel(val, pcie->base + CLK_CONTROL_OFFSET);
-> +	udelay(250);
-> +	val &= ~EP_MODE_SURVIVE_PERST;
-> +	writel(val, pcie->base + CLK_CONTROL_OFFSET);
-> +	msleep(250);
-> +}
-> +
-> +static int iproc_pcie_check_link(struct iproc_pcie *pcie, struct pci_bus *bus)
-> +{
-> +	u8 hdr_type;
-> +	u32 link_ctrl;
-> +	u16 pos, link_status;
-> +	int link_is_active = 0;
-> +
-> +	/* make sure we are not in EP mode */
-> +	pci_bus_read_config_byte(bus, 0, PCI_HEADER_TYPE, &hdr_type);
-> +	if ((hdr_type & 0x7f) != PCI_HEADER_TYPE_BRIDGE) {
-> +		dev_err(pcie->dev, "in EP mode, hdr=0x08%x\n", hdr_type);
-> +		return -EFAULT;
-> +	}
-> +
-> +	/* force class to PCI_CLASS_BRIDGE_PCI (0x0604) */
-> +	pci_bus_write_config_word(bus, 0, PCI_CLASS_DEVICE,
-> +				  PCI_CLASS_BRIDGE_PCI);
-> +
-> +	/* check link status to see if link is active */
-> +	pos = pci_bus_find_capability(bus, 0, PCI_CAP_ID_EXP);
-> +	pci_bus_read_config_word(bus, 0, pos + PCI_EXP_LNKSTA, &link_status);
-> +	if (link_status & PCI_EXP_LNKSTA_NLW)
-> +		link_is_active = 1;
-> +
-> +	if (!link_is_active) {
-> +		/* try GEN 1 link speed */
-> +#define PCI_LINK_STATUS_CTRL_2_OFFSET 0x0dc
-> +#define PCI_TARGET_LINK_SPEED_MASK    0xf
-> +#define PCI_TARGET_LINK_SPEED_GEN2    0x2
-> +#define PCI_TARGET_LINK_SPEED_GEN1    0x1
-> +		pci_bus_read_config_dword(bus, 0,
-> +					  PCI_LINK_STATUS_CTRL_2_OFFSET,
-> +					  &link_ctrl);
-> +		if ((link_ctrl & PCI_TARGET_LINK_SPEED_MASK) ==
-> +		    PCI_TARGET_LINK_SPEED_GEN2) {
-> +			link_ctrl &= ~PCI_TARGET_LINK_SPEED_MASK;
-> +			link_ctrl |= PCI_TARGET_LINK_SPEED_GEN1;
-> +			pci_bus_write_config_dword(bus, 0,
-> +					   PCI_LINK_STATUS_CTRL_2_OFFSET,
-> +					   link_ctrl);
-> +			msleep(100);
-> +
-> +			pos = pci_bus_find_capability(bus, 0, PCI_CAP_ID_EXP);
-> +			pci_bus_read_config_word(bus, 0, pos + PCI_EXP_LNKSTA,
-> +						 &link_status);
-> +			if (link_status & PCI_EXP_LNKSTA_NLW)
-> +				link_is_active = 1;
-> +		}
-> +	}
-> +
-> +	dev_info(pcie->dev, "link: %s\n", link_is_active ? "UP" : "DOWN");
-> +
-> +	return link_is_active ? 0 : -ENODEV;
-> +}
-> +
-> +static void iproc_pcie_enable(struct iproc_pcie *pcie)
-> +{
-> +	writel(SYS_RC_INTX_MASK, pcie->base + SYS_RC_INTX_EN);
-> +}
-> +
-> +int iproc_pcie_setup(struct iproc_pcie *pcie)
-> +{
-> +	int ret;
-> +	struct pci_bus *bus;
-> +
-> +	if (!pcie || !pcie->dev || !pcie->base)
-> +		return -EINVAL;
-> +
-> +	if (pcie->phy) {
-> +		ret = phy_init(pcie->phy);
-> +		if (ret) {
-> +			dev_err(pcie->dev, "unable to initialize PCIe PHY\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = phy_power_on(pcie->phy);
-> +		if (ret) {
-> +			dev_err(pcie->dev, "unable to power on PCIe PHY\n");
-> +			goto err_exit_phy;
-> +		}
-> +
-> +	}
-> +
-> +	iproc_pcie_reset(pcie);
-> +
-> +	pcie->sysdata.private_data = pcie;
-> +
-> +	bus = pci_create_root_bus(pcie->dev, 0, &iproc_pcie_ops,
-> +				  &pcie->sysdata, pcie->resources);
-> +	if (!bus) {
-> +		dev_err(pcie->dev, "unable to create PCI root bus\n");
-> +		ret = -ENOMEM;
-> +		goto err_power_off_phy;
-> +	}
-> +	pcie->root_bus = bus;
-> +
-> +	ret = iproc_pcie_check_link(pcie, bus);
-> +	if (ret) {
-> +		dev_err(pcie->dev, "no PCIe EP device detected\n");
-> +		goto err_rm_root_bus;
-> +	}
-> +
-> +	iproc_pcie_enable(pcie);
-> +
-> +	pci_scan_child_bus(bus);
-> +	pci_assign_unassigned_bus_resources(bus);
-> +	pci_bus_add_devices(bus);
-> +
-> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-
-I think the IRQ fixup should be before pci_bus_add_devices().  CC'd Yijing,
-who's been fixing similar issues.
-
-pci_bus_add_devices() is the point where drivers can claim these devices,
-and we don't want to change things after a driver claims the device.
-
-> +
-> +	return 0;
-> +
-> +err_rm_root_bus:
-> +	pci_stop_root_bus(bus);
-> +	pci_remove_root_bus(bus);
-> +
-> +err_power_off_phy:
-> +	if (pcie->phy)
-> +		phy_power_off(pcie->phy);
-> +err_exit_phy:
-> +	if (pcie->phy)
-> +		phy_exit(pcie->phy);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(iproc_pcie_setup);
-> +
-> +int iproc_pcie_remove(struct iproc_pcie *pcie)
-> +{
-> +	pci_stop_root_bus(pcie->root_bus);
-> +	pci_remove_root_bus(pcie->root_bus);
-> +
-> +	if (pcie->phy) {
-> +		phy_power_off(pcie->phy);
-> +		phy_exit(pcie->phy);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(iproc_pcie_remove);
-
-These exports wouldn't be needed if this were all squashed into one file.
-
-> +
-> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-> +MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
-> new file mode 100644
-> index 0000000..569bc04
-> --- /dev/null
-> +++ b/drivers/pci/host/pcie-iproc.h
-> @@ -0,0 +1,42 @@
-> +/*
-> + * Copyright (C) 2014-2015 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef _PCIE_IPROC_H
-> +#define _PCIE_IPROC_H
-> +
-> +#define IPROC_PCIE_MAX_NUM_IRQS 6
-> +
-> +/**
-> + * iProc PCIe device
-> + * @dev: pointer to device data structure
-> + * @base: PCIe host controller I/O register base
-> + * @resources: linked list of all PCI resources
-> + * @sysdata: Per PCI controller data
-> + * @root_bus: pointer to root bus
-> + * @phy: optional PHY device that controls the Serdes
-> + * @irqs: interrupt IDs
-> + */
-> +struct iproc_pcie {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	struct list_head *resources;
-> +	struct pci_sys_data sysdata;
-> +	struct pci_bus *root_bus;
-> +	struct phy *phy;
-> +	int irqs[IPROC_PCIE_MAX_NUM_IRQS];
-> +};
-> +
-> +extern int iproc_pcie_setup(struct iproc_pcie *pcie);
-> +extern int iproc_pcie_remove(struct iproc_pcie *pcie);
-
-Hopefully you can squash this all into one file, but if you can't, my
-preference is to omit "extern" on function declarations.
-
-> +
-> +#endif /* _PCIE_IPROC_H */
-> -- 
-> 1.7.9.5
-> 
+QXQgbGVhc3QgdGhlIFJvY2tjaGlwIHZhcmlhbnQgb2YgdGhlIGR3X2hkbWkgY2FuIGhhdmUgY29u
+dHJvbGxhYmxlIHBvd2VyIHN1cHBsaWVzCnByb3ZpZGluZyAxLjAgYW5kIDEuOFYuIFRoZXJlZm9y
+ZSBhZGQgdGhlIHBvc3NpYmlsaXR5IGZvciB0aGUgZ2VuZXJpYyBicmlkZ2UKZHJpdmVyIHRvIGVu
+YWJsZSBzdXBwbGllcyBwcm92aWRlZCBieSB0aGUgaHctc3BlY2lmaWMgZHJpdmVycy4KClNpZ25l
+ZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Ci0tLQpjaGFuZ2VzIHNp
+bmNlIHYxOgotIGZvbGxvdyBzdWdnZXN0aW9uIGZyb20gUnVzc2VsbCBLaW5nIHRvIGtlZXAgcmVn
+dWxhdG9yIGhhbmRsaW5nIGxvY2FsCiAgdG8gdGhlIHJvY2tjaGlwIGltcGxlbWVudGF0aW9uIGZv
+ciB0aGUgdGltZSBiZWluZyBhbmQgb25seSBnZW5lcmFsaXplCiAgd2hlbiBhIHJlYWwgc2Vjb25k
+IGltcGxlbWVudGF0aW9uIG5lZWRzIHJlZ3VsYXRvciBoYW5kbGluZwoKIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgIDUgKysrKwogZHJpdmVycy9n
+cHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyAgICAgICAgfCAzMiArKysrKysrKysr
+KysrKysrKysrKystCiAyIGZpbGVzIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJt
+L2JyaWRnZS9kd19oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+cm0vYnJpZGdlL2R3X2hkbWkudHh0CmluZGV4IGE5MDVjMTQuLmJiNzQ2NDAgMTAwNjQ0Ci0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0
+CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hk
+bWkudHh0CkBAIC0yMiw2ICsyMiwxMSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzCiAtIGRkYy1pMmMt
+YnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2Jp
+bmcKIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUgSERNSSBDRUMgY2xvY2ss
+IG5hbWUgc2hvdWxkIGJlICJjZWMiCiAKK09wdGlvbmFsIHN1cHBsaWVzOgorcm9ja2NoaXAscmsz
+Mjg4LWR3LWhkbWkgaGFuZGxlcyB0d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXM6CistIGF2ZGQx
+djAtc3VwcGx5OiAxLjBWIHBvd2VyIHN1cHBseQorLSBhdmRkMXY4LXN1cHBseTogMS44ViBwb3dl
+ciBzdXBwbHkKKwogRXhhbXBsZToKIAloZG1pOiBoZG1pQDAxMjAwMDAgewogCQljb21wYXRpYmxl
+ID0gImZzbCxpbXg2cS1oZG1pIjsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
+cC9kd19oZG1pLXJvY2tjaGlwLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1y
+b2NrY2hpcC5jCmluZGV4IGQyMzZmYWEuLjY0N2EyNDAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3Jv
+Y2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYwpAQCAtMTEsNiArMTEsNyBAQAogI2luY2x1ZGUgPGxp
+bnV4L3BsYXRmb3JtX2RldmljZS5oPgogI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KICNp
+bmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3Vt
+ZXIuaD4KICNpbmNsdWRlIDxkcm0vZHJtX29mLmg+CiAjaW5jbHVkZSA8ZHJtL2RybVAuaD4KICNp
+bmNsdWRlIDxkcm0vZHJtX2NydGNfaGVscGVyLmg+CkBAIC0yOCw2ICsyOSw5IEBAIHN0cnVjdCBy
+b2NrY2hpcF9oZG1pIHsKIAlzdHJ1Y3QgZGV2aWNlICpkZXY7CiAJc3RydWN0IHJlZ21hcCAqcmVn
+bWFwOwogCXN0cnVjdCBkcm1fZW5jb2RlciBlbmNvZGVyOworCXN0cnVjdCByZWd1bGF0b3JfYnVs
+a19kYXRhIHN1cHBsaWVzWzJdOworCWludCBuc3VwcGxpZXM7CisJYm9vbCBzdXBwbGllc19lbmFi
+bGVkOwogfTsKIAogI2RlZmluZSB0b19yb2NrY2hpcF9oZG1pKHgpCWNvbnRhaW5lcl9vZih4LCBz
+dHJ1Y3Qgcm9ja2NoaXBfaGRtaSwgeCkKQEAgLTE3OSw2ICsxODMsMTIgQEAgc3RhdGljIHN0cnVj
+dCBkcm1fZW5jb2Rlcl9mdW5jcyBkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfZnVuY3MgPSB7CiAK
+IHN0YXRpYyB2b2lkIGR3X2hkbWlfcm9ja2NoaXBfZW5jb2Rlcl9kaXNhYmxlKHN0cnVjdCBkcm1f
+ZW5jb2RlciAqZW5jb2RlcikKIHsKKwlzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSAqaGRtaSA9IHRvX3Jv
+Y2tjaGlwX2hkbWkoZW5jb2Rlcik7CisKKwlpZiAoaGRtaS0+bnN1cHBsaWVzID4gMCAmJiBoZG1p
+LT5zdXBwbGllc19lbmFibGVkKSB7CisJCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoaGRtaS0+bnN1
+cHBsaWVzLCBoZG1pLT5zdXBwbGllcyk7CisJCWhkbWktPnN1cHBsaWVzX2VuYWJsZWQgPSBmYWxz
+ZTsKKwl9CiB9CiAKIHN0YXRpYyBib29sCkBAIC0xOTksNyArMjA5LDE2IEBAIHN0YXRpYyB2b2lk
+IGR3X2hkbWlfcm9ja2NoaXBfZW5jb2Rlcl9jb21taXQoc3RydWN0IGRybV9lbmNvZGVyICplbmNv
+ZGVyKQogewogCXN0cnVjdCByb2NrY2hpcF9oZG1pICpoZG1pID0gdG9fcm9ja2NoaXBfaGRtaShl
+bmNvZGVyKTsKIAl1MzIgdmFsOwotCWludCBtdXg7CisJaW50IG11eCwgcmV0OworCisJaWYgKGhk
+bWktPm5zdXBwbGllcyA+IDAgJiYgIWhkbWktPnN1cHBsaWVzX2VuYWJsZWQpIHsKKwkJcmV0ID0g
+cmVndWxhdG9yX2J1bGtfZW5hYmxlKGhkbWktPm5zdXBwbGllcywgaGRtaS0+c3VwcGxpZXMpOwor
+CQlpZiAocmV0KSB7CisJCQlkZXZfZXJyKGhkbWktPmRldiwgImNvdWxkIG5vdCBlbmFibGUgaGRt
+aSBhbmFsb2cgc3VwcGxpZXNcbiIpOworCQkJcmV0dXJuOworCQl9CisJCWhkbWktPnN1cHBsaWVz
+X2VuYWJsZWQgPSB0cnVlOworCX0KIAogCW11eCA9IHJvY2tjaGlwX2RybV9lbmNvZGVyX2dldF9t
+dXhfaWQoaGRtaS0+ZGV2LT5vZl9ub2RlLCBlbmNvZGVyKTsKIAlpZiAobXV4KQpAQCAtMjc1LDYg
+KzI5NCwxNyBAQCBzdGF0aWMgaW50IGR3X2hkbWlfcm9ja2NoaXBfYmluZChzdHJ1Y3QgZGV2aWNl
+ICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAlpZiAoIWlvcmVzKQogCQlyZXR1cm4gLUVO
+WElPOwogCisJaGRtaS0+c3VwcGxpZXNbMF0uc3VwcGx5ID0gImF2ZGQxdjAiOworCWhkbWktPnN1
+cHBsaWVzWzFdLnN1cHBseSA9ICJhdmRkMXY4IjsKKwloZG1pLT5uc3VwcGxpZXMgPSAyOworCisJ
+cmV0ID0gZGV2bV9yZWd1bGF0b3JfYnVsa19nZXQoaGRtaS0+ZGV2LAorCQkJCSAgICAgIGhkbWkt
+Pm5zdXBwbGllcywgaGRtaS0+c3VwcGxpZXMpOworCWlmIChyZXQgPT0gLUVQUk9CRV9ERUZFUikK
+KwkJcmV0dXJuIHJldDsKKwlpZiAocmV0KQorCQloZG1pLT5uc3VwcGxpZXMgPSAwOworCiAJcGxh
+dGZvcm1fc2V0X2RydmRhdGEocGRldiwgaGRtaSk7CiAKIAllbmNvZGVyLT5wb3NzaWJsZV9jcnRj
+cyA9IGRybV9vZl9maW5kX3Bvc3NpYmxlX2NydGNzKGRybSwgZGV2LT5vZl9ub2RlKTsKLS0gCjIu
+MS40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
