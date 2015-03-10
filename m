@@ -1,68 +1,250 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] soc: mediatek: Add SMI driver
-Date: Tue, 10 Mar 2015 10:24:03 +0100
-Message-ID: <1425979443.6226.4.camel@pengutronix.de>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	 <1425638900-24989-2-git-send-email-yong.wu@mediatek.com>
-	 <1425871612.4871.10.camel@mtksdaap41> <2583132.xxsZocsQta@wuerfel>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
+Date: Tue, 10 Mar 2015 10:41:42 +0100
+Message-ID: <20150310094142.GD24885@pengutronix.de>
+References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
+ <1425888603-25800-3-git-send-email-s.hauer@pengutronix.de>
+ <7h61a94zy0.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2583132.xxsZocsQta@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <7h61a94zy0.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-Am Montag, den 09.03.2015, 22:56 +0100 schrieb Arnd Bergmann:
-> On Monday 09 March 2015 11:26:52 Yingjoe Chen wrote:
-> > On Fri, 2015-03-06 at 18:48 +0800, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > 
-> > >     This patch add SMI(Smart Multimedia Interface) driver. This driver is
-> > > responsible to enable/disable iommu and control the clocks of each
-> > > local arbiter.
-> > > 
-> > > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > >  drivers/soc/mediatek/Kconfig      |   7 ++
-> > >  drivers/soc/mediatek/Makefile     |   1 +
-> > >  drivers/soc/mediatek/mt8173-smi.c | 143 ++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mtk-smi.h           |  40 +++++++++++
-> > >  4 files changed, 191 insertions(+)
-> > >  create mode 100644 drivers/soc/mediatek/mt8173-smi.c
-> > >  create mode 100644 include/linux/mtk-smi.h
-> > > 
-> > 
-> > Hi Arnd, Matthias,
-> > 
-> > For the SMI driver, we can't find a better place, so we put it in
-> > drivers/soc/mediatek now. Please let us know if you have any suggestion
-> > or concern. Thanks
++Cc James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+On Mon, Mar 09, 2015 at 02:35:03PM -0700, Kevin Hilman wrote:
+> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
 > 
-> From what I understand from your description, I think it would better
-> fit in drivers/iommu. Another option is drivers/memory, which I think
-> is where the respective Tegra driver ended up.
+> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-Note that this is not the IOMMU driver. M4U is the IOMMU unit. The SMI
-unit is more of a bridge control for the internal buses where you can
-control various properties for the masters on the bus.
+> A bit of a changelog here would be useful describing this driver, that
+> it's only covering part of the device (e.g. power controller) with more
+> to come, dependency on the syscon driver, etc.
+> 
+> > +/*
+> > + * The Infracfg unit has bus protection bits. We enable the bus protection
+> > + * for disabled power domains so that the system does not hang when some unit
+> > + * accesses the bus while in power down.
+> > + */
+> 
+> Hmm, why don't you want to know if some device is accessing another
+> device which is in a domain that is powered down?   Seems like this is a
+> good way to hide real bugs.
 
-One notable property (and why this driver is part of the IOMMU series)
-is the control weather a master should go through the M4U unit for
-translation or bypass it and talk directly to external memory
-controller.
+How I understand it the system just hangs on erroneous accesses without
+these protection bits enabled, so enabling them at least makes sure we
+can output something.
+I must admit though that my understanding of these bits is quite limited
+and the only user of this driver I have available here (audio) doesn't
+make use of these protection bits, so I can't test here.
 
-Regards,
-Lucas
+James, could you shed some light on this issue?
+
+> > +	val = readl(ctl_addr);
+> > +	val |= PWR_ON_BIT;
+> > +	writel(val, ctl_addr);
+> > +	val |= PWR_ON_2ND_BIT;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	/* wait until PWR_ACK = 1 */
+> > +	expired = jiffies + HZ;
+> > +	while (!(readl(scp->base + SPM_PWR_STATUS) & data->sta_mask) ||
+> > +			!(readl(scp->base + SPM_PWR_STATUS_2ND) & data->sta_mask)) {
+> > +		cpu_relax();
+> > +		if (time_after(jiffies, expired))
+> > +			return -EIO;
+> 
+> hmm, seems like you'd want a dev_warn() or simliar here if this times
+> out and fails.  There's a bunch of these below too.
+
+Ok, will add.
+
+> > +	/* Clear bus protection bits */
+> > +	if (data->bus_prot_mask) {
+> > +		u32 mask = data->bus_prot_mask;
+> > +		struct regmap *infracfg = scp->infracfg;
+> > +
+> > +		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
+> > +
+> > +		expired = jiffies + HZ;
+> > +
+> > +		while (1) {
+> > +			u32 val;
+> > +
+> > +			ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
+> > +			if (ret)
+> > +				return ret;
+> > +
+> > +			if (!(val & mask))
+> > +				break;
+> > +
+> > +			cpu_relax();
+> > +			if (time_after(jiffies, expired))
+> > +				return -EIO;
+> > +		}
+> > +	}
+> 
+> This whole "Clear bus protection bits" part seems like it should be an
+> API in the infracfg driver.
+
+Ok, can do.
+
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static int scpsys_power_off(struct generic_pm_domain *genpd)
+> > +{
+> > +	struct scp_domain *scpd = container_of(genpd, struct scp_domain, pmd);
+> > +	struct scp *scp = scpd->scp;
+> > +	struct scp_domain_data *data = scpd->data;
+> > +	unsigned long expired;
+> > +	void __iomem *ctl_addr = scpd->scp->base + data->ctl_offs;
+> > +	u32 sram_pdn_ack = data->sram_pdn_ack_bits;
+> > +	u32 val;
+> > +	int ret;
+> > +
+> > +	/* set bus protection bits */
+> > +	if (data->bus_prot_mask) {
+> > +		struct regmap *infracfg = scp->infracfg;
+> > +		u32 mask = data->bus_prot_mask;
+> > +
+> > +		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
+> > +
+> > +		expired = jiffies + HZ;
+> > +
+> > +		while (1) {
+> > +			ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
+> > +			if (ret)
+> > +				return ret;
+> > +
+> > +			if ((val & mask) == mask)
+> > +				break;
+> > +
+> > +			cpu_relax();
+> > +			if (time_after(jiffies, expired))
+> > +				return -EIO;
+> > +		}
+> > +	}
+> 
+> As with the 'clear bus protection bits', seems like this should be a
+> call into the infracfg driver.
+> 
+> > +	val = readl(ctl_addr);
+> > +	val |= data->sram_pdn_bits;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	/* wait until SRAM_PDN_ACK all 1 */
+> > +	expired = jiffies + HZ;
+> > +	while ((readl(ctl_addr) & sram_pdn_ack) != sram_pdn_ack) {
+> > +		cpu_relax();
+> > +		if (time_after(jiffies, expired))
+> > +			return -EIO;
+> > +	}
+> > +
+> > +	val |= PWR_ISO_BIT;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	val &= ~PWR_RST_B_BIT;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	val |= PWR_CLK_DIS_BIT;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	val &= ~PWR_ON_BIT;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	val &= ~PWR_ON_2ND_BIT;
+> > +	writel(val, ctl_addr);
+> > +
+> > +	/* wait until PWR_ACK = 0 */
+> > +	expired = jiffies + HZ;
+> > +	while ((readl(scp->base + SPM_PWR_STATUS) & data->sta_mask) ||
+> > +			(readl(scp->base + SPM_PWR_STATUS_2ND) & data->sta_mask)) {
+> > +		cpu_relax();
+> > +		if (time_after(jiffies, expired))
+> > +			return -EIO;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int scpsys_probe(struct platform_device *pdev)
+> > +{
+> > +	struct genpd_onecell_data *pd_data;
+> > +	struct resource *res;
+> > +	int i;
+> > +	struct scp *scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
+> 
+> This might return NULL...
+
+Actually I recently learned that this never fails [1], but the check is
+missing accidently here. Will add it of course.
+
+[1] http://lwn.net/Articles/627419/
+
+> 
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	scp->base = devm_ioremap_resource(&pdev->dev, res);
+> 
+> ... and, boom.
+> 
+> > +	if (IS_ERR(scp->base))
+> > +		return PTR_ERR(scp->base);
+> > +
+> > +	pd_data = &scp->pd_data;
+> > +
+> > +	scp->infracfg = syscon_regmap_lookup_by_compatible("mediatek,mt8173-infracfg");
+> > +	if (IS_ERR(scp->infracfg))
+> > +		return PTR_ERR(scp->infracfg);
+> > +
+> > +	pd_data->domains = scp->pmd;
+> > +	pd_data->num_domains = NUM_DOMAINS;
+> > +
+> > +	for (i = 0; i < NUM_DOMAINS; i++) {
+> > +		struct scp_domain *scpd = &scp->domains[i];
+> > +		struct generic_pm_domain *pmd = &scpd->pmd;
+> > +
+> > +		scp->pmd[i] = pmd;
+> > +		scpd->data = &scp_domain_data[i];
+> > +		scpd->scp = scp;
+> > +
+> > +		pmd->name = scp_domain_data[i].name;
+> > +		pmd->power_off = scpsys_power_off;
+> > +		pmd->power_on = scpsys_power_on;
+> > +		pmd->power_off_latency_ns = 20000;
+> > +		pmd->power_on_latency_ns = 20000;
+> 
+> Are the latencies for all domains really the same?   Seems like the
+> latencies should be part of the per-domain data.
+> 
+> Where did these numbers come from?  HW specs, measurement, etc?
+
+They are from measurement. actually they are around 11us.
+
+> 
+> Also, eventually, these latencies can (and should) come from DT
+> after the support from Geert[1] is merged, so putting them in the data
+> struct for now
+
+I agree for domains created from regulators somewhere on the board, but
+in this case the domains are completely SoC internal. The
+"mediatek,mt8173-scpsys" compatible gives me enough information so I see
+no point adding this to the device tree.
+
+Sascha
 
 -- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
