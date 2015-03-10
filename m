@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v5 09/12] mfd: axp20x: Enable AXP22X regulators
-Date: Tue, 10 Mar 2015 19:59:20 +0800
-Message-ID: <1425988764-23618-10-git-send-email-wens@csie.org>
+Subject: [PATCH v5 04/12] mfd: axp20x: update DT bindings with
+ AXP22x compatibles
+Date: Tue, 10 Mar 2015 19:59:15 +0800
+Message-ID: <1425988764-23618-5-git-send-email-wens@csie.org>
 References: <1425988764-23618-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,27 +20,39 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the axp20x-regulators driver supports different variants of the
-AXP family, we can enable regulator support for AXP22X without the risk
-of incorrectly configuring regulators.
+Add AXP221 to the list of supported devices.
+
+Also replace any mention of AXP20x in the document with a
+generic "PMIC".
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/mfd/axp20x.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 0ec27d5023df..8d2dbb7eb588 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -370,6 +370,8 @@ static struct mfd_cell axp22x_cells[] = {
- 		.name			= "axp20x-pek",
- 		.num_resources		= ARRAY_SIZE(axp22x_pek_resources),
- 		.resources		= axp22x_pek_resources,
-+	}, {
-+		.name			= "axp20x-regulator",
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 98685f291a72..3914a3f91ff6 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -1,15 +1,16 @@
+-AXP202/AXP209 device tree bindings
++AXP family PMIC device tree bindings
  
+ The axp20x family current members :
+ axp202 (X-Powers)
+ axp209 (X-Powers)
++axp221 (X-Powers)
+ 
+ Required properties:
+-- compatible: "x-powers,axp202" or "x-powers,axp209"
++- compatible: "x-powers,axp202", "x-powers,axp209", "x-powers,axp221"
+ - reg: The I2C slave address for the AXP chip
+ - interrupt-parent: The parent interrupt controller
+ - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+-- interrupt-controller: axp20x has its own internal IRQs
++- interrupt-controller: The PMIC has its own internal IRQs
+ - #interrupt-cells: Should be set to 1
+ 
+ Optional properties:
 -- 
 2.1.4
