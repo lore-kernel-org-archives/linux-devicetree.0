@@ -1,229 +1,82 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH] arm64: dts: add APM Merlin Board device tree
-Date: Tue, 10 Mar 2015 10:10:54 -0700
-Message-ID: <1426007454-11848-1-git-send-email-fkan@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: patches@apm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Tue, 10 Mar 2015 12:13:46 -0500
+Message-ID: <F5017A7F-0EA2-41B3-A9DD-6123CCFD36FA@codeaurora.org>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com> <F9B276F7-61EF-4406-AB46-97D7F1ECEEFE@codeaurora.org> <89746055.qtEO3GZJmR@wuerfel>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <89746055.qtEO3GZJmR@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the support for APM Merlin board. The Merlin board
-is based on the APM X-Gene Shadowcat SoC. This DTS enables PMU,
-SATA and Serial.
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- arch/arm64/boot/dts/apm/apm-merlin.dts     |  39 ++++++++
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 154 +++++++++++++++++++++++++++++
- 2 files changed, 193 insertions(+)
- create mode 100644 arch/arm64/boot/dts/apm/apm-merlin.dts
- create mode 100644 arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+On Mar 9, 2015, at 7:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-diff --git a/arch/arm64/boot/dts/apm/apm-merlin.dts b/arch/arm64/boot/dts/apm/apm-merlin.dts
-new file mode 100644
-index 0000000..152c513
---- /dev/null
-+++ b/arch/arm64/boot/dts/apm/apm-merlin.dts
-@@ -0,0 +1,39 @@
-+/*
-+ * dts file for AppliedMicro (APM) Merlin Board
-+ *
-+ * Copyright (C) 2015, Applied Micro Circuits Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "apm-shadowcat.dtsi"
-+
-+/ {
-+	model = "APM X-Gene Merlin board";
-+	compatible = "apm,merlin", "apm,xgene-shadowcat";
-+
-+	chosen { };
-+
-+	memory {
-+		device_type = "memory";
-+		reg = < 0x1 0x00000000 0x0 0x80000000 >;
-+	};
-+};
-+
-+&serial0 {
-+	status = "ok";
-+};
-+&sata1 {
-+	status = "ok";
-+};
-+&sata2 {
-+	status = "ok";
-+};
-+&sata3 {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-new file mode 100644
-index 0000000..14b6cce
---- /dev/null
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -0,0 +1,154 @@
-+/*
-+ * dts file for AppliedMicro (APM) X-Gene Shadowcat SOC
-+ *
-+ * Copyright (C) 2015, Applied Micro Circuits Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/ {
-+	compatible = "apm,xgene-shadowcat";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu@000 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x000>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@001 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x001>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@100 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x100>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@101 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x101>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@200 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x200>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@201 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x201>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@300 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x300>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+		cpu@301 {
-+			device_type = "cpu";
-+			compatible = "apm,strega", "arm,armv8";
-+			reg = <0x0 0x301>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x1 0x0000fff8>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@78090000 {
-+		compatible = "arm,cortex-a15-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		interrupt-controller;
-+		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
-+		ranges = <0 0 0 0x79000000 0x0 0x800000>; /* MSI Range */
-+		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
-+		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
-+		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
-+		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <1 12 0xff04>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 0 0xff04>,	/* Secure Phys IRQ */
-+			     <1 13 0xff04>,	/* Non-secure Phys IRQ */
-+			     <1 14 0xff04>,	/* Virt IRQ */
-+			     <1 15 0xff04>;	/* Hyp IRQ */
-+		clock-frequency = <50000000>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		serial0: serial@10600000 {
-+			device_type = "serial";
-+			compatible = "ns16550";
-+			reg = <0 0x10600000 0x0 0x1000>;
-+			reg-shift = <2>;
-+			clock-frequency = <10000000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x4c 0x4>;
-+		};
-+
-+		sata1: sata@1a000000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a000000 0x0 0x1000>,
-+			      <0x0 0x1f200000 0x0 0x1000>,
-+			      <0x0 0x1f20d000 0x0 0x1000>,
-+			      <0x0 0x1f20e000 0x0 0x1000>;
-+			interrupts = <0x0 0x5a 0x4>;
-+			dma-coherent;
-+		};
-+
-+		sata2: sata@1a200000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a200000 0x0 0x1000>,
-+			      <0x0 0x1f210000 0x0 0x1000>,
-+			      <0x0 0x1f21d000 0x0 0x1000>,
-+			      <0x0 0x1f21e000 0x0 0x1000>;
-+			interrupts = <0x0 0x5b 0x4>;
-+			dma-coherent;
-+		};
-+
-+		sata3: sata@1a400000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x1000>,
-+			      <0x0 0x1f22d000 0x0 0x1000>,
-+			      <0x0 0x1f22e000 0x0 0x1000>;
-+			interrupts = <0x0 0x5c 0x4>;
-+			dma-coherent;
-+		};
-+	};
-+};
--- 
-1.9.1
+> On Friday 06 March 2015 14:37:52 Kumar Gala wrote:
+>> On Mar 6, 2015, at 1:15 PM, Olof Johansson <olof@lixom.net> wrote:
+>>=20
+>>> On Fri, Mar 6, 2015 at 8:08 AM, Kumar Gala <galak@codeaurora.org> w=
+rote:
+>>>>=20
+>>>> On Mar 5, 2015, at 7:59 PM, Olof Johansson <olof@lixom.net> wrote:
+>>>>=20
+>>>>> On Thu, Mar 5, 2015 at 12:23 PM, Kumar Gala <galak@codeaurora.org=
+> wrote:
+>>>>>>=20
+>>>>>> On Mar 5, 2015, at 1:42 PM, Kevin Hilman <khilman@kernel.org> wr=
+ote:
+>>>>>>=20
+>>>>>>> Kumar Gala <galak@codeaurora.org> writes:
+>>>>>>>=20
+>>>>>>>> The top level qcom,msm-id and qcom,board-id are utilized by bo=
+otloaders
+>>>>>>>> on Qualcomm MSM platforms to determine which device tree shoul=
+d be
+>>>>>>>> utilized and passed to the kernel.
+>>>>>>>>=20
+>>>>>>>> Cc: <devicetree@vger.kernel.org>
+>>>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+>>>>>>>=20
+>>>>>>> Is this the special magic that allows qcom bootloaders to take =
+a kernel
+>>>>>>> plus multiple DTBs and figure out which DTB to pass?
+>>>>>>>=20
+>>>>>>> Kevin
+>>>>>>=20
+>>>>>> yes
+>>>>>=20
+>>>>> That's a bummer.
+>>>>>=20
+>>>>> Luckily, the solution for upstream is still quite simple: Provide=
+ only
+>>>>> one devicetree, and it'll be used, right?
+>>>>=20
+>>>> We can provide only one, we still need the IDs in the DT.
+>>>=20
+>>> How are the DTS provided? Concatenated with the kernel, or in a
+>>> wrapped data format? Or in a separate partition from the kernel?
+>>=20
+>> Its a wrapped data format that is than concatenated with the kernel =
+if I remember correctly.
+>=20
+> Then you should be able to create a tool that can write this concaten=
+ated
+> format and insert these properties from a table that matches the boot
+> loader, right?
+>=20
+> 	Arnd
+
+Are you suggesting the tool insert the properties in the DT?  I=92m not=
+ sure I understand what the point of doing that would be.
+
+- k
+
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
