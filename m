@@ -1,117 +1,125 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Tue, 10 Mar 2015 10:35:50 -0700
-Message-ID: <20150310173550.GT5264@atomide.com>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
- <2223973.a64rBcZvaA@wuerfel>
- <CAB3XZEftjwUGS_Kj2dCxYY1m82C+a1_=akbnG3_hLETCr+Dddg@mail.gmail.com>
- <5683860.JYkc24rKim@wuerfel>
- <CAB3XZEfEQnb7qsxuAAr6pUehm1nw6Eu4ZsV1+E477yF5K1hczA@mail.gmail.com>
- <20150310161801.GR5264@atomide.com>
- <CAB3XZEdK2O7tSSTchvRQtaefzCECjjQ-biQmOBHGdzJaBknSFQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 00/15] musb: Add support for the Allwinner sunxi musb
+ controller
+Date: Tue, 10 Mar 2015 18:41:16 +0100
+Message-ID: <20150310174116.GX5085@lukather>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uN3tURjgVTLfI0kr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAB3XZEdK2O7tSSTchvRQtaefzCECjjQ-biQmOBHGdzJaBknSFQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Eliad Peller <eliad@wizery.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
+In-Reply-To: <1425933628-9672-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Eliad Peller <eliad@wizery.com> [150310 10:01]:
-> On Tue, Mar 10, 2015 at 6:18 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > * Eliad Peller <eliad@wizery.com> [150310 09:11]:
-> >> On Tue, Mar 10, 2015 at 5:52 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Tuesday 10 March 2015 16:31:33 Eliad Peller wrote:
-> >> >> On Tue, Mar 10, 2015 at 4:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> >> > On Tuesday 10 March 2015 13:00:19 Eliad Peller wrote:
-> >> >> >> On Tue, Mar 10, 2015 at 12:49 AM, Tony Lindgren <tony@atomide.com> wrote:
-> >> >> >> >> > I was expecting you to remove all calls to legacy_init_wl12xx from this file,
-> >> >> >> >> > including the ones for wl12xx aside from the wl18xx ones you removed, but
-> >> >> >> >> > if that's enough to clean out the platform_data handling from the wlcore
-> >> >> >> >> > driver, it's good enough as a start.
-> >> >> >> >> not sure i'm following - can you elaborate?
-> >> >> >> >>
-> >> >> >> >> i'll summarize the way i see it. please correct me if i'm wrong.
-> >> >> >> >>
-> >> >> >> >> both wl18xx and wl12xx use the platform data to get the irq number.
-> >> >> >> >> wl12xx (only) also needs some additional clock definitions to be
-> >> >> >> >> passed. there's currently some issue with specifying some the of clock
-> >> >> >> >> sources, so i preferred starting only with (the simpler) wl18xx
-> >> >> >> >> bindings.
-> >> >> >> >>
-> >> >> >> >> for platforms with wl18xx, we can remove the pdata-quirk, as all the
-> >> >> >> >> data (i.e. irq) can be passed by the new DT bindings.
-> >> >> >> >> however, for platforms with wl12xx, we still need to pass the clock
-> >> >> >> >> definitions (along with the irq), so we have to keep
-> >> >> >> >> legacy_init_wl12xx for the time being (and that's also why we have to
-> >> >> >> >> currently keep the platform_data handling in the wlcore driver)
-> >> >> >> >>
-> >> >> >> >> do you have something else in mind?
-> >> >> >> >
-> >> >> >> > I think what Arnd is saying is we've now removed all the wl12xx using
-> >> >> >> > legacy platforms, so all of them can boot with just data from dts.
-> >> >> >
-> >> >> > Right, that was my idea.
-> >> >> >
-> >> >> >> I don't think that's the case (unless i'm missing something).
-> >> >> >> e.g. there's still pdata-quirk for "compulab,omap3-sbc-t3730" which
-> >> >> >> initializes wl12xx device.
-> >> >> >
-> >> >> > This one is just like the igep0030, as Tony was saying: the board
-> >> >> > boots from device tree already, so now that we have a binding for
-> >> >> > it, we can remove the wl12xx_set_platform_data() for it.
-> >> >> >
-> >> >> i think the wl12xx_set_platform_data() name created some confusion -
-> >> >> it is used to pass platform data for both wl12xx and wl18xx devices.
-> >> >> (this confusion is all around the wlcore driver as well, due to the
-> >> >> code evolution)
-> >> >>
-> >> >> the binding i added is for wl18xx only (there is no wl12xx binding yet).
-> >> >> the remaining boards, AFAICT, have wl12xx (rather than wl18xx) cards.
-> >> >> so i don't see how we can remove these wl12xx_set_platform_data()
-> >> >> calls before we have wl12xx bindings in-place as well.
-> >> >
-> >> > What is missing for that binding then? I keep getting confused here,
-> >> > but I thought that they share the implementation that looks at the
-> >> > platform data.
-> >> >
-> >> they both get the same wl12xx_platform_data struct, but only wl12xx
-> >> cares about the clocks-related fields.
-> >> the bindings i added parses only the irq.
-> >>
-> >> (Luca tried previously to upstream wl12xx DT support along with the
-> >> required clock DT changes, but got some rejections, mainly wrt. clock
-> >> stuff.
-> >> e.g. http://thread.gmane.org/gmane.linux.kernel/1520752
-> >> that's why i preferred starting with "easier" wl18xx bindings only)
-> >
-> > I believe we did not have clock bindings back then, now it's simple
-> > to get the clock. If it's some internal clock to the wl12xx, then
-> > that's a different story, it should be just hidden behind a compatible
-> > flag then.
-> >
-> i'm really not familiar with the common clock framework, but there
-> still doesn't seem to be a way to determine whether a clock is XTAL or
-> not (which is what Luca's patch was about). should we use compatible
-> flag in such case? i'm not sure it sounds right.
-> 
-> anyway, i'd really prefer, if possible, starting with the wl18xx
-> bindings, and defer the wl12xx complications to later on.
-> (i also need to find some wl12xx card in order to actually test the
-> patches once i'll have them...)
-> 
-> we do have to make sure these wl18xx bindings are future-compatible
-> with the wl12xx ones, but i think the current bindings are pretty much
-> standard (and are actually a subset of the bindings needed by wl12xx),
-> so it should be fine.
 
-Well how about add just the parsing of the clock and assume it's always
-WL12XX_REFCLOCK_38 for now as that's the only thing we're currently
-using. Then we can add a property or compatible value if using something
-else as needed.
+--uN3tURjgVTLfI0kr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
+On Mon, Mar 09, 2015 at 09:40:13PM +0100, Hans de Goede wrote:
+> Hi All,
+>=20
+> This patch set has been a while in the making, so I'm very happy to prese=
+nt
+> the end result here, and I hope everyone likes it.
+>=20
+> Before talking about merging this there are 2 things which I would like to
+> point out:
+>=20
+> a) The musb controller in the sunxi SoCs uses some SRAM which needs to be
+> mapped to the musb controller by poking some bits in the SRAM controller,
+> just like the EMAC patches which were send a while back I've chosen to use
+> syscon for this, actually 2 of the patches in this set come directly from=
+ the
+> SRAM mapping patchset for the EMAC.
+>=20
+> I know that Maxime is not 100% in favor of using syscon:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/320221=
+=2Ehtml
+>=20
+> But I disagree with his arguments for writing a special driver for the SR=
+AM
+> controller:
 
-Tony
+And I disagree with your disagreement :)
+
+> 1) syscon was specifically designed for global system control registers l=
+ike
+> this and is fine to use as long as there are no conflicts where 1 bit is =
+of
+> interest to multiple drivers, and there is no such conflict here
+
+No. Syscon has been designed for being lazy.
+
+This is a huge abstraction non-sense. You have to put all the logic of
+dealing with some external register layout in clients drivers,
+including dealing with the different revisions/SoC that are different
+=66rom that aspect, and duplicating that code across all client drivers.
+
+> 2) Maxime's other arguments seem to boil down to it would be nice / prett=
+ier
+> to have a specific driver for this, without really proving a hard need for
+> such a driver. But writing such a driver is going to be a lot of work, and
+> we've a ton of other work to do, and as said there is no real need for a
+> separate driver, syscon works fine for this.
+
+Actually, I already wrote some prototype for this. I'll clean this up
+and send it tonight/tomorrow.
+
+> 3) I actually believe that having a specific driver for this is a bad ide=
+a,
+> because that means inventing a whole new cross driver API for this, and
+> getting those right is, hard, a lot of work, and even then one is still l=
+ikely
+> to get it wrong. We can avoid all this by going with the proven syscon so=
+lution.
+
+Except that modifying an in-kernel API, especially when we have two
+users, is easy. Moving back from syscon is not.
+
+> Maxime, can we please have your ack for moving forward with this using sy=
+scon?
+> (see above for my arguments why)
+
+If you can address my objections above, sure.
+
+Thanks for your awesome work on this,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--uN3tURjgVTLfI0kr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU/yy8AAoJEBx+YmzsjxAgdusQAIMcSYEfIyd66P3kI5ABpggk
+jjrOSIV2QHnWmHO5ZLLoVoB+2QLUkbVXg4eWKHNK3VTzK0S2fn9WBWtx0ARxugz6
+tPPaqD1oFVjfBH9J9YPfR8JOA1dFhgqruqLKxe51KnABTYNQG2RLAfXG+YgdAJfl
+qufTnKvqsIPKEcyt7gDDE2GAP/Mt/SQ0F/7na/FiISBXvJZTtR6ayof4ofD9SXW0
+LiPKbzBYLUGet4YCzVJRCLN8+0mr5W0CBn0Ero/ABqYgsVqvPQviSsGVjrbCtSpb
+l4aHKWvYWJFLEcZ4ZTX+EeSwKgel/phM9DpRZ88JKWbLYQd3ni3bn69a6VJeNzPl
+gIUszB6RIxdHjHcAWupvmq7YQu+nsedIap1zUYrfb7IDII3dE71oqayAbrTA914y
+qd3VZTudhV/NhPHwe02TSD06nrWfGIhv3YDspmusFslcUnXWztyzvhnlihjE8w/v
+fJzhU+PJvVcUdJfHidul8HiFD1gnoIu1/HWfUZeZWklRXLoTOIVJkx7p+KlDy5sX
+o1vQ7QgDXE5fK7Qtoah+HDEDxbCGfyPoiZx5sKad/AAnvIJtYBiQ4YR6HzYmZrBC
+E8OsBN/azA0aqgBB1Ld5QC6x3goqK7XOMj4RJnaljcVgdrWoXs1sz3NUigp5ocVW
+1a3Snmukze1z+2LwEj5n
+=ix9G
+-----END PGP SIGNATURE-----
+
+--uN3tURjgVTLfI0kr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
