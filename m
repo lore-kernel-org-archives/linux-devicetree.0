@@ -1,43 +1,74 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 05/12] ARM: dts: sun6i: hummingbird: Add
- AXP221 PMIC device node
-Date: Tue, 10 Mar 2015 22:28:43 +0100
-Message-ID: <20150310212843.GE5085@lukather>
-References: <1425988764-23618-1-git-send-email-wens@csie.org>
- <1425988764-23618-6-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Subject: Re: [PATCH v2 1/2] ARM: dts: add cubietech cubieboard4
+Date: Tue, 10 Mar 2015 22:26:03 +0100
+Message-ID: <20150310212603.GB5085@lukather>
+References: <1425932398-7194-1-git-send-email-tyler.baker@linaro.org>
+ <1425932398-7194-2-git-send-email-tyler.baker@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L5xhH6lUAPIS347H"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBW6E7WTQKGQEGLR454I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="iXVVnr8Hn1WiTnFI"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425988764-23618-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1425932398-7194-2-git-send-email-tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---L5xhH6lUAPIS347H
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-On Tue, Mar 10, 2015 at 07:59:16PM +0800, Chen-Yu Tsai wrote:
-> The Hummingbird A31 has an AXP221 PMIC hooked up to the
-> P2WI controller.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+--iXVVnr8Hn1WiTnFI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 09, 2015 at 01:19:57PM -0700, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> Add a Cubietech Cubieboard4 device tree and instruct make to build it. Th=
+is
+> device tree has been derived from the sun9i-a80-optimus.dts as they are v=
+ery
+> similar in design[1]. Notably, I2C3 is not used on Cubieboard4 and the LE=
+D/PWM
+> definitions will need to be updated in the future.
+>=20
+> [1] http://dl.cubieboard.org/model/cc-a80/Hardware/CC-A80-HW-V1.1.pdf
+>=20
+> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Applied, thanks!
+
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---L5xhH6lUAPIS347H--
+
+--iXVVnr8Hn1WiTnFI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU/2FrAAoJEBx+YmzsjxAg0oIQAIWXEULgWPh2hoeX7r0woxBC
+SSOViNoX5gfpzwdJtnXVjquS/MMMlwgKZncTs9bYhAaeG6nWVuFZO/oI8NtBLJ93
+QOpNMmaO+uoByR88voD8L+/lJKtie6TDeUoqk8shj73ZMO3JVrfMpsgqF2JFmwaz
+pJIUHZ4Hikob5Tp353UCvM7CohloniqnINWwWplrX5EyFkkoh88NecDyh128pXjb
+ErnVdOgy+NupLXtU914+VaKT5kY0oTSbhvvQLmvsKwJ0E1urZNpWIK/QG40QczxQ
+/fFNbeVHjEnAwY5dUKXbEZ4TgxaMWYUTPDo5o6pck03Wa6/QfRs4T5wek0gb2uhw
+OBKWH37u7ydnpvkZ3/T6Rk4iopD2MXAq+lfVBSOOyemNQXVKvfLNoafkwANkUztm
+XH7N5tDpzhAwpw+77BlxDt308LTBsFiaxqnL/dwXRRgwOT0kHpaD2Y+PFqqNzqDB
+rcAlE3DQdr3bvlnBG274r66p+IffvQFYYwICfF6NlEVFYV7OWJt14Dx2qLabX9Mf
+KOXcDSrvA1lZlf8kjTR034+309cSi9St3oB7peT6hYL6Sey6iEdk2rWsX7SR7pd4
+76xcIPxSF2InnRArkYjvTzWfQHPxYXQTRe5YZQuPXkhYvggVe0CTkqJ71zOAfHCX
+S8VucJl95sAggak4ioRY
+=2NVH
+-----END PGP SIGNATURE-----
+
+--iXVVnr8Hn1WiTnFI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
