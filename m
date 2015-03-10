@@ -1,116 +1,57 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Tue, 10 Mar 2015 22:44:33 +0900
-Message-ID: <54FEF541.6000305@samsung.com>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
- <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
- <20150307201340.GF5233@earth> <54FCEABE.9000007@samsung.com>
- <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
- <54FD880E.30903@samsung.com> <1425903199.13415.9.camel@AMDC1943>
+From: Robert Smigielski <robert.smigielski-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx: imx6q uart2 pin mux correction
+Date: Tue, 10 Mar 2015 09:45:42 -0400
+Message-ID: <CAPvN=VTSMxtjs6QQ=VFPCDgJ3LJ2xfC+Ryh-rXU4-xnqk+i67w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-reply-to: <1425903199.13415.9.camel@AMDC1943>
-Sender: linux-input-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Robert Smigielski <robert.smigielski-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
-> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
->> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
->>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
->>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
->>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
->>>>>> From: Beomho Seo <beomho.seo@samsung.com>
->>>>>>
->>>>>> This patch adds device driver of max77843 charger. This driver provide
->>>>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
->>>>>> charging mode so on.). Additionally, control charging paramters to use
->>>>>> i2c interface.
->>>>>>
->>>>>> Cc: Sebastian Reichel <sre@kernel.org>
->>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->>>>>
->>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
->>>>>
->>>>> I can't take it as is, since it depends on the private header file
->>>>> of PATCHv1.
->>>>>
->>>>> -- Sebastian
->>>>>
->>>>
->>>> This patch reviewed by Sebastian.
->>>> Could you Please merge that your git tree ?
->>>
->>> Hi,
->>>
->>> ... and again we are adding a new driver for very similar chipset to
->>> already supported. I looked at spec and the charger's registers are
->>> almost the same as for max77693. Their layout and addresses are the
->>> same. I see some minor differences, probably the most important would
->>> be different values current (fast-charge, top-off). But still 90% of
->>> registers are the same... Do we really have to add new driver?
->>>
->>> Best regards,
->>> Krzysztof
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-input" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->>
->> Hi,
->>
->> Thank you for your comment. As you say, both chip set are similar.
->> But new driver need for support max77843. It is support different below
->> - Provide Battery presence information.
-> 
-> Another set of power supply properties could be added for that chip.
-> This way the get_property() function would be the same but actually the
-> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
-> 
->> - Can OTG FET control.
-> 
-> Where the OTG FET feature is it enabled in your driver? I couldn't find
-> it.
-> 
+This patch contains a correction to the file imx6q-pinfunc.h for the
+definition of the UART2 GPIO pin mux setting.
 
-Sorry. This driver don't control OTG FET feature.
+Issue found when testing UART2 configured as the console in Linux
+GPIO_7 is a transmit pin not a transmit and receive pin
+GPIO_8 is a receive pin not a transmit and receive pin
 
->> - Bigger Fast charge current, Top Off current Threshold selection.
->> - Various and bigger OTG current limitation.
->> - Bigger primary charger termination voltage setting.
->> - Different maximum input current limit selection(Different step).
-> 
-> Yes, I mentioned some of these differences (the Fast/top-off
-> differences). These are differences in values so it does not require new
-> driver. There is need to develop new driver just to support different
-> current (3.0 A instead of 2.1 A) or voltage threshold.
-> 
+Verified the correction with Freescale in posting to the Freescale
+forum https://community.freescale.com/thread/343349
 
-They are different charging current, OTG current limitation, top off current,
-charging limitation value. In case OTG current limitation different not
-limitation value but using register bit(max77843 use[7:6] max77693 use[7]
-bit only). Even if this driver not support all feature, some register
-different with max77693(support value, use register bit).
+commit c383bbb4d17037435305858f488db7ae17dc1c85
+Author: robert.smigielski <robert.smigielski-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Date:   Fri Mar 6 11:53:20 2015 -0500
 
-If this driver will combined with max77693 may even be beneficial for
-new Maxim driver. But the present, this driver is related with
-max77843 core driver and max77843-regulator. So I hope this driver
-merge first. And then will extend two driver(max77843 charger and max77693 charger).
+    UART2 Tx and Rx values corrected based on IMX6Q datasheet
 
-> So the only new feature - battery presence - can be easily added to
-> existing driver. The driver can be extended for different
-> current/voltage values. Such extension may even be beneficial for new
-> Maxim MUIC/PMIC chipsets.
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+diff --git a/arch/arm/boot/dts/imx6q-pinfunc.h
+b/arch/arm/boot/dts/imx6q-pinfunc.h
+index c68c21d..4d4cc49 100644
+--- a/arch/arm/boot/dts/imx6q-pinfunc.h
++++ b/arch/arm/boot/dts/imx6q-pinfunc.h
+@@ -696,8 +696,7 @@
+ #define MX6QDL_PAD_GPIO_7__ECSPI5_RDY               0x240 0x610 0x000 0x1 0x0
+ #define MX6QDL_PAD_GPIO_7__EPIT1_OUT                0x240 0x610 0x000 0x2 0x0
+ #define MX6QDL_PAD_GPIO_7__FLEXCAN1_TX              0x240 0x610 0x000 0x3 0x0
+-#define MX6QDL_PAD_GPIO_7__UART2_TX_DATA            0x240 0x610 0x000 0x4 0x0
+-#define MX6QDL_PAD_GPIO_7__UART2_RX_DATA            0x240 0x610 0x928 0x4 0x2
++#define MX6QDL_PAD_GPIO_7__UART2_TX_DATA            0x240 0x610 0x928 0x4 0x2
+ #define MX6QDL_PAD_GPIO_7__GPIO1_IO07               0x240 0x610 0x000 0x5 0x0
+ #define MX6QDL_PAD_GPIO_7__SPDIF_LOCK               0x240 0x610 0x000 0x6 0x0
+ #define MX6QDL_PAD_GPIO_7__USB_OTG_HOST_MODE        0x240 0x610 0x000 0x7 0x0
+@@ -706,7 +705,6 @@
+ #define MX6QDL_PAD_GPIO_8__EPIT2_OUT                0x244 0x614 0x000 0x2 0x0
+ #define MX6QDL_PAD_GPIO_8__FLEXCAN1_RX              0x244 0x614 0x7e4 0x3 0x1
+ #define MX6QDL_PAD_GPIO_8__UART2_RX_DATA            0x244 0x614 0x928 0x4 0x3
+-#define MX6QDL_PAD_GPIO_8__UART2_TX_DATA            0x244 0x614 0x000 0x4 0x0
+ #define MX6QDL_PAD_GPIO_8__GPIO1_IO08               0x244 0x614 0x000 0x5 0x0
+ #define MX6QDL_PAD_GPIO_8__SPDIF_SR_CLK             0x244 0x614 0x000 0x6 0x0
+ #define MX6QDL_PAD_GPIO_8__USB_OTG_PWR_CTL_WAKE     0x244 0x614 0x000 0x7 0x0
 
-Best regards,
-Beomho Seo
+Robert Smigielski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
