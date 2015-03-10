@@ -1,47 +1,156 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] add power-supply support to dw_hdmi
-Date: Tue, 10 Mar 2015 09:58:18 +0000
-Message-ID: <20150310095818.GG8656@n2100.arm.linux.org.uk>
-References: <1429128.MSqYm0qZ9p@phil>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 02/15] phy-sun4i-usb: Add a helper function
+ to update the iscr register
+Date: Tue, 10 Mar 2015 11:13:49 +0100
+Message-ID: <54FEC3DD.10108@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <4772280.xE1WBZVd8Z@wuerfel> <54FEA59B.7020400@redhat.com> <2515825.598CypcWU3@wuerfel>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429128.MSqYm0qZ9p@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB3UH7OTQKGQE4ONLF4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <2515825.598CypcWU3@wuerfel>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 12:21:21AM +0100, Heiko Stuebner wrote:
-> At least the Rockchip variant of the dw_hdmi should control its supplying
-> regulators. A cursory glance at the imx manual didn't any equivalent there,
-> so I'm not sure if there are similar controllable regulators present.
-> 
-> Patch1 is only a small fix to keep {devm_}regulator_bulk_get quiet in
-> the deferring case and could go directly to the regulator tree, if ok.
-> 
-> Patch3 is the addition of the supplies to the rk3288 boards and I would
-> take it into my dts branch if patch2 gets deemed acceptable.
+Hi,
 
-I have a problem with this approach.
+On 10-03-15 09:57, Arnd Bergmann wrote:
+> On Tuesday 10 March 2015 09:04:43 Hans de Goede wrote:
+>> Hi,
+>>
+>> On 09-03-15 22:47, Arnd Bergmann wrote:
+>>> On Monday 09 March 2015 21:40:15 Hans de Goede wrote:
+>>>> +void sun4i_usb_phy_update_iscr(struct phy *_phy, u32 clr, u32 set)
+>>>> +{
+>>>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>> +       u32 iscr;
+>>>> +
+>>>> +       iscr = readl(data->base + REG_ISCR);
+>>>> +       iscr &= ~clr;
+>>>> +       iscr |= set;
+>>>> +       writel(iscr, data->base + REG_ISCR);
+>>>> +}
+>>>> +EXPORT_SYMBOL(sun4i_usb_phy_update_iscr);
+>>>> +
+>>>>
+>>>
+>>> I would generally consider this a bad design. What is the purpose of
+>>> calling sun4i_usb_phy_update_iscr()
+>>
+>> There are 2 different use cases for this one is to enable the dataline
+>> pull-ups at driver init and disable them at driver exit, this could /
+>> should probably be moved to the phy_init / phy_exit code for the usb0 phy
+>> removing the need to do this from within the sunxi musb glue.
+>>
+>> The second use-case is more tricky, for some reasons Allwinner has decided
+>> to not use the dedicated id-detect and vusb-sense pins of the phy they are
+>> using (these pins are not routed to the outside).
+>>
+>> Instead id-detect and vusb-sense are done through any $random gpio pins
+>> (including non irq capable pins on some designs requiring polling).
+>>
+>> But the musb-core still needs to know the status of the id and vbus pins,
+>> and gets this from the usb0-phy iscr register, which reflects the status of
+>> the not connected dedicated pins of the phy. The reason this can still
+>> work at all is because the iscr register allows the user to override
+>> whatever the not connected phy pins are seeing and forcing a value to
+>> report to the musb core as id and vbus status.
+>>
+>> This is done by these 2 functions in the musb sunxi glue:
+>>
+>> static void sunxi_musb_force_id(struct musb *musb, u32 val)
+>> {
+>>           struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
+>>
+>>           if (val)
+>>                   val = SUNXI_ISCR_FORCE_ID_HIGH;
+>>           else
+>>                   val = SUNXI_ISCR_FORCE_ID_LOW;
+>>
+>>           sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_ID_MASK, val);
+>> }
+>>
+>> static void sunxi_musb_force_vbus(struct musb *musb, u32 val)
+>> {
+>>           struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
+>>
+>>           if (val)
+>>                   val = SUNXI_ISCR_FORCE_VBUS_HIGH;
+>>           else
+>>                   val = SUNXI_ISCR_FORCE_VBUS_LOW;
+>>
+>>           sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_VBUS_MASK, val);
+>> }
+>>
+>> I will happily admit that these 2 functions are a better API between the sunxi musb
+>> glue and the sunxi usb phy driver. I started with the minimal sun4i_usb_phy_update_iscr
+>> approach as I wanted to keep the API as small as possible, but having 2 functions like
+>> the one above, which actually reflect what is happening would indeed be better.
+>
+> Ok, that would definitely improve things.
+>
+>> Note that the polling of the pins cannot (easily) be moved into the phy driver for various
+>> reasons:
+>>
+>> 1) It depends on dr_mode, the otg may be used in host only mode in which case there are no
+>> pins at all.
+>> 2) the musb set_vbus callback needs access to the pins
+>> 3) When id changes some musb core state changes are necessary.
+>>
+>> I'll respin the patch set to do things this way as soon as we've agreement on
+>> your second point.
+>>
+>>   > and why can't there be a high-level
+>>> PHY API for this?
+>>
+>> The current generic phy API seems to not have any bus specific methods, I know that
+>> in the long run people want to get rid of struct usb_phy, so maybe we should consider
+>> adding bus specific methods to the generic phy API for things like otg.
+>>
+>> If we decide to add bus specific methods, then the question becomes if having
+>>
+>> int phy_usb_set_id_detect(struct phy *phy, bool val);
+>> int phy_usb_set_vbus_detect(struct phy *phy, bool val);
+>>
+>> Functions in the generic phy API is a good idea, or if this is too sunxi specific,
+>> I'm fine with doing this either way. If we want to go the generic phy route
+>> I'll split this in 2 patches, one adding these 2 generic functions & phy-ops, and
+>> 1 doing the sunxi implementation.
+>>
+>> If people believe this is too sunxi specific (I believe it is, but as said I'm
+>> fine with doing this either way). I'll respin this patch to remove the too
+>> generic sun4i_usb_phy_update_iscr function, and instead add these 2:
+>>
+>> void sun4i_usb_phy_set_id_detect(struct phy *phy, bool val);
+>> void sun4i_usb_phy_set_vbus_detect(struct phy *phy, bool val);
+>
+> Thanks for your detailed explanations. I think this is something for
+> Kishon to decide, based on where he wants to take the phy API in the
+> long run. I'm fine with it either way, and it seems easy enough to
+> change between those two interfaces if we make up our minds about it
+> later.
 
-Rather than trying to shove everything into the generic part of the driver,
-what we should be doing is ensuring that the generic part stays generic,
-and the specific implementation details end up in the appropriate place.
+Ok, so I've fixed things in my personal tree to use 2 sun4i private functions for
+now:
 
-As Rockchip needs these external regulators, they should be in that part
-of the driver, and controlled appropriately from the encoder callbacks.
-The encoder has sufficient callbacks to be able to turn on/off regulators
-both before and after the bridge has been disabled/enabled.
+void sun4i_usb_phy_set_id_detect(struct phy *phy, bool val);
+void sun4i_usb_phy_set_vbus_detect(struct phy *phy, bool val);
 
-When we see more implementations with regulators, then we can think about
-moving it into the core dw_hdmi driver code.
+You can find this change here:
+https://github.com/jwrdegoede/linux-sunxi/commits/sunxi-wip
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll wait a bit to see if there are more review comments and then
+I'll send a v2 of the set.
+
+Regards,
+
+Hans
