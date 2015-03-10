@@ -1,225 +1,94 @@
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCH 3/5] arm-cci: Get rid of secure transactions for PMU driver
-Date: Tue, 10 Mar 2015 15:18:53 +0000
-Message-ID: <1426000735-14375-4-git-send-email-suzuki.poulose@arm.com>
-References: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 12/15] ARM: dts: sun4i: Enable USB DRC on
+ Chuwi V7 CW0825
+Date: Tue, 10 Mar 2015 16:23:09 +0100
+Message-ID: <54FF0C5D.3090706@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-13-git-send-email-hdegoede@redhat.com> <20150310150741.GW5085@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Will Deacon <will.deacon@arm.com>, Nicolas Pitre <nico@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Abhilash Kesavan <a.kesavan@samsung.com>, "Suzuki K. Poulose" <suzuki.poulose@arm.com>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB2MY7STQKGQEJPKFRSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150310150741.GW5085@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Hi,
 
-Avoid secure transactions while probing the CCI PMU. The
-existing code makes use of the Peripheral ID2 (PID2) register
-to determine the revision of the CCI400, which requires a
-secure transaction. This puts a limitation on the usage of the
-driver on systems running non-secure Linux(e.g, ARM64).
+On 03/10/2015 04:07 PM, Maxime Ripard wrote:
+> Hi Hans,
+>
+> On Mon, Mar 09, 2015 at 09:40:25PM +0100, Hans de Goede wrote:
+>> Enable the otg/drc usb controller on the Chuwi V7 CW0825 tablet.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts | 31 +++++++++++++++++++++++++
+>>   1 file changed, 31 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
+>> index 97fca89..034396c 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
+>> +++ b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
+>> @@ -111,6 +111,26 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&pio {
+>> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+>> +		allwinner,pins = "PH4";
+>> +		allwinner,function = "gpio_in";
+>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +	};
+>> +
+>> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
+>> +		allwinner,pins = "PH5";
+>> +		allwinner,function = "gpio_in";
+>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
+>> +	};
+>> +};
+>> +
+>> +&reg_usb0_vbus {
+>> +	status = "okay";
+>> +};
+>> +
+>>   &reg_usb2_vbus {
+>>   	status = "okay";
+>>   };
+>> @@ -121,7 +141,18 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&usb_otg {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&usb0_id_detect_pin
+>> +		     &usb0_vbus_detect_pin>;
+>> +	id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+>> +	vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+>> +	dr_mode = "otg";
+>
+> Is there a reason to not put that in the DTSI?
 
-Updated the device-tree binding for cci pmu node to add the explicit
-revision number for the compatible field.
+This is not in the dtsi because it is board specific.
 
-The supported strings are :
-	arm,cci-400-pmu,r0
-	arm,cci-400-pmu,r1
-	arm,cci-400-pmu - DEPRECATED. See NOTE below
+> All the users seem to be wiring it as OTG.
 
-NOTE: If the revision is not mentioned, we need to probe the cci revision,
-which could be fatal on a platform running non-secure. We need a reliable way
-to know if we can poke the CCI registers at runtime on ARM32. We depend on
-'mcpm_is_available()' when it is available. mcpm_is_available() returns true
-only when there is a registered driver for mcpm. Otherwise, we assume that we
-don't have secure access, and skips probing the revision number(ARM64 case).
+Sofar I've only enabled the otg on a handful of boards,
+the otg on the Mele-M9 for example is connected to a usb->sata
+bridge and as such should be brought up in host only mode.
 
-The MCPM should figure out if it is safe to access the CCI. Unfortunately
-there isn't a reliable way to indicate the same via dtb. This patch doesn't
-address/change the current situation. It only deals with the CCI-PMU, leaving
-the assumptions about the secure access as it has been, prior to this patch.
+And on the wobo-i5 (which I still need to create a dts file for)
+the otg is connected to an usb wifi module.
 
-Changes since V2:
- - Use 'bool' instead of 'int' for platform_has_secure_cci_access().
-   (Suggested-by: Sudeep Holla)
+Regards,
 
-Cc: devicetree@vger.kernel.org
-Cc: Punit Agrawal <punit.agrawal@arm.com>
-Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
----
- Documentation/devicetree/bindings/arm/cci.txt |    7 +++--
- arch/arm/include/asm/arm-cci.h                |   42 +++++++++++++++++++++++++
- arch/arm64/include/asm/arm-cci.h              |   27 ++++++++++++++++
- drivers/bus/arm-cci.c                         |   17 +++++++++-
- include/linux/arm-cci.h                       |    2 ++
- 5 files changed, 92 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/include/asm/arm-cci.h
- create mode 100644 arch/arm64/include/asm/arm-cci.h
-
-diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
-index f28d82b..0e4b6a7 100644
---- a/Documentation/devicetree/bindings/arm/cci.txt
-+++ b/Documentation/devicetree/bindings/arm/cci.txt
-@@ -94,8 +94,11 @@ specific to ARM.
- 		- compatible
- 			Usage: required
- 			Value type: <string>
--			Definition: must be "arm,cci-400-pmu"
--
-+			Definition: Supported strings are :
-+				 "arm,cci-400-pmu,r0"
-+				 "arm,cci-400-pmu,r1"
-+				 "arm,cci-400-pmu"  - DEPRECATED, permitted only where OS has
-+						      secure acces to CCI registers
- 		- reg:
- 			Usage: required
- 			Value type: Integer cells. A register entry, expressed
-diff --git a/arch/arm/include/asm/arm-cci.h b/arch/arm/include/asm/arm-cci.h
-new file mode 100644
-index 0000000..fe77f7a
---- /dev/null
-+++ b/arch/arm/include/asm/arm-cci.h
-@@ -0,0 +1,42 @@
-+/*
-+ * arch/arm/include/asm/arm-cci.h
-+ *
-+ * Copyright (C) 2015 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef __ASM_ARM_CCI_H
-+#define __ASM_ARM_CCI_H
-+
-+#ifdef CONFIG_MCPM
-+#include <asm/mcpm.h>
-+
-+/*
-+ * We don't have a reliable way of detecting whether,
-+ * if we have access to secure-only registers, unless
-+ * mcpm is registered.
-+ */
-+static inline bool platform_has_secure_cci_access(void)
-+{
-+	return mcpm_is_available();
-+}
-+
-+#else
-+static inline bool platform_has_secure_cci_access(void)
-+{
-+	return false;
-+}
-+#endif
-+
-+#endif
-diff --git a/arch/arm64/include/asm/arm-cci.h b/arch/arm64/include/asm/arm-cci.h
-new file mode 100644
-index 0000000..f0b6371
---- /dev/null
-+++ b/arch/arm64/include/asm/arm-cci.h
-@@ -0,0 +1,27 @@
-+/*
-+ * arch/arm64/include/asm/arm-cci.h
-+ *
-+ * Copyright (C) 2015 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef __ASM_ARM_CCI_H
-+#define __ASM_ARM_CCI_H
-+
-+static inline bool platform_has_secure_cci_access(void)
-+{
-+	return false;
-+}
-+
-+#endif
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index f88383e..70dff09 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -217,7 +217,9 @@ static int probe_cci_revision(void)
- 
- static const struct cci_pmu_model *probe_cci_model(struct platform_device *pdev)
- {
--	return &cci_pmu_models[probe_cci_revision()];
-+	if (platform_has_secure_cci_access())
-+		return &cci_pmu_models[probe_cci_revision()];
-+	return NULL;
- }
- 
- static int pmu_is_valid_counter(struct cci_pmu *cci_pmu, int idx)
-@@ -873,6 +875,15 @@ static struct cci_pmu_model cci_pmu_models[] = {
- static const struct of_device_id arm_cci_pmu_matches[] = {
- 	{
- 		.compatible = "arm,cci-400-pmu",
-+		.data	= NULL,
-+	},
-+	{
-+		.compatible = "arm,cci-400-pmu,r0",
-+		.data	= &cci_pmu_models[CCI_REV_R0],
-+	},
-+	{
-+		.compatible = "arm,cci-400-pmu,r1",
-+		.data	= &cci_pmu_models[CCI_REV_R1],
- 	},
- 	{},
- };
-@@ -883,7 +894,11 @@ static inline const struct cci_pmu_model *get_cci_model(struct platform_device *
- 							pdev->dev.of_node);
- 	if (!match)
- 		return NULL;
-+	if (match->data)
-+		return match->data;
- 
-+	dev_warn(&pdev->dev, "DEPERCATED compatible property,"
-+			 "requires secure access to CCI registers");
- 	return probe_cci_model(pdev);
- }
- 
-diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
-index 79d6edf..aede5c7 100644
---- a/include/linux/arm-cci.h
-+++ b/include/linux/arm-cci.h
-@@ -24,6 +24,8 @@
- #include <linux/errno.h>
- #include <linux/types.h>
- 
-+#include <asm/arm-cci.h>
-+
- struct device_node;
- 
- #ifdef CONFIG_ARM_CCI
--- 
-1.7.9.5
+Hans
