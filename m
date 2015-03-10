@@ -1,38 +1,56 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 0/3] add power-supply support to dw_hdmi
-Date: Tue, 10 Mar 2015 10:08:46 +0100
-Message-ID: <1425978526.3141.13.camel@pengutronix.de>
-References: <1429128.MSqYm0qZ9p@phil>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 09/15] ARM: dts: sun4i: Add USB Dual Role Controller
+Date: Tue, 10 Mar 2015 10:10:24 +0100
+Message-ID: <54FEB500.8050409@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <1425933628-9672-10-git-send-email-hdegoede@redhat.com> <CAGRGNgVsf05rtLC2+yOPrbrPV-ceQzPC=ZX1zX+hfNxdC7OX-A@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1429128.MSqYm0qZ9p@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, broonie@kernel.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBDPK7KTQKGQED7E6VTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGRGNgVsf05rtLC2+yOPrbrPV-ceQzPC=ZX1zX+hfNxdC7OX-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAxMC4wMy4yMDE1LCAwMDoyMSArMDEwMCBzY2hyaWViIEhlaWtvIFN0
-dWVibmVyOgo+IEF0IGxlYXN0IHRoZSBSb2NrY2hpcCB2YXJpYW50IG9mIHRoZSBkd19oZG1pIHNo
-b3VsZCBjb250cm9sIGl0cyBzdXBwbHlpbmcKPiByZWd1bGF0b3JzLiBBIGN1cnNvcnkgZ2xhbmNl
-IGF0IHRoZSBpbXggbWFudWFsIGRpZG4ndCBhbnkgZXF1aXZhbGVudCB0aGVyZSwKPiBzbyBJJ20g
-bm90IHN1cmUgaWYgdGhlcmUgYXJlIHNpbWlsYXIgY29udHJvbGxhYmxlIHJlZ3VsYXRvcnMgcHJl
-c2VudC4KCk9uIGkuTVg2IHRoZSBIRE1JX1ZQICgxLjEgVikgYW5kIEhETUlfVlBIICgyLjUgVikg
-YXJlIHVzdWFsbHkgc3VwcGxpZWQKYnkgdGhlIGludGVybmFsIExET19Tb0MgdmlhIFZERF9TT0Nf
-Q0FQIChhbHNvIHVzZWQgZm9yIEFSTSBjYWNoZSwgU0FUQSwKYW5kIFBDSWUpIGFuZCB0aGUgTERP
-XzJQNSB2aWEgVkRESElHSF9DQVAgKGFsc28gdXNlZCBmb3IgUExMcywgTUlQSSwKU0FUQSwgUENJ
-ZSwgVVNCLCBhbmQgTFZEUyksIHJlc3BlY3RpdmVseS4KV2hpbGUgSSBoYXZlbid0IHNlZW4gYW55
-b25lIGV2ZXIgZG8gdGhpcywgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvCnN1cHBseSB0aGVtIGZy
-b20gYW4gZXh0ZXJuYWwgcmVndWxhdG9yLgoKcmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On 10-03-15 00:31, Julian Calaby wrote:
+> Hi Hans,
+>
+> On Tue, Mar 10, 2015 at 7:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Add a node for the otg/drc usb controller to sun4i-a10.dtsi.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun4i-a10.dtsi | 12 ++++++++++++
+>>   drivers/usb/musb/Kconfig         |  1 +
+>>   2 files changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+>> index 8180a3a..fab8e9a 100644
+>> --- a/drivers/usb/musb/Kconfig
+>> +++ b/drivers/usb/musb/Kconfig
+>> @@ -65,6 +65,7 @@ comment "Platform Glue Layer"
+>>   config USB_MUSB_SUNXI
+>>          tristate "Allwinner (sunxi)"
+>>          depends on ARCH_SUNXI
+>> +       depends on NOP_USB_XCEIV
+>
+> Shouldn't this be in a different patch?
+
+Yes, this was a later fixup commit which got squashed into the wrong patch,
+thanks for catching this.
+
+This has been fixed in my personal tree, and will be in v2 of this set:
+https://github.com/jwrdegoede/linux-sunxi/commits/sunxi-wip
+
+Regards,
+
+Hans
