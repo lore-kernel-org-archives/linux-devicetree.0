@@ -1,70 +1,104 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] libfdt: Add fdt_path_offset_namelen()
-Date: Tue, 10 Mar 2015 11:17:11 +1100
-Message-ID: <20150310001711.GB30335@voom.fritz.box>
-References: <1425654758-2575-1-git-send-email-peter@hurleysoftware.com>
+From: Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] PCI: Export symbols of PCI functions
+Date: Mon, 09 Mar 2015 19:00:34 -0600
+Message-ID: <1425949234.25026.24.camel@redhat.com>
+References: <1425946878-13169-1-git-send-email-rjui@broadcom.com>
+	 <1425946878-13169-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425654758-2575-1-git-send-email-peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425946878-13169-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2015-03-09 at 17:21 -0700, Ray Jui wrote:
+> Export symbols of the following PCI functions so they can be referenced
+> by a PCI driver compiled as a kernel loadable module:
+> 
+> pci_common_swizzle
+> pci_create_root_bus
+> pci_stop_root_bus
+> pci_remove_root_bus
+> pci_assign_unassigned_bus_resources
+> pci_fixup_irqs
+> 
+> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/pci/pci.c       |    1 +
+>  drivers/pci/probe.c     |    1 +
+>  drivers/pci/remove.c    |    2 ++
+>  drivers/pci/setup-bus.c |    1 +
+>  drivers/pci/setup-irq.c |    1 +
+>  5 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 81f06e8..fb4a3da 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2492,6 +2492,7 @@ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp)
+>  	*pinp = pin;
+>  	return PCI_SLOT(dev->devfn);
+>  }
+> +EXPORT_SYMBOL(pci_common_swizzle);
+>  
+>  /**
+>   *	pci_release_region - Release a PCI bar
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 8d2f400..eb24ef9 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1993,6 +1993,7 @@ err_out:
+>  	kfree(b);
+>  	return NULL;
+>  }
+> +EXPORT_SYMBOL(pci_create_root_bus);
+>  
+>  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
+>  {
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index 8bd76c9..c523159 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -139,6 +139,7 @@ void pci_stop_root_bus(struct pci_bus *bus)
+>  	/* stop the host bridge */
+>  	device_release_driver(&host_bridge->dev);
+>  }
+> +EXPORT_SYMBOL(pci_stop_root_bus);
+>  
+>  void pci_remove_root_bus(struct pci_bus *bus)
+>  {
+> @@ -158,3 +159,4 @@ void pci_remove_root_bus(struct pci_bus *bus)
+>  	/* remove the host bridge */
+>  	device_unregister(&host_bridge->dev);
+>  }
+> +EXPORT_SYMBOL(pci_remove_root_bus);
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index e3e17f3..932c9e5 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1750,3 +1750,4 @@ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
+>  	__pci_bus_assign_resources(bus, &add_list, NULL);
+>  	BUG_ON(!list_empty(&add_list));
+>  }
+> +EXPORT_SYMBOL(pci_assign_unassigned_bus_resources);
+> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+> index 4e2d595..9d2bbb6 100644
+> --- a/drivers/pci/setup-irq.c
+> +++ b/drivers/pci/setup-irq.c
+> @@ -65,3 +65,4 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+>  	for_each_pci_dev(dev)
+>  		pdev_fixup_irq(dev, swizzle, map_irq);
+>  }
+> +EXPORT_SYMBOL(pci_fixup_irqs);
 
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 06, 2015 at 10:12:38AM -0500, Peter Hurley wrote:
-> Properties may contain path names which are not NUL-terminated.
-> For example, the 'stdout-path' property allows the form 'path:options',
-> where the ':' character terminates the path specifier.
->=20
-> Allow these path names to be used in-place for path descending;
-> add fdt_path_offset_namelen(), which limits the path name to 'namelen'
-> characters.
->=20
-> Reimplement fdt_path_offset() as a trivial wrapper.
->=20
-> Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Why not EXPORT_SYMBOL_GPL for all of these?  Some of these seem fairly
+close to PCI core functionality for arbitrarily licensed modules.
 
-I think this function is a good idea, however I would like to see a
-testcase for it.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU/jgHAAoJEGw4ysog2bOSqpIP/0FyHDhuH2CQnxqw+/l1TjrQ
-QnfPskR/q43MXfla0NqqKSvKbz2EwZzq2LryrAyKI8UEp5gXxHG1Sk3cXRYAFSTf
-m1gCGU52wK1tiF+nvZyJmylWgtLf9TbfPENa2kpYHov8NdQfN1BHh5Zi4oU3JErA
-FfVm2efq+9izypgULvNpOZqxYOPyWuYm/BqsU15uBsC90Yds85/3rusYfnGzlZKz
-cKAT6TNilr8k/EMIWyWNdV1JiOLv1HmeUT8kxvO3xWUeCf++sYyTpIB4+fC8pPjr
-DtyTtc8QQtZ7D/rD7lQuuXw/myfnKrc9AAfHFmVeN0VcNQ7JHkuZ2pdjhLWg9bY5
-+x+SKZdo0qD3GWIGwOdMvHz1TgBcUalf5BtYyfveyA7xRrtNnwpbheoB5RdMlnTB
-XC96KoC9uIVcdCgTNVAYvhJ9n41+CgoJdEKvip590sx+THiayQd18aZDneRQdjHv
-q82RX+5Pv1tBuvsJ5UzqZPwRqvzvYf4OAd/Xp71czotv70AMljMeL5BWgJ9ZcnA+
-5IbyGnYpzwqS3r2tBAcrjVHA0QXTcvnZDeJuifjAB/C8n5w7lT9uUPaJ9bwITrSc
-aLWcg6sa/fq5+fDa+ltOfCRjpcH2FgCH09yANhinPOhfJNhko+XFqjBVGvdC9XDQ
-VvS76XfrTuY+zcJ8mWje
-=jkmI
------END PGP SIGNATURE-----
-
---9zSXsLTf0vkW971A--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
