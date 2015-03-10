@@ -1,7 +1,7 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v4 4/4] ARM: dts: enable PCIe support for Cygnus
-Date: Mon, 9 Mar 2015 17:21:17 -0700
-Message-ID: <1425946878-13169-5-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v4 2/4] pci: iProc: define iProc PCIe platform bus binding
+Date: Mon, 9 Mar 2015 17:21:15 -0700
+Message-ID: <1425946878-13169-3-git-send-email-rjui@broadcom.com>
 References: <1425946878-13169-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,24 +12,41 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Me
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe device nodes in bcm-cygnus.dtsi but keep them disabled there.
-Only enable them for bcm958300k where PCIe interfaces are populated
+Document the Broadcom iProc PCIe platform interface device tree binding
 
 Signed-off-by: Ray Jui <rjui@broadcom.com>
 Reviewed-by: Scott Branden <sbraden@broadcom.com>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi |   42 +++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm958300k.dts  |    8 +++++++
- 2 files changed, 50 insertions(+)
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 ++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index ff5fb6a..ee0c6e4 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -90,6 +90,48 @@
- 		status = "disabled";
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+new file mode 100644
+index 0000000..f7ce50e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+@@ -0,0 +1,63 @@
++* Broadcom iProc PCIe controller with the platform bus interface
++
++Required properties:
++- compatible: Must be "brcm,iproc-pcie"
++- reg: base address and length of the PCIe controller I/O register space
++- #interrupt-cells: set to <1>
++- interrupt-map-mask and interrupt-map, standard PCI properties to define the
++  mapping of the PCIe interface to interrupt numbers
++- linux,pci-domain: PCI domain ID. Should be unique for each host controller
++- bus-range: PCI bus numbers covered
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- device_type: set to "pci"
++- ranges: ranges for the PCI memory and I/O regions
++
++Optional properties:
++- phys: phandle of the PCIe PHY device
++- phy-names: must be "pcie-phy"
++
++Example:
 +	pcie0: pcie@18012000 {
 +		compatible = "brcm,iproc-pcie";
 +		reg = <0x18012000 0x1000>;
@@ -48,7 +65,8 @@ index ff5fb6a..ee0c6e4 100644
 +		ranges = <0x81000000 0 0	  0x28000000 0 0x00010000
 +			  0x82000000 0 0x20000000 0x20000000 0 0x04000000>;
 +
-+		status = "disabled";
++		phys = <&phy 0 5>;
++		phy-names = "pcie-phy";
 +	};
 +
 +	pcie1: pcie@18013000 {
@@ -69,30 +87,8 @@ index ff5fb6a..ee0c6e4 100644
 +		ranges = <0x81000000 0 0	  0x48000000 0 0x00010000
 +			  0x82000000 0 0x40000000 0x40000000 0 0x04000000>;
 +
-+		status = "disabled";
++		phys = <&phy 1 6>;
++		phy-names = "pcie-phy";
 +	};
-+
- 	uart0: serial@18020000 {
- 		compatible = "snps,dw-apb-uart";
- 		reg = <0x18020000 0x100>;
-diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
-index f1bb36f..c9eb856 100644
---- a/arch/arm/boot/dts/bcm958300k.dts
-+++ b/arch/arm/boot/dts/bcm958300k.dts
-@@ -47,6 +47,14 @@
- 		bootargs = "console=ttyS0,115200";
- 	};
- 
-+	pcie0: pcie@18012000 {
-+		status = "okay";
-+	};
-+
-+	pcie1: pcie@18013000 {
-+		status = "okay";
-+	};
-+
- 	uart3: serial@18023000 {
- 		status = "okay";
- 	};
 -- 
 1.7.9.5
