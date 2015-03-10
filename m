@@ -1,36 +1,58 @@
-From: =?ISO-8859-1?Q?S=F8ren?= Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>
-Subject: [patch v2 2/4] pcf85063 is not a trivial device
-Date: Tue, 10 Mar 2015 21:31:09 +0100
-Message-ID: <1426019469.5476.18.camel@sanws1.rosetechnology.dk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b
+ DesignWare access
+Date: Tue, 10 Mar 2015 20:40:36 +0000
+Message-ID: <20150310204036.GP28806@sirena.org.uk>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+ <1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>
+ <CAHp75VcceG2O+YCw4twBzC_2v9+XQRpfBxMqGXERi3amnj3rdA@mail.gmail.com>
+ <54FDDFE6.8010109@opensource.altera.com>
+ <CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw@mail.gmail.com>
+ <54FDF8BB.4050202@opensource.altera.com>
+ <CAHp75VcmNOaiyRNLFzQT7nKS6piZzpYSoS785J86rKtNXx6KNg@mail.gmail.com>
+ <54FF556A.3020408@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh6Zox4op4iWzw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5okFfQlUf1yFo9NP"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54FF556A.3020408@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, Linux Documentation List <linux-doc@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Thor Thayer <tthayer.linux@gmail.com>, Axel Lin <axel.lin@ingics.com>, baruch@tkos.co.il, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Soeren Andersen <san at rosetechnology.dk>
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index aaa8325..3b1a3c5 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -76,7 +76,6 @@ nuvoton,npct501		i2c trusted platform module (TPM)
- nxp,pca9556		Octal SMBus and I2C registered interface
- nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
- nxp,pcf8563		Real-time clock/calendar
--nxp,pcf85063		Tiny Real-Time Clock
- ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI and Embedded TrueFocus
- pericom,pt7c4338	Real-time Clock Module
- plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
-    
+--5okFfQlUf1yFo9NP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Mar 10, 2015 at 03:34:50PM -0500, Thor Thayer wrote:
+
+> Is it preferable to have both 32 bit reads and writes for consistency?
+
+> Or is it preferable to make the minimal number of changes which would be to
+> only add a 32 bit write function?
+
+It's probably preferable to be symmetric, if only to help anyone else
+who has a similar system that generates errors instead of silently
+handling, but unless someone has any great reason it's not a blocker for
+me.
+
+--5okFfQlUf1yFo9NP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU/1bDAAoJECTWi3JdVIfQ7CsH/jVpg+TCsdKorSYTSFLYgGzr
+fkEu3oN/toI3C9rHsgPNPIGbvhayJ5L5TOfYgvIDercdkmEM9ex5Q/ym9wi3U4YD
+W7ggzehNWUk2Vb1CZtXp8exR789kaf6eEGhf4sJIaz350YYPML2iL+Vo3dFknZsA
+6Jqmy4dCGa6HpqT/l5Z6Ra+LlA9vhMtNL4jtVlvrlEN/X2W45ABABdNBuXLG+70d
+tfwTYL1ra49/N5+UCQs6CEOaKeZ/Sg8KzEsKw+mvgX9SnFtTVVliYg2PwUnAc4aq
+iRcgHLXbpWlsSdeOZjVoA8te62xwGPOzR25AaUZfFhk6srEcluc48X8iGO9Z6Jc=
+=e7d2
+-----END PGP SIGNATURE-----
+
+--5okFfQlUf1yFo9NP--
