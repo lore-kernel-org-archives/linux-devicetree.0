@@ -1,36 +1,103 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: update the of_selftest.txt
-Date: Tue, 10 Mar 2015 09:50:58 -0500
-Message-ID: <CAL_JsqJiWhXQqGCik9tDqyaXEqU8+gEdw=FBVL_Fddbk_SjfwQ@mail.gmail.com>
-References: <1425868525-113952-1-git-send-email-long.wanglong@huawei.com> <CAL_JsqLgxCQW==4YQrX193g+x22d1iL2jBGY4CSMnq7cQcSgZQ@mail.gmail.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [RFC PATCH v15 01/11] ARM: cpuidle: Register per cpuidle device
+Date: Tue, 10 Mar 2015 08:57:10 -0600
+Message-ID: <20150310145710.GB3727@linaro.org>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
+ <1425914206-22295-2-git-send-email-lina.iyer@linaro.org>
+ <20150310103734.GK8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLgxCQW==4YQrX193g+x22d1iL2jBGY4CSMnq7cQcSgZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150310103734.GK8656@n2100.arm.linux.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, msivasub@codeaurora.org, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 9:44 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sun, Mar 8, 2015 at 9:35 PM, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->> Since the directory "drivers/of/testcase-data" is renamed
->> to "drivers/of/unittest-data". so we should update the path
->> in the of_selftest.txt.
-
-[...]
-
->> -Before executing OF selftest, it is required to attach the test data to
->> +Before executing OF unittest, it is required to attach the test data to
->>  machine's device tree (if present). So, when selftest_data_add() is called,
+On Tue, Mar 10 2015 at 04:37 -0600, Russell King - ARM Linux wrote:
+>On Mon, Mar 09, 2015 at 09:16:36AM -0600, Lina Iyer wrote:
+>> @@ -105,18 +109,46 @@ static int __init arm_idle_init(void)
+>>  	if (ret <= 0)
+>>  		return ret ? : -ENODEV;
+>>
+>> +
 >
-> This one too.
+>A bit better formatting would be nice - you don't need the extra blank
+>line here.
+>
+>> +	ret = cpuidle_register_driver(drv);
+>> +	if (ret) {
+>> +		pr_err("Failed to register cpuidle driver\n");
+>> +		return ret;
+>> +	}
+>> +
+>>  	/*
+>>  	 * Call arch CPU operations in order to initialize
+>>  	 * idle states suspend back-end specific data
+>>  	 */
+>>  	for_each_possible_cpu(cpu) {
+>> +
+>
+>This blank line is not necessary either.
+>
+>>  		ret = arm_cpuidle_init(cpu);
+>
+>However, a blank line here would be a good thing.
+>
+Sure.
+>> +		/*
+>> +		 * This cpu does not support any idle states
+>> +		 */
+>
+>Also, formatting this as /* This cpu does not support any idle states */ is
+>acceptable too, and doesn't waste as many lines.
+>
+Will fix.
+>> +		if (ret == -ENOSYS)
+>> +			continue;
+>> +
+>>  		if (ret) {
+>>  			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
+>>  			return ret;
+>>  		}
+>> +
+>> +		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+>> +		if (!dev)
+>> +			return -ENOMEM;
+>> +
+>> +		dev->cpu = cpu;
+>> +		ret = cpuidle_register_device(dev);
+>> +		if (ret) {
+>> +			pr_err("Failed to register cpuidle device for CPU %d\n",
+>> +			       cpu);
+>> +			return ret;
+>
+>It looks like we leak the 'dev' allocation here.
+>
 
-Or not. The functions are all still "selftest". Not sure why Grant
-left all those...
+True, I will amend that.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>Also, other error paths, it looks like we leave the previously registered
+>cpuidle devices in place.  That may be acceptable if the intention is to
+>initialise as many CPUs as possible - but we then miss the
+>cpuidle_register() call below, which seems to make the registered devices
+>useless.  It's a little inconsistent.
+>
+>Also, it's useful to report why something fails - printing the error code
+>can help debugging if it isn't already printed elsewhere.
+>
+Fair point.
+>> +		}
+>> +
+>> +		per_cpu(cpuidle_arm_dev, cpu) = dev;
+>>  	}
+>>
+>> -	return cpuidle_register(drv, NULL);
+>> +	return 0;
+>>  }
+>>  device_initcall(arm_idle_init);
+>
+>-- 
+>FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+>according to speedtest.net.
