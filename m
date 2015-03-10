@@ -1,74 +1,94 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 0/4] pci: iproc: Add Broadcom iProc PCIe support
-Date: Mon, 9 Mar 2015 17:38:02 -0700
-Message-ID: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v5 1/4] PCI: Export symbols of PCI functions
+Date: Mon, 9 Mar 2015 17:38:03 -0700
+Message-ID: <1425947886-23705-2-git-send-email-rjui@broadcom.com>
+References: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425947886-23705-1-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds the support for Broadcom iProc PCIe controller
+Export symbols of the following PCI functions so they can be referenced
+by a PCI driver compiled as a kernel loadable module:
 
-pcie-iproc.c servers as the common core driver, and front-end bus
-interface needs to be added to support different bus interfaces
+pci_common_swizzle
+pci_create_root_bus
+pci_stop_root_bus
+pci_remove_root_bus
+pci_assign_unassigned_bus_resources
+pci_fixup_irqs
 
-pcie-iproc-pltfm.c contains the support for the platform bus interface
+Signed-off-by: Ray Jui <rjui@broadcom.com>
+---
+ drivers/pci/pci.c       |    1 +
+ drivers/pci/probe.c     |    1 +
+ drivers/pci/remove.c    |    2 ++
+ drivers/pci/setup-bus.c |    1 +
+ drivers/pci/setup-irq.c |    1 +
+ 5 files changed, 6 insertions(+)
 
-Changes from v4:
- - iProc PCIe driver module support was not included in patch series v4.
-   This patch series (v5) fixes it
-
-Changes from v3:
- - Export symbols of several PCI functions so they can be used by drivers
-   compiled as kernel module
- - Add additional support to the Broadcom iProc PCIe driver so it can be
-   installed/uninstalled as kernel loadable module
-
-Changes from v2:
- - Major rework of the PCIe driver to factor out common generic code from
-   front-end bus interface. Support for generic platform bus interface is
-   also added
- - Adapt to several new PCI APIs that have been introduced lately
-
-Changes from v1:
- - Add standard PCI interrupt DT properties "#interrupt-cells",
-   "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
-   supported by using standard PCI OF IRQ parsing function
- - Get rid of custom IRQ mapping function in the driver. Use
-   of_irq_parse_and_map_pci instead
-
-Ray Jui (4):
-  PCI: Export symbols of PCI functions
-  pci: iProc: define iProc PCIe platform bus binding
-  pci: iproc: Add Broadcom iProc PCIe support
-  ARM: dts: enable PCIe support for Cygnus
-
- .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 ++++
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |   42 +++
- arch/arm/boot/dts/bcm958300k.dts                   |    8 +
- drivers/pci/host/Kconfig                           |   17 +
- drivers/pci/host/Makefile                          |    2 +
- drivers/pci/host/pcie-iproc-pltfm.c                |  108 ++++++
- drivers/pci/host/pcie-iproc.c                      |  351 ++++++++++++++++++++
- drivers/pci/host/pcie-iproc.h                      |   42 +++
- drivers/pci/pci.c                                  |    1 +
- drivers/pci/probe.c                                |    1 +
- drivers/pci/remove.c                               |    2 +
- drivers/pci/setup-bus.c                            |    1 +
- drivers/pci/setup-irq.c                            |    1 +
- 13 files changed, 639 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
- create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
- create mode 100644 drivers/pci/host/pcie-iproc.c
- create mode 100644 drivers/pci/host/pcie-iproc.h
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 81f06e8..fb4a3da 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2492,6 +2492,7 @@ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp)
+ 	*pinp = pin;
+ 	return PCI_SLOT(dev->devfn);
+ }
++EXPORT_SYMBOL(pci_common_swizzle);
+ 
+ /**
+  *	pci_release_region - Release a PCI bar
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8d2f400..eb24ef9 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1993,6 +1993,7 @@ err_out:
+ 	kfree(b);
+ 	return NULL;
+ }
++EXPORT_SYMBOL(pci_create_root_bus);
+ 
+ int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
+ {
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index 8bd76c9..c523159 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -139,6 +139,7 @@ void pci_stop_root_bus(struct pci_bus *bus)
+ 	/* stop the host bridge */
+ 	device_release_driver(&host_bridge->dev);
+ }
++EXPORT_SYMBOL(pci_stop_root_bus);
+ 
+ void pci_remove_root_bus(struct pci_bus *bus)
+ {
+@@ -158,3 +159,4 @@ void pci_remove_root_bus(struct pci_bus *bus)
+ 	/* remove the host bridge */
+ 	device_unregister(&host_bridge->dev);
+ }
++EXPORT_SYMBOL(pci_remove_root_bus);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index e3e17f3..932c9e5 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1750,3 +1750,4 @@ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
+ 	__pci_bus_assign_resources(bus, &add_list, NULL);
+ 	BUG_ON(!list_empty(&add_list));
+ }
++EXPORT_SYMBOL(pci_assign_unassigned_bus_resources);
+diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+index 4e2d595..9d2bbb6 100644
+--- a/drivers/pci/setup-irq.c
++++ b/drivers/pci/setup-irq.c
+@@ -65,3 +65,4 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+ 	for_each_pci_dev(dev)
+ 		pdev_fixup_irq(dev, swizzle, map_irq);
+ }
++EXPORT_SYMBOL(pci_fixup_irqs);
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
