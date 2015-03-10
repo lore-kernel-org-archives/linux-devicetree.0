@@ -1,120 +1,65 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v12 02/19] leds: flash: document sysfs interface
-Date: Mon, 9 Mar 2015 17:17:00 -0700
-Message-ID: <CAK5ve-+JW4+bzxPSHCMBPdEDNWW8yWjgL_QyK+tNG_woTT=tLw@mail.gmail.com>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com> <1425485680-8417-3-git-send-email-j.anaszewski@samsung.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v4 0/4] pci: iproc: Add Broadcom iProc PCIe support
+Date: Mon, 9 Mar 2015 17:21:13 -0700
+Message-ID: <1425946878-13169-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1425485680-8417-3-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 4, 2015 at 8:14 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> Add a documentation of LED Flash class specific sysfs attributes.
->
+This patch series adds the support for Broadcom iProc PCIe controller
 
-Thanks, merged!
--Bryan
+pcie-iproc.c servers as the common core driver, and front-end bus
+interface needs to be added to support different bus interfaces
 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> ---
->  Documentation/ABI/testing/sysfs-class-led-flash |   80 +++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-flash
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-flash b/Documentation/ABI/testing/sysfs-class-led-flash
-> new file mode 100644
-> index 0000000..220a027
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-flash
-> @@ -0,0 +1,80 @@
-> +What:          /sys/class/leds/<led>/flash_brightness
-> +Date:          March 2015
-> +KernelVersion: 4.0
-> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
-> +Description:   read/write
-> +               Set the brightness of this LED in the flash strobe mode, in
-> +               microamperes. The file is created only for the flash LED devices
-> +               that support setting flash brightness.
-> +
-> +               The value is between 0 and
-> +               /sys/class/leds/<led>/max_flash_brightness.
-> +
-> +What:          /sys/class/leds/<led>/max_flash_brightness
-> +Date:          March 2015
-> +KernelVersion: 4.0
-> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
-> +Description:   read only
-> +               Maximum brightness level for this LED in the flash strobe mode,
-> +               in microamperes.
-> +
-> +What:          /sys/class/leds/<led>/flash_timeout
-> +Date:          March 2015
-> +KernelVersion: 4.0
-> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
-> +Description:   read/write
-> +               Hardware timeout for flash, in microseconds. The flash strobe
-> +               is stopped after this period of time has passed from the start
-> +               of the strobe. The file is created only for the flash LED
-> +               devices that support setting flash timeout.
-> +
-> +What:          /sys/class/leds/<led>/max_flash_timeout
-> +Date:          March 2015
-> +KernelVersion: 4.0
-> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
-> +Description:   read only
-> +               Maximum flash timeout for this LED, in microseconds.
-> +
-> +What:          /sys/class/leds/<led>/flash_strobe
-> +Date:          March 2015
-> +KernelVersion: 4.0
-> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
-> +Description:   read/write
-> +               Flash strobe state. When written with 1 it triggers flash strobe
-> +               and when written with 0 it turns the flash off.
-> +
-> +               On read 1 means that flash is currently strobing and 0 means
-> +               that flash is off.
-> +
-> +What:          /sys/class/leds/<led>/flash_fault
-> +Date:          March 2015
-> +KernelVersion: 4.0
-> +Contact:       Jacek Anaszewski <j.anaszewski@samsung.com>
-> +Description:   read only
-> +               Space separated list of flash faults that may have occurred.
-> +               Flash faults are re-read after strobing the flash. Possible
-> +               flash faults:
-> +
-> +               * led-over-voltage - flash controller voltage to the flash LED
-> +                       has exceeded the limit specific to the flash controller
-> +               * flash-timeout-exceeded - the flash strobe was still on when
-> +                       the timeout set by the user has expired; not all flash
-> +                       controllers may set this in all such conditions
-> +               * controller-over-temperature - the flash controller has
-> +                       overheated
-> +               * controller-short-circuit - the short circuit protection
-> +                       of the flash controller has been triggered
-> +               * led-power-supply-over-current - current in the LED power
-> +                       supply has exceeded the limit specific to the flash
-> +                       controller
-> +               * indicator-led-fault - the flash controller has detected
-> +                       a short or open circuit condition on the indicator LED
-> +               * led-under-voltage - flash controller voltage to the flash
-> +                       LED has been below the minimum limit specific to
-> +                       the flash
-> +               * controller-under-voltage - the input voltage of the flash
-> +                       controller is below the limit under which strobing the
-> +                       flash at full current will not be possible;
-> +                       the condition persists until this flag is no longer set
-> +               * led-over-temperature - the temperature of the LED has exceeded
-> +                       its allowed upper limit
-> --
-> 1.7.9.5
->
+pcie-iproc-pltfm.c contains the support for the platform bus interface
+
+Changes from v3:
+ - Export symbols of several PCI functions so they can be used by drivers
+   compiled as kernel module
+ - Add additional support to the Broadcom iProc PCIe driver so it can be
+   installed/uninstalled as kernel loadable module
+
+Changes from v2:
+ - Major rework of the PCIe driver to factor out common generic code from
+   front-end bus interface. Support for generic platform bus interface is
+   also added
+ - Adapt to several new PCI APIs that have been introduced lately
+
+Changes from v1:
+ - Add standard PCI interrupt DT properties "#interrupt-cells",
+   "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
+   supported by using standard PCI OF IRQ parsing function
+ - Get rid of custom IRQ mapping function in the driver. Use
+   of_irq_parse_and_map_pci instead
+
+Ray Jui (4):
+  PCI: Export symbols of PCI functions
+  pci: iProc: define iProc PCIe platform bus binding
+  pci: iproc: Add Broadcom iProc PCIe support
+  ARM: dts: enable PCIe support for Cygnus
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 ++++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   42 +++
+ arch/arm/boot/dts/bcm958300k.dts                   |    8 +
+ drivers/pci/host/Kconfig                           |   17 +
+ drivers/pci/host/Makefile                          |    2 +
+ drivers/pci/host/pcie-iproc-pltfm.c                |  101 ++++++
+ drivers/pci/host/pcie-iproc.c                      |  337 ++++++++++++++++++++
+ drivers/pci/host/pcie-iproc.h                      |   39 +++
+ drivers/pci/pci.c                                  |    1 +
+ drivers/pci/probe.c                                |    1 +
+ drivers/pci/remove.c                               |    2 +
+ drivers/pci/setup-bus.c                            |    1 +
+ drivers/pci/setup-irq.c                            |    1 +
+ 13 files changed, 615 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
+ create mode 100644 drivers/pci/host/pcie-iproc.c
+ create mode 100644 drivers/pci/host/pcie-iproc.h
+
+-- 
+1.7.9.5
