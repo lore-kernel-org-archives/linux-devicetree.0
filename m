@@ -1,91 +1,93 @@
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCH 5/5] arm-cci: Fix CCI PMU event validation
-Date: Tue, 10 Mar 2015 15:18:55 +0000
-Message-ID: <1426000735-14375-6-git-send-email-suzuki.poulose@arm.com>
-References: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
+From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCHv3 0/5] arm-cci400: PMU monitoring support on ARM64
+Date: Tue, 10 Mar 2015 15:18:50 +0000
+Message-ID: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Pitre <nico@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 
-We mask the event with the CCI_PMU_EVENT_MASK, before passing
-the config to pmu_validate_hw_event(), which causes extra bits
-to be ignored and qualifies an invalid event code as valid.
+This series enables the PMU monitoring support for CCI400 on ARM64.
+The existing CCI400 driver code is a mix of PMU driver and the MCPM
+driver code. The MCPM driver is only used on ARM(32) and contains
+arm32 assembly and hence can't be built on ARM64. This patch splits
+the code to
 
-e.g,
- $ perf stat -a -C 0 -e CCI_400/config=3D0x1ff,name=3Dcycles/ sleep 1
-   Performance counter stats for 'system wide':
+ - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
+ - ARM_CCI400_PMU driver
 
-         506951142      cycles
+Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
+the revision of the chipset, is a secure operation. Hence, it prevents
+us from running this on non-secure platforms. The issue is overcome by
+explicitly mentioning the revision number of the CCI PMU in the device tree
+binding. The device-tree binding has been updated with the new bindings.
 
-       1.013879626 seconds time elapsed
+i.e,=09arm-cci-400-pmu,r0 =3D> revision 0
+=09arm-cci-400-pmu,r1 =3D> revision 1
+=09arm-cci-400-pmu =3D> (old) DEPRECATED
 
-where, cycles has an event coding of 0xff. This patch also removes
-the unnecessary 'event' mask in pmu_write_register, since the config_base
-is set by the pmu code after the event is validated.
+The old binding has been DEPRECATED and must be used only on ARM32
+system with secure access. We don't have a reliable dynamic way to detect
+if the system is running secure. This series tries to use the best safe
+method by relying on the availability of MCPM(as it was prior to the series=
+).
+It is upto the MCPM platform driver to decide, if the system is secure befo=
+re
+it goes ahead and registers its drivers and pokes the CCI. This series does=
+n't
+address/solve the problem of MCPM. I will be happy to use a better approach=
+,
+if there is any.
 
-Changes since V2:
- - Switch to input unsigned long for pmu_validate_hw_event()
+Tested on (non-secure)TC2 and A53x2.
 
-Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
----
- drivers/bus/arm-cci.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Changes sinve V2
 
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index 581190d..89c86e9 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -179,12 +179,15 @@ enum cci400_perf_events {
- #define CCI_REV_R1_MASTER_PORT_MIN_EV=090x00
- #define CCI_REV_R1_MASTER_PORT_MAX_EV=090x11
-=20
--static int pmu_validate_hw_event(u8 hw_event)
-+static int pmu_validate_hw_event(unsigned long hw_event)
- {
- =09u8 ev_source =3D CCI_PMU_EVENT_SOURCE(hw_event);
- =09u8 ev_code =3D CCI_PMU_EVENT_CODE(hw_event);
- =09int if_type;
-=20
-+=09if (hw_event & ~CCI_PMU_EVENT_MASK)
-+=09=09return -ENOENT;
-+
- =09switch (ev_source) {
- =09case CCI_PORT_S0:
- =09case CCI_PORT_S1:
-@@ -258,7 +261,6 @@ static void pmu_enable_counter(int idx)
-=20
- static void pmu_set_event(int idx, unsigned long event)
- {
--=09event &=3D CCI_PMU_EVENT_MASK;
- =09pmu_write_register(event, idx, CCI_PMU_EVT_SEL);
- }
-=20
-@@ -275,7 +277,7 @@ static int pmu_get_event_idx(struct cci_pmu_hw_events *=
-hw, struct perf_event *ev
- {
- =09struct cci_pmu *cci_pmu =3D to_cci_pmu(event->pmu);
- =09struct hw_perf_event *hw_event =3D &event->hw;
--=09unsigned long cci_event =3D hw_event->config_base & CCI_PMU_EVENT_MASK;
-+=09unsigned long cci_event =3D hw_event->config_base;
- =09int idx;
-=20
- =09if (cci_event =3D=3D CCI_PMU_CYCLES) {
-@@ -296,7 +298,7 @@ static int pmu_get_event_idx(struct cci_pmu_hw_events *=
-hw, struct perf_event *ev
- static int pmu_map_event(struct perf_event *event)
- {
- =09int mapping;
--=09u8 config =3D event->attr.config & CCI_PMU_EVENT_MASK;
-+=09unsigned long config =3D event->attr.config;
-=20
- =09if (event->attr.type < PERF_TYPE_MAX)
- =09=09return -ENOENT;
+ - Include suggestions from Sudeep Holla.
+ - Cleanup event validation checks.
+
+Changes since V1 (Suggestions from Nicolas Pitre):
+
+ - Split Patch 2 to separate the 'PMU' abstraction(now Patch 2/5)
+   from the introduction of a new device-tree binding(now Patch 3/5)
+ - Rename
+=09ARM_CCI400_MCPM =3D> ARM_CCI400_PORT_CTRL
+=09CCI400_MCPM_PORTS_DATA =3D> CCI400_PORTS_DATA
+ - Select ARM_CCI400_COMMON for ARM_CCI400_PORT_CTRL
+ - Better documentation in the git commit log about the ARM_CCI config.
+ - Move the 'pr_info' to its apporpriate patch.
+
+
+Suzuki K. Poulose (5):
+  arm-cci: Rearrange code for splitting PMU vs driver code
+  arm-cci: Abstract the CCI400 PMU speicific definitions
+  arm-cci: Get rid of secure transactions for PMU driver
+  arm-cci: Split the code for PMU vs driver support
+  arm-cci: Fix CCI PMU event validation
+
+ Documentation/devicetree/bindings/arm/cci.txt |    7 +-
+ arch/arm/include/asm/arm-cci.h                |   42 +++
+ arch/arm/mach-exynos/Kconfig                  |    2 +-
+ arch/arm/mach-vexpress/Kconfig                |    4 +-
+ arch/arm64/include/asm/arm-cci.h              |   27 ++
+ drivers/bus/Kconfig                           |   28 +-
+ drivers/bus/arm-cci.c                         |  496 ++++++++++++++-------=
+----
+ include/linux/arm-cci.h                       |    9 +-
+ 8 files changed, 384 insertions(+), 231 deletions(-)
+ create mode 100644 arch/arm/include/asm/arm-cci.h
+ create mode 100644 arch/arm64/include/asm/arm-cci.h
+
 --=20
 1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
