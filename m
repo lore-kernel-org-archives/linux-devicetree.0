@@ -1,129 +1,241 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v5 2/3] wl18xx: add basic device-tree support
-Date: Wed, 11 Mar 2015 01:34:19 +0100
-Message-ID: <CABxcv=mygdT2Q+ByVKPx4+o_Oj9KSy=zVX9ng9yN25ivkfSn1A@mail.gmail.com>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
-	<1425915402-10012-2-git-send-email-eliad@wizery.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1425915402-10012-2-git-send-email-eliad@wizery.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Eliad Peller <eliad@wizery.com>
-Cc: linux-wireless@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Ido Yariv <ido@wizery.com>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V2] arm64: dts: add APM Merlin Board device tree
+Date: Tue, 10 Mar 2015 17:47:32 -0700
+Message-ID: <1426034852-18080-1-git-send-email-fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: patches@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Eliad,
+This patch adds the support for APM Merlin board. The Merlin board
+is based on the APM X-Gene Shadowcat SoC. This DTS enables PMU,
+SATA and Serial.
 
-On Mon, Mar 9, 2015 at 4:36 PM, Eliad Peller <eliad@wizery.com> wrote:
-> When running with device-tree, we no longer have a board file
-> that can set up the platform data for wlcore.
-> Allow this data to be passed from DT.
->
-> For now, parse only the irq used. Other (optional) properties
-> can be added later on.
->
-> Signed-off-by: Ido Yariv <ido@wizery.com>
-> Signed-off-by: Eliad Peller <eliad@wizery.com>
-> ---
+Signed-off-by: Feng Kan <fkan@apm.com>
+---
+  V2 Change:
+	- Add dma-range definition
 
-I see this is a v5 but I don't know what was changed from prior
-revisions. It would be good if the patches had a versions history.
+  V1 Change:
+	- add memreserve for spintable.
+        - remove clkfreq attribute
+	- update spin location, although it is done by bootloader.
+	- remove msi reg entry
+	- add chosen for stdout path 
+ arch/arm64/boot/dts/apm/apm-merlin.dts     |  41 ++++++++
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 155 +++++++++++++++++++++++++++++
+ 2 files changed, 196 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/apm/apm-merlin.dts
+ create mode 100644 arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
 
->  drivers/net/wireless/ti/wlcore/sdio.c | 80 ++++++++++++++++++++++++++++++++---
->  1 file changed, 74 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-> index d3dd7bf..ee556ac 100644
-> --- a/drivers/net/wireless/ti/wlcore/sdio.c
-> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
-> @@ -34,6 +34,8 @@
->  #include <linux/wl12xx.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/printk.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
->
->  #include "wlcore.h"
->  #include "wl12xx_80211.h"
-> @@ -214,6 +216,69 @@ static struct wl1271_if_operations sdio_ops = {
->         .set_block_size = wl1271_sdio_set_block_size,
->  };
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id wlcore_sdio_of_match_table[] = {
-> +       { .compatible = "ti,wl1801" },
-> +       { .compatible = "ti,wl1805" },
-> +       { .compatible = "ti,wl1807" },
-> +       { .compatible = "ti,wl1831" },
-> +       { .compatible = "ti,wl1835" },
-> +       { .compatible = "ti,wl1837" },
-> +       { }
-> +};
-> +
-> +static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-> +{
-> +       struct device_node *np = dev->of_node;
-> +       struct wl12xx_platform_data *pdata;
-> +
-> +       if (!np || !of_match_node(wlcore_sdio_of_match_table, np))
-> +               return NULL;
-> +
-> +       pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-> +       if (!pdata)
-> +               return NULL;
-> +
-> +       pdata->irq = irq_of_parse_and_map(np, 0);
-> +       if (!pdata->irq) {
-> +               dev_err(dev, "No irq in platform data\n");
-> +               kfree(pdata);
-> +               return NULL;
-> +       }
-> +
-> +       return pdata;
-> +}
-> +#else
-> +static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-> +{
-> +       return NULL;
-> +}
-> +#endif
-> +
-> +static struct wl12xx_platform_data *
-> +wlcore_get_platform_data(struct device *dev)
-> +{
-> +       struct wl12xx_platform_data *pdata;
-> +
-> +       /* first, look for DT data */
-
-I thought it was the opposite, that platform data should over-rule DT.
-That way you can still use the data filled in
-arch/arm/mach-omap2/pdata-quirks.c even after the driver supports your
-new DT binding.
-
-> +       pdata = wlcore_probe_of(dev);
-> +       if (pdata)
-> +               return pdata;
-> +
-> +       /* if not found - fallback to static platform data */
-> +       pdata = wl12xx_get_platform_data();
-> +       if (!IS_ERR(pdata))
-> +               return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
-> +
-> +       dev_err(dev, "No platform data set\n");
-> +       return NULL;
-> +}
-> +
-> +static void wlcore_del_platform_data(struct wl12xx_platform_data *pdata)
-> +{
-> +       kfree(pdata);
-> +}
-> +
-
-This function seems to be an unnecessary, why not just call kfree() directly?
-
-Or better, maybe the resource-managed devm_*() functions can be used
-so the data doesn't have to be explicitly freed?
-
-Best regards,
-Javier
+diff --git a/arch/arm64/boot/dts/apm/apm-merlin.dts b/arch/arm64/boot/dts/apm/apm-merlin.dts
+new file mode 100644
+index 0000000..3feefbd
+--- /dev/null
++++ b/arch/arm64/boot/dts/apm/apm-merlin.dts
+@@ -0,0 +1,41 @@
++/*
++ * dts file for AppliedMicro (APM) Merlin Board
++ *
++ * Copyright (C) 2015, Applied Micro Circuits Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++/include/ "apm-shadowcat.dtsi"
++
++/ {
++	model = "APM X-Gene Merlin board";
++	compatible = "apm,merlin", "apm,xgene-shadowcat";
++
++	chosen {
++		linux,stdout-path = &serial0;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = < 0x1 0x00000000 0x0 0x80000000 >;
++	};
++};
++
++&serial0 {
++	status = "ok";
++};
++&sata1 {
++	status = "ok";
++};
++&sata2 {
++	status = "ok";
++};
++&sata3 {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+new file mode 100644
+index 0000000..d9e193d
+--- /dev/null
++++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+@@ -0,0 +1,155 @@
++/*
++ * dts file for AppliedMicro (APM) X-Gene Shadowcat SOC
++ *
++ * Copyright (C) 2015, Applied Micro Circuits Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++/memreserve/ 0x4000000000 0x00010000;
++
++/ {
++	compatible = "apm,xgene-shadowcat";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x100>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x101>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@200 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x200>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@201 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x201>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@300 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x300>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++		cpu@301 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x301>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x40 0x0000fff8>;
++		};
++	};
++
++	gic: interrupt-controller@78090000 {
++		compatible = "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		interrupt-controller;
++		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
++		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
++		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
++		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
++		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <1 12 0xff04>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 0 0xff04>,	/* Secure Phys IRQ */
++			     <1 13 0xff04>,	/* Non-secure Phys IRQ */
++			     <1 14 0xff04>,	/* Virt IRQ */
++			     <1 15 0xff04>;	/* Hyp IRQ */
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		dma-ranges = <0x0 0x0 0x0 0x0 0x100 0x0>;
++
++		serial0: serial@10600000 {
++			device_type = "serial";
++			compatible = "ns16550";
++			reg = <0 0x10600000 0x0 0x1000>;
++			reg-shift = <2>;
++			clock-frequency = <10000000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x4c 0x4>;
++		};
++
++		sata1: sata@1a000000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a000000 0x0 0x1000>,
++			      <0x0 0x1f200000 0x0 0x1000>,
++			      <0x0 0x1f20d000 0x0 0x1000>,
++			      <0x0 0x1f20e000 0x0 0x1000>;
++			interrupts = <0x0 0x5a 0x4>;
++			dma-coherent;
++		};
++
++		sata2: sata@1a200000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a200000 0x0 0x1000>,
++			      <0x0 0x1f210000 0x0 0x1000>,
++			      <0x0 0x1f21d000 0x0 0x1000>,
++			      <0x0 0x1f21e000 0x0 0x1000>;
++			interrupts = <0x0 0x5b 0x4>;
++			dma-coherent;
++		};
++
++		sata3: sata@1a400000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a400000 0x0 0x1000>,
++			      <0x0 0x1f220000 0x0 0x1000>,
++			      <0x0 0x1f22d000 0x0 0x1000>,
++			      <0x0 0x1f22e000 0x0 0x1000>;
++			interrupts = <0x0 0x5c 0x4>;
++			dma-coherent;
++		};
++	};
++};
+-- 
+1.9.1
