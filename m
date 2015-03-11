@@ -1,110 +1,63 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: chosen/stdout-path and userland (Re: Can't boot kernel v4.0-rc2 on Koelsch)
-Date: Wed, 11 Mar 2015 11:08:16 +0100
-Message-ID: <CAMuHMdVSbYYGQyOjce87Q_dMHvh9du1EkgOgC+CBgrMys++mkA@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b
+ DesignWare access
+Date: Wed, 11 Mar 2015 12:27:16 +0200
+Message-ID: <1426069636.14897.271.camel@linux.intel.com>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+	 <1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>
+	 <CAHp75VcceG2O+YCw4twBzC_2v9+XQRpfBxMqGXERi3amnj3rdA@mail.gmail.com>
+	 <54FDDFE6.8010109@opensource.altera.com>
+	 <CAHp75Vf6dgobzZyJxu8eiqGgC7FRrwLCmyMf5Agk6S3jHDj4bw@mail.gmail.com>
+	 <54FDF8BB.4050202@opensource.altera.com>
+	 <CAHp75VcmNOaiyRNLFzQT7nKS6piZzpYSoS785J86rKtNXx6KNg@mail.gmail.com>
+	 <54FF556A.3020408@opensource.altera.com>
+	 <CAHp75VcgX8WWPkHVH80eQXGAG76xSG1YpDfb24E6aWA7GZ3OZg@mail.gmail.com>
+	 <54FF6E91.1010704@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Cao Minh Hiep <cm-hiep@jinso.co.jp>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Linux-SH <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Sakato Ryusuke <ryusuke.sakato.bx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54FF6E91.1010704-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dinguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thor Thayer <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, baruch <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TL;DR
+On Tue, 2015-03-10 at 17:22 -0500, Thor Thayer wrote:
 
-After removing the "console=3D" parameter from chosen/bootargs, and rel=
-ying
-solely on chosen/stdout-path, Hiep-san's Linaro userland cannot find th=
-e
-console device anymore.
 
-On Wed, Mar 11, 2015 at 7:45 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Tuesday 10 March 2015 12:32:59 Geert Uytterhoeven wrote:
->> On Tue, Mar 10, 2015 at 10:03 AM, Cao Minh Hiep <cm-hiep@jinso.co.jp=
-> wrote:
->> > On 2015=E5=B9=B403=E6=9C=8810=E6=97=A5 17:05, Nobuhiro Iwamatsu wr=
-ote:
->> >> This is user land issue.
->> >> Hiep, if you have not changed ttySCX in inittab, you will need to=
- change.
->> >> Could you check your inittab?
->> >>
->> >> --- a/inittab    2015-03-10 15:01:58.986609389 +0900
->> >> +++ b/inittab    2015-03-10 15:00:32.132094877 +0900
->> >> @@ -28,7 +28,7 @@
->> >>
->> >>   l6:6:wait:/etc/init.d/rc 6
->> >>   # Normally not reached, but fallthrough in case of emergency.
->> >>   z6:6:respawn:/sbin/sulogin
->> >>
->> >> -SC6:12345:respawn:/sbin/getty -L 38400 ttySC6
->> >> +SC0:12345:respawn:/sbin/getty -L 38400 ttySC0
->> >>
->> >>   # /sbin/getty invocations for the runlevels.
->> >>   #
->> >>   # The "id" field MUST be the same as the last
->> >
->> > There is no inittab file in Linaro userland that I am using.
->>
->> I'm not familiar with the Linaro userland.
->>
->> Is there any other configuration file that contains the string "ttyS=
-C6"?
->> Or does the Linaro userland derive it from the kernel command line?
->> If yes, perhaps there's a newer version that does look at stdout-pat=
-h
->> instead?
->>
->> The goal of the stdout-path support was to have a better description=
- in DT
->> and automate things. So I don't think reverting the change is the pr=
-oper way
->> forward.
->>
->> If you can't get it to work, I think we should bring it up with the =
-DT
->> people first, some of which work for Linaro.
->
-> I quite agree with that, but how should userspace know which device n=
-ode in
-> /dev corresponds to the console specified in stdout-path ?
+> > However, I'm now considering what if we just replace
+> > dw_{write/read}w() by l-variants without any additional DT property
+> > and accessor functions?
+> > Would it work for both your cases (old chip, new chip)?
+> > On my side I may test this on Intel MID.
+> >
+> 
+> Yes, this would be the simplest solution. The l-variant certainly works 
+> on our legacy SoCs. I'll be curious to hear your testing results.
 
-root@koelsch:~# hd /sys/firmware/devicetree/base/chosen/stdout-path
-00000000  2f 73 65 72 69 61 6c 40  65 36 65 36 30 30 30 30  |/serial@e6=
-e60000|
-00000010  00                                                |.|
-00000011
-root@koelsch:~# ls -l /sys/devices/platform/e6e60000.serial/tty
-total 0
-drwxr-xr-x 3 root root 0 Mar 11 10:50 ttySC0
-root@koelsch:~# cat /sys/devices/platform/e6e60000.serial/tty/ttySC0/de=
-v
-204:8
-root@koelsch:~# ls -l /dev/ttySC0
-crw------- 1 root tty 204, 8 Mar 11 10:46 /dev/ttySC0
+Whenever you send a new version of patch.
 
-Hence all pieces of the puzzle are available to userspace...
-Is there another way?
+> The data sheet mentions that registers are addressed at 32-bit 
+> boundaries to remain consistent with the AHB bus (Section 6.1 of 
+> dw_apb_ssi_db.pdf).  Additionally unused bits are reserved for writes 
+> and 0 for reads so this seems like a good solution.
+> 
+> My concern is the presence of legacy devices that I have no way of 
+> testing. Is a Request For Test in the body of the patch sufficient?
 
-BTW, we also had the "/dev/console" abstraction for quite a while.
-I've just replaced "ttySC0" by "console" in my /etc/inittab, and everyt=
-hing
-still works fine. That's Debian (without systemd) though, so it doesn't=
- help
-for the Linaro userland.
+Better to write this wider in cover letter or (in case of one patch) in
+additional description usually located after '---' line.
 
-Gr{oetje,eeting}s,
+Since I fixed couple of bugs in core I'm not sure we have a lot of
+users. Nevertheless, can you check who was recent and / or active
+contributor to spi-dw-mmio.c and put him / her to Cc list.
 
-                        Geert
+-- 
+Andy Shevchenko <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Intel Finland Oy
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
