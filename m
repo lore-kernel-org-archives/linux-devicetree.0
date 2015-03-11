@@ -1,62 +1,71 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH] pci: of : fix BUG: unable to handle kernel
-Date: Wed, 11 Mar 2015 12:37:42 -0400
-Message-ID: <55006F56.8010201@ti.com>
-References: <1426001139-18419-1-git-send-email-m-karicheri2@ti.com> <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com> <20150311124911.GA8656@n2100.arm.linux.org.uk> <55005F0F.5080302@ti.com> <CAL_JsqLi+bo=zEobrduWW9D1KtTGtfO17XYw6jGjh_u_foy_VA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 1/1] DT: video: atmel_lcdc: Add example of fixed framebuffer
+ memory
+Date: Wed, 11 Mar 2015 17:39:25 +0100
+Message-ID: <55006FBD.80701@atmel.com>
+References: <1425540938-20538-1-git-send-email-alexander.stein@systec-electronic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLi+bo=zEobrduWW9D1KtTGtfO17XYw6jGjh_u_foy_VA@mail.gmail.com>
+In-Reply-To: <1425540938-20538-1-git-send-email-alexander.stein@systec-electronic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulanit <Suravee.Suthikulpanit@amd.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>
+To: Alexander Stein <alexander.stein@systec-electronic.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2015 11:59 AM, Rob Herring wrote:
-> On Wed, Mar 11, 2015 at 10:28 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
->> On 03/11/2015 08:49 AM, Russell King - ARM Linux wrote:
->>>
->>> On Wed, Mar 11, 2015 at 07:35:45AM -0500, Rob Herring wrote:
->>>>
->>>> On Tue, Mar 10, 2015 at 10:25 AM, Murali Karicheri<m-karicheri2@ti.com>
->>>> wrote:
->>>>>
->>>>> On some platforms such as that based on x86, ia64 etc, root bus is
->>>>> created with parent node passed in as NULL to pci_create_root_bus().
->>>>> On these platforms, the patch series "PCI: get DMA configuration from
->>>>> parent device" when applied causes kernel crash. So add a check for this
->>>>> in of_pci_dma_configure()
->>>>
->>>>
->>>> Wouldn't these arches have OF disabled and call an empty function?
->>>> Regardless, we still need this.
->>>>
->>>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>>>
->>>>
->>>> I'm assuming Bjorn will apply this.
->>>>
->>>> Acked-by: Rob Herring<robh@kernel.org>
->>>
->>>
->>> It might be an idea to read the subject line...
->>>
->>> "fix BUG: unable to handle kernel"
->>
->> Russell,
->>
->> I will fix the subject as "fix BUG: unable to handle kernel NULL pointer"
->> and re-send.
+Le 05/03/2015 08:35, Alexander Stein a =E9crit :
+> This drivers allows a fixed framebuffer memory to be set by an additi=
+onal
+> IORESOURCE_MEM resource. Thus add an example to the DT documentation.
+>=20
+> Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com=
 >
-> Russell's point is the subject applies to every fix for a BUG.
-> Something like "of/pci: fix of_pci_dma_configure parent ptr NULL
-> dereference".
-Ok. Got it.
->
-> Rob
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+Queued in at91-4.1-dt. Thanks!
+
+> ---
+> Changes in v2:
+> * Fix typo noticed by checkpatch.pl
+>=20
+>  Documentation/devicetree/bindings/video/atmel,lcdc.txt | 12 ++++++++=
++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b=
+/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> index f059dd0..ecb8da0 100644
+> --- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> +++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> @@ -10,7 +10,9 @@ Required properties:
+>  	"atmel,at91sam9g45es-lcdc" ,
+>  	"atmel,at91sam9rl-lcdc" ,
+>  	"atmel,at32ap-lcdc"
+> -- reg : Should contain 1 register ranges(address and length)
+> +- reg : Should contain 1 register ranges(address and length).
+> +	Can contain an additional register range(address and length)
+> +	for fixed framebuffer memory. Useful for dedicated memories.
+>  - interrupts : framebuffer controller interrupt
+>  - display: a phandle pointing to the display node
+> =20
+> @@ -38,6 +40,14 @@ Example:
+> =20
+>  	};
+> =20
+> +Example for fixed framebuffer memory:
+> +
+> +	fb0: fb@0x00500000 {
+> +		compatible =3D "atmel,at91sam9263-lcdc";
+> +		reg =3D <0x00700000 0x1000 0x70000000 0x200000>;
+> +		[...]
+> +	};
+> +
+>  Atmel LCDC Display
+>  -----------------------------------------------------
+>  Required properties (as per of_videomode_helper):
+>=20
 
 
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+--=20
+Nicolas Ferre
