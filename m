@@ -1,51 +1,61 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC PATCH v15 04/11] ARM: cpuidle: Register cpuidle_ops for
- QCOM cpus
-Date: Wed, 11 Mar 2015 11:16:15 -0700
-Message-ID: <5500866F.6080704@codeaurora.org>
-References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org> <1425914206-22295-5-git-send-email-lina.iyer@linaro.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Wed, 11 Mar 2015 18:17:29 +0000
+Message-ID: <550086B9.4010001@arm.com>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>	<550056FD.8060804@arm.com>	<CAL85gmCuB4LfNp+6B8cL9+emFqWPM6W9gevTzibyaAzL+7jVdg@mail.gmail.com>	<55007BE3.30300@arm.com> <CAL85gmDVfop1_roHyLTRzFY3BahzTWs7nwbpmZD7emFKcFHyLg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1425914206-22295-5-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>, daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL85gmDVfop1_roHyLTRzFY3BahzTWs7nwbpmZD7emFKcFHyLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/15 08:16, Lina Iyer wrote:
-> Register cpuidle ops for Krait Processor Sub-System.
-> Supports v1 and v2 versions of KPSS.
->
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Kevin Hilman <khilman@linaro.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
->  arch/arm/include/asm/cpuidle_ops.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/include/asm/cpuidle_ops.h b/arch/arm/include/asm/cpuidle_ops.h
-> index be0a612..40cb262 100644
-> --- a/arch/arm/include/asm/cpuidle_ops.h
-> +++ b/arch/arm/include/asm/cpuidle_ops.h
-> @@ -1,3 +1,8 @@
->  /*
->   * List of cpuidle operations
->   */
-> +
-> +#if IS_ENABLED(CONFIG_QCOM_PM)
+On 11/03/15 17:57, Feng Kan wrote:
+> On Wed, Mar 11, 2015 at 10:31 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 11/03/15 17:19, Feng Kan wrote:
+>>> On Wed, Mar 11, 2015 at 7:53 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>> On 27/01/15 07:03, Pranavkumar Sawargaonkar wrote:
+>>>>> In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+>>>>> in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+>>>>> size due to size alignment checking in vgic driver for VCPU Control and
+>>>>> VCPU register.
+>>>>>
+>>>>> This patch corrects the sizes to be inline with the hardware spec.
+>>>>
+>>>> This patch may be correct, but it is useless. The firmware on my APM
+>>>> system (some version of u-boot) repaints the DT at boot time, negating
+>>>> the effect of this patch.
+>>> We have updated u-boot to reflect this change. I can supply you with a updated
+>>> image if you wish.
+>>
+>> That would be useful, thanks.
+>>
+>> But more importantly, why bother upstreaming your DT into the kernel
+>> tree if your firmware is going to overwrite whatever we provide?
+> We did tried to submit a version upstream but was rejected.
+> 
+>>
+>> Either the firmware let the user provide its own DT (and doesn't touch
+>> it other than to change the CPU enable method, insert a /memreserve/ or
+>> similar things), or the firmware always provide its own DT, and doesn't
+>> let the user provide its own. Corrupting the user DT is a disaster, as
+>> we just found.
+> Yes, the intent of the change is listed in the link below. It is not a
+> justification by any means,
+> just the effects of things appearing in layers.
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/288574.html
 
-Why not #ifdef CONFIG_QCOM_PM? I thought IS_ENABLED was for C code where
-you want to put it in an if () statement.
+Yeah. This is as wrong as it can possibly be. Oh well...
 
-> +CPUIDLE_OPS(qcom_kpss_v1)
-> +CPUIDLE_OPS(qcom_kpss_v2)
-> +#endif
+Thanks,
 
-
+	M.
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
