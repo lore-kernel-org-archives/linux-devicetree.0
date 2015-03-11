@@ -1,75 +1,64 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Wed, 11 Mar 2015 14:53:49 +0000
-Message-ID: <550056FD.8060804@arm.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
+Date: Wed, 11 Mar 2015 16:03:48 +0100
+Message-ID: <20150311150348.GA11272@localhost.localdomain>
+References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
+ <20150225151945.GB7703@localhost.localdomain>
+ <20150225170127.GD7703@localhost.localdomain>
+ <54EE0268.2040201@linn.co.uk>
+ <20150225173053.GE7703@localhost.localdomain>
+ <54F0A4C4.3020407@linn.co.uk>
+ <20150227181447.GA11594@localhost.localdomain>
+ <54F98660.5070805@linn.co.uk>
+ <20150306152239.GC26349@localhost.localdomain>
+ <5500251B.8010900@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422342206-4750-1-git-send-email-psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5500251B.8010900@linn.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/15 07:03, Pranavkumar Sawargaonkar wrote:
-> In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
-> in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
-> size due to size alignment checking in vgic driver for VCPU Control and
-> VCPU register.
-> 
-> This patch corrects the sizes to be inline with the hardware spec.
+On Wed, Mar 11, 2015 at 11:20:59AM +0000, Stathis Voukelatos wrote:
+> Our feeling is that we will have to test and verify that a move to gPTP
+> will fit with the use cases that we have to support and that will
+> require a fair amount of effort and rewrite of application software.
+> If the driver is not acceptable with the current interface we may need
+> to maintain it as a private patch until we are ready to move to gPTP
+> as you recommend.
 
-This patch may be correct, but it is useless. The firmware on my APM
-system (some version of u-boot) repaints the DT at boot time, negating
-the effect of this patch.
+Sure, there is nothing wrong with that.  For the kernel, we want to
+build good interfaces for future applications.  Sometimes reworking
+the applications that use the old, private interfaces is just too much
+work, so you have to maintain those interfaces in your products.
 
-Another system I can remove from my 64k-capable list.
+> I was referring to the Songcast protocol we are using which is part
+> of the OpenHome suite (www.openhome.org) and runs on top of UDP.
+> It could be filtered by testing the first 5 bytes of the payload.
 
-	M.
+Sounds promising.
 
-> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> CC: kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
-> CC: arnd-r2nGTMty4D4@public.gmane.org
-> CC: marc.zyngier-5wv7dgnIgG8@public.gmane.org
-> CC: christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-> CC: jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-> Signed-off-by: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/apm/apm-storm.dtsi |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> index f1ad9c2..65f0e6d 100644
-> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> @@ -81,10 +81,10 @@
->  		compatible = "arm,cortex-a15-gic";
->  		#interrupt-cells = <3>;
->  		interrupt-controller;
-> -		reg = <0x0 0x78010000 0x0 0x1000>,	/* GIC Dist */
-> -		      <0x0 0x78020000 0x0 0x1000>,	/* GIC CPU */
-> -		      <0x0 0x78040000 0x0 0x2000>,	/* GIC VCPU Control */
-> -		      <0x0 0x78060000 0x0 0x2000>;	/* GIC VCPU */
-> +		reg = <0x0 0x78010000 0x0 0x10000>,	/* GIC Dist */
-> +		      <0x0 0x78020000 0x0 0x20000>,	/* GIC CPU */
-> +		      <0x0 0x78040000 0x0 0x10000>,	/* GIC VCPU Control */
-> +		      <0x0 0x78060000 0x0 0x20000>;	/* GIC VCPU */
->  		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
->  	};
-> 
-> --
-> 1.7.9.5
-> 
-> 
+> In our implementation we also add the destination IP and port to
+> the filter to make it more reliable, but hwtstamp_rx_filters cannot
+> accept parameters.
 
+If the IP is a defined multicast group address, and if the port is
+well a known port, then you should of course include them in the
+driver level filter.
 
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Adding a unicast destination IP doesn't make it more reliable, because
+frames addressed to other hosts are switched away from the host (or
+dropped by the MAC).
+
+> However, I will test that and maybe come back with
+> a patch to expand the hwtstamp_rx_filter enum initially?
+
+It probably makes more sense to present the expanded filter list in
+the same patch series with the new driver that uses it, in order to
+see the context.  So I would hold off posting until both are ready.
+
+Thanks,
+Richard
