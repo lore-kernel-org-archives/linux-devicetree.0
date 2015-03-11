@@ -1,79 +1,98 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v6 0/4] pci: iproc: Add Broadcom iProc PCIe support
-Date: Wed, 11 Mar 2015 11:06:05 -0700
-Message-ID: <1426097169-20805-1-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v6 4/4] ARM: dts: enable PCIe support for Cygnus
+Date: Wed, 11 Mar 2015 11:06:09 -0700
+Message-ID: <1426097169-20805-5-git-send-email-rjui@broadcom.com>
+References: <1426097169-20805-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426097169-20805-1-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds the support for Broadcom iProc PCIe controller
+Add PCIe device nodes in bcm-cygnus.dtsi but keep them disabled there.
+Only enable them for bcm958300k where PCIe interfaces are populated
 
-pcie-iproc.c servers as the common core driver, and front-end bus
-interface needs to be added to support different bus interfaces
+Signed-off-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+---
+ arch/arm/boot/dts/bcm-cygnus.dtsi |   42 +++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/bcm958300k.dts  |    8 +++++++
+ 2 files changed, 50 insertions(+)
 
-pcie-iproc-pltfm.c contains the support for the platform bus interface
-
-Changes from v5:
- - Sync code base to v4.0-rc2
- - Change export symbols of common PCI functions to GPL only
- - Add comment to describe how configuration register access are protected
-   at the higher layer through 'pci_lock'
- - Use generic PCI functions for configuration register access and implement
-   'map_bus' callback to support it
- - Move 'pci_fixup_irqs' to before devices are added to the bus
- - Remove 'extern' from function prototype declared in the header
-
-Changes from v4:
- - iProc PCIe driver module support was not included in patch series v4.
-   This patch series (v5) fixes it
-
-Changes from v3:
- - Export symbols of several PCI functions so they can be used by drivers
-   compiled as kernel module
- - Add additional support to the Broadcom iProc PCIe driver so it can be
-   installed/uninstalled as kernel loadable module
-
-Changes from v2:
- - Major rework of the PCIe driver to factor out common generic code from
-   front-end bus interface. Support for generic platform bus interface is
-   also added
- - Adapt to several new PCI APIs that have been introduced lately
-
-Changes from v1:
- - Add standard PCI interrupt DT properties "#interrupt-cells",
-   "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
-   supported by using standard PCI OF IRQ parsing function
- - Get rid of custom IRQ mapping function in the driver. Use
-   of_irq_parse_and_map_pci instead
-
-Ray Jui (4):
-  PCI: Export symbols of PCI functions
-  pci: iProc: define iProc PCIe platform bus binding
-  pci: iproc: Add Broadcom iProc PCIe support
-  ARM: dts: enable PCIe support for Cygnus
-
- .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 +++++
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |   42 +++
- arch/arm/boot/dts/bcm958300k.dts                   |    8 +
- drivers/pci/host/Kconfig                           |   17 ++
- drivers/pci/host/Makefile                          |    2 +
- drivers/pci/host/pcie-iproc-pltfm.c                |  108 ++++++++
- drivers/pci/host/pcie-iproc.c                      |  268 ++++++++++++++++++++
- drivers/pci/host/pcie-iproc.h                      |   42 +++
- drivers/pci/pci.c                                  |    1 +
- drivers/pci/probe.c                                |    1 +
- drivers/pci/remove.c                               |    2 +
- drivers/pci/setup-bus.c                            |    1 +
- drivers/pci/setup-irq.c                            |    1 +
- 13 files changed, 556 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
- create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
- create mode 100644 drivers/pci/host/pcie-iproc.c
- create mode 100644 drivers/pci/host/pcie-iproc.h
-
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index ff5fb6a..ee0c6e4 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -90,6 +90,48 @@
+ 		status = "disabled";
+ 	};
+ 
++	pcie0: pcie@18012000 {
++		compatible = "brcm,iproc-pcie";
++		reg = <0x18012000 0x1000>;
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
++
++		linux,pci-domain = <0>;
++
++		bus-range = <0x00 0xff>;
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		ranges = <0x81000000 0 0	  0x28000000 0 0x00010000
++			  0x82000000 0 0x20000000 0x20000000 0 0x04000000>;
++
++		status = "disabled";
++	};
++
++	pcie1: pcie@18013000 {
++		compatible = "brcm,iproc-pcie";
++		reg = <0x18013000 0x1000>;
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
++
++		linux,pci-domain = <1>;
++
++		bus-range = <0x00 0xff>;
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		ranges = <0x81000000 0 0	  0x48000000 0 0x00010000
++			  0x82000000 0 0x40000000 0x40000000 0 0x04000000>;
++
++		status = "disabled";
++	};
++
+ 	uart0: serial@18020000 {
+ 		compatible = "snps,dw-apb-uart";
+ 		reg = <0x18020000 0x100>;
+diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
+index f1bb36f..c9eb856 100644
+--- a/arch/arm/boot/dts/bcm958300k.dts
++++ b/arch/arm/boot/dts/bcm958300k.dts
+@@ -47,6 +47,14 @@
+ 		bootargs = "console=ttyS0,115200";
+ 	};
+ 
++	pcie0: pcie@18012000 {
++		status = "okay";
++	};
++
++	pcie1: pcie@18013000 {
++		status = "okay";
++	};
++
+ 	uart3: serial@18023000 {
+ 		status = "okay";
+ 	};
 -- 
 1.7.9.5
