@@ -1,67 +1,102 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 12/12] ARM: dts: sun6i: hummingbird:
- Enable the onboard WiFi module
-Date: Wed, 11 Mar 2015 09:52:25 +0100
-Message-ID: <20150311085225.GK5085@lukather>
-References: <1425988764-23618-1-git-send-email-wens@csie.org>
- <1425988764-23618-14-git-send-email-wens@csie.org>
- <20150310213218.GH5085@lukather>
- <CAGb2v66zJcBBpLZFjNyugjRzt8SppQ0VbFD+pMqVYdK4EKg-fQ@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
+Date: Wed, 11 Mar 2015 10:03:45 +0100
+Message-ID: <20150311090345.GR24885@pengutronix.de>
+References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
+ <1425888603-25800-3-git-send-email-s.hauer@pengutronix.de>
+ <7h61a94zy0.fsf@deeprootsystems.com>
+ <20150310094142.GD24885@pengutronix.de>
+ <1426043791.24243.9.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+/c+wG9PuVDVAlsu"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4MFQCUAKGQE5KDJQEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66zJcBBpLZFjNyugjRzt8SppQ0VbFD+pMqVYdK4EKg-fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1426043791.24243.9.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---+/c+wG9PuVDVAlsu
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Wed, Mar 11, 2015 at 11:16:31AM +0800, James Liao wrote:
+> Hi,
+>=20
+> On Tue, 2015-03-10 at 10:41 +0100, Sascha Hauer wrote:
+> > On Mon, Mar 09, 2015 at 02:35:03PM -0700, Kevin Hilman wrote:
+> > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> > >=20
+> > > > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > >=20
+> > > A bit of a changelog here would be useful describing this driver,=
+ that
+> > > it's only covering part of the device (e.g. power controller) wit=
+h more
+> > > to come, dependency on the syscon driver, etc.
+> > >=20
+> > > > +/*
+> > > > + * The Infracfg unit has bus protection bits. We enable the bu=
+s protection
+> > > > + * for disabled power domains so that the system does not hang=
+ when some unit
+> > > > + * accesses the bus while in power down.
+> > > > + */
+> > >=20
+> > > Hmm, why don't you want to know if some device is accessing anoth=
+er
+> > > device which is in a domain that is powered down?   Seems like th=
+is is a
+> > > good way to hide real bugs.
+> >=20
+> > How I understand it the system just hangs on erroneous accesses wit=
+hout
+> > these protection bits enabled, so enabling them at least makes sure=
+ we
+> > can output something.
+> > I must admit though that my understanding of these bits is quite li=
+mited
+> > and the only user of this driver I have available here (audio) does=
+n't
+> > make use of these protection bits, so I can't test here.
+> >=20
+> > James, could you shed some light on this issue?
+>=20
+> I asked our designer about the bus protection feature, here is his
+> response:
+>=20
+> "
+> It's for unexpected signal glitch in Power switch process.
+>=20
+> During Power switch process, we have clock switch, reset, isolation
+> enable/disable and  power switch involved where the transition of
+> asynchronous reset and  isolation is the most critical one,  which ha=
+ve
+> risk to introduce a unexpected short period signal transition from
+> MTCMOS=E2=80=99s interface to other alive HW .=20
+> "
+>=20
+> That means it protects unexpected bus accessing from HW, not from SW.=
+ So
+> it will not hide bugs from wrong SW access.
 
-On Wed, Mar 11, 2015 at 11:11:49AM +0800, Chen-Yu Tsai wrote:
-> On Wed, Mar 11, 2015 at 5:32 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Tue, Mar 10, 2015 at 07:59:24PM +0800, Chen-Yu Tsai wrote:
-> >> The Hummingbird A31 has an AMPAK AP6210 WiFi+Bluetooth module. The
-> >> WiFi part is a BCM43362 IC connected to MMC1 in the A31 SoC via SDIO.
-> >> The IC also takes a power enable signal via GPIO. This is supported
-> >> with the new power sequencing bindings.
-> >>
-> >> The WiFi module supports out-of-band interrupt signaling via GPIO,
-> >> but this is buggy and not enabled yet.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >
-> > There's two almost identical patches 12/12. Which one am I suppose to
-> > apply?
-> 
-> This one is the right one. I forgot to clear the patches after changing
-> the description. The "buggy" part in the description is probably not
-> needed. Hans explained that the SD resets have nothing to do with
-> interrupt handling.
+Ok, thanks for clarifying. This means we should enable this feature
+sooner or later. Since the audio driver which is likely the first user
+of this driver doesn't need the protection bits I think we have some
+time and can add the protection bits once the clock patches have been
+merged.
 
-Just to be clear, you want the last sentence to be:
+Sascha
 
-The WiFi module supports out-of-band interrupt signaling via GPIO, but
-this is not enabled yet.
-
-Right?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---+/c+wG9PuVDVAlsu--
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
