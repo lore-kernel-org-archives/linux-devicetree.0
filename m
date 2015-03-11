@@ -1,44 +1,40 @@
-From: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 0/5] Update the OF unittest and some small fix
-Date: Wed, 11 Mar 2015 08:36:49 +0000
-Message-ID: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
+From: Wang Long <long.wanglong@huawei.com>
+Subject: [PATCH v2 2/5] of/unittest: Fix the wrong expected value in of_selftest_property_string
+Date: Wed, 11 Mar 2015 08:36:51 +0000
+Message-ID: <1426063014-211712-3-git-send-email-long.wanglong@huawei.com>
+References: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gaurav.minocha.os@gmail.com, robherring2@gmail.com, robh+dt@kernel.org, pantelis.antoniou@konsulko.com, grant.likely@linaro.org
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, peifeiyue@huawei.com, long.wanglong@huawei.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-This series patches do some small fixes in drivers/of/unittest.c,
-and update the Documenttion. 
+This patch fix the wrong expected value of of_property_match_string
+in of_selftest_property_string.
 
-At last, replace selftest with unittest in the c, dtsi 
-and binding files.
+Signed-off-by: Wang Long <long.wanglong@huawei.com>
+---
+ drivers/of/unittest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-* v2 <- v1:
-	- According to Gaurav's advice. make the rename
-	file patch correctly.
-	
-Wang Long (5):
-  of/unittest: remove the duplicate of_changeset_init
-  of/unittest: Fix the wrong expected value in
-    of_selftest_property_string
-  Documentation: update the of_selftest.txt
-  Documentation: rename of_selftest.txt to of_unittest.txt
-  of/unittest: replace 'selftest' with 'unittest'
-
- Documentation/devicetree/bindings/unittest.txt     |  44 +-
- .../{of_selftest.txt => of_unittest.txt}           |  35 +-
- drivers/of/unittest-data/tests-overlay.dtsi        | 108 ++--
- drivers/of/unittest.c                              | 703 ++++++++++-----------
- 4 files changed, 445 insertions(+), 445 deletions(-)
- rename Documentation/devicetree/{of_selftest.txt => of_unittest.txt} (87%)
-
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 199fb23..00ddce7 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -378,9 +378,9 @@ static void __init of_selftest_property_string(void)
+ 	rc = of_property_match_string(np, "phandle-list-names", "first");
+ 	selftest(rc == 0, "first expected:0 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "second");
+-	selftest(rc == 1, "second expected:0 got:%i\n", rc);
++	selftest(rc == 1, "second expected:1 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "third");
+-	selftest(rc == 2, "third expected:0 got:%i\n", rc);
++	selftest(rc == 2, "third expected:2 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "fourth");
+ 	selftest(rc == -ENODATA, "unmatched string; rc=%i\n", rc);
+ 	rc = of_property_match_string(np, "missing-property", "blah");
 -- 
 1.8.3.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
