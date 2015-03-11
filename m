@@ -1,30 +1,75 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3] ARM64: Add new Xilinx ZynqMP SoC
-Date: Wed, 11 Mar 2015 22:57:35 +0100
-Message-ID: <2718184.YlPDsYmc4D@wuerfel>
-References: <8dea13bec5470b0b18c586ce62c1fea467f9f647.1425890447.git.michal.simek@xilinx.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH 1/2] power: reset: Add generic SYSCON register mapped poweroff.
+Date: Wed, 11 Mar 2015 15:00:17 -0700
+Message-ID: <CAAtXAHetS9354mN5LAneMBk07U23hq2eZfqOxoXapG384=+EzQ@mail.gmail.com>
+References: <1426029670-31775-1-git-send-email-moritz.fischer@ettus.com>
+	<1426029670-31775-2-git-send-email-moritz.fischer@ettus.com>
+	<1426066272.4244.37.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8dea13bec5470b0b18c586ce62c1fea467f9f647.1425890447.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zach Pfeffer <zachp-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zynqier-5wv7dgnIgG8@public.gmane.org, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1426066272.4244.37.camel@x220>
+Sender: linux-pm-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 March 2015 09:41:04 Michal Simek wrote:
-> Initial version of device tree for Xilinx ZynqMP SoC.
->=20
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: S=F6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->=20
+Paul,
 
-Pulled into next/arm64, thanks!
+thanks for your feedback. While developing this I looked at other drivers in
+the tree and many of your comments would apply to them, too?
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Mar 11, 2015 at 2:31 AM, Paul Bolle <pebolle@tiscali
+
+>> +config POWER_RESET_SYSCON_POWEROFF
+>> +     bool "Generic SYSCON regmap poweroff driver"
+>
+> This adds a bool symbol.
+
+Is that an issue or is it just to substantiate the rest of your comments below?
+
+>> +obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
+>
+> So this objectfile can never be part of a module.
+
+Same comment would apply for power/reset/qnap-poweroff.c, right?
+
+>> +#include <linux/module.h>
+>
+> Is that include needed?
+
+Wouldn't that be needed if MODULE_DEVICE_TABLE etc, is used?
+
+
+>> +MODULE_DEVICE_TABLE(of, syscon_poweroff_of_match);
+>
+> This will be preprocessed away.
+
+In my experiments it didn't work without this, are you sure it's not needed?
+>
+>> +module_platform_driver(syscon_poweroff_driver);
+>
+> I think the built-in equivalent of this would be adding a wrapper that
+> only does
+>     platform_driver_register(&syscon_poweroff_driver);
+
+I couldn't find other examples in the tree doing this. Any pointers?
+
+>> +MODULE_LICENSE("GPL v2");
+>
+> You probably meant
+>     MODULE_LICENSE("GPL");
+
+Sorry about that. Will fix.
+>
+>> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
+>> +MODULE_DESCRIPTION("Generic SYSCON poweroff driver");
+>> +MODULE_ALIAS("platform:syscon-poweroff");
+>
+> But these four macros will all be effectively preprocessed away, anyhow.
+
+I'll remove them.
+
+Thanks,
+
+Moritz
