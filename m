@@ -1,69 +1,67 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] pwm: imx-pwm: add explicit compatible strings and
- required clock properties
-Date: Wed, 11 Mar 2015 09:48:29 +0100
-Message-ID: <20150311084827.GA19577@ulmo.nvidia.com>
-References: <1425907461-13538-1-git-send-email-mporter@konsulko.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 12/12] ARM: dts: sun6i: hummingbird:
+ Enable the onboard WiFi module
+Date: Wed, 11 Mar 2015 09:52:25 +0100
+Message-ID: <20150311085225.GK5085@lukather>
+References: <1425988764-23618-1-git-send-email-wens@csie.org>
+ <1425988764-23618-14-git-send-email-wens@csie.org>
+ <20150310213218.GH5085@lukather>
+ <CAGb2v66zJcBBpLZFjNyugjRzt8SppQ0VbFD+pMqVYdK4EKg-fQ@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+/c+wG9PuVDVAlsu"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4MFQCUAKGQE5KDJQEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425907461-13538-1-git-send-email-mporter@konsulko.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAGb2v66zJcBBpLZFjNyugjRzt8SppQ0VbFD+pMqVYdK4EKg-fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
+--+/c+wG9PuVDVAlsu
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 09, 2015 at 09:24:21AM -0400, Matt Porter wrote:
-> The imx-pwm binding contains language indicating compatible
-> strings to be used that is not valid for all supported parts
-> e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
-> valid compatible strings that represent the two versions of
-> this peripheral in use.
->=20
-> The binding is also missing the clocks/clock-names properties
-> so document these,the two required ipg and per clocks, and add
-> add these properties to the example.
->=20
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
-> ---
-> Changes since v1:
-> - compatible strings include the actual soc and one of the two specific
->   compatible parts.
->=20
->  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+On Wed, Mar 11, 2015 at 11:11:49AM +0800, Chen-Yu Tsai wrote:
+> On Wed, Mar 11, 2015 at 5:32 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Tue, Mar 10, 2015 at 07:59:24PM +0800, Chen-Yu Tsai wrote:
+> >> The Hummingbird A31 has an AMPAK AP6210 WiFi+Bluetooth module. The
+> >> WiFi part is a BCM43362 IC connected to MMC1 in the A31 SoC via SDIO.
+> >> The IC also takes a power enable signal via GPIO. This is supported
+> >> with the new power sequencing bindings.
+> >>
+> >> The WiFi module supports out-of-band interrupt signaling via GPIO,
+> >> but this is buggy and not enabled yet.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >
+> > There's two almost identical patches 12/12. Which one am I suppose to
+> > apply?
+> 
+> This one is the right one. I forgot to clear the patches after changing
+> the description. The "buggy" part in the description is probably not
+> needed. Hans explained that the SD resets have nothing to do with
+> interrupt handling.
 
-Applied, thanks.
+Just to be clear, you want the last sentence to be:
 
-Thierry
+The WiFi module supports out-of-band interrupt signaling via GPIO, but
+this is not enabled yet.
 
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature
+Right?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Maxime
 
-iQIcBAABCAAGBQJVAAFbAAoJEN0jrNd/PrOhMNoP/3JyxyEn5C9Wbw3ptB0UtP6l
-4vby7bL03bFVSmbNc2umt9TwDRQ2Zmpa19xUQkfusUt2rG0Fkzza/EpyYrxRJm4I
-iOit03ja5Kdw/d2lumR1Au7N4qWYwGv5W7ttbdF51WhzApIT7lRcEutXFFA6VpPU
-dbhVborqRWkT3jBL5zkVXeYW94CuQ1YTHtPBspgar7BMF3SLAC37mT00z9LQ9H/Q
-uYNtywFpPx4b6NwCUsl15dL5IJjTmzKCpdrCHSux1RKmbqDpoaRjBwhvltasZ3xW
-kHUGPDiIGwqvm7BP/WBn6x4zCrHefeffpxqXZzdEXep5eYLR20wEsJeABUBk0MJR
-Kafwc2+gD+gjM/dOBeYm6cx5KeoLrxzlTJHylcqgyuHTyeCbrqBT23wKYonnItDG
-QrSkwpWApcL1pUMr4pKKARW6q4Hd2x52wm5pgrKYi36LLqlijuYzKcVUTk6B0dxd
-vr0SYS1AZbjLzPEdHEBtYBc4EN9+Msao27sTj6sQUfWLW+8suC2sVxVgt6muxir4
-OQgUVd83XSwZYPcJiMDM1r+069ld7jSougoFzKI+BR/8gS9SmbFItgWd5mBqKvki
-nGMfaSTudrqK36S9nrvggMm1tLBZB4dITERGQ19Ap/3Rmfoqaf5r6C2fYkJIKI+t
-p2V7+XjMNgdkDr14kq4a
-=YykB
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--+/c+wG9PuVDVAlsu--
