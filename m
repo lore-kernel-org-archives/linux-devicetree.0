@@ -1,97 +1,68 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt/bindings: control CS via standard GPIO operations instead of SPI-HW
-Date: Wed, 11 Mar 2015 16:21:45 +0100
-Message-ID: <A8477522-2A97-4D1B-89EC-A70B5A28489F@martin.sperl.org>
-References: <1425487205-5477-1-git-send-email-kernel@martin.sperl.org> <1425487205-5477-2-git-send-email-kernel@martin.sperl.org> <54FA9109.6080102@wwwdotorg.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54FA9109.6080102-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH] pci: of : fix BUG: unable to handle kernel
+Date: Wed, 11 Mar 2015 11:25:54 -0400
+Message-ID: <55005E82.4050607@ti.com>
+References: <1426001139-18419-1-git-send-email-m-karicheri2@ti.com> <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulanit <Suravee.Suthikulpanit@amd.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-> On 07.03.2015, at 06:47, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> 
-> These pins aren't used by anything on the board, but are rather part of
-> the expansion header. I wonder if we wouldn't be better off removing any
-> configuration of the pins from the DT. After all, we can't guarantee how
-> the user has connected them. The "default" usage, a/k/a the expansion
-> header signal naming, isn't any guarantee.
-> 
-> Rather, the user should specify what they want to use the pin as; as a
-> GPIO input, GPIO output, or an SPI chip-select.
-...
-> While the existing DT already has this issue, note that this forces
-> these pins to be driven as outputs. What if the user has hooked up an
-> external device that drives these signals, and wants to use the pins as
-> GPIO inputs?
+On 03/11/2015 08:35 AM, Rob Herring wrote:
+> On Tue, Mar 10, 2015 at 10:25 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
+>> On some platforms such as that based on x86, ia64 etc, root bus is
+>> created with parent node passed in as NULL to pci_create_root_bus().
+>> On these platforms, the patch series "PCI: get DMA configuration from
+>> parent device" when applied causes kernel crash. So add a check for this
+>> in of_pci_dma_configure()
+>
+> Wouldn't these arches have OF disabled and call an empty function?
+The current patch series does have a empty function if OF is disabled.
+> Regardless, we still need this.
+These archs have OF enabled, but they call  pci_create_root_bus() with 
+NULL parent node passed in. That is why the crash happens.
+
+Murali
+>
+>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>
+> I'm assuming Bjorn will apply this.
+>
+> Acked-by: Rob Herring<robh@kernel.org>
+>
+>> ---
+>>   drivers/of/of_pci.c |    4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+>> index 86d3c38..a8e485c 100644
+>> --- a/drivers/of/of_pci.c
+>> +++ b/drivers/of/of_pci.c
+>> @@ -129,6 +129,10 @@ void of_pci_dma_configure(struct pci_dev *pci_dev)
+>>          struct device *dev =&pci_dev->dev;
+>>          struct device *bridge = pci_get_host_bridge_device(pci_dev);
+>>
+>> +       /* Some platforms can have bridge->parent set to NULL */
+>> +       if (!bridge->parent)
+>> +               return;
+>> +
+>>          of_dma_configure(dev, bridge->parent->of_node);
+>>          pci_put_host_bridge_device(bridge);
+>>   }
+>> --
+>> 1.7.9.5
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
-Actually if you look at the Documentation on page 102 you will find that
-those pins are pulled high by default (if it is HW or firmware I am not
-sure) - so a hat designer needs to take this into consideration anyway.
-The only difference is that it is pulled high and not driven high/low.
-
-Also with the "new" models there is the Firmware that will read those 
-"hat-descriptors" from the eeprom and configure the GPIO "modes" and
-pullups based on this information.
-
-But then it means in principle that this is a more general issue
-that just became apparent now.
-
-
-> This shouldn't be in the SoC .dtsi file. It's quite possible for someone
-> to use other GPIOs as SPI CS. It's board or even use-case specific
-> whether those are the correct values.
-> 
-> I would argue that we should not put any cs-gpios into any in-kernel DT
-> file, since there's no on-board usage of SPI on the RPi boards.
-
-but then: why not just make it optional and NOT configuring it at all
-and keep it "outside".
-
-> For SPI to be useful, the user has to add a DT node to represent the SPI
-> device itself anyway, so adding some properties to the controller to
-> define which GPIOs to use for SPI CS can be done then too.
-
->From what I have seen (and I am not an expert) is that with the 
-foundation device trees each "device" (spi/i2c/...) has a separate
-Gpio section, which gets referenced inside the spi/i2c/... block.
-
-As far as I understood with this setup the GPIOs ALT only gets set
-up when the driver itself loads (probably while parsing the DT
-for the device)
-
-So this is maybe the way forward for the whole default-dt?
-
-For SPI it would look like this:
-&gpio {
-        spi0_pins: spi0_pins {
-                brcm,pins = <7 8 9 10 11>;
-                brcm,function = <4>; /* alt0 */
-        };
-	...
-}
-
-&spi0 {
-	...
-        pinctrl-0 = <&spi0_pins>;
-	...
-}
-
-And if you keep spi0 disabled in the dtsi files then the ALT
-modes should not be set.
-
-Obviously we could also split the gpio-block into 
-"normal SPI" and "CS" pins, which would allow changing the
-"defaults" also in the dts that gets build.
-
-So how should we proceed?
-
-Martin--
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
