@@ -1,57 +1,96 @@
-From: =?gb2312?B?Q2h1bnlhbiBaaGFuZyAo1cW0utHeKQ==?=
- <Chunyan.Zhang@spreadtrum.com>
-Subject: [PATCH v8 0/2] Add Spreadtrum Sharkl64 Platform support
-Date: Wed, 11 Mar 2015 02:27:08 +0000
-Message-ID: <1426040790-19495-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [PATCH] dma: Add Xilinx ZDMA device tree Binding Documentation
+Date: Wed, 11 Mar 2015 08:18:30 +0530
+Message-ID: <CAGnW=BZeZk7HdB1mroAwCF=d8UXrpt_EzSMc6=m6AsfB5mJvPw@mail.gmail.com>
+References: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
+	<20150310235751.GC27583@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "arm@kernel.org" <arm@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150310235751.GC27583@jcartwri.amer.corp.natinst.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@ni.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, punnaiah choudary kalluri <kalluripunnaiahchoudary@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds Spreadtrum's Sharkl64 support in arm64 device tree.
+On Wed, Mar 11, 2015 at 5:27 AM, Josh Cartwright <joshc@ni.com> wrote:
+> On Tue, Mar 10, 2015 at 07:46:23PM +0530, Punnaiah Choudary Kalluri wrote:
+>> Device-tree binding documentation for Xilinx ZDMA Engine
+>>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> ---
+>
+> Hey Punnaiah-
+>
+> Was this intended to be sent out with a driver?
 
-Changes from v7:
-	- Added Mark Rutland's Acked-by
-	- Rebased v4.0-rc1
+First I would like to complete my review for device tree bindings and
+then planning to send the driver for review. please let me know if this is not
+the right way to do?
 
-Changes from v6:
-	- Setted stdout-path with "serial1:115200n8"
+>
+>>  .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 ++++++++++++++++++++
+>>  1 files changed, 76 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+>> new file mode 100644
+>> index 0000000..399a3bc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+>> @@ -0,0 +1,76 @@
+>> +Xilinx ZDMA engine, it does support memory to memory transfers,
+>> +memory to device and device to memory transfers. It also has flow
+>> +control and rate control support for slave/peripheral dma access.
+>> +
+>> +Xilinx ZynqMP has two instances of general purpose DMA(ZDMA).
+>> +one is located in FPD(full power domain) and other is located in
+>> +LPD(low power domain).
+>> +
+>> +ZDMA instance located in FPD is referred as FPDMA and instance located
+>> +in LPD is referred as LPDMA.
+>> +
+>> +FPDMA is configured with 8 DMA channels and AXI bus width is 128 byte.
+>> +LPDMA is configured with 8 DMA channels and AXI bus width is 64 byte.
+>> +
+>> +Each channel in a instance has its own address space and interrupt line
+>                    ^an
+>
+>> +but shares common reference and APB clock. So, each channel will be treated
+>> +as a standalone dma device.
+>
+> Does your example below then describe only a single channel?  Or, should
+> I expect to see sub-nodes representing each of the dma channels?
 
-Changes from v5:
-	- Added maintenance interrupt for gic
-	- Removed reg property from 'soc' and 'apb' nodes
+As said above each channel has its own register space and separate interrupt,
+i am treating each dma channel as standalone dma controller i.e dma
+controller with
+single channel. So, the below node describes for single channel and
+other channel
+nodes can follow the below example.
 
+>
+>> +Since its a general purpose dma controller, it has a rich set of configurable
+>> +options with respect to data and descriptor attributes.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "xlnx,fpdma-1.0" or "xlnx,lpdma-1.0"
+>> +- reg: Memory map for dma module access.
+>> +- interrupt-parent: Interrupt controller the interrupt is routed through
+>> +- interrupts: Should contain DMA channel interrupt.
+>> +- xlnx,id: Channel Id
+>
+> I would have expected, as a dma controller, to see a #dma-cells here,
+> and a tie-in to the existing Documentation/devicetree/bindings/dma/dma.txt documentation.
 
-Zhizhou Zhang (2):
-  arm64: dts: Add support for Spreadtrum SC9836 SoC in dts and Makefile
-  arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and
-    defconfig
+Ok i will take care of this in next version. thanks.
 
- arch/arm64/Kconfig                            |  5 ++
- arch/arm64/boot/dts/Makefile                  |  1 +
- arch/arm64/boot/dts/sprd/Makefile             |  5 ++
- arch/arm64/boot/dts/sprd/sc9836-openphone.dts | 49 ++++++++++++++++++
- arch/arm64/boot/dts/sprd/sc9836.dtsi          | 74 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl64.dtsi        | 65 +++++++++++++++++++++++
- arch/arm64/configs/defconfig                  |  1 +
- 7 files changed, 200 insertions(+)
- create mode 100644 arch/arm64/boot/dts/sprd/Makefile
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836-openphone.dts
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl64.dtsi
-
--- 
-1.9.1
+Regards,
+Punnaiah
+>
+>   Josh
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
