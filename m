@@ -1,45 +1,80 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Wed, 11 Mar 2015 14:21:29 +0100
-Message-ID: <CABxcv==yx3dy-beEF9cf1mKo1vjCh_LU6iLuvn1z-SKz9xG0qA@mail.gmail.com>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
-	<6286151.8rcX893TN6@wuerfel>
-	<CABxcv=mPVxW=BqL2PUL=AtS74kcqMG1yxC1WqMpxGiNOqGAnyQ@mail.gmail.com>
-	<2353601.si5uCETVn2@wuerfel>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: chosen/stdout-path and userland (Re: Can't boot kernel v4.0-rc2
+ on Koelsch)
+Date: Wed, 11 Mar 2015 14:23:13 +0100
+Message-ID: <CAMuHMdWjHnX4NS2Z7MMg9FBjDpo41h517U3t+ndSCzhGKDLCvA@mail.gmail.com>
+References: <CAMuHMdVSbYYGQyOjce87Q_dMHvh9du1EkgOgC+CBgrMys++mkA@mail.gmail.com>
+	<55003D82.1080601@hurleysoftware.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <2353601.si5uCETVn2@wuerfel>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tony Lindgren <tony@atomide.com>, Eliad Peller <eliad@wizery.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55003D82.1080601-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cao Minh Hiep <cm-hiep-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>, Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>, Linux-SH <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sakato Ryusuke <ryusuke.sakato.bx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 2:17 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 11 March 2015 14:07:11 Javier Martinez Canillas wrote:
->>
->> Right now it seems that all boards in mainline with a WiLink6 part are
->> using internal clocks. So as a first step I think that adding an
->> optional refclock-frequency and tcxoclock-frequency properties should
->> be enough.
->>
->> It would be good if the driver supports getting the refclock and
->> tcxoclock from an external provider in case a board gets these from
->> external clocks but that can be done as a followup if there are boards
->> in the future using that design.
->>
->> But please bear in mind that I'm not familiar with the clock handling
->> in WiLink6 since the WiLink8 part used in the IGEP boards does not
->> need these clocks and I only looked at Luciano's previous patches and
->> the WiLink today driver today. So it would be good if Eliad can double
->> check my assumptions to see if those are correct.
->
-> Sounds good. I'd also be fine with not implementing the case for
-> external clocks in the code until we need (and can test) it, but
-> I think it should be specified in the binding from the start.
->
+Hi Peter,
 
-Agreed.
+On Wed, Mar 11, 2015 at 2:05 PM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
+> On 03/11/2015 06:08 AM, Geert Uytterhoeven wrote:
+>> TL;DR
+>>
+>> After removing the "console=" parameter from chosen/bootargs, and relying
+>> solely on chosen/stdout-path, Hiep-san's Linaro userland cannot find the
+>> console device anymore.
 
-Best regards,
-Javier
+> The tty subsystem emits the list of consoles as a space-delimited, single text
+> line in /sys/class/tty/console/active (alias: /sys/devices/virtual/tty/console/active).
+
+Thanks! I didn't know about that virtual file.
+
+> The first console listed is the primary console.
+> tty0 is not resolved to its underlying tty device name.
+
+Are you sure about that? Isn't the last one the primary console?
+
+root@koelsch:~# cat  /sys/class/tty/console/active
+tty0 ttySC0
+
+If tty0 would be the primary console, getty on /dev/console wouldn't work for
+my serial console, as only input on the primary console can be read through
+/dev/console if my memory serves me well (or perhaps this has changed?).
+
+Ah, Documentation/ABI/testing/sysfs-tty agrees with me:
+
+What:           /sys/class/tty/console/active
+Date:           Nov 2010
+Contact:        Kay Sievers <kay.sievers-tD+1rO4QERM@public.gmane.org>
+Description:
+                 Shows the list of currently configured
+                 console devices, like 'tty1 ttyS0'.
+                 The last entry in the file is the active
+                 device connected to /dev/console.
+
+> That said, is the original reporter of this problem even interested in
+> upgrading their userspace, even if this is fixed in Linaro eventually?
+> What about other Linaro users?
+
+We'll see...
+
+> I think the only reasonable course here is to continue to support
+> "console=" in /chosen/bootargs.
+
+Hmm...
+If you really need it, you can always add it to the U-Boot bootargs variable.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
