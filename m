@@ -1,53 +1,89 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH] pci: of : fix BUG: unable to handle kernel
-Date: Wed, 11 Mar 2015 11:28:15 -0400
-Message-ID: <55005F0F.5080302@ti.com>
-References: <1426001139-18419-1-git-send-email-m-karicheri2@ti.com> <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com> <20150311124911.GA8656@n2100.arm.linux.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery
+ bindings
+Date: Wed, 11 Mar 2015 08:24:15 -0700
+Message-ID: <20150311152414.GX5264@atomide.com>
+References: <1426022847-30912-1-git-send-email-marek@goldelico.com>
+ <1426022847-30912-4-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150311124911.GA8656@n2100.arm.linux.org.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulanit <Suravee.Suthikulpanit@amd.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426022847-30912-4-git-send-email-marek@goldelico.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: bcousson@baylibre.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2015 08:49 AM, Russell King - ARM Linux wrote:
-> On Wed, Mar 11, 2015 at 07:35:45AM -0500, Rob Herring wrote:
->> On Tue, Mar 10, 2015 at 10:25 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
->>> On some platforms such as that based on x86, ia64 etc, root bus is
->>> created with parent node passed in as NULL to pci_create_root_bus().
->>> On these platforms, the patch series "PCI: get DMA configuration from
->>> parent device" when applied causes kernel crash. So add a check for this
->>> in of_pci_dma_configure()
->>
->> Wouldn't these arches have OF disabled and call an empty function?
->> Regardless, we still need this.
->>
->>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>
->> I'm assuming Bjorn will apply this.
->>
->> Acked-by: Rob Herring<robh@kernel.org>
->
-> It might be an idea to read the subject line...
->
-> "fix BUG: unable to handle kernel"
-Russell,
+Hi,
 
-I will fix the subject as "fix BUG: unable to handle kernel NULL 
-pointer" and re-send.
+* Marek Belisko <marek@goldelico.com> [150310 14:28]:
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+> new file mode 100644
+> index 0000000..d3dd9d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+> @@ -0,0 +1,43 @@
+> +twl4030_madc_battery
+> +
+> +Required properties:
+> + - compatible : "ti,twl4030-madc-battery"
+> + - capacity-uah : battery capacity in uAh
+> + - ti,volt-to-capacity-charging-map : list of voltage(mV):level(%) values
+> +	for charging calibration (see example)
+> + - ti,volt-to-capacity-discharging-map : list of voltage(mV):level(%) values
+> +	for discharging calibration (see example)
+> + - io-channels: Should contain IIO channel specifiers
+> +	for each element in io-channel-names.
+> +- io-channel-names: Should contain the following values:
+> + * "temp" - The ADC channel for temperature reading
+> + * "ichg" - The ADC channel for battery charging status
+> + * "vbat" - The ADC channel to measure the battery voltage
+> +
+> +Example:
+> +	madc-battery {
+> +		compatible = "ti,twl4030-madc-battery";
+> +		capacity-uah = <1200000>;
+> +		ti,volt-to-capacity-charging-map = <4200 100>,
+> +					        <4100 75>,
+> +					        <4000 55>,
+> +					        <3900 25>,
+> +					        <3800 5>,
+> +					        <3700 2>,
+> +					        <3600 1>,
+> +					        <3300 0>;
+> +
+> +		ti,volt-to-capacity-discharging-map = <4200 100>
+> +						   <4100 95>,
+> +						   <4000 70>,
+> +						   <3800 50>,
+> +						   <3700 10>,
+> +						   <3600 5>,
+> +						   <3300 0>;
+> +		io-channels = <&twl_madc 1>,
+> +	                      <&twl_madc 10>,
+> +			      <&twl_madc 12>;
+> +		io-channel-names = "temp",
+> +		                   "ichg",
+> +		                   "vbat";
+> +	};
 
-Thanks
+Rather than just making platform_data into device tree properties..
 
-Murali
->
-> which is meaningless.  It needs a much better subject line before it can
-> be committed.
->
+Can't you hide the these custom properties behind the compatible flag?
 
+You can initialize that data in the driver based on the compatible
+flag and the match data.
 
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+This makes sense if you can group things to similar configurations.
+
+Regards,
+
+Tony
+
