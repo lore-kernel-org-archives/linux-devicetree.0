@@ -1,26 +1,69 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] Disable PWMs in imx6ql.dtsi
-Date: Wed, 11 Mar 2015 09:53:44 +0800
-Message-ID: <20150311015342.GZ20455@dragon>
-References: <1425919236-6664-1-git-send-email-p.zabel@pengutronix.de>
+From: =?gb2312?B?Q2h1bnlhbiBaaGFuZyAo1cW0utHeKQ==?=
+ <Chunyan.Zhang@spreadtrum.com>
+Subject: [PATCH v8 2/2] arm64: Add support for Spreadtrum's Sharkl64
+ Platform in Kconfig and defconfig
+Date: Wed, 11 Mar 2015 02:27:08 +0000
+Message-ID: <1426040790-19495-3-git-send-email-chunyan.zhang@spreadtrum.com>
+References: <1426040790-19495-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425919236-6664-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Anssi Hannula <anssi.hannula-X3B1VOXEql0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1426040790-19495-1-git-send-email-chunyan.zhang@spreadtrum.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "arm@kernel.org" <arm@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2015 at 05:40:33PM +0100, Philipp Zabel wrote:
-> Philipp Zabel (3):
->   ARM: dts: imx6dl-aristainetos: enable backlight PWM explicitly
->   ARM: dts: hummingboard/cubox-i: enable front LED PWM explicitly
->   ARM: dts: imx6qdl: disable PWMs by default
+From: Zhizhou Zhang <zhizhou.zhang@spreadtrum.com>
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Adds support for Spreadtrum's SoC Platform in the arm64 Kconfig and
+defconfig files.
+
+Signed-off-by: Zhizhou Zhang <zhizhou.zhang@spreadtrum.com>
+Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+---
+ arch/arm64/Kconfig           | 5 +++++
+ arch/arm64/configs/defconfig | 1 +
+ 2 files changed, 6 insertions(+)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 1b8e973..e582fe2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -208,6 +208,11 @@ config ARCH_TEGRA_132_SOC
+ 	  but contains an NVIDIA Denver CPU complex in place of
+ 	  Tegra124's "4+1" Cortex-A15 CPU complex.
+ 
++config ARCH_SPRD
++	bool "Spreadtrum SoC platform"
++	help
++	  Support for Spreadtrum ARM based SoCs
++
+ config ARCH_THUNDER
+ 	bool "Cavium Inc. Thunder SoC Family"
+ 	help
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index be1f12a..535307c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -33,6 +33,7 @@ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_IOSCHED_DEADLINE is not set
+ CONFIG_ARCH_FSL_LS2085A=y
+ CONFIG_ARCH_MEDIATEK=y
++CONFIG_ARCH_SPRD=y
+ CONFIG_ARCH_THUNDER=y
+ CONFIG_ARCH_VEXPRESS=y
+ CONFIG_ARCH_XGENE=y
+-- 
+1.9.1
