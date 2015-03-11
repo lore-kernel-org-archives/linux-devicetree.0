@@ -1,71 +1,41 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v2 1/1] DT: video: atmel_lcdc: Add example of fixed framebuffer
- memory
-Date: Wed, 11 Mar 2015 17:39:25 +0100
-Message-ID: <55006FBD.80701@atmel.com>
-References: <1425540938-20538-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v1] of/pci : fix of_pci_dma_configure parent ptr NULL
+Date: Wed, 11 Mar 2015 12:40:03 -0400
+Message-ID: <1426092003-16925-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425540938-20538-1-git-send-email-alexander.stein@systec-electronic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Stein <alexander.stein@systec-electronic.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, arnd@arndb.de, Suravee.Suthikulpanit@amd.com, will.deacon@arm.com, joro@8bytes.org, linux@arm.linux.org.uk
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 05/03/2015 08:35, Alexander Stein a =E9crit :
-> This drivers allows a fixed framebuffer memory to be set by an additi=
-onal
-> IORESOURCE_MEM resource. Thus add an example to the DT documentation.
->=20
-> Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com=
->
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+On some platforms such as that based on x86, ia64 etc, root bus is
+created with parent node passed in as NULL to pci_create_root_bus().
+On these platforms, the patch series "PCI: get DMA configuration from
+parent device" when applied causes kernel crash. So add a check for this
+in of_pci_dma_configure()
 
-Queued in at91-4.1-dt. Thanks!
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Acked-by: Rob Herring<robh@kernel.org>
+---
+ drivers/of/of_pci.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-> ---
-> Changes in v2:
-> * Fix typo noticed by checkpatch.pl
->=20
->  Documentation/devicetree/bindings/video/atmel,lcdc.txt | 12 ++++++++=
-+++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b=
-/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> index f059dd0..ecb8da0 100644
-> --- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> +++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> @@ -10,7 +10,9 @@ Required properties:
->  	"atmel,at91sam9g45es-lcdc" ,
->  	"atmel,at91sam9rl-lcdc" ,
->  	"atmel,at32ap-lcdc"
-> -- reg : Should contain 1 register ranges(address and length)
-> +- reg : Should contain 1 register ranges(address and length).
-> +	Can contain an additional register range(address and length)
-> +	for fixed framebuffer memory. Useful for dedicated memories.
->  - interrupts : framebuffer controller interrupt
->  - display: a phandle pointing to the display node
-> =20
-> @@ -38,6 +40,14 @@ Example:
-> =20
->  	};
-> =20
-> +Example for fixed framebuffer memory:
-> +
-> +	fb0: fb@0x00500000 {
-> +		compatible =3D "atmel,at91sam9263-lcdc";
-> +		reg =3D <0x00700000 0x1000 0x70000000 0x200000>;
-> +		[...]
-> +	};
-> +
->  Atmel LCDC Display
->  -----------------------------------------------------
->  Required properties (as per of_videomode_helper):
->=20
-
-
---=20
-Nicolas Ferre
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 86d3c38..a8e485c 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -129,6 +129,10 @@ void of_pci_dma_configure(struct pci_dev *pci_dev)
+ 	struct device *dev = &pci_dev->dev;
+ 	struct device *bridge = pci_get_host_bridge_device(pci_dev);
+ 
++	/* Some platforms can have bridge->parent set to NULL */
++	if (!bridge->parent)
++		return;
++
+ 	of_dma_configure(dev, bridge->parent->of_node);
+ 	pci_put_host_bridge_device(bridge);
+ }
+-- 
+1.7.9.5
