@@ -1,135 +1,43 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v7 05/18] of: Document timings subnode of nvidia,tegra-mc
-Date: Wed, 11 Mar 2015 11:34:18 +0100
-Message-ID: <1426070126-26910-6-git-send-email-tomeu.vizoso@collabora.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v7 07/18] of: document external-memory-controller property in tegra124-car
+Date: Wed, 11 Mar 2015 11:34:20 +0100
+Message-ID: <1426070126-26910-8-git-send-email-tomeu.vizoso@collabora.com>
 References: <1426070126-26910-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426070126-26910-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org
-Cc: Mikko Perttunen <mikko.perttunen@kapsi.fi>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426070126-26910-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The MC driver needs some timing-specific information to program the EMEM during
-a rate change of the EMC clock.
+This property contains a phandle to the EMC driver that is needed by the
+EMC clock to request the EMC driver to do its part of the clock change
+sequence.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
+ Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v4:	* Add more information about nvidia,emem-configuration
-	* Remove mandatory naming of the timings subnode
-	* Remove constraint on the unit-address of the timings and timing subnodes
----
- .../memory-controllers/nvidia,tegra-mc.txt         | 84 +++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-index f3db93c..3338a28 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-@@ -1,6 +1,9 @@
- NVIDIA Tegra Memory Controller device tree bindings
- ===================================================
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+index c3891ce..7f02fb4 100644
+--- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+@@ -20,6 +20,7 @@ Required properties :
+ - #reset-cells : Should be 1.
+   In clock consumers, this cell represents the bit number in the CAR's
+   array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
++- nvidia,external-memory-controller : phandle of the EMC driver.
  
-+memory-controller node
-+----------------------
-+
- Required properties:
- - compatible: Should be "nvidia,tegra<chip>-mc"
- - reg: Physical base address and length of the controller's registers.
-@@ -15,9 +18,49 @@ Required properties:
- This device implements an IOMMU that complies with the generic IOMMU binding.
- See ../iommu/iommu.txt for details.
- 
--Example:
----------
-+emc-timings subnode
-+-------------------
-+
-+The node should contain a "emc-timings" subnode for each supported RAM type (see field RAM_CODE in
-+register PMC_STRAPPING_OPT_A).
-+
-+Required properties for "emc-timings" nodes :
-+- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is used for.
-+
-+timing subnode
-+--------------
-+
-+Each "emc-timings" node should contain a subnode for every supported EMC clock rate.
-+
-+Required properties for timing nodes :
-+- clock-frequency : Should contain the memory clock rate in Hz.
-+- nvidia,emem-configuration : Values to be written to the EMEM register block. For the Tegra124 SoC
-+(see section "15.6.1 MC Registers" in the TRM), these are the registers whose values need to be
-+specified, according to the board documentation:
-+
-+	MC_EMEM_ARB_CFG
-+	MC_EMEM_ARB_OUTSTANDING_REQ
-+	MC_EMEM_ARB_TIMING_RCD
-+	MC_EMEM_ARB_TIMING_RP
-+	MC_EMEM_ARB_TIMING_RC
-+	MC_EMEM_ARB_TIMING_RAS
-+	MC_EMEM_ARB_TIMING_FAW
-+	MC_EMEM_ARB_TIMING_RRD
-+	MC_EMEM_ARB_TIMING_RAP2PRE
-+	MC_EMEM_ARB_TIMING_WAP2PRE
-+	MC_EMEM_ARB_TIMING_R2R
-+	MC_EMEM_ARB_TIMING_W2W
-+	MC_EMEM_ARB_TIMING_R2W
-+	MC_EMEM_ARB_TIMING_W2R
-+	MC_EMEM_ARB_DA_TURNS
-+	MC_EMEM_ARB_DA_COVERS
-+	MC_EMEM_ARB_MISC0
-+	MC_EMEM_ARB_MISC1
-+	MC_EMEM_ARB_RING1_THROTTLE
- 
-+Example SoC include file:
-+
-+/ {
- 	mc: memory-controller@0,70019000 {
- 		compatible = "nvidia,tegra124-mc";
- 		reg = <0x0 0x70019000 0x0 0x1000>;
-@@ -34,3 +77,40 @@ Example:
- 		...
- 		iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
+ The node should contain a "emc-timings" subnode for each supported RAM type (see
+ field RAM_CODE in register PMC_STRAPPING_OPT_A).
+@@ -50,6 +51,7 @@ Example SoC include file:
+ 		reg = <0x60006000 0x1000>;
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
++		nvidia,external-memory-controller = <&emc>;
  	};
-+};
-+
-+Example board file:
-+
-+/ {
-+	memory-controller@0,70019000 {
-+		emc-timings-3 {
-+			nvidia,ram-code = <3>;
-+
-+			timing-12750000 {
-+				clock-frequency = <12750000>;
-+
-+				nvidia,emem-configuration = <
-+					0x40040001 /* MC_EMEM_ARB_CFG */
-+					0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
-+					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
-+					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
-+					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
-+					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
-+					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
-+					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
-+					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
-+					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
-+					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
-+					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
-+					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
-+					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
-+					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
-+					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
-+					0x77e30303 /* MC_EMEM_ARB_MISC0 */
-+					0x70000f03 /* MC_EMEM_ARB_MISC1 */
-+					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
-+				>;
-+			};
-+		};
-+	};
-+};
+ 
+ 	usb@c5004000 {
 -- 
 2.1.0
