@@ -1,92 +1,34 @@
-From: Valentin Rothberg <valentinrothberg@gmail.com>
-Subject: Re: ARCH_EXYNOS5433 missing in Kconfig
-Date: Wed, 11 Mar 2015 09:21:11 +0100
-Message-ID: <CAD3Xx4KPcWYpK0us2O+Ct67yYiNb1=ZXR7GhR0FMcchCjhMy8A@mail.gmail.com>
-References: <CAD3Xx4Jf5ACBKe-KvGRD=myHKrJ+K_P0vBrtrmfgh+1zNM4hug@mail.gmail.com>
- <54FF95ED.1040003@samsung.com>
+From: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 4/5] Documentation: rename of_selftest.txt to of_unittest.txt
+Date: Wed, 11 Mar 2015 08:36:53 +0000
+Message-ID: <1426063014-211712-5-git-send-email-long.wanglong@huawei.com>
+References: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54FF95ED.1040003@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Inki Dae <inki.dae@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andreas Ruprecht <rupran@einserver.de>, hengelein Stefan <stefan.hengelein@fau.de>, Paul Bolle <pebolle@tiscali.nl>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?6rmA6rWt7KeEQGtlcm5lbC5vcmc=?= <kgene@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426063014-211712-1-git-send-email-long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 2:10 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> Hi Valentin,
->
-> I sent the Exynos5433 clock patch and then separately I'm sending the
-> Exynos5433 devicetree patch-set[1].
-> [1] [PATCH v6 0/9] arm64: Add the support for new Exynos5433 SoC
-> - https://lkml.org/lkml/2015/3/9/1036
->
-> But, according to Arnd bergmann's comment[2], latest Exynos5433 dt patch-set[1]
-> removed the CONFIG_ARCH_EXYNOS5433.
-> [2] https://lkml.org/lkml/2015/2/24/85
->
->
-> So, I have plan to send following patch.
+Since the test of the devicetree's OF api use unittest as
+its name. so we should rename of_selftest.txt to of_unittest.txt.
 
-Great!  Thanks for your reply and the explanation.
+Signed-off-by: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/{of_selftest.txt => of_unittest.txt} | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/{of_selftest.txt => of_unittest.txt} (100%)
 
-Kind regards,
- Valentin
+diff --git a/Documentation/devicetree/of_selftest.txt b/Documentation/devicetree/of_unittest.txt
+similarity index 100%
+rename from Documentation/devicetree/of_selftest.txt
+rename to Documentation/devicetree/of_unittest.txt
+-- 
+1.8.3.4
 
-> ---
->     clk: samsung: Use CONFIG_ARCH_EXYNOS instead of Exynos-specific configuration
->
->     This patch removes the CONFIG_ARCH_EXYNOS{5433|7} and then use only the
->     CONFIG_ARCH_EXYNOS for ARM-64bit Exynos SoC.
->
->     Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->     Cc: Tomasz Figa <tomasz.figa@gmail.com>
->     Cc: Arnd Bergmann <arnd@arndb.de>
->     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/clk/samsung/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
-> index 17e9af7..561719d 100644
-> --- a/drivers/clk/samsung/Makefile
-> +++ b/drivers/clk/samsung/Makefile
-> @@ -10,11 +10,11 @@ obj-$(CONFIG_SOC_EXYNOS5250)        += clk-exynos5250.o
->  obj-$(CONFIG_SOC_EXYNOS5260)   += clk-exynos5260.o
->  obj-$(CONFIG_SOC_EXYNOS5410)   += clk-exynos5410.o
->  obj-$(CONFIG_SOC_EXYNOS5420)   += clk-exynos5420.o
-> -obj-$(CONFIG_ARCH_EXYNOS5433)  += clk-exynos5433.o
-> +obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos5433.o
->  obj-$(CONFIG_SOC_EXYNOS5440)   += clk-exynos5440.o
->  obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos-audss.o
->  obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos-clkout.o
->
->
-> Regards,
-> Chanwoo Choi
->
->
-> On 03/11/2015 12:32 AM, Valentin Rothberg wrote:
->> Hi Chanwoo,
->>
->> your commit 96bd6224f07b ("clk: samsung: exynos5433: Add clocks using
->> common clock framework") is included in today's linux-next tree (i.e.,
->> next-20150310).
->>
->> This patch conditionally compiles clk-exynos5433.c depending on the
->> Kconfig option ARCH_EXYNOS5433.  However, this option is not defined
->> in Kconfig, so that the driver cannot be compiled at the current
->> state:
->>
->> +obj-$(CONFIG_ARCH_EXYNOS5433)  += clk-exynos5433.o
->>
->> Is there a patch queued somewhere that adds this Kconfig symbol?  I
->> detected the issue by running undertaker-checkpatch from the
->> Undertaker tool suite (undertaker.cs.fau.de).  There is also a tool in
->> the git tree that can detect such issues (i.e.,
->> scripts/checkkconfigsymbols.py).
->>
->> Kind regards,
->>  Valentin
->>
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
