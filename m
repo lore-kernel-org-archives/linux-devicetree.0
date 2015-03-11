@@ -1,65 +1,65 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [RFC 15/18] omap3isp: Add support for the Device Tree
-Date: Thu, 12 Mar 2015 01:48:02 +0200
-Message-ID: <1977501.nIrQKlrSI0@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-16-git-send-email-sakari.ailus@iki.fi>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv2 1/2] power: reset: Add generic SYSCON register mapped
+ poweroff.
+Date: Thu, 12 Mar 2015 00:48:40 +0100
+Message-ID: <20150311234839.GA21023@earth>
+References: <1426113145-2921-1-git-send-email-moritz.fischer@ettus.com>
+ <1426113145-2921-2-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425764475-27691-16-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426113145-2921-2-git-send-email-moritz.fischer@ettus.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
 
-Thank you for the patch.
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Saturday 07 March 2015 23:41:12 Sakari Ailus wrote:
-> Add the ISP device to omap3 DT include file and add support to the driver to
-> use it.
-> 
-> Also obtain information on the external entities and the ISP configuration
-> related to them through the Device Tree in addition to the platform data.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> ---
->  drivers/media/platform/omap3isp/isp.c       |  206 ++++++++++++++++++++++--
->  drivers/media/platform/omap3isp/isp.h       |   11 ++
->  drivers/media/platform/omap3isp/ispcsiphy.c |    7 +
->  3 files changed, 213 insertions(+), 11 deletions(-)
+Hi Moritz,
 
-[snip]
+On Wed, Mar 11, 2015 at 03:32:24PM -0700, Moritz Fischer wrote:
+> [...]
+> +static struct platform_driver syscon_poweroff_driver = {
+> +	.probe = syscon_poweroff_probe,
+> +	.remove = syscon_poweroff_remove,
+> +	.driver = {
+> +		.name = "syscon-poweroff",
+> +		.of_match_table = of_match_ptr(syscon_poweroff_of_match),
 
-> @@ -2358,14 +2541,6 @@ static int isp_probe(struct platform_device *pdev)
->  	isp->mmio_hist_base_phys =
->  		mem->start + isp_res_maps[m].offset[OMAP3_ISP_IOMEM_HIST];
-> 
-> -	isp->syscon = syscon_regmap_lookup_by_pdevname("syscon.0");
-> -	isp->syscon_offset = isp_res_maps[m].syscon_offset;
+Sorry if it was unclear from my previous message - of_match_ptr() is
+only needed for optional OF support. Since you removed the #ifdef
+around syscon_poweroff_of_match, of_match_ptr() is not needed.
 
-You're removing syscon_offset initialization here but not adding it anywhere 
-else. This patch doesn't match the commit in your rm696-053-upstream branch, 
-could you send the right version ? I'll then review it.
+> [...]
 
-> -	isp->phy_type = isp_res_maps[m].phy_type;
-> -	if (IS_ERR(isp->syscon)) {
-> -		ret = PTR_ERR(isp->syscon);
-> -		goto error_isp;
-> -	}
-> -
->  	/* IOMMU */
->  	ret = isp_attach_iommu(isp);
->  	if (ret < 0) {
+-- Sebastian
 
--- 
-Regards,
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Laurent Pinchart
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBCgAGBQJVANRUAAoJENju1/PIO/qaGs4P/ihBCjKBr8eJpYk7WDSEL8cy
+yu7iBSUMhTUaqVX0GX0GRd/iT51wdlY2Mz/bm9wtqepvsDHPo9dW5zey+d1vOmTQ
+8mYoLMVI3pebO/fXdD06TEMFx5uAulnxz12jKYYPivHHy5NDYi0v+4hphzdQt+ED
+MbatH3IHPUUYDm6/ifc5t3iAxR7QKulw4BgIp5JUxl7SVrv+zcVXD0aFXQbhe7uk
+urfNG6A+58qE80aB9xPCvaVYzH/cQXNR7CzE1Q01X5xWFyU2KgUKHX7xdBA7Hu9U
+2jgjbGI4wNrTfAhv9Yf50BNxKB3/DNyyolTuc4Tr5w+xJorslxBrkI6E0gVBaAL6
+EbdBA66XTn4cSYNscLWAPLJoadkRHqA2939PXlkmhrkeJWDeOjH3c+jg+YmEMmzM
+p6JigZuBTHQPuMwjqvbY9x9ihXT4GRPRz7wdo/qwALF09ENPPcJOZG0zZU4R6183
+kiCyLtNHPbLnskONq8n45TctPO4Yt/ZFbH7KFM3R7m4bFlVQT9PgwtWsLcE4sxIE
+aWKow4cJNbLeAsoWcYoYwS+MG6PU+QBlszonGVTAJwusQle2Ek1eQO3EKSFClyoC
+XFb6+LR7YgXoF3D4wJFt9dxbWlYYRG2l+yVP3CxyAlm0nd2BkwkLC8Jbc3M2TTw/
+j7XgLsGrodG4Oiys8p8u
+=hZtH
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
