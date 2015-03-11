@@ -1,100 +1,63 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency control
-Date: Tue, 10 Mar 2015 17:13:28 -0700
-Message-ID: <20150311001328.14952.56422@quantum>
-References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
- <20150304112109.GB11010@pengutronix.de>
- <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
- <20150305074207.GC11010@pengutronix.de>
- <CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
- <20150305091948.GH11010@pengutronix.de>
- <CALx668X2m0hMVQumGQmhhrKnv4h1hiYp20Q4FcKuECK3mhoJiA@mail.gmail.com>
- <20150305105104.GJ11010@pengutronix.de>
- <CAKohpo=90YH3TLfnMro0AQOM6_uMB_SPS9Q3j6Myz4RqqBdVHg@mail.gmail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Wed, 11 Mar 2015 01:28:17 +0100
+Message-ID: <CABxcv=kL3Hw43VVxAsZ=DnY4Z+5431PO2YehcK2zTkFGBG0cNA@mail.gmail.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+	<1425915402-10012-3-git-send-email-eliad@wizery.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=90YH3TLfnMro0AQOM6_uMB_SPS9Q3j6Myz4RqqBdVHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Henry Chen <henryc.chen@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425915402-10012-3-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Viresh Kumar (2015-03-05 03:02:06)
-> On 5 March 2015 at 16:21, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > Given the variance of different SoCs I don't think it makes sense
-> > to try to handle all these cases. Instead the cpufreq-dt driver
-> > should just call clk_set_rate() on the CPU clock with the desired
-> > target frequency. Everything else should be handled in the clock
-> > driver which has intimate knowledge about the SoC anyway.
-> 
-> I agree..
-> 
-> @Russell: I wanted to ask you this since sometime..
-> 
-> On CPU-freq changes we fire PRE/POST notifiers and they are
-> used for updating loops_per_jiffies which then controls delays.
-> 
-> Now, it is fine to do that for normal frequencies, but what should be
-> the approach for intermediate frequencies ?
-> 
-> Intermediate freqs: On some platforms changing PLL's straight away
-> isn't considered safe and so we switch parent to another stable clock,
-> change PLL rate and switch back.
-> 
-> The *wild* thought I earlier had was to fire these notifiers for even these
-> intermediate frequencies, otherwise some of the delays will end before
-> they should have and that *might* cause other problems.
-> 
-> I wanted to know what do you (and other champs) think about this..
-> 
-> Thanks in advance for your advice.
+Hello Eliad,
 
-Sorry, I am not who you asked for advice but I will chime in anyways ;-)
+On Mon, Mar 9, 2015 at 4:36 PM, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
+> Add wl18xx (wilink8) bindings to omap3-igep0030-rev-g and
+> omap3-igep0020-rev-f dts files, instead of defining the
+> platform data through the pdata-quirks.
+>
+> The patch was compile-tested only.
+>
 
-I really hate this intermediate frequency stuff in cpufreq. As we
-discussed over lunch in Hong Kong, it does not scale. What if there two
-intermediate frequencies? What if a processor steps frequency up in 5KHz
-increments (albeit very quickly) until it converges to the target rate?
+You should look at MAINTAINERS or use ./scripts/get_maintainer.pl to
+know who should be cc'ed. Specially for this kind of patches where you
+are not able to test on the actual platform. Added Enric to cc as well
+since he also maintains the IGEP boards an has access to the hw too.
 
-Or what if we have more complex levels of intermediate frequencies?
-Stealing Sascha's excellent ascii art:
+> Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap3-igep0020-rev-f.dts | 9 +++++++++
+>  arch/arm/boot/dts/omap3-igep0030-rev-g.dts | 9 +++++++++
+>  arch/arm/mach-omap2/pdata-quirks.c         | 2 --
+>  3 files changed, 18 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap3-igep0020-rev-f.dts b/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
+> index cc8bd0c..8e5b44e 100644
+> --- a/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
+> +++ b/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
+> @@ -42,4 +42,13 @@
+>         vmmc-supply = <&lbep5clwmc_wlen>;
+>         bus-width = <4>;
+>         non-removable;
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       wlcore: wlcore@2 {
+> +               compatible = "ti,wl1835";
+> +               reg = <2>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <17 IRQ_TYPE_NONE>;
 
-            ---
-CPU_PLL ---|   |
-           |   |
-           |   |----- CPU
-           |   |
-IM_PLL ----|   |
-            ---
+As Arnd said, it seems this should be IRQ_TYPE_LEVEL_HIGH to match
+what the platform code is currently doing.
 
-Where the sequence is as follows:
-
-1) set IM_PLL to a new freq
-2) reparent CPU to IM_PLL
-3) configure CPU_PLL
-4) reparent CPU to CPU_PLL
-5) restore IM_PLL to original frequency
-
-Steps #1 and #5 are new in this example.
-
-I don't see how the concept of an intermediate frequency in the cpufreq
-core could ever scale gracefully to handle corner cases. They may be
-hypothetical now but I'd rather see us dodge this mistake.
-
-Furthermore any intermediate-frequency property in a Devicetree binding
-would suffer the same fate. Trying to neatly encode some weird sequence
-into this generic thing will get very ugly very fast.
-
-For proof please look at clk-divider.c, clk-gate.c, clk-mux.c or
-clk-composite.c and you'll see the result of the slow accumulation of
-lots and lots of hardware corner cases onto generic code. If I had known
-then what I know now I would not have created those generic clock types
-and I would have tried for an abstraction layer between generic stuff
-(e.g. find the best divider) and the real hardware stuff (write to the
-register). Instead I kept all of it together and now things are super
-ugly.
-
-Regards,
-Mike
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
