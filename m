@@ -1,43 +1,44 @@
 From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v5 1/2] power: rt5033_charger: Add RT5033 charger device
- driver
-Date: Wed, 11 Mar 2015 12:06:35 +0100
-Message-ID: <1426071995.4244.91.camel@x220>
-References: <1425864191-4121-1-git-send-email-beomho.seo@samsung.com>
-	 <1425864191-4121-2-git-send-email-beomho.seo@samsung.com>
+Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
+Date: Wed, 11 Mar 2015 12:10:23 +0100
+Message-ID: <1426072223.4244.93.camel@x220>
+References: <1426002063-25713-1-git-send-email-s.hauer@pengutronix.de>
+	 <1426002063-25713-3-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425864191-4121-2-git-send-email-beomho.seo@samsung.com>
+In-Reply-To: <1426002063-25713-3-git-send-email-s.hauer@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Dave Jones <davej@codemonkey.org.uk>, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com, sangbae90.lee@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Dave Jones <davej@codemonkey.org.uk>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Kevin Hilman <khilman@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-09 at 10:23 +0900, Beomho Seo wrote:
+On Tue, 2015-03-10 at 16:41 +0100, Sascha Hauer wrote:
 > --- /dev/null
-> +++ b/drivers/power/rt5033_charger.c
-> @@ -0,0 +1,485 @@
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -0,0 +1,345 @@
 > +/*
-> + * Battery charger driver for RT5033
-> + *
-> + * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
-> + * Author: Beomho Seo <beomho.seo@samsung.com>
+> + * Copyright (c) 2015 Pengutronix, Sascha Hauer <kernel@pengutronix.de>
 > + *
 > + * This program is free software; you can redistribute it and/or modify
 > + * it under the terms of the GNU General Public License version 2 as
-> + * published bythe Free Software Foundation.
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 > + */
-
-(bythe?)
 
 This states the license is GPL v2.
 
 > +MODULE_LICENSE("GPL");
 
-So you probably meant
+So you probably want
     MODULE_LICENSE("GPL v2");
+
+here.
 
 
 Paul Bolle
