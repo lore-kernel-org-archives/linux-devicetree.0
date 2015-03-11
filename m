@@ -1,70 +1,68 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Wed, 11 Mar 2015 10:50 +0100
-Message-ID: <1518869.l1vLcA6CaR@phil>
-References: <2265807.RXHBN9kUi4@phil> <1426066109.3101.46.camel@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] wl18xx: add basic device-tree support
+Date: Wed, 11 Mar 2015 10:51:21 +0100
+Message-ID: <2121942.zIG9BfPsTV@wuerfel>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com> <1425915402-10012-2-git-send-email-eliad@wizery.com> <CABxcv=mygdT2Q+ByVKPx4+o_Oj9KSy=zVX9ng9yN25ivkfSn1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1426066109.3101.46.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=mygdT2Q+ByVKPx4+o_Oj9KSy=zVX9ng9yN25ivkfSn1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCkFtIE1pdHR3b2NoLCAxMS4gTcOkcnogMjAxNSwgMTA6Mjg6Mjkgc2Nocmll
-YiBQaGlsaXBwIFphYmVsOgo+IEFtIERpZW5zdGFnLCBkZW4gMTAuMDMuMjAxNSwgMjI6NDUgKzAx
-MDAgc2NocmllYiBIZWlrbyBTdHVlYm5lcjoKPiA+IEF0IGxlYXN0IHRoZSBSb2NrY2hpcCB2YXJp
-YW50IG9mIHRoZSBkd19oZG1pIGNhbiBoYXZlIGNvbnRyb2xsYWJsZSBwb3dlcgo+ID4gc3VwcGxp
-ZXMgcHJvdmlkaW5nIDEuMCBhbmQgMS44Vi4gVGhlcmVmb3JlIGFkZCB0aGUgcG9zc2liaWxpdHkg
-Zm9yIHRoZQo+ID4gZ2VuZXJpYyBicmlkZ2UgZHJpdmVyIHRvIGVuYWJsZSBzdXBwbGllcyBwcm92
-aWRlZCBieSB0aGUgaHctc3BlY2lmaWMKPiA+IGRyaXZlcnMuCj4gPiAKPiA+IFNpZ25lZC1vZmYt
-Ynk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gPiAtLS0KPiA+IGNoYW5nZXMg
-c2luY2UgdjE6Cj4gPiAtIGZvbGxvdyBzdWdnZXN0aW9uIGZyb20gUnVzc2VsbCBLaW5nIHRvIGtl
-ZXAgcmVndWxhdG9yIGhhbmRsaW5nIGxvY2FsCj4gPiAKPiA+ICAgdG8gdGhlIHJvY2tjaGlwIGlt
-cGxlbWVudGF0aW9uIGZvciB0aGUgdGltZSBiZWluZyBhbmQgb25seSBnZW5lcmFsaXplCj4gPiAg
-IHdoZW4gYSByZWFsIHNlY29uZCBpbXBsZW1lbnRhdGlvbiBuZWVkcyByZWd1bGF0b3IgaGFuZGxp
-bmcKPiA+ICAKPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWku
-dHh0ICAgICB8ICA1ICsrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1y
-b2NrY2hpcC5jICAgICAgICB8IDMyCj4gPiAgKysrKysrKysrKysrKysrKysrKysrLSAyIGZpbGVz
-IGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hk
-bWkudHh0Cj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdl
-L2R3X2hkbWkudHh0IGluZGV4Cj4gPiBhOTA1YzE0Li5iYjc0NjQwIDEwMDY0NAo+ID4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQK
-PiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3
-X2hkbWkudHh0Cj4gPiBAQCAtMjIsNiArMjIsMTEgQEAgT3B0aW9uYWwgcHJvcGVydGllcwo+ID4g
-Cj4gPiAgLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZv
-ciBEREMgRURJRCBwcm9iaW5nCj4gPiAgLSBjbG9ja3MsIGNsb2NrLW5hbWVzOiBwaGFuZGxlIHRv
-IHRoZSBIRE1JIENFQyBjbG9jaywgbmFtZSBzaG91bGQgYmUKPiA+ICAiY2VjIgo+ID4gCj4gPiAr
-T3B0aW9uYWwgc3VwcGxpZXM6Cj4gPiArcm9ja2NoaXAscmszMjg4LWR3LWhkbWkgaGFuZGxlcyB0
-d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXM6Cj4gPiArLSBhdmRkMXYwLXN1cHBseTogMS4wViBw
-b3dlciBzdXBwbHkKPiA+ICstIGF2ZGQxdjgtc3VwcGx5OiAxLjhWIHBvd2VyIHN1cHBseQo+IAo+
-IEFyZSB0aGVzZSB0aGUgbmFtZXMgdXNlZCBpbiB0aGUgUm9ja2NoaXAgZG9jdW1lbnRhdGlvbj8K
-PiAKPiBTaW5jZSB0aGUgb2xkZXIgaW1wbGVtZW50YXRpb24gb24gaS5NWDYgdXNlcyAxLjFWIChI
-RE1JX1ZQKSBhbmQgMi41Vgo+IChIRE1JX1ZQSCksIEkgd29uZGVyIHdoZXRoZXIgZWFjaCBTb0Mg
-c2hvdWxkIHVzZSB0aGVpciBvd24gbmFtZSBvcgo+IHdoZXRoZXIgdGhlcmUgc2hvdWxkIGJlIGNv
-bW1vbiBuYW1lcyB0aGF0IGRvbid0IGluY2x1ZGUgdGhlIHZvbHRhZ2UuCj4gSSBkb24ndCBoYXZl
-IHRoZSBTeW5vcHN5cyBIRE1JIFRYIGRvY3MsIGJ1dCBJJ3ZlIHNlZW4gYXZkZGh2IGFuZCBhdmRk
-bHYKPiB1c2VkIG9mIG90aGVyIGNvcmVzJyBhbmFsb2cgc3VwcGxpZXMuCgpUaGUgcGlucyBvZiB0
-aGUgc29jIGNvbm5lY3RlZCB0byB0aGUgcmVndWxhdG9ycyBhcmUgbmFtZWQ6CglIRE1JX0FWRERf
-MVYwCglIRE1JX0FWRERfMVY4ClRoZSBkYXRhc2hlZXQgb25seSBjYWxscyBib3RoICJEQyBzdXBw
-bHkgdm9sdGFnZSBmb3IgQW5hbG9nIHBhcnQgb2YgSERNSSIgYW5kIApuZXZlciBtZW50aW9ucyB0
-aGVtIGFnYWluLgoKVGhlIGRhdGFib29rIG9mIHRoZSBJUCBibG9jayBpdHNlbGYgc2VlbXMgdG8g
-cmVhbGx5IGNhbGwgdGhpcyBWUEggYW5kIFZQIGFzIApwaHkgc3VwcGxpZXMsIGJ1dCBkb2N1bWVu
-dGF0aW9uIGlzIGEgYml0IHNwYXJzZSBhYm91dCB0aGVtLgoKSSBndWVzcyBhcyB3ZSBhbHJlYWR5
-IHVzZSB0aGUgZGF0YWJvb2sgY2xvY2stbmFtZXMgSSBzaG91bGQgYWxzbyBzd2l0Y2ggdG8gdGhl
-IApkYXRhYm9vayBzdXBwbHkgbmFtZXMgKGF2ZGQxdjAgLT4gdnAgYW5kIGF2ZGQxdjggLT4gdnBo
-KS4KCgpIZWlrbwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wednesday 11 March 2015 01:34:19 Javier Martinez Canillas wrote:
+> > +
+> > +static struct wl12xx_platform_data *
+> > +wlcore_get_platform_data(struct device *dev)
+> > +{
+> > +       struct wl12xx_platform_data *pdata;
+> > +
+> > +       /* first, look for DT data */
+> 
+> I thought it was the opposite, that platform data should over-rule DT.
+> That way you can still use the data filled in
+> arch/arm/mach-omap2/pdata-quirks.c even after the driver supports your
+> new DT binding.
+
+No, the pdata-quirks stuff for this driver must die, it was a hack
+that only exists because we previously could not attach data to an
+sdio function.
+
+> > +       pdata = wlcore_probe_of(dev);
+> > +       if (pdata)
+> > +               return pdata;
+> > +
+> > +       /* if not found - fallback to static platform data */
+> > +       pdata = wl12xx_get_platform_data();
+> > +       if (!IS_ERR(pdata))
+> > +               return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
+> > +
+> > +       dev_err(dev, "No platform data set\n");
+> > +       return NULL;
+> > +}
+> > +
+> > +static void wlcore_del_platform_data(struct wl12xx_platform_data *pdata)
+> > +{
+> > +       kfree(pdata);
+> > +}
+> > +
+> 
+> This function seems to be an unnecessary, why not just call kfree() directly?
+> 
+> Or better, maybe the resource-managed devm_*() functions can be used
+> so the data doesn't have to be explicitly freed?
+
+As I said earlier, I think it would be best not to dynamically allocate anything
+here at all. As Eliad explained, the data is used by two different drivers:
+wl12xx and wl18xx, and only the latter is converted for now, but after the
+conversion, it should not need the platform data structure any more, only
+the irq number that gets passed in from DT.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
