@@ -1,94 +1,97 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: am33xx: Move wkup_m3 node to soc node
- and add ranges
-Date: Wed, 11 Mar 2015 14:18:45 -0500
-Message-ID: <55009515.2010404@ti.com>
-References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com> <1425528742-3087-3-git-send-email-d-gerlach@ti.com> <20150305154039.GD13520@atomide.com> <54F88849.1090708@ti.com> <20150305165727.GE13520@atomide.com> <54FE33CA.4090709@ti.com> <20150310160919.GQ5264@atomide.com> <54FF4C32.5070106@ti.com> <20150311162635.GZ5264@atomide.com> <550078D5.7080700@ti.com> <20150311173212.GC5264@atomide.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery
+ bindings
+Date: Wed, 11 Mar 2015 20:36:54 +0100
+Message-ID: <20150311193654.GA3126@earth>
+References: <1426022847-30912-1-git-send-email-marek@goldelico.com>
+ <1426022847-30912-4-git-send-email-marek@goldelico.com>
+ <20150311152414.GX5264@atomide.com>
+ <844740CD-C95B-4411-A2C8-4906F58DBEE8@goldelico.com>
+ <20150311164442.GA5264@atomide.com>
+ <F7BA143D-5CF9-42E3-AFA8-B83B149EF77E@goldelico.com>
+ <20150311174316.GD5264@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150311173212.GC5264@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150311174316.GD5264@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Tony Lindgren <tony@atomide.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Kevin Hilman <khilman@linaro.org>, Felipe Balbi <balbi@ti.com>
+Cc: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Benoit Cousson <bcousson@baylibre.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2015 12:32 PM, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [150311 10:18]:
->> On 03/11/2015 11:26 AM, Tony Lindgren wrote:
->>> * Dave Gerlach <d-gerlach@ti.com> [150310 12:55]:
->>>> Suman and I have been looking at this together, so I can comment here. An
->>>> implementation like this is what Suman is referring to:
->>>>
->>>> +               l4_wkup: l4_wkup@44c00000 {
->>>> +                       compatible = "am335-l4-wkup", "simple-bus";
->>>> +                       #address-cells = <2>;
->>>> +                       #size-cells = <1>;
->>>> +                       ranges = <0 0           0x44c00000 0x100000>,
->>>> +                                <1 0x0         0x44d00000 0x4000>,
->>>> +                                <2 0x80000     0x44d80000 0x2000>;
->>
->> Actually, this would be slightly different, something like
->>  +                       ranges = <0 0    0x44c00000 0x100000>,
->>  +                                <1 0    0x44d00000 0x100000>,
->>  +                                <2 0    0x44e00000 0x4000>,
->>  +				  <3 0    0x44e10000 0x2000>;
->>
->> and the M3 DMEM entry below will be adjusted as <1 0x80000 0x2000>.
->>
->>>> +
->>>> +                       wkup_m3: wkup_m3@1,0 {
->>>> +                               compatible = "ti,am3353-wkup-m3";
->>>> +                               reg = <1 0x0     0x4000>,       /* M3 UMEM */
->>>> +                                     <2 0x80000 0x2000>;       /* M3 DMEM */
->>>> +
->>>> +                               ti,hwmods = "wkup_m3";
->>>> +                               ti,pm-firmware = "am335x-pm-firmware.elf";
->>>> +                       };
->>>> +               };
->>>> +
->>>>
->>>> The of_* layer automatically translates everything so the pdata-quirks can still
->>>> match based on wkup_m3@44d00000. The existing wkup_m3_rproc driver works almost
->>>> entirely as is with this, all cpu addresses are read and mapped correctly but
->>>> the driver no longer will read the actual device addresses correctly which we
->>>> need for understanding where to load the firmware sections.
->>>
->>> OK. I still don't quite understand how these additional ranges make sense
->>> for other drivers connected to the l4_wkup. For wkup_m3, it makes sense if
->>> it allows you to translate directly to the m3 address space, but is that
->>> really the case here? Maybe you should have the ranges in wkup_m3 instead
->>> if you want addresses for the m3?
->>
->> The idea is to introduce an additional address element (first cell in
->> ranges) so that the immediate child nodes bus address is referenced as 0
->> (second cell) for translation for their child nodes. This is the
->> approach used by the current scm node in Tero's series for OMAP4+. This
->> will work tomorrow if we move the prcm, scrm node under l4_wkup with
->> changes only in those nodes, and have their child nodes reg properties
->> unchanged. I guess you can see the difference between the following two
->> patches from Tero's PRCM series,
->> https://patchwork.kernel.org/patch/5882831/ &
->> https://patchwork.kernel.org/patch/5882841/
-> 
-> Well I just commented on Tero on that regarding the dra7 patch. I think
-> we need to have separate scm instances for scm_device, scm_core and
-> scm_wkup instead of doing multiple ranges. This based on looking at for
-> example 5432 TRM "Figure 18-1. Control Module Overview".
-> 
-> But here I think it's a different issue. You want to use ranges for getting
-> the m3 address space for the firmware? I'm not convinced we should
-> complicate the ranges for all l4_wkup drivers because of that.
 
-Yes, to some extent that's true, as we want to compute the m3 address
-space using the regs property. In anycase, the wkupm3 driver has to be
-updated for both approaches, the existing patch wouldn't work as is with
-the above convention of using 2 address cells. Since the l4_wkup node
-would be added for the first time, we are trying to see what would be
-the good approach w.r.t subsequent changes in the DTS if and when we
-have to move other nodes to be under l4_wkup.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-regards
-Suman
+Hi,
 
+On Wed, Mar 11, 2015 at 10:43:17AM -0700, Tony Lindgren wrote:
+> No no, "capacity-uah" is what we should use, but you need an ack from
+> the battery and device tree people that this is OK. Let's not add
+> "ti,capacity-uah=E2=80=9D as that can obviously be a generic property.
+
+I'm okay with capacity-uah.
+
+> > [...]
+>=20
+> Oh if they are battery spicific, then ideally we'd have generic batery
+> voltage to capacity maps property rather than a custom ti specific
+> property.
+>=20
+> To avoid extra hassles later on, maybe you could submit a generic
+> binding patch only documenting it to the battery people and the device
+> tree people? That will make it easier to maintain this driver in the
+> long run.
+
+Actually the proper way would be to differentiate between the
+battery and the measurement chip / adc and that should be
+implemented in the long run. The kernel's power supply framework
+is not yet ready for it, though.
+
+Example DT:
+
+battery {
+    battery-specific-data;
+};
+
+fuel-gauge {
+    measures =3D <&battery>;
+};
+
+charger {
+    charges =3D <&battery>;
+};
+
+Since infrastructure for generic bindings is missing, I think its
+best to have the vendor properties for now and map this to generic
+properties, once they have been specified.
+
+-- Sebastian
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVAJlPAAoJENju1/PIO/qaQxoP/123HIcSZD6reqXfhuvTOkwX
+tuWxVsAIGvgRwvn6m4ixNiQ9sFMtFJrsNiTfq+u9guZbJ9bhtJ2bjkRW4GCUsH/U
+/asxHBiOcdM/shJ7At6NvWxgghFVVTBwYvl+BLyVKz1Jmgr5o25AUng6cEe4kTq5
+93CNIFTcF0wDqMuqPxKkgWMuPbxmZfLlxGn8DGTzi2HLAVse6JfQ52pV+8PlfGnK
+JjFqOuZQzCn1pMG4+GjvTkhcgmnybHlUhegSYdrt5nb0sDkCi2/w644hmgMMXmMC
+gIfR1gzm/Zbj1txkvu3b1w3uQBNSBYcBhBdA6U8ojCNC9DpGrmCIp5y91UGlPfsy
+O5lgwPMyDBpiDKiI626Ow9wM0CfN5mKY5s8Hz7noZS6KzJjbQGVQwX/h5tZ9T825
+N+Uf0EE86A/NArJWAn4G0l/Ulh3v6tGE7Dy2rPyA3g/aZQ+fTiGC1mj8FT7xE5+H
+QB/9EgBW2+oftrMHzgQrX3UOHtvK2/e98nC+//PycUEiIc76ar3yCX8xmrSlcbny
+ECyZy4wrD4qEunO+RRxNWCCCnUNkx9pRr08/sP9yUh0cig8+yd7R11q/17rkKqbF
+hEnMpyGfhR5QdcjVGbG2WAihEr3gJ7k755uFESMPZ+LloZCT+X1jTPNzsipZGlRn
+y+9xE4dzt6PHQzgaeMt/
+=7vJk
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
