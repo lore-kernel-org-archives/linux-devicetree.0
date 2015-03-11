@@ -1,48 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 6/8] pinctrl: cygnus: add gpio/pinconf driver
-Date: Wed, 11 Mar 2015 10:15:20 +0100
-Message-ID: <CACRpkdZbxTyYWpxWCmdN8a7p+MjcUo6UxEwfgStPWsNzf4NZ=g@mail.gmail.com>
-References: <1425933902-20652-1-git-send-email-rjui@broadcom.com>
-	<1425933902-20652-7-git-send-email-rjui@broadcom.com>
-	<CACRpkdZ1ErfikdF41aANTM-7LE6AExizHtCZTq1_TTxwYjeSQA@mail.gmail.com>
-	<54FF306C.7020407@broadcom.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Wed, 11 Mar 2015 10:28:29 +0100
+Message-ID: <1426066109.3101.46.camel@pengutronix.de>
+References: <2265807.RXHBN9kUi4@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54FF306C.7020407@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback->
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2265807.RXHBN9kUi4@phil>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 6:57 PM, Ray Jui <rjui@broadcom.com> wrote:
-> On 3/10/2015 3:20 AM, Linus Walleij wrote:
->> On Mon, Mar 9, 2015 at 9:45 PM, Ray Jui <rjui@broadcom.com> wrote:
->>
->>> This adds the initial support of the Broadcom Cygnus GPIO/PINCONF driver
->>> that supports all 3 GPIO controllers on Cygnus including the ASIU GPIO
->>> controller, the chipCommonG GPIO controller, and the always-on GPIO
->>> controller. Basic PINCONF configurations such as bias pull up/down, and
->>> drive strength are also supported in this driver.
->>>
->>> Pins from the ASIU GPIO controller can be individually muxed to GPIO
->>> function, through interaction with the Cygnus IOMUX controller
->>>
->>> Signed-off-by: Ray Jui <rjui@broadcom.com>
->>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
->>> Tested-by: Dmitry Torokhov <dtor@chromium.org>
->>
->> Patch applied! But please look at this:
->>
->>> +#include <linux/gpio.h>
->>
->> Doesn't just #include <linux/gpio/driver.h> work?
->>
->
-> I think I need linux/gpio.h for gpiochip_add_pin_range and some related
-> APIs.
-
-OK you're right ... I need to fix this.
-
-Yours,
-Linus Walleij
+SGkgSGVpa28sCgpBbSBEaWVuc3RhZywgZGVuIDEwLjAzLjIwMTUsIDIyOjQ1ICswMTAwIHNjaHJp
+ZWIgSGVpa28gU3R1ZWJuZXI6Cj4gQXQgbGVhc3QgdGhlIFJvY2tjaGlwIHZhcmlhbnQgb2YgdGhl
+IGR3X2hkbWkgY2FuIGhhdmUgY29udHJvbGxhYmxlIHBvd2VyIHN1cHBsaWVzCj4gcHJvdmlkaW5n
+IDEuMCBhbmQgMS44Vi4gVGhlcmVmb3JlIGFkZCB0aGUgcG9zc2liaWxpdHkgZm9yIHRoZSBnZW5l
+cmljIGJyaWRnZQo+IGRyaXZlciB0byBlbmFibGUgc3VwcGxpZXMgcHJvdmlkZWQgYnkgdGhlIGh3
+LXNwZWNpZmljIGRyaXZlcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhl
+aWtvQHNudGVjaC5kZT4KPiAtLS0KPiBjaGFuZ2VzIHNpbmNlIHYxOgo+IC0gZm9sbG93IHN1Z2dl
+c3Rpb24gZnJvbSBSdXNzZWxsIEtpbmcgdG8ga2VlcCByZWd1bGF0b3IgaGFuZGxpbmcgbG9jYWwK
+PiAgIHRvIHRoZSByb2NrY2hpcCBpbXBsZW1lbnRhdGlvbiBmb3IgdGhlIHRpbWUgYmVpbmcgYW5k
+IG9ubHkgZ2VuZXJhbGl6ZQo+ICAgd2hlbiBhIHJlYWwgc2Vjb25kIGltcGxlbWVudGF0aW9uIG5l
+ZWRzIHJlZ3VsYXRvciBoYW5kbGluZwo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0v
+YnJpZGdlL2R3X2hkbWkudHh0ICAgICB8ICA1ICsrKysKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL2R3X2hkbWktcm9ja2NoaXAuYyAgICAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrKyst
+Cj4gIDIgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRn
+ZS9kd19oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJp
+ZGdlL2R3X2hkbWkudHh0Cj4gaW5kZXggYTkwNWMxNC4uYmI3NDY0MCAxMDA2NDQKPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hk
+bWkudHh0Cj4gQEAgLTIyLDYgKzIyLDExIEBAIE9wdGlvbmFsIHByb3BlcnRpZXMKPiAgLSBkZGMt
+aTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBw
+cm9iaW5nCj4gIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUgSERNSSBDRUMg
+Y2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiCj4gIAo+ICtPcHRpb25hbCBzdXBwbGllczoKPiAr
+cm9ja2NoaXAscmszMjg4LWR3LWhkbWkgaGFuZGxlcyB0d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxp
+ZXM6Cj4gKy0gYXZkZDF2MC1zdXBwbHk6IDEuMFYgcG93ZXIgc3VwcGx5Cj4gKy0gYXZkZDF2OC1z
+dXBwbHk6IDEuOFYgcG93ZXIgc3VwcGx5CgpBcmUgdGhlc2UgdGhlIG5hbWVzIHVzZWQgaW4gdGhl
+IFJvY2tjaGlwIGRvY3VtZW50YXRpb24/CgpTaW5jZSB0aGUgb2xkZXIgaW1wbGVtZW50YXRpb24g
+b24gaS5NWDYgdXNlcyAxLjFWIChIRE1JX1ZQKSBhbmQgMi41VgooSERNSV9WUEgpLCBJIHdvbmRl
+ciB3aGV0aGVyIGVhY2ggU29DIHNob3VsZCB1c2UgdGhlaXIgb3duIG5hbWUgb3IKd2hldGhlciB0
+aGVyZSBzaG91bGQgYmUgY29tbW9uIG5hbWVzIHRoYXQgZG9uJ3QgaW5jbHVkZSB0aGUgdm9sdGFn
+ZS4KSSBkb24ndCBoYXZlIHRoZSBTeW5vcHN5cyBIRE1JIFRYIGRvY3MsIGJ1dCBJJ3ZlIHNlZW4g
+YXZkZGh2IGFuZCBhdmRkbHYKdXNlZCBvZiBvdGhlciBjb3JlcycgYW5hbG9nIHN1cHBsaWVzLgoK
+cmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
