@@ -1,39 +1,34 @@
-From: punnaiah choudary kalluri <punnaia@xilinx.com>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Subject: Re: [PATCH] dma: Add Xilinx ZDMA device tree Binding Documentation
-Date: Wed, 11 Mar 2015 08:18:30 +0530
-Message-ID: <CAGnW=BZeZk7HdB1mroAwCF=d8UXrpt_EzSMc6=m6AsfB5mJvPw@mail.gmail.com>
+Date: Wed, 11 Mar 2015 08:21:01 +0530
+Message-ID: <CAGnW=BZpDjoX0tHncmzsMapppi9LKXe9SjCe7M4G3-js0Jm2JQ@mail.gmail.com>
 References: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
-	<20150310235751.GC27583@jcartwri.amer.corp.natinst.com>
+	<BN1BFFO11FD01214F9392FD94A0D30D9E28C190@BN1BFFO11FD012.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150310235751.GC27583@jcartwri.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, punnaiah choudary kalluri <kalluripunnaiahchoudary@gmail.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <BN1BFFO11FD01214F9392FD94A0D30D9E28C190-fm2tX0oQAVzat3LGO86d6+hlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, punnaiah choudary kalluri <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 5:27 AM, Josh Cartwright <joshc@ni.com> wrote:
-> On Tue, Mar 10, 2015 at 07:46:23PM +0530, Punnaiah Choudary Kalluri wrote:
+On Wed, Mar 11, 2015 at 5:31 AM, S=C3=B6ren Brinkmann
+<soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Tue, 2015-03-10 at 07:46PM +0530, Punnaiah Choudary Kalluri wrote:
 >> Device-tree binding documentation for Xilinx ZDMA Engine
 >>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 >> ---
->
-> Hey Punnaiah-
->
-> Was this intended to be sent out with a driver?
-
-First I would like to complete my review for device tree bindings and
-then planning to send the driver for review. please let me know if this is not
-the right way to do?
-
->
->>  .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 ++++++++++++++++++++
+>>  .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 +++++++++=
++++++++++++
 >>  1 files changed, 76 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+>>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdm=
+a.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
+>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b=
+/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
 >> new file mode 100644
 >> index 0000000..399a3bc
 >> --- /dev/null
@@ -47,50 +42,32 @@ the right way to do?
 >> +one is located in FPD(full power domain) and other is located in
 >> +LPD(low power domain).
 >> +
->> +ZDMA instance located in FPD is referred as FPDMA and instance located
+>> +ZDMA instance located in FPD is referred as FPDMA and instance loca=
+ted
 >> +in LPD is referred as LPDMA.
 >> +
->> +FPDMA is configured with 8 DMA channels and AXI bus width is 128 byte.
->> +LPDMA is configured with 8 DMA channels and AXI bus width is 64 byte.
->> +
->> +Each channel in a instance has its own address space and interrupt line
->                    ^an
+>> +FPDMA is configured with 8 DMA channels and AXI bus width is 128 by=
+te.
+>> +LPDMA is configured with 8 DMA channels and AXI bus width is 64 byt=
+e.
 >
->> +but shares common reference and APB clock. So, each channel will be treated
->> +as a standalone dma device.
->
-> Does your example below then describe only a single channel?  Or, should
-> I expect to see sub-nodes representing each of the dma channels?
+> All these implementation details are good background information, but
+> shouldn't be part of the binding.
 
-As said above each channel has its own register space and separate interrupt,
-i am treating each dma channel as standalone dma controller i.e dma
-controller with
-single channel. So, the below node describes for single channel and
-other channel
-nodes can follow the below example.
+Ok. i will remove then.
 
->
->> +Since its a general purpose dma controller, it has a rich set of configurable
->> +options with respect to data and descriptor attributes.
->> +
->> +Required properties:
->> +- compatible: Should be "xlnx,fpdma-1.0" or "xlnx,lpdma-1.0"
->> +- reg: Memory map for dma module access.
->> +- interrupt-parent: Interrupt controller the interrupt is routed through
->> +- interrupts: Should contain DMA channel interrupt.
->> +- xlnx,id: Channel Id
->
-> I would have expected, as a dma controller, to see a #dma-cells here,
-> and a tie-in to the existing Documentation/devicetree/bindings/dma/dma.txt documentation.
-
-Ok i will take care of this in next version. thanks.
-
-Regards,
+Thanks.
 Punnaiah
 >
->   Josh
+>         S=C3=B6ren
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
