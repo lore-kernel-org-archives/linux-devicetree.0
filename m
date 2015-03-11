@@ -1,154 +1,35 @@
-From: Yijing Wang <wangyijing@huawei.com>
-Subject: Re: [PATCH v5 3/4] pci: iproc: Add Broadcom iProc PCIe support
-Date: Wed, 11 Mar 2015 09:11:49 +0800
-Message-ID: <54FF9655.7080604@huawei.com>
-References: <1425947886-23705-1-git-send-email-rjui@broadcom.com> <1425947886-23705-4-git-send-email-rjui@broadcom.com> <20150310214010.GB32204@google.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 0/5] i.MX6 PU power domain support
+Date: Wed, 11 Mar 2015 09:12:38 +0800
+Message-ID: <20150311011236.GV20455@dragon>
+References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150310214010.GB32204@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424713215-3357-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-...
->> +	bus = pci_create_root_bus(pcie->dev, 0, &iproc_pcie_ops,
->> +				  &pcie->sysdata, pcie->resources);
->> +	if (!bus) {
->> +		dev_err(pcie->dev, "unable to create PCI root bus\n");
->> +		ret = -ENOMEM;
->> +		goto err_power_off_phy;
->> +	}
->> +	pcie->root_bus = bus;
->> +
->> +	ret = iproc_pcie_check_link(pcie, bus);
->> +	if (ret) {
->> +		dev_err(pcie->dev, "no PCIe EP device detected\n");
->> +		goto err_rm_root_bus;
->> +	}
->> +
->> +	iproc_pcie_enable(pcie);
->> +
->> +	pci_scan_child_bus(bus);
->> +	pci_assign_unassigned_bus_resources(bus);
->> +	pci_bus_add_devices(bus);
->> +
->> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> 
-> I think the IRQ fixup should be before pci_bus_add_devices().  CC'd Yijing,
-> who's been fixing similar issues.
-> 
-> pci_bus_add_devices() is the point where drivers can claim these devices,
-> and we don't want to change things after a driver claims the device.
+On Mon, Feb 23, 2015 at 06:40:10PM +0100, Philipp Zabel wrote:
+> Philipp Zabel (6):
+>   Documentation: Add device tree bindings for Freescale i.MX GPC
+>   ARM: imx6: gpc: Add PU power domain for GPU/VPU
+>   ARM: dts: imx6qdl: Add power-domain information to gpc node
+>   ARM: dts: imx6sl: Add power-domain information to gpc node
+>   ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp
+>     delay
 
-Yes, we should call pci_bus_add_devices() at last, after all resources(mem/io/irq) are
-configured properly. Otherwise, this code could not be run normally in non system boot up path.
+Applied above 5.
 
-Thanks!
-Yijing.
+>   ARM: imx6: gpc: Allow PU regulator bypass
 
+I only received 5 patches in the series.
 
-> 
->> +
->> +	return 0;
->> +
->> +err_rm_root_bus:
->> +	pci_stop_root_bus(bus);
->> +	pci_remove_root_bus(bus);
->> +
->> +err_power_off_phy:
->> +	if (pcie->phy)
->> +		phy_power_off(pcie->phy);
->> +err_exit_phy:
->> +	if (pcie->phy)
->> +		phy_exit(pcie->phy);
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(iproc_pcie_setup);
->> +
->> +int iproc_pcie_remove(struct iproc_pcie *pcie)
->> +{
->> +	pci_stop_root_bus(pcie->root_bus);
->> +	pci_remove_root_bus(pcie->root_bus);
->> +
->> +	if (pcie->phy) {
->> +		phy_power_off(pcie->phy);
->> +		phy_exit(pcie->phy);
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(iproc_pcie_remove);
-> 
-> These exports wouldn't be needed if this were all squashed into one file.
-> 
->> +
->> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
->> +MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
->> new file mode 100644
->> index 0000000..569bc04
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-iproc.h
->> @@ -0,0 +1,42 @@
->> +/*
->> + * Copyright (C) 2014-2015 Broadcom Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#ifndef _PCIE_IPROC_H
->> +#define _PCIE_IPROC_H
->> +
->> +#define IPROC_PCIE_MAX_NUM_IRQS 6
->> +
->> +/**
->> + * iProc PCIe device
->> + * @dev: pointer to device data structure
->> + * @base: PCIe host controller I/O register base
->> + * @resources: linked list of all PCI resources
->> + * @sysdata: Per PCI controller data
->> + * @root_bus: pointer to root bus
->> + * @phy: optional PHY device that controls the Serdes
->> + * @irqs: interrupt IDs
->> + */
->> +struct iproc_pcie {
->> +	struct device *dev;
->> +	void __iomem *base;
->> +	struct list_head *resources;
->> +	struct pci_sys_data sysdata;
->> +	struct pci_bus *root_bus;
->> +	struct phy *phy;
->> +	int irqs[IPROC_PCIE_MAX_NUM_IRQS];
->> +};
->> +
->> +extern int iproc_pcie_setup(struct iproc_pcie *pcie);
->> +extern int iproc_pcie_remove(struct iproc_pcie *pcie);
-> 
-> Hopefully you can squash this all into one file, but if you can't, my
-> preference is to omit "extern" on function declarations.
-> 
->> +
->> +#endif /* _PCIE_IPROC_H */
->> -- 
->> 1.7.9.5
->>
-> 
-> .
-> 
-
-
--- 
-Thanks!
-Yijing
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
