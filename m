@@ -1,61 +1,97 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Wed, 11 Mar 2015 08:11:38 -0700
-Message-ID: <20150311151138.GU5264@atomide.com>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
- <6286151.8rcX893TN6@wuerfel>
- <CABxcv=mPVxW=BqL2PUL=AtS74kcqMG1yxC1WqMpxGiNOqGAnyQ@mail.gmail.com>
- <2353601.si5uCETVn2@wuerfel>
- <CABxcv==yx3dy-beEF9cf1mKo1vjCh_LU6iLuvn1z-SKz9xG0qA@mail.gmail.com>
- <CAB3XZEfi49qMsB7A3p4Y7r9emzSbeyUGVy4-njzey1UnJU0qzA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAB3XZEfi49qMsB7A3p4Y7r9emzSbeyUGVy4-njzey1UnJU0qzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt/bindings: control CS via standard GPIO operations instead of SPI-HW
+Date: Wed, 11 Mar 2015 16:21:45 +0100
+Message-ID: <A8477522-2A97-4D1B-89EC-A70B5A28489F@martin.sperl.org>
+References: <1425487205-5477-1-git-send-email-kernel@martin.sperl.org> <1425487205-5477-2-git-send-email-kernel@martin.sperl.org> <54FA9109.6080102@wwwdotorg.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54FA9109.6080102-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150311 06:39]:
-> On Wed, Mar 11, 2015 at 3:21 PM, Javier Martinez Canillas
-> <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
-> > On Wed, Mar 11, 2015 at 2:17 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> >> On Wednesday 11 March 2015 14:07:11 Javier Martinez Canillas wrote:
-> >>>
-> >>> Right now it seems that all boards in mainline with a WiLink6 part are
-> >>> using internal clocks. So as a first step I think that adding an
-> >>> optional refclock-frequency and tcxoclock-frequency properties should
-> >>> be enough.
-> >>>
-> >>> It would be good if the driver supports getting the refclock and
-> >>> tcxoclock from an external provider in case a board gets these from
-> >>> external clocks but that can be done as a followup if there are boards
-> >>> in the future using that design.
-> >>>
-> >>> But please bear in mind that I'm not familiar with the clock handling
-> >>> in WiLink6 since the WiLink8 part used in the IGEP boards does not
-> >>> need these clocks and I only looked at Luciano's previous patches and
-> >>> the WiLink today driver today. So it would be good if Eliad can double
-> >>> check my assumptions to see if those are correct.
-> >>
-> sounds right. that's what i know as well.
+> On 07.03.2015, at 06:47, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 > 
-> >> Sounds good. I'd also be fine with not implementing the case for
-> >> external clocks in the code until we need (and can test) it, but
-> >> I think it should be specified in the binding from the start.
-> >>
-> > Agreed.
-> >
-> great. so i'll implement the internal clocks case only.
+> These pins aren't used by anything on the board, but are rather part of
+> the expansion header. I wonder if we wouldn't be better off removing any
+> configuration of the pins from the DT. After all, we can't guarantee how
+> the user has connected them. The "default" usage, a/k/a the expansion
+> header signal naming, isn't any guarantee.
+> 
+> Rather, the user should specify what they want to use the pin as; as a
+> GPIO input, GPIO output, or an SPI chip-select.
+...
+> While the existing DT already has this issue, note that this forces
+> these pins to be driven as outputs. What if the user has hooked up an
+> external device that drives these signals, and wants to use the pins as
+> GPIO inputs?
 
-OK great sounds good to me also.
 
-Regards,
+Actually if you look at the Documentation on page 102 you will find that
+those pins are pulled high by default (if it is HW or firmware I am not
+sure) - so a hat designer needs to take this into consideration anyway.
+The only difference is that it is pulled high and not driven high/low.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Also with the "new" models there is the Firmware that will read those 
+"hat-descriptors" from the eeprom and configure the GPIO "modes" and
+pullups based on this information.
+
+But then it means in principle that this is a more general issue
+that just became apparent now.
+
+
+> This shouldn't be in the SoC .dtsi file. It's quite possible for someone
+> to use other GPIOs as SPI CS. It's board or even use-case specific
+> whether those are the correct values.
+> 
+> I would argue that we should not put any cs-gpios into any in-kernel DT
+> file, since there's no on-board usage of SPI on the RPi boards.
+
+but then: why not just make it optional and NOT configuring it at all
+and keep it "outside".
+
+> For SPI to be useful, the user has to add a DT node to represent the SPI
+> device itself anyway, so adding some properties to the controller to
+> define which GPIOs to use for SPI CS can be done then too.
+
+>From what I have seen (and I am not an expert) is that with the 
+foundation device trees each "device" (spi/i2c/...) has a separate
+Gpio section, which gets referenced inside the spi/i2c/... block.
+
+As far as I understood with this setup the GPIOs ALT only gets set
+up when the driver itself loads (probably while parsing the DT
+for the device)
+
+So this is maybe the way forward for the whole default-dt?
+
+For SPI it would look like this:
+&gpio {
+        spi0_pins: spi0_pins {
+                brcm,pins = <7 8 9 10 11>;
+                brcm,function = <4>; /* alt0 */
+        };
+	...
+}
+
+&spi0 {
+	...
+        pinctrl-0 = <&spi0_pins>;
+	...
+}
+
+And if you keep spi0 disabled in the dtsi files then the ALT
+modes should not be set.
+
+Obviously we could also split the gpio-block into 
+"normal SPI" and "CS" pins, which would allow changing the
+"defaults" also in the dts that gets build.
+
+So how should we proceed?
+
+Martin--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
