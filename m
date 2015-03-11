@@ -1,48 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus USB PHY driver
-Date: Wed, 11 Mar 2015 22:47:30 +0100
-Message-ID: <3142298.YeoA7WAayD@wuerfel>
-References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com> <2079271.sEacVGN4vm@wuerfel> <5500B5B6.50609@broadcom.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Wed, 11 Mar 2015 22:48:13 +0100
+Message-ID: <7229476.C4So9noUlf@wuerfel>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <2155628.BceQuZbXC8@wuerfel> <79FFFE06-191C-404D-8923-48C9C28C61F7@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5500B5B6.50609-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <79FFFE06-191C-404D-8923-48C9C28C61F7@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 March 2015 14:37:58 Arun Ramamurthy wrote:
-> On 15-03-10 01:27 PM, Arnd Bergmann wrote:
-> > On Wednesday 25 February 2015 16:24:06 Arun Ramamurthy wrote:
-> >>>>> Should I run this by Alan Stern?
-> >>>>
-> >>>> I've added him to Cc here. He clearly didn't know the background about
-> >>>> the DT binding change, and should not need to, but he may have an opinion
-> >>>> on what names we should use.
-> >>>>
-> >>>
-> >> Arnd, should I re patch the ehci-platform driver to avoid phy-names
-> >> entirely? Alan, if not do you have an opinion on what the usb phy names
-> >> should be? The current patch uses "usbp" + port number such as "usbp0" ,
-> >> "usbp1" etc
-> >
-> > I think avoiding the phy names would be best here, but it requires a
-> > kernel API change first, because we do not have a way to get a phy
-> > by index as we do for other subsystems (e.g. clocks or gpios).
-> >
-> Arnd , there is an existing api _of_phy_get that gets a phy by index. 
-> However it is not exported and is called from of_phy_get which is in 
-> turn called from devm_of_phy_get.
+On Wednesday 11 March 2015 15:35:22 Kumar Gala wrote:
+> On Mar 11, 2015, at 3:20 PM, Arnd Bergmann <arnd@arndb.de> wrote:
 > 
-> My plan is to create a new function maybe devm_of_phy_get_by_index that 
-> calls _of_phy_get directly? What are your thoughts?
+> > On Wednesday 11 March 2015 08:33:04 Bjorn Andersson wrote:
+> >> 
+> >> But are these values actually used by the boot loader?
+> >> 
+> >> As far as I could see in 8974 the dtbTool provided by Qualcomm
+> >> extracts the values from the list of dtbs and use them to create the
+> >> table-of-content in the QCDT blob. The boot loader then looks in this
+> >> TOC to pick the right dtb to use.
+> >> 
+> > 
+> > I guess if I understand this right, we just need to fix that dtbTool
+> > then to look at the top-level compatible property and/or machine
+> > name instead?
+> > 
+> >       Arnd
+> 
+> Correct, and it means updating the tool for every board/dts that gets created in the future.
+> 
+> Thus, the feeling was that having the ids kept with the dtb made maintenance far easier.
+> 
 
-Sounds good to me.
+Part of my objection was to having nonstandard properties that are
+not even used anywhere in the kernel. If you could just encode
+them in the root compatible property as a string, that would be
+a lot nicer.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
