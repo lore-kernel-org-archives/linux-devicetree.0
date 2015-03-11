@@ -1,120 +1,87 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: chosen/stdout-path and userland (Re: Can't boot kernel v4.0-rc2
- on Koelsch)
-Date: Wed, 11 Mar 2015 09:05:06 -0400
-Message-ID: <55003D82.1080601@hurleysoftware.com>
-References: <CAMuHMdVSbYYGQyOjce87Q_dMHvh9du1EkgOgC+CBgrMys++mkA@mail.gmail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Wed, 11 Mar 2015 14:07:11 +0100
+Message-ID: <CABxcv=mPVxW=BqL2PUL=AtS74kcqMG1yxC1WqMpxGiNOqGAnyQ@mail.gmail.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+	<3439869.6umCuOq6SV@wuerfel>
+	<CABxcv=nE_Qd7do+dRyp=fw3wYmWFb+0eEjXYOtdjqE55Cp0zmQ@mail.gmail.com>
+	<6286151.8rcX893TN6@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVSbYYGQyOjce87Q_dMHvh9du1EkgOgC+CBgrMys++mkA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Cao Minh Hiep <cm-hiep@jinso.co.jp>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Linux-SH <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Sakato Ryusuke <ryusuke.sakato.bx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6286151.8rcX893TN6@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2015 06:08 AM, Geert Uytterhoeven wrote:
-> TL;DR
->=20
-> After removing the "console=3D" parameter from chosen/bootargs, and r=
-elying
-> solely on chosen/stdout-path, Hiep-san's Linaro userland cannot find =
-the
-> console device anymore.
->=20
-> On Wed, Mar 11, 2015 at 7:45 AM, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
->> On Tuesday 10 March 2015 12:32:59 Geert Uytterhoeven wrote:
->>> On Tue, Mar 10, 2015 at 10:03 AM, Cao Minh Hiep <cm-hiep@jinso.co.j=
-p> wrote:
->>>> On 2015=E5=B9=B403=E6=9C=8810=E6=97=A5 17:05, Nobuhiro Iwamatsu wr=
-ote:
->>>>> This is user land issue.
->>>>> Hiep, if you have not changed ttySCX in inittab, you will need to=
- change.
->>>>> Could you check your inittab?
->>>>>
->>>>> --- a/inittab    2015-03-10 15:01:58.986609389 +0900
->>>>> +++ b/inittab    2015-03-10 15:00:32.132094877 +0900
->>>>> @@ -28,7 +28,7 @@
->>>>>
->>>>>   l6:6:wait:/etc/init.d/rc 6
->>>>>   # Normally not reached, but fallthrough in case of emergency.
->>>>>   z6:6:respawn:/sbin/sulogin
->>>>>
->>>>> -SC6:12345:respawn:/sbin/getty -L 38400 ttySC6
->>>>> +SC0:12345:respawn:/sbin/getty -L 38400 ttySC0
->>>>>
->>>>>   # /sbin/getty invocations for the runlevels.
->>>>>   #
->>>>>   # The "id" field MUST be the same as the last
->>>>
->>>> There is no inittab file in Linaro userland that I am using.
->>>
->>> I'm not familiar with the Linaro userland.
->>>
->>> Is there any other configuration file that contains the string "tty=
-SC6"?
->>> Or does the Linaro userland derive it from the kernel command line?
->>> If yes, perhaps there's a newer version that does look at stdout-pa=
-th
->>> instead?
->>>
->>> The goal of the stdout-path support was to have a better descriptio=
-n in DT
->>> and automate things. So I don't think reverting the change is the p=
-roper way
->>> forward.
->>>
->>> If you can't get it to work, I think we should bring it up with the=
- DT
->>> people first, some of which work for Linaro.
+Hello Arnd,
+
+On Wed, Mar 11, 2015 at 1:40 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 11 March 2015 12:34:03 Javier Martinez Canillas wrote:
+>> Hello Arnd,
 >>
->> I quite agree with that, but how should userspace know which device =
-node in
->> /dev corresponds to the console specified in stdout-path ?
->=20
-> root@koelsch:~# hd /sys/firmware/devicetree/base/chosen/stdout-path
-> 00000000  2f 73 65 72 69 61 6c 40  65 36 65 36 30 30 30 30  |/serial@=
-e6e60000|
-> 00000010  00                                                |.|
-> 00000011
-> root@koelsch:~# ls -l /sys/devices/platform/e6e60000.serial/tty
-> total 0
-> drwxr-xr-x 3 root root 0 Mar 11 10:50 ttySC0
-> root@koelsch:~# cat /sys/devices/platform/e6e60000.serial/tty/ttySC0/=
-dev
-> 204:8
-> root@koelsch:~# ls -l /dev/ttySC0
-> crw------- 1 root tty 204, 8 Mar 11 10:46 /dev/ttySC0
->=20
-> Hence all pieces of the puzzle are available to userspace...
-> Is there another way?
->=20
-> BTW, we also had the "/dev/console" abstraction for quite a while.
-> I've just replaced "ttySC0" by "console" in my /etc/inittab, and ever=
-ything
-> still works fine. That's Debian (without systemd) though, so it doesn=
-'t help
-> for the Linaro userland.
+>> On Wed, Mar 11, 2015 at 10:53 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Wednesday 11 March 2015 02:00:59 Javier Martinez Canillas wrote:
+>> >>
+>> >> What do you mean by parsing here? IIUC there isn't a clock driver for
+>> >> these clocks and are setup directly in the
+>> >> drivers/net/wireless/ti/wl12xx/main.c driver.
+>> >>
+>> >> So you can't make the WLAN chip dev node a consumer of these clocks by
+>> >> adding a phandle to a clock provider and clock specifiers since there
+>> >> isn't a provider to be referenced in the DT. Or did I misunderstand?
+>> >
+>> > As I understand it, the clock signal is provided by an external oscillator,
+>>
+>> According to [0], it seems the chip can be connected to both external
+>> oscillators or internal clocks provided by the chip itself.
+>
+> I see, that part wasn't clear to me.
+>
 
-The tty subsystem emits the list of consoles as a space-delimited, sing=
-le text
-line in /sys/class/tty/console/active (alias: /sys/devices/virtual/tty/=
-console/active).
+Yeah, it was not clear to me either before reading Luciano's commit message.
 
-The first console listed is the primary console.
-tty0 is not resolved to its underlying tty device name.
+[snip]
 
-That said, is the original reporter of this problem even interested in
-upgrading their userspace, even if this is fixed in Linaro eventually?
-What about other Linaro users?
+>> > If there is no external clock provider for this chip and the clocks
+>> > are provided by the device itself, then all we need is a clock-frequency
+>> > property in the device node.
+>> >
+>>
+>> Agreed, IIUC Luciano wanted to expose the internal clocks by
+>> registering in the common clock framework but if those clocks are not
+>> really accessible from outside the wlan chip, then I also think that a
+>> device node property should be used instead.
+>
+> If I understand this right, that measn we can easily distinguish between
+> an external XTAL clock and the internal clock by they way they are
+> described in the DT: for the internal clock, we just provide a clock-frequency
+> property, while the external clock would be referenced through a clocks
+> property.
+>
 
-I think the only reasonable course here is to continue to support
-"console=3D" in /chosen/bootargs.
+That's my understanding as well.
 
-Regards,
-Peter Hurley
+Right now it seems that all boards in mainline with a WiLink6 part are
+using internal clocks. So as a first step I think that adding an
+optional refclock-frequency and tcxoclock-frequency properties should
+be enough.
 
+It would be good if the driver supports getting the refclock and
+tcxoclock from an external provider in case a board gets these from
+external clocks but that can be done as a followup if there are boards
+in the future using that design.
 
+But please bear in mind that I'm not familiar with the clock handling
+in WiLink6 since the WiLink8 part used in the IGEP boards does not
+need these clocks and I only looked at Luciano's previous patches and
+the WiLink today driver today. So it would be good if Eliad can double
+check my assumptions to see if those are correct.
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
