@@ -1,31 +1,36 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: m25p80: add "nor-jedec" binding
-Date: Wed, 11 Mar 2015 23:22:46 +0100
-Message-ID: <201503112322.46491.marex@denx.de>
-References: <1426111046-29900-1-git-send-email-computersforpeace@gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426111046-29900-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCHv2 0/2] Add support for generic register mapped poweroff.
+Date: Wed, 11 Mar 2015 15:32:23 -0700
+Message-ID: <1426113145-2921-1-git-send-email-moritz.fischer@ettus.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: sre@kernel.org
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 11, 2015 at 10:57:25 PM, Brian Norris wrote:
-> Almost all flash that are "compatible" with m25p80 support the JEDEC
-> READ ID opcode (0x95)
+This patchset adds support for generic register mapped poweroff via SYCON.
 
-On the 2/2 patch, you claim READ ID is 0x9F . You might want to sort
-this inconsistency :) Otherwise ...
+v2:
+ - Fixed documentation copy & paste
+ - Deal with OF dependecies as suggested by Sebastian
+ - Remove module specific stuff as suggested by Paul
 
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+v1:
+ - Earlier versions of this were specific to our product, however,
+   as Sebastian suggested, it can be generalized into a generic driver.
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Moritz Fischer (2):
+  power: reset: Add generic SYSCON register mapped poweroff.
+  dt: power: Add docs for generic SYSCON poweroff driver.
+
+ .../bindings/power/reset/syscon-poweroff.txt       | 23 +++++
+ drivers/power/reset/Kconfig                        |  7 ++
+ drivers/power/reset/Makefile                       |  1 +
+ drivers/power/reset/syscon-poweroff.c              | 97 ++++++++++++++++++++++
+ 4 files changed, 128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
+ create mode 100644 drivers/power/reset/syscon-poweroff.c
+
+-- 
+1.9.3
+
