@@ -1,61 +1,60 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Wed, 11 Mar 2015 18:17:29 +0000
-Message-ID: <550086B9.4010001@arm.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>	<550056FD.8060804@arm.com>	<CAL85gmCuB4LfNp+6B8cL9+emFqWPM6W9gevTzibyaAzL+7jVdg@mail.gmail.com>	<55007BE3.30300@arm.com> <CAL85gmDVfop1_roHyLTRzFY3BahzTWs7nwbpmZD7emFKcFHyLg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4] media: i2c: add support for omnivision's ov2659 sensor
+Date: Wed, 11 Mar 2015 20:22:06 +0200
+Message-ID: <2415294.49LTQe4m32@avalon>
+References: <1425814407-22766-1-git-send-email-prabhakar.csengg@gmail.com> <20150310013556.GF11954@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL85gmDVfop1_roHyLTRzFY3BahzTWs7nwbpmZD7emFKcFHyLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Cc: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150310013556.GF11954@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Lad Prabhakar <prabhakar.csengg@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/15 17:57, Feng Kan wrote:
-> On Wed, Mar 11, 2015 at 10:31 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 11/03/15 17:19, Feng Kan wrote:
->>> On Wed, Mar 11, 2015 at 7:53 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>>> On 27/01/15 07:03, Pranavkumar Sawargaonkar wrote:
->>>>> In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
->>>>> in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
->>>>> size due to size alignment checking in vgic driver for VCPU Control and
->>>>> VCPU register.
->>>>>
->>>>> This patch corrects the sizes to be inline with the hardware spec.
->>>>
->>>> This patch may be correct, but it is useless. The firmware on my APM
->>>> system (some version of u-boot) repaints the DT at boot time, negating
->>>> the effect of this patch.
->>> We have updated u-boot to reflect this change. I can supply you with a updated
->>> image if you wish.
->>
->> That would be useful, thanks.
->>
->> But more importantly, why bother upstreaming your DT into the kernel
->> tree if your firmware is going to overwrite whatever we provide?
-> We did tried to submit a version upstream but was rejected.
+On Tuesday 10 March 2015 03:35:57 Sakari Ailus wrote:
+> On Sun, Mar 08, 2015 at 11:33:27AM +0000, Lad Prabhakar wrote:
+> ...
 > 
->>
->> Either the firmware let the user provide its own DT (and doesn't touch
->> it other than to change the CPU enable method, insert a /memreserve/ or
->> similar things), or the firmware always provide its own DT, and doesn't
->> let the user provide its own. Corrupting the user DT is a disaster, as
->> we just found.
-> Yes, the intent of the change is listed in the link below. It is not a
-> justification by any means,
-> just the effects of things appearing in layers.
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/288574.html
+> > +static struct ov2659_platform_data *
+> > +ov2659_get_pdata(struct i2c_client *client)
+> > +{
+> > +	struct ov2659_platform_data *pdata;
+> > +	struct device_node *endpoint;
+> > +	int ret;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node) {
+> > +		dev_err(&client->dev, "ov2659_get_pdata: DT Node found\n");
+> > +		return client->dev.platform_data;
+> > +	}
+> > +
+> > +	endpoint = of_graph_get_next_endpoint(client->dev.of_node, NULL);
+> > +	if (!endpoint)
+> > +		return NULL;
+> > +
+> > +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> > +	if (!pdata)
+> > +		goto done;
+> > +
+> > +	ret = of_property_read_u32(endpoint, "link-frequencies",
+> > +				   &pdata->link_frequency);
+> 
+> This is actually documented as being a 64-bit array.
 
-Yeah. This is as wrong as it can possibly be. Oh well...
+The main purpose of link-frequencies is to restrict the link frequencies 
+acceptable in the system due to EMI requirements. One link frequency should be 
+selected in the array based on the desired format and frame rate. This is 
+usually done by exposing the frequency to userspace through a writable 
+V4L2_CID_LINK_FREQ control, and exposing the resulting pixel rate as a read-
+only V4L2_CID_PIXEL_RATE control.
 
-Thanks,
+V4L2_CID_PIXEL_RATE is mandatory to use the sensor with several drivers 
+(including omap3isp and omap4iss), so it should really be implemented.
 
-	M.
+> The smiapp wasn't even reading it from the endpoint node. Oh well...
+
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Laurent Pinchart
