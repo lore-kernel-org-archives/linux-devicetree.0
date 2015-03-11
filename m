@@ -1,13 +1,14 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Wed, 11 Mar 2015 15:41:45 +0100
-Message-ID: <55005429.5060103@redhat.com>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com> <20150303071635.GC4713@lukather> <54F568F8.1040104@redhat.com> <20150303082209.GE4713@lukather> <54F5B51F.6030609@redhat.com> <20150303135847.GH4911@lukather> <54FED277.4040000@redhat.com> <20150310184449.GZ5085@lukather> <54FF714F.4010303@redhat.com> <20150311134158.GM5085@lukather>
+Subject: Re: [PATCH 02/15] phy-sun4i-usb: Add a helper function
+ to update the iscr register
+Date: Wed, 11 Mar 2015 15:44:54 +0100
+Message-ID: <550054E6.9040609@redhat.com>
+References: <1425933628-9672-1-git-send-email-hdegoede@redhat.com> <4772280.xE1WBZVd8Z@wuerfel> <54FEA59B.7020400@redhat.com> <2515825.598CypcWU3@wuerfel> <54FEC3DD.10108@redhat.com> <54FECD30.6080106@ti.com> <54FECF9F.7020606@redhat.com> <55000749.9040606@ti.com> <55002970.8090206@redhat.com> <55003A15.2070900@ti.com> <55003D2B.60502@redhat.com> <55003E0D.9040509@ti.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBMNIQGUAKGQE6VZ6YUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150311134158.GM5085@lukather>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB65JQGUAKGQEG4FRGNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <55003E0D.9040509-l0cyMroinI0@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -15,38 +16,255 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 11-03-15 14:41, Maxime Ripard wrote:
-> On Tue, Mar 10, 2015 at 11:33:51PM +0100, Hans de Goede wrote:
->>>>> and we have no way to replace U-Boot in NAND
->>>>> so far (afaik). But replacing them by stdout-path is a very good
->>>>> solution too.
->>>>
->>>> You mean putting stdout-path in the dts, I'm not sure if I like that,
->>>> to me both bootargs and stdout-path are something which should be
->>>> left to the bootloader to set. But I understand that when not
->>>> using upstream u-boot that may be an issue.
->>>
->>> I know that some other platforms ask for stdout-path when they review
->>> it, because iirc, barebox uses it to know on which console to output
->>> its log and export its shell, which is also a valid interpretation of
->>> that property, and, contrary to bootargs, doesn't really imply that
->>> the bootloader should update it.
->>
->> Hmm, that is interesting we should probably start doing the same in
->> all the sunxi dts files, as eventually I would like to move all u-boot
->> board config to devicetree, so that we only need to maintain dts files
->> and not both dts files and u-boot board configs.
+On 11-03-15 14:07, Kishon Vijay Abraham I wrote:
+> Hi,
 >
-> I had the plan to remove all earlyprintk in the bootargs of the DTS, I
-> can do it to convert all DTS to use stdout-path as well.
+> On Wednesday 11 March 2015 06:33 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11-03-15 13:50, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>> On Wednesday 11 March 2015 05:09 PM, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 11-03-15 10:13, Kishon Vijay Abraham I wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Tuesday 10 March 2015 04:33 PM, Hans de Goede wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 10-03-15 11:53, Kishon Vijay Abraham I wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On Tuesday 10 March 2015 03:43 PM, Hans de Goede wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 10-03-15 09:57, Arnd Bergmann wrote:
+>>>>>>>>> On Tuesday 10 March 2015 09:04:43 Hans de Goede wrote:
+>>>>>>>>>> Hi,
+>>>>>>>>>>
+>>>>>>>>>> On 09-03-15 22:47, Arnd Bergmann wrote:
+>>>>>>>>>>> On Monday 09 March 2015 21:40:15 Hans de Goede wrote:
+>>>>>>>>>>>> +void sun4i_usb_phy_update_iscr(struct phy *_phy, u32 clr, u32 set)
+>>>>>>>>>>>> +{
+>>>>>>>>>>>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>>>>>>>>>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>>>>>>>>>> +       u32 iscr;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +       iscr = readl(data->base + REG_ISCR);
+>>>>>>>>>>>> +       iscr &= ~clr;
+>>>>>>>>>>>> +       iscr |= set;
+>>>>>>>>>>>> +       writel(iscr, data->base + REG_ISCR);
+>>>>>>>>>>>> +}
+>>>>>>>>>>>> +EXPORT_SYMBOL(sun4i_usb_phy_update_iscr);
+>>>>>>>>>>>> +
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> I would generally consider this a bad design. What is the purpose of
+>>>>>>>>>>> calling sun4i_usb_phy_update_iscr()
+>>>>>>>
+>>>>>>> right. That would bind the PHY driver and the controller driver and would
+>>>>>>> start creating problems when a different PHY is connected with the
+>>>>>>> controller.
+>>>>>>>>>>
+>>>>>>>>>> There are 2 different use cases for this one is to enable the dataline
+>>>>>>>>>> pull-ups at driver init and disable them at driver exit, this could /
+>>>>>>>>>> should probably be moved to the phy_init / phy_exit code for the usb0 phy
+>>>>>>>>>> removing the need to do this from within the sunxi musb glue.
+>>>>>>>>>>
+>>>>>>>>>> The second use-case is more tricky, for some reasons Allwinner has
+>>>>>>>>>> decided
+>>>>>>>>>> to not use the dedicated id-detect and vusb-sense pins of the phy they
+>>>>>>>>>> are
+>>>>>>>>>> using (these pins are not routed to the outside).
+>>>>>>>>>>
+>>>>>>>>>> Instead id-detect and vusb-sense are done through any $random gpio pins
+>>>>>>>>>> (including non irq capable pins on some designs requiring polling).
+>>>>>>>
+>>>>>>> The polling can still be done in PHY driver and can use the extcon framework
+>>>>>>> to report the status to controller driver no?
+>>>>>>
+>>>>>> Technically the polling can be moved to the phy driver yes, but it is not
+>>>>>> easy,
+>>>>>> e.g. we only need to poll when we're in otg mode rather then host-only
+>>>>>> or peripheral-only mode, and the mode gets set by the musb driver not phy
+>>>>>> the phy driver. The sunxi musb implementation uses an integrated phy, so it
+>>>>>> is just much easier and more logical to have all control / polling happening
+>>>>>> from a single module rather then from 2 different modules.
+>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> But the musb-core still needs to know the status of the id and vbus pins,
+>>>>>>>
+>>>>>>> musb-core or the musb-glue (musb/sunxi.c in this case)?
+>>>>>>>>>> and gets this from the usb0-phy iscr register, which reflects the
+>>>>>>>>>> status of
+>>>>>>>>>> the not connected dedicated pins of the phy. The reason this can still
+>>>>>>>>>> work at all is because the iscr register allows the user to override
+>>>>>>>>>> whatever the not connected phy pins are seeing and forcing a value to
+>>>>>>>>>> report to the musb core as id and vbus status.
+>>>>>>>>>>
+>>>>>>>>>> This is done by these 2 functions in the musb sunxi glue:
+>>>>>>>>>>
+>>>>>>>>>> static void sunxi_musb_force_id(struct musb *musb, u32 val)
+>>>>>>>>>> {
+>>>>>>>>>>           struct sunxi_glue *glue =
+>>>>>>>>>> dev_get_drvdata(musb->controller->parent);
+>>>>>>>>>>
+>>>>>>>>>>           if (val)
+>>>>>>>>>>                   val = SUNXI_ISCR_FORCE_ID_HIGH;
+>>>>>>>>>>           else
+>>>>>>>>>>                   val = SUNXI_ISCR_FORCE_ID_LOW;
+>>>>>>>>>>
+>>>>>>>>>>           sun4i_usb_phy_update_iscr(glue->phy, SUNXI_ISCR_FORCE_ID_MASK,
+>>>>>>>>>> val);
+>>>>>>>
+>>>>>>> What will writing to this register lead to? call to
+>>>>>>> sunxi_musb_id_vbus_det_irq
+>>>>>>> interrupt handler?
+>>>>>>
+>>>>>> No this changes the vbus and id status as seen by the musb core, and the musb
+>>>>>> responds to this, by e.g. starting a session, or when vbus does not get high
+>>>>>> after a session request by reporting a vbus-error interrupt.
+>>>>>>
+>>>>>> The sunxi_musb_id_vbus_det_irq handler gets triggered by edges on the gpio
+>>>>>> pins which are used to monitor the id and vbus status.
+>>>>>>
+>>>>>>
+>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> static void sunxi_musb_force_vbus(struct musb *musb, u32 val)
+>>>>>>>>>> {
+>>>>>>>>>>           struct sunxi_glue *glue =
+>>>>>>>>>> dev_get_drvdata(musb->controller->parent);
+>>>>>>>>>>
+>>>>>>>>>>           if (val)
+>>>>>>>>>>                   val = SUNXI_ISCR_FORCE_VBUS_HIGH;
+>>>>>>>>>>           else
+>>>>>>>>>>                   val = SUNXI_ISCR_FORCE_VBUS_LOW;
+>>>>>>>>>>
+>>>>>>>>>>           sun4i_usb_phy_update_iscr(glue->phy,
+>>>>>>>>>> SUNXI_ISCR_FORCE_VBUS_MASK,
+>>>>>>>>>> val);
+>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> I will happily admit that these 2 functions are a better API between the
+>>>>>>>>>> sunxi musb
+>>>>>>>>>> glue and the sunxi usb phy driver. I started with the minimal
+>>>>>>>>>> sun4i_usb_phy_update_iscr
+>>>>>>>>>> approach as I wanted to keep the API as small as possible, but having 2
+>>>>>>>>>> functions like
+>>>>>>>>>> the one above, which actually reflect what is happening would indeed be
+>>>>>>>>>> better.
+>>>>>>>>>
+>>>>>>>>> Ok, that would definitely improve things.
+>>>>>>>>>
+>>>>>>>>>> Note that the polling of the pins cannot (easily) be moved into the phy
+>>>>>>>>>> driver for various
+>>>>>>>>>> reasons:
+>>>>>>>>>>
+>>>>>>>>>> 1) It depends on dr_mode, the otg may be used in host only mode in which
+>>>>>>>>>> case there are no
+>>>>>>>>>> pins at all.
+>>>>>>>>>> 2) the musb set_vbus callback needs access to the pins
+>>>>>>>>>> 3) When id changes some musb core state changes are necessary.
+>>>>>>>>>>
+>>>>>>>>>> I'll respin the patch set to do things this way as soon as we've
+>>>>>>>>>> agreement on
+>>>>>>>>>> your second point.
+>>>>>>>>>>
+>>>>>>>>>>   > and why can't there be a high-level
+>>>>>>>>>>> PHY API for this?
+>>>>>>>>>>
+>>>>>>>>>> The current generic phy API seems to not have any bus specific methods, I
+>>>>>>>>>> know that
+>>>>>>>>>> in the long run people want to get rid of struct usb_phy, so maybe we
+>>>>>>>>>> should
+>>>>>>>>>> consider
+>>>>>>>>>> adding bus specific methods to the generic phy API for things like otg.
+>>>>>>>>>>
+>>>>>>>>>> If we decide to add bus specific methods, then the question becomes if
+>>>>>>>>>> having
+>>>>>>>>>>
+>>>>>>>>>> int phy_usb_set_id_detect(struct phy *phy, bool val);
+>>>>>>>>>> int phy_usb_set_vbus_detect(struct phy *phy, bool val);
+>>>>>>>>>>
+>>>>>>>>>> Functions in the generic phy API is a good idea, or if this is too sunxi
+>>>>>>>>>> specific,
+>>>>>>>>>> I'm fine with doing this either way. If we want to go the generic phy
+>>>>>>>>>> route
+>>>>>>>>>> I'll split this in 2 patches, one adding these 2 generic functions &
+>>>>>>>>>> phy-ops, and
+>>>>>>>>>> 1 doing the sunxi implementation.
+>>>>>>>
+>>>>>>> Please don't do that. We don't want to be bloating phy framework with
+>>>>>>> platform
+>>>>>>> specific hooks.
+>>>>>>
+>>>>>> Right, that was my feeling too. I believe that using sunxi specific phy
+>>>>>> functions
+>>>>>> here is best given that we're dealing with an otg controller + phy both if
+>>>>>> which
+>>>>>
+>>>>> Using platform specific PHY functions dissolves the very purpose of creating
+>>>>> the PHY framework. We have to find a better way.
+>>>>
+>>>> "We have to find a better way" is not really a helpful answer to the problem at
+>>>> hand. We're talking about a phy integrated on the same die, as, and closely
+>>>> working
+>>>
+>>> It's integrated in the same die but it is not within the controller IP. It's
+>>> still possible to replace the PHY and have the same controller in the next SoC.
+>>>> together with the otg controller, so we need some sort of coordination
+>>>> between the
+>>>> two.
+>>>>
+>>>> The 2 logical options for coordinatinon are:
+>>>>
+>>>> 1) Add generic phy framework functions for such coordination
+>>>>   -> Which you've nacked
+>>>>
+>>>> 2) Use platform private functions for this
+>>>>   -> Which you are essentially nacking above.
+>>>>
+>>>> Which leaves us with what as solution exactly ?
+>>>
+>>> We could poll on the GPIO in PHY driver to update the iscr register. I think
+>>> it's alright to poll on the GPIO in multiple modules for serving it's own
+>>> purpose IMHO.
+>>
+>> No, polling in multiple places is just plain and simple wrong, also where-ever
+>> possible we use edge triggered gpio-interrupts for this and having multiple
+>> handlers for the same interrupt is even more wrong.
+>>
+>> I'm fine with moving all the polling to the phy driver, but then we need to
+>> have a way to notify the sunxi musb glue about id pin changes.
+>
+> As I mentioned before, we can use extcon framework for it.
+>>
+>>>> I could make the phy-sun4i-usb.c driver register a struct usb_phy, as
+>>>> drivers/phy/phy-omap-usb2.c and drivers/phy/phy-twl4030-usb.c does,
+>>>
+>>> I'm not sure how will that help.
+>>
+>> It helps when we move the polling to the phy driver as it has a notification
+>> mechanism for events which we can then use to tell the musb-sunxi glue about
+>> id pin changes.
+>
+> extcon framework might help here.
 
-Sounds good, please do.
+Ok, I've taken a look and I see that it is already used for exactly this purpose
+in drivers/usb/phy/phy-tahvo.c and drivers/usb/phy/phy-omap-otg.c .
+
+Since I take it that this is the preferred solution for dealing with this, I'll
+go and rework my patchset to move the polling to the phy driver and use extcon
+to signal the status of the id / vbus det pins to other interested parties.
 
 Regards,
 
