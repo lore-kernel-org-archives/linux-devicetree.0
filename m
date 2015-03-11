@@ -1,60 +1,89 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Wed, 11 Mar 2015 10:28:29 +0100
-Message-ID: <1426066109.3101.46.camel@pengutronix.de>
-References: <2265807.RXHBN9kUi4@phil>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/2] power: reset: Add generic SYSCON register mapped
+ poweroff.
+Date: Wed, 11 Mar 2015 10:31:12 +0100
+Message-ID: <1426066272.4244.37.camel@x220>
+References: <1426029670-31775-1-git-send-email-moritz.fischer@ettus.com>
+	 <1426029670-31775-2-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2265807.RXHBN9kUi4@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426029670-31775-2-git-send-email-moritz.fischer@ettus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpBbSBEaWVuc3RhZywgZGVuIDEwLjAzLjIwMTUsIDIyOjQ1ICswMTAwIHNjaHJp
-ZWIgSGVpa28gU3R1ZWJuZXI6Cj4gQXQgbGVhc3QgdGhlIFJvY2tjaGlwIHZhcmlhbnQgb2YgdGhl
-IGR3X2hkbWkgY2FuIGhhdmUgY29udHJvbGxhYmxlIHBvd2VyIHN1cHBsaWVzCj4gcHJvdmlkaW5n
-IDEuMCBhbmQgMS44Vi4gVGhlcmVmb3JlIGFkZCB0aGUgcG9zc2liaWxpdHkgZm9yIHRoZSBnZW5l
-cmljIGJyaWRnZQo+IGRyaXZlciB0byBlbmFibGUgc3VwcGxpZXMgcHJvdmlkZWQgYnkgdGhlIGh3
-LXNwZWNpZmljIGRyaXZlcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhl
-aWtvQHNudGVjaC5kZT4KPiAtLS0KPiBjaGFuZ2VzIHNpbmNlIHYxOgo+IC0gZm9sbG93IHN1Z2dl
-c3Rpb24gZnJvbSBSdXNzZWxsIEtpbmcgdG8ga2VlcCByZWd1bGF0b3IgaGFuZGxpbmcgbG9jYWwK
-PiAgIHRvIHRoZSByb2NrY2hpcCBpbXBsZW1lbnRhdGlvbiBmb3IgdGhlIHRpbWUgYmVpbmcgYW5k
-IG9ubHkgZ2VuZXJhbGl6ZQo+ICAgd2hlbiBhIHJlYWwgc2Vjb25kIGltcGxlbWVudGF0aW9uIG5l
-ZWRzIHJlZ3VsYXRvciBoYW5kbGluZwo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0v
-YnJpZGdlL2R3X2hkbWkudHh0ICAgICB8ICA1ICsrKysKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL2R3X2hkbWktcm9ja2NoaXAuYyAgICAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrKyst
-Cj4gIDIgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRn
-ZS9kd19oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJp
-ZGdlL2R3X2hkbWkudHh0Cj4gaW5kZXggYTkwNWMxNC4uYmI3NDY0MCAxMDA2NDQKPiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hk
-bWkudHh0Cj4gQEAgLTIyLDYgKzIyLDExIEBAIE9wdGlvbmFsIHByb3BlcnRpZXMKPiAgLSBkZGMt
-aTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBw
-cm9iaW5nCj4gIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUgSERNSSBDRUMg
-Y2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiCj4gIAo+ICtPcHRpb25hbCBzdXBwbGllczoKPiAr
-cm9ja2NoaXAscmszMjg4LWR3LWhkbWkgaGFuZGxlcyB0d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxp
-ZXM6Cj4gKy0gYXZkZDF2MC1zdXBwbHk6IDEuMFYgcG93ZXIgc3VwcGx5Cj4gKy0gYXZkZDF2OC1z
-dXBwbHk6IDEuOFYgcG93ZXIgc3VwcGx5CgpBcmUgdGhlc2UgdGhlIG5hbWVzIHVzZWQgaW4gdGhl
-IFJvY2tjaGlwIGRvY3VtZW50YXRpb24/CgpTaW5jZSB0aGUgb2xkZXIgaW1wbGVtZW50YXRpb24g
-b24gaS5NWDYgdXNlcyAxLjFWIChIRE1JX1ZQKSBhbmQgMi41VgooSERNSV9WUEgpLCBJIHdvbmRl
-ciB3aGV0aGVyIGVhY2ggU29DIHNob3VsZCB1c2UgdGhlaXIgb3duIG5hbWUgb3IKd2hldGhlciB0
-aGVyZSBzaG91bGQgYmUgY29tbW9uIG5hbWVzIHRoYXQgZG9uJ3QgaW5jbHVkZSB0aGUgdm9sdGFn
-ZS4KSSBkb24ndCBoYXZlIHRoZSBTeW5vcHN5cyBIRE1JIFRYIGRvY3MsIGJ1dCBJJ3ZlIHNlZW4g
-YXZkZGh2IGFuZCBhdmRkbHYKdXNlZCBvZiBvdGhlciBjb3JlcycgYW5hbG9nIHN1cHBsaWVzLgoK
-cmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Tue, 2015-03-10 at 16:21 -0700, Moritz Fischer wrote:
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+ 
+> +config POWER_RESET_SYSCON_POWEROFF
+> +	bool "Generic SYSCON regmap poweroff driver"
+
+This adds a bool symbol.
+
+> +	depends on OF
+> +	select MFD_SYSCON
+> +	help
+> +	  Poweroff support for generic SYSCON mapped register poweroff.
+> +
+
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+
+> +obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
+
+So this objectfile can never be part of a module.
+
+> --- /dev/null
+> +++ b/drivers/power/reset/syscon-poweroff.c
+> @@ -0,0 +1,97 @@
+> +/*
+> + * Generic Syscon Poweroff Driver
+> + *
+> + * Copyright (c) 2015, National Instruments Corp.
+> + * Author: Moritz Fischer <moritz.fischer@ettus.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+
+> +#include <linux/module.h>
+
+Is that include needed?
+
+> +MODULE_DEVICE_TABLE(of, syscon_poweroff_of_match);
+
+This will be preprocessed away.
+
+> +module_platform_driver(syscon_poweroff_driver);
+
+I think the built-in equivalent of this would be adding a wrapper that
+only does
+    platform_driver_register(&syscon_poweroff_driver);
+
+and have that wrapper be marked with device_initcall(). Apparently
+there's no macro that does all that in one line.
+
+> +MODULE_LICENSE("GPL v2");
+
+You probably meant
+    MODULE_LICENSE("GPL");
+
+> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
+> +MODULE_DESCRIPTION("Generic SYSCON poweroff driver");
+> +MODULE_ALIAS("platform:syscon-poweroff");
+
+But these four macros will all be effectively preprocessed away, anyhow.
+
+
+Paul Bolle
