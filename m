@@ -1,55 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 3/4] cpufreq: mediatek: add Mediatek cpufreq driver
-Date: Wed, 11 Mar 2015 12:46:20 +0000
-Message-ID: <20150311124620.GC28806@sirena.org.uk>
-References: <1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
- <CAKohpo=c2t4_2hdPP-vQM7xewK5SXaHBGNA9PhvTwDv3++pSTg@mail.gmail.com>
- <CALx668VypyWbVuph0ir0SRt4kqASvYzwBuyc_r5tFeoHi+HieA@mail.gmail.com>
- <CAKohpomxXTP6NdPoSmB=eq2sFqqgskS5vYtDNAT6a0VL5K6dCg@mail.gmail.com>
- <CALx668VFRdeWcK_gKhJrJehnaH5uDpA0m2OfHLqPVUq8oocXaw@mail.gmail.com>
- <CAKohpokT7fSniPGX2BfM61AtMoMCxEP8WDtbZ34bozUXscEWyg@mail.gmail.com>
- <20150311105307.GW28806@sirena.org.uk>
- <CAKohpom4riOhzc3hK8B2tiSwGx0zG96C7QNeQB0yZaPMd_OpLw@mail.gmail.com>
- <1426074142.30734.7.camel@pengutronix.de>
- <CAKohponaQYYgYFAbpY3KZjt4+QhjBsqQtEpG5QpdMH0p__YUEQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH net-next 1/3] of: mdio: export of_mdio_parse_addr
+Date: Wed, 11 Mar 2015 07:48:01 -0500
+Message-ID: <CAL_JsqKfT2W=Gc4zpFXm269RoApbD8QKe2_gUDWns9U+BE=XuA@mail.gmail.com>
+References: <1426031833-5113-1-git-send-email-f.fainelli@gmail.com> <1426031833-5113-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3l764Q7zY5HuAgsB"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohponaQYYgYFAbpY3KZjt4+QhjBsqQtEpG5QpdMH0p__YUEQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Chen Fan <fan.chen@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Howard Chen <ibanezchen@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>Linux Kernel Mailing List <l>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1426031833-5113-2-git-send-email-f.fainelli@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 10, 2015 at 6:57 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Export of_mdio_parse_addr() which allows parsing a given Ethernet PHY
+> node MDIO address, verify it is within the allowed range, and return
+> its value. This is going to be useful for the DSA code which needs to
+> deal with multiple layers of MDIO buses.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
---3l764Q7zY5HuAgsB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Rob Herring <robh@kernel.org>
 
-On Wed, Mar 11, 2015 at 05:16:42PM +0530, Viresh Kumar wrote:
-
-> I think until the time we revive the voltage-domain stuff we need to support
-> mediatek's driver. And probably a virtual regulator is the best approach
-> unless someone else comes up with another idea.
-
-Why not just write a custom cpufreq driver if it's too hard to abstract?
-
---3l764Q7zY5HuAgsB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVADkbAAoJECTWi3JdVIfQRnMH/iGMkf3/S0DoSz9venn5GInN
-QLnusP6YSaztjFkp9a28fKtF3OMNmBFI2h92BweNyQy1SMpaKFVerQTuHajBYK9J
-g4Xhoe5KjvZoZZD5OmMYpjrakmp4QEkSBvBMRFD/65HL+IHEsSc31vXstg3HZbJ+
-akEkvPzni/4C9xY+7Z5NWhleahJ0Wm2VXCOFqRpo/fpjxAkwpQ1PYsnZDfZP5vLj
-FjNLIc6k6iVxTFWb6eEtn0SJfx+fBwQc4mj34tNzER5yJem7O/NCXMAPmI/dhapn
-U7k9FqZpCu52MxgDT+8K/F+zdCmq6oAWankEymK8ycQnGA6RwKKBB06UqF/l60E=
-=H1aC
------END PGP SIGNATURE-----
-
---3l764Q7zY5HuAgsB--
+> ---
+>  drivers/of/of_mdio.c    | 3 ++-
+>  include/linux/of_mdio.h | 7 +++++++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 1bd43053b8c7..0c064485d1c2 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -88,7 +88,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>         return 0;
+>  }
+>
+> -static int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+> +int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+>  {
+>         u32 addr;
+>         int ret;
+> @@ -108,6 +108,7 @@ static int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+>
+>         return addr;
+>  }
+> +EXPORT_SYMBOL(of_mdio_parse_addr);
+>
+>  /**
+>   * of_mdiobus_register - Register mii_bus and create PHYs from the device tree
+> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+> index d449018d0726..8f2237eb3485 100644
+> --- a/include/linux/of_mdio.h
+> +++ b/include/linux/of_mdio.h
+> @@ -24,6 +24,7 @@ struct phy_device *of_phy_attach(struct net_device *dev,
+>                                  phy_interface_t iface);
+>
+>  extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+> +extern int of_mdio_parse_addr(struct device *dev, const struct device_node *np);
+>
+>  #else /* CONFIG_OF */
+>  static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+> @@ -60,6 +61,12 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
+>  {
+>         return NULL;
+>  }
+> +
+> +static inline int of_mdio_parse_addr(struct device *dev,
+> +                                    const struct device_node *np)
+> +{
+> +       return -ENOSYS;
+> +}
+>  #endif /* CONFIG_OF */
+>
+>  #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
+> --
+> 2.1.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
