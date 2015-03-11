@@ -1,50 +1,38 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [PATCHv2 2/2] dt: power: Add docs for generic SYSCON poweroff driver.
-Date: Wed, 11 Mar 2015 15:32:25 -0700
-Message-ID: <1426113145-2921-3-git-send-email-moritz.fischer@ettus.com>
-References: <1426113145-2921-1-git-send-email-moritz.fischer@ettus.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426113145-2921-1-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: m25p80: add "nor-jedec"
+ binding
+Date: Wed, 11 Mar 2015 15:46:32 -0700
+Message-ID: <20150311224632.GD32500@ld-irv-0074>
+References: <1426111046-29900-1-git-send-email-computersforpeace@gmail.com>
+ <201503112322.46491.marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201503112322.46491.marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for generic SYSCON poweroff driver.
+On Wed, Mar 11, 2015 at 11:22:46PM +0100, Marek Vasut wrote:
+> On Wednesday, March 11, 2015 at 10:57:25 PM, Brian Norris wrote:
+> > Almost all flash that are "compatible" with m25p80 support the JEDEC
+> > READ ID opcode (0x95)
+> 
+> On the 2/2 patch, you claim READ ID is 0x9F . You might want to sort
+> this inconsistency :) Otherwise ...
 
-Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
----
- .../bindings/power/reset/syscon-poweroff.txt       | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Ugh, it should be 0x9F of course. Thanks for noticing. I'll fix this
+in the commit message and doc before applying, if I don't get other
+complaints.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
-new file mode 100644
-index 0000000..1e2546f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
-@@ -0,0 +1,23 @@
-+Generic SYSCON mapped register poweroff driver
-+
-+This is a generic poweroff driver using syscon to map the poweroff register.
-+The poweroff is generally performed with a write to the poweroff register
-+defined by the register map pointed by syscon reference plus the offset
-+with the mask defined in the poweroff node.
-+
-+Required properties:
-+- compatible: should contain "syscon-poweroff"
-+- regmap: this is phandle to the register map node
-+- offset: offset in the register map for the poweroff register (in bytes)
-+- mask: the poweroff value written to the poweroff register (32 bit access)
-+
-+Default will be little endian mode, 32 bit access only.
-+
-+Examples:
-+
-+	poweroff {
-+	   compatible = "syscon-poweroff";
-+	   regmap = <&regmapnode>;
-+	   offset = <0x0>;
-+	   mask = <0x7a>;
-+	};
--- 
-1.9.3
+> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+
+Thanks for the review!
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
