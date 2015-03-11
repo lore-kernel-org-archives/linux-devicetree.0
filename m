@@ -1,52 +1,56 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v5 1/2] power: rt5033_charger: Add RT5033 charger device
- driver
-Date: Wed, 11 Mar 2015 20:20:07 +0900
-Message-ID: <550024E7.3000808@samsung.com>
-References: <1425864191-4121-1-git-send-email-beomho.seo@samsung.com>
- <1425864191-4121-2-git-send-email-beomho.seo@samsung.com>
- <1426071995.4244.91.camel@x220>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
+Date: Wed, 11 Mar 2015 11:20:59 +0000
+Message-ID: <5500251B.8010900@linn.co.uk>
+References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk> <20150225151945.GB7703@localhost.localdomain> <20150225170127.GD7703@localhost.localdomain> <54EE0268.2040201@linn.co.uk> <20150225173053.GE7703@localhost.localdomain> <54F0A4C4.3020407@linn.co.uk> <20150227181447.GA11594@localhost.localdomain> <54F98660.5070805@linn.co.uk> <20150306152239.GC26349@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1426071995.4244.91.camel@x220>
+In-Reply-To: <20150306152239.GC26349@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Dave Jones <davej@codemonkey.org.uk>, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com, sangbae90.lee@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2015 08:06 PM, Paul Bolle wrote:
-> On Mon, 2015-03-09 at 10:23 +0900, Beomho Seo wrote:
->> --- /dev/null
->> +++ b/drivers/power/rt5033_charger.c
->> @@ -0,0 +1,485 @@
->> +/*
->> + * Battery charger driver for RT5033
->> + *
->> + * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
->> + * Author: Beomho Seo <beomho.seo@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published bythe Free Software Foundation.
->> + */
-> 
-> (bythe?)
-> 
-> This states the license is GPL v2.
-> 
->> +MODULE_LICENSE("GPL");
-> 
-> So you probably meant
->     MODULE_LICENSE("GPL v2");
-> 
-> 
-> Paul Bolle
-> 
+Hi Richard,
 
-OK I will fix wrong spacing and state the license.
-Additionally, fix wrong spacing all rt5033-* driver.
+On 06/03/15 15:22, Richard Cochran wrote:
+> I don't really know what the problem here is.  Yes, there is some
+> networking configuration that you need to do when administering a
+> network using PTP protocols.  But these protocols (1588 aka PTP, and
+> 802.1AS aka gPTP) do offer means for dealing with this.  In
+> particular, there is no danger mixing 1588 devices with audio devices,
+> because the gPTP protocol uses a different transport flag.
+>
+> In any case, this has nothing at all to do with the kernel interface.
 
-Best regards,
-Beomho Seo
+Our feeling is that we will have to test and verify that a move to gPTP
+will fit with the use cases that we have to support and that will
+require a fair amount of effort and rewrite of application software.
+If the driver is not acceptable with the current interface we may need
+to maintain it as a private patch until we are ready to move to gPTP
+as you recommend.
+
+>
+> If you want to try and integrate your custom protocols into the
+> networking stack, by all means please post them.  I would certainly
+> support expanding the time stamping interface to include your
+> protocol's packet types (like adding them to hwtstamp_rx_filters).
+> Maybe that would be enough for you?
+
+I was referring to the Songcast protocol we are using which is part
+of the OpenHome suite (www.openhome.org) and runs on top of UDP.
+It could be filtered by testing the first 5 bytes of the payload.
+In our implementation we also add the destination IP and port to
+the filter to make it more reliable, but hwtstamp_rx_filters cannot
+accept parameters. However, I will test that and maybe come back with
+a patch to expand the hwtstamp_rx_filter enum initially?
+
+>
+> Thanks,
+> Richard
+>
+
+Thank you,
+Stathis
