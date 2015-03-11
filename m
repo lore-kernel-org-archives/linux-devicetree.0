@@ -1,47 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
-Date: Wed, 11 Mar 2015 10:53:39 +0100
-Message-ID: <3439869.6umCuOq6SV@wuerfel>
-References: <1425915402-10012-1-git-send-email-eliad@wizery.com> <20150310173550.GT5264@atomide.com> <CABxcv=ndnNj4MhoXeW=GHXT4aEWQYHdbu-Mg4R2Zhf9CJTrJCA@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/2] ARM: imx6qdl-sabresd: set swbst_reg as vbus's parent
+ reg
+Date: Wed, 11 Mar 2015 10:57:00 +0100
+Message-ID: <20150311095700.GA8172@kroah.com>
+References: <1425629061-8995-1-git-send-email-peter.chen@freescale.com>
+ <20150311012424.GW20455@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=ndnNj4MhoXeW=GHXT4aEWQYHdbu-Mg4R2Zhf9CJTrJCA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Tony Lindgren <tony@atomide.com>, Eliad Peller <eliad@wizery.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150311012424.GW20455@dragon>
+Sender: stable-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Peter Chen <peter.chen@freescale.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 March 2015 02:00:59 Javier Martinez Canillas wrote:
-> Hello Tony,
+On Wed, Mar 11, 2015 at 09:24:25AM +0800, Shawn Guo wrote:
+> On Fri, Mar 06, 2015 at 04:04:20PM +0800, Peter Chen wrote:
+> > USB vbus 5V is from PMIC SWBST, so set swbst_reg as vbus's
+> > parent reg, it fixed a bug that the voltage of vbus is incorrect
+> > due to swbst_reg is disabled after boots up.
+> > 
+> > Cc: stable <stable@vger.kernel.org>
 > 
-> On Tue, Mar 10, 2015 at 6:35 PM, Tony Lindgren <tony@atomide.com> wrote:
-> >>
-> >> we do have to make sure these wl18xx bindings are future-compatible
-> >> with the wl12xx ones, but i think the current bindings are pretty much
-> >> standard (and are actually a subset of the bindings needed by wl12xx),
-> >> so it should be fine.
-> >
-> > Well how about add just the parsing of the clock and assume it's always
-> > WL12XX_REFCLOCK_38 for now as that's the only thing we're currently
-> > using. Then we can add a property or compatible value if using something
-> > else as needed.
-> >
+> It's more idiomatic to put the line in this way:
 > 
-> What do you mean by parsing here? IIUC there isn't a clock driver for
-> these clocks and are setup directly in the
-> drivers/net/wireless/ti/wl12xx/main.c driver.
+> Cc: stable@vger.kernel.org
 > 
-> So you can't make the WLAN chip dev node a consumer of these clocks by
-> adding a phandle to a clock provider and clock specifiers since there
-> isn't a provider to be referenced in the DT. Or did I misunderstand?
+> Changed it and applied both patches.
 
-As I understand it, the clock signal is provided by an external oscillator,
-which we can easily model in DT, and then you call clk_get_rate on that.
+It really doesn't matter, my scripts try to pick up any variation of the
+stable@ markings in a signed-off-by: area, as there is a huge number of
+different ways people try to mark this, including using invalid email
+addresses, and typos.
 
-If there is no external clock provider for this chip and the clocks
-are provided by the device itself, then all we need is a clock-frequency
-property in the device node.
+So no need to be pedantic about this, I can handle it just fine.
 
-	Arnd
+thanks,
+
+greg k-h
