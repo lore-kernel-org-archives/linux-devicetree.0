@@ -1,83 +1,57 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: MODULE_LICENSE(): "GPL"  vs. "GPL v2" (Was: [PATCH 1/2] Input: add
- support for Semtech SX8654 I2C touchscreen controller)
-Date: Wed, 11 Mar 2015 11:56:45 +0100
-Message-ID: <1426071405.4244.88.camel@x220>
-References: <1425666099-8365-1-git-send-email-sebastien.szymanski@armadeus.com>
-	 <20150306182155.GB4540@dtor-ws> <20150307005717.GD26151@dtor-ws>
-	 <1425731545.2281.3.camel@tiscali.nl> <20150307212543.GA38770@dtor-ws>
-	 <1425765281.2300.17.camel@x220>
-	 <64C774DE-93CD-41FB-AF78-301503025592@gmail.com>
-	 <1425766340.2300.29.camel@x220>
-	 <FACD03DB-5CFC-4C18-A185-1031903E3AAE@gmail.com>
-	 <1425767935.2300.48.camel@x220> <20150308045115.GA4054@dtor-ws>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 3/4] cpufreq: mediatek: add Mediatek cpufreq driver
+Date: Wed, 11 Mar 2015 16:33:49 +0530
+Message-ID: <CAKohpom4riOhzc3hK8B2tiSwGx0zG96C7QNeQB0yZaPMd_OpLw@mail.gmail.com>
+References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
+	<1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
+	<CAKohpo=c2t4_2hdPP-vQM7xewK5SXaHBGNA9PhvTwDv3++pSTg@mail.gmail.com>
+	<CALx668VypyWbVuph0ir0SRt4kqASvYzwBuyc_r5tFeoHi+HieA@mail.gmail.com>
+	<CAKohpomxXTP6NdPoSmB=eq2sFqqgskS5vYtDNAT6a0VL5K6dCg@mail.gmail.com>
+	<CALx668VFRdeWcK_gKhJrJehnaH5uDpA0m2OfHLqPVUq8oocXaw@mail.gmail.com>
+	<CAKohpokT7fSniPGX2BfM61AtMoMCxEP8WDtbZ34bozUXscEWyg@mail.gmail.com>
+	<20150311105307.GW28806@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150308045115.GA4054@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dave Jones <davej@codemonkey.org.uk>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?ISO-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rusty Russell <rusty@rustcorp.com.au>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150311105307.GW28806@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Chen Fan <fan.chen@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Howard Chen <ibanezchen@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-[Added Rusty and Dave.]
+On 11 March 2015 at 16:23, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Mar 10, 2015 at 08:20:43AM +0530, Viresh Kumar wrote:
+>
+> Please don't send upstream e-mail to my work account, I use this address
+> pretty consistently for upstream.  Upstream mail to my work account
+> frequently ends up unread.
 
-On Sat, 2015-03-07 at 20:51 -0800, Dmitry Torokhov wrote:
-> On Sat, Mar 07, 2015 at 11:38:55PM +0100, Paul Bolle wrote:
-> > From a technological standpoint it would be easy to declare "GPL" (or
-> > any other string) to mean "GPL v2 compatible", which is, I think, all
-> > that matters. But license_is_gpl_compatible() doesn't do that. And I
-> > fear that's for a reason. Is my fear unfounded?
-> 
-> Well we might ask Rusty on the off chance that he remembers but my guess
-> would be that he added "GPL v2" in addition to "GPL" and other license
-> stings because at the time there was one driver,
-> drivers/net/tulip/xircom_tulip_cb.c, that used MODULE_LICENSE("GPL v2").
+Sorry about that, I did exactly opposite of this earlier :(
 
-Dmitry and I discussed the fact that license_is_gpl_compatible() accepts
-both "GPL" and "GPL v2" as strings indicating a GPL compatible license.
-"GPL" is documented to mean "GNU Public License v2 or later" while "GPL
-v2" is documented to mean "GNU Public License v2".
+>> On 6 March 2015 at 11:19, Pi-Cheng Chen <pi-cheng.chen@linaro.org> wrote:
+>> > On 5 March 2015 at 17:55, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+>> > About putting
+>> > those stuff into regulator driver, I think you mean creating a
+>> > "virtual regulator
+>> > device" and put all the voltage controlling complex into the driver, right?
+>> > Maybe it's a good idea in this case, but I am sure if this kind of
+>> > virtual regulator is acceptable.
+>
+>> @Mark: Is this allowed to create virtual regulator for a CPU ?
+>
+> I don't really know what the above means or what problem it's supposed
+> to solve.
 
-It turns out people regularly confuse these license string. (To
-demonstrate just how often I hope to send comments for all patches sent
-yesterday and the day before yesterday that I spotted getting that
-wrong. I already sent a bunch of similar messages last week.) That's not
-surprising, because either one passes the compatibility test, whatever
-the actual license of the module might be.
+On mediatek platform, they need to configure two regulators in order to change
+DVFS state of the big cluster. The generic cpufreq-dt driver and earlier OPP
+bindings have support for a single regulator only and so what Pi-cheng tried
+to do is,
+- Configure one of the regulators using cpufreq-dt
+- And other one using cpufreq frequency change notifiers
 
-So are these two strings intended to correctly identify to the actual
-GPL version(s) of that module? Or is the fact that there are checks for
-both strings mostly a result of the way these two strings were
-introduced in a few steps? (I'll summarize these steps at the end of
-this message.) 
+This looks awkward..
 
-
-Paul Bolle
-
-0) MODULE_LICENSE() was introduced in v2.4.10. It documented four
-"idents" acceptable for free software modules:
-    "GPL"                      
-    "GPL and additional rights"
-    "Dual BSD/GPL"             
-    "Dual MPL/GPL"
-
-1) In v2.4.11 the license ident used in
-drivers/net/pcmcia/xircom_tulip_cb.c was changed from "GPL" to "GPL v2".
-
-2) In v2.5.40
-    "GPL v2"
-
-was also documented as an acceptable free software ident. At that time
-only drivers/net/tulip/xircom_tulip_cb.c used that ident.
-
-3) And in v2.5.55 license_is_gpl_compatible() was added. It accepted
-both license idents (since it accepted all then documented license
-idents). At that time the only user of "GPL v2" was still
-drivers/net/tulip/xircom_tulip_cb.c. (At that time there were over a
-thousand users of "GPL".)
-
-For comparison: in v4.0-rc3 there are nearly six thousand users of "GPL"
-and over a thousand users of "GPL v2".
-
+What I suggested was to create another virtual regulator for CPU which will
+eventually configure both the regulators. And so the question that such
+virtual regulators are allowed or not.
