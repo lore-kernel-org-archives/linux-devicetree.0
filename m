@@ -1,64 +1,61 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
-Date: Wed, 11 Mar 2015 16:03:48 +0100
-Message-ID: <20150311150348.GA11272@localhost.localdomain>
-References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
- <20150225151945.GB7703@localhost.localdomain>
- <20150225170127.GD7703@localhost.localdomain>
- <54EE0268.2040201@linn.co.uk>
- <20150225173053.GE7703@localhost.localdomain>
- <54F0A4C4.3020407@linn.co.uk>
- <20150227181447.GA11594@localhost.localdomain>
- <54F98660.5070805@linn.co.uk>
- <20150306152239.GC26349@localhost.localdomain>
- <5500251B.8010900@linn.co.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] ARM: dts: igep00x0: add wl18xx bindings
+Date: Wed, 11 Mar 2015 08:11:38 -0700
+Message-ID: <20150311151138.GU5264@atomide.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+ <6286151.8rcX893TN6@wuerfel>
+ <CABxcv=mPVxW=BqL2PUL=AtS74kcqMG1yxC1WqMpxGiNOqGAnyQ@mail.gmail.com>
+ <2353601.si5uCETVn2@wuerfel>
+ <CABxcv==yx3dy-beEF9cf1mKo1vjCh_LU6iLuvn1z-SKz9xG0qA@mail.gmail.com>
+ <CAB3XZEfi49qMsB7A3p4Y7r9emzSbeyUGVy4-njzey1UnJU0qzA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5500251B.8010900@linn.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAB3XZEfi49qMsB7A3p4Y7r9emzSbeyUGVy4-njzey1UnJU0qzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 11:20:59AM +0000, Stathis Voukelatos wrote:
-> Our feeling is that we will have to test and verify that a move to gPTP
-> will fit with the use cases that we have to support and that will
-> require a fair amount of effort and rewrite of application software.
-> If the driver is not acceptable with the current interface we may need
-> to maintain it as a private patch until we are ready to move to gPTP
-> as you recommend.
+* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150311 06:39]:
+> On Wed, Mar 11, 2015 at 3:21 PM, Javier Martinez Canillas
+> <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+> > On Wed, Mar 11, 2015 at 2:17 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> >> On Wednesday 11 March 2015 14:07:11 Javier Martinez Canillas wrote:
+> >>>
+> >>> Right now it seems that all boards in mainline with a WiLink6 part are
+> >>> using internal clocks. So as a first step I think that adding an
+> >>> optional refclock-frequency and tcxoclock-frequency properties should
+> >>> be enough.
+> >>>
+> >>> It would be good if the driver supports getting the refclock and
+> >>> tcxoclock from an external provider in case a board gets these from
+> >>> external clocks but that can be done as a followup if there are boards
+> >>> in the future using that design.
+> >>>
+> >>> But please bear in mind that I'm not familiar with the clock handling
+> >>> in WiLink6 since the WiLink8 part used in the IGEP boards does not
+> >>> need these clocks and I only looked at Luciano's previous patches and
+> >>> the WiLink today driver today. So it would be good if Eliad can double
+> >>> check my assumptions to see if those are correct.
+> >>
+> sounds right. that's what i know as well.
+> 
+> >> Sounds good. I'd also be fine with not implementing the case for
+> >> external clocks in the code until we need (and can test) it, but
+> >> I think it should be specified in the binding from the start.
+> >>
+> > Agreed.
+> >
+> great. so i'll implement the internal clocks case only.
 
-Sure, there is nothing wrong with that.  For the kernel, we want to
-build good interfaces for future applications.  Sometimes reworking
-the applications that use the old, private interfaces is just too much
-work, so you have to maintain those interfaces in your products.
+OK great sounds good to me also.
 
-> I was referring to the Songcast protocol we are using which is part
-> of the OpenHome suite (www.openhome.org) and runs on top of UDP.
-> It could be filtered by testing the first 5 bytes of the payload.
+Regards,
 
-Sounds promising.
-
-> In our implementation we also add the destination IP and port to
-> the filter to make it more reliable, but hwtstamp_rx_filters cannot
-> accept parameters.
-
-If the IP is a defined multicast group address, and if the port is
-well a known port, then you should of course include them in the
-driver level filter.
-
-Adding a unicast destination IP doesn't make it more reliable, because
-frames addressed to other hosts are switched away from the host (or
-dropped by the MAC).
-
-> However, I will test that and maybe come back with
-> a patch to expand the hwtstamp_rx_filter enum initially?
-
-It probably makes more sense to present the expanded filter list in
-the same patch series with the new driver that uses it, in order to
-see the context.  So I would hold off posting until both are ready.
-
-Thanks,
-Richard
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
