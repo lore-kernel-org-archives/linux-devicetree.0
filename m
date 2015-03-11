@@ -1,73 +1,52 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] dma: Add Xilinx ZDMA device tree Binding Documentation
-Date: Wed, 11 Mar 2015 08:21:01 +0530
-Message-ID: <CAGnW=BZpDjoX0tHncmzsMapppi9LKXe9SjCe7M4G3-js0Jm2JQ@mail.gmail.com>
-References: <BN1AFFO11FD032F933FA09686353911532C8180@BN1AFFO11FD032.protection.gbl>
-	<BN1BFFO11FD01214F9392FD94A0D30D9E28C190@BN1BFFO11FD012.protection.gbl>
+From: "long.wanglong" <long.wanglong@huawei.com>
+Subject: Re: [PATCH v2 1/2] Documentation: update the of_selftest.txt
+Date: Wed, 11 Mar 2015 11:07:26 +0800
+Message-ID: <54FFB16E.2000106@huawei.com>
+References: <1425868525-113952-1-git-send-email-long.wanglong@huawei.com> <CAL_JsqLgxCQW==4YQrX193g+x22d1iL2jBGY4CSMnq7cQcSgZQ@mail.gmail.com> <CAL_JsqJiWhXQqGCik9tDqyaXEqU8+gEdw=FBVL_Fddbk_SjfwQ@mail.gmail.com> <CA+rpMb+xL4g5bzGQhUe7kFkCmpH3VwGXsVP3zypW1w6366gAkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BN1BFFO11FD01214F9392FD94A0D30D9E28C190-fm2tX0oQAVzat3LGO86d6+hlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, punnaiah choudary kalluri <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+rpMb+xL4g5bzGQhUe7kFkCmpH3VwGXsVP3zypW1w6366gAkw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gaurav Minocha <gaurav.minocha.os@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, peifeiyue@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 5:31 AM, S=C3=B6ren Brinkmann
-<soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Tue, 2015-03-10 at 07:46PM +0530, Punnaiah Choudary Kalluri wrote:
->> Device-tree binding documentation for Xilinx ZDMA Engine
+On 2015/3/10 23:16, Gaurav Minocha wrote:
+> Hi Rob,
+> 
+> On Mar 10, 2015 7:51 AM, "Rob Herring" <robherring2@gmail.com <mailto:robherring2@gmail.com>> wrote:
 >>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/dma/xilinx/zdma.txt        |   76 +++++++++=
-+++++++++++
->>  1 files changed, 76 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zdm=
-a.txt
+>> On Tue, Mar 10, 2015 at 9:44 AM, Rob Herring <robherring2@gmail.com <mailto:robherring2@gmail.com>> wrote:
+>> > On Sun, Mar 8, 2015 at 9:35 PM, Wang Long <long.wanglong@huawei.com <mailto:long.wanglong@huawei.com>> wrote:
+>> >> Since the directory "drivers/of/testcase-data" is renamed
+>> >> to "drivers/of/unittest-data". so we should update the path
+>> >> in the of_selftest.txt.
 >>
->> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zdma.txt b=
-/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
->> new file mode 100644
->> index 0000000..399a3bc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/xilinx/zdma.txt
->> @@ -0,0 +1,76 @@
->> +Xilinx ZDMA engine, it does support memory to memory transfers,
->> +memory to device and device to memory transfers. It also has flow
->> +control and rate control support for slave/peripheral dma access.
->> +
->> +Xilinx ZynqMP has two instances of general purpose DMA(ZDMA).
->> +one is located in FPD(full power domain) and other is located in
->> +LPD(low power domain).
->> +
->> +ZDMA instance located in FPD is referred as FPDMA and instance loca=
-ted
->> +in LPD is referred as LPDMA.
->> +
->> +FPDMA is configured with 8 DMA channels and AXI bus width is 128 by=
-te.
->> +LPDMA is configured with 8 DMA channels and AXI bus width is 64 byt=
-e.
->
-> All these implementation details are good background information, but
-> shouldn't be part of the binding.
+>> [...]
+>>
+>> >> -Before executing OF selftest, it is required to attach the test data to
+>> >> +Before executing OF unittest, it is required to attach the test data to
+>> >>  machine's device tree (if present). So, when selftest_data_add() is called,
+>> >
+>> > This one too.
+>>
+>> Or not. The functions are all still "selftest". Not sure why Grant
+>> left all those...
+> 
+> I will send a patch to replace the selftest with unitest also will update the document if required..
+> 
+Hi Gaurav, Rob
 
-Ok. i will remove then.
+I have done the work. before replacing the selftest with unittest, i will fix some error in OF unittest.
+Please review my patch, and give me some advices.
 
 Thanks.
-Punnaiah
->
->         S=C3=B6ren
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Best Regards
+Wang Long
+
+>>
+>> Rob
+> 
