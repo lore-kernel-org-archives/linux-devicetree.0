@@ -1,79 +1,125 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 06/18] omap3isp: Refactor device configuration structs for Device Tree
-Date: Thu, 12 Mar 2015 01:07:51 +0200
-Message-ID: <101867645.hqvO850At0@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-7-git-send-email-sakari.ailus@iki.fi>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/2] power: reset: Add generic SYSCON register mapped
+ poweroff.
+Date: Thu, 12 Mar 2015 00:18:56 +0100
+Message-ID: <1426115936.4244.132.camel@x220>
+References: <1426029670-31775-1-git-send-email-moritz.fischer@ettus.com>
+	 <1426029670-31775-2-git-send-email-moritz.fischer@ettus.com>
+	 <1426066272.4244.37.camel@x220>
+	 <CAAtXAHetS9354mN5LAneMBk07U23hq2eZfqOxoXapG384=+EzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-7-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com, Mike Rapoport <mike@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHetS9354mN5LAneMBk07U23hq2eZfqOxoXapG384=+EzQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Moritz,
 
-Thank you for the patch.
+On Wed, 2015-03-11 at 15:00 -0700, Moritz Fischer wrote:
+> thanks for your feedback. While developing this I looked at other drivers in
+> the tree and many of your comments would apply to them, too?
 
-On Saturday 07 March 2015 23:41:03 Sakari Ailus wrote:
-> Make omap3isp configuration data structures more suitable for consumption by
-> the DT by separating the I2C bus information of all the sub-devices in a
-> group and the ISP bus information from each other. The ISP bus information
-> is made a pointer instead of being directly embedded in the struct.
+Could be. I didn't check. It's basically stuff that get's silently
+handled by the preprocessor. So I wouldn't be surprised if a lot of
+drivers do similar things.
+
+> On Wed, Mar 11, 2015 at 2:31 AM, Paul Bolle <pebolle@tiscali
 > 
-> In the case of the DT only the sensor specific information on the ISP bus
-> configuration is retained. The structs are renamed to reflect that.
+> >> +config POWER_RESET_SYSCON_POWEROFF
+> >> +     bool "Generic SYSCON regmap poweroff driver"
+> >
+> > This adds a bool symbol.
 > 
-> After this change the structs needed to describe device configuration can be
-> allocated and accessed separately without those needed only in the case of
-> platform data. The platform data related structs can be later removed once
-> the support for platform data can be removed.
+> Is that an issue or is it just to substantiate the rest of your comments below?
+
+It's just an observation.
+
+> >> +obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
+> >
+> > So this objectfile can never be part of a module.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-> Cc: Mike Rapoport <mike@compulab.co.il>
-> Cc: Igor Grinberg <grinberg@compulab.co.il>
-> ---
->  arch/arm/mach-omap2/board-cm-t35.c          |   57 +++++++-----------
->  drivers/media/platform/omap3isp/isp.c       |   86 ++++++++++++------------
->  drivers/media/platform/omap3isp/isp.h       |    2 +-
->  drivers/media/platform/omap3isp/ispccdc.c   |   26 ++++----
->  drivers/media/platform/omap3isp/ispccp2.c   |   22 +++----
->  drivers/media/platform/omap3isp/ispcsi2.c   |    8 +--
->  drivers/media/platform/omap3isp/ispcsiphy.c |   21 ++++---
->  include/media/omap3isp.h                    |   34 +++++------
->  8 files changed, 119 insertions(+), 137 deletions(-)
+> Same comment would apply for power/reset/qnap-poweroff.c, right?
 
-[snip]
+That could be. I didn't check it while looking at this patch.
 
-> diff --git a/drivers/media/platform/omap3isp/ispccdc.c
-> b/drivers/media/platform/omap3isp/ispccdc.c index 587489a..1c0a552 100644
-> --- a/drivers/media/platform/omap3isp/ispccdc.c
-> +++ b/drivers/media/platform/omap3isp/ispccdc.c
-> @@ -958,11 +958,11 @@ void omap3isp_ccdc_max_rate(struct isp_ccdc_device
-> *ccdc, /*
->   * ccdc_config_sync_if - Set CCDC sync interface configuration
->   * @ccdc: Pointer to ISP CCDC device.
-> - * @pdata: Parallel interface platform data (may be NULL)
-> + * @buscfg: Parallel interface platform data (may be NULL)
+> >> +#include <linux/module.h>
+> >
+> > Is that include needed?
+> 
+> Wouldn't that be needed if MODULE_DEVICE_TABLE etc, is used?
 
-The parameter is called parcfg below.
+Perhaps, but I don't think those macros are used.
 
-With this fixed,
+> >> +MODULE_DEVICE_TABLE(of, syscon_poweroff_of_match);
+> >
+> > This will be preprocessed away.
+> 
+> In my experiments it didn't work without this, are you sure it's not needed?
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+MODULE_DEVICE_TABLE() is defined only in include/linux/module.h. The few
+related lines read (in next-20150311):
+    #ifdef MODULE
+    /* Creates an alias so file2alias.c can find device table. */
+    #define MODULE_DEVICE_TABLE(type, name)					\
+    extern const typeof(name) __mod_##type##__##name##_device_table		\
+      __attribute__ ((unused, alias(__stringify(name))))
+    #else  /* !MODULE */
+    #define MODULE_DEVICE_TABLE(type, name)
+    #endif
 
->   * @data_size: Data size
->   */
->  static void ccdc_config_sync_if(struct isp_ccdc_device *ccdc,
-> -				struct isp_parallel_platform_data *pdata,
-> +				struct isp_parallel_cfg *parcfg,
->  				unsigned int data_size)
->  {
->  	struct isp_device *isp = to_isp_device(ccdc);
+So I think MODULE_DEVICE_TABLE() is always preprocessed away for boolean
+code. Did I get that right? 
 
--- 
-Regards,
+> >> +module_platform_driver(syscon_poweroff_driver);
+> >
+> > I think the built-in equivalent of this would be adding a wrapper that
+> > only does
+> >     platform_driver_register(&syscon_poweroff_driver);
+> 
+> I couldn't find other examples in the tree doing this. Any pointers?
 
-Laurent Pinchart
+Please note "think". But see drivers/cpufreq/dbx500-cpufreq.c:
+    static int __init dbx500_cpufreq_register(void)
+    {
+            return platform_driver_register(&dbx500_cpufreq_plat_driver);
+    }
+    device_initcall(dbx500_cpufreq_register);
+
+or drivers/gpio/gpio-vf610.c:
+    static int __init gpio_vf610_init(void)
+    {
+            return platform_driver_register(&vf610_gpio_driver);
+    }
+    device_initcall(gpio_vf610_init);
+
+(There are probably more.) Please note that both files use MODULE_*
+macros but can actually only be built-in.
+
+> >> +MODULE_LICENSE("GPL v2");
+> >
+> > You probably meant
+> >     MODULE_LICENSE("GPL");
+> 
+> Sorry about that. Will fix.
+
+That's a very easy mistake to make anyway. There's currently a thread
+were (another) Dmitry and I discuss the merits of differentiating
+between "GPL" and "GPL v2" in MODULE_LICENSE().
+
+> >> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
+> >> +MODULE_DESCRIPTION("Generic SYSCON poweroff driver");
+> >> +MODULE_ALIAS("platform:syscon-poweroff");
+> >
+> > But these four macros will all be effectively preprocessed away, anyhow.
+> 
+> I'll remove them.
+
+Thanks,
+
+
+Paul Bolle
+
