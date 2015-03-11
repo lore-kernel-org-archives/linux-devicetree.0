@@ -1,35 +1,49 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 0/5] i.MX6 PU power domain support
-Date: Wed, 11 Mar 2015 09:12:38 +0800
-Message-ID: <20150311011236.GV20455@dragon>
-References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: [PATCH v3 0/2] Add support for Broadcom iProc touchscreen
+Date: Tue, 10 Mar 2015 18:17:47 -0700
+Message-ID: <1426036669-21659-1-git-send-email-jonathar@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424713215-3357-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <Jonathan Richardson <jonathar@broadcom.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>
+Cc: Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 06:40:10PM +0100, Philipp Zabel wrote:
-> Philipp Zabel (6):
->   Documentation: Add device tree bindings for Freescale i.MX GPC
->   ARM: imx6: gpc: Add PU power domain for GPU/VPU
->   ARM: dts: imx6qdl: Add power-domain information to gpc node
->   ARM: dts: imx6sl: Add power-domain information to gpc node
->   ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp
->     delay
+This patchset contains initial support for the touchscreen on the Broadcom
+iProc family of SoCs. This driver has been validated with Cygnus and is expected
+to work on other iProc family of SoCs that use the same touchscreen controller.
 
-Applied above 5.
+Changes from v2:
+- Misc style changes.
+- Removed assumptions about interrupts generated in ISR. It now emits all
+  events and then syncs if necessary.
+- Removed our rotation property and replaced with the latest
+  touchscreen-inverted-x/y. Also added support for the standard optional
+  properties touchscreen-size-x/y and touchscreen-fuzz-x/y. Did not add support
+  for inverted-x/y at this time as our touchscreen is currently only oriented
+  180 degres.
 
->   ARM: imx6: gpc: Allow PU regulator bypass
+Changes from v1:
+- Add missing newlines to debug messages
+- Use BIT macro for defines
+- Fix logic in get_tsc_config to improve readability
+- Get rid of unnecessary remove() function
 
-I only received 5 patches in the series.
+Jonathan Richardson (2):
+  Input: touchscreen-iproc: Add Broadcom iProc touchscreen driver
+  Input: touchscreen-iproc: add device tree bindings
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../input/touchscreen/brcm,iproc-touchscreen.txt   |   76 +++
+ drivers/input/touchscreen/Kconfig                  |   11 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/bcm_iproc_tsc.c          |  527 ++++++++++++++++++++
+ 4 files changed, 615 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
+ create mode 100644 drivers/input/touchscreen/bcm_iproc_tsc.c
+
+-- 
+1.7.9.5
+
