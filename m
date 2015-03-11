@@ -1,45 +1,72 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: Re: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus
- USB PHY driver
-Date: Wed, 11 Mar 2015 14:37:58 -0700
-Message-ID: <5500B5B6.50609@broadcom.com>
-References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com> <54E53278.70705@broadcom.com> <54EE67A6.609@broadcom.com> <2079271.sEacVGN4vm@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
+Date: Wed, 11 Mar 2015 21:31:42 +0100
+Message-ID: <3192051.z32dL5alyl@wuerfel>
+References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <2216310.NqXA88JvvL@wuerfel> <55009ED6.4050205@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2079271.sEacVGN4vm@wuerfel>
+In-Reply-To: <55009ED6.4050205@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Alan Stern <stern@rowland.harvard.edu>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Jonathan Richardson <jonathar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@google.com>, Kumar Gala <galak@codeaurora.org>, Anatol Pomazau <anatol@google.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, mark.rutland@arm.com, a.zummo@towertech.it, sbranden@broadcom.com, pawel.moll@arm.com, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Ray Jui <rjui@broadcom.com>, ijc+devicetree@hellion.org.uk, Arun Ramamurthy <arunrama@broadcom.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, galak@codeaurora.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 11 March 2015 13:00:22 Arun Ramamurthy wrote:
+> 
+> Arnd, this is the device tree entry that I would end up with and I plan 
+> to use syscon_regmap_lookup_by_phandle in the rtc driver. Does this look 
+> acceptable?
+> 
+> rtc: iproc_rtc@0x03026000 {
+>                 compatible = "brcm,iproc-rtc";
+>                 reg =   <0x03026000 0xC>,
+>                 iso_cell_syscon = <&crmu_iso_cell_control>;
+>                 bbl_auth_syscon = <&crmu_bbl_auth>
+>                 status = "okay";
+> 
+> crmu_iso_cell_control:crmu@0x0301C02C {
+>                 compatible = "syscon";
+>                 reg = <0x0301C038 0x8>
+> }
+> 
+> crmu_bbl_auth:crmu@0x03024C74 {
+>                 compatible = "syscon";
+>                 reg = <0x03024C74 0x8>;
+> }
 
+This doesn't look right, sorry:
 
-On 15-03-10 01:27 PM, Arnd Bergmann wrote:
-> On Wednesday 25 February 2015 16:24:06 Arun Ramamurthy wrote:
->>>>> Should I run this by Alan Stern?
->>>>
->>>> I've added him to Cc here. He clearly didn't know the background about
->>>> the DT binding change, and should not need to, but he may have an opinion
->>>> on what names we should use.
->>>>
->>>
->> Arnd, should I re patch the ehci-platform driver to avoid phy-names
->> entirely? Alan, if not do you have an opinion on what the usb phy names
->> should be? The current patch uses "usbp" + port number such as "usbp0" ,
->> "usbp1" etc
->
-> I think avoiding the phy names would be best here, but it requires a
-> kernel API change first, because we do not have a way to get a phy
-> by index as we do for other subsystems (e.g. clocks or gpios).
->
-Arnd , there is an existing api _of_phy_get that gets a phy by index. 
-However it is not exported and is called from of_phy_get which is in 
-turn called from devm_of_phy_get.
+A syscon device is defined as a collection of registers that
+have no logical grouping within them but that can be seen
+as a single device. What you have here instead are two syscon
+nodes that each have only a single 8-byte register.
 
-My plan is to create a new function maybe devm_of_phy_get_by_index that 
-calls _of_phy_get directly? What are your thoughts?
+What are the other registers surrounding those? I would expect
+something like
 
-> 	Arnd
->
+	crmu0: syscon@03010000 {
+                 compatible = "syscon";
+                 reg = <0x03010000 0x10000>;
+	};
+
+and then use an offset into the syscon from the rtc node, like
+
+	iproc_rtc: rtc@03026000 {
+		compatible = "brcm,iproc-rtc";
+		reg = <0x03026000 0x1000>;
+		iso_cell_syscon = <&crmu0 0xc038>;
+		bbl_auth_syscon = <&crmu1 0x4c74>;
+	};
+
+Note also that you got most of the naming wrong:
+
+- node names should be generic strings like "rtc", "syscon", "pci" etc.
+  The specific strings are defined in ePAPR.
+- unit addresses should match the first 'reg' property and
+  not start with '0x'.
+- it seems strange that the rtc has only 12 bytes of registers,
+  though that may actually be correct.
+
+	Arnd
