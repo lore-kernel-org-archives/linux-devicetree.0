@@ -1,64 +1,66 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: chosen/stdout-path and userland (Re: Can't boot kernel v4.0-rc2
- on Koelsch)
-Date: Wed, 11 Mar 2015 09:42:41 -0400
-Message-ID: <55004651.2000205@hurleysoftware.com>
-References: <CAMuHMdVSbYYGQyOjce87Q_dMHvh9du1EkgOgC+CBgrMys++mkA@mail.gmail.com>	<55003D82.1080601@hurleysoftware.com> <CAMuHMdWjHnX4NS2Z7MMg9FBjDpo41h517U3t+ndSCzhGKDLCvA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Wed, 11 Mar 2015 14:41:58 +0100
+Message-ID: <20150311134158.GM5085@lukather>
+References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
+ <20150303071635.GC4713@lukather>
+ <54F568F8.1040104@redhat.com>
+ <20150303082209.GE4713@lukather>
+ <54F5B51F.6030609@redhat.com>
+ <20150303135847.GH4911@lukather>
+ <54FED277.4040000@redhat.com>
+ <20150310184449.GZ5085@lukather>
+ <54FF714F.4010303@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWjHnX4NS2Z7MMg9FBjDpo41h517U3t+ndSCzhGKDLCvA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Cao Minh Hiep <cm-hiep@jinso.co.jp>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Linux-SH <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Sakato Ryusuke <ryusuke.sakato.bx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1f1tNaDgxoBnXskx"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBXUNQGUAKGQEBNZO3GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54FF714F.4010303-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+--1f1tNaDgxoBnXskx
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 03/11/2015 09:23 AM, Geert Uytterhoeven wrote:
-> Hi Peter,
+On Tue, Mar 10, 2015 at 11:33:51PM +0100, Hans de Goede wrote:
+> >>>and we have no way to replace U-Boot in NAND
+> >>>so far (afaik). But replacing them by stdout-path is a very good
+> >>>solution too.
+> >>
+> >>You mean putting stdout-path in the dts, I'm not sure if I like that,
+> >>to me both bootargs and stdout-path are something which should be
+> >>left to the bootloader to set. But I understand that when not
+> >>using upstream u-boot that may be an issue.
+> >
+> >I know that some other platforms ask for stdout-path when they review
+> >it, because iirc, barebox uses it to know on which console to output
+> >its log and export its shell, which is also a valid interpretation of
+> >that property, and, contrary to bootargs, doesn't really imply that
+> >the bootloader should update it.
 > 
-> On Wed, Mar 11, 2015 at 2:05 PM, Peter Hurley <peter@hurleysoftware.com> wrote:
->> The first console listed is the primary console.
->> tty0 is not resolved to its underlying tty device name.
-> 
-> Are you sure about that? Isn't the last one the primary console?
-> 
-> root@koelsch:~# cat  /sys/class/tty/console/active
-> tty0 ttySC0
-> 
-> If tty0 would be the primary console, getty on /dev/console wouldn't work for
-> my serial console, as only input on the primary console can be read through
-> /dev/console if my memory serves me well (or perhaps this has changed?).
-> 
-> Ah, Documentation/ABI/testing/sysfs-tty agrees with me:
-> 
-> What:           /sys/class/tty/console/active
-> Date:           Nov 2010
-> Contact:        Kay Sievers <kay.sievers@vrfy.org>
-> Description:
->                  Shows the list of currently configured
->                  console devices, like 'tty1 ttyS0'.
->                  The last entry in the file is the active
->                  device connected to /dev/console.
+> Hmm, that is interesting we should probably start doing the same in
+> all the sunxi dts files, as eventually I would like to move all u-boot
+> board config to devicetree, so that we only need to maintain dts files
+> and not both dts files and u-boot board configs.
 
-Did I write 'first'?  <blushes>
-Yeah, it is 'last', as the documentation states.
+I had the plan to remove all earlyprintk in the bootargs of the DTS, I
+can do it to convert all DTS to use stdout-path as well.
 
->> That said, is the original reporter of this problem even interested in
->> upgrading their userspace, even if this is fixed in Linaro eventually?
->> What about other Linaro users?
-> 
-> We'll see...
-> 
->> I think the only reasonable course here is to continue to support
->> "console=" in /chosen/bootargs.
-> 
-> Hmm...
-> If you really need it, you can always add it to the U-Boot bootargs variable.
+Maxime
 
-Is u-boot a given?
-
-Regards,
-Peter Hurley
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--1f1tNaDgxoBnXskx--
