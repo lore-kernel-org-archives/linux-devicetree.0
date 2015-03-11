@@ -1,75 +1,100 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH net-next 2/3] net: dsa: move PHY setup on DSA MII bus to its own function
-Date: Tue, 10 Mar 2015 16:57:12 -0700
-Message-ID: <1426031833-5113-3-git-send-email-f.fainelli@gmail.com>
-References: <1426031833-5113-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426031833-5113-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency control
+Date: Tue, 10 Mar 2015 17:13:28 -0700
+Message-ID: <20150311001328.14952.56422@quantum>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+ <20150304112109.GB11010@pengutronix.de>
+ <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+ <20150305074207.GC11010@pengutronix.de>
+ <CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
+ <20150305091948.GH11010@pengutronix.de>
+ <CALx668X2m0hMVQumGQmhhrKnv4h1hiYp20Q4FcKuECK3mhoJiA@mail.gmail.com>
+ <20150305105104.GJ11010@pengutronix.de>
+ <CAKohpo=90YH3TLfnMro0AQOM6_uMB_SPS9Q3j6Myz4RqqBdVHg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=90YH3TLfnMro0AQOM6_uMB_SPS9Q3j6Myz4RqqBdVHg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Henry Chen <henryc.chen@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-In preparation for dealing with indirect reads and writes towards
-certain PHY devices, move the code which deals with binding the PHY
-device to the slave MII bus created by DSA to its own function:
-dsa_slave_phy_connect().
+Quoting Viresh Kumar (2015-03-05 03:02:06)
+> On 5 March 2015 at 16:21, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > Given the variance of different SoCs I don't think it makes sense
+> > to try to handle all these cases. Instead the cpufreq-dt driver
+> > should just call clk_set_rate() on the CPU clock with the desired
+> > target frequency. Everything else should be handled in the clock
+> > driver which has intimate knowledge about the SoC anyway.
+> 
+> I agree..
+> 
+> @Russell: I wanted to ask you this since sometime..
+> 
+> On CPU-freq changes we fire PRE/POST notifiers and they are
+> used for updating loops_per_jiffies which then controls delays.
+> 
+> Now, it is fine to do that for normal frequencies, but what should be
+> the approach for intermediate frequencies ?
+> 
+> Intermediate freqs: On some platforms changing PLL's straight away
+> isn't considered safe and so we switch parent to another stable clock,
+> change PLL rate and switch back.
+> 
+> The *wild* thought I earlier had was to fire these notifiers for even these
+> intermediate frequencies, otherwise some of the delays will end before
+> they should have and that *might* cause other problems.
+> 
+> I wanted to know what do you (and other champs) think about this..
+> 
+> Thanks in advance for your advice.
 
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- net/dsa/slave.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+Sorry, I am not who you asked for advice but I will chime in anyways ;-)
 
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index a47305c72fcc..19bc2b39c9d1 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -617,6 +617,23 @@ static int dsa_slave_fixed_link_update(struct net_device *dev,
- }
- 
- /* slave device setup *******************************************************/
-+static int dsa_slave_phy_connect(struct dsa_slave_priv *p,
-+				 struct net_device *slave_dev)
-+{
-+	struct dsa_switch *ds = p->parent;
-+
-+	p->phy = ds->slave_mii_bus->phy_map[p->port];
-+	if (!p->phy)
-+		return -ENODEV;
-+
-+	/* Use already configured phy mode */
-+	p->phy_interface = p->phy->interface;
-+	phy_connect_direct(slave_dev, p->phy, dsa_slave_adjust_link,
-+			   p->phy_interface);
-+
-+	return 0;
-+}
-+
- static int dsa_slave_phy_setup(struct dsa_slave_priv *p,
- 				struct net_device *slave_dev)
- {
-@@ -662,14 +679,9 @@ static int dsa_slave_phy_setup(struct dsa_slave_priv *p,
- 	 * MDIO bus instead
- 	 */
- 	if (!p->phy) {
--		p->phy = ds->slave_mii_bus->phy_map[p->port];
--		if (!p->phy)
--			return -ENODEV;
--
--		/* Use already configured phy mode */
--		p->phy_interface = p->phy->interface;
--		phy_connect_direct(slave_dev, p->phy, dsa_slave_adjust_link,
--				   p->phy_interface);
-+		ret = dsa_slave_phy_connect(p, slave_dev);
-+		if (ret)
-+			return ret;
- 	} else {
- 		netdev_info(slave_dev, "attached PHY at address %d [%s]\n",
- 			    p->phy->addr, p->phy->drv->name);
--- 
-2.1.0
+I really hate this intermediate frequency stuff in cpufreq. As we
+discussed over lunch in Hong Kong, it does not scale. What if there two
+intermediate frequencies? What if a processor steps frequency up in 5KHz
+increments (albeit very quickly) until it converges to the target rate?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Or what if we have more complex levels of intermediate frequencies?
+Stealing Sascha's excellent ascii art:
+
+            ---
+CPU_PLL ---|   |
+           |   |
+           |   |----- CPU
+           |   |
+IM_PLL ----|   |
+            ---
+
+Where the sequence is as follows:
+
+1) set IM_PLL to a new freq
+2) reparent CPU to IM_PLL
+3) configure CPU_PLL
+4) reparent CPU to CPU_PLL
+5) restore IM_PLL to original frequency
+
+Steps #1 and #5 are new in this example.
+
+I don't see how the concept of an intermediate frequency in the cpufreq
+core could ever scale gracefully to handle corner cases. They may be
+hypothetical now but I'd rather see us dodge this mistake.
+
+Furthermore any intermediate-frequency property in a Devicetree binding
+would suffer the same fate. Trying to neatly encode some weird sequence
+into this generic thing will get very ugly very fast.
+
+For proof please look at clk-divider.c, clk-gate.c, clk-mux.c or
+clk-composite.c and you'll see the result of the slow accumulation of
+lots and lots of hardware corner cases onto generic code. If I had known
+then what I know now I would not have created those generic clock types
+and I would have tried for an abstraction layer between generic stuff
+(e.g. find the best divider) and the real hardware stuff (write to the
+register). Instead I kept all of it together and now things are super
+ugly.
+
+Regards,
+Mike
