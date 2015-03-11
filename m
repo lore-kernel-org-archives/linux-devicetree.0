@@ -1,41 +1,52 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] ARM: imx6qdl-sabresd: set swbst_reg as vbus's parent
- reg
-Date: Wed, 11 Mar 2015 10:57:00 +0100
-Message-ID: <20150311095700.GA8172@kroah.com>
-References: <1425629061-8995-1-git-send-email-peter.chen@freescale.com>
- <20150311012424.GW20455@dragon>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v5 2/3] wl18xx: add basic device-tree support
+Date: Wed, 11 Mar 2015 11:05:47 +0100
+Message-ID: <CABxcv=nn9-1a-3809Y1JgC5ExkwHqQmCXRT3tX=h7Z6C7c+m2A@mail.gmail.com>
+References: <1425915402-10012-1-git-send-email-eliad@wizery.com>
+	<1425915402-10012-2-git-send-email-eliad@wizery.com>
+	<CABxcv=mygdT2Q+ByVKPx4+o_Oj9KSy=zVX9ng9yN25ivkfSn1A@mail.gmail.com>
+	<2121942.zIG9BfPsTV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150311012424.GW20455@dragon>
-Sender: stable-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Peter Chen <peter.chen@freescale.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <2121942.zIG9BfPsTV@wuerfel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Eliad Peller <eliad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ido Yariv <ido@wizery.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 09:24:25AM +0800, Shawn Guo wrote:
-> On Fri, Mar 06, 2015 at 04:04:20PM +0800, Peter Chen wrote:
-> > USB vbus 5V is from PMIC SWBST, so set swbst_reg as vbus's
-> > parent reg, it fixed a bug that the voltage of vbus is incorrect
-> > due to swbst_reg is disabled after boots up.
-> > 
-> > Cc: stable <stable@vger.kernel.org>
-> 
-> It's more idiomatic to put the line in this way:
-> 
-> Cc: stable@vger.kernel.org
-> 
-> Changed it and applied both patches.
+Hello Arnd,
 
-It really doesn't matter, my scripts try to pick up any variation of the
-stable@ markings in a signed-off-by: area, as there is a huge number of
-different ways people try to mark this, including using invalid email
-addresses, and typos.
+On Wed, Mar 11, 2015 at 10:51 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 11 March 2015 01:34:19 Javier Martinez Canillas wrote:
+>> > +
+>> > +static struct wl12xx_platform_data *
+>> > +wlcore_get_platform_data(struct device *dev)
+>> > +{
+>> > +       struct wl12xx_platform_data *pdata;
+>> > +
+>> > +       /* first, look for DT data */
+>>
+>> I thought it was the opposite, that platform data should over-rule DT.
+>> That way you can still use the data filled in
+>> arch/arm/mach-omap2/pdata-quirks.c even after the driver supports your
+>> new DT binding.
+>
+> No, the pdata-quirks stuff for this driver must die, it was a hack
+> that only exists because we previously could not attach data to an
+> sdio function.
+>
 
-So no need to be pedantic about this, I can handle it just fine.
+Ok sorry, I misunderstood and thought that the output from the
+discussion in patch 3/3 was that the pdata could not still be removed
+due not having a way to configure the clocks for wl12xx.
 
-thanks,
+I totally agree with removing the pdata on this driver, in fact I
+would go an just remove all the remaining OMAP2+ board files and
+pdata-quirks completely. Most OMAP2+ boards have been converted to DT
+years ago and if someone really cares about mainline support for these
+boards, they can add a DTS and DT bindings for the drivers that still
+needed like this one.
 
-greg k-h
+Best regards,
+Javier
