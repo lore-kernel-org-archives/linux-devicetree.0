@@ -1,56 +1,92 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] pci: of : fix BUG: unable to handle kernel
-Date: Wed, 11 Mar 2015 10:59:16 -0500
-Message-ID: <CAL_JsqLi+bo=zEobrduWW9D1KtTGtfO17XYw6jGjh_u_foy_VA@mail.gmail.com>
-References: <1426001139-18419-1-git-send-email-m-karicheri2@ti.com>
- <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com>
- <20150311124911.GA8656@n2100.arm.linux.org.uk> <55005F0F.5080302@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <55005F0F.5080302@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulanit <Suravee.Suthikulpanit@amd.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 4/5] arm64/efi: ensure that Image does not cross a 512 MB boundary
+Date: Wed, 11 Mar 2015 17:00:19 +0100
+Message-ID: <1426089620-9459-5-git-send-email-ard.biesheuvel@linaro.org>
+References: <1426089620-9459-1-git-send-email-ard.biesheuvel@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426089620-9459-1-git-send-email-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 10:28 AM, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> On 03/11/2015 08:49 AM, Russell King - ARM Linux wrote:
->>
->> On Wed, Mar 11, 2015 at 07:35:45AM -0500, Rob Herring wrote:
->>>
->>> On Tue, Mar 10, 2015 at 10:25 AM, Murali Karicheri<m-karicheri2@ti.com>
->>> wrote:
->>>>
->>>> On some platforms such as that based on x86, ia64 etc, root bus is
->>>> created with parent node passed in as NULL to pci_create_root_bus().
->>>> On these platforms, the patch series "PCI: get DMA configuration from
->>>> parent device" when applied causes kernel crash. So add a check for this
->>>> in of_pci_dma_configure()
->>>
->>>
->>> Wouldn't these arches have OF disabled and call an empty function?
->>> Regardless, we still need this.
->>>
->>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>>
->>>
->>> I'm assuming Bjorn will apply this.
->>>
->>> Acked-by: Rob Herring<robh@kernel.org>
->>
->>
->> It might be an idea to read the subject line...
->>
->> "fix BUG: unable to handle kernel"
->
-> Russell,
->
-> I will fix the subject as "fix BUG: unable to handle kernel NULL pointer"
-> and re-send.
+Update the Image placement logic used by the stub to make absolutely
+sure that the Image is placed such that the early init code will
+always be able to map it. This means the entire static memory footprint
+of the Image should be inside the same naturally aligned 512 MB region.
 
-Russell's point is the subject applies to every fix for a BUG.
-Something like "of/pci: fix of_pci_dma_configure parent ptr NULL
-dereference".
+First of all, the preferred offset of dram_base + TEXT_OFFSET is only
+suitable if it doesn't result in the Image crossing a 512 MB
+alignment boundary, which could be the case if dram_base itself is
+close to the end of a naturally aligned 512 MB region.
 
-Rob
+Also, when moving the kernel Image, we need to verify that the new
+destination region does not cross a 512 MB alignment boundary either.
+If that is the case, we retry the allocation with the alignment
+chosen such that the resulting region will always be suitable.
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/kernel/efi-stub.c | 41 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/kernel/efi-stub.c b/arch/arm64/kernel/efi-stub.c
+index f5374065ad53..3b67ca4e2f2e 100644
+--- a/arch/arm64/kernel/efi-stub.c
++++ b/arch/arm64/kernel/efi-stub.c
+@@ -21,15 +21,40 @@ efi_status_t __init handle_kernel_image(efi_system_table_t *sys_table,
+ 					unsigned long dram_base,
+ 					efi_loaded_image_t *image)
+ {
++	const unsigned long kernel_size = _edata - _text;
++	const unsigned long kernel_memsize = _end - _text;
++	unsigned long preferred_offset;
+ 	efi_status_t status;
+-	unsigned long kernel_size, kernel_memsize = 0;
+-
+-	/* Relocate the image, if required. */
+-	kernel_size = _edata - _text;
+-	if (*image_addr != (dram_base + TEXT_OFFSET)) {
+-		kernel_memsize = kernel_size + (_end - _edata);
+-		status = efi_low_alloc(sys_table, kernel_memsize + TEXT_OFFSET,
+-				       SZ_2M, reserve_addr);
++
++	/*
++	 * The kernel Image should be located as close as possible to the
++	 * base of system RAM, but its static memory footprint must not
++	 * cross a 512 MB alignment boundary.
++	 */
++	preferred_offset = dram_base + TEXT_OFFSET;
++	if ((preferred_offset & (SZ_512M - 1)) + kernel_memsize > SZ_512M)
++		preferred_offset = round_up(dram_base, SZ_512M) + TEXT_OFFSET;
++
++	if (*image_addr != preferred_offset) {
++		const unsigned long alloc_size = kernel_memsize + TEXT_OFFSET;
++
++		status = efi_low_alloc(sys_table, alloc_size, SZ_2M,
++				       reserve_addr);
++
++		/*
++		 * Check whether the new allocation crosses a 512 MB alignment
++		 * boundary. If so, retry with the alignment set to a power of
++		 * two upper bound of the allocation size. That is guaranteed
++		 * to produce a suitable allocation, but may waste more memory.
++		 */
++		if (status == EFI_SUCCESS &&
++		    ((*reserve_addr & (SZ_512M - 1)) + alloc_size) > SZ_512M) {
++			efi_free(sys_table, alloc_size, *reserve_addr);
++
++			status = efi_low_alloc(sys_table, alloc_size,
++					       roundup_pow_of_two(alloc_size),
++					       reserve_addr);
++		}
+ 		if (status != EFI_SUCCESS) {
+ 			pr_efi_err(sys_table, "Failed to relocate kernel\n");
+ 			return status;
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
