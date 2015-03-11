@@ -1,104 +1,25 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: imx6qdl-sabreauto.dtsi: add max7310 support
-Date: Wed, 11 Mar 2015 09:46:09 +0800
-Message-ID: <20150311014606.GY20455@dragon>
-References: <1425893288-1517-1-git-send-email-peter.chen@freescale.com>
- <1425893288-1517-2-git-send-email-peter.chen@freescale.com>
+Subject: Re: [PATCH 0/3] Disable PWMs in imx6ql.dtsi
+Date: Wed, 11 Mar 2015 09:53:44 +0800
+Message-ID: <20150311015342.GZ20455@dragon>
+References: <1425919236-6664-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425893288-1517-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1425919236-6664-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Anssi Hannula <anssi.hannula-X3B1VOXEql0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2015 at 05:28:06PM +0800, Peter Chen wrote:
-> max7310 is an i2c interface gpio expander
-> 
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 43 ++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> index 009abd6..51acfec 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> @@ -28,6 +28,13 @@
->  		};
->  	};
->  
-> +	max7310_reset: max7310-reset {
-> +		compatible = "gpio-reset";
+On Mon, Mar 09, 2015 at 05:40:33PM +0100, Philipp Zabel wrote:
+> Philipp Zabel (3):
+>   ARM: dts: imx6dl-aristainetos: enable backlight PWM explicitly
+>   ARM: dts: hummingboard/cubox-i: enable front LED PWM explicitly
+>   ARM: dts: imx6qdl: disable PWMs by default
 
-The mainline kernel doesn't seem to have a gpio-reset driver/binding
-yet.
-
-Shawn
-
-> +		reset-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> +		reset-delay-us = <1>;
-> +		#reset-cells = <0>;
-> +	};
-> +
->  	sound-spdif {
->  		compatible = "fsl,imx-audio-spdif",
->  			   "fsl,imx-sabreauto-spdif";
-> @@ -182,6 +189,35 @@
->  	};
->  };
->  
-> +&i2c3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c3>;
-> +	pinctrl-assert-gpios = <&gpio5 4 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +
-> +	max7310_a: gpio@30 {
-> +		compatible = "maxim,max7310";
-> +		reg = <0x30>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		resets = <&max7310_reset>;
-> +	};
-> +
-> +	max7310_b: gpio@32 {
-> +		compatible = "maxim,max7310";
-> +		reg = <0x32>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
-> +
-> +	max7310_c: gpio@34 {
-> +		compatible = "maxim,max7310";
-> +		reg = <0x34>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
-> +};
-> +
->  &iomuxc {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_hog>;
-> @@ -265,6 +301,13 @@
->  			>;
->  		};
->  
-> +		pinctrl_i2c3: i2c3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_3__I2C3_SCL  0x4001b8b1
-> +				MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
-> +			>;
-> +		};
-> +
->  		pinctrl_pwm3: pwm1grp {
->  			fsl,pins = <
->  				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
-> -- 
-> 1.9.1
-> 
+Applied all, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
