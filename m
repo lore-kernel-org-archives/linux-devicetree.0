@@ -1,45 +1,27 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Wed, 11 Mar 2015 22:48:13 +0100
-Message-ID: <7229476.C4So9noUlf@wuerfel>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <2155628.BceQuZbXC8@wuerfel> <79FFFE06-191C-404D-8923-48C9C28C61F7@codeaurora.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next 0/3] net: dsa: support PHY reads/writes
+ diversion
+Date: Wed, 11 Mar 2015 17:56:57 -0400 (EDT)
+Message-ID: <20150311.175657.1620941116448860241.davem@davemloft.net>
+References: <1426031833-5113-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <79FFFE06-191C-404D-8923-48C9C28C61F7@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1426031833-5113-1-git-send-email-f.fainelli@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 March 2015 15:35:22 Kumar Gala wrote:
-> On Mar 11, 2015, at 3:20 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> 
-> > On Wednesday 11 March 2015 08:33:04 Bjorn Andersson wrote:
-> >> 
-> >> But are these values actually used by the boot loader?
-> >> 
-> >> As far as I could see in 8974 the dtbTool provided by Qualcomm
-> >> extracts the values from the list of dtbs and use them to create the
-> >> table-of-content in the QCDT blob. The boot loader then looks in this
-> >> TOC to pick the right dtb to use.
-> >> 
-> > 
-> > I guess if I understand this right, we just need to fix that dtbTool
-> > then to look at the top-level compatible property and/or machine
-> > name instead?
-> > 
-> >       Arnd
-> 
-> Correct, and it means updating the tool for every board/dts that gets created in the future.
-> 
-> Thus, the feeling was that having the ids kept with the dtb made maintenance far easier.
-> 
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Tue, 10 Mar 2015 16:57:10 -0700
 
-Part of my objection was to having nonstandard properties that are
-not even used anywhere in the kernel. If you could just encode
-them in the root compatible property as a string, that would be
-a lot nicer.
+> This patch series completes the PHY reads/writes diversion when we
+> need to use the slave MII bus provided by DSA and the underlying
+> switch drivers to implement the real PHY reads and writes. This is
+> particularly useful when they are conflicting MDIO bus addresses as
+> in the case of multiple Broadcom switches connected to each other
+> (internal and external, or just external).
 
-	Arnd
+Series applied, thanks Florian.
