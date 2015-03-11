@@ -1,66 +1,71 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Wed, 11 Mar 2015 14:41:58 +0100
-Message-ID: <20150311134158.GM5085@lukather>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
- <20150303071635.GC4713@lukather>
- <54F568F8.1040104@redhat.com>
- <20150303082209.GE4713@lukather>
- <54F5B51F.6030609@redhat.com>
- <20150303135847.GH4911@lukather>
- <54FED277.4040000@redhat.com>
- <20150310184449.GZ5085@lukather>
- <54FF714F.4010303@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 1/2] dt-bindings: i2c: Add dt binding documentation for ingenic jz4780 SoC
+Date: Wed, 11 Mar 2015 14:26:43 +0000
+Message-ID: <1426084004-10364-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1426084004-10364-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1f1tNaDgxoBnXskx"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBXUNQGUAKGQEBNZO3GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54FF714F.4010303-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426084004-10364-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
---1f1tNaDgxoBnXskx
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Adds DT documentation for the the i2c controller for the JZ4780 SoC
 
-On Tue, Mar 10, 2015 at 11:33:51PM +0100, Hans de Goede wrote:
-> >>>and we have no way to replace U-Boot in NAND
-> >>>so far (afaik). But replacing them by stdout-path is a very good
-> >>>solution too.
-> >>
-> >>You mean putting stdout-path in the dts, I'm not sure if I like that,
-> >>to me both bootargs and stdout-path are something which should be
-> >>left to the bootloader to set. But I understand that when not
-> >>using upstream u-boot that may be an issue.
-> >
-> >I know that some other platforms ask for stdout-path when they review
-> >it, because iirc, barebox uses it to know on which console to output
-> >its log and export its shell, which is also a valid interpretation of
-> >that property, and, contrary to bootargs, doesn't really imply that
-> >the bootloader should update it.
-> 
-> Hmm, that is interesting we should probably start doing the same in
-> all the sunxi dts files, as eventually I would like to move all u-boot
-> board config to devicetree, so that we only need to maintain dts files
-> and not both dts files and u-boot board configs.
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-I had the plan to remove all earlyprintk in the bootargs of the DTS, I
-can do it to convert all DTS to use stdout-path as well.
+---
+V1 -> V2
+Reworded example node. Was separated between board/soc.
+No need for that as such.
+Rebase to v4.0-rc3
+---
+ .../devicetree/bindings/i2c/i2c-jz4780.txt         | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
 
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt b/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
+new file mode 100644
+index 0000000..231e4cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
+@@ -0,0 +1,35 @@
++* Ingenic JZ4780 I2C Bus controller
++
++Required properties:
++- compatible: should be "ingenic,jz4780-i2c"
++- reg: Should contain the address & size of the I2C controller registers.
++- interrupts: Should specify the interrupt provided by parent.
++- clocks: Should contain a single clock specifier for the JZ4780 I2C clock.
++- clock-frequency: desired I2C bus clock frequency in Hz.
++
++Recommended properties:
++- pinctrl-names: should be "default";
++- pinctrl-0: phandle to pinctrl function
++
++Optional properties:
++- interrupt-parent: Should be the phandle of the interrupt controller that
++  delivers interrupts to the I2C block.
++
++Example
++
++/ {
++	i2c4: i2c4@0x10054000 {
++		compatible = "ingenic,jz4780-i2c";
++		reg = <0x10054000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <56>;
++
++		clocks = <&cgu JZ4780_CLK_SMB4>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c4_data>;
++
++	};
++};
++
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---1f1tNaDgxoBnXskx--
+1.9.1
