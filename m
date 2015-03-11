@@ -1,171 +1,79 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4] media: i2c: add support for omnivision's ov2659 sensor
-Date: Thu, 12 Mar 2015 00:53:08 +0200
-Message-ID: <20150311225308.GL11954@valkosipuli.retiisi.org.uk>
-References: <1425814407-22766-1-git-send-email-prabhakar.csengg@gmail.com>
- <20150311110443.GJ11954@valkosipuli.retiisi.org.uk>
- <1908816.bn3vefYTH3@avalon>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC 06/18] omap3isp: Refactor device configuration structs for Device Tree
+Date: Thu, 12 Mar 2015 01:07:51 +0200
+Message-ID: <101867645.hqvO850At0@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-7-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1908816.bn3vefYTH3@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Lad Prabhakar <prabhakar.csengg@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1425764475-27691-7-git-send-email-sakari.ailus@iki.fi>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com, Mike Rapoport <mike@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Sakari,
 
-On Wed, Mar 11, 2015 at 08:09:11PM +0200, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Wednesday 11 March 2015 13:04:43 Sakari Ailus wrote:
-> > On Sun, Mar 08, 2015 at 11:33:27AM +0000, Lad Prabhakar wrote:
-> > > From: Benoit Parrot <bparrot@ti.com>
-> > > 
-> > > this patch adds support for omnivision's ov2659
-> > > sensor, the driver supports following features:
-> > > 1: Asynchronous probing
-> > > 2: DT support
-> > > 3: Media controller support
-> > > 
-> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > > Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> > > ---
-> > > 
-> > >  Sorry quick new version, I need to get this merged for next
-> > >  merge window.
-> > >  
-> > >  Changes for v4:
-> > >  1: Renamed target frequency property to 'link-frequencies'
-> > >     as per Sakari's suggestion.
-> > >  
-> > >  2: Changed the copyright to "GPL v2"
-> > >  
-> > >  v3: https://patchwork.kernel.org/patch/5959401/
-> > >  v2: https://patchwork.kernel.org/patch/5859801/
-> > >  v1: https://patchwork.linuxtv.org/patch/27919/
-> > >  
-> > >  .../devicetree/bindings/media/i2c/ov2659.txt       |   38 +
-> > >  MAINTAINERS                                        |   10 +
-> > >  drivers/media/i2c/Kconfig                          |   11 +
-> > >  drivers/media/i2c/Makefile                         |    1 +
-> > >  drivers/media/i2c/ov2659.c                         | 1439 +++++++++++++++
-> > >  include/media/ov2659.h                             |   33 +
-> > >  6 files changed, 1532 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> > >  create mode 100644 drivers/media/i2c/ov2659.c
-> > >  create mode 100644 include/media/ov2659.h
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> > > b/Documentation/devicetree/bindings/media/i2c/ov2659.txt new file mode
-> > > 100644
-> > > index 0000000..a655500
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> > > @@ -0,0 +1,38 @@
-> > > +* OV2659 1/5-Inch 2Mp SOC Camera
-> > > +
-> > > +The Omnivision OV2659 is a 1/5-inch SOC camera, with an active array size
-> > > of +1632H x 1212V. It is programmable through a SCCB. The OV2659 sensor
-> > > supports +multiple resolutions output, such as UXGA, SVGA, 720p. It also
-> > > can support +YUV422, RGB565/555 or raw RGB output formats.
-> > > +
-> > > +Required Properties:
-> > > +- compatible: Must be "ovti,ov2659"
-> > > +- reg: I2C slave address
-> > > +- clocks: reference to the xvclk input clock.
-> > > +- clock-names: should be "xvclk".
-> > > +- link-frequencies: target pixel clock frequency.
-> > > +
-> > > +For further reading on port node refer to
-> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > > +
-> > > +Example:
-> > > +
-> > > +	i2c0@1c22000 {
-> > > +		...
-> > > +		...
-> > > +		 ov2659@30 {
-> > > +			compatible = "ovti,ov2659";
-> > > +			reg = <0x30>;
-> > > +
-> > > +			clocks = <&clk_ov2659 0>;
-> > > +			clock-names = "xvclk";
-> > > +
-> > > +			port {
-> > > +				ov2659_0: endpoint {
-> > > +					remote-endpoint = <&vpfe_ep>;
-> > > +					link-frequencies = <70000000>;
-> > 
-> > link-frequencies = /bits/ 64 <70000000>;
-> > 
-> > > +				};
-> > > +			};
-> > > +		};
-> > > +		...
-> > > +	};
-> 
-> [snip]
-> 
-> > > new file mode 100644
-> > > index 0000000..487cb19
-> > > --- /dev/null
-> > > +++ b/include/media/ov2659.h
-> > > @@ -0,0 +1,33 @@
-> > > +/*
-> > > + * Omnivision OV2659 CMOS Image Sensor driver
-> > > + *
-> > > + * Copyright (C) 2015 Texas Instruments, Inc.
-> > > + *
-> > > + * Benoit Parrot <bparrot@ti.com>
-> > > + * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> > > + *
-> > > + * This program is free software; you may redistribute it and/or modify
-> > > + * it under the terms of the GNU General Public License as published by
-> > > + * the Free Software Foundation; version 2 of the License.
-> > > + *
-> > > + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > > + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-> > > + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > > + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-> > > + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-> > > + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-> > > + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> > > + * SOFTWARE.
-> > > + */
-> > > +
-> > > +#ifndef OV2659_H
-> > > +#define OV2659_H
-> > > +
-> > > +/**
-> > > + * struct ov2659_platform_data - ov2659 driver platform data
-> > > + * @link_frequency: target pixel clock frequency
-> > > + */
-> > > +struct ov2659_platform_data {
-> > > +	unsigned int link_frequency;
-> > 
-> > Shouldn't you have xvclk_frequency here as well? In most cases you need to
-> > set explicitly to a certain value in order to achieve the required link
-> > frequency.
-> 
-> I'm not sure about that. In the DT case setting the xvclk clock frequency is 
-> done outside of the driver (through assigned-clock-rates for instance). 
-> Wouldn't it make sense to apply the same logic for non-DT platforms and let 
-> the platform configure the clock ?
+Thank you for the patch.
 
-Good point. However, there may be other users of the clock that choose
-different frequencies. The assigned-clock-rates sets the *default* frequency
-of the clock. It could be later on changed.
+On Saturday 07 March 2015 23:41:03 Sakari Ailus wrote:
+> Make omap3isp configuration data structures more suitable for consumption by
+> the DT by separating the I2C bus information of all the sub-devices in a
+> group and the ISP bus information from each other. The ISP bus information
+> is made a pointer instead of being directly embedded in the struct.
+> 
+> In the case of the DT only the sensor specific information on the ISP bus
+> configuration is retained. The structs are renamed to reflect that.
+> 
+> After this change the structs needed to describe device configuration can be
+> allocated and accessed separately without those needed only in the case of
+> platform data. The platform data related structs can be later removed once
+> the support for platform data can be removed.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+> Cc: Mike Rapoport <mike@compulab.co.il>
+> Cc: Igor Grinberg <grinberg@compulab.co.il>
+> ---
+>  arch/arm/mach-omap2/board-cm-t35.c          |   57 +++++++-----------
+>  drivers/media/platform/omap3isp/isp.c       |   86 ++++++++++++------------
+>  drivers/media/platform/omap3isp/isp.h       |    2 +-
+>  drivers/media/platform/omap3isp/ispccdc.c   |   26 ++++----
+>  drivers/media/platform/omap3isp/ispccp2.c   |   22 +++----
+>  drivers/media/platform/omap3isp/ispcsi2.c   |    8 +--
+>  drivers/media/platform/omap3isp/ispcsiphy.c |   21 ++++---
+>  include/media/omap3isp.h                    |   34 +++++------
+>  8 files changed, 119 insertions(+), 137 deletions(-)
 
-The PLL calculation is very sensitive to the external clock freqnency, so
-whatever is done, the frequency must always be what was intended. Explicitly
-setting it ensures this whereas relying on the default not having been
-changed is risky at least.
+[snip]
+
+> diff --git a/drivers/media/platform/omap3isp/ispccdc.c
+> b/drivers/media/platform/omap3isp/ispccdc.c index 587489a..1c0a552 100644
+> --- a/drivers/media/platform/omap3isp/ispccdc.c
+> +++ b/drivers/media/platform/omap3isp/ispccdc.c
+> @@ -958,11 +958,11 @@ void omap3isp_ccdc_max_rate(struct isp_ccdc_device
+> *ccdc, /*
+>   * ccdc_config_sync_if - Set CCDC sync interface configuration
+>   * @ccdc: Pointer to ISP CCDC device.
+> - * @pdata: Parallel interface platform data (may be NULL)
+> + * @buscfg: Parallel interface platform data (may be NULL)
+
+The parameter is called parcfg below.
+
+With this fixed,
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>   * @data_size: Data size
+>   */
+>  static void ccdc_config_sync_if(struct isp_ccdc_device *ccdc,
+> -				struct isp_parallel_platform_data *pdata,
+> +				struct isp_parallel_cfg *parcfg,
+>  				unsigned int data_size)
+>  {
+>  	struct isp_device *isp = to_isp_device(ccdc);
 
 -- 
-Kind regards,
+Regards,
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Laurent Pinchart
