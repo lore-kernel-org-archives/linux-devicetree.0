@@ -1,88 +1,57 @@
 From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 4/5] arm64/efi: ensure that Image does not cross a 512 MB boundary
-Date: Wed, 11 Mar 2015 17:00:19 +0100
-Message-ID: <1426089620-9459-5-git-send-email-ard.biesheuvel@linaro.org>
-References: <1426089620-9459-1-git-send-email-ard.biesheuvel@linaro.org>
+Subject: [PATCH v2 0/5] arm64: update/clarify/relax Image and FDT placement rules
+Date: Wed, 11 Mar 2015 17:00:15 +0100
+Message-ID: <1426089620-9459-1-git-send-email-ard.biesheuvel@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426089620-9459-1-git-send-email-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the Image placement logic used by the stub to make absolutely
-sure that the Image is placed such that the early init code will
-always be able to map it. This means the entire static memory footprint
-of the Image should be inside the same naturally aligned 512 MB region.
+This series came about after Mark Rutland brought up the fact that the current
+FDT placement logic used by the EFI stub is flawed. But actually, it turned out
+that the documentation for both the Image and FDT placement was incorrect as
+well, or confusing at the very least.
 
-First of all, the preferred offset of dram_base + TEXT_OFFSET is only
-suitable if it doesn't result in the Image crossing a 512 MB
-alignment boundary, which could be the case if dram_base itself is
-close to the end of a naturally aligned 512 MB region.
+So this series does two things:
+- It relaxes the FDT placement requirements, and updates the documentation and
+  EFI stub FDT placement logic accordingly.
+- It clarifies the Image placement requirements in the documentation, and brings
+  the EFI stub Image placement logic in line with it
 
-Also, when moving the kernel Image, we need to verify that the new
-destination region does not cross a 512 MB alignment boundary either.
-If that is the case, we retry the allocation with the alignment
-chosen such that the resulting region will always be suitable.
+Changes since v1:
+- patch #1: split off reservation of the FDT binary itself from the memreserve
+  processing, since the former assumes the FDT is accessed via the linear
+  mapping, which we are about to change
+- patch #2: mention the older, stricter FDT placement rules in booting.txt,
+  get rid of early_print,
+  use correct format specifier for phys_addr_t,
+  use R/O mapping for FDT,
+- patches #3 .. #5: add R-b, minor style and grammar tweaks 
+  
+Ard Biesheuvel (5):
+  of/fdt: split off FDT self reservation from memreserve processing
+  arm64: use fixmap region for permanent FDT mapping
+  arm64: Documentation: clarify Image placement in physical RAM
+  arm64/efi: ensure that Image does not cross a 512 MB boundary
+  arm64/efi: adapt to relaxed FDT placement requirements
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/kernel/efi-stub.c | 41 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 33 insertions(+), 8 deletions(-)
+ Documentation/arm64/booting.txt         | 15 ++++---
+ arch/arm/mm/init.c                      |  1 +
+ arch/arm64/include/asm/efi.h            |  8 ++--
+ arch/arm64/include/asm/fixmap.h         |  9 +++++
+ arch/arm64/kernel/Makefile              |  1 +
+ arch/arm64/kernel/efi-stub.c            | 41 +++++++++++++++----
+ arch/arm64/kernel/head.S                | 38 +----------------
+ arch/arm64/kernel/setup.c               | 72 ++++++++++++++++++++++++---------
+ arch/powerpc/kernel/prom.c              |  1 +
+ drivers/firmware/efi/libstub/arm-stub.c |  5 +--
+ drivers/firmware/efi/libstub/efistub.h  |  1 -
+ drivers/firmware/efi/libstub/fdt.c      | 10 ++---
+ drivers/of/fdt.c                        | 19 ++++++---
+ include/linux/of_fdt.h                  |  2 +
+ 14 files changed, 131 insertions(+), 92 deletions(-)
 
-diff --git a/arch/arm64/kernel/efi-stub.c b/arch/arm64/kernel/efi-stub.c
-index f5374065ad53..3b67ca4e2f2e 100644
---- a/arch/arm64/kernel/efi-stub.c
-+++ b/arch/arm64/kernel/efi-stub.c
-@@ -21,15 +21,40 @@ efi_status_t __init handle_kernel_image(efi_system_table_t *sys_table,
- 					unsigned long dram_base,
- 					efi_loaded_image_t *image)
- {
-+	const unsigned long kernel_size = _edata - _text;
-+	const unsigned long kernel_memsize = _end - _text;
-+	unsigned long preferred_offset;
- 	efi_status_t status;
--	unsigned long kernel_size, kernel_memsize = 0;
--
--	/* Relocate the image, if required. */
--	kernel_size = _edata - _text;
--	if (*image_addr != (dram_base + TEXT_OFFSET)) {
--		kernel_memsize = kernel_size + (_end - _edata);
--		status = efi_low_alloc(sys_table, kernel_memsize + TEXT_OFFSET,
--				       SZ_2M, reserve_addr);
-+
-+	/*
-+	 * The kernel Image should be located as close as possible to the
-+	 * base of system RAM, but its static memory footprint must not
-+	 * cross a 512 MB alignment boundary.
-+	 */
-+	preferred_offset = dram_base + TEXT_OFFSET;
-+	if ((preferred_offset & (SZ_512M - 1)) + kernel_memsize > SZ_512M)
-+		preferred_offset = round_up(dram_base, SZ_512M) + TEXT_OFFSET;
-+
-+	if (*image_addr != preferred_offset) {
-+		const unsigned long alloc_size = kernel_memsize + TEXT_OFFSET;
-+
-+		status = efi_low_alloc(sys_table, alloc_size, SZ_2M,
-+				       reserve_addr);
-+
-+		/*
-+		 * Check whether the new allocation crosses a 512 MB alignment
-+		 * boundary. If so, retry with the alignment set to a power of
-+		 * two upper bound of the allocation size. That is guaranteed
-+		 * to produce a suitable allocation, but may waste more memory.
-+		 */
-+		if (status == EFI_SUCCESS &&
-+		    ((*reserve_addr & (SZ_512M - 1)) + alloc_size) > SZ_512M) {
-+			efi_free(sys_table, alloc_size, *reserve_addr);
-+
-+			status = efi_low_alloc(sys_table, alloc_size,
-+					       roundup_pow_of_two(alloc_size),
-+					       reserve_addr);
-+		}
- 		if (status != EFI_SUCCESS) {
- 			pr_efi_err(sys_table, "Failed to relocate kernel\n");
- 			return status;
 -- 
 1.8.3.2
 
