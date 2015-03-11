@@ -1,102 +1,47 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
-Date: Wed, 11 Mar 2015 10:03:45 +0100
-Message-ID: <20150311090345.GR24885@pengutronix.de>
-References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
- <1425888603-25800-3-git-send-email-s.hauer@pengutronix.de>
- <7h61a94zy0.fsf@deeprootsystems.com>
- <20150310094142.GD24885@pengutronix.de>
- <1426043791.24243.9.camel@mtksdaap41>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v9 0/5] i.MX6 PU power domain support
+Date: Wed, 11 Mar 2015 10:06:01 +0100
+Message-ID: <1426064761.3101.37.camel@pengutronix.de>
+References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
+	 <20150311011236.GV20455@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426043791.24243.9.camel@mtksdaap41>
+In-Reply-To: <20150311011236.GV20455@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 11:16:31AM +0800, James Liao wrote:
-> Hi,
->=20
-> On Tue, 2015-03-10 at 10:41 +0100, Sascha Hauer wrote:
-> > On Mon, Mar 09, 2015 at 02:35:03PM -0700, Kevin Hilman wrote:
-> > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> > >=20
-> > > > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > >=20
-> > > A bit of a changelog here would be useful describing this driver,=
- that
-> > > it's only covering part of the device (e.g. power controller) wit=
-h more
-> > > to come, dependency on the syscon driver, etc.
-> > >=20
-> > > > +/*
-> > > > + * The Infracfg unit has bus protection bits. We enable the bu=
-s protection
-> > > > + * for disabled power domains so that the system does not hang=
- when some unit
-> > > > + * accesses the bus while in power down.
-> > > > + */
-> > >=20
-> > > Hmm, why don't you want to know if some device is accessing anoth=
-er
-> > > device which is in a domain that is powered down?   Seems like th=
-is is a
-> > > good way to hide real bugs.
-> >=20
-> > How I understand it the system just hangs on erroneous accesses wit=
-hout
-> > these protection bits enabled, so enabling them at least makes sure=
- we
-> > can output something.
-> > I must admit though that my understanding of these bits is quite li=
-mited
-> > and the only user of this driver I have available here (audio) does=
-n't
-> > make use of these protection bits, so I can't test here.
-> >=20
-> > James, could you shed some light on this issue?
->=20
-> I asked our designer about the bus protection feature, here is his
-> response:
->=20
-> "
-> It's for unexpected signal glitch in Power switch process.
->=20
-> During Power switch process, we have clock switch, reset, isolation
-> enable/disable and  power switch involved where the transition of
-> asynchronous reset and  isolation is the most critical one,  which ha=
-ve
-> risk to introduce a unexpected short period signal transition from
-> MTCMOS=E2=80=99s interface to other alive HW .=20
-> "
->=20
-> That means it protects unexpected bus accessing from HW, not from SW.=
- So
-> it will not hide bugs from wrong SW access.
+Hi Shawn,
 
-Ok, thanks for clarifying. This means we should enable this feature
-sooner or later. Since the audio driver which is likely the first user
-of this driver doesn't need the protection bits I think we have some
-time and can add the protection bits once the clock patches have been
-merged.
+Am Mittwoch, den 11.03.2015, 09:12 +0800 schrieb Shawn Guo:
+> On Mon, Feb 23, 2015 at 06:40:10PM +0100, Philipp Zabel wrote:
+> > Philipp Zabel (6):
+> >   Documentation: Add device tree bindings for Freescale i.MX GPC
+> >   ARM: imx6: gpc: Add PU power domain for GPU/VPU
+> >   ARM: dts: imx6qdl: Add power-domain information to gpc node
+> >   ARM: dts: imx6sl: Add power-domain information to gpc node
+> >   ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp
+> >     delay
+> 
+> Applied above 5.
+> 
+> >   ARM: imx6: gpc: Allow PU regulator bypass
+> 
+> I only received 5 patches in the series.
 
-Sascha
+Thank you, this shouldn't have appeared in the list at all.
 
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+Allowing regulator bypass isn't part of the series because I still
+didn't manage to get rid of race conditions when enabling bypass on the
+regulator used in two places (gpc and imx6q-cpufreq).
+
+regards
+Philipp
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
