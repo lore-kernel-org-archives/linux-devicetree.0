@@ -1,82 +1,43 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH net-next 1/3] of: mdio: export of_mdio_parse_addr
-Date: Wed, 11 Mar 2015 07:48:01 -0500
-Message-ID: <CAL_JsqKfT2W=Gc4zpFXm269RoApbD8QKe2_gUDWns9U+BE=XuA@mail.gmail.com>
-References: <1426031833-5113-1-git-send-email-f.fainelli@gmail.com> <1426031833-5113-2-git-send-email-f.fainelli@gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] pci: of : fix BUG: unable to handle kernel
+Date: Wed, 11 Mar 2015 12:49:11 +0000
+Message-ID: <20150311124911.GA8656@n2100.arm.linux.org.uk>
+References: <1426001139-18419-1-git-send-email-m-karicheri2@ti.com>
+ <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1426031833-5113-2-git-send-email-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJPvW5q4XwwenFTHrDG4cU5uTd7n-vLKj0mdV9FbVC4Ag@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulanit <Suravee.Suthikulpanit@amd.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 6:57 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Export of_mdio_parse_addr() which allows parsing a given Ethernet PHY
-> node MDIO address, verify it is within the allowed range, and return
-> its value. This is going to be useful for the DSA code which needs to
-> deal with multiple layers of MDIO buses.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, Mar 11, 2015 at 07:35:45AM -0500, Rob Herring wrote:
+> On Tue, Mar 10, 2015 at 10:25 AM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> > On some platforms such as that based on x86, ia64 etc, root bus is
+> > created with parent node passed in as NULL to pci_create_root_bus().
+> > On these platforms, the patch series "PCI: get DMA configuration from
+> > parent device" when applied causes kernel crash. So add a check for this
+> > in of_pci_dma_configure()
+> 
+> Wouldn't these arches have OF disabled and call an empty function?
+> Regardless, we still need this.
+> 
+> > Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> 
+> I'm assuming Bjorn will apply this.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+It might be an idea to read the subject line...
 
-> ---
->  drivers/of/of_mdio.c    | 3 ++-
->  include/linux/of_mdio.h | 7 +++++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 1bd43053b8c7..0c064485d1c2 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -88,7 +88,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->         return 0;
->  }
->
-> -static int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
-> +int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
->  {
->         u32 addr;
->         int ret;
-> @@ -108,6 +108,7 @@ static int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
->
->         return addr;
->  }
-> +EXPORT_SYMBOL(of_mdio_parse_addr);
->
->  /**
->   * of_mdiobus_register - Register mii_bus and create PHYs from the device tree
-> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-> index d449018d0726..8f2237eb3485 100644
-> --- a/include/linux/of_mdio.h
-> +++ b/include/linux/of_mdio.h
-> @@ -24,6 +24,7 @@ struct phy_device *of_phy_attach(struct net_device *dev,
->                                  phy_interface_t iface);
->
->  extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
-> +extern int of_mdio_parse_addr(struct device *dev, const struct device_node *np);
->
->  #else /* CONFIG_OF */
->  static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
-> @@ -60,6 +61,12 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
->  {
->         return NULL;
->  }
-> +
-> +static inline int of_mdio_parse_addr(struct device *dev,
-> +                                    const struct device_node *np)
-> +{
-> +       return -ENOSYS;
-> +}
->  #endif /* CONFIG_OF */
->
->  #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
-> --
-> 2.1.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"fix BUG: unable to handle kernel"
+
+which is meaningless.  It needs a much better subject line before it can
+be committed.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
