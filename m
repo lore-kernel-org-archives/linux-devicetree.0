@@ -1,89 +1,45 @@
 From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 1/2] power: reset: Add generic SYSCON register mapped
- poweroff.
-Date: Wed, 11 Mar 2015 10:31:12 +0100
-Message-ID: <1426066272.4244.37.camel@x220>
-References: <1426029670-31775-1-git-send-email-moritz.fischer@ettus.com>
-	 <1426029670-31775-2-git-send-email-moritz.fischer@ettus.com>
+Subject: Re: [PATCH v3 1/2] Input: touchscreen-iproc: Add Broadcom iProc
+ touchscreen driver
+Date: Wed, 11 Mar 2015 10:46:37 +0100
+Message-ID: <1426067197.4244.41.camel@x220>
+References: <Jonathan Richardson <jonathar@broadcom.com>
+	 <1426036669-21659-1-git-send-email-jonathar@broadcom.com>
+	 <1426036669-21659-2-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426029670-31775-2-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1426036669-21659-2-git-send-email-jonathar@broadcom.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jonathan Richardson <jonathar@broadcom.com>
+Cc: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-03-10 at 16:21 -0700, Moritz Fischer wrote:
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
+One nit is all I can report.
+
+On Tue, 2015-03-10 at 18:17 -0700, Jonathan Richardson wrote:
+> --- a/drivers/input/touchscreen/Kconfig
+> +++ b/drivers/input/touchscreen/Kconfig
  
-> +config POWER_RESET_SYSCON_POWEROFF
-> +	bool "Generic SYSCON regmap poweroff driver"
-
-This adds a bool symbol.
-
-> +	depends on OF
-> +	select MFD_SYSCON
+> +config TOUCHSCREEN_IPROC
+> +	tristate "IPROC touch panel driver support"
 > +	help
-> +	  Poweroff support for generic SYSCON mapped register poweroff.
+> +	  Say Y here if you want to add support for the IPROC touch
+> +	  controller to your system.
 > +
+> +	  If unsure, say N.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called iproc-ts.
 
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
+The module will be called "bcm_iproc_tsc", won't it?
 
-> +obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
+> --- a/drivers/input/touchscreen/Makefile
+> +++ b/drivers/input/touchscreen/Makefile
 
-So this objectfile can never be part of a module.
-
-> --- /dev/null
-> +++ b/drivers/power/reset/syscon-poweroff.c
-> @@ -0,0 +1,97 @@
-> +/*
-> + * Generic Syscon Poweroff Driver
-> + *
-> + * Copyright (c) 2015, National Instruments Corp.
-> + * Author: Moritz Fischer <moritz.fischer@ettus.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-
-> +#include <linux/module.h>
-
-Is that include needed?
-
-> +MODULE_DEVICE_TABLE(of, syscon_poweroff_of_match);
-
-This will be preprocessed away.
-
-> +module_platform_driver(syscon_poweroff_driver);
-
-I think the built-in equivalent of this would be adding a wrapper that
-only does
-    platform_driver_register(&syscon_poweroff_driver);
-
-and have that wrapper be marked with device_initcall(). Apparently
-there's no macro that does all that in one line.
-
-> +MODULE_LICENSE("GPL v2");
-
-You probably meant
-    MODULE_LICENSE("GPL");
-
-> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
-> +MODULE_DESCRIPTION("Generic SYSCON poweroff driver");
-> +MODULE_ALIAS("platform:syscon-poweroff");
-
-But these four macros will all be effectively preprocessed away, anyhow.
+> +obj-$(CONFIG_TOUCHSCREEN_IPROC)		+= bcm_iproc_tsc.o
 
 
 Paul Bolle
+
