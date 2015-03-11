@@ -1,47 +1,58 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v9 0/5] i.MX6 PU power domain support
-Date: Wed, 11 Mar 2015 10:06:01 +0100
-Message-ID: <1426064761.3101.37.camel@pengutronix.de>
-References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
-	 <20150311011236.GV20455@dragon>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v5 12/12] ARM: dts: sun6i: hummingbird:
+ Enable the onboard WiFi module
+Date: Wed, 11 Mar 2015 17:08:08 +0800
+Message-ID: <CAGb2v64qQVDyG69Oe_R9m_GCY4kqW13dG+soh+MeaJ4W1Xb5kQ@mail.gmail.com>
+References: <1425988764-23618-1-git-send-email-wens@csie.org>
+ <1425988764-23618-14-git-send-email-wens@csie.org> <20150310213218.GH5085@lukather>
+ <CAGb2v66zJcBBpLZFjNyugjRzt8SppQ0VbFD+pMqVYdK4EKg-fQ@mail.gmail.com> <20150311085225.GK5085@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150311011236.GV20455@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEEMQCUAKGQESFOZM4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150311085225.GK5085@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Wed, Mar 11, 2015 at 4:52 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Wed, Mar 11, 2015 at 11:11:49AM +0800, Chen-Yu Tsai wrote:
+>> On Wed, Mar 11, 2015 at 5:32 AM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Tue, Mar 10, 2015 at 07:59:24PM +0800, Chen-Yu Tsai wrote:
+>> >> The Hummingbird A31 has an AMPAK AP6210 WiFi+Bluetooth module. The
+>> >> WiFi part is a BCM43362 IC connected to MMC1 in the A31 SoC via SDIO.
+>> >> The IC also takes a power enable signal via GPIO. This is supported
+>> >> with the new power sequencing bindings.
+>> >>
+>> >> The WiFi module supports out-of-band interrupt signaling via GPIO,
+>> >> but this is buggy and not enabled yet.
+>> >>
+>> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >
+>> > There's two almost identical patches 12/12. Which one am I suppose to
+>> > apply?
+>>
+>> This one is the right one. I forgot to clear the patches after changing
+>> the description. The "buggy" part in the description is probably not
+>> needed. Hans explained that the SD resets have nothing to do with
+>> interrupt handling.
+>
+> Just to be clear, you want the last sentence to be:
+>
+> The WiFi module supports out-of-band interrupt signaling via GPIO, but
+> this is not enabled yet.
+>
+> Right?
 
-Am Mittwoch, den 11.03.2015, 09:12 +0800 schrieb Shawn Guo:
-> On Mon, Feb 23, 2015 at 06:40:10PM +0100, Philipp Zabel wrote:
-> > Philipp Zabel (6):
-> >   Documentation: Add device tree bindings for Freescale i.MX GPC
-> >   ARM: imx6: gpc: Add PU power domain for GPU/VPU
-> >   ARM: dts: imx6qdl: Add power-domain information to gpc node
-> >   ARM: dts: imx6sl: Add power-domain information to gpc node
-> >   ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp
-> >     delay
-> 
-> Applied above 5.
-> 
-> >   ARM: imx6: gpc: Allow PU regulator bypass
-> 
-> I only received 5 patches in the series.
+That's right. Thanks.
 
-Thank you, this shouldn't have appeared in the list at all.
-
-Allowing regulator bypass isn't part of the series because I still
-didn't manage to get rid of race conditions when enabling bypass on the
-regulator used in two places (gpc and imx6q-cpufreq).
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
