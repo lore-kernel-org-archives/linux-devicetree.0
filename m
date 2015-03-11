@@ -1,69 +1,80 @@
-From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] media: i2c: add support for omnivision's ov2659 sensor
-Date: Wed, 11 Mar 2015 19:40:13 +0000
-Message-ID: <CA+V-a8tHrUS-=s8sas-yHy6Pnwbh+wu6KxyHDTfARopguqYL2g@mail.gmail.com>
-References: <1425814407-22766-1-git-send-email-prabhakar.csengg@gmail.com>
- <20150310013556.GF11954@valkosipuli.retiisi.org.uk> <2415294.49LTQe4m32@avalon>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery
+ bindings
+Date: Wed, 11 Mar 2015 12:37:36 -0700
+Message-ID: <20150311193736.GF5264@atomide.com>
+References: <1426022847-30912-1-git-send-email-marek@goldelico.com>
+ <1426022847-30912-4-git-send-email-marek@goldelico.com>
+ <20150311152414.GX5264@atomide.com>
+ <844740CD-C95B-4411-A2C8-4906F58DBEE8@goldelico.com>
+ <20150311164442.GA5264@atomide.com>
+ <F7BA143D-5CF9-42E3-AFA8-B83B149EF77E@goldelico.com>
+ <20150311174316.GD5264@atomide.com>
+ <20150311193654.GA3126@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2415294.49LTQe4m32@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150311193654.GA3126@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Benoit Cousson <bcousson@baylibre.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+* Sebastian Reichel <sre@kernel.org> [150311 12:37]:
+> Hi,
+>=20
+> On Wed, Mar 11, 2015 at 10:43:17AM -0700, Tony Lindgren wrote:
+> > No no, "capacity-uah" is what we should use, but you need an ack fr=
+om
+> > the battery and device tree people that this is OK. Let's not add
+> > "ti,capacity-uah=E2=80=9D as that can obviously be a generic proper=
+ty.
+>=20
+> I'm okay with capacity-uah.
 
-Thanks for the review.
+OK great.
+=20
+> > > [...]
+> >=20
+> > Oh if they are battery spicific, then ideally we'd have generic bat=
+ery
+> > voltage to capacity maps property rather than a custom ti specific
+> > property.
+> >=20
+> > To avoid extra hassles later on, maybe you could submit a generic
+> > binding patch only documenting it to the battery people and the dev=
+ice
+> > tree people? That will make it easier to maintain this driver in th=
+e
+> > long run.
+>=20
+> Actually the proper way would be to differentiate between the
+> battery and the measurement chip / adc and that should be
+> implemented in the long run. The kernel's power supply framework
+> is not yet ready for it, though.
+>=20
+> Example DT:
+>=20
+> battery {
+>     battery-specific-data;
+> };
+>=20
+> fuel-gauge {
+>     measures =3D <&battery>;
+> };
+>=20
+> charger {
+>     charges =3D <&battery>;
+> };
+>=20
+> Since infrastructure for generic bindings is missing, I think its
+> best to have the vendor properties for now and map this to generic
+> properties, once they have been specified.
 
-On Wed, Mar 11, 2015 at 6:22 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> On Tuesday 10 March 2015 03:35:57 Sakari Ailus wrote:
->> On Sun, Mar 08, 2015 at 11:33:27AM +0000, Lad Prabhakar wrote:
->> ...
->>
->> > +static struct ov2659_platform_data *
->> > +ov2659_get_pdata(struct i2c_client *client)
->> > +{
->> > +   struct ov2659_platform_data *pdata;
->> > +   struct device_node *endpoint;
->> > +   int ret;
->> > +
->> > +   if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node) {
->> > +           dev_err(&client->dev, "ov2659_get_pdata: DT Node found\n");
->> > +           return client->dev.platform_data;
->> > +   }
->> > +
->> > +   endpoint = of_graph_get_next_endpoint(client->dev.of_node, NULL);
->> > +   if (!endpoint)
->> > +           return NULL;
->> > +
->> > +   pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
->> > +   if (!pdata)
->> > +           goto done;
->> > +
->> > +   ret = of_property_read_u32(endpoint, "link-frequencies",
->> > +                              &pdata->link_frequency);
->>
->> This is actually documented as being a 64-bit array.
->
-> The main purpose of link-frequencies is to restrict the link frequencies
-> acceptable in the system due to EMI requirements. One link frequency should be
-> selected in the array based on the desired format and frame rate. This is
-> usually done by exposing the frequency to userspace through a writable
-> V4L2_CID_LINK_FREQ control, and exposing the resulting pixel rate as a read-
-> only V4L2_CID_PIXEL_RATE control.
->
-> V4L2_CID_PIXEL_RATE is mandatory to use the sensor with several drivers
-> (including omap3isp and omap4iss), so it should really be implemented.
->
-Even if the sensor supports only one frequency the control needs to be
-implemented ?
+OK, sounds good to me. I'm fine with the $subject patch as it is then:
 
-Cheers,
---Prabhakar Lad
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+Tony
