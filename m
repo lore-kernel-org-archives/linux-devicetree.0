@@ -1,7 +1,7 @@
 From: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/5] of/unittest: Fix the wrong expected value in of_selftest_property_string
-Date: Wed, 11 Mar 2015 03:37:20 +0000
-Message-ID: <1426045043-128610-3-git-send-email-long.wanglong@huawei.com>
+Subject: [PATCH 1/5] of/unittest: remove the duplicate of_changeset_init
+Date: Wed, 11 Mar 2015 03:37:19 +0000
+Message-ID: <1426045043-128610-2-git-send-email-long.wanglong@huawei.com>
 References: <1426045043-128610-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,30 +12,27 @@ To: gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQ
 Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fix the wrong expected value of of_property_match_string
-in of_selftest_property_string.
+Remove the duplicate of_changeset_init. In of_selftest_changeset
+testcase, the "struct of_changeset chgset" is initialized twice,
+but only once is enough. so, drop the first initializtion code.
 
 Signed-off-by: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/of/unittest.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/of/unittest.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 199fb23..00ddce7 100644
+index 0cf9a23..199fb23 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -378,9 +378,9 @@ static void __init of_selftest_property_string(void)
- 	rc = of_property_match_string(np, "phandle-list-names", "first");
- 	selftest(rc == 0, "first expected:0 got:%i\n", rc);
- 	rc = of_property_match_string(np, "phandle-list-names", "second");
--	selftest(rc == 1, "second expected:0 got:%i\n", rc);
-+	selftest(rc == 1, "second expected:1 got:%i\n", rc);
- 	rc = of_property_match_string(np, "phandle-list-names", "third");
--	selftest(rc == 2, "third expected:0 got:%i\n", rc);
-+	selftest(rc == 2, "third expected:2 got:%i\n", rc);
- 	rc = of_property_match_string(np, "phandle-list-names", "fourth");
- 	selftest(rc == -ENODATA, "unmatched string; rc=%i\n", rc);
- 	rc = of_property_match_string(np, "missing-property", "blah");
+@@ -478,7 +478,6 @@ static void __init of_selftest_changeset(void)
+ 	struct device_node *n1, *n2, *n21, *nremove, *parent, *np;
+ 	struct of_changeset chgset;
+ 
+-	of_changeset_init(&chgset);
+ 	n1 = __of_node_dup(NULL, "/testcase-data/changeset/n1");
+ 	selftest(n1, "testcase setup failure\n");
+ 	n2 = __of_node_dup(NULL, "/testcase-data/changeset/n2");
 -- 
 1.8.3.4
 
