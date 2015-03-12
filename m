@@ -1,63 +1,138 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v6 3/3] ARM: dts: vf610: add Miscellaneous System
- Control Module (MSCM)
-Date: Thu, 12 Mar 2015 10:03:08 +0100
-Message-ID: <59b0d98827cb4e7497de81e1c0826964@agner.ch>
-References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
- <1425249689-32354-4-git-send-email-stefan@agner.ch>
- <20150311004812.GU20455@dragon>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
+Date: Thu, 12 Mar 2015 10:14:27 +0100
+Message-ID: <20150312091427.GA4329@piout.net>
+References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
+ <1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150311004812.GU20455@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pebolle@tiscali.nl, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425375148-4369-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-03-11 01:48, Shawn Guo wrote:
-> On Sun, Mar 01, 2015 at 11:41:29PM +0100, Stefan Agner wrote:
->> Add the Miscellaneous System Control Module (MSCM) to the base
->> device tree for Vybrid SoC's. This module contains registers
->> to get information of the individual and current (accessing)
->> CPU. In a second block, there is an interrupt router, which
->> handles the routing of the interrupts between the two CPU cores
->> on VF6xx variants of the SoC. However, also on single core
->> variants the interrupt router needs to be configured in order
->> to receive interrupts on the CPU's interrupt controller. Almost
->> all peripheral interrupts are routed through the router, hence
->> the MSCM module is the default interrupt parent for this SoC.
->>
->> In a earlier commit the interrupt nodes were moved out of the
->> peripheral nodes and specified in the CPU specific vf500.dtsi
->> device tree. This allowed to use the base device tree vfxxx.dtsi
->> also for a Cortex-M4 specific device tree, which uses different
->> interrupt nodes due to the NVIC interrupt controller. However,
->> since the interrupt parent for peripherals is the MSCM module
->> independently which CPU the device tree is used for, we can move
->> the interrupt nodes into the base device tree vfxxx.dtsi again.
->> Depending on which CPU this base device tree will be used with,
->> the correct parent interrupt controller has to be assigned to
->> the MSCM-IR node (GIC or NVIC). The driver takes care of the
->> parent interrupt controller specific needs (interrupt-cells).
->>
->> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> 
-> Stefan,
-> 
-> I guess this patch has a run-time dependency on the first two in the
-> series, right?  Or put it another way, if I apply this single patch on
-> my branch, the dtb and kernel built from the same branch do not work
-> together, right?  If so, we will need to either wait for the first two
-> hit mainline or pull Jason's irqchip/vybrid branch into my tree as
-> prerequisite (irqchip/vybrid needs to be stable).
-> 
-> Shawn
+Hi,
 
-Yes, that is true. The driver need to be in place in order to
-successfully boot with the new device tree.
+As part of the system timer cleanup, I'll actually be needing that
+patch. Is it scheduled for inclusion or should I use "simple-bus" in the
+meantime?
 
+On 03/03/2015 at 10:32:24 +0100, Linus Walleij wrote :
+> This defines a new compatible option for MFD devices "simple-mfd" that will
+> make the OF core spawn child devices for all subnodes of that MFD device.
+> It is optional but handy for things like syscon and possibly other
+> simpler MFD devices.
+> 
+> Since there was no file to put the documentation in, I took this opportunity
+> to make a small writeup on MFD devices and add the compatible definition
+> there.
+> 
+> Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> I make the patch to the OF core in this one, it makes much more sense since
+> it's a oneliner
+> 
+> Lee: this is a (tested!) implementation of your suggestion for simple-mfd.
+> If you can eventually ACK this from the MFD side, I think it should be
+> funneled through the ARM SoC tree.
+> 
+> Grant/Rob: if either of you can ACK the change to the OF core likewise it can
+> be taken through ARM SoC.
+> 
+> DT binings maintainers: there is some background discussion on this here:
+> http://marc.info/?l=linux-arm-kernel&m=142486676603889&w=2
+> http://marc.info/?l=devicetree&m=142166313621469&w=2
+> ---
+>  Documentation/devicetree/bindings/mfd/mfd.txt | 40 +++++++++++++++++++++++++++
+>  drivers/of/platform.c                         |  1 +
+>  2 files changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
+> new file mode 100644
+> index 000000000000..cc057438abe8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+> @@ -0,0 +1,40 @@
+> +Multi-Function Devices (MFD)
+> +
+> +These devices comprise a nexus for heterogeneous hardware blocks spawning
+> +multiple child devices.
+> +
+> +A typical MFD can be:
+> +
+> +- A mixed signal ASIC on an external bus, sometimes a PMIC (power management
+> +  integrated circuit) that is manufactured in a lower technology node (rough
+> +  silicon) that handles analog drivers for things like audio amplifiers, LED
+> +  drivers, level shifters, PHY (physical interfaces to things like USB or
+> +  ethernet), regulators etc.
+> +
+> +- A range of memory registers containing "miscellaneous system registers" also
+> +  known as a system controller "syscon" or any other memory range containing a
+> +  mix of unrelated registers.
+> +
+> +Optional properties:
+> +
+> +- compatible : "simple-mfd" - this signifies that the operating system should
+> +  spawn child devices for all the subnodes of the MFD device akin to how
+> +  "simple-bus" inidicates when to spawn children for a simple memory-mapped
+> +  bus. For more complex devices, when the nexus driver has to probe registers
+> +  to figure out what children exist etc, this should not be used. In the latter
+> +  case the child devices will be instantiated by the operating system.
+> +
+> +Example:
+> +
+> +foo@1000 {
+> +		compatible = "syscon", "simple-mfd";
+> +		reg = <0x010000 0x1000>;
+> +
+> +		led@08.0 {
+> +			compatible = "register-bit-led";
+> +			offset = <0x08>;
+> +			mask = <0x01>;
+> +			label = "myled";
+> +			default-state = "on";
+> +		};
+> +};
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index b189733a1539..969ba4e1460c 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -26,6 +26,7 @@
+>  
+>  const struct of_device_id of_default_bus_match_table[] = {
+>  	{ .compatible = "simple-bus", },
+> +	{ .compatible = "simple-mfd", },
+>  #ifdef CONFIG_ARM_AMBA
+>  	{ .compatible = "arm,amba-bus", },
+>  #endif /* CONFIG_ARM_AMBA */
+> -- 
+> 1.9.3
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
