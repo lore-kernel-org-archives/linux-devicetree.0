@@ -1,108 +1,35 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH] ARM: dts: am437x-gp-evm: add DT nodes for ov2659 sensor
-Date: Thu, 12 Mar 2015 23:38:21 +0000
-Message-ID: <1426203501-32115-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 05/12] clocksource: add dependencies for Vybrid pit clocksource
+Date: Fri, 13 Mar 2015 00:36:13 +0100
+Message-ID: <1426203380-7155-6-git-send-email-stefan@agner.ch>
+References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426203380-7155-1-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Add the minimal dependencies required to use the Vybrid PIT
+clocksource driver. Those are not part of the SoC dependencies.
 
-this patch does the following:
-1: adds DT node for fixed oscillator.
-2: adds DT node entries for ov2659 sensor
-3: adds remote-endpoint entry for VPFE.
-
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- Note this patch depends on
- https://patchwork.kernel.org/patch/6000161/
- 
- arch/arm/boot/dts/am437x-gp-evm.dts | 42 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+ drivers/clocksource/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index f84d971..195f452 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -106,6 +106,14 @@
- 			};
- 		};
- 	};
-+
-+	/* fixed 12MHz oscillator */
-+	refclk: oscillator {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <12000000>;
-+	};
-+
- };
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 1c2506f..350e742 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -164,6 +164,8 @@ config FSL_FTM_TIMER
  
- &am43xx_pinmux {
-@@ -404,6 +412,21 @@
- 			regulator-always-on;
- 		};
- 	};
-+
-+	ov2659@30 {
-+		compatible = "ovti,ov2659";
-+		reg = <0x30>;
-+
-+		clocks = <&refclk 0>;
-+		clock-names = "xvclk";
-+
-+		port {
-+			ov2659_0: endpoint {
-+				remote-endpoint = <&vpfe1_ep>;
-+				link-frequencies = /bits/ 64 <70000000>;
-+			};
-+		};
-+	};
- };
+ config VF_PIT_TIMER
+ 	bool
++	select CLKSRC_MMIO
++	select CLKSRC_OF
+ 	help
+ 	  Support for Period Interrupt Timer on Freescale Vybrid Family SoCs.
  
- &i2c1 {
-@@ -423,6 +446,21 @@
- 		touchscreen-size-x = <1024>;
- 		touchscreen-size-y = <600>;
- 	};
-+
-+	ov2659@30 {
-+		compatible = "ovti,ov2659";
-+		reg = <0x30>;
-+
-+		clocks = <&refclk 0>;
-+		clock-names = "xvclk";
-+
-+		port {
-+			ov2659_1: endpoint {
-+				remote-endpoint = <&vpfe0_ep>;
-+				link-frequencies = /bits/ 64 <70000000>;
-+			};
-+		};
-+	};
- };
- 
- &epwmss0 {
-@@ -626,7 +664,7 @@
- 
- 	port {
- 		vpfe0_ep: endpoint {
--			/* remote-endpoint = <&sensor>; add once we have it */
-+			remote-endpoint = <&ov2659_1>;
- 			ti,am437x-vpfe-interface = <0>;
- 			bus-width = <8>;
- 			hsync-active = <0>;
-@@ -643,7 +681,7 @@
- 
- 	port {
- 		vpfe1_ep: endpoint {
--			/* remote-endpoint = <&sensor>; add once we have it */
-+			remote-endpoint = <&ov2659_0>;
- 			ti,am437x-vpfe-interface = <0>;
- 			bus-width = <8>;
- 			hsync-active = <0>;
 -- 
-2.1.0
+2.3.1
