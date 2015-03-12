@@ -1,108 +1,63 @@
-From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
- driver
-Date: Thu, 12 Mar 2015 15:44:19 -0700
-Message-ID: <550216C3.8090807@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>  <1426182312-6081-1-git-send-email-jonathar@broadcom.com>  <1426182312-6081-2-git-send-email-jonathar@broadcom.com> <1426183169.2742.10.camel@perches.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [RFC PATCH v15 02/11] ARM: qcom: Add Subsystem Power Manager
+ (SPM) driver
+Date: Thu, 12 Mar 2015 16:50:08 -0600
+Message-ID: <20150312225008.GH497@linaro.org>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
+ <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426183169.2742.10.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 15-03-12 10:59 AM, Joe Perches wrote:
-> On Thu, 2015-03-12 at 10:45 -0700, Jonathan Richardson wrote:
->> Add initial version of the Broadcom touchscreen driver.
-> 
-> style trivia:
-> (any of which could be fixed/improved/ignored later)
-> 
->> diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
-> []
->> +static void ts_reg_dump(struct iproc_ts_priv *priv)
->> +{
->> +	struct device *dev = &priv->pdev->dev;
->> +
->> +	dev_dbg(dev, "regCtl1             = 0x%08x\n",
->> +				readl(priv->regs + REGCTL1));
-> 
-> The output case here generally isn't very important so
-> sometimes it's better to use a macro like:
-> 
-> #define dbg_reg(dev, priv, reg)						\
-> 	dev_dbg(dev, "%20s= 0x%08x\n", #reg, readl((priv)->regs + reg))
-> 
->> +	dev_dbg(dev, "regCtl2             = 0x%08x\n",
->> +				readl(priv->regs + REGCTL2));
-> 
-> so these become
-> 	dbg_reg(dev, priv, INTERRUPT_THRES);
-> 	dbg_reg(dev, priv, INTERRUPT_MASK);
-> 
-> etc...
-> 
-> This style can reduce typo and copy/paste defects.
-> 
->> +	dev_dbg(dev, "interrupt_Thres     = 0x%08x\n",
->> +				readl(priv->regs + INTERRUPT_THRES));
->> +	dev_dbg(dev, "interrupt_Mask      = 0x%08x\n",
->> +				readl(priv->regs + INTERRUPT_MASK));
->> +	dev_dbg(dev, "interrupt_Status    = 0x%08x\n",
->> +				readl(priv->regs + INTERRUPT_STATUS));
->> +	dev_dbg(dev, "controller_Status   = 0x%08x\n",
->> +				readl(priv->regs + CONTROLLER_STATUS));
->> +	dev_dbg(dev, "FIFO_Data           = 0x%08x\n",
->> +				readl(priv->regs + FIFO_DATA));
->> +	dev_dbg(dev, "analog_Control      = 0x%08x\n",
->> +				readl(priv->regs + ANALOG_CONTROL));
->> +	dev_dbg(dev, "aux_Data            = 0x%08x\n",
->> +				readl(priv->regs + AUX_DATA));
->> +	dev_dbg(dev, "debounce_Cntr_Stat  = 0x%08x\n",
->> +				readl(priv->regs + DEBOUNCE_CNTR_STAT));
->> +	dev_dbg(dev, "scan_Cntr_Stat      = 0x%08x\n",
->> +				readl(priv->regs + SCAN_CNTR_STAT));
->> +	dev_dbg(dev, "rem_Cntr_Stat       = 0x%08x\n",
->> +				readl(priv->regs + REM_CNTR_STAT));
->> +	dev_dbg(dev, "settling_Timer_Stat = 0x%08x\n",
->> +				readl(priv->regs + SETTLING_TIMER_STAT));
->> +	dev_dbg(dev, "spare_Reg           = 0x%08x\n",
->> +				readl(priv->regs + SPARE_REG));
->> +	dev_dbg(dev, "soft_Bypass_Control = 0x%08x\n",
->> +				readl(priv->regs + SOFT_BYPASS_CONTROL));
->> +	dev_dbg(dev, "soft_Bypass_Data    = 0x%08x\n",
->> +				readl(priv->regs + SOFT_BYPASS_DATA));
->> +}
-> 
-> []
-> 
->> +static int get_tsc_config(struct device_node *np, struct iproc_ts_priv *priv)
->> +{
->> +	u32 val;
-> []
->> +	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
->> +		if (val < 0 || val > 255) {
-> 
-> testing u32 < 0 isn't necessary.
-> 
-> Maybe it'd be better to emit the out of range value too
-> 
->> +			dev_err(dev, "debounce_timeout must be [0-255]\n");
-> 
-> 			dev_err(dev, "debounce_timeout (%u) must be [0-255]\n", val);
-> 
-> 
+On Mon, Mar 09 2015 at 09:17 -0600, Lina Iyer wrote:
 
-Thanks. I'll make the suggested changes and send out a new patch.
+[...]
 
-Jon
+>+static int qcom_pm_collapse(unsigned long int unused)
+>+{
+>+	qcom_scm_cpu_power_down(QCOM_SCM_L2_ON);
 
+Rebase against latest SCM patches. Change to QCOM_SCM_CPU_PWR_DOWN_L2_ON.
+>+
+>+	/*
+>+	 * Returns here only if there was a pending interrupt and we did not
+>+	 * power down as a result.
+>+	 */
+>+	return -1;
+>+}
+>+
+>+static int qcom_cpu_standby(int cpuarg)
+>+{
+>+	spm_set_low_power_mode(PM_SLEEP_MODE_STBY);
+>+	cpu_do_idle();
+>+
+>+	return 0;
+>+}
+>+
+>+static int qcom_cpu_spc(int cpu)
+>+{
+>+	int ret;
+>+
+>+	spm_set_low_power_mode(PM_SLEEP_MODE_SPC);
+>+	cpu_pm_enter();
+Remove this. This is now done by cpuidle driver.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>+	ret = cpu_suspend(0, qcom_pm_collapse);
+>+	/*
+>+	 * ARM common code may execute WFI, and if the SPM mode is not reset,
+>+	 * then we may accidently do power down state.
+>+	 * SPM is configured to reset to do STBY, but that relies on the
+>+	 * SPM state machine to be executed. When an interrupt is pending as we
+>+	 * enter idle state, SPM would not execute its state machine, so the
+>+	 * SPM may remain configured to do power down state.
+>+	 * Reset the state back to standby.
+>+	 */
+>+	spm_set_low_power_mode(PM_SLEEP_MODE_STBY);
+>+	cpu_pm_exit();
+And this..
