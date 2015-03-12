@@ -1,34 +1,42 @@
-From: Rusty Russell <rusty@rustcorp.com.au>
-Subject: Re: MODULE_LICENSE(): "GPL"  vs. "GPL v2" (Was: [PATCH 1/2] Input: add support for Semtech SX8654 I2C touchscreen controller)
-Date: Thu, 12 Mar 2015 11:11:08 +1030
-Message-ID: <87k2ynxd23.fsf@rustcorp.com.au>
-References: <1425666099-8365-1-git-send-email-sebastien.szymanski@armadeus.com> <20150306182155.GB4540@dtor-ws> <20150307005717.GD26151@dtor-ws> <1425731545.2281.3.camel@tiscali.nl> <20150307212543.GA38770@dtor-ws> <1425765281.2300.17.camel@x220> <64C774DE-93CD-41FB-AF78-301503025592@gmail.com> <1425766340.2300.29.camel@x220> <FACD03DB-5CFC-4C18-A185-1031903E3AAE@gmail.com> <1425767935.2300.48.camel@x220> <20150308045115.GA4054@dtor-ws> <1426071405.4244.88.camel@x220>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH 1/2] ARM: imx6qdl-sabresd: set swbst_reg as vbus's parent
+ reg
+Date: Thu, 12 Mar 2015 09:54:18 +0800
+Message-ID: <20150312015417.GA31064@shlinux2>
+References: <1425629061-8995-1-git-send-email-peter.chen@freescale.com>
+ <20150311012424.GW20455@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426071405.4244.88.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>, Dave Jones <davej@codemonkey.org.uk>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150311012424.GW20455@dragon>
+Sender: stable-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Paul Bolle <pebolle@tiscali.nl> writes:
-> [Added Rusty and Dave.]
->
-> On Sat, 2015-03-07 at 20:51 -0800, Dmitry Torokhov wrote:
->> On Sat, Mar 07, 2015 at 11:38:55PM +0100, Paul Bolle wrote:
->> > From a technological standpoint it would be easy to declare "GPL" (or
->> > any other string) to mean "GPL v2 compatible", which is, I think, all
->> > that matters. But license_is_gpl_compatible() doesn't do that. And I
->> > fear that's for a reason. Is my fear unfounded?
->> 
->> Well we might ask Rusty on the off chance that he remembers but my guess
->> would be that he added "GPL v2" in addition to "GPL" and other license
->> stings because at the time there was one driver,
->> drivers/net/tulip/xircom_tulip_cb.c, that used MODULE_LICENSE("GPL v2").
+On Wed, Mar 11, 2015 at 09:24:25AM +0800, Shawn Guo wrote:
+> On Fri, Mar 06, 2015 at 04:04:20PM +0800, Peter Chen wrote:
+> > USB vbus 5V is from PMIC SWBST, so set swbst_reg as vbus's
+> > parent reg, it fixed a bug that the voltage of vbus is incorrect
+> > due to swbst_reg is disabled after boots up.
+> > 
+> > Cc: stable <stable@vger.kernel.org>
+> 
+> It's more idiomatic to put the line in this way:
+> 
+> Cc: stable@vger.kernel.org
+> 
 
-Yes, people screw this up.  But that's mainly because they don't care
-either :)
+One benefit for using <stable@vger.kernel.org> over than
+stable@vger.kernel.org directly is it can add "# v3.x+"
+at the last of Cc tag if you want git send Cc tag.
 
-Cheers,
-Rusty.
+Cc: <stable@vger.kernel.org> #3.x+ /* git can work */
+
+Cc: stable@vger.kernel.org #3.x+ /* git can't work */
+
+-- 
+
+Best Regards,
+Peter Chen
