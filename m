@@ -1,54 +1,79 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Thu, 12 Mar 2015 10:39:06 +0000
-Message-ID: <20150312103906.GB30145@leverpostej>
-References: <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
- <20150305122459.GC14093@leverpostej>
- <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
- <20150305170450.GG14093@leverpostej>
- <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
- <20150305185407.GK14093@leverpostej>
- <54F9140B.3060109@samsung.com>
- <20150306114021.GF8700@leverpostej>
- <54F99B1A.3080600@samsung.com>
- <54FE4957.7050904@samsung.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: m25p80: add "nor-jedec" binding
+Date: Thu, 12 Mar 2015 11:40:50 +0100
+Message-ID: <CAMuHMdWszFbs2N8W0-O35-fWydetMx8tHvn7NLEyZi_ZL9R1tA@mail.gmail.com>
+References: <1426111046-29900-1-git-send-email-computersforpeace@gmail.com>
+	<CAMuHMdUv2w0chGPK37oYaY5f64X4XK+Ab+aP7egxv2fnWa8k-g@mail.gmail.com>
+	<CACna6rz-4nKE_iV2-8aG3ZEcrpN88A0iX4cHC+FudJ-==H9p7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54FE4957.7050904@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
-Cc: Chanwoo Choi <cwchoi00@gmail.com>, "kgene@kernel.org" <kgene@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rz-4nKE_iV2-8aG3ZEcrpN88A0iX4cHC+FudJ-==H9p7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
+On Thu, Mar 12, 2015 at 11:36 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail=
+=2Ecom> wrote:
+> On 12 March 2015 at 11:19, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> =
+wrote:
+>> On Wed, Mar 11, 2015 at 10:57 PM, Brian Norris
+>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Doc=
+umentation/devicetree/bindings/mtd/m25p80.txt
+>>> index 4611aa83531b..1b2997d4cee4 100644
+>>> --- a/Documentation/devicetree/bindings/mtd/m25p80.txt
+>>> +++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+>>> @@ -3,9 +3,12 @@
+>>>  Required properties:
+>>>  - #address-cells, #size-cells : Must be present if the device has =
+sub-nodes
+>>>    representing partitions.
+>>> -- compatible : Should be the manufacturer and the name of the chip=
+=2E Bear in mind
+>>> +- compatible : Should be "nor-jedec" for any SPI NOR flash that ca=
+n be
+>>> +               identified by the JEDEC READ ID opcode (0x95).
+>>> +               Additionally, may include a device-specific string =
+consisting of
+>>> +               the manufacturer and name of the chip. Bear in mind
+>>
+>> For the casual reader, this suggests putting "nor-jedec" first, whic=
+h is not
+>> what we want. So I would write it like e.g.
+>>
+>> "Should be the manufacturer and the name of the chip. Additionally,
+>>  should contain "nor-jedec" for any SPI NOR flash that can be
+>>  identified by the JEDEC READ ID opcode (0x95)."
+>
+> I don't really like above. It suggests using manufacturer,name
+> always/in most cases. This is what we want to avoid. Let's use
+> "nor-jedec" wherever possible (when dealing with JEDEC compatible
+> flashes).
 
-> >>>> Do CPUs enter the kernel at EL2 or at EL1?
-> >>>
-> >>> Could you give me a tip how to check the kernel at EL2 or EL1?
-> >>
-> >> Hmm... I thought we logged this but it looks like we don't.
-> >>
-> >> You could hack in a check of is_hyp_mode_available() and
-> >> is_hyp_mode_mismatched(). That will tell you if EL2/hyp is available,
-> >> and whether all CPUs enter at the same mode (mandatory per the boot
-> >> protocol).
-> > 
-> > OK, I'll try it.
-> 
-> I check the return value of is_hyp_mode_available() to catch whether EL1 or EL2. 
-> 
-> The is_hyp_mode_available() returns 'false' during kernel booting.
-> - __boot_cpu_mode[0]: 0xe11 (BOOT_CPU_MODE_EL1)
-> - __boot_cpu_mode[1]: 0x0
+Why? It's a basic DT principle to always specify the real device.
+One day you might find a deviation from the nor-jedec spec, which you c=
+annot
+handle if the device node doesn't claim compatibility with the real dev=
+ice.
 
-Thanks for taking a look.
+Gr{oetje,eeting}s,
 
-It's unfortunate that CPUs aren't booted at EL2 (especially given that
-booting them at EL1N means the FW is doing more work to be less helpful
-to the OS), but at least they seem to be booted in consistent modes.
+                        Geert
 
-Thanks,
-Mark.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
