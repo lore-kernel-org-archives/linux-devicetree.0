@@ -1,78 +1,63 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 2/2] drm/bridge: Add IT6151 bridge driver
-Date: Thu, 12 Mar 2015 10:00:47 +0100
-Message-ID: <1426150847.5304.22.camel@x220>
-References: <1426054733-54378-1-git-send-email-ck.hu@mediatek.com>
-	 <1426054733-54378-2-git-send-email-ck.hu@mediatek.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v6 3/3] ARM: dts: vf610: add Miscellaneous System
+ Control Module (MSCM)
+Date: Thu, 12 Mar 2015 10:03:08 +0100
+Message-ID: <59b0d98827cb4e7497de81e1c0826964@agner.ch>
+References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
+ <1425249689-32354-4-git-send-email-stefan@agner.ch>
+ <20150311004812.GU20455@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426054733-54378-2-git-send-email-ck.hu@mediatek.com>
+In-Reply-To: <20150311004812.GU20455@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Jitao Shi <jitao.shi@mediatek.com>
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pebolle@tiscali.nl, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Just a few nits, I'm afraid.
+On 2015-03-11 01:48, Shawn Guo wrote:
+> On Sun, Mar 01, 2015 at 11:41:29PM +0100, Stefan Agner wrote:
+>> Add the Miscellaneous System Control Module (MSCM) to the base
+>> device tree for Vybrid SoC's. This module contains registers
+>> to get information of the individual and current (accessing)
+>> CPU. In a second block, there is an interrupt router, which
+>> handles the routing of the interrupts between the two CPU cores
+>> on VF6xx variants of the SoC. However, also on single core
+>> variants the interrupt router needs to be configured in order
+>> to receive interrupts on the CPU's interrupt controller. Almost
+>> all peripheral interrupts are routed through the router, hence
+>> the MSCM module is the default interrupt parent for this SoC.
+>>
+>> In a earlier commit the interrupt nodes were moved out of the
+>> peripheral nodes and specified in the CPU specific vf500.dtsi
+>> device tree. This allowed to use the base device tree vfxxx.dtsi
+>> also for a Cortex-M4 specific device tree, which uses different
+>> interrupt nodes due to the NVIC interrupt controller. However,
+>> since the interrupt parent for peripherals is the MSCM module
+>> independently which CPU the device tree is used for, we can move
+>> the interrupt nodes into the base device tree vfxxx.dtsi again.
+>> Depending on which CPU this base device tree will be used with,
+>> the correct parent interrupt controller has to be assigned to
+>> the MSCM-IR node (GIC or NVIC). The driver takes care of the
+>> parent interrupt controller specific needs (interrupt-cells).
+>>
+>> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> 
+> Stefan,
+> 
+> I guess this patch has a run-time dependency on the first two in the
+> series, right?  Or put it another way, if I apply this single patch on
+> my branch, the dtb and kernel built from the same branch do not work
+> together, right?  If so, we will need to either wait for the first two
+> hit mainline or pull Jason's irqchip/vybrid branch into my tree as
+> prerequisite (irqchip/vybrid needs to be stable).
+> 
+> Shawn
 
-On Wed, 2015-03-11 at 14:18 +0800, CK Hu wrote:
->  drivers/gpu/drm/bridge/Kconfig  |  10 +
->  drivers/gpu/drm/bridge/Makefile |   1 +
+Yes, that is true. The driver need to be in place in order to
+successfully boot with the new device tree.
 
-I applied 1/2 and 2/2 on top of next-20150312 to check a trivial issue.
-The chunks for these two files needed context changes to git this patch
-applied.
-
->  drivers/gpu/drm/bridge/it6151.c | 601 ++++++++++++++++++++++++++++++++++++++++
->  include/drm/bridge/it6151.h     |  34 +++
->  4 files changed, 646 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/it6151.c
->  create mode 100644 include/drm/bridge/it6151.h
-
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index f38bbcd..2b3a78e 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -11,3 +11,13 @@ config DRM_PTN3460
->  	select DRM_PANEL
->  	---help---
->  	  ptn3460 eDP-LVDS bridge chip driver.
-> +
-> +config DRM_IT6151
-> +	bool "Enable IT6151FN : MIPI to eDP Converter"
-> +	depends on DRM
-> +	select DRM_KMS_HELPER
-> +	help
-> +	  Choose this option if you have IT6151 for display
-> +	  The IT6151 is a high-performance and low-power
-> +	  MIPI to eDP converter
-> +
-
-(This empty line makes git am whine: "new blank line at EOF.".)
-
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/it6151.c
-
-> +#include <linux/module.h>
-
-This file can only be built-in. So I couldn't help but notice this
-include. And if I remove it
-    make drivers/gpu/drm/bridge/it6151.o
-
-still runs without warning or errors. Unless I've missed something
-non-obvious I'd say it is not needed.
-
-> +
-
-(Empty line at end of file.)
-
-> --- /dev/null
-> +++ b/include/drm/bridge/it6151.h
-
-> +
-
-(Another empty line at end of file.)
-
-
-Paul Bolle
+--
+Stefan
