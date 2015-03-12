@@ -1,75 +1,45 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
-Date: Thu, 12 Mar 2015 08:21:54 +0100
-Message-ID: <20150312072154.GB24885@pengutronix.de>
-References: <1425888603-25800-1-git-send-email-s.hauer@pengutronix.de>
- <1425888603-25800-3-git-send-email-s.hauer@pengutronix.de>
- <7h61a94zy0.fsf@deeprootsystems.com>
- <20150310094142.GD24885@pengutronix.de>
- <1426043791.24243.9.camel@mtksdaap41>
- <20150311090345.GR24885@pengutronix.de>
- <7hbnjzxxqo.fsf@deeprootsystems.com>
+From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/2] Add Spreadtrum Sharkl64 Platform support
+Date: Thu, 12 Mar 2015 15:31:36 +0800
+Message-ID: <CAAfSe-tNA-MnNATYPeKV4QGdVJcqtqNsVHb+EKzUyRxTgq_4iw@mail.gmail.com>
+References: <1426040790-19495-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<5111739.CpgUXH2iat@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7hbnjzxxqo.fsf@deeprootsystems.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5111739.CpgUXH2iat@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: =?UTF-8?B?Q2h1bnlhbiBaaGFuZyAo5byg5pil6ImzKQ==?= <Chunyan.Zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 10:14:23AM -0700, Kevin Hilman wrote:
-> Sascha Hauer <s.hauer@pengutronix.de> writes:
->=20
-> >> I asked our designer about the bus protection feature, here is his
-> >> response:
-> >>=20
-> >> "
-> >> It's for unexpected signal glitch in Power switch process.
-> >>=20
-> >> During Power switch process, we have clock switch, reset, isolatio=
-n
-> >> enable/disable and  power switch involved where the transition of
-> >> asynchronous reset and  isolation is the most critical one,  which=
- have
-> >> risk to introduce a unexpected short period signal transition from
-> >> MTCMOS=E2=80=99s interface to other alive HW .=20
-> >> "
-> >>=20
-> >> That means it protects unexpected bus accessing from HW, not from =
-SW. So
-> >> it will not hide bugs from wrong SW access.
-> >
-> > Ok, thanks for clarifying. This means we should enable this feature
-> > sooner or later. Since the audio driver which is likely the first u=
-ser
-> > of this driver doesn't need the protection bits I think we have som=
-e
-> > time and can add the protection bits once the clock patches have be=
-en
-> > merged.
->=20
-> Sounds OK to me.
->=20
-> But I still think it belongs in the infracfg layer, and not in the PM
-> domain layer.
+On Thu, Mar 12, 2015 at 6:01 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 11 March 2015 02:27:08 Chunyan Zhang wrote:
+>> This patchset adds Spreadtrum's Sharkl64 support in arm64 device tree.
+>>
+>> Changes from v7:
+>>         - Added Mark Rutland's Acked-by
+>>         - Rebased v4.0-rc1
+>>
+>
+> Applied both to next/arm64.
 
-I already have plans how to put the code into the infracfg driver. Wher=
-e
-the code is going to be called from remains to be seen. The power domai=
-n
-driver might or might not be a good place for it.
+Thanks Arnd.
 
-Sascha
+>
+> I had some trouble applying the patches because of broken end-of-line
+> markers and had to edit the patch manually. Please check what went
+> wrong there so you can avoid the problem in the future. Thanks!
+>
 
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+Sorry for that, I have found the reason about smpt server, I'll avoid
+the same problem in the future.
+
+Best regards,
+Chunyan
+
+>         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
