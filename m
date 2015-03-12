@@ -1,59 +1,44 @@
-From: James Hartley <james.hartley@imgtec.com>
-Subject: [PATCH V4 2/2] Documentation: crypto: Add DT binding info for the img hw hash accelerator
-Date: Thu, 12 Mar 2015 02:06:52 +0000
-Message-ID: <1426126012-16061-3-git-send-email-james.hartley@imgtec.com>
-References: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: imx6qdl-sabresd: set swbst_reg as vbus's parent
+ reg
+Date: Thu, 12 Mar 2015 10:19:19 +0800
+Message-ID: <20150312021917.GD20455@dragon>
+References: <1425629061-8995-1-git-send-email-peter.chen@freescale.com>
+ <20150311012424.GW20455@dragon>
+ <20150312015417.GA31064@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, abrestic@chromium.org, smueller@chronox.de
-Cc: devicetree@vger.kernel.org, ezequiel.garcia@imgtec.com, linux-crypto@vger.kernel.org, james.hartley@imgtec.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150312015417.GA31064@shlinux2>
+Sender: stable-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding documentation for the Imagination Technologies hash
-accelerator that provides hardware acceleration for SHA1/SHA224/SHA256/MD5
-hashes.  This hardware will be present in the upcoming pistachio SoC.
+On Thu, Mar 12, 2015 at 09:54:18AM +0800, Peter Chen wrote:
+> On Wed, Mar 11, 2015 at 09:24:25AM +0800, Shawn Guo wrote:
+> > On Fri, Mar 06, 2015 at 04:04:20PM +0800, Peter Chen wrote:
+> > > USB vbus 5V is from PMIC SWBST, so set swbst_reg as vbus's
+> > > parent reg, it fixed a bug that the voltage of vbus is incorrect
+> > > due to swbst_reg is disabled after boots up.
+> > > 
+> > > Cc: stable <stable@vger.kernel.org>
+> > 
+> > It's more idiomatic to put the line in this way:
+> > 
+> > Cc: stable@vger.kernel.org
+> > 
+> 
+> One benefit for using <stable@vger.kernel.org> over than
+> stable@vger.kernel.org directly is it can add "# v3.x+"
+> at the last of Cc tag if you want git send Cc tag.
+> 
+> Cc: <stable@vger.kernel.org> #3.x+ /* git can work */
+> 
+> Cc: stable@vger.kernel.org #3.x+ /* git can't work */
 
-Signed-off-by: James Hartley <james.hartley@imgtec.com>
----
- .../devicetree/bindings/crypto/img-hash.txt        |   27 ++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/img-hash.txt
+Yeah, that's true.  What I was really questioning is not
+< >, but the alias 'stable' right before it.
 
-diff --git a/Documentation/devicetree/bindings/crypto/img-hash.txt b/Documentation/devicetree/bindings/crypto/img-hash.txt
-new file mode 100644
-index 0000000..91a3d75
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/img-hash.txt
-@@ -0,0 +1,27 @@
-+Imagination Technologies hardware hash accelerator
-+
-+The hash accelerator provides hardware hashing acceleration for
-+SHA1, SHA224, SHA256 and MD5 hashes
-+
-+Required properties:
-+
-+- compatible : "img,hash-accelerator"
-+- reg : Offset and length of the register set for the module, and the DMA port
-+- interrupts : The designated IRQ line for the hashing module.
-+- dmas : DMA specifier as per Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names : Should be "tx"
-+- clocks : Clock specifiers
-+- clock-names : "sys" Used to clock the hash block registers
-+		"hash" Used to clock data through the accelerator
-+
-+Example:
-+
-+	hash: hash@18149600 {
-+	compatible = "img,hash-accelerator";
-+		reg = <0x18149600 0x100>, <0x18101100 0x4>;
-+		interrupts = <GIC_SHARED 59 IRQ_TYPE_LEVEL_HIGH>;
-+		dmas = <&dma 8 0xffffffff 0>;
-+		dma-names = "tx";
-+		clocks = <&cr_periph SYS_CLK_HASH>, <&clk_periph PERIPH_CLK_ROM>;
-+		clock-names = "sys", "hash";
-+	};
--- 
-1.7.9.5
+Shawn
