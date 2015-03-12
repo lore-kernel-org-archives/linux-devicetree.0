@@ -1,62 +1,76 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC PATCH v2 3/3] ARM: dts: exynos5420: add async-bridge clocks
- to disp1 power domain
-Date: Thu, 12 Mar 2015 14:00:07 +0100
-Message-ID: <55018DD7.2010608@samsung.com>
-References: <54D48701.10105@collabora.co.uk>
- <1423220154-5333-1-git-send-email-a.hajda@samsung.com>
+Subject: Re: [RFC PATCH 2/3] arm/exynos/pm_domains: add support for
+ async-bridge clocks
+Date: Thu, 12 Mar 2015 14:05:39 +0100
+Message-ID: <55018F23.3010402@samsung.com>
+References: <1423139739-19881-1-git-send-email-a.hajda@samsung.com>
+ <1423139739-19881-3-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1423220154-5333-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, javier.martinez@collabora.co.uk, Liquid.Acid@gmx.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1423139739-19881-3-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Liquid.Acid@gmx.net, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, javier.martinez@collabora.co.uk, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/15 11:55, Andrzej Hajda wrote:
-> FIMD and MIXER IPs in disp1 power domain have async-bridges (to GSCALER),
-> therefore their clocks should be enabled during power domain switch.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index e1fa800..58579f5 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -293,9 +293,11 @@
->  			 <&clock CLK_MOUT_SW_ACLK300>,
->  			 <&clock CLK_MOUT_USER_ACLK300_DISP1>,
->  			 <&clock CLK_MOUT_SW_ACLK400>,
-> -			 <&clock CLK_MOUT_USER_ACLK400_DISP1>;
-> +			 <&clock CLK_MOUT_USER_ACLK400_DISP1>,
-> +			 <&clock CLK_FIMD1>, <&clock CLK_MIXER>;
->  		clock-names = "oscclk", "pclk0", "clk0",
-> -			      "pclk1", "clk1", "pclk2", "clk2";
-> +			      "pclk1", "clk1", "pclk2", "clk2",
-> +			      "asb0", "asb1";
->  	};
-
-In general I don't like those clock/clock-names properties in the power
-domain nodes, since the power domains are not really consumers of those
-clocks. However these clocks are essential for the exynos power domains
-operation. There are more dependencies between the clocks and the power
-domains which adding of those properties does not cover. And we'll need
-to address those dependencies somehow.
-Anyway, the subject patch looks OK to me, given that support for clocks/
-clock-names in the exynos power domain device nodes has been merged
-for quite long already.
-The entire feature has been merged without PM or clk subsystem
-maintainer ACK, I don't see a reason not to merge this small addition
-of more clocks, especially that it fixes a real bug.
-
-Please feel free to add:
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
--- 
-Regards,
-Sylwester
+T24gMDUvMDIvMTUgMTM6MzUsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4gU2luY2UgRXh5bm9zNTQy
+MCB0aGVyZSBhcmUgYXN5bmMtYnJpZGdlcyAoQVNCKSBiZXR3ZWVuIGRpZmZlcmVudCBJUHMuIFRo
+ZXNlCj4gYnJpZGdlcyBtdXN0IGJlIG9wZXJhdGlvbmFsIGR1cmluZyBwb3dlciBkb21haW4gb24v
+b2ZmLCBpZS4gY2xvY2tzIHVzZWQKPiBieSB0aGVzZSBicmlkZ2VzIHNob3VsZCBiZSBlbmFibGVk
+Lgo+IFRoaXMgcGF0Y2ggZW5hYmxlZCB0aGVzZSBjbG9ja3MgZHVyaW5nIGRvbWFpbiBvbi9vZmYu
+Cj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4K
+ClJldmlld2VkLWJ5OiBTeWx3ZXN0ZXIgTmF3cm9ja2kgPHMubmF3cm9ja2lAc2Ftc3VuZy5jb20+
+Cgo+IC0tLQo+ICBhcmNoL2FybS9tYWNoLWV4eW5vcy9wbV9kb21haW5zLmMgfCAyNyArKysrKysr
+KysrKysrKysrKysrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyks
+IDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtZXh5bm9zL3Bt
+X2RvbWFpbnMuYyBiL2FyY2gvYXJtL21hY2gtZXh5bm9zL3BtX2RvbWFpbnMuYwo+IGluZGV4IDBl
+MmJjMzYuLmVjZmY1MjIgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vbWFjaC1leHlub3MvcG1fZG9t
+YWlucy5jCj4gKysrIGIvYXJjaC9hcm0vbWFjaC1leHlub3MvcG1fZG9tYWlucy5jCj4gQEAgLTM3
+LDYgKzM3LDcgQEAgc3RydWN0IGV4eW5vc19wbV9kb21haW4gewo+ICAJc3RydWN0IGNsayAqb3Nj
+Y2xrOwo+ICAJc3RydWN0IGNsayAqY2xrW01BWF9DTEtfUEVSX0RPTUFJTl07Cj4gIAlzdHJ1Y3Qg
+Y2xrICpwY2xrW01BWF9DTEtfUEVSX0RPTUFJTl07Cj4gKwlzdHJ1Y3QgY2xrICphc2JfY2xrW01B
+WF9DTEtfUEVSX0RPTUFJTl07Cj4gIH07Cj4gIAo+ICBzdGF0aWMgaW50IGV4eW5vc19wZF9wb3dl
+cihzdHJ1Y3QgZ2VuZXJpY19wbV9kb21haW4gKmRvbWFpbiwgYm9vbCBwb3dlcl9vbikKPiBAQCAt
+NDUsMTQgKzQ2LDE5IEBAIHN0YXRpYyBpbnQgZXh5bm9zX3BkX3Bvd2VyKHN0cnVjdCBnZW5lcmlj
+X3BtX2RvbWFpbiAqZG9tYWluLCBib29sIHBvd2VyX29uKQo+ICAJdm9pZCBfX2lvbWVtICpiYXNl
+Owo+ICAJdTMyIHRpbWVvdXQsIHB3cjsKPiAgCWNoYXIgKm9wOwo+ICsJaW50IGk7Cj4gIAo+ICAJ
+cGQgPSBjb250YWluZXJfb2YoZG9tYWluLCBzdHJ1Y3QgZXh5bm9zX3BtX2RvbWFpbiwgcGQpOwo+
+ICAJYmFzZSA9IHBkLT5iYXNlOwo+ICAKPiArCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLX1BFUl9E
+T01BSU47IGkrKykgewo+ICsJCWlmIChJU19FUlIocGQtPmFzYl9jbGtbaV0pKQo+ICsJCQlicmVh
+azsKPiArCQljbGtfcHJlcGFyZV9lbmFibGUocGQtPmFzYl9jbGtbaV0pOwo+ICsJfQo+ICsKPiAg
+CS8qIFNldCBvc2NjbGsgYmVmb3JlIHBvd2VyaW5nIG9mZiBhIGRvbWFpbiovCj4gIAlpZiAoIXBv
+d2VyX29uKSB7Cj4gLQkJaW50IGk7Cj4gLQo+ICAJCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLX1BF
+Ul9ET01BSU47IGkrKykgewo+ICAJCQlpZiAoSVNfRVJSKHBkLT5jbGtbaV0pKQo+ICAJCQkJYnJl
+YWs7Cj4gQEAgLTgxLDggKzg3LDYgQEAgc3RhdGljIGludCBleHlub3NfcGRfcG93ZXIoc3RydWN0
+IGdlbmVyaWNfcG1fZG9tYWluICpkb21haW4sIGJvb2wgcG93ZXJfb24pCj4gIAo+ICAJLyogUmVz
+dG9yZSBjbG9ja3MgYWZ0ZXIgcG93ZXJpbmcgb24gYSBkb21haW4qLwo+ICAJaWYgKHBvd2VyX29u
+KSB7Cj4gLQkJaW50IGk7Cj4gLQo+ICAJCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLX1BFUl9ET01B
+SU47IGkrKykgewo+ICAJCQlpZiAoSVNfRVJSKHBkLT5jbGtbaV0pKQo+ICAJCQkJYnJlYWs7Cj4g
+QEAgLTkyLDYgKzk2LDEyIEBAIHN0YXRpYyBpbnQgZXh5bm9zX3BkX3Bvd2VyKHN0cnVjdCBnZW5l
+cmljX3BtX2RvbWFpbiAqZG9tYWluLCBib29sIHBvd2VyX29uKQo+ICAJCX0KPiAgCX0KPiAgCj4g
+Kwlmb3IgKGkgPSAwOyBpIDwgTUFYX0NMS19QRVJfRE9NQUlOOyBpKyspIHsKPiArCQlpZiAoSVNf
+RVJSKHBkLT5hc2JfY2xrW2ldKSkKPiArCQkJYnJlYWs7Cj4gKwkJY2xrX2Rpc2FibGVfdW5wcmVw
+YXJlKHBkLT5hc2JfY2xrW2ldKTsKPiArCX0KPiArCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiBA
+QCAtMTM3LDYgKzE0NywxNSBAQCBzdGF0aWMgX19pbml0IGludCBleHlub3M0X3BtX2luaXRfcG93
+ZXJfZG9tYWluKHZvaWQpCj4gIAkJcGQtPnBkLnBvd2VyX29mZiA9IGV4eW5vc19wZF9wb3dlcl9v
+ZmY7Cj4gIAkJcGQtPnBkLnBvd2VyX29uID0gZXh5bm9zX3BkX3Bvd2VyX29uOwo+ICAKPiArCQlm
+b3IgKGkgPSAwOyBpIDwgTUFYX0NMS19QRVJfRE9NQUlOOyBpKyspIHsKPiArCQkJY2hhciBjbGtf
+bmFtZVs4XTsKPiArCj4gKwkJCXNucHJpbnRmKGNsa19uYW1lLCBzaXplb2YoY2xrX25hbWUpLCAi
+YXNiJWQiLCBpKTsKPiArCQkJcGQtPmFzYl9jbGtbaV0gPSBjbGtfZ2V0KGRldiwgY2xrX25hbWUp
+Owo+ICsJCQlpZiAoSVNfRVJSKHBkLT5hc2JfY2xrW2ldKSkKPiArCQkJCWJyZWFrOwo+ICsJCX0K
+PiArCj4gIAkJcGQtPm9zY2NsayA9IGNsa19nZXQoZGV2LCAib3NjY2xrIik7Cj4gIAkJaWYgKElT
+X0VSUihwZC0+b3NjY2xrKSkKPiAgCQkJZ290byBub19jbGs7Cj4gCgoKLS0gClN5bHdlc3RlciBO
+YXdyb2NraQpTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9sYW5kCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
