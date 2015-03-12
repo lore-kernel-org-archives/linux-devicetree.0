@@ -1,117 +1,83 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
- gadget complete function
-Date: Thu, 12 Mar 2015 05:40:56 +0000
-Message-ID: <HKNPR06MB3228B5E1A95EDFCD58CF32BD8060@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
- <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
- <HKNPR06MB3229E4509ECB25B3620B449D8060@HKNPR06MB322.apcprd06.prod.outlook.com>
- <20150312044449.GA29718@saruman.tx.rr.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: [Patch v2 1/3] dt: OF_UNITTEST make dependency broken, framework
+ fixes
+Date: Wed, 11 Mar 2015 22:59:38 -0700
+Message-ID: <55012B4A.9050504@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150312044449.GA29718@saruman.tx.rr.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: "balbi@TI.COM" <balbi@TI.COM>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <mmarek@suse.cz>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Frank Rowand <frank.rowand@sonymobile.com>
 
-> On Thu, Mar 12, 2015 at 04:33:41AM +0000, yoshihiro shimoda wrote:
-> > Hi Geert-san again,
-> >
-> > > Hi Geert-san,
-> > >
-> > > Thank you for the reply again!
-> > >
-> > > > Hi Shimoda-san,
-> > > >
-> > > > On Mon, Feb 16, 2015 at 2:52 AM, Yoshihiro Shimoda
-> > > > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > > > According to the gadget.h, a "complete" function will always be called
-> > > > > with interrupts disabled. However, sometimes usbhsg_queue_pop() function
-> > > > > is called with interrupts enabled. So, this function should calls
-> > > > > local_irq_save() before this calls the usb_gadget_giveback_request().
-> > > > > Otherwise, there is possible to cause a spinlock suspected in a gadget
-> > > > > complete function.
-> > > >
-> > > > I still feel uneasy about adding the call to local_irq_save(), as the need for
-> > > > this is usually an indicator of another locking problem.
-> > >
-> > > I also think that I would like to avoid using local_irq_save().
-> > > But, I have no idea to resolve this issue for now.
-> >
-> > After I modified usb-dmac driver to use a tasklet instead of a kthread,
-> > this issue disappeared.
-> >
-> > My understanding is the followings:
-> > - According to the backtrace below, during usbhsf_dma_complete() was running,
-> >  a softirq happened. After ncm_tx_tasklet() was called, the issue happened.
-> > http://thread.gmane.org/gmane.linux.usb.general/122023/focus=43729
-> >
-> > - This means that usbhsf_dma_complete() ran on a kthread. So, ncm driver is able
-> >   to do the ncm_tx_tasklet().
-> >
-> > - After the current usb-dmac driver, since usbhsf_dma_complete() runs on a tasklet,
-> >   ncm driver is not able to do the ncm_tx_tasklet during usbhsf_dma_complete() was running.
-> >
-> >
-> > So, I would like to recall this patch and I will resubmit this patch series as v3.
-> 
-> try something like below:
-> 
-> diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-> index e0384af77e56..e9d75d85be59 100644
-> --- a/drivers/usb/renesas_usbhs/mod_gadget.c
-> +++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-> @@ -119,7 +119,7 @@ struct usbhsg_recip_handle {
->  /*
->   *		queue push/pop
->   */
-> -static void usbhsg_queue_pop(struct usbhsg_uep *uep,
-> +static void __usbhsg_queue_pop(struct usbhsg_uep *uep,
->  			     struct usbhsg_request *ureq,
->  			     int status)
->  {
-> @@ -133,6 +133,15 @@ static void usbhsg_queue_pop(struct usbhsg_uep *uep,
->  	usb_gadget_giveback_request(&uep->ep, &ureq->req);
->  }
-> 
-> +static void usbhsg_queue_pop(struct usbhsg_uep *uep,
-> +			     struct usbhsg_request *ureq,
-> +			     int status)
-> +{
-> +	usbhs_lock(priv, flags);
-> +	__usbhsg_queue_pop(uep, ureq, status);
-> +	usbhs_unlock(priv, flags);
-> +}
-> +
->  static void usbhsg_queue_done(struct usbhs_priv *priv, struct usbhs_pkt *pkt)
->  {
->  	struct usbhs_pipe *pipe = pkt->pipe;
-> 
-> 
-> then, for cases where lock is already held you call __usbhsg_queue_pop()
-> and for all other cases, call usbhsg_queue_pop().
+This 3 patch series is not bisectable.  If CONFIG_OF_UNITTEST=y then the kernel
+will not build with just patch 1 or just patches 1 and 2 applied.
 
-Thank you for the suggestion. However, we cannot use this usbhsg_queue_pop() because
-a gadget driver might call usb_ep_queue() in the "complete" function and
-this driver calls usbhs_lock() in the usb_ep_queue().
+If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
+be incremented, even if there are not source changes.  This is caused by
+a lack of dependency tracking and checking for
+drivers/of/unittest-data/testcases.dtb.o.  Fixing the problem was made more
+complicated by the fact that testcases.dtb.o was linked into ../of_unittest.o.
 
-Perhaps my explanation was bad, but this issue was caused by the following conditions:
- - I use the renesas_usbhs driver as udc.
- - I use an old usb-dmac driver that the callback runs on a kthread.
- - I use the ncm driver. In this environment, the ncm driver might cause a spinlock suspected.
+Patch 1 modifies makefiles to move of_unittest.c into unittest-data/ and
+creates missing dependency tracking for testcases.dtb.o.
 
-As an old solution, I fixed the renesas_usbhs driver by this patch.
-However, if I use a new usb-dmac driver that the callback runs on a tasklet,
-I don't need this patch. (This is a new solution.)
+Patch 2 will move of_unittest.c into unittest-data/
 
-Best regards,
-Yoshihiro Shimoda
+Patch 3 will fix an of_unittest.c include path to account for the move.
 
+Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+
+---
+
+changes since version 1:
+
+  patch 1:
+  Remove some changes to scripts/Makefile.lib that are not needed.  They
+  were left over from attempts to fix the problem without moving of_unitest.c
+  into unittest-data/.
+
+
+ drivers/of/Makefile               |    4 ++--
+ drivers/of/unittest-data/Makefile |    9 +++++++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+Index: b/drivers/of/Makefile
+===================================================================
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -6,8 +6,6 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+ obj-$(CONFIG_OF_ADDRESS)  += address.o
+ obj-$(CONFIG_OF_IRQ)    += irq.o
+ obj-$(CONFIG_OF_NET)	+= of_net.o
+-obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
+-of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
+ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+@@ -16,5 +14,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
+ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ obj-$(CONFIG_OF_OVERLAY) += overlay.o
+ 
++obj-$(CONFIG_OF_UNITTEST) += unittest-data/
++
+ CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+ CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+Index: b/drivers/of/unittest-data/Makefile
+===================================================================
+--- /dev/null
++++ b/drivers/of/unittest-data/Makefile
+@@ -0,0 +1,9 @@
++
++obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
++of_unittest-objs := unittest.o testcases.dtb.o
++
++targets += testcases.dtb testcases.dtb.S
++
++.SECONDARY: \
++	$(obj)/testcases.dtb.S \
++	$(obj)/testcases.dtb
