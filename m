@@ -1,93 +1,107 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] v4l: mt9v032: Add OF support
-Date: Fri, 13 Mar 2015 01:41:35 +0200
-Message-ID: <2140837.pMzBpl3YU4@avalon>
-References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com> <2320734.ji4C9lV64t@avalon> <54FD9074.8050600@samsung.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [RFC 14/18] dt: bindings: Add bindings for omap3isp
+Date: Fri, 13 Mar 2015 01:43:51 +0200
+Message-ID: <20150312234350.GP11954@valkosipuli.retiisi.org.uk>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
+ <1429813.xCjhlUaUXi@avalon>
+ <20150312230320.GO11954@valkosipuli.retiisi.org.uk>
+ <2648615.8gSgjdUuiM@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54FD9074.8050600-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2648615.8gSgjdUuiM@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi Laurent,
 
-On Monday 09 March 2015 13:22:12 Sylwester Nawrocki wrote:
-> On 09/03/15 12:29, Laurent Pinchart wrote:
-> > On Monday 09 March 2015 11:35:52 Sylwester Nawrocki wrote:
-> >> On 08/03/15 14:45, Laurent Pinchart wrote:
-> >>> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> >>> @@ -0,0 +1,41 @@
-> >>> +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
-> >>> +
-> >>> +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor
-> >>> with
-> >>> +an active array size of 752H x 480V. It is programmable through a
-> >>> simple
-> >>> +two-wire serial interface.
-> >>> +
-> >>> +Required Properties:
-> >>> +
-> >>> +- compatible: value should be either one among the following
-> >>> +	(a) "aptina,mt9v032" for MT9V032 color sensor
-> >>> +	(b) "aptina,mt9v032m" for MT9V032 monochrome sensor
-> >>> +	(c) "aptina,mt9v034" for MT9V034 color sensor
-> >>> +	(d) "aptina,mt9v034m" for MT9V034 monochrome sensor
-> >> 
-> >> It can't be determined at runtime whether the sensor is just
-> >> monochromatic ?
+On Fri, Mar 13, 2015 at 01:11:03AM +0200, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Friday 13 March 2015 01:03:21 Sakari Ailus wrote:
+> > On Thu, Mar 12, 2015 at 01:39:07AM +0200, Laurent Pinchart wrote:
+> > > On Saturday 07 March 2015 23:41:11 Sakari Ailus wrote:
+> > > > Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> > > > ---
+> > > > 
+> > > >  .../devicetree/bindings/media/ti,omap3isp.txt      |   64 +++++++++++++
+> > > >  MAINTAINERS                                        |    1 +
+> > > >  2 files changed, 65 insertions(+)
+> > > >  create mode 100644
+> > > >  Documentation/devicetree/bindings/media/ti,omap3isp.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/media/ti,omap3isp.txt
+> > > > b/Documentation/devicetree/bindings/media/ti,omap3isp.txt new file mode
+> > > > 100644
+> > > > index 0000000..2059524
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/media/ti,omap3isp.txt
+> 
+> [snip]
+> 
+> > > > +syscon		: syscon phandle and register offset
+> > > 
+> > > We should document what the register offset is.
+> > 
+> > This is SoC specific as is the base address. I'm not sure that would be
+> > relevant here. If you think so, shouldn't we also add the device base
+> > addresses and register block lengths?
+> 
+> I meant something like
+> 
+> syscon:	the phandle and register offset to the Complex I/O or CSI-PHY 
+> register.
+
+Oh, I misunderstood you. I'll use that text.
+
+> > > > +ti,phy-type	: 0 -- 3430; 1 -- 3630
+> > > 
+> > > Would it make sense to add #define's for this ?
+> > 
+> > I'll use OMAP3ISP_PHY_TYPE_COMPLEX_IO and OMAP3ISP_PHY_TYPE_CSIPHY as
+> > discussed.
+> > 
+> > > It could also make sense to document/name them "Complex I/O" and "CSIPHY"
+> > > to avoid referring to the SoC that implements them, as the ISP is also
+> > > found in SoCs other than 3430 and 3630.
+> > > 
+> > > Could the PHY type be derived from the ES revision that we query at
+> > > runtime ?
 > >
-> > Unfortunately not. As far as I'm aware the only difference between the
-> > monochromatic and color sensors is the colour filter array. The register
-> > set is identical.
+> > I think this would work on 3430 and 3630 but I'm not certain about others.
 > > 
-> >> Al in all the color filter array is a physical property of the sensor,
-> >> still the driver seems to be ignoring the "m" suffix.
+> > > We should also take into account the fact that the DM3730 has officially
+> > > no CSIPHY, but still seems to implement them in practice.
 > > 
-> > No, the driver relies on the I2C core filling returning the I2C device id
-> > instance corresponding to the DT compatible string, and gets sensor model
-> > information from id->driver_data.
+> > The DT sources are for 36xx, but I'd guess it works on 37xx as well, doesn't
+> > it?
 > 
-> Sorry, I missed the I2C id part.
+> I think so.
 > 
-> >> Hence I suspect the
-> >> register interfaces for both color and monochromatic versions are
-> >> compatible. I'm wondering whether using a boolean property to indicate
-> >> the
-> >> color filter array type would do as well.
+> > > > +#clock-cells	: Must be 1 --- the ISP provides two external clocks,
+> > > > +		  cam_xclka and cam_xclkb, at indices 0 and 1,
+> > > > +		  respectively. Please find more information on common
+> > > > +		  clock bindings in ../clock/clock-bindings.txt.
+> > > > +
+> > > > +Port nodes (optional)
+> > > > +---------------------
+> > > 
+> > > This should refer to Documentation/devicetree/bindings/media/video-
+> > > interfaces.txt.
 > > 
-> > That's an option as well, yes. I don't have a strong preference at the
-> > moment, but it should be noted that the "m" suffix is contained in the
-> > chip's part number.
-> > 
-> > MT9V032C12STM
-> > MT9V032C12STC
-> > MT9V032C12STMD
-> > MT9V032C12STMH
-> > MT9V032C12STCD
-> > MT9V032C12STCH
-> > 
-> > Granted, they use "c" for colour sensors, which the DT bindings don't use,
-> > and a "C12ST" that we completely ignore.
+> > There's a reference to video-interfaces.txt in the beginning of the file. Do
+> > you think that'd be enough?
 > 
-> OK, deriving the compatible strings from current I2C device ids seems less
-> trouble from the driver's writer POV. However, my feeling is that using same
-> compatible and additional property to indicate colour/monochrome is cleaner
-> as far as device tree binding is concerned.
-> Anyway, I'm not going to object against your current approach, I suppose
-> it's acceptable as well.
+> I've missed that. I think you could move the reference here.
 
-It wouldn't take much to convince me about that, I'm really undecided. I'll 
-send v2 to fix other issues, we can continue discussing this point then.
+Done.
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
