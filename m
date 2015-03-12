@@ -1,38 +1,112 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v3 07/12] ARM: imx: depend MXC debug board on 3DS machines
-Date: Fri, 13 Mar 2015 00:36:15 +0100
-Message-ID: <1426203380-7155-8-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 08/12] ARM: allow MULTIPLATFORM with !MMU
+Date: Fri, 13 Mar 2015 00:36:16 +0100
+Message-ID: <1426203380-7155-9-git-send-email-stefan@agner.ch>
 References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426203380-7155-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426203380-7155-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Depend the MXC debug board on machines which actually support it.
+In order to support SoC with heterogenous CPU architectures (such
+as Freescale Vybrid/i.MXSX) it is preferable to use the same
+architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
+CPU. Hence allow to select MULTIPLATFORM even without MMU.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/mach-imx/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/Kconfig | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index c8dffce..d21cb9a 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -21,6 +21,7 @@ config MXC_AVIC
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 9f1f09a..636cb3f 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -230,7 +230,7 @@ config VECTORS_BASE
+ 	  in size.
  
- config MXC_DEBUG_BOARD
- 	bool "Enable MXC debug board(for 3-stack)"
-+	depends on MACH_MX27_3DS || MACH_MX31_3DS || MACH_MX35_3DS
+ config ARM_PATCH_PHYS_VIRT
+-	bool "Patch physical to virtual translations at runtime" if EMBEDDED
++	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
+ 	default y
+ 	depends on !XIP_KERNEL && MMU
+ 	depends on !ARCH_REALVIEW || !SPARSEMEM
+@@ -305,15 +305,12 @@ config MMU
+ #
+ choice
+ 	prompt "ARM system type"
+-	default ARCH_VERSATILE if !MMU
+-	default ARCH_MULTIPLATFORM if MMU
++	default ARCH_MULTIPLATFORM
+ 
+ config ARCH_MULTIPLATFORM
+ 	bool "Allow multiple platforms to be selected"
+-	depends on MMU
+ 	select ARCH_WANT_OPTIONAL_GPIOLIB
+ 	select ARM_HAS_SG_CHAIN
+-	select ARM_PATCH_PHYS_VIRT
+ 	select AUTO_ZRELADDR
+ 	select CLKSRC_OF
+ 	select COMMON_CLK
+@@ -785,13 +782,13 @@ comment "CPU Core family selection"
+ 
+ config ARCH_MULTI_V4
+ 	bool "ARMv4 based platforms (FA526)"
+-	depends on !ARCH_MULTI_V6_V7
++	depends on !ARCH_MULTI_V6_V7 && MMU
+ 	select ARCH_MULTI_V4_V5
+ 	select CPU_FA526
+ 
+ config ARCH_MULTI_V4T
+ 	bool "ARMv4T based platforms (ARM720T, ARM920T, ...)"
+-	depends on !ARCH_MULTI_V6_V7
++	depends on !ARCH_MULTI_V6_V7 && MMU
+ 	select ARCH_MULTI_V4_V5
+ 	select CPU_ARM920T if !(CPU_ARM7TDMI || CPU_ARM720T || \
+ 		CPU_ARM740T || CPU_ARM9TDMI || CPU_ARM922T || \
+@@ -799,7 +796,7 @@ config ARCH_MULTI_V4T
+ 
+ config ARCH_MULTI_V5
+ 	bool "ARMv5 based platforms (ARM926T, XSCALE, PJ1, ...)"
+-	depends on !ARCH_MULTI_V6_V7
++	depends on !ARCH_MULTI_V6_V7 && MMU
+ 	select ARCH_MULTI_V4_V5
+ 	select CPU_ARM926T if !(CPU_ARM946E || CPU_ARM1020 || \
+ 		CPU_ARM1020E || CPU_ARM1022 || CPU_ARM1026 || \
+@@ -810,11 +807,13 @@ config ARCH_MULTI_V4_V5
+ 
+ config ARCH_MULTI_V6
+ 	bool "ARMv6 based platforms (ARM11)"
++	depends on MMU
+ 	select ARCH_MULTI_V6_V7
+ 	select CPU_V6K
+ 
+ config ARCH_MULTI_V7
+-	bool "ARMv7 based platforms (Cortex-A, PJ4, Scorpion, Krait)"
++	bool "ARMv7-A based platforms (Cortex-A, PJ4, Scorpion, Krait)"
++	depends on MMU
+ 	default y
+ 	select ARCH_MULTI_V6_V7
+ 	select CPU_V7
+@@ -825,7 +824,7 @@ config ARCH_MULTI_V6_V7
+ 	select MIGHT_HAVE_CACHE_L2X0
+ 
+ config ARCH_MULTI_CPU_AUTO
+-	def_bool !(ARCH_MULTI_V4 || ARCH_MULTI_V4T || ARCH_MULTI_V6_V7)
++	def_bool !(ARCH_MULTI_V4 || ARCH_MULTI_V4T || ARCH_MULTI_V6_V7) && MMU
+ 	select ARCH_MULTI_V5
+ 
+ endmenu
+@@ -1967,7 +1966,7 @@ endchoice
+ 
+ config XIP_KERNEL
+ 	bool "Kernel Execute-In-Place from ROM"
+-	depends on !ARM_LPAE && !ARCH_MULTIPLATFORM
++	depends on !ARM_LPAE && (!ARCH_MULTIPLATFORM || ARCH_MULTI_V7M)
  	help
- 	  The debug board is an integral part of the MXC 3-stack(PDK)
- 	  platforms, it can be attached or removed from the peripheral
+ 	  Execute-In-Place allows the kernel to run from non-volatile storage
+ 	  directly addressable by the CPU, such as NOR flash. This saves RAM
 -- 
 2.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
