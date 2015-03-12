@@ -1,48 +1,52 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 9/9] ARM: dt: dove: add GPU power domain description
-Date: Thu, 12 Mar 2015 18:31:36 +0000
-Message-ID: <E1YW7tQ-0003mY-Uc@rmk-PC.arm.linux.org.uk>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V4 1/2] crypto: Add Imagination Technologies hw hash accelerator
+Date: Thu, 12 Mar 2015 11:56:45 -0700
+Message-ID: <CAL1qeaHq+gDyjBbX-O7dgSfceMNf1nezb2_hMKWvo11RnWt-xA@mail.gmail.com>
+References: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
+	<1426126012-16061-2-git-send-email-james.hartley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150312183020.GU8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1426126012-16061-2-git-send-email-james.hartley@imgtec.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: James Hartley <james.hartley@imgtec.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, smueller@chronox.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the description of the GPU power domain to the PMU DT entry.
+Hi James,
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/dove.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Wed, Mar 11, 2015 at 7:06 PM, James Hartley <james.hartley@imgtec.com> wrote:
+> This adds support for the Imagination Technologies hash accelerator which
+> provides hardware acceleration for SHA1 SHA224 SHA256 and MD5 hashes.
+>
+> Signed-off-by: James Hartley <james.hartley@imgtec.com>
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 3dcf5322bf0e..d273552ada8a 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -394,6 +394,13 @@
- 					marvell,pmu_iso_mask = <0x00000001>;
- 					resets = <&pmu 16>;
- 				};
-+
-+				gpu_domain: gpu-domain {
-+					#power-domain-cells = <0>;
-+					marvell,pmu_pwr_mask = <0x00000004>;
-+					marvell,pmu_iso_mask = <0x00000002>;
-+					resets = <&pmu 18>;
-+				};
- 			};
- 
- 			thermal: thermal-diode@d001c {
--- 
-1.8.3.1
+One comment below, otherwise this looks fine to me.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --- /dev/null
+> +++ b/drivers/crypto/img-hash.c
+
+> +static int img_hash_hw_init(struct img_hash_dev *hdev)
+> +{
+> +       unsigned long long nbits;
+> +       u32 u, l;
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(hdev->hash_clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = clk_prepare_enable(hdev->sys_clk);
+> +       if (ret) {
+> +               clk_disable_unprepare(hdev->hash_clk);
+> +               return ret;
+> +       }
+
+I think you'll still end up with inflated prepare/enable counts for
+these clocks since this function may get called multiple times and the
+only clk_disable_unprepare() calls are in the remove() path.  Perhaps
+it's best to just enable the clocks in probe() until runtime PM
+support is added?
+
+Thanks,
+Andrew
