@@ -1,42 +1,61 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH 1/2] ARM: imx6qdl-sabresd: set swbst_reg as vbus's parent
- reg
-Date: Thu, 12 Mar 2015 09:54:18 +0800
-Message-ID: <20150312015417.GA31064@shlinux2>
-References: <1425629061-8995-1-git-send-email-peter.chen@freescale.com>
- <20150311012424.GW20455@dragon>
+From: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 0/2] crypto: Add Imagination Technologies hw hash accelerator
+Date: Thu, 12 Mar 2015 02:06:50 +0000
+Message-ID: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150311012424.GW20455@dragon>
-Sender: stable-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, stable <stable@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smueller-T9tCv8IpfcWELgA04lAiVw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 09:24:25AM +0800, Shawn Guo wrote:
-> On Fri, Mar 06, 2015 at 04:04:20PM +0800, Peter Chen wrote:
-> > USB vbus 5V is from PMIC SWBST, so set swbst_reg as vbus's
-> > parent reg, it fixed a bug that the voltage of vbus is incorrect
-> > due to swbst_reg is disabled after boots up.
-> > 
-> > Cc: stable <stable@vger.kernel.org>
-> 
-> It's more idiomatic to put the line in this way:
-> 
-> Cc: stable@vger.kernel.org
-> 
+This adds support for the Imagination Technologies hash accelerator which 
+provides hardware acceleration for SHA1 SHA244 SHA256 and MD5 hashes.
 
-One benefit for using <stable@vger.kernel.org> over than
-stable@vger.kernel.org directly is it can add "# v3.x+"
-at the last of Cc tag if you want git send Cc tag.
+Tested on silicon, using testmgr.
 
-Cc: <stable@vger.kernel.org> #3.x+ /* git can work */
+Changes from V3:
+	* Standardised the cra_priorities to 300, sufficient to be chosen
+	  ahead of software / assembly implementations.
+	* Addressed Andrew Bresticker's review comments, except for two items
+	  that I will leave for when I have some more bandwidth if possible as
+	  I don't think they are required:
+		->Runtime PM
+		->Threaded IRQ handler instead of a tasklet
 
-Cc: stable@vger.kernel.org #3.x+ /* git can't work */
+Changes from V2:
+	* This hardware does not support importing a partial hash state, 
+	  so the init, update, final and finup have been reworked to use
+	  a fallback driver; only digest remains as hardware accelerated.
+	* Simplified the driver as a result of the above rework
+
+Changes from V1:
+	* Addressed review comments from Andrew Bresticker and 
+	  Vladimir Zapolskiy
+	* rebased to current linux-next
+
+James Hartley (2):
+  This adds support for the Imagination Technologies hash accelerator
+    which     provides hardware acceleration for SHA1 SHA224 SHA256 and
+    MD5 hashes.
+  This adds the binding documentation for the Imagination Technologies
+    hash     accelerator that provides hardware acceleration for
+    SHA1/SHA224/SHA256/MD5     hashes.  This hardware will be present
+    in the upcoming pistachio SoC.
+
+ .../devicetree/bindings/crypto/img-hash.txt        |   27 +
+ drivers/crypto/Kconfig                             |   14 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/img-hash.c                          | 1026 ++++++++++++++++++++
+ 4 files changed, 1068 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/img-hash.txt
+ create mode 100644 drivers/crypto/img-hash.c
 
 -- 
+1.7.9.5
 
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
