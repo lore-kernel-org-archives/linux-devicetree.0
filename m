@@ -1,93 +1,99 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/9] dt-bindings: add Marvell PMU documentation
-Date: Thu, 12 Mar 2015 16:32:07 -0500
-Message-ID: <CAL_Jsq+R70GVsuig7Ebo49_MeneD_RZ=E0haTVsb_xFhTR7-pw@mail.gmail.com>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <E1YW7t0-0003mE-My@rmk-PC.arm.linux.org.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] of: base: add function to get highest id of an alias stem
+Date: Thu, 12 Mar 2015 16:35:11 -0500
+Message-ID: <CAL_JsqKcOy_vR-NOsGwDHQfzAXrNPZ1Kqq99c8=SF_c136LwKQ@mail.gmail.com>
+References: <1426177093-26820-1-git-send-email-wsa@the-dreams.de> <1426177093-26820-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1YW7t0-0003mE-My-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426177093-26820-2-git-send-email-wsa@the-dreams.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bob Feretich <bob.feretich@rafresearch.com>, Jean Delvare <jdelvare@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 1:31 PM, Russell King
-<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> Add the required DT binding documentation for the Marvell PMU driver.
+On Thu, Mar 12, 2015 at 11:17 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> I2C supports adding adapters using either a dynamic or fixed id. The
+> latter is provided by aliases in the DT case. To prevent id collisions
+> of those two types, install this function which gives us the highest
+> fixed id, so we can then let the dynamically created ones come after
+> this highest number.
 >
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
->  Documentation/devicetree/bindings/soc/dove/pmu.txt | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/dove/pmu.txt
 >
-> diff --git a/Documentation/devicetree/bindings/soc/dove/pmu.txt b/Documentation/devicetree/bindings/soc/dove/pmu.txt
-> new file mode 100644
-> index 000000000000..9617aa298dd4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/dove/pmu.txt
-> @@ -0,0 +1,49 @@
-> +Device Tree bindings for Marvell PMU
+> Because this function is so similar to of_alias_get_id(), I thought of merging
+> them into __of_alias_get_id(np, stem, bool get_highest) and have two call
+> wrappers but then decided the decreased readability is not worth the hazzle.
+>
+>  drivers/of/base.c  | 26 ++++++++++++++++++++++++++
+>  include/linux/of.h |  6 ++++++
+>  2 files changed, 32 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 0a8aeb8523fe7d..63cba04aacf686 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1958,6 +1958,32 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>  }
+>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+>
+> +/**
+> + * of_alias_get_highest_id - Get highest alias id for the given stem
+> + * @stem:      Alias stem to be examined
+> + *
+> + * The function travels the lookup table to get the highest alias id for the
+> + * given alias stem.  It returns the alias id if found.
+> + */
+> +int of_alias_get_highest_id(const char *stem)
+> +{
+> +       struct alias_prop *app;
+> +       int id = -ENODEV;
 > +
-> +Required properties:
-> + - compatible: value should be "marvell,dove-pmu".
-> + - reg: two base addresses and sizes of the PM controller and PMU.
-> + - interrupts: single interrupt number for the PMU interrupt
-> + - interrupt-controller: must be specified as the PMU itself is an
-> +    interrupt controller.
-
-Is it always an interrupt controller or just in low power modes like
-ones typically tacked on to GICs?
-
-> + - #interrupt-cells: must be 1.
-> + - #reset-cells: must be 1.
+> +       mutex_lock(&of_mutex);
+> +       list_for_each_entry(app, &aliases_lookup, link) {
+> +               if (strcmp(app->stem, stem) != 0)
+> +                       continue;
 > +
-> +Optional properties:
-> + - None
+> +               if (app->id > id)
+> +                       id = app->id;
+> +       }
+> +       mutex_unlock(&of_mutex);
 > +
-> +Domain descriptions are listed as child nodes of the power management
-
-"Power domain descriptions..." just to be clear.
-
-> +node.  Each domain has the following properties:
+> +       return id;
+> +}
+> +EXPORT_SYMBOL_GPL(of_alias_get_highest_id);
 > +
-> +Required properties:
-> + - #power-domain-cells: must be 0.
+>  const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
+>                                u32 *pu)
+>  {
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index dfde07e77a632b..9bfcc18ceab3bf 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -332,6 +332,7 @@ extern int of_count_phandle_with_args(const struct device_node *np,
+>
+>  extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
+>  extern int of_alias_get_id(struct device_node *np, const char *stem);
+> +extern int of_alias_get_highest_id(const char *stem);
+>
+>  extern int of_machine_is_compatible(const char *compat);
+>
+> @@ -594,6 +595,11 @@ static inline int of_alias_get_id(struct device_node *np, const char *stem)
+>         return -ENOSYS;
+>  }
+>
+> +static inline int of_alias_get_highest_id(const char *stem)
+> +{
+> +       return -ENOSYS;
+> +}
 > +
-> +Optional properties:
-> + - marvell,pmu_pwr_mask: specifies the mask value for PMU power register
-> + - marvell,pmu_iso_mask: specifies the mask value for PMU isolation register
-> + - resets: points to the reset manager (PMU node) and reset index.
-> +
-> +Example:
-> +
-> +       pmu: power-management@d0000 {
-> +               compatible = "marvell,dove-pmu";
-> +               reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
-> +               interrupts = <33>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +               #reset-cells = <1>;
-> +
-> +               vpu_domain: vpu-domain {
-> +                       #power-domain-cells = <0>;
-> +                       marvell,pmu_pwr_mask = <0x00000008>;
-> +                       marvell,pmu_iso_mask = <0x00000001>;
-> +                       resets = <&pmu 16>;
-> +               };
-> +
-> +               gpu_domain: gpu-domain {
-> +                       #power-domain-cells = <0>;
-> +                       marvell,pmu_pwr_mask = <0x00000004>;
-> +                       marvell,pmu_iso_mask = <0x00000002>;
-> +                       resets = <&pmu 18>;
-> +               };
-> +       };
+>  static inline int of_machine_is_compatible(const char *compat)
+>  {
+>         return 0;
 > --
-> 1.8.3.1
+> 2.1.4
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
