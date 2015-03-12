@@ -1,597 +1,313 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: [PATCH v4 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen driver
-Date: Thu, 12 Mar 2015 10:45:11 -0700
-Message-ID: <1426182312-6081-2-git-send-email-jonathar@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>
- <1426182312-6081-1-git-send-email-jonathar@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH v4 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and evaluation board dts
+Date: Thu, 12 Mar 2015 12:56:25 -0500
+Message-ID: <1426182985-10425-1-git-send-email-galak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426182312-6081-1-git-send-email-jonathar@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>
-Cc: Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: linux-arm-msm@vger.kernel.org
+Cc: Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Add initial version of the Broadcom touchscreen driver.
+Add initial device tree support for Qualcomm MSM8916 SoC and MTP8916
+evaluation board.  At the current time we only boot up a single processor.
 
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Tested-by: Scott Branden <sbranden@broadcom.com>
-Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
 ---
- drivers/input/touchscreen/Kconfig         |   11 +
- drivers/input/touchscreen/Makefile        |    1 +
- drivers/input/touchscreen/bcm_iproc_tsc.c |  527 +++++++++++++++++++++++++++++
- 3 files changed, 539 insertions(+)
- create mode 100644 drivers/input/touchscreen/bcm_iproc_tsc.c
+v4:
+* Added chosen node so we dont need to spec everything for earlycon
+* fixed up timer node to armv8, dropped clock-frequency
 
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 6261fd6..4a8b0e5 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -323,6 +323,17 @@ config TOUCHSCREEN_ILI210X
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ili210x.
+v3:
+* Removed qcom,msm-id and qcom,board-id
+* Added top level compat for "qcom,msm8916-mtp-smb1360"
+
+v2:
+* Updated to dropping CONFIG_ARCH_QCOM_MSM8916
+* Updated to use qcom-ids.h
+ arch/arm64/boot/dts/Makefile              |   1 +
+ arch/arm64/boot/dts/qcom/Makefile         |   5 +
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dts  |  21 ++++
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi |  28 +++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi     | 183 ++++++++++++++++++++++++++++++
+ 5 files changed, 238 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/Makefile
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916.dtsi
+
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index e0350ca..8517f15 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -5,5 +5,6 @@ dts-dirs += cavium
+ dts-dirs += exynos
+ dts-dirs += freescale
+ dts-dirs += mediatek
++dts-dirs += qcom
  
-+config TOUCHSCREEN_IPROC
-+	tristate "IPROC touch panel driver support"
-+	help
-+	  Say Y here if you want to add support for the IPROC touch
-+	  controller to your system.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called bcm_iproc_tsc.
-+
- config TOUCHSCREEN_S3C2410
- 	tristate "Samsung S3C2410/generic touchscreen input driver"
- 	depends on ARCH_S3C24XX || SAMSUNG_DEV_TS
-diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-index 0242fea..68f69bc 100644
---- a/drivers/input/touchscreen/Makefile
-+++ b/drivers/input/touchscreen/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_TOUCHSCREEN_GOODIX)	+= goodix.o
- obj-$(CONFIG_TOUCHSCREEN_ILI210X)	+= ili210x.o
- obj-$(CONFIG_TOUCHSCREEN_INEXIO)	+= inexio.o
- obj-$(CONFIG_TOUCHSCREEN_INTEL_MID)	+= intel-mid-touch.o
-+obj-$(CONFIG_TOUCHSCREEN_IPROC)		+= bcm_iproc_tsc.o
- obj-$(CONFIG_TOUCHSCREEN_LPC32XX)	+= lpc32xx_ts.o
- obj-$(CONFIG_TOUCHSCREEN_MAX11801)	+= max11801_ts.o
- obj-$(CONFIG_TOUCHSCREEN_MC13783)	+= mc13783_ts.o
-diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
 new file mode 100644
-index 0000000..54c4dd1
+index 0000000..360ec4c
 --- /dev/null
-+++ b/drivers/input/touchscreen/bcm_iproc_tsc.c
-@@ -0,0 +1,527 @@
-+/*
-+* Copyright (C) 2015 Broadcom Corporation
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -0,0 +1,5 @@
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
++
++always		:= $(dtb-y)
++subdir-y	:= $(dts-dirs)
++clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
+new file mode 100644
+index 0000000..784ad92
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
+@@ -0,0 +1,21 @@
++/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
 +*
-+* This program is free software; you can redistribute it and/or
-+* modify it under the terms of the GNU General Public License as
-+* published by the Free Software Foundation version 2.
++* This program is free software; you can redistribute it and/or modify
++* it under the terms of the GNU General Public License version 2 and
++* only version 2 as published by the Free Software Foundation.
 +*
-+* This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+* kind, whether express or implied; without even the implied warranty
-+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++* This program is distributed in the hope that it will be useful,
++* but WITHOUT ANY WARRANTY; without even the implied warranty of
++* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 +* GNU General Public License for more details.
 +*/
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/keyboard.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <asm/irq.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+#include <linux/serio.h>
 +
-+#define IPROC_TS_NAME "iproc-ts"
++/dts-v1/;
 +
-+#define PEN_DOWN_STATUS     1
-+#define PEN_UP_STATUS       0
++#include "msm8916-mtp.dtsi"
 +
-+#define X_MIN               0
-+#define Y_MIN               0
-+#define X_MAX               0xFFF
-+#define Y_MAX               0xFFF
-+
-+/* Value given by controller for invalid coordinate. */
-+#define INVALID_COORD       0xFFFFFFFF
-+
-+/* Register offsets */
-+#define REGCTL1             0x00
-+#define REGCTL2             0x04
-+#define INTERRUPT_THRES     0x08
-+#define INTERRUPT_MASK      0x0c
-+
-+#define INTERRUPT_STATUS    0x10
-+#define CONTROLLER_STATUS   0x14
-+#define FIFO_DATA           0x18
-+#define FIFO_DATA_X_Y_MASK  0xFFFF
-+#define ANALOG_CONTROL      0x1c
-+
-+#define AUX_DATA            0x20
-+#define DEBOUNCE_CNTR_STAT  0x24
-+#define SCAN_CNTR_STAT      0x28
-+#define REM_CNTR_STAT       0x2c
-+
-+#define SETTLING_TIMER_STAT 0x30
-+#define SPARE_REG           0x34
-+#define SOFT_BYPASS_CONTROL 0x38
-+#define SOFT_BYPASS_DATA    0x3c
-+
-+
-+/* Bit values for INTERRUPT_MASK and INTERRUPT_STATUS regs */
-+#define TS_PEN_INTR_MASK        BIT(0)
-+#define TS_FIFO_INTR_MASK       BIT(2)
-+
-+/* Bit values for CONTROLLER_STATUS reg1 */
-+#define TS_PEN_DOWN             BIT(0)
-+
-+/* Shift values for control reg1 */
-+#define SCANNING_PERIOD_SHIFT   24
-+#define DEBOUNCE_TIMEOUT_SHIFT  16
-+#define SETTLING_TIMEOUT_SHIFT  8
-+#define TOUCH_TIMEOUT_SHIFT     0
-+
-+/* Shift values for coordinates from fifo */
-+#define X_COORD_SHIFT  0
-+#define Y_COORD_SHIFT  16
-+
-+/* Bit values for REGCTL2 */
-+#define TS_CONTROLLER_EN_BIT    BIT(16)
-+#define TS_CONTROLLER_AVGDATA_SHIFT 8
-+#define TS_CONTROLLER_AVGDATA_MASK (0x7 << TS_CONTROLLER_AVGDATA_SHIFT)
-+#define TS_CONTROLLER_PWR_LDO   BIT(5)
-+#define TS_CONTROLLER_PWR_ADC   BIT(4)
-+#define TS_CONTROLLER_PWR_BGP   BIT(3)
-+#define TS_CONTROLLER_PWR_TS    BIT(2)
-+#define TS_WIRE_MODE_BIT        BIT(1)
-+
-+struct tsc_param {
-+	/* Each step is 1024 us.  Valid 1-256 */
-+	u32 scanning_period;
-+
-+	/*  Each step is 512 us.  Valid 0-255 */
-+	u32 debounce_timeout;
-+
-+	/*
-+	 * The settling duration (in ms) is the amount of time the tsc
-+	 * waits to allow the voltage to settle after turning on the
-+	 * drivers in detection mode. Valid values: 0-11
-+	 *   0 =  0.008 ms
-+	 *   1 =  0.01 ms
-+	 *   2 =  0.02 ms
-+	 *   3 =  0.04 ms
-+	 *   4 =  0.08 ms
-+	 *   5 =  0.16 ms
-+	 *   6 =  0.32 ms
-+	 *   7 =  0.64 ms
-+	 *   8 =  1.28 ms
-+	 *   9 =  2.56 ms
-+	 *   10 = 5.12 ms
-+	 *   11 = 10.24 ms
-+	 */
-+	u32 settling_timeout;
-+
-+	/* touch timeout in sample counts */
-+	u32 touch_timeout;
-+
-+	/*
-+	 * Number of data samples which are averaged before a final data point
-+	 * is placed into the FIFO
-+	 */
-+	u32 average_data;
-+
-+	/* FIFO threshold */
-+	u32 fifo_threshold;
-+
-+	/* Optional standard touchscreen properties. */
-+	u32 max_x;
-+	u32 max_y;
-+	u32 fuzz_x;
-+	u32 fuzz_y;
-+	bool invert_x;
-+	bool invert_y;
++/ {
++	model = "Qualcomm Technologies, Inc. MSM 8916 MTP";
++	compatible = "qcom,msm8916-mtp", "qcom,msm8916-mtp-smb1360",
++			"qcom,msm8916", "qcom,mtp";
 +};
-+
-+struct iproc_ts_priv {
-+	struct platform_device *pdev;
-+	struct input_dev *idev;
-+
-+	void __iomem *regs;
-+	struct clk *tsc_clk;
-+
-+	int  pen_status;
-+	struct tsc_param cfg_params;
-+};
-+
-+/*
-+ * Set default values the same as hardware reset values
-+ * except for fifo_threshold with is set to 1.
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi
+new file mode 100644
+index 0000000..270ba55
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi
+@@ -0,0 +1,28 @@
++/* Copyright (c) 2014-2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
-+static struct tsc_param default_config = {
-+	.scanning_period  = 0x5,  /* 1 to 256 */
-+	.debounce_timeout = 0x28, /* 0 to 255 */
-+	.settling_timeout = 0x7,  /* 0 to 11 */
-+	.touch_timeout    = 0xa,  /* 0 to 255 */
-+	.average_data     = 5,    /* entry 5 = 32 pts */
-+	.fifo_threshold   = 1,    /* 0 to 31 */
-+	.max_x            = X_MAX,
-+	.max_y            = Y_MAX,
++
++#include "msm8916.dtsi"
++
++/ {
++	chosen {
++		stdout-path = &blsp1_uart2;
++	};
++
++	soc {
++		serial@78b0000 {
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart2_default>;
++			pinctrl-1 = <&blsp1_uart2_sleep>;
++		};
++	};
 +};
-+
-+static void ts_reg_dump(struct iproc_ts_priv *priv)
-+{
-+	struct device *dev = &priv->pdev->dev;
-+
-+	dev_dbg(dev, "regCtl1             = 0x%08x\n",
-+				readl(priv->regs + REGCTL1));
-+	dev_dbg(dev, "regCtl2             = 0x%08x\n",
-+				readl(priv->regs + REGCTL2));
-+	dev_dbg(dev, "interrupt_Thres     = 0x%08x\n",
-+				readl(priv->regs + INTERRUPT_THRES));
-+	dev_dbg(dev, "interrupt_Mask      = 0x%08x\n",
-+				readl(priv->regs + INTERRUPT_MASK));
-+	dev_dbg(dev, "interrupt_Status    = 0x%08x\n",
-+				readl(priv->regs + INTERRUPT_STATUS));
-+	dev_dbg(dev, "controller_Status   = 0x%08x\n",
-+				readl(priv->regs + CONTROLLER_STATUS));
-+	dev_dbg(dev, "FIFO_Data           = 0x%08x\n",
-+				readl(priv->regs + FIFO_DATA));
-+	dev_dbg(dev, "analog_Control      = 0x%08x\n",
-+				readl(priv->regs + ANALOG_CONTROL));
-+	dev_dbg(dev, "aux_Data            = 0x%08x\n",
-+				readl(priv->regs + AUX_DATA));
-+	dev_dbg(dev, "debounce_Cntr_Stat  = 0x%08x\n",
-+				readl(priv->regs + DEBOUNCE_CNTR_STAT));
-+	dev_dbg(dev, "scan_Cntr_Stat      = 0x%08x\n",
-+				readl(priv->regs + SCAN_CNTR_STAT));
-+	dev_dbg(dev, "rem_Cntr_Stat       = 0x%08x\n",
-+				readl(priv->regs + REM_CNTR_STAT));
-+	dev_dbg(dev, "settling_Timer_Stat = 0x%08x\n",
-+				readl(priv->regs + SETTLING_TIMER_STAT));
-+	dev_dbg(dev, "spare_Reg           = 0x%08x\n",
-+				readl(priv->regs + SPARE_REG));
-+	dev_dbg(dev, "soft_Bypass_Control = 0x%08x\n",
-+				readl(priv->regs + SOFT_BYPASS_CONTROL));
-+	dev_dbg(dev, "soft_Bypass_Data    = 0x%08x\n",
-+				readl(priv->regs + SOFT_BYPASS_DATA));
-+}
-+
-+static irqreturn_t iproc_touchscreen_interrupt(int irq, void *data)
-+{
-+	struct platform_device *pdev = data;
-+	struct iproc_ts_priv *priv = platform_get_drvdata(pdev);
-+	u32 intr_status;
-+	u32 raw_coordinate;
-+	u16 x;
-+	u16 y;
-+	int i;
-+	bool needs_sync = false;
-+
-+	intr_status = readl(priv->regs + INTERRUPT_STATUS);
-+	intr_status &= (TS_PEN_INTR_MASK | TS_FIFO_INTR_MASK);
-+	if (intr_status == 0)
-+		return IRQ_NONE;
-+
-+	/* Clear all interrupt status bits, write-1-clear */
-+	writel(intr_status, priv->regs + INTERRUPT_STATUS);
-+
-+	/* Pen up/down */
-+	if (intr_status & TS_PEN_INTR_MASK) {
-+		if (readl(priv->regs + CONTROLLER_STATUS) & TS_PEN_DOWN)
-+			priv->pen_status = PEN_DOWN_STATUS;
-+		else
-+			priv->pen_status = PEN_UP_STATUS;
-+
-+		input_report_key(priv->idev, BTN_TOUCH,	priv->pen_status);
-+		needs_sync = true;
-+
-+		dev_dbg(&priv->pdev->dev,
-+			"pen up-down (%d)\n", priv->pen_status);
-+	}
-+
-+	/* coordinates in FIFO exceed the theshold */
-+	if (intr_status & TS_FIFO_INTR_MASK) {
-+		for (i = 0; i < priv->cfg_params.fifo_threshold; i++) {
-+			raw_coordinate = readl(priv->regs + FIFO_DATA);
-+			if (raw_coordinate == INVALID_COORD)
-+				continue;
-+
-+			/*
-+			 * The x and y coordinate are 16 bits each
-+			 * with the x in the lower 16 bits and y in the
-+			 * upper 16 bits.
-+			 */
-+			x = (raw_coordinate >> X_COORD_SHIFT) &
-+				FIFO_DATA_X_Y_MASK;
-+			y = (raw_coordinate >> Y_COORD_SHIFT) &
-+				FIFO_DATA_X_Y_MASK;
-+
-+			/* We only want to retain the 12 msb of the 16 */
-+			x = (x >> 4) & 0x0FFF;
-+			y = (y >> 4) & 0x0FFF;
-+
-+			/* adjust x y according to lcd tsc mount angle */
-+			if (priv->cfg_params.invert_x)
-+				x = priv->cfg_params.max_x - x;
-+
-+			if (priv->cfg_params.invert_y)
-+				y = priv->cfg_params.max_y - y;
-+
-+			input_report_abs(priv->idev, ABS_X, x);
-+			input_report_abs(priv->idev, ABS_Y, y);
-+			needs_sync = true;
-+
-+			dev_dbg(&priv->pdev->dev, "xy (0x%x 0x%x)\n", x, y);
-+		}
-+	}
-+
-+	if (needs_sync)
-+		input_sync(priv->idev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int iproc_ts_start(struct input_dev *idev)
-+{
-+	u32 val;
-+	int ret;
-+	struct iproc_ts_priv *priv = input_get_drvdata(idev);
-+
-+	/* Enable clock */
-+	ret = clk_prepare_enable(priv->tsc_clk);
-+	if (ret) {
-+		dev_err(&priv->pdev->dev, "%s clk_prepare_enable failed %d\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Interrupt is generated when:
-+	 *  FIFO reaches the int_th value, and pen event(up/down)
-+	 */
-+	val = TS_PEN_INTR_MASK | TS_FIFO_INTR_MASK;
-+	writel(val, priv->regs + INTERRUPT_MASK);
-+
-+	writel(priv->cfg_params.fifo_threshold, priv->regs + INTERRUPT_THRES);
-+
-+	/* Initialize control reg1 */
-+	val = 0;
-+	val |= priv->cfg_params.scanning_period << SCANNING_PERIOD_SHIFT;
-+	val |= priv->cfg_params.debounce_timeout << DEBOUNCE_TIMEOUT_SHIFT;
-+	val |= priv->cfg_params.settling_timeout << SETTLING_TIMEOUT_SHIFT;
-+	val |= priv->cfg_params.touch_timeout << TOUCH_TIMEOUT_SHIFT;
-+	writel(val, priv->regs + REGCTL1);
-+
-+	/* Try to clear all interrupt status */
-+	val = readl(priv->regs + INTERRUPT_STATUS);
-+	val |= TS_FIFO_INTR_MASK | TS_PEN_INTR_MASK;
-+	writel(val, priv->regs + INTERRUPT_STATUS);
-+
-+	/* Initialize control reg2 */
-+	val = readl(priv->regs + REGCTL2);
-+	val |= TS_CONTROLLER_EN_BIT | TS_WIRE_MODE_BIT;
-+
-+	val &= ~(TS_CONTROLLER_AVGDATA_MASK);
-+	val |= priv->cfg_params.average_data << TS_CONTROLLER_AVGDATA_SHIFT;
-+
-+	val &= ~(TS_CONTROLLER_PWR_LDO |	/* PWR up LDO */
-+		   TS_CONTROLLER_PWR_ADC |	/* PWR up ADC */
-+		   TS_CONTROLLER_PWR_BGP |	/* PWR up BGP */
-+		   TS_CONTROLLER_PWR_TS);	/* PWR up TS */
-+
-+	writel(val, priv->regs + REGCTL2);
-+
-+	ts_reg_dump(priv);
-+
-+	return 0;
-+}
-+
-+static void iproc_ts_stop(struct input_dev *dev)
-+{
-+	u32 val;
-+	struct iproc_ts_priv *priv = input_get_drvdata(dev);
-+
-+	writel(0, priv->regs + INTERRUPT_MASK); /* Disable all interrupts */
-+
-+	/* Only power down touch screen controller */
-+	val = readl(priv->regs + REGCTL2);
-+	val |= TS_CONTROLLER_PWR_TS;
-+	writel(val, priv->regs + REGCTL2);
-+
-+	clk_disable(priv->tsc_clk);
-+}
-+
-+static int get_tsc_config(struct device_node *np, struct iproc_ts_priv *priv)
-+{
-+	u32 val;
-+	struct device *dev = &priv->pdev->dev;
-+
-+	priv->cfg_params = default_config;
-+
-+	if (of_property_read_u32(np, "scanning_period", &val) >= 0) {
-+		if (val < 1 || val > 256) {
-+			dev_err(dev, "scanning_period must be [1-256]\n");
-+			return -EINVAL;
-+		}
-+		priv->cfg_params.scanning_period = val;
-+	}
-+
-+	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
-+		if (val < 0 || val > 255) {
-+			dev_err(dev, "debounce_timeout must be [0-255]\n");
-+			return -EINVAL;
-+		}
-+		priv->cfg_params.debounce_timeout = val;
-+	}
-+
-+	if (of_property_read_u32(np, "settling_timeout", &val) >= 0) {
-+		if (val < 0 || val > 11) {
-+			dev_err(dev, "settling_timeout must be [0-11]\n");
-+			return -EINVAL;
-+		}
-+		priv->cfg_params.settling_timeout = val;
-+	}
-+
-+	if (of_property_read_u32(np, "touch_timeout", &val) >= 0) {
-+		if (val < 0 || val > 255) {
-+			dev_err(dev, "touch_timeout must be [0-255]\n");
-+			return -EINVAL;
-+		}
-+		priv->cfg_params.touch_timeout = val;
-+	}
-+
-+	if (of_property_read_u32(np, "average_data", &val) >= 0) {
-+		if (val < 0 || val > 8) {
-+			dev_err(dev, "average_data must be [0-8]\n");
-+			return -EINVAL;
-+		}
-+		priv->cfg_params.average_data = val;
-+	}
-+
-+	if (of_property_read_u32(np, "fifo_threshold", &val) >= 0) {
-+		if (val < 0 || val > 31) {
-+			dev_err(dev, "fifo_threshold must be [0-31]\n");
-+			return -EINVAL;
-+		}
-+		priv->cfg_params.fifo_threshold = val;
-+	}
-+
-+	/* Parse optional properties. */
-+	of_property_read_u32(np, "touchscreen-size-x", &priv->cfg_params.max_x);
-+	of_property_read_u32(np, "touchscreen-size-y", &priv->cfg_params.max_y);
-+
-+	of_property_read_u32(np, "touchscreen-fuzz-x",
-+		&priv->cfg_params.fuzz_x);
-+	of_property_read_u32(np, "touchscreen-fuzz-y",
-+		&priv->cfg_params.fuzz_y);
-+
-+	priv->cfg_params.invert_x = of_property_read_bool(np,
-+		"touchscreen-inverted-x");
-+	priv->cfg_params.invert_y = of_property_read_bool(np,
-+		"touchscreen-inverted-y");
-+
-+	return 0;
-+}
-+
-+static int iproc_ts_probe(struct platform_device *pdev)
-+{
-+	struct iproc_ts_priv *priv;
-+	struct input_dev *idev;
-+	struct resource *res;
-+	int ret;
-+	int irq;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* touchscreen controller memory mapped regs */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->regs)) {
-+		dev_err(&pdev->dev, "unable to map I/O memory\n");
-+		return PTR_ERR(priv->regs);
-+	}
-+
-+	priv->tsc_clk = devm_clk_get(&pdev->dev, "tsc_clk");
-+	if (IS_ERR(priv->tsc_clk)) {
-+		dev_err(&pdev->dev,
-+			"%s Failed getting clock tsc_clk\n", __func__);
-+		return PTR_ERR(priv->tsc_clk);
-+	}
-+
-+	ret = get_tsc_config(pdev->dev.of_node, priv);
-+	if (ret != 0) {
-+		dev_err(&pdev->dev, "%s get_tsc_config failed\n", __func__);
-+		return ret;
-+	}
-+
-+	idev = devm_input_allocate_device(&pdev->dev);
-+	if (!idev) {
-+		dev_err(&pdev->dev,
-+			"%s Allocate input device failed\n", __func__);
-+		return -ENOMEM;
-+	}
-+
-+	priv->idev = idev;
-+	priv->pdev = pdev;
-+
-+	priv->pen_status = PEN_UP_STATUS;
-+
-+	/* Set input device info  */
-+	idev->name = IPROC_TS_NAME;
-+	idev->dev.parent = &pdev->dev;
-+
-+	idev->id.bustype = BUS_HOST;
-+	idev->id.vendor = SERIO_UNKNOWN;
-+	idev->id.product = 0;
-+	idev->id.version = 0;
-+
-+	idev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
-+	set_bit(BTN_TOUCH, idev->keybit);
-+
-+	input_set_abs_params(idev, ABS_X, X_MIN, priv->cfg_params.max_x,
-+		priv->cfg_params.fuzz_x, 0);
-+	input_set_abs_params(idev, ABS_Y, Y_MIN, priv->cfg_params.max_y,
-+		priv->cfg_params.fuzz_y, 0);
-+
-+	idev->open = iproc_ts_start;
-+	idev->close = iproc_ts_stop;
-+
-+	input_set_drvdata(idev, priv);
-+	platform_set_drvdata(pdev, priv);
-+
-+	/* get interrupt */
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "%s platform_get_irq failed\n", __func__);
-+		return irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, irq,
-+		iproc_touchscreen_interrupt,
-+		IRQF_SHARED, IPROC_TS_NAME, pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = input_register_device(priv->idev);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"%s register input device failed %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id iproc_ts_of_match[] = {
-+	{.compatible = "brcm,iproc-touchscreen", },
-+	{ },
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+new file mode 100644
+index 0000000..8c8fd49
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -0,0 +1,183 @@
++/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include "skeleton.dtsi"
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/qcom,gcc-msm8916.h>
++#include <dt-bindings/reset/qcom,gcc-msm8916.h>
++
++/ {
++	model = "Qualcomm Technologies, Inc. MSM8916";
++	compatible = "qcom,msm8916";
++
++	interrupt-parent = <&intc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0>;
++		};
++
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x1>;
++		};
++
++		CPU2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x2>;
++		};
++
++		CPU3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x3>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	soc: soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0 0xffffffff>;
++		compatible = "simple-bus";
++
++		pinctrl@1000000 {
++			compatible = "qcom,msm8916-pinctrl";
++			reg = <0x1000000 0x300000>;
++			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			blsp1_uart2_default: blsp1_uart2_default {
++				pinmux {
++					function = "blsp_uart2";
++					pins = "gpio4", "gpio5";
++				};
++				pinconf {
++					pins = "gpio4", "gpio5";
++					drive-strength = <16>;
++					bias-disable;
++				};
++			};
++
++			blsp1_uart2_sleep: blsp1_uart2_sleep {
++				pinmux {
++					function = "blsp_uart2";
++					pins = "gpio4", "gpio5";
++				};
++				pinconf {
++					pins = "gpio4", "gpio5";
++					drive-strength = <2>;
++					bias-pull-down;
++				};
++			};
++		};
++
++		gcc: qcom,gcc@1800000 {
++			compatible = "qcom,gcc-msm8916";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			reg = <0x1800000 0x80000>;
++		};
++
++		blsp1_uart2: serial@78b0000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x78b0000 0x200>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		intc: interrupt-controller@b000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x0b000000 0x1000>, <0x0b002000 0x1000>;
++		};
++
++		timer@b020000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			compatible = "arm,armv7-timer-mem";
++			reg = <0xb020000 0x1000>;
++			clock-frequency = <19200000>;
++
++			frame@b021000 {
++				frame-number = <0>;
++				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb021000 0x1000>,
++				      <0xb022000 0x1000>;
++			};
++
++			frame@b023000 {
++				frame-number = <1>;
++				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb023000 0x1000>;
++				status = "disabled";
++			};
++
++			frame@b024000 {
++				frame-number = <2>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb024000 0x1000>;
++				status = "disabled";
++			};
++
++			frame@b025000 {
++				frame-number = <3>;
++				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb025000 0x1000>;
++				status = "disabled";
++			};
++
++			frame@b026000 {
++				frame-number = <4>;
++				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb026000 0x1000>;
++				status = "disabled";
++			};
++
++			frame@b027000 {
++				frame-number = <5>;
++				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb027000 0x1000>;
++				status = "disabled";
++			};
++
++			frame@b028000 {
++				frame-number = <6>;
++				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0xb028000 0x1000>;
++				status = "disabled";
++			};
++		};
++	};
 +};
-+MODULE_DEVICE_TABLE(of, iproc_ts_of_match);
-+
-+static struct platform_driver iproc_ts_driver = {
-+	.probe = iproc_ts_probe,
-+	.driver = {
-+		.name	= IPROC_TS_NAME,
-+		.of_match_table = of_match_ptr(iproc_ts_of_match),
-+	},
-+};
-+
-+module_platform_driver(iproc_ts_driver);
-+
-+MODULE_DESCRIPTION("IPROC Touchscreen driver");
-+MODULE_AUTHOR("Broadcom");
-+MODULE_LICENSE("GPL v2");
 -- 
-1.7.9.5
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
