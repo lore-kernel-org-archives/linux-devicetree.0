@@ -1,36 +1,57 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] hwspinlock/core: add device tree support
-Date: Thu, 12 Mar 2015 04:05:43 -0700
-Message-ID: <20150312110543.GT26334@sonymobile.com>
-References: <1425520876-37826-1-git-send-email-s-anna@ti.com>
- <1425520876-37826-3-git-send-email-s-anna@ti.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Thu, 12 Mar 2015 04:14:31 -0700
+Message-ID: <20150312111430.GU26334@sonymobile.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <20150312095136.GA30145@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1425520876-37826-3-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20150312095136.GA30145@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 04 Mar 18:01 PST 2015, Suman Anna wrote:
+On Thu 12 Mar 02:51 PDT 2015, Mark Rutland wrote:
 
-> This patch adds a new OF-friendly API of_hwspin_lock_get_id()
-> for hwspinlock clients to use/request locks from a hwspinlock
-> device instantiated through a device-tree blob. This new API
-> can be used by hwspinlock clients to get the id for a specific
-> lock using the phandle + args specifier, so that it can be
-> requested using the available hwspin_lock_request_specific()
-> API.
+> On Fri, Feb 27, 2015 at 10:30:16PM +0000, Bjorn Andersson wrote:
+> > Add binding documentation for the Qualcomm Hardware Mutex.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > ---
+> > 
+> > I think the conclusion on the dt binding discussion for hwspinlocks was that
+> > we're down to having the #hwlock-cells intact. So this version includes that,
+> > but non of the other previously discussed properties.
+> > 
+> > Changes since v5:
+> > - Extracted the dt binding documentation into a separate patch
+> > - Moved the driver to consume a syscon
 > 
-> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> I'm a little confused here. Why are we now using a syscon? I thought the
+> set of registers for the block was well-defined.
+> 
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+The sfpb-mutex registers make up a block (according to my
+documentation), but after discussing tcsr with Andy Gross we concluded
+that although the tcsr-mutex registers are layed out consecutively in
+the tcsr, they are not alone in the block.
+
+Further more Andy introduced the tcsr-syscon binding in his work to
+support DMA on GSBI (uart/i2c/spi), so that's why I had to make this
+change.
+
+Preferrably this would have showed up before v6...
+
+> If there's a link to some previous discussion on that point, it would be
+> helpful.
+> 
+
+Unfortunately there isn't, as we discussed this mainly face to face a
+few weeks back.
 
 Regards,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
