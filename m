@@ -1,7 +1,7 @@
 From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH v7 2/3] arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
-Date: Thu, 12 Mar 2015 16:45:20 +0530
-Message-ID: <1426158921-8987-3-git-send-email-rsahu@apm.com>
+Subject: [PATCH v7 3/3] Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
+Date: Thu, 12 Mar 2015 16:45:21 +0530
+Message-ID: <1426158921-8987-4-git-send-email-rsahu@apm.com>
 References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1426158921-8987-1-git-send-email-rsahu@apm.com>
@@ -10,49 +10,54 @@ To: vinod.koul@intel.com, dan.j.williams@intel.com
 Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree node for APM X-Gene SoC
-DMA controller and DMA clock.
+This patch adds device tree binding for APM X-Gene SoC DMA engine driver.
 
 Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
 Signed-off-by: Loc Ho <lho@apm.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../devicetree/bindings/dma/apm-xgene-dma.txt      | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f1ad9c2..9471770 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -102,6 +102,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x400 0x0>;
-
- 		clocks {
- 			#address-cells = <2>;
-@@ -352,6 +353,15 @@
- 				reg-names = "csr-reg";
- 				clock-output-names = "pcie4clk";
- 			};
+diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+new file mode 100644
+index 0000000..d305876
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+@@ -0,0 +1,47 @@
++Applied Micro X-Gene SoC DMA nodes
 +
-+			dmaclk: dmaclk@1f27c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f27c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "dmaclk";
-+			};
- 		};
-
- 		pcie0: pcie@1f2b0000 {
-@@ -656,5 +666,21 @@
- 			interrupts = <0x0 0x41 0x4>;
- 			clocks = <&rngpkaclk 0>;
- 		};
++DMA nodes are defined to describe on-chip DMA interfaces in
++APM X-Gene SoC.
 +
-+		dma: dma@1f270000 {
++Required properties for DMA interfaces:
++- compatible: Should be "apm,xgene-dma".
++- device_type: set to "dma".
++- reg: Address and length of the register set for the device.
++  It contains the information of registers in the following order:
++  1st - DMA control and status register address space.
++  2nd - Descriptor ring control and status register address space.
++  3rd - Descriptor ring command register address space.
++  4th - Soc efuse register address space.
++- interrupts: DMA has 5 interrupts sources. 1st interrupt is
++  DMA error reporting interrupt. 2nd, 3rd, 4th and 5th interrupts
++  are completion interrupts for each DMA channels.
++- clocks: Reference to the clock entry.
++
++Optional properties:
++- dma-coherent : Present if dma operations are coherent
++
++Example:
++	dmaclk: dmaclk@1f27c000 {
++		compatible = "apm,xgene-device-clock";
++		#clock-cells = <1>;
++		clocks = <&socplldiv2 0>;
++		reg = <0x0 0x1f27c000 0x0 0x1000>;
++		reg-names = "csr-reg";
++		clock-output-names = "dmaclk";
++	};
++
++	dma: dma@1f270000 {
 +			compatible = "apm,xgene-storm-dma";
 +			device_type = "dma";
 +			reg = <0x0 0x1f270000 0x0 0x10000>,
@@ -66,8 +71,6 @@ index f1ad9c2..9471770 100644
 +				     <0x0 0xbb 0x4>;
 +			dma-coherent;
 +			clocks = <&dmaclk 0>;
-+		};
- 	};
- };
++	};
 --
 1.8.2.1
