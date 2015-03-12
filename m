@@ -1,44 +1,49 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [RFC 13/18] v4l: of: Read lane-polarity endpoint property
-Date: Fri, 13 Mar 2015 00:25:03 +0200
-Message-ID: <20150312222503.GN11954@valkosipuli.retiisi.org.uk>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
- <1425764475-27691-14-git-send-email-sakari.ailus@iki.fi>
- <5943571.XgR4Bv1QGx@avalon>
- <20150312222327.GM11954@valkosipuli.retiisi.org.uk>
+From: James Hartley <James.Hartley@imgtec.com>
+Subject: RE: [PATCH V4 1/2] crypto: Add Imagination Technologies hw hash
+ accelerator
+Date: Thu, 12 Mar 2015 22:36:01 +0000
+Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5444657D7@hhmail02.hh.imgtec.org>
+References: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
+	<1426126012-16061-2-git-send-email-james.hartley@imgtec.com>
+ <CAL1qeaHq+gDyjBbX-O7dgSfceMNf1nezb2_hMKWvo11RnWt-xA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150312222327.GM11954-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaHq+gDyjBbX-O7dgSfceMNf1nezb2_hMKWvo11RnWt-xA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-crypto-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "smueller@chronox.de" <smueller@chronox.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2015 at 12:23:27AM +0200, Sakari Ailus wrote:
-...
-> > > +
-> > > +		for (i = 0; i < ARRAY_SIZE(bus->lane_polarity); i++) {
-> > > +			polarity = of_prop_next_u32(prop, polarity, &v);
-> > > +			if (!polarity)
-> > > +				break;
-> > > +			bus->lane_polarity[i] = v;
-> > > +		}
-> > 
-> > Should we check that i == num_data_lines + 1 ?
-> 
-> Good question. I think I'd just replace this with
-> of_property_read_u32_array() instead, how about that? Then there would have
-> to be at least as many lane polarities defined as there are lanes (data and
-> clock). Defining more wouldn't be an error.
-
-Oh, I missed the variable in the struct is bool. I'll just add the check.
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcmV3LCANCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBhYnJl
+c3RpY0Bnb29nbGUuY29tIFttYWlsdG86YWJyZXN0aWNAZ29vZ2xlLmNvbV0gT24gQmVoYWxmIE9m
+DQo+IEFuZHJldyBCcmVzdGlja2VyDQo+IFNlbnQ6IDEyIE1hcmNoIDIwMTUgMTg6NTcNCj4gVG86
+IEphbWVzIEhhcnRsZXkNCj4gQ2M6IEhlcmJlcnQgWHU7IHNtdWVsbGVyQGNocm9ub3guZGU7IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBFemVxdWllbA0KPiBHYXJjaWE7IGxpbnV4LWNyeXB0
+b0B2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNCAxLzJdIGNyeXB0bzog
+QWRkIEltYWdpbmF0aW9uIFRlY2hub2xvZ2llcyBodyBoYXNoDQo+IGFjY2VsZXJhdG9yDQo+IA0K
+PiBIaSBKYW1lcywNCj4gDQo+IE9uIFdlZCwgTWFyIDExLCAyMDE1IGF0IDc6MDYgUE0sIEphbWVz
+IEhhcnRsZXkNCj4gPGphbWVzLmhhcnRsZXlAaW1ndGVjLmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBh
+ZGRzIHN1cHBvcnQgZm9yIHRoZSBJbWFnaW5hdGlvbiBUZWNobm9sb2dpZXMgaGFzaCBhY2NlbGVy
+YXRvcg0KPiA+IHdoaWNoIHByb3ZpZGVzIGhhcmR3YXJlIGFjY2VsZXJhdGlvbiBmb3IgU0hBMSBT
+SEEyMjQgU0hBMjU2IGFuZCBNRDUNCj4gaGFzaGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+SmFtZXMgSGFydGxleSA8amFtZXMuaGFydGxleUBpbWd0ZWMuY29tPg0KPiANCj4gT25lIGNvbW1l
+bnQgYmVsb3csIG90aGVyd2lzZSB0aGlzIGxvb2tzIGZpbmUgdG8gbWUuDQo+IA0KPiA+IC0tLSAv
+ZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2NyeXB0by9pbWctaGFzaC5jDQo+IA0KPiA+ICtz
+dGF0aWMgaW50IGltZ19oYXNoX2h3X2luaXQoc3RydWN0IGltZ19oYXNoX2RldiAqaGRldikgew0K
+PiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBsb25nIG5iaXRzOw0KPiA+ICsgICAgICAgdTMyIHUs
+IGw7DQo+ID4gKyAgICAgICBpbnQgcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IGNsa19w
+cmVwYXJlX2VuYWJsZShoZGV2LT5oYXNoX2Nsayk7DQo+ID4gKyAgICAgICBpZiAocmV0KQ0KPiA+
+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IGNs
+a19wcmVwYXJlX2VuYWJsZShoZGV2LT5zeXNfY2xrKTsNCj4gPiArICAgICAgIGlmIChyZXQpIHsN
+Cj4gPiArICAgICAgICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGhkZXYtPmhhc2hfY2xr
+KTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiArICAgICAgIH0NCj4gDQo+
+IEkgdGhpbmsgeW91J2xsIHN0aWxsIGVuZCB1cCB3aXRoIGluZmxhdGVkIHByZXBhcmUvZW5hYmxl
+IGNvdW50cyBmb3IgdGhlc2UgY2xvY2tzDQo+IHNpbmNlIHRoaXMgZnVuY3Rpb24gbWF5IGdldCBj
+YWxsZWQgbXVsdGlwbGUgdGltZXMgYW5kIHRoZSBvbmx5DQo+IGNsa19kaXNhYmxlX3VucHJlcGFy
+ZSgpIGNhbGxzIGFyZSBpbiB0aGUgcmVtb3ZlKCkgcGF0aC4gIFBlcmhhcHMgaXQncyBiZXN0IHRv
+DQo+IGp1c3QgZW5hYmxlIHRoZSBjbG9ja3MgaW4gcHJvYmUoKSB1bnRpbCBydW50aW1lIFBNIHN1
+cHBvcnQgaXMgYWRkZWQ/DQoNClllcywgSSdsbCBkbyB0aGF0IGFuZCB1cGxvYWQgYSBWNSBzZXQu
+DQoNCj4gDQo+IFRoYW5rcywNCj4gQW5kcmV3DQoNClRoYW5rcw0KSmFtZXMuDQo=
