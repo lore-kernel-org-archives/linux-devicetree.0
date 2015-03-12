@@ -1,46 +1,103 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH 6/6] drm/exynos: dsi: do not set TE GPIO direction by input
-Date: Thu, 12 Mar 2015 23:29:57 +0900
-Message-ID: <1426170597-9606-7-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/6] of: add helper for getting endpoint node of specific
+ identifiers
+Date: Thu, 12 Mar 2015 23:29:53 +0900
+Message-ID: <1426170597-9606-3-git-send-email-human.hwang@samsung.com>
 References: <1426170597-9606-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1426170597-9606-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: sw0312.kim@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1426170597-9606-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gc29tZSBib2FyZCwgVEUgR1BJTyBzaG91bGQgYmUgY29uZmlndXJlZCBwcm9wZXJseSB0aG91
-Z2hvdXQgcGluY3RybCBkcml2ZXIKYXMgYW4gd2FrZXVwIGludGVycnVwdC4gU28gdGhpcyBncGlv
-IHNob3VsZCBiZSBjb25maWd1cmFibGUgaW4gdGhlIGJvYXJkJ3MgRFQsCm5vdCBiZWluZyByZXF1
-ZXN0ZWQgYXMgYSBpbnB1dCBwaW4uCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVt
-YW4uaHdhbmdAc2Ftc3VuZy5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3Nf
-ZHJtX2RzaS5jIHwgNCArKy0tCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2Ry
-bV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYwppbmRleCBl
-Mzg1ZDI0Li41OGUwNjIwIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
-c19kcm1fZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5j
-CkBAIC0xMzI0LDE1ICsxMzI0LDE1IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9yZWdpc3Rlcl90
-ZV9pcnEoc3RydWN0IGV4eW5vc19kc2kgKmRzaSkKIAkJZ290byBvdXQ7CiAJfQogCi0JcmV0ID0g
-Z3Bpb19yZXF1ZXN0X29uZShkc2ktPnRlX2dwaW8sIEdQSU9GX0lOLCAidGVfZ3BpbyIpOworCXJl
-dCA9IGdwaW9fcmVxdWVzdChkc2ktPnRlX2dwaW8sICJ0ZV9ncGlvIik7CiAJaWYgKHJldCkgewog
-CQlkZXZfZXJyKGRzaS0+ZGV2LCAiZ3BpbyByZXF1ZXN0IGZhaWxlZCB3aXRoICVkXG4iLCByZXQp
-OwogCQlnb3RvIG91dDsKIAl9CiAKIAl0ZV9ncGlvX2lycSA9IGdwaW9fdG9faXJxKGRzaS0+dGVf
-Z3Bpbyk7Ci0KIAlpcnFfc2V0X3N0YXR1c19mbGFncyh0ZV9ncGlvX2lycSwgSVJRX05PQVVUT0VO
-KTsKKwogCXJldCA9IHJlcXVlc3RfdGhyZWFkZWRfaXJxKHRlX2dwaW9faXJxLCBleHlub3NfZHNp
-X3RlX2lycV9oYW5kbGVyLCBOVUxMLAogCQkJCQlJUlFGX1RSSUdHRVJfUklTSU5HLCAiVEUiLCBk
-c2kpOwogCWlmIChyZXQpIHsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+When there are multiple ports or multiple endpoints in a port, they have to be
+distinguished by the value of reg property. It is common. The drivers can get
+the specific endpoint in the specific port via this function. Now the drivers
+have to implement this code in themselves or have to force the order of dt nodes
+to get the right node.
+
+Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/base.c        | 33 +++++++++++++++++++++++++++++++++
+ include/linux/of_graph.h |  8 ++++++++
+ 2 files changed, 41 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 36536b6..d7fa99d 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2155,6 +2155,39 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ EXPORT_SYMBOL(of_graph_get_next_endpoint);
+ 
+ /**
++ * of_graph_get_endpoint_by_regs() - get endpoint node of specific identifiers
++ * @parent: pointer to the parent device node
++ * @port_reg: identifier (value of reg property) of the parent port node
++ * @reg: identifier (value of reg property) of the endpoint node
++ *
++ * Return: An 'endpoint' node pointer which is identified by reg and at the same
++ * is the child of a port node identified by port_reg. reg and port_reg are
++ * ignored when they are -1.
++ */
++struct device_node *of_graph_get_endpoint_by_regs(
++	const struct device_node *parent, int port_reg, int reg)
++{
++	struct of_endpoint endpoint;
++	struct device_node *node, *prev_node = NULL;
++
++	while (1) {
++		node = of_graph_get_next_endpoint(parent, prev_node);
++		of_node_put(prev_node);
++		if (!node)
++			break;
++
++		of_graph_parse_endpoint(node, &endpoint);
++		if (((port_reg == -1) || (endpoint.port == port_reg)) &&
++			((reg == -1) || (endpoint.id == reg)))
++			return node;
++
++		prev_node = node;
++	}
++
++	return NULL;
++}
++
++/**
+  * of_graph_get_remote_port_parent() - get remote port's parent node
+  * @node: pointer to a local endpoint device_node
+  *
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index befef42..e859eb7 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
+ 				struct of_endpoint *endpoint);
+ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ 					struct device_node *previous);
++struct device_node *of_graph_get_endpoint_by_regs(
++		const struct device_node *parent, int port_reg, int reg);
+ struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node);
+ struct device_node *of_graph_get_remote_port(const struct device_node *node);
+@@ -49,6 +51,12 @@ static inline struct device_node *of_graph_get_next_endpoint(
+ 	return NULL;
+ }
+ 
++struct device_node *of_graph_get_endpoint_by_regs(
++		const struct device_node *parent, int port_reg, int reg)
++{
++	return NULL;
++}
++
+ static inline struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node)
+ {
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
