@@ -1,67 +1,62 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 17/17] soc/tegra: remove lagacy powergate APIs
-Date: Thu, 12 Mar 2015 13:45:02 +0100
-Message-ID: <20150312124501.GA632@ulmo>
-References: <1426162518-7405-1-git-send-email-vinceh@nvidia.com>
- <1426162518-7405-18-git-send-email-vinceh@nvidia.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC PATCH v2 3/3] ARM: dts: exynos5420: add async-bridge clocks
+ to disp1 power domain
+Date: Thu, 12 Mar 2015 14:00:07 +0100
+Message-ID: <55018DD7.2010608@samsung.com>
+References: <54D48701.10105@collabora.co.uk>
+ <1423220154-5333-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426162518-7405-18-git-send-email-vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jroedel-l3A5Bk7waGM@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1423220154-5333-1-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, javier.martinez@collabora.co.uk, Liquid.Acid@gmx.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 12, 2015 at 08:15:18PM +0800, Vince Hsu wrote:
-> We switch to generic power domain now. So remove the legacy functions.
->=20
-> Signed-off-by: Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 06/02/15 11:55, Andrzej Hajda wrote:
+> FIMD and MIXER IPs in disp1 power domain have async-bridges (to GSCALER),
+> therefore their clocks should be enabled during power domain switch.
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
->  drivers/soc/tegra/pmc.c | 68 -------------------------------------------=
-------
->  include/soc/tegra/pmc.h | 22 ----------------
->  2 files changed, 90 deletions(-)
+>  arch/arm/boot/dts/exynos5420.dtsi | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index e1fa800..58579f5 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -293,9 +293,11 @@
+>  			 <&clock CLK_MOUT_SW_ACLK300>,
+>  			 <&clock CLK_MOUT_USER_ACLK300_DISP1>,
+>  			 <&clock CLK_MOUT_SW_ACLK400>,
+> -			 <&clock CLK_MOUT_USER_ACLK400_DISP1>;
+> +			 <&clock CLK_MOUT_USER_ACLK400_DISP1>,
+> +			 <&clock CLK_FIMD1>, <&clock CLK_MIXER>;
+>  		clock-names = "oscclk", "pclk0", "clk0",
+> -			      "pclk1", "clk1", "pclk2", "clk2";
+> +			      "pclk1", "clk1", "pclk2", "clk2",
+> +			      "asb0", "asb1";
+>  	};
 
-I don't think we can do this. What if somebody updates their kernel but
-not the DTB? In that case they'll end up with drivers that don't enable
-power partitions but at the same time the powergate driver won't enable
-them either because it is missing the corresponding nodes in the DTB.
+In general I don't like those clock/clock-names properties in the power
+domain nodes, since the power domains are not really consumers of those
+clocks. However these clocks are essential for the exynos power domains
+operation. There are more dependencies between the clocks and the power
+domains which adding of those properties does not cover. And we'll need
+to address those dependencies somehow.
+Anyway, the subject patch looks OK to me, given that support for clocks/
+clock-names in the exynos power domain device nodes has been merged
+for quite long already.
+The entire feature has been merged without PM or clk subsystem
+maintainer ACK, I don't see a reason not to merge this small addition
+of more clocks, especially that it fixes a real bug.
 
-What we'll have to do is probably keep the code that enables the power
-partitions and make it conditional on the power domains somehow. Is
-there a way to determine at runtime whether a device has been attached
-to a power domain?
+Please feel free to add:
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-Thierry
-
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVAYpKAAoJEN0jrNd/PrOhMugP/3YKe8e5CNxes75pZTg0fZtq
-8KA7x5iTwHX/ca4ll1pqIrLf9LqCTf40PYb9w56PfVPik6++b3PNWb7dPC8ByEqo
-tXkptS+YvTpvkjW3TIxGcOzpOnUJFidQpzxuDNjRdaP/purjGHZnc9mRpJMEwfW2
-dm/+9PX6luAuIRXdkl0z7A7cqxR8k7k4v4n9ubK/Wk4Aj8pnPqf0y1/CyRDiPLY5
-vhMJ+QMszMw5EGyF1y/VSeHxXMrpj4Z4uL4+HqWGt81Hjm+sF3tcK3xDB37MOCQO
-GhJgF117C57t53/4Aec6nTFwTHyqSxkyMluQAh3IoM6p3w6X/B6U6g+Uu6vky6R+
-mCYKR1iG7biMw0m+WHaQPL750M54EUpuPtwTWsWxUj0grPIch62eciZv6MKfwusD
-iF0LHHYVebujsi613Y9fyOtyLlUHWPDmfUb2f3IxiYEfNt0Rknd6OyU5yQ9irlE8
-PTj0oOrMdeQTvCBGrRmJIBpJ4xSY3i9nQdeh75dI4c38Nc2e5Gcvmoz2CmC06JWw
-qzAvLdi0IGUoZsacL/Pyqn7QfeJDQKPRG5EhlxbfNB9/zmHjmuN1DyFH+V/5e25D
-zBuU0hZCYjk/jgxrda0CP4iG4qfC4gqhOHlynA22uYq+7sy4HgQNq+SgFfurrnLC
-ojUV9I/lqzUOA4qBsUOt
-=F4Vi
------END PGP SIGNATURE-----
-
---C7zPtVaVf+AK4Oqc--
+-- 
+Regards,
+Sylwester
