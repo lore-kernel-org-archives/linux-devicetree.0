@@ -1,7 +1,7 @@
 From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 7/9] ARM: dt: dove: wire up RTC interrupt
-Date: Thu, 12 Mar 2015 18:31:26 +0000
-Message-ID: <E1YW7tG-0003mQ-DQ@rmk-PC.arm.linux.org.uk>
+Subject: [PATCH 8/9] ARM: dt: dove: add video decoder power domain description
+Date: Thu, 12 Mar 2015 18:31:31 +0000
+Message-ID: <E1YW7tL-0003mU-Gi@rmk-PC.arm.linux.org.uk>
 References: <20150312183020.GU8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,27 +14,32 @@ To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJ
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a PMU driver, we can wire up the RTC interrupt in the
-DT description for Dove.
+Add the description of the video decoder power domain to the PMU DT
+entry.
 
 Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 ---
- arch/arm/boot/dts/dove.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/dove.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 43d4ebf414be..7e80407bdcf8 100644
+index 7e80407bdcf8..3dcf5322bf0e 100644
 --- a/arch/arm/boot/dts/dove.dtsi
 +++ b/arch/arm/boot/dts/dove.dtsi
-@@ -624,6 +624,8 @@
- 			rtc: real-time-clock@d8500 {
- 				compatible = "marvell,orion-rtc";
- 				reg = <0xd8500 0x20>;
-+				interrupt-parent = <&pmu>;
-+				interrupts = <5>;
+@@ -387,6 +387,13 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <1>;
+ 				#reset-cells = <1>;
++
++				vpu_domain: vpu-domain {
++					#power-domain-cells = <0>;
++					marvell,pmu_pwr_mask = <0x00000008>;
++					marvell,pmu_iso_mask = <0x00000001>;
++					resets = <&pmu 16>;
++				};
  			};
  
- 			gconf: global-config@e802c {
+ 			thermal: thermal-diode@d001c {
 -- 
 1.8.3.1
 
