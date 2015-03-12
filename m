@@ -1,44 +1,26 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v2 17/17] soc/tegra: remove lagacy powergate APIs
-Date: Thu, 12 Mar 2015 18:18:49 +0200
-Message-ID: <20150312161849.GF6072@tbergstrom-lnx.Nvidia.com>
-References: <1426162518-7405-1-git-send-email-vinceh@nvidia.com>
- <1426162518-7405-18-git-send-email-vinceh@nvidia.com>
- <20150312124501.GA632@ulmo>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V4 2/2] Documentation: crypto: Add DT binding info for the
+ img hw hash accelerator
+Date: Thu, 12 Mar 2015 09:32:28 -0700
+Message-ID: <CAL1qeaFy0fmuvYtDGswobDYho0o+pMfYRhinRxSNqKLfChZoNg@mail.gmail.com>
+References: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
+	<1426126012-16061-3-git-send-email-james.hartley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150312124501.GA632@ulmo>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Vince Hsu <vinceh@nvidia.com>, swarren@wwwdotorg.org, gnurou@gmail.com, jroedel@suse.de, p.zabel@pengutronix.de, mturquette@linaro.org, pgaikwad@nvidia.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tbergstrom@nvidia.com, airlied@linux.ie, bhelgaas@google.com, tj@kernel.org, arnd@arndb.de, robh@kernel.org, will.deacon@arm.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1426126012-16061-3-git-send-email-james.hartley@imgtec.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: James Hartley <james.hartley@imgtec.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, smueller@chronox.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 01:45:02PM +0100, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Thu, Mar 12, 2015 at 08:15:18PM +0800, Vince Hsu wrote:
-> > We switch to generic power domain now. So remove the legacy functions.
-> > 
-> > Signed-off-by: Vince Hsu <vinceh@nvidia.com>
-> > ---
-> >  drivers/soc/tegra/pmc.c | 68 -------------------------------------------------
-> >  include/soc/tegra/pmc.h | 22 ----------------
-> >  2 files changed, 90 deletions(-)
-> 
-> I don't think we can do this. What if somebody updates their kernel but
-> not the DTB? In that case they'll end up with drivers that don't enable
-> power partitions but at the same time the powergate driver won't enable
-> them either because it is missing the corresponding nodes in the DTB.
-> 
-> What we'll have to do is probably keep the code that enables the power
-> partitions and make it conditional on the power domains somehow. Is
-> there a way to determine at runtime whether a device has been attached
-> to a power domain?
+Hi James,
 
-Or use DT overlays to 'load' a hardcoded overlay for the specific SoC?
+On Wed, Mar 11, 2015 at 7:06 PM, James Hartley <james.hartley@imgtec.com> wrote:
+> This adds the binding documentation for the Imagination Technologies hash
+> accelerator that provides hardware acceleration for SHA1/SHA224/SHA256/MD5
+> hashes.  This hardware will be present in the upcoming pistachio SoC.
+>
+> Signed-off-by: James Hartley <james.hartley@imgtec.com>
 
-Cheers,
-
-Peter.
+Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
