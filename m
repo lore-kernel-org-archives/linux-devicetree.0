@@ -1,45 +1,96 @@
-From: Vince Hsu <vinceh@nvidia.com>
-Subject: Re: [PATCH v2 17/17] soc/tegra: remove lagacy powergate APIs
-Date: Thu, 12 Mar 2015 21:11:52 +0800
-Message-ID: <55019098.3020901@nvidia.com>
-References: <1426162518-7405-1-git-send-email-vinceh@nvidia.com> <1426162518-7405-18-git-send-email-vinceh@nvidia.com> <20150312124501.GA632@ulmo>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: [Patch v3 1/3] dt: OF_UNITTEST make dependency broken, framework
+ fixes
+Date: Thu, 12 Mar 2015 06:15:57 -0700
+Message-ID: <5501918D.2020000@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150312124501.GA632@ulmo>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: pdeschrijver@nvidia.com, swarren@wwwdotorg.org, gnurou@gmail.com, jroedel@suse.de, p.zabel@pengutronix.de, mturquette@linaro.org, pgaikwad@nvidia.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tbergstrom@nvidia.com, airlied@linux.ie, bhelgaas@google.com, tj@kernel.org, arnd@arndb.de, robh@kernel.org, will.deacon@arm.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <mmarek@suse.cz>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Frank Rowand <frank.rowand@sonymobile.com>
 
-On 03/12/2015 08:45 PM, Thierry Reding wrote:
-> * PGP Signed by an unknown key
->
-> On Thu, Mar 12, 2015 at 08:15:18PM +0800, Vince Hsu wrote:
->> We switch to generic power domain now. So remove the legacy functions.
->>
->> Signed-off-by: Vince Hsu <vinceh@nvidia.com>
->> ---
->>   drivers/soc/tegra/pmc.c | 68 -------------------------------------------------
->>   include/soc/tegra/pmc.h | 22 ----------------
->>   2 files changed, 90 deletions(-)
-> I don't think we can do this. What if somebody updates their kernel but
-> not the DTB? In that case they'll end up with drivers that don't enable
-> power partitions but at the same time the powergate driver won't enable
-> them either because it is missing the corresponding nodes in the DTB.
-You're right.
+This 3 patch series is not bisectable.  If CONFIG_OF_UNITTEST=y then the kernel
+will not build with just patch 1 or just patches 1 and 2 applied.
 
->
-> What we'll have to do is probably keep the code that enables the power
-> partitions and make it conditional on the power domains somehow. Is
-> there a way to determine at runtime whether a device has been attached
-> to a power domain?
->
-Yes, we can check if a power domain is bound to the GPD by DT in the 
-legacy powergate code.
+If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
+be incremented, even if there are not source changes.  This is caused by
+a lack of dependency tracking and checking for
+drivers/of/unittest-data/testcases.dtb.o.  Fixing the problem was made more
+complicated by the fact that testcases.dtb.o was linked into ../of_unittest.o.
 
-Thanks,
-Vince
+Patch 1 modifies makefiles to move of_unittest.c into unittest-data/ and
+creates missing dependency tracking for testcases.dtb.o.
+
+Patch 2 will move of_unittest.c into unittest-data/
+
+Patch 3 will fix an of_unittest.c include path to account for the move.
+
+Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+
+---
+
+changes since version 2:
+
+  patch 1:
+  Add .gitignore so that generated files will not get committed.
+
+changes since version 1:
+
+  patch 1:
+  Remove some changes to scripts/Makefile.lib that are not needed.  They
+  were left over from attempts to fix the problem without moving of_unitest.c
+  into unittest-data/.
+
+
+ drivers/of/Makefile                 |    4 ++--
+ drivers/of/unittest-data/.gitignore |    2 ++
+ drivers/of/unittest-data/Makefile   |    9 +++++++++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
+
+Index: b/drivers/of/Makefile
+===================================================================
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -6,8 +6,6 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+ obj-$(CONFIG_OF_ADDRESS)  += address.o
+ obj-$(CONFIG_OF_IRQ)    += irq.o
+ obj-$(CONFIG_OF_NET)	+= of_net.o
+-obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
+-of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
+ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+@@ -16,5 +14,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
+ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ obj-$(CONFIG_OF_OVERLAY) += overlay.o
+ 
++obj-$(CONFIG_OF_UNITTEST) += unittest-data/
++
+ CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+ CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+Index: b/drivers/of/unittest-data/Makefile
+===================================================================
+--- /dev/null
++++ b/drivers/of/unittest-data/Makefile
+@@ -0,0 +1,9 @@
++
++obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
++of_unittest-objs := unittest.o testcases.dtb.o
++
++targets += testcases.dtb testcases.dtb.S
++
++.SECONDARY: \
++	$(obj)/testcases.dtb.S \
++	$(obj)/testcases.dtb
+Index: b/drivers/of/unittest-data/.gitignore
+===================================================================
+--- /dev/null
++++ b/drivers/of/unittest-data/.gitignore
+@@ -0,0 +1,2 @@
++testcases.dtb
++testcases.dtb.S
