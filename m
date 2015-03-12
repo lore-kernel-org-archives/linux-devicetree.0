@@ -1,45 +1,123 @@
-From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/2] Add Spreadtrum Sharkl64 Platform support
-Date: Thu, 12 Mar 2015 15:31:36 +0800
-Message-ID: <CAAfSe-tNA-MnNATYPeKV4QGdVJcqtqNsVHb+EKzUyRxTgq_4iw@mail.gmail.com>
-References: <1426040790-19495-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<5111739.CpgUXH2iat@wuerfel>
+From: Anand Moon <moon.linux@yahoo.com>
+Subject: [PATCH] ARM: dts: exynos5420 Fixes -ELOOP (Too many levels of
+ symbolic links)
+Date: Thu, 12 Mar 2015 12:59:51 +0530
+Message-ID: <1426145391-30089-1-git-send-email-moon.linux@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5111739.CpgUXH2iat@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: =?UTF-8?B?Q2h1bnlhbiBaaGFuZyAo5byg5pil6ImzKQ==?= <Chunyan.Zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>
+Cc: devicetree@vger.kernel.org, Anand Moon <moon.linux@yahoo.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 6:01 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 11 March 2015 02:27:08 Chunyan Zhang wrote:
->> This patchset adds Spreadtrum's Sharkl64 support in arm64 device tree.
->>
->> Changes from v7:
->>         - Added Mark Rutland's Acked-by
->>         - Rebased v4.0-rc1
->>
->
-> Applied both to next/arm64.
+BUG of recursive symbolic link and be observed by using below powerdebug
+        git://git.linaro.org/tools/powerdebug.git.
 
-Thanks Arnd.
+This utility populates the Clock, Regulators, Sensors and Gpio.
+Some how the regulators were not getting populated by this utility.
+After debugging this powerdebug application using 'strace' I can across following.
 
->
-> I had some trouble applying the patches because of broken end-of-line
-> markers and had to edit the patch manually. Please check what went
-> wrong there so you can avoid the problem in the future. Thanks!
->
+Below output is trunkated.
 
-Sorry for that, I have found the reason about smpt server, I'll avoid
-the same problem in the future.
+stat64("/sys/class/regulator/regulator.0/usb@12000000-vdd10/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group/devices/usb@12000000/
+iommu_group/devices/usb@12000000/iommu_group", 0xbec45fb8) = -1 ELOOP (Too many levels of symbolic links)
+close(63)                               = 0
+close(62)                               = 0
 
-Best regards,
-Chunyan
+These changes depend on following series of commit.
+ Pull iommu fixes from Joerg Roedel:
+     "The patches contain:
 
->         Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+       - fix multiple ARM IOMMU drivers to behave well when the hardware is
+         not present
+
+       - mark MSM driver as broken
+
+       - fix build errors with the new ARM generic io-page-table code"
+
+    * tag 'iommu-fixes-v4.0-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu:
+      iommu/io-pgtable-arm: Add built time dependency
+      iommu/msm: Mark driver BROKEN
+      iommu/rockchip: Play nice in multi-platform builds
+      iommu/omap: Play nice in multi-platform builds
+      iommu/exynos: Play nice in multi-platform builds
+      iommu/io-pgtable-arm: Fix self-test WARNs on i386
+
+After these changes powerdebug will populate regulators.
+
+Tested on OdroidXU3 board.
+
+Signed-off-by: Anand Moon <moon.linux@yahoo.com>
+---
+ arch/arm/boot/dts/exynos5420.dtsi | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 9dc2e97..a5f13a3 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -840,14 +840,14 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
++	};
+ 
+-		usbdrd_dwc3_0: dwc3 {
+-			compatible = "snps,dwc3";
+-			reg = <0x12000000 0x10000>;
+-			interrupts = <0 72 0>;
+-			phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
+-			phy-names = "usb2-phy", "usb3-phy";
+-		};
++	usbdrd_dwc3_0: dwc3 {
++		compatible = "snps,dwc3";
++		reg = <0x12000000 0x10000>;
++		interrupts = <0 72 0>;
++		phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
++		phy-names = "usb2-phy", "usb3-phy";
+ 	};
+ 
+ 	usbdrd_phy0: phy@12100000 {
+@@ -866,14 +866,14 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
++	};
+ 
+-		usbdrd_dwc3_1: dwc3 {
+-			compatible = "snps,dwc3";
+-			reg = <0x12400000 0x10000>;
+-			interrupts = <0 73 0>;
+-			phys = <&usbdrd_phy1 0>, <&usbdrd_phy1 1>;
+-			phy-names = "usb2-phy", "usb3-phy";
+-		};
++	usbdrd_dwc3_1: dwc3 {
++		compatible = "snps,dwc3";
++		reg = <0x12400000 0x10000>;
++		interrupts = <0 73 0>;
++		phys = <&usbdrd_phy1 0>, <&usbdrd_phy1 1>;
++		phy-names = "usb2-phy", "usb3-phy";
+ 	};
+ 
+ 	usbdrd_phy1: phy@12500000 {
+-- 
+2.1.0
