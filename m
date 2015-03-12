@@ -1,40 +1,93 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 2/2] Documentation: omap-twl4030: Remove ti,codec property
-Date: Thu, 12 Mar 2015 22:14:59 +0100
-Message-ID: <1426194899-14037-3-git-send-email-marek@goldelico.com>
-References: <1426194899-14037-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426194899-14037-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, peter.ujfalusi@ti.com
-Cc: eballetbo@gmail.com, javier@dowhile0.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jarkko.nikula@bitmer.com, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/9] dt-bindings: add Marvell PMU documentation
+Date: Thu, 12 Mar 2015 16:32:07 -0500
+Message-ID: <CAL_Jsq+R70GVsuig7Ebo49_MeneD_RZ=E0haTVsb_xFhTR7-pw@mail.gmail.com>
+References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <E1YW7t0-0003mE-My@rmk-PC.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1YW7t0-0003mE-My-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ti,codec property is not necessary anymore thus removing references
-from documentation.
+On Thu, Mar 12, 2015 at 1:31 PM, Russell King
+<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> Add the required DT binding documentation for the Marvell PMU driver.
+>
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/soc/dove/pmu.txt | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/dove/pmu.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/dove/pmu.txt b/Documentation/devicetree/bindings/soc/dove/pmu.txt
+> new file mode 100644
+> index 000000000000..9617aa298dd4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/dove/pmu.txt
+> @@ -0,0 +1,49 @@
+> +Device Tree bindings for Marvell PMU
+> +
+> +Required properties:
+> + - compatible: value should be "marvell,dove-pmu".
+> + - reg: two base addresses and sizes of the PM controller and PMU.
+> + - interrupts: single interrupt number for the PMU interrupt
+> + - interrupt-controller: must be specified as the PMU itself is an
+> +    interrupt controller.
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- Documentation/devicetree/bindings/sound/omap-twl4030.txt | 2 --
- 1 file changed, 2 deletions(-)
+Is it always an interrupt controller or just in low power modes like
+ones typically tacked on to GICs?
 
-diff --git a/Documentation/devicetree/bindings/sound/omap-twl4030.txt b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
-index 1ab6bc8..656165f 100644
---- a/Documentation/devicetree/bindings/sound/omap-twl4030.txt
-+++ b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
-@@ -4,7 +4,6 @@ Required properties:
- - compatible: "ti,omap-twl4030"
- - ti,model: Name of the sound card (for example "omap3beagle")
- - ti,mcbsp: phandle for the McBSP node
--- ti,codec: phandle for the twl4030 audio node
- 
- Optional properties:
- - ti,mcbsp-voice: phandle for the McBSP node connected to the voice port of twl
-@@ -59,5 +58,4 @@ sound {
- 	ti,model = "omap3beagle";
- 
- 	ti,mcbsp = <&mcbsp2>;
--	ti,codec = <&twl_audio>;
- };
--- 
-1.9.1
+> + - #interrupt-cells: must be 1.
+> + - #reset-cells: must be 1.
+> +
+> +Optional properties:
+> + - None
+> +
+> +Domain descriptions are listed as child nodes of the power management
+
+"Power domain descriptions..." just to be clear.
+
+> +node.  Each domain has the following properties:
+> +
+> +Required properties:
+> + - #power-domain-cells: must be 0.
+> +
+> +Optional properties:
+> + - marvell,pmu_pwr_mask: specifies the mask value for PMU power register
+> + - marvell,pmu_iso_mask: specifies the mask value for PMU isolation register
+> + - resets: points to the reset manager (PMU node) and reset index.
+> +
+> +Example:
+> +
+> +       pmu: power-management@d0000 {
+> +               compatible = "marvell,dove-pmu";
+> +               reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
+> +               interrupts = <33>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +               #reset-cells = <1>;
+> +
+> +               vpu_domain: vpu-domain {
+> +                       #power-domain-cells = <0>;
+> +                       marvell,pmu_pwr_mask = <0x00000008>;
+> +                       marvell,pmu_iso_mask = <0x00000001>;
+> +                       resets = <&pmu 16>;
+> +               };
+> +
+> +               gpu_domain: gpu-domain {
+> +                       #power-domain-cells = <0>;
+> +                       marvell,pmu_pwr_mask = <0x00000004>;
+> +                       marvell,pmu_iso_mask = <0x00000002>;
+> +                       resets = <&pmu 18>;
+> +               };
+> +       };
+> --
+> 1.8.3.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
