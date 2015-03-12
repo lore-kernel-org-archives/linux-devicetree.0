@@ -1,109 +1,198 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v3 03/12] irqchip: vf610-mscm: support NVIC parent
-Date: Fri, 13 Mar 2015 00:36:11 +0100
-Message-ID: <1426203380-7155-4-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 11/12] ARM: dts: add support for Vybrid running on Cortex-M4
+Date: Fri, 13 Mar 2015 00:36:19 +0100
+Message-ID: <1426203380-7155-12-git-send-email-stefan@agner.ch>
 References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426203380-7155-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426203380-7155-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Support the NVIC interrupt controller as node parent of the MSCM
-interrupt router. On the dual-core variants of Vybird (VF6xx), the
-NVIC interrupt controller is used by the Cortex-M4. To support
-running Linux on this core too, MSCM needs NVIC parent support too.
+This adds an initial device tree to run Linux on the Cortex-M4 on
+the Vybrid based Colibri VF61 module.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
- 1 file changed, 26 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/Makefile            |  1 +
+ arch/arm/boot/dts/vf610m4-colibri.dts | 98 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/vf610m4.dtsi        | 50 ++++++++++++++++++
+ 3 files changed, 149 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
+ create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
 
-diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
-index 9521057..bb0e1a3 100644
---- a/drivers/irqchip/irq-vf610-mscm-ir.c
-+++ b/drivers/irqchip/irq-vf610-mscm-ir.c
-@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
- 	void __iomem *mscm_ir_base;
- 	u16 cpu_mask;
- 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
-+	bool is_nvic;
- };
- 
- static struct vf610_mscm_ir_chip_data *mscm_ir_data;
-@@ -91,6 +92,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
- {
- 	irq_hw_number_t hwirq = data->hwirq;
- 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
-+	struct irq_data *parent = data->parent_data;
- 	u16 irsprc;
- 
- 	irsprc = readw_relaxed(chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
-@@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
- 	writew_relaxed(chip_data->cpu_mask,
- 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
- 
--	irq_chip_unmask_parent(data);
-+	if (parent->chip->irq_enable)
-+		parent->chip->irq_enable(parent);
-+	else
-+		parent->chip->irq_unmask(parent);
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a1c776b..3a6ff9f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -309,6 +309,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf500-colibri-eval-v3.dtb \
+ 	vf610-colibri-eval-v3.dtb \
++	vf610m4-colibri.dtb \
+ 	vf610-cosmic.dtb \
+ 	vf610-twr.dtb
+ dtb-$(CONFIG_ARCH_MXS) += \
+diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
+new file mode 100644
+index 0000000..acd6cb5
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610m4-colibri.dts
+@@ -0,0 +1,98 @@
++/*
++ * Device tree for Colibri VF61 Cortex-M4 support
++ *
++ * Copyright (C) 2015 Stefan Agner
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
- }
- 
- static void vf610_mscm_ir_disable(struct irq_data *data)
- {
- 	irq_hw_number_t hwirq = data->hwirq;
- 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
-+	struct irq_data *parent = data->parent_data;
- 
- 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
- 
--	irq_chip_mask_parent(data);
-+	if (parent->chip->irq_enable)
-+		parent->chip->irq_disable(parent);
-+	else
-+		parent->chip->irq_mask(parent);
- }
- 
- static struct irq_chip vf610_mscm_ir_irq_chip = {
-@@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
- 					      domain->host_data);
- 
- 	gic_data.np = domain->parent->of_node;
--	gic_data.args_count = 3;
--	gic_data.args[0] = GIC_SPI;
--	gic_data.args[1] = irq_data->args[0];
--	gic_data.args[2] = irq_data->args[1];
++/dts-v1/;
++#include "vf610m4.dtsi"
 +
-+	if (mscm_ir_data->is_nvic) {
-+		gic_data.args_count = 1;
-+		gic_data.args[0] = irq_data->args[0];
-+	} else {
-+		gic_data.args_count = 3;
-+		gic_data.args[0] = GIC_SPI;
-+		gic_data.args[1] = irq_data->args[0];
-+		gic_data.args[2] = irq_data->args[1];
-+	}
++/ {
++	model = "VF610 Cortex-M4";
++	compatible = "fsl,vf610m4";
 +
- 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
- }
- 
-@@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
- 		goto out_unmap;
- 	}
- 
-+	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
-+		mscm_ir_data->is_nvic = true;
++	chosen {
++		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
++	};
 +
- 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
- 
- 	return 0;
++	memory {
++		reg = <0x8c000000 0x3000000>;
++	};
++};
++
++&gpio0 {
++	status = "disabled";
++};
++
++&gpio1 {
++	status = "disabled";
++};
++
++&gpio2 {
++	status = "disabled";
++};
++
++&gpio3 {
++	status = "disabled";
++};
++
++&gpio4 {
++	status = "disabled";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&iomuxc {
++	vf610-colibri {
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				VF610_PAD_PTD0__UART2_TX		0x21a2
++				VF610_PAD_PTD1__UART2_RX		0x21a1
++				VF610_PAD_PTD2__UART2_RTS		0x21a2
++				VF610_PAD_PTD3__UART2_CTS		0x21a1
++			>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
+new file mode 100644
+index 0000000..9ffe2eb
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610m4.dtsi
+@@ -0,0 +1,50 @@
++/*
++ * Device tree for VF6xx Cortex-M4 support
++ *
++ * Copyright (C) 2015 Stefan Agner
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "armv7-m.dtsi"
++#include "vfxxx.dtsi"
++
++&mscm_ir {
++	interrupt-parent = <&nvic>;
++};
 -- 
 2.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
