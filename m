@@ -1,55 +1,62 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1] of/pci : fix of_pci_dma_configure parent ptr NULL
-Date: Thu, 12 Mar 2015 11:03:45 -0400
-Message-ID: <5501AAD1.9050107@ti.com>
-References: <1426092003-16925-1-git-send-email-m-karicheri2@ti.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [RFC PATCH v15 04/11] ARM: cpuidle: Register cpuidle_ops for
+ QCOM cpus
+Date: Thu, 12 Mar 2015 09:06:55 -0600
+Message-ID: <20150312150655.GA497@linaro.org>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org>
+ <1425914206-22295-5-git-send-email-lina.iyer@linaro.org>
+ <5500866F.6080704@codeaurora.org>
+ <550187C0.4020006@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1426092003-16925-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, bhelgaas@google.com
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, arnd@arndb.de, Suravee.Suthikulpanit@amd.com, will.deacon@arm.com, joro@8bytes.org, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <550187C0.4020006@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2015 12:40 PM, Murali Karicheri wrote:
-> On some platforms such as that based on x86, ia64 etc, root bus is
-> created with parent node passed in as NULL to pci_create_root_bus().
-> On these platforms, the patch series "PCI: get DMA configuration from
-> parent device" when applied causes kernel crash. So add a check for this
-> in of_pci_dma_configure()
+On Thu, Mar 12 2015 at 06:34 -0600, Daniel Lezcano wrote:
+>On 03/11/2015 07:16 PM, Stephen Boyd wrote:
+>>On 03/09/15 08:16, Lina Iyer wrote:
+
+[...]
+
+>>>+#if IS_ENABLED(CONFIG_QCOM_PM)
+>>
+>>Why not #ifdef CONFIG_QCOM_PM? I thought IS_ENABLED was for C code where
+>>you want to put it in an if () statement.
 >
-> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
-> Acked-by: Rob Herring<robh@kernel.org>
-> ---
->   drivers/of/of_pci.c |    4 ++++
->   1 file changed, 4 insertions(+)
+>This is right. But the IS_ENABLED is also valid.
 >
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 86d3c38..a8e485c 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -129,6 +129,10 @@ void of_pci_dma_configure(struct pci_dev *pci_dev)
->   	struct device *dev =&pci_dev->dev;
->   	struct device *bridge = pci_get_host_bridge_device(pci_dev);
+>It seems the current trend is to replace #ifdef with #if IS_ENABLED. 
+>It is supposed to prevent to create or'ed conditional with the module 
+>support.
 >
-> +	/* Some platforms can have bridge->parent set to NULL */
-> +	if (!bridge->parent)
-> +		return;
-> +
->   	of_dma_configure(dev, bridge->parent->of_node);
->   	pci_put_host_bridge_device(bridge);
->   }
+>eg:
+>
+>#if defined(CONFIG_FOO) || defined(CONFIG_FOO_MODULE)
+>
+>is replaced by:
+>
+>#if IS_ENABLED(CONFIG_FOO)
+>
+>Lina: By the way, it would be preferable to use the 
+>CONFIG_ARM_QCOM_CPUIDLE where IS_ENABLED makes more sense even the 
 
-BJorn,
+Daniel: I dont have CONFIG_ARM_QCOM_CPUIDLE defined anymore. By moving
+to generic ARM cpuidle, i removed all changes to drivers/cpuidle/. So I
+used the config item that defineds these items.
 
-Just wondering if you can apply this to pci/iommu to help provide enough 
-baking time for this series to make into next kernel merge window.
+Also, having two indpendent CONFIG_ items provides a chance that the
+declaration is not matched with the definition or vice versa.
 
-As always, thanks for all your help.
-
-Regards,
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+>drivers are not modules (who knows if they are converted as module 
+>again hence #ifdef will be invalid).
+>
+>
+>
+>>>+CPUIDLE_OPS(qcom_kpss_v1)
+>>>+CPUIDLE_OPS(qcom_kpss_v2)
+>>>+#endif
