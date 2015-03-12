@@ -1,76 +1,45 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC PATCH 2/3] arm/exynos/pm_domains: add support for
- async-bridge clocks
-Date: Thu, 12 Mar 2015 14:05:39 +0100
-Message-ID: <55018F23.3010402@samsung.com>
-References: <1423139739-19881-1-git-send-email-a.hajda@samsung.com>
- <1423139739-19881-3-git-send-email-a.hajda@samsung.com>
+From: Vince Hsu <vinceh@nvidia.com>
+Subject: Re: [PATCH v2 17/17] soc/tegra: remove lagacy powergate APIs
+Date: Thu, 12 Mar 2015 21:11:52 +0800
+Message-ID: <55019098.3020901@nvidia.com>
+References: <1426162518-7405-1-git-send-email-vinceh@nvidia.com> <1426162518-7405-18-git-send-email-vinceh@nvidia.com> <20150312124501.GA632@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1423139739-19881-3-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Liquid.Acid@gmx.net, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, javier.martinez@collabora.co.uk, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150312124501.GA632@ulmo>
+Sender: linux-pm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: pdeschrijver@nvidia.com, swarren@wwwdotorg.org, gnurou@gmail.com, jroedel@suse.de, p.zabel@pengutronix.de, mturquette@linaro.org, pgaikwad@nvidia.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tbergstrom@nvidia.com, airlied@linux.ie, bhelgaas@google.com, tj@kernel.org, arnd@arndb.de, robh@kernel.org, will.deacon@arm.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMDIvMTUgMTM6MzUsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4gU2luY2UgRXh5bm9zNTQy
-MCB0aGVyZSBhcmUgYXN5bmMtYnJpZGdlcyAoQVNCKSBiZXR3ZWVuIGRpZmZlcmVudCBJUHMuIFRo
-ZXNlCj4gYnJpZGdlcyBtdXN0IGJlIG9wZXJhdGlvbmFsIGR1cmluZyBwb3dlciBkb21haW4gb24v
-b2ZmLCBpZS4gY2xvY2tzIHVzZWQKPiBieSB0aGVzZSBicmlkZ2VzIHNob3VsZCBiZSBlbmFibGVk
-Lgo+IFRoaXMgcGF0Y2ggZW5hYmxlZCB0aGVzZSBjbG9ja3MgZHVyaW5nIGRvbWFpbiBvbi9vZmYu
-Cj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4K
-ClJldmlld2VkLWJ5OiBTeWx3ZXN0ZXIgTmF3cm9ja2kgPHMubmF3cm9ja2lAc2Ftc3VuZy5jb20+
-Cgo+IC0tLQo+ICBhcmNoL2FybS9tYWNoLWV4eW5vcy9wbV9kb21haW5zLmMgfCAyNyArKysrKysr
-KysrKysrKysrKysrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyks
-IDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtZXh5bm9zL3Bt
-X2RvbWFpbnMuYyBiL2FyY2gvYXJtL21hY2gtZXh5bm9zL3BtX2RvbWFpbnMuYwo+IGluZGV4IDBl
-MmJjMzYuLmVjZmY1MjIgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vbWFjaC1leHlub3MvcG1fZG9t
-YWlucy5jCj4gKysrIGIvYXJjaC9hcm0vbWFjaC1leHlub3MvcG1fZG9tYWlucy5jCj4gQEAgLTM3
-LDYgKzM3LDcgQEAgc3RydWN0IGV4eW5vc19wbV9kb21haW4gewo+ICAJc3RydWN0IGNsayAqb3Nj
-Y2xrOwo+ICAJc3RydWN0IGNsayAqY2xrW01BWF9DTEtfUEVSX0RPTUFJTl07Cj4gIAlzdHJ1Y3Qg
-Y2xrICpwY2xrW01BWF9DTEtfUEVSX0RPTUFJTl07Cj4gKwlzdHJ1Y3QgY2xrICphc2JfY2xrW01B
-WF9DTEtfUEVSX0RPTUFJTl07Cj4gIH07Cj4gIAo+ICBzdGF0aWMgaW50IGV4eW5vc19wZF9wb3dl
-cihzdHJ1Y3QgZ2VuZXJpY19wbV9kb21haW4gKmRvbWFpbiwgYm9vbCBwb3dlcl9vbikKPiBAQCAt
-NDUsMTQgKzQ2LDE5IEBAIHN0YXRpYyBpbnQgZXh5bm9zX3BkX3Bvd2VyKHN0cnVjdCBnZW5lcmlj
-X3BtX2RvbWFpbiAqZG9tYWluLCBib29sIHBvd2VyX29uKQo+ICAJdm9pZCBfX2lvbWVtICpiYXNl
-Owo+ICAJdTMyIHRpbWVvdXQsIHB3cjsKPiAgCWNoYXIgKm9wOwo+ICsJaW50IGk7Cj4gIAo+ICAJ
-cGQgPSBjb250YWluZXJfb2YoZG9tYWluLCBzdHJ1Y3QgZXh5bm9zX3BtX2RvbWFpbiwgcGQpOwo+
-ICAJYmFzZSA9IHBkLT5iYXNlOwo+ICAKPiArCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLX1BFUl9E
-T01BSU47IGkrKykgewo+ICsJCWlmIChJU19FUlIocGQtPmFzYl9jbGtbaV0pKQo+ICsJCQlicmVh
-azsKPiArCQljbGtfcHJlcGFyZV9lbmFibGUocGQtPmFzYl9jbGtbaV0pOwo+ICsJfQo+ICsKPiAg
-CS8qIFNldCBvc2NjbGsgYmVmb3JlIHBvd2VyaW5nIG9mZiBhIGRvbWFpbiovCj4gIAlpZiAoIXBv
-d2VyX29uKSB7Cj4gLQkJaW50IGk7Cj4gLQo+ICAJCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLX1BF
-Ul9ET01BSU47IGkrKykgewo+ICAJCQlpZiAoSVNfRVJSKHBkLT5jbGtbaV0pKQo+ICAJCQkJYnJl
-YWs7Cj4gQEAgLTgxLDggKzg3LDYgQEAgc3RhdGljIGludCBleHlub3NfcGRfcG93ZXIoc3RydWN0
-IGdlbmVyaWNfcG1fZG9tYWluICpkb21haW4sIGJvb2wgcG93ZXJfb24pCj4gIAo+ICAJLyogUmVz
-dG9yZSBjbG9ja3MgYWZ0ZXIgcG93ZXJpbmcgb24gYSBkb21haW4qLwo+ICAJaWYgKHBvd2VyX29u
-KSB7Cj4gLQkJaW50IGk7Cj4gLQo+ICAJCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLX1BFUl9ET01B
-SU47IGkrKykgewo+ICAJCQlpZiAoSVNfRVJSKHBkLT5jbGtbaV0pKQo+ICAJCQkJYnJlYWs7Cj4g
-QEAgLTkyLDYgKzk2LDEyIEBAIHN0YXRpYyBpbnQgZXh5bm9zX3BkX3Bvd2VyKHN0cnVjdCBnZW5l
-cmljX3BtX2RvbWFpbiAqZG9tYWluLCBib29sIHBvd2VyX29uKQo+ICAJCX0KPiAgCX0KPiAgCj4g
-Kwlmb3IgKGkgPSAwOyBpIDwgTUFYX0NMS19QRVJfRE9NQUlOOyBpKyspIHsKPiArCQlpZiAoSVNf
-RVJSKHBkLT5hc2JfY2xrW2ldKSkKPiArCQkJYnJlYWs7Cj4gKwkJY2xrX2Rpc2FibGVfdW5wcmVw
-YXJlKHBkLT5hc2JfY2xrW2ldKTsKPiArCX0KPiArCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiBA
-QCAtMTM3LDYgKzE0NywxNSBAQCBzdGF0aWMgX19pbml0IGludCBleHlub3M0X3BtX2luaXRfcG93
-ZXJfZG9tYWluKHZvaWQpCj4gIAkJcGQtPnBkLnBvd2VyX29mZiA9IGV4eW5vc19wZF9wb3dlcl9v
-ZmY7Cj4gIAkJcGQtPnBkLnBvd2VyX29uID0gZXh5bm9zX3BkX3Bvd2VyX29uOwo+ICAKPiArCQlm
-b3IgKGkgPSAwOyBpIDwgTUFYX0NMS19QRVJfRE9NQUlOOyBpKyspIHsKPiArCQkJY2hhciBjbGtf
-bmFtZVs4XTsKPiArCj4gKwkJCXNucHJpbnRmKGNsa19uYW1lLCBzaXplb2YoY2xrX25hbWUpLCAi
-YXNiJWQiLCBpKTsKPiArCQkJcGQtPmFzYl9jbGtbaV0gPSBjbGtfZ2V0KGRldiwgY2xrX25hbWUp
-Owo+ICsJCQlpZiAoSVNfRVJSKHBkLT5hc2JfY2xrW2ldKSkKPiArCQkJCWJyZWFrOwo+ICsJCX0K
-PiArCj4gIAkJcGQtPm9zY2NsayA9IGNsa19nZXQoZGV2LCAib3NjY2xrIik7Cj4gIAkJaWYgKElT
-X0VSUihwZC0+b3NjY2xrKSkKPiAgCQkJZ290byBub19jbGs7Cj4gCgoKLS0gClN5bHdlc3RlciBO
-YXdyb2NraQpTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9sYW5kCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On 03/12/2015 08:45 PM, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+>
+> On Thu, Mar 12, 2015 at 08:15:18PM +0800, Vince Hsu wrote:
+>> We switch to generic power domain now. So remove the legacy functions.
+>>
+>> Signed-off-by: Vince Hsu <vinceh@nvidia.com>
+>> ---
+>>   drivers/soc/tegra/pmc.c | 68 -------------------------------------------------
+>>   include/soc/tegra/pmc.h | 22 ----------------
+>>   2 files changed, 90 deletions(-)
+> I don't think we can do this. What if somebody updates their kernel but
+> not the DTB? In that case they'll end up with drivers that don't enable
+> power partitions but at the same time the powergate driver won't enable
+> them either because it is missing the corresponding nodes in the DTB.
+You're right.
+
+>
+> What we'll have to do is probably keep the code that enables the power
+> partitions and make it conditional on the power domains somehow. Is
+> there a way to determine at runtime whether a device has been attached
+> to a power domain?
+>
+Yes, we can check if a power domain is bound to the GPD by DT in the 
+legacy powergate code.
+
+Thanks,
+Vince
