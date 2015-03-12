@@ -1,62 +1,94 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 06/12] ARM: unify MMU/!MMU addruart calls
-Date: Fri, 13 Mar 2015 00:36:14 +0100
-Message-ID: <1426203380-7155-7-git-send-email-stefan@agner.ch>
-References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] v4l: mt9v032: Add OF support
+Date: Fri, 13 Mar 2015 01:41:35 +0200
+Message-ID: <2140837.pMzBpl3YU4@avalon>
+References: <1425822349-19218-1-git-send-email-laurent.pinchart@ideasonboard.com> <2320734.ji4C9lV64t@avalon> <54FD9074.8050600@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1426203380-7155-1-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
-Cc: devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54FD9074.8050600-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the needless differences between MMU/!MMU addruart calls.
-This allows to use the same addruart macro on SoC level. Useful
-for SoC consisting of multiple CPUs with and without MMU such as
-Freescale Vybrid.
+Hi Sylwester,
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/include/debug/efm32.S | 2 +-
- arch/arm/kernel/debug.S        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Monday 09 March 2015 13:22:12 Sylwester Nawrocki wrote:
+> On 09/03/15 12:29, Laurent Pinchart wrote:
+> > On Monday 09 March 2015 11:35:52 Sylwester Nawrocki wrote:
+> >> On 08/03/15 14:45, Laurent Pinchart wrote:
+> >>> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> >>> @@ -0,0 +1,41 @@
+> >>> +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
+> >>> +
+> >>> +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor
+> >>> with
+> >>> +an active array size of 752H x 480V. It is programmable through a
+> >>> simple
+> >>> +two-wire serial interface.
+> >>> +
+> >>> +Required Properties:
+> >>> +
+> >>> +- compatible: value should be either one among the following
+> >>> +	(a) "aptina,mt9v032" for MT9V032 color sensor
+> >>> +	(b) "aptina,mt9v032m" for MT9V032 monochrome sensor
+> >>> +	(c) "aptina,mt9v034" for MT9V034 color sensor
+> >>> +	(d) "aptina,mt9v034m" for MT9V034 monochrome sensor
+> >> 
+> >> It can't be determined at runtime whether the sensor is just
+> >> monochromatic ?
+> >
+> > Unfortunately not. As far as I'm aware the only difference between the
+> > monochromatic and color sensors is the colour filter array. The register
+> > set is identical.
+> > 
+> >> Al in all the color filter array is a physical property of the sensor,
+> >> still the driver seems to be ignoring the "m" suffix.
+> > 
+> > No, the driver relies on the I2C core filling returning the I2C device id
+> > instance corresponding to the DT compatible string, and gets sensor model
+> > information from id->driver_data.
+> 
+> Sorry, I missed the I2C id part.
+> 
+> >> Hence I suspect the
+> >> register interfaces for both color and monochromatic versions are
+> >> compatible. I'm wondering whether using a boolean property to indicate
+> >> the
+> >> color filter array type would do as well.
+> > 
+> > That's an option as well, yes. I don't have a strong preference at the
+> > moment, but it should be noted that the "m" suffix is contained in the
+> > chip's part number.
+> > 
+> > MT9V032C12STM
+> > MT9V032C12STC
+> > MT9V032C12STMD
+> > MT9V032C12STMH
+> > MT9V032C12STCD
+> > MT9V032C12STCH
+> > 
+> > Granted, they use "c" for colour sensors, which the DT bindings don't use,
+> > and a "C12ST" that we completely ignore.
+> 
+> OK, deriving the compatible strings from current I2C device ids seems less
+> trouble from the driver's writer POV. However, my feeling is that using same
+> compatible and additional property to indicate colour/monochrome is cleaner
+> as far as device tree binding is concerned.
+> Anyway, I'm not going to object against your current approach, I suppose
+> it's acceptable as well.
 
-diff --git a/arch/arm/include/debug/efm32.S b/arch/arm/include/debug/efm32.S
-index 2265a19..660fa1e 100644
---- a/arch/arm/include/debug/efm32.S
-+++ b/arch/arm/include/debug/efm32.S
-@@ -16,7 +16,7 @@
- 
- #define	UARTn_TXDATA		0x0034
- 
--		.macro	addruart, rx, tmp
-+		.macro	addruart, rx, tmp, tmp2
- 		ldr	\rx, =(CONFIG_DEBUG_UART_PHYS)
- 
- 		/*
-diff --git a/arch/arm/kernel/debug.S b/arch/arm/kernel/debug.S
-index 78c91b5..ea9646c 100644
---- a/arch/arm/kernel/debug.S
-+++ b/arch/arm/kernel/debug.S
-@@ -35,7 +35,7 @@
- 
- #else /* !CONFIG_MMU */
- 		.macro	addruart_current, rx, tmp1, tmp2
--		addruart	\rx, \tmp1
-+		addruart	\rx, \tmp1, \tmp2
- 		.endm
- 
- #endif /* CONFIG_MMU */
+It wouldn't take much to convince me about that, I'm really undecided. I'll 
+send v2 to fix other issues, we can continue discussing this point then.
+
 -- 
-2.3.1
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
