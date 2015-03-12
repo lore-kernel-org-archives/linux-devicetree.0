@@ -1,46 +1,92 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 0/3] usb: renesas_usbhs: add support for USB-DMAC
-Date: Thu, 12 Mar 2015 15:35:17 +0900
-Message-ID: <1426142120-5072-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 1/3] usb: renesas_usbhs: add the channel number in dma-names
+Date: Thu, 12 Mar 2015 15:35:18 +0900
+Message-ID: <1426142120-5072-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1426142120-5072-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1426142120-5072-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on Felipe's usb.git / testing/next branch.
-(commit id = 9024c495f35be735a917571406fab30a789c27d1)
+To connect the channel of USB-DMAC to USBHS DnFIFO number, this patch
+adds this channel/FIFO number in dma-names. Otherwise, this driver
+needs to add analysis code for device tree.
 
-To use the USB-DMAC, we have to add some device nodes for USB-DMAC
-in dts file. If we don't have such device nodes, this driver will
-use PIO.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ .../devicetree/bindings/usb/renesas_usbhs.txt        |  5 ++++-
+ drivers/usb/renesas_usbhs/fifo.c                     | 20 +++++++++++++-------
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-Changes from v2:
- - Remove patch 1 because this spinlock suspected issue disappears
-   if I use a new usb-dmac dmaengine driver.
-
-Changes from v1:
- - Change local_irq_save/restore() area in patch 1.
- - Modify the commit log in patch 1.
- - fix some comments in patch 4.
-
-Yoshihiro Shimoda (3):
-  usb: renesas_usbhs: add the channel number in dma-names
-  usb: renesas_usbhs: fix the sequence in xfer_work()
-  usb: renesas_usbhs: add support for USB-DMAC
-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |   5 +-
- drivers/usb/renesas_usbhs/common.c                 |  19 +++
- drivers/usb/renesas_usbhs/common.h                 |   7 +
- drivers/usb/renesas_usbhs/fifo.c                   | 189 +++++++++++++++++++--
- drivers/usb/renesas_usbhs/fifo.h                   |   1 +
- drivers/usb/renesas_usbhs/pipe.c                   |  39 +++++
- drivers/usb/renesas_usbhs/pipe.h                   |   1 +
- include/linux/usb/renesas_usbhs.h                  |   2 +
- 8 files changed, 247 insertions(+), 16 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 61b045b..dc2a18f 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -15,7 +15,10 @@ Optional properties:
+   - phys: phandle + phy specifier pair
+   - phy-names: must be "usb"
+   - dmas: Must contain a list of references to DMA specifiers.
+-  - dma-names : Must contain a list of DMA names, "tx" or "rx".
++  - dma-names : Must contain a list of DMA names:
++   - tx0 ... tx<n>
++   - rx0 ... rx<n>
++    - This <n> means DnFIFO in USBHS module.
+ 
+ Example:
+ 	usbhs: usb@e6590000 {
+diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
+index d891bff..28d10eb 100644
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -1069,23 +1069,29 @@ static void usbhsf_dma_init_pdev(struct usbhs_fifo *fifo)
+ 					    &fifo->rx_slave);
+ }
+ 
+-static void usbhsf_dma_init_dt(struct device *dev, struct usbhs_fifo *fifo)
++static void usbhsf_dma_init_dt(struct device *dev, struct usbhs_fifo *fifo,
++			       int channel)
+ {
+-	fifo->tx_chan = dma_request_slave_channel_reason(dev, "tx");
++	char name[16];
++
++	snprintf(name, sizeof(name), "tx%d", channel);
++	fifo->tx_chan = dma_request_slave_channel_reason(dev, name);
+ 	if (IS_ERR(fifo->tx_chan))
+ 		fifo->tx_chan = NULL;
+-	fifo->rx_chan = dma_request_slave_channel_reason(dev, "rx");
++
++	snprintf(name, sizeof(name), "rx%d", channel);
++	fifo->rx_chan = dma_request_slave_channel_reason(dev, name);
+ 	if (IS_ERR(fifo->rx_chan))
+ 		fifo->rx_chan = NULL;
+ }
+ 
+-static void usbhsf_dma_init(struct usbhs_priv *priv,
+-			    struct usbhs_fifo *fifo)
++static void usbhsf_dma_init(struct usbhs_priv *priv, struct usbhs_fifo *fifo,
++			    int channel)
+ {
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 
+ 	if (dev->of_node)
+-		usbhsf_dma_init_dt(dev, fifo);
++		usbhsf_dma_init_dt(dev, fifo, channel);
+ 	else
+ 		usbhsf_dma_init_pdev(fifo);
+ 
+@@ -1231,7 +1237,7 @@ do {									\
+ 			usbhs_get_dparam(priv, d##channel##_tx_id);	\
+ 	fifo->rx_slave.shdma_slave.slave_id =				\
+ 			usbhs_get_dparam(priv, d##channel##_rx_id);	\
+-	usbhsf_dma_init(priv, fifo);					\
++	usbhsf_dma_init(priv, fifo, channel);				\
+ } while (0)
+ 
+ #define USBHS_DFIFO_INIT(priv, fifo, channel)				\
 -- 
 1.9.1
 
