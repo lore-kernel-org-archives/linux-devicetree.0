@@ -1,102 +1,60 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 14/18] dt: bindings: Add bindings for omap3isp
-Date: Fri, 13 Mar 2015 01:11:03 +0200
-Message-ID: <2648615.8gSgjdUuiM@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1429813.xCjhlUaUXi@avalon> <20150312230320.GO11954@valkosipuli.retiisi.org.uk>
+From: James Hartley <james.hartley@imgtec.com>
+Subject: [PATCH V5 0/2] crypto: Add Imagination Technologies hw hash accelerator
+Date: Thu, 12 Mar 2015 23:17:25 +0000
+Message-ID: <1426202247-6221-1-git-send-email-james.hartley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20150312230320.GO11954@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
+Content-Type: text/plain
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, abrestic@chromium.org, smueller@chronox.de
+Cc: devicetree@vger.kernel.org, ezequiel.garcia@imgtec.com, linux-crypto@vger.kernel.org, james.hartley@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+This adds support for the Imagination Technologies hash accelerator which 
+provides hardware acceleration for SHA1 SHA244 SHA256 and MD5 hashes.
 
-On Friday 13 March 2015 01:03:21 Sakari Ailus wrote:
-> On Thu, Mar 12, 2015 at 01:39:07AM +0200, Laurent Pinchart wrote:
-> > On Saturday 07 March 2015 23:41:11 Sakari Ailus wrote:
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-> > > ---
-> > > 
-> > >  .../devicetree/bindings/media/ti,omap3isp.txt      |   64 +++++++++++++
-> > >  MAINTAINERS                                        |    1 +
-> > >  2 files changed, 65 insertions(+)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/media/ti,omap3isp.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/ti,omap3isp.txt
-> > > b/Documentation/devicetree/bindings/media/ti,omap3isp.txt new file mode
-> > > 100644
-> > > index 0000000..2059524
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/ti,omap3isp.txt
+Tested on silicon, using testmgr.
 
-[snip]
+Changes from V4:
+	* Moved clk_prepare_enable for both clocks into the probe function to
+	  match the remove function, and avoid inflated prepare/enable counts.
 
-> > > +syscon		: syscon phandle and register offset
-> > 
-> > We should document what the register offset is.
-> 
-> This is SoC specific as is the base address. I'm not sure that would be
-> relevant here. If you think so, shouldn't we also add the device base
-> addresses and register block lengths?
+Changes from V3:
+	* Standardised the cra_priorities to 300, sufficient to be chosen
+	  ahead of software / assembly implementations.
+	* Addressed Andrew Bresticker's review comments, except for two items
+	  that I will leave for when I have some more bandwidth if possible as
+	  I don't think they are required:
+		->Runtime PM
+		->Threaded IRQ handler instead of a tasklet
 
-I meant something like
+Changes from V2:
+	* This hardware does not support importing a partial hash state, 
+	  so the init, update, final and finup have been reworked to use
+	  a fallback driver; only digest remains as hardware accelerated.
+	* Simplified the driver as a result of the above rework
 
-syscon:	the phandle and register offset to the Complex I/O or CSI-PHY 
-register.
+Changes from V1:
+	* Addressed review comments from Andrew Bresticker and 
+	  Vladimir Zapolskiy
+	* rebased to current linux-next
 
-> > > +ti,phy-type	: 0 -- 3430; 1 -- 3630
-> > 
-> > Would it make sense to add #define's for this ?
-> 
-> I'll use OMAP3ISP_PHY_TYPE_COMPLEX_IO and OMAP3ISP_PHY_TYPE_CSIPHY as
-> discussed.
-> 
-> > It could also make sense to document/name them "Complex I/O" and "CSIPHY"
-> > to avoid referring to the SoC that implements them, as the ISP is also
-> > found in SoCs other than 3430 and 3630.
-> > 
-> > Could the PHY type be derived from the ES revision that we query at
-> > runtime ?
->
-> I think this would work on 3430 and 3630 but I'm not certain about others.
-> 
-> > We should also take into account the fact that the DM3730 has officially
-> > no CSIPHY, but still seems to implement them in practice.
-> 
-> The DT sources are for 36xx, but I'd guess it works on 37xx as well, doesn't
-> it?
+James Hartley (2):
+  This adds support for the Imagination Technologies hash accelerator
+    which     provides hardware acceleration for SHA1 SHA224 SHA256 and
+    MD5 hashes.
+  This adds the binding documentation for the Imagination Technologies
+    hash     accelerator that provides hardware acceleration for
+    SHA1/SHA224/SHA256/MD5     hashes.  This hardware will be present
+    in the upcoming pistachio SoC.
 
-I think so.
-
-> > > +#clock-cells	: Must be 1 --- the ISP provides two external clocks,
-> > > +		  cam_xclka and cam_xclkb, at indices 0 and 1,
-> > > +		  respectively. Please find more information on common
-> > > +		  clock bindings in ../clock/clock-bindings.txt.
-> > > +
-> > > +Port nodes (optional)
-> > > +---------------------
-> > 
-> > This should refer to Documentation/devicetree/bindings/media/video-
-> > interfaces.txt.
-> 
-> There's a reference to video-interfaces.txt in the beginning of the file. Do
-> you think that'd be enough?
-
-I've missed that. I think you could move the reference here.
-
-> > > +reg		: The interface:
-> > > +		  0 - parallel (CCDC)
-> > > +		  1 - CSIPHY1 -- CSI2C / CCP2B on 3630;
-> > > +		      CSI1 -- CSIb on 3430
-> > > +		  2 - CSIPHY2 -- CSI2A / CCP2B on 3630;
-> > > +		      CSI2 -- CSIa on 3430
+ .../devicetree/bindings/crypto/img-hash.txt        |   27 +
+ drivers/crypto/Kconfig                             |   14 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/img-hash.c                          | 1030 ++++++++++++++++++++
+ 4 files changed, 1072 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/img-hash.txt
+ create mode 100644 drivers/crypto/img-hash.c
 
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.9.5
