@@ -1,44 +1,70 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] drm/bridge: Add IT6151 bridge driver
-Date: Thu, 12 Mar 2015 11:24:10 +0100
-Message-ID: <13714812.stPyeO78Dq@phil>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: drm/bridge: Add IT6151 bridge chip
+ driver bindings.
+Date: Thu, 12 Mar 2015 11:35:55 +0100
+Message-ID: <CABuKBe+nfY5Gt==GHPW+dQT_uTsEAY5BfwUD0x2SHNkxwNf=JQ@mail.gmail.com>
 References: <1426054733-54378-1-git-send-email-ck.hu@mediatek.com>
- <1426054733-54378-2-git-send-email-ck.hu@mediatek.com>
- <1426150847.5304.22.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1426150847.5304.22.camel@x220>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-mediatek@lists.infradead.org, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426054733-54378-1-git-send-email-ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgMTIuIE3DpHJ6IDIwMTUsIDEwOjAwOjQ3IHNjaHJpZWIgUGF1bCBCb2xs
-ZToKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvaXQ2
-MTUxLmMKPiA+IAo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAKPiBUaGlzIGZpbGUg
-Y2FuIG9ubHkgYmUgYnVpbHQtaW4uIFNvIEkgY291bGRuJ3QgaGVscCBidXQgbm90aWNlIHRoaXMK
-PiBpbmNsdWRlLiBBbmQgaWYgSSByZW1vdmUgaXQKPiAgICAgbWFrZSBkcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL2l0NjE1MS5vCj4gCj4gc3RpbGwgcnVucyB3aXRob3V0IHdhcm5pbmcgb3IgZXJyb3Jz
-LiBVbmxlc3MgSSd2ZSBtaXNzZWQgc29tZXRoaW5nCj4gbm9uLW9idmlvdXMgSSdkIHNheSBpdCBp
-cyBub3QgbmVlZGVkLgoKSSB0aGluayB0aGUgbW9yZSBpbnRlcmVzdGluZyBxdWVzdGlvbiB3b3Vs
-ZCBiZSwgd2h5IGNhbiBpdCBvbmx5IGJlIGJ1aWx0IGluIAo6LSkgLgoKVGhlIGRybS9icmlkZ2Ug
-c2VyaWVzIGZyb20gQWpheSBLdW1hciBbMF0gbWFkZSBpdCBpbnRvIDQuMC1yYyB0aGF0IGVuYWJs
-ZXMgCmRybS1icmlkZ2VzIHRvIGJlIHJlZ3VsYXIgcGxhdGZvcm0vaTJjIGRldmljZXMsIHNlZSBb
-MV0gZm9yIGV4YW1wbGUuCgpTbyBJIHRoaW5rIGFueSBuZXcgYnJpZGdlIGRyaXZlciBzaG91bGQg
-dXNlIHRoaXMgYXBwcm9hY2ggYW5kIGNhbiB0aHVzIGFsc28gYmUgCmJ1aWxkIGFzIG1vZHVsZS4K
-CgpIZWlrbwoKClswXSBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXNhbXN1bmct
-c29jL21zZzQxNDAzLmh0bWwKWzFdIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgt
-c2Ftc3VuZy1zb2MvbXNnNDE0MDYuaHRtbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+2015-03-11 7:18 GMT+01:00 CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> Add devicetree bindings for IT6151 MIPI to eDP bridge chip driver.
+>
+> Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+Please use scripts/get_maintainer.pl for all people to which send the
+next version of the patch set.
+
+Thanks,
+Matthias
+
+> ---
+>  Documentation/devicetree/bindings/drm/bridge/it6151.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/drm/bridge/it6151.txt
+>
+> diff --git a/Documentation/devicetree/bindings/drm/bridge/it6151.txt b/Documentation/devicetree/bindings/drm/bridge/it6151.txt
+> new file mode 100644
+> index 0000000..ad0ad60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/drm/bridge/it6151.txt
+> @@ -0,0 +1,15 @@
+> +it6151 bridge bindings
+> +
+> +Required properties:
+> +       - compatible: "ite,it6151"
+> +       - reg: i2c address of the bridge's dp tx.
+> +       - rxreg: i2c address of the bridge's mipi rx.
+> +       - reset-gpio: OF device-tree gpio specification
+> +
+> +Example:
+> +       ite6151: edp-bridge@5c {
+> +               compatible = "ite,it6151";
+> +               reg = <0x5c>;
+> +               rxreg = <0x6c>;
+> +               reset-gpio = <&pio 94 GPIO_ACTIVE_HIGH>;
+> +       };
+> --
+> 1.8.1.1.dirty
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
+
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
