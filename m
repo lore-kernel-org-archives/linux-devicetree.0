@@ -1,40 +1,46 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [Patch v2 3/3] dt: OF_UNITTEST make dependency broken, fix unittest.c
- after move
-Date: Wed, 11 Mar 2015 23:02:22 -0700
-Message-ID: <55012BEE.5040001@gmail.com>
-References: <55012B4A.9050504@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 0/3] usb: renesas_usbhs: add support for USB-DMAC
+Date: Thu, 12 Mar 2015 15:35:17 +0900
+Message-ID: <1426142120-5072-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <55012B4A.9050504@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: frowand.list@gmail.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <mmarek@suse.cz>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sonymobile.com>
+This patch set is based on Felipe's usb.git / testing/next branch.
+(commit id = 9024c495f35be735a917571406fab30a789c27d1)
 
-Fix an of_unittest.c include path to account for the move of
-unittest.c into unittest-data/.
+To use the USB-DMAC, we have to add some device nodes for USB-DMAC
+in dts file. If we don't have such device nodes, this driver will
+use PIO.
 
-Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+Changes from v2:
+ - Remove patch 1 because this spinlock suspected issue disappears
+   if I use a new usb-dmac dmaengine driver.
 
----
- drivers/of/unittest-data/unittest.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes from v1:
+ - Change local_irq_save/restore() area in patch 1.
+ - Modify the commit log in patch 1.
+ - fix some comments in patch 4.
 
-Index: b/drivers/of/unittest-data/unittest.c
-===================================================================
---- a/drivers/of/unittest-data/unittest.c
-+++ b/drivers/of/unittest-data/unittest.c
-@@ -23,7 +23,7 @@
- #include <linux/i2c.h>
- #include <linux/i2c-mux.h>
- 
--#include "of_private.h"
-+#include "../of_private.h"
- 
- static struct selftest_results {
- 	int passed;
+Yoshihiro Shimoda (3):
+  usb: renesas_usbhs: add the channel number in dma-names
+  usb: renesas_usbhs: fix the sequence in xfer_work()
+  usb: renesas_usbhs: add support for USB-DMAC
+
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |   5 +-
+ drivers/usb/renesas_usbhs/common.c                 |  19 +++
+ drivers/usb/renesas_usbhs/common.h                 |   7 +
+ drivers/usb/renesas_usbhs/fifo.c                   | 189 +++++++++++++++++++--
+ drivers/usb/renesas_usbhs/fifo.h                   |   1 +
+ drivers/usb/renesas_usbhs/pipe.c                   |  39 +++++
+ drivers/usb/renesas_usbhs/pipe.h                   |   1 +
+ include/linux/usb/renesas_usbhs.h                  |   2 +
+ 8 files changed, 247 insertions(+), 16 deletions(-)
+
+-- 
+1.9.1
+
