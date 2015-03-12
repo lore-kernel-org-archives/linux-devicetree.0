@@ -1,73 +1,47 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [GIT PULL] Immutable branch between MFD, Extcon, GPIO and Regulator
-Date: Thu, 12 Mar 2015 13:36:40 +0000
-Message-ID: <20150312133640.GB3383@x1>
-References: <1425399576-26428-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH v2 RESEND 0/4] Fix power domains handling on exynos542x
+Date: Thu, 12 Mar 2015 14:37:07 +0100
+Message-ID: <1426167431-24470-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425399576-26428-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kukjin Kim <kgene@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Liquid.Acid@gmx.net, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, javier.martinez@collabora.co.uk, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Gentlemen,
-
-I think this has soaked for long enough now.  Hopefully there are no is=
-sues.
-
-The following changes since commit c517d838eb7d07bbe9507871fab3931deccf=
-f539:
-
-  Linux 4.0-rc1 (2015-02-22 18:21:14 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd=
--extcon-gpio-regulator-v4.1
-
-for you to fetch changes up to 575ef7f6d5df2aec86f407c76c0b95b3064e4b30=
-:
-
-  ASoC: arizona: Add support for WM8280/WM8281 (2015-02-26 10:04:45 +00=
-00)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Extcon, GPIO and Regulator due for the v4=
-=2E1 merge window
-
-----------------------------------------------------------------
-Richard Fitzgerald (6):
-      mfd: arizona: Add support for WM8280/WM8281
-      Documentation: devicetree: arizona: Add bindings for WM8280
-      regulator: arizona-micsupp: Add support for WM8280/WM8281
-      gpio: arizona: Add support for WM8280/WM8281
-      extcon: arizona: Add support for WM8280/WM8281
-      ASoC: arizona: Add support for WM8280/WM8281
-
- Documentation/devicetree/bindings/mfd/arizona.txt | 15 +++++++++++----
- drivers/extcon/extcon-arizona.c                   |  1 +
- drivers/gpio/gpio-arizona.c                       |  1 +
- drivers/mfd/Kconfig                               |  5 +++--
- drivers/mfd/arizona-core.c                        | 15 +++++++++++++--
- drivers/mfd/arizona-i2c.c                         |  2 ++
- drivers/mfd/arizona-irq.c                         |  1 +
- drivers/mfd/arizona-spi.c                         |  2 ++
- drivers/regulator/arizona-micsupp.c               |  1 +
- include/linux/mfd/arizona/core.h                  |  1 +
- sound/soc/codecs/arizona.c                        |  2 ++
- 11 files changed, 38 insertions(+), 8 deletions(-)
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgS3VramluLAoKVGhpcyBpcyByZXNlbmQgb2YgbXkgcGF0Y2hzZXQgd2l0aCBhZGRlZCAoUmV2
+aWV3ZWR8VGVzdGVkKS1ieSB0YWdzIGFuZCByZW1vdmVkIFJGQwpwcmVmaXguCgpFeHlub3MgY2hp
+cHNldHMgc2luY2UgNTQyeCBoYXZlIGFzeW5jaHJvbm91cyBicmlkZ2VzIGNvbm5lY3RpbmcgZGlm
+ZmVyZW50IElQcy4KVGhlc2UgYnJpZGdlcyBzaG91bGQgYmUgb3BlcmF0aW9uYWwgZHVyaW5nIHBv
+d2VyIGRvbWFpbiBzd2l0Y2hpbmcsIGllIGFzc29jaWF0ZWQKY2xvY2tzIGNhbm5vdCBiZSBnYXRl
+ZC4KVGhpcyBwYXRjaHNldCBhZGRzIGJpbmRpbmcgdG8gcHJvdmlkZSBzdWNoIGNsb2NrcyBwZXIg
+cG93ZXIgZG9tYWluIGFuZCBhZGRzIGNvZGUKd2hpY2ggZW5hYmxlcyB0aGVtIGR1cmluZyBkb21h
+aW4gb24vb2ZmIG9wZXJhdGlvbi4KClRoaXMgcGF0Y2hzZXQgZml4ZXMgcG93ZXIgZG9tYWluIGlz
+c3VlcyB3aXRoIGRpc3AxIGRvbWFpbiBhbmQgSERNSSAoc29tZSBvZiB0aGVtKQpvbiBPZHJvaWQg
+WFUzOgotIGRpc3AxIHBvd2VyIGRvbWFpbiBjYW4gYmUgdHVybmVkIG9mZiwKLSBubyBtb3JlICJp
+bXByZWNpc2UgZXh0ZXJuYWwgYWJvcnQiIGZhdWx0cy4KClRoZSBwYXRjaHNldCBpcyBiYXNlZCBv
+biBzYW1zdW5nLWZpeGVzLWR0IHRhZyBmcm9tIGtnZW5lL2xpbnV4LXNhbXN1bmcuCgpJdCB3YXMg
+c3VjY2Vzc2Z1bGx5IHRlc3RlZCBvbiBPZHJvaWRYVTMuCgpSZWdhcmRzCkFuZHJ6ZWoKCgpBbmRy
+emVqIEhhamRhICg0KToKICBhcm0vZXh5bm9zOiBhZGQgYXN5bmNocm9ub3VzIGJyaWRnZSBjbG9j
+ayBiaW5kaW5ncwogIGFybS9leHlub3MvcG1fZG9tYWluczogYWRkIHN1cHBvcnQgZm9yIGFzeW5j
+LWJyaWRnZSBjbG9ja3MKICBBUk06IGR0czogZXh5bm9zNTQyMDogYWRkIGFzeW5jLWJyaWRnZSBj
+bG9ja3MgdG8gZGlzcDEgcG93ZXIgZG9tYWluCiAgQVJNOiBkdHM6IGV4eW5vczU0MjA6IGFkZCBh
+c3luYy1icmlkZ2UgY2xvY2tzIHRvIGdzYyBwb3dlciBkb21haW4KCiAuLi4vYmluZGluZ3MvYXJt
+L2V4eW5vcy9wb3dlcl9kb21haW4udHh0ICAgICAgICAgICB8ICAzICsrKwogYXJjaC9hcm0vYm9v
+dC9kdHMvZXh5bm9zNTQyMC5kdHNpICAgICAgICAgICAgICAgICAgfCAgOCArKysrKy0tCiBhcmNo
+L2FybS9tYWNoLWV4eW5vcy9wbV9kb21haW5zLmMgICAgICAgICAgICAgICAgICB8IDI3ICsrKysr
+KysrKysrKysrKysrKy0tLS0KIDMgZmlsZXMgY2hhbmdlZCwgMzIgaW5zZXJ0aW9ucygrKSwgNiBk
+ZWxldGlvbnMoLSkKCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
