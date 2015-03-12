@@ -1,83 +1,50 @@
-From: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Thu, 12 Mar 2015 09:22:02 +0530
-Message-ID: <CANFfpkQ1QyWEGwwQx1g1By=uXvctJjF8AOO+uA5CFUgO4v9DFg@mail.gmail.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
-	<550056FD.8060804@arm.com>
-	<CAL85gmCuB4LfNp+6B8cL9+emFqWPM6W9gevTzibyaAzL+7jVdg@mail.gmail.com>
-	<55007BE3.30300@arm.com>
-	<CAL85gmDVfop1_roHyLTRzFY3BahzTWs7nwbpmZD7emFKcFHyLg@mail.gmail.com>
-	<550086B9.4010001@arm.com>
+From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
+ gadget complete function
+Date: Thu, 12 Mar 2015 04:33:41 +0000
+Message-ID: <HKNPR06MB3229E4509ECB25B3620B449D8060@HKNPR06MB322.apcprd06.prod.outlook.com>
+References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
+ <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550086B9.4010001-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
-
-On Wed, Mar 11, 2015 at 11:47 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 11/03/15 17:57, Feng Kan wrote:
->> On Wed, Mar 11, 2015 at 10:31 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On 11/03/15 17:19, Feng Kan wrote:
->>>> On Wed, Mar 11, 2015 at 7:53 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>>>> On 27/01/15 07:03, Pranavkumar Sawargaonkar wrote:
->>>>>> In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
->>>>>> in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
->>>>>> size due to size alignment checking in vgic driver for VCPU Control and
->>>>>> VCPU register.
->>>>>>
->>>>>> This patch corrects the sizes to be inline with the hardware spec.
->>>>>
->>>>> This patch may be correct, but it is useless. The firmware on my APM
->>>>> system (some version of u-boot) repaints the DT at boot time, negating
->>>>> the effect of this patch.
->>>> We have updated u-boot to reflect this change. I can supply you with a updated
->>>> image if you wish.
->>>
->>> That would be useful, thanks.
->>>
->>> But more importantly, why bother upstreaming your DT into the kernel
->>> tree if your firmware is going to overwrite whatever we provide?
->> We did tried to submit a version upstream but was rejected.
->>
->>>
->>> Either the firmware let the user provide its own DT (and doesn't touch
->>> it other than to change the CPU enable method, insert a /memreserve/ or
->>> similar things), or the firmware always provide its own DT, and doesn't
->>> let the user provide its own. Corrupting the user DT is a disaster, as
->>> we just found.
->> Yes, the intent of the change is listed in the link below. It is not a
->> justification by any means,
->> just the effects of things appearing in layers.
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/288574.html
->
-> Yeah. This is as wrong as it can possibly be. Oh well...
-
-Yes there is an issue with u-boot patching the dt for end user who
-wants his DT to be used, for this we can (in fact we should) provide
-an option in u-boot (may be setting some environment variable) which
-will make sure end user's DT does not get modified (apart from
-standard things like patching mac-addresses) by u-boot.
-
-Another point I want to reopen here is the how to handle 64K GIC page
-size pointed out in this thread, what would be the best way to tackle
-this (adding a new DT string or any other way) ?
-
-
-Thanks,
-Pranav
-
->
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgR2VlcnQtc2FuIGFnYWluLA0KDQo+IEhpIEdlZXJ0LXNhbiwNCj4gDQo+IFRoYW5rIHlvdSBm
+b3IgdGhlIHJlcGx5IGFnYWluIQ0KPiANCj4gPiBIaSBTaGltb2RhLXNhbiwNCj4gPg0KPiA+IE9u
+IE1vbiwgRmViIDE2LCAyMDE1IGF0IDI6NTIgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+ID4gPHlv
+c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IEFjY29yZGluZyB0
+byB0aGUgZ2FkZ2V0LmgsIGEgImNvbXBsZXRlIiBmdW5jdGlvbiB3aWxsIGFsd2F5cyBiZSBjYWxs
+ZWQNCj4gPiA+IHdpdGggaW50ZXJydXB0cyBkaXNhYmxlZC4gSG93ZXZlciwgc29tZXRpbWVzIHVz
+YmhzZ19xdWV1ZV9wb3AoKSBmdW5jdGlvbg0KPiA+ID4gaXMgY2FsbGVkIHdpdGggaW50ZXJydXB0
+cyBlbmFibGVkLiBTbywgdGhpcyBmdW5jdGlvbiBzaG91bGQgY2FsbHMNCj4gPiA+IGxvY2FsX2ly
+cV9zYXZlKCkgYmVmb3JlIHRoaXMgY2FsbHMgdGhlIHVzYl9nYWRnZXRfZ2l2ZWJhY2tfcmVxdWVz
+dCgpLg0KPiA+ID4gT3RoZXJ3aXNlLCB0aGVyZSBpcyBwb3NzaWJsZSB0byBjYXVzZSBhIHNwaW5s
+b2NrIHN1c3BlY3RlZCBpbiBhIGdhZGdldA0KPiA+ID4gY29tcGxldGUgZnVuY3Rpb24uDQo+ID4N
+Cj4gPiBJIHN0aWxsIGZlZWwgdW5lYXN5IGFib3V0IGFkZGluZyB0aGUgY2FsbCB0byBsb2NhbF9p
+cnFfc2F2ZSgpLCBhcyB0aGUgbmVlZCBmb3INCj4gPiB0aGlzIGlzIHVzdWFsbHkgYW4gaW5kaWNh
+dG9yIG9mIGFub3RoZXIgbG9ja2luZyBwcm9ibGVtLg0KPiANCj4gSSBhbHNvIHRoaW5rIHRoYXQg
+SSB3b3VsZCBsaWtlIHRvIGF2b2lkIHVzaW5nIGxvY2FsX2lycV9zYXZlKCkuDQo+IEJ1dCwgSSBo
+YXZlIG5vIGlkZWEgdG8gcmVzb2x2ZSB0aGlzIGlzc3VlIGZvciBub3cuDQoNCkFmdGVyIEkgbW9k
+aWZpZWQgdXNiLWRtYWMgZHJpdmVyIHRvIHVzZSBhIHRhc2tsZXQgaW5zdGVhZCBvZiBhIGt0aHJl
+YWQsDQp0aGlzIGlzc3VlIGRpc2FwcGVhcmVkLg0KDQpNeSB1bmRlcnN0YW5kaW5nIGlzIHRoZSBm
+b2xsb3dpbmdzOg0KLSBBY2NvcmRpbmcgdG8gdGhlIGJhY2t0cmFjZSBiZWxvdywgZHVyaW5nIHVz
+YmhzZl9kbWFfY29tcGxldGUoKSB3YXMgcnVubmluZywNCiBhIHNvZnRpcnEgaGFwcGVuZWQuIEFm
+dGVyIG5jbV90eF90YXNrbGV0KCkgd2FzIGNhbGxlZCwgdGhlIGlzc3VlIGhhcHBlbmVkLg0KaHR0
+cDovL3RocmVhZC5nbWFuZS5vcmcvZ21hbmUubGludXgudXNiLmdlbmVyYWwvMTIyMDIzL2ZvY3Vz
+PTQzNzI5DQoNCi0gVGhpcyBtZWFucyB0aGF0IHVzYmhzZl9kbWFfY29tcGxldGUoKSByYW4gb24g
+YSBrdGhyZWFkLiBTbywgbmNtIGRyaXZlciBpcyBhYmxlDQogIHRvIGRvIHRoZSBuY21fdHhfdGFz
+a2xldCgpLg0KDQotIEFmdGVyIHRoZSBjdXJyZW50IHVzYi1kbWFjIGRyaXZlciwgc2luY2UgdXNi
+aHNmX2RtYV9jb21wbGV0ZSgpIHJ1bnMgb24gYSB0YXNrbGV0LA0KICBuY20gZHJpdmVyIGlzIG5v
+dCBhYmxlIHRvIGRvIHRoZSBuY21fdHhfdGFza2xldCBkdXJpbmcgdXNiaHNmX2RtYV9jb21wbGV0
+ZSgpIHdhcyBydW5uaW5nLg0KDQoNClNvLCBJIHdvdWxkIGxpa2UgdG8gcmVjYWxsIHRoaXMgcGF0
+Y2ggYW5kIEkgd2lsbCByZXN1Ym1pdCB0aGlzIHBhdGNoIHNlcmllcyBhcyB2My4NCg0KQmVzdCBy
+ZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
