@@ -1,49 +1,108 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: RE: [PATCH V4 1/2] crypto: Add Imagination Technologies hw hash
- accelerator
-Date: Thu, 12 Mar 2015 22:36:01 +0000
-Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5444657D7@hhmail02.hh.imgtec.org>
-References: <1426126012-16061-1-git-send-email-james.hartley@imgtec.com>
-	<1426126012-16061-2-git-send-email-james.hartley@imgtec.com>
- <CAL1qeaHq+gDyjBbX-O7dgSfceMNf1nezb2_hMKWvo11RnWt-xA@mail.gmail.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
+ driver
+Date: Thu, 12 Mar 2015 15:44:19 -0700
+Message-ID: <550216C3.8090807@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>  <1426182312-6081-1-git-send-email-jonathar@broadcom.com>  <1426182312-6081-2-git-send-email-jonathar@broadcom.com> <1426183169.2742.10.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaHq+gDyjBbX-O7dgSfceMNf1nezb2_hMKWvo11RnWt-xA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "smueller@chronox.de" <smueller@chronox.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426183169.2742.10.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV3LCANCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBhYnJl
-c3RpY0Bnb29nbGUuY29tIFttYWlsdG86YWJyZXN0aWNAZ29vZ2xlLmNvbV0gT24gQmVoYWxmIE9m
-DQo+IEFuZHJldyBCcmVzdGlja2VyDQo+IFNlbnQ6IDEyIE1hcmNoIDIwMTUgMTg6NTcNCj4gVG86
-IEphbWVzIEhhcnRsZXkNCj4gQ2M6IEhlcmJlcnQgWHU7IHNtdWVsbGVyQGNocm9ub3guZGU7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBFemVxdWllbA0KPiBHYXJjaWE7IGxpbnV4LWNyeXB0
-b0B2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNCAxLzJdIGNyeXB0bzog
-QWRkIEltYWdpbmF0aW9uIFRlY2hub2xvZ2llcyBodyBoYXNoDQo+IGFjY2VsZXJhdG9yDQo+IA0K
-PiBIaSBKYW1lcywNCj4gDQo+IE9uIFdlZCwgTWFyIDExLCAyMDE1IGF0IDc6MDYgUE0sIEphbWVz
-IEhhcnRsZXkNCj4gPGphbWVzLmhhcnRsZXlAaW1ndGVjLmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBh
-ZGRzIHN1cHBvcnQgZm9yIHRoZSBJbWFnaW5hdGlvbiBUZWNobm9sb2dpZXMgaGFzaCBhY2NlbGVy
-YXRvcg0KPiA+IHdoaWNoIHByb3ZpZGVzIGhhcmR3YXJlIGFjY2VsZXJhdGlvbiBmb3IgU0hBMSBT
-SEEyMjQgU0hBMjU2IGFuZCBNRDUNCj4gaGFzaGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-SmFtZXMgSGFydGxleSA8amFtZXMuaGFydGxleUBpbWd0ZWMuY29tPg0KPiANCj4gT25lIGNvbW1l
-bnQgYmVsb3csIG90aGVyd2lzZSB0aGlzIGxvb2tzIGZpbmUgdG8gbWUuDQo+IA0KPiA+IC0tLSAv
-ZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2NyeXB0by9pbWctaGFzaC5jDQo+IA0KPiA+ICtz
-dGF0aWMgaW50IGltZ19oYXNoX2h3X2luaXQoc3RydWN0IGltZ19oYXNoX2RldiAqaGRldikgew0K
-PiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBsb25nIG5iaXRzOw0KPiA+ICsgICAgICAgdTMyIHUs
-IGw7DQo+ID4gKyAgICAgICBpbnQgcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IGNsa19w
-cmVwYXJlX2VuYWJsZShoZGV2LT5oYXNoX2Nsayk7DQo+ID4gKyAgICAgICBpZiAocmV0KQ0KPiA+
-ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IGNs
-a19wcmVwYXJlX2VuYWJsZShoZGV2LT5zeXNfY2xrKTsNCj4gPiArICAgICAgIGlmIChyZXQpIHsN
-Cj4gPiArICAgICAgICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGhkZXYtPmhhc2hfY2xr
-KTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiArICAgICAgIH0NCj4gDQo+
-IEkgdGhpbmsgeW91J2xsIHN0aWxsIGVuZCB1cCB3aXRoIGluZmxhdGVkIHByZXBhcmUvZW5hYmxl
-IGNvdW50cyBmb3IgdGhlc2UgY2xvY2tzDQo+IHNpbmNlIHRoaXMgZnVuY3Rpb24gbWF5IGdldCBj
-YWxsZWQgbXVsdGlwbGUgdGltZXMgYW5kIHRoZSBvbmx5DQo+IGNsa19kaXNhYmxlX3VucHJlcGFy
-ZSgpIGNhbGxzIGFyZSBpbiB0aGUgcmVtb3ZlKCkgcGF0aC4gIFBlcmhhcHMgaXQncyBiZXN0IHRv
-DQo+IGp1c3QgZW5hYmxlIHRoZSBjbG9ja3MgaW4gcHJvYmUoKSB1bnRpbCBydW50aW1lIFBNIHN1
-cHBvcnQgaXMgYWRkZWQ/DQoNClllcywgSSdsbCBkbyB0aGF0IGFuZCB1cGxvYWQgYSBWNSBzZXQu
-DQoNCj4gDQo+IFRoYW5rcywNCj4gQW5kcmV3DQoNClRoYW5rcw0KSmFtZXMuDQo=
+On 15-03-12 10:59 AM, Joe Perches wrote:
+> On Thu, 2015-03-12 at 10:45 -0700, Jonathan Richardson wrote:
+>> Add initial version of the Broadcom touchscreen driver.
+> 
+> style trivia:
+> (any of which could be fixed/improved/ignored later)
+> 
+>> diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
+> []
+>> +static void ts_reg_dump(struct iproc_ts_priv *priv)
+>> +{
+>> +	struct device *dev = &priv->pdev->dev;
+>> +
+>> +	dev_dbg(dev, "regCtl1             = 0x%08x\n",
+>> +				readl(priv->regs + REGCTL1));
+> 
+> The output case here generally isn't very important so
+> sometimes it's better to use a macro like:
+> 
+> #define dbg_reg(dev, priv, reg)						\
+> 	dev_dbg(dev, "%20s= 0x%08x\n", #reg, readl((priv)->regs + reg))
+> 
+>> +	dev_dbg(dev, "regCtl2             = 0x%08x\n",
+>> +				readl(priv->regs + REGCTL2));
+> 
+> so these become
+> 	dbg_reg(dev, priv, INTERRUPT_THRES);
+> 	dbg_reg(dev, priv, INTERRUPT_MASK);
+> 
+> etc...
+> 
+> This style can reduce typo and copy/paste defects.
+> 
+>> +	dev_dbg(dev, "interrupt_Thres     = 0x%08x\n",
+>> +				readl(priv->regs + INTERRUPT_THRES));
+>> +	dev_dbg(dev, "interrupt_Mask      = 0x%08x\n",
+>> +				readl(priv->regs + INTERRUPT_MASK));
+>> +	dev_dbg(dev, "interrupt_Status    = 0x%08x\n",
+>> +				readl(priv->regs + INTERRUPT_STATUS));
+>> +	dev_dbg(dev, "controller_Status   = 0x%08x\n",
+>> +				readl(priv->regs + CONTROLLER_STATUS));
+>> +	dev_dbg(dev, "FIFO_Data           = 0x%08x\n",
+>> +				readl(priv->regs + FIFO_DATA));
+>> +	dev_dbg(dev, "analog_Control      = 0x%08x\n",
+>> +				readl(priv->regs + ANALOG_CONTROL));
+>> +	dev_dbg(dev, "aux_Data            = 0x%08x\n",
+>> +				readl(priv->regs + AUX_DATA));
+>> +	dev_dbg(dev, "debounce_Cntr_Stat  = 0x%08x\n",
+>> +				readl(priv->regs + DEBOUNCE_CNTR_STAT));
+>> +	dev_dbg(dev, "scan_Cntr_Stat      = 0x%08x\n",
+>> +				readl(priv->regs + SCAN_CNTR_STAT));
+>> +	dev_dbg(dev, "rem_Cntr_Stat       = 0x%08x\n",
+>> +				readl(priv->regs + REM_CNTR_STAT));
+>> +	dev_dbg(dev, "settling_Timer_Stat = 0x%08x\n",
+>> +				readl(priv->regs + SETTLING_TIMER_STAT));
+>> +	dev_dbg(dev, "spare_Reg           = 0x%08x\n",
+>> +				readl(priv->regs + SPARE_REG));
+>> +	dev_dbg(dev, "soft_Bypass_Control = 0x%08x\n",
+>> +				readl(priv->regs + SOFT_BYPASS_CONTROL));
+>> +	dev_dbg(dev, "soft_Bypass_Data    = 0x%08x\n",
+>> +				readl(priv->regs + SOFT_BYPASS_DATA));
+>> +}
+> 
+> []
+> 
+>> +static int get_tsc_config(struct device_node *np, struct iproc_ts_priv *priv)
+>> +{
+>> +	u32 val;
+> []
+>> +	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
+>> +		if (val < 0 || val > 255) {
+> 
+> testing u32 < 0 isn't necessary.
+> 
+> Maybe it'd be better to emit the out of range value too
+> 
+>> +			dev_err(dev, "debounce_timeout must be [0-255]\n");
+> 
+> 			dev_err(dev, "debounce_timeout (%u) must be [0-255]\n", val);
+> 
+> 
+
+Thanks. I'll make the suggested changes and send out a new patch.
+
+Jon
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
