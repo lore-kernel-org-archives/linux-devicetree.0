@@ -1,36 +1,107 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [FOR DISCUSSION 0/9] Dove PMU support
-Date: Fri, 13 Mar 2015 13:47:19 +0100
-Message-ID: <2953786.DBeOKcOQ8q@wuerfel>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <3456973.vXF9zkXSFZ@wuerfel> <20150313123211.GG8656@n2100.arm.linux.org.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [Patch v3 1/3] dt: OF_UNITTEST make dependency broken, framework fixes
+Date: Fri, 13 Mar 2015 08:13:00 -0500
+Message-ID: <CAL_JsqLbXJFT4+bnyksHmE9TWJbHuHpujiJOc2MOajO5Xem_+g@mail.gmail.com>
+References: <5501918D.2020000@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150313123211.GG8656@n2100.arm.linux.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Len Brown <len.brown@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <5501918D.2020000@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <mmarek@suse.cz>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 March 2015 12:32:11 Russell King - ARM Linux wrote:
-> On Fri, Mar 13, 2015 at 01:26:17PM +0100, Arnd Bergmann wrote:
-> > On Friday 13 March 2015 12:11:27 Russell King - ARM Linux wrote:
-> > > Of course, I also have a patch which adds legacy support to
-> > > arch/arm/mach-dove, but I've assumed you're not interested in that...
-> > 
-> > You mean legacy support in mach-mvebu?
-> 
-> No.
-> 
-> As you'll see, this uses a platform device notifier to hook the devices
-> onto the appropriate PM domain, which is why the driver needs to be
-> registered early.  This also gets used in DT mode with one legacy
-> platform device which is dynamically registered (something which can't
-> happen with DT.)
+On Thu, Mar 12, 2015 at 8:15 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sonymobile.com>
+>
+> This 3 patch series is not bisectable.  If CONFIG_OF_UNITTEST=y then the kernel
+> will not build with just patch 1 or just patches 1 and 2 applied.
 
-Ok, got it. I think that's fine too. If this helps you spend less
-time on forward-porting your patches and in turn completing the
-full dove support with DT faster, I'm all for merging this one too.
+If you did 2 patches with the move first, wouldn't that make it
+bisectable. However, I'd rather avoid the move.
 
-	Arnd
+> If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
+> be incremented, even if there are not source changes.  This is caused by
+> a lack of dependency tracking and checking for
+> drivers/of/unittest-data/testcases.dtb.o.  Fixing the problem was made more
+> complicated by the fact that testcases.dtb.o was linked into ../of_unittest.o.
+
+Couldn't we change that to be 2 modules.
+
+> Patch 1 modifies makefiles to move of_unittest.c into unittest-data/ and
+> creates missing dependency tracking for testcases.dtb.o.
+>
+> Patch 2 will move of_unittest.c into unittest-data/
+>
+> Patch 3 will fix an of_unittest.c include path to account for the move.
+
+This should all be in an intro email, not patch #1.
+
+Rob
+
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+>
+> ---
+>
+> changes since version 2:
+>
+>   patch 1:
+>   Add .gitignore so that generated files will not get committed.
+>
+> changes since version 1:
+>
+>   patch 1:
+>   Remove some changes to scripts/Makefile.lib that are not needed.  They
+>   were left over from attempts to fix the problem without moving of_unitest.c
+>   into unittest-data/.
+>
+>
+>  drivers/of/Makefile                 |    4 ++--
+>  drivers/of/unittest-data/.gitignore |    2 ++
+>  drivers/of/unittest-data/Makefile   |    9 +++++++++
+>  3 files changed, 13 insertions(+), 2 deletions(-)
+>
+> Index: b/drivers/of/Makefile
+> ===================================================================
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -6,8 +6,6 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+>  obj-$(CONFIG_OF_ADDRESS)  += address.o
+>  obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_NET)   += of_net.o
+> -obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
+> -of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
+>  obj-$(CONFIG_OF_MDIO)  += of_mdio.o
+>  obj-$(CONFIG_OF_PCI)   += of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+> @@ -16,5 +14,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
+>  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+>  obj-$(CONFIG_OF_OVERLAY) += overlay.o
+>
+> +obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+> +
+>  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+>  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+> Index: b/drivers/of/unittest-data/Makefile
+> ===================================================================
+> --- /dev/null
+> +++ b/drivers/of/unittest-data/Makefile
+> @@ -0,0 +1,9 @@
+> +
+> +obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
+> +of_unittest-objs := unittest.o testcases.dtb.o
+> +
+> +targets += testcases.dtb testcases.dtb.S
+> +
+> +.SECONDARY: \
+> +       $(obj)/testcases.dtb.S \
+> +       $(obj)/testcases.dtb
+> Index: b/drivers/of/unittest-data/.gitignore
+> ===================================================================
+> --- /dev/null
+> +++ b/drivers/of/unittest-data/.gitignore
+> @@ -0,0 +1,2 @@
+> +testcases.dtb
+> +testcases.dtb.S
