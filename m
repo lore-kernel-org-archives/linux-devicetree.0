@@ -1,7 +1,7 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 2/4 v3] dt/bindings: Add binding for BCM2835 mailbox driver
-Date: Thu, 12 Mar 2015 19:32:14 -0700
-Message-ID: <1426213936-4139-2-git-send-email-eric@anholt.net>
+Subject: [PATCH 4/4] ARM: bcm2835: Add the mailbox to the device tree.
+Date: Thu, 12 Mar 2015 19:32:16 -0700
+Message-ID: <1426213936-4139-4-git-send-email-eric@anholt.net>
 References: <1426213936-4139-1-git-send-email-eric@anholt.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1426213936-4139-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
@@ -10,51 +10,30 @@ To: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
 Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
-v2: Split into a separate patch for submitting to the devicetree list.
-    Consistently start node docs with a capital letter. device's
-    address in the example shouldn't have "0x". Drop machine-specific
-    interrupt numbers from the docs.  (changes by anholt).
-
-v3: Move the file to just bcm2835-mbox.txt, clean up formatting
-    (changes by anholt, from review by Lee Jones).
-
-.../devicetree/bindings/mailbox/bcm2835-mbox.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-
-diff --git a/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-new file mode 100644
-index 0000000..0bb2b9d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-@@ -0,0 +1,19 @@
-+Broadcom BCM2835 VideoCore mailbox IPC
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 3342cb1..6b5c3a1 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -60,6 +60,13 @@
+ 			reg = <0x7e104000 0x10>;
+ 		};
+ 
++		mailbox: mailbox@7e00b800 {
++			compatible = "brcm,bcm2835-mbox";
++			reg = <0x7e00b880 0x40>;
++			interrupts = <0 1>;
++			#mbox-cells = <1>;
++		};
 +
-+Required properties:
-+
-+- compatible:	Should be "brcm,bcm2835-mbox"
-+- reg:		Specifies base physical address and size of the registers
-+- interrupts:	The interrupt number
-+		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
-+		  channel. The value shall be 1
-+
-+Example:
-+
-+mailbox: mailbox@7e00b800 {
-+	compatible = "brcm,bcm2835-mbox";
-+	reg = <0x7e00b880 0x40>;
-+	interrupts = <0 1>;
-+	#mbox-cells = <1>;
-+};
+ 		gpio: gpio@7e200000 {
+ 			compatible = "brcm,bcm2835-gpio";
+ 			reg = <0x7e200000 0xb4>;
 -- 
 2.1.4
 
