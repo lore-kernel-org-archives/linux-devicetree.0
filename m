@@ -1,101 +1,81 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 3/7] eeprom: Add bindings for simple eeprom framework
-Date: Fri, 13 Mar 2015 09:50:31 +0000
-Message-ID: <1426240231-2520-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, broonie@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [RFC PATCH v15 04/11] ARM: cpuidle: Register cpuidle_ops for
+ QCOM cpus
+Date: Fri, 13 Mar 2015 10:57:18 +0100
+Message-ID: <5502B47E.4010106@linaro.org>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org> <1425914206-22295-5-git-send-email-lina.iyer@linaro.org> <5500866F.6080704@codeaurora.org> <550187C0.4020006@linaro.org> <20150312150655.GA497@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150312150655.GA497@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for simple eeprom framework which allows eeprom
-consumers to talk to eeprom providers to get access to eeprom cell data.
+On 03/12/2015 04:06 PM, Lina Iyer wrote:
+> On Thu, Mar 12 2015 at 06:34 -0600, Daniel Lezcano wrote:
+>> On 03/11/2015 07:16 PM, Stephen Boyd wrote:
+>>> On 03/09/15 08:16, Lina Iyer wrote:
+>
+> [...]
+>
+>>>> +#if IS_ENABLED(CONFIG_QCOM_PM)
+>>>
+>>> Why not #ifdef CONFIG_QCOM_PM? I thought IS_ENABLED was for C code =
+where
+>>> you want to put it in an if () statement.
+>>
+>> This is right. But the IS_ENABLED is also valid.
+>>
+>> It seems the current trend is to replace #ifdef with #if IS_ENABLED.
+>> It is supposed to prevent to create or'ed conditional with the modul=
+e
+>> support.
+>>
+>> eg:
+>>
+>> #if defined(CONFIG_FOO) || defined(CONFIG_FOO_MODULE)
+>>
+>> is replaced by:
+>>
+>> #if IS_ENABLED(CONFIG_FOO)
+>>
+>> Lina: By the way, it would be preferable to use the
+>> CONFIG_ARM_QCOM_CPUIDLE where IS_ENABLED makes more sense even the
+>
+> Daniel: I dont have CONFIG_ARM_QCOM_CPUIDLE defined anymore. By movin=
+g
+> to generic ARM cpuidle, i removed all changes to drivers/cpuidle/. So=
+ I
+> used the config item that defineds these items.
+>
+> Also, having two indpendent CONFIG_ items provides a chance that the
+> declaration is not matched with the definition or vice versa.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-[Maxime Ripard: intial version of eeprom framework]
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../devicetree/bindings/eeprom/eeprom.txt          | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
+I think CONFIG_ARM_QCOM_CPUIDLE should be defined as a bool in the=20
+Kconfig.arm in drivers/cpuidle.
 
-diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-new file mode 100644
-index 0000000..8348d18
---- /dev/null
-+++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-@@ -0,0 +1,70 @@
-+= EEPROM Data Device Tree Bindings =
-+
-+This binding is intended to represent the location of hardware
-+configuration data stored in EEPROMs.
-+
-+On a significant proportion of boards, the manufacturer has stored
-+some data on an EEPROM-like device, for the OS to be able to retrieve
-+these information and act upon it. Obviously, the OS has to know
-+about where to retrieve these data from, and where they are stored on
-+the storage device.
-+
-+This document is here to document this.
-+
-+= Data providers =
-+Contains bindings specific to provider drivers and data cells as children
-+to this node.
-+
-+= Data cells =
-+These are the child nodes of the provider which contain data cell
-+information like offset and size in eeprom provider.
-+
-+Required properties:
-+reg:	specifies the offset in byte within that storage device, and the length
-+	in bytes of the data we care about.
-+	There could be more then one offset-length pairs in this property.
-+
-+Optional properties:
-+As required by specific data parsers/interpreters.
-+
-+For example:
-+
-+	/* Provider */
-+	qfprom: qfprom@00700000 {
-+		compatible 	= "qcom,qfprom";
-+		reg		= <0x00700000 0x1000>;
-+		...
-+
-+		/* Data cells */
-+		tsens_calibration: calib@404 {
-+			reg = <0x404 0x10>;
-+		};
-+
-+		serial_number: sn {
-+			reg = <0x104 0x4>, <0x204 0x4>, <0x30c 0x4>;
-+
-+		};
-+		...
-+	};
-+
-+= Data consumers =
-+Are device nodes which consume eeprom data cells.
-+
-+Required properties:
-+
-+eeproms: List of phandle and data cell the device might be interested in.
-+
-+Optional properties:
-+
-+eeprom-names: List of data cell name strings sorted in the same order
-+	      as the eeproms property. Consumers drivers will use
-+	      eeprom-names to differentiate between multiple cells,
-+	      and hence being able to know what these cells are for.
-+
-+For example:
-+
-+	tsens {
-+		...
-+		eeproms = <&tsens_calibration>;
-+		eeprom-names = "calibration";
-+	};
--- 
-1.9.1
+We may want to disable the different cpuidle drivers even if they rely=20
+on the generic cpuidle driver.
+
+>> drivers are not modules (who knows if they are converted as module
+>> again hence #ifdef will be invalid).
+>>
+>>
+>>
+>>>> +CPUIDLE_OPS(qcom_kpss_v1)
+>>>> +CPUIDLE_OPS(qcom_kpss_v2)
+>>>> +#endif
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
