@@ -1,39 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/9] dt-bindings: add Marvell PMU documentation
-Date: Fri, 13 Mar 2015 13:02:26 +0100
-Message-ID: <2133182.jkcXJkTTjC@wuerfel>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <E1YW7t0-0003mE-My@rmk-PC.arm.linux.org.uk>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and
+ evaluation board dts
+Date: Fri, 13 Mar 2015 12:07:00 +0000
+Message-ID: <20150313120659.GE30671@e104818-lin.cambridge.arm.com>
+References: <1426107080-29079-1-git-send-email-galak@codeaurora.org>
+ <1426107080-29079-2-git-send-email-galak@codeaurora.org>
+ <20150312170541.GE30145@leverpostej>
+ <E114AF0E-5DA9-412A-B3E2-DDD95D224C66@codeaurora.org>
+ <20150312182508.GF30145@leverpostej>
+ <F0B0524B-AC0E-4E60-9A21-1208C4A978F5@codeaurora.org>
+ <20150313103453.GA3592@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1YW7t0-0003mE-My-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150313103453.GA3592@leverpostej>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 March 2015 18:31:10 Russell King wrote:
-> Add the required DT binding documentation for the Marvell PMU driver.
+On Fri, Mar 13, 2015 at 10:34:54AM +0000, Mark Rutland wrote:
+> > > Which of spin-table/psci are you planning on using for SMP support, and
+> > > when would that be likely to appear?
+> > 
+> > We have a qcom specific SMP enablement method for this device.  This
+> > was one of our first devices so it utilized as much from arm 32-bit as
+> > possible.
 > 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> 
+> Implementation specific enable methods are something we really don't
+> want to see for arm64.
 
-The binding and DT nodes look ok to me, I'm definitely fine
-with taking those through the arm-soc tree, regardless of how
-we merge the other changes. The actual driver should probably
-go the same way, unless you want to put them in a branch with
-the drivers/base changes and have them merged through Rafael's
-tree.
+I fully agree (and we've been stating this for over two years).
 
-Who is picking up patches for mach-dove at the moment? I
-know that Gregory Clement has taken over the mvebu git tree
-from Jason for the time being, but he's not listed as a maintainer
-for dove/mv78xx0/orion and wasn't on Cc to these mails as a
-consequence (I've added him for the discussion here).
+> If PSCI is out of the question then a spin-table shim in your
+> bootloader shouldn't be too hard to implement.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And I guess only WFI cpuidle supported in Linux.
+
+-- 
+Catalin
