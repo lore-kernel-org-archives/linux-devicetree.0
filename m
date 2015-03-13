@@ -1,46 +1,25 @@
-From: =?windows-1252?Q?S=E9bastien_Szymanski?=
- <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH v6 0/6] wlcore: add device-tree support
-Date: Fri, 13 Mar 2015 17:11:46 +0100
-Message-ID: <55030C42.6020206@armadeus.com>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v6 4/4] ARM: dts: enable PCIe support for Cygnus
+Date: Fri, 13 Mar 2015 09:21:15 -0700
+Message-ID: <55030E7B.8080305@gmail.com>
+References: <1426097169-20805-1-git-send-email-rjui@broadcom.com> <1426097169-20805-5-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1426162154-8716-1-git-send-email-eliad@wizery.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eliad Peller <eliad@wizery.com>, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Julien Boibessot <julien.boibessot@armadeus.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@deeprootsystems.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426097169-20805-5-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>
+Cc: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 11/03/15 11:06, Ray Jui wrote:
+> Add PCIe device nodes in bcm-cygnus.dtsi but keep them disabled there.
+> Only enable them for bcm958300k where PCIe interfaces are populated
+> 
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 
-On 03/12/2015 01:09 PM, Eliad Peller wrote:
-> =
-
-> NOTE: all the platform patches were compile-tested
-> only. I'm looking for some wl12xx card (that i should
-> have somewhere) to test the wl12xx changes (wrt. clocks),
-> but haven't found it yet.
-> =
-
-
-I have tested this series on a APF6 board, i.MX6 based board with a
-Jorjin WG7311-0A Wifi/BT module which is based on the wl1271l.
-
-It works. I was able to power up the wlan0 interface and ping google.
-
-Best regards,
-
--- =
-
-S=E9bastien Szymanski
+Applied to devicetree/next with Arnd's acked-by, thanks!
+-- 
+Florian
