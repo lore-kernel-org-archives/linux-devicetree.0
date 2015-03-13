@@ -1,47 +1,136 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 5/6] ARM: dts: add wl12xx/wl18xx bindings
-Date: Fri, 13 Mar 2015 08:27:52 -0700
-Message-ID: <20150313152751.GK5264@atomide.com>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
- <1426162154-8716-6-git-send-email-eliad@wizery.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
+ gadget complete function
+Date: Fri, 13 Mar 2015 10:44:08 -0500
+Message-ID: <20150313154408.GE5615@saruman.tx.rr.com>
+References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
+ <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <HKNPR06MB3229E4509ECB25B3620B449D8060@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <20150312044449.GA29718@saruman.tx.rr.com>
+ <HKNPR06MB3228B5E1A95EDFCD58CF32BD8060@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <20150312160907.GE9261@saruman.tx.rr.com>
+ <SIXPR06MB333E6503A469B6E147B20CED8070@SIXPR06MB333.apcprd06.prod.outlook.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E7i4zwmWs5DOuDSH"
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1426162154-8716-6-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <SIXPR06MB333E6503A469B6E147B20CED8070@SIXPR06MB333.apcprd06.prod.outlook.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "balbi@ti.com" <balbi@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150312 05:09]:
-> --- a/arch/arm/mach-omap2/pdata-quirks.c
-> +++ b/arch/arm/mach-omap2/pdata-quirks.c
->  
-> -static void __init omap3_evm_legacy_init(void)
-> -{
-> -	legacy_init_wl12xx(38400000, 0, 149);
-> -}
+--E7i4zwmWs5DOuDSH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-FYI, at least this part conflicts with the fixes in the arm-soc
-tree for the v4.0-rc series as omap3 evm also needs the copy clock
-quirk.
+Hi,
 
-> @@ -419,20 +351,9 @@ static struct pdata_init pdata_quirks[] __initdata = {
->  	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
->  	{ "isee,omap3-igep0020-rev-f", omap3_igep0020_rev_f_legacy_init, },
->  	{ "isee,omap3-igep0030-rev-g", omap3_igep0030_rev_g_legacy_init, },
-> -	{ "ti,omap3-evm-37xx", omap3_evm_legacy_init, },
+On Fri, Mar 13, 2015 at 01:14:01AM +0000, yoshihiro shimoda wrote:
+> > > > diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/r=
+enesas_usbhs/mod_gadget.c
+> > > > index e0384af77e56..e9d75d85be59 100644
+> > > > --- a/drivers/usb/renesas_usbhs/mod_gadget.c
+> > > > +++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+> > > > @@ -119,7 +119,7 @@ struct usbhsg_recip_handle {
+> > > >  /*
+> > > >   *		queue push/pop
+> > > >   */
+> > > > -static void usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > > > +static void __usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > > >  			     struct usbhsg_request *ureq,
+> > > >  			     int status)
+> > > >  {
+> > > > @@ -133,6 +133,15 @@ static void usbhsg_queue_pop(struct usbhsg_uep=
+ *uep,
+> > > >  	usb_gadget_giveback_request(&uep->ep, &ureq->req);
+> > > >  }
+> > > >
+> > > > +static void usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > > > +			     struct usbhsg_request *ureq,
+> > > > +			     int status)
+> > > > +{
+> > > > +	usbhs_lock(priv, flags);
+> > > > +	__usbhsg_queue_pop(uep, ureq, status);
+> > > > +	usbhs_unlock(priv, flags);
+> > > > +}
+> > > > +
+> > > >  static void usbhsg_queue_done(struct usbhs_priv *priv, struct usbh=
+s_pkt *pkt)
+> > > >  {
+> > > >  	struct usbhs_pipe *pipe =3D pkt->pipe;
+> > > >
+> > > >
+> > > > then, for cases where lock is already held you call __usbhsg_queue_=
+pop()
+> > > > and for all other cases, call usbhsg_queue_pop().
+> > >
+> > > Thank you for the suggestion. However, we cannot use this
+> > > usbhsg_queue_pop() because a gadget driver might call usb_ep_queue()
+> > > in the "complete" function and this driver calls usbhs_lock() in the
+> > > usb_ep_queue().
+> >=20
+> > right, in that case just call __usbhs_queue_pop() directly.
+>=20
+> Yes. So, my understanding is that this driver always calls __usbhs_queue_=
+pop()
+> because this driver cannot know that a gadget driver calls usb_ep_queue()=
+ or not
+> in the "complete" function.
 
-So this function cannot be yet removed.
+but you don't need to know that. All you have to do is spin_unlock()
+before calling usb_gadget_giveback_request(), look at
+drivers/usb/dwc3/gadget.c::dwc3_gadget_giveback()
 
-With that fixed, I was able to iw dev wlan0 scan with series on
-omap3 evm :)
+> > > Perhaps my explanation was bad, but this issue was caused by the
+> > > following conditions:
+> > >  - I use the renesas_usbhs driver as udc.
+> > >  - I use an old usb-dmac driver that the callback runs on a kthread.
+> > >  - I use the ncm driver. In this environment, the ncm driver might
+> > >	cause a spinlock suspected.
+> > >
+> > > As an old solution, I fixed the renesas_usbhs driver by this patch.
+> > > However, if I use a new usb-dmac driver that the callback runs on a
+> > > tasklet, I don't need this patch. (This is a new solution.)
+> >=20
+> > then differentiate based on some revision register or something like
+> > that ?
+>=20
+> Sorry for the lack information. I am submitting this usb-dmac driver that
+> the callback runs on a tasklet now. This means that the driver is not
+> merged yet. So, I think that we don't need to differentiate.
 
-Regards,
+But as soon as your driver gets merged, you will need to differentiate,
+right ?
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+balbi
+
+--E7i4zwmWs5DOuDSH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVAwXIAAoJEIaOsuA1yqREgjsP/3qq22ML83n70CGAP/LX2bj3
+30KkuxpNSdnsBRr7jyQUitAJZDAe2irYXpPeadDOFgND7B/J2NaaObd7YyF2MJV9
+gHeK/yMRpgo+8FlVumrO+774/DqAqwmvhnl99njFmU3k1Z7Ywjawo55ragP6BzeA
+/Bn/zf5OsruelybMzPEDRrbA6p3ikv26iDJz+KQ0ekf6T/Rl7BIFjUjsnb2M26cJ
+BFUdhKZmiBlzVhtbKSCuWZTPU4BM8McCP1BeyOLgDDUPynwu4aiHGRI3OfpLWcbe
+Euvp9wpe5cTer39U1aGUYkV6dW2xiAfD4kVjmwDBf/BzFQrqv7NrfNVZ9YUGVNHp
+JqTR9GYyuFb8CPSAf/G2R2uD4ZfZGgeFeG2jHWvt9spxI6cvH0JfxnBLJXzxAxbY
+/GeyIPVN09xUxutddy/USxdBgB6hctZFlRgDRsVb5sR9xH0jN77UkdLIhxotaxyW
+6D1pA5TfhGBpCHsUIFFflRu6tkxJMmkTWn/8uOLYrgDi3UH2nrESIDgT06plGlpP
++Yh9zeTEPkCtLBBkIM13xlqCrXij0mOqTxL+CsUr5MaYtaTjfHmEXLbndaTvtHIx
+G87Vnot3ZkSrv09McOMz/cycm8OaGTQdM243pN3nCJSLK1Jcz4p6M9Lyhe1sAdii
+SnqPPFuaLbuOWXfmK3UA
+=8+A6
+-----END PGP SIGNATURE-----
+
+--E7i4zwmWs5DOuDSH--
