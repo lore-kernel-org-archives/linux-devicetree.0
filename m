@@ -1,81 +1,162 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v6 3/3] ARM: dts: vf610: add Miscellaneous System
- Control Module (MSCM)
-Date: Fri, 13 Mar 2015 10:42:07 +0100
-Message-ID: <9eef9ff618d869fe37c9f1d6dd88c641@agner.ch>
-References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
- <1425249689-32354-4-git-send-email-stefan@agner.ch>
- <20150311004812.GU20455@dragon> <59b0d98827cb4e7497de81e1c0826964@agner.ch>
- <20150313044759.GQ20455@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150313044759.GQ20455@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pebolle@tiscali.nl, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 0/7] Add simple EEPROM Framework via regmap.
+Date: Fri, 13 Mar 2015 09:49:17 +0000
+Message-ID: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1425548685-12887-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1425548685-12887-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, broonie@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-03-13 05:48, Shawn Guo wrote:
-> On Thu, Mar 12, 2015 at 10:03:08AM +0100, Stefan Agner wrote:
->> On 2015-03-11 01:48, Shawn Guo wrote:
->> > On Sun, Mar 01, 2015 at 11:41:29PM +0100, Stefan Agner wrote:
->> >> Add the Miscellaneous System Control Module (MSCM) to the base
->> >> device tree for Vybrid SoC's. This module contains registers
->> >> to get information of the individual and current (accessing)
->> >> CPU. In a second block, there is an interrupt router, which
->> >> handles the routing of the interrupts between the two CPU cores
->> >> on VF6xx variants of the SoC. However, also on single core
->> >> variants the interrupt router needs to be configured in order
->> >> to receive interrupts on the CPU's interrupt controller. Almost
->> >> all peripheral interrupts are routed through the router, hence
->> >> the MSCM module is the default interrupt parent for this SoC.
->> >>
->> >> In a earlier commit the interrupt nodes were moved out of the
->> >> peripheral nodes and specified in the CPU specific vf500.dtsi
->> >> device tree. This allowed to use the base device tree vfxxx.dtsi
->> >> also for a Cortex-M4 specific device tree, which uses different
->> >> interrupt nodes due to the NVIC interrupt controller. However,
->> >> since the interrupt parent for peripherals is the MSCM module
->> >> independently which CPU the device tree is used for, we can move
->> >> the interrupt nodes into the base device tree vfxxx.dtsi again.
->> >> Depending on which CPU this base device tree will be used with,
->> >> the correct parent interrupt controller has to be assigned to
->> >> the MSCM-IR node (GIC or NVIC). The driver takes care of the
->> >> parent interrupt controller specific needs (interrupt-cells).
->> >>
->> >> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> >
->> > Stefan,
->> >
->> > I guess this patch has a run-time dependency on the first two in the
->> > series, right?  Or put it another way, if I apply this single patch on
->> > my branch, the dtb and kernel built from the same branch do not work
->> > together, right?  If so, we will need to either wait for the first two
->> > hit mainline or pull Jason's irqchip/vybrid branch into my tree as
->> > prerequisite (irqchip/vybrid needs to be stable).
->> >
->> > Shawn
->>
->> Yes, that is true. The driver need to be in place in order to
->> successfully boot with the new device tree.
-> 
-> Okay.  Pulled Jason's irqchip/vybrid branch in, and applied the patch.
-> 
-> Stefan,
-> 
-> There was a conflict on device dspi1 when applying the patch to my
-> imx/dt branch.  Please take a look to see if I solved it correctly.
-> 
+Thankyou all for providing inputs and comments on previous versions of this
+patchset. Here is the v2 of the patchset addressing all the issues raised as
+part of previous versions review.
 
-Hi Shawn,
+This patchset adds a new simple EEPROM framework to kernel.
 
-Your updated patch looks good to me. Also quickly boot tested the
-branch, worked fine.
+Up until now, EEPROM drivers were stored in drivers/misc, where they all had to
+duplicate pretty much the same code to register a sysfs file, allow in-kernel
+users to access the content of the devices they were driving, etc.
+    
+This was also a problem as far as other in-kernel users were involved, since
+the solutions used were pretty much different from on driver to another, there
+was a rather big abstraction leak.
+    
+This introduction of this framework aims at solving this. It also introduces DT
+representation for consumer devices to go get the data they require (MAC
+Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
+    
+Having regmap interface to this framework would give much better
+abstraction for eeproms on different buses.
 
-Thx!
+patch 1-3 Introduces the EEPROM framework.
+Patch 4 migrates an existing driver to eeprom framework.
+Patch 5-6 Adds Qualcomm specific qfprom driver.
+Patch 7 adds entry in MAINTAINERS.
 
---
-Stefan
+Its also possible to migrate other eeprom drivers to this framework.
+Patch 6 can also be made a generic mmio-eeprom driver.
+
+Providers APIs:
+	eeprom_register/unregister();
+
+Consumers APIs:
+	eeprom_cell_get()/of_eeprom_cell_get()/of_eeprom_cell_get_byname();
+	eeprom_cell_read()/eeprom_cell_write();
+
+Device Tree:
+
+	/* Provider */
+	qfprom: qfprom@00700000 {
+		compatible 	= "qcom,qfprom";
+		reg		= <0x00700000 0x1000>;
+		...
+
+		/* Data cells */
+		tsens_calibration: calib@404 {
+			reg = <0x404 0x10>;
+		};
+
+		serial_number: sn {
+			reg = <0x104 0x4>, <0x204 0x4>, <0x30c 0x4>;
+
+		};
+		...
+	};
+	
+	/* Consumer node */
+	tsens: tsens {
+		...
+		eeproms = <&tsens_calibration>;
+		eeprom-names = "calib";
+		...
+	};
+
+userspace interface:
+
+hexdump /sys/class/eeprom/qfprom0/eeprom
+                                                                                                                                                                                                                  
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+*
+00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+...
+*
+0001000
+
+
+Changes since v1(https://lkml.org/lkml/2015/3/5/153)
+ * Fix various Licencing issues spotted by Paul Bolle and Mark Brown
+ * Allow eeprom core to build as module spotted by Paul Bolle.
+ * Fix various kconfig issues spotted by Paul Bolle.
+ * remove unessary atomic varible spotted by Mark Brown.
+ * Few cleanups and common up some of the code in core.
+ * Add qfprom bindings.
+
+Changes since RFC(https://lkml.org/lkml/2015/2/19/307)
+ * Fix documentation and error checks in read/write spotted by Andrew Lunn
+ * Kconfig fix suggested by Stephen Boyd.
+ * Add module owner suggested by Stephen Boyd and others.
+ * Fix unsafe handling of eeprom in unregister spotted by Russell and Mark Brown.
+ * seperate bindings patch as suggested by Rob.
+ * Add MAINTAINERS as suggested by Rob.
+ * Added support to allow reading eeprom for things like serial number which
+  can be scatters across.
+ * Added eeprom data using reg property suggested by Sascha and Stephen.
+ * Added non-DT support.
+ * Move kerneldoc to the src files spotted by Mark Brown.
+ * Remove local list and do eeprom lookup by using class_find_device()
+
+
+Thanks,
+srini
+
+
+Maxime Ripard (1):
+  eeprom: sunxi: Move the SID driver to the eeprom framework
+
+Srinivas Kandagatla (6):
+  eeprom: Add a simple EEPROM framework for eeprom providers
+  eeprom: Add a simple EEPROM framework for eeprom consumers
+  eeprom: Add bindings for simple eeprom framework
+  eeprom: qfprom: Add Qualcomm QFPROM support.
+  eeprom: qfprom: Add bindings for qfprom
+  eeprom: Add to MAINTAINERS for eeprom framework
+
+ Documentation/ABI/testing/sysfs-driver-sunxi-sid   |  22 -
+ .../bindings/eeprom/allwinner,sunxi-sid.txt        |  21 +
+ .../devicetree/bindings/eeprom/eeprom.txt          |  70 +++
+ .../devicetree/bindings/eeprom/qfprom.txt          |  23 +
+ .../bindings/misc/allwinner,sunxi-sid.txt          |  17 -
+ MAINTAINERS                                        |   9 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/eeprom/Kconfig                             |  33 ++
+ drivers/eeprom/Makefile                            |   9 +
+ drivers/eeprom/core.c                              | 517 +++++++++++++++++++++
+ drivers/eeprom/eeprom-sunxi-sid.c                  | 136 ++++++
+ drivers/eeprom/qfprom.c                            |  87 ++++
+ drivers/misc/eeprom/Kconfig                        |  13 -
+ drivers/misc/eeprom/Makefile                       |   1 -
+ drivers/misc/eeprom/sunxi_sid.c                    | 156 -------
+ include/linux/eeprom-consumer.h                    |  67 +++
+ include/linux/eeprom-provider.h                    |  47 ++
+ 18 files changed, 1022 insertions(+), 209 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
+ create mode 100644 Documentation/devicetree/bindings/eeprom/allwinner,sunxi-sid.txt
+ create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
+ create mode 100644 Documentation/devicetree/bindings/eeprom/qfprom.txt
+ delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
+ create mode 100644 drivers/eeprom/Kconfig
+ create mode 100644 drivers/eeprom/Makefile
+ create mode 100644 drivers/eeprom/core.c
+ create mode 100644 drivers/eeprom/eeprom-sunxi-sid.c
+ create mode 100644 drivers/eeprom/qfprom.c
+ delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
+ create mode 100644 include/linux/eeprom-consumer.h
+ create mode 100644 include/linux/eeprom-provider.h
+
+-- 
+1.9.1
