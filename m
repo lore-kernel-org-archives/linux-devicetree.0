@@ -1,806 +1,346 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Fri, 13 Mar 2015 16:19:20 +0200
-Message-ID: <CAHp75Vd7+oLiLLuyocYh95TebtocWrRho6xNjuSUt8fYGp8npg@mail.gmail.com>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
-	<1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 2/6] wl12xx: use frequency instead of enumerations for
+ pdata clocks
+Date: Fri, 13 Mar 2015 08:00:47 -0700
+Message-ID: <20150313150047.GI5264@atomide.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+ <1426162154-8716-3-git-send-email-eliad@wizery.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426162154-8716-3-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 11:55 PM, Maxime Coquelin
-<mcoquelin.stm32@gmail.com> wrote:
-> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->
-> This drivers adds support to the STM32 USART controller, which is a
-> standard serial driver.
+* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150312 05:09]:
+> From: Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
+> 
+> Instead of defining an enumeration with the FW specific values for the
+> different clock rates, use the actual frequency instead.  Also add a
+> boolean to specify whether the clock is XTAL or not.
 
-My comment below.
+Thanks for doing this. Just one comment on how we're going to get this
+all merged. Chances are this will cause merge conflicts between the
+wireless tree and the omap tree for the platform data and dts changes.
 
->
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Can you please separate the wireless changes in this series so we can
+do this in the following sets:
+
+1. Add support for new things to wireless driver
+
+2. Switch platform code to use the new support
+
+3. Remove support for platform data with a follow-up patch
+
+The other option would be to have the whole series in a immutable
+branch against v3.0-rc1 that can be merged into both wirelss tree
+and omap tree.
+
+Regards,
+
+Tony
+ 
+> Change all board files to reflect this.
+> 
+> Signed-off-by: Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
+> [Eliad - small fixes, update board file changes]
+> Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/tty/serial/Kconfig       |  17 +
->  drivers/tty/serial/Makefile      |   1 +
->  drivers/tty/serial/stm32-usart.c | 695 +++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/serial_core.h |   3 +
->  4 files changed, 716 insertions(+)
->  create mode 100644 drivers/tty/serial/stm32-usart.c
->
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index d2501f0..880cb4f 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1611,6 +1611,23 @@ config SERIAL_SPRD_CONSOLE
->           with "earlycon" on the kernel command line. The console is
->           enabled when early_param is processed.
->
-> +config SERIAL_STM32
-> +       tristate "STMicroelectronics STM32 serial port support"
-> +       select SERIAL_CORE
-> +       depends on ARM || COMPILE_TEST
-> +       help
-> +         This driver is for the on-chip Serial Controller on
-> +         STMicroelectronics STM32 MCUs.
-> +         USART supports Rx & Tx functionality.
-> +         It support all industry standard baud rates.
-> +
-> +         If unsure, say N.
-> +
-> +config SERIAL_STM32_CONSOLE
-> +       bool "Support for console on STM32"
-> +       depends on SERIAL_STM32=y
-> +       select SERIAL_CORE_CONSOLE
-> +
->  endmenu
->
->  config SERIAL_MCTRL_GPIO
-> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> index 599be4b..67c5023 100644
-> --- a/drivers/tty/serial/Makefile
-> +++ b/drivers/tty/serial/Makefile
-> @@ -95,6 +95,7 @@ obj-$(CONFIG_SERIAL_FSL_LPUART)       += fsl_lpuart.o
->  obj-$(CONFIG_SERIAL_CONEXANT_DIGICOLOR)        += digicolor-usart.o
->  obj-$(CONFIG_SERIAL_MEN_Z135)  += men_z135_uart.o
->  obj-$(CONFIG_SERIAL_SPRD) += sprd_serial.o
-> +obj-$(CONFIG_SERIAL_STM32)     += stm32-usart.o
->
->  # GPIOLIB helpers for modem control lines
->  obj-$(CONFIG_SERIAL_MCTRL_GPIO)        += serial_mctrl_gpio.o
-> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-> new file mode 100644
-> index 0000000..61bb065
-> --- /dev/null
-> +++ b/drivers/tty/serial/stm32-usart.c
-> @@ -0,0 +1,695 @@
-> +/*
-> + * Copyright (C) Maxime Coquelin 2015
-> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + *
-> + * Inspired by st-asc.c from STMicroelectronics (c)
-> + */
-> +
-> +#if defined(CONFIG_SERIAL_STM32_USART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
-> +#define SUPPORT_SYSRQ
-> +#endif
-> +
-> +#include <linux/module.h>
-> +#include <linux/serial.h>
-> +#include <linux/console.h>
-> +#include <linux/sysrq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/tty.h>
-> +#include <linux/tty_flip.h>
-> +#include <linux/delay.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/serial_core.h>
-> +#include <linux/clk.h>
-> +
-> +#define DRIVER_NAME "stm32-usart"
-> +
-> +/* Register offsets */
-> +#define USART_SR               0x00
-> +#define USART_DR               0x04
-> +#define USART_BRR              0x08
-> +#define USART_CR1              0x0c
-> +#define USART_CR2              0x10
-> +#define USART_CR3              0x14
-> +#define USART_GTPR             0x18
-> +
-> +/* USART_SR */
-> +#define USART_SR_PE            BIT(0)
-> +#define USART_SR_FE            BIT(1)
-> +#define USART_SR_NF            BIT(2)
-> +#define USART_SR_ORE           BIT(3)
-> +#define USART_SR_IDLE          BIT(4)
-> +#define USART_SR_RXNE          BIT(5)
-> +#define USART_SR_TC            BIT(6)
-> +#define USART_SR_TXE           BIT(7)
-> +#define USART_SR_LBD           BIT(8)
-> +#define USART_SR_CTS           BIT(9)
-> +#define USART_SR_ERR_MASK      (USART_SR_LBD | USART_SR_ORE | \
-> +                                USART_SR_FE | USART_SR_PE)
-> +/* Dummy bits */
-> +#define USART_SR_DUMMY_RX      BIT(16)
-> +
-> +/* USART_DR */
-> +#define USART_DR_MASK          GENMASK(8, 0)
-> +
-> +/* USART_BRR */
-> +#define USART_BRR_DIV_F_MASK   GENMASK(3, 0)
-> +#define USART_BRR_DIV_M_MASK   GENMASK(15, 4)
-> +#define USART_BRR_DIV_M_SHIFT  4
-> +
-> +/* USART_CR1 */
-> +#define USART_CR1_SBK          BIT(0)
-> +#define USART_CR1_RWU          BIT(1)
-> +#define USART_CR1_RE           BIT(2)
-> +#define USART_CR1_TE           BIT(3)
-> +#define USART_CR1_IDLEIE       BIT(4)
-> +#define USART_CR1_RXNEIE       BIT(5)
-> +#define USART_CR1_TCIE         BIT(6)
-> +#define USART_CR1_TXEIE                BIT(7)
-> +#define USART_CR1_PEIE         BIT(8)
-> +#define USART_CR1_PS           BIT(9)
-> +#define USART_CR1_PCE          BIT(10)
-> +#define USART_CR1_WAKE         BIT(11)
-> +#define USART_CR1_M            BIT(12)
-> +#define USART_CR1_UE           BIT(13)
-> +#define USART_CR1_OVER8                BIT(15)
-> +#define USART_CR1_IE_MASK      GENMASK(8, 4)
-> +
-> +/* USART_CR2 */
-> +#define USART_CR2_ADD_MASK     GENMASK(3, 0)
-> +#define USART_CR2_LBDL         BIT(5)
-> +#define USART_CR2_LBDIE                BIT(6)
-> +#define USART_CR2_LBCL         BIT(8)
-> +#define USART_CR2_CPHA         BIT(9)
-> +#define USART_CR2_CPOL         BIT(10)
-> +#define USART_CR2_CLKEN                BIT(11)
-> +#define USART_CR2_STOP_2B      BIT(13)
-> +#define USART_CR2_STOP_MASK    GENMASK(13, 12)
-> +#define USART_CR2_LINEN                BIT(14)
-> +
-> +/* USART_CR3 */
-> +#define USART_CR3_EIE          BIT(0)
-> +#define USART_CR3_IREN         BIT(1)
-> +#define USART_CR3_IRLP         BIT(2)
-> +#define USART_CR3_HDSEL                BIT(3)
-> +#define USART_CR3_NACK         BIT(4)
-> +#define USART_CR3_SCEN         BIT(5)
-> +#define USART_CR3_DMAR         BIT(6)
-> +#define USART_CR3_DMAT         BIT(7)
-> +#define USART_CR3_RTSE         BIT(8)
-> +#define USART_CR3_CTSE         BIT(9)
-> +#define USART_CR3_CTSIE                BIT(10)
-> +#define USART_CR3_ONEBIT       BIT(11)
-> +
-> +/* USART_GTPR */
-> +#define USART_GTPR_PSC_MASK    GENMASK(7, 0)
-> +#define USART_GTPR_GT_MASK     GENMASK(15, 8)
-> +
-> +#define DRIVER_NAME "stm32-usart"
-> +#define STM32_SERIAL_NAME "ttyS"
-> +#define STM32_MAX_PORTS 6
-> +
-> +struct stm32_port {
-> +       struct uart_port port;
-> +       struct clk *clk;
+>  arch/arm/mach-davinci/board-da850-evm.c |  3 +-
+>  arch/arm/mach-omap2/pdata-quirks.c      | 29 ++++++++--------
+>  drivers/net/wireless/ti/wl12xx/main.c   | 60 ++++++++++++++++++++++++++++++---
+>  drivers/net/wireless/ti/wl12xx/wl12xx.h | 28 +++++++++++++++
+>  include/linux/wl12xx.h                  | 27 ++-------------
+>  5 files changed, 103 insertions(+), 44 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+> index 916589c..853b941 100644
+> --- a/arch/arm/mach-davinci/board-da850-evm.c
+> +++ b/arch/arm/mach-davinci/board-da850-evm.c
+> @@ -1386,7 +1386,8 @@ static const short da850_wl12xx_pins[] __initconst = {
+>  static struct wl12xx_platform_data da850_wl12xx_wlan_data __initdata = {
+>  	.irq			= -1,
+>  	.irq_trigger		= IRQ_TYPE_EDGE_RISING,
+> -	.board_ref_clock	= WL12XX_REFCLOCK_38,
+> +	.ref_clock_freq		= 38400000,
+> +	.ref_clock_xtal		= false,
+>  };
+>  
+>  static __init int da850_wl12xx_init(void)
+> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+> index 4449f4c..337cc22 100644
+> --- a/arch/arm/mach-omap2/pdata-quirks.c
+> +++ b/arch/arm/mach-omap2/pdata-quirks.c
+> @@ -39,14 +39,14 @@ static struct twl4030_gpio_platform_data twl_gpio_auxdata;
+>  
+>  static struct wl12xx_platform_data wl12xx __initdata;
+>  
+> -static void __init __used legacy_init_wl12xx(unsigned ref_clock,
+> -					     unsigned tcxo_clock,
+> +static void __init __used legacy_init_wl12xx(u32 ref_clock_freq,
+> +					     u32 tcxo_clock_freq,
+>  					     int gpio)
+>  {
+>  	int res;
+>  
+> -	wl12xx.board_ref_clock = ref_clock;
+> -	wl12xx.board_tcxo_clock = tcxo_clock;
+> +	wl12xx.ref_clock_freq = ref_clock_freq;
+> +	wl12xx.tcxo_clock_freq = tcxo_clock_freq;
+>  	wl12xx.irq = gpio_to_irq(gpio);
+>  	wl12xx.irq_trigger = IRQ_TYPE_LEVEL_HIGH;
+>  
+> @@ -57,8 +57,8 @@ static void __init __used legacy_init_wl12xx(unsigned ref_clock,
+>  	}
+>  }
+>  #else
+> -static inline void legacy_init_wl12xx(unsigned ref_clock,
+> -				      unsigned tcxo_clock,
+> +static inline void legacy_init_wl12xx(u32 ref_clock_freq,
+> +				      u32 tcxo_clock_freq,
+>  				      int gpio)
+>  {
+>  }
+> @@ -130,7 +130,7 @@ static void __init omap3_sbc_t3730_twl_init(void)
+>  static void __init omap3_sbc_t3730_legacy_init(void)
+>  {
+>  	omap3_sbc_t3x_usb_hub_init(167, "sb-t35 usb hub");
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 136);
+> +	legacy_init_wl12xx(38400000, 0, 136);
+>  }
+>  
+>  static void __init omap3_sbc_t3530_legacy_init(void)
+> @@ -174,12 +174,12 @@ static void __init omap3_igep0030_rev_g_legacy_init(void)
+>  
+>  static void __init omap3_evm_legacy_init(void)
+>  {
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 149);
+> +	legacy_init_wl12xx(38400000, 0, 149);
+>  }
+>  
+>  static void __init omap3_zoom_legacy_init(void)
+>  {
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_26, 0, 162);
+> +	legacy_init_wl12xx(26000000, 0, 162);
+>  }
+>  
+>  static void am35xx_enable_emac_int(void)
+> @@ -246,7 +246,7 @@ static void __init omap3_sbc_t3517_legacy_init(void)
+>  	am35xx_emac_reset();
+>  	hsmmc2_internal_input_clk();
+>  	omap3_sbc_t3517_wifi_init();
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 145);
+> +	legacy_init_wl12xx(38400000, 0, 145);
+>  }
+>  
+>  static void __init am3517_evm_legacy_init(void)
+> @@ -291,18 +291,17 @@ static void __init omap3_tao3530_legacy_init(void)
+>  #ifdef CONFIG_ARCH_OMAP4
+>  static void __init omap4_sdp_legacy_init(void)
+>  {
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_26,
+> -			   WL12XX_TCXOCLOCK_26, 53);
+> +	legacy_init_wl12xx(26000000, 26000000, 53);
+>  }
+>  
+>  static void __init omap4_panda_legacy_init(void)
+>  {
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 53);
+> +	legacy_init_wl12xx(38400000, 0, 53);
+>  }
+>  
+>  static void __init var_som_om44_legacy_init(void)
+>  {
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 41);
+> +	legacy_init_wl12xx(38400000, 0, 41);
+>  }
+>  #endif
+>  
+> @@ -317,7 +316,7 @@ static struct iommu_platform_data omap4_iommu_pdata = {
+>  #ifdef CONFIG_SOC_AM33XX
+>  static void __init am335x_evmsk_legacy_init(void)
+>  {
+> -	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 31);
+> +	legacy_init_wl12xx(38400000, 0, 31);
+>  }
+>  #endif
+>  
+> diff --git a/drivers/net/wireless/ti/wl12xx/main.c b/drivers/net/wireless/ti/wl12xx/main.c
+> index 144d1f8..b3f751f 100644
+> --- a/drivers/net/wireless/ti/wl12xx/main.c
+> +++ b/drivers/net/wireless/ti/wl12xx/main.c
+> @@ -1770,6 +1770,40 @@ wl12xx_iface_combinations[] = {
+>  	},
+>  };
+>  
+> +static const struct wl12xx_clock wl12xx_refclock_table[] = {
+> +	{ 19200000,	false,	WL12XX_REFCLOCK_19	},
+> +	{ 26000000,	false,	WL12XX_REFCLOCK_26	},
+> +	{ 26000000,	true,	WL12XX_REFCLOCK_26_XTAL	},
+> +	{ 38400000,	false,	WL12XX_REFCLOCK_38	},
+> +	{ 38400000,	true,	WL12XX_REFCLOCK_38_XTAL	},
+> +	{ 52000000,	false,	WL12XX_REFCLOCK_52	},
+> +	{ 0,		false,	0 }
 > +};
 > +
-> +static struct stm32_port stm32_ports[STM32_MAX_PORTS];
-> +static struct uart_driver stm32_usart_driver;
-> +
-> +static void stm32_stop_tx(struct uart_port *port);
-> +
-> +static void stm32_set_bits(struct uart_port *port, u32 reg, u32 bits)
-> +{
-> +       u32 val;
-> +
-> +       val = readl_relaxed(port->membase + reg);
-> +       val |= bits;
-> +       writel_relaxed(val, port->membase + reg);
-> +}
-> +
-> +static void stm32_clr_bits(struct uart_port *port, u32 reg, u32 bits)
-> +{
-> +       u32 val;
-> +
-> +       val = readl_relaxed(port->membase + reg);
-> +       val &= ~bits;
-> +       writel_relaxed(val, port->membase + reg);
-> +}
-> +
-> +static void stm32_receive_chars(struct uart_port *port)
-> +{
-> +       struct tty_port *tport = &port->state->port;
-> +       unsigned long c;
-> +       u32 sr;
-> +       char flag;
-> +
-> +       if (port->irq_wake)
-> +               pm_wakeup_event(tport->tty->dev, 0);
-> +
-> +       while ((sr = readl_relaxed(port->membase + USART_SR)) & USART_SR_RXNE) {
-> +               sr |= USART_SR_DUMMY_RX;
-> +               c = readl_relaxed(port->membase + USART_DR);
-> +               flag = TTY_NORMAL;
-> +               port->icount.rx++;
-> +
-> +               if (sr & USART_SR_ERR_MASK) {
-> +                       if (sr & USART_SR_LBD) {
-> +                               port->icount.brk++;
-> +                               if (uart_handle_break(port))
-> +                                       continue;
-> +                       } else if (sr & USART_SR_ORE) {
-> +                               port->icount.overrun++;
-> +                       } else if (sr & USART_SR_PE) {
-> +                               port->icount.parity++;
-> +                       } else if (sr & USART_SR_FE) {
-> +                               port->icount.frame++;
-> +                       }
-> +
-> +                       sr &= port->read_status_mask;
-> +
-> +                       if (sr & USART_SR_LBD)
-> +                               flag = TTY_BREAK;
-> +                       else if (sr & USART_SR_PE)
-> +                               flag = TTY_PARITY;
-> +                       else if (sr & USART_SR_FE)
-> +                               flag = TTY_FRAME;
-> +               }
-> +
-> +               if (uart_handle_sysrq_char(port, c))
-> +                       continue;
-> +               uart_insert_char(port, sr, USART_SR_ORE, c, flag);
-> +       }
-> +
-> +       spin_unlock(&port->lock);
-> +       tty_flip_buffer_push(tport);
-> +       spin_lock(&port->lock);
-> +}
-> +
-> +static void stm32_transmit_chars(struct uart_port *port)
-> +{
-> +       struct circ_buf *xmit = &port->state->xmit;
-> +
-> +       if (port->x_char) {
-> +               writel_relaxed(port->x_char, port->membase + USART_DR);
-> +               port->x_char = 0;
-> +               port->icount.tx++;
-> +               return;
-> +       }
-> +
-> +       if (uart_tx_stopped(port)) {
-> +               stm32_stop_tx(port);
-> +               return;
-> +       }
-> +
-> +       if (uart_circ_empty(xmit)) {
-> +               stm32_stop_tx(port);
-> +               return;
-> +       }
-> +
-> +       writel_relaxed(xmit->buf[xmit->tail], port->membase + USART_DR);
-> +       xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-> +       port->icount.tx++;
-> +
-> +       if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-> +               uart_write_wakeup(port);
-> +
-> +       if (uart_circ_empty(xmit))
-> +               stm32_stop_tx(port);
-> +}
-> +
-> +static irqreturn_t stm32_interrupt(int irq, void *ptr)
-> +{
-> +       struct uart_port *port = ptr;
-> +       u32 sr;
-> +
-> +       spin_lock(&port->lock);
-> +
-> +       sr = readl_relaxed(port->membase + USART_SR);
-> +
-> +       if (sr & USART_SR_RXNE)
-> +               stm32_receive_chars(port);
-> +
-> +       if (sr & USART_SR_TXE)
-> +               stm32_transmit_chars(port);
-> +
-> +       spin_unlock(&port->lock);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static unsigned int stm32_tx_empty(struct uart_port *port)
-> +{
-> +       return readl_relaxed(port->membase + USART_SR) & USART_SR_TXE;
-> +}
-> +
-> +static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
-> +{
-> +       /*
-> +        * This routine is used for seting signals of: DTR, DCD, CTS/RTS
-> +        * We use USART's hardware for CTS/RTS, so don't need any for that.
-> +        * Some boards have DTR and DCD implemented using PIO pins,
-> +        * code to do this should be hooked in here.
-> +        */
-> +}
-> +
-> +static unsigned int stm32_get_mctrl(struct uart_port *port)
-> +{
-> +       /*
-> +        * This routine is used for geting signals of: DTR, DCD, DSR, RI,
-> +        * and CTS/RTS
-> +        */
-> +       return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-> +}
-> +
-> +/* There are probably characters waiting to be transmitted. */
-> +static void stm32_start_tx(struct uart_port *port)
-> +{
-> +       struct circ_buf *xmit = &port->state->xmit;
-> +
-> +       if (uart_circ_empty(xmit))
-> +               return;
-> +
-> +       stm32_set_bits(port, USART_CR1, USART_CR1_TXEIE | USART_CR1_TE);
-> +}
-> +
-> +/* Transmit stop */
-> +static void stm32_stop_tx(struct uart_port *port)
-> +{
-> +       stm32_clr_bits(port, USART_CR1, USART_CR1_TXEIE);
-> +}
-> +
-> +/* Receive stop */
-> +static void stm32_stop_rx(struct uart_port *port)
-> +{
-> +       stm32_clr_bits(port, USART_CR1, USART_CR1_RXNEIE);
-> +}
-> +
-> +/* Handle breaks - ignored by us */
-> +static void stm32_break_ctl(struct uart_port *port, int break_state)
-> +{
-> +       /* Nothing here yet .. */
-> +}
-> +
-> +static int stm32_startup(struct uart_port *port)
-> +{
-> +       const char *name = to_platform_device(port->dev)->name;
-> +       u32 val;
-> +
-> +       if (request_irq(port->irq, stm32_interrupt, IRQF_NO_SUSPEND,
-> +                               name, port)) {
-> +               dev_err(port->dev, "cannot allocate irq %d\n", port->irq);
-> +               return -ENODEV;
-> +       }
-> +
-> +       val = USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
-> +       stm32_set_bits(port, USART_CR1, val);
-> +
-> +       return 0;
-> +}
-> +
-> +static void stm32_shutdown(struct uart_port *port)
-> +{
-> +       u32 val;
-> +
-> +       val = USART_CR1_TXEIE | USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
-> +       stm32_set_bits(port, USART_CR1, val);
-> +
-> +       free_irq(port->irq, port);
-> +}
-> +
-> +static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
-> +                           struct ktermios *old)
-> +{
-> +       unsigned int baud;
-> +       u32 usardiv, mantissa, fraction;
-> +       tcflag_t cflag;
-> +       u32 cr1, cr2, cr3;
-> +       unsigned long flags;
-> +
-> +       baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk / 16);
-> +       cflag = termios->c_cflag;
-> +
-> +       spin_lock_irqsave(&port->lock, flags);
-> +
-> +       /* Stop serial port and reset value */
-> +       writel_relaxed(0, port->membase + USART_CR1);
-> +
-> +       cr1 = USART_CR1_TE | USART_CR1_RE | USART_CR1_UE | USART_CR1_RXNEIE;
-> +
-> +       if (cflag & CSTOPB)
-> +               cr2 = USART_CR2_STOP_2B;
-> +
-> +       if (cflag & PARENB) {
-> +               cr1 |= USART_CR1_PCE;
-> +               if ((cflag & CSIZE) == CS8)
-> +                       cr1 |= USART_CR1_M;
-> +       }
-> +
-> +       if (cflag & PARODD)
-> +               cr1 |= USART_CR1_PS;
-> +
-> +       if (cflag & CRTSCTS)
-> +               cr3 = USART_CR3_RTSE | USART_CR3_CTSE;
-> +
-> +       usardiv = (port->uartclk * 25) / (baud * 4);
-> +       mantissa = (usardiv / 100) << USART_BRR_DIV_M_SHIFT;
-> +       fraction = DIV_ROUND_CLOSEST((usardiv % 100) * 16, 100);
-> +       if (fraction & ~USART_BRR_DIV_F_MASK) {
-> +               fraction = 0;
-> +               mantissa += (1 << USART_BRR_DIV_M_SHIFT);
-> +       }
-
-So, it's a fractional divider. right? Could it be then fractional
-divider clock in this first place (see
-drivers/clk/clk-fractional-divider.c)?
-
-> +
-> +       writel_relaxed(mantissa | fraction, port->membase + USART_BRR);
-> +
-> +       uart_update_timeout(port, cflag, baud);
-> +
-> +       port->read_status_mask = USART_SR_ORE;
-> +       if (termios->c_iflag & INPCK)
-> +               port->read_status_mask |= USART_SR_PE | USART_SR_FE;
-> +       if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
-> +               port->read_status_mask |= USART_SR_LBD;
-> +
-> +       /* Characters to ignore */
-> +       port->ignore_status_mask = 0;
-> +       if (termios->c_iflag & IGNPAR)
-> +               port->ignore_status_mask = USART_SR_PE | USART_SR_FE;
-> +       if (termios->c_iflag & IGNBRK) {
-> +               port->ignore_status_mask |= USART_SR_LBD;
-> +               /*
-> +                * If we're ignoring parity and break indicators,
-> +                * ignore overruns too (for real raw support).
-> +                */
-> +               if (termios->c_iflag & IGNPAR)
-> +                       port->ignore_status_mask |= USART_SR_ORE;
-> +       }
-> +
-> +       /*
-> +        * Ignore all characters if CREAD is not set.
-> +        */
-> +       if ((termios->c_cflag & CREAD) == 0)
-> +               port->ignore_status_mask |= USART_SR_DUMMY_RX;
-> +
-> +       writel_relaxed(cr3, port->membase + USART_CR3);
-> +       writel_relaxed(cr2, port->membase + USART_CR2);
-> +       writel_relaxed(cr1, port->membase + USART_CR1);
-> +
-> +       spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static const char *stm32_type(struct uart_port *port)
-> +{
-> +       return (port->type == PORT_STM32) ? DRIVER_NAME : NULL;
-> +}
-> +
-> +static void stm32_release_port(struct uart_port *port)
-> +{
-> +}
-> +
-> +static int stm32_request_port(struct uart_port *port)
-> +{
-> +       return 0;
-> +}
-> +
-> +static void stm32_config_port(struct uart_port *port, int flags)
-> +{
-> +       if ((flags & UART_CONFIG_TYPE))
-> +               port->type = PORT_STM32;
-> +}
-> +
-> +static int
-> +stm32_verify_port(struct uart_port *port, struct serial_struct *ser)
-> +{
-> +       /* No user changeable parameters */
-> +       return -EINVAL;
-> +}
-> +
-> +static void stm32_pm(struct uart_port *port, unsigned int state,
-> +               unsigned int oldstate)
-> +{
-> +       struct stm32_port *stm32port = container_of(port,
-> +                       struct stm32_port, port);
-> +       unsigned long flags = 0;
-> +
-> +       switch (state) {
-> +       case UART_PM_STATE_ON:
-> +               clk_prepare_enable(stm32port->clk);
-> +               break;
-> +       case UART_PM_STATE_OFF:
-> +               spin_lock_irqsave(&port->lock, flags);
-> +               stm32_clr_bits(port, USART_CR1, USART_CR1_UE);
-> +               spin_unlock_irqrestore(&port->lock, flags);
-> +               clk_disable_unprepare(stm32port->clk);
-> +               break;
-> +       }
-> +}
-> +
-> +static struct uart_ops stm32_uart_ops = {
-> +       .tx_empty       = stm32_tx_empty,
-> +       .set_mctrl      = stm32_set_mctrl,
-> +       .get_mctrl      = stm32_get_mctrl,
-> +       .start_tx       = stm32_start_tx,
-> +       .stop_tx        = stm32_stop_tx,
-> +       .stop_rx        = stm32_stop_rx,
-> +       .break_ctl      = stm32_break_ctl,
-> +       .startup        = stm32_startup,
-> +       .shutdown       = stm32_shutdown,
-> +       .set_termios    = stm32_set_termios,
-> +       .type           = stm32_type,
-> +       .release_port   = stm32_release_port,
-> +       .request_port   = stm32_request_port,
-> +       .config_port    = stm32_config_port,
-> +       .verify_port    = stm32_verify_port,
-> +       .pm             = stm32_pm,
+> +static const struct wl12xx_clock wl12xx_tcxoclock_table[] = {
+> +	{ 16368000,	true,	WL12XX_TCXOCLOCK_16_368	},
+> +	{ 16800000,	true,	WL12XX_TCXOCLOCK_16_8	},
+> +	{ 19200000,	true,	WL12XX_TCXOCLOCK_19_2	},
+> +	{ 26000000,	true,	WL12XX_TCXOCLOCK_26	},
+> +	{ 32736000,	true,	WL12XX_TCXOCLOCK_32_736	},
+> +	{ 33600000,	true,	WL12XX_TCXOCLOCK_33_6	},
+> +	{ 38400000,	true,	WL12XX_TCXOCLOCK_38_4	},
+> +	{ 52000000,	true,	WL12XX_TCXOCLOCK_52	},
+> +	{ 0,		false,	0 }
 > +};
 > +
-> +static int stm32_init_port(struct stm32_port *stm32port,
-> +                         struct platform_device *pdev)
+> +static int wl12xx_get_clock_idx(const struct wl12xx_clock *table,
+> +				u32 freq, bool xtal)
 > +{
-> +       struct uart_port *port = &stm32port->port;
-> +       struct resource *res;
+> +	int i;
 > +
-> +       port->iotype    = UPIO_MEM;
-> +       port->flags     = UPF_BOOT_AUTOCONF;
-> +       port->ops       = &stm32_uart_ops;
-> +       port->dev       = &pdev->dev;
-> +       port->irq       = platform_get_irq(pdev, 0);
+> +	for (i = 0; table[i].freq != 0; i++)
+> +		if ((table[i].freq == freq) && (table[i].xtal == xtal))
+> +			return table[i].hw_idx;
 > +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       port->membase = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(port->membase))
-> +               return PTR_ERR(port->membase);
-> +       port->mapbase = res->start;
-> +
-> +       spin_lock_init(&port->lock);
-> +
-> +       stm32port->clk = devm_clk_get(&pdev->dev, NULL);
-> +
-> +       if (WARN_ON(IS_ERR(stm32port->clk)))
-> +               return -EINVAL;
-> +
-> +       /* ensure that clk rate is correct by enabling the clk */
-> +       clk_prepare_enable(stm32port->clk);
-> +       stm32port->port.uartclk = clk_get_rate(stm32port->clk);
-> +       WARN_ON(stm32port->port.uartclk == 0);
-> +       clk_disable_unprepare(stm32port->clk);
-> +
-> +       return 0;
+> +	return -EINVAL;
 > +}
 > +
-> +static struct stm32_port *stm32_of_get_stm32_port(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       int id;
+>  static int wl12xx_setup(struct wl1271 *wl)
+>  {
+>  	struct wl12xx_priv *priv = wl->priv;
+> @@ -1799,7 +1833,17 @@ static int wl12xx_setup(struct wl1271 *wl)
+>  	wl12xx_conf_init(wl);
+>  
+>  	if (!fref_param) {
+> -		priv->ref_clock = pdata->board_ref_clock;
+> +		priv->ref_clock = wl12xx_get_clock_idx(wl12xx_refclock_table,
+> +						       pdata->ref_clock_freq,
+> +						       pdata->ref_clock_xtal);
+> +		if (priv->ref_clock < 0) {
+> +			wl1271_error("Invalid ref_clock frequency (%d Hz, %s)",
+> +				     pdata->ref_clock_freq,
+> +				     pdata->ref_clock_xtal ?
+> +				     "XTAL" : "not XTAL");
 > +
-> +       if (!np)
-> +               return NULL;
+> +			return priv->ref_clock;
+> +		}
+>  	} else {
+>  		if (!strcmp(fref_param, "19.2"))
+>  			priv->ref_clock = WL12XX_REFCLOCK_19;
+> @@ -1817,9 +1861,17 @@ static int wl12xx_setup(struct wl1271 *wl)
+>  			wl1271_error("Invalid fref parameter %s", fref_param);
+>  	}
+>  
+> -	if (!tcxo_param) {
+> -		priv->tcxo_clock = pdata->board_tcxo_clock;
+> -	} else {
+> +	if (!tcxo_param && pdata->tcxo_clock_freq) {
+> +		priv->tcxo_clock = wl12xx_get_clock_idx(wl12xx_tcxoclock_table,
+> +							pdata->tcxo_clock_freq,
+> +							true);
+> +		if (priv->tcxo_clock < 0) {
+> +			wl1271_error("Invalid tcxo_clock frequency (%d Hz)",
+> +				     pdata->tcxo_clock_freq);
 > +
-> +       id = of_alias_get_id(np, STM32_SERIAL_NAME);
-> +
-> +       if (id < 0)
-> +               id = 0;
-> +
-> +       if (WARN_ON(id >= STM32_MAX_PORTS))
-> +               return NULL;
-> +
-> +       stm32_ports[id].port.line = id;
-> +       return &stm32_ports[id];
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id stm32_match[] = {
-> +       { .compatible = "st,stm32-usart", },
-> +       {},
+> +			return priv->tcxo_clock;
+> +		}
+> +	} else if (tcxo_param) {
+>  		if (!strcmp(tcxo_param, "19.2"))
+>  			priv->tcxo_clock = WL12XX_TCXOCLOCK_19_2;
+>  		else if (!strcmp(tcxo_param, "26"))
+> diff --git a/drivers/net/wireless/ti/wl12xx/wl12xx.h b/drivers/net/wireless/ti/wl12xx/wl12xx.h
+> index 75c9265..5952e99a 100644
+> --- a/drivers/net/wireless/ti/wl12xx/wl12xx.h
+> +++ b/drivers/net/wireless/ti/wl12xx/wl12xx.h
+> @@ -82,6 +82,34 @@ struct wl12xx_priv {
+>  	struct wl127x_rx_mem_pool_addr *rx_mem_addr;
+>  };
+>  
+> +/* Reference clock values */
+> +enum {
+> +	WL12XX_REFCLOCK_19	= 0, /* 19.2 MHz */
+> +	WL12XX_REFCLOCK_26	= 1, /* 26 MHz */
+> +	WL12XX_REFCLOCK_38	= 2, /* 38.4 MHz */
+> +	WL12XX_REFCLOCK_52	= 3, /* 52 MHz */
+> +	WL12XX_REFCLOCK_38_XTAL = 4, /* 38.4 MHz, XTAL */
+> +	WL12XX_REFCLOCK_26_XTAL = 5, /* 26 MHz, XTAL */
 > +};
 > +
-> +MODULE_DEVICE_TABLE(of, stm32_match);
-> +#endif
-> +
-> +static int stm32_serial_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +       struct stm32_port *stm32port;
-> +
-> +       stm32port = stm32_of_get_stm32_port(pdev);
-> +       if (!stm32port)
-> +               return -ENODEV;
-> +
-> +       ret = stm32_init_port(stm32port, pdev);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = uart_add_one_port(&stm32_usart_driver, &stm32port->port);
-> +       if (ret)
-> +               return ret;
-> +
-> +       platform_set_drvdata(pdev, &stm32port->port);
-> +
-> +       return 0;
-> +}
-> +
-> +static int stm32_serial_remove(struct platform_device *pdev)
-> +{
-> +       struct uart_port *port = platform_get_drvdata(pdev);
-> +
-> +       return uart_remove_one_port(&stm32_usart_driver, port);
-> +}
-> +
-> +
-> +#ifdef CONFIG_SERIAL_STM32_CONSOLE
-> +static void stm32_console_putchar(struct uart_port *port, int ch)
-> +{
-> +       while (!(readl_relaxed(port->membase + USART_SR) & USART_SR_TXE))
-> +               cpu_relax();
-> +
-> +       writel_relaxed(ch, port->membase + USART_DR);
-> +}
-> +
-> +static void stm32_console_write(struct console *co, const char *s, unsigned cnt)
-> +{
-> +       struct uart_port *port = &stm32_ports[co->index].port;
-> +       unsigned long flags;
-> +       u32 old_cr1, new_cr1;
-> +       int locked = 1;
-> +
-> +       if (oops_in_progress) {
-> +               locked = spin_trylock_irqsave(&port->lock, flags);
-> +       } else {
-> +               locked = 1;
-> +               spin_lock_irqsave(&port->lock, flags);
-> +       }
-> +
-> +       /* Save and disable interrupts */
-> +       old_cr1 = readl_relaxed(port->membase + USART_CR1);
-> +       new_cr1 = old_cr1 & ~USART_CR1_IE_MASK;
-> +       writel_relaxed(new_cr1, port->membase + USART_CR1);
-> +
-> +       uart_console_write(port, s, cnt, stm32_console_putchar);
-> +
-> +       /* Restore interrupt state */
-> +       writel_relaxed(old_cr1, port->membase + USART_CR1);
-> +
-> +       if (locked)
-> +               spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static int stm32_console_setup(struct console *co, char *options)
-> +{
-> +       struct stm32_port *stm32port;
-> +       int baud = 9600;
-> +       int bits = 8;
-> +       int parity = 'n';
-> +       int flow = 'n';
-> +
-> +       if (co->index >= STM32_MAX_PORTS)
-> +               return -ENODEV;
-> +
-> +       stm32port = &stm32_ports[co->index];
-> +
-> +       /*
-> +        * This driver does not support early console initialization
-> +        * (use ARM early printk support instead), so we only expect
-> +        * this to be called during the uart port registration when the
-> +        * driver gets probed and the port should be mapped at that point.
-> +        */
-> +       if (stm32port->port.mapbase == 0 || stm32port->port.membase == NULL)
-> +               return -ENXIO;
-> +
-> +       if (options)
-> +               uart_parse_options(options, &baud, &parity, &bits, &flow);
-> +
-> +       return uart_set_options(&stm32port->port, co, baud, parity, bits, flow);
-> +}
-> +
-> +static struct console stm32_console = {
-> +       .name           = STM32_SERIAL_NAME,
-> +       .device         = uart_console_device,
-> +       .write          = stm32_console_write,
-> +       .setup          = stm32_console_setup,
-> +       .flags          = CON_PRINTBUFFER,
-> +       .index          = -1,
-> +       .data           = &stm32_usart_driver,
+> +/* TCXO clock values */
+> +enum {
+> +	WL12XX_TCXOCLOCK_19_2	= 0, /* 19.2MHz */
+> +	WL12XX_TCXOCLOCK_26	= 1, /* 26 MHz */
+> +	WL12XX_TCXOCLOCK_38_4	= 2, /* 38.4MHz */
+> +	WL12XX_TCXOCLOCK_52	= 3, /* 52 MHz */
+> +	WL12XX_TCXOCLOCK_16_368	= 4, /* 16.368 MHz */
+> +	WL12XX_TCXOCLOCK_32_736	= 5, /* 32.736 MHz */
+> +	WL12XX_TCXOCLOCK_16_8	= 6, /* 16.8 MHz */
+> +	WL12XX_TCXOCLOCK_33_6	= 7, /* 33.6 MHz */
 > +};
 > +
-> +#define STM32_SERIAL_CONSOLE (&stm32_console)
-> +
-> +#else
-> +#define STM32_SERIAL_CONSOLE NULL
-> +#endif /* CONFIG_SERIAL_STM32_CONSOLE */
-> +
-> +static struct uart_driver stm32_usart_driver = {
-> +       .owner          = THIS_MODULE,
-> +       .driver_name    = DRIVER_NAME,
-> +       .dev_name       = STM32_SERIAL_NAME,
-> +       .major          = 0,
-> +       .minor          = 0,
-> +       .nr             = STM32_MAX_PORTS,
-> +       .cons           = STM32_SERIAL_CONSOLE,
+> +struct wl12xx_clock {
+> +	u32	freq;
+> +	bool	xtal;
+> +	u8	hw_idx;
 > +};
 > +
-> +static struct platform_driver stm32_serial_driver = {
-> +       .probe          = stm32_serial_probe,
-> +       .remove         = stm32_serial_remove,
-> +       .driver = {
-> +               .name   = DRIVER_NAME,
-> +               .owner  = THIS_MODULE,
-> +               .of_match_table = of_match_ptr(stm32_match),
-> +       },
-> +};
-> +
-> +static int __init usart_init(void)
-> +{
-> +       int ret;
-> +       static char banner[] __initdata =
-> +               KERN_INFO "STM32 USART driver initialized\n";
-> +
-> +       printk(banner);
-> +
-> +       ret = uart_register_driver(&stm32_usart_driver);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = platform_driver_register(&stm32_serial_driver);
-> +       if (ret)
-> +               uart_unregister_driver(&stm32_usart_driver);
-> +
-> +       return ret;
-> +}
-> +
-> +static void __exit usart_exit(void)
-> +{
-> +       platform_driver_unregister(&stm32_serial_driver);
-> +       uart_unregister_driver(&stm32_usart_driver);
-> +}
-> +
-> +module_init(usart_init);
-> +module_exit(usart_exit);
-> +
-> +MODULE_ALIAS("platform:" DRIVER_NAME);
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 serial port driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-> index b212281..e22dee5 100644
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -258,4 +258,7 @@
->  /* Cris v10 / v32 SoC */
->  #define PORT_CRIS      112
->
-> +/* STM32 USART */
-> +#define PORT_STM32     110
-> +
->  #endif /* _UAPILINUX_SERIAL_CORE_H */
-> --
-> 1.9.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+>  struct wl12xx_fw_packet_counters {
+>  	/* Cumulative counter of released packets per AC */
+>  	u8 tx_released_pkts[NUM_TX_QUEUES];
+> diff --git a/include/linux/wl12xx.h b/include/linux/wl12xx.h
+> index 3876b67..eea1e6d 100644
+> --- a/include/linux/wl12xx.h
+> +++ b/include/linux/wl12xx.h
+> @@ -26,28 +26,6 @@
+>  
+>  #include <linux/err.h>
+>  
+> -/* Reference clock values */
+> -enum {
+> -	WL12XX_REFCLOCK_19	= 0, /* 19.2 MHz */
+> -	WL12XX_REFCLOCK_26	= 1, /* 26 MHz */
+> -	WL12XX_REFCLOCK_38	= 2, /* 38.4 MHz */
+> -	WL12XX_REFCLOCK_52	= 3, /* 52 MHz */
+> -	WL12XX_REFCLOCK_38_XTAL = 4, /* 38.4 MHz, XTAL */
+> -	WL12XX_REFCLOCK_26_XTAL = 5, /* 26 MHz, XTAL */
+> -};
+> -
+> -/* TCXO clock values */
+> -enum {
+> -	WL12XX_TCXOCLOCK_19_2	= 0, /* 19.2MHz */
+> -	WL12XX_TCXOCLOCK_26	= 1, /* 26 MHz */
+> -	WL12XX_TCXOCLOCK_38_4	= 2, /* 38.4MHz */
+> -	WL12XX_TCXOCLOCK_52	= 3, /* 52 MHz */
+> -	WL12XX_TCXOCLOCK_16_368	= 4, /* 16.368 MHz */
+> -	WL12XX_TCXOCLOCK_32_736	= 5, /* 32.736 MHz */
+> -	WL12XX_TCXOCLOCK_16_8	= 6, /* 16.8 MHz */
+> -	WL12XX_TCXOCLOCK_33_6	= 7, /* 33.6 MHz */
+> -};
+> -
+>  struct wl1251_platform_data {
+>  	int power_gpio;
+>  	/* SDIO only: IRQ number if WLAN_IRQ line is used, 0 for SDIO IRQs */
+> @@ -58,8 +36,9 @@ struct wl1251_platform_data {
+>  struct wl12xx_platform_data {
+>  	int irq;
+>  	u32 irq_trigger;
+> -	int board_ref_clock;
+> -	int board_tcxo_clock;
+> +	bool ref_clock_xtal;	/* specify whether the clock is XTAL or not */
+> +	u32 ref_clock_freq;	/* in Hertz */
+> +	u32 tcxo_clock_freq;	/* in Hertz, tcxo is always XTAL */
+>  	bool pwr_in_suspend;
+>  };
+>  
+> -- 
+> 1.8.5.2.229.g4448466.dirty
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
