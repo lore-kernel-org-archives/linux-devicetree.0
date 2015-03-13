@@ -1,85 +1,45 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: [PATCH 2/2] ASoC: qcom: Modify test for DSP in LPASS driver
-Date: Fri, 13 Mar 2015 00:54:17 -0700
-Message-ID: <1426233257-27532-2-git-send-email-kwestfie@codeaurora.org>
-References: <1426233257-27532-1-git-send-email-kwestfie@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1426233257-27532-1-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Fri, 13 Mar 2015 09:01:08 +0100
+Message-ID: <CABxcv=mETO9ESVa04YjRO1d-h5ksEwvwGKb1G-jxVk6ttr9JYg@mail.gmail.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+	<1426162154-8716-6-git-send-email-eliad@wizery.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426162154-8716-6-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, paupa13-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kenneth Westfield <kwestfie@codeaurora.org>
+Hello Eliad,
 
-As the representation of the DSP in the device
-tree has changed from a required subnode to an
-optional phandle, modify the test for DSP
-existence in the LPASS CPU DAI driver,
-accordingly.
+On Thu, Mar 12, 2015 at 1:09 PM, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
+> Replace all the pdata-quirks for setting wl12xx/wl18xx
+> platform data with proper DT definitions.
+>
+> The patch was compile-tested only.
+>
+> Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+> ---
 
-Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
----
- sound/soc/qcom/lpass-cpu.c | 33 +++++++--------------------------
- 1 file changed, 7 insertions(+), 26 deletions(-)
+I wanted to test your series but I realized that the IGEPv2 I've
+access is the old revision that has another SDIO wlan module instead
+of a Wilink8.
 
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index d5167131787f3a7663665c94dffe6899bd050179..6698d058de29600a464be79490bec641736819c3 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -359,45 +359,26 @@ static const struct regmap_config lpass_cpu_regmap_config = {
- 	.cache_type = REGCACHE_FLAT,
- };
- 
--static int lpass_cpu_parse_of(struct device *dev)
-+static int lpass_cpu_platform_probe(struct platform_device *pdev)
- {
-+	struct lpass_data *drvdata;
- 	struct device_node *dsp_of_node;
-+	struct resource *res;
-+	int ret;
- 
--	dsp_of_node = of_get_child_by_name(dev->of_node, "qcom,adsp");
--	if (!dsp_of_node) {
--		dev_err(dev, "%s() error getting qcom,adsp sub-node\n",
--				__func__);
--		return -EINVAL;
--	}
--
--	if (of_device_is_available(dsp_of_node)) {
--		dev_err(dev, "%s() DSP exists and holds audio resources\n",
-+	dsp_of_node = of_parse_phandle(pdev->dev.of_node, "qcom,adsp", 0);
-+	if (dsp_of_node) {
-+		dev_err(&pdev->dev, "%s() DSP exists and holds audio resources\n",
- 				__func__);
- 		return -EBUSY;
- 	}
- 
--	return 0;
--}
--
--static int lpass_cpu_platform_probe(struct platform_device *pdev)
--{
--	struct lpass_data *drvdata;
--	struct resource *res;
--	int ret;
--
- 	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct lpass_data),
- 			GFP_KERNEL);
- 	if (!drvdata)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, drvdata);
- 
--	ret = lpass_cpu_parse_of(&pdev->dev);
--	if (ret) {
--		dev_err(&pdev->dev, "%s() error getting DT node info: %d\n",
--				__func__, ret);
--		return ret;
--	}
--
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
- 	if (!res) {
- 		dev_err(&pdev->dev, "%s() error getting resource\n", __func__);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Maybe Enric have the new revision? I also added to Pau Pajuel as cc
+who still works in the company manufacturing these boards so he should
+be able to test it.
+
+But in any case, your patch looks good to me so for the
+arch/arm/boot/dts/omap3-igep00* changes:
+
+Acked-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
