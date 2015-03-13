@@ -1,71 +1,48 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and
- evaluation board dts
-Date: Fri, 13 Mar 2015 16:25:16 +0000
-Message-ID: <20150313162516.GA9603@leverpostej>
-References: <1426182985-10425-1-git-send-email-galak@codeaurora.org>
- <20150313105207.GB3592@leverpostej>
- <04AD8E46-277D-4652-88AF-D16538C2AA87@codeaurora.org>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 10/10] ARM: dt: dove: add GPU power domain description
+Date: Fri, 13 Mar 2015 16:24:06 +0000
+Message-ID: <E1YWSNa-0006GT-HU@rmk-PC.arm.linux.org.uk>
+References: <20150312183020.GU8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150312183020.GU8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <04AD8E46-277D-4652-88AF-D16538C2AA87-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2015 at 03:50:42PM +0000, Kumar Gala wrote:
->=20
-> On Mar 13, 2015, at 5:52 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrot=
-e:
->=20
-> >> +/ {
-> >> +	chosen {
-> >> +		stdout-path =3D &blsp1_uart2;
-> >> +	};
-> >=20
-> > It would be good if we had the configuration too (see
-> > Documentation/devicetree/bindings/chosen.txt), as that avoids any
-> > reliance on kernel defaults.
-> >=20
-> > You can refer to an alias, so this could be:
-> >=20
-> > aliases {
-> > 	serial0 =3D &blsp1_uart2;
-> > };
-> >=20
-> > chosen {
-> > 	stdout-path =3D "serial0:115200n8";
-> > };
-> >=20
-> > ...assuming that 115200n8 is correct for your UART, of course.
-> >=20
-> >=20
-> > [=E2=80=A6]
->=20
-> Where is the code that actually handles this parsing?  I=E2=80=99m no=
-t see it
-> in early_init_dt_scan_chosen_serial and I don=E2=80=99t believe
-> fdt_path_offset does anything special with =E2=80=98:'
+Add the description of the GPU power domain to the PMU DT entry.
 
-Take a look at commit 7914a7c5651a5161 ("of: support passing console op=
-tions with
-stdout-path").
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/dove.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Early on of_alias_scan will find the options and in of_console_check
-we'll call add_preferred_console as appropriate. That'll be called in
-uart_add_one_port.
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 3dcf5322bf0e..d273552ada8a 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -394,6 +394,13 @@
+ 					marvell,pmu_iso_mask = <0x00000001>;
+ 					resets = <&pmu 16>;
+ 				};
++
++				gpu_domain: gpu-domain {
++					#power-domain-cells = <0>;
++					marvell,pmu_pwr_mask = <0x00000004>;
++					marvell,pmu_iso_mask = <0x00000002>;
++					resets = <&pmu 18>;
++				};
+ 			};
+ 
+ 			thermal: thermal-diode@d001c {
+-- 
+1.8.3.1
 
-> I=E2=80=99ll kill off usage of skeleton.dtsi
-
-Cheers.
-
-Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
