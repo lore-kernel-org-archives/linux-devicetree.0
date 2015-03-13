@@ -1,76 +1,69 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 0/6] ARM: cpuidle: Unify the ARM64/ARM DT approach
-Date: Fri, 13 Mar 2015 18:08:12 +0100
-Message-ID: <5503197C.8030105@linaro.org>
-References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org> <7hfv98vnhn.fsf@deeprootsystems.com>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] irqchip: nvic: support hierarchy irq domain
+Date: Fri, 13 Mar 2015 18:35:26 +0100
+Message-ID: <CALszF6Di4kngd1Rzp9G=xwWPc4FqOPpA+5s+jrRSUGjs8OiCLg@mail.gmail.com>
+References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
+	<1426203380-7155-3-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <7hfv98vnhn.fsf@deeprootsystems.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lina.iyer@linaro.org, "keita.kobayashi.ym@renesas.com >> Keita Kobayashi" <keita.kobayashi.ym@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426203380-7155-3-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, marc.zyngier-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2015 06:03 PM, Kevin Hilman wrote:
-> Daniel Lezcano <daniel.lezcano@linaro.org> writes:
+2015-03-13 0:36 GMT+01:00 Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>:
+> Add support for hierarchy irq domain. Use to support the interrupt
+> router found in Vybrid SoC, which is between the NVIC and the
+> peripherals.
 >
->> There is a big number of cpuidle drivers for the ARM architecture.
->>
->> These drivers have been cleaned up and grouped into the drivers/cpui=
-dle
->> directory to keep track of the changes more easily and ensure the co=
-de
->> is following the same scheme across the drivers.
->>
->> That had the benefit of simplifying the code and factor out a lot of=
- common
->> parts. Beside that, as the drivers belong to the 'drivers' directory=
-, we had
->> to split the arch specific bits and the generic code in order to kee=
-p
->> everything self contained. The platform driver paradigm was used for=
- this
->> purpose.
->>
->> Unfortunately, this approach is now no longer accepted and a differe=
-nt solution
->> must be provided to reach the same goal: one example is the Qualcomm=
- cpuidle
->> driver upstreaming attempt [1].
->>
->> In the meantime, ARM64 developed a generic cpuidle driver based on D=
-T definition.
->>
->> The DT definition provides an 'enable-method' to specify one of the =
-cpu
->> operations (PSCI, ...).
->>
->> This patchset unify this driver with ARM32, using the same DT defini=
-tion.
->>
->> Thanks with this patchset we can use the 'enable-method' to specify =
-a cpu
->> operations, hence get rid of the platform driver approach and go fur=
-ther in the
->> cpuidle driver flexibility via the DT.
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  drivers/irqchip/irq-nvic.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
 >
-> I really like that these two are unified now.
+> diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+> index 4ff0805..5fac910 100644
+> --- a/drivers/irqchip/irq-nvic.c
+> +++ b/drivers/irqchip/irq-nvic.c
+> @@ -49,6 +49,31 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+>         handle_IRQ(irq, regs);
+>  }
 >
-> Acked-by: Kevin Hilman <khilman@linaro.org>
+> +static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +                               unsigned int nr_irqs, void *arg)
+> +{
+> +       int i, ret;
+> +       irq_hw_number_t hwirq;
+> +       unsigned int type = IRQ_TYPE_NONE;
+> +       struct of_phandle_args *irq_data = arg;
+> +
+> +       ret = irq_domain_xlate_onecell(domain, irq_data->np, irq_data->args,
+> +                                  irq_data->args_count, &hwirq, &type);
+> +       if (ret)
+> +               return ret;
+> +
+> +       for (i = 0; i < nr_irqs; i++)
+> +               irq_map_generic_chip(domain, virq + i, hwirq + i);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct irq_domain_ops nvic_irq_domain_ops = {
+> +       .xlate = irq_domain_xlate_onecell,
+> +       .alloc = nvic_irq_domain_alloc,
 
-Thanks for reviewing the patchset.
+.alloc is only available with CONFIG_IRQ_DOMAIN_HIERARCHY=y, and it is
+not selected by in the config ARM_NVIC entry.
+It breaks the build with my STM32 series.
 
-   -- Daniel
+Once selected, the build is fine, and the board boots successfully.
 
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Best regards,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
