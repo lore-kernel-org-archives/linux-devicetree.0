@@ -1,42 +1,81 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v3  10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Fri, 13 Mar 2015 10:41:23 +0100
-Message-ID: <1426239683.5304.59.camel@x220>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
-	 <1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v6 3/3] ARM: dts: vf610: add Miscellaneous System
+ Control Module (MSCM)
+Date: Fri, 13 Mar 2015 10:42:07 +0100
+Message-ID: <9eef9ff618d869fe37c9f1d6dd88c641@agner.ch>
+References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
+ <1425249689-32354-4-git-send-email-stefan@agner.ch>
+ <20150311004812.GU20455@dragon> <59b0d98827cb4e7497de81e1c0826964@agner.ch>
+ <20150313044759.GQ20455@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <wi>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150313044759.GQ20455@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pebolle@tiscali.nl, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Just a license nit, I'm afraid.
+On 2015-03-13 05:48, Shawn Guo wrote:
+> On Thu, Mar 12, 2015 at 10:03:08AM +0100, Stefan Agner wrote:
+>> On 2015-03-11 01:48, Shawn Guo wrote:
+>> > On Sun, Mar 01, 2015 at 11:41:29PM +0100, Stefan Agner wrote:
+>> >> Add the Miscellaneous System Control Module (MSCM) to the base
+>> >> device tree for Vybrid SoC's. This module contains registers
+>> >> to get information of the individual and current (accessing)
+>> >> CPU. In a second block, there is an interrupt router, which
+>> >> handles the routing of the interrupts between the two CPU cores
+>> >> on VF6xx variants of the SoC. However, also on single core
+>> >> variants the interrupt router needs to be configured in order
+>> >> to receive interrupts on the CPU's interrupt controller. Almost
+>> >> all peripheral interrupts are routed through the router, hence
+>> >> the MSCM module is the default interrupt parent for this SoC.
+>> >>
+>> >> In a earlier commit the interrupt nodes were moved out of the
+>> >> peripheral nodes and specified in the CPU specific vf500.dtsi
+>> >> device tree. This allowed to use the base device tree vfxxx.dtsi
+>> >> also for a Cortex-M4 specific device tree, which uses different
+>> >> interrupt nodes due to the NVIC interrupt controller. However,
+>> >> since the interrupt parent for peripherals is the MSCM module
+>> >> independently which CPU the device tree is used for, we can move
+>> >> the interrupt nodes into the base device tree vfxxx.dtsi again.
+>> >> Depending on which CPU this base device tree will be used with,
+>> >> the correct parent interrupt controller has to be assigned to
+>> >> the MSCM-IR node (GIC or NVIC). The driver takes care of the
+>> >> parent interrupt controller specific needs (interrupt-cells).
+>> >>
+>> >> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+>> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> >
+>> > Stefan,
+>> >
+>> > I guess this patch has a run-time dependency on the first two in the
+>> > series, right?  Or put it another way, if I apply this single patch on
+>> > my branch, the dtb and kernel built from the same branch do not work
+>> > together, right?  If so, we will need to either wait for the first two
+>> > hit mainline or pull Jason's irqchip/vybrid branch into my tree as
+>> > prerequisite (irqchip/vybrid needs to be stable).
+>> >
+>> > Shawn
+>>
+>> Yes, that is true. The driver need to be in place in order to
+>> successfully boot with the new device tree.
+> 
+> Okay.  Pulled Jason's irqchip/vybrid branch in, and applied the patch.
+> 
+> Stefan,
+> 
+> There was a conflict on device dspi1 when applying the patch to my
+> imx/dt branch.  Please take a look to see if I solved it correctly.
+> 
 
-On Thu, 2015-03-12 at 22:55 +0100, Maxime Coquelin wrote:
-> --- /dev/null
-> +++ b/drivers/tty/serial/stm32-usart.c
-> @@ -0,0 +1,695 @@
-> +/*
-> + * Copyright (C) Maxime Coquelin 2015
-> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + *
-> + * Inspired by st-asc.c from STMicroelectronics (c)
-> + */
+Hi Shawn,
 
-This states the license is GPL v2.
+Your updated patch looks good to me. Also quickly boot tested the
+branch, worked fine.
 
-> +MODULE_LICENSE("GPL");
+Thx!
 
-And
-    MODULE_LICENSE("GPL v2");
-
-would match that statement.
-
-
-Paul Bolle
-
+--
+Stefan
