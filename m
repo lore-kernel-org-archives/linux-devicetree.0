@@ -1,59 +1,75 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and
- evaluation board dts
-Date: Fri, 13 Mar 2015 10:52:07 +0000
-Message-ID: <20150313105207.GB3592@leverpostej>
-References: <1426182985-10425-1-git-send-email-galak@codeaurora.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
+Date: Fri, 13 Mar 2015 11:57:42 +0100
+Message-ID: <20150313105742.GS24885@pengutronix.de>
+References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
+ <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
+ <20150223135044.108ea32a65063a50aa36a309@linux-foundation.org>
+ <1426242563.18291.19.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426182985-10425-1-git-send-email-galak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
+In-Reply-To: <1426242563.18291.19.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tianping Fang <tianping.fang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> +/ {
-> +	chosen {
-> +		stdout-path = &blsp1_uart2;
-> +	};
+Hi Eddie,
 
-It would be good if we had the configuration too (see
-Documentation/devicetree/bindings/chosen.txt), as that avoids any
-reliance on kernel defaults.
+On Fri, Mar 13, 2015 at 06:29:23PM +0800, Eddie Huang wrote:
+> > regmap_read() and regmap_write() can return errors.  There is no
+> > checking for this.
+> > 
+> 
+> I encounter some trouble when I add code to check return value of
+> regmap_read and regmap_write. Every RTC register access through regmap,
+> and there are many register read/write in this driver. If I check every
+> return value, the driver will become ugly. I try to make this driver
+> clean using following macro.
+> 
+> static int __rtc_read(struct mt6397_rtc *rtc, u32 offset, u32 *data)
+> {
+>         u32 addr = rtc->addr_base + offset;
+> 
+>         if (offset < rtc->addr_range)
+>                 return regmap_read(rtc->regmap, addr, data);
+> 
+>         return -EINVAL;
+> }
+> 
+> #define rtc_read(ret, rtc, offset, data)                \
+> ({                                                      \
+>         ret = __rtc_read(rtc, offset, data);            \
+>         if (ret < 0)                                    \
+>                 goto rtc_exit;                          \
+> })                                                      \
 
-You can refer to an alias, so this could be:
+Hiding a goto (or return) in a macro is a very bad idea.
 
-aliases {
-	serial0 = &blsp1_uart2;
-};
+what you can do is
 
-chosen {
-	stdout-path = "serial0:115200n8";
-};
+	ret |= regmap_read(rtc->regmap, RTC_TC_SEC, &tm->tm_sec);
+	ret |= regmap_read(rtc->regmap, RTC_TC_MIN, &tm->tm_min);
 
-...assuming that 115200n8 is correct for your UART, of course.
+	if (ret)
+		return -EIO;
 
+(Don't return ret in this case though as it might contain different
+error codes orred together)
 
-[...]
+Another possibilty at least for contiguous registers would be
+regmap_bulk_read().
 
-> +#include "skeleton.dtsi"
+Sascha
 
-I'd like to get rid of skeleton.dtsi; it causes more problems than it
-solves (the address/size cells mismatch is confusing and hidden, people
-forget to fill in memory nodes appropriately, etc).
-
-Please remove this include and place appropriate #address-cells and #size-cells here.
-
-I'd strongly recommend going with /#size-cells = <2>; it' will save on a
-lot of pain if you need to add PCIe or something with large ranges
-later. If things all fall in 4GB within the SoC then have
-/soc/#size=cells = <1> and an appropriate /soc/ranges property.
-
-I note this DT doesn't have any memory nodes. Is that an accident or
-does the loader fill that in?
-
-If the latter, have an empty node with a comment to that effect.
-
-Mark.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
