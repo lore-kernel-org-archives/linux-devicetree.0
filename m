@@ -1,129 +1,46 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
-Date: Fri, 13 Mar 2015 18:29:23 +0800
-Message-ID: <1426242563.18291.19.camel@mtksdaap41>
-References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
-	 <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150223135044.108ea32a65063a50aa36a309@linux-foundation.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and
+ evaluation board dts
+Date: Fri, 13 Mar 2015 10:34:54 +0000
+Message-ID: <20150313103453.GA3592@leverpostej>
+References: <1426107080-29079-1-git-send-email-galak@codeaurora.org>
+ <1426107080-29079-2-git-send-email-galak@codeaurora.org>
+ <20150312170541.GE30145@leverpostej>
+ <E114AF0E-5DA9-412A-B3E2-DDD95D224C66@codeaurora.org>
+ <20150312182508.GF30145@leverpostej>
+ <F0B0524B-AC0E-4E60-9A21-1208C4A978F5@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150223135044.108ea32a65063a50aa36a309@linux-foundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Tianping Fang <tianping.fang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.chen@mediatek.com, yingjoe.chen@mediatek.com, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <F0B0524B-AC0E-4E60-9A21-1208C4A978F5-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, 2015-02-23 at 13:50 -0800, Andrew Morton wrote:
-> On Wed, 28 Jan 2015 17:27:56 +0800 Eddie Huang <eddie.huang@mediatek.com> wrote:
+> > Which of spin-table/psci are you planning on using for SMP support, and
+> > when would that be likely to appear?
 > 
-> > From: Tianping Fang <tianping.fang@mediatek.com>
-> > 
-> > Add Mediatek MT63xx RTC driver
+> We have a qcom specific SMP enablement method for this device.  This
+> was one of our first devices so it utilized as much from arm 32-bit as
+> possible.
+
+Implementation specific enable methods are something we really don't
+want to see for arm64. If PSCI is out of the question then a spin-table
+shim in your bootloader shouldn't be too hard to implement.
+
+> > Which exception level do CPUs enter the kernel? Even without a
+> > virt-capable GIC booting at EL2 is less work for the FW and gives the
+> > kernel a better chance of fixing things up (e.g. CNTVOFF).
 > 
-> There are a couple of checkpatch warnings which should be addressed,
-> please:
-> 
-> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-> #150: 
-> new file mode 100644
-> 
-> WARNING: DT compatible string "mediatek,mt6397-rtc" appears un-documented -- check ./Documentation/devicetree/bindings/
-> #488: FILE: drivers/rtc/rtc-mt6397.c:334:
-> +	{ .compatible = "mediatek,mt6397-rtc", },
-> 
-> 
-> 
-> 
-> >
-> > ...
-> >
-> > +static u16 rtc_read(struct mt6397_rtc *rtc, u32 offset)
-> > +{
-> > +	u32 rdata = 0;
-> > +	u32 addr = rtc->addr_base + offset;
-> > +
-> > +	if (offset < rtc->addr_range)
-> > +		regmap_read(rtc->regmap, addr, &rdata);
-> > +
-> > +	return (u16)rdata;
-> > +}
-> > +
-> > +static void rtc_write(struct mt6397_rtc *rtc, u32 offset, u32 data)
-> > +{
-> > +	u32 addr;
-> > +
-> > +	addr = rtc->addr_base + offset;
-> > +
-> > +	if (offset < rtc->addr_range)
-> > +		regmap_write(rtc->regmap, addr, data);
-> > +}
-> 
-> regmap_read() and regmap_write() can return errors.  There is no
-> checking for this.
-> 
+> I think the enter in EL1.
 
-I encounter some trouble when I add code to check return value of
-regmap_read and regmap_write. Every RTC register access through regmap,
-and there are many register read/write in this driver. If I check every
-return value, the driver will become ugly. I try to make this driver
-clean using following macro.
+That's unfortunate, but so long as they are consistent, it's not the end
+of the world.
 
-static int __rtc_read(struct mt6397_rtc *rtc, u32 offset, u32 *data)
-{
-        u32 addr = rtc->addr_base + offset;
-
-        if (offset < rtc->addr_range)
-                return regmap_read(rtc->regmap, addr, data);
-
-        return -EINVAL;
-}
-
-#define rtc_read(ret, rtc, offset, data)                \
-({                                                      \
-        ret = __rtc_read(rtc, offset, data);            \
-        if (ret < 0)                                    \
-                goto rtc_exit;                          \
-})                                                      \
-
-
-And function call rtc_read, rtc_write looks like:
-
-static int mtk_rtc_read_time(struct device *dev, struct rtc_time *tm)
-{
-        unsigned long time;
-        struct mt6397_rtc *rtc = dev_get_drvdata(dev);
-        int ret = 0;
-        u32 sec;
-
-        mutex_lock(&rtc->lock);
-        do {
-                rtc_read(ret, rtc, RTC_TC_SEC, &tm->tm_sec);
-                rtc_read(ret, rtc, RTC_TC_MIN, &tm->tm_min);
-                rtc_read(ret, rtc, RTC_TC_HOU, &tm->tm_hour);
-                rtc_read(ret, rtc, RTC_TC_DOM, &tm->tm_mday);
-                rtc_read(ret, rtc, RTC_TC_MTH, &tm->tm_mon);
-                rtc_read(ret, rtc, RTC_TC_YEA, &tm->tm_year);
-                rtc_read(ret, rtc, RTC_TC_SEC, &sec);
-        } while (sec < tm->tm_sec);
-        mutex_unlock(&rtc->lock);
-
-        tm->tm_year += RTC_MIN_YEAR_OFFSET;
-        tm->tm_mon--;
-        rtc_tm_to_time(tm, &time);
-
-        tm->tm_wday = (time / 86400 + 4) % 7;
-
-        return 0;
-
-rtc_exit:
-        mutex_unlock(&rtc->lock);
-        return ret;
-}
-
-It's a little tricky, does anyone have good suggestion ?
-
-Eddie
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
