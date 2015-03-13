@@ -1,375 +1,777 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH V2 5/5] MIPS: pistachio: Add an initial defconfig
-Date: Fri, 13 Mar 2015 15:54:09 -0700
-Message-ID: <1426287249-27185-6-git-send-email-abrestic@chromium.org>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH V2 1/5] MIPS: Create a common <asm/mach-generic/war.h>
+Date: Fri, 13 Mar 2015 15:54:05 -0700
+Message-ID: <1426287249-27185-2-git-send-email-abrestic@chromium.org>
 References: <1426287249-27185-1-git-send-email-abrestic@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426287249-27185-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1426287249-27185-1-git-send-email-abrestic@chromium.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Andrew Bresticker <abrestic@chromium.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Kevin Cernekee <cernekee@gmail.com>
 
-Add a defconfig for Pistachio which enables drivers for all the
-currently supported peripherals on the SoC.
+11 platforms require at least one of these workarounds to be enabled; 22
+platforms do not.  In the latter case we can fall back to a generic version.
 
-Signed-off-by: Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Note that this also deletes an orphaned reference to RM9000_CDEX_SMP_WAR.
+
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
 No changes from v1.
+Changes from Kevin's v6:
+ - Left cavium-octeon's war.h in-tact
 ---
- arch/mips/configs/pistachio_defconfig | 336 ++++++++++++++++++++++++++++++++++
- 1 file changed, 336 insertions(+)
- create mode 100644 arch/mips/configs/pistachio_defconfig
+ arch/mips/include/asm/mach-ar7/war.h       | 24 ------------------------
+ arch/mips/include/asm/mach-ath25/war.h     | 25 -------------------------
+ arch/mips/include/asm/mach-ath79/war.h     | 24 ------------------------
+ arch/mips/include/asm/mach-au1x00/war.h    | 24 ------------------------
+ arch/mips/include/asm/mach-bcm3384/war.h   | 24 ------------------------
+ arch/mips/include/asm/mach-bcm47xx/war.h   | 24 ------------------------
+ arch/mips/include/asm/mach-bcm63xx/war.h   | 24 ------------------------
+ arch/mips/include/asm/mach-cobalt/war.h    | 24 ------------------------
+ arch/mips/include/asm/mach-dec/war.h       | 24 ------------------------
+ arch/mips/include/asm/mach-emma2rh/war.h   | 24 ------------------------
+ arch/mips/include/asm/mach-generic/war.h   | 24 ++++++++++++++++++++++++
+ arch/mips/include/asm/mach-jazz/war.h      | 24 ------------------------
+ arch/mips/include/asm/mach-jz4740/war.h    | 24 ------------------------
+ arch/mips/include/asm/mach-lantiq/war.h    | 23 -----------------------
+ arch/mips/include/asm/mach-lasat/war.h     | 24 ------------------------
+ arch/mips/include/asm/mach-loongson/war.h  | 24 ------------------------
+ arch/mips/include/asm/mach-loongson1/war.h | 24 ------------------------
+ arch/mips/include/asm/mach-netlogic/war.h  | 25 -------------------------
+ arch/mips/include/asm/mach-paravirt/war.h  | 25 -------------------------
+ arch/mips/include/asm/mach-pnx833x/war.h   | 24 ------------------------
+ arch/mips/include/asm/mach-ralink/war.h    | 24 ------------------------
+ arch/mips/include/asm/mach-tx39xx/war.h    | 24 ------------------------
+ arch/mips/include/asm/mach-vr41xx/war.h    | 24 ------------------------
+ 23 files changed, 24 insertions(+), 530 deletions(-)
+ delete mode 100644 arch/mips/include/asm/mach-ar7/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ath25/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ath79/war.h
+ delete mode 100644 arch/mips/include/asm/mach-au1x00/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm3384/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm47xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm63xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-cobalt/war.h
+ delete mode 100644 arch/mips/include/asm/mach-dec/war.h
+ delete mode 100644 arch/mips/include/asm/mach-emma2rh/war.h
+ create mode 100644 arch/mips/include/asm/mach-generic/war.h
+ delete mode 100644 arch/mips/include/asm/mach-jazz/war.h
+ delete mode 100644 arch/mips/include/asm/mach-jz4740/war.h
+ delete mode 100644 arch/mips/include/asm/mach-lantiq/war.h
+ delete mode 100644 arch/mips/include/asm/mach-lasat/war.h
+ delete mode 100644 arch/mips/include/asm/mach-loongson/war.h
+ delete mode 100644 arch/mips/include/asm/mach-loongson1/war.h
+ delete mode 100644 arch/mips/include/asm/mach-netlogic/war.h
+ delete mode 100644 arch/mips/include/asm/mach-paravirt/war.h
+ delete mode 100644 arch/mips/include/asm/mach-pnx833x/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ralink/war.h
+ delete mode 100644 arch/mips/include/asm/mach-tx39xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-vr41xx/war.h
 
-diff --git a/arch/mips/configs/pistachio_defconfig b/arch/mips/configs/pistachio_defconfig
+diff --git a/arch/mips/include/asm/mach-ar7/war.h b/arch/mips/include/asm/mach-ar7/war.h
+deleted file mode 100644
+index 99071e5..0000000
+--- a/arch/mips/include/asm/mach-ar7/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_AR7_WAR_H
+-#define __ASM_MIPS_MACH_AR7_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_AR7_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ath25/war.h b/arch/mips/include/asm/mach-ath25/war.h
+deleted file mode 100644
+index e3a5250..0000000
+--- a/arch/mips/include/asm/mach-ath25/war.h
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2008 Felix Fietkau <nbd@openwrt.org>
+- */
+-#ifndef __ASM_MACH_ATH25_WAR_H
+-#define __ASM_MACH_ATH25_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define RM9000_CDEX_SMP_WAR		0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MACH_ATH25_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ath79/war.h b/arch/mips/include/asm/mach-ath79/war.h
+deleted file mode 100644
+index 0bb3090..0000000
+--- a/arch/mips/include/asm/mach-ath79/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MACH_ATH79_WAR_H
+-#define __ASM_MACH_ATH79_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MACH_ATH79_WAR_H */
+diff --git a/arch/mips/include/asm/mach-au1x00/war.h b/arch/mips/include/asm/mach-au1x00/war.h
+deleted file mode 100644
+index 72e260d..0000000
+--- a/arch/mips/include/asm/mach-au1x00/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_AU1X00_WAR_H
+-#define __ASM_MIPS_MACH_AU1X00_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_AU1X00_WAR_H */
+diff --git a/arch/mips/include/asm/mach-bcm3384/war.h b/arch/mips/include/asm/mach-bcm3384/war.h
+deleted file mode 100644
+index 59d7599..0000000
+--- a/arch/mips/include/asm/mach-bcm3384/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_BCM3384_WAR_H
+-#define __ASM_MIPS_MACH_BCM3384_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_BCM3384_WAR_H */
+diff --git a/arch/mips/include/asm/mach-bcm47xx/war.h b/arch/mips/include/asm/mach-bcm47xx/war.h
+deleted file mode 100644
+index a3d2f44..0000000
+--- a/arch/mips/include/asm/mach-bcm47xx/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_BCM47XX_WAR_H
+-#define __ASM_MIPS_MACH_BCM47XX_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_BCM47XX_WAR_H */
+diff --git a/arch/mips/include/asm/mach-bcm63xx/war.h b/arch/mips/include/asm/mach-bcm63xx/war.h
+deleted file mode 100644
+index 05ee867..0000000
+--- a/arch/mips/include/asm/mach-bcm63xx/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_BCM63XX_WAR_H
+-#define __ASM_MIPS_MACH_BCM63XX_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_BCM63XX_WAR_H */
+diff --git a/arch/mips/include/asm/mach-cobalt/war.h b/arch/mips/include/asm/mach-cobalt/war.h
+deleted file mode 100644
+index 34ae404..0000000
+--- a/arch/mips/include/asm/mach-cobalt/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_COBALT_WAR_H
+-#define __ASM_MIPS_MACH_COBALT_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_COBALT_WAR_H */
+diff --git a/arch/mips/include/asm/mach-dec/war.h b/arch/mips/include/asm/mach-dec/war.h
+deleted file mode 100644
+index d29996f..0000000
+--- a/arch/mips/include/asm/mach-dec/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_DEC_WAR_H
+-#define __ASM_MIPS_MACH_DEC_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_DEC_WAR_H */
+diff --git a/arch/mips/include/asm/mach-emma2rh/war.h b/arch/mips/include/asm/mach-emma2rh/war.h
+deleted file mode 100644
+index 79ae82d..0000000
+--- a/arch/mips/include/asm/mach-emma2rh/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_EMMA2RH_WAR_H
+-#define __ASM_MIPS_MACH_EMMA2RH_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_EMMA2RH_WAR_H */
+diff --git a/arch/mips/include/asm/mach-generic/war.h b/arch/mips/include/asm/mach-generic/war.h
 new file mode 100644
-index 0000000..f22e92e
+index 0000000..a1bc2e7
 --- /dev/null
-+++ b/arch/mips/configs/pistachio_defconfig
-@@ -0,0 +1,336 @@
-+CONFIG_MACH_PISTACHIO=y
-+CONFIG_MIPS_MT_SMP=y
-+CONFIG_MIPS_CPS=y
-+# CONFIG_COMPACTION is not set
-+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
-+CONFIG_ZSMALLOC=y
-+CONFIG_NR_CPUS=4
-+CONFIG_PREEMPT_VOLUNTARY=y
-+# CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_DEFAULT_HOSTNAME="localhost"
-+CONFIG_SYSVIPC=y
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_IKCONFIG=m
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_LOG_BUF_SHIFT=18
-+CONFIG_CGROUPS=y
-+CONFIG_CGROUP_FREEZER=y
-+CONFIG_CGROUP_SCHED=y
-+CONFIG_CFS_BANDWIDTH=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_BLK_DEV_INITRD=y
-+# CONFIG_RD_BZIP2 is not set
-+# CONFIG_RD_LZMA is not set
-+# CONFIG_RD_LZO is not set
-+# CONFIG_RD_LZ4 is not set
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_PROFILING=y
-+CONFIG_CC_STACKPROTECTOR_STRONG=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_MODULE_FORCE_UNLOAD=y
-+CONFIG_PARTITION_ADVANCED=y
-+CONFIG_PM_DEBUG=y
-+CONFIG_PM_ADVANCED_DEBUG=y
-+CONFIG_CPU_IDLE=y
-+# CONFIG_MIPS_CPS_CPUIDLE is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_NET_KEY=m
-+CONFIG_INET=y
-+CONFIG_IP_MULTICAST=y
-+CONFIG_IP_ADVANCED_ROUTER=y
-+CONFIG_IP_MULTIPLE_TABLES=y
-+CONFIG_IP_ROUTE_MULTIPATH=y
-+CONFIG_IP_ROUTE_VERBOSE=y
-+CONFIG_IP_MROUTE=y
-+CONFIG_IP_PIMSM_V1=y
-+CONFIG_IP_PIMSM_V2=y
-+CONFIG_SYN_COOKIES=y
-+CONFIG_INET_AH=m
-+CONFIG_INET_ESP=m
-+CONFIG_INET_IPCOMP=m
-+CONFIG_INET_XFRM_MODE_TRANSPORT=m
-+CONFIG_INET_XFRM_MODE_TUNNEL=m
-+CONFIG_INET_XFRM_MODE_BEET=m
-+# CONFIG_INET_DIAG is not set
-+CONFIG_TCP_CONG_ADVANCED=y
-+# CONFIG_TCP_CONG_BIC is not set
-+# CONFIG_TCP_CONG_WESTWOOD is not set
-+# CONFIG_TCP_CONG_HTCP is not set
-+CONFIG_TCP_CONG_LP=m
-+CONFIG_TCP_MD5SIG=y
-+CONFIG_IPV6=y
-+CONFIG_INET6_AH=m
-+CONFIG_INET6_ESP=m
-+CONFIG_INET6_XFRM_MODE_TRANSPORT=m
-+CONFIG_INET6_XFRM_MODE_TUNNEL=m
-+CONFIG_INET6_XFRM_MODE_BEET=m
-+CONFIG_IPV6_SIT=m
-+CONFIG_NETWORK_SECMARK=y
-+CONFIG_NETFILTER=y
-+# CONFIG_BRIDGE_NETFILTER is not set
-+CONFIG_NF_CONNTRACK=y
-+CONFIG_NF_CT_NETLINK=y
-+CONFIG_NETFILTER_XT_MARK=m
-+CONFIG_NETFILTER_XT_TARGET_CLASSIFY=y
-+CONFIG_NETFILTER_XT_TARGET_DSCP=y
-+CONFIG_NETFILTER_XT_TARGET_NFLOG=y
-+CONFIG_NETFILTER_XT_TARGET_NFQUEUE=y
-+CONFIG_NETFILTER_XT_TARGET_SECMARK=y
-+CONFIG_NETFILTER_XT_TARGET_TCPMSS=m
-+CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
-+CONFIG_NETFILTER_XT_MATCH_DSCP=y
-+CONFIG_NETFILTER_XT_MATCH_POLICY=y
-+CONFIG_NETFILTER_XT_MATCH_STATE=y
-+CONFIG_NF_CONNTRACK_IPV4=y
-+CONFIG_NF_NAT_IPV4=m
-+CONFIG_IP_NF_IPTABLES=y
-+CONFIG_IP_NF_FILTER=y
-+CONFIG_IP_NF_TARGET_REJECT=y
-+CONFIG_IP_NF_MANGLE=y
-+CONFIG_NF_CONNTRACK_IPV6=m
-+CONFIG_NF_NAT_IPV6=m
-+CONFIG_IP6_NF_IPTABLES=m
-+CONFIG_IP6_NF_MATCH_IPV6HEADER=m
-+CONFIG_IP6_NF_FILTER=m
-+CONFIG_IP6_NF_TARGET_REJECT=m
-+CONFIG_IP6_NF_MANGLE=m
-+CONFIG_BRIDGE=m
-+CONFIG_VLAN_8021Q=m
-+CONFIG_NET_SCHED=y
-+CONFIG_NET_SCH_HTB=m
-+CONFIG_NET_SCH_CODEL=m
-+CONFIG_NET_SCH_FQ_CODEL=m
-+CONFIG_NET_CLS_U32=m
-+CONFIG_CLS_U32_MARK=y
-+CONFIG_BT=m
-+CONFIG_BT_RFCOMM=m
-+CONFIG_BT_HCIBTUSB=m
-+CONFIG_BT_HCIBFUSB=m
-+CONFIG_BT_HCIVHCI=m
-+CONFIG_CFG80211=m
-+CONFIG_NL80211_TESTMODE=y
-+CONFIG_CFG80211_DEBUGFS=y
-+CONFIG_CFG80211_WEXT=y
-+CONFIG_MAC80211=m
-+CONFIG_MAC80211_LEDS=y
-+CONFIG_MAC80211_DEBUGFS=y
-+CONFIG_MAC80211_DEBUG_MENU=y
-+CONFIG_MAC80211_VERBOSE_DEBUG=y
-+CONFIG_RFKILL=y
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_DEBUG_DEVRES=y
-+CONFIG_CONNECTOR=y
-+CONFIG_MTD=y
-+CONFIG_MTD_BLOCK=y
-+CONFIG_MTD_M25P80=y
-+CONFIG_MTD_SPI_NOR=y
-+CONFIG_MTD_UBI=y
-+CONFIG_MTD_UBI_BLOCK=y
-+CONFIG_ZRAM=m
-+CONFIG_BLK_DEV_LOOP=y
-+CONFIG_SCSI=y
-+CONFIG_BLK_DEV_SD=y
-+CONFIG_BLK_DEV_SR=m
-+CONFIG_SCSI_SPI_ATTRS=y
-+CONFIG_MD=y
-+CONFIG_BLK_DEV_DM=y
-+CONFIG_DM_CRYPT=y
-+CONFIG_DM_VERITY=y
-+CONFIG_NETDEVICES=y
-+CONFIG_TUN=m
-+CONFIG_VETH=m
-+# CONFIG_NET_VENDOR_MARVELL is not set
-+# CONFIG_NET_VENDOR_MICREL is not set
-+# CONFIG_NET_VENDOR_MICROCHIP is not set
-+# CONFIG_NET_VENDOR_NATSEMI is not set
-+# CONFIG_NET_VENDOR_SEEQ is not set
-+# CONFIG_NET_VENDOR_SMSC is not set
-+CONFIG_STMMAC_ETH=y
-+# CONFIG_NET_VENDOR_VIA is not set
-+CONFIG_PPP=m
-+CONFIG_PPP_ASYNC=m
-+CONFIG_USB_PEGASUS=m
-+CONFIG_USB_RTL8150=m
-+CONFIG_USB_RTL8152=m
-+CONFIG_USB_NET_DM9601=m
-+CONFIG_USB_NET_SMSC75XX=m
-+CONFIG_USB_NET_SMSC95XX=m
-+CONFIG_USB_NET_MCS7830=m
-+# CONFIG_USB_NET_CDC_SUBSET is not set
-+# CONFIG_USB_NET_ZAURUS is not set
-+CONFIG_LIBERTAS_THINFIRM=m
-+CONFIG_USB_NET_RNDIS_WLAN=m
-+CONFIG_MAC80211_HWSIM=m
-+CONFIG_HOSTAP=m
-+CONFIG_HOSTAP_FIRMWARE=y
-+CONFIG_HOSTAP_FIRMWARE_NVRAM=y
-+CONFIG_RT2X00=m
-+CONFIG_RT2800USB=m
-+# CONFIG_INPUT_MOUSEDEV is not set
-+CONFIG_INPUT_EVDEV=y
-+# CONFIG_KEYBOARD_ATKBD is not set
-+CONFIG_KEYBOARD_GPIO=y
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_LEGACY_PTYS is not set
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_8250=y
-+# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_DW=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+CONFIG_HW_RANDOM=y
-+CONFIG_TCG_TPM=y
-+CONFIG_I2C=y
-+CONFIG_I2C_CHARDEV=m
-+CONFIG_I2C_IMG=y
-+CONFIG_I2C_STUB=m
-+CONFIG_SPI=y
-+CONFIG_SPI_BITBANG=m
-+CONFIG_SPI_IMG_SPFI=y
-+CONFIG_SPI_SPIDEV=y
-+CONFIG_DEBUG_GPIO=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_POWER_SUPPLY=y
-+CONFIG_THERMAL=y
-+CONFIG_WATCHDOG=y
-+CONFIG_WATCHDOG_CORE=y
-+CONFIG_IMGPDC_WDT=y
-+CONFIG_REGULATOR_FIXED_VOLTAGE=y
-+CONFIG_REGULATOR_GPIO=y
-+CONFIG_MEDIA_SUPPORT=y
-+CONFIG_MEDIA_RC_SUPPORT=y
-+# CONFIG_RC_DECODERS is not set
-+CONFIG_RC_DEVICES=y
-+CONFIG_IR_IMG=y
-+CONFIG_IR_IMG_NEC=y
-+CONFIG_IR_IMG_JVC=y
-+CONFIG_IR_IMG_SONY=y
-+CONFIG_IR_IMG_SHARP=y
-+CONFIG_IR_IMG_SANYO=y
-+CONFIG_IR_IMG_RC5=y
-+CONFIG_IR_IMG_RC6=y
-+# CONFIG_DVB_TUNER_DIB0070 is not set
-+# CONFIG_DVB_TUNER_DIB0090 is not set
-+CONFIG_FB=y
-+CONFIG_FB_MODE_HELPERS=y
-+CONFIG_BACKLIGHT_LCD_SUPPORT=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+CONFIG_BACKLIGHT_CLASS_DEVICE=y
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SEQUENCER=m
-+CONFIG_SND_SEQ_DUMMY=m
-+CONFIG_SND_HRTIMER=m
-+CONFIG_SND_DYNAMIC_MINORS=y
-+# CONFIG_SND_SPI is not set
-+CONFIG_SND_USB_AUDIO=m
-+CONFIG_USB=y
-+CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
-+# CONFIG_USB_DEFAULT_PERSIST is not set
-+CONFIG_USB_MON=y
-+CONFIG_USB_EHCI_HCD=y
-+CONFIG_USB_EHCI_ROOT_HUB_TT=y
-+CONFIG_USB_ACM=y
-+CONFIG_USB_STORAGE=y
-+CONFIG_USB_DWC2=y
-+CONFIG_USB_SERIAL=y
-+CONFIG_USB_SERIAL_GENERIC=y
-+CONFIG_USB_SERIAL_CP210X=m
-+CONFIG_USB_SERIAL_FTDI_SIO=m
-+CONFIG_USB_SERIAL_KEYSPAN=m
-+CONFIG_USB_SERIAL_PL2303=m
-+CONFIG_USB_SERIAL_OTI6858=m
-+CONFIG_USB_SERIAL_QUALCOMM=m
-+CONFIG_USB_SERIAL_SIERRAWIRELESS=m
-+CONFIG_USB_SERIAL_OPTION=m
-+CONFIG_MMC=y
-+CONFIG_MMC_BLOCK_MINORS=16
-+CONFIG_MMC_TEST=m
-+CONFIG_MMC_DW=y
-+CONFIG_MMC_DW_IDMAC=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_RTC_CLASS=y
-+CONFIG_DMADEVICES=y
-+CONFIG_IMG_MDC_DMA=y
-+CONFIG_STAGING=y
-+CONFIG_ASHMEM=y
-+# CONFIG_ANDROID_TIMED_OUTPUT is not set
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_MEMORY=y
-+CONFIG_IIO=y
-+CONFIG_CC10001_ADC=y
-+CONFIG_PWM=y
-+CONFIG_PWM_IMG=y
-+CONFIG_ANDROID=y
-+CONFIG_EXT4_FS=y
-+CONFIG_EXT4_FS_POSIX_ACL=y
-+CONFIG_EXT4_FS_SECURITY=y
-+# CONFIG_DNOTIFY is not set
-+CONFIG_FUSE_FS=m
-+CONFIG_ISO9660_FS=m
-+CONFIG_JOLIET=y
-+CONFIG_ZISOFS=y
-+CONFIG_UDF_FS=m
-+CONFIG_VFAT_FS=m
-+CONFIG_TMPFS=y
-+CONFIG_TMPFS_POSIX_ACL=y
-+CONFIG_ECRYPT_FS=y
-+CONFIG_HFSPLUS_FS=m
-+CONFIG_UBIFS_FS=y
-+CONFIG_SQUASHFS=y
-+CONFIG_SQUASHFS_FILE_DIRECT=y
-+CONFIG_SQUASHFS_LZO=y
-+CONFIG_PSTORE=y
-+CONFIG_PSTORE_CONSOLE=y
-+CONFIG_PSTORE_RAM=y
-+# CONFIG_NETWORK_FILESYSTEMS is not set
-+CONFIG_NLS_DEFAULT="utf8"
-+CONFIG_NLS_CODEPAGE_437=m
-+CONFIG_NLS_ASCII=m
-+CONFIG_NLS_ISO8859_1=m
-+CONFIG_PRINTK_TIME=y
-+CONFIG_DEBUG_INFO=y
-+CONFIG_MAGIC_SYSRQ=y
-+CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0
-+CONFIG_LOCKUP_DETECTOR=y
-+CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
-+CONFIG_BOOTPARAM_HUNG_TASK_PANIC=y
-+# CONFIG_SCHED_DEBUG is not set
-+CONFIG_SCHEDSTATS=y
-+CONFIG_TIMER_STATS=y
-+CONFIG_DEBUG_SPINLOCK=y
-+CONFIG_DEBUG_CREDENTIALS=y
-+CONFIG_FUNCTION_TRACER=y
-+CONFIG_BLK_DEV_IO_TRACE=y
-+CONFIG_LKDTM=y
-+CONFIG_TEST_UDELAY=m
-+CONFIG_KEYS=y
-+CONFIG_SECURITY=y
-+CONFIG_SECURITY_NETWORK=y
-+CONFIG_SECURITY_YAMA=y
-+CONFIG_SECURITY_YAMA_STACKED=y
-+CONFIG_DEFAULT_SECURITY_DAC=y
-+CONFIG_CRYPTO_AUTHENC=y
-+CONFIG_CRYPTO_HMAC=y
-+CONFIG_CRYPTO_SHA1=y
-+CONFIG_CRYPTO_SHA256=y
-+CONFIG_CRYPTO_SHA512=m
-+CONFIG_CRYPTO_ARC4=y
-+CONFIG_CRYPTO_DES=y
-+# CONFIG_CRYPTO_ANSI_CPRNG is not set
-+CONFIG_CRC_CCITT=y
-+CONFIG_CRC_T10DIF=m
-+CONFIG_CRC7=m
-+CONFIG_LIBCRC32C=m
-+# CONFIG_XZ_DEC_X86 is not set
++++ b/arch/mips/include/asm/mach-generic/war.h
+@@ -0,0 +1,24 @@
++/*
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
++ */
++#ifndef __ASM_MACH_GENERIC_WAR_H
++#define __ASM_MACH_GENERIC_WAR_H
++
++#define R4600_V1_INDEX_ICACHEOP_WAR	0
++#define R4600_V1_HIT_CACHEOP_WAR	0
++#define R4600_V2_HIT_CACHEOP_WAR	0
++#define R5432_CP0_INTERRUPT_WAR		0
++#define BCM1250_M3_WAR			0
++#define SIBYTE_1956_WAR			0
++#define MIPS4K_ICACHE_REFILL_WAR	0
++#define MIPS_CACHE_SYNC_WAR		0
++#define TX49XX_ICACHE_INDEX_INV_WAR	0
++#define ICACHE_REFILLS_WORKAROUND_WAR	0
++#define R10000_LLSC_WAR			0
++#define MIPS34K_MISSED_ITLB_WAR		0
++
++#endif /* __ASM_MACH_GENERIC_WAR_H */
+diff --git a/arch/mips/include/asm/mach-jazz/war.h b/arch/mips/include/asm/mach-jazz/war.h
+deleted file mode 100644
+index 5b18b9a..0000000
+--- a/arch/mips/include/asm/mach-jazz/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_JAZZ_WAR_H
+-#define __ASM_MIPS_MACH_JAZZ_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_JAZZ_WAR_H */
+diff --git a/arch/mips/include/asm/mach-jz4740/war.h b/arch/mips/include/asm/mach-jz4740/war.h
+deleted file mode 100644
+index 9b511d3..0000000
+--- a/arch/mips/include/asm/mach-jz4740/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_JZ4740_WAR_H
+-#define __ASM_MIPS_MACH_JZ4740_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_JZ4740_WAR_H */
+diff --git a/arch/mips/include/asm/mach-lantiq/war.h b/arch/mips/include/asm/mach-lantiq/war.h
+deleted file mode 100644
+index 358ca97..0000000
+--- a/arch/mips/include/asm/mach-lantiq/war.h
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- */
+-#ifndef __ASM_MIPS_MACH_LANTIQ_WAR_H
+-#define __ASM_MIPS_MACH_LANTIQ_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif
+diff --git a/arch/mips/include/asm/mach-lasat/war.h b/arch/mips/include/asm/mach-lasat/war.h
+deleted file mode 100644
+index 741ae72..0000000
+--- a/arch/mips/include/asm/mach-lasat/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_LASAT_WAR_H
+-#define __ASM_MIPS_MACH_LASAT_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_LASAT_WAR_H */
+diff --git a/arch/mips/include/asm/mach-loongson/war.h b/arch/mips/include/asm/mach-loongson/war.h
+deleted file mode 100644
+index f2570df..0000000
+--- a/arch/mips/include/asm/mach-loongson/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MACH_LOONGSON_WAR_H
+-#define __ASM_MACH_LOONGSON_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MACH_LEMOTE_WAR_H */
+diff --git a/arch/mips/include/asm/mach-loongson1/war.h b/arch/mips/include/asm/mach-loongson1/war.h
+deleted file mode 100644
+index 8fb50d0..0000000
+--- a/arch/mips/include/asm/mach-loongson1/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MACH_LOONGSON1_WAR_H
+-#define __ASM_MACH_LOONGSON1_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MACH_LOONGSON1_WAR_H */
+diff --git a/arch/mips/include/asm/mach-netlogic/war.h b/arch/mips/include/asm/mach-netlogic/war.h
+deleted file mode 100644
+index 2c72168..0000000
+--- a/arch/mips/include/asm/mach-netlogic/war.h
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2011 Netlogic Microsystems.
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_NLM_WAR_H
+-#define __ASM_MIPS_MACH_NLM_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_NLM_WAR_H */
+diff --git a/arch/mips/include/asm/mach-paravirt/war.h b/arch/mips/include/asm/mach-paravirt/war.h
+deleted file mode 100644
+index 36d3afb..0000000
+--- a/arch/mips/include/asm/mach-paravirt/war.h
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- * Copyright (C) 2013 Cavium Networks <support@caviumnetworks.com>
+- */
+-#ifndef __ASM_MIPS_MACH_PARAVIRT_WAR_H
+-#define __ASM_MIPS_MACH_PARAVIRT_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_PARAVIRT_WAR_H */
+diff --git a/arch/mips/include/asm/mach-pnx833x/war.h b/arch/mips/include/asm/mach-pnx833x/war.h
+deleted file mode 100644
+index e410df4..0000000
+--- a/arch/mips/include/asm/mach-pnx833x/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_PNX833X_WAR_H
+-#define __ASM_MIPS_MACH_PNX833X_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_PNX833X_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ralink/war.h b/arch/mips/include/asm/mach-ralink/war.h
+deleted file mode 100644
+index c074b5d..0000000
+--- a/arch/mips/include/asm/mach-ralink/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MACH_RALINK_WAR_H
+-#define __ASM_MACH_RALINK_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MACH_RALINK_WAR_H */
+diff --git a/arch/mips/include/asm/mach-tx39xx/war.h b/arch/mips/include/asm/mach-tx39xx/war.h
+deleted file mode 100644
+index 6a52e65..0000000
+--- a/arch/mips/include/asm/mach-tx39xx/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_TX39XX_WAR_H
+-#define __ASM_MIPS_MACH_TX39XX_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_TX39XX_WAR_H */
+diff --git a/arch/mips/include/asm/mach-vr41xx/war.h b/arch/mips/include/asm/mach-vr41xx/war.h
+deleted file mode 100644
+index ffe31e7..0000000
+--- a/arch/mips/include/asm/mach-vr41xx/war.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+- */
+-#ifndef __ASM_MIPS_MACH_VR41XX_WAR_H
+-#define __ASM_MIPS_MACH_VR41XX_WAR_H
+-
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+-#define R4600_V1_HIT_CACHEOP_WAR	0
+-#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R5432_CP0_INTERRUPT_WAR		0
+-#define BCM1250_M3_WAR			0
+-#define SIBYTE_1956_WAR			0
+-#define MIPS4K_ICACHE_REFILL_WAR	0
+-#define MIPS_CACHE_SYNC_WAR		0
+-#define TX49XX_ICACHE_INDEX_INV_WAR	0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+-#define R10000_LLSC_WAR			0
+-#define MIPS34K_MISSED_ITLB_WAR		0
+-
+-#endif /* __ASM_MIPS_MACH_VR41XX_WAR_H */
 -- 
 2.2.0.rc0.207.ga3a616c
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
