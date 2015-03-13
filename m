@@ -1,185 +1,55 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3  06/15] drivers: reset: Add STM32 reset driver
-Date: Fri, 13 Mar 2015 09:11:02 +0900
-Message-ID: <55022B16.7070408@samsung.com>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
- <1426197361-19290-7-git-send-email-maxime.coquelin@st.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 3/4] pci: iproc: Add Broadcom iProc PCIe support
+Date: Thu, 12 Mar 2015 17:17:36 -0700
+Message-ID: <55022CA0.6080806@broadcom.com>
+References: <1426097169-20805-1-git-send-email-rjui@broadcom.com> <1426097169-20805-4-git-send-email-rjui@broadcom.com> <20150312210856.GF7346@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1426197361-19290-7-git-send-email-maxime.coquelin@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150312210856.GF7346-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-On 03/13/2015 06:55 AM, Maxime Coquelin wrote:
-> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> 
-> The STM32 MCUs family IP can be reset by accessing some shared registers.
-> 
-> The specificity is that some reset lines are used by the timers.
-> At timer initialization time, the timer has to be reset, that's why
-> we cannot use a regular driver.
-> 
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> ---
->  drivers/reset/Makefile      |   1 +
->  drivers/reset/reset-stm32.c | 125 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 126 insertions(+)
->  create mode 100644 drivers/reset/reset-stm32.c
-> 
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 157d421..aed12d1 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -1,5 +1,6 @@
->  obj-$(CONFIG_RESET_CONTROLLER) += core.o
->  obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->  obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
-> +obj-$(CONFIG_ARCH_STM32) += reset-stm32.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_ARCH_STI) += sti/
-> diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.c
-> new file mode 100644
-> index 0000000..0d389b1
-> --- /dev/null
-> +++ b/drivers/reset/reset-stm32.c
-> @@ -0,0 +1,125 @@
-> +/*
-> + * Copyright (C) Maxime Coquelin 2015
-> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + *
-> + * Heavily based on sunxi driver from Maxime Ripard.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +struct stm32_reset_data {
-> +	spinlock_t			lock;
-> +	void __iomem			*membase;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +static int stm32_reset_assert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
-> +{
-> +	struct stm32_reset_data *data = container_of(rcdev,
-> +						     struct stm32_reset_data,
-> +						     rcdev);
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl_relaxed(data->membase + (bank * 4));
-> +	writel_relaxed(reg | BIT(offset), data->membase + (bank * 4));
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stm32_reset_deassert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	struct stm32_reset_data *data = container_of(rcdev,
-> +						     struct stm32_reset_data,
-> +						     rcdev);
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl_relaxed(data->membase + (bank * 4));
-> +	writel_relaxed(reg & ~BIT(offset), data->membase + (bank * 4));
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops stm32_reset_ops = {
-> +	.assert		= stm32_reset_assert,
-> +	.deassert	= stm32_reset_deassert,
-> +};
-> +
-> +static const struct of_device_id stm32_reset_dt_ids[] = {
-> +	 { .compatible = "st,stm32-rcc", },
-> +	 { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, sstm32_reset_dt_ids);
-> +
-> +static int stm32_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_reset_data *data;
-> +	struct resource *res;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->membase))
-> +		return PTR_ERR(data->membase);
-> +
-> +	spin_lock_init(&data->lock);
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.nr_resets = resource_size(res) * 8;
-> +	data->rcdev.ops = &stm32_reset_ops;
-> +	data->rcdev.of_node = pdev->dev.of_node;
-> +
-> +	return reset_controller_register(&data->rcdev);
-> +}
-> +
-> +static int stm32_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct stm32_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver stm32_reset_driver = {
-> +	.probe	= stm32_reset_probe,
-> +	.remove	= stm32_reset_remove,
-> +	.driver = {
-> +		.name		= "stm32-rcc-reset",
-> +		.of_match_table	= stm32_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(stm32_reset_driver);
-> +
-> +MODULE_AUTHOR("Maxime Coquelin <maxime.coquelin@gmail.com>");
-> +MODULE_DESCRIPTION("STM32 MCUs Reset Controller Driver");
-> +MODULE_LICENSE("GPL");
-> +
-> 
 
-Last blank line is un-necessary. When I applied this patch for test,
-"new blank line at EOF" happen.
+On 3/12/2015 2:08 PM, Bjorn Helgaas wrote:
+> On Wed, Mar 11, 2015 at 11:06:08AM -0700, Ray Jui wrote:
+>> This adds the support for Broadcom iProc PCIe controller
+>>
+>> pcie-iproc.c servers as the common core driver, and front-end bus
+>> interface needs to be added to support different bus interfaces
+>>
+>> pcie-iproc-pltfm.c contains the support for the platform bus interface
+>>
+>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ...
+> 
+>> +static int iproc_pcie_check_link(struct iproc_pcie *pcie, struct pci_bus *bus)
+>> +{
+>> +	u8 hdr_type;
+>> +	u32 link_ctrl;
+>> +	u16 pos, link_status;
+>> +	int link_is_active = 0;
+>> +
+>> +	/* make sure we are not in EP mode */
+>> +	pci_bus_read_config_byte(bus, 0, PCI_HEADER_TYPE, &hdr_type);
+>> +	if ((hdr_type & 0x7f) != PCI_HEADER_TYPE_BRIDGE) {
+>> +		dev_err(pcie->dev, "in EP mode, hdr=0x08%x\n", hdr_type);
+> 
+> "0x08%x" doesn't look right.  I changed it to "%#02x"; is that what you
+> intended?
+> 
+You are right. Will fix it along with the Kconfig fix (so it won't get
+compiled for non-ARM platforms). I'll submit v7?
 
 Thanks,
-Chanwoo Choi
 
-
+Ray
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
