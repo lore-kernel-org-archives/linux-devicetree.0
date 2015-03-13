@@ -1,26 +1,89 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V5 1/2] crypto: Add Imagination Technologies hw hash accelerator
-Date: Thu, 12 Mar 2015 17:28:31 -0700
-Message-ID: <CAL1qeaGyJzLXpuOsVRoBqjW3DcTF7VX2Gge3c+3DfPnyKB5_pQ@mail.gmail.com>
-References: <1426202247-6221-1-git-send-email-james.hartley@imgtec.com>
-	<1426202247-6221-2-git-send-email-james.hartley@imgtec.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/4] pci: iproc: Add Broadcom iProc PCIe support
+Date: Thu, 12 Mar 2015 17:48:48 -0700
+Message-ID: <1426207732-31625-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1426202247-6221-2-git-send-email-james.hartley@imgtec.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: James Hartley <james.hartley@imgtec.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, smueller@chronox.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+This patch series adds the support for Broadcom iProc PCIe controller
 
-On Thu, Mar 12, 2015 at 4:17 PM, James Hartley <james.hartley@imgtec.com> wrote:
-> This adds support for the Imagination Technologies hash accelerator which
-> provides hardware acceleration for SHA1 SHA224 SHA256 and MD5 hashes.
->
-> Signed-off-by: James Hartley <james.hartley@imgtec.com>
+pcie-iproc.c servers as the common core driver, and front-end bus
+interface needs to be added to support different bus interfaces
 
-Looks good to me.
+pcie-iproc-pltfm.c contains the support for the platform bus interface
 
-Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+Changes from v6:
+ - Fix print formatting
+ - Fix section mismatch warning by removing __init from the probe function
+ - Fix Kconfig to force it only compiling for ARM based platforms
+
+Changes from v5:
+ - Sync code base to v4.0-rc2
+ - Change export symbols of common PCI functions to GPL only
+ - Add comment to describe how configuration register access are protected
+   at the higher layer through 'pci_lock'
+ - Use generic PCI functions for configuration register access and implement
+   'map_bus' callback to support it
+ - Move 'pci_fixup_irqs' to before devices are added to the bus
+ - Remove 'extern' from function prototype declared in the header
+
+Changes from v4:
+ - iProc PCIe driver module support was not included in patch series v4.
+   This patch series (v5) fixes it
+
+Changes from v3:
+ - Export symbols of several PCI functions so they can be used by drivers
+   compiled as kernel module
+ - Add additional support to the Broadcom iProc PCIe driver so it can be
+   installed/uninstalled as kernel loadable module
+
+Changes from v2:
+ - Major rework of the PCIe driver to factor out common generic code from
+   front-end bus interface. Support for generic platform bus interface is
+   also added
+ - Adapt to several new PCI APIs that have been introduced lately
+
+Changes from v1:
+ - Add standard PCI interrupt DT properties "#interrupt-cells",
+   "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
+   supported by using standard PCI OF IRQ parsing function
+ - Get rid of custom IRQ mapping function in the driver. Use
+   of_irq_parse_and_map_pci instead
+
+Ray Jui (4):
+  PCI: Export symbols of PCI functions
+  pci: iProc: define iProc PCIe platform bus binding
+  pci: iproc: Add Broadcom iProc PCIe support
+  ARM: dts: enable PCIe support for Cygnus
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 +++++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   42 +++
+ arch/arm/boot/dts/bcm958300k.dts                   |    8 +
+ drivers/pci/host/Kconfig                           |   17 ++
+ drivers/pci/host/Makefile                          |    2 +
+ drivers/pci/host/pcie-iproc-pltfm.c                |  108 ++++++++
+ drivers/pci/host/pcie-iproc.c                      |  268 ++++++++++++++++++++
+ drivers/pci/host/pcie-iproc.h                      |   42 +++
+ drivers/pci/pci.c                                  |    1 +
+ drivers/pci/probe.c                                |    1 +
+ drivers/pci/remove.c                               |    2 +
+ drivers/pci/setup-bus.c                            |    1 +
+ drivers/pci/setup-irq.c                            |    1 +
+ 13 files changed, 556 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
+ create mode 100644 drivers/pci/host/pcie-iproc.c
+ create mode 100644 drivers/pci/host/pcie-iproc.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
