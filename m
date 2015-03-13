@@ -1,24 +1,33 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: Support for Netlogic XLP9XX/5XX I2C controller.
-Date: Fri, 13 Mar 2015 11:58:22 +0100
-Message-ID: <3418197.SuboJNVe5r@wuerfel>
-References: <1426228198-3314-1-git-send-email-jchandra@broadcom.com> <1426228198-3314-3-git-send-email-jchandra@broadcom.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] Documentation: omap-twl4030: Remove ti,codec property
+Date: Fri, 13 Mar 2015 12:05:20 +0100
+Message-ID: <38159868.RLZZTyUOlK@wuerfel>
+References: <1426194899-14037-1-git-send-email-marek@goldelico.com> <1426194899-14037-3-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426228198-3314-3-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426194899-14037-3-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, peter.ujfalusi@ti.com, eballetbo@gmail.com, javier@dowhile0.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jarkko.nikula@bitmer.com, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 March 2015 11:59:58 Jayachandran C wrote:
-> +- compatible      : should be "netlogic,xlp9xx-i2c"
-> 
+On Thursday 12 March 2015 22:14:59 Marek Belisko wrote:
+> diff --git a/Documentation/devicetree/bindings/sound/omap-twl4030.txt b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
+> index 1ab6bc8..656165f 100644
+> --- a/Documentation/devicetree/bindings/sound/omap-twl4030.txt
+> +++ b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
+> @@ -4,7 +4,6 @@ Required properties:
+>  - compatible: "ti,omap-twl4030"
+>  - ti,model: Name of the sound card (for example "omap3beagle")
+>  - ti,mcbsp: phandle for the McBSP node
+> -- ti,codec: phandle for the twl4030 audio node
 
-Use a real model number here, not a wildcard.
+As this was a required property, are you sure that no other operating system
+uses it?
 
-Also, please send the binding as a separate patch from the driver.
+Even if not, you should probably change it to be an optional property, so
+that the existing dtbs do not become noncompliant after the change.
 
 	Arnd
