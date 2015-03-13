@@ -1,135 +1,210 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3  00/15] Add support to STMicroelectronics STM32 family
-Date: Fri, 13 Mar 2015 08:45:14 +0900
-Message-ID: <5502250A.8090900@samsung.com>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 2/2] v4l: mt9v032: Add OF support
+Date: Fri, 13 Mar 2015 02:03:28 +0200
+Message-ID: <1426205008-6160-2-git-send-email-laurent.pinchart@ideasonboard.com>
+References: <1426205008-6160-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1426205008-6160-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: =?UTF-8?q?Carlos=20Sanmart=C3=ADn=20Bustos?= <carsanbu@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Maxime,
+Parse DT properties into a platform data structure when a DT node is
+available.
 
-I'm working for STM32 SoC. So, I'm very interesting in this patch-set.
-If you possible, please add me to Cc list on next patch-set.
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Best Regards,
-Chanwoo Choi
+---
 
+Changes since v1:
 
-On 03/13/2015 06:55 AM, Maxime Coquelin wrote:
-> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> 
-> This third round tries to address most of the comments made on previous series.
-> 
-> It contains few less patches, as the reset_controller_of_init() patch has been
-> removed, now that the bootlaoder handles the reset of the timers.
-> 
-> The pinctrl driver has also been removed after Linus review.
-> It will be reworked to use the generic pinconf bindings, and may contain
-> changes for other machines (Mediatek), to add support for pinmux property
-> handling directly in pinconf-generic.
-> 
-> STM32 MCUs are Cortex-M CPU, used in various applications (consumer
-> electronics, industrial applications, hobbyists...).
-> Datasheets, user and programming manuals are publicly available on
-> STMicroelectronics website.
-> 
-> With this series applied, the STM32F419 Discovery can boot succesfully.
-> 
-> 
-> Changes since v2:
-> -----------------
->  - Remove pinctrl driver from the series. 
->  - Remove reset_controller_of_init(), and reset the timers in the bootloader
->  - Add HW flow contrl property for serial driver
->  - Lots of changes in the DTS file, as per Andreas recommendations
->  - Some Kconfig clean-ups
->  - Adapt the config to be compatible with Andreas' bootwrapper, except UART port.
->  - Various fixes in documentation
-> 
-> Changes since v1:
-> -----------------
->  - Move bindings documentation in their own patches (Andreas)
->  - Rename ARM System timer to armv7m-systick (Rob)
->  - Add clock-frequency property handling in armv7m-systick (Rob)
->  - Re-factor the reset controllers into a single controller (Philipp)
->  - Add kerneldoc to reset_controller_of_init (Philipp)
->  - Add named constants in include/dt-bindings/reset/ (Philipp)
->  - Make pinctrl driver to depend on ARCH_STM32 or COMPILE_TEST (Geert)
->  - Introduce CPUV7M_NUM_IRQ config flag to indicate the number of interrupts
-> supported by the MCU, in order to limit memory waste in vectors' table (Uwe)
-> 
-> 
-> Maxime Coquelin (15):
->   scripts: link-vmlinux: Don't pass page offset to kallsyms if XIP
->     Kernel
->   ARM: ARMv7-M: Enlarge vector table up to 256 entries
->   dt-bindings: Document the ARM System timer bindings
->   clocksource: Add ARM System timer driver
->   dt-bindings: Document the STM32 reset bindings
->   drivers: reset: Add STM32 reset driver
->   dt-bindings: Document the STM32 timer bindings
->   clockevent: Add STM32 Timer driver
->   dt-bindings: Document the STM32 USART bindings
->   serial: stm32-usart: Add STM32 USART Driver
->   ARM: Add STM32 family machine
->   ARM: dts: Add ARM System timer as clockevent in armv7m
->   ARM: dts: Introduce STM32F429 MCU
->   ARM: configs: Add STM32 defconfig
->   MAINTAINERS: Add entry for STM32 MCUs
-> 
->  Documentation/arm/stm32/overview.txt               |  32 +
->  Documentation/arm/stm32/stm32f429-overview.txt     |  22 +
->  .../devicetree/bindings/arm/armv7m_systick.txt     |  26 +
->  .../devicetree/bindings/reset/st,stm32-rcc.txt     | 102 +++
->  .../devicetree/bindings/serial/st,stm32-usart.txt  |  32 +
->  .../devicetree/bindings/timer/st,stm32-timer.txt   |  22 +
->  MAINTAINERS                                        |   8 +
->  arch/arm/Kconfig                                   |  18 +
->  arch/arm/Makefile                                  |   1 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/armv7-m.dtsi                     |   6 +
->  arch/arm/boot/dts/stm32f429-disco.dts              |  71 +++
->  arch/arm/boot/dts/stm32f429.dtsi                   | 226 +++++++
->  arch/arm/configs/stm32_defconfig                   |  71 +++
->  arch/arm/kernel/entry-v7m.S                        |  13 +-
->  arch/arm/mach-stm32/Makefile                       |   1 +
->  arch/arm/mach-stm32/Makefile.boot                  |   3 +
->  arch/arm/mach-stm32/board-dt.c                     |  19 +
->  arch/arm/mm/Kconfig                                |  15 +
->  drivers/clocksource/Kconfig                        |  15 +
->  drivers/clocksource/Makefile                       |   2 +
->  drivers/clocksource/armv7m_systick.c               |  78 +++
->  drivers/clocksource/timer-stm32.c                  | 184 ++++++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-stm32.c                        | 125 ++++
->  drivers/tty/serial/Kconfig                         |  17 +
->  drivers/tty/serial/Makefile                        |   1 +
->  drivers/tty/serial/stm32-usart.c                   | 695 +++++++++++++++++++++
->  include/uapi/linux/serial_core.h                   |   3 +
->  scripts/link-vmlinux.sh                            |   2 +-
->  30 files changed, 1807 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/arm/stm32/overview.txt
->  create mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/armv7m_systick.txt
->  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/st,stm32-timer.txt
->  create mode 100644 arch/arm/boot/dts/stm32f429-disco.dts
->  create mode 100644 arch/arm/boot/dts/stm32f429.dtsi
->  create mode 100644 arch/arm/configs/stm32_defconfig
->  create mode 100644 arch/arm/mach-stm32/Makefile
->  create mode 100644 arch/arm/mach-stm32/Makefile.boot
->  create mode 100644 arch/arm/mach-stm32/board-dt.c
->  create mode 100644 drivers/clocksource/armv7m_systick.c
->  create mode 100644 drivers/clocksource/timer-stm32.c
->  create mode 100644 drivers/reset/reset-stm32.c
->  create mode 100644 drivers/tty/serial/stm32-usart.c
-> 
+- Add MT9V02[24] compatible strings
+- Prefix all compatible strings with "aptina,"
+- Use "link-frequencies" instead of "link-freqs"
 
+Open questions:
+
+- Should the color/monochrome model be inferred from the compatible string, or
+  should a separate DT property be used for that ?
+
+---
+ .../devicetree/bindings/media/i2c/mt9v032.txt      | 45 ++++++++++++++
+ MAINTAINERS                                        |  1 +
+ drivers/media/i2c/mt9v032.c                        | 70 +++++++++++++++++++++-
+ 3 files changed, 115 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+new file mode 100644
+index 0000000..68b134e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+@@ -0,0 +1,45 @@
++* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
++
++The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor with
++an active array size of 752H x 480V. It is programmable through a simple
++two-wire serial interface.
++
++Required Properties:
++
++- compatible: value should be either one among the following
++	(a) "aptina,mt9v022" for MT9V022 color sensor
++	(b) "aptina,mt9v022m" for MT9V022 monochrome sensor
++	(c) "aptina,mt9v024" for MT9V024 color sensor
++	(d) "aptina,mt9v024m" for MT9V024 monochrome sensor
++	(e) "aptina,mt9v032" for MT9V032 color sensor
++	(f) "aptina,mt9v032m" for MT9V032 monochrome sensor
++	(g) "aptina,mt9v034" for MT9V034 color sensor
++	(h) "aptina,mt9v034m" for MT9V034 monochrome sensor
++
++Optional Properties:
++
++- link-frequencies: List of allowed link frequencies in Hz. Each frequency is
++	expressed as a 64-bit big-endian integer.
++
++For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		mt9v032@5c {
++			compatible = "aptina,mt9v032";
++			reg = <0x5c>;
++
++			port {
++				mt9v032_1: endpoint {
++					link-frequencies =
++						<0 13000000>, <0 26600000>,
++						<0 27000000>;
++				};
++			};
++		};
++		...
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddc5a8c..180f6fb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6535,6 +6535,7 @@ M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
++F:	Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+ F:	drivers/media/i2c/mt9v032.c
+ F:	include/media/mt9v032.h
+ 
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index 255ea91..89e6d8d 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -17,6 +17,8 @@
+ #include <linux/i2c.h>
+ #include <linux/log2.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <linux/videodev2.h>
+@@ -26,6 +28,7 @@
+ #include <media/mt9v032.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-of.h>
+ #include <media/v4l2-subdev.h>
+ 
+ /* The first four rows are black rows. The active area spans 753x481 pixels. */
+@@ -876,10 +879,59 @@ static const struct regmap_config mt9v032_regmap_config = {
+  * Driver initialization and probing
+  */
+ 
++static struct mt9v032_platform_data *
++mt9v032_get_pdata(struct i2c_client *client)
++{
++	struct mt9v032_platform_data *pdata;
++	struct v4l2_of_endpoint endpoint;
++	struct device_node *np;
++	struct property *prop;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!np)
++		return NULL;
++
++	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
++		goto done;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		goto done;
++
++	prop = of_find_property(np, "link-frequencies", NULL);
++	if (prop) {
++		size_t size = prop->length / 8;
++		u64 *link_freqs;
++
++		link_freqs = devm_kzalloc(&client->dev,
++					  size * sizeof(*link_freqs),
++					  GFP_KERNEL);
++		if (!link_freqs)
++			goto done;
++
++		if (of_property_read_u64_array(np, "link-frequencies",
++					       link_freqs, size) < 0)
++			goto done;
++
++		pdata->link_freqs = link_freqs;
++		pdata->link_def_freq = link_freqs[0];
++	}
++
++	pdata->clk_pol = !!(endpoint.bus.parallel.flags &
++			    V4L2_MBUS_PCLK_SAMPLE_RISING);
++
++done:
++	of_node_put(np);
++	return pdata;
++}
++
+ static int mt9v032_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *did)
+ {
+-	struct mt9v032_platform_data *pdata = client->dev.platform_data;
++	struct mt9v032_platform_data *pdata = mt9v032_get_pdata(client);
+ 	struct mt9v032 *mt9v032;
+ 	unsigned int i;
+ 	int ret;
+@@ -1037,9 +1089,25 @@ static const struct i2c_device_id mt9v032_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, mt9v032_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id mt9v032_of_match[] = {
++	{ .compatible = "aptina,mt9v022" },
++	{ .compatible = "aptina,mt9v022m" },
++	{ .compatible = "aptina,mt9v024" },
++	{ .compatible = "aptina,mt9v024m" },
++	{ .compatible = "aptina,mt9v032" },
++	{ .compatible = "aptina,mt9v032m" },
++	{ .compatible = "aptina,mt9v034" },
++	{ .compatible = "aptina,mt9v034m" },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, mt9v032_of_match);
++#endif
++
+ static struct i2c_driver mt9v032_driver = {
+ 	.driver = {
+ 		.name = "mt9v032",
++		.of_match_table = of_match_ptr(mt9v032_of_match),
+ 	},
+ 	.probe		= mt9v032_probe,
+ 	.remove		= mt9v032_remove,
+-- 
+2.0.5
