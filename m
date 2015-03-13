@@ -1,129 +1,101 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 14/18] dt: bindings: Add bindings for omap3isp
-Date: Fri, 13 Mar 2015 10:34:53 +0100
-Message-ID: <20150313093453.GA4980@earth>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
- <1425764475-27691-15-git-send-email-sakari.ailus@iki.fi>
- <1429813.xCjhlUaUXi@avalon>
- <20150312230320.GO11954@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150312230320.GO11954-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 5/6] ARM: dts: vf610: add NAND flash controller peripherial
+Date: Fri, 13 Mar 2015 10:38:57 +0100
+Message-ID: <1426239538-11529-6-git-send-email-stefan@agner.ch>
+References: <1426239538-11529-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426239538-11529-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@nbsps.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
+This adds the NAND flash controller (NFC) peripherial. The driver
+supports the SLC NAND chips found on Freescale's Vybrid Tower System
+Module. The Micron NAND chip on the module needs 4-bit ECC per 512
+byte page. Use 24-bit ECC per 2k page, which is supported by the
+driver.
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/vf610-twr.dts | 44 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/vfxxx.dtsi    |  8 ++++++++
+ 2 files changed, 52 insertions(+)
 
-Hi,
-
-On Fri, Mar 13, 2015 at 01:03:21AM +0200, Sakari Ailus wrote:
-> [...]
->
-> > > +Required properties
-> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > +
-> > > +compatible	: "ti,omap3-isp"
-> >=20
-> > I would rephrase that using the usual wording as "compatible: Must cont=
-ain=20
-> > "ti,omap3-isp".
->
-> [...]
->
-> > > +ti,phy-type	: 0 -- 3430; 1 -- 3630
-> >=20
-> > Would it make sense to add #define's for this ?
->=20
-> I'll use OMAP3ISP_PHY_TYPE_COMPLEX_IO and OMAP3ISP_PHY_TYPE_CSIPHY as
-> discussed.
->=20
-> > It could also make sense to document/name them "Complex I/O" and "CSIPH=
-Y" to=20
-> > avoid referring to the SoC that implements them, as the ISP is also fou=
-nd in=20
-> > SoCs other than 3430 and 3630.
-> >=20
-> > Could the PHY type be derived from the ES revision that we query at run=
-time ?
->=20
-> I think this would work on 3430 and 3630 but I'm not certain about others.
->=20
-> > We should also take into account the fact that the DM3730 has officiall=
-y no=20
-> > CSIPHY, but still seems to implement them in practice.
->=20
-> The DT sources are for 36xx, but I'd guess it works on 37xx as well, does=
-n't
-> it?
-
-In other drivers this kind of information is often extracted from the
-compatible string. For example:
-
-{ .compatible =3D "ti,omap34xx-isp", .data =3D OMAP3ISP_PHY_TYPE_COMPLEX_IO=
-, },
-{ .compatible =3D "ti,omap36xx-isp", .data =3D OMAP3ISP_PHY_TYPE_CSIPHY, },
-=2E..
-
-> [...]
->
-> > > +Example
-> > > +=3D=3D=3D=3D=3D=3D=3D
-> > > +
-> > > +		omap3_isp: omap3_isp@480bc000 {
-> >=20
-> > DT node names traditionally use - as a separator. Furthermore the phand=
-le=20
-> > isn't needed. This should thus probably be
-> >=20
-> > 	omap3-isp@480bc000 {
->=20
-> Fixed.
-
-According to ePAPR this should be a generic name (page 19); For
-example the i2c node name should be "i2c@address" instead of
-"omap3-i2c@address". There is no recommended generic term for an
-image signal processor, "isp" looks ok to me and seems to be
-already used in NVIDIA Tegra's device tree files. So maybe:
-
-isp@480bc000 {
-
-> [...]
-
--- Sebastian
-
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVAq86AAoJENju1/PIO/qa5agP/2nQ6V8OcyeP9n7Aic/ILTda
-9d3poBwBh813CWgw7YXiczBtncAVMSl0Pm2Jwj3/jzsn3N/UkQofzirqLjbS1haM
-TZCexT9THz4r5w0/afcVzn97vHd5jx6V1YuCeWos+L8fTS8jwt34MiXDU2KYZJWn
-m9LPmyMfrMEgKLsnWWrq4AMFrGulhz3qOFgrPJBEpb1CzmtlFJ1f2akyKO9ZqtYK
-Hb2wK5uqvAY78Zfd42zfXOmKCQKpiNZqZFRZqefMoxkSnYQZB4FzWGpjMoF3uucX
-LiRTh60Ha7PaG4+931nt196WInXBNWJP8Pjjv74ebM5WuP95EcCwjMMLty5vs+3W
-8ghM7Nh+Fvm/DzhvtNreJPEqqkqgzps/7M5U2WOKgTZ47rpSlRABg43yt9mbvUDQ
-rsup5K2EoP/y9q+be069djXK1X/LwfKT1mnzcOlc94a+i7tALOgNcwyCt+sNKWBJ
-ITr2qNw1aAh/fVt/TA3DmHahOyTsWsL2NWzY+E7jzvdKDxZnqI8HhVfEyzqPp5Rn
-19Vt0sL8SZsCyquJ4NNGFSN0llYkdxYMBT4OqVZyldTuelEbRxmTMUJxq+Rcs60s
-ZKyo/mQcg2FMq2mSUDB3Stnp9iowscwDooWRlhNEe5UjZFlANfdJd8j9s/HgIcOT
-Azwsl0GTbA4JrKmLZ7ki
-=PWvs
------END PGP SIGNATURE-----
-
---Nq2Wo0NMKNjxTN9z--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index f64fddc..f42d155 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -287,6 +287,50 @@
+ 	status = "okay";
+ };
+ 
++&iomuxc {
++	vf610-twr {
++		pinctrl_nfc_1: nfcgrp_1 {
++			fsl,pins = <
++			VF610_PAD_PTD31__NF_IO15	0x28df
++			VF610_PAD_PTD30__NF_IO14	0x28df
++			VF610_PAD_PTD29__NF_IO13	0x28df
++			VF610_PAD_PTD28__NF_IO12	0x28df
++			VF610_PAD_PTD27__NF_IO11	0x28df
++			VF610_PAD_PTD26__NF_IO10	0x28df
++			VF610_PAD_PTD25__NF_IO9		0x28df
++			VF610_PAD_PTD24__NF_IO8		0x28df
++			VF610_PAD_PTD23__NF_IO7		0x28df
++			VF610_PAD_PTD22__NF_IO6		0x28df
++			VF610_PAD_PTD21__NF_IO5		0x28df
++			VF610_PAD_PTD20__NF_IO4		0x28df
++			VF610_PAD_PTD19__NF_IO3		0x28df
++			VF610_PAD_PTD18__NF_IO2		0x28df
++			VF610_PAD_PTD17__NF_IO1		0x28df
++			VF610_PAD_PTD16__NF_IO0		0x28df
++			VF610_PAD_PTB24__NF_WE_B	0x28c2
++			VF610_PAD_PTB25__NF_CE0_B	0x28c2
++			VF610_PAD_PTB27__NF_RE_B	0x28c2
++			VF610_PAD_PTC26__NF_RB_B	0x283d
++			VF610_PAD_PTC27__NF_ALE		0x28c2
++			VF610_PAD_PTC28__NF_CLE		0x28c2
++			>;
++		};
++	};
++};
++
++&nfc {
++	assigned-clocks = <&clks VF610_CLK_NFC>;
++	assigned-clock-rates = <33000000>;
++	nand-bus-width = <16>;
++	nand-ecc-mode = "hw";
++	nand-on-flash-bbt;
++	nand-ecc-strength = <24>;
++	nand-ecc-step-size = <2048>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_nfc_1>;
++	status = "okay";
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 32de809..8c85972 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -507,6 +507,14 @@
+ 				status = "disabled";
+ 			};
+ 
++			nfc: nand@400e0000 {
++				compatible = "fsl,vf610-nfc";
++				reg = <0x400e0000 0x4000>;
++				interrupts = <83 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks VF610_CLK_NFC>;
++				clock-names = "nfc";
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+2.3.1
