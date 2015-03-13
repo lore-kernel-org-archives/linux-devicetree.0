@@ -1,72 +1,48 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [Patch] dt: OF_UNITTEST make dependency broken
-Date: Fri, 13 Mar 2015 12:21:46 -0700
-Message-ID: <550338CA.50003@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH 6/6] dts: msm8974: Add dma channels for blsp2_i2c1 node
+Date: Fri, 13 Mar 2015 14:54:25 -0500
+Message-ID: <20150313195425.GA16977@qualcomm.com>
+References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org>
+ <1426268992-19298-7-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <mmarek@suse.cz>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426268992-19298-7-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, galak@codeaurora.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sonymobile.com>
+On Fri, Mar 13, 2015 at 11:19:52PM +0530, Sricharan R wrote:
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
 
-If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
-be incremented, even if there are not source changes.  This is caused by
-a lack of dependency tracking and checking for
-drivers/of/unittest-data/testcases.dtb.o.
+Reviewed-by: Andy Gross <agross@codeaurora.org>
 
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index 3f648ae..1ec7ec5 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -246,6 +246,8 @@
+>  			clock-names = "core", "iface";
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> +			dmas = <&blsp2_dma 20>, <&blsp2_dma 21>;
+> +			dma-names = "bam-tx", "bam-rx";
 
-Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+more of a nit, but the bam- is unnecessary.  it's just rx/tx.
+>  		};
+>  
+>  		blsp2_dma: dma@f9944000 {
+> -- 
+> 1.8.2.1
+> 
 
----
-
-
- drivers/of/Makefile                 |    5 +++--
- drivers/of/unittest-data/.gitignore |    2 ++
- drivers/of/unittest-data/Makefile   |    7 +++++++
- 3 files changed, 12 insertions(+), 2 deletions(-)
-
-Index: b/drivers/of/Makefile
-===================================================================
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -6,8 +6,7 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
- obj-$(CONFIG_OF_ADDRESS)  += address.o
- obj-$(CONFIG_OF_IRQ)    += irq.o
- obj-$(CONFIG_OF_NET)	+= of_net.o
--obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
--of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
-+obj-$(CONFIG_OF_UNITTEST) += unittest.o
- obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-@@ -16,5 +15,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
- obj-$(CONFIG_OF_RESOLVE)  += resolver.o
- obj-$(CONFIG_OF_OVERLAY) += overlay.o
- 
-+obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-+
- CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
- CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
-Index: b/drivers/of/unittest-data/Makefile
-===================================================================
---- /dev/null
-+++ b/drivers/of/unittest-data/Makefile
-@@ -0,0 +1,7 @@
-+obj-y += testcases.dtb.o
-+
-+targets += testcases.dtb testcases.dtb.S
-+
-+.SECONDARY: \
-+	$(obj)/testcases.dtb.S \
-+	$(obj)/testcases.dtb
-Index: b/drivers/of/unittest-data/.gitignore
-===================================================================
---- /dev/null
-+++ b/drivers/of/unittest-data/.gitignore
-@@ -0,0 +1,2 @@
-+testcases.dtb
-+testcases.dtb.S
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
