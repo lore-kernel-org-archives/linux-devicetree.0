@@ -1,80 +1,124 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
-Date: Fri, 13 Mar 2015 12:19:36 +0100
-Message-ID: <5502C7C8.1020002@gmail.com>
-References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>	 <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>	 <20150223135044.108ea32a65063a50aa36a309@linux-foundation.org> <1426242563.18291.19.camel@mtksdaap41>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v2 1/5] of/fdt: split off FDT self reservation from
+ memreserve processing
+Date: Fri, 13 Mar 2015 12:37:15 +0100
+Message-ID: <CAKv+Gu_Pb6cxTy9D2O3jx6q2_Q1qfPQBL1jT+kzAidhLsaQ3iQ@mail.gmail.com>
+References: <1426089620-9459-1-git-send-email-ard.biesheuvel@linaro.org>
+ <1426089620-9459-2-git-send-email-ard.biesheuvel@linaro.org>
+ <CAL_JsqL0vfut2BLxd2G=+AiRURHcygRro1n5k37wbCdW_N77Vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426242563.18291.19.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Tianping Fang <tianping.fang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.chen@mediatek.com, yingjoe.chen@mediatek.com, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CAL_JsqL0vfut2BLxd2G=+AiRURHcygRro1n5k37wbCdW_N77Vg@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 13/03/15 11:29, Eddie Huang wrote:
-> 
-> I encounter some trouble when I add code to check return value of
-> regmap_read and regmap_write. Every RTC register access through regmap,
-> and there are many register read/write in this driver. If I check every
-> return value, the driver will become ugly. I try to make this driver
-> clean using following macro.
-> 
-> static int __rtc_read(struct mt6397_rtc *rtc, u32 offset, u32 *data)
-> {
->         u32 addr = rtc->addr_base + offset;
-> 
->         if (offset < rtc->addr_range)
->                 return regmap_read(rtc->regmap, addr, data);
-> 
->         return -EINVAL;
-> }
-> 
-> #define rtc_read(ret, rtc, offset, data)                \
-> ({                                                      \
->         ret = __rtc_read(rtc, offset, data);            \
->         if (ret < 0)                                    \
->                 goto rtc_exit;                          \
-> })                                                      \
-> 
-
-I agree with Sascha on hiding a goto statement in a macro is not a good idea.
-
-> 
-> And function call rtc_read, rtc_write looks like:
-> 
-> static int mtk_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> {
->         unsigned long time;
->         struct mt6397_rtc *rtc = dev_get_drvdata(dev);
->         int ret = 0;
->         u32 sec;
-> 
->         mutex_lock(&rtc->lock);
->         do {
->                 rtc_read(ret, rtc, RTC_TC_SEC, &tm->tm_sec);
->                 rtc_read(ret, rtc, RTC_TC_MIN, &tm->tm_min);
->                 rtc_read(ret, rtc, RTC_TC_HOU, &tm->tm_hour);
->                 rtc_read(ret, rtc, RTC_TC_DOM, &tm->tm_mday);
->                 rtc_read(ret, rtc, RTC_TC_MTH, &tm->tm_mon);
->                 rtc_read(ret, rtc, RTC_TC_YEA, &tm->tm_year);
->                 rtc_read(ret, rtc, RTC_TC_SEC, &sec);
->         } while (sec < tm->tm_sec);
-
-What about introducing
-static int __mtk_rtc_read_time(struct mt6397_rtc *rtc, struct rtc_time *tm, u32 *sec)
-and hide the checks of return values from regmap_read and the offset check in there. You return the error code or 0.
-
-This way the while loop would look like this:
-
-do {
-	ret = __mtk_rtc_read_time(rtc, &tm, &sec);
-	if (ret < 0)
-		goto rtc_exit;
-} while (sec < tm->tm_sec);
-
-Best regards,
-Matthias
+T24gMTIgTWFyY2ggMjAxNSBhdCAyMjo1NCwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4g
+d3JvdGU6Cj4gT24gV2VkLCBNYXIgMTEsIDIwMTUgYXQgMTE6MDAgQU0sIEFyZCBCaWVzaGV1dmVs
+Cj4gPGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc+IHdyb3RlOgo+PiBUaGlzIHNwbGl0cyBvZmYg
+dGhlIHJlc2VydmF0aW9uIG9mIHRoZSBtZW1vcnkgb2NjdXBpZWQgYnkgdGhlIEZEVAo+PiBiaW5h
+cnkgaXRzZWxmIGZyb20gdGhlIHByb2Nlc3Npbmcgb2YgdGhlIG1lbW9yeSByZXNlcnZhdGlvbnMg
+aXQKPj4gY29udGFpbnMuIFRoaXMgaXMgbmVjZXNzYXJ5IGJlY2F1c2UgdGhlIHBoeXNpY2FsIGFk
+ZHJlc3Mgb2YgdGhlIEZEVCwKPj4gd2hpY2ggaXMgbmVlZGVkIHRvIHBlcmZvcm0gdGhlIHJlc2Vy
+dmF0aW9uLCBtYXkgbm90IGJlIGtub3duIHRvIHRoZQo+PiBGRFQgZHJpdmVyIGNvcmUsIGkuZS4s
+IGl0IG1heSBiZSBtYXBwZWQgb3V0c2lkZSB0aGUgbGluZWFyIGRpcmVjdAo+PiBtYXBwaW5nLCBp
+biB3aGljaCBjYXNlIF9fcGEoKSByZXR1cm5zIGEgYm9ndXMgdmFsdWUuCj4+Cj4+IENjOiBCZW5q
+YW1pbiBIZXJyZW5zY2htaWR0IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+Cj4+IENjOiBQYXVs
+IE1hY2tlcnJhcyA8cGF1bHVzQHNhbWJhLm9yZz4KPj4gU2lnbmVkLW9mZi1ieTogQXJkIEJpZXNo
+ZXV2ZWwgPGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc+Cj4KPiBOb3QgcmVhbGx5IHRoZSBkaXJl
+Y3Rpb24gSSBsaWtlIGdvaW5nIGJ5IG1vdmluZyBtb3JlIHRoaW5ncyBiYWNrIHRvCj4gYXJjaCBj
+b2RlLCBidXQgSSBoYXZlbid0IGNvbWUgdXAgd2l0aCBhbnkgYmV0dGVyIHN1Z2dlc3Rpb24gc286
+Cj4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPgoKVGhhbmtzLgoK
+QFJ1c3NlbGwsIEJlbmphbWluLCBQYXVsOiBkbyBhbnkgb2YgeW91IHBlcmhhcHMgaGF2ZSBhbnkg
+aXNzdWVzIHdpdGggdGhpcz8KClJlZ2FyZHMsCkFyZC4KCgo+PiAtLS0KPj4gIGFyY2gvYXJtL21t
+L2luaXQuYyAgICAgICAgIHwgIDEgKwo+PiAgYXJjaC9hcm02NC9tbS9pbml0LmMgICAgICAgfCAg
+MSArCj4+ICBhcmNoL3Bvd2VycGMva2VybmVsL3Byb20uYyB8ICAxICsKPj4gIGRyaXZlcnMvb2Yv
+ZmR0LmMgICAgICAgICAgIHwgMTkgKysrKysrKysrKysrKystLS0tLQo+PiAgaW5jbHVkZS9saW51
+eC9vZl9mZHQuaCAgICAgfCAgMiArKwo+PiAgNSBmaWxlcyBjaGFuZ2VkLCAxOSBpbnNlcnRpb25z
+KCspLCA1IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbW0vaW5pdC5j
+IGIvYXJjaC9hcm0vbW0vaW5pdC5jCj4+IGluZGV4IDE2MDliMDIyYTcyZi4uMGI4NjU3YzM2ZmU0
+IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9tbS9pbml0LmMKPj4gKysrIGIvYXJjaC9hcm0vbW0v
+aW5pdC5jCj4+IEBAIC0zMTcsNiArMzE3LDcgQEAgdm9pZCBfX2luaXQgYXJtX21lbWJsb2NrX2lu
+aXQoY29uc3Qgc3RydWN0IG1hY2hpbmVfZGVzYyAqbWRlc2MpCj4+ICAgICAgICAgaWYgKG1kZXNj
+LT5yZXNlcnZlKQo+PiAgICAgICAgICAgICAgICAgbWRlc2MtPnJlc2VydmUoKTsKPj4KPj4gKyAg
+ICAgICBlYXJseV9pbml0X2ZkdF9yZXNlcnZlX3NlbGYoKTsKPj4gICAgICAgICBlYXJseV9pbml0
+X2ZkdF9zY2FuX3Jlc2VydmVkX21lbSgpOwo+Pgo+PiAgICAgICAgIC8qIHJlc2VydmUgbWVtb3J5
+IGZvciBETUEgY29udGlndW91cyBhbGxvY2F0aW9ucyAqLwo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm02NC9tbS9pbml0LmMgYi9hcmNoL2FybTY0L21tL2luaXQuYwo+PiBpbmRleCBhZTg1ZGE2MzA3
+YmIuLmZhMjM4OWIwZjdmMCAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm02NC9tbS9pbml0LmMKPj4g
+KysrIGIvYXJjaC9hcm02NC9tbS9pbml0LmMKPj4gQEAgLTE3MCw2ICsxNzAsNyBAQCB2b2lkIF9f
+aW5pdCBhcm02NF9tZW1ibG9ja19pbml0KHZvaWQpCj4+ICAgICAgICAgICAgICAgICBtZW1ibG9j
+a19yZXNlcnZlKF9fdmlydF90b19waHlzKGluaXRyZF9zdGFydCksIGluaXRyZF9lbmQgLSBpbml0
+cmRfc3RhcnQpOwo+PiAgI2VuZGlmCj4+Cj4+ICsgICAgICAgZWFybHlfaW5pdF9mZHRfcmVzZXJ2
+ZV9zZWxmKCk7Cj4+ICAgICAgICAgZWFybHlfaW5pdF9mZHRfc2Nhbl9yZXNlcnZlZF9tZW0oKTsK
+Pj4KPj4gICAgICAgICAvKiA0R0IgbWF4aW11bSBmb3IgMzItYml0IG9ubHkgY2FwYWJsZSBkZXZp
+Y2VzICovCj4+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMva2VybmVsL3Byb20uYyBiL2FyY2gv
+cG93ZXJwYy9rZXJuZWwvcHJvbS5jCj4+IGluZGV4IGI4ZTE1YzY3ODk2MC4uMDkzY2NmYjM4NGFm
+IDEwMDY0NAo+PiAtLS0gYS9hcmNoL3Bvd2VycGMva2VybmVsL3Byb20uYwo+PiArKysgYi9hcmNo
+L3Bvd2VycGMva2VybmVsL3Byb20uYwo+PiBAQCAtNTczLDYgKzU3Myw3IEBAIHN0YXRpYyB2b2lk
+IF9faW5pdCBlYXJseV9yZXNlcnZlX21lbV9kdCh2b2lkKQo+PiAgICAgICAgIGludCBsZW47Cj4+
+ICAgICAgICAgY29uc3QgX19iZTMyICpwcm9wOwo+Pgo+PiArICAgICAgIGVhcmx5X2luaXRfZmR0
+X3Jlc2VydmVfc2VsZigpOwo+PiAgICAgICAgIGVhcmx5X2luaXRfZmR0X3NjYW5fcmVzZXJ2ZWRf
+bWVtKCk7Cj4+Cj4+ICAgICAgICAgZHRfcm9vdCA9IG9mX2dldF9mbGF0X2R0X3Jvb3QoKTsKPj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZmR0LmMgYi9kcml2ZXJzL29mL2ZkdC5jCj4+IGluZGV4
+IDNhODk2YzlhZWI3NC4uYmJiMzVjZGIwNmU4IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL29mL2Zk
+dC5jCj4+ICsrKyBiL2RyaXZlcnMvb2YvZmR0LmMKPj4gQEAgLTU2MSwxMSArNTYxLDYgQEAgdm9p
+ZCBfX2luaXQgZWFybHlfaW5pdF9mZHRfc2Nhbl9yZXNlcnZlZF9tZW0odm9pZCkKPj4gICAgICAg
+ICBpZiAoIWluaXRpYWxfYm9vdF9wYXJhbXMpCj4+ICAgICAgICAgICAgICAgICByZXR1cm47Cj4+
+Cj4+IC0gICAgICAgLyogUmVzZXJ2ZSB0aGUgZHRiIHJlZ2lvbiAqLwo+PiAtICAgICAgIGVhcmx5
+X2luaXRfZHRfcmVzZXJ2ZV9tZW1vcnlfYXJjaChfX3BhKGluaXRpYWxfYm9vdF9wYXJhbXMpLAo+
+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmZHRfdG90YWxzaXpl
+KGluaXRpYWxfYm9vdF9wYXJhbXMpLAo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAwKTsKPj4gLQo+PiAgICAgICAgIC8qIFByb2Nlc3MgaGVhZGVyIC9tZW1yZXNl
+cnZlLyBmaWVsZHMgKi8KPj4gICAgICAgICBmb3IgKG4gPSAwOyA7IG4rKykgewo+PiAgICAgICAg
+ICAgICAgICAgZmR0X2dldF9tZW1fcnN2KGluaXRpYWxfYm9vdF9wYXJhbXMsIG4sICZiYXNlLCAm
+c2l6ZSk7Cj4+IEBAIC01NzksNiArNTc0LDIwIEBAIHZvaWQgX19pbml0IGVhcmx5X2luaXRfZmR0
+X3NjYW5fcmVzZXJ2ZWRfbWVtKHZvaWQpCj4+ICB9Cj4+Cj4+ICAvKioKPj4gKyAqIGVhcmx5X2lu
+aXRfZmR0X3Jlc2VydmVfc2VsZigpIC0gcmVzZXJ2ZSB0aGUgbWVtb3J5IHVzZWQgYnkgdGhlIEZE
+VCBibG9iCj4+ICsgKi8KPj4gK3ZvaWQgX19pbml0IGVhcmx5X2luaXRfZmR0X3Jlc2VydmVfc2Vs
+Zih2b2lkKQo+PiArewo+PiArICAgICAgIGlmICghaW5pdGlhbF9ib290X3BhcmFtcykKPj4gKyAg
+ICAgICAgICAgICAgIHJldHVybjsKPj4gKwo+PiArICAgICAgIC8qIFJlc2VydmUgdGhlIGR0YiBy
+ZWdpb24gKi8KPj4gKyAgICAgICBlYXJseV9pbml0X2R0X3Jlc2VydmVfbWVtb3J5X2FyY2goX19w
+YShpbml0aWFsX2Jvb3RfcGFyYW1zKSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgZmR0X3RvdGFsc2l6ZShpbml0aWFsX2Jvb3RfcGFyYW1zKSwKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCk7Cj4+ICt9Cj4+ICsKPj4gKy8q
+Kgo+PiAgICogb2Zfc2Nhbl9mbGF0X2R0IC0gc2NhbiBmbGF0dGVuZWQgdHJlZSBibG9iIGFuZCBj
+YWxsIGNhbGxiYWNrIG9uIGVhY2guCj4+ICAgKiBAaXQ6IGNhbGxiYWNrIGZ1bmN0aW9uCj4+ICAg
+KiBAZGF0YTogY29udGV4dCBkYXRhIHBvaW50ZXIKPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
+dXgvb2ZfZmR0LmggYi9pbmNsdWRlL2xpbnV4L29mX2ZkdC5oCj4+IGluZGV4IDBmZjM2MGQ1YjNi
+My4uNmVmNmIzMzIzOGQzIDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mX2ZkdC5oCj4+
+ICsrKyBiL2luY2x1ZGUvbGludXgvb2ZfZmR0LmgKPj4gQEAgLTYyLDYgKzYyLDcgQEAgZXh0ZXJu
+IGludCBlYXJseV9pbml0X2R0X3NjYW5fY2hvc2VuKHVuc2lnbmVkIGxvbmcgbm9kZSwgY29uc3Qg
+Y2hhciAqdW5hbWUsCj4+ICBleHRlcm4gaW50IGVhcmx5X2luaXRfZHRfc2Nhbl9tZW1vcnkodW5z
+aWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICp1bmFtZSwKPj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGludCBkZXB0aCwgdm9pZCAqZGF0YSk7Cj4+ICBleHRlcm4gdm9p
+ZCBlYXJseV9pbml0X2ZkdF9zY2FuX3Jlc2VydmVkX21lbSh2b2lkKTsKPj4gK2V4dGVybiB2b2lk
+IGVhcmx5X2luaXRfZmR0X3Jlc2VydmVfc2VsZih2b2lkKTsKPj4gIGV4dGVybiB2b2lkIGVhcmx5
+X2luaXRfZHRfYWRkX21lbW9yeV9hcmNoKHU2NCBiYXNlLCB1NjQgc2l6ZSk7Cj4+ICBleHRlcm4g
+aW50IGVhcmx5X2luaXRfZHRfcmVzZXJ2ZV9tZW1vcnlfYXJjaChwaHlzX2FkZHJfdCBiYXNlLCBw
+aHlzX2FkZHJfdCBzaXplLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBib29sIG5vX21hcCk7Cj4+IEBAIC04OSw2ICs5MCw3IEBAIGV4dGVybiB1NjQgZmR0
+X3RyYW5zbGF0ZV9hZGRyZXNzKGNvbnN0IHZvaWQgKmJsb2IsIGludCBub2RlX29mZnNldCk7Cj4+
+ICBleHRlcm4gdm9pZCBvZl9mZHRfbGltaXRfbWVtb3J5KGludCBsaW1pdCk7Cj4+ICAjZWxzZSAv
+KiBDT05GSUdfT0ZfRkxBVFRSRUUgKi8KPj4gIHN0YXRpYyBpbmxpbmUgdm9pZCBlYXJseV9pbml0
+X2ZkdF9zY2FuX3Jlc2VydmVkX21lbSh2b2lkKSB7fQo+PiArc3RhdGljIGlubGluZSB2b2lkIGVh
+cmx5X2luaXRfZmR0X3Jlc2VydmVfc2VsZih2b2lkKSB7fQo+PiAgc3RhdGljIGlubGluZSBjb25z
+dCBjaGFyICpvZl9mbGF0X2R0X2dldF9tYWNoaW5lX25hbWUodm9pZCkgeyByZXR1cm4gTlVMTDsg
+fQo+PiAgc3RhdGljIGlubGluZSB2b2lkIHVuZmxhdHRlbl9kZXZpY2VfdHJlZSh2b2lkKSB7fQo+
+PiAgc3RhdGljIGlubGluZSB2b2lkIHVuZmxhdHRlbl9hbmRfY29weV9kZXZpY2VfdHJlZSh2b2lk
+KSB7fQo+PiAtLQo+PiAxLjguMy4yCj4+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
+c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
+LWRldg==
