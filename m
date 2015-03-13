@@ -1,98 +1,107 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v7 4/4] ARM: dts: enable PCIe support for Cygnus
-Date: Thu, 12 Mar 2015 17:48:52 -0700
-Message-ID: <1426207732-31625-5-git-send-email-rjui@broadcom.com>
-References: <1426207732-31625-1-git-send-email-rjui@broadcom.com>
+From: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
+ gadget complete function
+Date: Fri, 13 Mar 2015 01:14:01 +0000
+Message-ID: <SIXPR06MB333E6503A469B6E147B20CED8070@SIXPR06MB333.apcprd06.prod.outlook.com>
+References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
+ <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <HKNPR06MB3229E4509ECB25B3620B449D8060@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <20150312044449.GA29718@saruman.tx.rr.com>
+ <HKNPR06MB3228B5E1A95EDFCD58CF32BD8060@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <20150312160907.GE9261@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426207732-31625-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150312160907.GE9261-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Content-Language: ja-JP
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe device nodes in bcm-cygnus.dtsi but keep them disabled there.
-Only enable them for bcm958300k where PCIe interfaces are populated
+Hi,
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi |   42 +++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm958300k.dts  |    8 +++++++
- 2 files changed, 50 insertions(+)
+> Hi,
+> 
+> On Thu, Mar 12, 2015 at 05:40:56AM +0000, yoshihiro shimoda wrote:
+> > Hi,
+> >
+< snip >
+> > >
+> > > try something like below:
+> > >
+> > > diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+> > > index e0384af77e56..e9d75d85be59 100644
+> > > --- a/drivers/usb/renesas_usbhs/mod_gadget.c
+> > > +++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+> > > @@ -119,7 +119,7 @@ struct usbhsg_recip_handle {
+> > >  /*
+> > >   *		queue push/pop
+> > >   */
+> > > -static void usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > > +static void __usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > >  			     struct usbhsg_request *ureq,
+> > >  			     int status)
+> > >  {
+> > > @@ -133,6 +133,15 @@ static void usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > >  	usb_gadget_giveback_request(&uep->ep, &ureq->req);
+> > >  }
+> > >
+> > > +static void usbhsg_queue_pop(struct usbhsg_uep *uep,
+> > > +			     struct usbhsg_request *ureq,
+> > > +			     int status)
+> > > +{
+> > > +	usbhs_lock(priv, flags);
+> > > +	__usbhsg_queue_pop(uep, ureq, status);
+> > > +	usbhs_unlock(priv, flags);
+> > > +}
+> > > +
+> > >  static void usbhsg_queue_done(struct usbhs_priv *priv, struct usbhs_pkt *pkt)
+> > >  {
+> > >  	struct usbhs_pipe *pipe = pkt->pipe;
+> > >
+> > >
+> > > then, for cases where lock is already held you call __usbhsg_queue_pop()
+> > > and for all other cases, call usbhsg_queue_pop().
+> >
+> > Thank you for the suggestion. However, we cannot use this
+> > usbhsg_queue_pop() because a gadget driver might call usb_ep_queue()
+> > in the "complete" function and this driver calls usbhs_lock() in the
+> > usb_ep_queue().
+> 
+> right, in that case just call __usbhs_queue_pop() directly.
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index ff5fb6a..ee0c6e4 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -90,6 +90,48 @@
- 		status = "disabled";
- 	};
- 
-+	pcie0: pcie@18012000 {
-+		compatible = "brcm,iproc-pcie";
-+		reg = <0x18012000 0x1000>;
-+
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
-+
-+		linux,pci-domain = <0>;
-+
-+		bus-range = <0x00 0xff>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x81000000 0 0	  0x28000000 0 0x00010000
-+			  0x82000000 0 0x20000000 0x20000000 0 0x04000000>;
-+
-+		status = "disabled";
-+	};
-+
-+	pcie1: pcie@18013000 {
-+		compatible = "brcm,iproc-pcie";
-+		reg = <0x18013000 0x1000>;
-+
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
-+
-+		linux,pci-domain = <1>;
-+
-+		bus-range = <0x00 0xff>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x81000000 0 0	  0x48000000 0 0x00010000
-+			  0x82000000 0 0x40000000 0x40000000 0 0x04000000>;
-+
-+		status = "disabled";
-+	};
-+
- 	uart0: serial@18020000 {
- 		compatible = "snps,dw-apb-uart";
- 		reg = <0x18020000 0x100>;
-diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
-index f1bb36f..c9eb856 100644
---- a/arch/arm/boot/dts/bcm958300k.dts
-+++ b/arch/arm/boot/dts/bcm958300k.dts
-@@ -47,6 +47,14 @@
- 		bootargs = "console=ttyS0,115200";
- 	};
- 
-+	pcie0: pcie@18012000 {
-+		status = "okay";
-+	};
-+
-+	pcie1: pcie@18013000 {
-+		status = "okay";
-+	};
-+
- 	uart3: serial@18023000 {
- 		status = "okay";
- 	};
--- 
-1.7.9.5
+Yes. So, my understanding is that this driver always calls __usbhs_queue_pop()
+because this driver cannot know that a gadget driver calls usb_ep_queue() or not
+in the "complete" function.
+
+> > Perhaps my explanation was bad, but this issue was caused by the
+> > following conditions:
+> >  - I use the renesas_usbhs driver as udc.
+> >  - I use an old usb-dmac driver that the callback runs on a kthread.
+> >  - I use the ncm driver. In this environment, the ncm driver might
+> >	cause a spinlock suspected.
+> >
+> > As an old solution, I fixed the renesas_usbhs driver by this patch.
+> > However, if I use a new usb-dmac driver that the callback runs on a
+> > tasklet, I don't need this patch. (This is a new solution.)
+> 
+> then differentiate based on some revision register or something like
+> that ?
+
+Sorry for the lack information. I am submitting this usb-dmac driver that
+the callback runs on a tasklet now. This means that the driver is not
+merged yet. So, I think that we don't need to differentiate.
+
+Best regards,
+Yoshihiro Shimoda
+
+> --
+> balbi
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
