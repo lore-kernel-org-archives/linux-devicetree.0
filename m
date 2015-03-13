@@ -1,55 +1,55 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/overlay: Remove unused variable
-Date: Fri, 13 Mar 2015 10:28:14 -0500
-Message-ID: <CAL_JsqK=Sa3seVZscszFy-yoLJrmyW701cUPYJ3JCCsNCJMd-g@mail.gmail.com>
-References: <1425387885-7936-1-git-send-email-fabio.estevam@freescale.com>
+Subject: Re: [PATCH] of: Fix premature bootconsole disable with 'stdout-path'
+Date: Fri, 13 Mar 2015 10:27:29 -0500
+Message-ID: <CAL_JsqJveZ1yx+7yZ=OtQJLpYJaYVvSQXof3MRrTvZyPg1XhCw@mail.gmail.com>
+References: <1425230482-6423-1-git-send-email-peter@hurleysoftware.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425387885-7936-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1425230482-6423-1-git-send-email-peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 3, 2015 at 7:04 AM, Fabio Estevam
-<fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Commit 3e7f7626fd49a ("of/overlay: Do not generate duplicate nodes") removed
-> the only use of the 'grandchild' variable, which leads to the following build
-> warning:
+On Sun, Mar 1, 2015 at 11:21 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
+> Support for devicetree serial consoles via 'stdout-path' causes
+> bootconsoles to be disabled when the vt dummy console loads, since
+> there is no preferred console (the preferred console is not added
+> until the device is probed).
 >
-> drivers/of/overlay.c: In function 'of_overlay_apply_single_device_node':
-> drivers/of/overlay.c:89:31: warning: unused variable 'grandchild' [-Wunused-variable]
->   struct device_node *tchild, *grandchild;
->                                ^
+> Ensure there is at least a preferred console, even if never matched.
 >
-> Remove this unused variable.
->
-> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Requires: "console: Fix console name size mismatch"
+> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+> Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 
 Applied for 4.0. Thanks.
 
 Rob
 
 > ---
->  drivers/of/overlay.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/of/base.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 4066648..dee9270 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -86,7 +86,7 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
->                 struct device_node *target, struct device_node *child)
->  {
->         const char *cname;
-> -       struct device_node *tchild, *grandchild;
-> +       struct device_node *tchild;
->         int ret = 0;
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 36536b6..83dc8a6 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1885,8 +1885,10 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>                         name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+>                 if (IS_ENABLED(CONFIG_PPC) && !name)
+>                         name = of_get_property(of_aliases, "stdout", NULL);
+> -               if (name)
+> +               if (name) {
+>                         of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
+> +                       add_preferred_console("stdout-path", 0, NULL);
+> +               }
+>         }
 >
->         cname = kbasename(child->full_name);
+>         if (!of_aliases)
 > --
-> 1.9.1
+> 2.3.0
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
