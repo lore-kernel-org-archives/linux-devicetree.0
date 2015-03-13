@@ -1,75 +1,98 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] ARM: dts: vf610: add Miscellaneous System Control
- Module (MSCM)
-Date: Fri, 13 Mar 2015 12:48:01 +0800
-Message-ID: <20150313044759.GQ20455@dragon>
-References: <1425249689-32354-1-git-send-email-stefan@agner.ch>
- <1425249689-32354-4-git-send-email-stefan@agner.ch>
- <20150311004812.GU20455@dragon>
- <59b0d98827cb4e7497de81e1c0826964@agner.ch>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] libfdt: Add fdt_path_offset_namelen()
+Date: Fri, 13 Mar 2015 16:43:50 +1100
+Message-ID: <20150313054350.GA11132@voom.redhat.com>
+References: <1425654758-2575-1-git-send-email-peter@hurleysoftware.com>
+ <20150310001711.GB30335@voom.fritz.box>
+ <54FEF600.50402@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <59b0d98827cb4e7497de81e1c0826964-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <54FEF600.50402-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 10:03:08AM +0100, Stefan Agner wrote:
-> On 2015-03-11 01:48, Shawn Guo wrote:
-> > On Sun, Mar 01, 2015 at 11:41:29PM +0100, Stefan Agner wrote:
-> >> Add the Miscellaneous System Control Module (MSCM) to the base
-> >> device tree for Vybrid SoC's. This module contains registers
-> >> to get information of the individual and current (accessing)
-> >> CPU. In a second block, there is an interrupt router, which
-> >> handles the routing of the interrupts between the two CPU cores
-> >> on VF6xx variants of the SoC. However, also on single core
-> >> variants the interrupt router needs to be configured in order
-> >> to receive interrupts on the CPU's interrupt controller. Almost
-> >> all peripheral interrupts are routed through the router, hence
-> >> the MSCM module is the default interrupt parent for this SoC.
+
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 10, 2015 at 09:47:44AM -0400, Peter Hurley wrote:
+> Hi David,
+>=20
+> On 03/09/2015 08:17 PM, David Gibson wrote:
+> > On Fri, Mar 06, 2015 at 10:12:38AM -0500, Peter Hurley wrote:
+> >> Properties may contain path names which are not NUL-terminated.
+> >> For example, the 'stdout-path' property allows the form 'path:options',
+> >> where the ':' character terminates the path specifier.
 > >>
-> >> In a earlier commit the interrupt nodes were moved out of the
-> >> peripheral nodes and specified in the CPU specific vf500.dtsi
-> >> device tree. This allowed to use the base device tree vfxxx.dtsi
-> >> also for a Cortex-M4 specific device tree, which uses different
-> >> interrupt nodes due to the NVIC interrupt controller. However,
-> >> since the interrupt parent for peripherals is the MSCM module
-> >> independently which CPU the device tree is used for, we can move
-> >> the interrupt nodes into the base device tree vfxxx.dtsi again.
-> >> Depending on which CPU this base device tree will be used with,
-> >> the correct parent interrupt controller has to be assigned to
-> >> the MSCM-IR node (GIC or NVIC). The driver takes care of the
-> >> parent interrupt controller specific needs (interrupt-cells).
+> >> Allow these path names to be used in-place for path descending;
+> >> add fdt_path_offset_namelen(), which limits the path name to 'namelen'
+> >> characters.
 > >>
-> >> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> > 
-> > Stefan,
-> > 
-> > I guess this patch has a run-time dependency on the first two in the
-> > series, right?  Or put it another way, if I apply this single patch on
-> > my branch, the dtb and kernel built from the same branch do not work
-> > together, right?  If so, we will need to either wait for the first two
-> > hit mainline or pull Jason's irqchip/vybrid branch into my tree as
-> > prerequisite (irqchip/vybrid needs to be stable).
-> > 
-> > Shawn
-> 
-> Yes, that is true. The driver need to be in place in order to
-> successfully boot with the new device tree.
+> >> Reimplement fdt_path_offset() as a trivial wrapper.
+> >>
+> >> Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+> >=20
+> > I think this function is a good idea, however I would like to see a
+> > testcase for it.
+>=20
+> Sure, I can do that.
+>=20
+> I assume you mean a path name with non-NUL termination because
+> the fdt_path_offset() tests are already exercising the
+> fdt_path_offset_name() implementation.
 
-Okay.  Pulled Jason's irqchip/vybrid branch in, and applied the patch.
+Yes, I mean the non-\0-terminated case.  Or more specifically still,
+making sure that if you call fdt_path_offset_namelen() on a portion of
+a longer path, it correctly gives you the offset for only the partial
+path.
 
-Stefan,
+That said, there may be some other edge cases that could do with
+testing too, if you have time.  In particular I'm thinking of paths
+where there are repeated '/' character, and paths ending with one or
+more '/' characters.
 
-There was a conflict on device dspi1 when applying the patch to my
-imx/dt branch.  Please take a look to see if I solved it correctly.
+> Is there a readme somewhere regarding the test matrix (ie.,
+> which dts files go with which tests)?
 
-Shawn
+I'm afraid not, apart from the test runner script itself.  I'm not
+sure quite what information you're after here.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVAnkWAAoJEGw4ysog2bOSufwQAMdpjSRomRVrG1a1EK4uWBac
+wW7z2WHDqUe3hK3+5jsdzV1GwyW3acmgFBoy7CJglRj2Q8GsiHDO1pVkKTt7Oeu/
+TsA3hd3MC0tK48FxIg3YHj1y6kvHafTiyhdqj2uCnXYsYvYpkU0zEYrkdDf3VqYz
+VxqmasavBe5DK3dQYGtZr8aP79X35kFzbw786dhRTB42CpC/q6ZoK4JSWJ4L3qt1
+QvhgW0Kf8uBk7g6rz5fPn2IqRYL4hkxPkiaJPiJdSk0rdHvyhSlvrA7qaV60U51G
+p07AOeZQTvhY4GBlEmzN9Q6bZfZg1dR53UHpGN7TzxaPrv4Ux9uwxqn0icWxJO2h
+ec8cDZYAzr9d3qGlQZ9dOph3W93jqMWwu4FYKVLi+CJVvOjdjh7uOSif2ieG3isg
+va0QP9yJGyksPvpdbd25jUTHfMs32n1tiY16Mw3QhjMT/oG1tXVWkJM9tyAmFDwS
+1qk/bOGrJHmh46XokD53hjbaNnpAMp8Ti6ccbBY4giWVULQJrCsWsawDpSM2l7aF
+dIpi9p7QU3wOdbGMZoM3Pq/qUKar/HpsTh7slO+3MMajZm5E5x1eoLsZIWE1rCSp
+4qiEnXgmiwuXK8mMjSZeZgeVqR7z4sUukbOB14mle5gBfnJQErGagtRPLb+YEoim
+pO5U8bB9FikCIFAVnSVe
+=ZEIX
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
