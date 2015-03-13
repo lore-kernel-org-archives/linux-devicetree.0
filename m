@@ -1,39 +1,127 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v2 1/2] of: Add vendor prefix for Aptina Imaging
-Date: Fri, 13 Mar 2015 02:03:27 +0200
-Message-ID: <1426205008-6160-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Carlos=20Sanmart=C3=ADn=20Bustos?= <carsanbu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v5] media: i2c: add support for omnivision's ov2659 sensor
+Date: Fri, 13 Mar 2015 02:04:16 +0200
+Message-ID: <20150313000415.GR11954@valkosipuli.retiisi.org.uk>
+References: <1426202556-29156-1-git-send-email-prabhakar.csengg@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426202556-29156-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Hi Prabhakar,
 
-Aptina has recently been acquired by ON Semiconductor, but the name Aptina is
-still widely used. Should the onnn prefix be used instead ?
+On Thu, Mar 12, 2015 at 11:22:36PM +0000, Lad Prabhakar wrote:
+...
+> +static int ov2659_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	const struct ov2659_platform_data *pdata = ov2659_get_pdata(client);
+> +	struct v4l2_subdev *sd;
+> +	struct ov2659 *ov2659;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	if (!pdata) {
+> +		dev_err(&client->dev, "platform data not specified\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ov2659 = devm_kzalloc(&client->dev, sizeof(*ov2659), GFP_KERNEL);
+> +	if (!ov2659)
+> +		return -ENOMEM;
+> +
+> +	ov2659->pdata = pdata;
+> +	ov2659->client = client;
+> +
+> +	clk = devm_clk_get(&client->dev, "xvclk");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	ov2659->xvclk_frequency = clk_get_rate(clk);
+> +	if (ov2659->xvclk_frequency < 6000000 ||
+> +	    ov2659->xvclk_frequency > 27000000)
+> +		return -EINVAL;
+> +
+> +	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+> +	v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> +			  V4L2_CID_PIXEL_RATE, ov2659->xvclk_frequency,
+> +			  ov2659->xvclk_frequency, 1, ov2659->xvclk_frequency);
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..4326f52 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -20,6 +20,7 @@ amlogic	Amlogic, Inc.
- ams	AMS AG
- amstaos	AMS-Taos Inc.
- apm	Applied Micro Circuits Corporation (APM)
-+aptina	Aptina Imaging
- arm	ARM Ltd.
- armadeus	ARMadeus Systems SARL
- asahi-kasei	Asahi Kasei Corp.
+ov2659->xvclk_frequency is the frequency of the external clock, not the
+pixel rate. If I understand correctly, you should use the value of the
+link-frequency property instead (as long as it's one pixel per clock).
+
+With this fixed,
+
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+> +	v4l2_ctrl_new_std_menu_items(&ov2659->ctrls, &ov2659_ctrl_ops,
+> +				     V4L2_CID_TEST_PATTERN,
+> +				     ARRAY_SIZE(ov2659_test_pattern_menu) - 1,
+> +				     0, 0, ov2659_test_pattern_menu);
+> +	ov2659->sd.ctrl_handler = &ov2659->ctrls;
+> +
+> +	if (ov2659->ctrls.error) {
+> +		dev_err(&client->dev, "%s: control initialization error %d\n",
+> +			__func__, ov2659->ctrls.error);
+> +		return  ov2659->ctrls.error;
+> +	}
+> +
+> +	sd = &ov2659->sd;
+> +	client->flags |= I2C_CLIENT_SCCB;
+> +	v4l2_i2c_subdev_init(sd, client, &ov2659_subdev_ops);
+> +
+> +	sd->internal_ops = &ov2659_subdev_internal_ops;
+> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
+> +		     V4L2_SUBDEV_FL_HAS_EVENTS;
+> +
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	ov2659->pad.flags = MEDIA_PAD_FL_SOURCE;
+> +	sd->entity.type = MEDIA_ENT_T_V4L2_SUBDEV_SENSOR;
+> +	ret = media_entity_init(&sd->entity, 1, &ov2659->pad, 0);
+> +	if (ret < 0) {
+> +		v4l2_ctrl_handler_free(&ov2659->ctrls);
+> +		return ret;
+> +	}
+> +#endif
+> +
+> +	mutex_init(&ov2659->lock);
+> +
+> +	ov2659_get_default_format(&ov2659->format);
+> +	ov2659->frame_size = &ov2659_framesizes[2];
+> +	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+> +
+> +	ret = ov2659_detect(sd);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	/* Calculate the PLL register value needed */
+> +	ov2659_pll_calc_params(ov2659);
+> +
+> +	ret = v4l2_async_register_subdev(&ov2659->sd);
+> +	if (ret)
+> +		goto error;
+> +
+> +	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
+> +
+> +	return 0;
+> +
+> +error:
+> +	v4l2_ctrl_handler_free(&ov2659->ctrls);
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	media_entity_cleanup(&sd->entity);
+> +#endif
+> +	mutex_destroy(&ov2659->lock);
+> +	return ret;
+> +}
+
 -- 
-Regards,
+Kind regards,
 
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
