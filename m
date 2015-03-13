@@ -1,46 +1,59 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and
  evaluation board dts
-Date: Fri, 13 Mar 2015 10:34:54 +0000
-Message-ID: <20150313103453.GA3592@leverpostej>
-References: <1426107080-29079-1-git-send-email-galak@codeaurora.org>
- <1426107080-29079-2-git-send-email-galak@codeaurora.org>
- <20150312170541.GE30145@leverpostej>
- <E114AF0E-5DA9-412A-B3E2-DDD95D224C66@codeaurora.org>
- <20150312182508.GF30145@leverpostej>
- <F0B0524B-AC0E-4E60-9A21-1208C4A978F5@codeaurora.org>
+Date: Fri, 13 Mar 2015 10:52:07 +0000
+Message-ID: <20150313105207.GB3592@leverpostej>
+References: <1426182985-10425-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <F0B0524B-AC0E-4E60-9A21-1208C4A978F5-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1426182985-10425-1-git-send-email-galak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-> > Which of spin-table/psci are you planning on using for SMP support, and
-> > when would that be likely to appear?
-> 
-> We have a qcom specific SMP enablement method for this device.  This
-> was one of our first devices so it utilized as much from arm 32-bit as
-> possible.
+> +/ {
+> +	chosen {
+> +		stdout-path = &blsp1_uart2;
+> +	};
 
-Implementation specific enable methods are something we really don't
-want to see for arm64. If PSCI is out of the question then a spin-table
-shim in your bootloader shouldn't be too hard to implement.
+It would be good if we had the configuration too (see
+Documentation/devicetree/bindings/chosen.txt), as that avoids any
+reliance on kernel defaults.
 
-> > Which exception level do CPUs enter the kernel? Even without a
-> > virt-capable GIC booting at EL2 is less work for the FW and gives the
-> > kernel a better chance of fixing things up (e.g. CNTVOFF).
-> 
-> I think the enter in EL1.
+You can refer to an alias, so this could be:
 
-That's unfortunate, but so long as they are consistent, it's not the end
-of the world.
+aliases {
+	serial0 = &blsp1_uart2;
+};
+
+chosen {
+	stdout-path = "serial0:115200n8";
+};
+
+...assuming that 115200n8 is correct for your UART, of course.
+
+
+[...]
+
+> +#include "skeleton.dtsi"
+
+I'd like to get rid of skeleton.dtsi; it causes more problems than it
+solves (the address/size cells mismatch is confusing and hidden, people
+forget to fill in memory nodes appropriately, etc).
+
+Please remove this include and place appropriate #address-cells and #size-cells here.
+
+I'd strongly recommend going with /#size-cells = <2>; it' will save on a
+lot of pain if you need to add PCIe or something with large ranges
+later. If things all fall in 4GB within the SoC then have
+/soc/#size=cells = <1> and an appropriate /soc/ranges property.
+
+I note this DT doesn't have any memory nodes. Is that an accident or
+does the loader fill that in?
+
+If the latter, have an empty node with a comment to that effect.
 
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
