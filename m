@@ -1,105 +1,46 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] DeviceTree fixes for 4.0-rc
-Date: Fri, 13 Mar 2015 11:06:42 -0500
-Message-ID: <CAL_JsqJQRDOqdCNLCRBEPkVdcmW+NeouZTJzF1-WdeiUydaHCQ@mail.gmail.com>
+From: =?windows-1252?Q?S=E9bastien_Szymanski?=
+ <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH v6 0/6] wlcore: add device-tree support
+Date: Fri, 13 Mar 2015 17:11:46 +0100
+Message-ID: <55030C42.6020206@armadeus.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eliad Peller <eliad@wizery.com>, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Julien Boibessot <julien.boibessot@armadeus.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@deeprootsystems.com>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-Please pull DT fixes for 4.0. Details below.
+On 03/12/2015 01:09 PM, Eliad Peller wrote:
+> =
 
-Rob
+> NOTE: all the platform patches were compile-tested
+> only. I'm looking for some wl12xx card (that i should
+> have somewhere) to test the wl12xx changes (wrt. clocks),
+> but haven't found it yet.
+> =
 
-The following changes since commit 9eccca0843205f87c00404b663188b88eb248051:
 
-  Linux 4.0-rc3 (2015-03-08 16:09:09 -0700)
+I have tested this series on a APF6 board, i.MX6 based board with a
+Jorjin WG7311-0A Wifi/BT module which is based on the wl1271l.
 
-are available in the git repository at:
+It works. I was able to power up the wlan0 interface and ping google.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.0
+Best regards,
 
-for you to fetch changes up to a697c2efba03ac7bfdbffbba7f0f1aa294f7dee0:
+-- =
 
-  of/platform: Fix sparc:allmodconfig build (2015-03-13 09:45:24 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for 4.0-rc:
-
-- Fix for stdout-path option parsing with added unittest
-
-- Fix for stdout-path interaction with earlycon
-
-- Several DT unittest fixes
-
-- Fix Sparc allmodconfig build error on
-  of_platform_register_reconfig_notifier
-
-- Several DT overlay kconfig and build warning fixes
-
-- Several DT binding documentation updates
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      of: unittest: fix I2C dependency
-
-Chunyan Zhang (1):
-      Documentation: DT: Renamed of-serial.txt to 8250.txt
-
-Fabio Estevam (1):
-      of/overlay: Remove unused variable
-
-Guenter Roeck (1):
-      of/platform: Fix sparc:allmodconfig build
-
-Leif Lindholm (1):
-      of: fix handling of '/' in options for of_find_node_by_path()
-
-Mark Brown (1):
-      of/overlay: Directly include idr.h
-
-Matt Porter (1):
-      dt: submitting-patches: clarify that DT maintainers are to be
-cced on bindings
-
-Matwey V. Kornilov (2):
-      of: Add prompt for OF_OVERLAY config
-      of: Drop superfluous dependance for OF_OVERLAY
-
-Michal Simek (1):
-      of: Add vendor prefix for Arasan
-
-Niklas Cassel (1):
-      serial: add device tree binding documentation for ETRAX FS UART
-
-Peter Hurley (2):
-      of: Fix premature bootconsole disable with 'stdout-path'
-      of: unittest: Add options string testcase variants
-
-Rob Herring (1):
-      Merge tag 'v4.0-rc3' into HEAD
-
-Wang Long (2):
-      of/unittest: remove the duplicate of_changeset_init
-      of/unittest: Fix the wrong expected value in of_selftest_property_string
-
- .../bindings/serial/{of-serial.txt => 8250.txt}    |  0
- .../bindings/serial/axis,etraxfs-uart.txt          | 19 +++++++++++++++
- .../devicetree/bindings/submitting-patches.txt     |  3 +++
- .../devicetree/bindings/vendor-prefixes.txt        |  2 ++
- drivers/of/Kconfig                                 |  3 +--
- drivers/of/base.c                                  | 27 ++++++++++++++-------
- drivers/of/overlay.c                               |  3 ++-
- drivers/of/unittest.c                              | 28 +++++++++++++++-------
- include/linux/of_platform.h                        |  2 +-
- 9 files changed, 65 insertions(+), 22 deletions(-)
- rename Documentation/devicetree/bindings/serial/{of-serial.txt =>
-8250.txt} (100%)
- create mode 100644
-Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+S=E9bastien Szymanski
