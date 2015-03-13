@@ -1,48 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 1/2] of: Add prompt for OF_OVERLAY config
-Date: Fri, 13 Mar 2015 10:24:56 -0500
-Message-ID: <CAL_JsqL5Z9v3ohZE3Fm6c1kpTyzRH5mLVvQ-X7=sDL=JfwT_DA@mail.gmail.com>
-References: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: Drop superfluous dependance for OF_OVERLAY
+Date: Fri, 13 Mar 2015 10:25:14 -0500
+Message-ID: <CAL_JsqKN2e36CPmXsgXngsU7=XcmU+EHLGsui_bZ9TCuj9U4tQ@mail.gmail.com>
+References: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru> <1424068044-3457-2-git-send-email-matwey@sai.msu.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Matwey V. Kornilov" <matwey@sai.msu.ru>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424068044-3457-2-git-send-email-matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Matwey V. Kornilov" <matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 16, 2015 at 12:27 AM, Matwey V. Kornilov <matwey@sai.msu.ru> wrote:
-> Add prompt for OF_OVERLAY config option to make in visible in menuconfig/xconfig
-> to make user be able to set or unset this option.
+On Mon, Feb 16, 2015 at 12:27 AM, Matwey V. Kornilov <matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org> wrote:
+> The whole menu already depends on OF, so there is no need to additionaly specify it.
 >
-> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> Suggested-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+> Signed-off-by: Matwey V. Kornilov <matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org>
 
 Applied for 4.0. Thanks.
 
 Rob
 
 > ---
-> Changes from v1:
->  - Explanation commit message has been added to 1/2
->  - Add 2/2 (drop depends on OF) as suggested by <pebolle@tiscali.nl>
->
->  drivers/of/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/of/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
 >
 > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index b5e0c87..fdca685 100644
+> index fdca685..4831137 100644
 > --- a/drivers/of/Kconfig
 > +++ b/drivers/of/Kconfig
-> @@ -85,7 +85,7 @@ config OF_RESOLVE
->         bool
+> @@ -86,7 +86,6 @@ config OF_RESOLVE
 >
 >  config OF_OVERLAY
-> -       bool
-> +       bool "Device Tree overlays"
->         depends on OF
+>         bool "Device Tree overlays"
+> -       depends on OF
 >         select OF_DYNAMIC
 >         select OF_RESOLVE
+>
 > --
 > 2.1.4
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
