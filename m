@@ -1,72 +1,62 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 3/6] mtd: nand: vf610_nfc: add device tree bindings
-Date: Fri, 13 Mar 2015 10:38:55 +0100
-Message-ID: <1426239538-11529-4-git-send-email-stefan@agner.ch>
-References: <1426239538-11529-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426239538-11529-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@nbsps.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 18/18] omap3isp: Deprecate platform data support
+Date: Fri, 13 Mar 2015 10:40:50 +0100
+Message-ID: <20150313094050.GB4980@earth>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
+ <1425764475-27691-19-git-send-email-sakari.ailus@iki.fi>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425764475-27691-19-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- .../devicetree/bindings/mtd/vf610-nfc.txt          | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
 
-diff --git a/Documentation/devicetree/bindings/mtd/vf610-nfc.txt b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-new file mode 100644
-index 0000000..5f0d344
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-@@ -0,0 +1,45 @@
-+Freescale's NAND flash controller (NFC)
-+
-+This variant of the Freescale NAND flash controller (NFC) is on Vybrid (vf610),
-+MPC5125, MCF54418 and Kinetis K70.
-+
-+Required properties:
-+- compatible: "fsl,vf610-nfc"
-+- reg: address range of the NFC
-+- interrupts: interrupt of the NFC
-+- nand-bus-width: see nand.txt
-+- nand-ecc-mode: see nand.txt
-+- nand-on-flash-bbt: see nand.txt
-+- assigned-clocks: main clock from the SoC, for Vybrid <&clks VF610_CLK_NFC>;
-+- assigned-clock-rates: The NAND bus timing is derived from this clock
-+    rate and should not exceed maximum timing for any NAND memory chip
-+    in a board stuffing. Typical NAND memory timings derived from this
-+    clock are found in the SoC hardware reference manual. Furthermore,
-+    there might be restrictions on maximum rates when using hardware ECC.
-+
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+
-+Required properties for hardware ECC:
-+- nand-ecc-strength: supported strengths are 24 and 32 bit (see nand.txt)
-+- nand-ecc-step-size: step size equals page size, currently only 2k pages are
-+    supported
-+
-+Example:
-+
-+	nfc: nand@400e0000 {
-+		compatible = "fsl,vf610-nfc";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x400e0000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks VF610_CLK_NFC>;
-+		clock-names = "nfc";
-+		assigned-clocks = <&clks VF610_CLK_NFC>;
-+		assigned-clock-rates = <33000000>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-on-flash-bbt;
-+		nand-ecc-strength = <32>;
-+		nand-ecc-step-size = <2048>;
-+	};
--- 
-2.3.1
+--DKU6Jbt7q3WqK7+M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+[+CC Tony]
+
+On Sat, Mar 07, 2015 at 11:41:15PM +0200, Sakari Ailus wrote:
+> Print a warning when the driver is used with platform data. Existing
+> platform data user should move to DT now.
+
+I guess this should become a more visible warning on OMAP SoC level,
+since platform data based boot will be deprecated completly.
+
+-- Sebastian
+
+--DKU6Jbt7q3WqK7+M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVArCiAAoJENju1/PIO/qajWcQAIUyn6rZcJXxf06NC5Vp2mLt
+wa5wUTAd4OSWwkW7TeLKda1wSifSPrnADz0W33RbRsE0hsOBU7fWuaLIEjPEAg75
+xZii4eXGaXqlpbsE3gGlpZ3Fgob4BZbCYQpVKlvmIVoDf9Hk0uxU3TzHRtvVwR1B
+9d1E6MdadohcTLAF2m3tLjPT+FzT9B8DA4HifmhfgsCXK41HL3DYD9YXTazc75RO
+updeqnWHr1wETwx4eE2vEsBEuu9CU2Xt36NT2MVun7nl3yFlkJHoTxZGZsRLVVyG
+adONppE7PCYzbzpDzUel8O4wJPpJ+Yp/pcj8ZEbgbf8SSDQHvDY3UMjJ/V6vJnVZ
+joy4gJCHRtdkhXQn/ELXGXThFsJzfWOiuiH2ha+SQY0e2fy07XtyxiUnw+v2yMWQ
+PxRimxG6UllBZDVYkcR8CV/HummdPFoG9REaGkNF45Pxs9G6FH60YLsh0UqjBXqa
+mWQssuXzbsy3sxNP9SForeSouFW822adIrlm6pq6yrvl4sjcR7Uy12exMqO1zidM
+jIQlxIAMnxa6CQMtpJPbk4MnaBvNve3HQCQp+2WGf7JQwcDr/5VtQTswnfX+fO+Q
+cn14gC84mOogQYMYvYSiIM+SB3P+XL0w8VCAou1lgkAQB9SXLz0Pnf09gys361Ts
+qZLhl4/IlNTns6lyl3ha
+=s1SH
+-----END PGP SIGNATURE-----
+
+--DKU6Jbt7q3WqK7+M--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
