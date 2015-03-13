@@ -1,79 +1,97 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v4 2/4] arm64: dts: Add Qualcomm MSM8916 SoC and evaluation board dts
-Date: Fri, 13 Mar 2015 10:50:42 -0500
-Message-ID: <04AD8E46-277D-4652-88AF-D16538C2AA87@codeaurora.org>
-References: <1426182985-10425-1-git-send-email-galak@codeaurora.org> <20150313105207.GB3592@leverpostej>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150313105207.GB3592@leverpostej>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
+ from DT match tables
+Date: Fri, 13 Mar 2015 09:06:01 -0700
+Message-ID: <20150313160601.GI12966@brian-ubuntu>
+References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
+ <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
+ <20150206042744.GK18140@ld-irv-0074>
+ <20150210074634.GD8020@x1>
+ <20150224050452.GG18140@ld-irv-0074>
+ <20150224094110.GA20969@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150224094110.GA20969@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 24, 2015 at 09:41:10AM +0000, Lee Jones wrote:
+> On Mon, 23 Feb 2015, Brian Norris wrote:
+> > On Tue, Feb 10, 2015 at 03:46:34PM +0800, Lee Jones wrote:
+> > > On Thu, 05 Feb 2015, Brian Norris wrote:
 
-On Mar 13, 2015, at 5:52 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+[snip other discussion]
 
->> +/ {
->> +	chosen {
->> +		stdout-path =3D &blsp1_uart2;
->> +	};
->=20
-> It would be good if we had the configuration too (see
-> Documentation/devicetree/bindings/chosen.txt), as that avoids any
-> reliance on kernel defaults.
->=20
-> You can refer to an alias, so this could be:
->=20
-> aliases {
-> 	serial0 =3D &blsp1_uart2;
-> };
->=20
-> chosen {
-> 	stdout-path =3D "serial0:115200n8";
-> };
->=20
-> ...assuming that 115200n8 is correct for your UART, of course.
->=20
->=20
-> [=85]
+> > Now, unless you were able to provide an additional enlightening
+> > viewpoint, then the following paragraph likely all holds true:
+> > 
+> > > > Also, I realized that all this boot device / syscfg gymnastics is just
+> > > > for one simple fact; your driver is trying to hide the fact that your
+> > > > system can't reliably handle 4-byte addressing for the boot device. Even
+> > > > if you try your best at toggling 4-byte addressing before/after each
+> > > > read/write/erase, you still are vulnerable to power cuts during the
+> > > > operation. This is a bad design, and we have consistently agreed that we
+> > > > aren't going to work around that in Linux.
+> > > > 
+> > > > Better solutions: hook up a reset line to your flash; improve your boot
+> > > > ROM / bootloader to handle 4-byte addressing for large flash.
+> 
+> Okay, I'm re-read the code and have a new understanding about the
+> boot-from-spi 'gymnastics'. 
 
-Where is the code that actually handles this parsing?  I=92m not see it=
- in early_init_dt_scan_chosen_serial and I don=92t believe fdt_path_off=
-set does anything special with =91:'
+Great! See, much of that could be done by reading your own code (yeah,
+yeah, not "yours"; but still) and honestly dealing with my questions,
+rather than giving up and deferring to me or your MIA authorities. I'm
+happy to return to technical points and avoid the other unpleasantness.
 
->=20
->> +#include "skeleton.dtsi"
->=20
-> I'd like to get rid of skeleton.dtsi; it causes more problems than it
-> solves (the address/size cells mismatch is confusing and hidden, peop=
-le
-> forget to fill in memory nodes appropriately, etc).
->=20
-> Please remove this include and place appropriate #address-cells and #=
-size-cells here.
->=20
-> I'd strongly recommend going with /#size-cells =3D <2>; it' will save=
- on a
-> lot of pain if you need to add PCIe or something with large ranges
-> later. If things all fall in 4GB within the SoC then have
-> /soc/#size=3Dcells =3D <1> and an appropriate /soc/ranges property.
->=20
-> I note this DT doesn't have any memory nodes. Is that an accident or
-> does the loader fill that in?
+> There is a separate controller on the platform which acts as a boot
+> device and makes the NOR chip appear as though it is memory mapped.
+> This expects the NOR Controller to be in its default state [24-bit
+> addressing] on boot.  The issue arises if a warm-reset occurs and the
+> device is still in 32-bit addressing mode.
 
-it was coming out of skeleton.dtsi
+OK, this is all familiar. This is common to many other systems.
 
->=20
-> If the latter, have an empty node with a comment to that effect.
+> To minimise the risk, the
+> controller attempts to stay in 24-bit addressing mode for as long as
+> possible.
 
-I=92ll kill off usage of skeleton.dtsi
+This is the part where we differ, I suppose. The "as long as possible"
+statement is still not sufficient; I believe this still leaves holes
+that simply cannot be fixed in Linux.
 
-- k
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
+> You mentioned power-cuts.  I do not believe this to be an issue, as
+> when the power is completely removed the controller will reset back
+> into default state.  Only warm-resets are an issue.
+
+You're right: power cuts shouldn't be a problem. But what about other
+unexpected warm resets? (Watchdogs?) Do you have any solution for them?
+
+> > > > What's the possibility of dropping all this 4-byte address toggling
+> > > > shenanigans? This will be a blocker to merging with spi-nor.c.
+> 
+> We wouldn't be able to remove this code without significantly
+> weakening resilience to warm-reset mishaps, and changing the hardware
+> design for devices which have already been released is obviously out
+> of the question.
+
+Then maybe we can't solve this. That doesn't mean that upstream will
+support you, though.
+
+Problems like this are why "release early, release often" makes sense.
+If your employer didn't take the "fire the engineers and dump software
+support to the community" approach, but rather honestly engaged on
+driver support earlier, then perhaps your employer could have fixed the
+SoCs/boot ROMs/board designs earlier, rather than later, and you
+wouldn't be stuck trying to wedge in upstream workarounds for bad
+designs in the wild.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
