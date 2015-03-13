@@ -1,46 +1,48 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: Add vendor prefix for Arasan
-Date: Fri, 13 Mar 2015 10:24:25 -0500
-Message-ID: <CAL_JsqJSxGL4bxhFX1etBh_g6Ue7ovb0G_gniR-bgh1cQHA8xw@mail.gmail.com>
-References: <488161d515944ef059b620ea72bca1166b8da2c5.1423730315.git.michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 1/2] of: Add prompt for OF_OVERLAY config
+Date: Fri, 13 Mar 2015 10:24:56 -0500
+Message-ID: <CAL_JsqL5Z9v3ohZE3Fm6c1kpTyzRH5mLVvQ-X7=sDL=JfwT_DA@mail.gmail.com>
+References: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <488161d515944ef059b620ea72bca1166b8da2c5.1423730315.git.michal.simek@xilinx.com>
+In-Reply-To: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hayato Suzuki <hytszk@gmail.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Mark Brown <broonie@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Antony Pavlov <antonynpavlov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Vaussard <florian.vaussard@epfl.ch>
+To: "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 2:38 AM, Michal Simek <michal.simek@xilinx.com> wrote:
-> PATA(pata_arasan_cf.c) and SDHCI(sdhci-of-arasan.c) drivers
-> are already using this prefix.
+On Mon, Feb 16, 2015 at 12:27 AM, Matwey V. Kornilov <matwey@sai.msu.ru> wrote:
+> Add prompt for OF_OVERLAY config option to make in visible in menuconfig/xconfig
+> to make user be able to set or unset this option.
 >
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
 
 Applied for 4.0. Thanks.
 
 Rob
 
 > ---
+> Changes from v1:
+>  - Explanation commit message has been added to 1/2
+>  - Add 2/2 (drop depends on OF) as suggested by <pebolle@tiscali.nl>
 >
-> https://arasan.com/contact/
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/of/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b1df0ad1306c..7da04260a680 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -18,6 +18,7 @@ amlogic       Amlogic, Inc.
->  ams    AMS AG
->  amstaos        AMS-Taos Inc.
->  apm    Applied Micro Circuits Corporation (APM)
-> +arasan Arasan Chip Systems
->  arm    ARM Ltd.
->  armadeus       ARMadeus Systems SARL
->  atmel  Atmel Corporation
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index b5e0c87..fdca685 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -85,7 +85,7 @@ config OF_RESOLVE
+>         bool
+>
+>  config OF_OVERLAY
+> -       bool
+> +       bool "Device Tree overlays"
+>         depends on OF
+>         select OF_DYNAMIC
+>         select OF_RESOLVE
 > --
-> 1.8.2.3
+> 2.1.4
 >
