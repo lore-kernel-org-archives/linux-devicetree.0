@@ -1,36 +1,80 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 2/4] pci: iProc: define iProc PCIe platform bus binding
-Date: Fri, 13 Mar 2015 12:07:21 +0100
-Message-ID: <2401049.ClHMSX33l5@wuerfel>
-References: <1426097169-20805-1-git-send-email-rjui@broadcom.com> <1426097169-20805-3-git-send-email-rjui@broadcom.com> <20150312211448.GG7346@google.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
+Date: Fri, 13 Mar 2015 12:19:36 +0100
+Message-ID: <5502C7C8.1020002@gmail.com>
+References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>	 <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>	 <20150223135044.108ea32a65063a50aa36a309@linux-foundation.org> <1426242563.18291.19.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150312211448.GG7346@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ray Jui <rjui@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Bolle <pebolle@tiscali.nl>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426242563.18291.19.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Tianping Fang <tianping.fang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.chen@mediatek.com, yingjoe.chen@mediatek.com, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 March 2015 16:14:48 Bjorn Helgaas wrote:
-> [+cc Rob, Pawel, Mark, Ian, Kumar]
+
+
+On 13/03/15 11:29, Eddie Huang wrote:
 > 
-> On Wed, Mar 11, 2015 at 11:06:07AM -0700, Ray Jui wrote:
-> > Document the Broadcom iProc PCIe platform interface device tree binding
-> > 
-> > Signed-off-by: Ray Jui <rjui@broadcom.com>
-> > Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> I encounter some trouble when I add code to check return value of
+> regmap_read and regmap_write. Every RTC register access through regmap,
+> and there are many register read/write in this driver. If I check every
+> return value, the driver will become ugly. I try to make this driver
+> clean using following macro.
 > 
-> I'd like to get an ack for this from Arnd, Rob, or other device tree folks
-> (CC'd).
+> static int __rtc_read(struct mt6397_rtc *rtc, u32 offset, u32 *data)
+> {
+>         u32 addr = rtc->addr_base + offset;
+> 
+>         if (offset < rtc->addr_range)
+>                 return regmap_read(rtc->regmap, addr, data);
+> 
+>         return -EINVAL;
+> }
+> 
+> #define rtc_read(ret, rtc, offset, data)                \
+> ({                                                      \
+>         ret = __rtc_read(rtc, offset, data);            \
+>         if (ret < 0)                                    \
+>                 goto rtc_exit;                          \
+> })                                                      \
 > 
 
-Sorry, I should have given my ack earlier. I've carefully reviewed the
-previous versions and am happy with the current one.
+I agree with Sascha on hiding a goto statement in a macro is not a good idea.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> And function call rtc_read, rtc_write looks like:
+> 
+> static int mtk_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> {
+>         unsigned long time;
+>         struct mt6397_rtc *rtc = dev_get_drvdata(dev);
+>         int ret = 0;
+>         u32 sec;
+> 
+>         mutex_lock(&rtc->lock);
+>         do {
+>                 rtc_read(ret, rtc, RTC_TC_SEC, &tm->tm_sec);
+>                 rtc_read(ret, rtc, RTC_TC_MIN, &tm->tm_min);
+>                 rtc_read(ret, rtc, RTC_TC_HOU, &tm->tm_hour);
+>                 rtc_read(ret, rtc, RTC_TC_DOM, &tm->tm_mday);
+>                 rtc_read(ret, rtc, RTC_TC_MTH, &tm->tm_mon);
+>                 rtc_read(ret, rtc, RTC_TC_YEA, &tm->tm_year);
+>                 rtc_read(ret, rtc, RTC_TC_SEC, &sec);
+>         } while (sec < tm->tm_sec);
 
-for the whole series.
+What about introducing
+static int __mtk_rtc_read_time(struct mt6397_rtc *rtc, struct rtc_time *tm, u32 *sec)
+and hide the checks of return values from regmap_read and the offset check in there. You return the error code or 0.
 
-	Arnd
+This way the while loop would look like this:
+
+do {
+	ret = __mtk_rtc_read_time(rtc, &tm, &sec);
+	if (ret < 0)
+		goto rtc_exit;
+} while (sec < tm->tm_sec);
+
+Best regards,
+Matthias
