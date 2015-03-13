@@ -1,125 +1,58 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 0/6] ARM: cpuidle: Unify the ARM64/ARM DT approach
-Date: Fri, 13 Mar 2015 15:51:38 -0500
-Message-ID: <CAL_Jsq+HSE997h4CtM-hM29t5Yhrkc0ikkfJDOUhHf3JTH-g4w@mail.gmail.com>
-References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org> <5501A1DE.9020804@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 3/6] ARM64: cpuidle: Replace cpu_suspend by the common
+ ARM/ARM64 function
+Date: Fri, 13 Mar 2015 22:22:37 +0100
+Message-ID: <5503551D.2020202@linaro.org>
+References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org> <1425385777-14766-4-git-send-email-daniel.lezcano@linaro.org> <20150313182102.GS30671@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5501A1DE.9020804@linaro.org>
+In-Reply-To: <20150313182102.GS30671@e104818-lin.cambridge.arm.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lina.iyer@linaro.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, devicetree@vger.kernel.org, arnd@arndb.de, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lina.iyer@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 9:25 AM, Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On 03/13/2015 07:21 PM, Catalin Marinas wrote:
+> On Tue, Mar 03, 2015 at 01:29:34PM +0100, Daniel Lezcano wrote:
+>> Call the common ARM/ARM64 'arm_cpuidle_suspend' instead of cpu_suspe=
+nd function
+>> which is specific to ARM64.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>   drivers/cpuidle/cpuidle-arm64.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuid=
+le-arm64.c
+>> index 39a2c62..0cea244 100644
+>> --- a/drivers/cpuidle/cpuidle-arm64.c
+>> +++ b/drivers/cpuidle/cpuidle-arm64.c
+>> @@ -49,7 +49,7 @@ static int arm64_enter_idle_state(struct cpuidle_d=
+evice *dev,
+>>   		 * call the CPU ops suspend protocol with idle index as a
+>>   		 * parameter.
+>>   		 */
+>> -		ret =3D cpu_suspend(idx);
+>> +		arm_cpuidle_suspend(idx);
 >
-> Catalin, Rob,
->
-> do you agree with this patchset ?
+> Nitpick: why don't we just rename the arm one cpuidle_suspend()?
 
-There's very little to do with DT, but looks fine to me.
+I don't have a strong opinion on that. Actually, the cpuidle_ prefix is=
+=20
+used by the arch agnostic code in drivers/cpuidle/cpuidle.c.
 
-Rob
+If Rafael agrees on changing it to this function name, I am ok also.
 
->
-> Thanks
->   -- Daniel
->
->
-> On 03/03/2015 01:29 PM, Daniel Lezcano wrote:
->>
->> There is a big number of cpuidle drivers for the ARM architecture.
->>
->> These drivers have been cleaned up and grouped into the drivers/cpui=
-dle
->> directory to keep track of the changes more easily and ensure the co=
-de
->> is following the same scheme across the drivers.
->>
->> That had the benefit of simplifying the code and factor out a lot of
->> common
->> parts. Beside that, as the drivers belong to the 'drivers' directory=
-, we
->> had
->> to split the arch specific bits and the generic code in order to kee=
-p
->> everything self contained. The platform driver paradigm was used for=
- this
->> purpose.
->>
->> Unfortunately, this approach is now no longer accepted and a differe=
-nt
->> solution
->> must be provided to reach the same goal: one example is the Qualcomm
->> cpuidle
->> driver upstreaming attempt [1].
->>
->> In the meantime, ARM64 developed a generic cpuidle driver based on D=
-T
->> definition.
->>
->> The DT definition provides an 'enable-method' to specify one of the =
-cpu
->> operations (PSCI, ...).
->>
->> This patchset unify this driver with ARM32, using the same DT defini=
-tion.
->>
->> Thanks with this patchset we can use the 'enable-method' to specify =
-a cpu
->> operations, hence get rid of the platform driver approach and go fur=
-ther
->> in the
->> cpuidle driver flexibility via the DT.
->>
->> Daniel Lezcano (6):
->>    ARM: cpuidle: Remove duplicate header inclusion
->>    ARM: cpuidle: Add a cpuidle ops structure to be used for DT
->>    ARM64: cpuidle: Replace cpu_suspend by the common ARM/ARM64 funct=
-ion
->>    ARM64: cpuidle: Rename cpu_init_idle to a common function name
->>    ARM64: cpuidle: Remove arm64 reference
->>    ARM: cpuidle: Enable the ARM64 driver for both ARM32/ARM64
->>
->>   arch/arm/include/asm/cpuidle.h                     | 12 +++
->>   arch/arm/include/asm/cpuidle_ops.h                 |  3 +
->>   arch/arm/kernel/cpuidle.c                          | 87
->> +++++++++++++++++++++-
->>   arch/arm/mach-davinci/cpuidle.c                    |  1 -
->>   arch/arm/mach-imx/cpuidle-imx6q.c                  |  1 -
->>   arch/arm/mach-imx/cpuidle-imx6sl.c                 |  1 -
->>   arch/arm/mach-imx/cpuidle-imx6sx.c                 |  1 -
->>   arch/arm/mach-omap2/cpuidle44xx.c                  |  1 -
->>   arch/arm/mach-tegra/cpuidle-tegra20.c              |  1 -
->>   arch/arm/mach-tegra/cpuidle-tegra30.c              |  1 -
->>   arch/arm64/include/asm/cpuidle.h                   |  9 ++-
->>   arch/arm64/kernel/cpuidle.c                        |  2 +-
->>   drivers/cpuidle/Kconfig                            |  7 +-
->>   drivers/cpuidle/Kconfig.arm                        | 10 +++
->>   drivers/cpuidle/Kconfig.arm64                      | 13 ----
->>   drivers/cpuidle/Makefile                           |  5 +-
->>   drivers/cpuidle/{cpuidle-arm64.c =3D> cpuidle-arm.c} | 38 +++++---=
---
->>   drivers/cpuidle/cpuidle-at91.c                     |  1 -
->>   drivers/cpuidle/cpuidle-exynos.c                   |  1 -
->>   drivers/cpuidle/cpuidle-kirkwood.c                 |  1 -
->>   drivers/cpuidle/cpuidle-ux500.c                    |  1 -
->>   drivers/cpuidle/cpuidle-zynq.c                     |  1 -
->>   22 files changed, 139 insertions(+), 59 deletions(-)
->>   create mode 100644 arch/arm/include/asm/cpuidle_ops.h
->>   delete mode 100644 drivers/cpuidle/Kconfig.arm64
->>   rename drivers/cpuidle/{cpuidle-arm64.c =3D> cpuidle-arm.c} (72%)
->>
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
-or ARM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
