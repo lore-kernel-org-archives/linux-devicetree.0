@@ -1,52 +1,46 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [Patch 1/5] dt: unittest: early return from test skips tests
-Date: Fri, 13 Mar 2015 23:57:40 -0700
-Message-ID: <5503DBE4.8030006@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [Patch 2/5] dt: unittest: typo in error string
+Date: Fri, 13 Mar 2015 23:59:01 -0700
+Message-ID: <5503DC35.7020003@gmail.com>
 References: <5503C65F.4030000@gmail.com>
-Reply-To: frowand.list@gmail.com
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5503C65F.4030000@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5503C65F.4030000-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sonymobile.com>
+From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-Fix bugs pointed out by checkpatch.
+Fix bug pointed out by checkpatch.
 
-Mis-coding of two if statements caused early return from function.
+Splitting string incorrectly removed a space between two words.
 
-Number of tests completed increased from 102 to 107.
-Number of tests failed increased from 0 to 2.
-
-Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 ---
- drivers/of/unittest.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/of/unittest.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 Index: b/drivers/of/unittest.c
 ===================================================================
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -762,12 +762,14 @@ static void __init of_selftest_platform_
- 	irq = platform_get_irq(pdev, 0);
- 	selftest(irq < 0 && irq != -EPROBE_DEFER, "device parsing error failed - %d\n", irq);
+@@ -212,8 +212,9 @@ static void __init of_selftest_check_tre
+ 	child_count = of_selftest_check_node_linkage(of_root);
  
--	if (selftest(np = of_find_node_by_path("/testcase-data/platform-tests"),
--		     "No testcase data in device tree\n"));
-+	np = of_find_node_by_path("/testcase-data/platform-tests");
-+	selftest(np, "No testcase data in device tree\n");
-+	if (!np)
- 		return;
+ 	selftest(child_count > 0, "Device node data structure is corrupted\n");
+-	selftest(child_count == allnode_count, "allnodes list size (%i) doesn't match"
+-		 "sibling lists size (%i)\n", allnode_count, child_count);
++	selftest(child_count == allnode_count,
++		 "allnodes list size (%i) doesn't match sibling lists size (%i)\n",
++		 allnode_count, child_count);
+ 	pr_debug("allnodes list size (%i); sibling lists size (%i)\n", allnode_count, child_count);
+ }
  
--	if (selftest(!(rc = device_register(&test_bus)),
--		     "testbus registration failed; rc=%i\n", rc));
-+	rc = device_register(&test_bus);
-+	selftest(!rc, "testbus registration failed; rc=%i\n", rc);
-+	if (rc)
- 		return;
- 
- 	for_each_child_of_node(np, child) {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
