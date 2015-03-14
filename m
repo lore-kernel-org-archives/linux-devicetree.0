@@ -1,70 +1,59 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH V2 2/5] MIPS: Allow platforms to specify the decompressor load address
-Date: Fri, 13 Mar 2015 15:54:06 -0700
-Message-ID: <1426287249-27185-3-git-send-email-abrestic@chromium.org>
-References: <1426287249-27185-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1426287249-27185-1-git-send-email-abrestic@chromium.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Andrew Bresticker <abrestic@chromium.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Lars-Peter Clausen <lars@metafoo.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/2] v4l: mt9v032: Add OF support
+Date: Sat, 14 Mar 2015 02:26:38 +0200
+Message-ID: <7629490.JGcFgSER1P@avalon>
+References: <1426205008-6160-1-git-send-email-laurent.pinchart@ideasonboard.com> <1426205008-6160-2-git-send-email-laurent.pinchart@ideasonboard.com> <CA+V-a8u4dkx-tbrcZS5j1kq7HH3Q13_0BVAMLw2QaF-FyMC-Bg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8u4dkx-tbrcZS5j1kq7HH3Q13_0BVAMLw2QaF-FyMC-Bg@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Carlos =?ISO-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Platforms which use raw zboot images may need to link the image at
-a fixed address if there is no other way to communicate the load
-address to the bootloader.  Allow the per-platform Kbuild files
-to specify an optional zboot image load address (zload-y) and fall
-back to calc_vmlinuz_load_addr if unset.
+Hi Prabhakar,
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
----
-No changes from v1.
----
- arch/mips/boot/compressed/Makefile | 6 ++++--
- arch/mips/jz4740/Platform          | 1 +
- 2 files changed, 5 insertions(+), 2 deletions(-)
+On Friday 13 March 2015 05:43:42 Lad, Prabhakar wrote:
+> On Fri, Mar 13, 2015 at 12:03 AM, Laurent Pinchart wrote:
+> > Parse DT properties into a platform data structure when a DT node is
+> > available.
+> > 
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> > ---
+> 
+> [snip]
+> 
+> > +static struct mt9v032_platform_data *
+> > +mt9v032_get_pdata(struct i2c_client *client)
+> > +{
+> > +       struct mt9v032_platform_data *pdata;
+> > +       struct v4l2_of_endpoint endpoint;
+> > +       struct device_node *np;
+> > +       struct property *prop;
+> > +
+> > +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> > +               return client->dev.platform_data;
+> > +
+> > +       np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> > +       if (!np)
+> > +               return NULL;
+> > +
+> > +       if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
+> > +               goto done;
+> > +
+> 
+> with the above two statements it seems its based on older version of kernel.
 
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index 61af6b6..82d0b13 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -12,6 +12,8 @@
- # Author: Wu Zhangjin <wuzhangjin@gmail.com>
- #
- 
-+include $(srctree)/arch/mips/Kbuild.platforms
-+
- # set the default size of the mallocing area for decompressing
- BOOT_HEAP_SIZE := 0x400000
- 
-@@ -66,8 +68,8 @@ $(obj)/piggy.o: $(obj)/dummy.o $(obj)/vmlinux.bin.z FORCE
- # Calculate the load address of the compressed kernel image
- hostprogs-y := calc_vmlinuz_load_addr
- 
--ifeq ($(CONFIG_MACH_JZ4740),y)
--VMLINUZ_LOAD_ADDRESS := 0x80600000
-+ifneq ($(zload-y),)
-+VMLINUZ_LOAD_ADDRESS := $(zload-y)
- else
- VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
- 		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
-diff --git a/arch/mips/jz4740/Platform b/arch/mips/jz4740/Platform
-index ba91be9..c41d300 100644
---- a/arch/mips/jz4740/Platform
-+++ b/arch/mips/jz4740/Platform
-@@ -1,3 +1,4 @@
- platform-$(CONFIG_MACH_JZ4740)	+= jz4740/
- cflags-$(CONFIG_MACH_JZ4740)	+= -I$(srctree)/arch/mips/include/asm/mach-jz4740
- load-$(CONFIG_MACH_JZ4740)	+= 0xffffffff80010000
-+zload-$(CONFIG_MACH_JZ4740)	+= 0xffffffff80600000
+You're absolutely right, I've sent the wrong version of the patch, sorry about 
+that.
+
+I'll fix the v4l2_of_get_next_endpoint() call in v3. Is there anything wrong 
+with v4l2_of_parse_endpoint() though ?
+
 -- 
-2.2.0.rc0.207.ga3a616c
+Regards,
+
+Laurent Pinchart
