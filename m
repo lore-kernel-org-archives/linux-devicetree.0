@@ -1,7 +1,7 @@
 From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [Patch 2/5] dt: unittest: typo in error string
-Date: Fri, 13 Mar 2015 23:59:01 -0700
-Message-ID: <5503DC35.7020003@gmail.com>
+Subject: [Patch 3/5] dt: unittest: add const where needed
+Date: Sat, 14 Mar 2015 00:00:36 -0700
+Message-ID: <5503DC94.1060405@gmail.com>
 References: <5503C65F.4030000@gmail.com>
 Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
@@ -15,31 +15,56 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-Fix bug pointed out by checkpatch.
+Fix warnings pointed out by checkpatch.
 
-Splitting string incorrectly removed a space between two words.
+No bugs fixed, but the test code should be a good example of how to use
+the devicetree API.
 
 Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 ---
- drivers/of/unittest.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/of/unittest.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 Index: b/drivers/of/unittest.c
 ===================================================================
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -212,8 +212,9 @@ static void __init of_selftest_check_tre
- 	child_count = of_selftest_check_node_linkage(of_root);
- 
- 	selftest(child_count > 0, "Device node data structure is corrupted\n");
--	selftest(child_count == allnode_count, "allnodes list size (%i) doesn't match"
--		 "sibling lists size (%i)\n", allnode_count, child_count);
-+	selftest(child_count == allnode_count,
-+		 "allnodes list size (%i) doesn't match sibling lists size (%i)\n",
-+		 allnode_count, child_count);
- 	pr_debug("allnodes list size (%i); sibling lists size (%i)\n", allnode_count, child_count);
+@@ -666,7 +666,7 @@ static void __init of_selftest_parse_int
+ 	of_node_put(np);
  }
  
+-static struct of_device_id match_node_table[] = {
++static const struct of_device_id match_node_table[] = {
+ 	{ .data = "A", .name = "name0", }, /* Name alone is lowest priority */
+ 	{ .data = "B", .type = "type1", }, /* followed by type alone */
+ 
+@@ -740,7 +740,7 @@ static void __init of_selftest_platform_
+ 	int irq, rc;
+ 	struct device_node *np, *child, *grandchild;
+ 	struct platform_device *pdev;
+-	struct of_device_id match[] = {
++	const struct of_device_id match[] = {
+ 		{ .compatible = "test-device", },
+ 		{}
+ 	};
+@@ -941,7 +941,7 @@ static int selftest_remove(struct platfo
+ 	return 0;
+ }
+ 
+-static struct of_device_id selftest_match[] = {
++static const struct of_device_id selftest_match[] = {
+ 	{ .compatible = "selftest", },
+ 	{},
+ };
+@@ -1533,7 +1533,7 @@ static int selftest_i2c_bus_remove(struc
+ 	return 0;
+ }
+ 
+-static struct of_device_id selftest_i2c_bus_match[] = {
++static const struct of_device_id selftest_i2c_bus_match[] = {
+ 	{ .compatible = "selftest-i2c-bus", },
+ 	{},
+ };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
