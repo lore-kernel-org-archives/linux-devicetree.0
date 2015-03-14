@@ -1,7 +1,7 @@
 From: Frank Rowand <frowand.list@gmail.com>
-Subject: [Patch 4/5] dt: unittest: reduce checkpatch noise - line after declarations
-Date: Sat, 14 Mar 2015 00:02:31 -0700
-Message-ID: <5503DD07.5020407@gmail.com>
+Subject: [Patch 5/5] dt: unittest: breadcrumbs to reduce pain of future maintainers
+Date: Sat, 14 Mar 2015 00:04:24 -0700
+Message-ID: <5503DD78.5070808@gmail.com>
 References: <5503C65F.4030000@gmail.com>
 Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
@@ -17,55 +17,30 @@ From: Frank Rowand <frank.rowand@sonymobile.com>
 
 Fix warnings pointed out by checkpatch.
 
-No bug fixes, but reduce the number of checkpatch warnings so that future
-problems will stand out better.
+Checkpatch warns: externs should be avoided in .c files
+
+Reducing pain for future maintainers - adding a comment so that anyone trying
+to find where the extern data is created will be able to find it.
+(grep will not find that location)
+
 
 Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
 ---
- drivers/of/unittest.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/of/unittest.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 Index: b/drivers/of/unittest.c
 ===================================================================
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -279,6 +279,7 @@ static void __init of_selftest_parse_pha
- 
- 	for (i = 0; i < 8; i++) {
- 		bool passed = true;
-+
- 		rc = of_parse_phandle_with_args(np, "phandle-list",
- 						"#phandle-cells", i, &args);
- 
-@@ -539,6 +540,7 @@ static void __init of_selftest_parse_int
- 
- 	for (i = 0; i < 4; i++) {
- 		bool passed = true;
-+
- 		args.args_count = 0;
- 		rc = of_irq_parse_one(np, i, &args);
- 
-@@ -559,6 +561,7 @@ static void __init of_selftest_parse_int
- 
- 	for (i = 0; i < 4; i++) {
- 		bool passed = true;
-+
- 		args.args_count = 0;
- 		rc = of_irq_parse_one(np, i, &args);
- 
-@@ -611,6 +614,7 @@ static void __init of_selftest_parse_int
- 
- 	for (i = 0; i < 7; i++) {
- 		bool passed = true;
-+
- 		rc = of_irq_parse_one(np, i, &args);
- 
- 		/* Test the values from tests-phandle.dtsi */
-@@ -905,6 +909,7 @@ static int __init selftest_data_add(void
- 	np = selftest_data_node->child;
- 	while (np) {
- 		struct device_node *next = np->sibling;
-+
- 		np->parent = of_root;
- 		attach_node_and_children(np);
- 		np = next;
+@@ -865,6 +865,10 @@ static int __init selftest_data_add(void
+ {
+ 	void *selftest_data;
+ 	struct device_node *selftest_data_node, *np;
++	/*
++	 * __dtb_testcases_begin[] and __dtb_testcases_end[] are magically
++	 * created by cmd_dt_S_dtb in scripts/Makefile.lib
++	 */
+ 	extern uint8_t __dtb_testcases_begin[];
+ 	extern uint8_t __dtb_testcases_end[];
+ 	const int size = __dtb_testcases_end - __dtb_testcases_begin;
