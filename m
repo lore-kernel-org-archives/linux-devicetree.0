@@ -1,47 +1,101 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/7] iio: mlx90614: Add power management
-Date: Thu, 12 Mar 2015 10:30:27 +0000
-Message-ID: <55016AC3.2060704@kernel.org>
-References: <1424879712-28304-1-git-send-email-vianney.leclement@essensium.com> <1424879712-28304-7-git-send-email-vianney.leclement@essensium.com> <54FDBEB7.8030403@kernel.org> <20150309164308.GA2320@katana>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC 14/18] dt: bindings: Add bindings for omap3isp
+Date: Sat, 14 Mar 2015 16:10:11 +0200
+Message-ID: <20150314141010.GU11954@valkosipuli.retiisi.org.uk>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
+ <1425764475-27691-15-git-send-email-sakari.ailus@iki.fi>
+ <1429813.xCjhlUaUXi@avalon>
+ <20150312230320.GO11954@valkosipuli.retiisi.org.uk>
+ <20150313093453.GA4980@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150309164308.GA2320@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: =?UTF-8?B?Vmlhbm5leSBsZSBDbMOpbWVudCBkZSBTYWludC1NYXJjcQ==?= <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Arnout Vandecappelle (Essensium/Mind)" <arnout-agwphqFHkxc@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150313093453.GA4980@earth>
+Sender: linux-media-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/15 16:43, Wolfram Sang wrote:
-> On Mon, Mar 09, 2015 at 03:39:35PM +0000, Jonathan Cameron wrote:
->> On 25/02/15 15:55, Vianney le Cl=C3=A9ment de Saint-Marcq wrote:
->>> Add support for system sleep and runtime power management.
->>>
->>> To wake up the device, the SDA line should be held low for at least=
- 33ms
->>> while SCL is high.  As this is not possible using the i2c API (and =
-not
->>> supported by all i2c adapters), a GPIO connected to the SDA line is
->>> needed.  The GPIO is named "wakeup" and can be specified in a devic=
-e
->>> tree with the "wakeup-gpios" binding.
->> Needs some i2c specialist input on this!  As you mentioned it is lia=
-ble
->> to be controversial.  Wolfram, is this a one off special or do
->> any other devices do this sort of magic?
->=20
-> s/magic/insanity/ :)
->=20
-> I have never heard of something like this. Unsuprisingly, I can
-> not recommend doing it this way. But we all know hardware...
->=20
-> And while we could think about reusing the bus_recovery_infrastructur=
-e,
-> I don't think it is worth the hazzle. So, doing this GPIO fallback ma=
-y
-> well be the best we can do now.
->=20
-=46air enough.  Lets go with this approach then and hope this is the on=
-ly bit
-of hardware ever to do this (yeah right ;)
+Hi Sebastian,
+
+Thanks for the comments!
+
+On Fri, Mar 13, 2015 at 10:34:53AM +0100, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Fri, Mar 13, 2015 at 01:03:21AM +0200, Sakari Ailus wrote:
+> > [...]
+> >
+> > > > +Required properties
+> > > > +===================
+> > > > +
+> > > > +compatible	: "ti,omap3-isp"
+> > > 
+> > > I would rephrase that using the usual wording as "compatible: Must contain 
+> > > "ti,omap3-isp".
+> >
+> > [...]
+> >
+> > > > +ti,phy-type	: 0 -- 3430; 1 -- 3630
+> > > 
+> > > Would it make sense to add #define's for this ?
+> > 
+> > I'll use OMAP3ISP_PHY_TYPE_COMPLEX_IO and OMAP3ISP_PHY_TYPE_CSIPHY as
+> > discussed.
+> > 
+> > > It could also make sense to document/name them "Complex I/O" and "CSIPHY" to 
+> > > avoid referring to the SoC that implements them, as the ISP is also found in 
+> > > SoCs other than 3430 and 3630.
+> > > 
+> > > Could the PHY type be derived from the ES revision that we query at runtime ?
+> > 
+> > I think this would work on 3430 and 3630 but I'm not certain about others.
+> > 
+> > > We should also take into account the fact that the DM3730 has officially no 
+> > > CSIPHY, but still seems to implement them in practice.
+> > 
+> > The DT sources are for 36xx, but I'd guess it works on 37xx as well, doesn't
+> > it?
+> 
+> In other drivers this kind of information is often extracted from the
+> compatible string. For example:
+> 
+> { .compatible = "ti,omap34xx-isp", .data = OMAP3ISP_PHY_TYPE_COMPLEX_IO, },
+> { .compatible = "ti,omap36xx-isp", .data = OMAP3ISP_PHY_TYPE_CSIPHY, },
+> ...
+
+As Laurent said, I'd prefer to keep it as it is now; they phy selection
+isn't really a part of the ISP in hardware either. It just happens to be
+that the first phy selection logic can be found in 3430 (isp rev 2.0) and
+latter in 3630 (isp rev 15.0).
+
+> > [...]
+> >
+> > > > +Example
+> > > > +=======
+> > > > +
+> > > > +		omap3_isp: omap3_isp@480bc000 {
+> > > 
+> > > DT node names traditionally use - as a separator. Furthermore the phandle 
+> > > isn't needed. This should thus probably be
+> > > 
+> > > 	omap3-isp@480bc000 {
+> > 
+> > Fixed.
+> 
+> According to ePAPR this should be a generic name (page 19); For
+> example the i2c node name should be "i2c@address" instead of
+> "omap3-i2c@address". There is no recommended generic term for an
+> image signal processor, "isp" looks ok to me and seems to be
+> already used in NVIDIA Tegra's device tree files. So maybe:
+> 
+> isp@480bc000 {
+
+Thanks for the suggestion. I'll fix that.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
