@@ -1,63 +1,70 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC 15/18] omap3isp: Add support for the Device Tree
-Date: Sat, 14 Mar 2015 16:12:09 +0200
-Message-ID: <20150314141209.GV11954@valkosipuli.retiisi.org.uk>
+Subject: Re: [RFC 16/18] arm: dts: omap3: Add DT entries for OMAP 3
+Date: Sat, 14 Mar 2015 16:43:24 +0200
+Message-ID: <20150314144320.GW11954@valkosipuli.retiisi.org.uk>
 References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
- <1425764475-27691-16-git-send-email-sakari.ailus@iki.fi>
- <1977501.nIrQKlrSI0@avalon>
+ <1425764475-27691-17-git-send-email-sakari.ailus@iki.fi>
+ <2423520.KeZmBeFNoH@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1977501.nIrQKlrSI0@avalon>
+In-Reply-To: <2423520.KeZmBeFNoH@avalon>
 Sender: linux-media-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Thu, Mar 12, 2015 at 01:48:02AM +0200, Laurent Pinchart wrote:
+On Sun, Mar 08, 2015 at 01:51:51AM +0200, Laurent Pinchart wrote:
 > Hi Sakari,
 > 
 > Thank you for the patch.
 > 
-> On Saturday 07 March 2015 23:41:12 Sakari Ailus wrote:
-> > Add the ISP device to omap3 DT include file and add support to the driver to
-> > use it.
-> > 
-> > Also obtain information on the external entities and the ISP configuration
-> > related to them through the Device Tree in addition to the platform data.
+> On Saturday 07 March 2015 23:41:13 Sakari Ailus wrote:
+> > The resources the ISP needs are slightly different on 3[45]xx and 3[67]xx.
+> > Especially the phy-type property is different.
 > > 
 > > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 > > ---
-> >  drivers/media/platform/omap3isp/isp.c       |  206 ++++++++++++++++++++++--
-> >  drivers/media/platform/omap3isp/isp.h       |   11 ++
-> >  drivers/media/platform/omap3isp/ispcsiphy.c |    7 +
-> >  3 files changed, 213 insertions(+), 11 deletions(-)
-> 
-> [snip]
-> 
-> > @@ -2358,14 +2541,6 @@ static int isp_probe(struct platform_device *pdev)
-> >  	isp->mmio_hist_base_phys =
-> >  		mem->start + isp_res_maps[m].offset[OMAP3_ISP_IOMEM_HIST];
+> >  arch/arm/boot/dts/omap34xx.dtsi |   15 +++++++++++++++
+> >  arch/arm/boot/dts/omap36xx.dtsi |   15 +++++++++++++++
+> >  2 files changed, 30 insertions(+)
 > > 
-> > -	isp->syscon = syscon_regmap_lookup_by_pdevname("syscon.0");
-> > -	isp->syscon_offset = isp_res_maps[m].syscon_offset;
+> > diff --git a/arch/arm/boot/dts/omap34xx.dtsi
+> > b/arch/arm/boot/dts/omap34xx.dtsi index 3819c1e..4c034d0 100644
+> > --- a/arch/arm/boot/dts/omap34xx.dtsi
+> > +++ b/arch/arm/boot/dts/omap34xx.dtsi
+> > @@ -37,6 +37,21 @@
+> >  			pinctrl-single,register-width = <16>;
+> >  			pinctrl-single,function-mask = <0xff1f>;
+> >  		};
+> > +
+> > +		omap3_isp: omap3_isp@480bc000 {
+> > +			compatible = "ti,omap3-isp";
+> > +			reg = <0x480bc000 0x12fc
+> > +			       0x480bd800 0x017c>;
+> > +			interrupts = <24>;
+> > +			iommus = <&mmu_isp>;
+> > +			syscon = <&omap3_scm_general 0xdc>;
+> > +			ti,phy-type = <0>;
+> > +			#clock-cells = <1>;
+> > +			ports {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
 > 
-> You're removing syscon_offset initialization here but not adding it anywhere 
-> else. This patch doesn't match the commit in your rm696-053-upstream branch, 
-> could you send the right version ? I'll then review it.
+> How about predefining the ports too ?
 
-Yeah, there have been quite a few changes since I posted this RFC set, this
-including. I'll post a new version once I've been able to take into account
-all the comments I've got so far.
+After a short discussion, we decided not to add port nodes. The arguments
+considered were:
 
-It'd be nice if someone could test the pdata support; I haven't had a chance
-to do that in a few years now. :-)
+- Port nodes could help integrators writing the DT nodes. However the port
+  nodes are easier to construct than endpoint nodes. Board specific
+  configuration would also still need to be added.
+- Extra port nodes take space which could be spent more usefully for other
+  purposes.
 
 -- 
-Cheers,
+Regards,
 
 Sakari Ailus
 e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
