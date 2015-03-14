@@ -1,110 +1,45 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC 10/18] omap3isp: Move the syscon register out of the ISP
- register maps
-Date: Sat, 14 Mar 2015 17:00:39 +0200
-Message-ID: <20150314150038.GZ11954@valkosipuli.retiisi.org.uk>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
- <1425764475-27691-11-git-send-email-sakari.ailus@iki.fi>
- <1726882.heQ7ZxmKYg@avalon>
- <20150307234334.GH6539@valkosipuli.retiisi.org.uk>
- <20150309152038.GD5264@atomide.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: disable gmac by default in rk3288.dtsi
+Date: Sat, 14 Mar 2015 19:40:21 +0100
+Message-ID: <27431752.zqze5zkeW3@phil>
+References: <1426294532-32078-1-git-send-email-amstan@chromium.org> <1426294532-32078-2-git-send-email-amstan@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150309152038.GD5264@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426294532-32078-2-git-send-email-amstan@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru M Stan <amstan@chromium.org>
+Cc: roger.chen@rock-chips.com, dianders@chromium.org, peppe.cavallaro@st.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, kever.yang@rock-chips.com, eddie.cai@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Am Freitag, 13. M=E4rz 2015, 17:55:32 schrieb Alexandru M Stan:
+> This block should not be enabled by default or else if the kconfig is=
+ set,
+> it will try to load/probe even if there's no phy connected.
+>=20
+> Signed-off-by: Alexandru M Stan <amstan@chromium.org>
 
-Thanks for the comments!!
+applied to my fixes branch
 
-On Mon, Mar 09, 2015 at 08:20:38AM -0700, Tony Lindgren wrote:
-> * Sakari Ailus <sakari.ailus@iki.fi> [150307 15:44]:
-> > Hi Laurent,
-> > 
-> > On Sun, Mar 08, 2015 at 01:34:17AM +0200, Laurent Pinchart wrote:
-> > > Hi Sakari,
-> > > 
-> > > Thank you for the patch.
-> > > 
-> > > (CC'ing linux-omap and Tony)
-> > 
-> > Thanks.
-> > 
-> > > On Saturday 07 March 2015 23:41:07 Sakari Ailus wrote:
-> > > > The syscon register isn't part of the ISP, use it through the syscom driver
-> > > > regmap instead. The syscom block is considered to be from 343x on ISP
-> > > > revision 2.0 whereas 15.0 is assumed to have 3630 syscon.
-> > > > 
-> > > > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-> > > > ---
-> > > >  arch/arm/boot/dts/omap3.dtsi                |    2 +-
-> > > >  arch/arm/mach-omap2/devices.c               |   10 ----------
-> > > >  drivers/media/platform/omap3isp/isp.c       |   19 +++++++++++++++----
-> > > >  drivers/media/platform/omap3isp/isp.h       |   19 +++++++++++++++++--
-> > > >  drivers/media/platform/omap3isp/ispcsiphy.c |   20 +++++++++-----------
-> > > 
-> > > You might be asked to split the patch into two, let's see what Tony says.
-> > > 
-> > > >  5 files changed, 42 insertions(+), 28 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> > > > index 01b7111..fe0b293 100644
-> > > > --- a/arch/arm/boot/dts/omap3.dtsi
-> > > > +++ b/arch/arm/boot/dts/omap3.dtsi
-> > > > @@ -183,7 +183,7 @@
-> > > > 
-> > > >  		omap3_scm_general: tisyscon@48002270 {
-> > > >  			compatible = "syscon";
-> > > > -			reg = <0x48002270 0x2f0>;
-> > > > +			reg = <0x48002270 0x2f4>;
-> > > >  		};
-> > > > 
-> > > >  		pbias_regulator: pbias_regulator {
-> 
-> Can you please send the above dts change separately as a fix describing
-> what goes wrong? Let's get that out of the way for the -rc, otherwise
-> we're going to probably get conflicts with Tero's dts changes.
 
-Sure.
+Thanks
+Heiko
 
-There's one register that didn't used to be mapped to syscon.
-
-> > > > diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
-> > > > index 1afb50d..e945957 100644
-> > > > --- a/arch/arm/mach-omap2/devices.c
-> > > > +++ b/arch/arm/mach-omap2/devices.c
-> > > > @@ -143,16 +143,6 @@ static struct resource omap3isp_resources[] = {
-> > > >  		.flags		= IORESOURCE_MEM,
-> > > >  	},
-> > > >  	{
-> > > > -		.start		= OMAP343X_CTRL_BASE + OMAP343X_CONTROL_CSIRXFE,
-> > > > -		.end		= OMAP343X_CTRL_BASE + OMAP343X_CONTROL_CSIRXFE + 3,
-> > > > -		.flags		= IORESOURCE_MEM,
-> > > > -	},
-> > > > -	{
-> > > > -		.start		= OMAP343X_CTRL_BASE + OMAP3630_CONTROL_CAMERA_PHY_CTRL,
-> > > > -		.end		= OMAP343X_CTRL_BASE + OMAP3630_CONTROL_CAMERA_PHY_CTRL + 3,
-> > > > -		.flags		= IORESOURCE_MEM,
-> > > > -	},
-> > > > -	{
-> > > >  		.start		= 24 + OMAP_INTC_START,
-> > > >  		.flags		= IORESOURCE_IRQ,
-> > > >  	}
-> 
-> Looks good to me, teel free to merge this part along with the other
-> isp changes:
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-
-Thanks!
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288=
+=2Edtsi
+> index d771f68..eccc78d 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -411,6 +411,7 @@
+>  			"mac_clk_rx", "mac_clk_tx",
+>  			"clk_mac_ref", "clk_mac_refout",
+>  			"aclk_mac", "pclk_mac";
+> +		status =3D "disabled";
+>  	};
+>=20
+>  	usb_host0_ehci: usb@ff500000 {
