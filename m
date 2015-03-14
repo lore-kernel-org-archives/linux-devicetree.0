@@ -1,46 +1,180 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [Patch 5/5] dt: unittest: breadcrumbs to reduce pain of future maintainers
-Date: Sat, 14 Mar 2015 00:04:24 -0700
-Message-ID: <5503DD78.5070808@gmail.com>
-References: <5503C65F.4030000@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: sun6i: Add dts file for
+ CSQ CS908 board
+Date: Sat, 14 Mar 2015 16:37:03 +0800
+Message-ID: <CAGb2v66si8Kia2E_t+XaXYRPbjbruww8Xoo=6a9kibbSzXPRbg@mail.gmail.com>
+References: <1419851366-21945-1-git-send-email-hdegoede@redhat.com> <1419851366-21945-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5503C65F.4030000@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBSPGR6UAKGQEJ63BFNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1419851366-21945-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sonymobile.com>
+Hi,
 
-Fix warnings pointed out by checkpatch.
+Sorry for digging through old patches.
 
-Checkpatch warns: externs should be avoided in .c files
+On Mon, Dec 29, 2014 at 7:09 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The CSQ CS908 is an A31s based top-set box, with 1G RAM, 8G NAND,
+> rtl8188etv usb wifi, 2 USB A receptacles (1 connected through the OTG
+> controller), ethernet, 3.5 mm jack with a/v out and hdmi out.
+>
+> Note it has no sdcard slot and therefore can only be fel booted.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Drop URL from commit message, it is likely to go stale
+> Changes in v3:
+> -Do not duplicate the DT path, use label references instead
+> ---
+>  arch/arm/boot/dts/Makefile             |   3 +-
+>  arch/arm/boot/dts/sun6i-a31s-cs908.dts | 102 +++++++++++++++++++++++++++++++++
+>  2 files changed, 104 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/sun6i-a31s-cs908.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 803e914..a86f232 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -462,7 +462,8 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>         sun6i-a31-app4-evb1.dtb \
+>         sun6i-a31-colombus.dtb \
+>         sun6i-a31-hummingbird.dtb \
+> -       sun6i-a31-m9.dtb
+> +       sun6i-a31-m9.dtb \
+> +       sun6i-a31s-cs908.dtb
+>  dtb-$(CONFIG_MACH_SUN7I) += \
+>         sun7i-a20-bananapi.dtb \
+>         sun7i-a20-cubieboard2.dtb \
+> diff --git a/arch/arm/boot/dts/sun6i-a31s-cs908.dts b/arch/arm/boot/dts/sun6i-a31s-cs908.dts
+> new file mode 100644
+> index 0000000..491aa83
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun6i-a31s-cs908.dts
+> @@ -0,0 +1,102 @@
+> +/*
+> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this library; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "sun6i-a31s.dtsi"
+> +
+> +/ {
+> +       model = "CSQ CS908 top set box";
+> +       compatible = "csq,cs908", "allwinner,sun6i-a31s";
+> +};
+> +
+> +&usbphy {
+> +       status = "okay";
+> +};
+> +
+> +&ehci0 {
+> +       status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +       status = "okay";
+> +};
+> +
+> +&ohci1 {
+> +       status = "okay";
+> +};
+> +
+> +&pio {
+> +       usb1_vbus_pin_csq908: usb1_vbus_pin@0 {
+> +               allwinner,pins = "PC27";
+> +               allwinner,function = "gpio_out";
+> +               allwinner,drive = <0>;
+> +               allwinner,pull = <0>;
+> +       };
 
-Reducing pain for future maintainers - adding a comment so that anyone trying
-to find where the extern data is created will be able to find it.
-(grep will not find that location)
+This isn't used anywhere. Hans, did you miss something when
+converting to label references?
 
+ChenYu
 
-Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
----
- drivers/of/unittest.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
-Index: b/drivers/of/unittest.c
-===================================================================
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -865,6 +865,10 @@ static int __init selftest_data_add(void
- {
- 	void *selftest_data;
- 	struct device_node *selftest_data_node, *np;
-+	/*
-+	 * __dtb_testcases_begin[] and __dtb_testcases_end[] are magically
-+	 * created by cmd_dt_S_dtb in scripts/Makefile.lib
-+	 */
- 	extern uint8_t __dtb_testcases_begin[];
- 	extern uint8_t __dtb_testcases_end[];
- 	const int size = __dtb_testcases_end - __dtb_testcases_begin;
+> +};
+> +
+> +&uart0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart0_pins_a>;
+> +       status = "okay";
+> +};
+> +
+> +&gmac {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&gmac_pins_mii_a>;
+> +       phy = <&phy1>;
+> +       phy-mode = "mii";
+> +       status = "okay";
+> +       phy1: ethernet-phy@1 {
+> +               reg = <1>;
+> +       };
+> +};
+> +
+> +&ir {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&ir_pins_a>;
+> +       status = "okay";
+> +};
+> --
+> 2.1.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
