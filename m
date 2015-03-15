@@ -1,34 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
-Date: Sun, 15 Mar 2015 13:08:19 +0100
-Message-ID: <2070859.WcMooC33YH@wuerfel>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com> <20150313151301.GJ5264@atomide.com> <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Subject: [PATCH/RFC] ARM: shmobile: r8a7790: Remove MSIOF address from device tree
+Date: Sun, 15 Mar 2015 23:43:38 +0900
+Message-ID: <1426430618-3818-1-git-send-email-ykaneko0929@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
-> yeah, i missed it :/
-> 
-> looks like there's no platform that defines platform data for it.
-> i'll replace the dev_get_platdata() with a function that only parses
-> the clock-frequency properties (the irq is taken in this case from the
-> spi_device).
-> (or maybe i should just drop it, as no one actually uses it?)
+From: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
 
-I don't think we should drop the driver, but dropping the platform_data
-support sounds reasonable. New users of this driver should all be using
-DT, and if there is a good reason to use platform_data, it's easily
-put back.
+MSIOF Base Address H'E6xx can be accessed by CPU and DMAC.
+MSIOF Base Address H'E7xx for DMAC was removed from H/W manual.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+---
+
+This patch is based on devel branch of Simon Horman's renesas tree.
+
+ arch/arm/boot/dts/r8a7790.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 4bb2f4c..f3b8430 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1273,7 +1273,7 @@
+ 
+ 	msiof0: spi@e6e20000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6e20000 0 0x0064>, <0 0xe7e20000 0 0x0064>;
++		reg = <0 0xe6e20000 0 0x0064>;
+ 		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp0_clks R8A7790_CLK_MSIOF0>;
+ 		dmas = <&dmac0 0x51>, <&dmac0 0x52>;
+@@ -1285,7 +1285,7 @@
+ 
+ 	msiof1: spi@e6e10000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6e10000 0 0x0064>, <0 0xe7e10000 0 0x0064>;
++		reg = <0 0xe6e10000 0 0x0064>;
+ 		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7790_CLK_MSIOF1>;
+ 		dmas = <&dmac0 0x55>, <&dmac0 0x56>;
+@@ -1297,7 +1297,7 @@
+ 
+ 	msiof2: spi@e6e00000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6e00000 0 0x0064>, <0 0xe7e00000 0 0x0064>;
++		reg = <0 0xe6e00000 0 0x0064>;
+ 		interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7790_CLK_MSIOF2>;
+ 		dmas = <&dmac0 0x41>, <&dmac0 0x42>;
+@@ -1309,7 +1309,7 @@
+ 
+ 	msiof3: spi@e6c90000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6c90000 0 0x0064>, <0 0xe7c90000 0 0x0064>;
++		reg = <0 0xe6c90000 0 0x0064>;
+ 		interrupts = <0 159 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7790_CLK_MSIOF3>;
+ 		dmas = <&dmac0 0x45>, <&dmac0 0x46>;
+-- 
+1.9.1
+
