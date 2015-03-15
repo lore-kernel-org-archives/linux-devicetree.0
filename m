@@ -1,35 +1,196 @@
-From: Peter =?iso-8859-15?q?H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] st33zp24 new architecture proposal and st33zp24 spi driver
-Date: Sun, 15 Mar 2015 01:12:38 +0100
-Message-ID: <201503150112.43852.PeterHuewe@gmx.de>
-References: <1425809836-8873-1-git-send-email-christophe-h.ricard@st.com> <CALD+uuwv2dE-WhF-MLKUKCifrpquhd0XFo6HE_qrdKHyfyojDQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] v4l: mt9v032: Add OF support
+Date: Sun, 15 Mar 2015 02:21:07 +0200
+Message-ID: <20150315002107.GA11954@valkosipuli.retiisi.org.uk>
+References: <1426345057-2752-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1426345057-2752-2-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALD+uuwv2dE-WhF-MLKUKCifrpquhd0XFo6HE_qrdKHyfyojDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426345057-2752-2-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org" <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, "tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org" <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, "tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Christophe RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>, Jean-Luc BLANC <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>, Benoit HOUYERE <benoit.houyere-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos =?iso-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
+Hi Laurent,
 
-> Do you see any issue with this patch series to hit kernel revision 4.1 ?
-sorry for the delay. 
-No I think v8 is fine (hey it's already v8 ;-))
+On Sat, Mar 14, 2015 at 04:57:37PM +0200, Laurent Pinchart wrote:
+...
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> new file mode 100644
+> index 0000000..68b134e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> @@ -0,0 +1,45 @@
+> +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
+> +
+> +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor with
+> +an active array size of 752H x 480V. It is programmable through a simple
+> +two-wire serial interface.
+> +
+> +Required Properties:
+> +
+> +- compatible: value should be either one among the following
+> +	(a) "aptina,mt9v022" for MT9V022 color sensor
+> +	(b) "aptina,mt9v022m" for MT9V022 monochrome sensor
+> +	(c) "aptina,mt9v024" for MT9V024 color sensor
+> +	(d) "aptina,mt9v024m" for MT9V024 monochrome sensor
+> +	(e) "aptina,mt9v032" for MT9V032 color sensor
+> +	(f) "aptina,mt9v032m" for MT9V032 monochrome sensor
+> +	(g) "aptina,mt9v034" for MT9V034 color sensor
+> +	(h) "aptina,mt9v034m" for MT9V034 monochrome sensor
+> +
+> +Optional Properties:
+> +
+> +- link-frequencies: List of allowed link frequencies in Hz. Each frequency is
+> +	expressed as a 64-bit big-endian integer.
+> +
+> +For further reading on port node refer to
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	i2c0@1c22000 {
+> +		...
+> +		...
+> +		mt9v032@5c {
+> +			compatible = "aptina,mt9v032";
+> +			reg = <0x5c>;
+> +
+> +			port {
+> +				mt9v032_1: endpoint {
+> +					link-frequencies =
+> +						<0 13000000>, <0 26600000>,
 
-I added it to my tree (for-james) and will include it in the next pull request 
-which will be sent in a few days.
+How about:
 
-Thanks for your patches - and sorry it took so long - it's only my spare time, 
-which is limited.
+/bits/ 64 <13000000> ...
 
-Would of course be easier if the TPM vendors would support it more (e.g. HW).
+> +						<0 27000000>;
+> +				};
+> +			};
+> +		};
+> +		...
+> +	};
+> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+> index 255ea91..139eeef 100644
+> --- a/drivers/media/i2c/mt9v032.c
+> +++ b/drivers/media/i2c/mt9v032.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/i2c.h>
+>  #include <linux/log2.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+>  #include <linux/videodev2.h>
+> @@ -26,6 +28,7 @@
+>  #include <media/mt9v032.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
+>  #include <media/v4l2-subdev.h>
+>  
+>  /* The first four rows are black rows. The active area spans 753x481 pixels. */
+> @@ -876,10 +879,59 @@ static const struct regmap_config mt9v032_regmap_config = {
+>   * Driver initialization and probing
+>   */
+>  
+> +static struct mt9v032_platform_data *
+> +mt9v032_get_pdata(struct i2c_client *client)
+> +{
+> +	struct mt9v032_platform_data *pdata;
+> +	struct v4l2_of_endpoint endpoint;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +		return client->dev.platform_data;
+> +
+> +	np = of_graph_get_next_endpoint(client->dev.of_node, NULL);
+> +	if (!np)
+> +		return NULL;
+> +
+> +	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
+> +		goto done;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		goto done;
+> +
+> +	prop = of_find_property(np, "link-frequencies", NULL);
+> +	if (prop) {
+> +		size_t size = prop->length / 8;
+> +		u64 *link_freqs;
+> +
+> +		link_freqs = devm_kzalloc(&client->dev,
+> +					  size * sizeof(*link_freqs),
 
-Thanks,
-Peter
+You could simply use prop->length here. I think that'd look nicer.
+
+> +					  GFP_KERNEL);
+> +		if (!link_freqs)
+> +			goto done;
+> +
+> +		if (of_property_read_u64_array(np, "link-frequencies",
+> +					       link_freqs, size) < 0)
+> +			goto done;
+> +
+> +		pdata->link_freqs = link_freqs;
+> +		pdata->link_def_freq = link_freqs[0];
+> +	}
+> +
+> +	pdata->clk_pol = !!(endpoint.bus.parallel.flags &
+> +			    V4L2_MBUS_PCLK_SAMPLE_RISING);
+> +
+> +done:
+> +	of_node_put(np);
+> +	return pdata;
+> +}
+> +
+>  static int mt9v032_probe(struct i2c_client *client,
+>  		const struct i2c_device_id *did)
+>  {
+> -	struct mt9v032_platform_data *pdata = client->dev.platform_data;
+> +	struct mt9v032_platform_data *pdata = mt9v032_get_pdata(client);
+>  	struct mt9v032 *mt9v032;
+>  	unsigned int i;
+>  	int ret;
+> @@ -1037,9 +1089,25 @@ static const struct i2c_device_id mt9v032_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mt9v032_id);
+>  
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id mt9v032_of_match[] = {
+> +	{ .compatible = "aptina,mt9v022" },
+> +	{ .compatible = "aptina,mt9v022m" },
+> +	{ .compatible = "aptina,mt9v024" },
+> +	{ .compatible = "aptina,mt9v024m" },
+> +	{ .compatible = "aptina,mt9v032" },
+> +	{ .compatible = "aptina,mt9v032m" },
+> +	{ .compatible = "aptina,mt9v034" },
+> +	{ .compatible = "aptina,mt9v034m" },
+> +	{ /* Sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mt9v032_of_match);
+> +#endif
+> +
+>  static struct i2c_driver mt9v032_driver = {
+>  	.driver = {
+>  		.name = "mt9v032",
+> +		.of_match_table = of_match_ptr(mt9v032_of_match),
+>  	},
+>  	.probe		= mt9v032_probe,
+>  	.remove		= mt9v032_remove,
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
