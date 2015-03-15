@@ -1,73 +1,55 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] i8042: intel-8042 DT documentation
-Date: Sat, 14 Mar 2015 20:20:38 -0700
-Message-ID: <20150315032038.GA13064@dtor-ws>
-References: <1423857173-16432-6-git-send-email-v1ron@v1ros.org>
- <1424034707-15723-1-git-send-email-v1ron@v1ros.org>
- <1424034707-15723-2-git-send-email-v1ron@v1ros.org>
+From: Eliad Peller <eliad@wizery.com>
+Subject: Re: [PATCH v6 2/6] wl12xx: use frequency instead of enumerations for
+ pdata clocks
+Date: Sun, 15 Mar 2015 10:43:35 +0200
+Message-ID: <CAB3XZEcOytqpJ4pWoemLS3d+DCeA8C75MencDfGn_vhfEYrduw@mail.gmail.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+	<1426162154-8716-3-git-send-email-eliad@wizery.com>
+	<20150313150047.GI5264@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424034707-15723-2-git-send-email-v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150313150047.GI5264@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Kalle Valo <kvalo@codeaurora.org>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>, Luciano Coelho <luca@coelho.fi>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roman,
++Kalle
 
-On Mon, Feb 16, 2015 at 12:11:43AM +0300, Roman Volkov wrote:
-> Documentation for 'intel,8042' DT compatible node.
-> 
-> Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-> Signed-off-by: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
-> ---
->  .../devicetree/bindings/input/intel-8042.txt       | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/intel-8042.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/intel-8042.txt b/Documentation/devicetree/bindings/input/intel-8042.txt
-> new file mode 100644
-> index 0000000..ab8a3e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
-> @@ -0,0 +1,26 @@
-> +Intel 8042 Keyboard Controller
-> +
-> +Required properties:
-> +- compatible: should be "intel,8042"
-> +- regs: memory for keyboard controller
-> +- interrupts: usually, two interrupts should be specified (keyboard and aux).
-> +	However, only one interrupt is also allowed in case of absence of the
-> +	physical port in the controller. The i8042 driver must be loaded with
-> +	nokbd/noaux option in this case.
-> +- interrupt-names: interrupt names corresponding to numbers in the list.
-> +	"kbd" is the keyboard interrupt and "aux" is the auxiliary (mouse)
-> +	interrupt.
-> +- command-reg: offset in memory for command register
-> +- status-reg: offset in memory for status register
-> +- data-reg: offset in memory for data register
-> +
-> +Example:
-> +	i8042@d8008800 {
-> +		compatible = "intel,8042";
-> +		regs = <0xd8008800 0x100>;
-> +		interrupts = <23>, <4>;
-> +		interrupt-names = "kbd", "aux";
-> +		command-reg = <0x04>;
-> +		status-reg = <0x04>;
-> +		data-reg = <0x00>;
-> +	};
+On Fri, Mar 13, 2015 at 5:00 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Eliad Peller <eliad@wizery.com> [150312 05:09]:
+>> From: Luciano Coelho <luca@coelho.fi>
+>>
+>> Instead of defining an enumeration with the FW specific values for the
+>> different clock rates, use the actual frequency instead.  Also add a
+>> boolean to specify whether the clock is XTAL or not.
+>
+> Thanks for doing this. Just one comment on how we're going to get this
+> all merged. Chances are this will cause merge conflicts between the
+> wireless tree and the omap tree for the platform data and dts changes.
+>
+> Can you please separate the wireless changes in this series so we can
+> do this in the following sets:
+>
+> 1. Add support for new things to wireless driver
+>
+> 2. Switch platform code to use the new support
+>
+> 3. Remove support for platform data with a follow-up patch
+>
+the series will still be dependent on each other (e.g. (3) must come
+only after (2) was applied), so i'm not sure that will be very
+helpful?
 
-No, we already have existing OF bindings for i8042 on sparc and powerpc,
-I do not think we need to invent a brand new one.
+> The other option would be to have the whole series in a immutable
+> branch against v3.0-rc1 that can be merged into both wirelss tree
+> and omap tree.
+>
+i think that could be easier.
 
-Thanks.
+or maybe you can just take them all through the omap tree? the wlcore
+tree is not under active development, so i don't expect conflicts
+there.
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eliad.
