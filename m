@@ -1,86 +1,68 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
-Date: Mon, 16 Mar 2015 19:25:37 +0100
-Message-ID: <20150316182536.GA16829@earth>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
- <20150313151301.GJ5264@atomide.com>
- <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
- <2070859.WcMooC33YH@wuerfel>
- <20150316152939.GP5264@atomide.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/9] ARM: dt: dove: add Dove PMU DT entry to dove.dtsi
+Date: Mon, 16 Mar 2015 19:27:30 +0100
+Message-ID: <55072092.9040207@free-electrons.com>
+References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <E1YW7tB-0003mM-1L@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150316152939.GP5264@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Eliad Peller <eliad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Sekhar Nori <nsekhar@ti.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Luciano Coelho <luca@coelho.fi>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1YW7tB-0003mM-1L-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Russell,
 
---BXVAT5kNtrzKuDFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/03/2015 19:31, Russell King wrote:
+> Add the PMU description to the Dove DT file.  The PMU provides multiple
+> features, including an interrupt, reset, power and isolation controller.
+> 
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/dove.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+> index a5441d5482a6..43d4ebf414be 100644
+> --- a/arch/arm/boot/dts/dove.dtsi
+> +++ b/arch/arm/boot/dts/dove.dtsi
+> @@ -380,6 +380,15 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			pmu: power-management@d0000 {
+> +				compatible = "marvell,dove-pmu";
+> +				reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
 
-Hi,
+Here you overlap some other nodes such as the thermal one (from 0xd001c to 0xd0028),
+the clock gate one (from 0xd0038 to 0xd003c), the gpio one, the pinctrl one ...
 
-On Mon, Mar 16, 2015 at 08:29:39AM -0700, Tony Lindgren wrote:
-> * Arnd Bergmann <arnd@arndb.de> [150315 05:10]:
-> > On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
-> > > yeah, i missed it :/
-> > >=20
-> > > looks like there's no platform that defines platform data for it.
-> > > i'll replace the dev_get_platdata() with a function that only parses
-> > > the clock-frequency properties (the irq is taken in this case from the
-> > > spi_device).
-> > > (or maybe i should just drop it, as no one actually uses it?)
-> >=20
-> > I don't think we should drop the driver, but dropping the platform_data
-> > support sounds reasonable. New users of this driver should all be using
-> > DT, and if there is a good reason to use platform_data, it's easily
-> > put back.
->=20
-> Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
-> all in dts mode, but n900 still also boots in legacy mode. It seems the
-> board-rx51-peripherals.c only passes the power_gpio though, so that
-> should be easy to keep around.
->=20
-> We should keep things still working for n900 in legacy mode until the
-> pending regressions with device tree based booting have been cleared
-> for at least one merge cycle. I believe the last pending issues is the
-> support for ATAG_REVISION in device tree mode as posted by Pali.
+Could you be more specific?
 
-mh by migrating to newer gpiod interface platform data is no longer
-needed (instead the boardfile would need a gpiod_lookup_table). That
-way all of the dirty code is in the board file and will be removed
-once the time comes. See for example rx51_fmtx_gpios_table.
+Thanks,
 
-Note: This is independent of wl12xx changes, since N900 uses wl1251.
+Gregory
 
--- Sebastian
+> +				interrupts = <33>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				#reset-cells = <1>;
+> +			};
+> +
+>  			thermal: thermal-diode@d001c {
+>  				compatible = "marvell,dove-thermal";
+>  				reg = <0xd001c 0x0c>, <0xd005c 0x08>;
+> 
 
---BXVAT5kNtrzKuDFl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVByAdAAoJENju1/PIO/qaugAQAJyd6jAeZYJsxqG5J2qkey+g
-Zb+K1Q2yw9koChF9MMersXC4Rz8ClOZLKGx9/WWBZ8HAAlYzIrmMAP0BjCjgfswC
-8u/a56VK5smNiG+9hdromtnBRKh9zpKel/nOpC+0CNP21rJevvxA4c7S2lc+ACM8
-4bCvayP3PBaklZq8xSEM2NrqGNv6g2TR5+yooUMbbDbG6fg8oH/2IzkcP0StrKT7
-uXSUYufCDMAUllhhM4R5bt82pOJDtmx4AB0WikVmU3ldfgC3Uf8J6g9STr8lwPX2
-v19xi+8cnSE2nQtvjig35QDYiVONIP+IRoWVNezLHS3fQpMxdwSFeeQPRWN6nDvc
-n3ta2C2v213hB/mIxJ8ODhXx2b/MpraaFKjn0ml8ye0T8u/PU6ZbciTgLxHZoKtV
-JXwf0VvmO0+Qy2tTt5Zf/S0XNGx7zAojbRT6o/s8fxDpta/rsIPE5W+A8mtrlKhf
-Am4vFn3N4fCwmDIEhSpQXEe/W2hLWlmIlm0jMjg2ANVJiYNabx/kBPDb2BUhNJ+b
-wTrLv9V0L2+3Iizx6HvMKT1dt9CPf+av3vdq+wJrNBYh099pNTgbHl5j+etq09Oe
-73bSwtA7S1vuiGdif08AqYgKZJohoGUH1WguJ5g8klQ0G58mPrtKSYxCA8c5RGWQ
-Utgjq73IYFFZw0R5qCon
-=X9g0
------END PGP SIGNATURE-----
-
---BXVAT5kNtrzKuDFl--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
