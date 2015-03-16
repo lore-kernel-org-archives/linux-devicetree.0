@@ -1,271 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
-Date: Mon, 16 Mar 2015 16:30:48 +0100
-Message-ID: <20150316153048.GC10068@pengutronix.de>
-References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
- <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
+Date: Mon, 16 Mar 2015 08:29:39 -0700
+Message-ID: <20150316152939.GP5264@atomide.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+ <20150313151301.GJ5264@atomide.com>
+ <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
+ <2070859.WcMooC33YH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, rtc-linux@googlegroups.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <2070859.WcMooC33YH@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Eddie,
+* Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [150315 05:10]:
+> On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
+> > yeah, i missed it :/
+> > 
+> > looks like there's no platform that defines platform data for it.
+> > i'll replace the dev_get_platdata() with a function that only parses
+> > the clock-frequency properties (the irq is taken in this case from the
+> > spi_device).
+> > (or maybe i should just drop it, as no one actually uses it?)
+> 
+> I don't think we should drop the driver, but dropping the platform_data
+> support sounds reasonable. New users of this driver should all be using
+> DT, and if there is a good reason to use platform_data, it's easily
+> put back.
 
-On Wed, Jan 28, 2015 at 05:27:56PM +0800, Eddie Huang wrote:
-> From: Tianping Fang <tianping.fang@mediatek.com>
->=20
-> Add Mediatek MT63xx RTC driver
-MT6397?
+Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
+all in dts mode, but n900 still also boots in legacy mode. It seems the
+board-rx51-peripherals.c only passes the power_gpio though, so that
+should be easy to keep around.
 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index f15cddf..8ac52d8 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1427,6 +1427,16 @@ config RTC_DRV_MOXART
->  	   This driver can also be built as a module. If so, the module
->  	   will be called rtc-moxart
-> =20
-> +config RTC_DRV_MT63XX
-> +	tristate "Mediatek Real Time Clock driver"
-> +	depends on MFD_MT6397
-I suggest:
+We should keep things still working for n900 in legacy mode until the
+pending regressions with device tree based booting have been cleared
+for at least one merge cycle. I believe the last pending issues is the
+support for ATAG_REVISION in device tree mode as posted by Pali.
 
-	depends on MFD_MT6397 || COMPILE_TEST
+Regards,
 
-(maybe + any hard dependencies you need for compilation).
-
-> +	help
-> +	  This selects the Mediatek(R) RTC driver, you should add support
-> +	  for Mediatek MT6397 PMIC before select Mediatek(R) RTC driver.
-> +
-> +	  If you want to use Mediatek(R) RTC interface, select Y or M here.
-> +	  If unsure, Please select N.
-Given the dependency above I'd say choosing y here is fine. Instead of
-recommending that I'd just drop this line.
-
-> [...]
-> +static u16 rtc_read(struct mt6397_rtc *rtc, u32 offset)
-rtc_read is a bad name for a driver. There are already 6 functions with
-this name in the kernel. Better use a unique prefix.
-
-> [...]
-> +static irqreturn_t rtc_irq_handler_thread(int irq, void *data)
-> +{
-> +	struct mt6397_rtc *rtc =3D data;
-> +	u16 irqsta, irqen;
-> +
-> +	mutex_lock(&rtc->lock);
-> +	irqsta =3D rtc_read(rtc, RTC_IRQ_STA);
-Do you really need to lock for a single read access?
-
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	if (irqsta & RTC_IRQ_STA_AL) {
-> +		rtc_update_irq(rtc->rtc_dev, 1, RTC_IRQF | RTC_AF);
-> +		irqen =3D irqsta & ~RTC_IRQ_EN_AL;
-> +		rtc_write(rtc, RTC_IRQ_EN, irqen);
-> +		rtc_write_trigger(rtc);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-> +static int mtk_rtc_read_time(struct device *dev, struct rtc_time *tm=
-)
-> +{
-> +	unsigned long time;
-> +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
-> +
-> +	mutex_lock(&rtc->lock);
-> +	do {
-> +		tm->tm_sec =3D rtc_read(rtc, RTC_TC_SEC);
-> +		tm->tm_min =3D rtc_read(rtc, RTC_TC_MIN);
-> +		tm->tm_hour =3D rtc_read(rtc, RTC_TC_HOU);
-> +		tm->tm_mday =3D rtc_read(rtc, RTC_TC_DOM);
-> +		tm->tm_mon =3D rtc_read(rtc, RTC_TC_MTH);
-> +		tm->tm_year =3D rtc_read(rtc, RTC_TC_YEA);
-> +	} while (rtc_read(rtc, RTC_TC_SEC) < tm->tm_sec);
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	tm->tm_year +=3D RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon--;
-> +	rtc_tm_to_time(tm, &time);
-rtc_tm_to_time is deprecated, better use rtc_tm_to_time64.
-
-> +	tm->tm_wday =3D (time / 86400 + 4) % 7;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
-> +
-> +	tm->tm_year -=3D RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon++;
-> +	mutex_lock(&rtc->lock);
-> +	rtc_write(rtc, RTC_TC_YEA, tm->tm_year);
-> +	rtc_write(rtc, RTC_TC_MTH, tm->tm_mon);
-> +	rtc_write(rtc, RTC_TC_DOM, tm->tm_mday);
-> +	rtc_write(rtc, RTC_TC_HOU, tm->tm_hour);
-> +	rtc_write(rtc, RTC_TC_MIN, tm->tm_min);
-> +	rtc_write(rtc, RTC_TC_SEC, tm->tm_sec);
-Is this racy? I.e. what happens if RTC_TC_SEC overflows just before you
-write to it but after you wrote RTC_TC_MIN?
-
-> +	rtc_write_trigger(rtc);
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm =
-*alm)
-> +{
-> +	struct rtc_time *tm =3D &alm->time;
-> +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
-> +	u16 irqen, pdn2;
-> +
-> +	mutex_lock(&rtc->lock);
-> +	irqen =3D rtc_read(rtc, RTC_IRQ_EN);
-> +	pdn2 =3D rtc_read(rtc, RTC_PDN2);
-> +	tm->tm_sec  =3D rtc_read(rtc, RTC_AL_SEC);
-> +	tm->tm_min  =3D rtc_read(rtc, RTC_AL_MIN);
-> +	tm->tm_hour =3D rtc_read(rtc, RTC_AL_HOU) & RTC_AL_HOU_MASK;
-> +	tm->tm_mday =3D rtc_read(rtc, RTC_AL_DOM) & RTC_AL_DOM_MASK;
-> +	tm->tm_mon  =3D rtc_read(rtc, RTC_AL_MTH) & RTC_AL_MTH_MASK;
-> +	tm->tm_year =3D rtc_read(rtc, RTC_AL_YEA);
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	alm->enabled =3D !!(irqen & RTC_IRQ_EN_AL);
-> +	alm->pending =3D !!(pdn2 & RTC_PDN2_PWRON_ALARM);
-> +
-> +	tm->tm_year +=3D RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon--;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *=
-alm)
-> +{
-> +	struct rtc_time *tm =3D &alm->time;
-> +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
-> +	u16 irqen;
-> +
-> +	tm->tm_year -=3D RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon++;
-> +
-> +	if (alm->enabled) {
-> +		mutex_lock(&rtc->lock);
-> +		rtc_write(rtc, RTC_AL_YEA, tm->tm_year);
-> +		rtc_write(rtc, RTC_AL_MTH, (rtc_read(rtc, RTC_AL_MTH) &
-> +				RTC_NEW_SPARE3) | tm->tm_mon);
-This looks strange. Why doesn't RTC_NEW_SPARE3 contain the register
-name? I would have expected:
-
-	(rtc_read(rtc, RTC_AL_MTH) & ~RTC_AL_MTH_MASK) | tm->tm_mon;
-
-
-> +		rtc_write(rtc, RTC_AL_DOM, (rtc_read(rtc, RTC_AL_DOM) &
-> +				RTC_NEW_SPARE1) | tm->tm_mday);
-> +		rtc_write(rtc, RTC_AL_HOU, (rtc_read(rtc, RTC_AL_HOU) &
-> +				RTC_NEW_SPARE_FG_MASK) | tm->tm_hour);
-> +		rtc_write(rtc, RTC_AL_MIN, tm->tm_min);
-> +		rtc_write(rtc, RTC_AL_SEC, tm->tm_sec);
-> +		rtc_write(rtc, RTC_AL_MASK, RTC_AL_MASK_DOW);
-Is this racy? I.e. if the previous set alarm is
-
-	2015-03-13 14:15:00
-
-and you write
-
-	2015-03.14 17:17:00
-
-is it possible that this triggers an alarm if the update happens at
-
-	2015-03-14 14:15:00
-
-?
-
-> +		rtc_write_trigger(rtc);
-> +		irqen =3D rtc_read(rtc, RTC_IRQ_EN) | RTC_IRQ_EN_ONESHOT_AL;
-> +		rtc_write(rtc, RTC_IRQ_EN, irqen);
-> +		rtc_write_trigger(rtc);
-> +		mutex_unlock(&rtc->lock);
-	} else {
-		/* disable alarm here */
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct rtc_class_ops mtk_rtc_ops =3D {
-> +	.read_time  =3D mtk_rtc_read_time,
-> +	.set_time   =3D mtk_rtc_set_time,
-> +	.read_alarm =3D mtk_rtc_read_alarm,
-> +	.set_alarm  =3D mtk_rtc_set_alarm,
-> +};
-> +
-> +static int mtk_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct mt6397_chip *mt6397_chip =3D dev_get_drvdata(pdev->dev.paren=
-t);
-> +	struct mt6397_rtc *rtc;
-> +	u32 reg[2];
-> +	int ret =3D 0;
-> +
-> +	rtc =3D devm_kzalloc(&pdev->dev, sizeof(struct mt6397_rtc), GFP_KER=
-NEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	ret =3D of_property_read_u32_array(pdev->dev.of_node, "reg", reg, 2=
-);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "couldn't read rtc base address!\n");
-> +		return -EINVAL;
-> +	}
-> +	rtc->addr_base =3D reg[0];
-> +	rtc->addr_range =3D reg[1];
-This looks strange, but maybe that's right as you reuse the parent's
-regmap.
-
-> +	rtc->regmap =3D mt6397_chip->regmap;
-> +	rtc->dev =3D &pdev->dev;
-> +	mutex_init(&rtc->lock);
-> +
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	rtc->rtc_dev =3D rtc_device_register("mt6397-rtc", &pdev->dev,
-> +				&mtk_rtc_ops, THIS_MODULE);
-> +	if (IS_ERR(rtc->rtc_dev)) {
-> +		dev_err(&pdev->dev, "register rtc device failed\n");
-> +		return PTR_ERR(rtc->rtc_dev);
-> +	}
-> +
-> +	rtc->irq =3D platform_get_irq(pdev, 0);
-> +	if (rtc->irq < 0) {
-platform_get_irq(pdev, 0) =3D 0 should be treated as error, too.
-
-> +		ret =3D rtc->irq;
-> +		goto out_rtc;
-> +	}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
