@@ -1,23 +1,63 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 Subject: Re: [PATCH v6] media: i2c: add support for omnivision's ov2659 sensor
-Date: Mon, 16 Mar 2015 11:15:36 +0200
-Message-ID: <55069F38.5000607@linux.intel.com>
+Date: Mon, 16 Mar 2015 10:24:15 +0100
+Message-ID: <5506A13F.9060608@xs4all.nl>
 References: <1426415656-20775-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1426415656-20775-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Lad Prabhakar <prabhakar.csengg@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>
 Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
 Hi Prabhakar,
 
-Lad Prabhakar wrote:
-...
+On 03/15/2015 11:34 AM, Lad Prabhakar wrote:
+> From: Benoit Parrot <bparrot@ti.com>
+> 
+> this patch adds support for omnivision's ov2659
+> sensor, the driver supports following features:
+> 1: Asynchronous probing
+> 2: DT support
+> 3: Media controller support
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  Changes for v6:
+>  a: fixed V4L2_CID_PIXEL_RATE control to use link_frequency
+>     instead of xvclk_frequency.
+>  b: Included Ack from Sakari
+>  
+>  v5: https://patchwork.kernel.org/patch/6000161/
+>  v4: https://patchwork.kernel.org/patch/5961661/
+>  v3: https://patchwork.kernel.org/patch/5959401/
+>  v2: https://patchwork.kernel.org/patch/5859801/
+>  v1: https://patchwork.linuxtv.org/patch/27919/
+> 
+>  .../devicetree/bindings/media/i2c/ov2659.txt       |   38 +
+>  MAINTAINERS                                        |   10 +
+>  drivers/media/i2c/Kconfig                          |   11 +
+>  drivers/media/i2c/Makefile                         |    1 +
+>  drivers/media/i2c/ov2659.c                         | 1510 ++++++++++++++++++++
+>  include/media/ov2659.h                             |   33 +
+>  6 files changed, 1603 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2659.txt
+>  create mode 100644 drivers/media/i2c/ov2659.c
+>  create mode 100644 include/media/ov2659.h
+> 
+> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> new file mode 100644
+> index 0000000..3ae6629
+> --- /dev/null
+> +++ b/drivers/media/i2c/ov2659.c
+
+<snip>
+
 > +static const struct ov2659_pixfmt ov2659_formats[] = {
 > +	{
 > +		.code = MEDIA_BUS_FMT_YUYV8_2X8,
@@ -41,50 +81,20 @@ Lad Prabhakar wrote:
 > +	},
 > +};
 
-...
+The colorspaces defined here make no sense. Sensors should give you
+V4L2_COLORSPACE_SRGB. Certainly not COLORSPACE_JPEG (unless they encode
+to a JPEG for you) and SMPTE170M (SDTV) is unlikely as well, unless the
+documentation explicitly states that it uses that colorspace.
 
-> +static int ov2659_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	const struct ov2659_platform_data *pdata = ov2659_get_pdata(client);
-> +	struct v4l2_subdev *sd;
-> +	struct ov2659 *ov2659;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	if (!pdata) {
-> +		dev_err(&client->dev, "platform data not specified\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ov2659 = devm_kzalloc(&client->dev, sizeof(*ov2659), GFP_KERNEL);
-> +	if (!ov2659)
-> +		return -ENOMEM;
-> +
-> +	ov2659->pdata = pdata;
-> +	ov2659->client = client;
-> +
-> +	clk = devm_clk_get(&client->dev, "xvclk");
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	ov2659->xvclk_frequency = clk_get_rate(clk);
-> +	if (ov2659->xvclk_frequency < 6000000 ||
-> +	    ov2659->xvclk_frequency > 27000000)
-> +		return -EINVAL;
-> +
-> +	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
-> +	v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
-> +			  V4L2_CID_PIXEL_RATE, pdata->link_frequency,
-> +			  pdata->link_frequency, 1, pdata->link_frequency);
+Unfortunately, the product brief of this sensor does not mention the
+colorimetry information at all, nor does it give any information about
+the transfer function (aka gamma) used by the sensor. Since this sensor
+is advertised as an HDTV sensor I would guess the colorspace should either
+be SRGB or REC709, depending on the transfer function used.
 
-Are the formats that you advertise correct? If so, you should divide the
-link frequency by two to get pixel rate on formats that have two samples
-per clock cycle, i.e. use v4l2_ctrl_s_ctrl_int64() /
-__v4l2_ctrl_s_ctrl_int64().
+I see a lot of sensor drivers that wrongly use the JPEG colorspace. I'm planning
+to fix them, since that is really wrong.
 
--- 
 Regards,
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+	Hans
