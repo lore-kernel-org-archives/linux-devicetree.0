@@ -1,110 +1,118 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon
- driver
-Date: Mon, 16 Mar 2015 16:23:31 +0200
-Message-ID: <1426515811.2330.16.camel@linaro.org>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
-		 <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
-		 <54CF4FC7.2050309@ti.com> <1426509149.2330.5.camel@linaro.org>
-	 <5506D675.8010006@ti.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v2 4/5] PCI: designware: Add disable IO support
+Date: Mon, 16 Mar 2015 15:20:34 +0100
+Message-ID: <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5506D675.8010006@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linar>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+ST sti SoCs PCIe IPs are built around DesignWare IP Core.
+But in these SoCs PCIe IP doesn't support IO.
 
-Hi Roger, 
+This patch adds the possibility to disable it through
+a DT property, by creating an empty IO window and by
+removing PCI_COMMAND_IO from the setup register.
 
-On Mon, 2015-03-16 at 15:11 +0200, Roger Quadros wrote:
-> Hi Ivan,
-> 
-> On 16/03/15 14:32, Ivan T. Ivanov wrote:
-> > Hi,
-> > 
-> > On Mon, 2015-02-02 at 12:21 +0200, Roger Quadros wrote:
-> > > This driver observes the USB ID pin connected over a GPIO and
-> > > updates the USB cable extcon states accordingly.
-> > > 
-> > > The existing GPIO extcon driver is not suitable for this purpose
-> > > as it needs to be taught to understand USB cable states and it
-> > > can't handle more than one cable per instance.
-> > > 
-> > > For the USB case we need to handle 2 cable states.
-> > > 1) USB (attach/detach)
-> > > 2) USB-HOST (attach/detach)
-> > > 
-> > > This driver can be easily updated in the future to handle VBUS
-> > > events in case it happens to be available on GPIO for any platform.
-> > > 
-> > > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > > ---
-> > > v4:
-> > > - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
-> > > - changed host cable name to "USB-HOST"
-> > 
-> > I am sorry that I am getting a bit little late into this.
-> > 
-> > Isn't supposed that we have to use strings defined in
-> > const char extcon_cable_name[][]?
-> > 
-> > 
-> > > +
-> > > +/* List of detectable cables */
-> > > +enum {
-> > > +       EXTCON_CABLE_USB = 0,
-> > > +       EXTCON_CABLE_USB_HOST,
-> > > +
-> > 
-> > Same here: duplicated with enum extcon_cable_name
-> > 
-> > > +       EXTCON_CABLE_END,
-> > > +};
-> > > +
-> > > +static const char *usb_extcon_cable[] = {
-> > > +       [EXTCON_CABLE_USB] = "USB",
-> > > +       [EXTCON_CABLE_USB_HOST] = "USB-HOST",
-> > > +       NULL,
-> > > +};
-> 
-> I'm not exactly sure how else it is supposed to work if we
-> support only a subset of cables from the global extcon_cable_name[][].
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ .../devicetree/bindings/pci/designware-pcie.txt    |  2 ++
+ drivers/pci/host/pcie-designware.c                 | 24 ++++++++++++++++++++--
+ drivers/pci/host/pcie-designware.h                 |  1 +
+ 3 files changed, 25 insertions(+), 2 deletions(-)
 
-I don't see issue that we use just 2 events. I think that we can
-reuse  enum extcon_cable_name and strings already defined in 
-extcon_cable_name[][] global variable. It is defined extern in
-extcon.h file exactly for this purpose, no?
-
-> 
-> > 
-> > <snip>
-> > 
-> > > +
-> > > +static int usb_extcon_probe(struct platform_device *pdev)
-> > > +{
-> > > 
-> > 
-> > <snip>
-> > 
-> > > +
-> > > +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-> > > +                                       usb_irq_handler,
-> > > +                                       IRQF_TRIGGER_RISING |
-> > > +                                       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> > 
-> > Shouldn't triggers be defined in DTS files?
-> 
-> Could be but we're sure that we always need the trigger for both rising/falling edges
-> in this case. So the usage is more appropriately decided from application point of view
-> rather than h/w point of view. h/w is generic GPIO.
-
-No strong opinion on this. Could it be that GPIO did't support edge
-triggered interrupt, but just level triggered?
-
-Regards,
-Ivan
-
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+index 9f4faa8..40544d4 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -26,3 +26,5 @@ Optional properties:
+ - bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
+   specify this property, to keep backwards compatibility a range of 0x00-0xff
+   is assumed if not present)
++- disable_io_support: set this property for PCIe host controller without IO
++  port access
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index 1f4ea6f..f9d70f5 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -471,6 +471,9 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 		return -EINVAL;
+ 	}
+ 
++	pp->disable_io_support = of_property_read_bool(np,
++			"disable_io_support");
++
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		if (!pp->ops->msi_host_init) {
+ 			pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+@@ -704,6 +707,7 @@ static struct pci_ops dw_pcie_ops = {
+ static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+ {
+ 	struct pcie_port *pp;
++	struct resource *res;
+ 
+ 	pp = sys_to_pcie(sys);
+ 
+@@ -719,6 +723,18 @@ static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+ 	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
+ 	pci_add_resource(&sys->resources, &pp->busn);
+ 
++	if (pp->disable_io_support) {
++		/* This PCIe controller does not support IO, set an empty one */
++		res = devm_kzalloc(pp->dev, sizeof(*res), GFP_KERNEL);
++		if (res) {
++			res->start = 0;
++			res->end = 0;
++			res->name = "PCIe empty IO space";
++			res->flags = IORESOURCE_IO;
++			pci_add_resource(&sys->resources, res);
++		}
++	}
++
+ 	return 1;
+ }
+ 
+@@ -822,8 +838,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	/* setup command register */
+ 	dw_pcie_readl_rc(pp, PCI_COMMAND, &val);
+ 	val &= 0xffff0000;
+-	val |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+-		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
++
++	if (!pp->disable_io_support)
++		val |= PCI_COMMAND_IO;
++
++	val |= PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
++
+ 	dw_pcie_writel_rc(pp, val, PCI_COMMAND);
+ }
+ 
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index d0bbd27..027045d 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -52,6 +52,7 @@ struct pcie_port {
+ 	int			msi_irq;
+ 	struct irq_domain	*irq_domain;
+ 	unsigned long		msi_data;
++	bool			disable_io_support;
+ 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+ };
+ 
+-- 
+1.9.1
