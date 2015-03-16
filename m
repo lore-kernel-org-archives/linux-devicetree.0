@@ -1,40 +1,50 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] Documentation: devicetree: add binding doc for Broadcom
- NAND controller
-Date: Mon, 16 Mar 2015 16:07:51 -0700
-Message-ID: <55076247.4070104@broadcom.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com> <1425691129-1150-3-git-send-email-computersforpeace@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: DTS: am57xx-beagle-x15: Do not include the atl
+ header
+Date: Mon, 16 Mar 2015 16:15:18 -0700
+Message-ID: <20150316231518.GV12397@atomide.com>
+References: <1424958039-15523-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425691129-1150-3-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424958039-15523-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: nm@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [150226 05:46]:
+> AM57xx does not have ATL block integrated.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+Applying into omap-for-v4.1/dt thanks.
 
-On 15-03-06 05:18 PM, Brian Norris wrote:
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tony
+
 > ---
->   .../devicetree/bindings/mtd/brcmstb_nand.txt       | 109 +++++++++++++++++++++
->   1 file changed, 109 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mtd/brcmstb_nand.txt
->
-> diff --git a/Documentation/devicetree/bindings/mtd/brcmstb_nand.txt b/Documentation/devicetree/bindings/mtd/brcmstb_nand.txt
-> new file mode 100644
-> index 000000000000..933d44943cbb
-> --- /dev/null
-
-Could you change the binding document with the vendor prefix to match 
-all the other drivers we have been submitting? ie. "brcm,brcmnand.txt"
-
-Regards,
-  Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  arch/arm/boot/dts/am57xx-beagle-x15.dts | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> index 6463f9ef2b54..c1d82e830a96 100644
+> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> @@ -8,7 +8,6 @@
+>  /dts-v1/;
+>  
+>  #include "dra74x.dtsi"
+> -#include <dt-bindings/clk/ti-dra7-atl.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  
+> -- 
+> 2.3.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
