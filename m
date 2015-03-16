@@ -1,100 +1,321 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6] media: i2c: add support for omnivision's ov2659 sensor
-Date: Mon, 16 Mar 2015 10:24:15 +0100
-Message-ID: <5506A13F.9060608@xs4all.nl>
-References: <1426415656-20775-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] dmaengine: Add support for APM X-Gene SoC DMA
+ engine driver
+Date: Mon, 16 Mar 2015 14:57:56 +0530
+Message-ID: <20150316092756.GH32683@intel.com>
+References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
+ <1426158921-8987-2-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426415656-20775-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lad Prabhakar <prabhakar.csengg@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426158921-8987-2-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+On Thu, Mar 12, 2015 at 04:45:19PM +0530, Rameshwar Prasad Sahu wrote:
+> +/* DMA ring csr registers and bit definations */
+> +#define DMA_RING_CONFIG			0x04
+> +#define DMA_RING_ENABLE			BIT(31)
+> +#define DMA_RING_ID			0x08
+> +#define DMA_RING_ID_SETUP(v)		((v) | BIT(31))
+> +#define DMA_RING_ID_BUF			0x0C
+> +#define DMA_RING_ID_BUF_SETUP(v)	(((v) << 9) | BIT(21))
+> +#define DMA_RING_THRESLD0_SET1		0x30
+> +#define DMA_RING_THRESLD0_SET1_VAL	0X64
+> +#define DMA_RING_THRESLD1_SET1		0x34
+> +#define DMA_RING_THRESLD1_SET1_VAL	0xC8
+> +#define DMA_RING_HYSTERESIS		0x68
+> +#define DMA_RING_HYSTERESIS_VAL		0xFFFFFFFF
+> +#define DMA_RING_STATE			0x6C
+> +#define DMA_RING_STATE_WR_BASE		0x70
+> +#define DMA_RING_NE_INT_MODE		0x017C
+> +#define DMA_RING_NE_INT_MODE_SET(m, v)		\
+> +	((m) = ((m) & ~BIT(31 - (v))) | BIT(31 - (v)))
+> +#define DMA_RING_NE_INT_MODE_RESET(m, v)	\
+> +	((m) &= (~BIT(31 - (v))))
+> +#define DMA_RING_CLKEN			0xC208
+> +#define DMA_RING_SRST			0xC200
+> +#define DMA_RING_MEM_RAM_SHUTDOWN	0xD070
+> +#define DMA_RING_BLK_MEM_RDY		0xD074
+> +#define DMA_RING_BLK_MEM_RDY_VAL	0xFFFFFFFF
+> +#define DMA_RING_DESC_CNT(v)		(((v) & 0x0001FFFE) >> 1)
+> +#define DMA_RING_ID_GET(owner, num)	(((owner) << 6) | (num))
+> +#define DMA_RING_DST_ID(v)		((1 << 10) | (v))
+> +#define DMA_RING_CMD_OFFSET		0x2C
+> +#define DMA_RING_CMD_BASE_OFFSET(v)	((v) << 6)
+> +#define DMA_RING_COHERENT_SET(m)	(((u32 *)(m))[2] |= BIT(4))
+> +#define DMA_RING_ADDRL_SET(m, v)	(((u32 *)(m))[2] |= (((v) >> 8) << 5))
+> +#define DMA_RING_ADDRH_SET(m, v)	(((u32 *)(m))[3] |= ((v) >> 35))
+> +#define DMA_RING_ACCEPTLERR_SET(m)	(((u32 *)(m))[3] |= BIT(19))
+> +#define DMA_RING_SIZE_SET(m, v)		(((u32 *)(m))[3] |= ((v) << 23))
+> +#define DMA_RING_RECOMBBUF_SET(m)	(((u32 *)(m))[3] |= BIT(27))
+> +#define DMA_RING_RECOMTIMEOUTL_SET(m)	(((u32 *)(m))[3] |= (0x7 << 28))
+> +#define DMA_RING_RECOMTIMEOUTH_SET(m)	(((u32 *)(m))[4] |= 0x3)
+> +#define DMA_RING_SELTHRSH_SET(m)	(((u32 *)(m))[4] |= BIT(3))
+> +#define DMA_RING_TYPE_SET(m, v)		(((u32 *)(m))[4] |= ((v) << 19))
+These are very generic name as can conflicts, can you please namespace
+these...
 
-On 03/15/2015 11:34 AM, Lad Prabhakar wrote:
-> From: Benoit Parrot <bparrot@ti.com>
+> +/* DMA device csr registers and bit definitions */
+> +#define DMA_IPBRR			0x0
+> +#define DMA_DEV_ID_RD(v)		((v) & 0x00000FFF)
+> +#define DMA_BUS_ID_RD(v)		(((v) >> 12) & 3)
+> +#define DMA_REV_NO_RD(v)		(((v) >> 14) & 3)
+> +#define DMA_GCR				0x10
+> +#define DMA_CH_SETUP(v)			((v) = ((v) & ~0x000FFFFF) | 0x000AAFFF)
+> +#define DMA_ENABLE(v)			((v) |= BIT(31))
+> +#define DMA_DISABLE(v)			((v) &= ~BIT(31))
+> +#define DMA_RAID6_CONT			0x14
+> +#define DMA_RAID6_MULTI_CTRL(v)		((v) << 24)
+> +#define DMA_INT				0x70
+> +#define DMA_INT_MASK			0x74
+> +#define DMA_INT_ALL_MASK		0xFFFFFFFF
+> +#define DMA_INT_ALL_UNMASK		0x0
+> +#define DMA_INT_MASK_SHIFT		0x14
+> +#define DMA_RING_INT0_MASK		0x90A0
+> +#define DMA_RING_INT1_MASK		0x90A8
+> +#define DMA_RING_INT2_MASK		0x90B0
+> +#define DMA_RING_INT3_MASK		0x90B8
+> +#define DMA_RING_INT4_MASK		0x90C0
+> +#define DMA_CFG_RING_WQ_ASSOC		0x90E0
+> +#define DMA_ASSOC_RING_MNGR1		0xFFFFFFFF
+> +#define DMA_MEM_RAM_SHUTDOWN		0xD070
+> +#define DMA_BLK_MEM_RDY			0xD074
+> +#define DMA_BLK_MEM_RDY_VAL		0xFFFFFFFF
+same here and throughout the driver..
+
+> +static void xgene_dma_free_descriptor(struct xgene_dma_chan *chan,
+> +				      struct xgene_dma_desc_sw *desc)
+> +{
+> +	list_del(&desc->node);
+> +	chan_dbg(chan, "LD %p free\n", desc);
+> +	dma_pool_free(chan->desc_pool, desc, desc->tx.phys);
+where is the descriptor freed? Perhpas we can say clean rather than free
+here to not confuse...
+
+> +}
+> +
+> +static struct xgene_dma_desc_sw *xgene_dma_alloc_descriptor(
+> +				 struct xgene_dma_chan *chan)
+> +{
+> +	struct xgene_dma_desc_sw *desc;
+> +	dma_addr_t phys;
+> +
+> +	desc = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &phys);
+> +	if (!desc) {
+> +		chan_dbg(chan, "Failed to allocate LDs\n");
+not error?
+
+> +static void xgene_dma_free_desc_list_reverse(struct xgene_dma_chan *chan,
+> +					     struct list_head *list)
+do we really care about free order?
+
+> +{
+> +	struct xgene_dma_desc_sw *desc, *_desc;
+> +
+> +	list_for_each_entry_safe_reverse(desc, _desc, list, node)
+> +		xgene_dma_free_descriptor(chan, desc);
+> +}
+> +
+> +static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
+> +{
+> +	struct xgene_dma_chan *chan = to_dma_chan(dchan);
+> +
+> +	chan_dbg(chan, "Free all resources\n");
+> +
+> +	if (!chan->desc_pool)
+> +		return;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	/* Process all running descriptor */
+> +	xgene_dma_cleanup_descriptors(chan);
+> +
+> +	/* Clean all link descriptor queues */
+> +	xgene_dma_free_desc_list(chan, &chan->ld_pending);
+> +	xgene_dma_free_desc_list(chan, &chan->ld_running);
+> +	xgene_dma_free_desc_list(chan, &chan->ld_completed);
+> +
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	/* Delete this channel DMA pool */
+> +	dma_pool_destroy(chan->desc_pool);
+> +	chan->desc_pool = NULL;
+> +}
+> +
+> +static struct dma_async_tx_descriptor *xgene_dma_prep_memcpy(
+> +	struct dma_chan *dchan, dma_addr_t dst, dma_addr_t src,
+> +	size_t len, unsigned long flags)
+> +{
+> +	struct xgene_dma_desc_sw *first = NULL, *new;
+> +	struct xgene_dma_chan *chan;
+> +	size_t copy;
+> +	u32 desc_id;
+> +
+> +	if (unlikely(!dchan || !len))
+> +		return NULL;
+> +
+> +	chan = to_dma_chan(dchan);
+> +
+> +	/* Get the id for this group of descriptors */
+> +	desc_id = atomic_inc_return(&chan->desc_id);
+> +
+> +	do {
+> +		/* Allocate the link descriptor from DMA pool */
+> +		new = xgene_dma_alloc_descriptor(chan);
+> +		if (!new)
+> +			goto fail;
+> +
+> +		/* Create the largest transaction possible */
+> +		copy = min_t(size_t, len, DMA_MAX_64B_DESC_BYTE_CNT);
+> +
+> +		/* Prepare DMA descriptor */
+> +		xgene_dma_prep_cpy_desc(chan, new, dst, src, copy, desc_id);
+> +
+> +		if (!first)
+> +			first = new;
+> +
+> +		new->first = first;
+> +		first->desc_cnt++;
+> +		new->desc_id = desc_id;
+> +
+> +		new->tx.cookie = 0;
+> +		async_tx_ack(&new->tx);
+> +
+> +		/* Update metadata */
+> +		len -= copy;
+> +		dst += copy;
+> +		src += copy;
+> +
+> +		/* Insert the link descriptor to the LD ring */
+> +		list_add_tail(&new->node, &first->tx_list);
+> +	} while (len);
+> +
+> +	first->tx.flags = flags; /* client is in control of this ack */
+> +	first->tx.cookie = -EBUSY;
+> +	first->flags |= DMA_FLAG_FIRST_DESC;
+> +
+> +	return &first->tx;
+where are you mapping dma buffers?
+
+> +static enum dma_status xgene_dma_find_tx_desc_status(
+> +	struct xgene_dma_chan *chan, dma_cookie_t cookie,
+> +	struct dma_tx_state *txstate)
+> +{
+> +	struct xgene_dma_desc_sw *desc;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	/* Check if this tx descriptor is still in pending queue */
+> +	list_for_each_entry(desc, &chan->ld_pending, node) {
+> +		if (desc->tx.cookie == cookie) {
+> +			xgene_chan_xfer_ld_pending(chan);
+why are you calling this here, status check shouldnt do this...
+> +			spin_unlock_bh(&chan->lock);
+> +			return DMA_IN_PROGRESS;
+residue here is size of transacation.
+> +		}
+> +	}
+> +
+> +	/* Check if this descriptor is in running queue */
+> +	list_for_each_entry(desc, &chan->ld_running, node) {
+> +		if (desc->tx.cookie == cookie) {
+> +			/* Cleanup any running and executed descriptors */
+> +			xgene_dma_cleanup_descriptors(chan);
+ditto?
+> +			spin_unlock_bh(&chan->lock);
+> +			return dma_cookie_status(&chan->dma_chan,
+> +						 cookie, txstate);
+and you havent touched txstate so what is the intent here...?
+> +		}
+> +	}
+> +
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	return DMA_COMPLETE;
+> +}
+> +
+> +static enum dma_status xgene_dma_tx_status(struct dma_chan *dchan,
+> +					   dma_cookie_t cookie,
+> +					   struct dma_tx_state *txstate)
+> +{
+> +	struct xgene_dma_chan *chan = to_dma_chan(dchan);
+> +
+> +	enum dma_status status;
+> +
+> +	status = dma_cookie_status(dchan, cookie, txstate);
+> +	if (status == DMA_COMPLETE)
+you should do this if txstate in NULL, no point doing calculations..
+
+> +		return status;
+> +
+> +	return xgene_dma_find_tx_desc_status(chan, cookie, txstate);
+> +}
+> +
+> +static void xgene_dma_tasklet_cb(unsigned long data)
+> +{
+> +	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	/* Run all cleanup for descriptors which have been completed */
+> +	xgene_dma_cleanup_descriptors(chan);
+> +
+> +	/* Re-enable DMA channel IRQ */
+> +	enable_irq(chan->rx_irq);
+> +
+> +	spin_unlock_bh(&chan->lock);
+> +}
+> +
+> +static irqreturn_t xgene_dma_chan_ring_isr(int irq, void *id)
+> +{
+> +	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)id;
+> +
+> +	BUG_ON(!chan);
+> +
+> +	/*
+> +	 * Disable DMA channel IRQ until we process completed
+> +	 * descriptors
+> +	 */
+> +	disable_irq_nosync(chan->rx_irq);
+and why is that?
+
+> +
+> +	/*
+> +	 * Schedule the tasklet to handle all cleanup of the current
+> +	 * transaction. It will start a new transaction if there is
+> +	 * one pending.
+> +	 */
+> +	tasklet_schedule(&chan->tasklet);
+for better results why not schedule the next transaction here..?
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+
+> +static void xgene_dma_async_unregister(struct xgene_dma *pdma)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < DMA_MAX_CHANNEL; i++)
+> +		dma_async_device_unregister(&pdma->dma_dev[i]);
+how do you ensure irq is disabled and tasklets killed?
+
+> +MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
+> +MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>");
+> +MODULE_AUTHOR("Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_VERSION("1.0");
+why do you need this?
+> --
+> 1.8.2.1
 > 
-> this patch adds support for omnivision's ov2659
-> sensor, the driver supports following features:
-> 1: Asynchronous probing
-> 2: DT support
-> 3: Media controller support
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  Changes for v6:
->  a: fixed V4L2_CID_PIXEL_RATE control to use link_frequency
->     instead of xvclk_frequency.
->  b: Included Ack from Sakari
->  
->  v5: https://patchwork.kernel.org/patch/6000161/
->  v4: https://patchwork.kernel.org/patch/5961661/
->  v3: https://patchwork.kernel.org/patch/5959401/
->  v2: https://patchwork.kernel.org/patch/5859801/
->  v1: https://patchwork.linuxtv.org/patch/27919/
-> 
->  .../devicetree/bindings/media/i2c/ov2659.txt       |   38 +
->  MAINTAINERS                                        |   10 +
->  drivers/media/i2c/Kconfig                          |   11 +
->  drivers/media/i2c/Makefile                         |    1 +
->  drivers/media/i2c/ov2659.c                         | 1510 ++++++++++++++++++++
->  include/media/ov2659.h                             |   33 +
->  6 files changed, 1603 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2659.txt
->  create mode 100644 drivers/media/i2c/ov2659.c
->  create mode 100644 include/media/ov2659.h
-> 
-> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> new file mode 100644
-> index 0000000..3ae6629
-> --- /dev/null
-> +++ b/drivers/media/i2c/ov2659.c
 
-<snip>
-
-> +static const struct ov2659_pixfmt ov2659_formats[] = {
-> +	{
-> +		.code = MEDIA_BUS_FMT_YUYV8_2X8,
-> +		.colorspace = V4L2_COLORSPACE_JPEG,
-> +		.format_ctrl_regs = ov2659_format_yuyv,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_UYVY8_2X8,
-> +		.colorspace = V4L2_COLORSPACE_JPEG,
-> +		.format_ctrl_regs = ov2659_format_uyvy,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_RGB565_2X8_BE,
-> +		.colorspace = V4L2_COLORSPACE_JPEG,
-> +		.format_ctrl_regs = ov2659_format_rgb565,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
-> +		.colorspace = V4L2_COLORSPACE_SMPTE170M,
-> +		.format_ctrl_regs = ov2659_format_bggr,
-> +	},
-> +};
-
-The colorspaces defined here make no sense. Sensors should give you
-V4L2_COLORSPACE_SRGB. Certainly not COLORSPACE_JPEG (unless they encode
-to a JPEG for you) and SMPTE170M (SDTV) is unlikely as well, unless the
-documentation explicitly states that it uses that colorspace.
-
-Unfortunately, the product brief of this sensor does not mention the
-colorimetry information at all, nor does it give any information about
-the transfer function (aka gamma) used by the sensor. Since this sensor
-is advertised as an HDTV sensor I would guess the colorspace should either
-be SRGB or REC709, depending on the transfer function used.
-
-I see a lot of sensor drivers that wrongly use the JPEG colorspace. I'm planning
-to fix them, since that is really wrong.
-
-Regards,
-
-	Hans
+-- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
