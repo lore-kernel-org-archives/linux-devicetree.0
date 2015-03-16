@@ -1,94 +1,117 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH v7 3/3] Documentation: dma: Add APM X-Gene SoC DMA engine
- driver documentation
-Date: Mon, 16 Mar 2015 16:01:01 +0530
-Message-ID: <CAFd313ywcfzQvoP__NcXfZRCPJfJGxNKPJtCnH7Bo5N1JssCTw@mail.gmail.com>
-References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
-	<1426158921-8987-4-git-send-email-rsahu@apm.com>
-	<20150316092912.GI32683@intel.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH_V3 2/3] dma: jz4780: add driver for the Ingenic JZ4780
+ DMA controller
+Date: Mon, 16 Mar 2015 16:16:46 +0530
+Message-ID: <20150316104646.GM32683@intel.com>
+References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <1424954614-12589-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150316092912.GI32683@intel.com>
+Content-Disposition: inline
+In-Reply-To: <1424954614-12589-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex@alex-smith.me.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Thu, Feb 26, 2015 at 12:43:33PM +0000, Zubair Lutfullah Kakakhel wrote:
+> +/* Per-channel registers. */
+> +#define JZ_DMA_REG_DSA(n)	(0x00 + (n) * 0x20)
+> +#define JZ_DMA_REG_DTA(n)	(0x04 + (n) * 0x20)
+> +#define JZ_DMA_REG_DTC(n)	(0x08 + (n) * 0x20)
+> +#define JZ_DMA_REG_DRT(n)	(0x0c + (n) * 0x20)
+> +#define JZ_DMA_REG_DCS(n)	(0x10 + (n) * 0x20)
+> +#define JZ_DMA_REG_DCM(n)	(0x14 + (n) * 0x20)
+> +#define JZ_DMA_REG_DDA(n)	(0x18 + (n) * 0x20)
+> +#define JZ_DMA_REG_DSD(n)	(0x1c + (n) * 0x20)
+shouldn't this be a macro rather than copy paste n * 0x20
 
-On Mon, Mar 16, 2015 at 2:59 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Thu, Mar 12, 2015 at 04:45:21PM +0530, Rameshwar Prasad Sahu wrote:
->> This patch adds device tree binding for APM X-Gene SoC DMA engine driver.
-> The patch title should be to add the bindings and not Documentation
+> +
+> +#define JZ_DMA_DMAC_DMAE	BIT(0)
+> +#define JZ_DMA_DMAC_AR		BIT(2)
+> +#define JZ_DMA_DMAC_HLT		BIT(3)
+> +#define JZ_DMA_DMAC_FMSC	BIT(31)
+> +
+> +#define JZ_DMA_DRT_AUTO		0x8
+not consistent in BIT?
 
-Got it, thanks
->
-> --
-> ~Vinod
->>
->> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
->> Signed-off-by: Loc Ho <lho@apm.com>
->> ---
->>  .../devicetree/bindings/dma/apm-xgene-dma.txt      | 47 ++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
->> new file mode 100644
->> index 0000000..d305876
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
->> @@ -0,0 +1,47 @@
->> +Applied Micro X-Gene SoC DMA nodes
->> +
->> +DMA nodes are defined to describe on-chip DMA interfaces in
->> +APM X-Gene SoC.
->> +
->> +Required properties for DMA interfaces:
->> +- compatible: Should be "apm,xgene-dma".
->> +- device_type: set to "dma".
->> +- reg: Address and length of the register set for the device.
->> +  It contains the information of registers in the following order:
->> +  1st - DMA control and status register address space.
->> +  2nd - Descriptor ring control and status register address space.
->> +  3rd - Descriptor ring command register address space.
->> +  4th - Soc efuse register address space.
->> +- interrupts: DMA has 5 interrupts sources. 1st interrupt is
->> +  DMA error reporting interrupt. 2nd, 3rd, 4th and 5th interrupts
->> +  are completion interrupts for each DMA channels.
->> +- clocks: Reference to the clock entry.
->> +
->> +Optional properties:
->> +- dma-coherent : Present if dma operations are coherent
->> +
->> +Example:
->> +     dmaclk: dmaclk@1f27c000 {
->> +             compatible = "apm,xgene-device-clock";
->> +             #clock-cells = <1>;
->> +             clocks = <&socplldiv2 0>;
->> +             reg = <0x0 0x1f27c000 0x0 0x1000>;
->> +             reg-names = "csr-reg";
->> +             clock-output-names = "dmaclk";
->> +     };
->> +
->> +     dma: dma@1f270000 {
->> +                     compatible = "apm,xgene-storm-dma";
->> +                     device_type = "dma";
->> +                     reg = <0x0 0x1f270000 0x0 0x10000>,
->> +                           <0x0 0x1f200000 0x0 0x10000>,
->> +                           <0x0 0x1b008000 0x0 0x2000>,
->> +                           <0x0 0x1054a000 0x0 0x100>;
->> +                     interrupts = <0x0 0x82 0x4>,
->> +                                  <0x0 0xb8 0x4>,
->> +                                  <0x0 0xb9 0x4>,
->> +                                  <0x0 0xba 0x4>,
->> +                                  <0x0 0xbb 0x4>;
->> +                     dma-coherent;
->> +                     clocks = <&dmaclk 0>;
->> +     };
->> --
->> 1.8.2.1
->>
->
-> --
+> +static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+> +	struct jz4780_dma_chan *jzchan, unsigned int count,
+> +	enum dma_transaction_type type)
+> +{
+> +	struct jz4780_dma_desc *desc;
+> +
+> +	if (count > JZ_DMA_MAX_DESC)
+> +		return NULL;
+> +
+> +	desc = kzalloc(sizeof(*desc), GFP_ATOMIC);
+GFP_NOWAIT pls
+
+> +	if (!desc)
+> +		return NULL;
+> +
+> +	desc->desc = dma_pool_alloc(jzchan->desc_pool, GFP_ATOMIC,
+ditto
+
+> +static uint32_t jz4780_dma_width(enum dma_slave_buswidth width)
+> +{
+> +	switch (width) {
+> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+> +		return JZ_DMA_WIDTH_8_BIT;
+> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+> +		return JZ_DMA_WIDTH_16_BIT;
+these are same as dmaengine defines so should this be:
+
+	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+		return width;
+> +	default:
+> +		return JZ_DMA_WIDTH_32_BIT;
+> +	}
+> +}
+> +
+> +static uint32_t jz4780_dma_transfer_size(unsigned long val, int *ord)
+> +{
+> +	*ord = ffs(val) - 1;
+> +
+> +	/* 8 byte transfer sizes unsupported so fall back on 4. */
+okay falling back is not a good idea, same applies for default in
+jz4780_dma_width(). The slave dma parameters are match with devices, so
+programming something which you dont support, falling back or using defaults
+is not a good idea
+
+> +	default:
+> +		WARN_ON(1);
+> +		return -1; /* Can never happen. See previous comment */
+-1?? what happened to kernel error codes?
+
+> +	}
+> +}
+> +
+> +static void jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
+> +	struct jz4780_dma_hwdesc *desc, dma_addr_t addr, size_t len)
+> +{
+> +	struct dma_slave_config *config = &jzchan->config;
+> +	uint32_t width, maxburst, tsz;
+> +	int ord;
+> +
+> +	if (config->direction == DMA_MEM_TO_DEV) {
+this is a wrong idea, use the direction from the prep_ call
+
+> +static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+> +	dma_cookie_t cookie, struct dma_tx_state *txstate)
+> +{
+> +	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
+> +	struct virt_dma_desc *vdesc;
+> +	enum dma_status status;
+> +	unsigned long flags;
+> +
+> +	status = dma_cookie_status(chan, cookie, txstate);
+> +	if (status == DMA_COMPLETE)
+or if the txstate is NULL
+
+
+
+-- 
+~Vinod
