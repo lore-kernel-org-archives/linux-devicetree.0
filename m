@@ -1,32 +1,137 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 06/10] ARM: dts: omap3: Add missing dmas for crypto
-Date: Mon, 16 Mar 2015 14:44:43 -0700
-Message-ID: <20150316214442.GJ12397@atomide.com>
-References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
- <1424958600-18881-7-git-send-email-pali.rohar@gmail.com>
- <20150228164604.GI4978@amd>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC PATCH v15 02/11] ARM: qcom: Add Subsystem Power Manager
+ (SPM) driver
+Date: Mon, 16 Mar 2015 14:51:39 -0700
+Message-ID: <5507506B.6060201@codeaurora.org>
+References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org> <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150228164604.GI4978@amd>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [150228 08:49]:
-> On Thu 2015-02-26 14:49:56, Pali Roh=C3=A1r wrote:
-> > This patch adds missing dma DTS definitions for omap aes and sham d=
-rivers.
-> > Without it kernel drivers do not work.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->=20
-> Acked-by: Pavel	 Machek <pavel@ucw.cz>
+On 03/09/15 08:16, Lina Iyer wrote:
+> +
+> +static int qcom_idle_enter(int cpu, unsigned long index)
+> +{
+> +	if (!per_cpu(qcom_idle_ops, cpu)[index])
+> +		return -EOPNOTSUPP;
 
-Applying this into omap-for-v4.0/fixes to remove the regression
-for legacy vs DT based booting for GP omap3 boards.
+Is this case still happening?
 
-Tony
+> +
+> +	return per_cpu(qcom_idle_ops, cpu)[index](cpu);
+> +}
+> +
+> +const struct of_device_id qcom_idle_state_match[] __initconst = {
+
+static?
+
+> +	{ .compatible = "qcom,idle-state-stby", .data = qcom_cpu_standby },
+> +	{ .compatible = "qcom,idle-state-spc", .data = qcom_cpu_spc },
+> +	{ },
+> +};
+> +
+> +static int __init qcom_cpuidle_init(struct device_node *cpu_node, int cpu)
+> +{
+> +	const struct of_device_id *match_id;
+> +	struct device_node *state_node;
+> +	int i;
+> +	int state_count = 0;
+> +	idle_fn idle_fns[CPUIDLE_STATE_MAX];
+> +	idle_fn *fns;
+> +	cpumask_t mask;
+> +	bool use_scm_power_down = false;
+> +
+> +	for (i = 0; ; i++) {
+> +		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
+> +		if (!state_node)
+> +			break;
+> +
+> +		if (!of_device_is_available(state_node))
+> +			continue;
+> +
+> +		if (i == CPUIDLE_STATE_MAX) {
+> +			pr_warn("%s: cpuidle states reached max possible\n",
+> +					__func__);
+> +			break;
+> +		}
+> +
+> +		match_id = of_match_node(qcom_idle_state_match, state_node);
+> +		if (!match_id)
+> +			return -ENODEV;
+> +
+> +		idle_fns[state_count] = match_id->data;
+> +
+> +		/* Check if any of the states allow power down */
+> +		if (match_id->data == qcom_cpu_spc)
+> +			use_scm_power_down = true;
+> +
+> +		state_count++;
+> +	}
+> +
+> +	if (!state_count) {
+> +		pr_warn("No idle ops founds for cpu %d\n", cpu);
+
+Maybe pr_debug? It's not the end of the world that we don't have cpuidle.
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	fns = kcalloc(state_count, sizeof(*fns), GFP_KERNEL);
+> +	if (!fns)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < state_count; i++)
+> +		fns[i] = idle_fns[i];
+> +
+> +	if (use_scm_power_down) {
+> +		/* We have atlease one power down mode */
+
+s/atlease/at least/
+
+> +		cpumask_clear(&mask);
+> +		cpumask_set_cpu(cpu, &mask);
+> +		qcom_scm_set_warm_boot_addr(cpu_resume, &mask);
+> +	}
+> +
+> +	per_cpu(qcom_idle_ops, cpu) = fns;
+> +
+> +	/*
+> +	 * Condition: cpuidle_driver_register() needs to happen before
+> +	 * cpuidle_register_device().
+> +	 * Check if the SPM probe has happened -
+> +	 * - If SPM probed successfully before arm_idle_init(), then defer
+> +	 *   the registration of cpuidle_device back to arm_idle_init()
+> +	 * - If the SPM probe happens in the future, then let the SPM probe
+> +	 *   register the cpuidle device, return -ENOSYS.
+> +	 */
+> +	return per_cpu(cpu_spm_drv, cpu) ? 0 : -ENOSYS;
+> +}
+> +
+> +struct cpuidle_ops qcom_kpss_v1_cpuidle_ops __initdata = {
+> +	.name = "qcom,kpss-acc-v1",
+> +	.suspend = qcom_idle_enter,
+> +	.init = qcom_cpuidle_init,
+> +};
+> +
+> +struct cpuidle_ops qcom_kpss_v2_cpuidle_ops __initdata = {
+> +	.name = "qcom,kpss-acc-v2",
+> +	.suspend = qcom_idle_enter,
+> +	.init = qcom_cpuidle_init,
+> +};
+> +
+>
+
+This just looks weird because of the macro magic in Daniel's series. Any
+reason we can't use the linker instead of doing preprocessor magic so
+that it looks like these structures are actually used?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
