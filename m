@@ -1,54 +1,141 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] ARM: omap2plus_defconfig: Enable EXTCON_GPIO_USB
-Date: Mon, 16 Mar 2015 10:53:57 -0700
-Message-ID: <20150316175355.GS5264@atomide.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-8-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422274532-9488-8-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
+Date: Mon, 16 Mar 2015 13:00:51 -0500
+Message-ID: <582D947C-1229-4DD9-BC82-812D1560C49E@codeaurora.org>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org> <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@n>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150126 04:19]:
-> This driver is needed for USB cable type detection on dra7-evm,
-> dra72-evm and am57xx-beagle-x15.
-> 
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
-Applying this into omap-for-v4.1/defconfig. I think it's all
-queued up after this, please check and repost patches if
-it's still missing something as I've marked all the extcon
-related threads as read here now.
+On Mar 16, 2015, at 9:20 AM, Gabriel FERNANDEZ <gabriel.fernandez@st.co=
+m> wrote:
 
-Regards,
-
-Tony
-
+> ST sti SoCs PCIe IPs are built around DesignWare IP Core.
+> But in these SoCs PCIe IP doesn't support IO.
+>=20
+> This patch adds the possibility to disable it through
+> a DT property, by creating an empty IO window and by
+> removing PCI_COMMAND_IO from the setup register.
+>=20
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 > ---
->  arch/arm/configs/omap2plus_defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> index 667d9d5..7e10e58 100644
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@ -326,6 +326,7 @@ CONFIG_DMADEVICES=y
->  CONFIG_TI_EDMA=y
->  CONFIG_DMA_OMAP=y
->  CONFIG_EXTCON=y
-> +CONFIG_EXTCON_USB_GPIO=m
->  CONFIG_EXTCON_PALMAS=y
->  CONFIG_PWM=y
->  CONFIG_PWM_TIECAP=y
-> -- 
-> 2.1.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> .../devicetree/bindings/pci/designware-pcie.txt    |  2 ++
+> drivers/pci/host/pcie-designware.c                 | 24 +++++++++++++=
++++++++--
+> drivers/pci/host/pcie-designware.h                 |  1 +
+> 3 files changed, 25 insertions(+), 2 deletions(-)
+
+Why not just update the code such that if the ranges doesn=92t have an =
+IO space rather than introducing a new DT property?
+
+- k
+
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.tx=
+t b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 9f4faa8..40544d4 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -26,3 +26,5 @@ Optional properties:
+> - bus-range: PCI bus numbers covered (it is recommended for new devic=
+etrees to
+>   specify this property, to keep backwards compatibility a range of 0=
+x00-0xff
+>   is assumed if not present)
+> +- disable_io_support: set this property for PCIe host controller wit=
+hout IO
+> +  port access
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pc=
+ie-designware.c
+> index 1f4ea6f..f9d70f5 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -471,6 +471,9 @@ int __init dw_pcie_host_init(struct pcie_port *pp=
+)
+> 		return -EINVAL;
+> 	}
+>=20
+> +	pp->disable_io_support =3D of_property_read_bool(np,
+> +			"disable_io_support");
+> +
+> 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> 		if (!pp->ops->msi_host_init) {
+> 			pp->irq_domain =3D irq_domain_add_linear(pp->dev->of_node,
+> @@ -704,6 +707,7 @@ static struct pci_ops dw_pcie_ops =3D {
+> static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+> {
+> 	struct pcie_port *pp;
+> +	struct resource *res;
+>=20
+> 	pp =3D sys_to_pcie(sys);
+>=20
+> @@ -719,6 +723,18 @@ static int dw_pcie_setup(int nr, struct pci_sys_=
+data *sys)
+> 	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
+> 	pci_add_resource(&sys->resources, &pp->busn);
+>=20
+> +	if (pp->disable_io_support) {
+> +		/* This PCIe controller does not support IO, set an empty one */
+> +		res =3D devm_kzalloc(pp->dev, sizeof(*res), GFP_KERNEL);
+> +		if (res) {
+> +			res->start =3D 0;
+> +			res->end =3D 0;
+> +			res->name =3D "PCIe empty IO space";
+> +			res->flags =3D IORESOURCE_IO;
+> +			pci_add_resource(&sys->resources, res);
+
+Do we really need an empty resource?  What happens if we just dont have=
+ one?
+
+> +		}
+> +	}
+> +
+> 	return 1;
+> }
+>=20
+> @@ -822,8 +838,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> 	/* setup command register */
+> 	dw_pcie_readl_rc(pp, PCI_COMMAND, &val);
+> 	val &=3D 0xffff0000;
+> -	val |=3D PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+> -		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+> +
+> +	if (!pp->disable_io_support)
+> +		val |=3D PCI_COMMAND_IO;
+> +
+> +	val |=3D PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER | PCI_COMMAND_SERR=
+;
+> +
+> 	dw_pcie_writel_rc(pp, val, PCI_COMMAND);
+> }
+>=20
+> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pc=
+ie-designware.h
+> index d0bbd27..027045d 100644
+> --- a/drivers/pci/host/pcie-designware.h
+> +++ b/drivers/pci/host/pcie-designware.h
+> @@ -52,6 +52,7 @@ struct pcie_port {
+> 	int			msi_irq;
+> 	struct irq_domain	*irq_domain;
+> 	unsigned long		msi_data;
+> +	bool			disable_io_support;
+> 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+> };
+>=20
+> --=20
+> 1.9.1
+>=20
+
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
