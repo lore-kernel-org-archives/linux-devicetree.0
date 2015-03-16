@@ -1,50 +1,79 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
-Date: Mon, 16 Mar 2015 08:29:39 -0700
-Message-ID: <20150316152939.GP5264@atomide.com>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
- <20150313151301.GJ5264@atomide.com>
- <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
- <2070859.WcMooC33YH@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [REGRESSION stable] "of: fix handling of '/' in options for of_find_node_by_path()"
+ breaks stdout-path
+Date: Mon, 16 Mar 2015 16:53:22 +0100
+Message-ID: <5506FC72.80800@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2070859.WcMooC33YH@wuerfel>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [150315 05:10]:
-> On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
-> > yeah, i missed it :/
-> > 
-> > looks like there's no platform that defines platform data for it.
-> > i'll replace the dev_get_platdata() with a function that only parses
-> > the clock-frequency properties (the irq is taken in this case from the
-> > spi_device).
-> > (or maybe i should just drop it, as no one actually uses it?)
-> 
-> I don't think we should drop the driver, but dropping the platform_data
-> support sounds reasonable. New users of this driver should all be using
-> DT, and if there is a good reason to use platform_data, it's easily
-> put back.
+Hi All,
 
-Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
-all in dts mode, but n900 still also boots in legacy mode. It seems the
-board-rx51-peripherals.c only passes the power_gpio though, so that
-should be easy to keep around.
+While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
+got any console (neither video output not serial console) on an Allwinner A20 ARM
+board.
 
-We should keep things still working for n900 in legacy mode until the
-pending regressions with device tree based booting have been cleared
-for at least one merge cycle. I believe the last pending issues is the
-support for ATAG_REVISION in device tree mode as posted by Pali.
+This is caused by:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=106937e8ccdcf0f4b95fbf0fe9abd42766cade33
+
+Reverting this commit fixes the serial console being gone for me.
+
+After this there still is an issue that tty0 no longer is seen as console, where it
+used to be properly used as console in 3.19, I'll investigate that further and send
+a separate mail about this.
+
+Greg, this commit has a: "Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.19" please do not apply
+this commit to stable!
+
+u-boot sets stdout-path to this value on the board in question:
+"/soc@01c00000/serial@01c28000:115200"
+
+Looking at the first hunk of the patch in question, the problem is obvious:
+
+@@ -714,16 +714,17 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+  const char *path)
+  {
+   struct device_node *child;
+- int len = strchrnul(path, '/') - path;
+- int term;
++ int len;
++ const char *end;
++ end = strchr(path, ':');
++ if (!end)
++ end = strchrnul(path, '/');
++
++ len = end - path;
+   if (!len)
+    return NULL;
+- term = strchrnul(path, ':') - path;
+- if (term < len)
+- len = term;
+-
+  __for_each_child_of_node(parent, child) {
+   const char *name = strrchr(child->full_name, '/');
+   if (WARN(!name, "malformed device_node %s\n", child->full_name))
+
+The new code to determine len will match (when starting at root) the name of
+all child nodes against: "soc@01c00000/serial@01c28000" as it checks for
+the ":" first and then uses everything before it. Where as the old code
+would match against: "soc@01c00000" which is the correct thing to do.
+
+The best fix I can come up with is to check for both ":" and "/" and use
+the earlier one as end to calculate the length. I've not coded this out /
+tested this due to -ENOTIME. Note that I've also not audited the rest of
+the patch for similar issues.
+
+I will happily test any patches to fix this.
 
 Regards,
 
-Tony
+Hans
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
