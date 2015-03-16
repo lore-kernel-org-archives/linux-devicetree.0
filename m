@@ -1,73 +1,24 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Mon, 16 Mar 2015 13:49:20 -0400
-Message-ID: <550717A0.3060603@hurleysoftware.com>
-References: <55070544.9010908@redhat.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
+Date: Mon, 16 Mar 2015 17:53:56 +0000
+Message-ID: <550718B4.5090406@linaro.org>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org> <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <55070544.9010908@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
 
-On 03/16/2015 12:31 PM, Hans de Goede wrote:
-> Hi All,
-> 
-> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
-> get console / kernel messages output on the hdmi output of my ARM board / on tty0
-> 
-> This is caused by:
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
-> 
-> Reverting this commit fixes this for me.
-> 
-> What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
-> happens before the tty0 registers stopping tty0 from becoming part of the console list
-> since there already is a preferred console at that time.
-> 
-> This is an undesirable behavior change caused by the commit in question, on boards
-> where there is both video output, and a serial console configured through stdout-path
-> we want to have console output on both as we do not know which of the 2 will actually
-> be hooked up by the user.
 
-I don't see this as a regression, but rather a misconfiguration.
-
-1. Your DT indicates the stdout device is a serial console; that is
-   the expected outcome. Here's what ePAPR has to say on the chosen/stdout-path
-   property node:
-
-   "A string that specifies the full path to the node representing the device to be
-   used for boot console output. If the character ":" is present in the value it
-   terminates the path. The value may be an alias."
-
-   If the serial console is not the stdout device then the DT should not
-   claim it is.
-
-2. The tty0 console is not now, and has never been, always enabled.
-
-   The tty0 console is only enabled when either,
-     a) there is no other console
-     b) when specified on the command line (ie., "console=tty0") or
-        by prom/dt.
-
-   Your situation is akin to adding the serial console to the command line; if
-   "console=tty0" is not also explicitly added, there is no boot console output
-   to tty0.
-
-3. This same breakage will happen if any other device registers a console matching
-   the stdout-path at console_init() time (ie, with console_initcall() macro) before
-   the dummy console. The order in which consoles are inited via console_initcall()
-   is dependent on link order, so essentially not controllable across different
-   subsystems (or if there were consoles defined with the arch itself).
-
-That said, I'll look into fixing your use-case automagically without requiring
-configuration changes.
-
-Regards,
-Peter Hurley
+On 16/03/15 14:20, Gabriel FERNANDEZ wrote:
+>   - bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
+>     specify this property, to keep backwards compatibility a range of 0x00-0xff
+>     is assumed if not present)
+> +- disable_io_support: set this property for PCIe host controller without IO
+> +  port access
+Shouldn't dt properties use hyphens rather than under scores ?
