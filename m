@@ -1,90 +1,49 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
-Date: Mon, 16 Mar 2015 17:52:09 +0800
-Message-ID: <1426499529.15259.58.camel@mtksdaap41>
-References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
-	 <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150223135044.108ea32a65063a50aa36a309@linux-foundation.org>
-	 <1426242563.18291.19.camel@mtksdaap41>
-	 <20150313105742.GS24885@pengutronix.de>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
+Date: Mon, 16 Mar 2015 15:24:20 +0530
+Message-ID: <CAKohpok1rQFywhgpajomXYu+uc7zmuhVhg0RY4vJzaH2uKNURA@mail.gmail.com>
+References: <cover.1423642246.git.viresh.kumar@linaro.org>
+	<CAKohpokF0_or8aXwzWZ=bUX1Robk8THyqRpKjbaarg9NHufLmw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150313105742.GS24885-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAKohpokF0_or8aXwzWZ=bUX1Robk8THyqRpKjbaarg9NHufLmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tianping Fang <tianping.fang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+On 27 February 2015 at 10:55, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 11 February 2015 at 13:46, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Now that I have received an verbal Ack from Rob Herring (in a personal
+>> conversation) about the bindings, I am showing how the code looks like with
+>> these new bindings.
+>>
+>> Some part is still now done:
+>
+> s/now/not
+>
+>> - Interface for adding new detailed OPPs from platform code instead of DT
+>> - Providing cpufreq helpers for the next OPPs
+>> - Providing regulator helpers for the target/min/max ranges
+>>
+>> Please provide feedback on how this looks like..
+>
+> Can we have some reviews of the code changes please ?
 
-On Fri, 2015-03-13 at 11:57 +0100, Sascha Hauer wrote:
-> Hi Eddie,
-> 
-> On Fri, Mar 13, 2015 at 06:29:23PM +0800, Eddie Huang wrote:
-> > > regmap_read() and regmap_write() can return errors.  There is no
-> > > checking for this.
-> > > 
-> > 
-> > I encounter some trouble when I add code to check return value of
-> > regmap_read and regmap_write. Every RTC register access through regmap,
-> > and there are many register read/write in this driver. If I check every
-> > return value, the driver will become ugly. I try to make this driver
-> > clean using following macro.
-> > 
-> > static int __rtc_read(struct mt6397_rtc *rtc, u32 offset, u32 *data)
-> > {
-> >         u32 addr = rtc->addr_base + offset;
-> > 
-> >         if (offset < rtc->addr_range)
-> >                 return regmap_read(rtc->regmap, addr, data);
-> > 
-> >         return -EINVAL;
-> > }
-> > 
-> > #define rtc_read(ret, rtc, offset, data)                \
-> > ({                                                      \
-> >         ret = __rtc_read(rtc, offset, data);            \
-> >         if (ret < 0)                                    \
-> >                 goto rtc_exit;                          \
-> > })                                                      \
-> 
-> Hiding a goto (or return) in a macro is a very bad idea.
-> 
-> what you can do is
-> 
-> 	ret |= regmap_read(rtc->regmap, RTC_TC_SEC, &tm->tm_sec);
-> 	ret |= regmap_read(rtc->regmap, RTC_TC_MIN, &tm->tm_min);
-> 
-> 	if (ret)
-> 		return -EIO;
-> 
-> (Don't return ret in this case though as it might contain different
-> error codes orred together)
-> 
+Rob/Rafael/Arnd/Nishanth,
 
-OK, I will drop macro, and check regmap_read, regmap_write return value
-in each function.
+Reviews please? This had been hanging since a long time, can we get this merged
+in next merge window please?
 
-> Another possibilty at least for contiguous registers would be
-> regmap_bulk_read().
-> 
-> Sascha
-> 
+Bindings are already OK'd by Rob (in personal conversation) and its
+all about code
+now. Which can be updated later on as well if we find an issue..
 
-Contiguous registers access occurs in reading and writing time. I think
-Matthias's suggestion is a good way: 
+@Rob: Can you please Ack whatever stuff you are okay with ?
 
-do {
-	ret = __mtk_rtc_read_time(rtc, &tm, &sec);
-	if (ret < 0)
-		goto rtc_exit;
-} while (sec < tm->tm_sec);
-
-Eddie
-
-
+--
+viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
