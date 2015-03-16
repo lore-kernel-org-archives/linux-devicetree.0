@@ -1,79 +1,91 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [REGRESSION stable] "of: fix handling of '/' in options for of_find_node_by_path()"
- breaks stdout-path
-Date: Mon, 16 Mar 2015 16:53:22 +0100
-Message-ID: <5506FC72.80800@redhat.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v7 1/3] dmaengine: Add support for APM X-Gene SoC DMA
+ engine driver
+Date: Mon, 16 Mar 2015 21:56:13 +0530
+Message-ID: <20150316162613.GO32683@intel.com>
+References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
+ <1426158921-8987-2-git-send-email-rsahu@apm.com>
+ <20150316092756.GH32683@intel.com>
+ <CAFd313y3avndJ_jDbOSWsbBOYapto_HpDUa+eR7Qy2FO2qLDYg@mail.gmail.com>
+ <20150316112730.GN32683@intel.com>
+ <CAFd313yeXL2sd4qzh_-6iANQf=w0k4p_tXEmrk_QZ-baKgKG8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd313yeXL2sd4qzh_-6iANQf=w0k4p_tXEmrk_QZ-baKgKG8Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rameshwar Sahu <rsahu@apm.com>
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On Mon, Mar 16, 2015 at 05:24:34PM +0530, Rameshwar Sahu wrote:
+> >> >> +static void xgene_dma_free_desc_list_reverse(struct xgene_dma_chan *chan,
+> >> >> +                                          struct list_head *list)
+> >> > do we really care about free order?
+> >>
+> >> Yes it start dellocation of descriptor by tail.
+> > and why by tail is not clear.
+> We can free allocated descriptor in forward order from head or in
+> reverse order, I just followed here fsldma.c driver.
+> Does this make sense ??
+No, you have two APIs to free list. Why do you need two?
 
-While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
-got any console (neither video output not serial console) on an Allwinner A20 ARM
-board.
+> 
+> 
+> >
+> >> > where are you mapping dma buffers?
+> >>
+> >>  I didn't get you here. Can you please explain me here what you mean.
+> >> As per my understanding client should map the dma buffer and give the
+> >> physical address and size to this callback prep routines.
+> > not for memcpy, that is true for slave transfers
+> >
+> > For mempcy the idea is that drivers will do buffer mapping
+> 
+> Still I am clear here, why memcpy will do buffer mapping, I see other
+> drivers and also async_memcpy.c , they only map it and pass mapped
+> physical dma address to driver.
+> 
+> Buffer mapping mean you here is dma_map_xxx ?? Am I correct.
+Yes
 
-This is caused by:
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=106937e8ccdcf0f4b95fbf0fe9abd42766cade33
+> 
+> >
+> >> > why are you calling this here, status check shouldnt do this...
+> >>
+> >> Okay, I will remove it.
+> >>
+> >>
+> >> >> +                     spin_unlock_bh(&chan->lock);
+> >> >> +                     return DMA_IN_PROGRESS;
+> >> > residue here is size of transacation.
+> >>
+> >> We can't calculate here residue size. We don't have any controller
+> >> register which will tell about remaining transaction size.
+> > Okay if you cant calculate residue why do we have this fn?
+> 
+> So basically case here for me is completion of dma descriptor
+> submitted to hw is not same as order of submission to hw.
+> So scenario coming in multithread running :e.g. let's assume we have
+> submitted two descriptors first has cookie 1001 and second has 1002,
+> now 1002 is completed first, so updated last_completed_cookie as 1002
+> but not yer checked for dma_tx_status, and then first cookie completes
+> and update last_completed_cookie as 1001, now second transaction check
+> for tx_status and it get DMA_IN_PROGRESS, because
+> last_completed_cookie(1001) is less than second transaction's
+> cookie(1002).
+> 
+> Due to this issue I am traversing that transaction in pending list and
+> running list, if not there means we are done.
+> 
+> Does this make sense??
+That only convinces me that there is something not so correct.
 
-Reverting this commit fixes the serial console being gone for me.
+To help me understand pls let me know if below is fine:
+- for a physical channel, do you submit multiple transactions?
+- if yes, how does DMA deal with multiple transactions, how does it schedule
+  them?
 
-After this there still is an issue that tty0 no longer is seen as console, where it
-used to be properly used as console in 3.19, I'll investigate that further and send
-a separate mail about this.
-
-Greg, this commit has a: "Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.19" please do not apply
-this commit to stable!
-
-u-boot sets stdout-path to this value on the board in question:
-"/soc@01c00000/serial@01c28000:115200"
-
-Looking at the first hunk of the patch in question, the problem is obvious:
-
-@@ -714,16 +714,17 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
-  const char *path)
-  {
-   struct device_node *child;
-- int len = strchrnul(path, '/') - path;
-- int term;
-+ int len;
-+ const char *end;
-+ end = strchr(path, ':');
-+ if (!end)
-+ end = strchrnul(path, '/');
-+
-+ len = end - path;
-   if (!len)
-    return NULL;
-- term = strchrnul(path, ':') - path;
-- if (term < len)
-- len = term;
--
-  __for_each_child_of_node(parent, child) {
-   const char *name = strrchr(child->full_name, '/');
-   if (WARN(!name, "malformed device_node %s\n", child->full_name))
-
-The new code to determine len will match (when starting at root) the name of
-all child nodes against: "soc@01c00000/serial@01c28000" as it checks for
-the ":" first and then uses everything before it. Where as the old code
-would match against: "soc@01c00000" which is the correct thing to do.
-
-The best fix I can come up with is to check for both ":" and "/" and use
-the earlier one as end to calculate the length. I've not coded this out /
-tested this due to -ENOTIME. Note that I've also not audited the rest of
-the patch for similar issues.
-
-I will happily test any patches to fix this.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
