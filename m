@@ -1,24 +1,54 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
-Date: Mon, 16 Mar 2015 17:53:56 +0000
-Message-ID: <550718B4.5090406@linaro.org>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org> <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] ARM: omap2plus_defconfig: Enable EXTCON_GPIO_USB
+Date: Mon, 16 Mar 2015 10:53:57 -0700
+Message-ID: <20150316175355.GS5264@atomide.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+ <1422274532-9488-8-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422274532-9488-8-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150126 04:19]:
+> This driver is needed for USB cable type detection on dra7-evm,
+> dra72-evm and am57xx-beagle-x15.
+> 
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
+Applying this into omap-for-v4.1/defconfig. I think it's all
+queued up after this, please check and repost patches if
+it's still missing something as I've marked all the extcon
+related threads as read here now.
 
-On 16/03/15 14:20, Gabriel FERNANDEZ wrote:
->   - bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
->     specify this property, to keep backwards compatibility a range of 0x00-0xff
->     is assumed if not present)
-> +- disable_io_support: set this property for PCIe host controller without IO
-> +  port access
-Shouldn't dt properties use hyphens rather than under scores ?
+Regards,
+
+Tony
+
+> ---
+>  arch/arm/configs/omap2plus_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+> index 667d9d5..7e10e58 100644
+> --- a/arch/arm/configs/omap2plus_defconfig
+> +++ b/arch/arm/configs/omap2plus_defconfig
+> @@ -326,6 +326,7 @@ CONFIG_DMADEVICES=y
+>  CONFIG_TI_EDMA=y
+>  CONFIG_DMA_OMAP=y
+>  CONFIG_EXTCON=y
+> +CONFIG_EXTCON_USB_GPIO=m
+>  CONFIG_EXTCON_PALMAS=y
+>  CONFIG_PWM=y
+>  CONFIG_PWM_TIECAP=y
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
