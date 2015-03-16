@@ -1,67 +1,65 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/9] ARM: dt: dove: add Dove PMU DT entry to dove.dtsi
-Date: Mon, 16 Mar 2015 19:27:30 +0100
-Message-ID: <55072092.9040207@free-electrons.com>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <E1YW7tB-0003mM-1L@rmk-PC.arm.linux.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
+Date: Mon, 16 Mar 2015 11:24:26 -0700
+Message-ID: <20150316182426.GW5264@atomide.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+ <20150313151301.GJ5264@atomide.com>
+ <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
+ <2070859.WcMooC33YH@wuerfel>
+ <20150316152939.GP5264@atomide.com>
+ <20150316182536.GA16829@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1YW7tB-0003mM-1L-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150316182536.GA16829@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On 12/03/2015 19:31, Russell King wrote:
-> Add the PMU description to the Dove DT file.  The PMU provides multiple
-> features, including an interrupt, reset, power and isolation controller.
+* Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org> [150316 11:26]:
+> Hi,
 > 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/dove.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> On Mon, Mar 16, 2015 at 08:29:39AM -0700, Tony Lindgren wrote:
+> > * Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [150315 05:10]:
+> > > On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
+> > > > yeah, i missed it :/
+> > > > 
+> > > > looks like there's no platform that defines platform data for it.
+> > > > i'll replace the dev_get_platdata() with a function that only parses
+> > > > the clock-frequency properties (the irq is taken in this case from the
+> > > > spi_device).
+> > > > (or maybe i should just drop it, as no one actually uses it?)
+> > > 
+> > > I don't think we should drop the driver, but dropping the platform_data
+> > > support sounds reasonable. New users of this driver should all be using
+> > > DT, and if there is a good reason to use platform_data, it's easily
+> > > put back.
+> > 
+> > Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
+> > all in dts mode, but n900 still also boots in legacy mode. It seems the
+> > board-rx51-peripherals.c only passes the power_gpio though, so that
+> > should be easy to keep around.
+> > 
+> > We should keep things still working for n900 in legacy mode until the
+> > pending regressions with device tree based booting have been cleared
+> > for at least one merge cycle. I believe the last pending issues is the
+> > support for ATAG_REVISION in device tree mode as posted by Pali.
 > 
-> diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-> index a5441d5482a6..43d4ebf414be 100644
-> --- a/arch/arm/boot/dts/dove.dtsi
-> +++ b/arch/arm/boot/dts/dove.dtsi
-> @@ -380,6 +380,15 @@
->  				status = "disabled";
->  			};
->  
-> +			pmu: power-management@d0000 {
-> +				compatible = "marvell,dove-pmu";
-> +				reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
-
-Here you overlap some other nodes such as the thermal one (from 0xd001c to 0xd0028),
-the clock gate one (from 0xd0038 to 0xd003c), the gpio one, the pinctrl one ...
-
-Could you be more specific?
-
-Thanks,
-
-Gregory
-
-> +				interrupts = <33>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <1>;
-> +				#reset-cells = <1>;
-> +			};
-> +
->  			thermal: thermal-diode@d001c {
->  				compatible = "marvell,dove-thermal";
->  				reg = <0xd001c 0x0c>, <0xd005c 0x08>;
+> mh by migrating to newer gpiod interface platform data is no longer
+> needed (instead the boardfile would need a gpiod_lookup_table). That
+> way all of the dirty code is in the board file and will be removed
+> once the time comes. See for example rx51_fmtx_gpios_table.
 > 
+> Note: This is independent of wl12xx changes, since N900 uses wl1251.
 
+Oh sorry yes sounds like that's different platform data then. In that
+case I see no reasons to drop the platform data for wl12xx.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
