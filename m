@@ -1,93 +1,45 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Mon, 16 Mar 2015 15:11:17 +0200
-Message-ID: <5506D675.8010006@ti.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>	 <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>	 <54CF4FC7.2050309@ti.com> <1426509149.2330.5.camel@linaro.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v2 5/5] MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+Date: Mon, 16 Mar 2015 15:20:35 +0100
+Message-ID: <1426515635-9466-6-git-send-email-gabriel.fernandez@linaro.org>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426509149.2330.5.camel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linar>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+This patch adds the pci-st.c pci driver found on STMicroelectronics
+SoC's into the STI arch section of the maintainers file.
 
-On 16/03/15 14:32, Ivan T. Ivanov wrote:
-> Hi, 
-> 
-> On Mon, 2015-02-02 at 12:21 +0200, Roger Quadros wrote:
->> This driver observes the USB ID pin connected over a GPIO and
->> updates the USB cable extcon states accordingly.
->>
->> The existing GPIO extcon driver is not suitable for this purpose
->> as it needs to be taught to understand USB cable states and it
->> can't handle more than one cable per instance.
->>
->> For the USB case we need to handle 2 cable states.
->> 1) USB (attach/detach)
->> 2) USB-HOST (attach/detach)
->>
->> This driver can be easily updated in the future to handle VBUS
->> events in case it happens to be available on GPIO for any platform.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->> v4:
->> - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
->> - changed host cable name to "USB-HOST"
-> 
-> I am sorry that I am getting a bit little late into this.
-> 
-> Isn't supposed that we have to use strings defined in 
-> const char extcon_cable_name[][]?
-> 
-> 
->> +
->> +/* List of detectable cables */
->> +enum {
->> +       EXTCON_CABLE_USB = 0,
->> +       EXTCON_CABLE_USB_HOST,
->> +
-> 
-> Same here: duplicated with enum extcon_cable_name
-> 
->> +       EXTCON_CABLE_END,
->> +};
->> +
->> +static const char *usb_extcon_cable[] = {
->> +       [EXTCON_CABLE_USB] = "USB",
->> +       [EXTCON_CABLE_USB_HOST] = "USB-HOST",
->> +       NULL,
->> +};
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm not exactly sure how else it is supposed to work if we
-support only a subset of cables from the global extcon_cable_name[][].
-
->>
-> 
-> <snip>
-> 
->> +
->> +static int usb_extcon_probe(struct platform_device *pdev)
->> +{
->>
-> 
-> <snip>
-> 
->> +
->> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->> +                                       usb_irq_handler,
->> +                                       IRQF_TRIGGER_RISING |
->> +                                       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> 
-> Shouldn't triggers be defined in DTS files?
-
-Could be but we're sure that we always need the trigger for both rising/falling edges
-in this case. So the usage is more appropriately decided from application point of view
-rather than h/w point of view. h/w is generic GPIO.
-
-cheers,
--roger
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a0dadde..83ed2c3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1455,6 +1455,7 @@ F:	drivers/clocksource/arm_global_timer.c
+ F:	drivers/i2c/busses/i2c-st.c
+ F:	drivers/media/rc/st_rc.c
+ F:	drivers/mmc/host/sdhci-st.c
++F:	drivers/pci/host/pci-st.c
+ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
+-- 
+1.9.1
