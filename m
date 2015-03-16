@@ -1,40 +1,76 @@
-From: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-Subject: Re: [PATCH] dts: cubox: Map gpio-keys and pps-gpio to gpio3 8
-Date: Mon, 16 Mar 2015 15:33:49 -0600
-Message-ID: <CAHKv19CYD59Ssf6LMyh8K12_5tGLq+yX=sNXWyvU0fPo3JN57g@mail.gmail.com>
-References: <1426538201-7571-1-git-send-email-george.joseph@fairview5.com>
-	<20150316205004.GO8656@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150316205004.GO8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kern." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 3/6] Documentation: DT: Document twl4030-madc-battery bindings
+Date: Mon, 16 Mar 2015 22:37:38 +0100
+Message-ID: <B8616E57-51B5-446E-87D5-9C3EC9B5F1C9@goldelico.com>
+References: <1423088075-10025-1-git-send-email-marek@goldelico.com> <1423088075-10025-4-git-send-email-marek@goldelico.com> <20150316210532.GA11441@amd> <CAAfyv34vnRY=TAyx4+7s1SW7rVE7CFh9z+OOcCsbCx63y9aVog@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAAfyv34vnRY=TAyx4+7s1SW7rVE7CFh9z+OOcCsbCx63y9aVog@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>, Belisko Marek <marek.belisko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 2:50 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Mon, Mar 16, 2015 at 02:36:41PM -0600, George Joseph wrote:
->> The Cubox has a recessed button between the HDMI and RJ-45 connectors
->> that wasn't mapped in the device tree.  Since the button is normally
->> open and there's no external pull up/down, that pad (EIM_DA8) can be
->> used for almost anything so I've mapped it to gpio-keys BTN_0 and
->> pps-gpio.  Whichever driver claims it first wins.  If both drivers
->> are build as modules, you can even switch between them at run time
->> and the pinmux will adjust the pin configuration as required.
->> If neither driver claims the gpio, it's still available in the normal
->> gpio sysfs.
->
-> I wonder why we want to have the PPS support in mainline, given that
-> you would need to solder to the board to make use of that.  I can see
-> the point of the gpio-keys going into mainline, but not the PPS bit.
-> That's more like a local hack.
->
 
-Well, it was just one less thing I'd have to patch locally for so I
-took a chance. :)    I'll remove the pps bits and resubmit.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Am 16.03.2015 um 22:20 schrieb Belisko Marek <marek.belisko@gmail.com>:
+
+> On Mon, Mar 16, 2015 at 10:05 PM, Pavel Machek <pavel@ucw.cz> wrote:
+>> On Wed 2015-02-04 23:14:32, Marek Belisko wrote:
+>>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>>> ---
+>>> .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
+>>> 1 file changed, 43 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+>>> 
+>>> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+>>> new file mode 100644
+>>> index 0000000..bb3580c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+>>> @@ -0,0 +1,43 @@
+>>> +twl4030_madc_battery
+>>> +
+>>> +Required properties:
+>>> + - compatible : "ti,twl4030-madc-battery"
+>>> + - capacity-uah : battery capacity in uAh
+>> 
+>> Could we make it capacity-uAh ?
+> This name was suggested by Mark Rutland [1] and naming convention
+> should be all lowercase. There exists already bindings
+> without uppercase (e.g. ti,bb-uamp) so I would keep it consistent.
+>> 
+>>> + - volt-to-capacity-charging-map : list of voltage(mV):level(%) values
+>>> +     for charging calibration (see example)
+>>> + - volt-to-capacity-discharging-map : list of voltage(mV):level(%) values
+>>> +     for discharging calibration (see example)
+>> 
+>> Would "mV-to-capacity..." be more accurate? Also, would it make sense
+> Again maybe mv but it can be added also later.
+>> to introduce coefficients for temperature and discharge rate?
+> What do you mean? Nothing like that is used in current driver why do
+> we need to add it?
+
+Temperature calibration should have already been done in the underlaying twl4030 iio driver.
+
+Discharge rate is the real current flow reported in uA. Also reported by iio.
+
+>> 
+>> Thanks,
+>>                                                                        Pavel
+>> --
+>> (english) http://www.livejournal.com/~pavelmachek
+>> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
+> [1] - http://lists.openwall.net/linux-kernel/2014/10/09/104
+> 
+> BR,
+> 
+> marek
+> 
+
+BR,
+Nikolaus
+
+
