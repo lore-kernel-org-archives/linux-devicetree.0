@@ -1,51 +1,98 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V8 4/5] ASoC: Allow for building QCOM drivers
-Date: Mon, 16 Mar 2015 11:25:10 +0000
-Message-ID: <20150316112510.GL28806@sirena.org.uk>
-References: <1426233668-30593-1-git-send-email-kwestfie@codeaurora.org>
- <1426233668-30593-5-git-send-email-kwestfie@codeaurora.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] dmaengine: Add support for APM X-Gene SoC DMA
+ engine driver
+Date: Mon, 16 Mar 2015 16:57:30 +0530
+Message-ID: <20150316112730.GN32683@intel.com>
+References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
+ <1426158921-8987-2-git-send-email-rsahu@apm.com>
+ <20150316092756.GH32683@intel.com>
+ <CAFd313y3avndJ_jDbOSWsbBOYapto_HpDUa+eR7Qy2FO2qLDYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="m4dDEz192B/qme3Z"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426233668-30593-5-git-send-email-kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <CAFd313y3avndJ_jDbOSWsbBOYapto_HpDUa+eR7Qy2FO2qLDYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ALSA Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, MSM Mailing List <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 16, 2015 at 04:00:22PM +0530, Rameshwar Sahu wrote:
 
---m4dDEz192B/qme3Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> +static struct xgene_dma_desc_sw *xgene_dma_alloc_descriptor(
+> >> +                              struct xgene_dma_chan *chan)
+> >> +{
+> >> +     struct xgene_dma_desc_sw *desc;
+> >> +     dma_addr_t phys;
+> >> +
+> >> +     desc = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &phys);
+> >> +     if (!desc) {
+> >> +             chan_dbg(chan, "Failed to allocate LDs\n");
+> > not error?
+> 
+> Yes it's error only by lacking of dma memory, do I need to use dev_err
+> to show the error msg ??
+yes
 
-On Fri, Mar 13, 2015 at 01:01:07AM -0700, Kenneth Westfield wrote:
-> From: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->=20
-> Allow for the Qualcomm Technologies ASoC drivers
-> to build.
+> 
+> >
+> >> +static void xgene_dma_free_desc_list_reverse(struct xgene_dma_chan *chan,
+> >> +                                          struct list_head *list)
+> > do we really care about free order?
+> 
+> Yes it start dellocation of descriptor by tail.
+and why by tail is not clear.
 
-Applied everything up to here, thanks.
+> > where are you mapping dma buffers?
+> 
+>  I didn't get you here. Can you please explain me here what you mean.
+> As per my understanding client should map the dma buffer and give the
+> physical address and size to this callback prep routines.
+not for memcpy, that is true for slave transfers
 
---m4dDEz192B/qme3Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+For mempcy the idea is that drivers will do buffer mapping
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> > why are you calling this here, status check shouldnt do this...
+> 
+> Okay, I will remove it.
+> 
+> 
+> >> +                     spin_unlock_bh(&chan->lock);
+> >> +                     return DMA_IN_PROGRESS;
+> > residue here is size of transacation.
+> 
+> We can't calculate here residue size. We don't have any controller
+> register which will tell about remaining transaction size.
+Okay if you cant calculate residue why do we have this fn?
 
-iQEcBAEBCAAGBQJVBr2VAAoJECTWi3JdVIfQyeQH/3QTsFc9K8ptqybmJxxTKj5T
-riRXq4ANrnqA0TuuY0A55gTnOLp96pFC6rg9YqodDb69pOQouh1eC/tN6Ahr9usS
-YLrfNaPZtBk82TQGurQsx/c8z/oMWunybzxNn68H8o/iv7CQrBJCxqjQSZxHqaCs
-khrAr7zBLGg9X7IHuUzwyZoSTO5462zaxNFLD9XdIE+ZXUBJUZjpk5CMqdXN63/R
-MtYv0JxR3feee5jCsug1q7zqe7g4V8phnD8p6+nTPqEvCxc7yVefY9WLCNqiemb7
-DN8wSNQiIpwIj0K+6eQ9nrnkGXv0dsuJVdtVg+CzGzyZEbNN08Tm1BIORIr8ySo=
-=bxrd
------END PGP SIGNATURE-----
+> 
+> >> +             }
+> >> +     }
+> >> +
+> >> +     /* Check if this descriptor is in running queue */
+> >> +     list_for_each_entry(desc, &chan->ld_running, node) {
+> >> +             if (desc->tx.cookie == cookie) {
+> >> +                     /* Cleanup any running and executed descriptors */
+> >> +                     xgene_dma_cleanup_descriptors(chan);
+> > ditto?
+> 
+> Okay
+> 
+> 
+> >> +                     spin_unlock_bh(&chan->lock);
+> >> +                     return dma_cookie_status(&chan->dma_chan,
+> >> +                                              cookie, txstate);
+> > and you havent touched txstate so what is the intent here...?
+> 
+> txstate can filled by caller, so it may be NULL or not NULL, we are
+> passing same.
+something seems very wrong here. Status should return the current satue of
+queried descriptor and if residue value in txstate, you seem to be doing
+something else, quotesion is what and why :)
 
---m4dDEz192B/qme3Z--
+-- 
+~Vinod
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
