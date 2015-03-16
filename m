@@ -1,114 +1,149 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
- gadget complete function
-Date: Mon, 16 Mar 2015 07:34:00 +0000
-Message-ID: <HKNPR06MB32288BD972AD6DBCAE68E71D8020@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
- <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
- <HKNPR06MB3229E4509ECB25B3620B449D8060@HKNPR06MB322.apcprd06.prod.outlook.com>
- <20150312044449.GA29718@saruman.tx.rr.com>
- <HKNPR06MB3228B5E1A95EDFCD58CF32BD8060@HKNPR06MB322.apcprd06.prod.outlook.com>
- <20150312160907.GE9261@saruman.tx.rr.com>
- <SIXPR06MB333E6503A469B6E147B20CED8070@SIXPR06MB333.apcprd06.prod.outlook.com>
- <20150313154408.GE5615@saruman.tx.rr.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
+ from DT match tables
+Date: Mon, 16 Mar 2015 08:13:06 +0000
+Message-ID: <20150316081306.GD3383@x1>
+References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
+ <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
+ <20150206042744.GK18140@ld-irv-0074>
+ <20150210074634.GD8020@x1>
+ <20150224050452.GG18140@ld-irv-0074>
+ <20150224094110.GA20969@x1>
+ <20150313160601.GI12966@brian-ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150313154408.GE5615-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150313160601.GI12966@brian-ubuntu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 13 Mar 2015, Brian Norris wrote:
+> On Tue, Feb 24, 2015 at 09:41:10AM +0000, Lee Jones wrote:
+> > On Mon, 23 Feb 2015, Brian Norris wrote:
+> > > On Tue, Feb 10, 2015 at 03:46:34PM +0800, Lee Jones wrote:
+> > > > On Thu, 05 Feb 2015, Brian Norris wrote:
+>=20
+> [snip other discussion]
 
-> Hi,
-> 
-> On Fri, Mar 13, 2015 at 01:14:01AM +0000, yoshihiro shimoda wrote:
-> > > > > diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-> > > > > index e0384af77e56..e9d75d85be59 100644
-> > > > > --- a/drivers/usb/renesas_usbhs/mod_gadget.c
-> > > > > +++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-> > > > > @@ -119,7 +119,7 @@ struct usbhsg_recip_handle {
-> > > > >  /*
-> > > > >   *		queue push/pop
-> > > > >   */
-> > > > > -static void usbhsg_queue_pop(struct usbhsg_uep *uep,
-> > > > > +static void __usbhsg_queue_pop(struct usbhsg_uep *uep,
-> > > > >  			     struct usbhsg_request *ureq,
-> > > > >  			     int status)
-> > > > >  {
-> > > > > @@ -133,6 +133,15 @@ static void usbhsg_queue_pop(struct usbhsg_uep *uep,
-> > > > >  	usb_gadget_giveback_request(&uep->ep, &ureq->req);
-> > > > >  }
-> > > > >
-> > > > > +static void usbhsg_queue_pop(struct usbhsg_uep *uep,
-> > > > > +			     struct usbhsg_request *ureq,
-> > > > > +			     int status)
-> > > > > +{
-> > > > > +	usbhs_lock(priv, flags);
-> > > > > +	__usbhsg_queue_pop(uep, ureq, status);
-> > > > > +	usbhs_unlock(priv, flags);
-> > > > > +}
-> > > > > +
-> > > > >  static void usbhsg_queue_done(struct usbhs_priv *priv, struct usbhs_pkt *pkt)
-> > > > >  {
-> > > > >  	struct usbhs_pipe *pipe = pkt->pipe;
-> > > > >
-> > > > >
-> > > > > then, for cases where lock is already held you call __usbhsg_queue_pop()
-> > > > > and for all other cases, call usbhsg_queue_pop().
-> > > >
-> > > > Thank you for the suggestion. However, we cannot use this
-> > > > usbhsg_queue_pop() because a gadget driver might call usb_ep_queue()
-> > > > in the "complete" function and this driver calls usbhs_lock() in the
-> > > > usb_ep_queue().
-> > >
-> > > right, in that case just call __usbhs_queue_pop() directly.
-> >
-> > Yes. So, my understanding is that this driver always calls __usbhs_queue_pop()
-> > because this driver cannot know that a gadget driver calls usb_ep_queue() or not
-> > in the "complete" function.
-> 
-> but you don't need to know that. All you have to do is spin_unlock()
-> before calling usb_gadget_giveback_request(), look at
-> drivers/usb/dwc3/gadget.c::dwc3_gadget_giveback()
+[...]
 
-Thank you for the suggestion. I understood it.
+> > > Now, unless you were able to provide an additional enlightening
+> > > viewpoint, then the following paragraph likely all holds true:
+> > >=20
+> > > > > Also, I realized that all this boot device / syscfg gymnastic=
+s is just
+> > > > > for one simple fact; your driver is trying to hide the fact t=
+hat your
+> > > > > system can't reliably handle 4-byte addressing for the boot d=
+evice. Even
+> > > > > if you try your best at toggling 4-byte addressing before/aft=
+er each
+> > > > > read/write/erase, you still are vulnerable to power cuts duri=
+ng the
+> > > > > operation. This is a bad design, and we have consistently agr=
+eed that we
+> > > > > aren't going to work around that in Linux.
+> > > > >=20
+> > > > > Better solutions: hook up a reset line to your flash; improve=
+ your boot
+> > > > > ROM / bootloader to handle 4-byte addressing for large flash.
+> >=20
+> > Okay, I'm re-read the code and have a new understanding about the
+> > boot-from-spi 'gymnastics'.=20
 
-> > > > Perhaps my explanation was bad, but this issue was caused by the
-> > > > following conditions:
-> > > >  - I use the renesas_usbhs driver as udc.
-> > > >  - I use an old usb-dmac driver that the callback runs on a kthread.
-> > > >  - I use the ncm driver. In this environment, the ncm driver might
-> > > >	cause a spinlock suspected.
-> > > >
-> > > > As an old solution, I fixed the renesas_usbhs driver by this patch.
-> > > > However, if I use a new usb-dmac driver that the callback runs on a
-> > > > tasklet, I don't need this patch. (This is a new solution.)
-> > >
-> > > then differentiate based on some revision register or something like
-> > > that ?
-> >
-> > Sorry for the lack information. I am submitting this usb-dmac driver that
-> > the callback runs on a tasklet now. This means that the driver is not
-> > merged yet. So, I think that we don't need to differentiate.
-> 
-> But as soon as your driver gets merged, you will need to differentiate,
-> right ?
+[snipping lecture]
 
-Right. So, I will submit v3 patch soon.
+> I'm
+> happy to return to technical points and avoid the other unpleasantnes=
+s.
 
-Best regards,
-Yoshihiro Shimoda
+Yes, let's start again.
 
-> --
-> balbi
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > There is a separate controller on the platform which acts as a boot
+> > device and makes the NOR chip appear as though it is memory mapped.
+> > This expects the NOR Controller to be in its default state [24-bit
+> > addressing] on boot.  The issue arises if a warm-reset occurs and t=
+he
+> > device is still in 32-bit addressing mode.
+>=20
+> OK, this is all familiar. This is common to many other systems.
+>=20
+> > To minimise the risk, the
+> > controller attempts to stay in 24-bit addressing mode for as long a=
+s
+> > possible.
+>=20
+> This is the part where we differ, I suppose. The "as long as possible=
+"
+> statement is still not sufficient; I believe this still leaves holes
+> that simply cannot be fixed in Linux.
+
+Linux supports lots of devices which are not perfect.  Minimising risk
+to error prone hardware is one of software's key roles.  Being a
+software guy, I don't like it any more than you do, but it is a fact
+of life that hardware isn't perfect.  That's why the Linux kernel
+supports a truck-load of 'errata' and 'quirks'.  Saying "we're not
+going to support that in Linux" doesn't sound like the right attitude
+to me.
+
+So when you said "we have consistently agreed that we aren't going to
+work around that in Linux", who has agreed this.  Would you be kind
+enough to point me in the direction of that conversation please?
+
+> > You mentioned power-cuts.  I do not believe this to be an issue, as
+> > when the power is completely removed the controller will reset back
+> > into default state.  Only warm-resets are an issue.
+>=20
+> You're right: power cuts shouldn't be a problem. But what about other
+> unexpected warm resets? (Watchdogs?) Do you have any solution for the=
+m?
+
+They are possible and are the point of the patch.  If they happen
+while we're in 24bit mode, we risk corruption.  The best solution
+provided by out estrange colleague is provided in this set.  The risk
+of a soft reset happening during the small amount of time that we're
+in 32bit mode is considered acceptable.  Without this patch, the risk
+is significantly more substantial.
+
+> > > > > What's the possibility of dropping all this 4-byte address to=
+ggling
+> > > > > shenanigans? This will be a blocker to merging with spi-nor.c=
+=2E
+> >=20
+> > We wouldn't be able to remove this code without significantly
+> > weakening resilience to warm-reset mishaps, and changing the hardwa=
+re
+> > design for devices which have already been released is obviously ou=
+t
+> > of the question.
+>=20
+> Then maybe we can't solve this. That doesn't mean that upstream will
+> support you, though.
+>=20
+> Problems like this are why "release early, release often" makes sense=
+=2E
+> If your employer didn't take the "fire the engineers and dump softwar=
+e
+> support to the community" approach, but rather honestly engaged on
+> driver support earlier, then perhaps your employer could have fixed t=
+he
+> SoCs/boot ROMs/board designs earlier, rather than later, and you
+> wouldn't be stuck trying to wedge in upstream workarounds for bad
+> designs in the wild.
+
+These lessons have now been learnt.  The attitude to upstreaming in
+the present day is vastly different to how it was when this driver was
+initially authored.
+
+As for the business decisions you allude to, I'm afraid I have no
+influence in those and am not qualified to comment. ;)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
