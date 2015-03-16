@@ -1,36 +1,24 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Mon, 16 Mar 2015 17:31:00 +0100
-Message-ID: <55070544.9010908@redhat.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH] PM / Domains: Correct unit address in power-controller example
+Date: Mon, 16 Mar 2015 10:14:30 -0700
+Message-ID: <7hh9tkooeh.fsf@deeprootsystems.com>
+References: <1426517232-2592-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Hurley <peter@hurleysoftware.com>
-Cc: stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1426517232-2592-1-git-send-email-geert+renesas@glider.be> (Geert
+	Uytterhoeven's message of "Mon, 16 Mar 2015 15:47:12 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
 
-While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
-get console / kernel messages output on the hdmi output of my ARM board / on tty0
+> In example 2 of the generic PM domains DT bindings, the unit address of
+> the device node representing the child power controller doesn't match
+> its "reg" property. Correct it.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This is caused by:
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
-
-Reverting this commit fixes this for me.
-
-What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
-happens before the tty0 registers stopping tty0 from becoming part of the console list
-since there already is a preferred console at that time.
-
-This is an undesirable behavior change caused by the commit in question, on boards
-where there is both video output, and a serial console configured through stdout-path
-we want to have console output on both as we do not know which of the 2 will actually
-be hooked up by the user.
-
-Regards,
-
-Hans
+Acked-by: Kevin Hilman <khilman@linaro.org>
