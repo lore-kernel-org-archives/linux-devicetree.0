@@ -1,74 +1,82 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe
- controller
-Date: Mon, 16 Mar 2015 16:11:35 +0100
-Message-ID: <1426518695.26437.55.camel@x220>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
-	 <1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 3/3] ARM: dts: add property for maximum ADC clock
+ frequencies
+Date: Mon, 16 Mar 2015 16:17:55 +0100
+Message-ID: <80ba0aa345e8bb04e23e2988f51a851d@agner.ch>
+References: <1426518614-20201-1-git-send-email-stefan@agner.ch>
+ <1426518614-20201-4-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@lin>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426518614-20201-4-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-16 at 15:20 +0100, Gabriel FERNANDEZ wrote:
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
- 
-> +config PCI_ST
-> +	bool "ST PCIe controller"
+Forgot to add i.MX/Vybrid maintainers Shawn and Sascha.
 
-You add a bool Kconfig symbol. A week or two ago I saw some patches fly
-by that - I think - allowed PCIe controllers to be built modular.
-
-> +	depends on ARCH_STI || (ARM && COMPILE_TEST)
-> +	select PCIE_DW
-> +	help
-> +	  Enable PCIe controller support on ST Socs. This controller is based
-> +	  on Designware hardware and therefore the driver re-uses the
-> +	  Designware core functions to implement the driver.
-
-> --- a/drivers/pci/host/Makefile
-> +++ b/drivers/pci/host/Makefile
-
-> +obj-$(CONFIG_PCI_ST) += pci-st.o
-
-If you keep that symbol bool this objectfile will never be part of a
-module.
-
-> diff --git a/drivers/pci/host/pci-st.c b/drivers/pci/host/pci-st.c
-> new file mode 100644
-> index 0000000..470000d
-> --- /dev/null
-> +++ b/drivers/pci/host/pci-st.c
-
-> +#include <linux/module.h>
-
-For built-in code this include is, probably, not needed.
-
-> +MODULE_DEVICE_TABLE(of, st_pcie_of_match);
-
-For built-in code that macro will always be preprocessed away.
-
-> +/* ST PCIe driver does not allow module unload */
-> +static int __init pcie_init(void)
-> +{
-> +	return platform_driver_probe(&st_pcie_driver, st_pcie_probe);
-> +}
-> +device_initcall(pcie_init);
-
-I think the module unload comment is a bit odd for built-in only code.
-
-> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
-> +MODULE_DESCRIPTION("PCI express Driver for ST SoCs");
-> +MODULE_LICENSE("GPL v2");
-
-These three macros will be, basically, always preprocessed away as long
-as this code can't be built to be modular.
-
-
-Paul Bolle
+On 2015-03-16 16:10, Stefan Agner wrote:
+> The ADC clock frequency is limited depending on modes used. Add
+> device tree property which allow to set the mode used and the
+> maximum frequency ratings for the instance. These allows to
+> set the ADC clock to a frequency which is within specification
+> according to the actual mode used.
+> 
+> Acked-by: Fugang Duan <B38611@freescale.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/vf610-adc.txt | 9 +++++++++
+>  arch/arm/boot/dts/vfxxx.dtsi                            | 4 ++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> index 1a4a43d..3eb40e2 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> @@ -11,6 +11,13 @@ Required properties:
+>  - clock-names: Must contain "adc", matching entry in the clocks property.
+>  - vref-supply: The regulator supply ADC reference voltage.
+>  
+> +Recommended properties:
+> +- fsl,adck-max-frequency: Maximum frequencies according to datasheets operating
+> +  requirements. Three values are required, depending on conversion mode:
+> +  - Frequency in normal mode (ADLPC=0, ADHSC=0)
+> +  - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
+> +  - Frequency in low-power mode (ADLPC=1, ADHSC=0)
+> +
+>  Example:
+>  adc0: adc@4003b000 {
+>  	compatible = "fsl,vf610-adc";
+> @@ -18,5 +25,7 @@ adc0: adc@4003b000 {
+>  	interrupts = <0 53 0x04>;
+>  	clocks = <&clks VF610_CLK_ADC0>;
+>  	clock-names = "adc";
+> +	fsl,adck-max-frequency = <30000000>, <40000000>,
+> +				<20000000>;
+>  	vref-supply = <&reg_vcc_3v3_mcu>;
+>  };
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index a29c7ce..c6609bd 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -189,6 +189,8 @@
+>  				clocks = <&clks VF610_CLK_ADC0>;
+>  				clock-names = "adc";
+>  				status = "disabled";
+> +				fsl,adck-max-frequency = <30000000>, <40000000>,
+> +							<20000000>;
+>  			};
+>  
+>  			wdoga5: wdog@4003e000 {
+> @@ -387,6 +389,8 @@
+>  				clocks = <&clks VF610_CLK_ADC1>;
+>  				clock-names = "adc";
+>  				status = "disabled";
+> +				fsl,adck-max-frequency = <30000000>, <40000000>,
+> +							<20000000>;
+>  			};
+>  
+>  			esdhc1: esdhc@400b2000 {
