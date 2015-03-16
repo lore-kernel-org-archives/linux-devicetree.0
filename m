@@ -1,51 +1,30 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
-Date: Mon, 16 Mar 2015 21:00:42 +0100
-Message-ID: <3714853.Vuc23EfWdL@wuerfel>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org> <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org> <582D947C-1229-4DD9-BC82-812D1560C49E@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH] dts: Add am335x-wega-rdk.dtb sources for
+ phyBOARD-Wega-AM335x
+Date: Mon, 16 Mar 2015 13:04:20 -0700
+Message-ID: <20150316200419.GY5264@atomide.com>
+References: <1425733193-12837-1-git-send-email-matwey@sai.msu.ru>
+ <CAJs94EYQOmfhjkpok+pxRH-S8YpenZSNavFPWqVPLjM7zbSLBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <582D947C-1229-4DD9-BC82-812D1560C49E-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJs94EYQOmfhjkpok+pxRH-S8YpenZSNavFPWqVPLjM7zbSLBw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Cc: Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, c.arlt@phytec.de, s.mueller-klieser@phytec.de, Teresa =?utf-8?B?R8OhbWV6?= <t.gamez@phytec.de>, w.egorov@phytec.de
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 March 2015 13:00:51 Kumar Gala wrote:
-> On Mar 16, 2015, at 9:20 AM, Gabriel FERNANDEZ <gabriel.fernandez@st.=
-com> wrote:
->=20
-> > ST sti SoCs PCIe IPs are built around DesignWare IP Core.
-> > But in these SoCs PCIe IP doesn't support IO.
-> >=20
-> > This patch adds the possibility to disable it through
-> > a DT property, by creating an empty IO window and by
-> > removing PCI_COMMAND_IO from the setup register.
-> >=20
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > .../devicetree/bindings/pci/designware-pcie.txt    |  2 ++
-> > drivers/pci/host/pcie-designware.c                 | 24 +++++++++++=
-+++++++++--
-> > drivers/pci/host/pcie-designware.h                 |  1 +
-> > 3 files changed, 25 insertions(+), 2 deletions(-)
->=20
-> Why not just update the code such that if the ranges doesn=E2=80=99t =
-have an IO
-> space rather than introducing a new DT property?
+* Matwey V. Kornilov <matwey@sai.msu.ru> [150312 23:58]:
+> Hi,
+> 
+> Teresa replied me, but unfortunately I found that the answer not
+> reached the public maillists. Briefly, we don't need this patch,
+> PhyTec will send better one this year.
 
-I suspect we can simplify this now by changing over the designware PCI
-code from pci_common_init_dev to calling pci_scan_root_bus() in the
-same way that pci-versatile.c does. This would also clean up some
-other areas of the driver and let you do proper error handling
-in the probe.
+OK will ignore this one then. This year sounds a bit long time
+to wait though.. How about maybe send it a bit sooner? :)
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
