@@ -1,55 +1,141 @@
-Return-Path: <gregory.0xf0@gmail.com>
+Return-Path: <paupa13@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1426716507-22749-1-git-send-email-sbranden@broadcom.com>
-References: <1426716507-22749-1-git-send-email-sbranden@broadcom.com>
-Date: Wed, 18 Mar 2015 15:28:41 -0700
-Message-ID: <CADtm3G53ptJON1mC=HXq3QdaDzW_Jt4yd7_30Kn_7mBXbO=Vpg@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: brcm: rationalize Broadcom documentation naming
-From: Gregory Fong <gregory.0xf0@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11479ceafb15b40511979a39
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Lee Jones <lee@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <CAFqH_53D52WGDZUTv=w7SguTeROwrzmn9XLB+cTg-3y+Q4FxfQ@mail.gmail.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+	<1426162154-8716-6-git-send-email-eliad@wizery.com>
+	<CABxcv=mETO9ESVa04YjRO1d-h5ksEwvwGKb1G-jxVk6ttr9JYg@mail.gmail.com>
+	<CAFqH_53D52WGDZUTv=w7SguTeROwrzmn9XLB+cTg-3y+Q4FxfQ@mail.gmail.com>
+Date: Mon, 16 Mar 2015 14:08:04 +0100
+Message-ID: <CAN692hmTGDDB3W5TtgfmQK5V9hUGpqVHpF=xK7F_v85cUjcRPw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] ARM: dts: add wl12xx/wl18xx bindings
+From: Pau Pajuel <paupa13@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bb70a225b3b3d0511678ae7
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, Eliad Peller <eliad@wizery.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>, =?UTF-8?Q?Agust=C3=AD?= <afontquerni@gmail.com>, eduard gavin <egavinc@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a11479ceafb15b40511979a39
+--047d7bb70a225b3b3d0511678ae7
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mar 18, 2015 3:09 PM, "Scott Branden" <sbranden@broadcom.com> wrote:
+Hi,
+
+2015-03-13 9:17 GMT+01:00 Enric Balletbo Serra <eballetbo@gmail.com>:
+
+> Hello,
 >
-> This patchset attempts to standarize the naming of dt-bindings
-
-Just noticed:
-
-s/standarize/standardize/
-
-> documents based on the Broadcom vendor prefix of brcm.
+> 2015-03-13 9:01 GMT+01:00 Javier Martinez Canillas <javier@dowhile0.org>:
+> > Hello Eliad,
+> >
+> > On Thu, Mar 12, 2015 at 1:09 PM, Eliad Peller <eliad@wizery.com> wrote:
+> >> Replace all the pdata-quirks for setting wl12xx/wl18xx
+> >> platform data with proper DT definitions.
+> >>
+> >> The patch was compile-tested only.
+> >>
+> >> Signed-off-by: Eliad Peller <eliad@wizery.com>
+> >> ---
+> >
+> > I wanted to test your series but I realized that the IGEPv2 I've
+> > access is the old revision that has another SDIO wlan module instead
+> > of a Wilink8.
+> >
+> > Maybe Enric have the new revision? I also added to Pau Pajuel as cc
+> > who still works in the company manufacturing these boards so he should
+> > be able to test it.
+> >
 >
-> Although there are no guidelines currently present for how to name
-> the dt-bindings document the "vendor,binding.txt" style is in use by
-> some of the other vendors.
+> Sorry, now I only have an old revision too, so I can't test, cc'ing
+> Agust=C3=AD that has access to the hardware, maybe he can test it or he c=
+an
+> provide to us a board ;)
 >
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> Signed-off-by: Scott Branden <sbranden@broadcom.com>
+> > But in any case, your patch looks good to me so for the
+> > arch/arm/boot/dts/omap3-igep00* changes:
+> >
+> > Acked-by: Javier Martinez Canillas <javier@dowhile0.org>
+> >
+>
+> For my part also looks good.
+>
+> Acked-by: Enric Balletbo i Serra <eballetbo@gmail.com>
+>
+> Best regards,
+>    Enric
+>
+> > Best regards,
+> > Javier
+>
 
-Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
+I'm gonna test it this week. I added Eduard Gavin as cc too.
 
---001a11479ceafb15b40511979a39
+Cheers!
+
+--047d7bb70a225b3b3d0511678ae7
 Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-<p dir="ltr">On Mar 18, 2015 3:09 PM, &quot;Scott Branden&quot; &lt;<a href="mailto:sbranden@broadcom.com">sbranden@broadcom.com</a>&gt; wrote:<br>
+<div dir=3D"ltr">Hi,<br><div><div class=3D"gmail_extra"><br><div class=3D"g=
+mail_quote">2015-03-13 9:17 GMT+01:00 Enric Balletbo Serra <span dir=3D"ltr=
+">&lt;<a href=3D"mailto:eballetbo@gmail.com" target=3D"_blank">eballetbo@gm=
+ail.com</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
+">Hello,<br>
+<span class=3D""><br>
+2015-03-13 9:01 GMT+01:00 Javier Martinez Canillas &lt;<a href=3D"mailto:ja=
+vier@dowhile0.org">javier@dowhile0.org</a>&gt;:<br>
+&gt; Hello Eliad,<br>
 &gt;<br>
-&gt; This patchset attempts to standarize the naming of dt-bindings</p>
-<p dir="ltr">Just noticed:</p>
-<p dir="ltr">s/standarize/standardize/</p>
-<p dir="ltr">&gt; documents based on the Broadcom vendor prefix of brcm.<br>
+&gt; On Thu, Mar 12, 2015 at 1:09 PM, Eliad Peller &lt;<a href=3D"mailto:el=
+iad@wizery.com">eliad@wizery.com</a>&gt; wrote:<br>
+&gt;&gt; Replace all the pdata-quirks for setting wl12xx/wl18xx<br>
+&gt;&gt; platform data with proper DT definitions.<br>
+&gt;&gt;<br>
+&gt;&gt; The patch was compile-tested only.<br>
+&gt;&gt;<br>
+&gt;&gt; Signed-off-by: Eliad Peller &lt;<a href=3D"mailto:eliad@wizery.com=
+">eliad@wizery.com</a>&gt;<br>
+&gt;&gt; ---<br>
 &gt;<br>
-&gt; Although there are no guidelines currently present for how to name<br>
-&gt; the dt-bindings document the &quot;vendor,binding.txt&quot; style is in use by<br>
-&gt; some of the other vendors.<br>
+&gt; I wanted to test your series but I realized that the IGEPv2 I&#39;ve<b=
+r>
+&gt; access is the old revision that has another SDIO wlan module instead<b=
+r>
+&gt; of a Wilink8.<br>
 &gt;<br>
-&gt; Acked-by: Stephen Warren &lt;<a href="mailto:swarren@wwwdotorg.org">swarren@wwwdotorg.org</a>&gt;<br>
-&gt; Signed-off-by: Scott Branden &lt;<a href="mailto:sbranden@broadcom.com">sbranden@broadcom.com</a>&gt;</p>
-<p dir="ltr">Acked-by: Gregory Fong &lt;<a href="mailto:gregory.0xf0@gmail.com">gregory.0xf0@gmail.com</a>&gt;<br>
-</p>
+&gt; Maybe Enric have the new revision? I also added to Pau Pajuel as cc<br=
+>
+&gt; who still works in the company manufacturing these boards so he should=
+<br>
+&gt; be able to test it.<br>
+&gt;<br>
+<br>
+</span>Sorry, now I only have an old revision too, so I can&#39;t test, cc&=
+#39;ing<br>
+Agust=C3=AD that has access to the hardware, maybe he can test it or he can=
+<br>
+provide to us a board ;)<br>
+<span class=3D""><br>
+&gt; But in any case, your patch looks good to me so for the<br>
+&gt; arch/arm/boot/dts/omap3-igep00* changes:<br>
+&gt;<br>
+&gt; Acked-by: Javier Martinez Canillas &lt;<a href=3D"mailto:javier@dowhil=
+e0.org">javier@dowhile0.org</a>&gt;<br>
+&gt;<br>
+<br>
+</span>For my part also looks good.<br>
+<br>
+Acked-by: Enric Balletbo i Serra &lt;<a href=3D"mailto:eballetbo@gmail.com"=
+>eballetbo@gmail.com</a>&gt;<br>
+<br>
+Best regards,<br>
+=C2=A0 =C2=A0Enric<br>
+<br>
+&gt; Best regards,<br>
+&gt; Javier<br>
+</blockquote></div><br></div><div class=3D"gmail_extra">I&#39;m gonna test =
+it this week. I added Eduard Gavin <span class=3D"">as cc too.<br><br></spa=
+n></div><div class=3D"gmail_extra"><span class=3D"">Cheers!<br></span></div=
+></div></div>
 
---001a11479ceafb15b40511979a39--
+--047d7bb70a225b3b3d0511678ae7--
