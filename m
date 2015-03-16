@@ -1,89 +1,29 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: DRA7: Remove ti,timer-dsp and ti,timer-pwm
- properties
-Date: Mon, 16 Mar 2015 15:29:10 -0700
-Message-ID: <20150316222909.GS12397@atomide.com>
-References: <1426526437-63741-1-git-send-email-s-anna@ti.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Mon, 16 Mar 2015 16:35:12 -0600
+Message-ID: <55075AA0.8080306@codeaurora.org>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426526437-63741-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Suman Anna <s-anna@ti.com>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [150316 10:21]:
-> Remove the 'ti,timer-dsp' and 'ti,timer-pwm' properties from the timer
-> nodes that still have them. This seems to be copied from OMAP5, on
-> which only certain timers are capable of providing PWM functionality
-> or be able to interrupt the DSP. All the GPTimers On DRA7 are capable
-> of PWM and interrupting any core (due to the presence of Crossbar).
-> 
-> These properties were used by the driver to add capabilities to each
-> timer, and support requesting timers by capability. In the DT world,
-> we expect any users of timers to use phandles to the respective timer,
-> and use the omap_dm_timer_request_by_node() API. The API to request
-> using capabilities, omap_dm_timer_request_by_cap() API should be
-> deprecated eventually.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-
-Applying into omap-for-v4.1/dt thanks.
-
-Tony
-
+On 2/27/2015 3:30 PM, Bjorn Andersson wrote:
+> Add binding documentation for the Qualcomm Hardware Mutex.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 > ---
->  arch/arm/boot/dts/dra7.dtsi | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 5827fedafd43..318d9409e8cd 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -658,7 +658,6 @@
->  			reg = <0x48820000 0x80>;
->  			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
->  			ti,hwmods = "timer5";
-> -			ti,timer-dsp;
->  		};
->  
->  		timer6: timer@48822000 {
-> @@ -666,8 +665,6 @@
->  			reg = <0x48822000 0x80>;
->  			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->  			ti,hwmods = "timer6";
-> -			ti,timer-dsp;
-> -			ti,timer-pwm;
->  		};
->  
->  		timer7: timer@48824000 {
-> @@ -675,7 +672,6 @@
->  			reg = <0x48824000 0x80>;
->  			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
->  			ti,hwmods = "timer7";
-> -			ti,timer-dsp;
->  		};
->  
->  		timer8: timer@48826000 {
-> @@ -683,8 +679,6 @@
->  			reg = <0x48826000 0x80>;
->  			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
->  			ti,hwmods = "timer8";
-> -			ti,timer-dsp;
-> -			ti,timer-pwm;
->  		};
->  
->  		timer9: timer@4803e000 {
-> @@ -706,7 +700,6 @@
->  			reg = <0x48088000 0x80>;
->  			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
->  			ti,hwmods = "timer11";
-> -			ti,timer-pwm;
->  		};
->  
->  		timer13: timer@48828000 {
-> -- 
-> 2.3.2
-> 
+
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+
+-- 
+Jeffrey Hugo
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, a Linux Foundation Collaborative Project
