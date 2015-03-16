@@ -1,40 +1,30 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 3/4] MAINTAINERS: Add myself as maintainer of
- Allwinner Security System
-Date: Mon, 16 Mar 2015 12:06:20 -0700
-Message-ID: <1426532780.23897.30.camel@perches.com>
-References: <1426532482-28830-1-git-send-email-clabbe.montjoie@gmail.com>
-	 <1426532482-28830-4-git-send-email-clabbe.montjoie@gmail.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Mon, 16 Mar 2015 15:46:51 -0400
+Message-ID: <5507332B.5020504@hurleysoftware.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1426532482-28830-4-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: LABBE Corentin <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <5507227D.8020408@redhat.com>
+Sender: stable-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-16 at 20:01 +0100, LABBE Corentin wrote:
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -10923,6 +10923,12 @@ L:	linux-mm@kvack.org
->  S:	Maintained
->  F:	mm/zswap.c
->  
-> +ALLWINNER SECURITY SYSTEM
-> +M:	Corentin Labbe <clabbe.montjoie@gmail.com>
-> +L:	linux-crypto@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/crypto/sunxi-ss/
+On 03/16/2015 02:35 PM, Hans de Goede wrote:
+> To be clear about my aarch64 remark, that relates to the behavior of aarch64 acpi using
+> machines, those will also output to both a serial tty and tty0 when the acpi equivalent
+> of stdout-path is present and points to a serial tty.
 
-Use alphabetic ordering for new sections please.
+I already made comments addressing the unsuitability of the license for the
+aarch64 acpi console; the proposed SPCR table format is patented by Microsoft and
+licensed incompatibly with GPLv2.
 
-Please place this section between:
+That said, the aarch64 acpi console should be treated like any other prom that
+starts a console and so won't suffer from this breakage.
 
-ALI1563 I2C DRIVER
-and
-ALPHA PORT
-
-
+Regards,
+Peter Hurley
