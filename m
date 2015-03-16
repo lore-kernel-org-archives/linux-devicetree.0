@@ -1,141 +1,87 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
-Date: Mon, 16 Mar 2015 13:00:51 -0500
-Message-ID: <582D947C-1229-4DD9-BC82-812D1560C49E@codeaurora.org>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org> <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@n>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Mon, 16 Mar 2015 19:12:28 +0100
+Message-ID: <55071D0C.2050700@redhat.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550717A0.3060603-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On Mar 16, 2015, at 9:20 AM, Gabriel FERNANDEZ <gabriel.fernandez@st.co=
-m> wrote:
+On 16-03-15 18:49, Peter Hurley wrote:
+> Hi Hans,
+>
+> On 03/16/2015 12:31 PM, Hans de Goede wrote:
+>> Hi All,
+>>
+>> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
+>> get console / kernel messages output on the hdmi output of my ARM board / on tty0
+>>
+>> This is caused by:
+>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
+>>
+>> Reverting this commit fixes this for me.
+>>
+>> What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
+>> happens before the tty0 registers stopping tty0 from becoming part of the console list
+>> since there already is a preferred console at that time.
+>>
+>> This is an undesirable behavior change caused by the commit in question, on boards
+>> where there is both video output, and a serial console configured through stdout-path
+>> we want to have console output on both as we do not know which of the 2 will actually
+>> be hooked up by the user.
+>
+> I don't see this as a regression, but rather a misconfiguration.
 
-> ST sti SoCs PCIe IPs are built around DesignWare IP Core.
-> But in these SoCs PCIe IP doesn't support IO.
->=20
-> This patch adds the possibility to disable it through
-> a DT property, by creating an empty IO window and by
-> removing PCI_COMMAND_IO from the setup register.
->=20
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> ---
-> .../devicetree/bindings/pci/designware-pcie.txt    |  2 ++
-> drivers/pci/host/pcie-designware.c                 | 24 +++++++++++++=
-+++++++--
-> drivers/pci/host/pcie-designware.h                 |  1 +
-> 3 files changed, 25 insertions(+), 2 deletions(-)
+As said it is an undesirable behavior change, whether you want to call that a regression
+or not is not all that interesting. Fixing it however is important, as e.g. Fedora
+ARM images rely on this behavior, both "regular" arm as well as aarch64.
 
-Why not just update the code such that if the ranges doesn=92t have an =
-IO space rather than introducing a new DT property?
+> 1. Your DT indicates the stdout device is a serial console; that is
+>     the expected outcome. Here's what ePAPR has to say on the chosen/stdout-path
+>     property node:
+>
+>     "A string that specifies the full path to the node representing the device to be
+>     used for boot console output. If the character ":" is present in the value it
+>     terminates the path. The value may be an alias."
+>
+>     If the serial console is not the stdout device then the DT should not
+>     claim it is.
+>
+> 2. The tty0 console is not now, and has never been, always enabled.
+>
+>     The tty0 console is only enabled when either,
+>       a) there is no other console
+>       b) when specified on the command line (ie., "console=tty0") or
+>          by prom/dt.
+>
+>     Your situation is akin to adding the serial console to the command line; if
+>     "console=tty0" is not also explicitly added, there is no boot console output
+>     to tty0.
+>
+> 3. This same breakage will happen if any other device registers a console matching
+>     the stdout-path at console_init() time (ie, with console_initcall() macro) before
+>     the dummy console. The order in which consoles are inited via console_initcall()
+>     is dependent on link order, so essentially not controllable across different
+>     subsystems (or if there were consoles defined with the arch itself).
+>
+> That said, I'll look into fixing your use-case automagically without requiring
+> configuration changes.
 
-- k
+Thanks!
 
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.tx=
-t b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 9f4faa8..40544d4 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -26,3 +26,5 @@ Optional properties:
-> - bus-range: PCI bus numbers covered (it is recommended for new devic=
-etrees to
->   specify this property, to keep backwards compatibility a range of 0=
-x00-0xff
->   is assumed if not present)
-> +- disable_io_support: set this property for PCIe host controller wit=
-hout IO
-> +  port access
-> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pc=
-ie-designware.c
-> index 1f4ea6f..f9d70f5 100644
-> --- a/drivers/pci/host/pcie-designware.c
-> +++ b/drivers/pci/host/pcie-designware.c
-> @@ -471,6 +471,9 @@ int __init dw_pcie_host_init(struct pcie_port *pp=
-)
-> 		return -EINVAL;
-> 	}
->=20
-> +	pp->disable_io_support =3D of_property_read_bool(np,
-> +			"disable_io_support");
-> +
-> 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> 		if (!pp->ops->msi_host_init) {
-> 			pp->irq_domain =3D irq_domain_add_linear(pp->dev->of_node,
-> @@ -704,6 +707,7 @@ static struct pci_ops dw_pcie_ops =3D {
-> static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
-> {
-> 	struct pcie_port *pp;
-> +	struct resource *res;
->=20
-> 	pp =3D sys_to_pcie(sys);
->=20
-> @@ -719,6 +723,18 @@ static int dw_pcie_setup(int nr, struct pci_sys_=
-data *sys)
-> 	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
-> 	pci_add_resource(&sys->resources, &pp->busn);
->=20
-> +	if (pp->disable_io_support) {
-> +		/* This PCIe controller does not support IO, set an empty one */
-> +		res =3D devm_kzalloc(pp->dev, sizeof(*res), GFP_KERNEL);
-> +		if (res) {
-> +			res->start =3D 0;
-> +			res->end =3D 0;
-> +			res->name =3D "PCIe empty IO space";
-> +			res->flags =3D IORESOURCE_IO;
-> +			pci_add_resource(&sys->resources, res);
+Regards,
 
-Do we really need an empty resource?  What happens if we just dont have=
- one?
-
-> +		}
-> +	}
-> +
-> 	return 1;
-> }
->=20
-> @@ -822,8 +838,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
-> 	/* setup command register */
-> 	dw_pcie_readl_rc(pp, PCI_COMMAND, &val);
-> 	val &=3D 0xffff0000;
-> -	val |=3D PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-> -		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
-> +
-> +	if (!pp->disable_io_support)
-> +		val |=3D PCI_COMMAND_IO;
-> +
-> +	val |=3D PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER | PCI_COMMAND_SERR=
-;
-> +
-> 	dw_pcie_writel_rc(pp, val, PCI_COMMAND);
-> }
->=20
-> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pc=
-ie-designware.h
-> index d0bbd27..027045d 100644
-> --- a/drivers/pci/host/pcie-designware.h
-> +++ b/drivers/pci/host/pcie-designware.h
-> @@ -52,6 +52,7 @@ struct pcie_port {
-> 	int			msi_irq;
-> 	struct irq_domain	*irq_domain;
-> 	unsigned long		msi_data;
-> +	bool			disable_io_support;
-> 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
-> };
->=20
-> --=20
-> 1.9.1
->=20
-
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
