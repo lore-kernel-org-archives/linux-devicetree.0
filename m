@@ -1,88 +1,80 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon
- driver
-Date: Mon, 16 Mar 2015 14:32:29 +0200
-Message-ID: <1426509149.2330.5.camel@linaro.org>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
-	 <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
-	 <54CF4FC7.2050309@ti.com>
+From: Walter Lozano <walter@vanguardiasur.com.ar>
+Subject: Re: [PATCH v2] ARM: socfpga: dts: Add adxl34x
+Date: Mon, 16 Mar 2015 10:10:45 -0300
+Message-ID: <CABxpGwCbFF+pJ0H_sMjqk6c9awdRuxi6j0CL_d3mH5z4Qht+ng@mail.gmail.com>
+References: <1419462712-14151-1-git-send-email-walter@vanguardiasur.com.ar>
+	<20150105092153.GJ13070@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CF4FC7.2050309@ti.com>
+In-Reply-To: <20150105092153.GJ13070@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, 
+On Mon, Jan 5, 2015 at 6:21 AM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
+> Hi!
+>
+> On Wed, Dec 24, 2014 at 08:11:52PM -0300, Walter Lozano wrote:
+>> This patch adds the DTS bindings for the adxl34x digital
+>> accelerometer.
+>>
+>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
+>> ---
+>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> index 16ea6f5..d343e03 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> @@ -60,6 +60,22 @@
+>>       rxc-skew-ps = <2000>;
+>>  };
+>>
+>> +&gpio2 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&i2c1 {
+>> +     status = "okay";
+>> +
+>> +     accel1: accelerometer@53 {
+>> +             compatible = "adxl34x";
+>> +             reg = <0x53>;
+>> +
+>> +             interrupt-parent = <&portc>;
+>> +             interrupts = <3 2>;
+>> +     };
+>> +};
+>> +
+>>  &mmc0 {
+>>       vmmc-supply = <&regulator_3_3v>;
+>>       vqmmc-supply = <&regulator_3_3v>;
+>
+> I just gave it a short spin. I get some interrupts and the position property
+> changes, so it seems to work:
+>
+>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+>
+> Regards,
+> Steffen
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-On Mon, 2015-02-02 at 12:21 +0200, Roger Quadros wrote:
-> This driver observes the USB ID pin connected over a GPIO and
-> updates the USB cable extcon states accordingly.
-> 
-> The existing GPIO extcon driver is not suitable for this purpose
-> as it needs to be taught to understand USB cable states and it
-> can't handle more than one cable per instance.
-> 
-> For the USB case we need to handle 2 cable states.
-> 1) USB (attach/detach)
-> 2) USB-HOST (attach/detach)
-> 
-> This driver can be easily updated in the future to handle VBUS
-> events in case it happens to be available on GPIO for any platform.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> v4:
-> - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
-> - changed host cable name to "USB-HOST"
-
-I am sorry that I am getting a bit little late into this.
-
-Isn't supposed that we have to use strings defined in 
-const char extcon_cable_name[][]?
-
-
-> +
-> +/* List of detectable cables */
-> +enum {
-> +       EXTCON_CABLE_USB = 0,
-> +       EXTCON_CABLE_USB_HOST,
-> +
-
-Same here: duplicated with enum extcon_cable_name
-
-> +       EXTCON_CABLE_END,
-> +};
-> +
-> +static const char *usb_extcon_cable[] = {
-> +       [EXTCON_CABLE_USB] = "USB",
-> +       [EXTCON_CABLE_USB_HOST] = "USB-HOST",
-> +       NULL,
-> +};
-> 
-
-<snip>
-
-> +
-> +static int usb_extcon_probe(struct platform_device *pdev)
-> +{
-> 
-
-<snip>
-
-> +
-> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-> +                                       usb_irq_handler,
-> +                                       IRQF_TRIGGER_RISING |
-> +                                       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-
-Shouldn't triggers be defined in DTS files?
-
+Ping?
+How should this continue?
 
 Regards,
-Ivan
 
-> 
+Walter
+
+-- 
+Walter Lozano, VanguardiaSur
+www.vanguardiasur.com.ar
