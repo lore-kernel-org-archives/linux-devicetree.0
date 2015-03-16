@@ -1,77 +1,54 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v5 1/2] dt/bindings: qcom_adm: Fix channel specifiers
-Date: Mon, 16 Mar 2015 03:12:46 -0500
-Message-ID: <1426493567-24324-2-git-send-email-agross@codeaurora.org>
-References: <1426493567-24324-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426493567-24324-1-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>
+From: sricharan@codeaurora.org
+Subject: Re: [Patch v4 2/2] dmaengine: Add ADM driver
+Date: Mon, 16 Mar 2015 08:15:26 -0000
+Message-ID: <11135b79b94477532e57f30b1ea3c715.squirrel@www.codeaurora.org>
+References: <1423719965-8156-1-git-send-email-agross@codeaurora.org>
+    <1423719965-8156-3-git-send-email-agross@codeaurora.org>
+    <20150313085745.GG32000@intel.com>
+    <20150313220627.GB23640@qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150313220627.GB23640@qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the crci information from the dma channel property.  At least
-one client device requires using more than one CRCI value for a channel.  This
-does not match the current binding and the crci information needs to be removed.
+Hi,
 
-Instead, the client device will provide this information via other means.
+<snip>
+>
+>>
+>> > +static int adm_get_blksize(unsigned int burst)
+>> > +{
+>> > +	int ret;
+>> > +
+>> > +	switch (burst) {
+>> > +	case 16:
+>> > +		ret = 0;
+>> > +		break;
+>> > +	case 32:
+>> > +		ret = 1;
+>> > +		break;
+>> > +	case 64:
+>> > +		ret = 2;
+>> > +		break;
+>> > +	case 128:
+>> > +		ret = 3;
+>> > +		break;
+>> > +	case 192:
+>> > +		ret = 4;
+>> > +		break;
+>> > +	case 256:
+>> > +		ret = 5;
+>> > +		break;
+>> ffs(burst>>4) ?
+>
+> that should work nicely.  thanks.
+>
+  Will not work for 192, 256 ?
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- Documentation/devicetree/bindings/dma/qcom_adm.txt |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/qcom_adm.txt b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-index 9bcab91..38d45f8 100644
---- a/Documentation/devicetree/bindings/dma/qcom_adm.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-@@ -4,8 +4,7 @@ Required properties:
- - compatible: must contain "qcom,adm" for IPQ/APQ8064 and MSM8960
- - reg: Address range for DMA registers
- - interrupts: Should contain one interrupt shared by all channels
--- #dma-cells: must be <2>.  First cell denotes the channel number.  Second cell
--  denotes CRCI (client rate control interface) flow control assignment.
-+- #dma-cells: must be <1>.  First cell denotes the channel number.
- - clocks: Should contain the core clock and interface clock.
- - clock-names: Must contain "core" for the core clock and "iface" for the
-   interface clock.
-@@ -22,7 +21,7 @@ Example:
- 			compatible = "qcom,adm";
- 			reg = <0x18300000 0x100000>;
- 			interrupts = <0 170 0>;
--			#dma-cells = <2>;
-+			#dma-cells = <1>;
- 
- 			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
- 			clock-names = "core", "iface";
-@@ -35,15 +34,12 @@ Example:
- 			qcom,ee = <0>;
- 		};
- 
--DMA clients must use the format descripted in the dma.txt file, using a three
-+DMA clients must use the format descripted in the dma.txt file, using a two
- cell specifier for each channel.
- 
--Each dmas request consists of 3 cells:
-+Each dmas request consists of two cells:
-  1. phandle pointing to the DMA controller
-  2. channel number
-- 3. CRCI assignment, if applicable.  If no CRCI flow control is required, use 0.
--    The CRCI is used for flow control.  It identifies the peripheral device that
--    is the source/destination for the transferred data.
- 
- Example:
- 
-@@ -56,7 +52,7 @@ Example:
- 
- 		cs-gpios = <&qcom_pinmux 20 0>;
- 
--		dmas = <&adm_dma 6 9>,
--			<&adm_dma 5 10>;
-+		dmas = <&adm_dma 6>,
-+			<&adm_dma 5>;
- 		dma-names = "rx", "tx";
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+ Sricharan
