@@ -1,91 +1,36 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v7 1/3] dmaengine: Add support for APM X-Gene SoC DMA
- engine driver
-Date: Mon, 16 Mar 2015 21:56:13 +0530
-Message-ID: <20150316162613.GO32683@intel.com>
-References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
- <1426158921-8987-2-git-send-email-rsahu@apm.com>
- <20150316092756.GH32683@intel.com>
- <CAFd313y3avndJ_jDbOSWsbBOYapto_HpDUa+eR7Qy2FO2qLDYg@mail.gmail.com>
- <20150316112730.GN32683@intel.com>
- <CAFd313yeXL2sd4qzh_-6iANQf=w0k4p_tXEmrk_QZ-baKgKG8Q@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Mon, 16 Mar 2015 17:31:00 +0100
+Message-ID: <55070544.9010908@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFd313yeXL2sd4qzh_-6iANQf=w0k4p_tXEmrk_QZ-baKgKG8Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rameshwar Sahu <rsahu@apm.com>
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Hurley <peter@hurleysoftware.com>
+Cc: stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 05:24:34PM +0530, Rameshwar Sahu wrote:
-> >> >> +static void xgene_dma_free_desc_list_reverse(struct xgene_dma_chan *chan,
-> >> >> +                                          struct list_head *list)
-> >> > do we really care about free order?
-> >>
-> >> Yes it start dellocation of descriptor by tail.
-> > and why by tail is not clear.
-> We can free allocated descriptor in forward order from head or in
-> reverse order, I just followed here fsldma.c driver.
-> Does this make sense ??
-No, you have two APIs to free list. Why do you need two?
+Hi All,
 
-> 
-> 
-> >
-> >> > where are you mapping dma buffers?
-> >>
-> >>  I didn't get you here. Can you please explain me here what you mean.
-> >> As per my understanding client should map the dma buffer and give the
-> >> physical address and size to this callback prep routines.
-> > not for memcpy, that is true for slave transfers
-> >
-> > For mempcy the idea is that drivers will do buffer mapping
-> 
-> Still I am clear here, why memcpy will do buffer mapping, I see other
-> drivers and also async_memcpy.c , they only map it and pass mapped
-> physical dma address to driver.
-> 
-> Buffer mapping mean you here is dma_map_xxx ?? Am I correct.
-Yes
+While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
+get console / kernel messages output on the hdmi output of my ARM board / on tty0
 
-> 
-> >
-> >> > why are you calling this here, status check shouldnt do this...
-> >>
-> >> Okay, I will remove it.
-> >>
-> >>
-> >> >> +                     spin_unlock_bh(&chan->lock);
-> >> >> +                     return DMA_IN_PROGRESS;
-> >> > residue here is size of transacation.
-> >>
-> >> We can't calculate here residue size. We don't have any controller
-> >> register which will tell about remaining transaction size.
-> > Okay if you cant calculate residue why do we have this fn?
-> 
-> So basically case here for me is completion of dma descriptor
-> submitted to hw is not same as order of submission to hw.
-> So scenario coming in multithread running :e.g. let's assume we have
-> submitted two descriptors first has cookie 1001 and second has 1002,
-> now 1002 is completed first, so updated last_completed_cookie as 1002
-> but not yer checked for dma_tx_status, and then first cookie completes
-> and update last_completed_cookie as 1001, now second transaction check
-> for tx_status and it get DMA_IN_PROGRESS, because
-> last_completed_cookie(1001) is less than second transaction's
-> cookie(1002).
-> 
-> Due to this issue I am traversing that transaction in pending list and
-> running list, if not there means we are done.
-> 
-> Does this make sense??
-That only convinces me that there is something not so correct.
+This is caused by:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
 
-To help me understand pls let me know if below is fine:
-- for a physical channel, do you submit multiple transactions?
-- if yes, how does DMA deal with multiple transactions, how does it schedule
-  them?
+Reverting this commit fixes this for me.
 
--- 
-~Vinod
+What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
+happens before the tty0 registers stopping tty0 from becoming part of the console list
+since there already is a preferred console at that time.
+
+This is an undesirable behavior change caused by the commit in question, on boards
+where there is both video output, and a serial console configured through stdout-path
+we want to have console output on both as we do not know which of the 2 will actually
+be hooked up by the user.
+
+Regards,
+
+Hans
