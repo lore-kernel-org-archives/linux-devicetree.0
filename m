@@ -1,76 +1,122 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 3/6] Documentation: DT: Document twl4030-madc-battery bindings
-Date: Mon, 16 Mar 2015 22:37:38 +0100
-Message-ID: <B8616E57-51B5-446E-87D5-9C3EC9B5F1C9@goldelico.com>
-References: <1423088075-10025-1-git-send-email-marek@goldelico.com> <1423088075-10025-4-git-send-email-marek@goldelico.com> <20150316210532.GA11441@amd> <CAAfyv34vnRY=TAyx4+7s1SW7rVE7CFh9z+OOcCsbCx63y9aVog@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAAfyv34vnRY=TAyx4+7s1SW7rVE7CFh9z+OOcCsbCx63y9aVog@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>, Belisko Marek <marek.belisko@gmail.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH V3 0/5] MIPS: Initial IMG Pistachio SoC support
+Date: Mon, 16 Mar 2015 14:43:06 -0700
+Message-ID: <1426542191-6883-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Andrew Bresticker <abrestic@chromium.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
+This series adds basic support for the Imagination Technologies Pistachio
+SoC.  Pistachio will boot using device-tree only.  v4.0-rc1 already includes
+support for several of the peripherals on Pistachio, including MMC, SPI,
+I2C, DMA, watchdog timer, PWM, and IR.  Clock and pinctrl support for
+Pistachio is coming soon, as well as an initial device-tree and support
+for USB and ethernet.
 
-Am 16.03.2015 um 22:20 schrieb Belisko Marek <marek.belisko@gmail.com>:
+Patches 1 and 2 are cleanups in preparation for adding Pistachio support,
+with patch 1 having been posted by Kevin late last year [1].  Patch 3
+documents Pistachio's required device-tree properties/nodes and its boot
+protocol.  Patch 4 adds support for Pistachio itself and finally patch 5
+adds a defconfig for Pistachio.
 
-> On Mon, Mar 16, 2015 at 10:05 PM, Pavel Machek <pavel@ucw.cz> wrote:
->> On Wed 2015-02-04 23:14:32, Marek Belisko wrote:
->>> Signed-off-by: Marek Belisko <marek@goldelico.com>
->>> ---
->>> .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
->>> 1 file changed, 43 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->>> 
->>> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->>> new file mode 100644
->>> index 0000000..bb3580c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->>> @@ -0,0 +1,43 @@
->>> +twl4030_madc_battery
->>> +
->>> +Required properties:
->>> + - compatible : "ti,twl4030-madc-battery"
->>> + - capacity-uah : battery capacity in uAh
->> 
->> Could we make it capacity-uAh ?
-> This name was suggested by Mark Rutland [1] and naming convention
-> should be all lowercase. There exists already bindings
-> without uppercase (e.g. ti,bb-uamp) so I would keep it consistent.
->> 
->>> + - volt-to-capacity-charging-map : list of voltage(mV):level(%) values
->>> +     for charging calibration (see example)
->>> + - volt-to-capacity-discharging-map : list of voltage(mV):level(%) values
->>> +     for discharging calibration (see example)
->> 
->> Would "mV-to-capacity..." be more accurate? Also, would it make sense
-> Again maybe mv but it can be added also later.
->> to introduce coefficients for temperature and discharge rate?
-> What do you mean? Nothing like that is used in current driver why do
-> we need to add it?
+Boot tested on an IMG Pistachio BuB ("bring-up board") and build tested
+for all other affected platforms.  Based on v4.0-rc4.  A tree with these
+changes is available at [2].
 
-Temperature calibration should have already been done in the underlaying twl4030 iio driver.
+Changes from v2:
+ - Addressed review comments from James
+Changes from v1:
+ - Switched to MIPS UHI hand-off protocol
 
-Discharge rate is the real current flow reported in uA. Also reported by iio.
+Cc: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Cc: James Hartley <james.hartley@imgtec.com>
+Cc: James Hogan <james.hogan@imgtec.com>
 
->> 
->> Thanks,
->>                                                                        Pavel
->> --
->> (english) http://www.livejournal.com/~pavelmachek
->> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-> 
-> [1] - http://lists.openwall.net/linux-kernel/2014/10/09/104
-> 
-> BR,
-> 
-> marek
-> 
+[1] http://patchwork.linux-mips.org/patch/8837/
+[2] https://github.com/abrestic/linux/tree/pistachio-platform-v3
 
-BR,
-Nikolaus
+Andrew Bresticker (3):
+  MIPS: Allow platforms to specify the decompressor load address
+  MIPS: Document Pistachio boot protocol and device-tree bindings
+  MIPS: Add support for the IMG Pistachio SoC
 
+Govindraj Raja (1):
+  MIPS: pistachio: Add an initial defconfig
 
+Kevin Cernekee (1):
+  MIPS: Create a common <asm/mach-generic/war.h>
+
+ .../devicetree/bindings/mips/img/pistachio.txt     |  42 +++
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  |  27 ++
+ arch/mips/boot/compressed/Makefile                 |   6 +-
+ arch/mips/configs/pistachio_defconfig              | 336 +++++++++++++++++++++
+ arch/mips/include/asm/mach-ar7/war.h               |  24 --
+ arch/mips/include/asm/mach-ath25/war.h             |  25 --
+ arch/mips/include/asm/mach-ath79/war.h             |  24 --
+ arch/mips/include/asm/mach-au1x00/war.h            |  24 --
+ arch/mips/include/asm/mach-bcm3384/war.h           |  24 --
+ arch/mips/include/asm/mach-bcm47xx/war.h           |  24 --
+ arch/mips/include/asm/mach-bcm63xx/war.h           |  24 --
+ arch/mips/include/asm/mach-cobalt/war.h            |  24 --
+ arch/mips/include/asm/mach-dec/war.h               |  24 --
+ arch/mips/include/asm/mach-emma2rh/war.h           |  24 --
+ arch/mips/include/asm/mach-generic/war.h           |  24 ++
+ arch/mips/include/asm/mach-jazz/war.h              |  24 --
+ arch/mips/include/asm/mach-jz4740/war.h            |  24 --
+ arch/mips/include/asm/mach-lantiq/war.h            |  23 --
+ arch/mips/include/asm/mach-lasat/war.h             |  24 --
+ arch/mips/include/asm/mach-loongson/war.h          |  24 --
+ arch/mips/include/asm/mach-loongson1/war.h         |  24 --
+ arch/mips/include/asm/mach-netlogic/war.h          |  25 --
+ arch/mips/include/asm/mach-paravirt/war.h          |  25 --
+ arch/mips/include/asm/mach-pistachio/gpio.h        |  21 ++
+ arch/mips/include/asm/mach-pistachio/irq.h         |  18 ++
+ arch/mips/include/asm/mach-pnx833x/war.h           |  24 --
+ arch/mips/include/asm/mach-ralink/war.h            |  24 --
+ arch/mips/include/asm/mach-tx39xx/war.h            |  24 --
+ arch/mips/include/asm/mach-vr41xx/war.h            |  24 --
+ arch/mips/jz4740/Platform                          |   1 +
+ arch/mips/pistachio/Makefile                       |   1 +
+ arch/mips/pistachio/Platform                       |   8 +
+ arch/mips/pistachio/init.c                         | 131 ++++++++
+ arch/mips/pistachio/irq.c                          |  28 ++
+ arch/mips/pistachio/time.c                         |  52 ++++
+ 36 files changed, 694 insertions(+), 532 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/img/pistachio.txt
+ create mode 100644 arch/mips/configs/pistachio_defconfig
+ delete mode 100644 arch/mips/include/asm/mach-ar7/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ath25/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ath79/war.h
+ delete mode 100644 arch/mips/include/asm/mach-au1x00/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm3384/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm47xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm63xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-cobalt/war.h
+ delete mode 100644 arch/mips/include/asm/mach-dec/war.h
+ delete mode 100644 arch/mips/include/asm/mach-emma2rh/war.h
+ create mode 100644 arch/mips/include/asm/mach-generic/war.h
+ delete mode 100644 arch/mips/include/asm/mach-jazz/war.h
+ delete mode 100644 arch/mips/include/asm/mach-jz4740/war.h
+ delete mode 100644 arch/mips/include/asm/mach-lantiq/war.h
+ delete mode 100644 arch/mips/include/asm/mach-lasat/war.h
+ delete mode 100644 arch/mips/include/asm/mach-loongson/war.h
+ delete mode 100644 arch/mips/include/asm/mach-loongson1/war.h
+ delete mode 100644 arch/mips/include/asm/mach-netlogic/war.h
+ delete mode 100644 arch/mips/include/asm/mach-paravirt/war.h
+ create mode 100644 arch/mips/include/asm/mach-pistachio/gpio.h
+ create mode 100644 arch/mips/include/asm/mach-pistachio/irq.h
+ delete mode 100644 arch/mips/include/asm/mach-pnx833x/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ralink/war.h
+ delete mode 100644 arch/mips/include/asm/mach-tx39xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-vr41xx/war.h
+ create mode 100644 arch/mips/pistachio/Makefile
+ create mode 100644 arch/mips/pistachio/Platform
+ create mode 100644 arch/mips/pistachio/init.c
+ create mode 100644 arch/mips/pistachio/irq.c
+ create mode 100644 arch/mips/pistachio/time.c
+
+-- 
+2.2.0.rc0.207.ga3a616c
