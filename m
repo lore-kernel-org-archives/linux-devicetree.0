@@ -1,56 +1,86 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Mon, 16 Mar 2015 14:23:03 -0400
-Message-ID: <55071F87.1050706@hurleysoftware.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
+Date: Mon, 16 Mar 2015 19:25:37 +0100
+Message-ID: <20150316182536.GA16829@earth>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+ <20150313151301.GJ5264@atomide.com>
+ <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
+ <2070859.WcMooC33YH@wuerfel>
+ <20150316152939.GP5264@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55071D0C.2050700-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150316152939.GP5264@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Eliad Peller <eliad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Sekhar Nori <nsekhar@ti.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Luciano Coelho <luca@coelho.fi>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/16/2015 02:12 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 16-03-15 18:49, Peter Hurley wrote:
->> Hi Hans,
->>
->> On 03/16/2015 12:31 PM, Hans de Goede wrote:
->>> Hi All,
->>>
->>> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
->>> get console / kernel messages output on the hdmi output of my ARM board / on tty0
->>>
->>> This is caused by:
->>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
->>>
->>> Reverting this commit fixes this for me.
->>>
->>> What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
->>> happens before the tty0 registers stopping tty0 from becoming part of the console list
->>> since there already is a preferred console at that time.
->>>
->>> This is an undesirable behavior change caused by the commit in question, on boards
->>> where there is both video output, and a serial console configured through stdout-path
->>> we want to have console output on both as we do not know which of the 2 will actually
->>> be hooked up by the user.
->>
->> I don't see this as a regression, but rather a misconfiguration.
-> 
-> As said it is an undesirable behavior change, whether you want to call that a regression
-> or not is not all that interesting. Fixing it however is important, as e.g. Fedora
-> ARM images rely on this behavior, both "regular" arm as well as aarch64.
 
-What dts file is causing this problem?
-Is it in mainline or distributed only in Fedora?
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Mar 16, 2015 at 08:29:39AM -0700, Tony Lindgren wrote:
+> * Arnd Bergmann <arnd@arndb.de> [150315 05:10]:
+> > On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
+> > > yeah, i missed it :/
+> > >=20
+> > > looks like there's no platform that defines platform data for it.
+> > > i'll replace the dev_get_platdata() with a function that only parses
+> > > the clock-frequency properties (the irq is taken in this case from the
+> > > spi_device).
+> > > (or maybe i should just drop it, as no one actually uses it?)
+> >=20
+> > I don't think we should drop the driver, but dropping the platform_data
+> > support sounds reasonable. New users of this driver should all be using
+> > DT, and if there is a good reason to use platform_data, it's easily
+> > put back.
+>=20
+> Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
+> all in dts mode, but n900 still also boots in legacy mode. It seems the
+> board-rx51-peripherals.c only passes the power_gpio though, so that
+> should be easy to keep around.
+>=20
+> We should keep things still working for n900 in legacy mode until the
+> pending regressions with device tree based booting have been cleared
+> for at least one merge cycle. I believe the last pending issues is the
+> support for ATAG_REVISION in device tree mode as posted by Pali.
+
+mh by migrating to newer gpiod interface platform data is no longer
+needed (instead the boardfile would need a gpiod_lookup_table). That
+way all of the dirty code is in the board file and will be removed
+once the time comes. See for example rx51_fmtx_gpios_table.
+
+Note: This is independent of wl12xx changes, since N900 uses wl1251.
+
+-- Sebastian
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVByAdAAoJENju1/PIO/qaugAQAJyd6jAeZYJsxqG5J2qkey+g
+Zb+K1Q2yw9koChF9MMersXC4Rz8ClOZLKGx9/WWBZ8HAAlYzIrmMAP0BjCjgfswC
+8u/a56VK5smNiG+9hdromtnBRKh9zpKel/nOpC+0CNP21rJevvxA4c7S2lc+ACM8
+4bCvayP3PBaklZq8xSEM2NrqGNv6g2TR5+yooUMbbDbG6fg8oH/2IzkcP0StrKT7
+uXSUYufCDMAUllhhM4R5bt82pOJDtmx4AB0WikVmU3ldfgC3Uf8J6g9STr8lwPX2
+v19xi+8cnSE2nQtvjig35QDYiVONIP+IRoWVNezLHS3fQpMxdwSFeeQPRWN6nDvc
+n3ta2C2v213hB/mIxJ8ODhXx2b/MpraaFKjn0ml8ye0T8u/PU6ZbciTgLxHZoKtV
+JXwf0VvmO0+Qy2tTt5Zf/S0XNGx7zAojbRT6o/s8fxDpta/rsIPE5W+A8mtrlKhf
+Am4vFn3N4fCwmDIEhSpQXEe/W2hLWlmIlm0jMjg2ANVJiYNabx/kBPDb2BUhNJ+b
+wTrLv9V0L2+3Iizx6HvMKT1dt9CPf+av3vdq+wJrNBYh099pNTgbHl5j+etq09Oe
+73bSwtA7S1vuiGdif08AqYgKZJohoGUH1WguJ5g8klQ0G58mPrtKSYxCA8c5RGWQ
+Utgjq73IYFFZw0R5qCon
+=X9g0
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
