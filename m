@@ -1,66 +1,64 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
-Date: Mon, 16 Mar 2015 11:24:26 -0700
-Message-ID: <20150316182426.GW5264@atomide.com>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
- <20150313151301.GJ5264@atomide.com>
- <CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
- <2070859.WcMooC33YH@wuerfel>
- <20150316152939.GP5264@atomide.com>
- <20150316182536.GA16829@earth>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Mon, 16 Mar 2015 19:35:41 +0100
+Message-ID: <5507227D.8020408@redhat.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150316182536.GA16829@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <55071F87.1050706@hurleysoftware.com>
+Sender: stable-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org> [150316 11:26]:
-> Hi,
-> 
-> On Mon, Mar 16, 2015 at 08:29:39AM -0700, Tony Lindgren wrote:
-> > * Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [150315 05:10]:
-> > > On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
-> > > > yeah, i missed it :/
-> > > > 
-> > > > looks like there's no platform that defines platform data for it.
-> > > > i'll replace the dev_get_platdata() with a function that only parses
-> > > > the clock-frequency properties (the irq is taken in this case from the
-> > > > spi_device).
-> > > > (or maybe i should just drop it, as no one actually uses it?)
-> > > 
-> > > I don't think we should drop the driver, but dropping the platform_data
-> > > support sounds reasonable. New users of this driver should all be using
-> > > DT, and if there is a good reason to use platform_data, it's easily
-> > > put back.
-> > 
-> > Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
-> > all in dts mode, but n900 still also boots in legacy mode. It seems the
-> > board-rx51-peripherals.c only passes the power_gpio though, so that
-> > should be easy to keep around.
-> > 
-> > We should keep things still working for n900 in legacy mode until the
-> > pending regressions with device tree based booting have been cleared
-> > for at least one merge cycle. I believe the last pending issues is the
-> > support for ATAG_REVISION in device tree mode as posted by Pali.
-> 
-> mh by migrating to newer gpiod interface platform data is no longer
-> needed (instead the boardfile would need a gpiod_lookup_table). That
-> way all of the dirty code is in the board file and will be removed
-> once the time comes. See for example rx51_fmtx_gpios_table.
-> 
-> Note: This is independent of wl12xx changes, since N900 uses wl1251.
+Hi,
 
-Oh sorry yes sounds like that's different platform data then. In that
-case I see no reasons to drop the platform data for wl12xx.
+On 16-03-15 19:23, Peter Hurley wrote:
+> On 03/16/2015 02:12 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 16-03-15 18:49, Peter Hurley wrote:
+>>> Hi Hans,
+>>>
+>>> On 03/16/2015 12:31 PM, Hans de Goede wrote:
+>>>> Hi All,
+>>>>
+>>>> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
+>>>> get console / kernel messages output on the hdmi output of my ARM board / on tty0
+>>>>
+>>>> This is caused by:
+>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
+>>>>
+>>>> Reverting this commit fixes this for me.
+>>>>
+>>>> What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
+>>>> happens before the tty0 registers stopping tty0 from becoming part of the console list
+>>>> since there already is a preferred console at that time.
+>>>>
+>>>> This is an undesirable behavior change caused by the commit in question, on boards
+>>>> where there is both video output, and a serial console configured through stdout-path
+>>>> we want to have console output on both as we do not know which of the 2 will actually
+>>>> be hooked up by the user.
+>>>
+>>> I don't see this as a regression, but rather a misconfiguration.
+>>
+>> As said it is an undesirable behavior change, whether you want to call that a regression
+>> or not is not all that interesting. Fixing it however is important, as e.g. Fedora
+>> ARM images rely on this behavior, both "regular" arm as well as aarch64.
+>
+> What dts file is causing this problem?
+> Is it in mainline or distributed only in Fedora?
+
+This is on allwinner (sunxi) devices such as Allwinner A10 or A20 based boards, currently
+the setting of stdout-path on these boards is done by (an unmodified) upstream u-boot.
+
+To be clear about my aarch64 remark, that relates to the behavior of aarch64 acpi using
+machines, those will also output to both a serial tty and tty0 when the acpi equivalent
+of stdout-path is present and points to a serial tty.
 
 Regards,
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
