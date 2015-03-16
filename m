@@ -1,250 +1,116 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 10/18] omap3isp: Move the syscon register out of the ISP register maps
-Date: Mon, 16 Mar 2015 02:19:04 +0200
-Message-ID: <5344778.cfsY6SCB4g@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-11-git-send-email-sakari.ailus@iki.fi>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v6 0/9] arm64: Add the support for new Exynos5433 SoC
+Date: Mon, 16 Mar 2015 14:04:38 +0900
+Message-ID: <55066466.90502@samsung.com>
+References: <1425952655-21654-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-11-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1425952655-21654-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: kgene@kernel.org, mark.rutland@arm.com, marc.zyngier@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Dear Kukjin,
 
-On Saturday 07 March 2015 23:41:07 Sakari Ailus wrote:
-> The syscon register isn't part of the ISP, use it through the syscom driver
-> regmap instead. The syscom block is considered to be from 343x on ISP
-> revision 2.0 whereas 15.0 is assumed to have 3630 syscon.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-> ---
->  arch/arm/boot/dts/omap3.dtsi                |    2 +-
->  arch/arm/mach-omap2/devices.c               |   10 ----------
->  drivers/media/platform/omap3isp/isp.c       |   19 +++++++++++++++----
->  drivers/media/platform/omap3isp/isp.h       |   19 +++++++++++++++++--
->  drivers/media/platform/omap3isp/ispcsiphy.c |   20 +++++++++-----------
+Gently Ping!
 
-I've noticed another issue, you need a "select MFD_SYSCON" in Kconfig.
+Best Regards
+Chanwoo Choi
 
->  5 files changed, 42 insertions(+), 28 deletions(-)
+On 03/10/2015 10:57 AM, Chanwoo Choi wrote:
+> This patchset adds new 64-bit Exynos5433 Samsung SoC which contains quad
+> Cortex-A57 and quad Cortex-A53. It is desigend with the 20nm low power process.
 > 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 01b7111..fe0b293 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -183,7 +183,7 @@
+> Depends on:
+> - This patch-set has the dependency on following four patch-set.
+> The Exynos5433 clock controller patch-set[1][2] was merged by Michael Turquette.
+> and Exynos5433's pinctrl patch[3] was merged by Linus Walleij. Exynos5433's TMU
+> patch[4] will be refactoring without feature update.
 > 
->  		omap3_scm_general: tisyscon@48002270 {
->  			compatible = "syscon";
-> -			reg = <0x48002270 0x2f0>;
-> +			reg = <0x48002270 0x2f4>;
->  		};
+> [1] [PATCH v5 00/13] clk: samsung: Add the support for exynos5433 clocks
+> - https://lkml.org/lkml/2015/2/2/368
+> [2] [PATCH v3 0/9] clk: samsung: Add clocks for remaining domains of Exynos5433
+> - https://lkml.org/lkml/2015/2/2/784
+> [3] [PATCH v4] pinctrl: exynos: Add support for Exynos5433
+> - https://lkml.org/lkml/2015/2/23/728
+> [4] [PATCH 0/3] thermal: exynos: Add support for Exynos5433 TMU
+> - https://lkml.org/lkml/2015/2/26/234
 > 
->  		pbias_regulator: pbias_regulator {
-> diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
-> index 1afb50d..e945957 100644
-> --- a/arch/arm/mach-omap2/devices.c
-> +++ b/arch/arm/mach-omap2/devices.c
-> @@ -143,16 +143,6 @@ static struct resource omap3isp_resources[] = {
->  		.flags		= IORESOURCE_MEM,
->  	},
->  	{
-> -		.start		= OMAP343X_CTRL_BASE + OMAP343X_CONTROL_CSIRXFE,
-> -		.end		= OMAP343X_CTRL_BASE + OMAP343X_CONTROL_CSIRXFE + 3,
-> -		.flags		= IORESOURCE_MEM,
-> -	},
-> -	{
-> -		.start		= OMAP343X_CTRL_BASE + OMAP3630_CONTROL_CAMERA_PHY_CTRL,
-> -		.end		= OMAP343X_CTRL_BASE + OMAP3630_CONTROL_CAMERA_PHY_CTRL + 3,
-> -		.flags		= IORESOURCE_MEM,
-> -	},
-> -	{
->  		.start		= 24 + OMAP_INTC_START,
->  		.flags		= IORESOURCE_IRQ,
->  	}
-> diff --git a/drivers/media/platform/omap3isp/isp.c
-> b/drivers/media/platform/omap3isp/isp.c index 68d7edfc..4ff4bbd 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -51,6 +51,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/omap-iommu.h>
->  #include <linux/platform_device.h>
-> @@ -94,8 +95,9 @@ static const struct isp_res_mapping isp_res_maps[] = {
->  		       1 << OMAP3_ISP_IOMEM_RESZ |
->  		       1 << OMAP3_ISP_IOMEM_SBL |
->  		       1 << OMAP3_ISP_IOMEM_CSI2A_REGS1 |
-> -		       1 << OMAP3_ISP_IOMEM_CSIPHY2 |
-> -		       1 << OMAP3_ISP_IOMEM_343X_CONTROL_CSIRXFE,
-> +		       1 << OMAP3_ISP_IOMEM_CSIPHY2,
-> +		.syscon_offset = 0xdc,
-> +		.phy_type = ISP_PHY_TYPE_3430,
->  	},
->  	{
->  		.isp_rev = ISP_REVISION_15_0,
-> @@ -112,8 +114,9 @@ static const struct isp_res_mapping isp_res_maps[] = {
->  		       1 << OMAP3_ISP_IOMEM_CSI2A_REGS2 |
->  		       1 << OMAP3_ISP_IOMEM_CSI2C_REGS1 |
->  		       1 << OMAP3_ISP_IOMEM_CSIPHY1 |
-> -		       1 << OMAP3_ISP_IOMEM_CSI2C_REGS2 |
-> -		       1 << OMAP3_ISP_IOMEM_3630_CONTROL_CAMERA_PHY_CTRL,
-> +		       1 << OMAP3_ISP_IOMEM_CSI2C_REGS2,
-> +		.syscon_offset = 0x2f0,
-> +		.phy_type = ISP_PHY_TYPE_3630,
->  	},
->  };
+> Changelog:
 > 
-> @@ -2352,6 +2355,14 @@ static int isp_probe(struct platform_device *pdev)
->  		}
->  	}
+> Changes from v5:
+> (https://lkml.org/lkml/2015/3/5/27)
+> - Move 'timer' dt node under root node by Mark Rutland's comment
 > 
-> +	isp->syscon = syscon_regmap_lookup_by_pdevname("syscon.0");
-> +	isp->syscon_offset = isp_res_maps[m].syscon_offset;
-> +	isp->phy_type = isp_res_maps[m].phy_type;
-> +	if (IS_ERR(isp->syscon)) {
-> +		ret = PTR_ERR(isp->syscon);
-> +		goto error_isp;
-> +	}
-> +
->  	/* IOMMU */
->  	ret = isp_attach_iommu(isp);
->  	if (ret < 0) {
-> diff --git a/drivers/media/platform/omap3isp/isp.h
-> b/drivers/media/platform/omap3isp/isp.h index 9535524..03d2129 100644
-> --- a/drivers/media/platform/omap3isp/isp.h
-> +++ b/drivers/media/platform/omap3isp/isp.h
-> @@ -59,8 +59,6 @@ enum isp_mem_resources {
->  	OMAP3_ISP_IOMEM_CSI2C_REGS1,
->  	OMAP3_ISP_IOMEM_CSIPHY1,
->  	OMAP3_ISP_IOMEM_CSI2C_REGS2,
-> -	OMAP3_ISP_IOMEM_343X_CONTROL_CSIRXFE,
-> -	OMAP3_ISP_IOMEM_3630_CONTROL_CAMERA_PHY_CTRL,
->  	OMAP3_ISP_IOMEM_LAST
->  };
+> Changes from v4:
+> (https://lkml.org/lkml/2015/2/24/2)
+> - Rebased it on Linux 4.0-rc2
+> - Remove CONFIG_ARCH_EXYNOS5433 configuration by Arnd Bergmann's comment
+> - Move 'aliases' dt node from SoC dtsi to board dts file by Arnd Bergmann's comment
+> - Add Exynos5433 TMU patches which got the Lukasz Majewski's reviewed message
 > 
-> @@ -93,14 +91,25 @@ enum isp_subclk_resource {
->  /* ISP2P: OMAP 36xx */
->  #define ISP_REVISION_15_0		0xF0
+> Changes from v3:
+> (https://lkml.org/lkml/2015/2/12/65)
+> - Rebased it on Linux 4.0-rc1.
+> - Remove ARM_GIC and ARM_AMBA dependency because CONFIG_ARM64 already included them.
 > 
-> +#define ISP_PHY_TYPE_3430		0
-> +#define ISP_PHY_TYPE_3630		1
-> +
-> +struct regmap;
-> +
->  /*
->   * struct isp_res_mapping - Map ISP io resources to ISP revision.
->   * @isp_rev: ISP_REVISION_x_x
->   * @map: bitmap for enum isp_mem_resources
-> + * @syscon_offset: offset of the syscon register for 343x / 3630
-> + *	    (CONTROL_CSIRXFE / CONTROL_CAMERA_PHY_CTRL, respectively)
-> + *	    from the syscon base address
-> + * @phy_type: ISP_PHY_TYPE_{3430,3630}
->   */
->  struct isp_res_mapping {
->  	u32 isp_rev;
->  	u32 map;
-> +	u32 syscon_offset;
-> +	u32 phy_type;
->  };
+> Changes from v2:
+> (https://lkml.org/lkml/2014/12/2/134)
+> : Fix the range of GICC memory map (0x1000 -> 0x2000)
+> : Fix address space of 'range' property under 'soc' node
+> : Add ADMA / I2S dt node for sound playback/capture
+> - Select ARM_AMBA/ARM_GIC/HAVE_S3C_RTC for Exynos5433 in arch/arm64/Kconfig
+> - Send separate patch-set for Exynos5433 clock controller[1][2] and pinctrl[3]
 > 
->  /*
-> @@ -140,6 +149,9 @@ struct isp_xclk {
->   *             regions.
->   * @mmio_hist_base_phys: Physical L4 bus address for ISP hist block
-> register *			 region.
-> + * @syscon: Regmap for the syscon register space
-> + * @syscon_offset: Offset of the CSIPHY control register in syscon
-> + * @phy_type: ISP_PHY_TYPE_{3430,3630}
->   * @mapping: IOMMU mapping
->   * @stat_lock: Spinlock for handling statistics
->   * @isp_mutex: Mutex for serializing requests to ISP.
-> @@ -176,6 +188,9 @@ struct isp_device {
+> Changes from v1:
+> (https://lkml.org/lkml/2014/11/27/92)
+> - Merge two patches (patch2, patch3) to solve incomplete description
+> - Exynos5433 Clock driver
+>  : Fix wrong register and code clean by using space instead of tab
+>  : Add CLK_IGNORE_UNUSED flag to pclk_sysreg_* clock for accessing system control register
+>  : Remove duplicate definition on the patch for CMU_BUS{0|1|2} domain
+> - Exynos5433 SoC DTS
+>  : Remove un-supported properties of arch_timer
+>  : Remove 'clock-frequency' property from 'cpus' dt node
+>  : Fix interrupt type from edge rising triggering to level high triggering
+>    because Cortex-A53/A57 use level triggering.
+>  : Fix defult address-size/size-celss from 1 to 2 because Exynos5433 is 64-bit SoC
+>  : Modify 'fin_pll' dt node to remove un-needed and ugly code
+>  : Move 'chipid' dt node under 'soc'
+>  : Use lowercase on all case in exynos5433.dtsi
+>  : Add PSCI dt node for secondary cpu boot
+>  : Add 'samsung,exynos5433' compatible to MCT dt node
+> - Divide pinctrl patch from this patchset
+> - Add new following patches:
+>   : clocksource: exynos_mct: Add the support for Exynos 64bit SoC
+>   : arm64: Enable Exynos5433 SoC in the defconfig
 > 
->  	void __iomem *mmio_base[OMAP3_ISP_IOMEM_LAST];
->  	unsigned long mmio_hist_base_phys;
-> +	struct regmap *syscon;
-> +	u32 syscon_offset;
-> +	u32 phy_type;
+> Chanwoo Choi (6):
+>   arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
+>   arm64: dts: exynos: Add SPI/PDMA dt node for Exynos5433
+>   arm64: dts: exynos: Add PMU dt node for Exynos5433
+>   arm64: dts: exynos: Add RTC and ADC dt node for Exynos5433 SoC
+>   arm64: dts: exynos: Add TMU sensor dt node for Exynos5433 SoC
+>   arm64: dts: exynos: Add thermal-zones dt node for Exynos5433 SoC
 > 
->  	struct dma_iommu_mapping *mapping;
+> Inha Song (2):
+>   arm64: dts: exynos: Add ADMA dt node for Exynos5433 SoC
+>   arm64: dts: exynos: Add I2S dt node for Exynos5433 SoC
 > 
-> diff --git a/drivers/media/platform/omap3isp/ispcsiphy.c
-> b/drivers/media/platform/omap3isp/ispcsiphy.c index 4486e9f..d91dde1 100644
-> --- a/drivers/media/platform/omap3isp/ispcsiphy.c
-> +++ b/drivers/media/platform/omap3isp/ispcsiphy.c
-> @@ -16,6 +16,7 @@
+> Jaehoon Chung (1):
+>   arm64: dts: exynos: Add MSHC dt node for Exynos5433
 > 
->  #include <linux/delay.h>
->  #include <linux/device.h>
-> +#include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
+>  .../devicetree/bindings/arm/samsung/pmu.txt        |   1 +
+>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++
+>  .../dts/exynos/exynos5433-tmu-sensor-conf.dtsi     |  22 +
+>  arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     | 231 +++++
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 931 +++++++++++++++++++++
+>  5 files changed, 1883 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
 > 
->  #include "isp.h"
-> @@ -26,10 +27,11 @@ static void csiphy_routing_cfg_3630(struct isp_csiphy
-> *phy, enum isp_interface_type iface,
->  				    bool ccp2_strobe)
->  {
-> -	u32 reg = isp_reg_readl(
-> -		phy->isp, OMAP3_ISP_IOMEM_3630_CONTROL_CAMERA_PHY_CTRL, 0);
-> +	u32 reg;
->  	u32 shift, mode;
-> 
-> +	regmap_read(phy->isp->syscon, phy->isp->syscon_offset, &reg);
-> +
->  	switch (iface) {
->  	default:
->  	/* Should not happen in practice, but let's keep the compiler happy. */
-> @@ -63,8 +65,7 @@ static void csiphy_routing_cfg_3630(struct isp_csiphy
-> *phy, reg &= ~(OMAP3630_CONTROL_CAMERA_PHY_CTRL_CAMMODE_MASK << shift); reg
-> |= mode << shift;
-> 
-> -	isp_reg_writel(phy->isp, reg,
-> -		       OMAP3_ISP_IOMEM_3630_CONTROL_CAMERA_PHY_CTRL, 0);
-> +	regmap_write(phy->isp->syscon, phy->isp->syscon_offset, reg);
->  }
-> 
->  static void csiphy_routing_cfg_3430(struct isp_csiphy *phy, u32 iface, bool
-> on, @@ -78,16 +79,14 @@ static void csiphy_routing_cfg_3430(struct
-> isp_csiphy *phy, u32 iface, bool on, return;
-> 
->  	if (!on) {
-> -		isp_reg_writel(phy->isp, 0,
-> -			       OMAP3_ISP_IOMEM_343X_CONTROL_CSIRXFE, 0);
-> +		regmap_write(phy->isp->syscon, phy->isp->syscon_offset, 0);
->  		return;
->  	}
-> 
->  	if (ccp2_strobe)
->  		csirxfe |= OMAP343X_CONTROL_CSIRXFE_SELFORM;
-> 
-> -	isp_reg_writel(phy->isp, csirxfe,
-> -		       OMAP3_ISP_IOMEM_343X_CONTROL_CSIRXFE, 0);
-> +	regmap_write(phy->isp->syscon, phy->isp->syscon_offset, csirxfe);
->  }
-> 
->  /*
-> @@ -106,10 +105,9 @@ static void csiphy_routing_cfg(struct isp_csiphy *phy,
->  			       enum isp_interface_type iface, bool on,
->  			       bool ccp2_strobe)
->  {
-> -	if (phy->isp->mmio_base[OMAP3_ISP_IOMEM_3630_CONTROL_CAMERA_PHY_CTRL]
-> -	    && on)
-> +	if (phy->isp->phy_type == ISP_PHY_TYPE_3630 && on)
->  		return csiphy_routing_cfg_3630(phy, iface, ccp2_strobe);
-> -	if (phy->isp->mmio_base[OMAP3_ISP_IOMEM_343X_CONTROL_CSIRXFE])
-> +	if (phy->isp->phy_type == ISP_PHY_TYPE_3430)
->  		return csiphy_routing_cfg_3430(phy, iface, on, ccp2_strobe);
->  }
-
--- 
-Regards,
-
-Laurent Pinchart
