@@ -1,137 +1,71 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC PATCH v15 02/11] ARM: qcom: Add Subsystem Power Manager
- (SPM) driver
-Date: Mon, 16 Mar 2015 14:51:39 -0700
-Message-ID: <5507506B.6060201@codeaurora.org>
-References: <1425914206-22295-1-git-send-email-lina.iyer@linaro.org> <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1425914206-22295-3-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>, daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+From: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+Subject: [PATCH v2] dts: cubox: Map gpio-keys to gpio3 8
+Date: Mon, 16 Mar 2015 15:53:49 -0600
+Message-ID: <1426542829-16786-1-git-send-email-george.joseph@fairview5.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/15 08:16, Lina Iyer wrote:
-> +
-> +static int qcom_idle_enter(int cpu, unsigned long index)
-> +{
-> +	if (!per_cpu(qcom_idle_ops, cpu)[index])
-> +		return -EOPNOTSUPP;
+The Cubox has a recessed button between the HDMI and RJ-45 connectors
+that wasn't mapped in the device tree, so I've mapped it to gpio-keys
+BTN_0.
 
-Is this case still happening?
+Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+Tested-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-> +
-> +	return per_cpu(qcom_idle_ops, cpu)[index](cpu);
-> +}
-> +
-> +const struct of_device_id qcom_idle_state_match[] __initconst = {
-
-static?
-
-> +	{ .compatible = "qcom,idle-state-stby", .data = qcom_cpu_standby },
-> +	{ .compatible = "qcom,idle-state-spc", .data = qcom_cpu_spc },
-> +	{ },
-> +};
-> +
-> +static int __init qcom_cpuidle_init(struct device_node *cpu_node, int cpu)
-> +{
-> +	const struct of_device_id *match_id;
-> +	struct device_node *state_node;
-> +	int i;
-> +	int state_count = 0;
-> +	idle_fn idle_fns[CPUIDLE_STATE_MAX];
-> +	idle_fn *fns;
-> +	cpumask_t mask;
-> +	bool use_scm_power_down = false;
-> +
-> +	for (i = 0; ; i++) {
-> +		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
-> +		if (!state_node)
-> +			break;
-> +
-> +		if (!of_device_is_available(state_node))
-> +			continue;
-> +
-> +		if (i == CPUIDLE_STATE_MAX) {
-> +			pr_warn("%s: cpuidle states reached max possible\n",
-> +					__func__);
-> +			break;
-> +		}
-> +
-> +		match_id = of_match_node(qcom_idle_state_match, state_node);
-> +		if (!match_id)
-> +			return -ENODEV;
-> +
-> +		idle_fns[state_count] = match_id->data;
-> +
-> +		/* Check if any of the states allow power down */
-> +		if (match_id->data == qcom_cpu_spc)
-> +			use_scm_power_down = true;
-> +
-> +		state_count++;
-> +	}
-> +
-> +	if (!state_count) {
-> +		pr_warn("No idle ops founds for cpu %d\n", cpu);
-
-Maybe pr_debug? It's not the end of the world that we don't have cpuidle.
-
-> +		return -ENODEV;
-> +	}
-> +
-> +	fns = kcalloc(state_count, sizeof(*fns), GFP_KERNEL);
-> +	if (!fns)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < state_count; i++)
-> +		fns[i] = idle_fns[i];
-> +
-> +	if (use_scm_power_down) {
-> +		/* We have atlease one power down mode */
-
-s/atlease/at least/
-
-> +		cpumask_clear(&mask);
-> +		cpumask_set_cpu(cpu, &mask);
-> +		qcom_scm_set_warm_boot_addr(cpu_resume, &mask);
-> +	}
-> +
-> +	per_cpu(qcom_idle_ops, cpu) = fns;
-> +
-> +	/*
-> +	 * Condition: cpuidle_driver_register() needs to happen before
-> +	 * cpuidle_register_device().
-> +	 * Check if the SPM probe has happened -
-> +	 * - If SPM probed successfully before arm_idle_init(), then defer
-> +	 *   the registration of cpuidle_device back to arm_idle_init()
-> +	 * - If the SPM probe happens in the future, then let the SPM probe
-> +	 *   register the cpuidle device, return -ENOSYS.
-> +	 */
-> +	return per_cpu(cpu_spm_drv, cpu) ? 0 : -ENOSYS;
-> +}
-> +
-> +struct cpuidle_ops qcom_kpss_v1_cpuidle_ops __initdata = {
-> +	.name = "qcom,kpss-acc-v1",
-> +	.suspend = qcom_idle_enter,
-> +	.init = qcom_cpuidle_init,
-> +};
-> +
-> +struct cpuidle_ops qcom_kpss_v2_cpuidle_ops __initdata = {
-> +	.name = "qcom,kpss-acc-v2",
-> +	.suspend = qcom_idle_enter,
-> +	.init = qcom_cpuidle_init,
-> +};
-> +
->
-
-This just looks weird because of the macro magic in Daniel's series. Any
-reason we can't use the linker instead of doing preprocessor magic so
-that it looks like these structures are actually used?
-
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index 6a524ca..de6e3a8 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -3,6 +3,8 @@
+  */
+ #include "imx6qdl-microsom.dtsi"
+ #include "imx6qdl-microsom-ar8035.dtsi"
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	ir_recv: ir-receiver {
+@@ -66,6 +68,18 @@
+ 		spdif-controller = <&spdif>;
+ 		spdif-out;
+ 	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-0 = <&pinctrl_gpio_key>;
++		pinctrl-names = "default";
++
++		button_0 {
++			label = "Button 0";
++			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++	};
+ };
+ 
+ &hdmi {
+@@ -170,6 +184,12 @@
+ 				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
+ 			>;
+ 		};
++
++		pinctrl_gpio_key: gpio-key {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_DA8__GPIO3_IO08	0x17059
++			>;
++		};
+ 	};
+ };
+ 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
