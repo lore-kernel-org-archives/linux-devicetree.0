@@ -1,35 +1,49 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] PM / Domains: Correct unit address in power-controller example
-Date: Mon, 16 Mar 2015 15:47:12 +0100
-Message-ID: <1426517232-2592-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH] ARM: dts: Update lid and power pin-functions for exynos5250-spring
+Date: Mon, 16 Mar 2015 15:54:50 +0100
+Message-ID: <5506EEBA.6050509@suse.de>
+References: <1424276245-7028-1-git-send-email-afaerber@suse.de> <54E5CDB7.6050002@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54E5CDB7.6050002@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In example 2 of the generic PM domains DT bindings, the unit address of
-the device node representing the child power controller doesn't match
-its "reg" property. Correct it.
+Kukjin,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/power/power_domain.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Am 19.02.2015 um 12:49 schrieb Javier Martinez Canillas:
+> Hello Andreas,
+>=20
+> On 02/18/2015 05:17 PM, Andreas F=C3=A4rber wrote:
+>> Configure the pins in external interrupt mode, as done for Snow in
+>> e5e5c6d14e39 ("ARM: dts: Add power and lid GPIO keys pinctrl for
+>> exynos5250-snow").
+>>
+>> Reported-by: Kukjin Kim <kgene@kernel.org>
+>> Suggested-by: Javier Martinez Canillas <javier.martinez@collabora.co=
+=2Euk>
+>> Fixes: 53dd4138bb0a ("ARM: dts: Add exynos5250-spring device tree")
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>> ---
+>=20
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
+k>
 
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index 0f8ed3710c66e9e2..025b5e7df61c630c 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -48,7 +48,7 @@ Example 2:
- 		#power-domain-cells = <1>;
- 	};
- 
--	child: power-controller@12340000 {
-+	child: power-controller@12341000 {
- 		compatible = "foo,power-controller";
- 		reg = <0x12341000 0x1000>;
- 		power-domains = <&parent 0>;
--- 
-1.9.1
+Ping?
 
+Regards,
+Andreas
+
+>=20
+> Best regards,
+> Javier
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmany=
+u,
+Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
