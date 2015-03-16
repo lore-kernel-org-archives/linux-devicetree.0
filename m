@@ -1,49 +1,50 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
-Date: Mon, 16 Mar 2015 15:24:20 +0530
-Message-ID: <CAKohpok1rQFywhgpajomXYu+uc7zmuhVhg0RY4vJzaH2uKNURA@mail.gmail.com>
-References: <cover.1423642246.git.viresh.kumar@linaro.org>
-	<CAKohpokF0_or8aXwzWZ=bUX1Robk8THyqRpKjbaarg9NHufLmw@mail.gmail.com>
+From: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH 6/6] dts: msm8974: Add dma channels for blsp2_i2c1 node
+Date: Mon, 16 Mar 2015 09:55:26 -0000
+Message-ID: <0ac0be987e1d6b8bdfd524f14c83fcb4.squirrel@www.codeaurora.org>
+References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org>
+    <1426268992-19298-7-git-send-email-sricharan@codeaurora.org>
+    <20150313195425.GA16977@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKohpokF0_or8aXwzWZ=bUX1Robk8THyqRpKjbaarg9NHufLmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150313195425.GA16977-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 February 2015 at 10:55, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 11 February 2015 at 13:46, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Now that I have received an verbal Ack from Rob Herring (in a personal
->> conversation) about the bindings, I am showing how the code looks like with
->> these new bindings.
+Hi,
+
+> On Fri, Mar 13, 2015 at 11:19:52PM +0530, Sricharan R wrote:
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>
+> Reviewed-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>
+>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 2 ++
+>>  1 file changed, 2 insertions(+)
 >>
->> Some part is still now done:
+>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> index 3f648ae..1ec7ec5 100644
+>> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> @@ -246,6 +246,8 @@
+>>  			clock-names = "core", "iface";
+>>  			#address-cells = <1>;
+>>  			#size-cells = <0>;
+>> +			dmas = <&blsp2_dma 20>, <&blsp2_dma 21>;
+>> +			dma-names = "bam-tx", "bam-rx";
 >
-> s/now/not
->
->> - Interface for adding new detailed OPPs from platform code instead of DT
->> - Providing cpufreq helpers for the next OPPs
->> - Providing regulator helpers for the target/min/max ranges
->>
->> Please provide feedback on how this looks like..
->
-> Can we have some reviews of the code changes please ?
+> more of a nit, but the bam- is unnecessary.  it's just rx/tx.
 
-Rob/Rafael/Arnd/Nishanth,
+  Ok, will change it.
 
-Reviews please? This had been hanging since a long time, can we get this merged
-in next merge window please?
+Regards,
+ Sricharan
 
-Bindings are already OK'd by Rob (in personal conversation) and its
-all about code
-now. Which can be updated later on as well if we find an issue..
-
-@Rob: Can you please Ack whatever stuff you are okay with ?
-
---
-viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
