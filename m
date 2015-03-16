@@ -1,72 +1,86 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] mtd: nand: add NAND driver for Broadcom STB NAND
- controller
-Date: Mon, 16 Mar 2015 11:55:16 -0700
-Message-ID: <55072714.9080104@gmail.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com> <1425691129-1150-4-git-send-email-computersforpeace@gmail.com>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6] crypto: Add Allwinner Security System crypto accelerator
+Date: Mon, 16 Mar 2015 20:01:18 +0100
+Message-ID: <1426532482-28830-1-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425691129-1150-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBGWRTSUAKGQENCRFRGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/15 17:18, Brian Norris wrote:
-> This core originated in Set-Top Box chips (BCM7xxx) but is used in a
-> variety of other Broadcom chips, including some BCM63xxx, BCM33xx, and
-> iProc/Cygnus. It's been used only on ARM and MIPS SoCs, so restrict it
-> to those architectures.
-> 
-> There are multiple revisions of this core throughout the years, and
-> almost every version broke register compatibility in some small way, but
-> with some effort, this driver is able to support v4.0, v5.0, v6.x, v7.0,
-> and v7.1. It's been tested on v5.0, v6.0, v7.0, and v7.1 recently, so
-> there hopefully are no more lurking inconsistencies.
-> 
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+Hello
 
-Looks good to me, just one nitpick below:
+This is the driver for the Security System included in Allwinner SoC A20.
+The Security System (SS for short) is a hardware cryptographic accelerator that
+support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
+It could be found on others Allwinner SoC: 
+- A10s, A33 and A31 diagram speak about it with precisions (AES/DES/3DES/Md5/SHA1/PRNG)
+- A10 and A13 manual give the same datasheet for SS than A20
+- A23 speak about a security system but without precisions
+- A80 datasheet speak about a security system with more functions
+  (SHA224/SHA256/RSA/CRC) but without precisions
+  But I do not have access on any of those hardware, tests are welcome.
 
-[snip]
+  This driver currently supports:
+  - MD5 and SHA1 hash algorithms
+  - AES block cipher in CBC mode with 128/196/256bits keys.
+  - DES and 3DES block cipher in CBC mode
+  The driver exposes all those algorithms through the kernel cryptographic API.
 
-> +static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
-> +{
-> +	static const unsigned int block_sizes_v6[] = { 8, 16, 128, 256, 512, 1024, 2048, 0 };
-> +	static const unsigned int block_sizes_v4[] = { 16, 128, 8, 512, 256, 1024, 2048, 0 };
-> +	static const unsigned int page_sizes[] = { 512, 2048, 4096, 8192, 0 };
-> +
-> +	ctrl->nand_version = nand_readreg(ctrl, 0) & 0xffff;
-> +
-> +	/* Only support v4.0+? */
-> +	if (ctrl->nand_version < 0x0400)
-> +		return -ENODEV;
+  The driver support only CPU driven (aka poll mode) transfer mode,
+  since the DMA engine of the A20 does not have a mainline driver yet.
 
-It could be nice to have an informative error message here that this is
-either:
+  Changes since v5:
+  - Hash functions now keep partial hash states in sunxi_ss structures
+  - Use of spinlock instead of mutex
+  - Remove the static sunxi_ss structures by using container of
+  - Add export/import functions
+  - replace lots of writel by writesl
+  - replace lots of readl by readsl
 
-- an unknown controller revision (> 7.1)
-- an older controller revision
-- a check against the compatible property, just in case?
+  Changes since v4:
+  - Rework all mutex path
+  - Use ahash_request_ctx() in hash functions
+  - Major rework of hash functions for solving mutex problems
+  - Split sunxi_req_ctx in two since ciphers now use struct sunxi_tfm_ctx
+  - Hash functions now test FIFO space register
 
-[snip]
+  Changes since v3:
+  - Remove all algorithms options from Kconfig, so now only one module is used
+  - Add the sunxi_ss_cipher function to unify mode calculation
+  - Remove the sunxi_cipher_exit empty function
+  - Add some missing mutex_unlock()
+  - Drop PRNG support, I wait for more comment on its results before re-enabling it.
 
-> +		ctrl->cs_offsets = brcmnand_cs_offsets_v71;
-> +	} else {
-> +		ctrl->cs_offsets = brcmnand_cs_offsets;
-> +
-> +		/* pre-v5.0 has a different CS0 offset layout */
-> +		if (ctrl->nand_version <= 0x0500)
-> +			ctrl->cs0_offsets = brcmnand_cs_offsets_cs0;
+  Changes since v2:
+  - Fix Makefile and Kconfig for static kernel.
 
-Based on this check, should the comment should be "pre-v5.0 and v5.0
-have a different CS0 offset layout"?
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  Changes since v1:
+  - annotate ss->base as __iomem
+  - regroup all mutex in the ss_ctx structure
+  - splited driver in 7 modules (core md5 sha1 aes des 3des prng) in sunxi-ss directory
+  - use dev_exit_p() for .remove
+  - added missing CRYPTO_BLKCIPHER dep in Kconfig
+  - use ahash instead of shash
+  - use ablkcipher instead of blkcipher
+  - use crypto_rng_ctx instead of crypto_tfm_ctx
+  - set seed as an u32
+  - drop useless comment decoration
+  - drop useless debug
+  - ss_ctx is now a static pointer and whole structure being allocated
+  - fix the platform_get_resource/devm_ioremap_resource pattern
+  - invert getting die id and configuring clock
+  - set clock value as a const unsigned long
+  - add MODULE_ALIAS
+  - use define names more consistency (SS_xxx)
+  - fix PRNG errors
+  - respell SS to Security System in DT documentation
