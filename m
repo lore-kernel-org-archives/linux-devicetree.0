@@ -1,148 +1,55 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [REGRESSION stable] "of: fix handling of '/' in options for
- of_find_node_by_path()" breaks stdout-path
-Date: Mon, 16 Mar 2015 18:19:57 +0000
-Message-ID: <20150316181957.GJ4278@bivouac.eciton.net>
-References: <5506FC72.80800@redhat.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Mon, 16 Mar 2015 14:23:03 -0400
+Message-ID: <55071F87.1050706@hurleysoftware.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5506FC72.80800-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <55071D0C.2050700-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Mon, Mar 16, 2015 at 04:53:22PM +0100, Hans de Goede wrote:
-> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
-> got any console (neither video output not serial console) on an Allwinner A20 ARM
-> board.
+On 03/16/2015 02:12 PM, Hans de Goede wrote:
+> Hi,
 > 
-> This is caused by:
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=106937e8ccdcf0f4b95fbf0fe9abd42766cade33
+> On 16-03-15 18:49, Peter Hurley wrote:
+>> Hi Hans,
+>>
+>> On 03/16/2015 12:31 PM, Hans de Goede wrote:
+>>> Hi All,
+>>>
+>>> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
+>>> get console / kernel messages output on the hdmi output of my ARM board / on tty0
+>>>
+>>> This is caused by:
+>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
+>>>
+>>> Reverting this commit fixes this for me.
+>>>
+>>> What is happening here is that the "add_preferred_console("stdout-path", 0, NULL);"
+>>> happens before the tty0 registers stopping tty0 from becoming part of the console list
+>>> since there already is a preferred console at that time.
+>>>
+>>> This is an undesirable behavior change caused by the commit in question, on boards
+>>> where there is both video output, and a serial console configured through stdout-path
+>>> we want to have console output on both as we do not know which of the 2 will actually
+>>> be hooked up by the user.
+>>
+>> I don't see this as a regression, but rather a misconfiguration.
 > 
-> Reverting this commit fixes the serial console being gone for me.
+> As said it is an undesirable behavior change, whether you want to call that a regression
+> or not is not all that interesting. Fixing it however is important, as e.g. Fedora
+> ARM images rely on this behavior, both "regular" arm as well as aarch64.
 
-Sorry about that.
- 
-> After this there still is an issue that tty0 no longer is seen as console, where it
-> used to be properly used as console in 3.19, I'll investigate that further and send
-> a separate mail about this.
-> 
-> Greg, this commit has a: "Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.19" please do not apply
-> this commit to stable!
-> 
-> u-boot sets stdout-path to this value on the board in question:
-> "/soc@01c00000/serial@01c28000:115200"
-> 
-> Looking at the first hunk of the patch in question, the problem is obvious:
-> 
-> @@ -714,16 +714,17 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->  const char *path)
->  {
->   struct device_node *child;
-> - int len = strchrnul(path, '/') - path;
-> - int term;
-> + int len;
-> + const char *end;
-> + end = strchr(path, ':');
-> + if (!end)
-> + end = strchrnul(path, '/');
-> +
-> + len = end - path;
->   if (!len)
->    return NULL;
-> - term = strchrnul(path, ':') - path;
-> - if (term < len)
-> - len = term;
-> -
->  __for_each_child_of_node(parent, child) {
->   const char *name = strrchr(child->full_name, '/');
->   if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> 
-> The new code to determine len will match (when starting at root) the name of
-> all child nodes against: "soc@01c00000/serial@01c28000" as it checks for
-> the ":" first and then uses everything before it. Where as the old code
-> would match against: "soc@01c00000" which is the correct thing to do.
-> 
-> The best fix I can come up with is to check for both ":" and "/" and use
-> the earlier one as end to calculate the length. I've not coded this out /
-> tested this due to -ENOTIME. Note that I've also not audited the rest of
-> the patch for similar issues.
-> 
-> I will happily test any patches to fix this.
+What dts file is causing this problem?
+Is it in mainline or distributed only in Fedora?
 
-Can you give this one a try for the first part of your problem?
 
-And if you're happy with that, I can revert the previous version and
-send a new combined fix.
-
-Rob/Grant: am I OK to assume the existence of the phandle-tests
-subnode for my unrelated test?
-
-/
-    Leif
-
->From cbb150ddd277e5fe1c109e6a675f075f0611f71d Mon Sep 17 00:00:00 2001
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Mon, 16 Mar 2015 17:58:22 +0000
-Subject: [PATCH] of: fix regression in of_find_node_opts_by_path()
-
-This fixes a regression for dealing with paths that contain both a ':'
-option separator and a '/' in the path preceding it. And adds a test
-case to prove it.
-
-Fixes: 106937e8ccdc ("of: fix handling of '/' in options for of_find_node_by_path()")
-Reported-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/of/base.c     | 10 ++++------
- drivers/of/unittest.c |  5 +++++
- 2 files changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index adb8764..2ee7265 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -715,13 +715,11 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
- {
- 	struct device_node *child;
- 	int len;
--	const char *end;
-+	const char *p1, *p2;
- 
--	end = strchr(path, ':');
--	if (!end)
--		end = strchrnul(path, '/');
--
--	len = end - path;
-+	p1 = strchrnul(path, ':');
-+	p2 = strchrnul(path, '/');
-+	len = (p1 < p2 ? p1 : p2) - path;
- 	if (!len)
- 		return NULL;
- 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index aba8946..8d94349 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -97,6 +97,11 @@ static void __init of_selftest_find_node_by_name(void)
- 		 "option path test, subcase #1 failed\n");
- 	of_node_put(np);
- 
-+	np = of_find_node_opts_by_path("/testcase-data/phandle-tests:test/option", &options);
-+	selftest(np && !strcmp("test/option", options),
-+		 "option path test, subcase #2 failed\n");
-+	of_node_put(np);
-+
- 	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
- 	selftest(np, "NULL option path test failed\n");
- 	of_node_put(np);
--- 
-2.1.4
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
