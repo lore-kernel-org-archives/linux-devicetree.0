@@ -1,100 +1,35 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v2 2/3] ARM: dts: qcom: Add 8x74 chipset SPMI PMIC's nodes
-Date: Tue, 17 Mar 2015 12:48:34 +0200
-Message-ID: <1426589315-16847-3-git-send-email-iivanov@mm-sol.com>
-References: <1426589315-16847-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426589315-16847-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 1/2] clk: samsung: exynos3250: Add driver for CMU_ISP clock
+ domain
+Date: Tue, 17 Mar 2015 11:52:18 +0100
+Message-ID: <55080762.9080701@samsung.com>
+References: <1425302250-13446-1-git-send-email-b.michalska@samsung.com>
+ <1425302250-13446-2-git-send-email-b.michalska@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1425302250-13446-2-git-send-email-b.michalska@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Beata Michalska <b.michalska@samsung.com>
+Cc: tomasz.figa@gmail.com, mturquette@linaro.org, kgene@kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-PM8841 and PM8941 have 2 SPMI devices per physical package.
-Add their configuration nodes and include them in boards
-which are using 8x74 based chipset.
+On 02/03/15 14:17, Beata Michalska wrote:
+> From: Tomasz Figa <t.figa@samsung.com>
+> 
+> Add clock controller for CMU ISP clock domain on Exynos3250,
+> providing clocks for FIMC-IS subsystem.
+> 
+> [b.michalska:use samsung_cmu_register_one to register
+>  the provider; updated DT binding documentation]
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Reviewed-by: Andy Gross <agross@codeaurora.org>
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
----
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts        |  2 ++
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts |  2 ++
- arch/arm/boot/dts/qcom-pm8841.dtsi                    | 18 ++++++++++++++++++
- arch/arm/boot/dts/qcom-pm8941.dtsi                    | 18 ++++++++++++++++++
- 4 files changed, 40 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-pm8841.dtsi
- create mode 100644 arch/arm/boot/dts/qcom-pm8941.dtsi
+Thanks for moving the initial clocks settings to dts, I've added this
+patch to my tree.
+In future please don't forget to add version information to subsequent
+patch iterations, it helps to ensure the right patch version is being
+applied.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-index 4737049..d484d08 100644
---- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -1,4 +1,6 @@
- #include "qcom-msm8974.dtsi"
-+#include "qcom-pm8841.dtsi"
-+#include "qcom-pm8941.dtsi"
-
- / {
- 	model = "Qualcomm APQ8074 Dragonboard";
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index cccc21b..bd35b06 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -1,4 +1,6 @@
- #include "qcom-msm8974.dtsi"
-+#include "qcom-pm8841.dtsi"
-+#include "qcom-pm8941.dtsi"
-
- / {
- 	model = "Sony Xperia Z1";
-diff --git a/arch/arm/boot/dts/qcom-pm8841.dtsi b/arch/arm/boot/dts/qcom-pm8841.dtsi
-new file mode 100644
-index 0000000..45b5eaf
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-pm8841.dtsi
-@@ -0,0 +1,18 @@
-+#include <dt-bindings/spmi/spmi.h>
-+
-+&spmi_bus {
-+
-+	usid4: pm8841@4 {
-+		compatible = "qcom,pm8841", "qcom,spmi-pmic";
-+		reg = <0x4 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	usid5: pm8841@5 {
-+		compatible = "qcom,pm8841", "qcom,spmi-pmic";
-+		reg = <0x5 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-new file mode 100644
-index 0000000..78069f5
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -0,0 +1,18 @@
-+#include <dt-bindings/spmi/spmi.h>
-+
-+&spmi_bus {
-+
-+	usid0: pm8941@0 {
-+		compatible = "qcom,pm8941", "qcom,spmi-pmic";
-+		reg = <0x0 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	usid1: pm8941@1 {
-+		compatible = "qcom,pm8941", "qcom,spmi-pmic";
-+		reg = <0x1 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
---
-1.9.1
+-- 
+Regards,
+Sylwester
