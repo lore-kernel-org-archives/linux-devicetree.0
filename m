@@ -1,60 +1,67 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [Patch v4 2/2] dmaengine: Add ADM driver
-Date: Tue, 17 Mar 2015 00:04:15 -0500
-Message-ID: <20150317050415.GB28722@qualcomm.com>
-References: <1423719965-8156-1-git-send-email-agross@codeaurora.org>
- <1423719965-8156-3-git-send-email-agross@codeaurora.org>
- <20150313085745.GG32000@intel.com>
- <20150313220627.GB23640@qualcomm.com>
- <11135b79b94477532e57f30b1ea3c715.squirrel@www.codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <11135b79b94477532e57f30b1ea3c715.squirrel@www.codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: sricharan@codeaurora.org
-Cc: Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [Patch v6 0/2] Add Qualcomm ADM dmaengine driver
+Date: Tue, 17 Mar 2015 00:46:10 -0500
+Message-ID: <1426571172-9711-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 08:15:26AM -0000, sricharan@codeaurora.org wrote:
-> Hi,
-> 
-> <snip>
-> >
-> >>
-> >> > +static int adm_get_blksize(unsigned int burst)
-> >> > +{
-> >> > +	int ret;
-> >> > +
-> >> > +	switch (burst) {
-> >> > +	case 16:
-> >> > +		ret = 0;
-> >> > +		break;
-> >> > +	case 32:
-> >> > +		ret = 1;
-> >> > +		break;
-> >> > +	case 64:
-> >> > +		ret = 2;
-> >> > +		break;
-> >> > +	case 128:
-> >> > +		ret = 3;
-> >> > +		break;
-> >> > +	case 192:
-> >> > +		ret = 4;
-> >> > +		break;
-> >> > +	case 256:
-> >> > +		ret = 5;
-> >> > +		break;
-> >> ffs(burst>>4) ?
-> >
-> > that should work nicely.  thanks.
-> >
->   Will not work for 192, 256 ?
+This patch set introduces the dmaengine driver for the Qualcomm Application
+Data Mover (ADM) DMA controller present on MSM8x60, APQ8064, and IPQ8064
+devices.
 
-you are right.  I'll have to separate those out into 2 more cases.  Good catch!
+The initial version of this driver will only support slave DMA operations
+between system memory and peripherals.  Flow control via the CRCI (client rate
+control interface) is supported and can be configured via device tree
+configuration.  Flow control usage is required for some peripheral devices.
+
+Changes from v5:
+  - Fix erroneous adm_get_blksize for values of 192 and 256.
+
+Changes from v4:
+  - Fixed copyright date
+  - Fixed error in EE offsets and usage
+  - Changed namespace for registers and fields to ADM specific naming
+  - Removed alloc_chan function
+  - Removed control function and fixed up terminate_all and slave_config
+  - Reworked descriptor processing code to make it more clean
+  - Moved to use of_dma_xlate_by_chan_id
+  - Fixed other small review comments
+
+Changes from v3:
+  - Remove .owner field
+
+Changes from v2:
+  - Removed extraneous achan variable from xlate function
+  - Reworked crci check in slave_sg function
+  - Added mux field to async_desc structure.
+  - Reworked dma start function to use crci and mux values directly from
+    structure.
+  - Added disable of clocks in probe error paths.
+  - Changed to use #define for fixed number of channels.
+
+Changes since v1:
+  - Fixed various review comments
+  - Fixed some descriptor programming issues.
+  - Added single descriptors to support sub burst length transactions.
+    Selection of single or box descriptors depends on the sg length and burst
+    size.
+  - Removed use of crci in the dmas property.  CRCI is now designated via the
+    slave_config structure and will be stored in slave_id.
+
+Andy Gross (2):
+  dt/bindings: qcom_adm: Fix channel specifiers
+  dmaengine: Add ADM driver
+
+ Documentation/devicetree/bindings/dma/qcom_adm.txt |   16 +-
+ drivers/dma/Kconfig                                |   10 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/qcom_adm.c                             |  900 ++++++++++++++++++++
+ 4 files changed, 917 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/dma/qcom_adm.c
 
 -- 
-Qualcomm Innovation Center, Inc.
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+hosted by The Linux Foundation
