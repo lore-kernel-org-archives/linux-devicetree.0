@@ -1,103 +1,43 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] Documentation: DT: Document twl4030-madc-battery
- bindings
-Date: Tue, 17 Mar 2015 11:37:46 +0100
-Message-ID: <20150317103746.GB3759@amd>
-References: <1423088075-10025-1-git-send-email-marek@goldelico.com>
- <1423088075-10025-4-git-send-email-marek@goldelico.com>
- <20150316210532.GA11441@amd>
- <CAAfyv34vnRY=TAyx4+7s1SW7rVE7CFh9z+OOcCsbCx63y9aVog@mail.gmail.com>
- <20150317084730.GA9761@amd>
- <940EE988-03A4-4B1B-A168-959E367953A6@goldelico.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Tue, 17 Mar 2015 10:38:06 +0000
+Message-ID: <20150317103806.GU8656@n2100.arm.linux.org.uk>
+References: <20150317083221.32662.14647.stgit@baseline>
+ <20150317083221.32662.96822.stgit@baseline>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <940EE988-03A4-4B1B-A168-959E367953A6-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux PM mailing list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <20150317083221.32662.96822.stgit@baseline>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Hiroshi DOYU <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Tue, Mar 17, 2015 at 01:32:21AM -0700, Paul Walmsley wrote:
+>  Required properties:
+>  - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
+> -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
+> -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
+> -  tegra132, or tegra210.
+> -- reg : Should contain 1 register ranges(address and length)
+> +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124, must
+> +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra114
+> +  or tegra124.  For Tegra132, the compatible string must contain
+> +  "nvidia,tegra132-ahb".
+> +
+> +- reg : Should contain 1 register ranges(address and length).  On Tegra20,
+> +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
+> +  address of the IP block must end in 0x04.  On DT files for later chips, the
+> +  actual hardware base address of the IP block should be used.
 
-> >>> to introduce coefficients for temperature and discharge rate?
-> >> What do you mean? Nothing like that is used in current driver why =
-do
-> >> we need to add it?
-> >=20
-> > Well, conversion between Li-ion's voltage and state of charge at 0
-> > current is well known:
->=20
-> We can=E2=80=99t measure at 0 current since the OMAP is driven from b=
-attery
-> and charger and may also draw some mA=E2=80=A6
+You could check that in the driver.  If you can check it in the driver,
+you can also decide to ignore it if it were offset by 0x04 (possibly
+printing a warning.)  That opens up the ability to fix the older Tegra
+DT files going forward while still remaining compatible with existing
+DT files, and avoiding the need for a complex note about this.
 
-Yes, but you know how many mA you are taking just now. So if you knew
-the internal resistance, you could compute the voltage at 0
-current. (And it should also work during charging, as long as you know
-how much current is going in.)
-
-> >    def percent(m, v):
-> >    	u =3D 0.0387-(1.4523*(3.7835-v))
-> >        if u < 0:
-> >            return 0
-> >          return (0.1966+math.sqrt(u))*100
-> >=20
-> > And there's not much to calibrate there, and it should become libra=
-ry
-> > helper function; there's no need to write it to every single dts.
-> >=20
-> > The charge/discharge difference is due to internal battery resistan=
-ce,
-> > and Ohm's law. (Then, you should not need different values for
-> > charging/discharging case.)
->=20
-> Yes, and that also depends on the board and battery type. So you alwa=
-ys
-> need to specify some battery specific coefficient for that in the DT.
-
-Yes, and that coefficient should be internal battery resistance ;-).
-
-> We simply did choose a table, because calculating the right coefficie=
-nts
-> is more complex and getting the table values can easily be done from
-> running one full charge-discharge-charge cycle.
-
-Well.. One set of coefficients would be kind of ok. But you are doing
-two, because it really depends on current, not charge/discharge. So
-why not do it right, for all currents...?
-
-> > With your aproach, you'll get lower percentage when phone is under
-> > load vs. idle. Taking internal resistance into account would give y=
-ou
-> > more precise readings. (Attached, old patch for zaurus shows the
-> > needed computation).
->=20
-> This is why we have a charging and a discharging table to compensate
-> for this effect.
-
-Yes, but there's very different current during "idle" phone and during
-call (for example). So yes, you are compensating for different current
-during charge and discharge, but it is possible to do better.
-
-> > I guess this should go into library somewhere, because many machine=
-s
-> > need similar code.
->=20
-> Is a library easier to maintain and handle than just a set of table
-> values?
-
-I think so, yes, because otherwise you need a set of tables for each
-machine.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
