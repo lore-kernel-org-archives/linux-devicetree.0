@@ -1,77 +1,97 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v6 1/2] dt/bindings: qcom_adm: Fix channel specifiers
-Date: Tue, 17 Mar 2015 00:46:11 -0500
-Message-ID: <1426571172-9711-2-git-send-email-agross@codeaurora.org>
-References: <1426571172-9711-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426571172-9711-1-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v6 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Tue, 17 Mar 2015 00:30:16 -0600
+Message-ID: <1426573821-1937-1-git-send-email-lho@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the crci information from the dma channel property.  At least
-one client device requires using more than one CRCI value for a channel.  This
-does not match the current binding and the crci information needs to be removed.
+This patch adds support for the APM X-Gene SoC EDAC driver for DT.
 
-Instead, the client device will provide this information via other means.
+v6:
+* Rebase to 4.0.0-rc3
+* Add memory scrub stub function and enable ARM64 EDAC support patch
+* Add bit definition defines for L2RTOS registers
+* Remove un-necessary clearing of all L1/L2 software generated registers
+* Remove wrong notification of LSU un-correctable error
+* Change L2 reporting of un-correcable error to correctable error
+* Change clearing of the L2C L2RTO registers
+* Add support for L2 HW version 1 and version 2 or above
+* Add support for L3 HW version 1 and version 2 or above
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
+v5:
+* Rebase to 3.17.rc1 (next)
+* Update binding documentation for additional SoC node binding resource
+* Enable MCU correctable and uncorrectable interrupts if not enabled by
+  firmware
+* Enable top level interrupt only after all MCU registered. Otherwise,
+  error interrupt will never get cleared by the corresponding MCU.
+* Remove clearing of L1 and L2 errors during initialization time. Otherwise,
+  they will not be captured between firmware booting and error configuration.
+* Add capture and clearing SoC register bus errors
+* Add register bus resource to SoC DT node
+
+v4:
+* Fix PMD l1/l2 error reading address due to wrong variable type
+* Fix clearing of software generated and HW errors for l1/l2
+
+v3:
+* Update binding documentation for PMD DT node and exampples
+* Add binding documentation for SoC DT node
+* Change MC, PMD, and L3C driver error injection to use debugfs
+* Add missing IRQ for MC correctable error (code and DT)
+* Use true/false where appropriate instead 1/0
+* Add bit definition for L1 MMUESR register and fully decode this error
+* Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
+* Add check for disabled PMD (code and DT)
+* Switch to edac_printk instead pr_err
+* Some minor comments update
+
+v2:
+* Add EDAC entry in MAINTAINERS for APM EDAC driver
+* Remove the MC scrub patch
+* Remove the word 'Caches' from Kconfig
+* Change all MASK defines to use BIT(x)
+* Update comment or remove them
+* Wrap error injection code around CONFIG_EDAC_DEBUG
+* Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+* Change all function XXX_hw_init to XXX_hw_ctl
+* Fix typo 'activie'
+* Move calling function edac_mc_alloc after resource retrieval
+* Check for NULL on platform_get_resource return if reference directly
+* Add documentation for struct xgene_edac_pmd_ctx
+* Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+  functions
+* Use for loop for configure each CPU of an PMD
+* Replace /2 by >> 1
+* Remove unnecessary comment on edac_device_add_device failure
+* Make mem_err_ip static const
+* Unwind EDAC register correctly if failed
 ---
- Documentation/devicetree/bindings/dma/qcom_adm.txt |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Loc Ho (5):
+  arm64: Enable EDAC on ARM64
+  MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+  Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+    binding
+  edac: Add APM X-Gene SoC EDAC driver
+  arm64: Add APM X-Gene SoC EDAC DTS entries
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_adm.txt b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-index 9bcab91..38d45f8 100644
---- a/Documentation/devicetree/bindings/dma/qcom_adm.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-@@ -4,8 +4,7 @@ Required properties:
- - compatible: must contain "qcom,adm" for IPQ/APQ8064 and MSM8960
- - reg: Address range for DMA registers
- - interrupts: Should contain one interrupt shared by all channels
--- #dma-cells: must be <2>.  First cell denotes the channel number.  Second cell
--  denotes CRCI (client rate control interface) flow control assignment.
-+- #dma-cells: must be <1>.  First cell denotes the channel number.
- - clocks: Should contain the core clock and interface clock.
- - clock-names: Must contain "core" for the core clock and "iface" for the
-   interface clock.
-@@ -22,7 +21,7 @@ Example:
- 			compatible = "qcom,adm";
- 			reg = <0x18300000 0x100000>;
- 			interrupts = <0 170 0>;
--			#dma-cells = <2>;
-+			#dma-cells = <1>;
- 
- 			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
- 			clock-names = "core", "iface";
-@@ -35,15 +34,12 @@ Example:
- 			qcom,ee = <0>;
- 		};
- 
--DMA clients must use the format descripted in the dma.txt file, using a three
-+DMA clients must use the format descripted in the dma.txt file, using a two
- cell specifier for each channel.
- 
--Each dmas request consists of 3 cells:
-+Each dmas request consists of two cells:
-  1. phandle pointing to the DMA controller
-  2. channel number
-- 3. CRCI assignment, if applicable.  If no CRCI flow control is required, use 0.
--    The CRCI is used for flow control.  It identifies the peripheral device that
--    is the source/destination for the transferred data.
- 
- Example:
- 
-@@ -56,7 +52,7 @@ Example:
- 
- 		cs-gpios = <&qcom_pinmux 20 0>;
- 
--		dmas = <&adm_dma 6 9>,
--			<&adm_dma 5 10>;
-+		dmas = <&adm_dma 6>,
-+			<&adm_dma 5>;
- 		dma-names = "rx", "tx";
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   82 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   98 +
+ arch/arm64/include/asm/edac.h                      |   31 +
+ drivers/edac/Kconfig                               |    9 +-
+ drivers/edac/Makefile                              |    1 +
+ drivers/edac/xgene_edac.c                          | 2183 ++++++++++++++++++++
+ 8 files changed, 2412 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+ create mode 100644 arch/arm64/include/asm/edac.h
+ create mode 100644 drivers/edac/xgene_edac.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
