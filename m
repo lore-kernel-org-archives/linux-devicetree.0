@@ -1,56 +1,79 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with
- 'stdout-path'" breaks console on tty0
-Date: Tue, 17 Mar 2015 07:49:23 +0100
-Message-ID: <CAMuHMdXNXJnz8ONH7t1ctSpQ-SNQNJrp+VSpR2yPEG2FKk8qMw@mail.gmail.com>
-References: <55070544.9010908@redhat.com>
-	<550717A0.3060603@hurleysoftware.com>
-	<87r3sowk51.fsf@igel.home>
-	<5507758B.2060000@hurleysoftware.com>
-	<87ioe0wje7.fsf@igel.home>
-	<5507795C.2020009@hurleysoftware.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: kexec fails if OF_UNITTEST=y (was: Re: [PATCH v2] Removes
+ OF_UNITTEST dependency on OF_DYNAMIC config symbol)
+Date: Tue, 17 Mar 2015 07:52:44 +0100
+Message-ID: <CAMuHMdU+DCVNyjd0s4TLz93=3AFGoq_QWvRbg3nCej7a3mX2BA@mail.gmail.com>
+References: <CAMuHMdVb47ogpLe_4iSz-NAxdcASUZ2HzTpxh+ibjcdMtiO-tQ@mail.gmail.com>
+	<CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <5507795C.2020009@hurleysoftware.com>
-Sender: stable-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Andreas Schwab <schwab@linux-m68k.org>, Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 1:46 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
-> On 03/16/2015 08:35 PM, Andreas Schwab wrote:
->> Peter Hurley <peter@hurleysoftware.com> writes:
->>> On 03/16/2015 08:19 PM, Andreas Schwab wrote:
->>>> Peter Hurley <peter@hurleysoftware.com> writes:
->>>>> I don't see this as a regression, but rather a misconfiguration.
->>>>
->>>> It breaks booting on PowerMac.
+Hi Rob,
+
+On Tue, Mar 17, 2015 at 1:25 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Mar 16, 2015 at 5:58 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> On Fri, Jan 23, 2015 at 2:03 PM, Geert Uytterhoeven
+>> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> On Sun, Jan 11, 2015 at 8:19 AM, Gaurav Minocha
+>>> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> This patch intends to remove the unittests dependency on
+>>>> the functions defined in dynamic.c. So, rather than calling
+>>>> of_attach_node defined in dynamic.c, minimal functionality
+>>>> required to attach a new node is re-defined in unittest.c.
+>>>> Also, now after executing the tests the test data is not
+>>>> removed from the device tree so there is no need to call
+>>>> of_detach_node.
 >>>
->>> It doesn't boot?
+>>> Could there be unwanted side effects of not removing the test data?
 >>
->> Yes.
+>> Unfortunately I found a regression introduced by commit 3ce04b4a9fdc30b6
+>> ("Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol").
+>>
+>> If the test data is still present, kexec (kexec-tools 2.0.7 released 24
+>> November 2014, 1:2.0.7-5 in Debian) fails with:
+>>
+>> unrecoverable error: short read
+>> from"/proc/device-tree//testcase-data/large-property-PAGE_SIZEx8"
+>>
+>> Granted, this is a bug in kexec-tools, but I'm reporting it anyway, as it is
+>> a kernel regression with existing userspace.
+>>
+>> I believe this bug was fixed in kexec-tools by commit d1932cd592e2a6aa
+>> ("kexec/fs2dt: Use slurp_file_len to avoid partial read of files"), but I
+>> haven't tested the fix yet.
 >
-> Ok, thanks for the report.
->
-> Can you attach
-> 1) your .dts
+> Is OF_UNITTEST enabled by default in Debian or this is a custom
+> kernel? Perhaps we should require a command line option to actually
+> populate the test data and run the tests?
 
-Note that this is a PowerMac, so there's no DTS, only a real DT passed by
-the Firmware.
+It's not that bad, this is a custom kernel. I just had it still
+enabled by accident.
 
-> Do you have a serial console hooked up?
+I guess making it modular is not that easy?
 
-Most probably, the chosen/stdout-path is provided automatically by the
-firmware, even if no serial console is present. Andreas, is that correct?
+> We just need more tests to slow down the boot enough people will not
+> enable them by default. ;)
+
+Apart from slowing down the boot, most tests don't have side effects.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
