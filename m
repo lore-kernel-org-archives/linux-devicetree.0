@@ -1,61 +1,34 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH] of/irq: Fix of_irq_parse_one() returned error codes
-Date: Wed, 18 Mar 2015 00:21:32 +0200
-Message-ID: <1426630892-30206-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, laurent.pinchart+renesas@ideasonboard.com
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'" breaks console on tty0
+Date: Tue, 17 Mar 2015 23:26:52 +0100
+Message-ID: <87vbhzqmz7.fsf@igel.home>
+References: <55070544.9010908@redhat.com>
+	<550717A0.3060603@hurleysoftware.com> <87r3sowk51.fsf@igel.home>
+	<5507758B.2060000@hurleysoftware.com> <87zj7bquwk.fsf@igel.home>
+	<5508842F.5090209@hurleysoftware.com>
+	<55088B23.8030108@hurleysoftware.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <55088B23.8030108@hurleysoftware.com> (Peter Hurley's message of
+	"Tue, 17 Mar 2015 16:14:27 -0400")
+Sender: stable-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The error code paths that require cleanup use a goto to jump to the
-cleanup code and return an error code. However, the error code variable
-res, which is initialized to -EINVAL when declared, is then overwritten
-with the return value of of_parse_phandle_with_args(), and reused as the
-return code from of_irq_parse_one(). This leads to an undetermined error
-being returned instead of the expected -EINVAL value. Fix it.
+Peter Hurley <peter@hurleysoftware.com> writes:
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- drivers/of/irq.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+> Would you share what the actual prom stdout string value is?
+> (linux,stdout-path is equivalent)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 0d7765807f49..1a7980692f25 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -290,7 +290,7 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
- 	struct device_node *p;
- 	const __be32 *intspec, *tmp, *addr;
- 	u32 intsize, intlen;
--	int i, res = -EINVAL;
-+	int i, res;
- 
- 	pr_debug("of_irq_parse_one: dev=%s, index=%d\n", of_node_full_name(device), index);
- 
-@@ -323,15 +323,19 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
- 
- 	/* Get size of interrupt specifier */
- 	tmp = of_get_property(p, "#interrupt-cells", NULL);
--	if (tmp == NULL)
-+	if (tmp == NULL) {
-+		res = -EINVAL;
- 		goto out;
-+	}
- 	intsize = be32_to_cpu(*tmp);
- 
- 	pr_debug(" intsize=%d intlen=%d\n", intsize, intlen);
- 
- 	/* Check index */
--	if ((index + 1) * intsize > intlen)
-+	if ((index + 1) * intsize > intlen) {
-+		res = -EINVAL;
- 		goto out;
-+	}
- 
- 	/* Copy intspec into irq structure */
- 	intspec += index * intsize;
+You mean the contents of chosen/linux,stdout-path?
+
+"/pci@0,f0000000/NVDA,Parent@10/NVDA,Display-B@1"
+
+Andreas.
+
 -- 
-Regards,
-
-Laurent Pinchart
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
