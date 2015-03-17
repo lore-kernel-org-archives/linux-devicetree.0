@@ -1,59 +1,42 @@
 From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
-Date: Tue, 17 Mar 2015 08:41:03 +0100
-Message-ID: <CAG374jBqtw8sW-ZpMJFQUR0skdh+oX_F120hc90ssAYHzrF15g@mail.gmail.com>
+Date: Tue, 17 Mar 2015 08:49:17 +0100
+Message-ID: <CAG374jCD05qXiMfCZOPFvaxYLgU75CR3Kiryxxxz1CzmgVOsjg@mail.gmail.com>
 References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
 	<1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
-	<582D947C-1229-4DD9-BC82-812D1560C49E@codeaurora.org>
-	<3714853.Vuc23EfWdL@wuerfel>
+	<550718B4.5090406@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <3714853.Vuc23EfWdL@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kumar Gala <galak@codeaurora.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <550718B4.5090406@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Srinivas,
 
-Ok i will try the same way that pci-versatile.c
+Yes, you are right.
 
-Thanks.
+Nevertheless i'll try the Kumar and Arnd 's request to not use DT to do that.
+
+BR
 
 Gabriel
 
-On 16 March 2015 at 21:00, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 16 March 2015 13:00:51 Kumar Gala wrote:
->> On Mar 16, 2015, at 9:20 AM, Gabriel FERNANDEZ <gabriel.fernandez@st=
-=2Ecom> wrote:
->>
->> > ST sti SoCs PCIe IPs are built around DesignWare IP Core.
->> > But in these SoCs PCIe IP doesn't support IO.
->> >
->> > This patch adds the possibility to disable it through
->> > a DT property, by creating an empty IO window and by
->> > removing PCI_COMMAND_IO from the setup register.
->> >
->> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
->> > ---
->> > .../devicetree/bindings/pci/designware-pcie.txt    |  2 ++
->> > drivers/pci/host/pcie-designware.c                 | 24 ++++++++++=
-++++++++++--
->> > drivers/pci/host/pcie-designware.h                 |  1 +
->> > 3 files changed, 25 insertions(+), 2 deletions(-)
->>
->> Why not just update the code such that if the ranges doesn=E2=80=99t=
- have an IO
->> space rather than introducing a new DT property?
+On 16 March 2015 at 18:53, Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 >
-> I suspect we can simplify this now by changing over the designware PC=
-I
-> code from pci_common_init_dev to calling pci_scan_root_bus() in the
-> same way that pci-versatile.c does. This would also clean up some
-> other areas of the driver and let you do proper error handling
-> in the probe.
 >
->         Arnd
+> On 16/03/15 14:20, Gabriel FERNANDEZ wrote:
+>>
+>>   - bus-range: PCI bus numbers covered (it is recommended for new
+>> devicetrees to
+>>     specify this property, to keep backwards compatibility a range of
+>> 0x00-0xff
+>>     is assumed if not present)
+>> +- disable_io_support: set this property for PCIe host controller without
+>> IO
+>> +  port access
+>
+> Shouldn't dt properties use hyphens rather than under scores ?
