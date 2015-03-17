@@ -1,82 +1,44 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] Revert "of: fix handling of '/' in options for of_find_node_by_path()"
-Date: Tue, 17 Mar 2015 16:14:52 +0000
-Message-ID: <1426608893-3739-2-git-send-email-leif.lindholm@linaro.org>
-References: <1426608893-3739-1-git-send-email-leif.lindholm@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426608893-3739-1-git-send-email-leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH 0/5] USB: atmel: rework clock handling
+Date: Tue, 17 Mar 2015 17:15:45 +0100
+Message-ID: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Robert Nelson <robert.nelson@digikey.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 106937e8ccdc
-("of: fix handling of '/' in options for of_find_node_by_path()")
+Hello,
 
-This fix breaks handling of strings containing both ':' and '/'.
+This series reworks clock handling in atmel USB host drivers, and while
+doing so fixes a regression introduced by 3440ef1 (ARM: at91/dt: fix USB
+high-speed clock to select UTMI).
 
-Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Fixes: 106937e8ccdc
----
- drivers/of/base.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+Best Regards,
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index adb8764..3b1aa08 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -714,17 +714,16 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
- 						const char *path)
- {
- 	struct device_node *child;
--	int len;
--	const char *end;
-+	int len = strchrnul(path, '/') - path;
-+	int term;
- 
--	end = strchr(path, ':');
--	if (!end)
--		end = strchrnul(path, '/');
--
--	len = end - path;
- 	if (!len)
- 		return NULL;
- 
-+	term = strchrnul(path, ':') - path;
-+	if (term < len)
-+		len = term;
-+
- 	__for_each_child_of_node(parent, child) {
- 		const char *name = strrchr(child->full_name, '/');
- 		if (WARN(!name, "malformed device_node %s\n", child->full_name))
-@@ -769,12 +768,8 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
- 
- 	/* The path could begin with an alias */
- 	if (*path != '/') {
--		int len;
--		const char *p = separator;
--
--		if (!p)
--			p = strchrnul(path, '/');
--		len = p - path;
-+		char *p = strchrnul(path, '/');
-+		int len = separator ? separator - path : p - path;
- 
- 		/* of_aliases must not be NULL */
- 		if (!of_aliases)
-@@ -799,8 +794,6 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
- 		path++; /* Increment past '/' delimiter */
- 		np = __of_find_node_by_path(np, path);
- 		path = strchrnul(path, '/');
--		if (separator && separator < path)
--			break;
- 	}
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	return np;
+Boris
+
+Boris Brezillon (5):
+  USB: ehci-atmel: rework clk handling
+  USB: host: ohci-at91: remove useless uclk clock
+  USB: atmel: update DT bindings documentation
+  ARM: at91/dt: remove useless uhpck clock references from ehci
+    defintions
+  ARM: at91/dt: remove useless usb clock
+
+ .../devicetree/bindings/usb/atmel-usb.txt          | 25 ++++++++++++++++++
+ arch/arm/boot/dts/at91rm9200.dtsi                  |  4 +--
+ arch/arm/boot/dts/at91sam9260.dtsi                 |  4 +--
+ arch/arm/boot/dts/at91sam9261.dtsi                 |  4 +--
+ arch/arm/boot/dts/at91sam9263.dtsi                 |  4 +--
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |  8 +++---
+ arch/arm/boot/dts/at91sam9n12.dtsi                 |  5 ++--
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |  8 +++---
+ arch/arm/boot/dts/sama5d3.dtsi                     |  9 +++----
+ arch/arm/boot/dts/sama5d4.dtsi                     |  9 +++----
+ drivers/usb/host/ehci-atmel.c                      | 30 +++++++---------------
+ drivers/usb/host/ohci-at91.c                       | 18 +++----------
+ 12 files changed, 63 insertions(+), 65 deletions(-)
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
