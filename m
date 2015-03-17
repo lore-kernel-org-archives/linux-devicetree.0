@@ -1,169 +1,90 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with
- 'stdout-path'" breaks console on tty0
-Date: Tue, 17 Mar 2015 08:30:41 -0500
-Message-ID: <CAL_Jsq+dA3RDbakrkeMY07czs13bFFKCyETEXTzWxf+h1umBPQ@mail.gmail.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com>
- <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com>
- <5507227D.8020408@redhat.com> <55075AFD.7000001@hurleysoftware.com> <5507E3E3.5000001@redhat.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
+Date: Tue, 17 Mar 2015 14:43:45 +0100
+Message-ID: <20150317134345.GG10068@pengutronix.de>
+References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
+ <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
+ <20150316153048.GC10068@pengutronix.de>
+ <1426595474.24415.18.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <5507E3E3.5000001@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426595474.24415.18.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tianping Fang <tianping.fang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 3:20 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
->
->
-> On 16-03-15 23:36, Peter Hurley wrote:
->>
->> On 03/16/2015 02:35 PM, Hans de Goede wrote:
->>>
->>> Hi,
->>>
->>> On 16-03-15 19:23, Peter Hurley wrote:
->>>>
->>>> On 03/16/2015 02:12 PM, Hans de Goede wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 16-03-15 18:49, Peter Hurley wrote:
->>>>>>
->>>>>> Hi Hans,
->>>>>>
->>>>>> On 03/16/2015 12:31 PM, Hans de Goede wrote:
->>>>>>>
->>>>>>> Hi All,
->>>>>>>
->>>>>>> While updating my local working tree to 4.0-rc4 this morning I
->>>>>>> noticed that I no longer
->>>>>>> get console / kernel messages output on the hdmi output of my ARM
->>>>>>> board / on tty0
->>>>>>>
->>>>>>> This is caused by:
->>>>>>>
->>>>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=2fa645cb2703d9b3786d850db815414dfeefa51d
->>>>>>>
->>>>>>> Reverting this commit fixes this for me.
->>>>>>>
->>>>>>> What is happening here is that the
->>>>>>> "add_preferred_console("stdout-path", 0, NULL);"
->>>>>>> happens before the tty0 registers stopping tty0 from becoming part of
->>>>>>> the console list
->>>>>>> since there already is a preferred console at that time.
->>>>>>>
->>>>>>> This is an undesirable behavior change caused by the commit in
->>>>>>> question, on boards
->>>>>>> where there is both video output, and a serial console configured
->>>>>>> through stdout-path
->>>>>>> we want to have console output on both as we do not know which of the
->>>>>>> 2 will actually
->>>>>>> be hooked up by the user.
->>>>>>
->>>>>>
->>>>>> I don't see this as a regression, but rather a misconfiguration.
->>>>>
->>>>>
->>>>> As said it is an undesirable behavior change, whether you want to call
->>>>> that a regression
->>>>> or not is not all that interesting. Fixing it however is important, as
->>>>> e.g. Fedora
->>>>> ARM images rely on this behavior, both "regular" arm as well as
->>>>> aarch64.
->>>>
->>>>
->>>> What dts file is causing this problem?
->>>> Is it in mainline or distributed only in Fedora?
->>>
->>>
->>> This is on allwinner (sunxi) devices such as Allwinner A10 or A20 based
->>> boards, currently
->>> the setting of stdout-path on these boards is done by (an unmodified)
->>> upstream u-boot.
->>
->>
->> You forgot to mention my patch is not very likely to break anything
->> in the wild since _you_ upstreamed the dependency only 3 weeks ago [1].
->
->
-> I contacted Grant Likely a while ago about how to get the same behavior we
-> have on aarch64 (console on both video output/tty0 and a serial tty by
-> default)
-> on devicetree based platforms and he pointed to stdout-path, and then I
-> wrote
-> the patch.
->
-> I did this after talking to several Fedora ARM people about the problems
-> we've with boards
-> where we have both a video output and a serial console, such as on eg also
-> Rasberry Pi-s,
-> and the conclusion was that there is no single way for users to use these
-> boards, so we
-> must show boot messages on both, so that if things fail the user gets a
-> chance to see
-> how / why things fail. And passing a console= argument does not work here,
-> we (the
-> distro) need something which will just work everywhere, and we had that
-> until your
-> patch broke things.
->
->> And what "Fedora ARM images rely on this behavior"?
->
->
-> All of them, Fedora ARM images are generic and use a multi-platform kernel,
-> so any
-> supported board which has a serial console connector + video output needs
-> this to work.
->
-> More specifically the Fedora nightly composes of F-22 which contain u-boot
-> v2015.04-rc3 which contains the sunxi commit I gave *as an example*.
->
->> I don't appreciate the deception.
->
->
-> There is no deception sunxi happens to be the ARM SOC I do a lot of work on,
-> but it
-> is hardly the only user of stdout-path while also having video-output /
-> tty0.
->
-> Note that my initial mail did not mention sunxi at all. You asked for an
-> example, and
-> now providing the example is deception ???
->
-> I can understand that your unhappy to hear that your patch breaks things,
-> but please
-> stop blaming the messenger.
->
-> I've been in your shoes were a kernel patch of mine caused a behavioral
-> changed and
-> people saw that as a regression. In my case it had to escalate to Linus, and
-> Linus
-> ordered the subsys maintainer to revert my patch, before I saw that I was
-> wrong.
-> I had to cool off a bit after that before I realized that Linus was actually
-> right,
-> the no regressions policy we have in the kernel is a very sensible one, and
-> you
-> cannot just go and change behavior people rely on, because that indeed is a
-> REGRESSION.
->
-> TBH I do not understand why we're even arguing here, AFAICT the behavior
-> change
-> is an unwanted side-effect of your patch, so the solution is to rewrite the
-> patch
-> so that we get the same end result (not turning off bootconsole-s too early)
-> without
-> the unwanted side-effect, and you agreed to work on that ?
+Hello Eddie,
 
-I intend to revert this if we don't have a fix soon.
+On Tue, Mar 17, 2015 at 08:31:14PM +0800, Eddie Huang wrote:
+> On Mon, 2015-03-16 at 16:30 +0100, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Jan 28, 2015 at 05:27:56PM +0800, Eddie Huang wrote:
+> > > [...]
+> > > +static u16 rtc_read(struct mt6397_rtc *rtc, u32 offset)
+> > rtc_read is a bad name for a driver. There are already 6 functions =
+with
+> > this name in the kernel. Better use a unique prefix.
+>=20
+> I will use prefix mtk_
+I would prefer a prefix that is unique to the driver. "mtk_" doesn't
+work to distinguish between the rtc and a (say) spi driver. What you
+want here is that if someone reports a bug on any mailinglist with a
+backtrace you are able to immediately see which driver is affected.
 
-I think we just need a flag saying we've enabled the earlycon from
-stdout-path or not and then add the preferred console based on that. I
-assume with "earlycon" only on the command-line, getting console only
-on stdout-path is okay.
+> > > [...]
+> > > +static irqreturn_t rtc_irq_handler_thread(int irq, void *data)
+> > > +{
+> > > +	struct mt6397_rtc *rtc =3D data;
+> > > +	u16 irqsta, irqen;
+> > > +
+> > > +	mutex_lock(&rtc->lock);
+> > > +	irqsta =3D rtc_read(rtc, RTC_IRQ_STA);
+> > Do you really need to lock for a single read access?
+>=20
+> I think this lock is necessary, because other thread may access rtc
+> register at the same time, for example, call mtk_rtc_set_alarm to mod=
+ify
+> alarm time.
+That would be a valid reason if mtk_rtc_set_alarm touched that register
+twice in a single critical section and the handler must not read the
+value of the first write. Otherwise it should be fine, shouldn't it?
 
-Rob
+> > > +static int mtk_rtc_set_time(struct device *dev, struct rtc_time =
+*tm)
+> > > +{
+> > > +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
+> > > +
+> > > +	tm->tm_year -=3D RTC_MIN_YEAR_OFFSET;
+> > > +	tm->tm_mon++;
+> > > +	mutex_lock(&rtc->lock);
+> > > +	rtc_write(rtc, RTC_TC_YEA, tm->tm_year);
+> > > +	rtc_write(rtc, RTC_TC_MTH, tm->tm_mon);
+> > > +	rtc_write(rtc, RTC_TC_DOM, tm->tm_mday);
+> > > +	rtc_write(rtc, RTC_TC_HOU, tm->tm_hour);
+> > > +	rtc_write(rtc, RTC_TC_MIN, tm->tm_min);
+> > > +	rtc_write(rtc, RTC_TC_SEC, tm->tm_sec);
+> > Is this racy? I.e. what happens if RTC_TC_SEC overflows just before=
+ you
+> > write to it but after you wrote RTC_TC_MIN?
+>=20
+> register value will write to hardware after rtc_write_trigger, so the
+> racy condition not exist.
+Ah, it seems the hardware guys did their job. Nice.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
