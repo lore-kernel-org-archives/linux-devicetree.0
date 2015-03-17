@@ -1,112 +1,67 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v5 1/3] of: Add binding for NVIDIA Tegra ACTMON node
-Date: Tue, 17 Mar 2015 10:25:54 +0100
-Message-ID: <CAAObsKBbxrRfqJGN1NH1V3YqMBG_qv1WZnFDZKzuHTake4PZyA@mail.gmail.com>
-References: <1418719298-25314-1-git-send-email-tomeu.vizoso@collabora.com>
- <1418719298-25314-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_JsqLRWLrNHbtOxWMm1MnkuppAL9CJh4BGk2RgyrniFuxo0g@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] ARM: omap2plus_defconfig: Enable EXTCON_GPIO_USB
+Date: Tue, 17 Mar 2015 11:29:45 +0200
+Message-ID: <5507F409.3010903@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-8-git-send-email-rogerq@ti.com> <20150316175355.GS5264@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLRWLrNHbtOxWMm1MnkuppAL9CJh4BGk2RgyrniFuxo0g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Alexandre Courbot <gnurou@gmail.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Arto Merilainen <amerilainen@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150316175355.GS5264-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 January 2015 at 16:16, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, Dec 16, 2014 at 2:41 AM, Tomeu Vizoso
-> <tomeu.vizoso@collabora.com> wrote:
->> This block gathers statistics about various counters and can be configured to
->> fire interrupts when thresholds are crossed.
+On 16/03/15 19:53, Tony Lindgren wrote:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150126 04:19]:
+>> This driver is needed for USB cable type detection on dra7-evm,
+>> dra72-evm and am57xx-beagle-x15.
 >>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> 
+> Applying this into omap-for-v4.1/defconfig. I think it's all
+> queued up after this, please check and repost patches if
+> it's still missing something as I've marked all the extcon
+> related threads as read here now.
+
+Thanks Tony.
+
+We just need to revert the following commit.
+addfcde7c485 ("ARM: dts: dra7x-evm: beagle-x15: Fix USB Host")
+
+I'll send a patch on l-o for that.
+
+cheers,
+-roger
+
+
+> 
+> Regards,
+> 
+> Tony
+> 
 >> ---
+>>  arch/arm/configs/omap2plus_defconfig | 1 +
+>>  1 file changed, 1 insertion(+)
 >>
->> v2:     * Add operating-points property
->> ---
->>  .../devicetree/bindings/arm/tegra/actmon.txt       | 38 ++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/tegra/actmon.txt
+>> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+>> index 667d9d5..7e10e58 100644
+>> --- a/arch/arm/configs/omap2plus_defconfig
+>> +++ b/arch/arm/configs/omap2plus_defconfig
+>> @@ -326,6 +326,7 @@ CONFIG_DMADEVICES=y
+>>  CONFIG_TI_EDMA=y
+>>  CONFIG_DMA_OMAP=y
+>>  CONFIG_EXTCON=y
+>> +CONFIG_EXTCON_USB_GPIO=m
+>>  CONFIG_EXTCON_PALMAS=y
+>>  CONFIG_PWM=y
+>>  CONFIG_PWM_TIECAP=y
+>> -- 
+>> 2.1.0
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/tegra/actmon.txt b/Documentation/devicetree/bindings/arm/tegra/actmon.txt
->> new file mode 100644
->> index 0000000..b4069df
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/tegra/actmon.txt
->> @@ -0,0 +1,38 @@
->> +Tegra124 Activity Monitor driver
->> +
->> +Required properties:
->> +
->> +- compatible: should be "nvidia,tegra124-actmon"
->> +- reg: offset and length of the register set for the device
->> +- interrupts: standard interrupt property
->> +- clocks: Must contain a phandle and clock specifier pair for each entry in clock-names. See ../clock/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +  - actmon
->> +  - emc
->> +- resets: Must contain an entry for each entry in reset-names. See ../reset/reset.txt for details.
->> +- reset-names: Must include the following entries:
->> +  - actmon
->> +- operating-points: Supported operating points. See ../power/opp.txt for details.
->
-> FYI, we are looking to deprecate this and do something more
-> extensible[1]. I'm not saying don't use this, but input on the new one
-> would be helpful. This is also the 2nd bus scaling binding I've
-> reviewed this week (Exynos being the other). I like the simplicity of
-> this, but would like something common even more.
 
-I see, but this one is modelling just the ACTMON IP block, which just
-gathers statistics and can fire interrupts when some thresholds are
-surpassed. Memory bus scaling itself is performed by the EMC driver
-(External memory clock).
-
-> This somewhat seems like it is in the wrong place. Is this for scaling
-> internal buses or DDR? Is it the activity monitor that also does the
-> frequency changes? I would expect the DDR controller to do that and
-> then the OPPs should be part of the DDR controller.
-
-You are right, in the next version I have removed the OPP data from
-the ACTMON node and the driver now uses the CCF API to find out what
-frequencies are supported by the EMC clock.
-
-Thanks,
-
-Tomeu
-
-> Rob
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/308629.html
->
->> +
->> +Example:
->> +       actmon@6000c800 {
->> +               compatible = "nvidia,tegra124-actmon";
->> +               reg = <0x0 0x6000c800 0x0 0x400>;
->> +               interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
->> +               clocks = <&tegra_car TEGRA124_CLK_ACTMON>,
->> +                        <&tegra_car TEGRA124_CLK_EMC>;
->> +               clock-names = "actmon", "emc";
->> +               resets = <&tegra_car 119>;
->> +               reset-names = "actmon";
->> +               operating-points = <
->> +                       /* kHz  uV */
->> +                       102000  800000
->> +                       204000  800000
->> +                       300000  820000
->> +                       396000  850000
->> +                       528000  880000
->> +                       600000  910000
->> +                       792000  980000
->> +                       924000  1010000
->> +               >;
->> +       };
->> --
->> 1.9.3
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
