@@ -1,63 +1,34 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Tue, 17 Mar 2015 01:32:21 -0700
-Message-ID: <20150317083221.32662.96822.stgit@baseline>
-References: <20150317083221.32662.14647.stgit@baseline>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150317083221.32662.14647.stgit@baseline>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH v2 0/3] Add ktd2692 Flash LED driver using LED Flash class
+Date: Tue, 17 Mar 2015 17:45:48 +0900
+Message-ID: <1426581951-11869-1-git-send-email-ingi2.kim@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-For Tegra132 and later chips, we can now use the correct hardware base
-address for the Tegra AHB IP block in the DT data.  Update the DT binding
-documentation to reflect this change.
+This patch adds ktd2692 Flash LED driver with LED Flash class
 
-Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../bindings/arm/tegra/nvidia,tegra20-ahb.txt      |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Change in v2:
+	- Introduction of LED Flash class as Jacek's comment
+	- Supplement of binding documentation
+	- Rename gpio control pin and remove unused pin
+	- Add regulator for the Flash LED
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-index 067c979..7692b4c 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-@@ -2,10 +2,15 @@ NVIDIA Tegra AHB
- 
- Required properties:
- - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
--  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
--  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
--  tegra132, or tegra210.
--- reg : Should contain 1 register ranges(address and length)
-+  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124, must
-+  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra114
-+  or tegra124.  For Tegra132, the compatible string must contain
-+  "nvidia,tegra132-ahb".
-+
-+- reg : Should contain 1 register ranges(address and length).  On Tegra20,
-+  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
-+  address of the IP block must end in 0x04.  On DT files for later chips, the
-+  actual hardware base address of the IP block should be used.
- 
- Example:
- 	ahb: ahb@6000c004 {
+Ingi Kim (3):
+  of: Add vendor prefix for Kinetic technologies
+  leds: ktd2692: add device tree bindings for ktd2692
+  leds: Add ktd2692 flash LED driver
+
+ .../devicetree/bindings/leds/leds-ktd2692.txt      |  37 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/leds/Kconfig                               |   9 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-ktd2692.c                        | 522 +++++++++++++++++++++
+ 5 files changed, 570 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+ create mode 100644 drivers/leds/leds-ktd2692.c
+
+-- 
+2.0.5
