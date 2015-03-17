@@ -1,76 +1,46 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Tue, 17 Mar 2015 10:43:12 -0600
-Message-ID: <550859A0.9090500@wwwdotorg.org>
-References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline>
+From: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Tue, 17 Mar 2015 12:48:58 -0400
+Message-ID: <55085AFA.7070909@redhat.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <5507332B.5020504@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150317083221.32662.96822.stgit@baseline>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Hiroshi DOYU <hdoyu@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5507332B.5020504-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 02:32 AM, Paul Walmsley wrote:
-> For Tegra132 and later chips, we can now use the correct hardware base
-> address for the Tegra AHB IP block in the DT data.  Update the DT binding
-> documentation to reflect this change.
+On 03/16/2015 03:46 PM, Peter Hurley wrote:
+> On 03/16/2015 02:35 PM, Hans de Goede wrote:
+>> To be clear about my aarch64 remark, that relates to the behavior of aarch64 acpi using
+>> machines, those will also output to both a serial tty and tty0 when the acpi equivalent
+>> of stdout-path is present and points to a serial tty.
+> 
+> I already made comments addressing the unsuitability of the license for the
+> aarch64 acpi console;
 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-> index 067c979..7692b4c 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-> @@ -2,10 +2,15 @@ NVIDIA Tegra AHB
->
->   Required properties:
->   - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
-> -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
-> -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
-> -  tegra132, or tegra210.
-> -- reg : Should contain 1 register ranges(address and length)
-> +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124, must
-> +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra114
-> +  or tegra124.  For Tegra132, the compatible string must contain
-> +  "nvidia,tegra132-ahb".
-> +
-> +- reg : Should contain 1 register ranges(address and length).  On Tegra20,
-> +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
-> +  address of the IP block must end in 0x04.  On DT files for later chips, the
-> +  actual hardware base address of the IP block should be used.
+Yes, you did. However, I believe you might have outdated information.
+Have you read the SPCR in the past few months, or are you looking at a
+version prior to update that was made in October of 2014?
 
-A table-based approach rather than prose might make this more legible?
+> the proposed SPCR table format is patented by Microsoft and
+> licensed incompatibly with GPLv2.
 
-- compatible: Must contain the following:
-   Tegra20:  "nvidia,tegra20-ahb"
-   Tegra30:  "nvidia,tegra30-ahb"
-   Tegra114: "nvidia,tegra114-ahb", "nvidia,tegra30-ahb"
-   Tegra124: "nvidia,tegra124-ahb", "nvidia,tegra30-ahb"
-   Tegra132: "nvidia,tegra132-ahb"
-   Tegra210: "nvidia,tegra210-ahb", "nvidia,tegra132-ahb"
+Can you be specific about your concerns? The license has already been
+changed once (I instigated the request that lead to that change to drop
+several pages of terse terms that used to cover the first few pages). I
+have found the Microsoft team extremely responsive and amenable to
+resolving issues, so if you would do us the service of articulating what
+the concern is, I'll reach back out and get that addressed. I have a
+direct line into their server and legal teams to discuss this issue.
 
-With any luck, we can extend that final item for future chips to be:
+Jon.
 
-   Tegra210, TegraNNN:
-             "nvidia,tegra<chip>-ahb", "nvidia,tegra132-ahb"
-
-Perhaps we format the 114/124 entry that way too.
-
-
-As a historical note, I thought this issue might have been caused by the 
-HW lumping together a bunch of vaguely related features into the same 
-address window, with offset 0 being unrelated to AHB. This is certainly 
-the explanation for some other interesting reg value in DT on other HW 
-modules in Tegra. However as best I can tell that isn't the case for 
-this HW module; we just mapped the start of the reg value to the first 
-defined register for some reason rather than aligning it with the entry 
-in the address map. So, this series makes sense to me.
-
-The series,
-Acked-by: Stephen Warren <swarren@nvidia.com>
-
-(it'd be nice if the DT doc was modified as I described above, but not 
-strictly necessary. I like Russell's ideas how to make this more 
-transparent/automatic so old DTs can be converted too).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
