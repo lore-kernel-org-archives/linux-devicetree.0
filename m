@@ -1,132 +1,69 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon
- driver
-Date: Tue, 17 Mar 2015 10:00:41 +0200
-Message-ID: <1426579241.2330.19.camel@linaro.org>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
-	 <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
-	 <54CF4FC7.2050309@ti.com> <1426509149.2330.5.camel@linaro.org>
-	 <5506D675.8010006@ti.com> <1426515811.2330.16.camel@linaro.org>
-	 <55078B0F.1040800@samsung.com> <1426578738.2330.18.camel@linaro.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt/bindings: control CS via standard GPIO operations
+ instead of SPI-HW
+Date: Tue, 17 Mar 2015 09:03:47 +0100
+Message-ID: <5507DFE3.6080900@i2se.com>
+References: <1425487205-5477-1-git-send-email-kernel@martin.sperl.org> <1425487205-5477-2-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426578738.2330.18.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425487205-5477-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Martin,
 
-Fixed spelling error.
+Am 04.03.2015 um 17:40 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> Change the device tree to use cs-gpios for the spi bus master
+> and standard gpio operation instead of relying on the HW with
+> just 2 chip_selects using ALT0.
+>
+> This reassigns the existing CS pins 7(=CS1) and 8(=CS0)
+> as output instead of ALT0 (=SPI HW block controlled) 
+> and adds them in the list of cs-gpios for the spi-bus.
+>
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> ---
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi |    4 ++--
+>  arch/arm/boot/dts/bcm2835.dtsi     |    1 +
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index c706448..f0e36ab 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -20,12 +20,12 @@
+>  	pinctrl-names = "default";
+>  
+>  	gpioout: gpioout {
+> -		brcm,pins = <6>;
+> +		brcm,pins = <6 7 8>;
+>  		brcm,function = <1>; /* GPIO out */
+>  	};
+>  
+>  	alt0: alt0 {
+> -		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
+> +		brcm,pins = <0 1 2 3 4 5 9 10 11 14 15 40 45>;
+>  		brcm,function = <4>; /* alt0 */
+>  	};
 
-On Tue, 2015-03-17 at 09:52 +0200, Ivan T. Ivanov wrote:
-> Hi,
-> 
-> On Tue, 2015-03-17 at 11:01 +0900, Chanwoo Choi wrote:
-> > Hi Ivan,
-> > 
-> > On 03/16/2015 11:23 PM, Ivan T. Ivanov wrote:
-> > > Hi Roger,
-> > > 
-> > > On Mon, 2015-03-16 at 15:11 +0200, Roger Quadros wrote:
-> > > > Hi Ivan,
-> > > > 
-> > > > On 16/03/15 14:32, Ivan T. Ivanov wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On Mon, 2015-02-02 at 12:21 +0200, Roger Quadros wrote:
-> > > > > > This driver observes the USB ID pin connected over a GPIO and
-> > > > > > updates the USB cable extcon states accordingly.
-> > > > > > 
-> > > > > > The existing GPIO extcon driver is not suitable for this purpose
-> > > > > > as it needs to be taught to understand USB cable states and it
-> > > > > > can't handle more than one cable per instance.
-> > > > > > 
-> > > > > > For the USB case we need to handle 2 cable states.
-> > > > > > 1) USB (attach/detach)
-> > > > > > 2) USB-HOST (attach/detach)
-> > > > > > 
-> > > > > > This driver can be easily updated in the future to handle VBUS
-> > > > > > events in case it happens to be available on GPIO for any platform.
-> > > > > > 
-> > > > > > Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> > > > > > ---
-> > > > > > v4:
-> > > > > > - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
-> > > > > > - changed host cable name to "USB-HOST"
-> > > > > 
-> > > > > I am sorry that I am getting a bit little late into this.
-> > > > > 
-> > > > > Isn't supposed that we have to use strings defined in
-> > > > > const char extcon_cable_name[][]?
-> > > > > 
-> > > > > 
-> > > > > > +
-> > > > > > +/* List of detectable cables */
-> > > > > > +enum {
-> > > > > > +       EXTCON_CABLE_USB = 0,
-> > > > > > +       EXTCON_CABLE_USB_HOST,
-> > > > > > +
-> > > > > 
-> > > > > Same here: duplicated with enum extcon_cable_name
-> > > > > 
-> > > > > > +       EXTCON_CABLE_END,
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const char *usb_extcon_cable[] = {
-> > > > > > +       [EXTCON_CABLE_USB] = "USB",
-> > > > > > +       [EXTCON_CABLE_USB_HOST] = "USB-HOST",
-> > > > > > +       NULL,
-> > > > > > +};
-> > > > 
-> > > > I'm not exactly sure how else it is supposed to work if we
-> > > > support only a subset of cables from the global extcon_cable_name[][].
-> > > 
-> > > I don't see issue that we use just 2 events. I think that we can
-> > > reuse  enum extcon_cable_name
-> 
-> Now I see that extcon_dev_register() expect NULL terminated array of
-> pointers, so it will not be possible to use enum extcon_cable_name
-> as index in the above array, sorry.
-> 
-> > >  and strings already defined in
-> > > extcon_cable_name[][] global variable. It is defined extern in
-> > > extcon.h file exactly for this purpose, no?
-> > 
-> > 'extcon_cable_name' global variable is not used on extcon driver directly.
-> > It is just recommended cable name.
-> 
-> Hm, this is what bothers me. How client drivers will know cable name if
-> every provider start using its own naming scheme?
-> 
-> If I write client driver I will use:
-> 
-> extcon_register_interest(obj, name, extcon_cable_name[EXTCON_USB_HOST], nb);
-> 
-> and this will now work with this driver because it define string differently.
-                ^^^
-s/now/not/
+just a note for your next version. I think this patch won't apply
+against for-rpi-next.
 
-> 
-> ... Well, I see that string is changed because your recommendation :-),
-> then lets fix extcon_cable_name strings and not let drivers define its own
-> names.
-> 
-> 
-> > I have plan to use standard cable name for extcon driver instead of that
-> > each extcon driver define the cable name.
-> > 
-> 
-> Sound like a good plan :-)
-> 
-> Regards,
-> Ivan
-> 
-> 
-> 
+It misses that one:
+
+https://git.kernel.org/cgit/linux/kernel/git/rpi/linux-rpi.git/commit/?h=for-rpi-next&id=72a6dbe0ea91e2a9c4357a3b0afbbd7b1f00dc8a
+
+Regards
+Stefan
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
