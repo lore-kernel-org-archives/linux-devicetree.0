@@ -1,152 +1,209 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH_V3 2/3] dma: jz4780: add driver for the Ingenic JZ4780
- DMA controller
-Date: Tue, 17 Mar 2015 18:07:36 +0000
-Message-ID: <55086D68.1000303@imgtec.com>
-References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1424954614-12589-3-git-send-email-Zubair.Kakakhel@imgtec.com> <20150316104646.GM32683@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150316104646.GM32683-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org
+From: Keyur Chudgar <kchudgar@apm.com>
+Subject: [PATCH v1 3/3] drivers: net: xgene: Add second SGMII based 1G interface
+Date: Tue, 17 Mar 2015 11:27:13 -0700
+Message-ID: <1426616833-9671-4-git-send-email-kchudgar@apm.com>
+References: <1426616833-9671-1-git-send-email-kchudgar@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1426616833-9671-1-git-send-email-kchudgar@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, Keyur Chudgar <kchudgar@apm.com>, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+- Added resource initialization based on port-id field
+- Enabled second SGMII 1G interface
 
-Thanks for the review.
+Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+---
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h    |  2 +
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c  | 50 ++++++++++++++++++++---
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h  | 17 ++++++--
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 10 +++--
+ 4 files changed, 67 insertions(+), 12 deletions(-)
 
-On 16/03/15 10:46, Vinod Koul wrote:
-> On Thu, Feb 26, 2015 at 12:43:33PM +0000, Zubair Lutfullah Kakakhel wrote:
->> +/* Per-channel registers. */
->> +#define JZ_DMA_REG_DSA(n)	(0x00 + (n) * 0x20)
->> +#define JZ_DMA_REG_DTA(n)	(0x04 + (n) * 0x20)
->> +#define JZ_DMA_REG_DTC(n)	(0x08 + (n) * 0x20)
->> +#define JZ_DMA_REG_DRT(n)	(0x0c + (n) * 0x20)
->> +#define JZ_DMA_REG_DCS(n)	(0x10 + (n) * 0x20)
->> +#define JZ_DMA_REG_DCM(n)	(0x14 + (n) * 0x20)
->> +#define JZ_DMA_REG_DDA(n)	(0x18 + (n) * 0x20)
->> +#define JZ_DMA_REG_DSD(n)	(0x1c + (n) * 0x20)
-> shouldn't this be a macro rather than copy paste n * 0x20
-> 
-
-Done
-
->> +
->> +#define JZ_DMA_DMAC_DMAE	BIT(0)
->> +#define JZ_DMA_DMAC_AR		BIT(2)
->> +#define JZ_DMA_DMAC_HLT		BIT(3)
->> +#define JZ_DMA_DMAC_FMSC	BIT(31)
->> +
->> +#define JZ_DMA_DRT_AUTO		0x8
-> not consistent in BIT?
-
-Its actually 0x01000. instead of just bit.
-
->> +static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
->> +	struct jz4780_dma_chan *jzchan, unsigned int count,
->> +	enum dma_transaction_type type)
->> +{
->> +	struct jz4780_dma_desc *desc;
->> +
->> +	if (count > JZ_DMA_MAX_DESC)
->> +		return NULL;
->> +
->> +	desc = kzalloc(sizeof(*desc), GFP_ATOMIC);
-> GFP_NOWAIT pls
-> 
->> +	if (!desc)
->> +		return NULL;
->> +
->> +	desc->desc = dma_pool_alloc(jzchan->desc_pool, GFP_ATOMIC,
-> ditto
-> 
-
-Done
-
->> +static uint32_t jz4780_dma_width(enum dma_slave_buswidth width)
->> +{
->> +	switch (width) {
->> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
->> +		return JZ_DMA_WIDTH_8_BIT;
->> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
->> +		return JZ_DMA_WIDTH_16_BIT;
-> these are same as dmaengine defines so should this be:
-> 
-
-These are. The DMA_SLAVE_BUSWIDTH_4_BYTES isn't.
-
-> 	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> 	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> 		return width;
->> +	default:
->> +		return JZ_DMA_WIDTH_32_BIT;
->> +	}
->> +}
->> +
->> +static uint32_t jz4780_dma_transfer_size(unsigned long val, int *ord)
->> +{
->> +	*ord = ffs(val) - 1;
->> +
->> +	/* 8 byte transfer sizes unsupported so fall back on 4. */
-> okay falling back is not a good idea, same applies for default in
-> jz4780_dma_width(). The slave dma parameters are match with devices, so
-> programming something which you dont support, falling back or using defaults
-> is not a good idea
-> 
-
-How bad of an idea is it and what is a better way?
-I see similar stuff in imx-dma and dma-jz4740.
-
-And my jz4740-mmc driver (I add jz4780 support and use it to test this dma driver mainly)
-falls back on defaults after it requests a larger transfer size.
-
->> +	default:
->> +		WARN_ON(1);
->> +		return -1; /* Can never happen. See previous comment */
-> -1?? what happened to kernel error codes?
-> 
-
-Oops.
-
->> +	}
->> +}
->> +
->> +static void jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
->> +	struct jz4780_dma_hwdesc *desc, dma_addr_t addr, size_t len)
->> +{
->> +	struct dma_slave_config *config = &jzchan->config;
->> +	uint32_t width, maxburst, tsz;
->> +	int ord;
->> +
->> +	if (config->direction == DMA_MEM_TO_DEV) {
-> this is a wrong idea, use the direction from the prep_ call
-> 
-Done
-
->> +static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
->> +	dma_cookie_t cookie, struct dma_tx_state *txstate)
->> +{
->> +	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
->> +	struct virt_dma_desc *vdesc;
->> +	enum dma_status status;
->> +	unsigned long flags;
->> +
->> +	status = dma_cookie_status(chan, cookie, txstate);
->> +	if (status == DMA_COMPLETE)
-> or if the txstate is NULL
-> 
-
-Done
-
-> 
-> 
-
-Thanks
-ZubairLK
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
+index ec45f32..d9bc89d6 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
+@@ -97,6 +97,8 @@ enum xgene_enet_rm {
+ #define QCOHERENT		BIT(4)
+ #define RECOMBBUF		BIT(27)
+ 
++#define MAC_OFFSET			0x30
++
+ #define BLOCK_ETH_CSR_OFFSET		0x2000
+ #define BLOCK_ETH_RING_IF_OFFSET	0x9000
+ #define BLOCK_ETH_DIAG_CSR_OFFSET	0xD000
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+index 635a83b..f0cb39d 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+@@ -645,9 +645,11 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
+ 	struct device *dev = ndev_to_dev(ndev);
+ 	struct xgene_enet_desc_ring *rx_ring, *tx_ring, *cp_ring;
+ 	struct xgene_enet_desc_ring *buf_pool = NULL;
+-	u8 cpu_bufnum = 0, eth_bufnum = START_ETH_BUFNUM;
+-	u8 bp_bufnum = START_BP_BUFNUM;
+-	u16 ring_id, ring_num = START_RING_NUM;
++	u8 cpu_bufnum = pdata->cpu_bufnum;
++	u8 eth_bufnum = pdata->eth_bufnum;
++	u8 bp_bufnum = pdata->bp_bufnum;
++	u16 ring_num = pdata->ring_num;
++	u16 ring_id;
+ 	int ret;
+ 
+ 	/* allocate rx descriptor ring */
+@@ -752,6 +754,22 @@ static const struct net_device_ops xgene_ndev_ops = {
+ 	.ndo_set_mac_address = xgene_enet_set_mac_address,
+ };
+ 
++static int xgene_get_port_id(struct device *dev, struct xgene_enet_pdata *pdata)
++{
++	u32 id = 0;
++	int ret;
++
++	ret = device_property_read_u32(dev, "port-id", &id);
++	if (!ret && id > 1) {
++		dev_err(dev, "Incorrect port-id specified\n");
++		return -ENODEV;
++	}
++
++	pdata->port_id = id;
++
++	return 0;
++}
++
+ static int xgene_get_mac_address(struct device *dev,
+ 				 unsigned char *addr)
+ {
+@@ -843,6 +861,10 @@ static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
+ 	}
+ 	pdata->rx_irq = ret;
+ 
++	ret = xgene_get_port_id(dev, pdata);
++	if (ret)
++		return ret;
++
+ 	if (xgene_get_mac_address(dev, ndev->dev_addr) != ETH_ALEN)
+ 		eth_hw_addr_random(ndev);
+ 
+@@ -866,13 +888,13 @@ static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
+ 		pdata->clk = NULL;
+ 	}
+ 
+-	base_addr = pdata->base_addr;
++	base_addr = pdata->base_addr - (pdata->port_id * MAC_OFFSET);
+ 	pdata->eth_csr_addr = base_addr + BLOCK_ETH_CSR_OFFSET;
+ 	pdata->eth_ring_if_addr = base_addr + BLOCK_ETH_RING_IF_OFFSET;
+ 	pdata->eth_diag_csr_addr = base_addr + BLOCK_ETH_DIAG_CSR_OFFSET;
+ 	if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII ||
+ 	    pdata->phy_mode == PHY_INTERFACE_MODE_SGMII) {
+-		pdata->mcx_mac_addr = base_addr + BLOCK_ETH_MAC_OFFSET;
++		pdata->mcx_mac_addr = pdata->base_addr + BLOCK_ETH_MAC_OFFSET;
+ 		pdata->mcx_mac_csr_addr = base_addr + BLOCK_ETH_MAC_CSR_OFFSET;
+ 	} else {
+ 		pdata->mcx_mac_addr = base_addr + BLOCK_AXG_MAC_OFFSET;
+@@ -935,6 +957,24 @@ static void xgene_enet_setup_ops(struct xgene_enet_pdata *pdata)
+ 		pdata->rm = RM0;
+ 		break;
+ 	}
++
++	switch (pdata->port_id) {
++	case 0:
++		pdata->cpu_bufnum = START_CPU_BUFNUM_0;
++		pdata->eth_bufnum = START_ETH_BUFNUM_0;
++		pdata->bp_bufnum = START_BP_BUFNUM_0;
++		pdata->ring_num = START_RING_NUM_0;
++		break;
++	case 1:
++		pdata->cpu_bufnum = START_CPU_BUFNUM_1;
++		pdata->eth_bufnum = START_ETH_BUFNUM_1;
++		pdata->bp_bufnum = START_BP_BUFNUM_1;
++		pdata->ring_num = START_RING_NUM_1;
++		break;
++	default:
++		break;
++	}
++
+ }
+ 
+ static int xgene_enet_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+index c2d465c..b93ed21 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+@@ -41,9 +41,15 @@
+ #define SKB_BUFFER_SIZE		(XGENE_ENET_MAX_MTU - NET_IP_ALIGN)
+ #define NUM_PKT_BUF	64
+ #define NUM_BUFPOOL	32
+-#define START_ETH_BUFNUM	2
+-#define START_BP_BUFNUM		0x22
+-#define START_RING_NUM		8
++
++#define START_CPU_BUFNUM_0	0
++#define START_ETH_BUFNUM_0	2
++#define START_BP_BUFNUM_0	0x22
++#define START_RING_NUM_0	8
++#define START_CPU_BUFNUM_1	12
++#define START_ETH_BUFNUM_1	10
++#define START_BP_BUFNUM_1	0x2A
++#define START_RING_NUM_1	264
+ 
+ #define PHY_POLL_LINK_ON	(10 * HZ)
+ #define PHY_POLL_LINK_OFF	(PHY_POLL_LINK_ON / 5)
+@@ -125,6 +131,11 @@ struct xgene_enet_pdata {
+ 	struct xgene_mac_ops *mac_ops;
+ 	struct xgene_port_ops *port_ops;
+ 	struct delayed_work link_work;
++	u32 port_id;
++	u8 cpu_bufnum;
++	u8 eth_bufnum;
++	u8 bp_bufnum;
++	u16 ring_num;
+ };
+ 
+ struct xgene_indirect_ctl {
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+index f5d4f68..f27fb6f 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+@@ -226,6 +226,7 @@ static u32 xgene_enet_link_status(struct xgene_enet_pdata *p)
+ static void xgene_sgmac_init(struct xgene_enet_pdata *p)
+ {
+ 	u32 data, loop = 10;
++	u32 offset = p->port_id * 4;
+ 
+ 	xgene_sgmac_reset(p);
+ 
+@@ -272,9 +273,9 @@ static void xgene_sgmac_init(struct xgene_enet_pdata *p)
+ 	xgene_enet_wr_csr(p, RSIF_RAM_DBG_REG0_ADDR, 0);
+ 
+ 	/* Bypass traffic gating */
+-	xgene_enet_wr_csr(p, CFG_LINK_AGGR_RESUME_0_ADDR, TX_PORT0);
++	xgene_enet_wr_csr(p, CFG_LINK_AGGR_RESUME_0_ADDR + offset, TX_PORT0);
+ 	xgene_enet_wr_csr(p, CFG_BYPASS_ADDR, RESUME_TX);
+-	xgene_enet_wr_csr(p, SG_RX_DV_GATE_REG_0_ADDR, RESUME_RX0);
++	xgene_enet_wr_csr(p, SG_RX_DV_GATE_REG_0_ADDR + offset, RESUME_RX0);
+ }
+ 
+ static void xgene_sgmac_rxtx(struct xgene_enet_pdata *p, u32 bits, bool set)
+@@ -330,13 +331,14 @@ static void xgene_enet_cle_bypass(struct xgene_enet_pdata *p,
+ 				  u32 dst_ring_num, u16 bufpool_id)
+ {
+ 	u32 data, fpsel;
++	u32 offset = p->port_id * MAC_OFFSET;
+ 
+ 	data = CFG_CLE_BYPASS_EN0;
+-	xgene_enet_wr_csr(p, CLE_BYPASS_REG0_0_ADDR, data);
++	xgene_enet_wr_csr(p, CLE_BYPASS_REG0_0_ADDR + offset, data);
+ 
+ 	fpsel = xgene_enet_ring_bufnum(bufpool_id) - 0x20;
+ 	data = CFG_CLE_DSTQID0(dst_ring_num) | CFG_CLE_FPSEL0(fpsel);
+-	xgene_enet_wr_csr(p, CLE_BYPASS_REG1_0_ADDR, data);
++	xgene_enet_wr_csr(p, CLE_BYPASS_REG1_0_ADDR + offset, data);
+ }
+ 
+ static void xgene_enet_shutdown(struct xgene_enet_pdata *p)
+-- 
+1.9.1
