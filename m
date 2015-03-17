@@ -1,61 +1,90 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v6 8/8] ARM: tegra: Add Tegra124 ACTMON support
-Date: Tue, 17 Mar 2015 10:36:18 +0100
-Message-ID: <1426584991-11110-9-git-send-email-tomeu.vizoso@collabora.com>
-References: <1426584991-11110-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] ARM: dts: dra7x-evm: beagle-x14: Fix USB Peripheral
+Date: Tue, 17 Mar 2015 11:43:51 +0200
+Message-ID: <1426585431-29914-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1426584991-11110-1-git-send-email-tomeu.vizoso@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-tegra@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Mikko Perttunen <mikko.perttunen@kapsi.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: balbi@ti.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device node for the ACTMON block to the Tegra124 device tree.
+Now that we have EXTCON_USB_GPIO queued for v4.1, revert
+commit addfcde7c485 ("ARM: dts: dra7x-evm: beagle-x15: Fix USB Host")
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+On these EVMs, the USB cable state has to be determined via the
+ID pin tied to a GPIO line. We use the gpio-usb-extcon driver
+to read the ID pin and the extcon framework to forward
+the USB cable state information to the USB driver so the
+controller can be configured in the right mode (host/peripheral).
 
+Gets USB peripheral mode to work on this EVM.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
+ arch/arm/boot/dts/am57xx-beagle-x15.dts | 8 ++++++++
+ arch/arm/boot/dts/dra7-evm.dts          | 8 ++++++++
+ arch/arm/boot/dts/dra72-evm.dts         | 8 ++++++++
+ 3 files changed, 24 insertions(+)
 
-v6:	* Remove operating-points property
-
-v2:	* Add operating-points property
----
- arch/arm/boot/dts/tegra124.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index a49e7da..2158aa9 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -215,6 +215,17 @@
- 		reg = <0x0 0x60007000 0x0 0x1000>;
- 	};
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+index bd48dba..170fbf9 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+@@ -548,6 +548,14 @@
+ 	pinctrl-0 = <&usb1_pins>;
+ };
  
-+	actmon@0,6000c800 {
-+		compatible = "nvidia,tegra124-actmon";
-+		reg = <0x0 0x6000c800 0x0 0x400>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA124_CLK_ACTMON>,
-+			 <&tegra_car TEGRA124_CLK_EMC>;
-+		clock-names = "actmon", "emc";
-+		resets = <&tegra_car 119>;
-+		reset-names = "actmon";
-+	};
++&omap_dwc3_1 {
++	extcon = <&extcon_usb1>;
++};
 +
- 	gpio: gpio@0,6000d000 {
- 		compatible = "nvidia,tegra124-gpio", "nvidia,tegra30-gpio";
- 		reg = <0x0 0x6000d000 0x0 0x1000>;
++&omap_dwc3_2 {
++	extcon = <&extcon_usb2>;
++};
++
+ &usb2 {
+ 	dr_mode = "peripheral";
+ };
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index b1bd06c..aa46590 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -541,6 +541,14 @@
+ 	};
+ };
+ 
++&omap_dwc3_1 {
++	extcon = <&extcon_usb1>;
++};
++
++&omap_dwc3_2 {
++	extcon = <&extcon_usb2>;
++};
++
+ &usb1 {
+ 	dr_mode = "peripheral";
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+index daf2811..ce0390f 100644
+--- a/arch/arm/boot/dts/dra72-evm.dts
++++ b/arch/arm/boot/dts/dra72-evm.dts
+@@ -377,6 +377,14 @@
+ 	phy-supply = <&ldo4_reg>;
+ };
+ 
++&omap_dwc3_1 {
++	extcon = <&extcon_usb1>;
++};
++
++&omap_dwc3_2 {
++	extcon = <&extcon_usb2>;
++};
++
+ &usb1 {
+ 	dr_mode = "peripheral";
+ 	pinctrl-names = "default";
 -- 
 2.1.0
+
