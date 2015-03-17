@@ -1,60 +1,70 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [PATCH 4/4] ARM: DT: msm8960: Add ADM device node
-Date: Tue, 17 Mar 2015 16:51:11 -0500
-Message-ID: <1426629071-3541-5-git-send-email-agross@codeaurora.org>
-References: <1426629071-3541-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1426629071-3541-1-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Gross <agross@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH RESEND v6 1/2] leds: tlc591xx: Document binding for the TI 8/16 Channel i2c LED driver
+Date: Tue, 17 Mar 2015 23:08:26 +0100
+Message-ID: <1426630107-25057-2-git-send-email-andrew@lunn.ch>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the ADM DMA on the MSM8960 SOC
+Document the binding for the TLC591xx LED driver.
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Tested-by: Imre Kaloz <kaloz@openwrt.org>
+Cc: Matthew.Fatheree@belkin.com
 ---
- arch/arm/boot/dts/qcom-msm8960.dtsi |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../devicetree/bindings/leds/leds-tlc591xx.txt     | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
 
-diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
-index e1b0d5c..1b7c4c4 100644
---- a/arch/arm/boot/dts/qcom-msm8960.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
-@@ -4,6 +4,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8960.h>
-+#include <dt-bindings/reset/qcom,gcc-msm8960.h>
- #include <dt-bindings/soc/qcom,gsbi.h>
- 
- / {
-@@ -238,5 +239,25 @@
- 				vmmc-supply = <&vsdcc_fixed>;
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+new file mode 100644
+index 000000000000..3bbbf7024411
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+@@ -0,0 +1,40 @@
++LEDs connected to tlc59116 or tlc59108
 +
-+		adm_dma: dma@18320000 {
-+			compatible = "qcom,adm";
-+			reg = <0x18320000 0xE0000>;
-+			interrupts = <GIC_SPI 171 IRQ_TYPE_NONE>;
-+			#dma-cells = <1>;
++Required properties
++- compatible: should be "ti,tlc59116" or "ti,tlc59108"
++- #address-cells: must be 1
++- #size-cells: must be 0
++- reg: typically 0x68
 +
-+			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
-+			clock-names = "core", "iface";
++Each led is represented as a sub-node of the ti,tlc59116.
++See Documentation/devicetree/bindings/leds/common.txt
 +
-+			resets = <&gcc ADM0_RESET>,
-+				 <&gcc ADM0_PBUS_RESET>,
-+				 <&gcc ADM0_C0_RESET>,
-+				 <&gcc ADM0_C1_RESET>,
-+				 <&gcc ADM0_C2_RESET>;
-+			reset-names = "clk", "pbus", "c0", "c1", "c2";
-+			qcom,ee = <1>;
++LED sub-node properties:
++- reg: number of LED line, 0 to 15 or 0 to 7
++- label: (optional) name of LED
++- linux,default-trigger : (optional)
 +
-+			status = "disabled";
-+		};
- 	};
- };
++Examples:
++
++tlc59116@68 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,tlc59116";
++	reg = <0x68>;
++
++	wan@0 {
++		label = "wrt1900ac:amber:wan";
++		reg = <0x0>;
++	};
++
++	2g@2 {
++		label = "wrt1900ac:white:2g";
++		reg = <0x2>;
++	};
++
++	alive@9 {
++		label = "wrt1900ac:green:alive";
++		reg = <0x9>;
++		linux,default_trigger = "heartbeat";
++	};
++};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+2.1.4
