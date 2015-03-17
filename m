@@ -1,32 +1,37 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCHv3 0/5] arm-cci400: PMU monitoring support on ARM64
-Date: Tue, 17 Mar 2015 18:54:49 +0000
-Message-ID: <20150317185449.GF8399@arm.com>
-References: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH 1/5] USB: ehci-atmel: rework clk handling
+Date: Tue, 17 Mar 2015 15:01:07 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1503171459310.1061-100000@iolanthe.rowland.org>
+References: <1426608950-31555-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426000735-14375-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1426608950-31555-2-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nico@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Robert Nelson <robert.nelson@digikey.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 03:18:50PM +0000, Suzuki K. Poulose wrote:
-> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-> 
-> This series enables the PMU monitoring support for CCI400 on ARM64.
-> The existing CCI400 driver code is a mix of PMU driver and the MCPM
-> driver code. The MCPM driver is only used on ARM(32) and contains
-> arm32 assembly and hence can't be built on ARM64. This patch splits
-> the code to
-> 
->  - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
->  - ARM_CCI400_PMU driver
+On Tue, 17 Mar 2015, Boris Brezillon wrote:
 
-If you repost this with acks added and my feedback addressed, then I'm
-happy to put together a branch for arm-soc along with your other CCI PMU
-fix for event validation.
+> The EHCI IP only needs the UTMI/UPLL (uclk) and the peripheral (iclk)
+> clocks to work properly. Remove the useless system clock (fclk).
+> 
+> Avoid calling set_rate on the fixed rate UTMI/IPLL clock and remove
+> useless IS_ENABLED(CONFIG_COMMON_CLK) tests (all at91 platforms have been
+> moved to the CCF).
+> 
+> This patch also fixes a bug introduced by 3440ef1 (ARM: at91/dt: fix USB
+> high-speed clock to select UTMI), which was leaving the usb clock
+> uninitialized and preventing the OHCI driver from setting the usb clock
+> rate to 48MHz.
+> This bug was caused by several things:
+> 1/ usb clock drivers set the CLK_SET_RATE_GATE flag, which means the rate
+>    cannot be changed once the clock is prepared
+> 2/ The EHCI driver was retrieving and preparing/enabling the uhpck
+>    clock which was in turn preparing its parent clock (the usb clock),
+>    thus preventing any rate change because of 1/
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-Will
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
