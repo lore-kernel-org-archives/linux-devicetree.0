@@ -1,54 +1,71 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: atull <atull@opensource.altera.com>
 Subject: Re: [PATCH 2/2] add newhaven lcd tty driver on i2c
-Date: Tue, 17 Mar 2015 22:16:05 +0100
-Message-ID: <20150317211605.GB8441@kroah.com>
+Date: Tue, 17 Mar 2015 16:39:30 -0500
+Message-ID: <alpine.DEB.2.02.1503171638550.21358@linuxheads99>
 References: <1426624607-2832-1-git-send-email-atull@opensource.altera.com>
  <1426624607-2832-3-git-send-email-atull@opensource.altera.com>
+ <20150317211605.GB8441@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/mixed;
+	boundary="8323329-1605024904-1426628386=:21358"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426624607-2832-3-git-send-email-atull@opensource.altera.com>
+In-Reply-To: <20150317211605.GB8441@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 03:36:47PM -0500, Alan Tull wrote:
-> Supports the Newhaven NHD=E2=80=900216K3Z=E2=80=90NSW=E2=80=90BBW 2x1=
-6 LCD module as i2c slave.
-> Devices will show up as /dev/ttyLCD0, etc.
->=20
->  * Backspace is supported to the beginning of the current line.
->     * i.e. printf '\b' > /dev/ttyLCD0
->=20
->  * ESC [ 2 J
->     * erase whole display and reset cursor to home.
->     * i.e. printf '\e[2J' > /dev/ttyLCD0
->=20
->  * ESC [ 2 K
->     * erase current line and set cursor to beginning of line.
->     * i.e. printf '\e[2K' > /dev/ttyLCD0
->=20
->  * CR and LF are supported.
->=20
->  * Vertical scroll when cursor is on bottom line and receive end of l=
-ine.
->=20
-> Default brightness can be set from the device tree/plat data.
->=20
-> Brightness can be set from a sysfs file, for example:
->  * echo 6 > /sys/devices/soc.0/ffc04000.i2c/i2c-0/0-0028/brightness
->=20
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+--8323329-1605024904-1426628386=:21358
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 
-This should use the new fb_tft api instead of trying to look like a tty
-device.  That framework is merged in the staging-next branch of the
-staging.git kernel tree and will show up in 4.1-rc1.  Please port this
-driver to that api and submit a patch for me to take for the staging
-tree so that we don't have one-off devices like this.
+On Tue, 17 Mar 2015, Greg Kroah-Hartman wrote:
 
-thanks,
+> On Tue, Mar 17, 2015 at 03:36:47PM -0500, Alan Tull wrote:
+> > Supports the Newhaven NHD‐0216K3Z‐NSW‐BBW 2x16 LCD module as i2c slave.
+> > Devices will show up as /dev/ttyLCD0, etc.
+> > 
+> >  * Backspace is supported to the beginning of the current line.
+> >     * i.e. printf '\b' > /dev/ttyLCD0
+> > 
+> >  * ESC [ 2 J
+> >     * erase whole display and reset cursor to home.
+> >     * i.e. printf '\e[2J' > /dev/ttyLCD0
+> > 
+> >  * ESC [ 2 K
+> >     * erase current line and set cursor to beginning of line.
+> >     * i.e. printf '\e[2K' > /dev/ttyLCD0
+> > 
+> >  * CR and LF are supported.
+> > 
+> >  * Vertical scroll when cursor is on bottom line and receive end of line.
+> > 
+> > Default brightness can be set from the device tree/plat data.
+> > 
+> > Brightness can be set from a sysfs file, for example:
+> >  * echo 6 > /sys/devices/soc.0/ffc04000.i2c/i2c-0/0-0028/brightness
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> 
+> This should use the new fb_tft api instead of trying to look like a tty
+> device.  That framework is merged in the staging-next branch of the
+> staging.git kernel tree and will show up in 4.1-rc1.  Please port this
+> driver to that api and submit a patch for me to take for the staging
+> tree so that we don't have one-off devices like this.
 
-greg k-h
+Cool! Will do.
+
+Thanks!
+Alan
+
+> 
+> thanks,
+> 
+> greg k-h
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
+--8323329-1605024904-1426628386=:21358--
