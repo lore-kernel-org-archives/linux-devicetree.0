@@ -1,64 +1,38 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Tue, 17 Mar 2015 16:22:08 -0400
-Message-ID: <55088CF0.3050709@hurleysoftware.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <55075AFD.7000001@hurleysoftware.com> <5507E3E3.5000001@redhat.com> <CAL_Jsq+dA3RDbakrkeMY07czs13bFFKCyETEXTzWxf+h1umBPQ@mail.gmail.com> <55082F9F.90909@redhat.com> <55083828.8090705@hurleysoftware.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <55083828.8090705@hurleysoftware.com>
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/5] of: overlay: Assorted fixes
+Date: Tue, 17 Mar 2015 22:30:52 +0200
+Message-ID: <1426624257-23003-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 10:20 AM, Peter Hurley wrote:
-> On 03/17/2015 09:43 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 17-03-15 14:30, Rob Herring wrote:
->>> On Tue, Mar 17, 2015 at 3:20 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> <snip>
->>
->>>> TBH I do not understand why we're even arguing here, AFAICT the behavior
->>>> change
->>>> is an unwanted side-effect of your patch, so the solution is to rewrite the
->>>> patch
->>>> so that we get the same end result (not turning off bootconsole-s too early)
->>>> without
->>>> the unwanted side-effect, and you agreed to work on that ?
->>>
->>> I intend to revert this if we don't have a fix soon.
->>>
->>> I think we just need a flag saying we've enabled the earlycon from
->>> stdout-path or not and then add the preferred console based on that. I
->>> assume with "earlycon" only on the command-line, getting console only
->>> on stdout-path is okay.
->>
->> Yes, if a user explicitly specifies something like "earlycon" on the
->> commandline then not automatically getting console output on tty0 is
->> fine AFAICT. The use case important for me / distros is when no
->> console= (or related) arguments are present on the cmdline at all,
->> then the desired behavior is to have console output on tty0 as well
->> as on any serial console specified with stdout-path.
-> 
-> The issues raised by this patch have nothing to do with earlycon.
-> 
-> 1. PowerPC boot crash - the report with the most troubleshooting info right now
->    implicates some buffer overflow or console mismanagement triggered by simply
->    having defined a preferred console. This needs to be figured out regardless,
->    and this is what I'm working right now.
-> 
-> 2. Hans' use-case was _already broken_ even before this patch; _any_ driver
->    that adds a preferred console before the vt console driver will cause
->    this problem. So again, this needs to be fixed regardless.
+The first patch makes sure that no overlays are being left over from
+the unit tests.
 
-Rob,
+The second puts the overlays as objects in the sysfs in
+/sys/firmware/devicetree/overlays while the next one adds a master
+overlay enable switch (that once is set to disabled can't be re-enabled)
 
-You're right; this patch will need to be reverted. I'll send you a revert.
+The next updates the ABI docs and the final one adds me as the
+maintainer for device tree overlays.
 
-Regards,
-Peter Hurley
+Pantelis Antoniou (5):
+  of: unittest: overlay: Keep track of created overlays
+  of: overlay: kobjectify overlay objects
+  of: overlay: Master enable switch
+  Documentation: ABI: /sys/firmware/devicetree/overlays
+  MAINTAINERS: Pantelis Antoniou device tree overlay maintainer
+
+ .../ABI/testing/sysfs-firmware-devicetree-overlays |   9 ++
+ MAINTAINERS                                        |   9 ++
+ drivers/of/base.c                                  |   5 +
+ drivers/of/of_private.h                            |   9 ++
+ drivers/of/overlay.c                               | 116 ++++++++++++++++++++-
+ drivers/of/unittest.c                              |  62 +++++++++++
+ 6 files changed, 208 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+
+-- 
+1.7.12
