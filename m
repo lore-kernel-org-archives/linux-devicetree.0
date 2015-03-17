@@ -1,122 +1,96 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Tue, 17 Mar 2015 13:47:27 -0400
-Message-ID: <550868AF.8050201@hurleysoftware.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <5507332B.5020504@hurleysoftware.com> <55085AFA.7070909@redhat.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 10/15] serial: stm32-usart: Add STM32 USART Driver
+Date: Tue, 17 Mar 2015 19:56:47 +0200
+Message-ID: <CAHp75Vdf6=z1d5+eYJ+QGTko9kkZf-oPfoWaf8FRoTdqcdWxjw@mail.gmail.com>
+References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
+	<1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
+	<CAHp75Vd7+oLiLLuyocYh95TebtocWrRho6xNjuSUt8fYGp8npg@mail.gmail.com>
+	<CALszF6BWuUYRh+3rWnSQLApkAHA5dQXw=6x6D_evRtb+5B_ukA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <55085AFA.7070909@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Jon Masters <jcm@redhat.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6BWuUYRh+3rWnSQLApkAHA5dQXw=6x6D_evRtb+5B_ukA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem@davemloft>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+On Tue, Mar 17, 2015 at 7:32 PM, Maxime Coquelin
+<mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2015-03-13 15:19 GMT+01:00 Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
 
-On 03/17/2015 12:48 PM, Jon Masters wrote:
-> On 03/16/2015 03:46 PM, Peter Hurley wrote:
->> On 03/16/2015 02:35 PM, Hans de Goede wrote:
->>> To be clear about my aarch64 remark, that relates to the behavior o=
-f aarch64 acpi using
->>> machines, those will also output to both a serial tty and tty0 when=
- the acpi equivalent
->>> of stdout-path is present and points to a serial tty.
+>>> +static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
+>>> +                           struct ktermios *old)
+>>> +{
+>>> +       unsigned int baud;
+>>> +       u32 usardiv, mantissa, fraction;
+>>> +       tcflag_t cflag;
+>>> +       u32 cr1, cr2, cr3;
+>>> +       unsigned long flags;
+>>> +
+>>> +       baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk / 16);
+>>> +       cflag = termios->c_cflag;
+>>> +
+>>> +       spin_lock_irqsave(&port->lock, flags);
+>>> +
+>>> +       /* Stop serial port and reset value */
+>>> +       writel_relaxed(0, port->membase + USART_CR1);
+>>> +
+>>> +       cr1 = USART_CR1_TE | USART_CR1_RE | USART_CR1_UE | USART_CR1_RXNEIE;
+>>> +
+>>> +       if (cflag & CSTOPB)
+>>> +               cr2 = USART_CR2_STOP_2B;
+>>> +
+>>> +       if (cflag & PARENB) {
+>>> +               cr1 |= USART_CR1_PCE;
+>>> +               if ((cflag & CSIZE) == CS8)
+>>> +                       cr1 |= USART_CR1_M;
+>>> +       }
+>>> +
+>>> +       if (cflag & PARODD)
+>>> +               cr1 |= USART_CR1_PS;
+>>> +
+>>> +       if (cflag & CRTSCTS)
+>>> +               cr3 = USART_CR3_RTSE | USART_CR3_CTSE;
+>>> +
+>>> +       usardiv = (port->uartclk * 25) / (baud * 4);
+>>> +       mantissa = (usardiv / 100) << USART_BRR_DIV_M_SHIFT;
+>>> +       fraction = DIV_ROUND_CLOSEST((usardiv % 100) * 16, 100);
+>>> +       if (fraction & ~USART_BRR_DIV_F_MASK) {
+>>> +               fraction = 0;
+>>> +               mantissa += (1 << USART_BRR_DIV_M_SHIFT);
+>>> +       }
 >>
->> I already made comments addressing the unsuitability of the license =
-for the
->> aarch64 acpi console;
->=20
-> Yes, you did. However, I believe you might have outdated information.
-> Have you read the SPCR in the past few months, or are you looking at =
-a
-> version prior to update that was made in October of 2014?
+>> So, it's a fractional divider. right? Could it be then fractional
+>> divider clock in this first place (see
+>> drivers/clk/clk-fractional-divider.c)?
+>>
+>
+> I'm not sure it makes sense to represent this baudrate divider within
+> the UART IP as a clock.
 
-The version of the Serial Port Console Redirection Table specification
-I was referring to is downloadable here:
+You have it already. I mean it should be fractional divider clock.
 
-https://msdn.microsoft.com/en-us/library/windows/hardware/dn639132%28v=3D=
-vs.85%29.aspx
+stm32port->clk = devm_clk_get(&pdev->dev, NULL);
++
++       if (WARN_ON(IS_ERR(stm32port->clk)))
++               return -EINVAL;
++
++       /* ensure that clk rate is correct by enabling the clk */
++       clk_prepare_enable(stm32port->clk);
++       stm32port->port.uartclk = clk_get_rate(stm32port->clk);
 
-That page says Last Updated: October 21, 2014
+> What would be the gain?
 
-The cover page of that downloaded specification has this text:
+Remove custom implementation of the calculations. It will be just one
+line to refresh the baud rate. I think we have a lot of duplicates
+here and there in the kernel. It would be nice not to bring another
+one.
 
-"
-Patent Notice. Microsoft provides you certain patent rights for impleme=
-ntations of this specification under the terms of Microsoft=E2=80=99s C=
-ommunity Promise, available at http://www.microsoft.com/openspecificati=
-ons/en/us/programs/community-promise/default.aspx.=20
-Version 1.02 =E2=80=94 October 9, 2014
-"
-
->> the proposed SPCR table format is patented by Microsoft and
->> licensed incompatibly with GPLv2.
->=20
-> Can you be specific about your concerns? The license has already been
-> changed once (I instigated the request that lead to that change to dr=
-op
-> several pages of terse terms that used to cover the first few pages).=
- I
-> have found the Microsoft team extremely responsive and amenable to
-> resolving issues, so if you would do us the service of articulating w=
-hat
-> the concern is, I'll reach back out and get that addressed. I have a
-> direct line into their server and legal teams to discuss this issue.
-
-Well, I'm deducing somewhat here because the code that would use the
-SPCR table format has not been submitted. So I don't _know_ what licens=
-e(s)
-you intend to submit with.
-
-But assuming you're using some part of the SPCR specification to implem=
-ent
-the aarch64 acpi console, then my concern stems from the incompatibilit=
-y
-between GPL v2 and the Microsoft Community Promise license.
-
-In order for you to submit code to mainline, you (or rather, the submit=
-ter)
-must certify that you have the legal right to do so. That's spelled out
-in Documentation/SubmittingPatches, under 'Developer's Certficate of Or=
-igin 1.1'.
-
-So if you and Microsoft have worked out some deal where Microsoft has
-licensed the SPCR spec to you under GPL v2 terms, then, great! there is=
- no
-problem.
-
-However, if Microsoft is licensing your use of the SPCR specification
-under the Microsoft Community Promise and you intend license your submi=
-ssion
-with the same, then the problem is that the Microsoft Community Promise
-License asserts additional limitations which are not compatible with GP=
-L v2;
-specifically, this text:
-
-[from https://msdn.microsoft.com/en-us/openspecifications/dn646766 ]
-
-"If you file, maintain, or voluntarily participate in a patent infringe=
-ment lawsuit
-against a Microsoft implementation of any Covered Specification, then t=
-his personal
-promise does not apply with respect to any Covered Implementation made =
-or used by you."
-
-
-IOW, if I sue Microsoft for patent infringement ste,ming from their use=
- of
-Microsoft XML Document Object Model Level 1 Standards Support Document
-(which infringes on patents I own), then my embedded aarch64 kernel - w=
-hich
-merely contains your implementation - is no longer covered under the te=
-rms
-of the license.
-
-Now, that's just my interpretation of it; maybe the Linux Foundation's
-lawyers would see it differently.
-
-Regards,
-Peter Hurley
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
