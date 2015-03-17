@@ -1,98 +1,87 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH 3/5] USB: atmel: update DT bindings documentation
-Date: Tue, 17 Mar 2015 17:15:48 +0100
-Message-ID: <1426608950-31555-4-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 2/5] USB: host: ohci-at91: remove useless uclk clock
+Date: Tue, 17 Mar 2015 17:15:47 +0100
+Message-ID: <1426608950-31555-3-git-send-email-boris.brezillon@free-electrons.com>
 References: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Robert Nelson <robert.nelson@digikey.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@free-electrons.com>, Douglas Gilbert <dgilbert@interlog.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Robert Nelson <robert.nelson@digikey.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the missing clocks, clock-names, reg and interrupts
-properties.
+Now that the system clock driver is forwarding set_rate request to the
+parent clock, we can safely call clk_set_rate on the system clk and get
+rid of the uclk field.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 ---
- .../devicetree/bindings/usb/atmel-usb.txt          | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/usb/host/ohci-at91.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-index e180d56..1be8d7a 100644
---- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-@@ -5,6 +5,13 @@ OHCI
- Required properties:
-  - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
-    used in host mode.
-+ - reg: Address and length of the register set for the device
-+ - interrupts: Should contain ehci interrupt
-+ - clocks: Should reference the peripheral, host and system clocks
-+ - clock-names: Should contains two strings
-+		"ohci_clk" for the peripheral clock
-+		"hclk" for the host clock
-+		"uhpck" for the system clock
-  - num-ports: Number of ports.
-  - atmel,vbus-gpio: If present, specifies a gpio that needs to be
-    activated for the bus to be powered.
-@@ -14,6 +21,8 @@ Required properties:
- usb0: ohci@00500000 {
- 	compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 	reg = <0x00500000 0x100000>;
-+	clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
-+	clock-names = "ohci_clk", "hclk", "uhpck";
- 	interrupts = <20 4>;
- 	num-ports = <2>;
- };
-@@ -23,11 +32,19 @@ EHCI
- Required properties:
-  - compatible: Should be "atmel,at91sam9g45-ehci" for USB controllers
-    used in host mode.
-+ - reg: Address and length of the register set for the device
-+ - interrupts: Should contain ehci interrupt
-+ - clocks: Should reference the peripheral and the UTMI clocks
-+ - clock-names: Should contains two strings
-+		"ehci_clk" for the peripheral clock
-+		"usb_clk" for the UTMI clock
+diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
+index 7cce85a..15df00c 100644
+--- a/drivers/usb/host/ohci-at91.c
++++ b/drivers/usb/host/ohci-at91.c
+@@ -39,7 +39,6 @@
+ struct ohci_at91_priv {
+ 	struct clk *iclk;
+ 	struct clk *fclk;
+-	struct clk *uclk;
+ 	struct clk *hclk;
+ 	bool clocked;
+ 	bool wakeup;		/* Saved wake-up state for resume */
+@@ -64,10 +63,8 @@ static void at91_start_clock(struct ohci_at91_priv *ohci_at91)
+ {
+ 	if (ohci_at91->clocked)
+ 		return;
+-	if (IS_ENABLED(CONFIG_COMMON_CLK)) {
+-		clk_set_rate(ohci_at91->uclk, 48000000);
+-		clk_prepare_enable(ohci_at91->uclk);
+-	}
++
++	clk_set_rate(ohci_at91->fclk, 48000000);
+ 	clk_prepare_enable(ohci_at91->hclk);
+ 	clk_prepare_enable(ohci_at91->iclk);
+ 	clk_prepare_enable(ohci_at91->fclk);
+@@ -78,11 +75,10 @@ static void at91_stop_clock(struct ohci_at91_priv *ohci_at91)
+ {
+ 	if (!ohci_at91->clocked)
+ 		return;
++
+ 	clk_disable_unprepare(ohci_at91->fclk);
+ 	clk_disable_unprepare(ohci_at91->iclk);
+ 	clk_disable_unprepare(ohci_at91->hclk);
+-	if (IS_ENABLED(CONFIG_COMMON_CLK))
+-		clk_disable_unprepare(ohci_at91->uclk);
+ 	ohci_at91->clocked = false;
+ }
  
- usb1: ehci@00800000 {
- 	compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
- 	reg = <0x00800000 0x100000>;
- 	interrupts = <22 4>;
-+	clocks = <&utmi>, <&uhphs_clk>;
-+	clock-names = "usb_clk", "ehci_clk";
- };
+@@ -191,14 +187,6 @@ static int usb_hcd_at91_probe(const struct hc_driver *driver,
+ 		retval = PTR_ERR(ohci_at91->hclk);
+ 		goto err;
+ 	}
+-	if (IS_ENABLED(CONFIG_COMMON_CLK)) {
+-		ohci_at91->uclk = devm_clk_get(dev, "usb_clk");
+-		if (IS_ERR(ohci_at91->uclk)) {
+-			dev_err(dev, "failed to get uclk\n");
+-			retval = PTR_ERR(ohci_at91->uclk);
+-			goto err;
+-		}
+-	}
  
- AT91 USB device controller
-@@ -53,6 +70,8 @@ usb1: gadget@fffa4000 {
- 	compatible = "atmel,at91rm9200-udc";
- 	reg = <0xfffa4000 0x4000>;
- 	interrupts = <10 4>;
-+	clocks = <&udc_clk>, <&udpck>;
-+	clock-names = "pclk", "hclk";
- 	atmel,vbus-gpio = <&pioC 5 0>;
- };
- 
-@@ -65,6 +84,10 @@ Required properties:
- 	       "sama5d3-udc"
-  - reg: Address and length of the register set for the device
-  - interrupts: Should contain usba interrupt
-+ - clocks: Should reference the peripheral and host clocks
-+ - clock-names: Should contains two strings
-+		"pclk" for the peripheral clock
-+		"hclk" for the host clock
-  - ep childnode: To specify the number of endpoints and their properties.
- 
- Optional properties:
-@@ -86,6 +109,8 @@ usb2: gadget@fff78000 {
- 	reg = <0x00600000 0x80000
- 	       0xfff78000 0x400>;
- 	interrupts = <27 4 0>;
-+	clocks = <&utmi>, <&udphs_clk>;
-+	clock-names = "hclk", "pclk";
- 	atmel,vbus-gpio = <&pioB 19 0>;
- 
- 	ep0 {
+ 	board = hcd->self.controller->platform_data;
+ 	ohci = hcd_to_ohci(hcd);
 -- 
 1.9.1
