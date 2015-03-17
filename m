@@ -1,90 +1,98 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 4/5] ARM: at91/dt: remove useless uhpck clock references from ehci defintions
-Date: Tue, 17 Mar 2015 17:15:49 +0100
-Message-ID: <1426608950-31555-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH 3/5] USB: atmel: update DT bindings documentation
+Date: Tue, 17 Mar 2015 17:15:48 +0100
+Message-ID: <1426608950-31555-4-git-send-email-boris.brezillon@free-electrons.com>
 References: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426608950-31555-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>, Robert Nelson <robert.nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Robert Nelson <robert.nelson@digikey.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The uhpck is useless for High-Speed communications, remove the reference
-to this clock in all ehci definitions.
+Add documentation for the missing clocks, clock-names, reg and interrupts
+properties.
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi | 4 ++--
- arch/arm/boot/dts/at91sam9x5.dtsi  | 4 ++--
- arch/arm/boot/dts/sama5d3.dtsi     | 4 ++--
- arch/arm/boot/dts/sama5d4.dtsi     | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/usb/atmel-usb.txt          | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 488af63..a5895f3 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1300,8 +1300,8 @@
- 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
- 			reg = <0x00800000 0x100000>;
- 			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&utmi>, <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ehci_clk", "hclk", "uhpck";
-+			clocks = <&utmi>, <&uhphs_clk>;
-+			clock-names = "usb_clk", "ehci_clk";
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index d221179..9a74a90 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -1185,8 +1185,8 @@
- 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
- 			reg = <0x00700000 0x100000>;
- 			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&utmi>, <&uhphs_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ehci_clk", "uhpck";
-+			clocks = <&utmi>, <&uhphs_clk>;
-+			clock-names = "usb_clk", "ehci_clk";
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 367af53..a266a39 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1415,8 +1415,8 @@
- 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
- 			reg = <0x00700000 0x100000>;
- 			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&utmi>, <&uhphs_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ehci_clk", "uhpck";
-+			clocks = <&utmi>, <&uhphs_clk>;
-+			clock-names = "usb_clk", "ehci_clk";
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+index e180d56..1be8d7a 100644
+--- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
++++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+@@ -5,6 +5,13 @@ OHCI
+ Required properties:
+  - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
+    used in host mode.
++ - reg: Address and length of the register set for the device
++ - interrupts: Should contain ehci interrupt
++ - clocks: Should reference the peripheral, host and system clocks
++ - clock-names: Should contains two strings
++		"ohci_clk" for the peripheral clock
++		"hclk" for the host clock
++		"uhpck" for the system clock
+  - num-ports: Number of ports.
+  - atmel,vbus-gpio: If present, specifies a gpio that needs to be
+    activated for the bus to be powered.
+@@ -14,6 +21,8 @@ Required properties:
+ usb0: ohci@00500000 {
+ 	compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+ 	reg = <0x00500000 0x100000>;
++	clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
++	clock-names = "ohci_clk", "hclk", "uhpck";
+ 	interrupts = <20 4>;
+ 	num-ports = <2>;
+ };
+@@ -23,11 +32,19 @@ EHCI
+ Required properties:
+  - compatible: Should be "atmel,at91sam9g45-ehci" for USB controllers
+    used in host mode.
++ - reg: Address and length of the register set for the device
++ - interrupts: Should contain ehci interrupt
++ - clocks: Should reference the peripheral and the UTMI clocks
++ - clock-names: Should contains two strings
++		"ehci_clk" for the peripheral clock
++		"usb_clk" for the UTMI clock
  
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 4303874..4bfe7c1 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -260,8 +260,8 @@
- 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
- 			reg = <0x00600000 0x100000>;
- 			interrupts = <46 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&utmi>, <&uhphs_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ehci_clk", "uhpck";
-+			clocks = <&utmi>, <&uhphs_clk>;
-+			clock-names = "usb_clk", "ehci_clk";
- 			status = "disabled";
- 		};
+ usb1: ehci@00800000 {
+ 	compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+ 	reg = <0x00800000 0x100000>;
+ 	interrupts = <22 4>;
++	clocks = <&utmi>, <&uhphs_clk>;
++	clock-names = "usb_clk", "ehci_clk";
+ };
  
+ AT91 USB device controller
+@@ -53,6 +70,8 @@ usb1: gadget@fffa4000 {
+ 	compatible = "atmel,at91rm9200-udc";
+ 	reg = <0xfffa4000 0x4000>;
+ 	interrupts = <10 4>;
++	clocks = <&udc_clk>, <&udpck>;
++	clock-names = "pclk", "hclk";
+ 	atmel,vbus-gpio = <&pioC 5 0>;
+ };
+ 
+@@ -65,6 +84,10 @@ Required properties:
+ 	       "sama5d3-udc"
+  - reg: Address and length of the register set for the device
+  - interrupts: Should contain usba interrupt
++ - clocks: Should reference the peripheral and host clocks
++ - clock-names: Should contains two strings
++		"pclk" for the peripheral clock
++		"hclk" for the host clock
+  - ep childnode: To specify the number of endpoints and their properties.
+ 
+ Optional properties:
+@@ -86,6 +109,8 @@ usb2: gadget@fff78000 {
+ 	reg = <0x00600000 0x80000
+ 	       0xfff78000 0x400>;
+ 	interrupts = <27 4 0>;
++	clocks = <&utmi>, <&udphs_clk>;
++	clock-names = "hclk", "pclk";
+ 	atmel,vbus-gpio = <&pioB 19 0>;
+ 
+ 	ep0 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
