@@ -1,106 +1,133 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 2/6] ARM: cpuidle: Add a cpuidle ops structure to be used
- for DT
-Date: Tue, 17 Mar 2015 11:29:05 +0000
-Message-ID: <20150317112905.GA14984@red-moon>
-References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org>
- <1425385777-14766-3-git-send-email-daniel.lezcano@linaro.org>
- <55075453.2070503@codeaurora.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v2 2/5] PCI: st: Add Device Tree bindings for sti pcie
+Date: Tue, 17 Mar 2015 11:42:14 +0000
+Message-ID: <20150317114213.GH27081@e106497-lin.cambridge.arm.com>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1426515635-9466-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426515635-9466-3-git-send-email-gabriel.fernandez@linaro.org>
 Content-Disposition: inline
-In-Reply-To: <55075453.2070503@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@li>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 10:08:19PM +0000, Stephen Boyd wrote:
-> On 03/03/15 04:29, Daniel Lezcano wrote:
-> >
-> > The code is optimized to use the __init section intensively in order to reduce
-> > the memory footprint after the driver is initialized and unify the function
-> > names with ARM64.
-> >
-> > In order to prevent multiple declarations and the specific cpuidle ops to be
-> > spread across the different headers, a mechanism, similar to the cgroup subsys,
-> > has been introduced.
-> >
-> > A new platform willing to add its cpuidle ops must add an entry in the file
-> > cpuidle_ops.h in the current form:
-> >
-> >  #if IS_ENABLED(CONFIG_ARM_FOO_CPUIDLE)
-> >  CPUIDLE_OPS(foo)
-> >  #endif
-> >
-> > ... and use the variable name in the specific low level code:
-> >
-> > struct cpuidle_ops foo_cpuidle_ops;
-> >
-> > The CPUIDLE_OPS macro will be processed in different way in the cpuidle.c file,
-> > thus allowing to keep untouched the arm cpuidle core code in the future when
-> > a new platform is added.
-> [...]
-> > diff --git a/arch/arm/include/asm/cpuidle_ops.h b/arch/arm/include/asm/cpuidle_ops.h
-> > new file mode 100644
-> > index 0000000..be0a612
-> > --- /dev/null
-> > +++ b/arch/arm/include/asm/cpuidle_ops.h
-> > @@ -0,0 +1,3 @@
-> > +/*
-> > + * List of cpuidle operations
-> > + */
-> > diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
-> > index 45969f8..25e9789c 100644
-> > --- a/arch/arm/kernel/cpuidle.c
-> > +++ b/arch/arm/kernel/cpuidle.c
-> > @@ -10,8 +10,29 @@
-> >   */
-> >  
-> >  #include <linux/cpuidle.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  #include <asm/cpuidle.h>
-> >  
-> > +#define CPUIDLE_OPS(__x) extern struct cpuidle_ops __x ## _cpuidle_ops;
-> > +#include <asm/cpuidle_ops.h>
-> > +#undef CPUIDLE_OPS
-> > +
-> > +#define CPUIDLE_OPS(__x) __x ## _cpuidle_ops_id,
-> > +enum cpuidle_ops_id {
-> > +#include <asm/cpuidle_ops.h>
-> > +        CPUIDLE_OPS_COUNT,
-> > +};
-> > +#undef CPUIDLE_OPS
-> > +
-> > +#define CPUIDLE_OPS(__x) [__x ## _cpuidle_ops_id ] = &__x ## _cpuidle_ops,
-> > +static struct cpuidle_ops *supported_cpuidle_ops[] __initconst = {
-> > +#include <asm/cpuidle_ops.h>
-> > +};
-> > +#undef CPUIDLE_OPS
-> > +
-> > +static struct cpuidle_ops cpuidle_ops[NR_CPUS];
-> 
-> Is there any reason why we aren't putting these structures into a linker
-> section like we do for the smp operations structures?
+Hi Gabriel,
 
-I think it can be done with an OF_TABLE, it is a bit of shame cpuidle_ops
-should work on UP too otherwise they could have been merged in
-smp_ops to create cpu_ops, like arm64 does.
+On Mon, Mar 16, 2015 at 02:20:32PM +0000, Gabriel FERNANDEZ wrote:
+> sti pcie is built around a Synopsis Designware PCIe IP.
+>=20
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/st-pcie.txt | 54 +++++++++++++=
+++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Docu=
+mentation/devicetree/bindings/pci/st-pcie.txt
+> new file mode 100644
+> index 0000000..94aae2d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
+> @@ -0,0 +1,54 @@
+> +STMicroelectronics STi PCIe controller
+> +
+> +This PCIe host controller is based on the Synopsis Designware PCIe I=
+P
+> +and thus inherits all the common properties defined in designware-pc=
+ie.txt.
+> +
+> +Required properties:
+> + - compatible: "st,stih407-pcie"
+> + - reg: base address and length of the pcie controller, mem-window a=
+ddress
+> +   and length available to the controller.
+> + - interrupts: A list of interrupt outputs of the controller. Must c=
+ontain an
+> +   entry for each entry in the interrupt-names property.
+> + - interrupt-names: Should be "msi". STi interrupt that is asserted =
+when an
+> +   MSI is received.
+> + - st,syscfg : should be a phandle of the syscfg node. Also contains=
+ syscfg
+> +   offset for IP configuration.
+> + - resets, reset-names: the power-down and soft-reset lines of PCIe =
+IP.
+> +   Associated names must be "powerdown" and "softreset".
+> + - phys, phy-names: the phandle for the PHY device.
+> +   Associated name must be "pcie"
+> +
+> +Optional properties:
+> + - reset-gpio: a GPIO spec to define which pin is connected to the b=
+us reset.
+> +
+> +Example:
+> +
+> +pcie0: pcie@9b00000 {
+> +	compatible =3D "st,stih407-pcie", "snps,dw-pcie";
+> +	device_type =3D "pci";
+> +	reg =3D <0x09b00000 0x4000>,	/* dbi cntrl registers */
+> +	      <0x2fff0000 0x00010000>,	/* configuration space */
+> +	      <0x40000000 0x80000000>;	/* lmi mem window */
+> +	reg-names =3D "dbi", "config", "mem-window";
+> +	st,syscfg =3D <&syscfg_core 0xd8 0xe0>;
+> +	#address-cells =3D <3>;
+> +	#size-cells =3D <2>;
+> +	ranges =3D <0x00000800 0 0x2fff0000 0x2fff0000 0 0x00010000   /* co=
+nfiguration space */
 
-> The nice thing about using the linker is it makes it clearer at the
-> location where we define the structure that it's actually used by
-> something. Right now the structures are defined non-static in a file and
-> then we have to know that a CPUIDLE_OPS() define has been made in
-> another architecture specific asm header file so that this macro magic
-> works. The commit text says something about multiple declarations and
-> ops spread across header files, which shouldn't apply if we're using the
-> linker to find these ops and merge them into an array we can iterate over.
+Unless you are trying to support some legacy code please remove the con=
+figuration space from the ranges.
+There is no resource type associated with config space and the generic =
+parser will give you back an
+invalid resource type. The other reason for that is that if you really =
+claim to be ECAM compliant by
+adding the config space here you need way more than 64K of space.
 
-It makes sense, see above for UP vs SMP. I wonder if we can't find
-something to overcome the UP limitation nicely, the init code in
-arch/arm/kernel/devtree.c is identical for smp_ops and cpuidle_ops,
-apart from the CONFIG_SMP ifdeffery.
+Best regards,
+Liviu
 
-Lorenzo
+> +		  0x82000000 0 0x20000000 0x20000000 0 0x0FFF0000>; /* non-prefetc=
+hable memory */
+> +	num-lanes =3D <1>;
+> +	interrupts =3D <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names =3D "msi";
+> +	#interrupt-cells =3D <1>;
+> +	interrupt-map-mask =3D <0 0 0 7>;
+> +	interrupt-map =3D <0 0 0 1 &intc GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>, =
+/* INT A */
+> +			<0 0 0 2 &intc GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>, /* INT B */
+> +			<0 0 0 3 &intc GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>, /* INT C */
+> +			<0 0 0 4 &intc GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>; /* INT D */
+> +
+> +	resets =3D <&powerdown STIH407_PCIE0_POWERDOWN>,
+> +		 <&softreset STIH407_PCIE0_SOFTRESET>;
+> +	reset-names =3D "powerdown",
+> +		      "softreset";
+> +	phys =3D <&phy_port0 PHY_TYPE_PCIE>;
+> +	phy-names =3D "pcie";
+> +};
+> --=20
+> 1.9.1
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
