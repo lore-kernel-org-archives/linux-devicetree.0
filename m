@@ -1,42 +1,118 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v2 4/5] PCI: designware: Add disable IO support
-Date: Tue, 17 Mar 2015 08:49:17 +0100
-Message-ID: <CAG374jCD05qXiMfCZOPFvaxYLgU75CR3Kiryxxxz1CzmgVOsjg@mail.gmail.com>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1426515635-9466-5-git-send-email-gabriel.fernandez@linaro.org>
-	<550718B4.5090406@linaro.org>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon
+ driver
+Date: Tue, 17 Mar 2015 09:52:18 +0200
+Message-ID: <1426578738.2330.18.camel@linaro.org>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+	 <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
+	 <54CF4FC7.2050309@ti.com> <1426509149.2330.5.camel@linaro.org>
+	 <5506D675.8010006@ti.com> <1426515811.2330.16.camel@linaro.org>
+	 <55078B0F.1040800@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <550718B4.5090406@linaro.org>
+In-Reply-To: <55078B0F.1040800@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Roger Quadros <rogerq@ti.com>, myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+Hi,
 
-Yes, you are right.
+On Tue, 2015-03-17 at 11:01 +0900, Chanwoo Choi wrote:
+> Hi Ivan,
+> 
+> On 03/16/2015 11:23 PM, Ivan T. Ivanov wrote:
+> > Hi Roger,
+> > 
+> > On Mon, 2015-03-16 at 15:11 +0200, Roger Quadros wrote:
+> > > Hi Ivan,
+> > > 
+> > > On 16/03/15 14:32, Ivan T. Ivanov wrote:
+> > > > Hi,
+> > > > 
+> > > > On Mon, 2015-02-02 at 12:21 +0200, Roger Quadros wrote:
+> > > > > This driver observes the USB ID pin connected over a GPIO and
+> > > > > updates the USB cable extcon states accordingly.
+> > > > > 
+> > > > > The existing GPIO extcon driver is not suitable for this purpose
+> > > > > as it needs to be taught to understand USB cable states and it
+> > > > > can't handle more than one cable per instance.
+> > > > > 
+> > > > > For the USB case we need to handle 2 cable states.
+> > > > > 1) USB (attach/detach)
+> > > > > 2) USB-HOST (attach/detach)
+> > > > > 
+> > > > > This driver can be easily updated in the future to handle VBUS
+> > > > > events in case it happens to be available on GPIO for any platform.
+> > > > > 
+> > > > > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > > > > ---
+> > > > > v4:
+> > > > > - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
+> > > > > - changed host cable name to "USB-HOST"
+> > > > 
+> > > > I am sorry that I am getting a bit little late into this.
+> > > > 
+> > > > Isn't supposed that we have to use strings defined in
+> > > > const char extcon_cable_name[][]?
+> > > > 
+> > > > 
+> > > > > +
+> > > > > +/* List of detectable cables */
+> > > > > +enum {
+> > > > > +       EXTCON_CABLE_USB = 0,
+> > > > > +       EXTCON_CABLE_USB_HOST,
+> > > > > +
+> > > > 
+> > > > Same here: duplicated with enum extcon_cable_name
+> > > > 
+> > > > > +       EXTCON_CABLE_END,
+> > > > > +};
+> > > > > +
+> > > > > +static const char *usb_extcon_cable[] = {
+> > > > > +       [EXTCON_CABLE_USB] = "USB",
+> > > > > +       [EXTCON_CABLE_USB_HOST] = "USB-HOST",
+> > > > > +       NULL,
+> > > > > +};
+> > > 
+> > > I'm not exactly sure how else it is supposed to work if we
+> > > support only a subset of cables from the global extcon_cable_name[][].
+> > 
+> > I don't see issue that we use just 2 events. I think that we can
+> > reuse  enum extcon_cable_name
 
-Nevertheless i'll try the Kumar and Arnd 's request to not use DT to do that.
+Now I see that extcon_dev_register() expect NULL terminated array of 
+pointers, so it will not be possible to use enum extcon_cable_name
+as index in the above array, sorry.
 
-BR
+> >  and strings already defined in
+> > extcon_cable_name[][] global variable. It is defined extern in
+> > extcon.h file exactly for this purpose, no?
+> 
+> 'extcon_cable_name' global variable is not used on extcon driver directly.
+> It is just recommended cable name.
 
-Gabriel
+Hm, this is what bothers me. How client drivers will know cable name if 
+every provider start using its own naming scheme? 
 
-On 16 March 2015 at 18:53, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
-> On 16/03/15 14:20, Gabriel FERNANDEZ wrote:
->>
->>   - bus-range: PCI bus numbers covered (it is recommended for new
->> devicetrees to
->>     specify this property, to keep backwards compatibility a range of
->> 0x00-0xff
->>     is assumed if not present)
->> +- disable_io_support: set this property for PCIe host controller without
->> IO
->> +  port access
->
-> Shouldn't dt properties use hyphens rather than under scores ?
+If I write client driver I will use:
+
+extcon_register_interest(obj, name, extcon_cable_name[EXTCON_USB_HOST], nb);
+
+and this will now work with this driver because it define string differently.
+
+... Well, I see that string is changed because your recommendation :-), 
+then lets fix extcon_cable_name strings and not let drivers define its own
+names.
+
+
+> I have plan to use standard cable name for extcon driver instead of that
+> each extcon driver define the cable name.
+> 
+
+Sound like a good plan :-)
+
+Regards,
+Ivan
