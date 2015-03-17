@@ -1,29 +1,58 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v1 0/3] drivers: net: xgene: Add second SGMII based 1G
- interface
-Date: Tue, 17 Mar 2015 15:28:41 -0400 (EDT)
-Message-ID: <20150317.152841.370869744292443495.davem@davemloft.net>
-References: <1426616833-9671-1-git-send-email-kchudgar@apm.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426616833-9671-1-git-send-email-kchudgar-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kchudgar-qTEPVZfXA3Y@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, isubramanian-qTEPVZfXA3Y@public.gmane.org
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: [PATCH 1/2] of: handle both '/' and ':' in path strings
+Date: Tue, 17 Mar 2015 12:30:31 -0700
+Message-ID: <1426620632-23383-1-git-send-email-computersforpeace@gmail.com>
+References: <1425924225-22748-2-git-send-email-leif.lindholm@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425924225-22748-2-git-send-email-leif.lindholm@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Brian Norris <computersforpeace@gmail.com>, Peter Hurley <peter@hurleysoftware.com>, Leif Lindholm <leif.lindholm@linaro.org>, stable@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
-Date: Tue, 17 Mar 2015 11:27:10 -0700
+Commit 106937e8ccdc ("of: fix handling of '/' in options for
+of_find_node_by_path()") caused a regression in OF handling of
+stdout-path. While it fixes some cases which have '/' after the ':', it
+breaks cases where there is more than one '/' *before* the ':'.
 
-> This patch adds support for second SGMII based 1G interface.
->   
-> Signed-off-by: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+For example, it breaks this boot string
 
-Series applied to net-next, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  stdout-path = "/rdb/serial@f040ab00:115200";
+
+So rather than doing sequentialized checks (first for '/', then for ':';
+or vice versa), to get the correct behavior we need to check for the
+first occurrence of either one of them.
+
+It so happens that the handy strcspn() helper can do just that.
+
+Fixes: 106937e8ccdc ("of: fix handling of '/' in options for of_find_node_by_path()")
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Cc: stable@vger.kernel.org
+---
+This is for -stable only because the regression is marked for stable. Not sure
+the first one deserves to go to -stable, actually...
+
+ drivers/of/base.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index adb8764861c0..966d6fdcf427 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -715,13 +715,8 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+ {
+ 	struct device_node *child;
+ 	int len;
+-	const char *end;
+ 
+-	end = strchr(path, ':');
+-	if (!end)
+-		end = strchrnul(path, '/');
+-
+-	len = end - path;
++	len = strcspn(path, "/:");
+ 	if (!len)
+ 		return NULL;
+ 
+-- 
+1.9.1
