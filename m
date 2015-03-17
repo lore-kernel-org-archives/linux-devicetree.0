@@ -1,356 +1,48 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 1/2] DT: arm64: msm8916: add all SPI DT nodes
-Date: Tue, 17 Mar 2015 18:25:31 +0200
-Message-ID: <1426609532-11996-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH] ARM: dts: Update exynos5250-spring with mmc node changes
+Date: Wed, 18 Mar 2015 01:27:49 +0900
+Message-ID: <55085605.2000001@kernel.org>
+References: <1424275812-6797-1-git-send-email-afaerber@suse.de> <54E5CD2E.9070608@collabora.co.uk> <5506EEF9.7080100@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5506EEF9.7080100@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add SPI DT nodes for the SoC. Every SPI DT node has reference to
-blsp dma node with relevant dma channels and appropriate pinctrl
-nodes to configure SPI pins.
+On 03/16/15 23:55, Andreas F=C3=A4rber wrote:
+> Am 19.02.2015 um 12:46 schrieb Javier Martinez Canillas:
+>> Hello Andreas,
+>>
+Hi,
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi |  317 +++++++++++++++++++++++++++++++++
- 1 files changed, 317 insertions(+), 0 deletions(-)
+>> On 02/18/2015 05:10 PM, Andreas F=C3=A4rber wrote:
+>>> Resolve a merge conflict with mmc refactoring aaa25a5a33cb ("ARM: d=
+ts:
+>>> unuse the slot-node and deprecate the supports-highspeed for dw-mmc=
+ in
+>>> exynos") by dropping the slot@0 nodes, moving its bus-width propert=
+y to
+>>> the mmc node and replacing supports-highspeed with cap-{mmc,sd}-hig=
+hspeed,
+>>> matching exynos5250-snow.
+>>>
+>>> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+>>> Fixes: 53dd4138bb0a ("ARM: dts: Add exynos5250-spring device tree")
+>>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5250-spring.dts | 16 ++++------------
+>>>  1 file changed, 4 insertions(+), 12 deletions(-)
+>>>
+>>
+>> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.=
+uk>
+>=20
+> Ping!
+>=20
+Thanks, applied with 'Cc: <stable@vger.kernel.org> [3.19+]'
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 8c8fd49..b5be833 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -96,6 +96,210 @@
- 					bias-pull-down;
- 				};
- 			};
-+
-+			spi1_default: spi1_default {
-+				pinmux {
-+					function = "blsp_spi1";
-+					pins = "gpio0", "gpio1", "gpio3";
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio2";
-+				};
-+				pinconf {
-+					pins = "gpio0", "gpio1", "gpio3";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
-+				pinconf_cs {
-+					pins = "gpio2";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			spi1_sleep: spi1_sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio0", "gpio1", "gpio2", "gpio3";
-+				};
-+				pinconf {
-+					pins = "gpio0", "gpio1", "gpio2", "gpio3";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+			};
-+
-+			spi2_default: spi2_default {
-+				pinmux {
-+					function = "blsp_spi2";
-+					pins = "gpio4", "gpio5", "gpio7";
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio6";
-+				};
-+				pinconf {
-+					pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
-+				pinconf_cs {
-+					pins = "gpio6";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			spi2_sleep: spi2_sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+				};
-+				pinconf {
-+					pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+			};
-+
-+			spi3_default: spi3_default {
-+				pinmux {
-+					function = "blsp_spi3";
-+					pins = "gpio8", "gpio9", "gpio11";
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio10";
-+				};
-+				pinconf {
-+					pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
-+				pinconf_cs {
-+					pins = "gpio10";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			spi3_sleep: spi3_sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+				};
-+				pinconf {
-+					pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+			};
-+
-+			spi4_default: spi4_default {
-+				pinmux {
-+					function = "blsp_spi4";
-+					pins = "gpio12", "gpio13", "gpio15";
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio14";
-+				};
-+				pinconf {
-+					pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
-+				pinconf_cs {
-+					pins = "gpio14";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			spi4_sleep: spi4_sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+				};
-+				pinconf {
-+					pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+			};
-+
-+			spi5_default: spi5_default {
-+				pinmux {
-+					function = "blsp_spi5";
-+					pins = "gpio16", "gpio17", "gpio19";
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio18";
-+				};
-+				pinconf {
-+					pins = "gpio16", "gpio17", "gpio18", "gpio19";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
-+				pinconf_cs {
-+					pins = "gpio18";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			spi5_sleep: spi4_sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio16", "gpio17", "gpio18", "gpio19";
-+				};
-+				pinconf {
-+					pins = "gpio16", "gpio17", "gpio18", "gpio19";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+			};
-+
-+			spi6_default: spi6_default {
-+				pinmux {
-+					function = "blsp_spi6";
-+					pins = "gpio20", "gpio21", "gpio23";
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio22";
-+				};
-+				pinconf {
-+					pins = "gpio20", "gpio21", "gpio22", "gpio23";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
-+				pinconf_cs {
-+					pins = "gpio22";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			spi6_sleep: spi6_sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio20", "gpio21", "gpio22", "gpio23";
-+				};
-+				pinconf {
-+					pins = "gpio20", "gpio21", "gpio22", "gpio23";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+			};
- 		};
- 
- 		gcc: qcom,gcc@1800000 {
-@@ -114,6 +318,119 @@
- 			status = "disabled";
- 		};
- 
-+		blsp_dma: dma@7884000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0x07884000 0x23000>;
-+			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi1: spi@78b5000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0x078b5000 0x600>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 5>, <&blsp_dma 4>;
-+			dma-names = "rx", "tx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&spi1_default>;
-+			pinctrl-1 = <&spi1_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi2: spi@78b6000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0x078b6000 0x600>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 7>, <&blsp_dma 6>;
-+			dma-names = "rx", "tx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&spi2_default>;
-+			pinctrl-1 = <&spi2_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi3: spi@78b7000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0x078b7000 0x600>;
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP3_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 9>, <&blsp_dma 8>;
-+			dma-names = "rx", "tx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&spi3_default>;
-+			pinctrl-1 = <&spi3_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi4: spi@78b8000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0x078b8000 0x600>;
-+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP4_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 11>, <&blsp_dma 10>;
-+			dma-names = "rx", "tx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&spi4_default>;
-+			pinctrl-1 = <&spi4_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi5: spi@78b9000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0x078b9000 0x600>;
-+			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP5_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 13>, <&blsp_dma 12>;
-+			dma-names = "rx", "tx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&spi5_default>;
-+			pinctrl-1 = <&spi5_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi6: spi@78ba000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0x078ba000 0x600>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP6_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
-+			dma-names = "rx", "tx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&spi6_default>;
-+			pinctrl-1 = <&spi6_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
--- 
-1.7.0.4
+- Kukjin
