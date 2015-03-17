@@ -1,51 +1,48 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Tue, 17 Mar 2015 14:43:59 +0100
-Message-ID: <55082F9F.90909@redhat.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <55075AFD.7000001@hurleysoftware.com> <5507E3E3.5000001@redhat.com> <CAL_Jsq+dA3RDbakrkeMY07czs13bFFKCyETEXTzWxf+h1umBPQ@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 6/9] ARM: dt: dove: add Dove PMU DT entry to dove.dtsi
+Date: Tue, 17 Mar 2015 13:43:35 +0000
+Message-ID: <20150317134335.GV8656@n2100.arm.linux.org.uk>
+References: <20150312183020.GU8656@n2100.arm.linux.org.uk>
+ <E1YW7tB-0003mM-1L@rmk-PC.arm.linux.org.uk>
+ <55072092.9040207@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+dA3RDbakrkeMY07czs13bFFKCyETEXTzWxf+h1umBPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55072092.9040207-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Mar 16, 2015 at 07:27:30PM +0100, Gregory CLEMENT wrote:
+> > +			pmu: power-management@d0000 {
+> > +				compatible = "marvell,dove-pmu";
+> > +				reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
+> 
+> Here you overlap some other nodes such as the thermal one (from 0xd001c
+> to 0xd0028), the clock gate one (from 0xd0038 to 0xd003c), the gpio one,
+> the pinctrl one ...
 
-On 17-03-15 14:30, Rob Herring wrote:
-> On Tue, Mar 17, 2015 at 3:20 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+Yes, I'm well aware of that, but here's the thing...
 
-<snip>
+I'm describing the hardware here.
 
->> TBH I do not understand why we're even arguing here, AFAICT the behavior
->> change
->> is an unwanted side-effect of your patch, so the solution is to rewrite the
->> patch
->> so that we get the same end result (not turning off bootconsole-s too early)
->> without
->> the unwanted side-effect, and you agreed to work on that ?
->
-> I intend to revert this if we don't have a fix soon.
->
-> I think we just need a flag saying we've enabled the earlycon from
-> stdout-path or not and then add the preferred console based on that. I
-> assume with "earlycon" only on the command-line, getting console only
-> on stdout-path is okay.
+The real problem is that Dove (etc) went down the path of breaking up
+the PMU device into multiple smaller devices each specifying a sub-set
+of the register range.  By doing that, Dove moved away from describing
+the hardware - instead, we've described the Linux _implementation_ with
+its separate (sub-)devices - its the implementation's choice that we'd
+break up the PMU into these separate devices, almost to the point of
+specifying each individual register.
 
-Yes, if a user explicitly specifies something like "earlycon" on the
-commandline then not automatically getting console output on tty0 is
-fine AFAICT. The use case important for me / distros is when no
-console= (or related) arguments are present on the cmdline at all,
-then the desired behavior is to have console output on tty0 as well
-as on any serial console specified with stdout-path.
+What could be done to work around this oversight is to mvoe these
+devices beneath the PMU node, which IMHO makes complete sense as these
+are sub-devices of the PMU/PMC rather than separate devices.
 
-Thanks & Regards,
-
-Hans
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
