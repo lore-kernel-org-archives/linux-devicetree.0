@@ -1,79 +1,143 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v2 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Wed, 18 Mar 2015 07:40:33 +0900
-Message-ID: <5508AD61.1060005@samsung.com>
-References: <1426581951-11869-1-git-send-email-ingi2.kim@samsung.com>
- <1426581951-11869-3-git-send-email-ingi2.kim@samsung.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH V5 2/2] ARM: dts: Add HS400 support for exynos5420 and exynos5800
+Date: Wed, 18 Mar 2015 04:56:28 +0530
+Message-ID: <CAGOxZ53OgKKZVS2qKsMw4cDxdkwG-8OER=8oPxTo9g-+qKHimQ@mail.gmail.com>
+References: <1422499318-13726-1-git-send-email-alim.akhtar@samsung.com>
+ <1422499318-13726-3-git-send-email-alim.akhtar@samsung.com>
+ <54ED6D24.4000703@samsung.com> <CAGOxZ53_TGay2ooTW22ZGPZ+yneqoXH6JEPZ=mMSYr1cpOhXWg@mail.gmail.com>
+ <07b501d06057$d9d7bc80$8d873580$@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1426581951-11869-3-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <07b501d06057$d9d7bc80$8d873580$@kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Douglas Anderson <dianders@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 05:45 PM, Ingi Kim wrote:
-> This patch adds the device tree bindings for ktd2692 flash LEDs.
-> Add optional properties 'flash-timeout-us' to control flash timeout
-> and 'vin-supply' for flash-led regulator
-> 
-> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
-> ---
->  .../devicetree/bindings/leds/leds-ktd2692.txt      | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> new file mode 100644
-> index 0000000..1b44225
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> @@ -0,0 +1,37 @@
-> +* Kinetic Technologies - KTD2692 Flash LED Driver
-> +
-> +KTD2692 is the ideal power solution for high-power flash LEDs.
-> +It uses ExpressWire single-wire programming for maximum flexibility.
-> +
-> +The ExpressWire interface through CTRL pin can control LED on/off and
-> +enable/disable the IC, Movie/Flash mode current, Flash timeout,
-> +LVP(low voltage protection).
-> +
-> +Required properties:
-> +	- compatible: "kinetic,ktd2692"
-> +	- ctrl-gpio : gpio pin in order control ktd2692 flash led.
-> +		There is an internal 300kOhm pull-down resistor at this pin
-> +	- supply : "vin" LED supply
-> +
-> +Optional property:
-> +	- flash-timeout-us : Maximum flash timeout in microseconds.
-> +			flash timeout ranges from 0 to 1835000us and
-> +			default is 1049000us.
-> +
-> +Example:
-> +
-> +vbat: fixedregulator@0 {
-> +	compatible = "regulator-fixed";
-> +	regulator-name = "vbat-supply";
-> +	regulator-min-microvolt = <5000000>;
-> +	regulator-max-microvolt = <5000000>;
-> +	gpio = <>;
+Thanks Kukjin for looking into this.
+I will rebase on top of your for-next and send again.
 
-gpio = <> ? What do you mean?
-And this is described at Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-I'm not sure whether this example really needs.
+On Tue, Mar 17, 2015 at 7:42 AM, Kukjin Kim <kgene@kernel.org> wrote:
+> Alim Akhtar wrote:
+>>
+>> Ping?
+>>
+> Alim,
+>
+> Can you please re-send it based on latest my tree?
+> It would be helpful for me ;)
+>
+> Thanks,
+> Kukjin
+>
+>> On Wed, Feb 25, 2015 at 12:05 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>> > Hi, Alim.
+>> >
+>> > Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> >
+>> > Best Regards,
+>> > Jaehoon Chung
+>> >
+>> > On 01/29/2015 11:41 AM, Alim Akhtar wrote:
+>> >> From: Seungwon Jeon <tgih.jun@samsung.com>
+>> >>
+>> >> HS400 timing values are added for SMDK5420, exynos5420-peach-pit
+>> >> and exynos5800-peach-pi boards.
+>> >> This also adds RCLK GPIO line, this gpio should be in pull-down
+>> >> state.
+>> >> This also enables HS400 on peach-pi and this updates the clock frequency
+>> >> to 800MHz to be set as input clock to controller.
+>> >>
+>> >> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+>> >> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> >> [Alim: addressed review comments]
+>> >> ---
+>> >>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    4 +++-
+>> >>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 +++++++
+>> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts  |    4 +++-
+>> >>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    7 +++++--
+>> >>  4 files changed, 18 insertions(+), 4 deletions(-)
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-
+>> pit.dts
+>> >> index 9a050e1..f7a44a4 100644
+>> >> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> >> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> >> @@ -569,8 +569,10 @@
+>> >>       samsung,dw-mshc-ciu-div = <3>;
+>> >>       samsung,dw-mshc-sdr-timing = <0 4>;
+>> >>       samsung,dw-mshc-ddr-timing = <0 2>;
+>> >> +     samsung,dw-mshc-hs400-timing = <0 2>;
+>> >> +     samsung,read-strobe-delay = <90>;
+>> >>       pinctrl-names = "default";
+>> >> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> >> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>> >>       bus-width = <8>;
+>> >>  };
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>> >> index ba686e4..8b15316 100644
+>> >> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>> >> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>> >> @@ -201,6 +201,13 @@
+>> >>                       samsung,pin-drv = <3>;
+>> >>               };
+>> >>
+>> >> +             sd0_rclk: sd0-rclk {
+>> >> +                     samsung,pins = "gpc0-7";
+>> >> +                     samsung,pin-function = <2>;
+>> >> +                     samsung,pin-pud = <1>;
+>> >> +                     samsung,pin-drv = <3>;
+>> >> +             };
+>> >> +
+>> >>               sd1_cmd: sd1-cmd {
+>> >>                       samsung,pins = "gpc1-1";
+>> >>                       samsung,pin-function = <2>;
+>> >> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> >> index 8be3d7b..2078a1f 100644
+>> >> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> >> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> >> @@ -80,8 +80,10 @@
+>> >>               samsung,dw-mshc-ciu-div = <3>;
+>> >>               samsung,dw-mshc-sdr-timing = <0 4>;
+>> >>               samsung,dw-mshc-ddr-timing = <0 2>;
+>> >> +             samsung,dw-mshc-hs400-timing = <0 2>;
+>> >> +             samsung,read-strobe-delay = <90>;
+>> >>               pinctrl-names = "default";
+>> >> -             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> >> +             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>> >>               bus-width = <8>;
+>> >>               cap-mmc-highspeed;
+>> >>       };
+>> >> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> >> index e8fdda8..96f0d61 100644
+>> >> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> >> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> >> @@ -550,15 +550,18 @@
+>> >>       num-slots = <1>;
+>> >>       broken-cd;
+>> >>       mmc-hs200-1_8v;
+>> >> +     mmc-hs400-1_8v;
+>> >>       cap-mmc-highspeed;
+>> >>       non-removable;
+>> >>       card-detect-delay = <200>;
+>> >> -     clock-frequency = <400000000>;
+>> >> +     clock-frequency = <800000000>;
+>> >>       samsung,dw-mshc-ciu-div = <3>;
+>> >>       samsung,dw-mshc-sdr-timing = <0 4>;
+>> >>       samsung,dw-mshc-ddr-timing = <0 2>;
+>> >> +     samsung,dw-mshc-hs400-timing = <0 2>;
+>> >> +     samsung,read-strobe-delay = <90>;
+>> >>       pinctrl-names = "default";
+>> >> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> >> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>> >>       bus-width = <8>;
+>> >>  };
+>
 
-Best Regards,
-Jaehoon Chung
 
-> +	regulator-always-on;
-> +};
-> +
-> +flash-led {
-> +	compatible = "kinetic,ktd2692";
-> +	ctrl-gpio = <&gpc0 1 0>;
-> +	flash-timeout-us = <1835000>;
-> +	vin-supply = <&vbat>;
-> +};
-> 
+
+-- 
+Regards,
+Alim
