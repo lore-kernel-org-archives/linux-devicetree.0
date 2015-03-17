@@ -1,167 +1,42 @@
-From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v7 1/3] dmaengine: Add support for APM X-Gene SoC DMA
- engine driver
-Date: Tue, 17 Mar 2015 16:08:21 +0530
-Message-ID: <CAFd313zqetJq1S8aXK4i_PCLK1RCAwkzoiYGUd_9YSYvwjA=iw@mail.gmail.com>
-References: <1426158921-8987-1-git-send-email-rsahu@apm.com>
-	<1426158921-8987-2-git-send-email-rsahu@apm.com>
-	<20150316092756.GH32683@intel.com>
-	<CAFd313y3avndJ_jDbOSWsbBOYapto_HpDUa+eR7Qy2FO2qLDYg@mail.gmail.com>
-	<20150316112730.GN32683@intel.com>
-	<CAFd313yeXL2sd4qzh_-6iANQf=w0k4p_tXEmrk_QZ-baKgKG8Q@mail.gmail.com>
-	<20150316162613.GO32683@intel.com>
-	<CAFd313xG4EZdoS4vMxq4TW7v+xc_OEd3uC1R4LW3=Xs3+JzY9w@mail.gmail.com>
-	<CAFd313zJHP2PbN=Xa48GRmyQ6EvH=3wrZPBngtsZ2djo4ka96A@mail.gmail.com>
-	<20150317101953.GC32683@intel.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
+Date: Tue, 17 Mar 2015 11:38:54 +0100
+Message-ID: <CACRpkdYptEuJYsSGJqmnDrewDcafzx5tqa8E+FC7BETon7X9fQ@mail.gmail.com>
+References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
+	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
+	<20150312091427.GA4329@piout.net>
+	<CACRpkdacQ-MR+Sziu-TQXWr+1UCtBphZ5eNSWbJ2ZpCnH+o9JA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150317101953.GC32683-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CACRpkdacQ-MR+Sziu-TQXWr+1UCtBphZ5eNSWbJ2ZpCnH+o9JA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On Tue, Mar 17, 2015 at 3:49 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Mar 17, 2015 at 03:03:14PM +0530, Rameshwar Sahu wrote:
->> Hi Vinod,
->>
->> On Mon, Mar 16, 2015 at 11:01 PM, Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org> wrote:
->> > Hi Vinod,
->> >
->> > On Mon, Mar 16, 2015 at 9:56 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->> >> On Mon, Mar 16, 2015 at 05:24:34PM +0530, Rameshwar Sahu wrote:
->> >>> >> >> +static void xgene_dma_free_desc_list_reverse(struct xgene_dma_chan *chan,
->> >>> >> >> +                                          struct list_head *list)
->> >>> >> > do we really care about free order?
->> >>> >>
->> >>> >> Yes it start dellocation of descriptor by tail.
->> >>> > and why by tail is not clear.
->> >>> We can free allocated descriptor in forward order from head or in
->> >>> reverse order, I just followed here fsldma.c driver.
->> >>> Does this make sense ??
->> >> No, you have two APIs to free list. Why do you need two?
->> >
->> > Yes, basically we have tow API to free list.
->> > xgene_dma_free_desc_list_reverse will call if any failure in
->> > allocation of memory from DMA pool in prep routines.
->> > Like e.g. in prep routing we have some descriptors allocated and still
->> > need to get descriptor to complete the DMA request and failure happen,
->> > so we need to free all allocated descriptor.
->> >
->> >>
->> >>>
->> >>>
->> >>> >
->> >>> >> > where are you mapping dma buffers?
->> >>> >>
->> >>> >>  I didn't get you here. Can you please explain me here what you mean.
->> >>> >> As per my understanding client should map the dma buffer and give the
->> >>> >> physical address and size to this callback prep routines.
->> >>> > not for memcpy, that is true for slave transfers
->> >>> >
->> >>> > For mempcy the idea is that drivers will do buffer mapping
->> >>>
->> >>> Still I am clear here, why memcpy will do buffer mapping, I see other
->> >>> drivers and also async_memcpy.c , they only map it and pass mapped
->> >>> physical dma address to driver.
->> >>>
->> >>> Buffer mapping mean you here is dma_map_xxx ?? Am I correct.
->> >> Yes
->> >
->> > I have confusion here, I don't see any driver dma buffer mapping in
->> > prep_dma_memcpy.
->> > Can you please clear me here if driver does this on behalf of client,
->> > like any example so that I can proceed further.
->>
->> Any comment here ??
-> The advise typically is that for memcpy the dma mapping should be done by
-> client. For now this is okay as we have precedence, let me check with Dan.
->>
->> >>
->> >>>
->> >>> >
->> >>> >> > why are you calling this here, status check shouldnt do this...
->> >>> >>
->> >>> >> Okay, I will remove it.
->> >>> >>
->> >>> >>
->> >>> >> >> +                     spin_unlock_bh(&chan->lock);
->> >>> >> >> +                     return DMA_IN_PROGRESS;
->> >>> >> > residue here is size of transacation.
->> >>> >>
->> >>> >> We can't calculate here residue size. We don't have any controller
->> >>> >> register which will tell about remaining transaction size.
->> >>> > Okay if you cant calculate residue why do we have this fn?
->> >>>
->> >>> So basically case here for me is completion of dma descriptor
->> >>> submitted to hw is not same as order of submission to hw.
->> >>> So scenario coming in multithread running :e.g. let's assume we have
->> >>> submitted two descriptors first has cookie 1001 and second has 1002,
->> >>> now 1002 is completed first, so updated last_completed_cookie as 1002
->> >>> but not yer checked for dma_tx_status, and then first cookie completes
->> >>> and update last_completed_cookie as 1001, now second transaction check
->> >>> for tx_status and it get DMA_IN_PROGRESS, because
->> >>> last_completed_cookie(1001) is less than second transaction's
->> >>> cookie(1002).
->> >>>
->> >>> Due to this issue I am traversing that transaction in pending list and
->> >>> running list, if not there means we are done.
->> >>>
->> >>> Does this make sense??
->> >> That only convinces me that there is something not so correct.
->> >>
->> >> To help me understand pls let me know if below is fine:
->> >> - for a physical channel, do you submit multiple transactions?
->> >
->> > Yes
->> >
->> >> - if yes, how does DMA deal with multiple transactions, how does it schedule
->> >>   them?
->> >
->> > So , basically we submit multiple descriptor to dma physical channel,
->> > and dma engine execute it one by one and give us completion callback.
->> > So in this way we expect callback on same order as submission order
->> > and it does also, no issue.
->> >
->> > But problem is with supporting p+q offload, here we have P
->> > functionality supports in dma physical channel 0 and Q functionality
->> > supports in dma physical channel 1. So for pq we need to submit two
->> > descriptor, one to channel 0 and second to channel1, in this case we
->> > can't expect the completion order, because channnel 0 can finish P
->> > before Q or vice versa, and we need to wait to complete both before
->> > calling client callback() and completing cookie.
->> > Second thing we submit memcpy and sg on same channel, and can complete
->> > before even though if it submitted after PQ.
->>
->> So our SoC dma engine hw design idea was to get more throughput while
->> running two channel concurrent and calculating the P and Q together,
->> but somehow now today we came to scenario where running P and Q on
->> different channel causing hang to dmaengine, some hw bug, So now I am
->> going to support P and Q generation in same channel, so above
->> mentioned cookie status scenario will never come.
->> I will send you the patch for review.
-> Okay, so I am going to expect the status callback will do as per API
-> expectations and these kinds of hacks will be absent in the code :)
-
-Yes, I will send patch ASAP for further review.
+On Tue, Mar 17, 2015 at 11:28 AM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Mar 12, 2015 at 10:14 AM, Alexandre Belloni
+> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 >
-> --
-> ~Vinod
->>
->> Thanks,
->> >
->> >>
->> >> --
->> >> ~Vinod
->> >> --
->> >> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
->> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> As part of the system timer cleanup, I'll actually be needing that
+>> patch. Is it scheduled for inclusion or should I use "simple-bus" in the
+>> meantime?
 >
-> --
+> No replies to the thread so I will send a pull request to ARM SoC cleanup
+> branch.
+
+Ah well I had some pending changes requested by Lee. Once Lee
+ACK it for MFD and (hopefully) Bryan pitches in for LEDs, I'll post
+a pull request.
+
+BTW: Alexandre: your ACK or Reviewed-by would be appreciated ;)
+
+Antione: if you're also using this, pls provide your ACK on the series.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
