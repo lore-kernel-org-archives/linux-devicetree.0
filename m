@@ -1,64 +1,87 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Tue, 17 Mar 2015 10:20:24 -0400
-Message-ID: <55083828.8090705@hurleysoftware.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <55075AFD.7000001@hurleysoftware.com> <5507E3E3.5000001@redhat.com> <CAL_Jsq+dA3RDbakrkeMY07czs13bFFKCyETEXTzWxf+h1umBPQ@mail.gmail.com> <55082F9F.90909@redhat.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: Support for Netlogic XLP9XX/5XX I2C
+ controller.
+Date: Tue, 17 Mar 2015 15:41:47 +0100
+Message-ID: <20150317144147.GI10068@pengutronix.de>
+References: <1426228198-3314-1-git-send-email-jchandra@broadcom.com>
+ <1426228198-3314-3-git-send-email-jchandra@broadcom.com>
+ <20150313102406.GP952@pengutronix.de>
+ <20150314114836.GB611@jayachandranc.netlogicmicro.com>
+ <20150314200124.GB5105@pengutronix.de>
+ <20150317143039.GG19012@jayachandranc.netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55082F9F.90909-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150317143039.GG19012-l4W0uAg2RDvWG0bvociYJ/An/qbn1+6FOui0OUZsNXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Jayachandran C." <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 09:43 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 17-03-15 14:30, Rob Herring wrote:
->> On Tue, Mar 17, 2015 at 3:20 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> 
-> <snip>
-> 
->>> TBH I do not understand why we're even arguing here, AFAICT the behavior
->>> change
->>> is an unwanted side-effect of your patch, so the solution is to rewrite the
->>> patch
->>> so that we get the same end result (not turning off bootconsole-s too early)
->>> without
->>> the unwanted side-effect, and you agreed to work on that ?
->>
->> I intend to revert this if we don't have a fix soon.
->>
->> I think we just need a flag saying we've enabled the earlycon from
->> stdout-path or not and then add the preferred console based on that. I
->> assume with "earlycon" only on the command-line, getting console only
->> on stdout-path is okay.
-> 
-> Yes, if a user explicitly specifies something like "earlycon" on the
-> commandline then not automatically getting console output on tty0 is
-> fine AFAICT. The use case important for me / distros is when no
-> console= (or related) arguments are present on the cmdline at all,
-> then the desired behavior is to have console output on tty0 as well
-> as on any serial console specified with stdout-path.
+Hello,
 
-The issues raised by this patch have nothing to do with earlycon.
+On Tue, Mar 17, 2015 at 08:00:40PM +0530, Jayachandran C. wrote:
+> On Sat, Mar 14, 2015 at 09:01:24PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Sat, Mar 14, 2015 at 05:18:37PM +0530, Jayachandran C. wrote:
+> > > On Fri, Mar 13, 2015 at 11:24:06AM +0100, Uwe Kleine-K=F6nig wrot=
+e:
+> > > > On Fri, Mar 13, 2015 at 11:59:58AM +0530, Jayachandran C wrote:
+> > > > > diff --git a/drivers/i2c/busses/i2c-xlp9xx.c b/drivers/i2c/bu=
+sses/i2c-xlp9xx.c
+> > > > > new file mode 100644
+> > > > > index 00000000..2f303ad
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/i2c/busses/i2c-xlp9xx.c
+> > > > > @@ -0,0 +1,446 @@
+> > > > > [...]
+> > > > > +
+> > > > > +/*
+> > > > > + * see Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt =
+for device
+> > > > > + * tree bindings documentation
+> > > > > + */
+> > > > When I asked for documentation here, I didn't meant the device =
+tree
+> > > > binding, but the hardware reference manual.
+> > >=20
+> > > Unfortunately there is no standalone documentation for the I2C co=
+ntroller,
+> > > this block is used in XLP9xx and XLP5xx SoCs and you can get the =
+documentation
+> > > for the whole SoC from support.broadcom.com if you have an accoun=
+t there.
+> > I don't. According to the instructions to get such an account I hav=
+e to
+> > contact my "Sales/Engineering contacts at Broadcom or its
+> > Distributors/Manufacturer's representatives directly". Who would th=
+at be
+> > for me? You?
+>=20
+> Not really. If you want to develop drivers for a XLP9xx board you
+> have, then you should have an account at support site and the
+> instructions apply.
+I don't want to develop drivers for such a board, among other reasons
+because I don't own one. But I want to make a review of such a driver.
+And therefor a datasheet would be helpful.
+=20
+> The rationale given in device tree guidelines is that the silicon ven=
+dor
+> may release future chips which break the wildcard. In this specific c=
+ase
+> that issue will not happen, because the driver is from the silicon ve=
+ndor.
+> Anyway, for consistency, we will take out the wildcard in v4.
+I honestly hope the high trust in your employer is justified. It didn't
+work for me (for a different employer of course).
 
-1. PowerPC boot crash - the report with the most troubleshooting info right now
-   implicates some buffer overflow or console mismanagement triggered by simply
-   having defined a preferred console. This needs to be figured out regardless,
-   and this is what I'm working right now.
+Best regards
+Uwe
 
-2. Hans' use-case was _already broken_ even before this patch; _any_ driver
-   that adds a preferred console before the vt console driver will cause
-   this problem. So again, this needs to be fixed regardless.
-
-Regards,
-Peter Hurley
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
