@@ -1,43 +1,63 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Tue, 17 Mar 2015 09:25:32 +0100
-Message-ID: <5507E4FC.1060005@redhat.com>
-References: <55070544.9010908@redhat.com>	<550717A0.3060603@hurleysoftware.com> <87r3sowk51.fsf@igel.home>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Tue, 17 Mar 2015 01:32:21 -0700
+Message-ID: <20150317083221.32662.96822.stgit@baseline>
+References: <20150317083221.32662.14647.stgit@baseline>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <87r3sowk51.fsf@igel.home>
-Sender: stable-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>, Peter Hurley <peter@hurleysoftware.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150317083221.32662.14647.stgit@baseline>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+For Tegra132 and later chips, we can now use the correct hardware base
+address for the Tegra AHB IP block in the DT data.  Update the DT binding
+documentation to reflect this change.
 
-On 17-03-15 01:19, Andreas Schwab wrote:
-> Peter Hurley <peter@hurleysoftware.com> writes:
->
->> I don't see this as a regression, but rather a misconfiguration.
->
-> It breaks booting on PowerMac.
+Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../bindings/arm/tegra/nvidia,tegra20-ahb.txt      |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Actually that is more likely to be caused by:
-
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=106937e8ccdcf0f4b95fbf0fe9abd42766cade33
-
-Try reverting that one, also see:
-
-http://www.spinics.net/lists/stable/msg82872.html
-
-Note that if either if these patches are the culprit likely
-your system is still booting you're just not getting any
-messages on either video output (caused by the commit discussed
-in this thread) nor on a serial console (caused by the 106937e8
-commit). If you've a network interface which comes up automatically
-try pinging it.
-
-Regards,
-
-Hans
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+index 067c979..7692b4c 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+@@ -2,10 +2,15 @@ NVIDIA Tegra AHB
+ 
+ Required properties:
+ - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
+-  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
+-  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
+-  tegra132, or tegra210.
+-- reg : Should contain 1 register ranges(address and length)
++  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124, must
++  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra114
++  or tegra124.  For Tegra132, the compatible string must contain
++  "nvidia,tegra132-ahb".
++
++- reg : Should contain 1 register ranges(address and length).  On Tegra20,
++  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
++  address of the IP block must end in 0x04.  On DT files for later chips, the
++  actual hardware base address of the IP block should be used.
+ 
+ Example:
+ 	ahb: ahb@6000c004 {
