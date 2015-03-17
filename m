@@ -1,158 +1,88 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [REGRESSION stable] "of: fix handling of '/' in options for of_find_node_by_path()"
- breaks stdout-path
-Date: Tue, 17 Mar 2015 14:58:50 +0100
-Message-ID: <5508331A.3090806@redhat.com>
-References: <5506FC72.80800@redhat.com> <20150316181957.GJ4278@bivouac.eciton.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/6] Documentation: DT: Document twl4030-madc-battery
+ bindings
+Date: Tue, 17 Mar 2015 14:59:13 +0100
+Message-ID: <20150317135913.GA4034@amd>
+References: <1423088075-10025-1-git-send-email-marek@goldelico.com>
+ <1423088075-10025-4-git-send-email-marek@goldelico.com>
+ <20150316210532.GA11441@amd>
+ <CAAfyv34vnRY=TAyx4+7s1SW7rVE7CFh9z+OOcCsbCx63y9aVog@mail.gmail.com>
+ <20150317084730.GA9761@amd>
+ <940EE988-03A4-4B1B-A168-959E367953A6@goldelico.com>
+ <20150317103746.GB3759@amd>
+ <CDA0FF88-2D00-46E0-828E-DD6F4FF4ADAF@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150316181957.GJ4278-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CDA0FF88-2D00-46E0-828E-DD6F4FF4ADAF@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Belisko Marek <marek.belisko@gmail.com>, mark.rutland@arm.com, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, GTA04 owners <gta04-owner@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi!
 
-On 16-03-15 19:19, Leif Lindholm wrote:
-> Hi Hans,
->
-> On Mon, Mar 16, 2015 at 04:53:22PM +0100, Hans de Goede wrote:
->> While updating my local working tree to 4.0-rc4 this morning I noticed that I no longer
->> got any console (neither video output not serial console) on an Allwinner A20 ARM
->> board.
->>
->> This is caused by:
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of?id=106937e8ccdcf0f4b95fbf0fe9abd42766cade33
->>
->> Reverting this commit fixes the serial console being gone for me.
->
-> Sorry about that.
->
->> After this there still is an issue that tty0 no longer is seen as console, where it
->> used to be properly used as console in 3.19, I'll investigate that further and send
->> a separate mail about this.
->>
->> Greg, this commit has a: "Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.19" please do not apply
->> this commit to stable!
->>
->> u-boot sets stdout-path to this value on the board in question:
->> "/soc@01c00000/serial@01c28000:115200"
->>
->> Looking at the first hunk of the patch in question, the problem is obvious:
->>
->> @@ -714,16 +714,17 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->>   const char *path)
->>   {
->>    struct device_node *child;
->> - int len = strchrnul(path, '/') - path;
->> - int term;
->> + int len;
->> + const char *end;
->> + end = strchr(path, ':');
->> + if (!end)
->> + end = strchrnul(path, '/');
->> +
->> + len = end - path;
->>    if (!len)
->>     return NULL;
->> - term = strchrnul(path, ':') - path;
->> - if (term < len)
->> - len = term;
->> -
->>   __for_each_child_of_node(parent, child) {
->>    const char *name = strrchr(child->full_name, '/');
->>    if (WARN(!name, "malformed device_node %s\n", child->full_name))
->>
->> The new code to determine len will match (when starting at root) the name of
->> all child nodes against: "soc@01c00000/serial@01c28000" as it checks for
->> the ":" first and then uses everything before it. Where as the old code
->> would match against: "soc@01c00000" which is the correct thing to do.
->>
->> The best fix I can come up with is to check for both ":" and "/" and use
->> the earlier one as end to calculate the length. I've not coded this out /
->> tested this due to -ENOTIME. Note that I've also not audited the rest of
->> the patch for similar issues.
->>
->> I will happily test any patches to fix this.
->
-> Can you give this one a try for the first part of your problem?
+> >>>>> to introduce coefficients for temperature and discharge rate?
+> >>>> What do you mean? Nothing like that is used in current driver wh=
+y do
+> >>>> we need to add it?
+> >>>=20
+> >>> Well, conversion between Li-ion's voltage and state of charge at =
+0
+> >>> current is well known:
+> >>=20
+> >> We can=E2=80=99t measure at 0 current since the OMAP is driven fro=
+m battery
+> >> and charger and may also draw some mA=E2=80=A6
+> >=20
+> > Yes, but you know how many mA you are taking just now. So if you kn=
+ew
+> > the internal resistance, you could compute the voltage at 0
+> > current. (And it should also work during charging, as long as you k=
+now
+> > how much current is going in.)
+>=20
+> As far as I understand the twl4030 charger and MADC it is not possibl=
+e to
+> separate these values. It is only reporting the inflow from charger t=
+o
+> battery + system. So you don=E2=80=99t know how many mA are supplying=
+ the system
+> and how many mA are left over for charging.
+>=20
+> You can only assume how much the system is drawing while running (som=
+ething
+> between 50 and 600 mA but this depends on system activities, power st=
+ate
+> of peripherald and e.g. backlight being switched on).
+>=20
+> I think your basic assumption that we know any time how many mA the s=
+ystem
+> is taking is not given.
 
-I've just given the below patch a test run and it resolves the issue for me.
+So.. you won't be able to get exact value while charging, but you
+get one while discharging, which is what really matters...?
 
-Thanks & Regards,
+> > Yes, and that coefficient should be internal battery resistance ;-)=
+=2E
+>=20
+> But where do you know this value from to write it into a DT file?
+> Usually you can=E2=80=99t measure it easily and for some batteries yo=
+u don=E2=80=99t have
+> a data sheet.
+>=20
+> Contrary, the calibration curves can easily be measured on the device
+> (assuming that the charge level decreases/increases linearly over tim=
+e
+> between Full and Empty).
 
-Hans
-
-
-> And if you're happy with that, I can revert the previous version and
-> send a new combined fix.
->
-> Rob/Grant: am I OK to assume the existence of the phandle-tests
-> subnode for my unrelated test?
->
-> /
->      Leif
->
->  From cbb150ddd277e5fe1c109e6a675f075f0611f71d Mon Sep 17 00:00:00 2001
-> From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Mon, 16 Mar 2015 17:58:22 +0000
-> Subject: [PATCH] of: fix regression in of_find_node_opts_by_path()
->
-> This fixes a regression for dealing with paths that contain both a ':'
-> option separator and a '/' in the path preceding it. And adds a test
-> case to prove it.
->
-> Fixes: 106937e8ccdc ("of: fix handling of '/' in options for of_find_node_by_path()")
-> Reported-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->   drivers/of/base.c     | 10 ++++------
->   drivers/of/unittest.c |  5 +++++
->   2 files changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index adb8764..2ee7265 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -715,13 +715,11 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->   {
->   	struct device_node *child;
->   	int len;
-> -	const char *end;
-> +	const char *p1, *p2;
->
-> -	end = strchr(path, ':');
-> -	if (!end)
-> -		end = strchrnul(path, '/');
-> -
-> -	len = end - path;
-> +	p1 = strchrnul(path, ':');
-> +	p2 = strchrnul(path, '/');
-> +	len = (p1 < p2 ? p1 : p2) - path;
->   	if (!len)
->   		return NULL;
->
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index aba8946..8d94349 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -97,6 +97,11 @@ static void __init of_selftest_find_node_by_name(void)
->   		 "option path test, subcase #1 failed\n");
->   	of_node_put(np);
->
-> +	np = of_find_node_opts_by_path("/testcase-data/phandle-tests:test/option", &options);
-> +	selftest(np && !strcmp("test/option", options),
-> +		 "option path test, subcase #2 failed\n");
-> +	of_node_put(np);
-> +
->   	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
->   	selftest(np, "NULL option path test failed\n");
->   	of_node_put(np);
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you can copy it from the data sheet, that's the easiest option. If
+not, you should be able to easily compute it from the charge/discharge
+curves or from measured voltage at different loads.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
