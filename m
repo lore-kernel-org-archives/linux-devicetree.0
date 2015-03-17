@@ -1,169 +1,90 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH 5/5] ARM: at91/dt: remove useless usb clock
-Date: Tue, 17 Mar 2015 17:15:50 +0100
-Message-ID: <1426608950-31555-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 4/5] ARM: at91/dt: remove useless uhpck clock references from ehci defintions
+Date: Tue, 17 Mar 2015 17:15:49 +0100
+Message-ID: <1426608950-31555-5-git-send-email-boris.brezillon@free-electrons.com>
 References: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426608950-31555-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Robert Nelson <robert.nelson@digikey.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426608950-31555-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>, Robert Nelson <robert.nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ohci driver now calls clk_set_rate on the uhpck clock (which forwards
-set_rate requests to its parent: the usb clock).
-Remove useless references to usb clocks from ohci definitions.
+The uhpck is useless for High-Speed communications, remove the reference
+to this clock in all ehci definitions.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/at91rm9200.dtsi  | 4 ++--
- arch/arm/boot/dts/at91sam9260.dtsi | 4 ++--
- arch/arm/boot/dts/at91sam9261.dtsi | 4 ++--
- arch/arm/boot/dts/at91sam9263.dtsi | 4 ++--
  arch/arm/boot/dts/at91sam9g45.dtsi | 4 ++--
- arch/arm/boot/dts/at91sam9n12.dtsi | 5 ++---
  arch/arm/boot/dts/at91sam9x5.dtsi  | 4 ++--
- arch/arm/boot/dts/sama5d3.dtsi     | 5 ++---
- arch/arm/boot/dts/sama5d4.dtsi     | 5 ++---
- 9 files changed, 18 insertions(+), 21 deletions(-)
+ arch/arm/boot/dts/sama5d3.dtsi     | 4 ++--
+ arch/arm/boot/dts/sama5d4.dtsi     | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
-index 21c2b50..31892a1 100644
---- a/arch/arm/boot/dts/at91rm9200.dtsi
-+++ b/arch/arm/boot/dts/at91rm9200.dtsi
-@@ -936,8 +936,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00300000 0x100000>;
- 			interrupts = <23 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&ohci_clk>, <&ohci_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&ohci_clk>, <&ohci_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index e7f0a4a..2dabe77 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -1008,8 +1008,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x100000>;
- 			interrupts = <20 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&ohci_clk>, <&ohci_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&ohci_clk>, <&ohci_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-index d55fdf2..db811f9 100644
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -75,8 +75,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x100000>;
- 			interrupts = <20 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&ohci_clk>, <&hclk0>, <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&ohci_clk>, <&hclk0>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index fce301c..aa981cd 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -1010,8 +1010,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00a00000 0x100000>;
- 			interrupts = <29 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&ohci_clk>, <&ohci_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&ohci_clk>, <&ohci_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
- 		};
- 	};
 diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index a5895f3..644570e 100644
+index 488af63..a5895f3 100644
 --- a/arch/arm/boot/dts/at91sam9g45.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1291,8 +1291,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00700000 0x100000>;
+@@ -1300,8 +1300,8 @@
+ 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+ 			reg = <0x00800000 0x100000>;
  			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 0c53a37..8d4200d 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -940,9 +940,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x00100000>;
- 			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>,
--				 <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
+-			clocks = <&utmi>, <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
+-			clock-names = "usb_clk", "ehci_clk", "hclk", "uhpck";
++			clocks = <&utmi>, <&uhphs_clk>;
++			clock-names = "usb_clk", "ehci_clk";
  			status = "disabled";
  		};
  	};
 diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 9a74a90..dab8bf9 100644
+index d221179..9a74a90 100644
 --- a/arch/arm/boot/dts/at91sam9x5.dtsi
 +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -1176,8 +1176,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00600000 0x100000>;
+@@ -1185,8 +1185,8 @@
+ 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+ 			reg = <0x00700000 0x100000>;
  			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
+-			clocks = <&utmi>, <&uhphs_clk>, <&uhpck>;
+-			clock-names = "usb_clk", "ehci_clk", "uhpck";
++			clocks = <&utmi>, <&uhphs_clk>;
++			clock-names = "usb_clk", "ehci_clk";
  			status = "disabled";
  		};
- 
+ 	};
 diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index a266a39..b1ded48 100644
+index 367af53..a266a39 100644
 --- a/arch/arm/boot/dts/sama5d3.dtsi
 +++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1405,9 +1405,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00600000 0x100000>;
+@@ -1415,8 +1415,8 @@
+ 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+ 			reg = <0x00700000 0x100000>;
  			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>,
--				 <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
+-			clocks = <&utmi>, <&uhphs_clk>, <&uhpck>;
+-			clock-names = "usb_clk", "ehci_clk", "uhpck";
++			clocks = <&utmi>, <&uhphs_clk>;
++			clock-names = "usb_clk", "ehci_clk";
  			status = "disabled";
  		};
  
 diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 4bfe7c1..8b16d6a 100644
+index 4303874..4bfe7c1 100644
 --- a/arch/arm/boot/dts/sama5d4.dtsi
 +++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -250,9 +250,8 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x100000>;
+@@ -260,8 +260,8 @@
+ 			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+ 			reg = <0x00600000 0x100000>;
  			interrupts = <46 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>,
--				 <&uhpck>;
--			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-+			clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
-+			clock-names = "ohci_clk", "hclk", "uhpck";
+-			clocks = <&utmi>, <&uhphs_clk>, <&uhpck>;
+-			clock-names = "usb_clk", "ehci_clk", "uhpck";
++			clocks = <&utmi>, <&uhphs_clk>;
++			clock-names = "usb_clk", "ehci_clk";
  			status = "disabled";
  		};
  
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
