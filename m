@@ -1,58 +1,43 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH 1/2] of: handle both '/' and ':' in path strings
-Date: Tue, 17 Mar 2015 12:30:31 -0700
-Message-ID: <1426620632-23383-1-git-send-email-computersforpeace@gmail.com>
+Subject: [PATCH 2/2] of: unittest: Add option string test case with longer path
+Date: Tue, 17 Mar 2015 12:30:32 -0700
+Message-ID: <1426620632-23383-2-git-send-email-computersforpeace@gmail.com>
 References: <1425924225-22748-2-git-send-email-leif.lindholm@linaro.org>
+ <1426620632-23383-1-git-send-email-computersforpeace@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425924225-22748-2-git-send-email-leif.lindholm@linaro.org>
+In-Reply-To: <1426620632-23383-1-git-send-email-computersforpeace@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
 Cc: Brian Norris <computersforpeace@gmail.com>, Peter Hurley <peter@hurleysoftware.com>, Leif Lindholm <leif.lindholm@linaro.org>, stable@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 106937e8ccdc ("of: fix handling of '/' in options for
-of_find_node_by_path()") caused a regression in OF handling of
-stdout-path. While it fixes some cases which have '/' after the ':', it
-breaks cases where there is more than one '/' *before* the ':'.
+There were regressions seen with commit 106937e8ccdc ("of: fix handling
+of '/' in options for of_find_node_by_path()"), where we couldn't handle
+extra '/' before the ':'. Let's test for this now.
 
-For example, it breaks this boot string
+Confirmed that this test fails without the previous patch and passes
+when patched. All other tests pass.
 
-  stdout-path = "/rdb/serial@f040ab00:115200";
-
-So rather than doing sequentialized checks (first for '/', then for ':';
-or vice versa), to get the correct behavior we need to check for the
-first occurrence of either one of them.
-
-It so happens that the handy strcspn() helper can do just that.
-
-Fixes: 106937e8ccdc ("of: fix handling of '/' in options for of_find_node_by_path()")
 Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-Cc: stable@vger.kernel.org
 ---
-This is for -stable only because the regression is marked for stable. Not sure
-the first one deserves to go to -stable, actually...
+ drivers/of/unittest.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- drivers/of/base.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index adb8764861c0..966d6fdcf427 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -715,13 +715,8 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
- {
- 	struct device_node *child;
- 	int len;
--	const char *end;
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index aba8946cac46..52c45c7df07f 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -97,6 +97,11 @@ static void __init of_selftest_find_node_by_name(void)
+ 		 "option path test, subcase #1 failed\n");
+ 	of_node_put(np);
  
--	end = strchr(path, ':');
--	if (!end)
--		end = strchrnul(path, '/');
--
--	len = end - path;
-+	len = strcspn(path, "/:");
- 	if (!len)
- 		return NULL;
- 
++	np = of_find_node_opts_by_path("/testcase-data/testcase-device1:test/option", &options);
++	selftest(np && !strcmp("test/option", options),
++		 "option path test, subcase #2 failed\n");
++	of_node_put(np);
++
+ 	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
+ 	selftest(np, "NULL option path test failed\n");
+ 	of_node_put(np);
 -- 
 1.9.1
