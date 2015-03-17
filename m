@@ -1,41 +1,64 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] ARM: dt: dove: add Dove PMU DT entry to dove.dtsi
-Date: Tue, 17 Mar 2015 15:15:55 +0000
-Message-ID: <20150317151555.GX8656@n2100.arm.linux.org.uk>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk>
- <E1YW7tB-0003mM-1L@rmk-PC.arm.linux.org.uk>
- <55072092.9040207@free-electrons.com>
- <20150317134335.GV8656@n2100.arm.linux.org.uk>
- <5508439F.4000507@gmail.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos3250: Add assigned clock parents
+ to CMU node
+Date: Wed, 18 Mar 2015 00:19:38 +0900
+Message-ID: <5508460A.7030608@kernel.org>
+References: <1425302250-13446-1-git-send-email-b.michalska@samsung.com> <1425302250-13446-3-git-send-email-b.michalska@samsung.com> <5508078C.6010902@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5508439F.4000507-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5508078C.6010902@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Beata Michalska <b.michalska@samsung.com>, kgene@kernel.org, tomasz.figa@gmail.com, mturquette@linaro.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 04:09:19PM +0100, Sebastian Hesselbarth wrote:
-> If we do this, we should have a look at syscon and potentially also
-> simple-mfd which will allow us to share the registers and register
-> platform_devices for the sub-nodes.
+On 03/17/15 19:53, Sylwester Nawrocki wrote:
+> On 02/03/15 14:17, Beata Michalska wrote:
+>> Use assigned-clocks/assigned-clock-parents properties for
+>> CMU clock controller DT node to secure proper clock setup:
+>> switching the two muxes to root oscillator clock is not only
+>> required for proper powering down the ISP power domain,
+>> but it also reduces the risk of accessing the ISP CMU
+>> registers while the ISP power domain remains turned off
+>> (i.e. through the common clock framework by clk_summary)
+>>
+>> Signed-off-by: Beata Michalska <b.michalska@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 > 
-> The current pmu power/reset/irq can still use the extra locking
-> and directly access MMIO registers - but for the others we should
-> really look into using regmaps.
+> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > 
-> The only thing here is that power domain descriptions are also encoded
-> as direct sub-nodes of the pmu node, right?
+> Kukjin, please merge this patch for v4.1. I merged the exynos3250
+> CMU ISP driver patch and we will have regression if $subject patch
+> is not applied, i.e. reading /sys/kernel/debug/clk/clk_summary
+> would cause system hang on exynos3250.
+> 
+OK, applied.
 
-Yes, I've been debating about putting those under a domains { } sub-node,
-like we do with the ports { } sub-node for of-graph stuff.
+Thanks,
+Kukjin
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> ---
+>>  arch/arm/boot/dts/exynos3250.dtsi |    4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+>> index 277b48b..6d6118e 100644
+>> --- a/arch/arm/boot/dts/exynos3250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+>> @@ -172,6 +172,10 @@
+>>  			compatible = "samsung,exynos3250-cmu";
+>>  			reg = <0x10030000 0x20000>;
+>>  			#clock-cells = <1>;
+>> +			assigned-clocks = <&cmu CLK_MOUT_ACLK_400_MCUISP_SUB>,
+>> +					  <&cmu CLK_MOUT_ACLK_266_SUB>;
+>> +			assigned-clock-parents = <&cmu CLK_FIN_PLL>,
+>> +						 <&cmu CLK_FIN_PLL>;
+>>  		};
+>>  
+>>  		cmu_dmc: clock-controller@105C0000 {
+>>
+> 
+> Thanks,
+> Sylwester
