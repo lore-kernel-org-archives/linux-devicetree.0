@@ -1,58 +1,49 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v6 1/8] of: Add binding for NVIDIA Tegra ACTMON node
-Date: Tue, 17 Mar 2015 10:36:11 +0100
-Message-ID: <1426584991-11110-2-git-send-email-tomeu.vizoso@collabora.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v6 8/8] ARM: tegra: Add Tegra124 ACTMON support
+Date: Tue, 17 Mar 2015 10:36:18 +0100
+Message-ID: <1426584991-11110-9-git-send-email-tomeu.vizoso@collabora.com>
 References: <1426584991-11110-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426584991-11110-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1426584991-11110-1-git-send-email-tomeu.vizoso@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-tegra@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Mikko Perttunen <mikko.perttunen@kapsi.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This block gathers statistics about various counters and can be configured to
-fire interrupts when thresholds are crossed.
+Add device node for the ACTMON block to the Tegra124 device tree.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
 
 ---
 
-v6:	* Wrap a few lines at 80
-	* Fix paths to other bindings
-	* Remove operating-points property
+v6:	* Remove operating-points property
 
 v2:	* Add operating-points property
 ---
- .../devicetree/bindings/arm/tegra/actmon.txt       | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/actmon.txt
+ arch/arm/boot/dts/tegra124.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/actmon.txt b/Documentation/devicetree/bindings/arm/tegra/actmon.txt
-new file mode 100644
-index 0000000..adb60da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/actmon.txt
-@@ -0,0 +1,28 @@
-+Tegra124 Activity Monitor
-+
-+Required properties:
-+
-+- compatible: should be "nvidia,tegra124-actmon"
-+- reg: offset and length of the register set for the device
-+- interrupts: standard interrupt property
-+- clocks: Must contain a phandle and clock specifier pair for each entry in
-+clock-names. See ../../clock/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - actmon
-+  - emc
-+- resets: Must contain an entry for each entry in reset-names. See
-+../../reset/reset.txt for details.
-+- reset-names: Must include the following entries:
-+  - actmon
-+
-+Example:
-+	actmon@6000c800 {
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index a49e7da..2158aa9 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -215,6 +215,17 @@
+ 		reg = <0x0 0x60007000 0x0 0x1000>;
+ 	};
+ 
++	actmon@0,6000c800 {
 +		compatible = "nvidia,tegra124-actmon";
 +		reg = <0x0 0x6000c800 0x0 0x400>;
 +		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
@@ -62,5 +53,9 @@ index 0000000..adb60da
 +		resets = <&tegra_car 119>;
 +		reset-names = "actmon";
 +	};
++
+ 	gpio: gpio@0,6000d000 {
+ 		compatible = "nvidia,tegra124-gpio", "nvidia,tegra30-gpio";
+ 		reg = <0x0 0x6000d000 0x0 0x1000>;
 -- 
 2.1.0
