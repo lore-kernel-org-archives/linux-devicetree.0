@@ -1,79 +1,65 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: kexec fails if OF_UNITTEST=y (was: Re: [PATCH v2] Removes
- OF_UNITTEST dependency on OF_DYNAMIC config symbol)
-Date: Tue, 17 Mar 2015 07:52:44 +0100
-Message-ID: <CAMuHMdU+DCVNyjd0s4TLz93=3AFGoq_QWvRbg3nCej7a3mX2BA@mail.gmail.com>
-References: <CAMuHMdVb47ogpLe_4iSz-NAxdcASUZ2HzTpxh+ibjcdMtiO-tQ@mail.gmail.com>
-	<CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA@mail.gmail.com>
+From: Eliad Peller <eliad@wizery.com>
+Subject: Re: [PATCH v6 6/6] wlcore: remove wl12xx_platform_data
+Date: Tue, 17 Mar 2015 08:58:50 +0200
+Message-ID: <CAB3XZEdtmCDnHLW_JpmPXu2rgg8RNkOvPaUfoijmL_UsG93_Gg@mail.gmail.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+	<20150313151301.GJ5264@atomide.com>
+	<CAB3XZEdFMQexA69JEuw=VnqsNOEkWAM0+oWWmt6DaN9+hZ+vdw@mail.gmail.com>
+	<2070859.WcMooC33YH@wuerfel>
+	<20150316152939.GP5264@atomide.com>
+	<20150316182536.GA16829@earth>
+	<20150316182426.GW5264@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150316182426.GW5264@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@ring0.de>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Sekhar Nori <nsekhar@ti.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Luciano Coelho <luca@coelho.fi>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Mar 17, 2015 at 1:25 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Mar 16, 2015 at 5:58 AM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Fri, Jan 23, 2015 at 2:03 PM, Geert Uytterhoeven
->> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>> On Sun, Jan 11, 2015 at 8:19 AM, Gaurav Minocha
->>> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> This patch intends to remove the unittests dependency on
->>>> the functions defined in dynamic.c. So, rather than calling
->>>> of_attach_node defined in dynamic.c, minimal functionality
->>>> required to attach a new node is re-defined in unittest.c.
->>>> Also, now after executing the tests the test data is not
->>>> removed from the device tree so there is no need to call
->>>> of_detach_node.
->>>
->>> Could there be unwanted side effects of not removing the test data?
+On Mon, Mar 16, 2015 at 8:24 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Sebastian Reichel <sre@ring0.de> [150316 11:26]:
+>> Hi,
 >>
->> Unfortunately I found a regression introduced by commit 3ce04b4a9fdc30b6
->> ("Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol").
+>> On Mon, Mar 16, 2015 at 08:29:39AM -0700, Tony Lindgren wrote:
+>> > * Arnd Bergmann <arnd@arndb.de> [150315 05:10]:
+>> > > On Sunday 15 March 2015 10:50:42 Eliad Peller wrote:
+>> > > > yeah, i missed it :/
+>> > > >
+>> > > > looks like there's no platform that defines platform data for it.
+>> > > > i'll replace the dev_get_platdata() with a function that only parses
+>> > > > the clock-frequency properties (the irq is taken in this case from the
+>> > > > spi_device).
+>> > > > (or maybe i should just drop it, as no one actually uses it?)
+>> > >
+>> > > I don't think we should drop the driver, but dropping the platform_data
+>> > > support sounds reasonable. New users of this driver should all be using
+>> > > DT, and if there is a good reason to use platform_data, it's easily
+>> > > put back.
+>> >
+>> > Well we have n8x0 and n900 using the spi driver. For those, n8x0 boot
+>> > all in dts mode, but n900 still also boots in legacy mode. It seems the
+>> > board-rx51-peripherals.c only passes the power_gpio though, so that
+>> > should be easy to keep around.
+>> >
+>> > We should keep things still working for n900 in legacy mode until the
+>> > pending regressions with device tree based booting have been cleared
+>> > for at least one merge cycle. I believe the last pending issues is the
+>> > support for ATAG_REVISION in device tree mode as posted by Pali.
 >>
->> If the test data is still present, kexec (kexec-tools 2.0.7 released 24
->> November 2014, 1:2.0.7-5 in Debian) fails with:
+>> mh by migrating to newer gpiod interface platform data is no longer
+>> needed (instead the boardfile would need a gpiod_lookup_table). That
+>> way all of the dirty code is in the board file and will be removed
+>> once the time comes. See for example rx51_fmtx_gpios_table.
 >>
->> unrecoverable error: short read
->> from"/proc/device-tree//testcase-data/large-property-PAGE_SIZEx8"
->>
->> Granted, this is a bug in kexec-tools, but I'm reporting it anyway, as it is
->> a kernel regression with existing userspace.
->>
->> I believe this bug was fixed in kexec-tools by commit d1932cd592e2a6aa
->> ("kexec/fs2dt: Use slurp_file_len to avoid partial read of files"), but I
->> haven't tested the fix yet.
+>> Note: This is independent of wl12xx changes, since N900 uses wl1251.
 >
-> Is OF_UNITTEST enabled by default in Debian or this is a custom
-> kernel? Perhaps we should require a command line option to actually
-> populate the test data and run the tests?
+> Oh sorry yes sounds like that's different platform data then. In that
+> case I see no reasons to drop the platform data for wl12xx.
+>
+great.
+so i'll drop the relevant wlcore_spi platform data code, and rebase
+the patches on top of v4.0-rc4 (probably tomorrow).
 
-It's not that bad, this is a custom kernel. I just had it still
-enabled by accident.
-
-I guess making it modular is not that easy?
-
-> We just need more tests to slow down the boot enough people will not
-> enable them by default. ;)
-
-Apart from slowing down the boot, most tests don't have side effects.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eliad.
