@@ -1,93 +1,136 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Tue, 17 Mar 2015 11:01:51 +0900
-Message-ID: <55078B0F.1040800@samsung.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
- <54CF4FC7.2050309@ti.com> <1426509149.2330.5.camel@linaro.org>
- <5506D675.8010006@ti.com> <1426515811.2330.16.camel@linaro.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH V5 2/2] ARM: dts: Add HS400 support for exynos5420 and
+ exynos5800
+Date: Tue, 17 Mar 2015 11:12:42 +0900
+Message-ID: <07b501d06057$d9d7bc80$8d873580$@kernel.org>
+References: <1422499318-13726-1-git-send-email-alim.akhtar@samsung.com>
+ <1422499318-13726-3-git-send-email-alim.akhtar@samsung.com>
+ <54ED6D24.4000703@samsung.com>
+ <CAGOxZ53_TGay2ooTW22ZGPZ+yneqoXH6JEPZ=mMSYr1cpOhXWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1426515811.2330.16.camel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: Roger Quadros <rogerq@ti.com>, myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAGOxZ53_TGay2ooTW22ZGPZ+yneqoXH6JEPZ=mMSYr1cpOhXWg@mail.gmail.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Alim Akhtar' <alim.akhtar@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>
+Cc: devicetree@vger.kernel.org, 'Ulf Hansson' <ulf.hansson@linaro.org>, linux-samsung-soc@vger.kernel.org, 'Seungwon Jeon' <tgih.jun@samsung.com>, linux-mmc@vger.kernel.org, 'Chris Ball' <chris@printf.net>, 'Douglas Anderson' <dianders@chromium.org>, 'kgene' <kgene@kernel.org>, 'Alim Akhtar' <alim.akhtar@samsung.com>, 'Abhilash Kesavan' <a.kesavan@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
-
-On 03/16/2015 11:23 PM, Ivan T. Ivanov wrote:
+Alim Akhtar wrote:
 > 
-> Hi Roger, 
+> Ping?
 > 
-> On Mon, 2015-03-16 at 15:11 +0200, Roger Quadros wrote:
->> Hi Ivan,
->>
->> On 16/03/15 14:32, Ivan T. Ivanov wrote:
->>> Hi,
->>>
->>> On Mon, 2015-02-02 at 12:21 +0200, Roger Quadros wrote:
->>>> This driver observes the USB ID pin connected over a GPIO and
->>>> updates the USB cable extcon states accordingly.
->>>>
->>>> The existing GPIO extcon driver is not suitable for this purpose
->>>> as it needs to be taught to understand USB cable states and it
->>>> can't handle more than one cable per instance.
->>>>
->>>> For the USB case we need to handle 2 cable states.
->>>> 1) USB (attach/detach)
->>>> 2) USB-HOST (attach/detach)
->>>>
->>>> This driver can be easily updated in the future to handle VBUS
->>>> events in case it happens to be available on GPIO for any platform.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>> v4:
->>>> - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
->>>> - changed host cable name to "USB-HOST"
->>>
->>> I am sorry that I am getting a bit little late into this.
->>>
->>> Isn't supposed that we have to use strings defined in
->>> const char extcon_cable_name[][]?
->>>
->>>
->>>> +
->>>> +/* List of detectable cables */
->>>> +enum {
->>>> +       EXTCON_CABLE_USB = 0,
->>>> +       EXTCON_CABLE_USB_HOST,
->>>> +
->>>
->>> Same here: duplicated with enum extcon_cable_name
->>>
->>>> +       EXTCON_CABLE_END,
->>>> +};
->>>> +
->>>> +static const char *usb_extcon_cable[] = {
->>>> +       [EXTCON_CABLE_USB] = "USB",
->>>> +       [EXTCON_CABLE_USB_HOST] = "USB-HOST",
->>>> +       NULL,
->>>> +};
->>
->> I'm not exactly sure how else it is supposed to work if we
->> support only a subset of cables from the global extcon_cable_name[][].
-> 
-> I don't see issue that we use just 2 events. I think that we can
-> reuse  enum extcon_cable_name and strings already defined in 
-> extcon_cable_name[][] global variable. It is defined extern in
-> extcon.h file exactly for this purpose, no?
+Alim,
 
-'extcon_cable_name' global variable is not used on extcon driver directly.
-It is just recommended cable name. 
-
-I have plan to use standard cable name for extcon driver instead of that
-each extcon driver define the cable name.
-
-[snip]
+Can you please re-send it based on latest my tree?
+It would be helpful for me ;)
 
 Thanks,
-Chanwoo Choi
+Kukjin
+
+> On Wed, Feb 25, 2015 at 12:05 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> > Hi, Alim.
+> >
+> > Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+> >
+> > Best Regards,
+> > Jaehoon Chung
+> >
+> > On 01/29/2015 11:41 AM, Alim Akhtar wrote:
+> >> From: Seungwon Jeon <tgih.jun@samsung.com>
+> >>
+> >> HS400 timing values are added for SMDK5420, exynos5420-peach-pit
+> >> and exynos5800-peach-pi boards.
+> >> This also adds RCLK GPIO line, this gpio should be in pull-down
+> >> state.
+> >> This also enables HS400 on peach-pi and this updates the clock frequency
+> >> to 800MHz to be set as input clock to controller.
+> >>
+> >> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+> >> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> >> [Alim: addressed review comments]
+> >> ---
+> >>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    4 +++-
+> >>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 +++++++
+> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts  |    4 +++-
+> >>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    7 +++++--
+> >>  4 files changed, 18 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-
+> pit.dts
+> >> index 9a050e1..f7a44a4 100644
+> >> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> >> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> >> @@ -569,8 +569,10 @@
+> >>       samsung,dw-mshc-ciu-div = <3>;
+> >>       samsung,dw-mshc-sdr-timing = <0 4>;
+> >>       samsung,dw-mshc-ddr-timing = <0 2>;
+> >> +     samsung,dw-mshc-hs400-timing = <0 2>;
+> >> +     samsung,read-strobe-delay = <90>;
+> >>       pinctrl-names = "default";
+> >> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> >> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+> >>       bus-width = <8>;
+> >>  };
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> >> index ba686e4..8b15316 100644
+> >> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> >> @@ -201,6 +201,13 @@
+> >>                       samsung,pin-drv = <3>;
+> >>               };
+> >>
+> >> +             sd0_rclk: sd0-rclk {
+> >> +                     samsung,pins = "gpc0-7";
+> >> +                     samsung,pin-function = <2>;
+> >> +                     samsung,pin-pud = <1>;
+> >> +                     samsung,pin-drv = <3>;
+> >> +             };
+> >> +
+> >>               sd1_cmd: sd1-cmd {
+> >>                       samsung,pins = "gpc1-1";
+> >>                       samsung,pin-function = <2>;
+> >> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> >> index 8be3d7b..2078a1f 100644
+> >> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> >> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> >> @@ -80,8 +80,10 @@
+> >>               samsung,dw-mshc-ciu-div = <3>;
+> >>               samsung,dw-mshc-sdr-timing = <0 4>;
+> >>               samsung,dw-mshc-ddr-timing = <0 2>;
+> >> +             samsung,dw-mshc-hs400-timing = <0 2>;
+> >> +             samsung,read-strobe-delay = <90>;
+> >>               pinctrl-names = "default";
+> >> -             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> >> +             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+> >>               bus-width = <8>;
+> >>               cap-mmc-highspeed;
+> >>       };
+> >> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> >> index e8fdda8..96f0d61 100644
+> >> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> >> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> >> @@ -550,15 +550,18 @@
+> >>       num-slots = <1>;
+> >>       broken-cd;
+> >>       mmc-hs200-1_8v;
+> >> +     mmc-hs400-1_8v;
+> >>       cap-mmc-highspeed;
+> >>       non-removable;
+> >>       card-detect-delay = <200>;
+> >> -     clock-frequency = <400000000>;
+> >> +     clock-frequency = <800000000>;
+> >>       samsung,dw-mshc-ciu-div = <3>;
+> >>       samsung,dw-mshc-sdr-timing = <0 4>;
+> >>       samsung,dw-mshc-ddr-timing = <0 2>;
+> >> +     samsung,dw-mshc-hs400-timing = <0 2>;
+> >> +     samsung,read-strobe-delay = <90>;
+> >>       pinctrl-names = "default";
+> >> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> >> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+> >>       bus-width = <8>;
+> >>  };
+
