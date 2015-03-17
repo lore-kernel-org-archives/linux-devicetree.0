@@ -1,119 +1,106 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RESEND PATCH 2/2] bus: ocp2scp: SYNC2 value should be changed to 0x6
-Date: Tue, 17 Mar 2015 16:54:51 +0530
-Message-ID: <1426591491-3685-2-git-send-email-kishon@ti.com>
-References: <1426591491-3685-1-git-send-email-kishon@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 2/6] ARM: cpuidle: Add a cpuidle ops structure to be used
+ for DT
+Date: Tue, 17 Mar 2015 11:29:05 +0000
+Message-ID: <20150317112905.GA14984@red-moon>
+References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org>
+ <1425385777-14766-3-git-send-email-daniel.lezcano@linaro.org>
+ <55075453.2070503@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1426591491-3685-1-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, tony@atomide.com, gregkh@linuxfoundation.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, kishon@ti.com, nm@ti.com, praneeth@ti.com, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55075453.2070503@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-As per the TRMs of AM572x, OMAP4430, OMAP4460, OMAP543x, the value of
-SYNC2 must be set to 0x6 in order to ensure correct operation.
+On Mon, Mar 16, 2015 at 10:08:19PM +0000, Stephen Boyd wrote:
+> On 03/03/15 04:29, Daniel Lezcano wrote:
+> >
+> > The code is optimized to use the __init section intensively in order to reduce
+> > the memory footprint after the driver is initialized and unify the function
+> > names with ARM64.
+> >
+> > In order to prevent multiple declarations and the specific cpuidle ops to be
+> > spread across the different headers, a mechanism, similar to the cgroup subsys,
+> > has been introduced.
+> >
+> > A new platform willing to add its cpuidle ops must add an entry in the file
+> > cpuidle_ops.h in the current form:
+> >
+> >  #if IS_ENABLED(CONFIG_ARM_FOO_CPUIDLE)
+> >  CPUIDLE_OPS(foo)
+> >  #endif
+> >
+> > ... and use the variable name in the specific low level code:
+> >
+> > struct cpuidle_ops foo_cpuidle_ops;
+> >
+> > The CPUIDLE_OPS macro will be processed in different way in the cpuidle.c file,
+> > thus allowing to keep untouched the arm cpuidle core code in the future when
+> > a new platform is added.
+> [...]
+> > diff --git a/arch/arm/include/asm/cpuidle_ops.h b/arch/arm/include/asm/cpuidle_ops.h
+> > new file mode 100644
+> > index 0000000..be0a612
+> > --- /dev/null
+> > +++ b/arch/arm/include/asm/cpuidle_ops.h
+> > @@ -0,0 +1,3 @@
+> > +/*
+> > + * List of cpuidle operations
+> > + */
+> > diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
+> > index 45969f8..25e9789c 100644
+> > --- a/arch/arm/kernel/cpuidle.c
+> > +++ b/arch/arm/kernel/cpuidle.c
+> > @@ -10,8 +10,29 @@
+> >   */
+> >  
+> >  #include <linux/cpuidle.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> >  #include <asm/cpuidle.h>
+> >  
+> > +#define CPUIDLE_OPS(__x) extern struct cpuidle_ops __x ## _cpuidle_ops;
+> > +#include <asm/cpuidle_ops.h>
+> > +#undef CPUIDLE_OPS
+> > +
+> > +#define CPUIDLE_OPS(__x) __x ## _cpuidle_ops_id,
+> > +enum cpuidle_ops_id {
+> > +#include <asm/cpuidle_ops.h>
+> > +        CPUIDLE_OPS_COUNT,
+> > +};
+> > +#undef CPUIDLE_OPS
+> > +
+> > +#define CPUIDLE_OPS(__x) [__x ## _cpuidle_ops_id ] = &__x ## _cpuidle_ops,
+> > +static struct cpuidle_ops *supported_cpuidle_ops[] __initconst = {
+> > +#include <asm/cpuidle_ops.h>
+> > +};
+> > +#undef CPUIDLE_OPS
+> > +
+> > +static struct cpuidle_ops cpuidle_ops[NR_CPUS];
+> 
+> Is there any reason why we aren't putting these structures into a linker
+> section like we do for the smp operations structures?
 
-So modified the SYNC2 value of OCP2SCP TIMING register to 0x6 in all the
-platforms that use OCP2SCP driver except AM437x. Also introduced a new
-compatible property since we don't want to modify the OCP2SCP TIMING
-register for AM437x.
+I think it can be done with an OF_TABLE, it is a bit of shame cpuidle_ops
+should work on UP too otherwise they could have been merged in
+smp_ops to create cpu_ops, like arm64 does.
 
-The sections in TRM where the above caution can be found is mentioned below.
-AM572x TRM SPRUHZ6 (http://www.ti.com/lit/ug/spruhz6/spruhz6.pdf) under
-section 26.3.2.2, table 26-26.
+> The nice thing about using the linker is it makes it clearer at the
+> location where we define the structure that it's actually used by
+> something. Right now the structures are defined non-static in a file and
+> then we have to know that a CPUIDLE_OPS() define has been made in
+> another architecture specific asm header file so that this macro magic
+> works. The commit text says something about multiple declarations and
+> ops spread across header files, which shouldn't apply if we're using the
+> linker to find these ops and merge them into an array we can iterate over.
 
-OMAP4430 TRM SWPU231AP (http://www.ti.com/lit/ug/swpu231ap/swpu231ap.pdf)
-under section 23.12.6.2.2 , Table 23-1213.
+It makes sense, see above for UP vs SMP. I wonder if we can't find
+something to overcome the UP limitation nicely, the init code in
+arch/arm/kernel/devtree.c is identical for smp_ops and cpuidle_ops,
+apart from the CONFIG_SMP ifdeffery.
 
-OMAP4460 TRM SWPU235AB (http://www.ti.com/lit/ug/swpu235ab/swpu235ab.pdf)
-under section 23.12.6.2.2, Table 23-1213.
-
-OMAP543x TRM SWPU249 (http://www.ti.com/lit/pdf/swpu249)
-under section 27.3.2.2, Table 27-27.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Praneeth Bajjuri <praneeth@ti.com>
----
- drivers/bus/omap-ocp2scp.c |   34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/drivers/bus/omap-ocp2scp.c b/drivers/bus/omap-ocp2scp.c
-index 723ec06..9f18569 100644
---- a/drivers/bus/omap-ocp2scp.c
-+++ b/drivers/bus/omap-ocp2scp.c
-@@ -16,6 +16,7 @@
-  *
-  */
- 
-+#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/err.h>
-@@ -23,6 +24,9 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- 
-+#define OCP2SCP_TIMING 0x18
-+#define SYNC2_MASK 0xf
-+
- static int ocp2scp_remove_devices(struct device *dev, void *c)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
-@@ -35,6 +39,9 @@ static int ocp2scp_remove_devices(struct device *dev, void *c)
- static int omap_ocp2scp_probe(struct platform_device *pdev)
- {
- 	int ret;
-+	u32 reg;
-+	void __iomem *regs;
-+	struct resource *res;
- 	struct device_node *np = pdev->dev.of_node;
- 
- 	if (np) {
-@@ -47,6 +54,32 @@ static int omap_ocp2scp_probe(struct platform_device *pdev)
- 	}
- 
- 	pm_runtime_enable(&pdev->dev);
-+	/*
-+	 * As per AM572x TRM: http://www.ti.com/lit/ug/spruhz6/spruhz6.pdf
-+	 * under section 26.3.2.2, table 26-26 OCP2SCP TIMING Caution;
-+	 * As per OMAP4430 TRM: http://www.ti.com/lit/ug/swpu231ap/swpu231ap.pdf
-+	 * under section 23.12.6.2.2 , Table 23-1213 OCP2SCP TIMING Caution;
-+	 * As per OMAP4460 TRM: http://www.ti.com/lit/ug/swpu235ab/swpu235ab.pdf
-+	 * under section 23.12.6.2.2, Table 23-1213 OCP2SCP TIMING Caution;
-+	 * As per OMAP543x TRM http://www.ti.com/lit/pdf/swpu249
-+	 * under section 27.3.2.2, Table 27-27 OCP2SCP TIMING Caution;
-+	 *
-+	 * Read path of OCP2SCP is not working properly due to low reset value
-+	 * of SYNC2 parameter in OCP2SCP. Suggested reset value is 0x6 or more.
-+	 */
-+	if (!of_device_is_compatible(np, "ti,am437x-ocp2scp")) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		regs = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(regs))
-+			goto err0;
-+
-+		pm_runtime_get_sync(&pdev->dev);
-+		reg = readl_relaxed(regs + OCP2SCP_TIMING);
-+		reg &= ~(SYNC2_MASK);
-+		reg |= 0x6;
-+		writel_relaxed(reg, regs + OCP2SCP_TIMING);
-+		pm_runtime_put_sync(&pdev->dev);
-+	}
- 
- 	return 0;
- 
-@@ -67,6 +100,7 @@ static int omap_ocp2scp_remove(struct platform_device *pdev)
- #ifdef CONFIG_OF
- static const struct of_device_id omap_ocp2scp_id_table[] = {
- 	{ .compatible = "ti,omap-ocp2scp" },
-+	{ .compatible = "ti,am437x-ocp2scp" },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, omap_ocp2scp_id_table);
--- 
-1.7.9.5
-
+Lorenzo
