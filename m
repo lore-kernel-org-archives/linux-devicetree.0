@@ -1,123 +1,83 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH 2/2] pinctrl: Add Pistachio SoC pin control driver
-Date: Tue, 17 Mar 2015 09:56:41 -0700
-Message-ID: <CAL1qeaHCKPeQnf8VPWmz_=uN1=_mxWbMGF+HuPZ_AYOqA+15JA@mail.gmail.com>
-References: <1424744104-14151-1-git-send-email-abrestic@chromium.org>
-	<1424744104-14151-3-git-send-email-abrestic@chromium.org>
-	<CACRpkdbqioAreyDwM2JN87=gH20n1OkUXPjdkW885iDWUV1NnA@mail.gmail.com>
-	<CAL1qeaHzpi3_PNpxnLOf=b8d2n5DrRrnB_yiZFHpiP8C7b0hSg@mail.gmail.com>
-	<CACRpkdbt4MQYY7MqjFN-1Dp0am1PaOZ1YL+bKc8SJrtFDnSW_Q@mail.gmail.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v3 05/15] dt-bindings: Document the STM32 reset bindings
+Date: Tue, 17 Mar 2015 17:57:47 +0100
+Message-ID: <CALszF6AVKnSPzOhyBQaOnQJwo34gx-rwRdb3RgL_pDNaX1FpNg@mail.gmail.com>
+References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
+	<1426197361-19290-6-git-send-email-maxime.coquelin@st.com>
+	<55022AC0.7090403@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbt4MQYY7MqjFN-1Dp0am1PaOZ1YL+bKc8SJrtFDnSW_Q@mail.gmail.com>
+In-Reply-To: <55022AC0.7090403@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 5:16 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Mar 6, 2015 at 7:51 PM, Andrew Bresticker <abrestic@chromium.org> wrote:
->> On Fri, Mar 6, 2015 at 3:55 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Chanwoo,
+
+2015-03-13 1:09 GMT+01:00 Chanwoo Choi <cw00.choi@samsung.com>:
+> Hi Maxime,
 >
->>>> +static inline void gpio_writel(struct pistachio_gpio_bank *bank, u32 val,
->>>> +                              u32 reg)
->>>> +{
->>>> +       writel(val, bank->base + reg);
->>>> +}
->>>
->>> I don't see the point of these special readl/writel accessors. Just
->>> use readl/writel
->>> directly. Or consider readl/writel_relaxed() if MIPS has this.
+> On 03/13/2015 06:55 AM, Maxime Coquelin wrote:
+>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 >>
->> I actually find these useful for tracing MMIO accesses within a driver
->> and it seems many other drivers do this too.  I can drop them though
->> if you'd prefer.
->
-> OK does it turn up in ftrace etc? I was thinking these would be
-> inlined by the compiler (especially since you even state they shall
-> be inlined) and the symbols trashed?
-
-Right, the functions as-is won't show up as trace events, but they can
-be easily modified to do so.
-
->>> (...)
->>>> +static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
->>>> +{
->>>> +       struct device_node *child, *node = pctl->dev->of_node;
->>>> +       struct pistachio_gpio_bank *bank;
->>>> +       unsigned int i = 0;
->>>> +       int irq, ret = 0;
->>>> +
->>>> +       for_each_child_of_node(node, child) {
->>>> +               if (!of_find_property(child, "gpio-controller", NULL))
->>>> +                       continue;
->>>
->>> So why not instead specify "simple-bus" as compatible on the parent node
->>> and have each subnode be its own device (simple-bus will spawn platform
->>> devices for all subnodes).
->>>
->>> Overall this composite-device pattern is discouraged if we can instead have
->>> unique devices for each bank.
+>> This adds documentation of device tree bindings for the
+>> STM32 reset controller.
 >>
->> I think there's an issue here though if some other device probes
->> between the pinctrl driver and the gpiochip drivers.  Since all these
->> pins are configured as GPIOs at POR, the pinctrl driver needs to clear
->> the GPIO enable bit on a pin when enabling a pinmux function for that
->> pin (see pistachio_pinmux_enable()).  If the gpiochip driver has yet
->> to probe, attempting to map the pinctrl pin to a GPIO range/pin (via
->> pinctrl_find_gpio_range_from_pin()) will fail and we won't be able to
->> disable the GPIO function for that pin.
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> ---
+>>  .../devicetree/bindings/reset/st,stm32-rcc.txt     | 102 +++++++++++++++++++++
+>>  1 file changed, 102 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+>> new file mode 100644
+>> index 0000000..962f961
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+<snip>
+
+>> + - can1: 281
+>> + - can2: 282
+>> + - pwr: 284
+>> + - dac: 285
+>> + - uart7: 286
+>> + - uart8: 287
+>> + - tim1: 288
+>> + - tim8: 289
+>> + - usart1: 292
+>> + - usart6: 293
+>> + - adc: 296
+>> + - sdio: 299
+>> + - spi1: 300
+>> + - spi4: 301
+>> + - syscfg: 302
+>> + - tim9: 304
+>> + - tim10: 305
+>> + - tim11: 306
+>> + - spi5: 308
+>> + - spi6: 309
+>> + - sai1: 310
+>> + - ltdc: 31
+>> +
+>>
 >
-> I was thinking the GPIO driver part should get a -EPROBE_DEFER when
-> trying to call gpiochip_add_pin_range() and continue later when the
-> pin controller is available?
+> Last line is un-necessary. When I applied this patch for test
+> "new blank line at EOF" happen.
 
-Right.
+Thanks, that will be fixed in v4.
 
-> And all drivers using GPIOs in turn get a -EPROBE_DEFER when
-> trying to get GPIOs on a not-yet registered GPIO chip.
-
-Right.
-
-> Sorry if I don't really know how things work now... :(
-> It seems like a logical way to me.
-
-OK, let me try to run through an example:
-
-1) Initially all pins (except for those set up by the firmware) are
-configured as GPIOs.
-2) The pinctrl driver probes.
-3) Another driver, e.g. an I2C controller attempts to probe and
-pinmux_enable_setting() is called.
-4) The ->set_mux() op must set the proper function for the pin.
-5) The ->set_mux() op must also disable the GPIO function for the pin.
-To disable the GPIO function, the pinctrl driver must map the pin to a
-GPIO bank/offset and disable the GPIO via the GPIO bank's GPIO_EN
-register.
-
-Now to map the pin back to a GPIO bank/offset, I had been using
-pinctrl_find_gpio_range_from_pin(), which works just fine if the GPIO
-driver has already probed.  But in the example above, we haven't
-probed the GPIO driver yet so we're unable to do the mapping.  This
-particular issue, I think, could by returning -EPROBE_DEFER from
-->set_mux() if we're enable to look up the GPIO bank.
-
->>  Also it doesn't look like
->> there's a good way to tell gpiolib to disable a GPIO form the pinctrl
->> driver.
+Kind regards,
+Maxime
 >
-> Define exactly what you mean by "disable". There is
-> pinctrl_free_gpio().
-
-Each GPIO bank has a GPIO_EN register which enables the GPIO function
-for the corresponding pin, overriding the function selected in the
-pinctrl registers.  What I think we need here is pinctrl_free_gpio()
-in the reverse direction: a way for the pinctrl driver to tell the
-GPIO driver to disable the GPIO function for a particular pin.  Now we
-could hack around this by having the pinctrl driver do the mapping
-from pin to GPIO bank/offset and modifying the GPIO bank registers
-itself, but that seems a bit ugly.
-
-Thanks,
-Andrew
+> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+> @@ -99,4 +99,3 @@ List of indexes for STM32F429:
+>   - spi6: 309
+>   - sai1: 310
+>   - ltdc: 31
+> -
+>
+> Thanks,
+> Chanwoo Choi
+>
