@@ -1,36 +1,64 @@
 From: Peter Hurley <peter@hurleysoftware.com>
 Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
  breaks console on tty0
-Date: Tue, 17 Mar 2015 16:14:27 -0400
-Message-ID: <55088B23.8030108@hurleysoftware.com>
-References: <55070544.9010908@redhat.com>	<550717A0.3060603@hurleysoftware.com> <87r3sowk51.fsf@igel.home>	<5507758B.2060000@hurleysoftware.com> <87zj7bquwk.fsf@igel.home> <5508842F.5090209@hurleysoftware.com>
+Date: Tue, 17 Mar 2015 16:22:08 -0400
+Message-ID: <55088CF0.3050709@hurleysoftware.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <55075AFD.7000001@hurleysoftware.com> <5507E3E3.5000001@redhat.com> <CAL_Jsq+dA3RDbakrkeMY07czs13bFFKCyETEXTzWxf+h1umBPQ@mail.gmail.com> <55082F9F.90909@redhat.com> <55083828.8090705@hurleysoftware.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <5508842F.5090209@hurleysoftware.com>
+In-Reply-To: <55083828.8090705@hurleysoftware.com>
 Sender: stable-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 03:44 PM, Peter Hurley wrote:
-> On 03/17/2015 03:35 PM, Andreas Schwab wrote:
->> Peter Hurley <peter@hurleysoftware.com> writes:
+On 03/17/2015 10:20 AM, Peter Hurley wrote:
+> On 03/17/2015 09:43 AM, Hans de Goede wrote:
+>> Hi,
 >>
->>> It doesn't boot?
+>> On 17-03-15 14:30, Rob Herring wrote:
+>>> On Tue, Mar 17, 2015 at 3:20 AM, Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> It boots right into user space, but the initrd doesn't like something
->> (perhaps the missing console) and exits.  Note that the framebuffer
->> console does work, but all I see are the penguins.
+>> <snip>
 >>
->> [    6.235604] Warning: unable to open an initial console.
+>>>> TBH I do not understand why we're even arguing here, AFAICT the behavior
+>>>> change
+>>>> is an unwanted side-effect of your patch, so the solution is to rewrite the
+>>>> patch
+>>>> so that we get the same end result (not turning off bootconsole-s too early)
+>>>> without
+>>>> the unwanted side-effect, and you agreed to work on that ?
+>>>
+>>> I intend to revert this if we don't have a fix soon.
+>>>
+>>> I think we just need a flag saying we've enabled the earlycon from
+>>> stdout-path or not and then add the preferred console based on that. I
+>>> assume with "earlycon" only on the command-line, getting console only
+>>> on stdout-path is okay.
+>>
+>> Yes, if a user explicitly specifies something like "earlycon" on the
+>> commandline then not automatically getting console output on tty0 is
+>> fine AFAICT. The use case important for me / distros is when no
+>> console= (or related) arguments are present on the cmdline at all,
+>> then the desired behavior is to have console output on tty0 as well
+>> as on any serial console specified with stdout-path.
 > 
-> Thanks, Andreas. I had figured out from your earlier email that your
-> specific breakage was the absence of any console.
+> The issues raised by this patch have nothing to do with earlycon.
+> 
+> 1. PowerPC boot crash - the report with the most troubleshooting info right now
+>    implicates some buffer overflow or console mismanagement triggered by simply
+>    having defined a preferred console. This needs to be figured out regardless,
+>    and this is what I'm working right now.
+> 
+> 2. Hans' use-case was _already broken_ even before this patch; _any_ driver
+>    that adds a preferred console before the vt console driver will cause
+>    this problem. So again, this needs to be fixed regardless.
 
-Would you share what the actual prom stdout string value is?
-(linux,stdout-path is equivalent)
+Rob,
+
+You're right; this patch will need to be reverted. I'll send you a revert.
 
 Regards,
 Peter Hurley
