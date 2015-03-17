@@ -1,63 +1,67 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/9] ARM: dt: dove: add Dove PMU DT entry to dove.dtsi
-Date: Tue, 17 Mar 2015 16:09:19 +0100
-Message-ID: <5508439F.4000507@gmail.com>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk> <E1YW7tB-0003mM-1L@rmk-PC.arm.linux.org.uk> <55072092.9040207@free-electrons.com> <20150317134335.GV8656@n2100.arm.linux.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Tue, 17 Mar 2015 15:14:24 +0000
+Message-ID: <20150317151424.GQ8399@arm.com>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+ <1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
+ <20150306105821.GE22377@arm.com>
+ <1425903103.13300.29.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150317134335.GV8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425903103.13300.29.camel@mhfsdcap03>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 02:43 PM, Russell King - ARM Linux wrote:
-> On Mon, Mar 16, 2015 at 07:27:30PM +0100, Gregory CLEMENT wrote:
->>> +			pmu: power-management@d0000 {
->>> +				compatible = "marvell,dove-pmu";
->>> +				reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
->>
->> Here you overlap some other nodes such as the thermal one (from 0xd001c
->> to 0xd0028), the clock gate one (from 0xd0038 to 0xd003c), the gpio one,
->> the pinctrl one ...
->
-> Yes, I'm well aware of that, but here's the thing...
->
-> I'm describing the hardware here.
->
-> The real problem is that Dove (etc) went down the path of breaking up
-> the PMU device into multiple smaller devices each specifying a sub-set
-> of the register range.  By doing that, Dove moved away from describing
+On Mon, Mar 09, 2015 at 12:11:43PM +0000, Yong Wu wrote:
+> On Fri, 2015-03-06 at 10:58 +0000, Will Deacon wrote:
+> > On Fri, Mar 06, 2015 at 10:48:17AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > 
+> > > This patch adds support for mediatek m4u (MultiMedia Memory Management Unit).
+> > > Currently this only supports m4u gen 2 with 2 levels of page table on mt8173.
+> > 
+> > [...]
+> > 
+> > > +/* 2 level pagetable: pgd -> pte */
+> > > +#define F_PTE_TYPE_GET(regval)  (regval & 0x3)
+> > > +#define F_PTE_TYPE_LARGE         BIT(0)
+> > > +#define F_PTE_TYPE_SMALL         BIT(1)
+> > > +#define F_PTE_B_BIT              BIT(2)
+> > > +#define F_PTE_C_BIT              BIT(3)
+> > > +#define F_PTE_BIT32_BIT          BIT(9)
+> > > +#define F_PTE_S_BIT              BIT(10)
+> > > +#define F_PTE_NG_BIT             BIT(11)
+> > > +#define F_PTE_PA_LARGE_MSK            (~0UL << 16)
+> > > +#define F_PTE_PA_LARGE_GET(regval)    ((regval >> 16) & 0xffff)
+> > > +#define F_PTE_PA_SMALL_MSK            (~0UL << 12)
+> > > +#define F_PTE_PA_SMALL_GET(regval)    ((regval >> 12) & (~0))
+> > > +#define F_PTE_TYPE_IS_LARGE_PAGE(pte) ((imu_pte_val(pte) & 0x3) == \
+> > > +                                       F_PTE_TYPE_LARGE)
+> > > +#define F_PTE_TYPE_IS_SMALL_PAGE(pte) ((imu_pte_val(pte) & 0x3) == \
+> > > +                                       F_PTE_TYPE_SMALL)
+> > 
+> > This looks like the ARM short-descriptor format to me. Could you please
+> > add a new page table format to the io-pgtable code, so that other IOMMU
+> > drivers can make use of this? I know there was some interest in using
+> > short descriptor for the ARM SMMU, for example.
+>     Currently I not familiar with the io-pgtable,I may need some time
+> for it and the ARM short-descriptor. 
 
-Russell,
+Well, you can read the LPAE version I wrote in io-pgtable-arm.c for some
+inspiration (it's used by arm-smmu.c and ipmmu-vmsa.c).
 
-I totally agree that from today's point-of-view having a single pmu
-node with sub-nodes would have been the better approach.
+>     And there are some difference between mediatek's pagetable with the
+> standard short-descriptor, like bit 9. we use it for the dram over 4GB.
+> Then how should we do if there are some difference. 
 
-> the hardware - instead, we've described the Linux _implementation_ with
-> its separate (sub-)devices - its the implementation's choice that we'd
-> break up the PMU into these separate devices, almost to the point of
-> specifying each individual register.
->
-> What could be done to work around this oversight is to mvoe these
-> devices beneath the PMU node, which IMHO makes complete sense as these
-> are sub-devices of the PMU/PMC rather than separate devices.
+That can easily be handled using a quirk (see, for example,
+IO_PGTABLE_QUIRK_ARM_NS).
 
-If we do this, we should have a look at syscon and potentially also
-simple-mfd which will allow us to share the registers and register
-platform_devices for the sub-nodes.
-
-The current pmu power/reset/irq can still use the extra locking
-and directly access MMIO registers - but for the others we should
-really look into using regmaps.
-
-The only thing here is that power domain descriptions are also encoded
-as direct sub-nodes of the pmu node, right?
-
-Sebastian
-
-
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
