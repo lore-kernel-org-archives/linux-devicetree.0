@@ -1,65 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] pinctrl: bindings: pinctrl: Add support for TI's
- IODelay configuration
-Date: Wed, 18 Mar 2015 02:30:54 +0100
-Message-ID: <CACRpkdZ1faucps07jaT9kOyviC+Sw6gPkbF=cAGCUj+DiaEgTA@mail.gmail.com>
-References: <1425427237-11511-1-git-send-email-nm@ti.com>
-	<1425427237-11511-2-git-send-email-nm@ti.com>
-	<CACRpkdaLEPzBywMnMrteboK7Q4su8PoB0wjnGvVpgUJ=2czVxQ@mail.gmail.com>
-	<20150310153321.GO5264@atomide.com>
-	<54FF28F5.4040707@ti.com>
-	<20150310173115.GS5264@atomide.com>
-	<54FF38F3.2030703@ti.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH/RFC v13 02/13] dt-binding: leds: Add common LED DT
+ bindings macros
+Date: Tue, 17 Mar 2015 18:33:51 -0700
+Message-ID: <CAK5ve-JrWXr08vfaERsU5jDqnW9vu-dOCmWqMfs4D_e8cyqgEQ@mail.gmail.com>
+References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com> <1426175114-14876-3-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54FF38F3.2030703@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lokesh Vutla <lokeshvutla@ti.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1426175114-14876-3-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 7:33 PM, Nishanth Menon <nm@ti.com> wrote:
-> On 03/10/2015 12:31 PM, Tony Lindgren wrote:
-
->> Yes except I'd make use of some kind of #pinctrl-cells here just like
->> interrupt controller has #interrupt-cells. Then you can have the values
->> seprate and the controller knows what to do with them based on the
->> compatible flag and #pinctrl-cells.
+On Thu, Mar 12, 2015 at 8:45 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Add macros for defining boost mode and trigger type properties
+> of flash LED devices.
 >
-> Something like the following I suppose, where pinctrl-cells is optional?
->
-> dra7_pmx_core: pinmux@4a003400 {
->         compatible = "ti,dra7-padconf", "pinctrl-single";
->         reg = <0x4a003400 0x0464>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->         #interrupt-cells = <1>;
->         interrupt-controller;
->         pinctrl-single,register-width = <32>;
->         pinctrl-single,function-mask = <0x3fffffff>;
-> };
->
-> dra7_iodelay_core: padconf@4844a000 {
->         compatible = "ti,dra7-iodelay";
->         reg = <0x4844a000 0x0d1c>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->         #pinctrl-cells = <2>;
-> };
->
-> Linus,
->
-> I hope you are ok with the above?
+Applied, thanks,
+-Bryan
 
-Hm depends on where the documentation hits I guess?
-
-Such a generic cell count property has to be to the generic
-pinctrl-bindings.txt document if I read it right.
-
-Overall I guess this will be acceptable but you really need to
-reuse some more code between this driver and pinctrl-single.c
-if I read it right.
-
-Yours,
-Linus Walleij
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> ---
+>  include/dt-bindings/leds/common.h |   21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 include/dt-bindings/leds/common.h
+>
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> new file mode 100644
+> index 0000000..79fcef7
+> --- /dev/null
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -0,0 +1,21 @@
+> +/*
+> + * This header provides macros for the common LEDs device tree bindings.
+> + *
+> + * Copyright (C) 2015, Samsung Electronics Co., Ltd.
+> + *
+> + * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_LEDS_H__
+> +#define __DT_BINDINGS_LEDS_H
+> +
+> +/* External trigger type */
+> +#define LEDS_TRIG_TYPE_EDGE    0
+> +#define LEDS_TRIG_TYPE_LEVEL   1
+> +
+> +/* Boost modes */
+> +#define LEDS_BOOST_OFF         0
+> +#define LEDS_BOOST_ADAPTIVE    1
+> +#define LEDS_BOOST_FIXED       2
+> +
+> +#endif /* __DT_BINDINGS_LEDS_H */
+> --
+> 1.7.9.5
+>
