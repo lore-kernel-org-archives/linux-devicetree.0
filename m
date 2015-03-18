@@ -1,80 +1,48 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4 v3] dt/bindings: Add binding for BCM2835 mailbox
- driver
-Date: Wed, 18 Mar 2015 09:15:40 +0000
-Message-ID: <20150318091540.GK3318@x1>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net>
- <1426213936-4139-2-git-send-email-eric@anholt.net>
- <20150317172758.GC3318@x1>
- <5508A75A.4070203@broadcom.com>
- <20150318082321.GH3318@x1>
- <CABb+yY0Gc+vJHksKc7ahYfRdh2vzj_VR_bFvjr+K+hiqiah5bg@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: Add unified-cache Device Tree property
+Date: Wed, 18 Mar 2015 09:21:02 +0000
+Message-ID: <5509437E.6060806@arm.com>
+References: <1426617084-1583-1-git-send-email-r.schwebel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY0Gc+vJHksKc7ahYfRdh2vzj_VR_bFvjr+K+hiqiah5bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1426617084-1583-1-git-send-email-r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2015, Jassi Brar wrote:
-> On Wed, Mar 18, 2015 at 1:53 PM, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue, 17 Mar 2015, Scott Branden wrote:
-> >> On 15-03-17 10:27 AM, Lee Jones wrote:
-> >> >On Thu, 12 Mar 2015, Eric Anholt wrote:
-> >> >
-> >> >>From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> >> >>
-> >> >>Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> >> >>Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
-> >> >>Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> >> >>---
-> >> >>
-> >> >>
-> >> >>v2: Split into a separate patch for submitting to the devicetree list.
-> >> >>     Consistently start node docs with a capital letter. device's
-> >> >>     address in the example shouldn't have "0x". Drop machine-specific
-> >> >>     interrupt numbers from the docs.  (changes by anholt).
-> >> >>
-> >> >>v3: Move the file to just bcm2835-mbox.txt, clean up formatting
-> >> >>     (changes by anholt, from review by Lee Jones).
-> >> >
-> >> >Thanks for fixing up.
-> >> >
-> >> >>.../devicetree/bindings/mailbox/bcm2835-mbox.txt      | 19 +++++++++++++++++++
-> >> >>  1 file changed, 19 insertions(+)
-> >> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-> >> >
-> >> >I don't see any unruliness or causes of controversy.
-> >> >
-> >> >Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> >
-> >> >>diff --git a/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-> >> >>new file mode 100644
-> >> >>index 0000000..0bb2b9d
-> >> >>--- /dev/null
-> >> >>+++ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-> >> I am trying to standarize all broadcom device tree bindings in the
-> >> format "brcm,binding.txt".
-> >>
-> >> Could you please rename this file to brcm,bcm2835-mbox.txt for
-> >> consistency in bindings?
-> >
-> > The file name is governed by the maintainer of the subsystem you're
-> > applying documentation for.  If this were an MFD submission, I would
-> > not accept a the format matching the compatible string for instance.
-> > I like consistency and commas in file names creeps me out.
-> >
-> > This however, is Jassi's call.
-> >
-> I don't really have a strong opinion here. I tend to respect Broadcom
-> platforms' convention of using "brcm,binding.txt"
 
-I'm fine with this Eric.
 
-If you change it back my Ack can reside.
+On 17/03/15 18:31, Robert Schwebel wrote:
+> Without this propergy, we get this boot warning:
+>
+              ^^property
+> "L2C: device tree omits to specify unified cache"
+>
+> Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+
+> ---
+>   arch/arm/boot/dts/vexpress-v2p-ca9.dts | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+> index 23662b5..a411274 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+> @@ -170,6 +170,7 @@
+>   		compatible = "arm,pl310-cache";
+>   		reg = <0x1e00a000 0x1000>;
+>   		interrupts = <0 43 4>;
+> +		cache-unified;
+>   		cache-level = <2>;
+>   		arm,data-latency = <1 1 1>;
+>   		arm,tag-latency = <1 1 1>;
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
