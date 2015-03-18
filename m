@@ -1,94 +1,83 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 0/6] wlcore: add device-tree support
-Date: Wed, 18 Mar 2015 13:53:56 -0700
-Message-ID: <20150318205356.GW31346@atomide.com>
-References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c: driver for the Conexant Digicolor I2C controller
+Date: Wed, 18 Mar 2015 22:07:30 +0100
+Message-ID: <20150318210730.GA12960@katana>
+References: <7da767503ac6085c10fbd1953ffd36621b8bf0c5.1424092804.git.baruch@tkos.co.il>
+ <a106023efa9fd648f46021cd063437df798528de.1424092804.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426696710-6891-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <a106023efa9fd648f46021cd063437df798528de.1424092804.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150318 09:39]:
-> Add device-tree support to the wlcore (wl12xx/wl18xx)
-> driver.
-> 
-> Update the current users to use the bindings instead
-> of pdata-quirks.
-> 
-> Finally, remove the deprecated wl12xx_platform_data
-> struct (along with the da850 board file code that
-> still uses it)
-> 
-> v7:
-> * rebase (v4.0-rc4)
-> * fix wlcore_spi compilation (remove platform data)
-> * additional minor changes in driver code
 
-Thanks for updating it, looks good to me now and still works
-for me.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
+Hi,
 
-Tony
- 
-> v6:
-> * Add Luca's patches to pass irq_trigger/freq
-> * Support wl12xx as well
-> * Update all relevant platforms
-> 
-> Eliad Peller (4):
->   dt: bindings: add TI's wilink wireless device
->   wlcore: add device-tree support
->   ARM: dts: add wl12xx/wl18xx bindings
->   wlcore: remove wl12xx_platform_data
-> 
-> Luciano Coelho (2):
->   wlcore: set irq_trigger in board files instead of hiding behind a
->     quirk
->   wl12xx: use frequency instead of enumerations for pdata clocks
-> 
->  .../devicetree/bindings/net/wireless/ti,wlcore.txt |  47 +++++++++
->  arch/arm/boot/dts/am335x-evmsk.dts                 |  11 ++
->  arch/arm/boot/dts/omap3-cm-t3517.dts               |  10 ++
->  arch/arm/boot/dts/omap3-cm-t3730.dts               |  10 ++
->  arch/arm/boot/dts/omap3-evm-common.dtsi            |  10 ++
->  arch/arm/boot/dts/omap3-igep0020-rev-f.dts         |   9 ++
->  arch/arm/boot/dts/omap3-igep0030-rev-g.dts         |   9 ++
->  arch/arm/boot/dts/omap3-zoom3.dts                  |  10 ++
->  arch/arm/boot/dts/omap4-panda-common.dtsi          |  10 ++
->  arch/arm/boot/dts/omap4-sdp.dts                    |  11 ++
->  arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi     |  10 ++
->  arch/arm/mach-davinci/Kconfig                      |  11 --
->  arch/arm/mach-davinci/board-da850-evm.c            | 112 ---------------------
->  arch/arm/mach-omap2/pdata-quirks.c                 |  74 --------------
->  drivers/net/wireless/ti/wilink_platform_data.c     |  25 -----
->  drivers/net/wireless/ti/wl12xx/main.c              |  63 ++++++++++--
->  drivers/net/wireless/ti/wl12xx/wl12xx.h            |  28 ++++++
->  drivers/net/wireless/ti/wlcore/boot.c              |   1 -
->  drivers/net/wireless/ti/wlcore/debugfs.c           |   2 +-
->  drivers/net/wireless/ti/wlcore/main.c              |  31 +++---
->  drivers/net/wireless/ti/wlcore/sdio.c              |  63 ++++++++++--
->  drivers/net/wireless/ti/wlcore/spi.c               |   6 +-
->  drivers/net/wireless/ti/wlcore/wlcore.h            |   5 +-
->  drivers/net/wireless/ti/wlcore/wlcore_i.h          |   6 +-
->  include/linux/wl12xx.h                             |  49 ---------
->  25 files changed, 311 insertions(+), 312 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
-> 
-> -- 
-> 1.8.5.2.229.g4448466.dirty
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+On Mon, Feb 16, 2015 at 03:20:04PM +0200, Baruch Siach wrote:
+> This commit adds a driver for the I2C master controller on the CX92755 So=
+C. The
+> CX92755 is one SoC in the Conexant Digicolor series. This driver should s=
+upport
+> other SoCs from that series.
+>=20
+> Only 7bit slave addresses are currently supported.
+>=20
+> Tested on the Equinox CX92755 EVK, using i2c-tools utilities to read and =
+write
+> the on-chip (sic) audio codec.
+>=20
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+
+Looks mostly good.
+
+> +static u32 dc_i2c_func(struct i2c_adapter *adap)
+> +{
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +}
+
+You probably want to advertise I2C_FUNC_NOSTART here, too?
+
+And if you could rebase to something after 4.0-rc1, that would be much
+appreciated.
+
+Thanks,
+
+   Wolfram
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVCekSAAoJEBQN5MwUoCm2rdgP/02PDA9QYm0EqMs27Eaeul3r
+Xcsn/LwyZqs5Vr0naZFprzUyjvnPux0MLNg6oVcSz2ciqR1/5JwBOgWDtjZtNEsW
+GsqQVZiD94sysPPhlhdWAA7Mp8QxnkUjNhZyF9ppoLI2ATaSVcpFR/P2xWhT+EBu
+DTH2J0uaQy5/hMgXa28uU4uiSQGkInL9xCrfyDe+CbSVMfALL6cKWTt4+os0cIyv
+L3k5P0yG8UNIW5gSpiDB1gl05aU5jz4+uwm4MhE9jFv4/kNhp7vCjQWvBe6HCKfQ
+z5N7D76GyGsvXGI12TrAwi82ugrDiS2ZvJQrmRr5MrSxgYa6F8Cf+aDxQwpm9e03
+3/IHktBPh++a1R9c0nBqXSDhp2e9WBpWyc6AJVrgXDBpGk1Rp1gERll9YEMAHwTL
+M4Hesh7Lcu+S3+5Vd+4w52kYx7if/ZyBzac7x7FF5HhTDaQmzKnWhjiei9T3vGM7
+5nKttiuzMxuRcOccPh07qsTxhg3FKj768GpCuGg62ABbgGGHDhjHWURSQ0tKzASv
+dhyvuRwkPdwqKzDFJI19B/Vpy9tP57MIV7xVlmTeQyOtYwGbtB/hbaBKEu9V1+Yj
+sa//sj/aKOieOzQTzVGZiqJRE28sRvdmyRW7PcxO6eGzLLcJec32hsa991zEcHK0
+iOain3H1nA6lJ7jGhmK/
+=bb2q
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
