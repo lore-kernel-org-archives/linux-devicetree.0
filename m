@@ -1,48 +1,66 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Wed, 18 Mar 2015 17:06:14 +0100
-Message-ID: <20150318160614.GS4560@piout.net>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
- <1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V4 0/3] dma: dt: Add DMA driver for jz4780
+Date: Wed, 18 Mar 2015 16:16:34 +0000
+Message-ID: <1426695397-54906-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425375148-4369-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2015 at 10:32:24 +0100, Linus Walleij wrote :
-> This defines a new compatible option for MFD devices "simple-mfd" that will
-> make the OF core spawn child devices for all subnodes of that MFD device.
-> It is optional but handy for things like syscon and possibly other
-> simpler MFD devices.
-> 
-> Since there was no file to put the documentation in, I took this opportunity
-> to make a small writeup on MFD devices and add the compatible definition
-> there.
-> 
-> Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi,
 
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Here we have three patches that add a DMA driver for the Ingenic JZ4780 SoC.
 
+JZ4780 support is still in-flight.
+
+These are based on 4.0-rc4.
+
+Apart from the channel numbers, jz4740 and jz4780 are quite different.
+The descriptor bit fields are different in a register
+There is an extra register for stride in jz4780
+jz4780 has more/different features in hardware.
+
+Hence, we are unable to use the jz4740-dma driver.
+
+V3->V4
+some minor fixes.
+driver would default to 4 byte transfer size in case of unsupported.
+now gives error instead
+
+V2->V3 changes
+DMA bindings. See patches for details.
+
+V1->V2 changes
+Updates for dmaengine api changes.
+Add residue support.
+Details in the patch commit message
+
+ZubairLK
+
+Alex Smith (2):
+  dt-bindings: dma: Add binding for jz4780-dma
+  dma: jz4780: add driver for the Ingenic JZ4780 DMA controller
+
+Zubair Lutfullah Kakakhel (1):
+  MAINTAINERS: Add Ingenic JZ4780 DMA driver maintainer entry
+
+ .../devicetree/bindings/dma/jz4780-dma.txt         |  56 ++
+ MAINTAINERS                                        |   5 +
+ drivers/dma/Kconfig                                |  10 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/dma-jz4780.c                           | 877 +++++++++++++++++++++
+ include/dt-bindings/dma/jz4780-dma.h               |  49 ++
+ 6 files changed, 998 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
+ create mode 100644 drivers/dma/dma-jz4780.c
+ create mode 100644 include/dt-bindings/dma/jz4780-dma.h
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
