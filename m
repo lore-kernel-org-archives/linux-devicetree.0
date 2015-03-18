@@ -1,66 +1,83 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4 v4] mailbox: Enable BCM2835 mailbox support
-Date: Wed, 18 Mar 2015 08:42:55 +0000
-Message-ID: <20150318084255.GJ3318@x1>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net>
- <1426213936-4139-3-git-send-email-eric@anholt.net>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe controller
+Date: Wed, 18 Mar 2015 09:49:22 +0100
+Message-ID: <55093C12.7070004@st.com>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>	 <1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org> <1426518695.26437.55.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426213936-4139-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1426518695.26437.55.camel@x220>
+Sender: linux-pci-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.c>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Mar 2015, Eric Anholt wrote:
+Hi Paul,
 
-> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> 
-> Implement BCM2835 mailbox support as a device registered with the
-> general purpose mailbox framework. Implementation based on commits by
-> Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on which to base the
-> implementation.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013-April/000528.html
-> [2] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013-May/000546.html
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
-> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> 
-> v2: Squashed Craig's work for review, carried over to new version of
->     Mailbox framework (changes by Lubomir)
-> 
-> v3: Fix multi-line comment style.  Refer to the documentation by
->     filename.  Only declare one MODULE_AUTHOR.  Alphabetize includes.
->     Drop some excessive dev_dbg()s (changes by anholt).
-> 
-> v4: Use the new bcm2835_peripheral_read_workaround(), drop the
+On 03/16/2015 04:11 PM, Paul Bolle wrote:
+>> +config PCI_ST
+>> +	bool "ST PCIe controller"
+> You add a bool Kconfig symbol. A week or two ago I saw some patches fly
+> by that - I think - allowed PCIe controllers to be built modular.
 
-Can you explain to me why this is required (and don't just point me in
-the direction of the other patch ;) ).  You appear to be using the
-non-relaxed variants of readl and writel, which already do memory
-barriers, so I'm a little perplexed as to how the problem can arise.
+Thanks for your review.
 
->     unnecessary wmb()s, make the messages be a pointer to u32, rather
->     than u32-cast-as-pointer, fold in small static functions, drop
->     extra error messages, clean up sizeof() arg for malloc, disable
->     interrupts on unload.
-> 
->  drivers/mailbox/Kconfig           |   8 ++
->  drivers/mailbox/Makefile          |   2 +
->  drivers/mailbox/bcm2835-mailbox.c | 259 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 269 insertions(+)
->  create mode 100644 drivers/mailbox/bcm2835-mailbox.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are you talking about "PCI: Export symbols of PCI functions" patch, that 
+is part of a series
+named "pci: iproc: Add Broadcom iProc PCIe support" ?
+
+This controller doesn't look like to be based on pcie-designware core 
+driver.
+Other vendors that are using "pcie-designware" core driver are also make 
+it bool.
+The current core driver doesn't support module loading/unloading as I 
+see it.
+If this is required, I also think this should be part of another patchset.
+
+What do you think ?
+
+Please advise,
+BR,
+Fabrice
+>
+>> +	depends on ARCH_STI || (ARM && COMPILE_TEST)
+>> +	select PCIE_DW
+>> +	help
+>> +	  Enable PCIe controller support on ST Socs. This controller is based
+>> +	  on Designware hardware and therefore the driver re-uses the
+>> +	  Designware core functions to implement the driver.
+>> --- a/drivers/pci/host/Makefile
+>> +++ b/drivers/pci/host/Makefile
+>> +obj-$(CONFIG_PCI_ST) += pci-st.o
+> If you keep that symbol bool this objectfile will never be part of a
+> module.
+>
+>> diff --git a/drivers/pci/host/pci-st.c b/drivers/pci/host/pci-st.c
+>> new file mode 100644
+>> index 0000000..470000d
+>> --- /dev/null
+>> +++ b/drivers/pci/host/pci-st.c
+>> +#include <linux/module.h>
+> For built-in code this include is, probably, not needed.
+>
+>> +MODULE_DEVICE_TABLE(of, st_pcie_of_match);
+> For built-in code that macro will always be preprocessed away.
+>
+>> +/* ST PCIe driver does not allow module unload */
+>> +static int __init pcie_init(void)
+>> +{
+>> +	return platform_driver_probe(&st_pcie_driver, st_pcie_probe);
+>> +}
+>> +device_initcall(pcie_init);
+> I think the module unload comment is a bit odd for built-in only code.
+>
+>> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
+>> +MODULE_DESCRIPTION("PCI express Driver for ST SoCs");
+>> +MODULE_LICENSE("GPL v2");
+> These three macros will be, basically, always preprocessed away as long
+> as this code can't be built to be modular.
+>
+>
+> Paul Bolle
+>
