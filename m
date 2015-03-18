@@ -1,70 +1,108 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4 v3] dt/bindings: Add binding for BCM2835 mailbox
- driver
-Date: Wed, 18 Mar 2015 08:23:21 +0000
-Message-ID: <20150318082321.GH3318@x1>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net>
- <1426213936-4139-2-git-send-email-eric@anholt.net>
- <20150317172758.GC3318@x1>
- <5508A75A.4070203@broadcom.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 2/2] dmaengine: usb-dmac: Add Renesas USB DMA
+ Controller (USB-DMAC) driver
+Date: Wed, 18 Mar 2015 13:52:15 +0530
+Message-ID: <20150318082215.GF32683@intel.com>
+References: <1426052394-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1426052394-5556-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5508A75A.4070203-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1426052394-5556-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: dan.j.williams@intel.com, laurent.pinchart@ideasonboard.com, horms@verge.net.au, kuninori.morimoto.gx@renesas.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Mar 2015, Scott Branden wrote:
-> On 15-03-17 10:27 AM, Lee Jones wrote:
-> >On Thu, 12 Mar 2015, Eric Anholt wrote:
-> >
-> >>From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> >>
-> >>Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> >>Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
-> >>Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> >>---
-> >>
-> >>
-> >>v2: Split into a separate patch for submitting to the devicetree list.
-> >>     Consistently start node docs with a capital letter. device's
-> >>     address in the example shouldn't have "0x". Drop machine-specific
-> >>     interrupt numbers from the docs.  (changes by anholt).
-> >>
-> >>v3: Move the file to just bcm2835-mbox.txt, clean up formatting
-> >>     (changes by anholt, from review by Lee Jones).
-> >
-> >Thanks for fixing up.
-> >
-> >>.../devicetree/bindings/mailbox/bcm2835-mbox.txt      | 19 +++++++++++++++++++
-> >>  1 file changed, 19 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-> >
-> >I don't see any unruliness or causes of controversy.
-> >
-> >Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> >>diff --git a/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-> >>new file mode 100644
-> >>index 0000000..0bb2b9d
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
-> I am trying to standarize all broadcom device tree bindings in the
-> format "brcm,binding.txt".
-> 
-> Could you please rename this file to brcm,bcm2835-mbox.txt for
-> consistency in bindings?
+On Wed, Mar 11, 2015 at 02:39:54PM +0900, Yoshihiro Shimoda wrote:
+> +static struct dma_async_tx_descriptor *
+> +usb_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+> +		       unsigned int sg_len, enum dma_transfer_direction dir,
+> +		       unsigned long dma_flags, void *context)
+> +{
+> +	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
+> +	struct usb_dmac_desc *desc;
+> +
+> +	/* A client driver will use dmaengine_prep_slave_single() */
+> +	if (sg_len != 1) {
+and why is that?
 
-The file name is governed by the maintainer of the subsystem you're
-applying documentation for.  If this were an MFD submission, I would
-not accept a the format matching the compatible string for instance.
-I like consistency and commas in file names creeps me out.
+> +static enum dma_status usb_dmac_tx_status(struct dma_chan *chan,
+> +					  dma_cookie_t cookie,
+> +					  struct dma_tx_state *txstate)
+> +{
+> +	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
+> +	enum dma_status status;
+> +	unsigned long flags;
+> +	unsigned int residue;
+> +
+> +	status = dma_cookie_status(chan, cookie, txstate);
+> +	/* a client driver will get residue after DMA_COMPLETE */
+can you explain this comment?
 
-This however, is Jassi's call.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if (!txstate)
+> +		return status;
+> +
+> +	spin_lock_irqsave(&uchan->vc.lock, flags);
+> +	residue = uchan->residue;
+how is this related to the cookie for which request is made?
+> +static void usb_dmac_chan_tasklet(unsigned long data)
+> +{
+> +	struct usb_dmac_chan *chan = (struct usb_dmac_chan *)data;
+> +	struct usb_dmac_desc *desc = chan->desc;
+> +
+> +	spin_lock_irq(&chan->vc.lock);
+> +
+> +	/* This driver assumes a transfer finishes if desc is not NULL */
+> +	if (desc) {
+> +		chan->residue = usb_dmac_chan_get_last_residue(chan, desc);
+why should this be for channel and not the descriptor which is completed, so
+you overwrite this before user has chance to query ?
+
+Looking at this, so you issue a transaction of 100bytes, will you get
+completion even if 100bytes have not been transfered, If so how does dma
+decide theat transfer is complete even if 100bytes are not transferred yet?
+
+> +		vchan_cookie_complete(&desc->vd);
+> +	}
+> +
+> +	/* (Re)start the next transfer if this driver has a next desc */
+> +	usb_dmac_chan_start_xfer(chan);
+why not do this in irq :)
+
+
+> +#ifdef CONFIG_PM
+> +static int usb_dmac_runtime_suspend(struct device *dev)
+> +{
+> +	struct usb_dmac *dmac = dev_get_drvdata(dev);
+> +	int i;
+> +
+> +	for (i = 0; i < dmac->n_channels; ++i)
+> +		usb_dmac_chan_halt(&dmac->channels[i]);
+> +
+> +	return 0;
+> +}
+> +
+> +static int usb_dmac_runtime_resume(struct device *dev)
+> +{
+> +	struct usb_dmac *dmac = dev_get_drvdata(dev);
+> +
+> +	return usb_dmac_init(dmac);
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops usb_dmac_pm = {
+> +	SET_RUNTIME_PM_OPS(usb_dmac_runtime_suspend, usb_dmac_runtime_resume,
+since you are using SET_RUNTIME_PM_OPS, you dont need to wrap this with
+ifdef CONFIG_PM
+
+> +
+> +static void usb_dmac_chan_remove(struct usb_dmac_chan *uchan)
+> +{
+> +	tasklet_kill(&uchan->task);
+that part is good, but how about disabling irq? you can still get insterrupt
+
+-- 
+~Vinod
+
