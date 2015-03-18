@@ -1,403 +1,73 @@
-From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
-Date: Wed, 18 Mar 2015 18:38:29 +0200
-Message-ID: <1426696710-6891-6-git-send-email-eliad@wizery.com>
-References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426696710-6891-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH v2] add support for Freescale's MMA8653FC 10 bit accelerometer
+Date: Wed, 18 Mar 2015 17:42:13 +0100
+Message-ID: <5509AAE5.1000503@posteo.de>
+References: <1426694157-10866-1-git-send-email-martink@posteo.de> <2231139.ojeyer6qnI@ws-stein>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <2231139.ojeyer6qnI@ws-stein>
+Sender: linux-input-owner@vger.kernel.org
+To: Alexander Stein <alexander.stein@systec-electronic.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmitry.torokhov@gmail.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, linux-api@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace all the pdata-quirks for setting wl12xx/wl18xx
-platform data with proper DT definitions.
+Am 2015-03-18 um 17:21 schrieb Alexander Stein:
+> On Wednesday 18 March 2015 16:55:57, Martin Kepplinger wrote:
+>> From: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+>>
+>> The MMA8653FC is a low-power, three-axis, capacitive micromachined
+>> accelerometer with 10 bits of resolution with flexible user-programmable
+>> options.
+>>
+>> Embedded interrupt functions enable overall power savings, by relieving the
+>> host processor from continuously polling data, for example using the poll()
+>> system call.
+>>
+>> The device can be configured to generate wake-up interrupt signals from any
+>> combination of the configurable embedded functions, enabling the MMA8653FC
+>> to monitor events while remaining in a low-power mode during periods of
+>> inactivity.
+>>
+>> This driver provides devicetree properties to program the device's behaviour
+>> and a simple, tested and documented sysfs interface. The data sheet and more
+>> information is available on Freescale's website.
+>>
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+>> ---
+>> applies to v4.0-rc4 and the current -next.
+>>
+>> patch revision history
+>> ......................
+>> v2 corrects licensing and commit messages and adds appropriate recipients
+>>
+>>  .../testing/sysfs-bus-i2c-devices-fsl-mma8653fc    |  39 +
+>>  .../devicetree/bindings/misc/fsl,mma8653fc.txt     |  96 +++
+>>  MAINTAINERS                                        |   5 +
+>>  drivers/input/misc/Kconfig                         |  11 +
+>>  drivers/input/misc/Makefile                        |   1 +
+>>  drivers/input/misc/mma8653fc.c                     | 913 +++++++++++++++++++++
+>>  6 files changed, 1065 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-fsl-mma8653fc
+>>  create mode 100644 Documentation/devicetree/bindings/misc/fsl,mma8653fc.txt
+>>  create mode 100644 drivers/input/misc/mma8653fc.c
+> 
+> Shouldn't this go to drivers/iio/magnetometer instead of defining a new sysfs ABI?
+> 
 
-Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Acked-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Acked-by: Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Tested-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
-v7: rebase
+It could have gone to drivers/iio/accel if it would use an iio
+interface, which would make more sense, you are right, but I simply
+don't have the time to merge it in to iio.
 
- arch/arm/boot/dts/am335x-evmsk.dts             | 11 ++++
- arch/arm/boot/dts/omap3-cm-t3517.dts           | 10 ++++
- arch/arm/boot/dts/omap3-cm-t3730.dts           | 10 ++++
- arch/arm/boot/dts/omap3-evm-common.dtsi        | 10 ++++
- arch/arm/boot/dts/omap3-igep0020-rev-f.dts     |  9 ++++
- arch/arm/boot/dts/omap3-igep0030-rev-g.dts     |  9 ++++
- arch/arm/boot/dts/omap3-zoom3.dts              | 10 ++++
- arch/arm/boot/dts/omap4-panda-common.dtsi      | 10 ++++
- arch/arm/boot/dts/omap4-sdp.dts                | 11 ++++
- arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi | 10 ++++
- arch/arm/mach-omap2/pdata-quirks.c             | 74 --------------------------
- 11 files changed, 100 insertions(+), 74 deletions(-)
+It doesn't use an input interface either but I don't see a good place
+for an accelerometer that uses sysfs only.
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index df5fee6..87fc7a3 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -15,6 +15,7 @@
- 
- #include "am33xx.dtsi"
- #include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "TI AM335x EVM-SK";
-@@ -647,6 +648,16 @@
- 	cap-power-off-card;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <31 IRQ_TYPE_LEVEL_HIGH>; /* gpio 31 */
-+		ref-clock-frequency = <38400000>;
-+	};
- };
- 
- &mcasp1 {
-diff --git a/arch/arm/boot/dts/omap3-cm-t3517.dts b/arch/arm/boot/dts/omap3-cm-t3517.dts
-index 0ab748c..f5b5a1d 100644
---- a/arch/arm/boot/dts/omap3-cm-t3517.dts
-+++ b/arch/arm/boot/dts/omap3-cm-t3517.dts
-@@ -133,6 +133,16 @@
- 	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_HIGH>; /* gpio 145 */
-+		ref-clock-frequency = <38400000>;
-+	};
- };
- 
- &dss {
-diff --git a/arch/arm/boot/dts/omap3-cm-t3730.dts b/arch/arm/boot/dts/omap3-cm-t3730.dts
-index 46eadb2..2294f5b 100644
---- a/arch/arm/boot/dts/omap3-cm-t3730.dts
-+++ b/arch/arm/boot/dts/omap3-cm-t3730.dts
-@@ -73,6 +73,16 @@
- 	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>; /* gpio 136 */
-+		ref-clock-frequency = <38400000>;
-+	};
- };
- 
- &dss {
-diff --git a/arch/arm/boot/dts/omap3-evm-common.dtsi b/arch/arm/boot/dts/omap3-evm-common.dtsi
-index 127f3e7..346552b 100644
---- a/arch/arm/boot/dts/omap3-evm-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-evm-common.dtsi
-@@ -106,6 +106,16 @@
- 	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>; /* gpio 149 */
-+		ref-clock-frequency = <38400000>;
-+	};
- };
- 
- &twl_gpio {
-diff --git a/arch/arm/boot/dts/omap3-igep0020-rev-f.dts b/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
-index cc8bd0c..72f7cdc 100644
---- a/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
-+++ b/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
-@@ -42,4 +42,13 @@
- 	vmmc-supply = <&lbep5clwmc_wlen>;
- 	bus-width = <4>;
- 	non-removable;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1835";
-+		reg = <2>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_HIGH>; /* gpio 177 */
-+	};
- };
-diff --git a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-index 9326b28..b899e34 100644
---- a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-+++ b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-@@ -64,4 +64,13 @@
- 	vmmc-supply = <&lbep5clwmc_wlen>;
- 	bus-width = <4>;
- 	non-removable;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1835";
-+		reg = <2>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>; /* gpio 136 */
-+	};
- };
-diff --git a/arch/arm/boot/dts/omap3-zoom3.dts b/arch/arm/boot/dts/omap3-zoom3.dts
-index 6644f51..131448d 100644
---- a/arch/arm/boot/dts/omap3-zoom3.dts
-+++ b/arch/arm/boot/dts/omap3-zoom3.dts
-@@ -195,6 +195,16 @@
- 	cap-power-off-card;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc3_pins &mmc3_2_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>; /* gpio 162 */
-+		ref-clock-frequency = <26000000>;
-+	};
- };
- 
- &uart1 {
-diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index 1505135..1228de5 100644
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -450,6 +450,16 @@
- 	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>; /* gpio 53 */
-+		ref-clock-frequency = <38400000>;
-+	};
- };
- 
- &emif1 {
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 3e1da43..8c36f51 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -487,6 +487,17 @@
- 	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1281";
-+		reg = <2>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>; /* gpio 53 */
-+		ref-clock-frequency = <26000000>;
-+		tcxo-clock-frequency = <26000000>;
-+	};
- };
- 
- &emif1 {
-diff --git a/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi b/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi
-index cc66af4..9bceeb7 100644
---- a/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi
-+++ b/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi
-@@ -65,4 +65,14 @@
- 	bus-width = <4>;
- 	cap-power-off-card;
- 	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <9 IRQ_TYPE_LEVEL_HIGH>; /* gpio 41 */
-+		ref-clock-frequency = <38400000>;
-+	};
- };
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index cebdf8d..af11511 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -14,7 +14,6 @@
- #include <linux/kernel.h>
- #include <linux/of_platform.h>
- #include <linux/ti_wilink_st.h>
--#include <linux/wl12xx.h>
- 
- #include <linux/platform_data/pinctrl-single.h>
- #include <linux/platform_data/iommu-omap.h>
-@@ -35,35 +34,6 @@ struct pdata_init {
- struct of_dev_auxdata omap_auxdata_lookup[];
- static struct twl4030_gpio_platform_data twl_gpio_auxdata;
- 
--#if IS_ENABLED(CONFIG_WL12XX)
--
--static struct wl12xx_platform_data wl12xx __initdata;
--
--static void __init __used legacy_init_wl12xx(u32 ref_clock_freq,
--					     u32 tcxo_clock_freq,
--					     int gpio)
--{
--	int res;
--
--	wl12xx.ref_clock_freq = ref_clock_freq;
--	wl12xx.tcxo_clock_freq = tcxo_clock_freq;
--	wl12xx.irq = gpio_to_irq(gpio);
--	wl12xx.irq_trigger = IRQ_TYPE_LEVEL_HIGH;
--
--	res = wl12xx_set_platform_data(&wl12xx);
--	if (res) {
--		pr_err("error setting wl12xx data: %d\n", res);
--		return;
--	}
--}
--#else
--static inline void legacy_init_wl12xx(u32 ref_clock_freq,
--				      u32 tcxo_clock_freq,
--				      int gpio)
--{
--}
--#endif
--
- #ifdef CONFIG_MACH_NOKIA_N8X0
- static void __init omap2420_n8x0_legacy_init(void)
- {
-@@ -130,7 +100,6 @@ static void __init omap3_sbc_t3730_twl_init(void)
- static void __init omap3_sbc_t3730_legacy_init(void)
- {
- 	omap3_sbc_t3x_usb_hub_init(167, "sb-t35 usb hub");
--	legacy_init_wl12xx(38400000, 0, 136);
- }
- 
- static void __init omap3_sbc_t3530_legacy_init(void)
-@@ -160,14 +129,12 @@ static struct platform_device btwilink_device = {
- 
- static void __init omap3_igep0020_rev_f_legacy_init(void)
- {
--	legacy_init_wl12xx(0, 0, 177);
- 	platform_device_register(&wl18xx_device);
- 	platform_device_register(&btwilink_device);
- }
- 
- static void __init omap3_igep0030_rev_g_legacy_init(void)
- {
--	legacy_init_wl12xx(0, 0, 136);
- 	platform_device_register(&wl18xx_device);
- 	platform_device_register(&btwilink_device);
- }
-@@ -175,12 +142,6 @@ static void __init omap3_igep0030_rev_g_legacy_init(void)
- static void __init omap3_evm_legacy_init(void)
- {
- 	hsmmc2_internal_input_clk();
--	legacy_init_wl12xx(38400000, 0, 149);
--}
--
--static void __init omap3_zoom_legacy_init(void)
--{
--	legacy_init_wl12xx(26000000, 0, 162);
- }
- 
- static void am35xx_enable_emac_int(void)
-@@ -247,7 +208,6 @@ static void __init omap3_sbc_t3517_legacy_init(void)
- 	am35xx_emac_reset();
- 	hsmmc2_internal_input_clk();
- 	omap3_sbc_t3517_wifi_init();
--	legacy_init_wl12xx(38400000, 0, 145);
- }
- 
- static void __init am3517_evm_legacy_init(void)
-@@ -289,23 +249,6 @@ static void __init omap3_tao3530_legacy_init(void)
- }
- #endif /* CONFIG_ARCH_OMAP3 */
- 
--#ifdef CONFIG_ARCH_OMAP4
--static void __init omap4_sdp_legacy_init(void)
--{
--	legacy_init_wl12xx(26000000, 26000000, 53);
--}
--
--static void __init omap4_panda_legacy_init(void)
--{
--	legacy_init_wl12xx(38400000, 0, 53);
--}
--
--static void __init var_som_om44_legacy_init(void)
--{
--	legacy_init_wl12xx(38400000, 0, 41);
--}
--#endif
--
- #if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5)
- static struct iommu_platform_data omap4_iommu_pdata = {
- 	.reset_name = "mmu_cache",
-@@ -314,13 +257,6 @@ static struct iommu_platform_data omap4_iommu_pdata = {
- };
- #endif
- 
--#ifdef CONFIG_SOC_AM33XX
--static void __init am335x_evmsk_legacy_init(void)
--{
--	legacy_init_wl12xx(38400000, 0, 31);
--}
--#endif
--
- #ifdef CONFIG_SOC_OMAP5
- static void __init omap5_uevm_legacy_init(void)
- {
-@@ -421,19 +357,9 @@ static struct pdata_init pdata_quirks[] __initdata = {
- 	{ "isee,omap3-igep0020-rev-f", omap3_igep0020_rev_f_legacy_init, },
- 	{ "isee,omap3-igep0030-rev-g", omap3_igep0030_rev_g_legacy_init, },
- 	{ "ti,omap3-evm-37xx", omap3_evm_legacy_init, },
--	{ "ti,omap3-zoom3", omap3_zoom_legacy_init, },
- 	{ "ti,am3517-evm", am3517_evm_legacy_init, },
- 	{ "technexion,omap3-tao3530", omap3_tao3530_legacy_init, },
- #endif
--#ifdef CONFIG_ARCH_OMAP4
--	{ "ti,omap4-sdp", omap4_sdp_legacy_init, },
--	{ "ti,omap4-panda", omap4_panda_legacy_init, },
--	{ "variscite,var-dvk-om44", var_som_om44_legacy_init, },
--	{ "variscite,var-stk-om44", var_som_om44_legacy_init, },
--#endif
--#ifdef CONFIG_SOC_AM33XX
--	{ "ti,am335x-evmsk", am335x_evmsk_legacy_init, },
--#endif
- #ifdef CONFIG_SOC_OMAP5
- 	{ "ti,omap5-uevm", omap5_uevm_legacy_init, },
- #endif
--- 
-1.8.5.2.229.g4448466.dirty
+It works well, is a relatively recent chip and a clean dirver. But this
+is all I can provide.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Best regards,
+> Alexander
+> 
+
