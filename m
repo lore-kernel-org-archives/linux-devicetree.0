@@ -1,520 +1,112 @@
-From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 2/3] i2c: xlp9xx: Driver for Netlogic XLP9XX/5XX I2C controller
-Date: Wed, 18 Mar 2015 17:20:29 +0530
-Message-ID: <1426679430-26134-3-git-send-email-jchandra@broadcom.com>
-References: <1426679430-26134-1-git-send-email-jchandra@broadcom.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] ARM: dts: mt8173: Add psci-0.2 cpuidle support
+Date: Wed, 18 Mar 2015 12:16:05 +0000
+Message-ID: <20150318121604.GC19624@leverpostej>
+References: <1426658432-29333-1-git-send-email-howard.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426679430-26134-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426658432-29333-1-git-send-email-howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi,
 
-Add an I2C bus driver i2c-xlp9xx.c to support the I2C block in the
-XLP9xx/XLP5xx MIPS SoC. Update Kconfig and Makefile to add the
-CONFIG_I2C_XLP9XX option.
+On Wed, Mar 18, 2015 at 06:00:32AM +0000, Howard Chen wrote:
+> add device tree for psci-0.2 on mt8173 platform
 
-Signed-off-by: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- drivers/i2c/busses/Kconfig      |  10 +
- drivers/i2c/busses/Makefile     |   1 +
- drivers/i2c/busses/i2c-xlp9xx.c | 445 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 456 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-xlp9xx.c
+Are all the other mandatory PSCI 0.2 components implemented and working?
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 22da9c2..dde4648 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -898,6 +898,16 @@ config I2C_XLR
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-xlr.
- 
-+config I2C_XLP9XX
-+	tristate "XLP9XX I2C support"
-+	depends on CPU_XLP || COMPILE_TEST
-+	help
-+	  This driver enables support for the on-chip I2C interface of
-+	  the Broadcom XLP9xx/XLP5xx MIPS processors.
-+
-+	  This driver can also be built as a module.  If so, the module will
-+	  be called i2c-xlp9xx.
-+
- config I2C_RCAR
- 	tristate "Renesas R-Car I2C Controller"
- 	depends on ARCH_SHMOBILE || COMPILE_TEST
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 3638feb..f8e0f0e 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -87,6 +87,7 @@ obj-$(CONFIG_I2C_WMT)		+= i2c-wmt.o
- obj-$(CONFIG_I2C_OCTEON)	+= i2c-octeon.o
- obj-$(CONFIG_I2C_XILINX)	+= i2c-xiic.o
- obj-$(CONFIG_I2C_XLR)		+= i2c-xlr.o
-+obj-$(CONFIG_I2C_XLP9XX)	+= i2c-xlp9xx.o
- obj-$(CONFIG_I2C_RCAR)		+= i2c-rcar.o
- 
- # External I2C/SMBus adapter drivers
-diff --git a/drivers/i2c/busses/i2c-xlp9xx.c b/drivers/i2c/busses/i2c-xlp9xx.c
-new file mode 100644
-index 00000000..4fd3849
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-xlp9xx.c
-@@ -0,0 +1,445 @@
-+/*
-+ * Copyright (c) 2003-2015 Broadcom Corporation
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/completion.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define XLP9XX_I2C_DIV			0x0
-+#define XLP9XX_I2C_CTRL			0x1
-+#define XLP9XX_I2C_CMD			0x2
-+#define XLP9XX_I2C_STATUS		0x3
-+#define XLP9XX_I2C_MTXFIFO		0x4
-+#define XLP9XX_I2C_MRXFIFO		0x5
-+#define XLP9XX_I2C_MFIFOCTRL		0x6
-+#define XLP9XX_I2C_STXFIFO		0x7
-+#define XLP9XX_I2C_SRXFIFO		0x8
-+#define XLP9XX_I2C_SFIFOCTRL		0x9
-+#define XLP9XX_I2C_SLAVEADDR		0xA
-+#define XLP9XX_I2C_OWNADDR		0xB
-+#define XLP9XX_I2C_FIFOWCNT		0xC
-+#define XLP9XX_I2C_INTEN		0xD
-+#define XLP9XX_I2C_INTST		0xE
-+#define XLP9XX_I2C_WAITCNT		0xF
-+#define XLP9XX_I2C_TIMEOUT		0X10
-+#define XLP9XX_I2C_GENCALLADDR		0x11
-+
-+#define XLP9XX_I2C_CMD_START		BIT(7)
-+#define XLP9XX_I2C_CMD_STOP		BIT(6)
-+#define XLP9XX_I2C_CMD_READ		BIT(5)
-+#define XLP9XX_I2C_CMD_WRITE		BIT(4)
-+#define XLP9XX_I2C_CMD_ACK		BIT(3)
-+
-+#define XLP9XX_I2C_CTRL_MCTLEN_SHIFT	16
-+#define XLP9XX_I2C_CTRL_MCTLEN_MASK	0xffff0000
-+#define XLP9XX_I2C_CTRL_RST		BIT(8)
-+#define XLP9XX_I2C_CTRL_EN		BIT(6)
-+#define XLP9XX_I2C_CTRL_MASTER		BIT(4)
-+#define XLP9XX_I2C_CTRL_FIFORD		BIT(1)
-+#define XLP9XX_I2C_CTRL_ADDMODE		BIT(0)
-+
-+#define XLP9XX_I2C_INTEN_NACKADDR	BIT(25)
-+#define XLP9XX_I2C_INTEN_SADDR		BIT(13)
-+#define XLP9XX_I2C_INTEN_DATADONE	BIT(12)
-+#define XLP9XX_I2C_INTEN_ARLOST		BIT(11)
-+#define XLP9XX_I2C_INTEN_MFIFOFULL	BIT(4)
-+#define XLP9XX_I2C_INTEN_MFIFOEMTY	BIT(3)
-+#define XLP9XX_I2C_INTEN_MFIFOHI	BIT(2)
-+#define XLP9XX_I2C_INTEN_BUSERR		BIT(0)
-+
-+#define XLP9XX_I2C_MFIFOCTRL_HITH_SHIFT		8
-+#define XLP9XX_I2C_MFIFOCTRL_LOTH_SHIFT		0
-+#define XLP9XX_I2C_MFIFOCTRL_RST		BIT(16)
-+
-+#define XLP9XX_I2C_SLAVEADDR_RW			BIT(0)
-+#define XLP9XX_I2C_SLAVEADDR_ADDR_SHIFT		1
-+
-+#define XLP9XX_I2C_IP_CLK_FREQ		133000000UL
-+#define XLP9XX_I2C_DEFAULT_FREQ		100000
-+#define XLP9XX_I2C_HIGH_FREQ		400000
-+#define XLP9XX_I2C_FIFO_SIZE		0x80U
-+#define XLP9XX_I2C_TIMEOUT_MS		1000
-+
-+#define XLP9XX_I2C_FIFO_WCNT_MASK	0xff
-+#define XLP9XX_I2C_STATUS_ERRMASK	(XLP9XX_I2C_INTEN_ARLOST | \
-+			XLP9XX_I2C_INTEN_NACKADDR | XLP9XX_I2C_INTEN_BUSERR)
-+
-+struct xlp9xx_i2c_dev {
-+	struct device *dev;
-+	struct i2c_adapter adapter;
-+	struct completion msg_complete;
-+	int irq;
-+	bool msg_read;
-+	u32 __iomem *base;
-+	u32 msg_buf_remaining;
-+	u32 msg_len;
-+	u32 clk_hz;
-+	u32 msg_err;
-+	u8 *msg_buf;
-+};
-+
-+static inline void xlp9xx_write_i2c_reg(struct xlp9xx_i2c_dev *priv,
-+					unsigned long reg, u32 val)
-+{
-+	writel(val, priv->base + reg);
-+}
-+
-+static inline u32 xlp9xx_read_i2c_reg(struct xlp9xx_i2c_dev *priv,
-+				      unsigned long reg)
-+{
-+	return readl(priv->base + reg);
-+}
-+
-+static void xlp9xx_i2c_mask_irq(struct xlp9xx_i2c_dev *priv, u32 mask)
-+{
-+	u32 inten;
-+
-+	inten = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_INTEN) & ~mask;
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, inten);
-+}
-+
-+static void xlp9xx_i2c_unmask_irq(struct xlp9xx_i2c_dev *priv, u32 mask)
-+{
-+	u32 inten;
-+
-+	inten = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_INTEN) | mask;
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, inten);
-+}
-+
-+static void xlp9xx_i2c_update_rx_fifo_thres(struct xlp9xx_i2c_dev *priv)
-+{
-+	u32 thres;
-+
-+	thres = min(priv->msg_buf_remaining, XLP9XX_I2C_FIFO_SIZE);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_MFIFOCTRL,
-+			     thres << XLP9XX_I2C_MFIFOCTRL_HITH_SHIFT);
-+}
-+
-+static void xlp9xx_i2c_fill_tx_fifo(struct xlp9xx_i2c_dev *priv)
-+{
-+	u32 len, i;
-+	u8 *buf = priv->msg_buf;
-+
-+	len = min(priv->msg_buf_remaining, XLP9XX_I2C_FIFO_SIZE);
-+	for (i = 0; i < len; i++)
-+		xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_MTXFIFO, buf[i]);
-+	priv->msg_buf_remaining -= len;
-+	priv->msg_buf += len;
-+}
-+
-+static void xlp9xx_i2c_drain_rx_fifo(struct xlp9xx_i2c_dev *priv)
-+{
-+	u32 len, i;
-+	u8 *buf = priv->msg_buf;
-+
-+	len = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_FIFOWCNT) &
-+				  XLP9XX_I2C_FIFO_WCNT_MASK;
-+	len = min(priv->msg_buf_remaining, len);
-+	for (i = 0; i < len; i++, buf++)
-+		*buf = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_MRXFIFO);
-+
-+	priv->msg_buf_remaining -= len;
-+	priv->msg_buf = buf;
-+
-+	if (priv->msg_buf_remaining)
-+		xlp9xx_i2c_update_rx_fifo_thres(priv);
-+}
-+
-+static irqreturn_t xlp9xx_i2c_isr(int irq, void *dev_id)
-+{
-+	struct xlp9xx_i2c_dev *priv = dev_id;
-+	u32 status;
-+
-+	status = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_INTST);
-+	if (status == 0)
-+		return IRQ_NONE;
-+
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTST, status);
-+	if (status & XLP9XX_I2C_STATUS_ERRMASK) {
-+		priv->msg_err = status;
-+		goto xfer_done;
-+	}
-+
-+	/* SADDR ACK for SMBUS_QUICK */
-+	if ((status & XLP9XX_I2C_INTEN_SADDR) && (priv->msg_len == 0))
-+		goto xfer_done;
-+
-+	if (!priv->msg_read) {
-+		if (status & XLP9XX_I2C_INTEN_MFIFOEMTY) {
-+			/* TX FIFO got empty, fill it up again */
-+			if (priv->msg_buf_remaining)
-+				xlp9xx_i2c_fill_tx_fifo(priv);
-+			else
-+				xlp9xx_i2c_mask_irq(priv,
-+						    XLP9XX_I2C_INTEN_MFIFOEMTY);
-+		}
-+	} else {
-+		if (status & (XLP9XX_I2C_INTEN_DATADONE |
-+			      XLP9XX_I2C_INTEN_MFIFOHI)) {
-+			/* data is in FIFO, read it */
-+			if (priv->msg_buf_remaining)
-+				xlp9xx_i2c_drain_rx_fifo(priv);
-+		}
-+	}
-+
-+	/* Transfer complete */
-+	if (status & XLP9XX_I2C_INTEN_DATADONE)
-+		goto xfer_done;
-+
-+	return IRQ_HANDLED;
-+
-+xfer_done:
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, 0);
-+	complete(&priv->msg_complete);
-+	return IRQ_HANDLED;
-+}
-+
-+static int xlp9xx_i2c_init(struct xlp9xx_i2c_dev *priv)
-+{
-+	u32 prescale;
-+
-+	/*
-+	 * The controller uses 5 * SCL clock internally.
-+	 * So prescale value should be divided by 5.
-+	 */
-+	prescale = DIV_ROUND_UP(XLP9XX_I2C_IP_CLK_FREQ, priv->clk_hz);
-+	prescale = ((prescale - 8) / 5) - 1;
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, XLP9XX_I2C_CTRL_RST);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, XLP9XX_I2C_CTRL_EN |
-+			     XLP9XX_I2C_CTRL_MASTER);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_DIV, prescale);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, 0);
-+
-+	return 0;
-+}
-+
-+static int xlp9xx_i2c_xfer_msg(struct xlp9xx_i2c_dev *priv, struct i2c_msg *msg,
-+			       int last_msg)
-+{
-+	unsigned long timeleft;
-+	u32 intr_mask, cmd, val;
-+
-+	priv->msg_buf = msg->buf;
-+	priv->msg_buf_remaining = priv->msg_len = msg->len;
-+	priv->msg_err = 0;
-+	priv->msg_read = (msg->flags & I2C_M_RD);
-+	reinit_completion(&priv->msg_complete);
-+
-+	/* Reset FIFO */
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_MFIFOCTRL,
-+			     XLP9XX_I2C_MFIFOCTRL_RST);
-+
-+	/* set FIFO threshold if reading */
-+	if (priv->msg_read)
-+		xlp9xx_i2c_update_rx_fifo_thres(priv);
-+
-+	/* set slave addr */
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_SLAVEADDR,
-+			     (msg->addr << XLP9XX_I2C_SLAVEADDR_ADDR_SHIFT) |
-+			     (priv->msg_read ? XLP9XX_I2C_SLAVEADDR_RW : 0));
-+
-+	/* Build control word for transfer */
-+	val = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_CTRL);
-+	if (!priv->msg_read)
-+		val &= ~XLP9XX_I2C_CTRL_FIFORD;
-+	else
-+		val |= XLP9XX_I2C_CTRL_FIFORD;	/* read */
-+
-+	if (msg->flags & I2C_M_TEN)
-+		val |= XLP9XX_I2C_CTRL_ADDMODE;	/* 10-bit address mode*/
-+	else
-+		val &= ~XLP9XX_I2C_CTRL_ADDMODE;
-+
-+	/* set data length to be transferred */
-+	val = (val & ~XLP9XX_I2C_CTRL_MCTLEN_MASK) |
-+	      (msg->len << XLP9XX_I2C_CTRL_MCTLEN_SHIFT);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, val);
-+
-+	/* fill fifo during tx */
-+	if (!priv->msg_read)
-+		xlp9xx_i2c_fill_tx_fifo(priv);
-+
-+	/* set interrupt mask */
-+	intr_mask = (XLP9XX_I2C_INTEN_ARLOST | XLP9XX_I2C_INTEN_BUSERR |
-+		     XLP9XX_I2C_INTEN_NACKADDR | XLP9XX_I2C_INTEN_DATADONE);
-+
-+	if (priv->msg_read) {
-+		intr_mask |= XLP9XX_I2C_INTEN_MFIFOHI;
-+		if (msg->len == 0)
-+			intr_mask |= XLP9XX_I2C_INTEN_SADDR;
-+	} else {
-+		if (msg->len == 0)
-+			intr_mask |= XLP9XX_I2C_INTEN_SADDR;
-+		else
-+			intr_mask |= XLP9XX_I2C_INTEN_MFIFOEMTY;
-+	}
-+	xlp9xx_i2c_unmask_irq(priv, intr_mask);
-+
-+	/* set cmd reg */
-+	cmd = XLP9XX_I2C_CMD_START;
-+	cmd |= (priv->msg_read ? XLP9XX_I2C_CMD_READ : XLP9XX_I2C_CMD_WRITE);
-+	if (last_msg)
-+		cmd |= XLP9XX_I2C_CMD_STOP;
-+
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CMD, cmd);
-+
-+	timeleft = msecs_to_jiffies(XLP9XX_I2C_TIMEOUT_MS);
-+	timeleft = wait_for_completion_timeout(&priv->msg_complete, timeleft);
-+
-+	if (priv->msg_err) {
-+		dev_dbg(priv->dev, "transfer error %x!\n", priv->msg_err);
-+		if (priv->msg_err & XLP9XX_I2C_INTEN_BUSERR)
-+			xlp9xx_i2c_init(priv);
-+		return -EAGAIN;
-+	}
-+
-+	if (timeleft == 0) {
-+		dev_dbg(priv->dev, "i2c transfer timed out!\n");
-+		xlp9xx_i2c_init(priv);
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int xlp9xx_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+			   int num)
-+{
-+	int i, ret;
-+	struct xlp9xx_i2c_dev *priv = i2c_get_adapdata(adap);
-+
-+	for (i = 0; i < num; i++) {
-+		ret = xlp9xx_i2c_xfer_msg(priv, &msgs[i], i == num - 1);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	return num;
-+}
-+
-+static u32 xlp9xx_i2c_functionality(struct i2c_adapter *adapter)
-+{
-+	return I2C_FUNC_SMBUS_EMUL | I2C_FUNC_I2C |
-+		I2C_FUNC_10BIT_ADDR;
-+}
-+
-+static struct i2c_algorithm xlp9xx_i2c_algo = {
-+	.master_xfer = xlp9xx_i2c_xfer,
-+	.functionality = xlp9xx_i2c_functionality,
-+};
-+
-+static int xlp9xx_i2c_get_frequency(struct platform_device *pdev,
-+				    struct xlp9xx_i2c_dev *priv)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	u32 freq;
-+	int err;
-+
-+	err = of_property_read_u32(np, "clock-frequency", &freq);
-+	if (err) {
-+		freq = XLP9XX_I2C_DEFAULT_FREQ;
-+		dev_dbg(&pdev->dev, "using default frequency %u\n", freq);
-+	} else if (freq == 0 || freq > XLP9XX_I2C_HIGH_FREQ) {
-+		dev_warn(&pdev->dev, "invalid frequency %u, using default\n",
-+			 freq);
-+		freq = XLP9XX_I2C_DEFAULT_FREQ;
-+	}
-+	priv->clk_hz = freq;
-+
-+	return 0;
-+}
-+
-+static int xlp9xx_i2c_probe(struct platform_device *pdev)
-+{
-+	struct xlp9xx_i2c_dev *priv;
-+	struct resource *res;
-+	int err = 0;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->irq = platform_get_irq(pdev, 0);
-+	if (priv->irq <= 0) {
-+		dev_err(&pdev->dev, "invalid irq!\n");
-+		return priv->irq;
-+	}
-+
-+	xlp9xx_i2c_get_frequency(pdev, priv);
-+	xlp9xx_i2c_init(priv);
-+
-+	err = devm_request_irq(&pdev->dev, priv->irq, xlp9xx_i2c_isr, 0,
-+			       pdev->name, priv);
-+	if (err) {
-+		dev_err(&pdev->dev, "IRQ request failed!\n");
-+		return err;
-+	}
-+
-+	init_completion(&priv->msg_complete);
-+	priv->adapter.dev.parent = &pdev->dev;
-+	priv->adapter.algo = &xlp9xx_i2c_algo;
-+	priv->adapter.dev.of_node = pdev->dev.of_node;
-+	priv->dev = &pdev->dev;
-+
-+	snprintf(priv->adapter.name, sizeof(priv->adapter.name), "xlp9xx-i2c");
-+	i2c_set_adapdata(&priv->adapter, priv);
-+
-+	err = i2c_add_adapter(&priv->adapter);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to add I2C adapter!\n");
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+	dev_dbg(&pdev->dev, "I2C bus:%d added\n", priv->adapter.nr);
-+
-+	return 0;
-+}
-+
-+static int xlp9xx_i2c_remove(struct platform_device *pdev)
-+{
-+	struct xlp9xx_i2c_dev *priv;
-+
-+	priv = platform_get_drvdata(pdev);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, 0);
-+	synchronize_irq(priv->irq);
-+	i2c_del_adapter(&priv->adapter);
-+	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, 0);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id xlp9xx_i2c_of_match[] = {
-+	{ .compatible = "netlogic,xlp980-i2c", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver xlp9xx_i2c_driver = {
-+	.probe = xlp9xx_i2c_probe,
-+	.remove = xlp9xx_i2c_remove,
-+	.driver = {
-+		.name = "xlp9xx-i2c",
-+		.of_match_table = xlp9xx_i2c_of_match,
-+	},
-+};
-+
-+module_platform_driver(xlp9xx_i2c_driver);
-+
-+MODULE_AUTHOR("Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>");
-+MODULE_DESCRIPTION("XLP9XX/5XX I2C Bus Controller Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+e.g. is MIGRATE_INFO_TYPE present, do SYSTEM_{OFF,RESET} work?
 
+If they're not present and working, we can't describe this as having
+PSCI 0.2.
+
+Also, what FW does this require the system to have?
+
+Mark.
+
+> add device tree for cupidle-arm64 on mt8173 platform
+> 
+> Signed-off-by: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 30 ++++++++++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 8554ec3..96dff1e 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -48,6 +48,8 @@
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53";
+>  			reg = <0x000>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -55,6 +57,7 @@
+>  			compatible = "arm,cortex-a53";
+>  			reg = <0x001>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
+>  		};
+>  
+>  		cpu2: cpu@100 {
+> @@ -62,6 +65,7 @@
+>  			compatible = "arm,cortex-a57";
+>  			reg = <0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
+>  		};
+>  
+>  		cpu3: cpu@101 {
+> @@ -69,15 +73,33 @@
+>  			compatible = "arm,cortex-a57";
+>  			reg = <0x101>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
+>  		};
+> +
+> +		idle-states {
+> +			entry-method = "arm,psci-0.2";
+> +
+> +			CPU_SLEEP_0_0: cpu-sleep-0-0 {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x0010000>;
+> +				entry-latency-us = <600>;
+> +				exit-latency-us = <600>;
+> +				min-residency-us = <1200>;
+> +			};
+> +
+> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x1010000>;
+> +				entry-latency-us = <800>;
+> +				exit-latency-us = <1000>;
+> +				min-residency-us = <2000>;
+> +				wakeup-latency-us = <1000>;
+> +			};
+>  	};
+>  
+>  	psci {
+> -		compatible = "arm,psci";
+> +		compatible = "arm,psci-0.2";
+>  		method = "smc";
+> -		cpu_suspend   = <0x84000001>;
+> -		cpu_off	      = <0x84000002>;
+> -		cpu_on	      = <0x84000003>;
+>  	};
+>  
+>  	uart_clk: dummy26m {
+> -- 
+> 1.9.1
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
