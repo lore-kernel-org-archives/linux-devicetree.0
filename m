@@ -1,76 +1,96 @@
-From: Daniel Stone <daniel@fooishbar.org>
-Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
-Date: Wed, 18 Mar 2015 09:52:33 +0000
-Message-ID: <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
-References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
- <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v6 00/12] Improvements to Tegra-based Chromebook support
+Date: Wed, 18 Mar 2015 10:52:15 +0100
+Message-ID: <1426672363-30667-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hyungwon Hwang <human.hwang@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dh09.lee@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, cw00.choi@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexandre Courbot <gnurou@gmail.com>, Asaf Vertz <asaf.vertz@tandemg.com>, Ben Hutchings <ben@decadent.org.uk>, Chris Ball <chris@printf.net>, David Airlie <airlied@linux.ie>, David Riley <davidriley@chromium.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Johan Rudholm <johan.rudholm@axis.com>, Kumar Gala <galak@codeaurora.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, Paul Walmsley <paul@pwsan.com>, Pawel Moll <pawel.moll@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linu>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAxOCBNYXJjaCAyMDE1IGF0IDA4OjE2LCBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdh
-bmdAc2Ftc3VuZy5jb20+IHdyb3RlOgo+ICsjZGVmaW5lIFJFRyhkc2ksIHJlZykgICgoZHNpKS0+
-cmVnX2Jhc2UgKyBkc2ktPmRyaXZlcl9kYXRhLT5yZWdzWyhyZWcpXSkKClRoaXMgc2VlbXMgbGlr
-ZSBhIGdvb2QgY2hhbmdlIGluIGdlbmVyYWwsIGJ1dCBwbGVhc2Ugc3BsaXQgaXQgdXA6IGl0Cm1h
-a2VzIGJpc2VjdGlvbiBtdWNoIGVhc2llciBpZiB5b3UgaGF2ZSBvbmUgcGF0Y2ggd2hpY2ggYWRk
-cyBubwpmdW5jdGlvbmFsaXR5IGFuZCBzaG91bGQgaGF2ZSBleGFjdGx5IHRoZSBzYW1lIGJlaGF2
-aW91ciwgYW5kIHRoZW4KYW5vdGhlciBwYXRjaCB3aGljaCBpbnRyb2R1Y2VzIHlvdXIgY2hhbmdl
-cy4KCj4gQEAgLTQzMSwxNSArNTc5LDExIEBAIHN0YXRpYyB1bnNpZ25lZCBsb25nIGV4eW5vc19k
-c2lfc2V0X3BsbChzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpLAo+ICAgICAgICAgdTE2IG07Cj4gICAg
-ICAgICB1MzIgcmVnOwo+Cj4gLSAgICAgICBjbGtfc2V0X3JhdGUoZHNpLT5wbGxfY2xrLCBkc2kt
-PnBsbF9jbGtfcmF0ZSk7Cj4gLQo+IC0gICAgICAgZmluID0gY2xrX2dldF9yYXRlKGRzaS0+cGxs
-X2Nsayk7Cj4gLSAgICAgICBpZiAoIWZpbikgewo+IC0gICAgICAgICAgICAgICBkZXZfZXJyKGRz
-aS0+ZGV2LCAiZmFpbGVkIHRvIGdldCBQTEwgY2xvY2sgZnJlcXVlbmN5XG4iKTsKPiAtICAgICAg
-ICAgICAgICAgcmV0dXJuIDA7Cj4gLSAgICAgICB9Cj4gLQo+IC0gICAgICAgZGV2X2RiZyhkc2kt
-PmRldiwgIlBMTCBpbnB1dCBmcmVxdWVuY3k6ICVsdVxuIiwgZmluKTsKPiArICAgICAgIC8qCj4g
-KyAgICAgICAgKiBUaGUgaW5wdXQgUExMIGNsb2NrIGZvciBNSVBJIERTSSBpbiBFeHlub3M1NDMz
-IHNlZW1zIHRvIGJlIGZpeGVkCj4gKyAgICAgICAgKiBieSBPU0MgQ0xLLgo+ICsgICAgICAgICov
-Cj4gKyAgICAgICBmaW4gPSAyNCAqIE1IWjsKCkVyLCBpcyB0aGlzIGFsd2F5cyB0cnVlIG9uIG90
-aGVyIHBsYXRmb3JtcyBhcyB3ZWxsPyBTaG91bGRuJ3QgdGhpcyBiZQphIHBhcnQgb2YgdGhlIERl
-dmljZVRyZWUgZGVzY3JpcHRpb24/Cgo+IEBAIC01MDksNyArNjU2LDcgQEAgc3RhdGljIGludCBl
-eHlub3NfZHNpX2VuYWJsZV9jbG9jayhzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQo+ICAgICAgICAg
-ZGV2X2RiZyhkc2ktPmRldiwgImhzX2NsayA9ICVsdSwgYnl0ZV9jbGsgPSAlbHUsIGVzY19jbGsg
-PSAlbHVcbiIsCj4gICAgICAgICAgICAgICAgIGhzX2NsaywgYnl0ZV9jbGssIGVzY19jbGspOwo+
-Cj4gLSAgICAgICByZWcgPSByZWFkbChkc2ktPnJlZ19iYXNlICsgRFNJTV9DTEtDVFJMX1JFRyk7
-Cj4gKyAgICAgICByZWcgPSByZWFkbChSRUcoZHNpLCBEU0lNX0NMS0NUUkxfUkVHKSk7CgpJbnN0
-ZWFkIG9mIHRoaXMgcmVhZGwoUkVHKCkpIHBhdHRlcm4geW91IGhhdmUgZXZlcnl3aGVyZSwgbWF5
-YmUgaXQKd291bGQgYmUgZWFzaWVyIHRvIGludHJvZHVjZSBhIGRzaV9yZWFkX3JlZyhkc2ksIHJl
-Z19lbnVtX3ZhbHVlKQpoZWxwZXIsIGFuZCB0aGUgc2FtZSBmb3Igd3JpdGVfcmVnLgoKPiBAQCAt
-MTcyMCwxOCArMTg3MywxNiBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FUFJPQkVfREVG
-RVI7Cj4gICAgICAgICB9Cj4KPiAtICAgICAgIGRzaS0+cGxsX2NsayA9IGRldm1fY2xrX2dldChk
-ZXYsICJwbGxfY2xrIik7Cj4gLSAgICAgICBpZiAoSVNfRVJSKGRzaS0+cGxsX2NsaykpIHsKPiAt
-ICAgICAgICAgICAgICAgZGV2X2luZm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgcGxsIGlucHV0
-IGNsb2NrXG4iKTsKPiAtICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihkc2ktPnBsbF9jbGsp
-Owo+IC0gICAgICAgICAgICAgICBnb3RvIGVycl9kZWxfY29tcG9uZW50Owo+IC0gICAgICAgfQo+
-IC0KPiAtICAgICAgIGRzaS0+YnVzX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJidXNfY2xrIik7
-Cj4gLSAgICAgICBpZiAoSVNfRVJSKGRzaS0+YnVzX2NsaykpIHsKPiAtICAgICAgICAgICAgICAg
-ZGV2X2luZm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgYnVzIGNsb2NrXG4iKTsKPiAtICAgICAg
-ICAgICAgICAgcmV0ID0gUFRSX0VSUihkc2ktPmJ1c19jbGspOwo+IC0gICAgICAgICAgICAgICBn
-b3RvIGVycl9kZWxfY29tcG9uZW50Owo+ICsgICAgICAgZHNpLT5jbGtzID0gZGV2bV9remFsbG9j
-KGRldiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZigqZHNpLT5jbGtz
-KSAqIGRzaS0+ZHJpdmVyX2RhdGEtPm51bV9jbGtzLAo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgR0ZQX0tFUk5FTCk7Cj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgZHNpLT5kcml2
-ZXJfZGF0YS0+bnVtX2Nsa3M7IGkrKykgewo+ICsgICAgICAgICAgICAgICBkc2ktPmNsa3NbaV0g
-PSBkZXZtX2Nsa19nZXQoZGV2LCBjbGtfbmFtZXNbaV0pOwo+ICsgICAgICAgICAgICAgICBpZiAo
-SVNfRVJSKGRzaS0+Y2xrc1tpXSkpIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfaW5m
-byhkZXYsICJmYWlsZWQgdG8gZ2V0IGRzaSBwbGwgaW5wdXQgY2xvY2tcbiIpOwoKVGhpcyBlcnJv
-ciBtZXNzYWdlIHNlZW1zIHdyb25nOyBpdCBzaG91bGQgY29udGFpbiB0aGUgbmFtZSBvZiB0aGUK
-YWN0dWFsIGZhaWxpbmcgY2xvY2suCgpDaGVlcnMsCkRhbmllbApfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+v6:	* Added Acked-by and Reviewed-By tags
+	* Rebased on top of 4.0-rc1
+	* Added patch that marks the WiFi card as powered during suspend
+
+v5:	* Moved to use gpio-restart for reboots, had to make tegra_pmc_rest=
+art
+	a notification handler
+
+v4:	* Added support for the system reset GPIO, for proper reboots
+	* Moved out changes to ASOC to their own series, as requested by Mark
+	Brown
+	* Added patch to reset the SOR, to make sure it's in a known state
+	* Changed nvidia,model property of the sound nodes to GoogleNyanBig
+	and GoogleNyanBlaze so they can be told apart in userspace
+
+v3:	* Added bindings for the LTN140AT29 panel
+	* Removed the delay in pwrseq, as what was actually needed was to add
+	a dependency on the power supplies of the host
+	* Uses the pinmux for the Blaze as generated by tegra-pinmux-scripts
+	* Uses the pinmux for the Big as in the last patch from Simon Glass
+
+Hello,
+
+this series adds support for the Tegra-based HP Chromebook 14 (aka nyan
+blaze), which is very similar to the Acer Chromebook 13 (aka nyan big).
+Because they both include tegra124-nyan.dtsi, some improvements to Blaz=
+e
+support have also benefitted the Big. I have tested that USB2, the pane=
+ls,
+HDMI, the trackpad, Wifi and sound work on both.
+
+The leaf DTs contain the whole pinmux configuration as generated by
+tegra-pinmux-scripts. I chose to not put the common configuration in th=
+e
+common dtsi so we can paste the output as is and be sure that the kerne=
+l
+doesn't diverge from the canonical data.
+
+These patches are based on top of 4.0-rc1.
+
+http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=3Dnyan-v6
+
+Regards,
+
+Tomeu
+
+David Riley (1):
+  soc/tegra: pmc: move to using a restart handler
+
+St=C3=A9phane Marchesin (1):
+  drm/panel: add support for Samsung LTN140AT29 panel
+
+Tomeu Vizoso (10):
+  ARM: tegra: Change model of sound card in Nyan Big
+  ARM: tegra: Move out nyan-generic parts out from the nyan-big DT
+  ARM: tegra: Add DTS for the nyan-blaze board
+  ARM: tegra: Add node for trackpad in Nyan boards
+  ARM: tegra: Use pwrseq-simple for the wifi in Nyan
+  ARM: tegra: Use the generated pinmux data
+  ARM: tegra: Set spi-max-frequency property to flash node
+  drm/tegra: Reset the SOR on probe
+  ARM: tegra: Add gpio-restart node
+  ARM: tegra: The WiFi card is kept powered during suspend
+
+ .../bindings/panel/samsung,ltn140at29-301.txt      |    7 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/tegra124-nyan-big.dts            | 2119 +++++++++++-=
+--------
+ arch/arm/boot/dts/tegra124-nyan-blaze.dts          | 1332 ++++++++++++
+ arch/arm/boot/dts/tegra124-nyan.dtsi               |  695 +++++++
+ arch/arm/mach-tegra/tegra.c                        |    1 -
+ drivers/gpu/drm/panel/panel-simple.c               |   26 +
+ drivers/gpu/drm/tegra/sor.c                        |   14 +
+ drivers/soc/tegra/pmc.c                            |   31 +-
+ 9 files changed, 3254 insertions(+), 972 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/panel/samsung,ltn=
+140at29-301.txt
+ create mode 100644 arch/arm/boot/dts/tegra124-nyan-blaze.dts
+ create mode 100644 arch/arm/boot/dts/tegra124-nyan.dtsi
+
+--=20
+2.1.0
+
