@@ -1,80 +1,97 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v13 10/13] Documentation: leds: Add description of
- v4l2-flash sub-device
-Date: Wed, 18 Mar 2015 15:36:05 +0100
-Message-ID: <55098D55.6050101@samsung.com>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
- <1426175114-14876-11-git-send-email-j.anaszewski@samsung.com>
- <20150318123957.GH11954@valkosipuli.retiisi.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/3] mailbox: Add support for ST's Mailbox IP
+Date: Wed, 18 Mar 2015 15:26:58 +0000
+Message-ID: <20150318152658.GO3318@x1>
+References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+ <1425379283-1567-4-git-send-email-lee.jones@linaro.org>
+ <CAJe_Zhc1uLf_grsbzOs3ahJHJXXZ+BF__702mEPPL=SWPU5nzw@mail.gmail.com>
+ <20150318131226.GM3318@x1>
+ <CABb+yY2HwZn3VSvZ4iVfWE8GrsLDA6Tx_V2HZiOBvJb9UHY2Mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150318123957.GH11954@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, cooloney@gmail.com
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2HwZn3VSvZ4iVfWE8GrsLDA6Tx_V2HZiOBvJb9UHY2Mg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Wed, 18 Mar 2015, Jassi Brar wrote:
+> On Wed, Mar 18, 2015 at 6:42 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > On Wed, 04 Mar 2015, Jassi Brar wrote:
+> >
+> >> > +
+> >> > +       if ((!data) || (!sti_mbox_chan_is_tx(mbox)))
+> >> >
+> >> nit: too much protection.
+> >
+> > What makes you think that?
+> >
+>  Usually we write
+>                if (!data || !sti_mbox_chan_is_tx(mbox))
 
-On 03/18/2015 01:39 PM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Thu, Mar 12, 2015 at 04:45:11PM +0100, Jacek Anaszewski wrote:
->> This patch extends LED Flash class documention by
->> the description of interactions with v4l2-flash sub-device.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Acked-by: Sakari Ailus <sakari.ailus@iki.fi>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> ---
->>   Documentation/leds/leds-class-flash.txt |   13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/leds/leds-class-flash.txt b/Documentation/leds/leds-class-flash.txt
->> index 19bb673..8623413 100644
->> --- a/Documentation/leds/leds-class-flash.txt
->> +++ b/Documentation/leds/leds-class-flash.txt
->> @@ -20,3 +20,16 @@ Following sysfs attributes are exposed for controlling flash LED devices:
->>   	- max_flash_timeout
->>   	- flash_strobe
->>   	- flash_fault
->> +
->> +A LED subsystem driver can be controlled also from the level of VideoForLinux2
->> +subsystem. In order to enable this CONFIG_V4L2_FLASH_LED_CLASS symbol has to
->> +be defined in the kernel config. The driver must call the v4l2_flash_init
->> +function to get registered in the V4L2 subsystem. On remove the
->> +v4l2_flash_release function has to be called (see <media/v4l2-flash.h>).
->> +
->> +After proper initialization a V4L2 Flash sub-device is created. The sub-device
->> +exposes a number of V4L2 controls, which allow for controlling a LED Flash class
->
-> Over 80 characters per line.
+Ah, the parentheses.  Yes, I agree.  Thanks for clarifying.
 
-This line has exactly 80 characters, probably you checked the
-length in the patch, which includes leading '+' character.
+> >> > +                       mbox->irq =3D irq_create_mapping(mbinst-=
+>irq_domain,
+> >> > +                                                      mbox->rx_=
+id);
+> >> >
+> >> simply assigning same IRQ to all controller DT nodes and using
+> >> IRQF_SHARED for the common handler, wouldn't work?
+> >
+> > I do have intentions to simplify this driver somewhat, but that wil=
+l
+> > take some time as it will require a great deal of consultation and
+> > testing from the ST side.  This is the current internal implementat=
+ion
+> > which is used in the wild and has been fully tested.  If you'll all=
+ow
+> > me to conduct my adaptions subsequently we can have full history an=
+d a
+> > possible reversion plan if anything untoward take place i.e. I mess
+> > something up.
+> >
+> OK, but wouldn't that break the bindings of this driver when you
+> eventually do that?
 
->
-> With this fixed,
->
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+That's going to happen regardless, since these bindings are already in
+use internally.  Mainline (i.e. v4.0+) isn't going to be used in
+products for years to come, so we have a lot of time until any new
+bindings become ABI.
 
-Probably I inadvertently changed the Acked-by email.
-Bryan, please apply the patch with:
+> >> > + * struct sti_mbox_msg - sti mailbox message description
+> >> > + * @dsize:             data payload size
+> >> > + * @pdata:             message data payload
+> >> > + */
+> >> > +struct sti_mbox_msg {
+> >> > +       u32             dsize;
+> >> > +       u8              *pdata;
+> >> > +};
+> >> >
+> >> There isn't any client driver in this patchset to tell exactly, bu=
+t it
+> >> seems the header could be split into one shared between mailbox
+> >> clients and provider and another internal to client/provider ?
+> >
+> > I believe only the above will be required by the client.  Seems sil=
+ly
+> > to create a client specific header just for that, don't you think?
+> >
+> Do you mean to have copies of the structure in controller and client =
+driver? :O
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+I do not.  I planned on sharing the main header with with client
+also.
 
->
->> +device with use of its internal kernel API.
->> +Opening the V4L2 Flash sub-device makes the LED subsystem sysfs interface
->> +unavailable. The interface is re-enabled after the V4L2 Flash sub-device
->> +is closed.
->
+But I guess by your reaction you suggest having a teeny client header
+as the best way forward then.
 
-
--- 
-Best Regards,
-Jacek Anaszewski
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
