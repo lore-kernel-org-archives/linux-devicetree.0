@@ -1,82 +1,47 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c: driver for the Conexant Digicolor I2C controller
-Date: Wed, 18 Mar 2015 22:07:30 +0100
-Message-ID: <20150318210730.GA12960@katana>
-References: <7da767503ac6085c10fbd1953ffd36621b8bf0c5.1424092804.git.baruch@tkos.co.il>
- <a106023efa9fd648f46021cd063437df798528de.1424092804.git.baruch@tkos.co.il>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: brcm: rationalize Broadcom documentation
+ naming
+Date: Wed, 18 Mar 2015 14:53:16 -0700
+Message-ID: <5509F3CC.1010207@broadcom.com>
+References: <1426706645-19313-1-git-send-email-sbranden@broadcom.com> <5509D528.1080208@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a106023efa9fd648f46021cd063437df798528de.1424092804.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+In-Reply-To: <5509D528.1080208-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 15-03-18 12:42 PM, Stephen Warren wrote:
+> On 03/18/2015 01:24 PM, Scott Branden wrote:
+>> This patchset attempts to standarize the naming of dt-bindings
+>> documents based on the Broadcom vendor prefix of brcm.
+>>
+>> Although there are no guidelines currently present for how to name
+>> the dt-bindings document the "vendor,binding.txt" style is in use by
+>> some of the other vendors.
+>
+> Conceptually I'm fine with this.
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>
+> The only comment I have is that some bindings refer to other bindings,
+> e.g. an I2C controller binding might refer to the core I2C binding to
+> define core I2C properties. Since this patch moves a couple files
+> between directories, did you double-check that none of the pathnames in
+> those references need fixing up?
 
-Hi,
+Yes, I read all the brcm documents and did not find references to the 
+moved files.
 
-On Mon, Feb 16, 2015 at 03:20:04PM +0200, Baruch Siach wrote:
-> This commit adds a driver for the I2C master controller on the CX92755 So=
-C. The
-> CX92755 is one SoC in the Conexant Digicolor series. This driver should s=
-upport
-> other SoCs from that series.
->=20
-> Only 7bit slave addresses are currently supported.
->=20
-> Tested on the Equinox CX92755 EVK, using i2c-tools utilities to read and =
-write
-> the on-chip (sic) audio codec.
->=20
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-
-Looks mostly good.
-
-> +static u32 dc_i2c_func(struct i2c_adapter *adap)
-> +{
-> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> +}
-
-You probably want to advertise I2C_FUNC_NOSTART here, too?
-
-And if you could rebase to something after 4.0-rc1, that would be much
-appreciated.
+In my search I found 4 more files inconsistently named from the Kona 
+family.  I'm submitting a new patch with those files renamed as well.
 
 Thanks,
-
-   Wolfram
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVCekSAAoJEBQN5MwUoCm2rdgP/02PDA9QYm0EqMs27Eaeul3r
-Xcsn/LwyZqs5Vr0naZFprzUyjvnPux0MLNg6oVcSz2ciqR1/5JwBOgWDtjZtNEsW
-GsqQVZiD94sysPPhlhdWAA7Mp8QxnkUjNhZyF9ppoLI2ATaSVcpFR/P2xWhT+EBu
-DTH2J0uaQy5/hMgXa28uU4uiSQGkInL9xCrfyDe+CbSVMfALL6cKWTt4+os0cIyv
-L3k5P0yG8UNIW5gSpiDB1gl05aU5jz4+uwm4MhE9jFv4/kNhp7vCjQWvBe6HCKfQ
-z5N7D76GyGsvXGI12TrAwi82ugrDiS2ZvJQrmRr5MrSxgYa6F8Cf+aDxQwpm9e03
-3/IHktBPh++a1R9c0nBqXSDhp2e9WBpWyc6AJVrgXDBpGk1Rp1gERll9YEMAHwTL
-M4Hesh7Lcu+S3+5Vd+4w52kYx7if/ZyBzac7x7FF5HhTDaQmzKnWhjiei9T3vGM7
-5nKttiuzMxuRcOccPh07qsTxhg3FKj768GpCuGg62ABbgGGHDhjHWURSQ0tKzASv
-dhyvuRwkPdwqKzDFJI19B/Vpy9tP57MIV7xVlmTeQyOtYwGbtB/hbaBKEu9V1+Yj
-sa//sj/aKOieOzQTzVGZiqJRE28sRvdmyRW7PcxO6eGzLLcJec32hsa991zEcHK0
-iOain3H1nA6lJ7jGhmK/
-=bb2q
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+Scott
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
