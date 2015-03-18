@@ -1,35 +1,90 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: brcm: rationalize Broadcom documentation
- naming
-Date: Wed, 18 Mar 2015 13:42:32 -0600
-Message-ID: <5509D528.1080208@wwwdotorg.org>
-References: <1426706645-19313-1-git-send-email-sbranden@broadcom.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of_net: factor out repetitive code from of_get_mac_address()
+Date: Wed, 18 Mar 2015 12:46:34 -0700
+Message-ID: <5509D61A.4080009@gmail.com>
+References: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426706645-19313-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1776166.J84mUn2Yu8-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/2015 01:24 PM, Scott Branden wrote:
-> This patchset attempts to standarize the naming of dt-bindings
-> documents based on the Broadcom vendor prefix of brcm.
->
-> Although there are no guidelines currently present for how to name
-> the dt-bindings document the "vendor,binding.txt" style is in use by
-> some of the other vendors.
+On 18/03/15 12:25, Sergei Shtylyov wrote:
+> of_get_mac_address() basically does the same  thing thrice, every  time with  a
+> different  property  name,  so it makes sense to factor out the repetitive code
+> into separate function. While at it, we can start using ETH_ALEN instead of the
+> bare number and drop unnecessary parens around the property length check.
+> 
+> The resulting ARM object file is 100 bytes less in size than before the patch.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Conceptually I'm fine with this.
-Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The only comment I have is that some bindings refer to other bindings, 
-e.g. an I2C controller binding might refer to the core I2C binding to 
-define core I2C properties. Since this patch moves a couple files 
-between directories, did you double-check that none of the pathnames in 
-those references need fixing up?
+> 
+> ---
+> The patch is against Grant Likely's 'linux.git' repo's 'devicetree/next' branch.
+> 
+>  drivers/of/of_net.c |   29 +++++++++++++++++------------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+> 
+> Index: linux/drivers/of/of_net.c
+> ===================================================================
+> --- linux.orig/drivers/of/of_net.c
+> +++ linux/drivers/of/of_net.c
+> @@ -38,6 +38,15 @@ int of_get_phy_mode(struct device_node *
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_phy_mode);
+>  
+> +static const void *of_get_mac_addr(struct device_node *np, const char *name)
+> +{
+> +	struct property *pp = of_find_property(np, name, NULL);
+> +
+> +	if (pp && pp->length == ETH_ALEN && is_valid_ether_addr(pp->value))
+> +		return pp->value;
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * Search the device tree for the best MAC address to use.  'mac-address' is
+>   * checked first, because that is supposed to contain to "most recent" MAC
+> @@ -58,20 +67,16 @@ EXPORT_SYMBOL_GPL(of_get_phy_mode);
+>  */
+>  const void *of_get_mac_address(struct device_node *np)
+>  {
+> -	struct property *pp;
+> +	const void *addr;
+>  
+> -	pp = of_find_property(np, "mac-address", NULL);
+> -	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
+> -		return pp->value;
+> +	addr = of_get_mac_addr(np, "mac-address");
+> +	if (addr)
+> +		return addr;
+>  
+> -	pp = of_find_property(np, "local-mac-address", NULL);
+> -	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
+> -		return pp->value;
+> +	addr = of_get_mac_addr(np, "local-mac-address");
+> +	if (addr)
+> +		return addr;
+>  
+> -	pp = of_find_property(np, "address", NULL);
+> -	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
+> -		return pp->value;
+> -
+> -	return NULL;
+> +	return of_get_mac_addr(np, "address");
+>  }
+>  EXPORT_SYMBOL(of_get_mac_address);
+> 
+
+
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
