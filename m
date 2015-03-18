@@ -1,45 +1,99 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 3/4] cpufreq: mediatek: add Mediatek cpufreq driver
-Date: Wed, 18 Mar 2015 12:29:43 +0530
-Message-ID: <CAKohpon8kXzfeKUUwrRhuei0cY9iVbMHfBjDwXW=M2SAYHdtYQ@mail.gmail.com>
-References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-	<1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
-	<CAKohpo=c2t4_2hdPP-vQM7xewK5SXaHBGNA9PhvTwDv3++pSTg@mail.gmail.com>
-	<CALx668VypyWbVuph0ir0SRt4kqASvYzwBuyc_r5tFeoHi+HieA@mail.gmail.com>
-	<CAKohpomxXTP6NdPoSmB=eq2sFqqgskS5vYtDNAT6a0VL5K6dCg@mail.gmail.com>
-	<CALx668VFRdeWcK_gKhJrJehnaH5uDpA0m2OfHLqPVUq8oocXaw@mail.gmail.com>
-	<CAKohpokT7fSniPGX2BfM61AtMoMCxEP8WDtbZ34bozUXscEWyg@mail.gmail.com>
-	<20150311105307.GW28806@sirena.org.uk>
-	<CAKohpom4riOhzc3hK8B2tiSwGx0zG96C7QNeQB0yZaPMd_OpLw@mail.gmail.com>
-	<20150311124555.GB28806@sirena.org.uk>
-	<CAKohpok=8vU6Nr21n49MHoyk=REEMkuibVk9L+0L7uLnFj==AQ@mail.gmail.com>
-	<CALx668U7EoiMB8D0Num5w9oC0zZkC55uKaSOLrrBhKnLXUtoOQ@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
+Date: Wed, 18 Mar 2015 08:42:32 +0100
+Message-ID: <20150318074232.GO10068@pengutronix.de>
+References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
+ <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
+ <20150316153048.GC10068@pengutronix.de>
+ <1426595474.24415.18.camel@mtksdaap41>
+ <20150317134345.GG10068@pengutronix.de>
+ <1426649260.3662.5.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CALx668U7EoiMB8D0Num5w9oC0zZkC55uKaSOLrrBhKnLXUtoOQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chen Fan <fan.chen@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@li
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426649260.3662.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 March 2015 at 16:45, Pi-Cheng Chen <pi-cheng.chen@linaro.org> wrote:
-> The voltages of the two regulators need to be always under a limitation:
-> 100mV < Vsram - Vproc < 200mV
-> For now, I just calculate the OPPs of Vsram from OPPs of Vproc.
->
-> Another thing I should mention, if the voltage difference of two adjacent
-> OPPs is greater than 100mV, we need to set the regulator to some
-> voltages which are not in OPP table considering the limitation above.
-> I think that will make it more difficult to model such flow in a generic
-> framework.
+Hello Eddie,
 
-Actually the problem is that OPP tables are insufficient for such cases,
-and we are adding work-arounds to fix that. Though it will get fixed
-with the new bindings we are adding.
+On Wed, Mar 18, 2015 at 11:27:40AM +0800, Eddie Huang wrote:
+> On Tue, 2015-03-17 at 14:43 +0100, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Mar 17, 2015 at 08:31:14PM +0800, Eddie Huang wrote:
+> > > On Mon, 2015-03-16 at 16:30 +0100, Uwe Kleine-K=F6nig wrote:
+> > > > On Wed, Jan 28, 2015 at 05:27:56PM +0800, Eddie Huang wrote:
+> > > > > [...]
+> > > > > +static irqreturn_t rtc_irq_handler_thread(int irq, void *dat=
+a)
+> > > > > +{
+> > > > > +	struct mt6397_rtc *rtc =3D data;
+> > > > > +	u16 irqsta, irqen;
+> > > > > +
+> > > > > +	mutex_lock(&rtc->lock);
+> > > > > +	irqsta =3D rtc_read(rtc, RTC_IRQ_STA);
+> > > > Do you really need to lock for a single read access?
+> > >=20
+> > > I think this lock is necessary, because other thread may access r=
+tc
+> > > register at the same time, for example, call mtk_rtc_set_alarm to=
+ modify
+> > > alarm time.
+> > That would be a valid reason if mtk_rtc_set_alarm touched that regi=
+ster
+> > twice in a single critical section and the handler must not read th=
+e
+> > value of the first write. Otherwise it should be fine, shouldn't it=
+?
+> >=20
+>=20
+> My original though is if disable alarm in mtk_rtc_set_alarm function,
+> RTC_IRQ_STA may be affected, this is why I add mutex. After checking
+> with designer, RTC_IRQ_STA will not be affected. I will remove the
+> mutex.
+Even if IRQ_STA is changed there is no problem. With the lock the
+following can happen:
 
-I am confused on what we should be doing here. Even if you write
-your own driver, you will be abusing DT with incorrect information.
+Either the irq thread comes first:
 
-Even if you go around adding a new driver, I would like you to fallback
-to cpufreq-dt ones the new OPP bindings are in place.
+	thread1			thread2
+
+	lock
+	rtc_read
+	unlock   ------------>  lock
+				dosomething with IRQ_STA
+				unlock
+
+or the other thread comes first:
+
+	thread1			thread2
+
+				lock
+				dosomething with IRQ_STA
+	lock   <-------------	unlock
+	rtc_read
+	unlock
+
+So thread1 either reads the old or the new value of IRQ_STA.
+
+Without locking you have the same! Either the write in thread2 comes
+first or not. And depending on that you either read the new or the old
+value respectively.
+
+Of course this assumes that a write is atomic in the sense that if you
+update a value from 0x01 to 0x10 there is no point in time a reader can
+see 0x00 or 0x11. But this is usually given. Also reading the register
+in question must not have side effects that affect the other threads.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
