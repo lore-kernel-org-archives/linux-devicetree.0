@@ -1,139 +1,73 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: BCM2835: Add a function for doing an rmb()
- between device reads.
-Date: Wed, 18 Mar 2015 08:26:03 +0000
-Message-ID: <20150318082603.GI3318@x1>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4 v3] dt/bindings: Add binding for BCM2835 mailbox driver
+Date: Wed, 18 Mar 2015 14:10:51 +0530
+Message-ID: <CABb+yY0Gc+vJHksKc7ahYfRdh2vzj_VR_bFvjr+K+hiqiah5bg@mail.gmail.com>
 References: <1426213936-4139-1-git-send-email-eric@anholt.net>
+	<1426213936-4139-2-git-send-email-eric@anholt.net>
+	<20150317172758.GC3318@x1>
+	<5508A75A.4070203@broadcom.com>
+	<20150318082321.GH3318@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426213936-4139-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <20150318082321.GH3318@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Mar 2015, Eric Anholt wrote:
-
-> Stephen Warren was concerned that the rmb() present in the new mailbo=
-x
-> driver was unnecessary, and after seeing the docs, that it was just s=
-o
-> surprising that somebody would come along and remove it later.  The
-> explanation for the need for the rmb() is long enough that we won't
-> want to place it at every callsite.  Make a wrapper with the whole
-> explanation in it, so that anyone wondering what's going on sees the
-> docs right there.
->=20
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
->  include/soc/bcm2835/peripheral-workaround.h | 75 +++++++++++++++++++=
-++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 include/soc/bcm2835/peripheral-workaround.h
->=20
-> diff --git a/include/soc/bcm2835/peripheral-workaround.h b/include/so=
-c/bcm2835/peripheral-workaround.h
-> new file mode 100644
-> index 0000000..4541a13
-> --- /dev/null
-> +++ b/include/soc/bcm2835/peripheral-workaround.h
-> @@ -0,0 +1,75 @@
-> +/*
-> + * Copyright =C2=A9 2015 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +static inline void bcm2835_peripheral_read_workaround(void)
-> +{
-> +#ifdef CONFIG_ARCH_BCM2835
-> +	/*
-> +	 * The BCM2835 bus is unusual in that it doesn't guarantee
-> +	 * ordering between reads from different peripherals (where
-> +	 * peripherals roughly correspond to Linux devices).  From
-> +	 * BCM2835 ARM Peripherals.pdf, page 7:
-> +	 *
-> +	 *     "In order to keep the system complexity low and data
-> +	 *      throughput high, the BCM2835 AXI system does not
-> +	 *      always return read data in-order. The GPU has special
-> +	 *      logic to cope with data arriving out-of-order; however
-> +	 *      the ARM core does not contain such logic. Therefore
-> +	 *      some precautions must be taken when using the ARM to
-> +	 *      access peripherals.
-> +	 *
-> +	 *      Accesses to the same peripheral will always arrive and
-> +	 *      return in-order. It is only when switching from one
-> +	 *      peripheral to another that data can arrive
-> +	 *      out-of-order. The simplest way to make sure that data
-> +	 *      is processed in-order is to place a memory barrier
-> +	 *      instruction at critical positions in the code. You
-> +	 *      should place:
-> +	 *
-> +	 *      =E2=80=A2 A memory write barrier before the first write to =
-a
-> +	 *        peripheral.
-> +	 *      =E2=80=A2 A memory read barrier after the last read of a
-> +	 *        peripheral."
-> +	 *
-> +	 * The footnote explicitly says that:
-> +	 *
-> +	 *      "For example:
-> +	 *
-> +	 *         a_status =3D *pointer_to_peripheral_a;
-> +	 *         b_status =3D *pointer_to_peripheral_b;
-> +	 *
-> +	 *       Without precuations the values ending up in the
-> +	 *       variables a_status and b_status can be swapped
-> +	 *       around."
-> +	 *
-> +	 * However, it also notes that, somewhat contrary to the first
-> +	 * bullet point:
-> +	 *
-> +	 *     "It is theoretical possible for writes to go =E2=80=98wrong=E2=
-=80=99
-> +	 *      but that is far more difficult to achieve. The AXI
-> +	 *      system makes sure the data always arrives in-order at
-> +	 *      its intended destination. So:
-> +	 *
-> +	 *        *pointer_to_peripheral_a =3D value_a;
-> +	 *        *pointer_to_peripheral_b =3D value_b;
-> +	 *
-> +	 *      will always give the expected result. The only time
-> +	 *      write data can arrive out-of-order is if two different
-> +	 *      peripherals are connected to the same external
-> +	 *      equipment"
-> +	 *
-> +	 * Since we aren't interacting with multiple peripherals
-> +	 * connected to the same external equipment as far as we know,
-> +	 * that means that we only need to handle the read workaround
-> +	 * case.  We do so by placing an rmb() at the first device
-> +	 * read acceess in a given driver path, including the
-> +	 * interrupt handlers.
-> +	 */
-> +	rmb();
-> +#endif
-> +}
-
-The format:
-
-#ifdef CONFIG_ARCH_BCM2835
-static inline void bcm2835_peripheral_read_workaround(void)
-{
-        <stuff>
-}
-#else
-static inline void bcm2835_peripheral_read_workaround(void) {}
-#endif
-
-=2E.. is more traditional in the Linux kernel.
+On Wed, Mar 18, 2015 at 1:53 PM, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 17 Mar 2015, Scott Branden wrote:
+>> On 15-03-17 10:27 AM, Lee Jones wrote:
+>> >On Thu, 12 Mar 2015, Eric Anholt wrote:
+>> >
+>> >>From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>> >>
+>> >>Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>> >>Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+>> >>Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> >>---
+>> >>
+>> >>
+>> >>v2: Split into a separate patch for submitting to the devicetree list.
+>> >>     Consistently start node docs with a capital letter. device's
+>> >>     address in the example shouldn't have "0x". Drop machine-specific
+>> >>     interrupt numbers from the docs.  (changes by anholt).
+>> >>
+>> >>v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+>> >>     (changes by anholt, from review by Lee Jones).
+>> >
+>> >Thanks for fixing up.
+>> >
+>> >>.../devicetree/bindings/mailbox/bcm2835-mbox.txt      | 19 +++++++++++++++++++
+>> >>  1 file changed, 19 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+>> >
+>> >I don't see any unruliness or causes of controversy.
+>> >
+>> >Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >
+>> >>diff --git a/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+>> >>new file mode 100644
+>> >>index 0000000..0bb2b9d
+>> >>--- /dev/null
+>> >>+++ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+>> I am trying to standarize all broadcom device tree bindings in the
+>> format "brcm,binding.txt".
+>>
+>> Could you please rename this file to brcm,bcm2835-mbox.txt for
+>> consistency in bindings?
+>
+> The file name is governed by the maintainer of the subsystem you're
+> applying documentation for.  If this were an MFD submission, I would
+> not accept a the format matching the compatible string for instance.
+> I like consistency and commas in file names creeps me out.
+>
+> This however, is Jassi's call.
+>
+I don't really have a strong opinion here. I tend to respect Broadcom
+platforms' convention of using "brcm,binding.txt"
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
