@@ -1,75 +1,93 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] mailbox: Add support for ST's Mailbox IP
-Date: Wed, 18 Mar 2015 19:23:19 +0530
-Message-ID: <CABb+yY0wmy+oYUsVkStrMVmfGjvedDPn+wsN_yjvdMRQoVEHOg@mail.gmail.com>
-References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
-	<1425379283-1567-4-git-send-email-lee.jones@linaro.org>
-	<3926609.Ff6LCkuuMX@wuerfel>
-	<CAJe_ZhdjPa3C_TUDAPA3fS3K83FGB-GaAjVBjtsow2mp5h8NRw@mail.gmail.com>
-	<20150318131722.GN3318@x1>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
+ nodes
+Date: Wed, 18 Mar 2015 15:00:37 +0100
+Message-ID: <20150318140037.GE3580@katana>
+References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20150318123012.GA3580@katana>
+ <55097C46.9010605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150318131722.GN3318@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HnQK338I3UIa/qiP"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55097C46.9010605@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2015 at 6:47 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 03 Mar 2015, Jassi Brar wrote:
->
->> On 3 March 2015 at 17:04, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Tuesday 03 March 2015 10:41:23 Lee Jones wrote:
->> >> +
->> >> +/*
->> >> + * struct sti_mbox_msg - sti mailbox message description
->> >> + * @dsize:             data payload size
->> >> + * @pdata:             message data payload
->> >> + */
->> >> +struct sti_mbox_msg {
->> >> +       u32             dsize;
->> >> +       u8              *pdata;
->> >> +};
->> >
->> > As mentioned in another thread, we may just want to add a 'size'
->> > argument to the message send function, and a default helper for
->> > messages with size of 32 bits.
->> >
->> Case-a) 'size' is a member of the payload structure itself
->>     The extra 'size' argument would only be used for sanity check.
->>     This driver seems so. Lee, can you not do without 'dsize'?
->>
->> Case-b) 'size' is not a member of payload structure:
->>      b1)  payload is fixed length, that is 'size' := sizeof(struct my_payload)
->>             Here the size argument is redundant.
->>
->>      b2)  payload length varies
->>             This case is highly unlikely because there would be no way
->> for remote to know how many bytes to read as the payload. Not to mean
->> we can't do without the 'size' argument.
->>
->> Your opinion has huge weight, but I would like to be enlightened
->> before agreeing.
->
-> Let's simplify this.
->
-> If you want to have varying length payloads, you have to carry the
-> size in the payload.  If you wish to force fixed size payloads, then
-> you may do without a size segment.
->
-> Do you really want to force all users of Mailbox to use fixed size
-> payloads?
->
-No. I only observed the fact that every known mailbox controller
-driver already has a way to figure out the payload length because
-either the protocol uses fixed length payloads or has the 'size' field
-in every payload.
-I am yet to see a platform that uses both, then the 'size' argument
-will be helpful but still not necessary.
 
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--HnQK338I3UIa/qiP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Mar 18, 2015 at 02:23:18PM +0100, Sebastian Hesselbarth wrote:
+> On 18.03.2015 13:30, Wolfram Sang wrote:
+> >On Mon, Mar 09, 2015 at 01:21:05PM +0100, Sebastian Hesselbarth wrote:
+> >>I2C mux pinctrl driver currently determines the number of sub-busses by
+> >>counting available pinctrl-names. Unfortunately, this requires each
+> >>incarnation of the devicetree node with different available sub-busses
+> >>to be rewritten.
+> >>
+> >>This patch reworks i2c-mux-pinctrl driver to count the number of
+> >>available sub-nodes instead. The rework should be compatible to the old
+> >>way of probing for sub-busses and additionally allows to disable unused
+> >>sub-busses with standard DT property status =3D "disabled".
+> >
+> >Not sure about this change. With DYNAMIC_OF these days, you can't rely
+> >that 'disabled' stays disabled all the time. My gut feeling tells me
+> >that people will want to use this someday.
+>=20
+> Possible. But this change just makes i2c-mux-pinctrl honor status
+> property at all. There is no functional change except it now allows
+> you to disable any of the sub-busses.
+
+Actually, this is the feature I like. However, I wonder if we shouldn't
+have that in the core, say in of_i2c_register_devices()?
+
+> I agree that this driver still does not cope well with DYNAMIC_OF but
+> neither did the former implementation. How about we settle this driver
+> to this implementation now and wait for any maniac that wants to use it
+> the way you are suggesting above?
+
+Sure. I don't want you to make this driver OF_DYNAMIC compatible. I just
+thought it makes it harder, though, e.g. you allocate memory for the
+number of active busses not the number of possibilities, so that would
+have to be reverted by the "maniac". I am still at the glimpse level,
+but what if we let the mux-pinctrl parse all the data (even for disabled
+busses), but only the enabled ones will get a muxed adapter because this
+is handled in of_i2c_register_devices()?
+
+> BTW, I have received a patchwork update notification - it may be
+> unrelated but I prefer the Dove dts/dtsi changes to go through mvebu
+> tree.
+
+Yes, I only take dts patches in rare cases.
+
+
+--HnQK338I3UIa/qiP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVCYUFAAoJEBQN5MwUoCm294UQAKtiCrW6w3cXTTzqtE31Mf7K
+Xesd6Zxo6QkwCWL9GH+ocUcT58i9vjEb/99QW9YV01dwVkX+PU0eZqJD3em9tHGT
+uTiU7fWNjsHGjEoeZDXRRfyb4CWOUkpde7sa1JUNDXNA8c3wxSciAQ9BaxSgRmMd
+HLR2V3ggHWdw4TTEJUSztZMGqGYfUKEZvYK21OAwcGgn6qDCpQRFIR3UZmfwmSiE
+m3+gfWHLPyErF4EOPp0/sv8vEqsr04OQIFm2/Hi17Xea6neFo8DAWzwTmmtT1xq7
+QinxN2d41N6npfbidI5RXebLbVguPOE9joha+J0RswSrFEhCt+skdieZWVI17l2t
+EVGUoYr+RkGwJQi4gEV2owr1UP4+9rWd4Tqpg4DDQNOBKAW3DFLofX1TUKrychCr
+NaTdtglfwuenvuzR77VusuCFXhvy+vJprDqbRIJuvtaqJ1hedZHb5QI1K8SyH3JS
+fsnelQwYUc2FeX3ObEkeu+mpPMv6v1KkKhPa52kMad3RTMSny58fgKKM3/UJ6PoG
+Jw2PWgt5IpDdwIy8Y1JkMlDQ5r90YD53gwXqwrvzaRWH8GwlqmjVZ9bIHgNi5eNH
+tQ2n6394LwtHLSdZgIp2q4pij8aP5yJXGmTfVeGVhBFoVc0uEhbmOxRDDlobc0vS
+5qM8gIUv8E5oiATRt80+
+=iY7V
+-----END PGP SIGNATURE-----
+
+--HnQK338I3UIa/qiP--
