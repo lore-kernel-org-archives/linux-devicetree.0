@@ -1,93 +1,76 @@
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCHv4 0/5] arm-cci400: PMU monitoring support on ARM64
-Date: Wed, 18 Mar 2015 12:24:37 +0000
-Message-ID: <1426681482-23118-1-git-send-email-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: will.deacon@arm.com
-Cc: Nicolas Pitre <nico@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/5] USB: ehci-atmel: rework clk handling
+Date: Wed, 18 Mar 2015 13:28:54 +0100
+Message-ID: <20150318122854.GA18070@kroah.com>
+References: <Pine.LNX.4.44L0.1503171459310.1061-100000@iolanthe.rowland.org>
+ <55095E86.1060201@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55095E86.1060201-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>, Robert Nelson <robert.nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+On Wed, Mar 18, 2015 at 12:16:22PM +0100, Nicolas Ferre wrote:
+> Le 17/03/2015 20:01, Alan Stern a =E9crit :
+> > On Tue, 17 Mar 2015, Boris Brezillon wrote:
+> >=20
+> >> The EHCI IP only needs the UTMI/UPLL (uclk) and the peripheral (ic=
+lk)
+> >> clocks to work properly. Remove the useless system clock (fclk).
+> >>
+> >> Avoid calling set_rate on the fixed rate UTMI/IPLL clock and remov=
+e
+> >> useless IS_ENABLED(CONFIG_COMMON_CLK) tests (all at91 platforms ha=
+ve been
+> >> moved to the CCF).
+> >>
+> >> This patch also fixes a bug introduced by 3440ef1 (ARM: at91/dt: f=
+ix USB
+> >> high-speed clock to select UTMI), which was leaving the usb clock
+> >> uninitialized and preventing the OHCI driver from setting the usb =
+clock
+> >> rate to 48MHz.
+> >> This bug was caused by several things:
+> >> 1/ usb clock drivers set the CLK_SET_RATE_GATE flag, which means t=
+he rate
+> >>    cannot be changed once the clock is prepared
+> >> 2/ The EHCI driver was retrieving and preparing/enabling the uhpck
+> >>    clock which was in turn preparing its parent clock (the usb clo=
+ck),
+> >>    thus preventing any rate change because of 1/
+> >>
+> >> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> >=20
+> > Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>=20
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> and:
+> Fixes: 3440ef169100 ("ARM: at91/dt: fix USB high-speed clock to selec=
+t UTMI")
+>=20
+> Alan, Greg,
+>=20
+> Can you please take this patch (only this patch 1/5 of the series) as=
+ a fix=20
+> for the 4.0-rc? It would solve the issue that we see on at91sam9x5/at=
+91sam9n12.
+> I'll take care of the rest of the series for 4.1.
+>=20
+> If you want me to take it of to re-send the patch, tell me.
 
-This series enables the PMU monitoring support for CCI400 on ARM64.
-The existing CCI400 driver code is a mix of PMU driver and the MCPM
-driver code. The MCPM driver is only used on ARM(32) and contains
-arm32 assembly and hence can't be built on ARM64. This patch splits
-the code to
+I'll queue it up now, thanks.  You can take the rest of the series :)
 
- - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
- - ARM_CCI400_PMU driver
+thanks,
 
-Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
-the revision of the chipset, is a secure operation. Hence, it prevents
-us from running this on non-secure platforms. The issue is overcome by
-explicitly mentioning the revision number of the CCI PMU in the device tree
-binding. The device-tree binding has been updated with the new bindings.
-
-i.e,=09arm-cci-400-pmu,r0 =3D> revision 0
-=09arm-cci-400-pmu,r1 =3D> revision 1
-=09arm-cci-400-pmu =3D> (old) DEPRECATED
-
-The old binding has been DEPRECATED and must be used only on ARM32
-system with secure access. We don't have a reliable dynamic way to detect
-if the system is running secure. This series tries to use the best safe
-method by relying on the availability of MCPM(as it was prior to the series=
-).
-It is upto the MCPM platform driver to decide, if the system is secure befo=
-re
-it goes ahead and registers its drivers and pokes the CCI. This series does=
-n't
-address/solve the problem of MCPM. I will be happy to use a better approach=
-,
-if there is any.
-
-Tested on (non-secure)TC2 and A53x2.
-
-Changes since V3
- - Patch 5 : Use unsigned long for CCI_PMU_EVENT_MASK (Suggested-by: Will D=
-eacon)
- - Patch 3 : Fix misspelled 'DEPRECATED' in dev_warn().
- - Added the ACKs and Reviews.
-
-Changes since V2
-
- - Include suggestions from Sudeep Holla.
- - Cleanup event validation checks.
-
-Changes since V1 (Suggestions from Nicolas Pitre):
-
- - Split Patch 2 to separate the 'PMU' abstraction(now Patch 2/5)
-   from the introduction of a new device-tree binding(now Patch 3/5)
- - Rename
-=09ARM_CCI400_MCPM =3D> ARM_CCI400_PORT_CTRL
-=09CCI400_MCPM_PORTS_DATA =3D> CCI400_PORTS_DATA
- - Select ARM_CCI400_COMMON for ARM_CCI400_PORT_CTRL
- - Better documentation in the git commit log about the ARM_CCI config.
- - Move the 'pr_info' to its apporpriate patch.
-
-
-Suzuki K. Poulose (5):
-  arm-cci: Rearrange code for splitting PMU vs driver code
-  arm-cci: Abstract the CCI400 PMU speicific definitions
-  arm-cci: Get rid of secure transactions for PMU driver
-  arm-cci: Split the code for PMU vs driver support
-  arm-cci: Fix CCI PMU event validation
-
- Documentation/devicetree/bindings/arm/cci.txt |    7 +-
- arch/arm/include/asm/arm-cci.h                |   42 +++
- arch/arm/mach-exynos/Kconfig                  |    2 +-
- arch/arm/mach-vexpress/Kconfig                |    4 +-
- arch/arm64/include/asm/arm-cci.h              |   27 ++
- drivers/bus/Kconfig                           |   28 +-
- drivers/bus/arm-cci.c                         |  498 ++++++++++++++-------=
-----
- include/linux/arm-cci.h                       |    9 +-
- 8 files changed, 385 insertions(+), 232 deletions(-)
- create mode 100644 arch/arm/include/asm/arm-cci.h
- create mode 100644 arch/arm64/include/asm/arm-cci.h
-
---=20
-1.7.9.5
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
