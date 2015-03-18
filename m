@@ -1,99 +1,57 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: Re: [PATCH v2 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Wed, 18 Mar 2015 10:35:27 +0900
-Message-ID: <5508D65F.7070301@samsung.com>
-References: <1426581951-11869-1-git-send-email-ingi2.kim@samsung.com>
- <1426581951-11869-3-git-send-email-ingi2.kim@samsung.com>
- <5508AD61.1060005@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 6/8] pinctrl: cygnus: add gpio/pinconf driver
+Date: Wed, 18 Mar 2015 02:39:21 +0100
+Message-ID: <CACRpkdYhMw36xrqptbd8b7KpkVyrZMW_nkxQTPcGkQvt3z3w=Q@mail.gmail.com>
+References: <1425933902-20652-1-git-send-email-rjui@broadcom.com>
+	<1425933902-20652-7-git-send-email-rjui@broadcom.com>
+	<CACRpkdZ1ErfikdF41aANTM-7LE6AExizHtCZTq1_TTxwYjeSQA@mail.gmail.com>
+	<54FF306C.7020407@broadcom.com>
+	<CACRpkdZbxTyYWpxWCmdN8a7p+MjcUo6UxEwfgStPWsNzf4NZ=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <5508AD61.1060005@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZbxTyYWpxWCmdN8a7p+MjcUo6UxEwfgStPWsNzf4NZ=g@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback->
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 2015=EB=85=84 03=EC=9B=94 18=EC=9D=BC 07:40, Jaehoon Chung wrote:
-> On 03/17/2015 05:45 PM, Ingi Kim wrote:
->> This patch adds the device tree bindings for ktd2692 flash LEDs.
->> Add optional properties 'flash-timeout-us' to control flash timeout
->> and 'vin-supply' for flash-led regulator
+On Wed, Mar 11, 2015 at 10:15 AM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 10, 2015 at 6:57 PM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> On 3/10/2015 3:20 AM, Linus Walleij wrote:
+>>> On Mon, Mar 9, 2015 at 9:45 PM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>
+>>>> This adds the initial support of the Broadcom Cygnus GPIO/PINCONF driver
+>>>> that supports all 3 GPIO controllers on Cygnus including the ASIU GPIO
+>>>> controller, the chipCommonG GPIO controller, and the always-on GPIO
+>>>> controller. Basic PINCONF configurations such as bias pull up/down, and
+>>>> drive strength are also supported in this driver.
+>>>>
+>>>> Pins from the ASIU GPIO controller can be individually muxed to GPIO
+>>>> function, through interaction with the Cygnus IOMUX controller
+>>>>
+>>>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>> Tested-by: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>
+>>> Patch applied! But please look at this:
+>>>
+>>>> +#include <linux/gpio.h>
+>>>
+>>> Doesn't just #include <linux/gpio/driver.h> work?
+>>>
 >>
->> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
->> ---
->>  .../devicetree/bindings/leds/leds-ktd2692.txt      | 37 +++++++++++=
-+++++++++++
->>  1 file changed, 37 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2=
-692.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt=
- b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->> new file mode 100644
->> index 0000000..1b44225
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->> @@ -0,0 +1,37 @@
->> +* Kinetic Technologies - KTD2692 Flash LED Driver
->> +
->> +KTD2692 is the ideal power solution for high-power flash LEDs.
->> +It uses ExpressWire single-wire programming for maximum flexibility=
-=2E
->> +
->> +The ExpressWire interface through CTRL pin can control LED on/off a=
-nd
->> +enable/disable the IC, Movie/Flash mode current, Flash timeout,
->> +LVP(low voltage protection).
->> +
->> +Required properties:
->> +	- compatible: "kinetic,ktd2692"
->> +	- ctrl-gpio : gpio pin in order control ktd2692 flash led.
->> +		There is an internal 300kOhm pull-down resistor at this pin
->> +	- supply : "vin" LED supply
->> +
->> +Optional property:
->> +	- flash-timeout-us : Maximum flash timeout in microseconds.
->> +			flash timeout ranges from 0 to 1835000us and
->> +			default is 1049000us.
->> +
->> +Example:
->> +
->> +vbat: fixedregulator@0 {
->> +	compatible =3D "regulator-fixed";
->> +	regulator-name =3D "vbat-supply";
->> +	regulator-min-microvolt =3D <5000000>;
->> +	regulator-max-microvolt =3D <5000000>;
->> +	gpio =3D <>;
->=20
-> gpio =3D <> ? What do you mean?
-> And this is described at Documentation/devicetree/bindings/regulator/=
-fixed-regulator.txt
-> I'm not sure whether this example really needs.
->=20
-> Best Regards,
-> Jaehoon Chung
->=20
+>> I think I need linux/gpio.h for gpiochip_add_pin_range and some related
+>> APIs.
+>
+> OK you're right ... I need to fix this.
 
-I just want to show that dummy regulator can be used with flash-led.
-As you mentioned earlier, remove unnecessary example and add refer comm=
-ent=20
+I sent a patch fixing this now... hope it will work.
 
-Thanks,
-Ingi Kim
-
->> +	regulator-always-on;
->> +};
->> +
->> +flash-led {
->> +	compatible =3D "kinetic,ktd2692";
->> +	ctrl-gpio =3D <&gpc0 1 0>;
->> +	flash-timeout-us =3D <1835000>;
->> +	vin-supply =3D <&vbat>;
->> +};
->>
->=20
->=20
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
