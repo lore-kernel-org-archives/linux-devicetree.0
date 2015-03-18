@@ -1,68 +1,94 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 2/2] v4l: mt9v032: Add OF support
-Date: Wed, 18 Mar 2015 22:56:22 +0200
-Message-ID: <20150318205622.GJ11954@valkosipuli.retiisi.org.uk>
-References: <1426345057-2752-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <1426345057-2752-2-git-send-email-laurent.pinchart@ideasonboard.com>
- <20150315002107.GA11954@valkosipuli.retiisi.org.uk>
- <2768138.CXiK86JdWh@avalon>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] wlcore: add device-tree support
+Date: Wed, 18 Mar 2015 13:53:56 -0700
+Message-ID: <20150318205356.GW31346@atomide.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2768138.CXiK86JdWh@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Carlos =?iso-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+In-Reply-To: <1426696710-6891-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Wed, Mar 18, 2015 at 03:32:28PM +0200, Laurent Pinchart wrote:
-...
-> > > @@ -876,10 +879,59 @@ static const struct regmap_config
-> > > mt9v032_regmap_config = {> 
-> > >   * Driver initialization and probing
-> > >   */
-> > > 
-> > > +static struct mt9v032_platform_data *
-> > > +mt9v032_get_pdata(struct i2c_client *client)
-> > > +{
-> > > +	struct mt9v032_platform_data *pdata;
-> > > +	struct v4l2_of_endpoint endpoint;
-> > > +	struct device_node *np;
-> > > +	struct property *prop;
-> > > +
-> > > +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> > > +		return client->dev.platform_data;
-> > > +
-> > > +	np = of_graph_get_next_endpoint(client->dev.of_node, NULL);
-> > > +	if (!np)
-> > > +		return NULL;
-> > > +
-> > > +	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
-> > > +		goto done;
-> > > +
-> > > +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> > > +	if (!pdata)
-> > > +		goto done;
-> > > +
-> > > +	prop = of_find_property(np, "link-frequencies", NULL);
-> > > +	if (prop) {
-> > > +		size_t size = prop->length / 8;
-> > > +		u64 *link_freqs;
-> > > +
-> > > +		link_freqs = devm_kzalloc(&client->dev,
-> > > +					  size * sizeof(*link_freqs),
-> > 
-> > You could simply use prop->length here. I think that'd look nicer.
+* Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> [150318 09:39]:
+> Add device-tree support to the wlcore (wl12xx/wl18xx)
+> driver.
 > 
-> How about devm_kcalloc(&client->dev, size, sizeof(*link_freqs)) as this is 
-> allocating an array ?
+> Update the current users to use the bindings instead
+> of pdata-quirks.
+> 
+> Finally, remove the deprecated wl12xx_platform_data
+> struct (along with the da850 board file code that
+> still uses it)
+> 
+> v7:
+> * rebase (v4.0-rc4)
+> * fix wlcore_spi compilation (remove platform data)
+> * additional minor changes in driver code
 
-That's certainly fine as well, I think. Feel free to divide prop->length by
-sizeof(*link_freqs) instead of plain 8.
+Thanks for updating it, looks good to me now and still works
+for me.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Regards,
+
+Tony
+ 
+> v6:
+> * Add Luca's patches to pass irq_trigger/freq
+> * Support wl12xx as well
+> * Update all relevant platforms
+> 
+> Eliad Peller (4):
+>   dt: bindings: add TI's wilink wireless device
+>   wlcore: add device-tree support
+>   ARM: dts: add wl12xx/wl18xx bindings
+>   wlcore: remove wl12xx_platform_data
+> 
+> Luciano Coelho (2):
+>   wlcore: set irq_trigger in board files instead of hiding behind a
+>     quirk
+>   wl12xx: use frequency instead of enumerations for pdata clocks
+> 
+>  .../devicetree/bindings/net/wireless/ti,wlcore.txt |  47 +++++++++
+>  arch/arm/boot/dts/am335x-evmsk.dts                 |  11 ++
+>  arch/arm/boot/dts/omap3-cm-t3517.dts               |  10 ++
+>  arch/arm/boot/dts/omap3-cm-t3730.dts               |  10 ++
+>  arch/arm/boot/dts/omap3-evm-common.dtsi            |  10 ++
+>  arch/arm/boot/dts/omap3-igep0020-rev-f.dts         |   9 ++
+>  arch/arm/boot/dts/omap3-igep0030-rev-g.dts         |   9 ++
+>  arch/arm/boot/dts/omap3-zoom3.dts                  |  10 ++
+>  arch/arm/boot/dts/omap4-panda-common.dtsi          |  10 ++
+>  arch/arm/boot/dts/omap4-sdp.dts                    |  11 ++
+>  arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi     |  10 ++
+>  arch/arm/mach-davinci/Kconfig                      |  11 --
+>  arch/arm/mach-davinci/board-da850-evm.c            | 112 ---------------------
+>  arch/arm/mach-omap2/pdata-quirks.c                 |  74 --------------
+>  drivers/net/wireless/ti/wilink_platform_data.c     |  25 -----
+>  drivers/net/wireless/ti/wl12xx/main.c              |  63 ++++++++++--
+>  drivers/net/wireless/ti/wl12xx/wl12xx.h            |  28 ++++++
+>  drivers/net/wireless/ti/wlcore/boot.c              |   1 -
+>  drivers/net/wireless/ti/wlcore/debugfs.c           |   2 +-
+>  drivers/net/wireless/ti/wlcore/main.c              |  31 +++---
+>  drivers/net/wireless/ti/wlcore/sdio.c              |  63 ++++++++++--
+>  drivers/net/wireless/ti/wlcore/spi.c               |   6 +-
+>  drivers/net/wireless/ti/wlcore/wlcore.h            |   5 +-
+>  drivers/net/wireless/ti/wlcore/wlcore_i.h          |   6 +-
+>  include/linux/wl12xx.h                             |  49 ---------
+>  25 files changed, 311 insertions(+), 312 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+> 
+> -- 
+> 1.8.5.2.229.g4448466.dirty
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
