@@ -1,97 +1,131 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 18 Mar 2015 18:26:14 +0530
-Message-ID: <CABb+yY2woK6qWbrgPGRBRXJqJdf=1HxE_-Am-SY1_Uf_dNgTew@mail.gmail.com>
-References: <1425466367-30556-1-git-send-email-vincent.yang@socionext.com>
-	<1425466884-30648-1-git-send-email-vincent.yang@socionext.com>
-	<55094BEF.9060006@arm.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Wed, 18 Mar 2015 09:00:30 -0400
+Message-ID: <550976EE.4020500@hurleysoftware.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <5507332B.5020504@hurleysoftware.com> <55085AFA.7070909@redhat.com> <550868AF.8050201@hurleysoftware.com> <5508C327.9020108@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55094BEF.9060006-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <5508C327.9020108@redhat.com>
+Sender: stable-owner@vger.kernel.org
+To: Jon Masters <jcm@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2015 at 3:27 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Vincent,
->
-> I see that this driver is queued but most of my earlier comments were
-> not addressed.
->
-Some of your comments have been addressed as changes and some as replies.
+On 03/17/2015 08:13 PM, Jon Masters wrote:
+> Hi Peter,
+> 
+> On 03/17/2015 01:47 PM, Peter Hurley wrote:
+> 
+>> On 03/17/2015 12:48 PM, Jon Masters wrote:
+>>> On 03/16/2015 03:46 PM, Peter Hurley wrote:
+>>>> On 03/16/2015 02:35 PM, Hans de Goede wrote:
+>>>>> To be clear about my aarch64 remark, that relates to the behavior of aarch64 acpi using
+>>>>> machines, those will also output to both a serial tty and tty0 when the acpi equivalent
+>>>>> of stdout-path is present and points to a serial tty.
+>>>>
+>>>> I already made comments addressing the unsuitability of the license for the
+>>>> aarch64 acpi console;
+>>>
+>>> Yes, you did. However, I believe you might have outdated information.
+>>> Have you read the SPCR in the past few months, or are you looking at a
+>>> version prior to update that was made in October of 2014?
+>>
+>> The version of the Serial Port Console Redirection Table specification
+>> I was referring to is downloadable here:
+>>
+>> https://msdn.microsoft.com/en-us/library/windows/hardware/dn639132%28v=vs.85%29.aspx
+>>
+>> That page says Last Updated: October 21, 2014
+> 
+> Ok. You've got the most recent version :) Let me predicate the following
+> with the assertion that I am not a lawyer and I am not offering legal
+> advice. But I have worked with Microsoft (and many other large hardware
+> and software vendors) for some time on topics related to standardization
+> of ARM and I am offering to reach back out to them to resolve any
+> legitimate concerns arising here. The thing we need to ascertain is
+> whether there is a legitimate concern.
+> 
+>>> Can you be specific about your concerns? The license has already been
+>>> changed once (I instigated the request that lead to that change to drop
+>>> several pages of terse terms that used to cover the first few pages). I
+>>> have found the Microsoft team extremely responsive and amenable to
+>>> resolving issues, so if you would do us the service of articulating what
+>>> the concern is, I'll reach back out and get that addressed. I have a
+>>> direct line into their server and legal teams to discuss this issue.
+>>
+>> Well, I'm deducing somewhat here because the code that would use the
+>> SPCR table format has not been submitted. So I don't _know_ what license(s)
+>> you intend to submit with.
+> 
+> Fair enough. I wrote an initial quick and dirty implementation of SPCR
+> parsing which I handed off to a colleague to cleanup. They are indeed
+> planning such a submission. So such an implementation does in fact exist
+> and there is an intent to submit.
 
-> *No ACK from DT binding maintainers too*.
->
-Yeah it would have been great to have some ack. It has been many
-months now, but I see its not uncommon for bindings go in via
-maintainers. I assume folks find it just normal.
+I assumed that because I received no reply to my first email that this
+effort had been abandoned, so I didn't bother to raise the technical
+issues that plague the devicetree hack.
 
 
->> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> @@ -0,0 +1,43 @@
->> +ARM MHU Mailbox Driver
->> +======================
->> +
->> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
->> +3 independent channels/links to communicate with remote processor(s).
->> + MHU links are hardwired on a platform. A link raises interrupt for any
->
->
-> As I had mentioned before it's just one implementation, the IP had
-> provision bi-directional interrupts and the binding *has to consider*
-> that instead of having to workaround that later.
->
-I will reply in yet another way.... the spec I have don't mention that
-(and it makes sense) and your platform doesn't do that either. I would
-have had to do something about it, had there been such a weird setup,
-but there's none known.
+> Ultimately, ACPI based ARM systems
+> (and even x86 ones) will be better off for supporting SPCR. While not
+> required, it does obviate the need for both "console=" and "earlycon="
+> kernel command line parameters, and thus improves end user experience by
+> making console setup automatic.
 
- So let us please avoid getting into bikeshedding discussion yet
-again. Otherwise almost every binding is broken because there could
-always be some platform that does weird things with irqs.
+Sure; there are several platforms/arches that already do this from proms.
 
->> +The last channel is specified to be a 'Secure' resource, hence can't be
->> +used by Linux running NS.
->
-> Correct so drop the support for secure channel until the first user
-> comes up.
->
-In your last post you said:
-  "Sorry my statement was not clear, I wanted to ask you to add that info
-to the binding."
-  Not that it makes sense to say the obvious, I added it just to
-address your comment.
+> We decided to include SPCR in the SBBR
+> rather than writing a new table on the understanding that writing a new
+> table was otherwise the default, and a wasted effort when such a
+> specification already existed. The concern you raise was anticipated,
+> and the changes mentioned were already made. I'm sure we'll be able to
+> ask for additional clarification and changes also.
+> 
+>> So if you and Microsoft have worked out some deal where Microsoft has
+>> licensed the SPCR spec to you under GPL v2 terms, then, great! there is no
+>> problem.
+> 
+> I am willing to assist in brokering a discussion on this. But first we
+> should ascertain what is necessary here and articulate that succinctly.
 
-> I am worried it might generate abort if someone tries to
-> access it in ARM64 which always runs in non-secure.
->
-Abort should have happened years ago if someone _tries_ to access a
-secure resource from non-secure mode ;)
-How do you protect such people from "trying to" dereference NULL
-pointers?  (you made me repeat Nth time).
+The kernel source is licensed under GPL v2 (see ./COPYING), so contributions
+are expected to be licensed under compatible terms.
 
->> +
->> +static struct amba_id mhu_ids[] = {
->> +       {
->> +               .id     = 0x1bb098,
->
->
-> As I mentioned couple of times this is broken. Please refer my earlier mail
-> for details. You are skipping a field to compare which incorrect.
-> You are just trying to get it working with existing AMBA driver without any
-> changes matching the IDs partially.
->
-I did not miss your last mail. Let me try to reply in even simpler
-terms... PID[0,3] identification is fine grained enough. If/when we
-have some platform with non-ARM MHU, we could catch that in this
-driver. Most likely even then the reg-map won't change drastically, if
-at all. So we could ignore the PID4, otherwise we check PID4 in this
-driver and adapt the behavior.
+Patent retaliation provisions are not compatible with GPL v2, because
+those provisions assert limitations that don't exist in GPL v2.
+For example, the Apache 2.0 license and the original Eclipse 1.0 license
+both have patent retaliation provisions that make them incompatible
+with GPL v2.
 
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Free Software Foundation maintains a list of free and non-free software
+licenses at http://www.gnu.org/philosophy/license-list.html with
+commentary on each regarding their compatibility and provisions.
+FSF also maintains a licensing and compliance lab which you can contact
+at licensing@fsf.org
+
+The new(er) Microsoft Open Specification licenses are not reviewed on
+that page; contacting FSF licensing is probably the best next step.
+
+> <snip>
+> 
+>> Now, that's just my interpretation of it; maybe the Linux Foundation's
+>> lawyers would see it differently.
+> 
+> Who ultimately is going to make the legal call on this one? In other
+> words, would an opinion from LF be the best thing to pursue? I can reach
+> out and connect a few people off-list for some conversation.
+
+Any license outside the typical free-software licenses like GPL v2, MIT,
+public domain statements, etc. will face an uphill battle at submission
+time.
+
+That said, there's no harm done in submitting the work and addressing
+these issues at that time. Either it will be accepted or it won't with
+an explanation of why not.
+
+Regards,
+Peter Hurley
