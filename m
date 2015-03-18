@@ -1,119 +1,53 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v13 07/13] DT: Add documentation for the Skyworks
- AAT1290
-Date: Wed, 18 Mar 2015 11:28:17 +0100
-Message-ID: <55095341.1040502@samsung.com>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
- <1426175114-14876-8-git-send-email-j.anaszewski@samsung.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe
+ controller
+Date: Wed, 18 Mar 2015 11:35:30 +0100
+Message-ID: <1426674930.2649.50.camel@tiscali.nl>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
+		 <1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org>
+	 <1426518695.26437.55.camel@x220> <55093C12.7070004@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1426175114-14876-8-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <55093C12.7070004@st.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kuma>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2015 04:45 PM, Jacek Anaszewski wrote:
-> This patch adds device tree binding documentation for
-> 1.5A Step-Up Current Regulator for Flash LEDs.
->
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> ---
->   .../devicetree/bindings/leds/leds-aat1290.txt      |   71 ++++++++++++++++++++
->   1 file changed, 71 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-aat1290.txt b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-> new file mode 100644
-> index 0000000..b2a1192
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-> @@ -0,0 +1,71 @@
-> +* Skyworks Solutions, Inc. AAT1290 Current Regulator for Flash LEDs
-> +
-> +The device is controlled through two pins: FL_EN and EN_SET. The pins when,
-> +asserted high, enable flash strobe and movie mode (max 1/2 of flash current)
-> +respectively. In order to add a capability of selecting the strobe signal source
-> +(e.g. GPIO or ISP) there is an additional switch required, independent of the
-> +flash chip. The switch is controlled with pin control.
-> +
-> +Required properties:
-> +
-> +- compatible : Must be "skyworks,aat1290".
-> +- flen-gpios : Must be device tree identifier of the flash device FL_EN pin.
-> +- enset-gpios : Must be device tree identifier of the flash device EN_SET pin.
-> +
-> +Optional properties:
-> +- pinctrl-names : Must contain entries: "default", "host", "isp". Entries
-> +		"default" and "host" must refer to the same pin configuration
-> +		node, which sets the host as a strobe signal provider. Entry
-> +		"isp" must refer to the pin configuration node, which sets the
-> +		ISP as a strobe signal provider.
-> +
-> +A discrete LED element connected to the device must be represented by a child
-> +node - see Documentation/devicetree/bindings/leds/common.txt.
-> +
-> +Required properties of the LED child node:
-> +- flash-max-microamp : Maximum intensity in microamperes of the flash LED -
-> +		       it can be calculated using following formula:
-> +		       I = 1A * 162kohm / Rset.
-> +- flash-timeout-us : Maximum flash timeout in microseconds -
-> +		     it can be calculated using following formula:
-> +		     T = 8.82 * 10^9 * Ct.
-> +
-> +Optional properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example (by Ct = 220nF, Rset = 160kohm and exynos4412-trats2 board with
-> +a switch that allows for routing strobe signal either from host or from ISP):
-> +
-> +#include "exynos4412.dtsi"
-> +
-> +aat1290 {
-> +	compatible = "skyworks,aat1290";
-> +	gpios = <&gpj1 1 0>, <&gpj1 2 0>;
+Hi Fabrice,
 
-gpios are here mistake - to be removed.
+Fabrice Gasnier schreef op wo 18-03-2015 om 09:49 [+0100]:
+> On 03/16/2015 04:11 PM, Paul Bolle wrote:
+> >> +config PCI_ST
+> >> +	bool "ST PCIe controller"
+> > You add a bool Kconfig symbol. A week or two ago I saw some patches fly
+> > by that - I think - allowed PCIe controllers to be built modular.
+> 
+> Thanks for your review.
+> 
+> Are you talking about "PCI: Export symbols of PCI functions" patch, that 
+> is part of a series
+> named "pci: iproc: Add Broadcom iProc PCIe support" ?
 
-> +	flen-gpios = <&gpj1 1 GPIO_ACTIVE_HIGH>;
-> +	enset-gpios = <&gpj1 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	pinctrl-names = "default", "host", "isp";
-> +	pinctrl-0 = <&camera_flash_host>;
-> +	pinctrl-1 = <&camera_flash_host>;
-> +	pinctrl-2 = <&camera_flash_isp>;
-> +
-> +	camera_flash: flash-led {
-> +		label = "aat1290-flash";
-> +		flash-max-microamp = <1012500>
+Yes, that is the series I was thinking about. (I made you search lkml,
+and that was a bit rude. But you found the patch anyhow.)
 
-missing semicolon - will be added in the next version.
+> This controller doesn't look like to be based on pcie-designware core 
+> driver.
+> Other vendors that are using "pcie-designware" core driver are also make 
+> it bool.
+> The current core driver doesn't support module loading/unloading as I 
+> see it.
+> If this is required, I also think this should be part of another patchset.
+> 
+> What do you think ?
 
-> +		flash-timeout-us = <1940000>;
-> +	};
-> +};
-> +
-> +&pinctrl_0 {
-> +	camera_flash_host: camera-flash-host {
-> +		samsung,pins = "gpj1-0";
-> +		samsung,pin-function = <1>;
-> +		samsung,pin-val = <0>;
-> +	};
-> +
-> +	camera_flash_isp: camera-flash-isp {
-> +		samsung,pins = "gpj1-0";
-> +		samsung,pin-function = <1>;
-> +		samsung,pin-val = <1>;
-> +	};
-> +};
->
+I wouldn't know whether your driver might work as a loadable module, but
+other people reading this surely will. But if it can't work as a module
+you should drop all the module related macros etc. I spotted. Because
+then they serve no purpose.
 
 
--- 
-Best Regards,
-Jacek Anaszewski
+Paul Bolle
