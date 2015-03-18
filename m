@@ -1,47 +1,113 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt/bindings: Add binding for BCM2835 mailbox driver
-Date: Tue, 17 Mar 2015 19:52:12 -0600
-Message-ID: <5508DA4C.6050800@wwwdotorg.org>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-2-git-send-email-eric@anholt.net> <20150303080550.GF6976@x1> <87vbih98za.fsf@eliezer.anholt.net> <54F66FDD.2040409@wwwdotorg.org> <87egothkaf.fsf@eliezer.anholt.net> <55079AA0.5090904@wwwdotorg.org> <87vbhzl9t1.fsf@eliezer.anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87vbhzl9t1.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v6] ARM: dts: Add HS400 support for exynos5420 and exynos5800
+Date: Wed, 18 Mar 2015 08:38:38 +0530
+Message-ID: <1426648118-20790-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org
+Cc: linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, dianders@chromium.org, alim.akhtar@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.kesavan@samsung.com, alim.akhtar@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 01:10 PM, Eric Anholt wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
-> 
->> On 03/12/2015 05:23 PM, Eric Anholt wrote:
->>> Device base maintainers weren't excited about my patch for 
->>> -EPROBE_DEFER, because then a new DT would mean we start
->>> failing to probe the USB driver in an older kernel, which
->>> whould be a regression in the case that the user had U-Boot
->>> setting up USB for them.
->> 
->> The main ABI issue is that old DTs should work with new kernels.
->> The other way around is nice, but certainly not as strict a
->> requirement. I don't think that should block a change. Do you
->> have a link to the thread; I don't think I noticed it.
-> 
-> http://comments.gmane.org/gmane.linux.kernel/1906119
+From: Seungwon Jeon <tgih.jun@samsung.com>
 
-Hmm. I think that in general, the Linux kernel has already chosen
-deferred probe as the ordering mechanism over fixed init levels, which
-have demonstrably been unable to solve all ordering problems in the
-past. As Kevin pointed out, new DT with old kernel isn't the most
-important use-case. The only other objection I saw was Ulf not wanting
-to introduce another "probe scenario", but I guess he changed his mind
-since he outlines the steps to make deferred probe work in a later email.
+HS400 timing values are added for SMDK5420, exynos5420-peach-pit
+and exynos5800-peach-pi boards.
+This also adds RCLK GPIO line, this gpio should be in pull-down
+state.
+This also enables HS400 on peach-pi and this updates the clock frequency
+to 800MHz to be set as input clock to controller.
 
-I guess/hope the way forward is to either wait for PM domains to work
-with deferred probe, or push that work forward (i.e. implement part
-(1) mentioned in Ulf's Mar 16 email).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+[Alim: addressed review comments]
+Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+Changes in V6:
+	Rebased on kukjin's for-next branch[0] 
+	(commit: 77105c8 Merge branch 'v4.0-samsung-fixes-2' into for-next)
+
+[0]: git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 4 +++-
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi  | 7 +++++++
+ arch/arm/boot/dts/exynos5420-smdk5420.dts  | 4 +++-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 7 +++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index d0ee55f..e158861 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -695,8 +695,10 @@
+ 	samsung,dw-mshc-ciu-div = <3>;
+ 	samsung,dw-mshc-sdr-timing = <0 4>;
+ 	samsung,dw-mshc-ddr-timing = <0 2>;
++	samsung,dw-mshc-hs400-timing = <0 2>;
++	samsung,read-strobe-delay = <90>;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
++	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+ 	bus-width = <8>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+index ba686e4..8b15316 100644
+--- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+@@ -201,6 +201,13 @@
+ 			samsung,pin-drv = <3>;
+ 		};
+ 
++		sd0_rclk: sd0-rclk {
++			samsung,pins = "gpc0-7";
++			samsung,pin-function = <2>;
++			samsung,pin-pud = <1>;
++			samsung,pin-drv = <3>;
++		};
++
+ 		sd1_cmd: sd1-cmd {
+ 			samsung,pins = "gpc1-1";
+ 			samsung,pin-function = <2>;
+diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+index 7a56852..de5e41e 100644
+--- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
++++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+@@ -80,8 +80,10 @@
+ 		samsung,dw-mshc-ciu-div = <3>;
+ 		samsung,dw-mshc-sdr-timing = <0 4>;
+ 		samsung,dw-mshc-ddr-timing = <0 2>;
++		samsung,dw-mshc-hs400-timing = <0 2>;
++		samsung,read-strobe-delay = <90>;
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
++		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+ 		bus-width = <8>;
+ 		cap-mmc-highspeed;
+ 	};
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 7ea1d66..2e84613 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -650,15 +650,18 @@
+ 	num-slots = <1>;
+ 	broken-cd;
+ 	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
+ 	cap-mmc-highspeed;
+ 	non-removable;
+ 	card-detect-delay = <200>;
+-	clock-frequency = <400000000>;
++	clock-frequency = <800000000>;
+ 	samsung,dw-mshc-ciu-div = <3>;
+ 	samsung,dw-mshc-sdr-timing = <0 4>;
+ 	samsung,dw-mshc-ddr-timing = <0 2>;
++	samsung,dw-mshc-hs400-timing = <0 2>;
++	samsung,read-strobe-delay = <90>;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
++	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+ 	bus-width = <8>;
+ };
+ 
+-- 
+1.9.1
