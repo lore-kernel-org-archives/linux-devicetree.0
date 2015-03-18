@@ -1,44 +1,81 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 2/3] TTY: add support for tty_slave devices.
-Date: Wed, 18 Mar 2015 10:11:35 +0100
-Message-ID: <1426669895.2649.7.camel@tiscali.nl>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
-	 <20150318055831.21025.85317.stgit@notabene.brown>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4 v3] dt/bindings: Add binding for BCM2835 mailbox
+ driver
+Date: Wed, 18 Mar 2015 09:15:40 +0000
+Message-ID: <20150318091540.GK3318@x1>
+References: <1426213936-4139-1-git-send-email-eric@anholt.net>
+ <1426213936-4139-2-git-send-email-eric@anholt.net>
+ <20150317172758.GC3318@x1>
+ <5508A75A.4070203@broadcom.com>
+ <20150318082321.GH3318@x1>
+ <CABb+yY0Gc+vJHksKc7ahYfRdh2vzj_VR_bFvjr+K+hiqiah5bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150318055831.21025.85317.stgit@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neil@brown.name>
-Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY0Gc+vJHksKc7ahYfRdh2vzj_VR_bFvjr+K+hiqiah5bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Just two nits to look into once you get to fix up all the smaller
-issues.
+On Wed, 18 Mar 2015, Jassi Brar wrote:
+> On Wed, Mar 18, 2015 at 1:53 PM, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, 17 Mar 2015, Scott Branden wrote:
+> >> On 15-03-17 10:27 AM, Lee Jones wrote:
+> >> >On Thu, 12 Mar 2015, Eric Anholt wrote:
+> >> >
+> >> >>From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> >> >>
+> >> >>Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> >> >>Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+> >> >>Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> >> >>---
+> >> >>
+> >> >>
+> >> >>v2: Split into a separate patch for submitting to the devicetree list.
+> >> >>     Consistently start node docs with a capital letter. device's
+> >> >>     address in the example shouldn't have "0x". Drop machine-specific
+> >> >>     interrupt numbers from the docs.  (changes by anholt).
+> >> >>
+> >> >>v3: Move the file to just bcm2835-mbox.txt, clean up formatting
+> >> >>     (changes by anholt, from review by Lee Jones).
+> >> >
+> >> >Thanks for fixing up.
+> >> >
+> >> >>.../devicetree/bindings/mailbox/bcm2835-mbox.txt      | 19 +++++++++++++++++++
+> >> >>  1 file changed, 19 insertions(+)
+> >> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+> >> >
+> >> >I don't see any unruliness or causes of controversy.
+> >> >
+> >> >Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> >
+> >> >>diff --git a/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+> >> >>new file mode 100644
+> >> >>index 0000000..0bb2b9d
+> >> >>--- /dev/null
+> >> >>+++ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+> >> I am trying to standarize all broadcom device tree bindings in the
+> >> format "brcm,binding.txt".
+> >>
+> >> Could you please rename this file to brcm,bcm2835-mbox.txt for
+> >> consistency in bindings?
+> >
+> > The file name is governed by the maintainer of the subsystem you're
+> > applying documentation for.  If this were an MFD submission, I would
+> > not accept a the format matching the compatible string for instance.
+> > I like consistency and commas in file names creeps me out.
+> >
+> > This however, is Jassi's call.
+> >
+> I don't really have a strong opinion here. I tend to respect Broadcom
+> platforms' convention of using "brcm,binding.txt"
 
-NeilBrown schreef op wo 18-03-2015 om 16:58 [+1100]:
-> --- /dev/null
-> +++ b/drivers/tty/slave/Kconfig
-> @@ -0,0 +1,7 @@
-> +menuconfig TTY_SLAVE
-> +	tristate "TTY slave devices"
-> +	depends on OF
-> +	help
-> +	  Devices which attach via a uart, but need extra
-> +	  driver support for power management etc.
-> +
+I'm fine with this Eric.
 
-This blank line makes "git am" whine: "new blank line at EOF".
-
-> --- /dev/null
-> +++ b/drivers/tty/slave/tty_slave_core.c
-
-[...]
-
-This file doesn't have a MODULE_LICENSE() macro. So I think that, if
-this driver is built as a module and loaded, kernel/module.c will set
-its license to "unspecified" and taint the kernel.
-
-
-Paul Bolle
+If you change it back my Ack can reside.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
