@@ -1,93 +1,93 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
-Date: Wed, 18 Mar 2015 11:27:40 +0800
-Message-ID: <1426649260.3662.5.camel@mtksdaap41>
-References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
-	 <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150316153048.GC10068@pengutronix.de>
-	 <1426595474.24415.18.camel@mtksdaap41>
-	 <20150317134345.GG10068@pengutronix.de>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v4 3/4] arm64:thunder: Add initial dts for Cavium's
+ Thunder SoC in 2 Node topology.
+Date: Wed, 18 Mar 2015 09:32:53 +0530
+Message-ID: <CAFpQJXWL-NM+WndfB5pLj6TmdVngACR9YCr_ahaUTqAO3DaX1g@mail.gmail.com>
+References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1421924755-26029-4-git-send-email-gkulkarni@caviumnetworks.com>
+	<2882934.brFyhkGPyE@wuerfel>
+	<1885509.Z0Gm3e3FlX@wuerfel>
+	<CAFpQJXUvux+b9hYx_ZY-1hor0HRFFgh=e4vCYyJiDHrDC9Y=tQ@mail.gmail.com>
+	<CAFpQJXXkXatxRcfpA1DjuuiUf3vup3DV+dACyGxT=TDkrO8rNQ@mail.gmail.com>
+	<CAFpQJXVc5c=YRLw3uS5RiSR13veo_SUiM-aV6hf+diQuWxdfYQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150317134345.GG10068@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXVc5c=YRLw3uS5RiSR13veo_SUiM-aV6hf+diQuWxdfYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+Hi Catalin, Will, Mark, Arnd
 
-On Tue, 2015-03-17 at 14:43 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Eddie,
->=20
-> On Tue, Mar 17, 2015 at 08:31:14PM +0800, Eddie Huang wrote:
-> > On Mon, 2015-03-16 at 16:30 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Wed, Jan 28, 2015 at 05:27:56PM +0800, Eddie Huang wrote:
-> > > > [...]
-> > > > +static u16 rtc_read(struct mt6397_rtc *rtc, u32 offset)
-> > > rtc_read is a bad name for a driver. There are already 6 function=
-s with
-> > > this name in the kernel. Better use a unique prefix.
-> >=20
-> > I will use prefix mtk_
-> I would prefer a prefix that is unique to the driver. "mtk_" doesn't
-> work to distinguish between the rtc and a (say) spi driver. What you
-> want here is that if someone reports a bug on any mailinglist with a
-> backtrace you are able to immediately see which driver is affected.
->=20
+On Tue, Mar 10, 2015 at 2:12 PM, Ganapatrao Kulkarni
+<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Ping?
+>
+> On Tue, Feb 24, 2015 at 2:22 PM, Ganapatrao Kulkarni
+> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Arnd,
+>>
+>> On Fri, Jan 23, 2015 at 6:07 PM, Ganapatrao Kulkarni
+>> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hi Arnd,
+>>>
+>>> On Thu, Jan 22, 2015 at 11:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>>> On Thursday 22 January 2015 17:47:13 Arnd Bergmann wrote:
+>>>>>
+>>>>> This seems wrong still: The clusters and cores do not have unique
+>>>>> numbers. I believe the code will not work correctly, and it won't
+>>>>> be compliant with the binding from patch 2.
+>>>>>
+>>>>> I think the right way here would be to use
+>>>>>
+>>>>>         arm,associativity = <0 2 47>;
+>>>>>
+>>>>> for cpu@20f, and
+>>>>>
+>>>>>         arm,associativity = <1 3 48>;
+>>>>>
+>>>>> for cpu@10000. Your previous version used the numbers from
+>>>>> the reg property, which should be fine as well if that helps:
+>>>>>
+>>>>>
+>>>>>         arm,associativity = <0x0 0x200 0x20f>;
+>>>>>
+>>>>>         arm,associativity = <0x10000 0x10000 0x10000>;
+>>>>>
+>>>>> which should have the same effect as above, as long as the code
+>>>>> can handle the numbers not being consecutive.
+>>>>>
+>>>>>
+>>>>
+>>>> Upon further consideration, I think your patch is correct after
+>>>> all, but let me check again on PowerPC machines.
+>>> i have removed, board id which was in previous patch, to keep the
+>>> associativity aligned to mpidr, ie. socket,cluster id and core id.
+>>> both previous and current mappings holds good for our design.
+>>> our topology is 2 sockets(aff2=0and 1) , each having 3
+>>> clusters(aff1=0to2)and each cluster having 16 cores(aff0:0to15)
+>>> in associativity property, for our case, only first id(socket id) is
+>>> mapped to numa, others are mentioned only to describe the topology.
+>>>>
+>>>>         Arnd
+>> any further comments, how we go about these patches?
+>> please suggest.
+>>
+>>> thanks
+>>> Ganapat
+>>
+>> thanks
+>> Ganapat
 
-My meaning is mtk_rtc_read, mtk_rtc_write.
+Please suggest how we go about these patches.
+please share your review comments, if any changes needs to be done.
 
-> > > > [...]
-> > > > +static irqreturn_t rtc_irq_handler_thread(int irq, void *data)
-> > > > +{
-> > > > +	struct mt6397_rtc *rtc =3D data;
-> > > > +	u16 irqsta, irqen;
-> > > > +
-> > > > +	mutex_lock(&rtc->lock);
-> > > > +	irqsta =3D rtc_read(rtc, RTC_IRQ_STA);
-> > > Do you really need to lock for a single read access?
-> >=20
-> > I think this lock is necessary, because other thread may access rtc
-> > register at the same time, for example, call mtk_rtc_set_alarm to m=
-odify
-> > alarm time.
-> That would be a valid reason if mtk_rtc_set_alarm touched that regist=
-er
-> twice in a single critical section and the handler must not read the
-> value of the first write. Otherwise it should be fine, shouldn't it?
->=20
 
-My original though is if disable alarm in mtk_rtc_set_alarm function,
-RTC_IRQ_STA may be affected, this is why I add mutex. After checking
-with designer, RTC_IRQ_STA will not be affected. I will remove the
-mutex.
-
-> > > > +static int mtk_rtc_set_time(struct device *dev, struct rtc_tim=
-e *tm)
-> > > > +{
-> > > > +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
-> > > > +
-> > > > +	tm->tm_year -=3D RTC_MIN_YEAR_OFFSET;
-> > > > +	tm->tm_mon++;
-> > > > +	mutex_lock(&rtc->lock);
-> > > > +	rtc_write(rtc, RTC_TC_YEA, tm->tm_year);
-> > > > +	rtc_write(rtc, RTC_TC_MTH, tm->tm_mon);
-> > > > +	rtc_write(rtc, RTC_TC_DOM, tm->tm_mday);
-> > > > +	rtc_write(rtc, RTC_TC_HOU, tm->tm_hour);
-> > > > +	rtc_write(rtc, RTC_TC_MIN, tm->tm_min);
-> > > > +	rtc_write(rtc, RTC_TC_SEC, tm->tm_sec);
-> > > Is this racy? I.e. what happens if RTC_TC_SEC overflows just befo=
-re you
-> > > write to it but after you wrote RTC_TC_MIN?
-> >=20
-> > register value will write to hardware after rtc_write_trigger, so t=
-he
-> > racy condition not exist.
-> Ah, it seems the hardware guys did their job. Nice.
->=20
-> Best regards
-> Uwe
->=20
+thanks
+Ganapat
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
