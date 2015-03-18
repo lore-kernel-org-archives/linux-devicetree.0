@@ -1,151 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 2/2] v4l: mt9v032: Add OF support
-Date: Wed, 18 Mar 2015 15:32:28 +0200
-Message-ID: <2768138.CXiK86JdWh@avalon>
-References: <1426345057-2752-1-git-send-email-laurent.pinchart@ideasonboard.com> <1426345057-2752-2-git-send-email-laurent.pinchart@ideasonboard.com> <20150315002107.GA11954@valkosipuli.retiisi.org.uk>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 3/3] mailbox: Add support for ST's Mailbox IP
+Date: Wed, 18 Mar 2015 19:02:07 +0530
+Message-ID: <CABb+yY2HwZn3VSvZ4iVfWE8GrsLDA6Tx_V2HZiOBvJb9UHY2Mg@mail.gmail.com>
+References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+ <1425379283-1567-4-git-send-email-lee.jones@linaro.org>
+ <CAJe_Zhc1uLf_grsbzOs3ahJHJXXZ+BF__702mEPPL=SWPU5nzw@mail.gmail.com>
+ <20150318131226.GM3318@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20150315002107.GA11954@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Carlos =?ISO-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150318131226.GM3318@x1>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, kernel@stlinux.com, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Wed, Mar 18, 2015 at 6:42 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Wed, 04 Mar 2015, Jassi Brar wrote:
+>
+>> > +
+>> > +       if ((!data) || (!sti_mbox_chan_is_tx(mbox)))
+>> >
+>> nit: too much protection.
+>
+> What makes you think that?
+>
+ Usually we write
+               if (!data || !sti_mbox_chan_is_tx(mbox))
 
-On Sunday 15 March 2015 02:21:07 Sakari Ailus wrote:
-> On Sat, Mar 14, 2015 at 04:57:37PM +0200, Laurent Pinchart wrote:
-> ...
-> 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> > b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt new file mode
-> > 100644
-> > index 0000000..68b134e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> > @@ -0,0 +1,45 @@
-> > +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
-> > +
-> > +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor
-> > with +an active array size of 752H x 480V. It is programmable through a
-> > simple +two-wire serial interface.
-> > +
-> > +Required Properties:
-> > +
-> > +- compatible: value should be either one among the following
-> > +	(a) "aptina,mt9v022" for MT9V022 color sensor
-> > +	(b) "aptina,mt9v022m" for MT9V022 monochrome sensor
-> > +	(c) "aptina,mt9v024" for MT9V024 color sensor
-> > +	(d) "aptina,mt9v024m" for MT9V024 monochrome sensor
-> > +	(e) "aptina,mt9v032" for MT9V032 color sensor
-> > +	(f) "aptina,mt9v032m" for MT9V032 monochrome sensor
-> > +	(g) "aptina,mt9v034" for MT9V034 color sensor
-> > +	(h) "aptina,mt9v034m" for MT9V034 monochrome sensor
-> > +
-> > +Optional Properties:
-> > +
-> > +- link-frequencies: List of allowed link frequencies in Hz. Each
-> > frequency is +	expressed as a 64-bit big-endian integer.
-> > +
-> > +For further reading on port node refer to
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +
-> > +Example:
-> > +
-> > +	i2c0@1c22000 {
-> > +		...
-> > +		...
-> > +		mt9v032@5c {
-> > +			compatible = "aptina,mt9v032";
-> > +			reg = <0x5c>;
-> > +
-> > +			port {
-> > +				mt9v032_1: endpoint {
-> > +					link-frequencies =
-> > +						<0 13000000>, <0 26600000>,
-> 
-> How about:
-> 
-> /bits/ 64 <13000000> ...
 
-Absolutely.
+>> > +                       mbox->irq = irq_create_mapping(mbinst->irq_domain,
+>> > +                                                      mbox->rx_id);
+>> >
+>> simply assigning same IRQ to all controller DT nodes and using
+>> IRQF_SHARED for the common handler, wouldn't work?
+>
+> I do have intentions to simplify this driver somewhat, but that will
+> take some time as it will require a great deal of consultation and
+> testing from the ST side.  This is the current internal implementation
+> which is used in the wild and has been fully tested.  If you'll allow
+> me to conduct my adaptions subsequently we can have full history and a
+> possible reversion plan if anything untoward take place i.e. I mess
+> something up.
+>
+OK, but wouldn't that break the bindings of this driver when you
+eventually do that?
 
-> > +						<0 27000000>;
-> > +				};
-> > +			};
-> > +		};
-> > +		...
-> > +	};
-> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-> > index 255ea91..139eeef 100644
-> > --- a/drivers/media/i2c/mt9v032.c
-> > +++ b/drivers/media/i2c/mt9v032.c
+>> > + * struct sti_mbox_msg - sti mailbox message description
+>> > + * @dsize:             data payload size
+>> > + * @pdata:             message data payload
+>> > + */
+>> > +struct sti_mbox_msg {
+>> > +       u32             dsize;
+>> > +       u8              *pdata;
+>> > +};
+>> >
+>> There isn't any client driver in this patchset to tell exactly, but it
+>> seems the header could be split into one shared between mailbox
+>> clients and provider and another internal to client/provider ?
+>
+> I believe only the above will be required by the client.  Seems silly
+> to create a client specific header just for that, don't you think?
+>
+Do you mean to have copies of the structure in controller and client driver? :O
 
-[snip]
-
-> > @@ -876,10 +879,59 @@ static const struct regmap_config
-> > mt9v032_regmap_config = {> 
-> >   * Driver initialization and probing
-> >   */
-> > 
-> > +static struct mt9v032_platform_data *
-> > +mt9v032_get_pdata(struct i2c_client *client)
-> > +{
-> > +	struct mt9v032_platform_data *pdata;
-> > +	struct v4l2_of_endpoint endpoint;
-> > +	struct device_node *np;
-> > +	struct property *prop;
-> > +
-> > +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> > +		return client->dev.platform_data;
-> > +
-> > +	np = of_graph_get_next_endpoint(client->dev.of_node, NULL);
-> > +	if (!np)
-> > +		return NULL;
-> > +
-> > +	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
-> > +		goto done;
-> > +
-> > +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> > +	if (!pdata)
-> > +		goto done;
-> > +
-> > +	prop = of_find_property(np, "link-frequencies", NULL);
-> > +	if (prop) {
-> > +		size_t size = prop->length / 8;
-> > +		u64 *link_freqs;
-> > +
-> > +		link_freqs = devm_kzalloc(&client->dev,
-> > +					  size * sizeof(*link_freqs),
-> 
-> You could simply use prop->length here. I think that'd look nicer.
-
-How about devm_kcalloc(&client->dev, size, sizeof(*link_freqs)) as this is 
-allocating an array ?
-
-> > +					  GFP_KERNEL);
-> > +		if (!link_freqs)
-> > +			goto done;
-> > +
-> > +		if (of_property_read_u64_array(np, "link-frequencies",
-> > +					       link_freqs, size) < 0)
-> > +			goto done;
-> > +
-> > +		pdata->link_freqs = link_freqs;
-> > +		pdata->link_def_freq = link_freqs[0];
-> > +	}
-> > +
-> > +	pdata->clk_pol = !!(endpoint.bus.parallel.flags &
-> > +			    V4L2_MBUS_PCLK_SAMPLE_RISING);
-> > +
-> > +done:
-> > +	of_node_put(np);
-> > +	return pdata;
-> > +}
-
--- 
-Regards,
-
-Laurent Pinchart
+-Jassi
