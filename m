@@ -1,113 +1,93 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v6] ARM: dts: Add HS400 support for exynos5420 and exynos5800
-Date: Wed, 18 Mar 2015 08:38:38 +0530
-Message-ID: <1426648118-20790-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene@kernel.org
-Cc: linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, dianders@chromium.org, alim.akhtar@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.kesavan@samsung.com, alim.akhtar@samsung.com
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
+Date: Wed, 18 Mar 2015 11:27:40 +0800
+Message-ID: <1426649260.3662.5.camel@mtksdaap41>
+References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
+	 <1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150316153048.GC10068@pengutronix.de>
+	 <1426595474.24415.18.camel@mtksdaap41>
+	 <20150317134345.GG10068@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150317134345.GG10068@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Seungwon Jeon <tgih.jun@samsung.com>
+Hi Uwe,
 
-HS400 timing values are added for SMDK5420, exynos5420-peach-pit
-and exynos5800-peach-pi boards.
-This also adds RCLK GPIO line, this gpio should be in pull-down
-state.
-This also enables HS400 on peach-pi and this updates the clock frequency
-to 800MHz to be set as input clock to controller.
+On Tue, 2015-03-17 at 14:43 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Eddie,
+>=20
+> On Tue, Mar 17, 2015 at 08:31:14PM +0800, Eddie Huang wrote:
+> > On Mon, 2015-03-16 at 16:30 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Wed, Jan 28, 2015 at 05:27:56PM +0800, Eddie Huang wrote:
+> > > > [...]
+> > > > +static u16 rtc_read(struct mt6397_rtc *rtc, u32 offset)
+> > > rtc_read is a bad name for a driver. There are already 6 function=
+s with
+> > > this name in the kernel. Better use a unique prefix.
+> >=20
+> > I will use prefix mtk_
+> I would prefer a prefix that is unique to the driver. "mtk_" doesn't
+> work to distinguish between the rtc and a (say) spi driver. What you
+> want here is that if someone reports a bug on any mailinglist with a
+> backtrace you are able to immediately see which driver is affected.
+>=20
 
-Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-[Alim: addressed review comments]
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
----
-Changes in V6:
-	Rebased on kukjin's for-next branch[0] 
-	(commit: 77105c8 Merge branch 'v4.0-samsung-fixes-2' into for-next)
+My meaning is mtk_rtc_read, mtk_rtc_write.
 
-[0]: git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+> > > > [...]
+> > > > +static irqreturn_t rtc_irq_handler_thread(int irq, void *data)
+> > > > +{
+> > > > +	struct mt6397_rtc *rtc =3D data;
+> > > > +	u16 irqsta, irqen;
+> > > > +
+> > > > +	mutex_lock(&rtc->lock);
+> > > > +	irqsta =3D rtc_read(rtc, RTC_IRQ_STA);
+> > > Do you really need to lock for a single read access?
+> >=20
+> > I think this lock is necessary, because other thread may access rtc
+> > register at the same time, for example, call mtk_rtc_set_alarm to m=
+odify
+> > alarm time.
+> That would be a valid reason if mtk_rtc_set_alarm touched that regist=
+er
+> twice in a single critical section and the handler must not read the
+> value of the first write. Otherwise it should be fine, shouldn't it?
+>=20
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 4 +++-
- arch/arm/boot/dts/exynos5420-pinctrl.dtsi  | 7 +++++++
- arch/arm/boot/dts/exynos5420-smdk5420.dts  | 4 +++-
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 7 +++++--
- 4 files changed, 18 insertions(+), 4 deletions(-)
+My original though is if disable alarm in mtk_rtc_set_alarm function,
+RTC_IRQ_STA may be affected, this is why I add mutex. After checking
+with designer, RTC_IRQ_STA will not be affected. I will remove the
+mutex.
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index d0ee55f..e158861 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -695,8 +695,10 @@
- 	samsung,dw-mshc-ciu-div = <3>;
- 	samsung,dw-mshc-sdr-timing = <0 4>;
- 	samsung,dw-mshc-ddr-timing = <0 2>;
-+	samsung,dw-mshc-hs400-timing = <0 2>;
-+	samsung,read-strobe-delay = <90>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
- 	bus-width = <8>;
- };
- 
-diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-index ba686e4..8b15316 100644
---- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-@@ -201,6 +201,13 @@
- 			samsung,pin-drv = <3>;
- 		};
- 
-+		sd0_rclk: sd0-rclk {
-+			samsung,pins = "gpc0-7";
-+			samsung,pin-function = <2>;
-+			samsung,pin-pud = <1>;
-+			samsung,pin-drv = <3>;
-+		};
-+
- 		sd1_cmd: sd1-cmd {
- 			samsung,pins = "gpc1-1";
- 			samsung,pin-function = <2>;
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 7a56852..de5e41e 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -80,8 +80,10 @@
- 		samsung,dw-mshc-ciu-div = <3>;
- 		samsung,dw-mshc-sdr-timing = <0 4>;
- 		samsung,dw-mshc-ddr-timing = <0 2>;
-+		samsung,dw-mshc-hs400-timing = <0 2>;
-+		samsung,read-strobe-delay = <90>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
- 		bus-width = <8>;
- 		cap-mmc-highspeed;
- 	};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 7ea1d66..2e84613 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -650,15 +650,18 @@
- 	num-slots = <1>;
- 	broken-cd;
- 	mmc-hs200-1_8v;
-+	mmc-hs400-1_8v;
- 	cap-mmc-highspeed;
- 	non-removable;
- 	card-detect-delay = <200>;
--	clock-frequency = <400000000>;
-+	clock-frequency = <800000000>;
- 	samsung,dw-mshc-ciu-div = <3>;
- 	samsung,dw-mshc-sdr-timing = <0 4>;
- 	samsung,dw-mshc-ddr-timing = <0 2>;
-+	samsung,dw-mshc-hs400-timing = <0 2>;
-+	samsung,read-strobe-delay = <90>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
- 	bus-width = <8>;
- };
- 
--- 
-1.9.1
+> > > > +static int mtk_rtc_set_time(struct device *dev, struct rtc_tim=
+e *tm)
+> > > > +{
+> > > > +	struct mt6397_rtc *rtc =3D dev_get_drvdata(dev);
+> > > > +
+> > > > +	tm->tm_year -=3D RTC_MIN_YEAR_OFFSET;
+> > > > +	tm->tm_mon++;
+> > > > +	mutex_lock(&rtc->lock);
+> > > > +	rtc_write(rtc, RTC_TC_YEA, tm->tm_year);
+> > > > +	rtc_write(rtc, RTC_TC_MTH, tm->tm_mon);
+> > > > +	rtc_write(rtc, RTC_TC_DOM, tm->tm_mday);
+> > > > +	rtc_write(rtc, RTC_TC_HOU, tm->tm_hour);
+> > > > +	rtc_write(rtc, RTC_TC_MIN, tm->tm_min);
+> > > > +	rtc_write(rtc, RTC_TC_SEC, tm->tm_sec);
+> > > Is this racy? I.e. what happens if RTC_TC_SEC overflows just befo=
+re you
+> > > write to it but after you wrote RTC_TC_MIN?
+> >=20
+> > register value will write to hardware after rtc_write_trigger, so t=
+he
+> > racy condition not exist.
+> Ah, it seems the hardware guys did their job. Nice.
+>=20
+> Best regards
+> Uwe
+>=20
