@@ -1,77 +1,43 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
 Subject: Re: [PATCH v2] add support for Freescale's MMA8653FC 10 bit
  accelerometer
-Date: Wed, 18 Mar 2015 09:44:54 -0700
-Message-ID: <20150318164454.GA11350@dtor-ws>
+Date: Wed, 18 Mar 2015 17:59:38 +0100
+Message-ID: <1426697978.6764.8.camel@hadess.net>
 References: <1426694157-10866-1-git-send-email-martink@posteo.de>
- <2231139.ojeyer6qnI@ws-stein>
- <5509AAE5.1000503@posteo.de>
+	 <2231139.ojeyer6qnI@ws-stein> <5509AAE5.1000503@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5509AAE5.1000503@posteo.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, linux-api@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5509AAE5.1000503-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2015 at 05:42:13PM +0100, Martin Kepplinger wrote:
-> Am 2015-03-18 um 17:21 schrieb Alexander Stein:
-> > On Wednesday 18 March 2015 16:55:57, Martin Kepplinger wrote:
-> >> From: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-> >>
-> >> The MMA8653FC is a low-power, three-axis, capacitive micromachined
-> >> accelerometer with 10 bits of resolution with flexible user-programmable
-> >> options.
-> >>
-> >> Embedded interrupt functions enable overall power savings, by relieving the
-> >> host processor from continuously polling data, for example using the poll()
-> >> system call.
-> >>
-> >> The device can be configured to generate wake-up interrupt signals from any
-> >> combination of the configurable embedded functions, enabling the MMA8653FC
-> >> to monitor events while remaining in a low-power mode during periods of
-> >> inactivity.
-> >>
-> >> This driver provides devicetree properties to program the device's behaviour
-> >> and a simple, tested and documented sysfs interface. The data sheet and more
-> >> information is available on Freescale's website.
-> >>
-> >> Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-> >> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> >> ---
-> >> applies to v4.0-rc4 and the current -next.
-> >>
-> >> patch revision history
-> >> ......................
-> >> v2 corrects licensing and commit messages and adds appropriate recipients
-> >>
-> >>  .../testing/sysfs-bus-i2c-devices-fsl-mma8653fc    |  39 +
-> >>  .../devicetree/bindings/misc/fsl,mma8653fc.txt     |  96 +++
-> >>  MAINTAINERS                                        |   5 +
-> >>  drivers/input/misc/Kconfig                         |  11 +
-> >>  drivers/input/misc/Makefile                        |   1 +
-> >>  drivers/input/misc/mma8653fc.c                     | 913 +++++++++++++++++++++
-> >>  6 files changed, 1065 insertions(+)
-> >>  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-fsl-mma8653fc
-> >>  create mode 100644 Documentation/devicetree/bindings/misc/fsl,mma8653fc.txt
-> >>  create mode 100644 drivers/input/misc/mma8653fc.c
-> > 
-> > Shouldn't this go to drivers/iio/magnetometer instead of defining a new sysfs ABI?
-> > 
+On Wed, 2015-03-18 at 17:42 +0100, Martin Kepplinger wrote:
 > 
-> It could have gone to drivers/iio/accel if it would use an iio
-> interface, which would make more sense, you are right, but I simply
+<snip>
+> It could have gone to drivers/iio/accel if it would use an iio 
+> interface, which would make more sense, you are right, but I simply 
 > don't have the time to merge it in to iio.
 > 
-> It doesn't use an input interface either but I don't see a good place
-> for an accelerometer that uses sysfs only.
+> It doesn't use an input interface either but I don't see a good 
+> place for an accelerometer that uses sysfs only.
+> 
+> It works well, is a relatively recent chip and a clean dirver. But 
+> this is all I can provide.
 
-drivers/misc? Since it is not using input infrastructure (nor should
-it), it does not belong in drivers/input.
+As a person who works on the user-space interaction of those with 
+desktops [1]: Urgh.
 
-Thanks.
+I already have 3 (probably 4) types of accelerometers to contend with, 
+I'm not fond of adding yet another type.
 
--- 
-Dmitry
+Is there any way to get this hardware working outside the SoCs it's 
+designed for (say, a device with I2C like a Raspberry Pi), so that a 
+kind soul could handle getting this using the right interfaces?
+
+Cheers
+
+[1]: https://github.com/hadess/iio-sensor-proxy
