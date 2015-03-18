@@ -1,44 +1,46 @@
-From: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2] ARM: vexpress: Add unified-cache Device Tree property
-Date: Wed, 18 Mar 2015 10:34:58 +0100
-Message-ID: <1426671298-2012-1-git-send-email-r.schwebel@pengutronix.de>
-References: <5509437E.6060806@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5509437E.6060806-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] ARM: dts: dra7x-evm: beagle-x14: Fix USB Peripheral
+Date: Wed, 18 Mar 2015 11:38:00 +0200
+Message-ID: <55094778.6090304@ti.com>
+References: <1426585431-29914-1-git-send-email-rogerq@ti.com> <20150317145428.GA5001@saruman.tx.rr.com> <20150317180257.GH31346@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150317180257.GH31346@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>
+Cc: nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Without this property, we get this boot warning:
+On 17/03/15 20:02, Tony Lindgren wrote:
+> * Felipe Balbi <balbi@ti.com> [150317 07:55]:
+>> Hi,
+>>
+>> On Tue, Mar 17, 2015 at 11:43:51AM +0200, Roger Quadros wrote:
+>>> Now that we have EXTCON_USB_GPIO queued for v4.1, revert
+>>> commit addfcde7c485 ("ARM: dts: dra7x-evm: beagle-x15: Fix USB Host")
+>>>
+>>> On these EVMs, the USB cable state has to be determined via the
+>>> ID pin tied to a GPIO line. We use the gpio-usb-extcon driver
+>>> to read the ID pin and the extcon framework to forward
+>>> the USB cable state information to the USB driver so the
+>>> controller can be configured in the right mode (host/peripheral).
+>>>
+>>> Gets USB peripheral mode to work on this EVM.
+>>>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>
+>> on subject: x14 ? other than that
 
-"L2C: device tree omits to specify unified cache"
+oops :P
 
-Signed-off-by: Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/vexpress-v2p-ca9.dts | 1 +
- 1 file changed, 1 insertion(+)
+>>
+>> Reviewed-by: Felipe Balbi <balbi@ti.com>
+> 
+> Applying into omap-for-v4.1/dt-v2 with the subject line fixed.
 
-Changes since v1:
- * fix typo in patch description
+Thanks Tony.
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-index 23662b5..a411274 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-@@ -170,6 +170,7 @@
- 		compatible = "arm,pl310-cache";
- 		reg = <0x1e00a000 0x1000>;
- 		interrupts = <0 43 4>;
-+		cache-unified;
- 		cache-level = <2>;
- 		arm,data-latency = <1 1 1>;
- 		arm,tag-latency = <1 1 1>;
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
