@@ -1,147 +1,62 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 2/6] ARM: cpuidle: Add a cpuidle ops structure to be used
- for DT
-Date: Wed, 18 Mar 2015 09:13:27 +0100
-Message-ID: <550933A7.9030401@linaro.org>
-References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org> <1425385777-14766-3-git-send-email-daniel.lezcano@linaro.org> <55075453.2070503@codeaurora.org> <20150317112905.GA14984@red-moon> <5508D160.6090205@codeaurora.org>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: [PATCH v2 5/6] drm/exynos: dsi: add support for MIC driver as a bridge
+Date: Wed, 18 Mar 2015 17:16:30 +0900
+Message-ID: <1426666591-16103-6-git-send-email-human.hwang@samsung.com>
+References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5508D160.6090205@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: sw0312.kim@samsung.com, dh09.lee@samsung.com, cw00.choi@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/2015 02:14 AM, Stephen Boyd wrote:
-> On 03/17/15 04:29, Lorenzo Pieralisi wrote:
->> On Mon, Mar 16, 2015 at 10:08:19PM +0000, Stephen Boyd wrote:
->>> On 03/03/15 04:29, Daniel Lezcano wrote:
->>>> The code is optimized to use the __init section intensively in ord=
-er to reduce
->>>> the memory footprint after the driver is initialized and unify the=
- function
->>>> names with ARM64.
->>>>
->>>> In order to prevent multiple declarations and the specific cpuidle=
- ops to be
->>>> spread across the different headers, a mechanism, similar to the c=
-group subsys,
->>>> has been introduced.
->>>>
->>>> A new platform willing to add its cpuidle ops must add an entry in=
- the file
->>>> cpuidle_ops.h in the current form:
->>>>
->>>>   #if IS_ENABLED(CONFIG_ARM_FOO_CPUIDLE)
->>>>   CPUIDLE_OPS(foo)
->>>>   #endif
->>>>
->>>> ... and use the variable name in the specific low level code:
->>>>
->>>> struct cpuidle_ops foo_cpuidle_ops;
->>>>
->>>> The CPUIDLE_OPS macro will be processed in different way in the cp=
-uidle.c file,
->>>> thus allowing to keep untouched the arm cpuidle core code in the f=
-uture when
->>>> a new platform is added.
->>> [...]
->>>> diff --git a/arch/arm/include/asm/cpuidle_ops.h b/arch/arm/include=
-/asm/cpuidle_ops.h
->>>> new file mode 100644
->>>> index 0000000..be0a612
->>>> --- /dev/null
->>>> +++ b/arch/arm/include/asm/cpuidle_ops.h
->>>> @@ -0,0 +1,3 @@
->>>> +/*
->>>> + * List of cpuidle operations
->>>> + */
->>>> diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
->>>> index 45969f8..25e9789c 100644
->>>> --- a/arch/arm/kernel/cpuidle.c
->>>> +++ b/arch/arm/kernel/cpuidle.c
->>>> @@ -10,8 +10,29 @@
->>>>    */
->>>>
->>>>   #include <linux/cpuidle.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/of_device.h>
->>>>   #include <asm/cpuidle.h>
->>>>
->>>> +#define CPUIDLE_OPS(__x) extern struct cpuidle_ops __x ## _cpuidl=
-e_ops;
->>>> +#include <asm/cpuidle_ops.h>
->>>> +#undef CPUIDLE_OPS
->>>> +
->>>> +#define CPUIDLE_OPS(__x) __x ## _cpuidle_ops_id,
->>>> +enum cpuidle_ops_id {
->>>> +#include <asm/cpuidle_ops.h>
->>>> +        CPUIDLE_OPS_COUNT,
->>>> +};
->>>> +#undef CPUIDLE_OPS
->>>> +
->>>> +#define CPUIDLE_OPS(__x) [__x ## _cpuidle_ops_id ] =3D &__x ## _c=
-puidle_ops,
->>>> +static struct cpuidle_ops *supported_cpuidle_ops[] __initconst =3D=
- {
->>>> +#include <asm/cpuidle_ops.h>
->>>> +};
->>>> +#undef CPUIDLE_OPS
->>>> +
->>>> +static struct cpuidle_ops cpuidle_ops[NR_CPUS];
->>> Is there any reason why we aren't putting these structures into a l=
-inker
->>> section like we do for the smp operations structures?
->> I think it can be done with an OF_TABLE, it is a bit of shame cpuidl=
-e_ops
->> should work on UP too otherwise they could have been merged in
->> smp_ops to create cpu_ops, like arm64 does.
->
-> We should merge the two and remove the SMP dependency on arm32.
-
-I will be happy to do that but right now it would be nice to keep=20
-focused on bringing the cpuidle ops first, even if we have a bit of cod=
-e=20
-duplicated, in order to unblock the cpuidle drivers awaiting for this=20
-code to be merged.
-
->>> The nice thing about using the linker is it makes it clearer at the
->>> location where we define the structure that it's actually used by
->>> something. Right now the structures are defined non-static in a fil=
-e and
->>> then we have to know that a CPUIDLE_OPS() define has been made in
->>> another architecture specific asm header file so that this macro ma=
-gic
->>> works. The commit text says something about multiple declarations a=
-nd
->>> ops spread across header files, which shouldn't apply if we're usin=
-g the
->>> linker to find these ops and merge them into an array we can iterat=
-e over.
->> It makes sense, see above for UP vs SMP. I wonder if we can't find
->> something to overcome the UP limitation nicely, the init code in
->> arch/arm/kernel/devtree.c is identical for smp_ops and cpuidle_ops,
->> apart from the CONFIG_SMP ifdeffery.
->
-> It should be possible to replace the arm32 smp_operations structure w=
-ith
-> something like the arm64 cpu_operations structure. Yes we would have =
-to
-> drop the SMP dependency, but that will be ok. It would require some w=
-ork
-> to make arm32 and arm64 the same, but for these purposes that isn't
-> really required as long as we can put the cpu idle hook there.
->
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+TUlDIG11c3QgYmUgaW5pdGlsaXplZCBieSBNSVBJIERTSSB3aGVuIGl0IGlzIGJlaW5nIGJvdW5k
+LgoKU2lnbmVkLW9mZi1ieTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1bmcuY29t
+PgotLS0KIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYyB8IDI0ICsrKysr
+KysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKaW5kZXggNzcyMzZhZC4uZTM4NWQy
+NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCisr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYwpAQCAtMjAsNiArMjAs
+NyBAQAogI2luY2x1ZGUgPGxpbnV4L2lycS5oPgogI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5o
+PgogI2luY2x1ZGUgPGxpbnV4L29mX2dwaW8uaD4KKyNpbmNsdWRlIDxsaW51eC9vZl9ncmFwaC5o
+PgogI2luY2x1ZGUgPGxpbnV4L3BoeS9waHkuaD4KICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Iv
+Y29uc3VtZXIuaD4KICNpbmNsdWRlIDxsaW51eC9jb21wb25lbnQuaD4KQEAgLTI4MCw2ICsyODEs
+NyBAQCBzdHJ1Y3QgZXh5bm9zX2RzaSB7CiAJc3RydWN0IGxpc3RfaGVhZCB0cmFuc2Zlcl9saXN0
+OwogCiAJc3RydWN0IGV4eW5vc19kc2lfZHJpdmVyX2RhdGEgKmRyaXZlcl9kYXRhOworCXN0cnVj
+dCBkZXZpY2Vfbm9kZSAqYnJpZGdlX25vZGU7CiB9OwogCiAjZGVmaW5lIGhvc3RfdG9fZHNpKGhv
+c3QpIGNvbnRhaW5lcl9vZihob3N0LCBzdHJ1Y3QgZXh5bm9zX2RzaSwgZHNpX2hvc3QpCkBAIC0x
+Nzg3LDcgKzE3ODksMjIgQEAgc3RhdGljIGludCBleHlub3NfZHNpX3BhcnNlX2R0KHN0cnVjdCBl
+eHlub3NfZHNpICpkc2kpCiAKIAlyZXQgPSBleHlub3NfZHNpX29mX3JlYWRfdTMyKGVwLCAic2Ft
+c3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5IiwKIAkJCQkgICAgICZkc2ktPmVzY19jbGtfcmF0ZSk7
+CisJaWYgKHJldCA8IDApCisJCWdvdG8gZW5kOworCisJb2Zfbm9kZV9wdXQoZXApOworCisJZXAg
+PSBvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludChub2RlLCBOVUxMKTsKKwlpZiAoIWVwKSB7CisJ
+CXJldCA9IC1FTlhJTzsKKwkJZ290byBlbmQ7CisJfQogCisJZHNpLT5icmlkZ2Vfbm9kZSA9IG9m
+X2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZXApOworCWlmICghZHNpLT5icmlkZ2Vfbm9k
+ZSkgeworCQlyZXQgPSAtRU5YSU87CisJCWdvdG8gZW5kOworCX0KIGVuZDoKIAlvZl9ub2RlX3B1
+dChlcCk7CiAKQEAgLTE4MDAsNiArMTgxNyw3IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9iaW5k
+KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAogCXN0cnVjdCBleHlu
+b3NfZHJtX2Rpc3BsYXkgKmRpc3BsYXkgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKIAlzdHJ1Y3Qg
+ZXh5bm9zX2RzaSAqZHNpID0gZGlzcGxheV90b19kc2koZGlzcGxheSk7CiAJc3RydWN0IGRybV9k
+ZXZpY2UgKmRybV9kZXYgPSBkYXRhOworCXN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2U7CiAJaW50
+IHJldDsKIAogCXJldCA9IGV4eW5vc19kcm1fY3JlYXRlX2VuY19jb25uKGRybV9kZXYsIGRpc3Bs
+YXkpOwpAQCAtMTgwOSw2ICsxODI3LDEyIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9iaW5kKHN0
+cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAogCQlyZXR1cm4gcmV0Owog
+CX0KIAorCWJyaWRnZSA9IG9mX2RybV9maW5kX2JyaWRnZShkc2ktPmJyaWRnZV9ub2RlKTsKKwlp
+ZiAoYnJpZGdlKSB7CisJCWRpc3BsYXktPmVuY29kZXItPmJyaWRnZSA9IGJyaWRnZTsKKwkJZHJt
+X2JyaWRnZV9hdHRhY2goZHJtX2RldiwgYnJpZGdlKTsKKwl9CisKIAlyZXR1cm4gbWlwaV9kc2lf
+aG9zdF9yZWdpc3RlcigmZHNpLT5kc2lfaG9zdCk7CiB9CiAKLS0gCjEuOS4xCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
