@@ -1,56 +1,151 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Wed, 18 Mar 2015 14:23:18 +0100
-Message-ID: <55097C46.9010605@gmail.com>
-References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com> <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com> <20150318123012.GA3580@katana>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150318123012.GA3580@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 2/2] v4l: mt9v032: Add OF support
+Date: Wed, 18 Mar 2015 15:32:28 +0200
+Message-ID: <2768138.CXiK86JdWh@avalon>
+References: <1426345057-2752-1-git-send-email-laurent.pinchart@ideasonboard.com> <1426345057-2752-2-git-send-email-laurent.pinchart@ideasonboard.com> <20150315002107.GA11954@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20150315002107.GA11954@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Carlos =?ISO-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18.03.2015 13:30, Wolfram Sang wrote:
-> On Mon, Mar 09, 2015 at 01:21:05PM +0100, Sebastian Hesselbarth wrote:
->> I2C mux pinctrl driver currently determines the number of sub-busses by
->> counting available pinctrl-names. Unfortunately, this requires each
->> incarnation of the devicetree node with different available sub-busses
->> to be rewritten.
->>
->> This patch reworks i2c-mux-pinctrl driver to count the number of
->> available sub-nodes instead. The rework should be compatible to the old
->> way of probing for sub-busses and additionally allows to disable unused
->> sub-busses with standard DT property status = "disabled".
->
-> Not sure about this change. With DYNAMIC_OF these days, you can't rely
-> that 'disabled' stays disabled all the time. My gut feeling tells me
-> that people will want to use this someday.
+Hi Sakari,
 
-Possible. But this change just makes i2c-mux-pinctrl honor status
-property at all. There is no functional change except it now allows
-you to disable any of the sub-busses.
+On Sunday 15 March 2015 02:21:07 Sakari Ailus wrote:
+> On Sat, Mar 14, 2015 at 04:57:37PM +0200, Laurent Pinchart wrote:
+> ...
+> 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> > b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt new file mode
+> > 100644
+> > index 0000000..68b134e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> > @@ -0,0 +1,45 @@
+> > +* Aptina 1/3-Inch WVGA CMOS Digital Image Sensor
+> > +
+> > +The Aptina MT9V032 is a 1/3-inch CMOS active pixel digital image sensor
+> > with +an active array size of 752H x 480V. It is programmable through a
+> > simple +two-wire serial interface.
+> > +
+> > +Required Properties:
+> > +
+> > +- compatible: value should be either one among the following
+> > +	(a) "aptina,mt9v022" for MT9V022 color sensor
+> > +	(b) "aptina,mt9v022m" for MT9V022 monochrome sensor
+> > +	(c) "aptina,mt9v024" for MT9V024 color sensor
+> > +	(d) "aptina,mt9v024m" for MT9V024 monochrome sensor
+> > +	(e) "aptina,mt9v032" for MT9V032 color sensor
+> > +	(f) "aptina,mt9v032m" for MT9V032 monochrome sensor
+> > +	(g) "aptina,mt9v034" for MT9V034 color sensor
+> > +	(h) "aptina,mt9v034m" for MT9V034 monochrome sensor
+> > +
+> > +Optional Properties:
+> > +
+> > +- link-frequencies: List of allowed link frequencies in Hz. Each
+> > frequency is +	expressed as a 64-bit big-endian integer.
+> > +
+> > +For further reading on port node refer to
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +Example:
+> > +
+> > +	i2c0@1c22000 {
+> > +		...
+> > +		...
+> > +		mt9v032@5c {
+> > +			compatible = "aptina,mt9v032";
+> > +			reg = <0x5c>;
+> > +
+> > +			port {
+> > +				mt9v032_1: endpoint {
+> > +					link-frequencies =
+> > +						<0 13000000>, <0 26600000>,
+> 
+> How about:
+> 
+> /bits/ 64 <13000000> ...
 
-I agree that this driver still does not cope well with DYNAMIC_OF but
-neither did the former implementation. How about we settle this driver
-to this implementation now and wait for any maniac that wants to use it
-the way you are suggesting above?
+Absolutely.
 
-The other option would be to leave the driver as is - but at least on
-Dove where the muxing-options are not used often, it will always create
-4 i2c-busses (controller plus the three muxing options) on any board
-even though the pins are not accessible at all. I think that will just
-create massive confusion from the user point-of-view?
+> > +						<0 27000000>;
+> > +				};
+> > +			};
+> > +		};
+> > +		...
+> > +	};
+> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+> > index 255ea91..139eeef 100644
+> > --- a/drivers/media/i2c/mt9v032.c
+> > +++ b/drivers/media/i2c/mt9v032.c
 
-BTW, I have received a patchwork update notification - it may be
-unrelated but I prefer the Dove dts/dtsi changes to go through mvebu
-tree.
+[snip]
 
-Sebastian
+> > @@ -876,10 +879,59 @@ static const struct regmap_config
+> > mt9v032_regmap_config = {> 
+> >   * Driver initialization and probing
+> >   */
+> > 
+> > +static struct mt9v032_platform_data *
+> > +mt9v032_get_pdata(struct i2c_client *client)
+> > +{
+> > +	struct mt9v032_platform_data *pdata;
+> > +	struct v4l2_of_endpoint endpoint;
+> > +	struct device_node *np;
+> > +	struct property *prop;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> > +		return client->dev.platform_data;
+> > +
+> > +	np = of_graph_get_next_endpoint(client->dev.of_node, NULL);
+> > +	if (!np)
+> > +		return NULL;
+> > +
+> > +	if (v4l2_of_parse_endpoint(np, &endpoint) < 0)
+> > +		goto done;
+> > +
+> > +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> > +	if (!pdata)
+> > +		goto done;
+> > +
+> > +	prop = of_find_property(np, "link-frequencies", NULL);
+> > +	if (prop) {
+> > +		size_t size = prop->length / 8;
+> > +		u64 *link_freqs;
+> > +
+> > +		link_freqs = devm_kzalloc(&client->dev,
+> > +					  size * sizeof(*link_freqs),
+> 
+> You could simply use prop->length here. I think that'd look nicer.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about devm_kcalloc(&client->dev, size, sizeof(*link_freqs)) as this is 
+allocating an array ?
+
+> > +					  GFP_KERNEL);
+> > +		if (!link_freqs)
+> > +			goto done;
+> > +
+> > +		if (of_property_read_u64_array(np, "link-frequencies",
+> > +					       link_freqs, size) < 0)
+> > +			goto done;
+> > +
+> > +		pdata->link_freqs = link_freqs;
+> > +		pdata->link_def_freq = link_freqs[0];
+> > +	}
+> > +
+> > +	pdata->clk_pol = !!(endpoint.bus.parallel.flags &
+> > +			    V4L2_MBUS_PCLK_SAMPLE_RISING);
+> > +
+> > +done:
+> > +	of_node_put(np);
+> > +	return pdata;
+> > +}
+
+-- 
+Regards,
+
+Laurent Pinchart
