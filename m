@@ -1,83 +1,85 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Wed, 18 Mar 2015 09:49:22 +0100
-Message-ID: <55093C12.7070004@st.com>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>	 <1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org> <1426518695.26437.55.camel@x220>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v3 0/7] Use DRM component API in tilcdc to connect to tda998x
+Date: Wed, 18 Mar 2015 11:06:29 +0200
+Message-ID: <cover.1426668480.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1426518695.26437.55.camel@x220>
-Sender: linux-pci-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.c>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
+Cc: tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk, robdclark@gmail.com, moinejf@free.fr, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+I think the patches 1-5 are ready for merging. See the details below.
 
-On 03/16/2015 04:11 PM, Paul Bolle wrote:
->> +config PCI_ST
->> +	bool "ST PCIe controller"
-> You add a bool Kconfig symbol. A week or two ago I saw some patches fly
-> by that - I think - allowed PCIe controllers to be built modular.
+I moved the "drm/tilcdc: Decrement refcount of ep-node from
+of_graph_get_next_endpoint" to last in the set and I think it can be
+dropped. The "of: Decrement refcount of previous endpoint in
+of_graph_get_next_endpoint" is eventually going to be merged and
+before that leaking of two of-node refcount increments each time the
+module is loaded is not that serious. The of-nodes live forever anyway.
 
-Thanks for your review.
+The merge of the dts patch can be delayed until the next merger
+window. The DRM_TILCDC_SLAVE_COMPAT should keep the bbb HDMI
+operational until then.
 
-Are you talking about "PCI: Export symbols of PCI functions" patch, that 
-is part of a series
-named "pci: iproc: Add Broadcom iProc PCIe support" ?
+Changes since v2 version of the patch-set:
+- use obj-y in Makefle for tilcdc subdir in:
+  "drm/tilcdc: Force building of DRM_TILCDC_SLAVE_COMPAT"
+- move to last:
+  "drm/tilcdc: Decrement refcount of ep-node from of_graph_get_next_endpoint"
 
-This controller doesn't look like to be based on pcie-designware core 
-driver.
-Other vendors that are using "pcie-designware" core driver are also make 
-it bool.
-The current core driver doesn't support module loading/unloading as I 
-see it.
-If this is required, I also think this should be part of another patchset.
+Changes since first version of the patch-set:
+- Rename DRM_TILCDC_INIT to DRM_TILCDC_SLAVE_COMPAT and make it visible
+- Add separate: 
+  drm/tilcdc: Decrement refcount of ep-node from of_graph_get_next_endpoint
+- Reduce info-level spam
+- Use component_master_add_with_match()
+- Be more explicit about tda998x being the only supported external encoder
 
-What do you think ?
+Remove tilcdc slave support and connect to tda998x trough its
+component DRM API. For dtb backward compatibility the code creates at
+boot time a DT overlay based on the earlier binding. The overlay
+conforms to the new graph based binding.
 
-Please advise,
-BR,
-Fabrice
->
->> +	depends on ARCH_STI || (ARM && COMPILE_TEST)
->> +	select PCIE_DW
->> +	help
->> +	  Enable PCIe controller support on ST Socs. This controller is based
->> +	  on Designware hardware and therefore the driver re-uses the
->> +	  Designware core functions to implement the driver.
->> --- a/drivers/pci/host/Makefile
->> +++ b/drivers/pci/host/Makefile
->> +obj-$(CONFIG_PCI_ST) += pci-st.o
-> If you keep that symbol bool this objectfile will never be part of a
-> module.
->
->> diff --git a/drivers/pci/host/pci-st.c b/drivers/pci/host/pci-st.c
->> new file mode 100644
->> index 0000000..470000d
->> --- /dev/null
->> +++ b/drivers/pci/host/pci-st.c
->> +#include <linux/module.h>
-> For built-in code this include is, probably, not needed.
->
->> +MODULE_DEVICE_TABLE(of, st_pcie_of_match);
-> For built-in code that macro will always be preprocessed away.
->
->> +/* ST PCIe driver does not allow module unload */
->> +static int __init pcie_init(void)
->> +{
->> +	return platform_driver_probe(&st_pcie_driver, st_pcie_probe);
->> +}
->> +device_initcall(pcie_init);
-> I think the module unload comment is a bit odd for built-in only code.
->
->> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
->> +MODULE_DESCRIPTION("PCI express Driver for ST SoCs");
->> +MODULE_LICENSE("GPL v2");
-> These three macros will be, basically, always preprocessed away as long
-> as this code can't be built to be modular.
->
->
-> Paul Bolle
->
+The first patch is just a bugfix and can be applied or dropped
+independently.
+
+Jyri Sarha (7):
+  drm/tilcdc: Fix module unloading
+  drm/tilcdc: Remove tilcdc slave support for tda998x driver
+  drm/tilcdc: Add support for external tda998x encoder
+  drm/tilcdc: Add DRM_TILCDC_SLAVE_COMPAT for ti,tilcdc,slave binding
+    support
+  drm/tilcdc: Force building of DRM_TILCDC_SLAVE_COMPAT
+  ARM: dts: am335x-boneblack: Use new binding for HDMI
+  drm/tilcdc: Decrement refcount of ep-node from
+    of_graph_get_next_endpoint
+
+ .../devicetree/bindings/drm/tilcdc/slave.txt       |  18 -
+ .../devicetree/bindings/drm/tilcdc/tilcdc.txt      |  27 ++
+ arch/arm/boot/dts/am335x-boneblack.dts             |  20 +-
+ drivers/gpu/drm/Makefile                           |   2 +-
+ drivers/gpu/drm/tilcdc/Kconfig                     |  13 +
+ drivers/gpu/drm/tilcdc/Makefile                    |   5 +-
+ drivers/gpu/drm/tilcdc/tilcdc_crtc.c               |  36 +-
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c                |  89 +++--
+ drivers/gpu/drm/tilcdc/tilcdc_drv.h                |   5 +-
+ drivers/gpu/drm/tilcdc/tilcdc_external.c           | 105 ++++++
+ drivers/gpu/drm/tilcdc/tilcdc_external.h           |  24 ++
+ drivers/gpu/drm/tilcdc/tilcdc_slave.c              | 411 ---------------------
+ drivers/gpu/drm/tilcdc/tilcdc_slave.h              |  26 --
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c       | 270 ++++++++++++++
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts     |  72 ++++
+ 15 files changed, 633 insertions(+), 490 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/drm/tilcdc/slave.txt
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_external.c
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_external.h
+ delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave.c
+ delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave.h
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts
+
+-- 
+1.9.1
+
