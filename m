@@ -1,108 +1,139 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: usb-dmac: Add Renesas USB DMA
- Controller (USB-DMAC) driver
-Date: Wed, 18 Mar 2015 13:52:15 +0530
-Message-ID: <20150318082215.GF32683@intel.com>
-References: <1426052394-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1426052394-5556-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: BCM2835: Add a function for doing an rmb()
+ between device reads.
+Date: Wed, 18 Mar 2015 08:26:03 +0000
+Message-ID: <20150318082603.GI3318@x1>
+References: <1426213936-4139-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426052394-5556-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: dan.j.williams@intel.com, laurent.pinchart@ideasonboard.com, horms@verge.net.au, kuninori.morimoto.gx@renesas.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1426213936-4139-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 02:39:54PM +0900, Yoshihiro Shimoda wrote:
-> +static struct dma_async_tx_descriptor *
-> +usb_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
-> +		       unsigned int sg_len, enum dma_transfer_direction dir,
-> +		       unsigned long dma_flags, void *context)
+On Thu, 12 Mar 2015, Eric Anholt wrote:
+
+> Stephen Warren was concerned that the rmb() present in the new mailbo=
+x
+> driver was unnecessary, and after seeing the docs, that it was just s=
+o
+> surprising that somebody would come along and remove it later.  The
+> explanation for the need for the rmb() is long enough that we won't
+> want to place it at every callsite.  Make a wrapper with the whole
+> explanation in it, so that anyone wondering what's going on sees the
+> docs right there.
+>=20
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
+>  include/soc/bcm2835/peripheral-workaround.h | 75 +++++++++++++++++++=
+++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 include/soc/bcm2835/peripheral-workaround.h
+>=20
+> diff --git a/include/soc/bcm2835/peripheral-workaround.h b/include/so=
+c/bcm2835/peripheral-workaround.h
+> new file mode 100644
+> index 0000000..4541a13
+> --- /dev/null
+> +++ b/include/soc/bcm2835/peripheral-workaround.h
+> @@ -0,0 +1,75 @@
+> +/*
+> + * Copyright =C2=A9 2015 Broadcom
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +static inline void bcm2835_peripheral_read_workaround(void)
 > +{
-> +	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-> +	struct usb_dmac_desc *desc;
-> +
-> +	/* A client driver will use dmaengine_prep_slave_single() */
-> +	if (sg_len != 1) {
-and why is that?
-
-> +static enum dma_status usb_dmac_tx_status(struct dma_chan *chan,
-> +					  dma_cookie_t cookie,
-> +					  struct dma_tx_state *txstate)
-> +{
-> +	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-> +	enum dma_status status;
-> +	unsigned long flags;
-> +	unsigned int residue;
-> +
-> +	status = dma_cookie_status(chan, cookie, txstate);
-> +	/* a client driver will get residue after DMA_COMPLETE */
-can you explain this comment?
-
-> +	if (!txstate)
-> +		return status;
-> +
-> +	spin_lock_irqsave(&uchan->vc.lock, flags);
-> +	residue = uchan->residue;
-how is this related to the cookie for which request is made?
-> +static void usb_dmac_chan_tasklet(unsigned long data)
-> +{
-> +	struct usb_dmac_chan *chan = (struct usb_dmac_chan *)data;
-> +	struct usb_dmac_desc *desc = chan->desc;
-> +
-> +	spin_lock_irq(&chan->vc.lock);
-> +
-> +	/* This driver assumes a transfer finishes if desc is not NULL */
-> +	if (desc) {
-> +		chan->residue = usb_dmac_chan_get_last_residue(chan, desc);
-why should this be for channel and not the descriptor which is completed, so
-you overwrite this before user has chance to query ?
-
-Looking at this, so you issue a transaction of 100bytes, will you get
-completion even if 100bytes have not been transfered, If so how does dma
-decide theat transfer is complete even if 100bytes are not transferred yet?
-
-> +		vchan_cookie_complete(&desc->vd);
-> +	}
-> +
-> +	/* (Re)start the next transfer if this driver has a next desc */
-> +	usb_dmac_chan_start_xfer(chan);
-why not do this in irq :)
-
-
-> +#ifdef CONFIG_PM
-> +static int usb_dmac_runtime_suspend(struct device *dev)
-> +{
-> +	struct usb_dmac *dmac = dev_get_drvdata(dev);
-> +	int i;
-> +
-> +	for (i = 0; i < dmac->n_channels; ++i)
-> +		usb_dmac_chan_halt(&dmac->channels[i]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int usb_dmac_runtime_resume(struct device *dev)
-> +{
-> +	struct usb_dmac *dmac = dev_get_drvdata(dev);
-> +
-> +	return usb_dmac_init(dmac);
-> +}
+> +#ifdef CONFIG_ARCH_BCM2835
+> +	/*
+> +	 * The BCM2835 bus is unusual in that it doesn't guarantee
+> +	 * ordering between reads from different peripherals (where
+> +	 * peripherals roughly correspond to Linux devices).  From
+> +	 * BCM2835 ARM Peripherals.pdf, page 7:
+> +	 *
+> +	 *     "In order to keep the system complexity low and data
+> +	 *      throughput high, the BCM2835 AXI system does not
+> +	 *      always return read data in-order. The GPU has special
+> +	 *      logic to cope with data arriving out-of-order; however
+> +	 *      the ARM core does not contain such logic. Therefore
+> +	 *      some precautions must be taken when using the ARM to
+> +	 *      access peripherals.
+> +	 *
+> +	 *      Accesses to the same peripheral will always arrive and
+> +	 *      return in-order. It is only when switching from one
+> +	 *      peripheral to another that data can arrive
+> +	 *      out-of-order. The simplest way to make sure that data
+> +	 *      is processed in-order is to place a memory barrier
+> +	 *      instruction at critical positions in the code. You
+> +	 *      should place:
+> +	 *
+> +	 *      =E2=80=A2 A memory write barrier before the first write to =
+a
+> +	 *        peripheral.
+> +	 *      =E2=80=A2 A memory read barrier after the last read of a
+> +	 *        peripheral."
+> +	 *
+> +	 * The footnote explicitly says that:
+> +	 *
+> +	 *      "For example:
+> +	 *
+> +	 *         a_status =3D *pointer_to_peripheral_a;
+> +	 *         b_status =3D *pointer_to_peripheral_b;
+> +	 *
+> +	 *       Without precuations the values ending up in the
+> +	 *       variables a_status and b_status can be swapped
+> +	 *       around."
+> +	 *
+> +	 * However, it also notes that, somewhat contrary to the first
+> +	 * bullet point:
+> +	 *
+> +	 *     "It is theoretical possible for writes to go =E2=80=98wrong=E2=
+=80=99
+> +	 *      but that is far more difficult to achieve. The AXI
+> +	 *      system makes sure the data always arrives in-order at
+> +	 *      its intended destination. So:
+> +	 *
+> +	 *        *pointer_to_peripheral_a =3D value_a;
+> +	 *        *pointer_to_peripheral_b =3D value_b;
+> +	 *
+> +	 *      will always give the expected result. The only time
+> +	 *      write data can arrive out-of-order is if two different
+> +	 *      peripherals are connected to the same external
+> +	 *      equipment"
+> +	 *
+> +	 * Since we aren't interacting with multiple peripherals
+> +	 * connected to the same external equipment as far as we know,
+> +	 * that means that we only need to handle the read workaround
+> +	 * case.  We do so by placing an rmb() at the first device
+> +	 * read acceess in a given driver path, including the
+> +	 * interrupt handlers.
+> +	 */
+> +	rmb();
 > +#endif
-> +
-> +static const struct dev_pm_ops usb_dmac_pm = {
-> +	SET_RUNTIME_PM_OPS(usb_dmac_runtime_suspend, usb_dmac_runtime_resume,
-since you are using SET_RUNTIME_PM_OPS, you dont need to wrap this with
-ifdef CONFIG_PM
+> +}
 
-> +
-> +static void usb_dmac_chan_remove(struct usb_dmac_chan *uchan)
-> +{
-> +	tasklet_kill(&uchan->task);
-that part is good, but how about disabling irq? you can still get insterrupt
+The format:
 
--- 
-~Vinod
+#ifdef CONFIG_ARCH_BCM2835
+static inline void bcm2835_peripheral_read_workaround(void)
+{
+        <stuff>
+}
+#else
+static inline void bcm2835_peripheral_read_workaround(void) {}
+#endif
 
+=2E.. is more traditional in the Linux kernel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
