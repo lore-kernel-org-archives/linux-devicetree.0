@@ -1,39 +1,37 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 1/2] clk: samsung: Use CONFIG_ARCH_EXYNOS instead of
- CONFIG_ARCH_EXYNOS5433
-Date: Wed, 18 Mar 2015 09:42:31 +0900
-Message-ID: <1426639352-6255-2-git-send-email-cw00.choi@samsung.com>
-References: <1426639352-6255-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1426639352-6255-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org
-Cc: kgene@kernel.org, arnd@arndb.de, inki.dae@samsung.com, chanho61.park@samsung.com, cw00.choi@samsung.com, jonghwa3.lee@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 11/18] pinctrl: Add pinctrl driver for STM32 MCUs
+Date: Wed, 18 Mar 2015 02:08:13 +0100
+Message-ID: <CACRpkdZA4OMB+gqh6XKfYWR8RSLZGpYjj-cgrC_KcSfcon4QVg@mail.gmail.com>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1424455277-29983-12-git-send-email-mcoquelin.stm32@gmail.com>
+	<2464742.YZIRrHto62@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <2464742.YZIRrHto62@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the CONFIG_ARCH_EXYNOS5433 and then use only the
-CONFIG_ARCH_EXYNOS for ARM-64bit Exynos5433 SoC.
+On Tue, Mar 10, 2015 at 4:08 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 20 February 2015 19:01:10 Maxime Coquelin wrote:
 
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/clk/samsung/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> +/* Pull-Up/Down */
+>> +#define NO_PULL                0
+>> +#define PULL_UP                1
+>> +#define PULL_DOWN      2
+>> +
+>> +/* Type */
+>> +#define PUSH_PULL      (0 << 2)
+>> +#define OPEN_DRAIN     (1 << 2)
+>> +
+>
+> These should probably not be stm32 specific at all, they sound
+> rather generic, so maybe put the definitions into a common file.
 
-diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
-index 17e9af7..a17683b 100644
---- a/drivers/clk/samsung/Makefile
-+++ b/drivers/clk/samsung/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_SOC_EXYNOS5250)	+= clk-exynos5250.o
- obj-$(CONFIG_SOC_EXYNOS5260)	+= clk-exynos5260.o
- obj-$(CONFIG_SOC_EXYNOS5410)	+= clk-exynos5410.o
- obj-$(CONFIG_SOC_EXYNOS5420)	+= clk-exynos5420.o
--obj-$(CONFIG_ARCH_EXYNOS5433)	+= clk-exynos5433.o
-+obj-$(CONFIG_ARCH_EXYNOS)	+= clk-exynos5433.o
- obj-$(CONFIG_SOC_EXYNOS5440)	+= clk-exynos5440.o
- obj-$(CONFIG_ARCH_EXYNOS)	+= clk-exynos-audss.o
- obj-$(CONFIG_ARCH_EXYNOS)	+= clk-exynos-clkout.o
--- 
-1.8.5.5
+It's part of what GENERIC_PINCONF does and it has bindings
+in Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+Yours,
+Linus Walleij
