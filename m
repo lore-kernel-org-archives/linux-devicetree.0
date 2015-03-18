@@ -1,50 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] of: Add vendor prefix for Aptina Imaging
-Date: Wed, 18 Mar 2015 15:40:15 +0200
-Message-ID: <7715060.bEeyxqYSht@avalon>
-References: <1426345057-2752-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v8 2/3] arm64: dts: Add APM X-Gene SoC DMA device and DMA clock DTS nodes
+Date: Wed, 18 Mar 2015 19:17:35 +0530
+Message-ID: <1426686456-15536-3-git-send-email-rsahu@apm.com>
+References: <1426686456-15536-1-git-send-email-rsahu@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426345057-2752-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <1426686456-15536-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos =?ISO-8859-1?Q?Sanmart=EDn?= Bustos <carsanbu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patch adds the device tree node for APM X-Gene SoC
+DMA controller and DMA clock.
 
-Gentle ping to the DT maintainers for this (hopefully) simple bikeshedding 
-question.
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+---
+ arch/arm64/boot/dts/apm/apm-storm.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-On Saturday 14 March 2015 16:57:36 Laurent Pinchart wrote:
-> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> Aptina has recently been acquired by ON Semiconductor, but the name Aptina
-> is still widely used. Should the onnn prefix be used instead ?
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
-> 389ca13..4326f52 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -20,6 +20,7 @@ amlogic	Amlogic, Inc.
->  ams	AMS AG
->  amstaos	AMS-Taos Inc.
->  apm	Applied Micro Circuits Corporation (APM)
-> +aptina	Aptina Imaging
->  arm	ARM Ltd.
->  armadeus	ARMadeus Systems SARL
->  asahi-kasei	Asahi Kasei Corp.
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index f1ad9c2..9471770 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -102,6 +102,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
++		dma-ranges = <0x0 0x0 0x0 0x0 0x400 0x0>;
 
--- 
-Regards,
+ 		clocks {
+ 			#address-cells = <2>;
+@@ -352,6 +353,15 @@
+ 				reg-names = "csr-reg";
+ 				clock-output-names = "pcie4clk";
+ 			};
++
++			dmaclk: dmaclk@1f27c000 {
++				compatible = "apm,xgene-device-clock";
++				#clock-cells = <1>;
++				clocks = <&socplldiv2 0>;
++				reg = <0x0 0x1f27c000 0x0 0x1000>;
++				reg-names = "csr-reg";
++				clock-output-names = "dmaclk";
++			};
+ 		};
 
-Laurent Pinchart
+ 		pcie0: pcie@1f2b0000 {
+@@ -656,5 +666,21 @@
+ 			interrupts = <0x0 0x41 0x4>;
+ 			clocks = <&rngpkaclk 0>;
+ 		};
++
++		dma: dma@1f270000 {
++			compatible = "apm,xgene-storm-dma";
++			device_type = "dma";
++			reg = <0x0 0x1f270000 0x0 0x10000>,
++			      <0x0 0x1f200000 0x0 0x10000>,
++			      <0x0 0x1b008000 0x0 0x2000>,
++			      <0x0 0x1054a000 0x0 0x100>;
++			interrupts = <0x0 0x82 0x4>,
++				     <0x0 0xb8 0x4>,
++				     <0x0 0xb9 0x4>,
++				     <0x0 0xba 0x4>,
++				     <0x0 0xbb 0x4>;
++			dma-coherent;
++			clocks = <&dmaclk 0>;
++		};
+ 	};
+ };
+--
+1.8.2.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
