@@ -1,62 +1,69 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v13 02/13] dt-binding: leds: Add common LED DT
- bindings macros
-Date: Tue, 17 Mar 2015 18:33:51 -0700
-Message-ID: <CAK5ve-JrWXr08vfaERsU5jDqnW9vu-dOCmWqMfs4D_e8cyqgEQ@mail.gmail.com>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com> <1426175114-14876-3-git-send-email-j.anaszewski@samsung.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/4 v3] dt/bindings: Add binding for BCM2835 mailbox driver
+Date: Tue, 17 Mar 2015 18:34:01 -0700
+Message-ID: <87r3snytpy.fsf@eliezer.anholt.net>
+References: <1426213936-4139-1-git-send-email-eric@anholt.net> <1426213936-4139-2-git-send-email-eric@anholt.net> <20150317172758.GC3318@x1> <5508A75A.4070203@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1426175114-14876-3-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pavel Machek <pavel@ucw.cz>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5508A75A.4070203-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2015 at 8:45 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> Add macros for defining boost mode and trigger type properties
-> of flash LED devices.
->
-Applied, thanks,
--Bryan
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> ---
->  include/dt-bindings/leds/common.h |   21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 include/dt-bindings/leds/common.h
+Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
+
+> Hi Lubomir,
 >
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-> new file mode 100644
-> index 0000000..79fcef7
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -0,0 +1,21 @@
-> +/*
-> + * This header provides macros for the common LEDs device tree bindings.
-> + *
-> + * Copyright (C) 2015, Samsung Electronics Co., Ltd.
-> + *
-> + * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_LEDS_H__
-> +#define __DT_BINDINGS_LEDS_H
-> +
-> +/* External trigger type */
-> +#define LEDS_TRIG_TYPE_EDGE    0
-> +#define LEDS_TRIG_TYPE_LEVEL   1
-> +
-> +/* Boost modes */
-> +#define LEDS_BOOST_OFF         0
-> +#define LEDS_BOOST_ADAPTIVE    1
-> +#define LEDS_BOOST_FIXED       2
-> +
-> +#endif /* __DT_BINDINGS_LEDS_H */
-> --
-> 1.7.9.5
 >
+> On 15-03-17 10:27 AM, Lee Jones wrote:
+>> On Thu, 12 Mar 2015, Eric Anholt wrote:
+>>> diff --git a/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt=
+ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+>>> new file mode 100644
+>>> index 0000000..0bb2b9d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mailbox/bcm2835-mbox.txt
+> I am trying to standarize all broadcom device tree bindings in the=20
+> format "brcm,binding.txt".
+>
+> Could you please rename this file to brcm,bcm2835-mbox.txt for=20
+> consistency in bindings?
+
+The filename was at the request of Lee Jones, to match the convention of
+the other mailbox drivers.  I don't care what the filename is as long as
+people can get agreement on what it should be.
+
+(Right now it seems to be 2:1 in favor of using the compatible string?)
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVCNYJAAoJELXWKTbR/J7okx4P/Rd0dq6/TqvRfBN7Z8edVL/X
+b90+/NV1lkgkv6D0sHhv1bOV2DeB/v6nlU3I35BrrlHjydDDkLg+4mE2MxkLTFpI
+GjQyqjxSyFlPIR3Yjp8Dy+Pggd5b6g1X6PzljQUqrijLbZAytUBylR7mTrdjpdfZ
+fenovKbojxYUaq7zrCM1KkaJZjrWa6royutVWh4h6tx/UBmcPhuPwvmblHylXOR+
+KmGFsIxlvMzMIHbMRPIgYp44dTqoX87sgpL4TEiu7Vd3TZsKx5KBpF6Bnyz20SPP
+GfKCLJUAdi7SHfqpV2jGfUAL9G+yeaneZjFCqQCjEZbKBfp/IEj9HpAmzmjNLxt9
+o3Wlpm/pyQamXOdrQgqtYmk0kVV/Bu5LJg3fjvrNp/QzFexL89PzPcQo3V1QVZ8e
+SG00e96YjQwFTehd1bMkdA6/JvNn7rjeBrNzWEK9O09T5sn4sGKO0VglABVSq06y
+1tIngXN1WEJocpOe84UQpRun9jIg1i3pypGcguclDkdvsWLJN9yxrZd0CmffW1xD
+4dqj3MAQpxABRWoCMXgblwQTH9te3K+1BM+SI+ouLUln+Ta2U6Dc19U0LWHRBSp2
+/KpH5Qjw8TjxutZTfO/TClesbix2a1fkssq+p3etSTlqcP1TiUDuz1K9NQWs6Xh9
+G3y/VUp2XpahAYseHXia
+=8mIr
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
