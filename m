@@ -1,143 +1,102 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [PATCH V5 2/2] ARM: dts: Add HS400 support for exynos5420 and exynos5800
-Date: Wed, 18 Mar 2015 04:56:28 +0530
-Message-ID: <CAGOxZ53OgKKZVS2qKsMw4cDxdkwG-8OER=8oPxTo9g-+qKHimQ@mail.gmail.com>
-References: <1422499318-13726-1-git-send-email-alim.akhtar@samsung.com>
- <1422499318-13726-3-git-send-email-alim.akhtar@samsung.com>
- <54ED6D24.4000703@samsung.com> <CAGOxZ53_TGay2ooTW22ZGPZ+yneqoXH6JEPZ=mMSYr1cpOhXWg@mail.gmail.com>
- <07b501d06057$d9d7bc80$8d873580$@kernel.org>
+From: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
+ breaks console on tty0
+Date: Tue, 17 Mar 2015 20:13:27 -0400
+Message-ID: <5508C327.9020108@redhat.com>
+References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <5507332B.5020504@hurleysoftware.com> <55085AFA.7070909@redhat.com> <550868AF.8050201@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <07b501d06057$d9d7bc80$8d873580$@kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Douglas Anderson <dianders@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550868AF.8050201-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Kukjin for looking into this.
-I will rebase on top of your for-next and send again.
+Hi Peter,
 
-On Tue, Mar 17, 2015 at 7:42 AM, Kukjin Kim <kgene@kernel.org> wrote:
-> Alim Akhtar wrote:
+On 03/17/2015 01:47 PM, Peter Hurley wrote:
+
+> On 03/17/2015 12:48 PM, Jon Masters wrote:
+>> On 03/16/2015 03:46 PM, Peter Hurley wrote:
+>>> On 03/16/2015 02:35 PM, Hans de Goede wrote:
+>>>> To be clear about my aarch64 remark, that relates to the behavior of aarch64 acpi using
+>>>> machines, those will also output to both a serial tty and tty0 when the acpi equivalent
+>>>> of stdout-path is present and points to a serial tty.
+>>>
+>>> I already made comments addressing the unsuitability of the license for the
+>>> aarch64 acpi console;
 >>
->> Ping?
->>
-> Alim,
->
-> Can you please re-send it based on latest my tree?
-> It would be helpful for me ;)
->
-> Thanks,
-> Kukjin
->
->> On Wed, Feb 25, 2015 at 12:05 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->> > Hi, Alim.
->> >
->> > Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
->> >
->> > Best Regards,
->> > Jaehoon Chung
->> >
->> > On 01/29/2015 11:41 AM, Alim Akhtar wrote:
->> >> From: Seungwon Jeon <tgih.jun@samsung.com>
->> >>
->> >> HS400 timing values are added for SMDK5420, exynos5420-peach-pit
->> >> and exynos5800-peach-pi boards.
->> >> This also adds RCLK GPIO line, this gpio should be in pull-down
->> >> state.
->> >> This also enables HS400 on peach-pi and this updates the clock frequency
->> >> to 800MHz to be set as input clock to controller.
->> >>
->> >> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
->> >> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> >> [Alim: addressed review comments]
->> >> ---
->> >>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    4 +++-
->> >>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 +++++++
->> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts  |    4 +++-
->> >>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    7 +++++--
->> >>  4 files changed, 18 insertions(+), 4 deletions(-)
->> >>
->> >> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-
->> pit.dts
->> >> index 9a050e1..f7a44a4 100644
->> >> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> >> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> >> @@ -569,8 +569,10 @@
->> >>       samsung,dw-mshc-ciu-div = <3>;
->> >>       samsung,dw-mshc-sdr-timing = <0 4>;
->> >>       samsung,dw-mshc-ddr-timing = <0 2>;
->> >> +     samsung,dw-mshc-hs400-timing = <0 2>;
->> >> +     samsung,read-strobe-delay = <90>;
->> >>       pinctrl-names = "default";
->> >> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
->> >> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
->> >>       bus-width = <8>;
->> >>  };
->> >>
->> >> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
->> >> index ba686e4..8b15316 100644
->> >> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
->> >> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
->> >> @@ -201,6 +201,13 @@
->> >>                       samsung,pin-drv = <3>;
->> >>               };
->> >>
->> >> +             sd0_rclk: sd0-rclk {
->> >> +                     samsung,pins = "gpc0-7";
->> >> +                     samsung,pin-function = <2>;
->> >> +                     samsung,pin-pud = <1>;
->> >> +                     samsung,pin-drv = <3>;
->> >> +             };
->> >> +
->> >>               sd1_cmd: sd1-cmd {
->> >>                       samsung,pins = "gpc1-1";
->> >>                       samsung,pin-function = <2>;
->> >> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> index 8be3d7b..2078a1f 100644
->> >> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> @@ -80,8 +80,10 @@
->> >>               samsung,dw-mshc-ciu-div = <3>;
->> >>               samsung,dw-mshc-sdr-timing = <0 4>;
->> >>               samsung,dw-mshc-ddr-timing = <0 2>;
->> >> +             samsung,dw-mshc-hs400-timing = <0 2>;
->> >> +             samsung,read-strobe-delay = <90>;
->> >>               pinctrl-names = "default";
->> >> -             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
->> >> +             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
->> >>               bus-width = <8>;
->> >>               cap-mmc-highspeed;
->> >>       };
->> >> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> >> index e8fdda8..96f0d61 100644
->> >> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> >> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> >> @@ -550,15 +550,18 @@
->> >>       num-slots = <1>;
->> >>       broken-cd;
->> >>       mmc-hs200-1_8v;
->> >> +     mmc-hs400-1_8v;
->> >>       cap-mmc-highspeed;
->> >>       non-removable;
->> >>       card-detect-delay = <200>;
->> >> -     clock-frequency = <400000000>;
->> >> +     clock-frequency = <800000000>;
->> >>       samsung,dw-mshc-ciu-div = <3>;
->> >>       samsung,dw-mshc-sdr-timing = <0 4>;
->> >>       samsung,dw-mshc-ddr-timing = <0 2>;
->> >> +     samsung,dw-mshc-hs400-timing = <0 2>;
->> >> +     samsung,read-strobe-delay = <90>;
->> >>       pinctrl-names = "default";
->> >> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
->> >> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
->> >>       bus-width = <8>;
->> >>  };
->
+>> Yes, you did. However, I believe you might have outdated information.
+>> Have you read the SPCR in the past few months, or are you looking at a
+>> version prior to update that was made in October of 2014?
+> 
+> The version of the Serial Port Console Redirection Table specification
+> I was referring to is downloadable here:
+> 
+> https://msdn.microsoft.com/en-us/library/windows/hardware/dn639132%28v=vs.85%29.aspx
+> 
+> That page says Last Updated: October 21, 2014
 
+Ok. You've got the most recent version :) Let me predicate the following
+with the assertion that I am not a lawyer and I am not offering legal
+advice. But I have worked with Microsoft (and many other large hardware
+and software vendors) for some time on topics related to standardization
+of ARM and I am offering to reach back out to them to resolve any
+legitimate concerns arising here. The thing we need to ascertain is
+whether there is a legitimate concern.
 
+>> Can you be specific about your concerns? The license has already been
+>> changed once (I instigated the request that lead to that change to drop
+>> several pages of terse terms that used to cover the first few pages). I
+>> have found the Microsoft team extremely responsive and amenable to
+>> resolving issues, so if you would do us the service of articulating what
+>> the concern is, I'll reach back out and get that addressed. I have a
+>> direct line into their server and legal teams to discuss this issue.
+> 
+> Well, I'm deducing somewhat here because the code that would use the
+> SPCR table format has not been submitted. So I don't _know_ what license(s)
+> you intend to submit with.
 
--- 
-Regards,
-Alim
+Fair enough. I wrote an initial quick and dirty implementation of SPCR
+parsing which I handed off to a colleague to cleanup. They are indeed
+planning such a submission. So such an implementation does in fact exist
+and there is an intent to submit. Ultimately, ACPI based ARM systems
+(and even x86 ones) will be better off for supporting SPCR. While not
+required, it does obviate the need for both "console=" and "earlycon="
+kernel command line parameters, and thus improves end user experience by
+making console setup automatic. We decided to include SPCR in the SBBR
+rather than writing a new table on the understanding that writing a new
+table was otherwise the default, and a wasted effort when such a
+specification already existed. The concern you raise was anticipated,
+and the changes mentioned were already made. I'm sure we'll be able to
+ask for additional clarification and changes also.
+
+> So if you and Microsoft have worked out some deal where Microsoft has
+> licensed the SPCR spec to you under GPL v2 terms, then, great! there is no
+> problem.
+
+I am willing to assist in brokering a discussion on this. But first we
+should ascertain what is necessary here and articulate that succinctly.
+
+<snip>
+
+> Now, that's just my interpretation of it; maybe the Linux Foundation's
+> lawyers would see it differently.
+
+Who ultimately is going to make the legal call on this one? In other
+words, would an opinion from LF be the best thing to pursue? I can reach
+out and connect a few people off-list for some conversation.
+
+Ultimately, I believe Microsoft are willing to have a productive
+conversation with us on these topics. I have found them very amenable
+and professional when collaborating on ARM related standardization
+topics and I am sure we can resolve any issues arising here.
+
+Jon.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
