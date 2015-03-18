@@ -1,76 +1,119 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 18 Mar 2015 10:25:27 +0000
-Message-ID: <55095297.5060605@arm.com>
-References: <1425466367-30556-1-git-send-email-vincent.yang@socionext.com> <1425466884-30648-1-git-send-email-vincent.yang@socionext.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v13 07/13] DT: Add documentation for the Skyworks
+ AAT1290
+Date: Wed, 18 Mar 2015 11:28:17 +0100
+Message-ID: <55095341.1040502@samsung.com>
+References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
+ <1426175114-14876-8-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425466884-30648-1-git-send-email-vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1426175114-14876-8-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
-
-Forgot couple of things earlier:
-
-On 04/03/15 11:01, Vincent Yang wrote:
-> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 03/12/2015 04:45 PM, Jacek Anaszewski wrote:
+> This patch adds device tree binding documentation for
+> 1.5A Step-Up Current Regulator for Flash LEDs.
 >
-> Add driver for the ARM Primecell Message-Handling-Unit(MHU) controller.
->
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
 > ---
->   .../devicetree/bindings/mailbox/arm-mhu.txt        |  43 +++++
->   drivers/mailbox/Kconfig                            |   9 +
->   drivers/mailbox/Makefile                           |   2 +
->   drivers/mailbox/arm_mhu.c                          | 195 +++++++++++++++++++++
->   4 files changed, 249 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->   create mode 100644 drivers/mailbox/arm_mhu.c
+>   .../devicetree/bindings/leds/leds-aat1290.txt      |   71 ++++++++++++++++++++
+>   1 file changed, 71 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-aat1290.txt b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
+> new file mode 100644
+> index 0000000..b2a1192
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
+> @@ -0,0 +1,71 @@
+> +* Skyworks Solutions, Inc. AAT1290 Current Regulator for Flash LEDs
+> +
+> +The device is controlled through two pins: FL_EN and EN_SET. The pins when,
+> +asserted high, enable flash strobe and movie mode (max 1/2 of flash current)
+> +respectively. In order to add a capability of selecting the strobe signal source
+> +(e.g. GPIO or ISP) there is an additional switch required, independent of the
+> +flash chip. The switch is controlled with pin control.
+> +
+> +Required properties:
+> +
+> +- compatible : Must be "skyworks,aat1290".
+> +- flen-gpios : Must be device tree identifier of the flash device FL_EN pin.
+> +- enset-gpios : Must be device tree identifier of the flash device EN_SET pin.
+> +
+> +Optional properties:
+> +- pinctrl-names : Must contain entries: "default", "host", "isp". Entries
+> +		"default" and "host" must refer to the same pin configuration
+> +		node, which sets the host as a strobe signal provider. Entry
+> +		"isp" must refer to the pin configuration node, which sets the
+> +		ISP as a strobe signal provider.
+> +
+> +A discrete LED element connected to the device must be represented by a child
+> +node - see Documentation/devicetree/bindings/leds/common.txt.
+> +
+> +Required properties of the LED child node:
+> +- flash-max-microamp : Maximum intensity in microamperes of the flash LED -
+> +		       it can be calculated using following formula:
+> +		       I = 1A * 162kohm / Rset.
+> +- flash-timeout-us : Maximum flash timeout in microseconds -
+> +		     it can be calculated using following formula:
+> +		     T = 8.82 * 10^9 * Ct.
+> +
+> +Optional properties of the LED child node:
+> +- label : see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example (by Ct = 220nF, Rset = 160kohm and exynos4412-trats2 board with
+> +a switch that allows for routing strobe signal either from host or from ISP):
+> +
+> +#include "exynos4412.dtsi"
+> +
+> +aat1290 {
+> +	compatible = "skyworks,aat1290";
+> +	gpios = <&gpj1 1 0>, <&gpj1 2 0>;
+
+gpios are here mistake - to be removed.
+
+> +	flen-gpios = <&gpj1 1 GPIO_ACTIVE_HIGH>;
+> +	enset-gpios = <&gpj1 2 GPIO_ACTIVE_HIGH>;
+> +
+> +	pinctrl-names = "default", "host", "isp";
+> +	pinctrl-0 = <&camera_flash_host>;
+> +	pinctrl-1 = <&camera_flash_host>;
+> +	pinctrl-2 = <&camera_flash_isp>;
+> +
+> +	camera_flash: flash-led {
+> +		label = "aat1290-flash";
+> +		flash-max-microamp = <1012500>
+
+missing semicolon - will be added in the next version.
+
+> +		flash-timeout-us = <1940000>;
+> +	};
+> +};
+> +
+> +&pinctrl_0 {
+> +	camera_flash_host: camera-flash-host {
+> +		samsung,pins = "gpj1-0";
+> +		samsung,pin-function = <1>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	camera_flash_isp: camera-flash-isp {
+> +		samsung,pins = "gpj1-0";
+> +		samsung,pin-function = <1>;
+> +		samsung,pin-val = <1>;
+> +	};
+> +};
 >
 
-[...]
 
-> +static int mhu_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct mhu_link *mlink = chan->con_priv;
-> +	u32 *arg = data;
-> +
-
-Arnd doesn't like this and had suggestions in some other thread.
-
-> +	writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mhu_startup(struct mbox_chan *chan)
-> +{
-> +	struct mhu_link *mlink = chan->con_priv;
-> +	u32 val;
-> +	int ret;
-> +
-> +	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
-> +	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
-> +
-> +	ret = request_irq(mlink->irq, mhu_rx_interrupt,
-> +			  IRQF_SHARED, "mhu_link", chan);
-
-Any reason we can't move this to probe and have {en,dis}able_irq here if
-needed. I has seen it was too heavy to have these especially when
-sending small packets.
-
-Regards,
-Sudeep
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
