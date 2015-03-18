@@ -1,30 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Revert "of: Fix premature bootconsole disable with 'stdout-path'"
-Date: Wed, 18 Mar 2015 08:05:58 -0500
-Message-ID: <CAL_JsqKOCy9gxC1xhVTY31agnE=gcRUQKWwLih4Q9UTUUSKkrg@mail.gmail.com>
-References: <1426625193-5055-1-git-send-email-peter@hurleysoftware.com> <1426654054.6504.2.camel@ellerman.id.au>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/3] mailbox: Add support for ST's Mailbox IP
+Date: Wed, 18 Mar 2015 13:12:26 +0000
+Message-ID: <20150318131226.GM3318@x1>
+References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+ <1425379283-1567-4-git-send-email-lee.jones@linaro.org>
+ <CAJe_Zhc1uLf_grsbzOs3ahJHJXXZ+BF__702mEPPL=SWPU5nzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426654054.6504.2.camel@ellerman.id.au>
+Content-Disposition: inline
+In-Reply-To: <CAJe_Zhc1uLf_grsbzOs3ahJHJXXZ+BF__702mEPPL=SWPU5nzw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pranith Kumar <bobby.prani@gmail.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 11:47 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> On Tue, 2015-03-17 at 16:46 -0400, Peter Hurley wrote:
->> This reverts commit 2fa645cb2703d9b3786d850db815414dfeefa51d.
->>
->> The assumption that at least 1 preferred console will be registered
->> when the stdout-path property is set is invalid, which can result
->> in _no_ consoles.
->>
->> Signed-off-by: Peter Hurley <peter@hurleysoftware.com>
->
-> Grant/Rob, in case you didn't see it, this has caused a panic on at least one
-> powerpc box. So would be nice if it could go in for 4.0.
+On Wed, 04 Mar 2015, Jassi Brar wrote:
+> On 3 March 2015 at 16:11, Lee Jones <lee.jones@linaro.org> wrote:
+>=20
+> > ---
+> >  drivers/mailbox/Kconfig       |   7 +
+> >  drivers/mailbox/Makefile      |   2 +
+> >  drivers/mailbox/mailbox-sti.c | 664 ++++++++++++++++++++++++++++++=
+++++++++++++
+> >  include/linux/mailbox_sti.h   | 128 ++++++++
 
-Yes, I'm well aware of it and it will go in this week.
+[...]
 
-Rob
+> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
+> > +{
+> > +       struct sti_mbox_dev_data *mbox =3D chan->con_priv;
+> > +       struct sti_mbox_data *md =3D &mbox->mdata;
+> > +       struct sti_mbox_device *mdev =3D mbox->parent;
+> > +       struct sti_mbox_attribute *p =3D mdev->cfg;
+> > +       void __iomem *base;
+> > +
+> > +       dev_info(mdev->dev, "Using Mbox (%x) %s: channel (%d)\n",
+> > +                mdev->id, mdev->name, mbox->chan_id);
+> > +
+> > +       base =3D mdev->mbox_reg_base + (p->num_inst * mbox->tx_inst=
+);
+> > +
+> > +       if ((!data) || (!sti_mbox_chan_is_tx(mbox)))
+> >
+> nit: too much protection.
+
+What makes you think that?
+
+[...]
+
+> > +                       mbox->irq =3D irq_create_mapping(mbinst->ir=
+q_domain,
+> > +                                                      mbox->rx_id)=
+;
+> >
+> simply assigning same IRQ to all controller DT nodes and using
+> IRQF_SHARED for the common handler, wouldn't work?
+
+I do have intentions to simplify this driver somewhat, but that will
+take some time as it will require a great deal of consultation and
+testing from the ST side.  This is the current internal implementation
+which is used in the wild and has been fully tested.  If you'll allow
+me to conduct my adaptions subsequently we can have full history and a
+possible reversion plan if anything untoward take place i.e. I mess
+something up.
+
+[...]
+
+> > + * struct sti_mbox_msg - sti mailbox message description
+> > + * @dsize:             data payload size
+> > + * @pdata:             message data payload
+> > + */
+> > +struct sti_mbox_msg {
+> > +       u32             dsize;
+> > +       u8              *pdata;
+> > +};
+> >
+> There isn't any client driver in this patchset to tell exactly, but i=
+t
+> seems the header could be split into one shared between mailbox
+> clients and provider and another internal to client/provider ?
+
+I believe only the above will be required by the client.  Seems silly
+to create a client specific header just for that, don't you think?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
