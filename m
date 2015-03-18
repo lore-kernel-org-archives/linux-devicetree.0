@@ -1,42 +1,45 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH_V3 2/3] dma: jz4780: add driver for the Ingenic JZ4780
- DMA controller
-Date: Wed, 18 Mar 2015 16:49:27 +0530
-Message-ID: <20150318111927.GJ32683@intel.com>
-References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1424954614-12589-3-git-send-email-Zubair.Kakakhel@imgtec.com>
- <20150316104646.GM32683@intel.com>
- <55086D68.1000303@imgtec.com>
+From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 1/3] of: Add vendor prefix 'netlogic'
+Date: Wed, 18 Mar 2015 17:20:28 +0530
+Message-ID: <1426679430-26134-2-git-send-email-jchandra@broadcom.com>
+References: <1426679430-26134-1-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55086D68.1000303@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex@alex-smith.me.uk
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426679430-26134-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 06:07:36PM +0000, Zubair Lutfullah Kakakhel wrote:
-> >> +static uint32_t jz4780_dma_transfer_size(unsigned long val, int *ord)
-> >> +{
-> >> +	*ord = ffs(val) - 1;
-> >> +
-> >> +	/* 8 byte transfer sizes unsupported so fall back on 4. */
-> > okay falling back is not a good idea, same applies for default in
-> > jz4780_dma_width(). The slave dma parameters are match with devices, so
-> > programming something which you dont support, falling back or using defaults
-> > is not a good idea
-> How bad of an idea is it and what is a better way?
-> I see similar stuff in imx-dma and dma-jz4740.
-> 
-> And my jz4740-mmc driver (I add jz4780 support and use it to test this dma driver mainly)
-> falls back on defaults after it requests a larger transfer size.
-Well emmc it might work, but consider you did fall back on audio playback,
-you will get crapped out audio, or a SPI transfer.
+From: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-That is why falling back causes issues, so right way would be return error
-and have driver fixed for it
+Add vendor name "netlogic" in vendor-prefixes.txt, which will be used for
+the Netlogic XLP and XLPII MIPS SoCs. These processors were from NetLogic
+Microsystems that is now a part of Broadcom Corporation.
 
+Signed-off-by: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389ca13..a718eb1 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -123,6 +123,7 @@ mxicy	Macronix International Co., Ltd.
+ national	National Semiconductor
+ neonode		Neonode Inc.
+ netgear	NETGEAR
++netlogic	Broadcom Corporation (formerly NetLogic Microsystems)
+ newhaven	Newhaven Display International
+ nintendo	Nintendo
+ nokia	Nokia
 -- 
-~Vinod
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
