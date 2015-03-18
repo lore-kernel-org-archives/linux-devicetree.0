@@ -1,168 +1,76 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH RESEND] iio: st-sensors: add support for lis3lv02d accelerometer
-Date: Wed, 18 Mar 2015 10:52:06 +0100
-Message-ID: <1426672326-6292-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
+Date: Wed, 18 Mar 2015 09:52:33 +0000
+Message-ID: <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
+References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
+ <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyungwon Hwang <human.hwang@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dh09.lee@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the LIS3LV02 accelerometer found in the
-ST Microelectronics Nomadik board series.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-I'm not giving up on this. I think the st-sensors driver should
-support this variant as its framework is way better than the misc
-driver. The other driver is anyway not even in the right subsystem.
----
- .../devicetree/bindings/iio/st-sensors.txt         |  1 +
- drivers/iio/accel/st_accel.h                       |  1 +
- drivers/iio/accel/st_accel_core.c                  | 81 ++++++++++++++++++++++
- drivers/iio/accel/st_accel_i2c.c                   |  4 ++
- 4 files changed, 87 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index a7a0a15913ad..d2aaca974531 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -23,6 +23,7 @@ standard bindings from pinctrl/pinctrl-bindings.txt.
- Valid compatible strings:
- 
- Accelerometers:
-+- st,lis3lv02dl-accel
- - st,lsm303dlh-accel
- - st,lsm303dlhc-accel
- - st,lis3dh-accel
-diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
-index fa9646034305..7ee9724b1428 100644
---- a/drivers/iio/accel/st_accel.h
-+++ b/drivers/iio/accel/st_accel.h
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include <linux/iio/common/st_sensors.h>
- 
-+#define LIS3LV02DL_ACCEL_DEV_NAME	"lis3lv02dl_accel"
- #define LSM303DLHC_ACCEL_DEV_NAME	"lsm303dlhc_accel"
- #define LIS3DH_ACCEL_DEV_NAME		"lis3dh"
- #define LSM330D_ACCEL_DEV_NAME		"lsm330d_accel"
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 53f32629283a..58d1d13d552a 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -129,6 +129,30 @@
- #define ST_ACCEL_3_IG1_EN_MASK			0x08
- #define ST_ACCEL_3_MULTIREAD_BIT		false
- 
-+/* CUSTOM VALUES FOR SENSOR 4 */
-+#define ST_ACCEL_4_WAI_EXP			0x3a
-+#define ST_ACCEL_4_ODR_ADDR			0x20
-+#define ST_ACCEL_4_ODR_MASK			0x30 /* DF1 and DF0 */
-+#define ST_ACCEL_4_ODR_AVL_40HZ_VAL		0x00
-+#define ST_ACCEL_4_ODR_AVL_160HZ_VAL		0x01
-+#define ST_ACCEL_4_ODR_AVL_640HZ_VAL		0x02
-+#define ST_ACCEL_4_ODR_AVL_2560HZ_VAL		0x03
-+#define ST_ACCEL_4_PW_ADDR			0x20
-+#define ST_ACCEL_4_PW_MASK			0xc0
-+#define ST_ACCEL_4_FS_ADDR			0x21
-+#define ST_ACCEL_4_FS_MASK			0x80
-+#define ST_ACCEL_4_FS_AVL_2_VAL			0X00
-+#define ST_ACCEL_4_FS_AVL_6_VAL			0X01
-+#define ST_ACCEL_4_FS_AVL_2_GAIN		IIO_G_TO_M_S_2(1024)
-+#define ST_ACCEL_4_FS_AVL_6_GAIN		IIO_G_TO_M_S_2(340)
-+#define ST_ACCEL_4_BDU_ADDR			0x21
-+#define ST_ACCEL_4_BDU_MASK			0x40
-+#define ST_ACCEL_4_DRDY_IRQ_ADDR		0x21
-+#define ST_ACCEL_4_DRDY_IRQ_INT1_MASK		0x04
-+#define ST_ACCEL_4_IG1_EN_ADDR			0x21
-+#define ST_ACCEL_4_IG1_EN_MASK			0x08
-+#define ST_ACCEL_4_MULTIREAD_BIT		true
-+
- static const struct iio_chan_spec st_accel_12bit_channels[] = {
- 	ST_SENSORS_LSM_CHANNELS(IIO_ACCEL,
- 			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-@@ -373,6 +397,63 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 		.multi_read_bit = ST_ACCEL_3_MULTIREAD_BIT,
- 		.bootime = 2,
- 	},
-+	{
-+		.wai = ST_ACCEL_4_WAI_EXP,
-+		.sensors_supported = {
-+			[0] = LIS3LV02DL_ACCEL_DEV_NAME,
-+		},
-+		.ch = (struct iio_chan_spec *)st_accel_12bit_channels,
-+		.odr = {
-+			.addr = ST_ACCEL_4_ODR_ADDR,
-+			.mask = ST_ACCEL_4_ODR_MASK,
-+			.odr_avl = {
-+				{ 40, ST_ACCEL_4_ODR_AVL_40HZ_VAL },
-+				{ 160, ST_ACCEL_4_ODR_AVL_160HZ_VAL, },
-+				{ 640, ST_ACCEL_4_ODR_AVL_640HZ_VAL, },
-+				{ 2560, ST_ACCEL_4_ODR_AVL_2560HZ_VAL, },
-+			},
-+		},
-+		.pw = {
-+			.addr = ST_ACCEL_4_PW_ADDR,
-+			.mask = ST_ACCEL_4_PW_MASK,
-+			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
-+			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
-+		},
-+		.enable_axis = {
-+			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
-+			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
-+		},
-+		.fs = {
-+			.addr = ST_ACCEL_4_FS_ADDR,
-+			.mask = ST_ACCEL_4_FS_MASK,
-+			.fs_avl = {
-+				[0] = {
-+					.num = ST_ACCEL_FS_AVL_2G,
-+					.value = ST_ACCEL_4_FS_AVL_2_VAL,
-+					.gain = ST_ACCEL_4_FS_AVL_2_GAIN,
-+				},
-+				[1] = {
-+					.num = ST_ACCEL_FS_AVL_6G,
-+					.value = ST_ACCEL_4_FS_AVL_6_VAL,
-+					.gain = ST_ACCEL_4_FS_AVL_6_GAIN,
-+				},
-+			},
-+		},
-+		.bdu = {
-+			.addr = ST_ACCEL_4_BDU_ADDR,
-+			.mask = ST_ACCEL_4_BDU_MASK,
-+		},
-+		.drdy_irq = {
-+			.addr = ST_ACCEL_4_DRDY_IRQ_ADDR,
-+			.mask_int1 = ST_ACCEL_4_DRDY_IRQ_INT1_MASK,
-+			.ig1 = {
-+				.en_addr = ST_ACCEL_4_IG1_EN_ADDR,
-+				.en_mask = ST_ACCEL_4_IG1_EN_MASK,
-+			},
-+		},
-+		.multi_read_bit = ST_ACCEL_4_MULTIREAD_BIT,
-+		.bootime = 2, /* guess */
-+	},
- };
- 
- static int st_accel_read_raw(struct iio_dev *indio_dev,
-diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
-index c7246bdd30b9..6b720c190b2d 100644
---- a/drivers/iio/accel/st_accel_i2c.c
-+++ b/drivers/iio/accel/st_accel_i2c.c
-@@ -21,6 +21,10 @@
- #ifdef CONFIG_OF
- static const struct of_device_id st_accel_of_match[] = {
- 	{
-+		.compatible = "st,lis3lv02dl-accel",
-+		.data = LIS3LV02DL_ACCEL_DEV_NAME,
-+	},
-+	{
- 		.compatible = "st,lsm303dlh-accel",
- 		.data = LSM303DLH_ACCEL_DEV_NAME,
- 	},
--- 
-1.9.3
+SGksCgpPbiAxOCBNYXJjaCAyMDE1IGF0IDA4OjE2LCBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdh
+bmdAc2Ftc3VuZy5jb20+IHdyb3RlOgo+ICsjZGVmaW5lIFJFRyhkc2ksIHJlZykgICgoZHNpKS0+
+cmVnX2Jhc2UgKyBkc2ktPmRyaXZlcl9kYXRhLT5yZWdzWyhyZWcpXSkKClRoaXMgc2VlbXMgbGlr
+ZSBhIGdvb2QgY2hhbmdlIGluIGdlbmVyYWwsIGJ1dCBwbGVhc2Ugc3BsaXQgaXQgdXA6IGl0Cm1h
+a2VzIGJpc2VjdGlvbiBtdWNoIGVhc2llciBpZiB5b3UgaGF2ZSBvbmUgcGF0Y2ggd2hpY2ggYWRk
+cyBubwpmdW5jdGlvbmFsaXR5IGFuZCBzaG91bGQgaGF2ZSBleGFjdGx5IHRoZSBzYW1lIGJlaGF2
+aW91ciwgYW5kIHRoZW4KYW5vdGhlciBwYXRjaCB3aGljaCBpbnRyb2R1Y2VzIHlvdXIgY2hhbmdl
+cy4KCj4gQEAgLTQzMSwxNSArNTc5LDExIEBAIHN0YXRpYyB1bnNpZ25lZCBsb25nIGV4eW5vc19k
+c2lfc2V0X3BsbChzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpLAo+ICAgICAgICAgdTE2IG07Cj4gICAg
+ICAgICB1MzIgcmVnOwo+Cj4gLSAgICAgICBjbGtfc2V0X3JhdGUoZHNpLT5wbGxfY2xrLCBkc2kt
+PnBsbF9jbGtfcmF0ZSk7Cj4gLQo+IC0gICAgICAgZmluID0gY2xrX2dldF9yYXRlKGRzaS0+cGxs
+X2Nsayk7Cj4gLSAgICAgICBpZiAoIWZpbikgewo+IC0gICAgICAgICAgICAgICBkZXZfZXJyKGRz
+aS0+ZGV2LCAiZmFpbGVkIHRvIGdldCBQTEwgY2xvY2sgZnJlcXVlbmN5XG4iKTsKPiAtICAgICAg
+ICAgICAgICAgcmV0dXJuIDA7Cj4gLSAgICAgICB9Cj4gLQo+IC0gICAgICAgZGV2X2RiZyhkc2kt
+PmRldiwgIlBMTCBpbnB1dCBmcmVxdWVuY3k6ICVsdVxuIiwgZmluKTsKPiArICAgICAgIC8qCj4g
+KyAgICAgICAgKiBUaGUgaW5wdXQgUExMIGNsb2NrIGZvciBNSVBJIERTSSBpbiBFeHlub3M1NDMz
+IHNlZW1zIHRvIGJlIGZpeGVkCj4gKyAgICAgICAgKiBieSBPU0MgQ0xLLgo+ICsgICAgICAgICov
+Cj4gKyAgICAgICBmaW4gPSAyNCAqIE1IWjsKCkVyLCBpcyB0aGlzIGFsd2F5cyB0cnVlIG9uIG90
+aGVyIHBsYXRmb3JtcyBhcyB3ZWxsPyBTaG91bGRuJ3QgdGhpcyBiZQphIHBhcnQgb2YgdGhlIERl
+dmljZVRyZWUgZGVzY3JpcHRpb24/Cgo+IEBAIC01MDksNyArNjU2LDcgQEAgc3RhdGljIGludCBl
+eHlub3NfZHNpX2VuYWJsZV9jbG9jayhzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQo+ICAgICAgICAg
+ZGV2X2RiZyhkc2ktPmRldiwgImhzX2NsayA9ICVsdSwgYnl0ZV9jbGsgPSAlbHUsIGVzY19jbGsg
+PSAlbHVcbiIsCj4gICAgICAgICAgICAgICAgIGhzX2NsaywgYnl0ZV9jbGssIGVzY19jbGspOwo+
+Cj4gLSAgICAgICByZWcgPSByZWFkbChkc2ktPnJlZ19iYXNlICsgRFNJTV9DTEtDVFJMX1JFRyk7
+Cj4gKyAgICAgICByZWcgPSByZWFkbChSRUcoZHNpLCBEU0lNX0NMS0NUUkxfUkVHKSk7CgpJbnN0
+ZWFkIG9mIHRoaXMgcmVhZGwoUkVHKCkpIHBhdHRlcm4geW91IGhhdmUgZXZlcnl3aGVyZSwgbWF5
+YmUgaXQKd291bGQgYmUgZWFzaWVyIHRvIGludHJvZHVjZSBhIGRzaV9yZWFkX3JlZyhkc2ksIHJl
+Z19lbnVtX3ZhbHVlKQpoZWxwZXIsIGFuZCB0aGUgc2FtZSBmb3Igd3JpdGVfcmVnLgoKPiBAQCAt
+MTcyMCwxOCArMTg3MywxNiBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lfcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FUFJPQkVfREVG
+RVI7Cj4gICAgICAgICB9Cj4KPiAtICAgICAgIGRzaS0+cGxsX2NsayA9IGRldm1fY2xrX2dldChk
+ZXYsICJwbGxfY2xrIik7Cj4gLSAgICAgICBpZiAoSVNfRVJSKGRzaS0+cGxsX2NsaykpIHsKPiAt
+ICAgICAgICAgICAgICAgZGV2X2luZm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgcGxsIGlucHV0
+IGNsb2NrXG4iKTsKPiAtICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihkc2ktPnBsbF9jbGsp
+Owo+IC0gICAgICAgICAgICAgICBnb3RvIGVycl9kZWxfY29tcG9uZW50Owo+IC0gICAgICAgfQo+
+IC0KPiAtICAgICAgIGRzaS0+YnVzX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJidXNfY2xrIik7
+Cj4gLSAgICAgICBpZiAoSVNfRVJSKGRzaS0+YnVzX2NsaykpIHsKPiAtICAgICAgICAgICAgICAg
+ZGV2X2luZm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgYnVzIGNsb2NrXG4iKTsKPiAtICAgICAg
+ICAgICAgICAgcmV0ID0gUFRSX0VSUihkc2ktPmJ1c19jbGspOwo+IC0gICAgICAgICAgICAgICBn
+b3RvIGVycl9kZWxfY29tcG9uZW50Owo+ICsgICAgICAgZHNpLT5jbGtzID0gZGV2bV9remFsbG9j
+KGRldiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZigqZHNpLT5jbGtz
+KSAqIGRzaS0+ZHJpdmVyX2RhdGEtPm51bV9jbGtzLAo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgR0ZQX0tFUk5FTCk7Cj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgZHNpLT5kcml2
+ZXJfZGF0YS0+bnVtX2Nsa3M7IGkrKykgewo+ICsgICAgICAgICAgICAgICBkc2ktPmNsa3NbaV0g
+PSBkZXZtX2Nsa19nZXQoZGV2LCBjbGtfbmFtZXNbaV0pOwo+ICsgICAgICAgICAgICAgICBpZiAo
+SVNfRVJSKGRzaS0+Y2xrc1tpXSkpIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfaW5m
+byhkZXYsICJmYWlsZWQgdG8gZ2V0IGRzaSBwbGwgaW5wdXQgY2xvY2tcbiIpOwoKVGhpcyBlcnJv
+ciBtZXNzYWdlIHNlZW1zIHdyb25nOyBpdCBzaG91bGQgY29udGFpbiB0aGUgbmFtZSBvZiB0aGUK
+YWN0dWFsIGZhaWxpbmcgY2xvY2suCgpDaGVlcnMsCkRhbmllbApfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
