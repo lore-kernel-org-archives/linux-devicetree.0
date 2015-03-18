@@ -1,63 +1,75 @@
-From: Jon Masters <jcm@redhat.com>
-Subject: Re: [REGRESSION] "of: Fix premature bootconsole disable with 'stdout-path'"
- breaks console on tty0
-Date: Wed, 18 Mar 2015 18:46:20 -0400
-Message-ID: <550A003C.4040100@redhat.com>
-References: <55070544.9010908@redhat.com> <550717A0.3060603@hurleysoftware.com> <55071D0C.2050700@redhat.com> <55071F87.1050706@hurleysoftware.com> <5507227D.8020408@redhat.com> <5507332B.5020504@hurleysoftware.com> <55085AFA.7070909@redhat.com> <550868AF.8050201@hurleysoftware.com> <5508C327.9020108@redhat.com> <550976EE.4020500@hurleysoftware.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
+ nodes
+Date: Thu, 19 Mar 2015 00:10:29 +0100
+Message-ID: <550A05E5.3050100@gmail.com>
+References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com> <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com> <20150318123012.GA3580@katana> <55097C46.9010605@gmail.com> <20150318140037.GE3580@katana>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <550976EE.4020500@hurleysoftware.com>
-Sender: stable-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150318140037.GE3580@katana>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On 18.03.2015 15:00, Wolfram Sang wrote:
+> On Wed, Mar 18, 2015 at 02:23:18PM +0100, Sebastian Hesselbarth wrote:
+>> Possible. But this change just makes i2c-mux-pinctrl honor status
+>> property at all. There is no functional change except it now allows
+>> you to disable any of the sub-busses.
+>
+> Actually, this is the feature I like. However, I wonder if we shouldn't
+> have that in the core, say in of_i2c_register_devices()?
 
-On 03/18/2015 09:00 AM, Peter Hurley wrote:
-> On 03/17/2015 08:13 PM, Jon Masters wrote:
+Hmm, looking at of_i2c_register_devices():
 
->>>> Can you be specific about your concerns? The license has already been
->>>> changed once (I instigated the request that lead to that change to drop
->>>> several pages of terse terms that used to cover the first few pages). I
->>>> have found the Microsoft team extremely responsive and amenable to
->>>> resolving issues, so if you would do us the service of articulating what
->>>> the concern is, I'll reach back out and get that addressed. I have a
->>>> direct line into their server and legal teams to discuss this issue.
->>>
->>> Well, I'm deducing somewhat here because the code that would use the
->>> SPCR table format has not been submitted. So I don't _know_ what license(s)
->>> you intend to submit with.
->>
->> Fair enough. I wrote an initial quick and dirty implementation of SPCR
->> parsing which I handed off to a colleague to cleanup. They are indeed
->> planning such a submission. So such an implementation does in fact exist
->> and there is an intent to submit.
-> 
-> I assumed that because I received no reply to my first email that this
-> effort had been abandoned, so I didn't bother to raise the technical
-> issues that plague the devicetree hack.
+	for_each_available_child_of_node(adap->dev.of_node, node)
+		of_i2c_register_device(adap, node);
 
-I apologize for that. These patches are currently being developed
-against an internal tree and we'll get them posted for review.
+already honors status properties by using for_each_available_foo.
+Therefore, i2c-core will also skip i2c device nodes disabled by
+status property.
 
->>> So if you and Microsoft have worked out some deal where Microsoft has
->>> licensed the SPCR spec to you under GPL v2 terms, then, great! there is no
->>> problem.
->>
->> I am willing to assist in brokering a discussion on this. But first we
->> should ascertain what is necessary here and articulate that succinctly.
-> 
-> The kernel source is licensed under GPL v2 (see ./COPYING), so contributions
-> are expected to be licensed under compatible terms.
+>> I agree that this driver still does not cope well with DYNAMIC_OF but
+>> neither did the former implementation. How about we settle this driver
+>> to this implementation now and wait for any maniac that wants to use it
+>> the way you are suggesting above?
+>
+> Sure. I don't want you to make this driver OF_DYNAMIC compatible. I just
+> thought it makes it harder, though, e.g. you allocate memory for the
+> number of active busses not the number of possibilities, so that would
+> have to be reverted by the "maniac". I am still at the glimpse level,
+> but what if we let the mux-pinctrl parse all the data (even for disabled
+> busses), but only the enabled ones will get a muxed adapter because this
+> is handled in of_i2c_register_devices()?
 
-Just a sidenote, that this is a data structure, not code. There are
-plenty of other specifications and standards that the kernel uses that
-are licensed under a variety of terms. The specific issue seems to be
-the potential for conflict over the patent language in that document as
-possibly pertaining to implementations, not the specific license of the
-document per se. I'll ping a few and get a conversation going.
+I am not too deep into i2c-core, but AFAIKS i2c-mux-pinctrl is not an
+i2c device but an i2c mux that is dealt with differently? It is not
+probed with of_i2c_register_devices() but as a separate platform_device
+with a reference to the parent i2c bus.
 
-Jon.
+About the memory allocation for the maximum potential number of muxes:
+We would need some way to distinguish disabled from enabled muxes in
+i2c-mux-pinctrl's platform_data.
+
+i2c_mux_pinctrl_probe() is basically DT-agnostic and it should
+definitely stay that way. Currently, each mux within pd->bus_count
+requires a non-NULL pd->pinctrl_states[i] otherwise _probe() will bail
+out for all sub-busses.
+
+We could rework it to
+
+(a) deal with each sub-bus individually with respect to 
+pinctrl_lookup_state() and i2c_add_mux_adapter()
+
+and
+
+(b) allow (and skip) muxes with pinctrl_states[i] == NULL for now and
+let the "maniac" deal with storing/re-probing the corresponding
+pinctrl_state name once it gets dynamically enabled.
+
+I am still not too eager working on it but if you insist, I can see
+what I can do as long as Stephen sticks with testing it on Tegra. ;)
+
+Sebastian
