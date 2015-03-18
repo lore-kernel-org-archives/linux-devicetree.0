@@ -1,66 +1,59 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v13 10/13] Documentation: leds: Add description of
- v4l2-flash sub-device
-Date: Wed, 18 Mar 2015 14:39:57 +0200
-Message-ID: <20150318123957.GH11954@valkosipuli.retiisi.org.uk>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
- <1426175114-14876-11-git-send-email-j.anaszewski@samsung.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: add function to get highest id of an alias
+ stem
+Date: Wed, 18 Mar 2015 13:46:31 +0100
+Message-ID: <20150318124631.GB3580@katana>
+References: <1426177093-26820-1-git-send-email-wsa@the-dreams.de>
+ <1426177093-26820-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426175114-14876-11-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+In-Reply-To: <1426177093-26820-2-git-send-email-wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bob Feretich <bob.feretich-8wbKi1faPaosQv5ZqcSHkQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
 
-On Thu, Mar 12, 2015 at 04:45:11PM +0100, Jacek Anaszewski wrote:
-> This patch extends LED Flash class documention by
-> the description of interactions with v4l2-flash sub-device.
-> 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Acked-by: Sakari Ailus <sakari.ailus@iki.fi>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> ---
->  Documentation/leds/leds-class-flash.txt |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/leds/leds-class-flash.txt b/Documentation/leds/leds-class-flash.txt
-> index 19bb673..8623413 100644
-> --- a/Documentation/leds/leds-class-flash.txt
-> +++ b/Documentation/leds/leds-class-flash.txt
-> @@ -20,3 +20,16 @@ Following sysfs attributes are exposed for controlling flash LED devices:
->  	- max_flash_timeout
->  	- flash_strobe
->  	- flash_fault
-> +
-> +A LED subsystem driver can be controlled also from the level of VideoForLinux2
-> +subsystem. In order to enable this CONFIG_V4L2_FLASH_LED_CLASS symbol has to
-> +be defined in the kernel config. The driver must call the v4l2_flash_init
-> +function to get registered in the V4L2 subsystem. On remove the
-> +v4l2_flash_release function has to be called (see <media/v4l2-flash.h>).
-> +
-> +After proper initialization a V4L2 Flash sub-device is created. The sub-device
-> +exposes a number of V4L2 controls, which allow for controlling a LED Flash class
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Over 80 characters per line.
+On Thu, Mar 12, 2015 at 05:17:58PM +0100, Wolfram Sang wrote:
+> I2C supports adding adapters using either a dynamic or fixed id. The
+> latter is provided by aliases in the DT case. To prevent id collisions
+> of those two types, install this function which gives us the highest
+> fixed id, so we can then let the dynamically created ones come after
+> this highest number.
+>=20
+> Signed-off-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
-With this fixed,
+Applied to for-next, thanks!
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-> +device with use of its internal kernel API.
-> +Opening the V4L2 Flash sub-device makes the LED subsystem sysfs interface
-> +unavailable. The interface is re-enabled after the V4L2 Flash sub-device
-> +is closed.
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Kind regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+iQIcBAEBAgAGBQJVCXOnAAoJEBQN5MwUoCm2oegP/0XwIzZWTdiQJRkOZnRPWR9s
+2RsaQ3qLeQhuPveezpztlTLELunG2Gd/tzr6Jg6wY45OxC4VJEbrAsh+3r226Iac
+WmSGnxWiGyu+zXMg6HGGhglSd75Q0Z/h8qIHtb77phw4c+q83XHeGdN6bjIZv3ED
+q0AtTYN+r8Yikd29xqCyEZXoyghqSacjyjkIN/s0R8Eka9QBVRDUKMKcJQt+IoCZ
+FII2SD/X7ODKdR6SJZSIR89B7jFhIPFuBeHLFmhaKD4YRa5LOSkJjl8XxdlmLiNn
+aX2US/jbKpCaqG8jwegOjV/BJHRzPB7hQDd6xbL7rm/3H2IhJCbKFAswRDGag3DM
+NG/FnDK8bHXtatbemfXW1oOpa3rLbtroXTwtlI2nz/1xCA6RJTL0Z+4w7m/tmgP2
+Op8Ngi//dfk0HLIUTvUyY09vQyP3DRDVwWl6cdjcebTAHrMzGYeCv+1R8n1lb/qt
+7XkBbmyI6meWprfd2OVKgAFw9Y3mhI9B9h2cG9CysTQLfZblGmTHSKKtUN/7txLg
+JQcOimi6jzhHjAyKH5DHMr6UcyJE+RxLDvM4KWF/1OYfRqIxZt+s8HM7uIxAhdV+
+tz/h7HV/XSna23yG6wLp75mKqiJur/uxHv60xjll2Q9sDRbm+z5CpiAkjdLR6+6O
+p2nPBmSkeTXh2T7sVM7T
+=ZQN+
+-----END PGP SIGNATURE-----
+
+--A6N2fC+uXW/VQSAv--
