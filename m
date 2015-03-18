@@ -1,7 +1,7 @@
 From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCH 5/5] arm-cci: Fix CCI PMU event validation
-Date: Wed, 18 Mar 2015 12:24:42 +0000
-Message-ID: <1426681482-23118-6-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 3/5] arm-cci: Get rid of secure transactions for PMU driver
+Date: Wed, 18 Mar 2015 12:24:40 +0000
+Message-ID: <1426681482-23118-4-git-send-email-suzuki.poulose@arm.com>
 References: <1426681482-23118-1-git-send-email-suzuki.poulose@arm.com>
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -14,89 +14,217 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 
-We mask the event with the CCI_PMU_EVENT_MASK, before passing
-the config to pmu_validate_hw_event(), which causes extra bits
-to be ignored and qualifies an invalid event code as valid.
+Avoid secure transactions while probing the CCI PMU. The
+existing code makes use of the Peripheral ID2 (PID2) register
+to determine the revision of the CCI400, which requires a
+secure transaction. This puts a limitation on the usage of the
+driver on systems running non-secure Linux(e.g, ARM64).
 
-e.g,
- $ perf stat -a -C 0 -e CCI_400/config=3D0x1ff,name=3Dcycles/ sleep 1
-   Performance counter stats for 'system wide':
+Updated the device-tree binding for cci pmu node to add the explicit
+revision number for the compatible field.
 
-         506951142      cycles
+The supported strings are :
+=09arm,cci-400-pmu,r0
+=09arm,cci-400-pmu,r1
+=09arm,cci-400-pmu - DEPRECATED. See NOTE below
 
-       1.013879626 seconds time elapsed
+NOTE: If the revision is not mentioned, we need to probe the cci revision,
+which could be fatal on a platform running non-secure. We need a reliable w=
+ay
+to know if we can poke the CCI registers at runtime on ARM32. We depend on
+'mcpm_is_available()' when it is available. mcpm_is_available() returns tru=
+e
+only when there is a registered driver for mcpm. Otherwise, we assume that =
+we
+don't have secure access, and skips probing the revision number(ARM64 case)=
+.
 
-where, cycles has an event coding of 0xff. This patch also removes
-the unnecessary 'event' mask in pmu_write_register, since the config_base
-is set by the pmu code after the event is validated.
+The MCPM should figure out if it is safe to access the CCI. Unfortunately
+there isn't a reliable way to indicate the same via dtb. This patch doesn't
+address/change the current situation. It only deals with the CCI-PMU, leavi=
+ng
+the assumptions about the secure access as it has been, prior to this patch=
+.
 
-Changes since V3:
- - Fix type for CCI_PMU_EVENT_MASK - Suggested-by: Will Deacon.
+Changes since V2:
+ - Use 'bool' instead of 'int' for platform_has_secure_cci_access().
+   (Suggested-by: Sudeep Holla)
 
+Cc: devicetree@vger.kernel.org
+Cc: Punit Agrawal <punit.agrawal@arm.com>
 Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
-Acked-by: Punit Agrawal <punit.agrawal@arm.com>
-Reviewed-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+Acked-by: Nicolas Pitre <nicolas.pitre@linaro.org>
 ---
- drivers/bus/arm-cci.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/arm/cci.txt |    7 +++--
+ arch/arm/include/asm/arm-cci.h                |   42 +++++++++++++++++++++=
+++++
+ arch/arm64/include/asm/arm-cci.h              |   27 ++++++++++++++++
+ drivers/bus/arm-cci.c                         |   17 +++++++++-
+ include/linux/arm-cci.h                       |    2 ++
+ 5 files changed, 92 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/include/asm/arm-cci.h
+ create mode 100644 arch/arm64/include/asm/arm-cci.h
 
+diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/=
+devicetree/bindings/arm/cci.txt
+index f28d82b..0e4b6a7 100644
+--- a/Documentation/devicetree/bindings/arm/cci.txt
++++ b/Documentation/devicetree/bindings/arm/cci.txt
+@@ -94,8 +94,11 @@ specific to ARM.
+ =09=09- compatible
+ =09=09=09Usage: required
+ =09=09=09Value type: <string>
+-=09=09=09Definition: must be "arm,cci-400-pmu"
+-
++=09=09=09Definition: Supported strings are :
++=09=09=09=09 "arm,cci-400-pmu,r0"
++=09=09=09=09 "arm,cci-400-pmu,r1"
++=09=09=09=09 "arm,cci-400-pmu"  - DEPRECATED, permitted only where OS has
++=09=09=09=09=09=09      secure acces to CCI registers
+ =09=09- reg:
+ =09=09=09Usage: required
+ =09=09=09Value type: Integer cells. A register entry, expressed
+diff --git a/arch/arm/include/asm/arm-cci.h b/arch/arm/include/asm/arm-cci.=
+h
+new file mode 100644
+index 0000000..fe77f7a
+--- /dev/null
++++ b/arch/arm/include/asm/arm-cci.h
+@@ -0,0 +1,42 @@
++/*
++ * arch/arm/include/asm/arm-cci.h
++ *
++ * Copyright (C) 2015 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __ASM_ARM_CCI_H
++#define __ASM_ARM_CCI_H
++
++#ifdef CONFIG_MCPM
++#include <asm/mcpm.h>
++
++/*
++ * We don't have a reliable way of detecting whether,
++ * if we have access to secure-only registers, unless
++ * mcpm is registered.
++ */
++static inline bool platform_has_secure_cci_access(void)
++{
++=09return mcpm_is_available();
++}
++
++#else
++static inline bool platform_has_secure_cci_access(void)
++{
++=09return false;
++}
++#endif
++
++#endif
+diff --git a/arch/arm64/include/asm/arm-cci.h b/arch/arm64/include/asm/arm-=
+cci.h
+new file mode 100644
+index 0000000..f0b6371
+--- /dev/null
++++ b/arch/arm64/include/asm/arm-cci.h
+@@ -0,0 +1,27 @@
++/*
++ * arch/arm64/include/asm/arm-cci.h
++ *
++ * Copyright (C) 2015 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __ASM_ARM_CCI_H
++#define __ASM_ARM_CCI_H
++
++static inline bool platform_has_secure_cci_access(void)
++{
++=09return false;
++}
++
++#endif
 diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index 054df84..b854125 100644
+index ae3864d..a23663c 100644
 --- a/drivers/bus/arm-cci.c
 +++ b/drivers/bus/arm-cci.c
-@@ -81,7 +81,7 @@ static const struct of_device_id arm_cci_matches[] =3D {
+@@ -217,7 +217,9 @@ static int probe_cci_revision(void)
 =20
- #define CCI_PMU_CNTR_MASK=09((1ULL << 32) -1)
-=20
--#define CCI_PMU_EVENT_MASK=09=090xff
-+#define CCI_PMU_EVENT_MASK=09=090xffUL
- #define CCI_PMU_EVENT_SOURCE(event)=09((event >> 5) & 0x7)
- #define CCI_PMU_EVENT_CODE(event)=09(event & 0x1f)
-=20
-@@ -179,12 +179,15 @@ enum cci400_perf_events {
- #define CCI_REV_R1_MASTER_PORT_MIN_EV=090x00
- #define CCI_REV_R1_MASTER_PORT_MAX_EV=090x11
-=20
--static int pmu_validate_hw_event(u8 hw_event)
-+static int pmu_validate_hw_event(unsigned long hw_event)
+ static const struct cci_pmu_model *probe_cci_model(struct platform_device =
+*pdev)
  {
- =09u8 ev_source =3D CCI_PMU_EVENT_SOURCE(hw_event);
- =09u8 ev_code =3D CCI_PMU_EVENT_CODE(hw_event);
- =09int if_type;
-=20
-+=09if (hw_event & ~CCI_PMU_EVENT_MASK)
-+=09=09return -ENOENT;
-+
- =09switch (ev_source) {
- =09case CCI_PORT_S0:
- =09case CCI_PORT_S1:
-@@ -258,7 +261,6 @@ static void pmu_enable_counter(int idx)
-=20
- static void pmu_set_event(int idx, unsigned long event)
- {
--=09event &=3D CCI_PMU_EVENT_MASK;
- =09pmu_write_register(event, idx, CCI_PMU_EVT_SEL);
+-=09return &cci_pmu_models[probe_cci_revision()];
++=09if (platform_has_secure_cci_access())
++=09=09return &cci_pmu_models[probe_cci_revision()];
++=09return NULL;
  }
 =20
-@@ -275,7 +277,7 @@ static int pmu_get_event_idx(struct cci_pmu_hw_events *=
-hw, struct perf_event *ev
- {
- =09struct cci_pmu *cci_pmu =3D to_cci_pmu(event->pmu);
- =09struct hw_perf_event *hw_event =3D &event->hw;
--=09unsigned long cci_event =3D hw_event->config_base & CCI_PMU_EVENT_MASK;
-+=09unsigned long cci_event =3D hw_event->config_base;
- =09int idx;
+ static int pmu_is_valid_counter(struct cci_pmu *cci_pmu, int idx)
+@@ -882,6 +884,15 @@ static struct cci_pmu_model cci_pmu_models[] =3D {
+ static const struct of_device_id arm_cci_pmu_matches[] =3D {
+ =09{
+ =09=09.compatible =3D "arm,cci-400-pmu",
++=09=09.data=09=3D NULL,
++=09},
++=09{
++=09=09.compatible =3D "arm,cci-400-pmu,r0",
++=09=09.data=09=3D &cci_pmu_models[CCI_REV_R0],
++=09},
++=09{
++=09=09.compatible =3D "arm,cci-400-pmu,r1",
++=09=09.data=09=3D &cci_pmu_models[CCI_REV_R1],
+ =09},
+ =09{},
+ };
+@@ -892,7 +903,11 @@ static inline const struct cci_pmu_model *get_cci_mode=
+l(struct platform_device *
+ =09=09=09=09=09=09=09pdev->dev.of_node);
+ =09if (!match)
+ =09=09return NULL;
++=09if (match->data)
++=09=09return match->data;
 =20
- =09if (cci_event =3D=3D CCI_PMU_CYCLES) {
-@@ -296,7 +298,7 @@ static int pmu_get_event_idx(struct cci_pmu_hw_events *=
-hw, struct perf_event *ev
- static int pmu_map_event(struct perf_event *event)
- {
- =09int mapping;
--=09u8 config =3D event->attr.config & CCI_PMU_EVENT_MASK;
-+=09unsigned long config =3D event->attr.config;
++=09dev_warn(&pdev->dev, "DEPRECATED compatible property,"
++=09=09=09 "requires secure access to CCI registers");
+ =09return probe_cci_model(pdev);
+ }
 =20
- =09if (event->attr.type < PERF_TYPE_MAX)
- =09=09return -ENOENT;
+diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
+index 79d6edf..aede5c7 100644
+--- a/include/linux/arm-cci.h
++++ b/include/linux/arm-cci.h
+@@ -24,6 +24,8 @@
+ #include <linux/errno.h>
+ #include <linux/types.h>
+=20
++#include <asm/arm-cci.h>
++
+ struct device_node;
+=20
+ #ifdef CONFIG_ARM_CCI
 --=20
 1.7.9.5
