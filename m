@@ -1,7 +1,7 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v6 3/6] clk: Change bcm clocks build dependency
-Date: Tue, 17 Mar 2015 22:45:19 -0700
-Message-ID: <1426657522-2473-4-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v6 6/6] clk: cygnus: remove Cygnus dummy clock binding
+Date: Tue, 17 Mar 2015 22:45:22 -0700
+Message-ID: <1426657522-2473-7-git-send-email-rjui@broadcom.com>
 References: <1426657522-2473-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,28 +12,54 @@ To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>,
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The clock code under drivers/clk/bcm now contains code for both the
-Broadcom mobile SoCs and the iProc SoCs. Change the the makefile
-dependency to be under config flag CONFIG_ARCH_BCM that's enabled for
-both families of SoCs
+Remove old Cygnus dummy clock binding document, as it's replaced by
+Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
 
 Signed-off-by: Ray Jui <rjui@broadcom.com>
 ---
- drivers/clk/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/clock/bcm-cygnus-clock.txt |   34 --------------------
+ 1 file changed, 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index d478ceb..1dde3c8 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -43,7 +43,7 @@ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
- obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
--obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
-+obj-$(CONFIG_ARCH_BCM)			+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
- obj-$(CONFIG_ARCH_HI3xxx)		+= hisilicon/
- obj-$(CONFIG_ARCH_HIP04)		+= hisilicon/
+diff --git a/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt b/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+deleted file mode 100644
+index 00d26ed..0000000
+--- a/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-Broadcom Cygnus Clocks
+-
+-This binding uses the common clock binding:
+-Documentation/devicetree/bindings/clock/clock-bindings.txt
+-
+-Currently various "fixed" clocks are declared for peripheral drivers that use
+-the common clock framework to reference their core clocks. Proper support of
+-these clocks will be added later
+-
+-Device tree example:
+-
+-	clocks {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		osc: oscillator {
+-			compatible = "fixed-clock";
+-			#clock-cells = <1>;
+-			clock-frequency = <25000000>;
+-		};
+-
+-		apb_clk: apb_clk {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <1000000000>;
+-		};
+-
+-		periph_clk: periph_clk {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <500000000>;
+-		};
+-	};
 -- 
 1.7.9.5
