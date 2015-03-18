@@ -1,75 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] irqchip: renesas-intc-irqpin: Add optional functional
- clock to bindings
-Date: Wed, 18 Mar 2015 20:55:42 +0300
-Message-ID: <5509BC1E.8050802@cogentembedded.com>
-References: <1426696644-25636-1-git-send-email-geert+renesas@glider.be>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH v2] add support for Freescale's MMA8653FC 10 bit accelerometer
+Date: Wed, 18 Mar 2015 19:02:08 +0100
+Message-ID: <5509BDA0.9000806@posteo.de>
+References: <1426694157-10866-1-git-send-email-martink@posteo.de>	 <2231139.ojeyer6qnI@ws-stein> <5509AAE5.1000503@posteo.de> <1426697978.6764.8.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426696644-25636-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1426697978.6764.8.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>
+Cc: Alexander Stein <alexander.stein@systec-electronic.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmitry.torokhov@gmail.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, linux-api@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Am 2015-03-18 um 17:59 schrieb Bastien Nocera:
+> On Wed, 2015-03-18 at 17:42 +0100, Martin Kepplinger wrote:
+>>
+> <snip>
+>> It could have gone to drivers/iio/accel if it would use an iio 
+>> interface, which would make more sense, you are right, but I simply 
+>> don't have the time to merge it in to iio.
+>>
+>> It doesn't use an input interface either but I don't see a good 
+>> place for an accelerometer that uses sysfs only.
+>>
+>> It works well, is a relatively recent chip and a clean dirver. But 
+>> this is all I can provide.
+> 
+> As a person who works on the user-space interaction of those with 
+> desktops [1]: Urgh.
+> 
+> I already have 3 (probably 4) types of accelerometers to contend with, 
+> I'm not fond of adding yet another type.
+> 
+> Is there any way to get this hardware working outside the SoCs it's 
+> designed for (say, a device with I2C like a Raspberry Pi), so that a 
+> kind soul could handle getting this using the right interfaces?
+> 
 
-On 03/18/2015 07:37 PM, Geert Uytterhoeven wrote:
+It works on basically any SoC and is in no way limited in this regard.
+Sure, userspace has to expicitely support it and I hear you. Using the
+iio interface would make more sense. I can only say I'd love to have the
+time to move this driver over. I'm very sorry.
 
-> This clock is managed since commit 705bc96c2c15313c ("irqchip:
-> renesas-intc-irqpin: Add minimal runtime PM support").
+> Cheers
+> 
+> [1]: https://github.com/hadess/iio-sensor-proxy
+> 
 
-> Also add an example while we're at.
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->   .../interrupt-controller/renesas,intc-irqpin.txt   | 29 ++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
-
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> index 4f7946ae8adcdc04..e7cfcec056159b93 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> @@ -25,3 +25,32 @@ Optional properties:
->     if different from the default 4 bits
->   - control-parent: disable and enable interrupts on the parent interrupt
->     controller, needed for some broken implementations
-> +- clocks: Must contain a reference to the functional clock.  The property is
-> +  mandatory if the hardware implements a controllable functional clock for
-> +  the irqpin controller instance.
-> +
-> +
-> +Example
-> +-------
-> +
-> +	irqpin1: irqpin@e6900004 {
-
-    The node name should be "interrupt-controller@e6900004".
-
-> +		compatible = "renesas,intc-irqpin-r8a7740",
-> +			     "renesas,intc-irqpin";
-> +		#interrupt-cells = <2>;
-> +		interrupt-controller;
-> +		reg = <0xe6900004 4>,
-> +			<0xe6900014 4>,
-> +			<0xe6900024 1>,
-> +			<0xe6900044 1>,
-> +			<0xe6900064 1>;
-> +		interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH
-> +			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-
-    Hm, 8 similar interrupts?
-
-> +		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
-> +		power-domains = <&pd_a4s>;
-> +	};
-
-WBR, Sergei
