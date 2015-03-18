@@ -1,54 +1,38 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v7 7/9] arm64: dts: exynos: Add I2S dt node for Exynos5433 SoC
-Date: Wed, 18 Mar 2015 09:17:34 +0900
-Message-ID: <1426637856-3730-8-git-send-email-cw00.choi@samsung.com>
-References: <1426637856-3730-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1426637856-3730-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene@kernel.org
-Cc: mark.rutland@arm.com, marc.zyngier@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, cw00.choi@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] clk: samsung: exynos5433: Fix wrong offset and remove
+ specific CONFIG_ARCH_EXYNOS5433
+Date: Wed, 18 Mar 2015 09:42:30 +0900
+Message-ID: <1426639352-6255-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Inha Song <ideal.song@samsung.com>
+This patch fixes the wrong offset of PCLK_MSCL_SECURE_SMMU_JPEG in CMU_MSCL
+domain and removes the specific CONFIG_ARCH_EXYNOS5433 instead use the
+CONFIG_ARCH_EXYNOS. Because Arnd Bergmann gave me a comment[1] that don't add
+specific CONFIG_ARCH_EXYNOS5433 for ARM-64bit SoC. So, I send the Exynos5433
+devicetree patch-set[2] without adding CONFIG_ARCH_EXYNOS5433.
 
-This patch adds I2S device tree node for Exynos5433 SoC.
-In Exynos5433 SoC, I2S0 is used for audio interface.
+[1] https://lkml.org/lkml/2015/2/24/85
+[2] [PATCH v7 0/9] arm64: Add the support for new Exynos5433 SoC
+    - https://lkml.org/lkml/2015/3/17/843
 
-Signed-off-by: Inha Song <ideal.song@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Inki Dae <inki.dae@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Chanwoo Choi (1):
+  clk: samsung: Use CONFIG_ARCH_EXYNOS instead of CONFIG_ARCH_EXYNOS5433
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 1155205..f6ae71c 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -475,6 +475,23 @@
- 			status = "disabled";
- 		};
- 
-+		i2s0: i2s0@11440000 {
-+			compatible = "samsung,exynos7-i2s";
-+			reg = <0x11440000 0x100>;
-+			dmas = <&adma 0 &adma 2>;
-+			dma-names = "tx", "rx";
-+			interrupts = <0 70 0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
-+				 <&cmu_aud CLK_SCLK_AUD_I2S>,
-+				 <&cmu_aud CLK_SCLK_I2S_BCLK>;
-+			clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2s0_bus>;
-+			status = "disabled";
-+		};
-+
- 		pinctrl_alive: pinctrl@10580000 {
- 			compatible = "samsung,exynos5433-pinctrl";
- 			reg = <0x10580000 0x1000>;
+Jonghwa Lee (1):
+  clk: samsung: exynos5433: Fix wrong offset of PCLK_MSCL_SECURE_SMMU_JPEG
+
+ drivers/clk/samsung/Makefile         | 2 +-
+ drivers/clk/samsung/clk-exynos5433.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 -- 
 1.8.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
