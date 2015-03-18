@@ -1,76 +1,32 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] of_net: factor out repetitive code from of_get_mac_address()
-Date: Wed, 18 Mar 2015 22:25:46 +0300
-Message-ID: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] of_net: factor out repetitive code from
+ of_get_mac_address()
+Date: Wed, 18 Mar 2015 15:29:33 -0400 (EDT)
+Message-ID: <20150318.152933.636562640494674435.davem@davemloft.net>
+References: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
 Sender: netdev-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-of_get_mac_address() basically does the same  thing thrice, every  time with  a
-different  property  name,  so it makes sense to factor out the repetitive code
-into separate function. While at it, we can start using ETH_ALEN instead of the
-bare number and drop unnecessary parens around the property length check.
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Date: Wed, 18 Mar 2015 22:25:46 +0300
 
-The resulting ARM object file is 100 bytes less in size than before the patch.
+> of_get_mac_address() basically does the same  thing thrice, every  time with  a
+> different  property  name,  so it makes sense to factor out the repetitive code
+> into separate function. While at it, we can start using ETH_ALEN instead of the
+> bare number and drop unnecessary parens around the property length check.
+> 
+> The resulting ARM object file is 100 bytes less in size than before the patch.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> The patch is against Grant Likely's 'linux.git' repo's 'devicetree/next' branch.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-The patch is against Grant Likely's 'linux.git' repo's 'devicetree/next' branch.
-
- drivers/of/of_net.c |   29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-Index: linux/drivers/of/of_net.c
-===================================================================
---- linux.orig/drivers/of/of_net.c
-+++ linux/drivers/of/of_net.c
-@@ -38,6 +38,15 @@ int of_get_phy_mode(struct device_node *
- }
- EXPORT_SYMBOL_GPL(of_get_phy_mode);
- 
-+static const void *of_get_mac_addr(struct device_node *np, const char *name)
-+{
-+	struct property *pp = of_find_property(np, name, NULL);
-+
-+	if (pp && pp->length == ETH_ALEN && is_valid_ether_addr(pp->value))
-+		return pp->value;
-+	return NULL;
-+}
-+
- /**
-  * Search the device tree for the best MAC address to use.  'mac-address' is
-  * checked first, because that is supposed to contain to "most recent" MAC
-@@ -58,20 +67,16 @@ EXPORT_SYMBOL_GPL(of_get_phy_mode);
- */
- const void *of_get_mac_address(struct device_node *np)
- {
--	struct property *pp;
-+	const void *addr;
- 
--	pp = of_find_property(np, "mac-address", NULL);
--	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
--		return pp->value;
-+	addr = of_get_mac_addr(np, "mac-address");
-+	if (addr)
-+		return addr;
- 
--	pp = of_find_property(np, "local-mac-address", NULL);
--	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
--		return pp->value;
-+	addr = of_get_mac_addr(np, "local-mac-address");
-+	if (addr)
-+		return addr;
- 
--	pp = of_find_property(np, "address", NULL);
--	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
--		return pp->value;
--
--	return NULL;
-+	return of_get_mac_addr(np, "address");
- }
- EXPORT_SYMBOL(of_get_mac_address);
+Acked-by: David S. Miller <davem@davemloft.net>
