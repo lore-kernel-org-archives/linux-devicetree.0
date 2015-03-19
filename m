@@ -1,103 +1,130 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 2/2] pinctrl: driver for Conexant Digicolor CX92755 pin
- mapping
-Date: Thu, 19 Mar 2015 11:12:01 +0200
-Message-ID: <20150319091201.GA2415@tarshish>
-References: <1e256c7c4e35bb5bed79a2d2f1c8497b3b73ab74.1426519305.git.baruch@tkos.co.il>
- <2c75fb4c925dc318fd7c5db73315a7ac5822c8ce.1426519305.git.baruch@tkos.co.il>
- <CACRpkdY2bZf7eZn_jhb3r96SNk4W4miUa-thr1X5wPPZ1mfZUQ@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] mailbox: Add support for ST's Mailbox IP
+Date: Thu, 19 Mar 2015 09:17:42 +0000
+Message-ID: <20150319091742.GX3318@x1>
+References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+ <1425379283-1567-4-git-send-email-lee.jones@linaro.org>
+ <3926609.Ff6LCkuuMX@wuerfel>
+ <CAJe_ZhdjPa3C_TUDAPA3fS3K83FGB-GaAjVBjtsow2mp5h8NRw@mail.gmail.com>
+ <20150318131722.GN3318@x1>
+ <CABb+yY0wmy+oYUsVkStrMVmfGjvedDPn+wsN_yjvdMRQoVEHOg@mail.gmail.com>
+ <20150318153421.GP3318@x1>
+ <CABb+yY0HufMEDy7ANj8KV0hamvM-Tgy4GBkwD73wm3DMumcbaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdY2bZf7eZn_jhb3r96SNk4W4miUa-thr1X5wPPZ1mfZUQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jonathan Ben Avraham <yba@tkos.co.il>, Mike Green <Mike.Green@conexant.com>
+In-Reply-To: <CABb+yY0HufMEDy7ANj8KV0hamvM-Tgy4GBkwD73wm3DMumcbaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Thu, 19 Mar 2015, Jassi Brar wrote:
 
-On Wed, Mar 18, 2015 at 01:33:02PM +0100, Linus Walleij wrote:
-> On Mon, Mar 16, 2015 at 4:21 PM, Baruch Siach <baruch@tkos.co.il> wrote:
-> 
-> > This adds pinctrl and gpio driver to the CX92755 SoC "General Purpose Pin
-> > Mapping" hardware block. The CX92755 is one SoC from the Conexant Digicolor
-> > series. Pin mapping hardware supports configuring pins as either GPIO, or up to
-> > 3 other "client select" functions. This driver adds support for pin muxing
-> > using the generic device tree binding, and a basic gpiolib driver for the GPIO
-> > functionality.
+> On Wed, Mar 18, 2015 at 9:04 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> > On Wed, 18 Mar 2015, Jassi Brar wrote:
 > >
-> > This driver does not currently support GPIO interrupts, and pad configuration.
+> >> On Wed, Mar 18, 2015 at 6:47 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
+wrote:
+> >> > On Tue, 03 Mar 2015, Jassi Brar wrote:
+> >> >
+> >> >> On 3 March 2015 at 17:04, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> >> >> > On Tuesday 03 March 2015 10:41:23 Lee Jones wrote:
+> >> >> >> +
+> >> >> >> +/*
+> >> >> >> + * struct sti_mbox_msg - sti mailbox message description
+> >> >> >> + * @dsize:             data payload size
+> >> >> >> + * @pdata:             message data payload
+> >> >> >> + */
+> >> >> >> +struct sti_mbox_msg {
+> >> >> >> +       u32             dsize;
+> >> >> >> +       u8              *pdata;
+> >> >> >> +};
+> >> >> >
+> >> >> > As mentioned in another thread, we may just want to add a 'si=
+ze'
+> >> >> > argument to the message send function, and a default helper f=
+or
+> >> >> > messages with size of 32 bits.
+> >> >> >
+> >> >> Case-a) 'size' is a member of the payload structure itself
+> >> >>     The extra 'size' argument would only be used for sanity che=
+ck.
+> >> >>     This driver seems so. Lee, can you not do without 'dsize'?
+> >> >>
+> >> >> Case-b) 'size' is not a member of payload structure:
+> >> >>      b1)  payload is fixed length, that is 'size' :=3D sizeof(s=
+truct my_payload)
+> >> >>             Here the size argument is redundant.
+> >> >>
+> >> >>      b2)  payload length varies
+> >> >>             This case is highly unlikely because there would be=
+ no way
+> >> >> for remote to know how many bytes to read as the payload. Not t=
+o mean
+> >> >> we can't do without the 'size' argument.
+> >> >>
+> >> >> Your opinion has huge weight, but I would like to be enlightene=
+d
+> >> >> before agreeing.
+> >> >
+> >> > Let's simplify this.
+> >> >
+> >> > If you want to have varying length payloads, you have to carry t=
+he
+> >> > size in the payload.  If you wish to force fixed size payloads, =
+then
+> >> > you may do without a size segment.
+> >> >
+> >> > Do you really want to force all users of Mailbox to use fixed si=
+ze
+> >> > payloads?
+> >> >
+> >> No. I only observed the fact that every known mailbox controller
+> >> driver already has a way to figure out the payload length because
+> >> either the protocol uses fixed length payloads or has the 'size' f=
+ield
+> >> in every payload.
+> >> I am yet to see a platform that uses both, then the 'size' argumen=
+t
+> >> will be helpful but still not necessary.
 > >
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> 
-> (...)
-> 
-> > +struct dc_pinmap {
-> > +       void __iomem            *regs;
-> > +       struct device           *dev;
-> > +       struct pinctrl_dev      *pctl;
-> > +
-> > +       struct pinctrl_pin_desc *pins;
-> 
-> Instead of storing just an array of pinctrl_pin_desc
-> use the .pins in struct pinctrl_desc and store a pointer
-> to your struct pinctrl_desc in this state container.
+> > I see.  So your real concern is that controllers shouldn't have two
+> > means of obtaining size.
+> >
+> I think right now there's not much need to expand the api for 'u32'
+> sized payloads.
+>=20
+> > Arnd's idea of placing the message size as part of the send_message=
+()
+> > call is fine, but it's still going to end up in the payload isn't i=
+t?
+> >
+> ... or it will be implied by sizeof(struct my_packet) if the protocol
+> has finite set of payloads.
+>=20
+> > And what about receiving?
+> >
+> Similar to sending - controller driver passes pointer to RX buffer
+> which the client parses. Remember the protocol would already have a
+> way to communicate payload length.
 
-Good point. Will do.
+So this is the bit that's getting me.  How do you pass payload length
+to the remote processor if you don't have it in the payload?  Unless
+we are using cross-terminology of course.  I'm thinking that the
+payload is the entire message sent to the remote proc i.e:
+[[ size ][ data]].
 
-> > +       const char              *pin_names[PINS_COUNT];
-> 
-> This duplicates names that should already be in the
-> .pins array in struct pinctrl_desc, don't do that.
-
-The .get_function_groups callback in pinmux_ops expect a char array pointer in 
-*groups. That is currently implemented as
-
-	*groups = pmap->pin_names;
-	*num_groups = PINS_COUNT;
-
-How can I implement that without a persistent char pointers array, where all I 
-have is the .name fields scattered in a big pinctrl_pin_desc array?
-
-> > +       struct gpio_chip        chip;
-> > +       spinlock_t              lock;
-> > +};
-> 
-> > +static const char *dc_get_group_name(struct pinctrl_dev *pctldev,
-> > +                                    unsigned selector)
-> > +{
-> > +       struct dc_pinmap *pmap = pinctrl_dev_get_drvdata(pctldev);
-> > +
-> > +       return pmap->pin_names[selector];
-> > +}
-> 
-> Add some comment explaining that you have exactly one group per pin.
-
-OK.
-
-> You are also re-implementing the .pins field in struct pinctrl_desc
-> where each pin is described by a struct pinctrl_pin_desc with
-> special macros available to define them and all.
-> 
-> If you want to have one group per pin named like this
-> why not just
-> 
-> return pmap->desc->pins[selector].name;
-> 
-> ?
-
-I had to have the char pointers array anyway, as explained above. If you have 
-a better suggestion to that problem I will happily implement it as you suggest 
-here.
-
-Thanks for reviewing, and for applying all my other little documentation 
-update patches.
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
