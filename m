@@ -1,54 +1,43 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: driver for the Conexant Digicolor I2C
- controller
-Date: Thu, 19 Mar 2015 16:23:45 +0100
-Message-ID: <20150319152345.GB7657@katana>
-References: <7f61d9379c89db43f5b7f65c408433dd0d82a88a.1426763807.git.baruch@tkos.co.il>
- <fcd782e43c6f038c853772d3b6f23e4d9d6d3cc8.1426763807.git.baruch@tkos.co.il>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Thu, 19 Mar 2015 15:26:06 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com>
+References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fcd782e43c6f038c853772d3b6f23e4d9d6d3cc8.1426763807.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150317103806.GU8656@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Hiroshi DOYU <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 17 Mar 2015, Russell King - ARM Linux wrote:
 
---hQiwHBbRI9kgIhsi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Mar 17, 2015 at 01:32:21AM -0700, Paul Walmsley wrote:
+> >  Required properties:
+> >  - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
+> > -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
+> > -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
+> > -  tegra132, or tegra210.
+> > -- reg : Should contain 1 register ranges(address and length)
+> > +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124, must
+> > +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra114
+> > +  or tegra124.  For Tegra132, the compatible string must contain
+> > +  "nvidia,tegra132-ahb".
+> > +
+> > +- reg : Should contain 1 register ranges(address and length).  On Tegra20,
+> > +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
+> > +  address of the IP block must end in 0x04.  On DT files for later chips, the
+> > +  actual hardware base address of the IP block should be used.
+> 
+> You could check that in the driver.  If you can check it in the driver,
+> you can also decide to ignore it if it were offset by 0x04 (possibly
+> printing a warning.)  That opens up the ability to fix the older Tegra
+> DT files going forward while still remaining compatible with existing
+> DT files, and avoiding the need for a complex note about this.
 
-On Thu, Mar 19, 2015 at 01:16:47PM +0200, Baruch Siach wrote:
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+That's fine, I'll do that and drop this patch.
 
-I fixed two remaining 'check' issues with spaces around operators.
-
-Applied to for-next, thanks!
-
-
---hQiwHBbRI9kgIhsi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVCuoBAAoJEBQN5MwUoCm21C8P/ia9k5cEayfcZjcutcAdipfL
-fQiODYa/+bzJPINVE8M1hRbaB+TcGL7TGYrRkrunr6qxZ5Q03p2AMGoUkoCqIqte
-MMZkWEDOXeQgDCejSKxmXS33awbzQ58wJyVOF7vUj+rpuvVQYtzelcHxgd8fgjWZ
-r2QKVhup+4vi7RzQmMlwUefvxI0+Z4DYXoKWza5kCespusf1Ix+LTRXeR5AQYAZ/
-2IhhlHM4Y4/dFWRDlCW/EoSl2glL02LxCXGvmJLzNn/s2SB58fKQ2RnwyP/HNULv
-ny9Ocn0F4C3rEuRlDqdOXFLDUsVrwjcDOtH9ZvR9EHlaWyI670iFHfqn4p/aw2g6
-q2u3vEeldxbEQhQPuTOf2f6KXy9uljgqzHnJY2/B7LNxUlR4IxAmBzwuqpMKfV/V
-yQ2l7m9QvPr7OCa5FjJ02AAoeuNwt3RGsbNZlz5vTm9+LA73zjjydpLRhp3rW6RE
-yemwp9NPN8drnztrg08/aWiisWPcwXmT0YuBGcwYUsjOA4AZ2HZYpHcCd9lIPKw+
-79lyNHc7seZEyjjt4UJUrjNgS4S2z/6PumgCFvN/4yVDuX1q12tStLn6c3n8lOms
-XhAZoPPKEzWIHVrikJWkQb4dXcuzOTc+mLMtLVu7zKGYMxGbkQz+Jlu9N6qPjqTi
-vV3vlLBRVXKxGXBtKchR
-=LgJo
------END PGP SIGNATURE-----
-
---hQiwHBbRI9kgIhsi--
+- Paul
