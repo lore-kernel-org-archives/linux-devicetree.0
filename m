@@ -1,119 +1,101 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH V2 7/8] ARM: cpuidle: Register per cpuidle device
-Date: Thu, 19 Mar 2015 09:31:12 -0600
-Message-ID: <20150319153112.GA589@linaro.org>
-References: <1426704372-20406-1-git-send-email-daniel.lezcano@linaro.org>
- <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Thu, 19 Mar 2015 15:33:13 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503191528570.9480@utopia.booyaka.com>
+References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <550859A0.9090500@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rjw@rjwysocki.net, lorenzo.pieralisi@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550859A0.9090500-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18 2015 at 12:46 -0600, Daniel Lezcano wrote:
->Some architectures have some cpus which does not support idle states.
->
->Let the underlying low level code to return -ENOSYS when it is not
->possible to set an idle state.
->
->Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->---
-> drivers/cpuidle/cpuidle-arm.c | 45 +++++++++++++++++++++++++++++++++++++++++--
-> 1 file changed, 43 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
->index 1c94b88..0682ed0 100644
->--- a/drivers/cpuidle/cpuidle-arm.c
->+++ b/drivers/cpuidle/cpuidle-arm.c
->@@ -17,11 +17,14 @@
-> #include <linux/kernel.h>
-> #include <linux/module.h>
-> #include <linux/of.h>
->+#include <linux/slab.h>
->
-> #include <asm/cpuidle.h>
->
-> #include "dt_idle_states.h"
->
->+static DEFINE_PER_CPU(struct cpuidle_device, *cpuidle_arm_dev);
+On Tue, 17 Mar 2015, Stephen Warren wrote:
 
-Is a per-cpu variable needed? There seems to be no per-cpu access, other
-than at init.
+> On 03/17/2015 02:32 AM, Paul Walmsley wrote:
+> > For Tegra132 and later chips, we can now use the correct hardware base
+> > address for the Tegra AHB IP block in the DT data.  Update the DT binding
+> > documentation to reflect this change.
+> 
+> > diff --git
+> > a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+> > b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+> > index 067c979..7692b4c 100644
+> > --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+> > +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+> > @@ -2,10 +2,15 @@ NVIDIA Tegra AHB
+> > 
+> >   Required properties:
+> >   - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
+> > -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
+> > -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
+> > -  tegra132, or tegra210.
+> > -- reg : Should contain 1 register ranges(address and length)
+> > +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124,
+> > must
+> > +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is
+> > tegra114
+> > +  or tegra124.  For Tegra132, the compatible string must contain
+> > +  "nvidia,tegra132-ahb".
+> > +
+> > +- reg : Should contain 1 register ranges(address and length).  On Tegra20,
+> > +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
+> > +  address of the IP block must end in 0x04.  On DT files for later chips,
+> > the
+> > +  actual hardware base address of the IP block should be used.
+> 
+> A table-based approach rather than prose might make this more legible?
+> 
+> - compatible: Must contain the following:
+>   Tegra20:  "nvidia,tegra20-ahb"
+>   Tegra30:  "nvidia,tegra30-ahb"
+>   Tegra114: "nvidia,tegra114-ahb", "nvidia,tegra30-ahb"
+>   Tegra124: "nvidia,tegra124-ahb", "nvidia,tegra30-ahb"
+>   Tegra132: "nvidia,tegra132-ahb"
+>   Tegra210: "nvidia,tegra210-ahb", "nvidia,tegra132-ahb"
+> 
+> With any luck, we can extend that final item for future chips to be:
+> 
+>   Tegra210, TegraNNN:
+>             "nvidia,tegra<chip>-ahb", "nvidia,tegra132-ahb"
+> 
+> Perhaps we format the 114/124 entry that way too.
 
->+
-> /*
->  * arm_enter_idle_state - Programs CPU to enter the specified state
->  *
->@@ -94,6 +97,7 @@ static int __init arm_idle_init(void)
-> {
-> 	int cpu, ret;
-> 	struct cpuidle_driver *drv = &arm_idle_driver;
->+	struct cpuidle_device *dev;
->
-> 	/*
-> 	 * Initialize idle states data, starting at index 1.
->@@ -105,18 +109,55 @@ static int __init arm_idle_init(void)
-> 	if (ret <= 0)
-> 		return ret ? : -ENODEV;
->
->+	ret = cpuidle_register_driver(drv);
->+	if (ret) {
->+		pr_err("Failed to register cpuidle driver\n");
->+		return ret;
->+	}
->+
-> 	/*
-> 	 * Call arch CPU operations in order to initialize
-> 	 * idle states suspend back-end specific data
-> 	 */
-> 	for_each_possible_cpu(cpu) {
-> 		ret = arm_cpuidle_init(cpu);
->+
->+		/* This cpu does not support any idle states */
->+		if (ret == -ENOSYS)
->+			continue;
->+
-> 		if (ret) {
-> 			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
->-			return ret;
->+			goto out_fail;
->+		}
->+
->+		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
->+		if (!dev) {
->+			pr_err("Failed to allocate cpuidle device\n");
->+			goto out_fail;
->+		}
->+
->+		dev->cpu = cpu;
->+		per_cpu(cpuidle_arm_dev, cpu) = dev;
->+
->+		ret = cpuidle_register_device(dev);
->+		if (ret) {
->+			pr_err("Failed to register cpuidle device for CPU %d\n",
->+			       cpu);
->+			kfree(dev);
->+			goto out_fail;
-> 		}
-> 	}
->+out:
->+	return ret;
->
->-	return cpuidle_register(drv, NULL);
->+out_fail:
->+	for (cpu--; cpu <= 0; cpu--) {
->+		dev = per_cpu(cpuidle_arm_dev, cpu);
->+		cpuidle_unregister_device(dev);
->+		kfree(dev);
->+	}
->+	cpuidle_unregister_driver(drv);
->+	goto out;
-> }
-> device_initcall(arm_idle_init);
->-- 
->1.9.1
->
+I think I'm just going to drop this patch, since Russell prefers that the 
+workaround is applied in the driver.
+
+With regards to using tables rather than narrative descriptions: perhaps 
+consider a patch to 
+Documentation/devicetree/bindings/submitting-patches.txt ?  I don't know 
+what the DT binding documentation maintainers' future plans are with 
+regards to automated documentation reflow, etc., but submitting a patch 
+there would stimulate at least some coordination on the issue.
+
+> As a historical note, I thought this issue might have been caused by the HW
+> lumping together a bunch of vaguely related features into the same address
+> window, with offset 0 being unrelated to AHB. This is certainly the
+> explanation for some other interesting reg value in DT on other HW modules in
+> Tegra. However as best I can tell that isn't the case for this HW module; we
+> just mapped the start of the reg value to the first defined register for some
+> reason rather than aligning it with the entry in the address map. So, this
+> series makes sense to me.
+> 
+> The series,
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> (it'd be nice if the DT doc was modified as I described above, but not
+> strictly necessary. I like Russell's ideas how to make this more
+> transparent/automatic so old DTs can be converted too).
+
+I'll add the ack on the first patch, but since the second one has been 
+changed, I won't add one there yet.
+
+
+- Paul
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
