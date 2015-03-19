@@ -1,147 +1,64 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V2 7/8] ARM: cpuidle: Register per cpuidle device
-Date: Thu, 19 Mar 2015 12:27:20 +0100
-Message-ID: <550AB298.6040907@linaro.org>
-References: <1426704372-20406-1-git-send-email-daniel.lezcano@linaro.org> <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org> <20150319110806.GE24556@red-moon>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: brcmstb: add nodes for SATA controller
+ and PHY
+Date: Thu, 19 Mar 2015 14:33:32 +0300
+Message-ID: <550AB40C.8060607@cogentembedded.com>
+References: <1426728222-8197-1-git-send-email-computersforpeace@gmail.com> <1426728222-8197-5-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150319110806.GE24556@red-moon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426728222-8197-5-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 12:08 PM, Lorenzo Pieralisi wrote:
-> On Wed, Mar 18, 2015 at 06:46:11PM +0000, Daniel Lezcano wrote:
->> Some architectures have some cpus which does not support idle states=
-=2E
->>
->> Let the underlying low level code to return -ENOSYS when it is not
->> possible to set an idle state.
->
-> http://www.spinics.net/lists/linux-acpi/msg55550.html
->
-> -ENXIO ?
+Hello.
 
-Ack, it makes more sense.
+On 3/19/2015 4:23 AM, Brian Norris wrote:
 
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
->>   drivers/cpuidle/cpuidle-arm.c | 45 +++++++++++++++++++++++++++++++=
-++++++++++--
->>   1 file changed, 43 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle=
--arm.c
->> index 1c94b88..0682ed0 100644
->> --- a/drivers/cpuidle/cpuidle-arm.c
->> +++ b/drivers/cpuidle/cpuidle-arm.c
->> @@ -17,11 +17,14 @@
->>   #include <linux/kernel.h>
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->> +#include <linux/slab.h>
->>
->>   #include <asm/cpuidle.h>
->>
->>   #include "dt_idle_states.h"
->>
->> +static DEFINE_PER_CPU(struct cpuidle_device, *cpuidle_arm_dev);
->> +
->>   /*
->>    * arm_enter_idle_state - Programs CPU to enter the specified stat=
-e
->>    *
->> @@ -94,6 +97,7 @@ static int __init arm_idle_init(void)
->>   {
->>   	int cpu, ret;
->>   	struct cpuidle_driver *drv =3D &arm_idle_driver;
->> +	struct cpuidle_device *dev;
->>
->>   	/*
->>   	 * Initialize idle states data, starting at index 1.
->> @@ -105,18 +109,55 @@ static int __init arm_idle_init(void)
->>   	if (ret <=3D 0)
->>   		return ret ? : -ENODEV;
->>
->> +	ret =3D cpuidle_register_driver(drv);
->> +	if (ret) {
->> +		pr_err("Failed to register cpuidle driver\n");
->> +		return ret;
->> +	}
->> +
->>   	/*
->>   	 * Call arch CPU operations in order to initialize
->>   	 * idle states suspend back-end specific data
->>   	 */
->>   	for_each_possible_cpu(cpu) {
->>   		ret =3D arm_cpuidle_init(cpu);
->> +
->> +		/* This cpu does not support any idle states */
->> +		if (ret =3D=3D -ENOSYS)
->> +			continue;
->> +
->>   		if (ret) {
->>   			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
->> -			return ret;
->> +			goto out_fail;
->> +		}
->> +
->> +		dev =3D kzalloc(sizeof(*dev), GFP_KERNEL);
->> +		if (!dev) {
->> +			pr_err("Failed to allocate cpuidle device\n");
->> +			goto out_fail;
->> +		}
->> +
->> +		dev->cpu =3D cpu;
->> +		per_cpu(cpuidle_arm_dev, cpu) =3D dev;
->> +
->> +		ret =3D cpuidle_register_device(dev);
->> +		if (ret) {
->> +			pr_err("Failed to register cpuidle device for CPU %d\n",
->> +			       cpu);
->> +			kfree(dev);
->> +			goto out_fail;
->>   		}
->>   	}
->> +out:
->> +	return ret;
->
-> return 0;
->
->>
->> -	return cpuidle_register(drv, NULL);
->> +out_fail:
->> +	for (cpu--; cpu <=3D 0; cpu--) {
->
-> This loop is wrong.
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Light dependency on:
+>    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331921.html
+> for the surrounding text.
 
-Why is it wrong ? We have to initialize at cpu - 1 to unregister the=20
-previous registered cpu, not the current one, no ?
+>   arch/arm/boot/dts/bcm7445.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
 
->> +		dev =3D per_cpu(cpuidle_arm_dev, cpu);
->> +		cpuidle_unregister_device(dev);
->> +		kfree(dev);
->> +	}
->> +	cpuidle_unregister_driver(drv);
->> +	goto out;
->
-> You just:
->
-> return ret;
->
-> little point in jumping around to just return.
+> diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
+> index 9eaeac8dce1b..7a7c4d8c2afe 100644
+> --- a/arch/arm/boot/dts/bcm7445.dtsi
+> +++ b/arch/arm/boot/dts/bcm7445.dtsi
+> @@ -108,6 +108,42 @@
+>   			brcm,int-map-mask = <0x25c>, <0x7000000>;
+>   			brcm,int-fwd-mask = <0x70000>;
+>   		};
+> +
+> +		sata@f045a000 {
 
-Ok.
+    Hm, why the <unit-address> part of the name doesn't correspond to the 
+"reg" prop?
 
+> +			compatible = "brcm,bcm7445-ahci", "brcm,sata3-ahci";
+> +			reg-names = "ahci", "top-ctrl";
+> +			reg = <0x45a000 0xa9c>, <0x458040 0x24>;
+> +			interrupts = <GIC_SPI 30 0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+[...]
+> +		sata_phy: sata-phy@f0458100 {
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+    Same question here...
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> +			compatible = "brcm,bcm7445-sata-phy", "brcm,phy-sata3";
+> +			reg = <0x458100 0x1e00>, <0x45804c 0x10>;
+[...]
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
