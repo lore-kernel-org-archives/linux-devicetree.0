@@ -1,65 +1,70 @@
-From: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v2] add support for Freescale's MMA8653FC 10 bit
- accelerometer
-Date: Thu, 19 Mar 2015 11:22:57 +0100
-Message-ID: <1426760577.6764.14.camel@hadess.net>
-References: <1426694157-10866-1-git-send-email-martink@posteo.de>
-			 <2231139.ojeyer6qnI@ws-stein> <5509AAE5.1000503@posteo.de>
-		 <1426697978.6764.8.camel@hadess.net> <5509BDA0.9000806@posteo.de>
-	 <1426701934.6764.10.camel@hadess.net> <5509C3E6.8070000@posteo.de>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 00/12] USB: chipidea: patchset for performance improvement
+Date: Thu, 19 Mar 2015 11:36:29 +0100
+Message-ID: <20150319103629.GI14457@ns203013.ovh.net>
+References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5509C3E6.8070000-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-03-18 at 19:28 +0100, Martin Kepplinger wrote:
-> Am 2015-03-18 um 19:05 schrieb Bastien Nocera:
-> > On Wed, 2015-03-18 at 19:02 +0100, Martin Kepplinger wrote:
-> > > Am 2015-03-18 um 17:59 schrieb Bastien Nocera:
-> > > > On Wed, 2015-03-18 at 17:42 +0100, Martin Kepplinger wrote:
-> > > > > 
-> > > > <snip>
-> > > > > It could have gone to drivers/iio/accel if it would use an 
-> > > > > iio   interface, which would make more sense, you are right, 
-> > > > > but I 
-> > > > > simply  don't have the time to merge it in to iio.
-> > > > > 
-> > > > > It doesn't use an input interface either but I don't see a 
-> > > > > good   place for an accelerometer that uses sysfs only.
-> > > > > 
-> > > > > It works well, is a relatively recent chip and a clean 
-> > > > > dirver.  But  this is all I can provide.
-> > > > 
-> > > > As a person who works on the user-space interaction of those 
-> > > > with   desktops [1]: Urgh.
-> > > > 
-> > > > I already have 3 (probably 4) types of accelerometers to 
-> > > > contend  with,  I'm not fond of adding yet another type.
-> > > > 
-> > > > Is there any way to get this hardware working outside the SoCs 
-> > > > it's  designed for (say, a device with I2C like a Raspberry 
-> > > > Pi),  so that a  kind soul could handle getting this using the 
-> > > > right  interfaces?
-> > > > 
-> > > 
-> > > It works on basically any SoC and is in no way limited in this  
-> > > regard. Sure, userspace has to expicitely support it and I hear 
-> > > you.  Using the iio interface would make more sense. I can only 
-> > > say I'd  love to have the time to move this driver over. I'm 
-> > > very sorry.
-> > 
-> > How can we get the hardware for somebody to use on their own  
-> > laptops/embedded boards to implement this driver?
-> > 
+On 09:19 Thu 19 Mar     , Peter Chen wrote:
+> Hi all,
 > 
-> It's connected over I2C. If the included documentation is not clear 
-> please tell me what exacly. Thanks!
+> In this patch set, I add some interfaces for tuning the performance
+> of chipidea usb driver. With this set, the USB performance can be improved
+> at some user cases with suitable parameters. The main changes:
+> 
+> - Interface to tune interrupt threshold control, and set
+> 'Immediate' for default value
+> - The glue layer can disable stream mode according to USB role
+> - Interface to tune AHB burst configuration at SBUSCFG
+> - Interface to tune tx/rx burst size
+> - i.mx changes for achieving better performance, it can reduce
+>   the latecy between bus and USB FIFO, and reduce the overrun
+>   and underrun occurrences, it is useful for the system bus is busy.
+>   we see great improvement for ISO transfer, eg, high resolution
+>   USB camera when the bus is busy.
+> 
+> Below are some test results at imx6sx sdb board
+> (set ehci_hcd.park=3 at bootargs), the tests are done
+> at v4.0 kernel, no other bus loading during the tests,
+> so we have not seen performance change for some use cases.
+> 
+> USB Mass Storage (Host mode)
+> With Patch Set		Without Patch Set
+> R: 26.9 MB/s		27 MB/s
+> W: 25.2 MB/s		24.5 MB/s
+> 
+> 1G USB Ethernet Card
+> With Patch Set		Without Patch Set
+> TX: 186 Mb/s		185 Mb/s
+> RX: 219 Mb/s		216 Mb/s
+> 
+> g_ncm (Device Mode)
+> With Patch Set		Without Patch Set
+> TX: 166MB/s		163MB/s
+> RX: 230MB/s		184MB/s
 
+The improve is not drag sticks except for gcm RX
 
-I'll ask the question a different way: can you please give the address 
-of a shop where that hardware is available?
+The most interesting path will be on full system loaded
+
+can you test it and provide data?
+
+Best Regards,
+J.
