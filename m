@@ -1,63 +1,131 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [UPDATED] [PATCH 3/5] arm-cci: Get rid of secure transactions
- for PMU driver
-Date: Thu, 19 Mar 2015 17:54:09 +0000
-Message-ID: <20150319175409.GE10153@leverpostej>
-References: <1426000735-14375-4-git-send-email-suzuki.poulose@arm.com>
- <1426585901-19137-1-git-send-email-suzuki.poulose@arm.com>
- <20150319173252.GC10153@leverpostej>
- <550B09A1.4020801@arm.com>
- <550B0CF6.8070205@arm.com>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Thu, 19 Mar 2015 17:55:04 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503191706340.9480@utopia.booyaka.com>
+References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com> <550AEE6B.5080301@wwwdotorg.org>
+ <alpine.DEB.2.02.1503191601520.9480@utopia.booyaka.com> <550AFF52.6070503@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <550B0CF6.8070205-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Suzuki K. Poulose" <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550AFF52.6070503-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 05:52:54PM +0000, Suzuki K. Poulose wrote:
-> On 19/03/15 17:38, Sudeep Holla wrote:
-> >
-> >
-> > On 19/03/15 17:32, Mark Rutland wrote:
-> >> One more thing:
-> >>
-> >>> @@ -883,7 +894,11 @@ static inline const struct cci_pmu_model *get_cci_model(struct platform_device *
-> >>>    							pdev->dev.of_node);
-> >>>    	if (!match)
-> >>>    		return NULL;
-> >>> +	if (match->data)
-> >>> +		return match->data;
-> >>>
-> >>> +	dev_warn(&pdev->dev, "DEPRECATED compatible property,"
-> >>> +			 "requires secure access to CCI registers");
-> >>>    	return probe_cci_model(pdev);
-> >>>    }
-> >>
-> >> Before the probe, could we please have:
-> >>
-> >> 	if (!IS_ENABLED(CONFIG_ARM))
-> >> 		return -EINVAL;
-> >>
-> >> On arm64 we require a model-specific string, and we shouldn't go
-> >> touching secure-only registers.
-> >>
-> >
-> > IIUC platform_has_secure_cci_access always return false for ARM64
-> > preventing any secure access. No ?
-> >
-> Yes, you are right. The check has been abstracted away with the 
-> platform_has_secure_cci_access().
+On Thu, 19 Mar 2015, Stephen Warren wrote:
 
-Ah, that's fine then.
+> The binding document is supposed to say what value the reg property should
+> have. 
 
-Sorry for the noise!
+If you look at other DT binding documentation in the kernel, this is 
+generally not the case.  Consider these examples:
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/i2c/i2c-omap.txt
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
+
+For example, the bcm2835 I2C binding documentation only mentions one of 
+the two I2C controllers apparently available on the system:
+
+$ fgrep -r i2c arch/arm/boot/dts/ | fgrep bcm2835 | fgrep \@
+arch/arm/boot/dts/bcm2835.dtsi:		i2c0: i2c@20205000 {
+arch/arm/boot/dts/bcm2835.dtsi:		i2c1: i2c@7e804000 {
+$
+
+The Exynos documentation contains only one address of many I2C controllers 
+on the various SoCs:
+
+$ fgrep -r i2c arch/arm/boot/dts/ | fgrep exynos | fgrep \@
+...
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_0: i2c@13860000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_1: i2c@13870000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_2: i2c@13880000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_3: i2c@13890000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_4: i2c@138A0000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_5: i2c@138B0000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_6: i2c@138C0000 {
+arch/arm/boot/dts/exynos4415.dtsi:		i2c_7: i2c@138D0000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_0: i2c@12C60000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_1: i2c@12C70000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_2: i2c@12C80000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_3: i2c@12C90000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_4: i2c@12CA0000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_5: i2c@12CB0000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_6: i2c@12CC0000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_7: i2c@12CD0000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_8: i2c@12CE0000 {
+arch/arm/boot/dts/exynos5250.dtsi:	i2c_9: i2c@121D0000 {
+arch/arm/boot/dts/exynos5420.dtsi:	i2c_0: i2c@12C60000 {
+arch/arm/boot/dts/exynos5420.dtsi:	i2c_1: i2c@12C70000 {
+arch/arm/boot/dts/exynos5420.dtsi:	i2c_2: i2c@12C80000 {
+arch/arm/boot/dts/exynos5420.dtsi:	i2c_3: i2c@12C90000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_4: i2c@12CA0000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_5: i2c@12CB0000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_6: i2c@12CC0000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_7: i2c@12CD0000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_8: i2c@12E00000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_9: i2c@12E10000 {
+arch/arm/boot/dts/exynos5420.dtsi:	hsi2c_10: i2c@12E20000 {
+arch/arm/boot/dts/exynos5440.dtsi:	i2c@F0000 {
+arch/arm/boot/dts/exynos5440.dtsi:	i2c@10000 {
+...
+$
+
+And there are many other integration details that would need to be 
+specified in the documentation using the approach that you advocate - for 
+example, interrupt and DMA IDs, etc.
+
+> If we require some unusual offset in the reg property (i.e. something
+> other than what the HW documentation describes as the module base address),
+> that ought to be documented. We do have this situation for this module at
+> present, although the documentation unfortunately doesn't explicitly call this
+> out even though the example alludes to it.
+>
+> I do think we should at least fix the example so it isn't confusing and
+> inconsistent with expected practice. We could either switch the example to
+> Tegra210 so we only provide the best example going forward, or have separate
+> examples for Tegra20/210 to highlight the difference.
+> 
+> We should also add documentation that Chips before Tegra210 (or 
+> Tegra132?) *require* the extra offset. Any code or DT written to the 
+> existing (admittedly slightly implicit) binding needs to continue to 
+> work, so we should document this unusual requirement, even if we enhance 
+> the Linux driver to accept either mode of operation.
+
+After the two driver patches (after rmk's requested changes) are applied, 
+no unusual offset will be required, but if the legacy offset is specified, 
+it will be transparently handled.
+
+As I see it, there are three possible cases:
+
+1. the legacy, incorrect base address is used, in which case everything 
+will still work but there will be a warning;
+
+2. the correct base address (from a hardware SoC integration point of 
+view) is used, in which case everything will work with no warnings,
+
+3. a novel, completely incorrect base address is used, in which case the 
+IP block won't work at all and the driver will fail completely
+
+After the patches, the driver now handles the first two cases.  If you 
+would like the DT binding documentation practice changed to attempt to 
+address the third case, by requiring DT binding documentation to contain 
+lists of the correct IP integration data for every possible chip that 
+contains that IP block, as you mention above, such a change would be a 
+major delta from existing kernel practice, so would certainly mandate 
+submitting a patch for the common DT binding documentation file at
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/submitting-patches.txt
+
+> Other OSs and old versions of Linux will still need the exception for 
+> older SoCs.
+
+How about this: I will send a patch for the DT binding documentation to 
+note that versions of Linux prior to v4.1 (unless Torvalds runs another 
+poll) require the four-byte-offset base address.  Is that sufficient to 
+address your concerns with this series?
+
+
+- Paul
