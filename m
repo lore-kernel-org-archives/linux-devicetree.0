@@ -1,99 +1,98 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RFC] pinmux: group and function definitions in the device tree
-Date: Thu, 19 Mar 2015 19:56:37 +0100
-Message-ID: <20150319185637.GV4927@pengutronix.de>
-References: <20150319153950.GC30114@odux.rfo.atmel.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node binding
+Date: Thu, 19 Mar 2015 12:01:42 -0700
+Message-ID: <550B1D16.7000108@gmail.com>
+References: <550A42AC.8060104@gmail.com> <550A4382.4030209@gmail.com> <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com> <20150319184139.GG8656@n2100.arm.linux.org.uk>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150319153950.GC30114@odux.rfo.atmel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20150319184139.GG8656@n2100.arm.linux.org.uk>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 04:39:50PM +0100, Ludovic Desroches wrote:
-> Hi,
+On 3/19/2015 11:41 AM, Russell King - ARM Linux wrote:
+> On Thu, Mar 19, 2015 at 08:23:29AM -0500, Rob Herring wrote:
+>> On Wed, Mar 18, 2015 at 10:33 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>> +version
+>>> +       The version of the DTB.  This is analagous to the linux kernel version.
+>>> +
+>>> +       This is a format free field intended for human consumption.  User space
+>>> +       programs should not have any expections about this property.
+>>> +
+>>> +       The DTB number in this property is incremented each time a make that
+>>> +       creates one or more DTBs is invoked.  If the make creates multiple
+>>> +       DTBs then this number is only incremented once.
+>>> +
+>>> +       The DTB number is stored in file .version_dtb.
+>>> +
+>>> +version-linux
+>>> +       The version of the linux kernel most recently built in the source
+>>> +       control system that contains the source used to build the DTB.
+>>> +
+>>> +       The linux kernel version number is not incremented for a make that
+>>> +       creates a DTB.
+>>> +
+>>> +dtb-path
+>>> +       The build directory relative path of the DTB.
+>>> +
+>>> +dts-path
+>>> +       The absolute path of the .dts file compiled to create the DTB.
+>>
+>> So these become an ABI and we can never change the directory structure?
+>>
+>> The problem with informational fields is someone, somewhere will rely
+>> on them and then we are stuck with them. Look at /proc/cpuinfo.
 > 
-> I would like to start a discussion about pinmuxing and device tree bindings.
-> 
-> I am currently writing a new pinmuxing driver using the generic pinconf.
-> My main concern is about defining functions and which pins belong to a
-> group.
-> 
-> At the moment, it seems that most drivers using the generic pinconf
-> define this stuff in a static way. The pinctrl-at91 driver covers many
-> devices, the new one should do the same for new Atmel devices. Having
-> the group and function definitions in the driver could involve a huge
-> file...
-> I am not sure it is a good thing to embed all these information into a
-> single zImage...
-> 
-> How can we achieved this? I was thinking about something like this:
-> 
-> pinctrl@fc06a000 {
-> 
-> 	[...]
-> 
-> 	pinctrl_defs {
-> 		mci0 {
-> 			mci0_ioset0_1bit_grp {
-> 				at91,pins = <68 69 70>;
-> 				at91,mux = <2>;
-> 			};
-> 
-> 			mci0_ioset0_4bit_grp {
-> 				at91,pins = <68 69 70 71 72 73>;
-> 				at91,mux = <2>;
-> 			};
-> 
-> 			mci0_ioset0_8bit_grp {
-> 				at91,pins = <68 69 70 71 72 73 74 75 76 77>;
-> 				at91,mux = <2>;
-> 			};
-> 		};
-> 	};
+> There's a bigger problem: including the Linux kernel specific version
+> means that we will _never_ be able to move them out of the kernel.
 
-Why are different groups here? Do you want to put them into the dtsi?
-This would mean you have to carry a lot of groups in each dtsi from
-which only a small fraction is used. We did that on i.MX but no longer
-do this since the dtbs get very big.
+As I failed to properly document, but have said will be in the next
+version, the dtb-info node and all of the properties are optional.
+
+As I replied to Mark, I will change version-linux to a more generic
+name and meaning in the next version.  The property could be missing,
+it could be about BSD, it could be about uboot.  Whatever.
 
 > 
-> 	pinctrl_mci0_default: mci0_default {
-> 		mux {
-> 			function = "mci0";
-> 			groups = &mci0_ioset0_8bit_grp;
-> 		};
+> Moreover, what it means is that people can then write code to test
+> what the dtb version is, and we'll end up with the dtb version being
+> tested to determine various features.
+
+What???  Why would we ever accept code that tested the dtb version
+instead of the compatible strings and properties in device nodes?
+The dtb version is a meaningless number just like the kernel version
+number in /proc/version is a meaningless number.  It starts at 1 (and
+can be reset to 1 anytime the person controlling the build environment
+chooses to for any random reason).  The dtb version number only makes
+sense in a local context to check which build of an object actually
+got onto the target.
+
+I could be creating some confusion here though.  The dtb version string
+also includes the current commit of the source code repository, in
+exactly the same manner as the kernel version string does.
+
 > 
-> 		conf {
-> 			groups = &mci0_ioset0_8bit_grp;
-> 			bias-pullup;
-> 		};
-> 	};
-> };
+> Since the design goal of DTB is to describe the hardware, including
+> the Linux kernel version is totally against that: the Linux kernel
+> version should be totally irrelevant.  What's more relevant would be
+> a _hardware_ version field, but even that's questionable...
 > 
-> - A subnode for these definitions in order to not parse the whole
->   pinctrl node to retrieve groups and functions.
-> - Using node names as function and group names.
-> - Can we get generic properties to define the groups? Of course a 'pins'
->   property is mandatory. In my case I will need an extra one to tell the
->   controller how to mux the pins (a same pin can have up to 7 muxing
->   possibilities).
+> And yes, you are right - anything like this which we add immediately
+> becames a user ABI which becomes *very* difficult to change later, so
+> in order to accept anything like this, we have to be absolutely sure
+> that this is something we really really really really want to do.  Let
+> me put it another way: once this is accepted, it will probably be
+> impossible to ever change it.
 
-Did you have a look at the RFC I sent for these kind of controllers [1] and
-the final result for the Mediatek driver currently in Linux-next [2]?.
+Would it be more palatable if including the dtb-info node was conditional
+on some debug config option?
 
-The binding has both the config and the pins in a single node and thus
-is very compact.
 
-Sascha
+> 
+> ... just like Bogomips in /proc/cpuinfo.
+> 
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296491.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318452.html
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
