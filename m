@@ -1,79 +1,124 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node binding
-Date: Thu, 19 Mar 2015 13:44:57 -0700
-Message-ID: <550B3549.1030808@gmail.com>
-References: <550A42AC.8060104@gmail.com> <550A4382.4030209@gmail.com> <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com> <20150319184139.GG8656@n2100.arm.linux.org.uk> <550B1D16.7000108@gmail.com> <20150319193225.GH8656@n2100.arm.linux.org.uk>
-Reply-To: frowand.list@gmail.com
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v7 0/9] arm64: Add the support for new Exynos5433 SoC
+Date: Fri, 20 Mar 2015 05:52:29 +0900
+Message-ID: <CAGTfZH30wMkvkFpH1dGCPfMQtQEREhDtYHpvpaTt9RMVha_8Nw@mail.gmail.com>
+References: <1426637856-3730-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <20150319193225.GH8656@n2100.arm.linux.org.uk>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426637856-3730-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/19/2015 12:32 PM, Russell King - ARM Linux wrote:
-> On Thu, Mar 19, 2015 at 12:01:42PM -0700, Frank Rowand wrote:
->> On 3/19/2015 11:41 AM, Russell King - ARM Linux wrote:
->> What???  Why would we ever accept code that tested the dtb version
->> instead of the compatible strings and properties in device nodes?
->> The dtb version is a meaningless number just like the kernel version
->> number in /proc/version is a meaningless number.  It starts at 1 (and
->> can be reset to 1 anytime the person controlling the build environment
->> chooses to for any random reason).  The dtb version number only makes
->> sense in a local context to check which build of an object actually
->> got onto the target.
-> 
-> I think you need to learn a lesson here.  I rotfled at your "just like
-> the kernel version number" comment, because we already have code in the
-> kernel to map 3.x and 4.x kernels to a 2.60.x number because userspace
-> breaks with 3.x and 4.x version numbers.
+Dear Kukjin,
 
-I am aware of that and totally agree that it is on point.
+Could you please pick or review this patch-set?
 
-> 
-> I'm quite sure that someone made the exact same argument about kernel
-> version numbers that you're making above about versioning dtb stuff.
-> 
-> At the end of the day, if userspace starts abusing an API that we've
-> provided in good faith, and we change something such as the version
-> information which results in userspace breaking - even if userspace is
-> doing something that's wrong according to how we've defined it, it's
-> still our problem to fix.  No userspace regressions when upgrading.
-> That's the rule.
+Best Regards,
+Chanwoo Choi
 
-And I totally agree with that.
-
-> 
-> Don't bother trying to argue against this - you can't.  We will not accept
-> any argument (no matter how valid) which will result in userspace breaking
-> upon an upgrade.
-
-No argument.  But I am not arguing for that.
-
-> 
-> You must be *absolutely* *sure* that you want to export this information,
-> and that you are absolutely happy with the consequences which would occur
-> should userspace then start using this information in a way which you did
-> not intend, which could very well block you from ever being able to change
-> the version number from a prescribed "this version number makes userspace
-> work" value.
-
-I understand the concern you are expressing.  And I agree it is an issue to
-be concerned about and not dismissed.  But I also think that the concern is
-mis-characterizing the "DTB version".  To pick on the example in patch 0,
-an analogous Linux version is "#5" (not "4.0.0"):
-
-   Linux version 4.0.0-rc4-dirty (frank@buildhost) (gcc version 4.6.x-google 20120106 (prerelease) (GCC) ) #5 SMP PREEMPT Wed Mar 18 20:04:48 PDT 2015
-
-and the proposed DTB version is "#4":
-
-   DTB version 4.0.0-rc4-dirty (frank@buildhost) (DTC 1.4.0-dirty) #4 Wed Mar 18 20:04:11 PDT 2015
-
-I don't think the concern holds for "#5" and "#4".
-
-I will concede that there is something unique in the proposed DTB version -
-the source code system commit version number (in this example "4.0.0-rc4-dirty"
-from git).
+On Wed, Mar 18, 2015 at 9:17 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> This patchset adds new 64-bit Exynos5433 Samsung SoC which contains quad
+> Cortex-A57 and quad Cortex-A53. It is desigend with the 20nm low power process.
+>
+> Depends on:
+> - This patch-set has the dependency on Exynos5433 clock driver[1] and pinctrl driver[2].
+> The Exynos5433 clock controller patch-set[1] was merged by Michael Turquette.
+> and Exynos5433's pinctrl patch[2] was merged by Linus Walleij. Exynos5433's TMU patch[3]
+> will be refactoring without feature update.
+>
+> [1] http://git.linaro.org/people/mike.turquette/linux.git/commit/cc91909b9683c834485fd0627708c81d9398bf02
+> [2] https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/commit/?h=for-next&id=3c5ecc9ed3537846fd95e8f288d6d6968075879f
+> [3] [PATCH 0/3] thermal: exynos: Add support for Exynos5433 TMU
+>     - https://lkml.org/lkml/2015/2/26/234
+>
+> Changelog:
+>
+> Changes fromv v6:
+> (https://lkml.org/lkml/2015/3/9/1036)
+> - Fix wrong base address of CMU_MSCL dt node (0x105d0000 -> 0x150d0000)
+> - Adjust the length of memory mapped region for all clock domains
+>
+> Changes from v5:
+> (https://lkml.org/lkml/2015/3/5/27)
+> - Move 'timer' dt node under root node by Mark Rutland's comment
+>
+> Changes from v4:
+> (https://lkml.org/lkml/2015/2/24/2)
+> - Rebased it on Linux 4.0-rc2
+> - Remove CONFIG_ARCH_EXYNOS5433 configuration by Arnd Bergmann's comment
+> - Move 'aliases' dt node from SoC dtsi to board dts file by Arnd Bergmann's comment
+> - Add Exynos5433 TMU patches which got the Lukasz Majewski's reviewed message
+>
+> Changes from v3:
+> (https://lkml.org/lkml/2015/2/12/65)
+> - Rebased it on Linux 4.0-rc1.
+> - Remove ARM_GIC and ARM_AMBA dependency because CONFIG_ARM64 already included them.
+>
+> Changes from v2:
+> (https://lkml.org/lkml/2014/12/2/134)
+> : Fix the range of GICC memory map (0x1000 -> 0x2000)
+> : Fix address space of 'range' property under 'soc' node
+> : Add ADMA / I2S dt node for sound playback/capture
+> - Select ARM_AMBA/ARM_GIC/HAVE_S3C_RTC for Exynos5433 in arch/arm64/Kconfig
+> - Send separate patch-set for Exynos5433 clock controller[1][2] and pinctrl[3]
+>
+> Changes from v1:
+> (https://lkml.org/lkml/2014/11/27/92)
+> - Merge two patches (patch2, patch3) to solve incomplete description
+> - Exynos5433 Clock driver
+>  : Fix wrong register and code clean by using space instead of tab
+>  : Add CLK_IGNORE_UNUSED flag to pclk_sysreg_* clock for accessing system control register
+>  : Remove duplicate definition on the patch for CMU_BUS{0|1|2} domain
+> - Exynos5433 SoC DTS
+>  : Remove un-supported properties of arch_timer
+>  : Remove 'clock-frequency' property from 'cpus' dt node
+>  : Fix interrupt type from edge rising triggering to level high triggering
+>    because Cortex-A53/A57 use level triggering.
+>  : Fix defult address-size/size-celss from 1 to 2 because Exynos5433 is 64-bit SoC
+>  : Modify 'fin_pll' dt node to remove un-needed and ugly code
+>  : Move 'chipid' dt node under 'soc'
+>  : Use lowercase on all case in exynos5433.dtsi
+>  : Add PSCI dt node for secondary cpu boot
+>  : Add 'samsung,exynos5433' compatible to MCT dt node
+> - Divide pinctrl patch from this patchset
+> - Add new following patches:
+>   : clocksource: exynos_mct: Add the support for Exynos 64bit SoC
+>   : arm64: Enable Exynos5433 SoC in the defconfig
+> -----------------------------------------------------
+>
+> Chanwoo Choi (6):
+>   arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
+>   arm64: dts: exynos: Add SPI/PDMA dt node for Exynos5433
+>   arm64: dts: exynos: Add PMU dt node for Exynos5433
+>   arm64: dts: exynos: Add RTC and ADC dt node for Exynos5433 SoC
+>   arm64: dts: exynos: Add TMU sensor dt node for Exynos5433 SoC
+>   arm64: dts: exynos: Add thermal-zones dt node for Exynos5433 SoC
+>
+> Inha Song (2):
+>   arm64: dts: exynos: Add ADMA dt node for Exynos5433 SoC
+>   arm64: dts: exynos: Add I2S dt node for Exynos5433 SoC
+>
+> Jaehoon Chung (1):
+>   arm64: dts: exynos: Add MSHC dt node for Exynos5433
+>
+>  .../devicetree/bindings/arm/samsung/pmu.txt        |   1 +
+>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 698 +++++++++++++++
+>  .../dts/exynos/exynos5433-tmu-sensor-conf.dtsi     |  22 +
+>  arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     | 231 +++++
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 931 +++++++++++++++++++++
+>  5 files changed, 1883 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>
+> --
+> 1.8.5.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
