@@ -1,111 +1,181 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Thu, 19 Mar 2015 11:46:44 -0600
-Message-ID: <550B0B84.6050400@wwwdotorg.org>
-References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <550859A0.9090500@wwwdotorg.org> <alpine.DEB.2.02.1503191528570.9480@utopia.booyaka.com> <550AEEE9.70806@wwwdotorg.org> <alpine.DEB.2.02.1503191617140.9480@utopia.booyaka.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] mtd:spi-nor: Add lock and unlock callback functions to
+ struct spi_nor
+Date: Thu, 19 Mar 2015 10:49:03 -0700
+Message-ID: <20150319174903.GT32500@ld-irv-0074>
+References: <1426493714-3748-1-git-send-email-vndao@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1503191617140.9480-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426493714-3748-1-git-send-email-vndao@altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vndao@altera.com
+Cc: dwmw2@infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ngachi86@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 10:34 AM, Paul Walmsley wrote:
-> On Thu, 19 Mar 2015, Stephen Warren wrote:
->
->> On 03/19/2015 09:33 AM, Paul Walmsley wrote:
->>> On Tue, 17 Mar 2015, Stephen Warren wrote:
->>>
->>>> On 03/17/2015 02:32 AM, Paul Walmsley wrote:
->>>>> For Tegra132 and later chips, we can now use the correct hardware base
->>>>> address for the Tegra AHB IP block in the DT data.  Update the DT
->>>>> binding
->>>>> documentation to reflect this change.
->>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>>>> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>>>> index 067c979..7692b4c 100644
->>>>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>>>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>>>> @@ -2,10 +2,15 @@ NVIDIA Tegra AHB
->>>>>
->>>>>     Required properties:
->>>>>     - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
->>>>> -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
->>>>> -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
->>>>> -  tegra132, or tegra210.
->>>>> -- reg : Should contain 1 register ranges(address and length)
->>>>> +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and
->>>>> Tegra124,
->>>>> must
->>>>> +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is
->>>>> tegra114
->>>>> +  or tegra124.  For Tegra132, the compatible string must contain
->>>>> +  "nvidia,tegra132-ahb".
->>>>> +
->>>>> +- reg : Should contain 1 register ranges(address and length).  On
->>>>> Tegra20,
->>>>> +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical
->>>>> base
->>>>> +  address of the IP block must end in 0x04.  On DT files for later
->>>>> chips,
->>>>> the
->>>>> +  actual hardware base address of the IP block should be used.
->>>>
->>>> A table-based approach rather than prose might make this more legible?
->>>>
->>>> - compatible: Must contain the following:
->>>>     Tegra20:  "nvidia,tegra20-ahb"
->>>>     Tegra30:  "nvidia,tegra30-ahb"
->>>>     Tegra114: "nvidia,tegra114-ahb", "nvidia,tegra30-ahb"
->>>>     Tegra124: "nvidia,tegra124-ahb", "nvidia,tegra30-ahb"
->>>>     Tegra132: "nvidia,tegra132-ahb"
->>>>     Tegra210: "nvidia,tegra210-ahb", "nvidia,tegra132-ahb"
->>>>
->>>> With any luck, we can extend that final item for future chips to be:
->>>>
->>>>     Tegra210, TegraNNN:
->>>>               "nvidia,tegra<chip>-ahb", "nvidia,tegra132-ahb"
->>>>
->>>> Perhaps we format the 114/124 entry that way too.
->>>
->>> I think I'm just going to drop this patch, since Russell prefers that the
->>> workaround is applied in the driver.
->>>
->>> With regards to using tables rather than narrative descriptions: perhaps
->>> consider a patch to
->>> Documentation/devicetree/bindings/submitting-patches.txt ?  I don't know
->>> what the DT binding documentation maintainers' future plans are with
->>> regards to automated documentation reflow, etc., but submitting a patch
->>> there would stimulate at least some coordination on the issue.
->>
->> I don't think it's appropriate for that file to dictate that, in the same way
->> that coding style documentation generally doesn't address that kind of detail
->> regarding code structure.
->
-> We do indeed specify details like this in our documentation guidelines.
-> Here are two examples:
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/kernel-doc-nano-HOWTO.txt#n103
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/CodingStyle#n464
+Hi Viet,
 
-Perhaps I phrased my point slightly differently form the core of what I 
-meant.
+On Mon, Mar 16, 2015 at 01:15:14AM -0700, vndao@altera.com wrote:
+> From: VIET NGA DAO <vndao@altera.com>
+> 
+> This patch introduces a properly-replaceable spi_nor callback that does
+> flash specific lock and unlock. The existing code for spi_nor_lock and
+> spi_nor_unlock is moved into their own functions which are stm_lock and
+> stm_unlock.
 
-I'm not aware that review feedback can't address topics that are not 
-already addressed by the documentation. Is there such a rule?
+I'm curious; is this a complete ripoff of my code [1]? You haven't
+credited my authorship at all. That's a big no-no. Typically you keep
+the 'From:' and Signed-off-by of the original author if you're going to
+modify/redistribute it. (Admittedly, I didn't provide the S-o-b on my
+informal patch.)
 
-Equally, I think if you want the documentation to address a particular 
-point, it's appropriate for you to submit a patch to the documentation 
-to update it, rather than ask the reviewer to do so before accepting the 
-review feedback.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Anyway, that's all fine this time, but please avoid doing this in the
+future; I can fix up the authorship, etc., and apply it, if it gets an
+Ack/Tested-by from one or more reviewers (e.g., you). BTW, I hope you at
+least tested this, right?
+
+Brian
+
+[1] http://lists.infradead.org/pipermail/linux-mtd/2015-March/058301.html
+
+> Signed-off-by: VIET NGA DAO <vndao@altera.com>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 56 ++++++++++++++++++++++++++++---------------
+>  include/linux/mtd/spi-nor.h   |  4 ++++
+>  2 files changed, 41 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index b6a5a0c..43bb552 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -369,17 +369,13 @@ erase_err:
+>  	return ret;
+>  }
+>  
+> -static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+> +static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  {
+> -	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+> +	struct mtd_info *mtd = nor->mtd;
+>  	uint32_t offset = ofs;
+>  	uint8_t status_old, status_new;
+>  	int ret = 0;
+>  
+> -	ret = spi_nor_lock_and_prep(nor, SPI_NOR_OPS_LOCK);
+> -	if (ret)
+> -		return ret;
+> -
+>  	status_old = read_sr(nor);
+>  
+>  	if (offset < mtd->size - (mtd->size / 2))
+> @@ -402,26 +398,18 @@ static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>  				(status_old & (SR_BP2 | SR_BP1 | SR_BP0))) {
+>  		write_enable(nor);
+>  		ret = write_sr(nor, status_new);
+> -		if (ret)
+> -			goto err;
+>  	}
+>  
+> -err:
+> -	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
+>  	return ret;
+>  }
+>  
+> -static int spi_nor_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+> +static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  {
+> -	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+> +	struct mtd_info *mtd = nor->mtd;
+>  	uint32_t offset = ofs;
+>  	uint8_t status_old, status_new;
+>  	int ret = 0;
+>  
+> -	ret = spi_nor_lock_and_prep(nor, SPI_NOR_OPS_UNLOCK);
+> -	if (ret)
+> -		return ret;
+> -
+>  	status_old = read_sr(nor);
+>  
+>  	if (offset+len > mtd->size - (mtd->size / 64))
+> @@ -444,15 +432,41 @@ static int spi_nor_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>  				(status_old & (SR_BP2 | SR_BP1 | SR_BP0))) {
+>  		write_enable(nor);
+>  		ret = write_sr(nor, status_new);
+> -		if (ret)
+> -			goto err;
+>  	}
+>  
+> -err:
+> +	return ret;
+> +}
+> +
+> +static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+> +{
+> +	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+> +	int ret;
+> +
+> +	ret = spi_nor_lock_and_prep(nor, SPI_NOR_OPS_LOCK);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = nor->flash_lock(nor, ofs, len);
+> +
+>  	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_UNLOCK);
+>  	return ret;
+>  }
+>  
+> +static int spi_nor_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+> +{
+> +	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+> +	int ret;
+> +
+> +	ret = spi_nor_lock_and_prep(nor, SPI_NOR_OPS_UNLOCK);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = nor->flash_unlock(nor, ofs, len);
+> +
+> +	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
+> +	return ret;
+> +}
+> +
+>  /* Used when the "_ext_id" is two bytes at most */
+>  #define INFO(_jedec_id, _ext_id, _sector_size, _n_sectors, _flags)	\
+>  	((kernel_ulong_t)&(struct flash_info) {				\
+> @@ -1045,6 +1059,10 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
+>  
+>  	/* nor protection support for STmicro chips */
+>  	if (JEDEC_MFR(info) == CFI_MFR_ST) {
+> +		nor->flash_lock = stm_lock;
+> +		nor->flash_unlock = stm_unlock;
+> +	}
+> +	if (nor->flash_lock && nor->flash_unlock) {
+>  		mtd->_lock = spi_nor_lock;
+>  		mtd->_unlock = spi_nor_unlock;
+>  	}
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index 4720b86..e4e73d5 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -155,6 +155,8 @@ enum spi_nor_option_flags {
+>   * @write:		[DRIVER-SPECIFIC] write data to the SPI NOR
+>   * @erase:		[DRIVER-SPECIFIC] erase a sector of the SPI NOR
+>   *			at the offset @offs
+> + * @lock:		[FLASH-SPECIFIC] lock a region of the SPI NOR
+> + * @unlock:		[FLASH-SPECIFIC] unlock a region of the SPI NOR
+>   * @priv:		the private data
+>   */
+>  struct spi_nor {
+> @@ -188,6 +190,8 @@ struct spi_nor {
+>  	void (*write)(struct spi_nor *nor, loff_t to,
+>  			size_t len, size_t *retlen, const u_char *write_buf);
+>  	int (*erase)(struct spi_nor *nor, loff_t offs);
+> +	int (*flash_lock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+> +	int (*flash_unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+>  
+>  	void *priv;
+>  };
+> -- 
+> 1.7.11.GIT
+> 
