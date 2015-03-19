@@ -1,39 +1,74 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Thu, 19 Mar 2015 18:46:59 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1503191845060.9480@utopia.booyaka.com>
-References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com> <550AEE6B.5080301@wwwdotorg.org>
- <alpine.DEB.2.02.1503191601520.9480@utopia.booyaka.com> <550AFF52.6070503@wwwdotorg.org> <alpine.DEB.2.02.1503191706340.9480@utopia.booyaka.com> <550B155E.9050308@wwwdotorg.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [patch 6/7] dt: dtb version: dtsi files
+Date: Thu, 19 Mar 2015 19:46:03 +0100
+Message-ID: <20150319184603.GA4946@pengutronix.de>
+References: <550A42AC.8060104@gmail.com>
+ <550A44F9.9060504@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550B155E.9050308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <550A44F9.9060504@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Mar 2015, Stephen Warren wrote:
-
-> We should not document Linux 4.1 as the cut-off. DT bindings are supposed to
-> be OS agnostic. While it's practically unlikely, it is entirely possible for
-> some other OS to have already implemented support for this binding, and the
-> current binding is an ABI. We have no control over if/when any non-Linux code
-> is updated to add support for a 0-based offset for existing SoCs, and
-> certainly no versions of Linux or any other OS can be updated retro-actively
-> except perhaps a few linux-stable versions. We can however write the binding
-> in such a way as support for new SoCs requires the new 0-based address, since
-> there is no binding specification for those new chips yet, and the time when
-> you add the new binding documentation is the first time any OS could possibly
-> add conformant support for it.
+On Wed, Mar 18, 2015 at 08:39:37PM -0700, Frank Rowand wrote:
+> From: Frank Rowand <frank.rowand@sonymobile.com>
 > 
-> In summary, I believe the binding document must state that T20/30/114/124
-> require the offset of 4 in reg value, and newer chips require no offset in the
-> reg value. We can still always accept either in the Linux kernel going forward
-> based on the principle of being lenient re: input data.
+> Create a .dtsi file to contain the /chosen/dtb-info node and populate the
+> properties in that node.
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+> ---
+>  arch/arm/boot/dts/skeleton.dtsi              |    2 
+>  include/dt-bindings/version.dtsi             |   19 +++++
+> 
+> Index: b/include/dt-bindings/version.dtsi
+> ===================================================================
+> --- /dev/null
+> +++ b/include/dt-bindings/version.dtsi
+> @@ -0,0 +1,19 @@
+> +
+> +#include <utsrelease.h>
+> +#include <compile.h>
+> +#include <compile_dtb.h>
+> +
+> +/ {
+> +	chosen {
+> +		dtb-info {
+> +			version = UTS_RELEASE, " ", DTB_VERSION;
+> +			version-linux =
+> +				UTS_RELEASE,
+> +				" (", LINUX_COMPILE_BY, "@", LINUX_COMPILE_HOST, ") ",
+> +				"(", LINUX_COMPILER, ") ",
+> +				UTS_VERSION;
+> +			dtb-path = ___DTB_DTB_PATH;
+> +			dts-path = ___DTB_DTS_PATH;
+> +		};
+> +	};
+> +};
 
-That's fine.  I'll send a patch for that.
+People are working on reproducible builds to be able to build bit
+identical packages for a whole Distribution [1]. While I don't know
+how feasible this really is I think we should not actively work on making
+that impossible. The people working on reproducible builds state that
+timestamps in binaries are bad, because when you can reproduce it it
+doesn't matter if it was build yesterday or a decade ago.
 
+Like others already said for security reasons (and also for
+reproducibility) I don't want to leak the pathes or machine names I use to
+build dtbs into the binaries.
 
-- Paul
+So all this should at least be configurable.
+
+Sascha
+
+[1] https://wiki.debian.org/ReproducibleBuilds
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
