@@ -1,40 +1,93 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node binding
-Date: Thu, 19 Mar 2015 18:23:21 +0100
-Message-ID: <CAMuHMdV1O2dpEW2yA2OFJ71zBm1aHSoiREmn3ujP5kEGZCN1GA@mail.gmail.com>
-References: <550A42AC.8060104@gmail.com>
-	<550A4382.4030209@gmail.com>
-	<20150319134910.GF18473@leverpostej>
-	<550B013B.1060002@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [UPDATED] [PATCH 3/5] arm-cci: Get rid of secure transactions
+ for PMU driver
+Date: Thu, 19 Mar 2015 17:25:31 +0000
+Message-ID: <20150319172531.GB10153@leverpostej>
+References: <1426000735-14375-4-git-send-email-suzuki.poulose@arm.com>
+ <1426585901-19137-1-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <550B013B.1060002@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1426585901-19137-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nico@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 6:02 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> Why would you _ever_ need an absolute path!?
->
-> The absolute path tells you which source repository contained the source.
+On Tue, Mar 17, 2015 at 09:51:41AM +0000, Suzuki K. Poulose wrote:
+> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+> 
+> A minor change, fixed missplled 'DEPRECATED' in the dev_warn().
+> 
+> Thanks
+> Suzuki
+> 
+> ----8>----
+> Avoid secure transactions while probing the CCI PMU. The
+> existing code makes use of the Peripheral ID2 (PID2) register
+> to determine the revision of the CCI400, which requires a
+> secure transaction. This puts a limitation on the usage of the
+> driver on systems running non-secure Linux(e.g, ARM64).
+> 
+> Updated the device-tree binding for cci pmu node to add the explicit
+> revision number for the compatible field.
+> 
+> The supported strings are :
+> 	arm,cci-400-pmu,r0
+> 	arm,cci-400-pmu,r1
+> 	arm,cci-400-pmu - DEPRECATED. See NOTE below
+> 
+> NOTE: If the revision is not mentioned, we need to probe the cci revision,
+> which could be fatal on a platform running non-secure. We need a reliable way
+> to know if we can poke the CCI registers at runtime on ARM32. We depend on
+> 'mcpm_is_available()' when it is available. mcpm_is_available() returns true
+> only when there is a registered driver for mcpm. Otherwise, we assume that we
+> don't have secure access, and skips probing the revision number(ARM64 case).
+> 
+> The MCPM should figure out if it is safe to access the CCI. Unfortunately
+> there isn't a reliable way to indicate the same via dtb. This patch doesn't
+> address/change the current situation. It only deals with the CCI-PMU, leaving
+> the assumptions about the secure access as it has been, prior to this patch.
+> 
+> Changes since V2:
+>  - Use 'bool' instead of 'int' for platform_has_secure_cci_access().
+>    (Suggested-by: Sudeep Holla)
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Punit Agrawal <punit.agrawal@arm.com>
+> Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+> Acked-by: Nicolas Pitre <nicolas.pitre@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cci.txt |    7 +++--
+>  arch/arm/include/asm/arm-cci.h                |   42 +++++++++++++++++++++++++
+>  arch/arm64/include/asm/arm-cci.h              |   27 ++++++++++++++++
+>  drivers/bus/arm-cci.c                         |   17 +++++++++-
+>  include/linux/arm-cci.h                       |    2 ++
+>  5 files changed, 92 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm/include/asm/arm-cci.h
+>  create mode 100644 arch/arm64/include/asm/arm-cci.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
+> index f28d82b..0e4b6a7 100644
+> --- a/Documentation/devicetree/bindings/arm/cci.txt
+> +++ b/Documentation/devicetree/bindings/arm/cci.txt
+> @@ -94,8 +94,11 @@ specific to ARM.
+>  		- compatible
+>  			Usage: required
+>  			Value type: <string>
+> -			Definition: must be "arm,cci-400-pmu"
+> -
+> +			Definition: Supported strings are :
 
-Really? Usually it's just gonna be <something>/linux-2.6...
+I'd prefer we said "Must contain one of:".
 
-IMHO it leaks information (the <something>) you don't want to be in final
-build, like login names and file server names.
-We already have way to many uses of __FILE__ in the kernel source tree.
-Unfortunately there's no replacement macro with just the relative path,
-against the topdir of the source tree.
+> +				 "arm,cci-400-pmu,r0"
+> +				 "arm,cci-400-pmu,r1"
+> +				 "arm,cci-400-pmu"  - DEPRECATED, permitted only where OS has
+> +						      secure acces to CCI registers
 
-Gr{oetje,eeting}s,
+Otherwise, the binding change looks fine to me, so:
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: Mark Rutland <mark.rutland@arm.com> [DT binding]
