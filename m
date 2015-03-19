@@ -1,85 +1,70 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Thu, 19 Mar 2015 09:44:41 -0600
-Message-ID: <550AEEE9.70806@wwwdotorg.org>
-References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <550859A0.9090500@wwwdotorg.org> <alpine.DEB.2.02.1503191528570.9480@utopia.booyaka.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
+ nodes
+Date: Thu, 19 Mar 2015 09:47:41 -0600
+Message-ID: <550AEF9D.6090307@wwwdotorg.org>
+References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com> <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com> <20150318123012.GA3580@katana> <55097C46.9010605@gmail.com> <20150318140037.GE3580@katana> <550A05E5.3050100@gmail.com> <20150319100944.GA914@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1503191528570.9480@utopia.booyaka.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Hiroshi DOYU <hdoyu@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150319100944.GA914@katana>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 09:33 AM, Paul Walmsley wrote:
-> On Tue, 17 Mar 2015, Stephen Warren wrote:
+On 03/19/2015 04:09 AM, Wolfram Sang wrote:
 >
->> On 03/17/2015 02:32 AM, Paul Walmsley wrote:
->>> For Tegra132 and later chips, we can now use the correct hardware base
->>> address for the Tegra AHB IP block in the DT data.  Update the DT binding
->>> documentation to reflect this change.
->>
->>> diff --git
->>> a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>> index 067c979..7692b4c 100644
->>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
->>> @@ -2,10 +2,15 @@ NVIDIA Tegra AHB
+>>>> Possible. But this change just makes i2c-mux-pinctrl honor status
+>>>> property at all. There is no functional change except it now allows
+>>>> you to disable any of the sub-busses.
 >>>
->>>    Required properties:
->>>    - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
->>> -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
->>> -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
->>> -  tegra132, or tegra210.
->>> -- reg : Should contain 1 register ranges(address and length)
->>> +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and Tegra124,
->>> must
->>> +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is
->>> tegra114
->>> +  or tegra124.  For Tegra132, the compatible string must contain
->>> +  "nvidia,tegra132-ahb".
->>> +
->>> +- reg : Should contain 1 register ranges(address and length).  On Tegra20,
->>> +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical base
->>> +  address of the IP block must end in 0x04.  On DT files for later chips,
->>> the
->>> +  actual hardware base address of the IP block should be used.
+>>> Actually, this is the feature I like. However, I wonder if we shouldn't
+>>> have that in the core, say in of_i2c_register_devices()?
 >>
->> A table-based approach rather than prose might make this more legible?
+>> Hmm, looking at of_i2c_register_devices():
 >>
->> - compatible: Must contain the following:
->>    Tegra20:  "nvidia,tegra20-ahb"
->>    Tegra30:  "nvidia,tegra30-ahb"
->>    Tegra114: "nvidia,tegra114-ahb", "nvidia,tegra30-ahb"
->>    Tegra124: "nvidia,tegra124-ahb", "nvidia,tegra30-ahb"
->>    Tegra132: "nvidia,tegra132-ahb"
->>    Tegra210: "nvidia,tegra210-ahb", "nvidia,tegra132-ahb"
+>> 	for_each_available_child_of_node(adap->dev.of_node, node)
+>> 		of_i2c_register_device(adap, node);
 >>
->> With any luck, we can extend that final item for future chips to be:
->>
->>    Tegra210, TegraNNN:
->>              "nvidia,tegra<chip>-ahb", "nvidia,tegra132-ahb"
->>
->> Perhaps we format the 114/124 entry that way too.
+>> already honors status properties by using for_each_available_foo.
+>> Therefore, i2c-core will also skip i2c device nodes disabled by
+>> status property.
 >
-> I think I'm just going to drop this patch, since Russell prefers that the
-> workaround is applied in the driver.
+> Yes, but only child nodes, not the complete bus. Here is an RFC of what
+> I mean:
 >
-> With regards to using tables rather than narrative descriptions: perhaps
-> consider a patch to
-> Documentation/devicetree/bindings/submitting-patches.txt ?  I don't know
-> what the DT binding documentation maintainers' future plans are with
-> regards to automated documentation reflow, etc., but submitting a patch
-> there would stimulate at least some coordination on the issue.
+> From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Subject: [RFC] i2c: of: always check if busses are enabled
+>
+> Allow all busses to have a "status" property which allows busses to not
+> be probed when set to "disabled". Needed for DTS overlays with i2c mux
+> scenarios.
 
-I don't think it's appropriate for that file to dictate that, in the 
-same way that coding style documentation generally doesn't address that 
-kind of detail regarding code structure. Rather, the code review process 
-hopefully homes in on the best representation case-by-case. A table 
-seems more succinct and unambiguous in this case. Most DT bindings don't 
-need to specify this level of detail since there aren't so many 
-inconsistent options; the generic rules apply.
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+
+> @@ -1305,8 +1305,8 @@ static void of_i2c_register_devices(struct i2c_adapter *adap)
+>   {
+>   	struct device_node *node;
+>
+> -	/* Only register child devices if the adapter has a node pointer set */
+> -	if (!adap->dev.of_node)
+> +	/* Only register childs if adapter has a node pointer with enabled status */
+> +	if (!adap->dev.of_node || !of_device_is_available(adap->dev.of_node))
+>   		return;
+
+That feels a bit odd to me. For a regular non-mux I2C controller, that 
+extra case would never trigger if the controller node was disabled, 
+since the device core would never probe the controller device itself. 
+So, we'd end up with inconsistent paths through the I2C core for regular 
+controllers and muxes.
+
+Perhaps better would be to have a mux-specific function to iterate over 
+a mux's child nodes and instantiate buses for those. That function would 
+check whether each bus node was disabled or not. That'd isolate the 
+special case into the place where it was relevant.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
