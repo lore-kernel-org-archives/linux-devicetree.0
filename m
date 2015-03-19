@@ -1,51 +1,59 @@
-From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7] media: i2c: add support for omnivision's ov2659 sensor
-Date: Thu, 19 Mar 2015 09:39:53 +0000
-Message-ID: <CA+V-a8uaLhRrSn7KA1N5LCfPAx0KKpP4HFyk69SOmJmaSt3ewQ@mail.gmail.com>
-References: <1426628910-11927-1-git-send-email-prabhakar.csengg@gmail.com> <5509F87D.9060603@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH v2 1/2] i2c: dt binding documentation for the Digicolor I2C controller
+Date: Thu, 19 Mar 2015 11:54:17 +0200
+Message-ID: <844001df525b3073e50cbd95f357c0eb9912a394.1426758858.git.baruch@tkos.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5509F87D.9060603-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+The CX92755 is an SoC in the Conexant Digicolor series. This devicetree binding
+document describes the I2C controller on the CX92755 SoC, that is also shared
+by some other SoCs in the Digicolor series.
 
-Thanks for the review.
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
+v2: no change
+---
+ .../devicetree/bindings/i2c/i2c-digicolor.txt      | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-digicolor.txt
 
-On Wed, Mar 18, 2015 at 10:13 PM, Sakari Ailus
-<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Hi Prabhakar,
->
-> Lad Prabhakar wrote:
-> ...
->>
->> +static int ov2659_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
->> +{
->> +       struct ov2659 *ov2659 =
->> +                       container_of(ctrl->handler, struct ov2659, ctrls);
->> +       struct v4l2_mbus_framefmt *fmt = &ov2659->format;
->> +
->> +       switch (ctrl->id) {
->> +       case V4L2_CID_PIXEL_RATE:
->> +               if (fmt->code != MEDIA_BUS_FMT_SBGGR8_1X8)
->> +                       ov2659->link_frequency->val =
->> +                                       ov2659->pdata->link_frequency / 2;
->> +               else
->> +                       ov2659->link_frequency->val =
->> +                                       ov2659->pdata->link_frequency;
->
->
-> You should simply use v4l2_ctrl_s_ctrl_int64() in ..._set_fmt() as this
-> isn't really a proper volatile control, but its value depends on the format.
->
-Yea makes sense, will respin the patch with this change.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-digicolor.txt b/Documentation/devicetree/bindings/i2c/i2c-digicolor.txt
+new file mode 100644
+index 000000000000..457a098d4f7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-digicolor.txt
+@@ -0,0 +1,25 @@
++Conexant Digicolor I2C controller
++
++Required properties:
++ - compatible: must be "cnxt,cx92755-i2c"
++ - reg: physical address and length of the device registers
++ - interrupts: a single interrupt specifier
++ - clocks: clock for the device
++ - #address-cells: should be <1>
++ - #size-cells: should be <0>
++
++Optional properties:
++- clock-frequency: the desired I2C bus clock frequency in Hz; in
++  absence of this property the default value is used (100 kHz).
++
++Example:
++
++	i2c: i2c@f0000120 {
++		compatible = "cnxt,cx92755-i2c";
++		reg = <0xf0000120 0x10>;
++		interrupts = <28>;
++		clocks = <&main_clk>;
++		clock-frequency = <100000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
+-- 
+2.1.4
 
-Cheers,
---Prabhakar Lad
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
