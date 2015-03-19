@@ -1,102 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
- driver
-Date: Thu, 19 Mar 2015 14:17:53 +0000
-Message-ID: <20150319141753.GB25967@leverpostej>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Eliad Peller <eliad@wizery.com>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Thu, 19 Mar 2015 16:42:57 +0200
+Message-ID: <CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+	<1426696710-6891-6-git-send-email-eliad@wizery.com>
+	<550AD7C1.2030405@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: kongxinwei <kong.kongxinwei@hisilicon.com>
-Cc: "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <550AD7C1.2030405@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pontus Fuchs <pontus.fuchs@gmail.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 07:57:27AM +0000, kongxinwei wrote:
-> This patch adds the support for hisilicon thermal sensor, within
-> hisilicon SoC. there will register sensors for thermal framework
-> and use device tree to bind cooling device.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
-> ---
->  drivers/thermal/Kconfig        |   8 +
->  drivers/thermal/Makefile       |   1 +
->  drivers/thermal/hisi_thermal.c | 531 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 540 insertions(+)
->  create mode 100644 drivers/thermal/hisi_thermal.c
+hi Pontus,
 
-[...]
+On Thu, Mar 19, 2015 at 4:05 PM, Pontus Fuchs <pontus.fuchs@gmail.com> wrote:
+> On 2015-03-18 17:38, Eliad Peller wrote:
+>>
+>> Replace all the pdata-quirks for setting wl12xx/wl18xx
+>> platform data with proper DT definitions.
+>>
+>> Signed-off-by: Eliad Peller <eliad@wizery.com>
+>> Acked-by: Javier Martinez Canillas <javier@dowhile0.org>
+>> Acked-by: Enric Balletbo i Serra <eballetbo@gmail.com>
+>> Tested-by: Tony Lindgren <tony@atomide.com>
+>> ---
+>> v7: rebase
+>>
+>>   arch/arm/boot/dts/am335x-evmsk.dts             | 11 ++++
+>>   arch/arm/boot/dts/omap3-cm-t3517.dts           | 10 ++++
+>>   arch/arm/boot/dts/omap3-cm-t3730.dts           | 10 ++++
+>>   arch/arm/boot/dts/omap3-evm-common.dtsi        | 10 ++++
+>>   arch/arm/boot/dts/omap3-igep0020-rev-f.dts     |  9 ++++
+>>   arch/arm/boot/dts/omap3-igep0030-rev-g.dts     |  9 ++++
+>>   arch/arm/boot/dts/omap3-zoom3.dts              | 10 ++++
+>>   arch/arm/boot/dts/omap4-panda-common.dtsi      | 10 ++++
+>
+>
+> Hi Eliad,
+>
+> Tested OK (boot, scan, join, ping) on Pandaboard ES.
+>
+thanks for testing it!
 
-> +       ret = of_property_read_u32(np, "hisilicon,tsensor-lag-value",
-> +                                  &sensor->lag);
-
-This wasn't in the binding.
-
-[...]
-
-> +       ret = of_property_read_u32(np, "hisilicon,tsensor-thres-temp",
-> +                                  &sensor->thres_temp);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to get thres value %d: %d\n",
-> +                       index, ret);
-> +               return ret;
-> +       }
-> +
-> +       ret = of_property_read_u32(np, "hisilicon,tsensor-reset-temp",
-> +                                  &sensor->reset_temp);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to get reset value %d: %d\n",
-> +                       index, ret);
-> +               return ret;
-> +       }
-
-I see now that these properties result in the HW being programmed. You
-should figure out how to reconcile these with thermal-zone trip points
-rather than having parallel properties.
-
-> +
-> +       if (of_property_read_bool(np, "hisilicon,tsensor-bind-irq")) {
-> +
-> +               if (data->irq_bind_sensor != -1)
-> +                       dev_warn(&pdev->dev, "irq has bound to index %d\n",
-> +                                data->irq_bind_sensor);
-> +
-> +               /* bind irq to this sensor */
-> +               data->irq_bind_sensor = index;
-> +       }
-
-I don't see why this should be specified in the DT. Why do you believe
-it should?
-
-[...]
-
-> +static int hisi_thermal_probe(struct platform_device *pdev)
-> +{
-> +       struct hisi_thermal_data *data;
-> +       struct resource *res;
-> +       int i;
-> +       int ret;
-> +
-> +       if (!cpufreq_get_current_driver()) {
-> +               dev_dbg(&pdev->dev, "no cpufreq driver!");
-> +               return -EPROBE_DEFER;
-> +       }
-
-Surely we care about not burning out the board even if we don't have
-cpufreq?
-
-Is there any ordering guarantee between the probing of this driver and
-cpufreq?
-
-
-[...]
-
-> +       data->clk = devm_clk_get(&pdev->dev, NULL);
-
-You gave this clock a name in the binding. Use it or drop it.
-
-Mark. 
+Eliad.
