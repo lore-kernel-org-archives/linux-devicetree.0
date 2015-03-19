@@ -1,63 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: dts: brcmstb: add nodes for SATA controller
- and PHY
-Date: Thu, 19 Mar 2015 14:33:32 +0300
-Message-ID: <550AB40C.8060607@cogentembedded.com>
-References: <1426728222-8197-1-git-send-email-computersforpeace@gmail.com> <1426728222-8197-5-git-send-email-computersforpeace@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V2 7/8] ARM: cpuidle: Register per cpuidle device
+Date: Thu, 19 Mar 2015 11:38:24 +0000
+Message-ID: <20150319113824.GC4449@red-moon>
+References: <1426704372-20406-1-git-send-email-daniel.lezcano@linaro.org>
+ <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org>
+ <20150319110806.GE24556@red-moon>
+ <550AB298.6040907@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426728222-8197-5-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <550AB298.6040907-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Mar 19, 2015 at 11:27:20AM +0000, Daniel Lezcano wrote:
 
-On 3/19/2015 4:23 AM, Brian Norris wrote:
-
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Light dependency on:
->    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331921.html
-> for the surrounding text.
-
->   arch/arm/boot/dts/bcm7445.dtsi | 36 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 36 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
-> index 9eaeac8dce1b..7a7c4d8c2afe 100644
-> --- a/arch/arm/boot/dts/bcm7445.dtsi
-> +++ b/arch/arm/boot/dts/bcm7445.dtsi
-> @@ -108,6 +108,42 @@
->   			brcm,int-map-mask = <0x25c>, <0x7000000>;
->   			brcm,int-fwd-mask = <0x70000>;
->   		};
-> +
-> +		sata@f045a000 {
-
-    Hm, why the <unit-address> part of the name doesn't correspond to the 
-"reg" prop?
-
-> +			compatible = "brcm,bcm7445-ahci", "brcm,sata3-ahci";
-> +			reg-names = "ahci", "top-ctrl";
-> +			reg = <0x45a000 0xa9c>, <0x458040 0x24>;
-> +			interrupts = <GIC_SPI 30 0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-[...]
-> +		sata_phy: sata-phy@f0458100 {
-
-    Same question here...
-
-> +			compatible = "brcm,bcm7445-sata-phy", "brcm,phy-sata3";
-> +			reg = <0x458100 0x1e00>, <0x45804c 0x10>;
 [...]
 
-WBR, Sergei
+> >>   	for_each_possible_cpu(cpu) {
+> >>   		ret = arm_cpuidle_init(cpu);
+> >> +
+> >> +		/* This cpu does not support any idle states */
+> >> +		if (ret == -ENOSYS)
+> >> +			continue;
+> >> +
+> >>   		if (ret) {
+> >>   			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
+> >> -			return ret;
+> >> +			goto out_fail;
+> >> +		}
+> >> +
+> >> +		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> >> +		if (!dev) {
+> >> +			pr_err("Failed to allocate cpuidle device\n");
+> >> +			goto out_fail;
+> >> +		}
+> >> +
+> >> +		dev->cpu = cpu;
+> >> +		per_cpu(cpuidle_arm_dev, cpu) = dev;
+> >> +
+> >> +		ret = cpuidle_register_device(dev);
+> >> +		if (ret) {
+> >> +			pr_err("Failed to register cpuidle device for CPU %d\n",
+> >> +			       cpu);
+> >> +			kfree(dev);
+> >> +			goto out_fail;
+> >>   		}
+> >>   	}
+> >> +out:
+> >> +	return ret;
+> >
+> > return 0;
+> >
+> >>
+> >> -	return cpuidle_register(drv, NULL);
+> >> +out_fail:
+> >> +	for (cpu--; cpu <= 0; cpu--) {
+> >
+> > This loop is wrong.
+> 
+> Why is it wrong ? We have to initialize at cpu - 1 to unregister the 
+> previous registered cpu, not the current one, no ?
 
+Yes, but on cpu>=0 not cpu<=0
+
+while (--cpu >= 0)
+
+?
+
+Lorenzo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
