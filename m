@@ -1,86 +1,97 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH 2/2] drm/panel: simple: Add support for Innolux AT043TN24
-Date: Thu, 19 Mar 2015 14:43:01 +0100
-Message-ID: <84ca8ea51cd7bd709729de927d60d8a2f47664c7.1426772560.git.nicolas.ferre@atmel.com>
-References: <c661ab7f0d1829c7cac7875ce44eb3293a7515a9.1426772560.git.nicolas.ferre@atmel.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node
+ binding
+Date: Thu, 19 Mar 2015 13:49:10 +0000
+Message-ID: <20150319134910.GF18473@leverpostej>
+References: <550A42AC.8060104@gmail.com>
+ <550A4382.4030209@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c661ab7f0d1829c7cac7875ce44eb3293a7515a9.1426772560.git.nicolas.ferre@atmel.com>
+Content-Disposition: inline
+In-Reply-To: <550A4382.4030209@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, thierry.reding@gmail.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Innolux AT043TN24 4.3" WQVGA TFT LCD panel.
-This panel with backlight is found in PDA 4.3" LCD screen (TM43xx series for
-instance).
+On Thu, Mar 19, 2015 at 03:33:22AM +0000, Frank Rowand wrote:
+> From: Frank Rowand <frank.rowand@sonymobile.com>
+> 
+> Add /chosen/dtb-node binding.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- .../bindings/panel/innolux,at043tn24.txt           |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/innolux,at043tn24.txt
+Why? It doesn't matter what the cover says, the commit message should
+have a rationale.
 
-diff --git a/Documentation/devicetree/bindings/panel/innolux,at043tn24.txt b/Documentation/devicetree/bindings/panel/innolux,at043tn24.txt
-new file mode 100644
-index 000000000000..4104226b61bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/innolux,at043tn24.txt
-@@ -0,0 +1,7 @@
-+Innolux AT043TN24 4.3" WQVGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "innolux,at043tn24"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 6e4a85f50d71..4088f9bd7973 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -663,6 +663,31 @@ static const struct panel_desc hitachi_tx23d38vm0caa = {
- 	},
- };
- 
-+static const struct drm_display_mode innolux_at043tn24_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 2,
-+	.hsync_end = 480 + 2 + 41,
-+	.htotal = 480 + 2 + 41 + 2,
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 2,
-+	.vsync_end = 272 + 2 + 11,
-+	.vtotal = 272 + 2 + 11 + 2,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+};
-+
-+static const struct panel_desc innolux_at043tn24 = {
-+	.modes = &innolux_at043tn24_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 95,
-+		.height = 54,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+};
-+
- static const struct drm_display_mode innolux_g121i1_l01_mode = {
- 	.clock = 71000,
- 	.hdisplay = 1280,
-@@ -872,6 +897,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "hit,tx23d38vm0caa",
- 		.data = &hitachi_tx23d38vm0caa
- 	}, {
-+		.compatible = "innolux,at043tn24",
-+		.data = &innolux_at043tn24,
-+	}, {
- 		.compatible ="innolux,g121i1-l01",
- 		.data = &innolux_g121i1_l01
- 	}, {
--- 
-2.1.3
+Who needs this information, and when do they need it?
+
+Why is the existing information insufficient?
+
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt |   37 +++++++++++
+> 
+> Index: b/Documentation/devicetree/bindings/chosen.txt
+> ===================================================================
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -46,6 +46,43 @@ on PowerPC "stdout" if "stdout-path" is
+>  should only use the "stdout-path" property.
+>  
+>  
+> +dtb-info node
+> +----------------
+> +
+> +Information that describes where the device tree blob (DTB) came from and the
+> +environment it was created in.
+> +
+> +This node is normally created by including arch/arm/boot/dts/skeleton.dtsi,
+> +which includes include/dt-bindings/version.dtsi.
+> +
+> +Properties:
+> +
+> +version
+> +	The version of the DTB.  This is analagous to the linux kernel version.
+> +
+> +	This is a format free field intended for human consumption.  User space
+> +	programs should not have any expections about this property.
+
+I doubt that this would stay the case for long were this property added.
+
+> +	The DTB number in this property is incremented each time a make that
+> +	creates one or more DTBs is invoked.  If the make creates multiple
+> +	DTBs then this number is only incremented once.
+> +
+> +	The DTB number is stored in file .version_dtb.
+
+This is irrelevant to the binding, and as you mention above, you can
+make no expectations about this property.
+
+I'm not sure I see the point in adding a property which is not
+well-defined and not guarnateed to be in any way stable.
+
+> +
+> +version-linux
+> +	The version of the linux kernel most recently built in the source
+> +	control system that contains the source used to build the DTB.
+> +
+> +	The linux kernel version number is not incremented for a make that
+> +	creates a DTB.
+
+...so if I build a DTB outside of a linux source tree I don't get to
+describe that?
+
+> +dtb-path
+> +	The build directory relative path of the DTB.
+> +
+> +dts-path
+> +	The absolute path of the .dts file compiled to create the DTB.
+
+Why do you need the DTB path?
+
+Why do these differ w.r.t. absolute/relative?
+
+Why would you _ever_ need an absolute path!?
+
+Mark.
