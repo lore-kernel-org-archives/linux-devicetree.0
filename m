@@ -1,42 +1,53 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Thu, 19 Mar 2015 10:58:36 -0400
-Message-ID: <550AE41C.8070803@hurleysoftware.com>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>	<1426197361-19290-11-git-send-email-maxime.coquelin@st.com>	<CAHp75Vd7+oLiLLuyocYh95TebtocWrRho6xNjuSUt8fYGp8npg@mail.gmail.com>	<CALszF6BWuUYRh+3rWnSQLApkAHA5dQXw=6x6D_evRtb+5B_ukA@mail.gmail.com>	<CAHp75Vdf6=z1d5+eYJ+QGTko9kkZf-oPfoWaf8FRoTdqcdWxjw@mail.gmail.com> <CALszF6A5Zu7i0hxSLTS-nfOAXmd0__jLjB=fHxK93Ex5Vbi9LA@mail.gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v1] of/pci : fix of_pci_dma_configure parent ptr NULL
+Date: Thu, 19 Mar 2015 10:01:34 -0500
+Message-ID: <20150319150134.GA26935@google.com>
+References: <1426092003-16925-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALszF6A5Zu7i0hxSLTS-nfOAXmd0__jLjB=fHxK93Ex5Vbi9LA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem@davemlo>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426092003-16925-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, arnd@arndb.de, Suravee.Suthikulpanit@amd.com, will.deacon@arm.com, joro@8bytes.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 09:55 AM, Maxime Coquelin wrote:
->>>>> +static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
->>>>> +                           struct ktermios *old)
-[...]
->>>>> +       usardiv = (port->uartclk * 25) / (baud * 4);
->>>>> +       mantissa = (usardiv / 100) << USART_BRR_DIV_M_SHIFT;
->>>>> +       fraction = DIV_ROUND_CLOSEST((usardiv % 100) * 16, 100);
->>>>> +       if (fraction & ~USART_BRR_DIV_F_MASK) {
->>>>> +               fraction = 0;
->>>>> +               mantissa += (1 << USART_BRR_DIV_M_SHIFT);
->>>>> +       }
-[...]
-> Really, I would prefer keeping this fractional divider as it is
-> implemented today.
+On Wed, Mar 11, 2015 at 12:40:03PM -0400, Murali Karicheri wrote:
+> On some platforms such as that based on x86, ia64 etc, root bus is
+> created with parent node passed in as NULL to pci_create_root_bus().
+> On these platforms, the patch series "PCI: get DMA configuration from
+> parent device" when applied causes kernel crash. So add a check for this
+> in of_pci_dma_configure()
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> Acked-by: Rob Herring<robh@kernel.org>
 
-You have to admit that's basically an unintelligible mess;
-how would anyone ever be able to refactor and replace that with a
-common divider implementation?
+Since I hadn't merged the original patch yet, I just folded this fix into
+it.  The series is on pci/iommu, and I merged it for "next".  Thanks for
+your patience. 
 
-At the very least, please comment on the formula and format.
+Bjorn
 
-Regards,
-Peter Hurley
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/of/of_pci.c |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 86d3c38..a8e485c 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -129,6 +129,10 @@ void of_pci_dma_configure(struct pci_dev *pci_dev)
+>  	struct device *dev = &pci_dev->dev;
+>  	struct device *bridge = pci_get_host_bridge_device(pci_dev);
+>  
+> +	/* Some platforms can have bridge->parent set to NULL */
+> +	if (!bridge->parent)
+> +		return;
+> +
+>  	of_dma_configure(dev, bridge->parent->of_node);
+>  	pci_put_host_bridge_device(bridge);
+>  }
+> -- 
+> 1.7.9.5
+> 
