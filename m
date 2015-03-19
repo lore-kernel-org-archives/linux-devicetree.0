@@ -1,54 +1,86 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: brcmstb: add IRQ0 controller
-Date: Wed, 18 Mar 2015 17:31:32 -0700
-Message-ID: <1426725092-16392-2-git-send-email-computersforpeace@gmail.com>
-References: <1426725092-16392-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426725092-16392-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/3] mfd: devicetree: qcom_rpm: document IPQ8064 resources
+Date: Wed, 18 Mar 2015 17:53:01 -0700
+Message-ID: <550A1DED.3070008@codeaurora.org>
+References: <1416512485-7292-1-git-send-email-joshc@codeaurora.org> <1416512485-7292-2-git-send-email-joshc@codeaurora.org> <20141124103812.GG4241@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141124103812.GG4241@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This L2 controller handles multiplexing a few different interrupts. We
-also need it for configuring the interrupt forwarding masks for the
-UART.
+On 11/24/14 02:38, Lee Jones wrote:
+> On Thu, 20 Nov 2014, Josh Cartwright wrote:
+>
+>> The IPQ8064 SoC has several RPM-controlled resources, an NSS fabrick
+>> clock and four regulator resources.  Provide definitions for them.
+>>
+>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 6 +++++-
+>>  include/dt-bindings/mfd/qcom-rpm.h                 | 6 ++++++
+>>  2 files changed, 11 insertions(+), 1 deletion(-)
+> For my own reference:
+>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-With this, we can *now* boot BCM7445 to a prompt using the upstream
-kernel + DTB.
+Lee, can you pick this patch up please?
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/bcm7445.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>
+>> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+>> index 4264021..6d4e3ec 100644
+>> --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+>> @@ -12,6 +12,7 @@ frequencies.
+>>  		    "qcom,rpm-apq8064"
+>>  		    "qcom,rpm-msm8660"
+>>  		    "qcom,rpm-msm8960"
+>> +		    "qcom,rpm-ipq8064"
+>>  
+>>  - reg:
+>>  	Usage: required
+>> @@ -67,6 +68,7 @@ of valid subnodes that can operate on these resources.
+>>  		    "qcom,rpm-pm8901-ftsmps"
+>>  		    "qcom,rpm-pm8921-smps"
+>>  		    "qcom,rpm-pm8921-ftsmps"
+>> +		    "qcom,rpm-smb208"
+>>  
+>>  - reg:
+>>  	Usage: required
+>> @@ -76,7 +78,9 @@ of valid subnodes that can operate on these resources.
+>>  		    QCOM_RPM_PM8058_SMPS0 - QCOM_RPM_PM8058_SMPS4,
+>>  		    QCOM_RPM_PM8821_SMPS1 - QCOM_RPM_PM8821_SMPS2,
+>>  		    QCOM_RPM_PM8901_SMPS0 - QCOM_RPM_PM8901_SMPS4,
+>> -		    QCOM_RPM_PM8921_SMPS1 - QCOM_RPM_PM8921_SMPS8
+>> +		    QCOM_RPM_PM8921_SMPS1 - QCOM_RPM_PM8921_SMPS8,
+>> +		    QCOM_RPM_SMB208_S1a, QCOM_RPM_SMB208_S1b,
+>> +		    QCOM_RPM_SMB208_S2a, QCOM_RPM_SMB208_S2b
+>>  
+>>  - bias-pull-down:
+>>  	Usage: optional
+>> diff --git a/include/dt-bindings/mfd/qcom-rpm.h b/include/dt-bindings/mfd/qcom-rpm.h
+>> index 388a6f3..13a9d4b 100644
+>> --- a/include/dt-bindings/mfd/qcom-rpm.h
+>> +++ b/include/dt-bindings/mfd/qcom-rpm.h
+>> @@ -141,6 +141,12 @@
+>>  #define QCOM_RPM_SYS_FABRIC_MODE		131
+>>  #define QCOM_RPM_USB_OTG_SWITCH			132
+>>  #define QCOM_RPM_VDDMIN_GPIO			133
+>> +#define QCOM_RPM_NSS_FABRIC_0_CLK		134
+>> +#define QCOM_RPM_NSS_FABRIC_1_CLK		135
+>> +#define QCOM_RPM_SMB208_S1a			136
+>> +#define QCOM_RPM_SMB208_S1b			137
+>> +#define QCOM_RPM_SMB208_S2a			138
+>> +#define QCOM_RPM_SMB208_S2b			139
+>>  
+>>  /*
+>>   * Constants used to select force mode for regulators.
 
-diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
-index b183dc99111a..9eaeac8dce1b 100644
---- a/arch/arm/boot/dts/bcm7445.dtsi
-+++ b/arch/arm/boot/dts/bcm7445.dtsi
-@@ -96,6 +96,18 @@
- 				     "syscon";
- 			reg = <0x452000 0x100>;
- 		};
-+
-+		irq0_intc: interrupt-controller@f040a780 {
-+			compatible = "brcm,bcm7120-l2-intc";
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <1>;
-+			reg = <0x40a780 0x8>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 0x45 0x0>,
-+				     <GIC_SPI 0x43 0x0>;
-+			brcm,int-map-mask = <0x25c>, <0x7000000>;
-+			brcm,int-fwd-mask = <0x70000>;
-+		};
- 	};
- 
- 	smpboot {
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
