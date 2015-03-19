@@ -1,117 +1,74 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Thu, 19 Mar 2015 12:28:46 -0600
-Message-ID: <550B155E.9050308@wwwdotorg.org>
-References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com> <550AEE6B.5080301@wwwdotorg.org> <alpine.DEB.2.02.1503191601520.9480@utopia.booyaka.com> <550AFF52.6070503@wwwdotorg.org> <alpine.DEB.2.02.1503191706340.9480@utopia.booyaka.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node
+ binding
+Date: Thu, 19 Mar 2015 18:41:40 +0000
+Message-ID: <20150319184139.GG8656@n2100.arm.linux.org.uk>
+References: <550A42AC.8060104@gmail.com>
+ <550A4382.4030209@gmail.com>
+ <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1503191706340.9480@utopia.booyaka.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Hiroshi DOYU <hdoyu@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 11:55 AM, Paul Walmsley wrote:
-> On Thu, 19 Mar 2015, Stephen Warren wrote:
->
->> The binding document is supposed to say what value the reg property should
->> have.
->
-> If you look at other DT binding documentation in the kernel, this is
-> generally not the case.  Consider these examples:
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/i2c/i2c-omap.txt
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
+On Thu, Mar 19, 2015 at 08:23:29AM -0500, Rob Herring wrote:
+> On Wed, Mar 18, 2015 at 10:33 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> > +version
+> > +       The version of the DTB.  This is analagous to the linux kernel version.
+> > +
+> > +       This is a format free field intended for human consumption.  User space
+> > +       programs should not have any expections about this property.
+> > +
+> > +       The DTB number in this property is incremented each time a make that
+> > +       creates one or more DTBs is invoked.  If the make creates multiple
+> > +       DTBs then this number is only incremented once.
+> > +
+> > +       The DTB number is stored in file .version_dtb.
+> > +
+> > +version-linux
+> > +       The version of the linux kernel most recently built in the source
+> > +       control system that contains the source used to build the DTB.
+> > +
+> > +       The linux kernel version number is not incremented for a make that
+> > +       creates a DTB.
+> > +
+> > +dtb-path
+> > +       The build directory relative path of the DTB.
+> > +
+> > +dts-path
+> > +       The absolute path of the .dts file compiled to create the DTB.
+> 
+> So these become an ABI and we can never change the directory structure?
+> 
+> The problem with informational fields is someone, somewhere will rely
+> on them and then we are stuck with them. Look at /proc/cpuinfo.
 
-That is because there are no special requirements for the reg values 
-beyond the HW documentation.
+There's a bigger problem: including the Linux kernel specific version
+means that we will _never_ be able to move them out of the kernel.
 
-However, if we need the reg value to contain something other than the 
-base address that's in the HW documentation, we clearly need to document 
-that exception. How else would anyone know about the exception?
+Moreover, what it means is that people can then write code to test
+what the dtb version is, and we'll end up with the dtb version being
+tested to determine various features.
 
-The example doesn't count because (a) it's not normative (b) an example 
-wouldn't explain why an exception needs to be made or how to calculate 
-the exception value for cases other than the specific example given.
+Since the design goal of DTB is to describe the hardware, including
+the Linux kernel version is totally against that: the Linux kernel
+version should be totally irrelevant.  What's more relevant would be
+a _hardware_ version field, but even that's questionable...
 
-...
->> If we require some unusual offset in the reg property (i.e. something
->> other than what the HW documentation describes as the module base address),
->> that ought to be documented. We do have this situation for this module at
->> present, although the documentation unfortunately doesn't explicitly call this
->> out even though the example alludes to it.
->>
->> I do think we should at least fix the example so it isn't confusing and
->> inconsistent with expected practice. We could either switch the example to
->> Tegra210 so we only provide the best example going forward, or have separate
->> examples for Tegra20/210 to highlight the difference.
->>
->> We should also add documentation that Chips before Tegra210 (or
->> Tegra132?) *require* the extra offset. Any code or DT written to the
->> existing (admittedly slightly implicit) binding needs to continue to
->> work, so we should document this unusual requirement, even if we enhance
->> the Linux driver to accept either mode of operation.
->
-> After the two driver patches (after rmk's requested changes) are applied,
-> no unusual offset will be required, but if the legacy offset is specified,
-> it will be transparently handled.
->
-> As I see it, there are three possible cases:
->
-> 1. the legacy, incorrect base address is used, in which case everything
-> will still work but there will be a warning;
->
-> 2. the correct base address (from a hardware SoC integration point of
-> view) is used, in which case everything will work with no warnings,
->
-> 3. a novel, completely incorrect base address is used, in which case the
-> IP block won't work at all and the driver will fail completely
->
-> After the patches, the driver now handles the first two cases.  If you
-> would like the DT binding documentation practice changed to attempt to
-> address the third case, by requiring DT binding documentation to contain
-> lists of the correct IP integration data for every possible chip that
-> contains that IP block, as you mention above, such a change would be a
-> major delta from existing kernel practice, so would certainly mandate
-> submitting a patch for the common DT binding documentation file at
+And yes, you are right - anything like this which we add immediately
+becames a user ABI which becomes *very* difficult to change later, so
+in order to accept anything like this, we have to be absolutely sure
+that this is something we really really really really want to do.  Let
+me put it another way: once this is accepted, it will probably be
+impossible to ever change it.
 
-That's not what I'm asking for. I want exceptions to standard practice 
-documented, which is that reg contains whatever the HW documentation 
-says it should. There's no need to enumerate all the valid values; the 
-HW documentation does that. However, if the DT binding requires 
-something other than what the HW documentation says, we must document that.
+... just like Bogomips in /proc/cpuinfo.
 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/submitting-patches.txt
->
->> Other OSs and old versions of Linux will still need the exception for
->> older SoCs.
->
-> How about this: I will send a patch for the DT binding documentation to
-> note that versions of Linux prior to v4.1 (unless Torvalds runs another
-> poll) require the four-byte-offset base address.  Is that sufficient to
-> address your concerns with this series?
-
-Almost yes.
-
-We should not document Linux 4.1 as the cut-off. DT bindings are 
-supposed to be OS agnostic. While it's practically unlikely, it is 
-entirely possible for some other OS to have already implemented support 
-for this binding, and the current binding is an ABI. We have no control 
-over if/when any non-Linux code is updated to add support for a 0-based 
-offset for existing SoCs, and certainly no versions of Linux or any 
-other OS can be updated retro-actively except perhaps a few linux-stable 
-versions. We can however write the binding in such a way as support for 
-new SoCs requires the new 0-based address, since there is no binding 
-specification for those new chips yet, and the time when you add the new 
-binding documentation is the first time any OS could possibly add 
-conformant support for it.
-
-In summary, I believe the binding document must state that 
-T20/30/114/124 require the offset of 4 in reg value, and newer chips 
-require no offset in the reg value. We can still always accept either in 
-the Linux kernel going forward based on the principle of being lenient 
-re: input data.
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
