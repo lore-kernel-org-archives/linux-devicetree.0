@@ -1,173 +1,40 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V2 7/8] ARM: cpuidle: Register per cpuidle device
-Date: Thu, 19 Mar 2015 18:11:21 +0100
-Message-ID: <550B0339.6010609@linaro.org>
-References: <1426704372-20406-1-git-send-email-daniel.lezcano@linaro.org> <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org> <20150319153112.GA589@linaro.org> <550AEC3C.5090200@linaro.org> <20150319154247.GB589@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node binding
+Date: Thu, 19 Mar 2015 18:23:21 +0100
+Message-ID: <CAMuHMdV1O2dpEW2yA2OFJ71zBm1aHSoiREmn3ujP5kEGZCN1GA@mail.gmail.com>
+References: <550A42AC.8060104@gmail.com>
+	<550A4382.4030209@gmail.com>
+	<20150319134910.GF18473@leverpostej>
+	<550B013B.1060002@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150319154247.GB589@linaro.org>
+In-Reply-To: <550B013B.1060002@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: rjw@rjwysocki.net, lorenzo.pieralisi@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 04:42 PM, Lina Iyer wrote:
-> On Thu, Mar 19 2015 at 09:33 -0600, Daniel Lezcano wrote:
->> On 03/19/2015 04:31 PM, Lina Iyer wrote:
->>> On Wed, Mar 18 2015 at 12:46 -0600, Daniel Lezcano wrote:
->>>> Some architectures have some cpus which does not support idle stat=
-es.
->>>>
->>>> Let the underlying low level code to return -ENOSYS when it is not
->>>> possible to set an idle state.
->>>>
->>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>> ---
->>>> drivers/cpuidle/cpuidle-arm.c | 45
->>>> +++++++++++++++++++++++++++++++++++++++++--
->>>> 1 file changed, 43 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/cpuidle/cpuidle-arm.c
->>>> b/drivers/cpuidle/cpuidle-arm.c
->>>> index 1c94b88..0682ed0 100644
->>>> --- a/drivers/cpuidle/cpuidle-arm.c
->>>> +++ b/drivers/cpuidle/cpuidle-arm.c
->>>> @@ -17,11 +17,14 @@
->>>> #include <linux/kernel.h>
->>>> #include <linux/module.h>
->>>> #include <linux/of.h>
->>>> +#include <linux/slab.h>
->>>>
->>>> #include <asm/cpuidle.h>
->>>>
->>>> #include "dt_idle_states.h"
->>>>
->>>> +static DEFINE_PER_CPU(struct cpuidle_device, *cpuidle_arm_dev);
->>>
->>> Is a per-cpu variable needed? There seems to be no per-cpu access, =
-other
->>> than at init.
->>
->> :)
->>
->> Actually it is the cpuidle framework which is using the per cpu vari=
-able.
->>
+On Thu, Mar 19, 2015 at 6:02 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> Why would you _ever_ need an absolute path!?
 >
-> But this is static pointer, I can see that struct cpuidle_device * be=
-ing
-> used by cpuidle framework.
->
-> It gets stored here?
->
-> DEFINE_PER_CPU(struct cpuidle_device *, cpuidle_devices);
->
-> But we dont need to save it here, for in this file, there is no per-c=
-pu
-> access, other than when the registration fails.
+> The absolute path tells you which source repository contained the source.
 
-Indeed, that is true. There is no need of these cpuidle variables.=20
-=46urthermore, we can access the cpuidle_devices directly as they are=20
-exported in cpuidle.h.
+Really? Usually it's just gonna be <something>/linux-2.6...
 
-I will fix it.
+IMHO it leaks information (the <something>) you don't want to be in final
+build, like login names and file server names.
+We already have way to many uses of __FILE__ in the kernel source tree.
+Unfortunately there's no replacement macro with just the relative path,
+against the topdir of the source tree.
 
-Thanks
-   -- Daniel
+Gr{oetje,eeting}s,
 
->>>> +
->>>> /*
->>>> * arm_enter_idle_state - Programs CPU to enter the specified state
->>>> *
->>>> @@ -94,6 +97,7 @@ static int __init arm_idle_init(void)
->>>> {
->>>>    int cpu, ret;
->>>>    struct cpuidle_driver *drv =3D &arm_idle_driver;
->>>> +    struct cpuidle_device *dev;
->>>>
->>>>    /*
->>>>     * Initialize idle states data, starting at index 1.
->>>> @@ -105,18 +109,55 @@ static int __init arm_idle_init(void)
->>>>    if (ret <=3D 0)
->>>>        return ret ? : -ENODEV;
->>>>
->>>> +    ret =3D cpuidle_register_driver(drv);
->>>> +    if (ret) {
->>>> +        pr_err("Failed to register cpuidle driver\n");
->>>> +        return ret;
->>>> +    }
->>>> +
->>>>    /*
->>>>     * Call arch CPU operations in order to initialize
->>>>     * idle states suspend back-end specific data
->>>>     */
->>>>    for_each_possible_cpu(cpu) {
->>>>        ret =3D arm_cpuidle_init(cpu);
->>>> +
->>>> +        /* This cpu does not support any idle states */
->>>> +        if (ret =3D=3D -ENOSYS)
->>>> +            continue;
->>>> +
->>>>        if (ret) {
->>>>            pr_err("CPU %d failed to init idle CPU ops\n", cpu);
->>>> -            return ret;
->>>> +            goto out_fail;
->>>> +        }
->>>> +
->>>> +        dev =3D kzalloc(sizeof(*dev), GFP_KERNEL);
->>>> +        if (!dev) {
->>>> +            pr_err("Failed to allocate cpuidle device\n");
->>>> +            goto out_fail;
->>>> +        }
->>>> +
->>>> +        dev->cpu =3D cpu;
->>>> +        per_cpu(cpuidle_arm_dev, cpu) =3D dev;
->>>> +
->>>> +        ret =3D cpuidle_register_device(dev);
->>>> +        if (ret) {
->>>> +            pr_err("Failed to register cpuidle device for CPU %d\=
-n",
->>>> +                   cpu);
->>>> +            kfree(dev);
->>>> +            goto out_fail;
->>>>        }
->>>>    }
->>>> +out:
->>>> +    return ret;
->>>>
->>>> -    return cpuidle_register(drv, NULL);
->>>> +out_fail:
->>>> +    for (cpu--; cpu <=3D 0; cpu--) {
->>>> +        dev =3D per_cpu(cpuidle_arm_dev, cpu);
->>>> +        cpuidle_unregister_device(dev);
->>>> +        kfree(dev);
->>>> +    }
->>>> +    cpuidle_unregister_driver(drv);
->>>> +    goto out;
->>>> }
->>>> device_initcall(arm_idle_init);
->>>> --
->>>> 1.9.1
->>>>
->>
->>
->> --
->> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
-or ARM SoCs
->>
->> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
->> <http://twitter.com/#!/linaroorg> Twitter |
->> <http://www.linaro.org/linaro-blog/> Blog
->>
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
