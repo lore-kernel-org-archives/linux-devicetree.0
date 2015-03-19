@@ -1,124 +1,124 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH v2 1/4] mtd: nand: add common DT init code
-Date: Wed, 18 Mar 2015 19:49:15 -0700
-Message-ID: <1426733358-15596-2-git-send-email-computersforpeace@gmail.com>
-References: <1426733358-15596-1-git-send-email-computersforpeace@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: [patch 0/7] dt: dtb version: add version info to dtb
+Date: Wed, 18 Mar 2015 20:29:48 -0700
+Message-ID: <550A42AC.8060104@gmail.com>
+Reply-To: frowand.list@gmail.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426733358-15596-1-git-send-email-computersforpeace@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Dan Ehrenberg <dehrenberg@chromium.org>, Gregory Fong <gregory.0xf0@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-These are already-documented common bindings for NAND chips. Let's
-handle them in nand_base.
+Rob,
 
-If NAND controller drivers need to act on this data before bringing up
-the NAND chip (e.g., fill out ECC callback functions, change HW modes,
-etc.), then they can do so between calling nand_scan_ident() and
-nand_scan_tail().
+Can this be added to the next trees to get some test exposure before submitting
+to Linus?
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
----
- drivers/mtd/nand/nand_base.c | 41 +++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/nand.h     |  5 +++++
- 2 files changed, 46 insertions(+)
+There is currently no way to tie a device tree blob (DTB) back to the source
+and environment used to create it.  Add this information, including a DTB
+version number, which is somewhat analogous to the Linux kernel version number.
 
-diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
-index d4cec2f8a016..692142da62e7 100644
---- a/drivers/mtd/nand/nand_base.c
-+++ b/drivers/mtd/nand/nand_base.c
-@@ -48,6 +48,7 @@
- #include <linux/leds.h>
- #include <linux/io.h>
- #include <linux/mtd/partitions.h>
-+#include <linux/of_mtd.h>
- 
- /* Define default oob placement schemes for large and small page devices */
- static struct nand_ecclayout nand_oob_8 = {
-@@ -3779,6 +3780,39 @@ ident_done:
- 	return type;
- }
- 
-+static int nand_dt_init(struct mtd_info *mtd, struct nand_chip *chip,
-+			struct device_node *dn)
-+{
-+	int ecc_mode, ecc_strength, ecc_step;
-+
-+	if (of_get_nand_bus_width(dn) == 16)
-+		chip->options |= NAND_BUSWIDTH_16;
-+
-+	if (of_get_nand_on_flash_bbt(dn))
-+		chip->bbt_options |= NAND_BBT_USE_FLASH;
-+
-+	ecc_mode = of_get_nand_ecc_mode(dn);
-+	ecc_strength = of_get_nand_ecc_strength(dn);
-+	ecc_step = of_get_nand_ecc_step_size(dn);
-+
-+	if ((ecc_step >= 0 && !(ecc_strength >= 0)) ||
-+	    (!(ecc_step >= 0) && ecc_strength >= 0)) {
-+		pr_err("must set both strength and step size in DT\n");
-+		return -EINVAL;
-+	}
-+
-+	if (ecc_mode >= 0)
-+		chip->ecc.mode = ecc_mode;
-+
-+	if (ecc_strength >= 0)
-+		chip->ecc.strength = ecc_strength;
-+
-+	if (ecc_step > 0)
-+		chip->ecc.size = ecc_step;
-+
-+	return 0;
-+}
-+
- /**
-  * nand_scan_ident - [NAND Interface] Scan for the NAND device
-  * @mtd: MTD device structure
-@@ -3796,6 +3830,13 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
- 	int i, nand_maf_id, nand_dev_id;
- 	struct nand_chip *chip = mtd->priv;
- 	struct nand_flash_dev *type;
-+	int ret;
-+
-+	if (chip->dn) {
-+		ret = nand_dt_init(mtd, chip, chip->dn);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	/* Set the default functions */
- 	nand_set_defaults(chip, chip->options & NAND_BUSWIDTH_16);
-diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-index 3d4ea7eb2b68..e0f40e12a2c8 100644
---- a/include/linux/mtd/nand.h
-+++ b/include/linux/mtd/nand.h
-@@ -26,6 +26,8 @@
- 
- struct mtd_info;
- struct nand_flash_dev;
-+struct device_node;
-+
- /* Scan and identify a NAND device */
- extern int nand_scan(struct mtd_info *mtd, int max_chips);
- /*
-@@ -542,6 +544,7 @@ struct nand_buffers {
-  *			flash device
-  * @IO_ADDR_W:		[BOARDSPECIFIC] address to write the 8 I/O lines of the
-  *			flash device.
-+ * @dn:			[BOARDSPECIFIC] device node describing this instance
-  * @read_byte:		[REPLACEABLE] read one byte from the chip
-  * @read_word:		[REPLACEABLE] read one word from the chip
-  * @write_byte:		[REPLACEABLE] write a single byte to the chip on the
-@@ -644,6 +647,8 @@ struct nand_chip {
- 	void __iomem *IO_ADDR_R;
- 	void __iomem *IO_ADDR_W;
- 
-+	struct device_node *dn;
-+
- 	uint8_t (*read_byte)(struct mtd_info *mtd);
- 	u16 (*read_word)(struct mtd_info *mtd);
- 	void (*write_byte)(struct mtd_info *mtd, uint8_t byte);
--- 
-1.9.1
+The DTB version number is independent of the kernel version number, and is
+incremented for each make of one or more DTBs.
+
+The DTB information is placed in node /chosen/dtb-info.  The data for this
+node will be automatically generated by the .dtb make system for any .dts
+that includes arch/arm/boot/dts/skeleton.dtsi, either directly or indirectly.
+This means that architectures other than arm will not receive this feature.
+This can be added to other architectures by modifying their skeleton.dtsi.
+
+There are 70 of the 557 arm .dts files that do not include skeleton.dtsi.
+Thus the .dtb files created for these systems will not have the
+/chosen/dtb-info node:
+
+   armada-xp-axpwifiap.dts
+   armada-xp-db.dts
+   armada-xp-gp.dts
+   armada-xp-lenovo-ix4-300d.dts
+   armada-xp-matrix.dts
+   armada-xp-netgear-rn2120.dts
+   armada-xp-openblocks-ax3-4.dts
+   armada-xp-synology-ds414.dts
+   atlas6-evb.dts
+   atlas7-evb.dts
+   axm5516-amarillo.dts
+   bcm2835-rpi-b-plus.dts
+   bcm2835-rpi-b.dts
+   ea3250.dts
+   ecx-2000.dts
+   highbank.dts
+   hip04-d01.dts
+   integratorap.dts
+   integratorcp.dts
+   ls1021a-qds.dts
+   ls1021a-twr.dts
+   meson6-atv1200.dts
+   moxart-uc7112lx.dts
+   mt8127-moose.dts
+   mt8135-evbp1.dts
+   nspire-clp.dts
+   nspire-cx.dts
+   nspire-tp.dts
+   phy3250.dts
+   picoxcell-pc7302-pc3x2.dts
+   picoxcell-pc7302-pc3x3.dts
+   prima2-evb.dts
+   r7s72100-genmai.dts
+   r8a73a4-ape6evm-reference.dts
+   r8a73a4-ape6evm.dts
+   r8a7790-lager.dts
+   r8a7791-henninger.dts
+   r8a7791-koelsch.dts
+   r8a7794-alt.dts
+   spear1310-evb.dts
+   spear1340-evb.dts
+   spear300-evb.dts
+   spear310-evb.dts
+   spear320-evb.dts
+   spear320-hmi.dts
+   spear600-evb.dts
+   stih407-b2120.dts
+   stih410-b2120.dts
+   stih415-b2000.dts
+   stih415-b2020.dts
+   stih416-b2000.dts
+   stih416-b2020.dts
+   stih416-b2020e.dts
+   stih418-b2199.dts
+   sun9i-a80-optimus.dts
+   vexpress-v2p-ca15-tc1.dts
+   vexpress-v2p-ca15_a7.dts
+   vexpress-v2p-ca5s.dts
+   vexpress-v2p-ca9.dts
+   vt8500-bv07.dts
+   wm8505-ref.dts
+   wm8650-mid.dts
+   wm8750-apc8750.dts
+   wm8850-w70v2.dts
+   xenvm-4.2.dts
+   zynq-parallella.dts
+   zynq-zc702.dts
+   zynq-zc706.dts
+   zynq-zed.dts
+   zynq-zybo.dts
+
+
+
+An example of the DTB information reported is:
+
+  $ echo ; cat /proc/version; echo ; echo ; dmesg | grep DTB
+
+  Linux version 4.0.0-rc4-dirty (frank@buildhost) (gcc version 4.6.x-google 20120106 (prerelease) (GCC) ) #5 SMP PREEMPT Wed Mar 18 20:04:48 PDT 2015
+
+
+  DTB version 4.0.0-rc4-dirty (frank@buildhost) (DTC 1.4.0-dirty) #4 Wed Mar 18 20:04:11 PDT 2015
+  DTB linux version 4.0.0-rc4-dirty (frank@build_host) (gcc version 4.6.x-google 20120106 (prerelease) (GCC) ) #3 SMP PREEMPT Wed Mar 18 20:02:46 PDT 2015
+  DTB source /local/nobackup/src/git_linus/linux--4.0/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+  DTB blob arch/arm/boot/dts/qcom-apq8074-dragonboard.dtb
+
+
+The values of the /chosen/dtb-info/ properties are also available in
+/proc/device-tree/chosen/dtb-info/
