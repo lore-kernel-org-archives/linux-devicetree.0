@@ -1,82 +1,47 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node binding
-Date: Thu, 19 Mar 2015 10:37:08 -0700
-Message-ID: <550B0944.6080203@gmail.com>
-References: <550A42AC.8060104@gmail.com> <550A4382.4030209@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [UPDATED] [PATCH 3/5] arm-cci: Get rid of secure transactions
+ for PMU driver
+Date: Thu, 19 Mar 2015 17:38:41 +0000
+Message-ID: <550B09A1.4020801@arm.com>
+References: <1426000735-14375-4-git-send-email-suzuki.poulose@arm.com> <1426585901-19137-1-git-send-email-suzuki.poulose@arm.com> <20150319173252.GC10153@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550A4382.4030209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150319173252.GC10153@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nico@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/18/2015 8:33 PM, Frank Rowand wrote:
-> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> 
-> Add /chosen/dtb-node binding.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/chosen.txt |   37 +++++++++++
-> 
-> Index: b/Documentation/devicetree/bindings/chosen.txt
-> ===================================================================
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -46,6 +46,43 @@ on PowerPC "stdout" if "stdout-path" is
->  should only use the "stdout-path" property.
->  
->  
-> +dtb-info node
-> +----------------
-> +
-> +Information that describes where the device tree blob (DTB) came from and the
-> +environment it was created in.
 
-I left out optional vs required.  The next version will state that the dtb-info
-node and each separate property within it are optional.
 
-> +
-> +This node is normally created by including arch/arm/boot/dts/skeleton.dtsi,
-> +which includes include/dt-bindings/version.dtsi.
-> +
-> +Properties:
-> +
-> +version
-> +	The version of the DTB.  This is analagous to the linux kernel version.
-> +
-> +	This is a format free field intended for human consumption.  User space
-> +	programs should not have any expections about this property.
-> +
-> +	The DTB number in this property is incremented each time a make that
-> +	creates one or more DTBs is invoked.  If the make creates multiple
-> +	DTBs then this number is only incremented once.
-> +
-> +	The DTB number is stored in file .version_dtb.
-> +
-> +version-linux
-> +	The version of the linux kernel most recently built in the source
-> +	control system that contains the source used to build the DTB.
-> +
-> +	The linux kernel version number is not incremented for a make that
-> +	creates a DTB.
-> +
-> +dtb-path
-> +	The build directory relative path of the DTB.
-> +
-> +dts-path
-> +	The absolute path of the .dts file compiled to create the DTB.
-> +
-> +
->  Properties documented in other bindings
->  ---------------------------------------
->  #address-cells                          video/simple-framebuffer-sunxi.txt
-> 
+On 19/03/15 17:32, Mark Rutland wrote:
+> One more thing:
+>
+>> @@ -883,7 +894,11 @@ static inline const struct cci_pmu_model *get_cci_model(struct platform_device *
+>>   							pdev->dev.of_node);
+>>   	if (!match)
+>>   		return NULL;
+>> +	if (match->data)
+>> +		return match->data;
+>>
+>> +	dev_warn(&pdev->dev, "DEPRECATED compatible property,"
+>> +			 "requires secure access to CCI registers");
+>>   	return probe_cci_model(pdev);
+>>   }
+>
+> Before the probe, could we please have:
+>
+> 	if (!IS_ENABLED(CONFIG_ARM))
+> 		return -EINVAL;
+>
+> On arm64 we require a model-specific string, and we shouldn't go
+> touching secure-only registers.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+IIUC platform_has_secure_cci_access always return false for ARM64
+preventing any secure access. No ?
+
+Regards,
+Sudeep
