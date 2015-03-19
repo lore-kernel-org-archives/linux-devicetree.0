@@ -1,50 +1,47 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/3] 96boards: add thermal senor support to hikey board
-Date: Thu, 19 Mar 2015 13:59:46 +0000
-Message-ID: <20150319135946.GG18473@leverpostej>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Pontus Fuchs <pontus.fuchs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Thu, 19 Mar 2015 15:05:53 +0100
+Message-ID: <550AD7C1.2030405@gmail.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com> <1426696710-6891-6-git-send-email-eliad@wizery.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: kongxinwei <kong.kongxinwei@hisilicon.com>
-Cc: "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426696710-6891-6-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 07:57:26AM +0000, kongxinwei wrote:
-> The Linaro connect introduce 96boards series in Hong Kong,The HiKey board
-> is the first board to be certified 96Boards Consumer Edition compatible.
-> This board is based on the HiSilicon SoC. you can get more information
-> from https://www.96boards.org.
-> 
-> The hisilicon SoC contains thermal module, this thermal module has 4 sensors,
-> 
-> 	- sensor 0: local sensor;
-> 	- sensor 1: remote sensor for ACPU cluster 1;
-> 	- sensor 2: remote sensor for ACPU cluster 2;
-> 	- sensor 3: remote sensor for GPU;
-> 
-> It can obtain this device temperature by operating this hardware. The new
-> sensor driver satisfies thermal framework and to realize the ACPU ,GPU and
-> so on to cool function.
-> 
-> kongxinwei (3):
->   thermal: hisilicon: add new hisilicon thermal sensor driver
->   dts: hi6220: enable thermal sensor for hisilicon SoC
->   dt-bindings: Document the hi6220 thermal sensor bindings
-> 
->  .../bindings/thermal/hisilicon-thermal.txt         |  51 ++
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 153 ++++++
->  drivers/thermal/Kconfig                            |   8 +
->  drivers/thermal/Makefile                           |   1 +
->  drivers/thermal/hisi_thermal.c                     | 531 +++++++++++++++++++++
+On 2015-03-18 17:38, Eliad Peller wrote:
+> Replace all the pdata-quirks for setting wl12xx/wl18xx
+> platform data with proper DT definitions.
+>
+> Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+> Acked-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+> Acked-by: Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Tested-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v7: rebase
+>
+>   arch/arm/boot/dts/am335x-evmsk.dts             | 11 ++++
+>   arch/arm/boot/dts/omap3-cm-t3517.dts           | 10 ++++
+>   arch/arm/boot/dts/omap3-cm-t3730.dts           | 10 ++++
+>   arch/arm/boot/dts/omap3-evm-common.dtsi        | 10 ++++
+>   arch/arm/boot/dts/omap3-igep0020-rev-f.dts     |  9 ++++
+>   arch/arm/boot/dts/omap3-igep0030-rev-g.dts     |  9 ++++
+>   arch/arm/boot/dts/omap3-zoom3.dts              | 10 ++++
+>   arch/arm/boot/dts/omap4-panda-common.dtsi      | 10 ++++
 
-Mainline does not have a hi6220 dtsi.
+Hi Eliad,
 
-Which tree is this against?
+Tested OK (boot, scan, join, ping) on Pandaboard ES.
 
-What are your dependencies?
+BR,
 
-Mark.
+Pontus
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
