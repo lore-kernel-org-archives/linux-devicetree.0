@@ -1,86 +1,87 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/3] mfd: devicetree: qcom_rpm: document IPQ8064 resources
-Date: Wed, 18 Mar 2015 17:53:01 -0700
-Message-ID: <550A1DED.3070008@codeaurora.org>
-References: <1416512485-7292-1-git-send-email-joshc@codeaurora.org> <1416512485-7292-2-git-send-email-joshc@codeaurora.org> <20141124103812.GG4241@x1>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
+Date: Thu, 19 Mar 2015 10:02:52 +0900
+Message-ID: <20150319100252.03be7dda@hwh-ubuntu>
+References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
+ <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
+ <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141124103812.GG4241@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Stone <daniel@fooishbar.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dh09.lee@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/14 02:38, Lee Jones wrote:
-> On Thu, 20 Nov 2014, Josh Cartwright wrote:
->
->> The IPQ8064 SoC has several RPM-controlled resources, an NSS fabrick
->> clock and four regulator resources.  Provide definitions for them.
->>
->> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 6 +++++-
->>  include/dt-bindings/mfd/qcom-rpm.h                 | 6 ++++++
->>  2 files changed, 11 insertions(+), 1 deletion(-)
-> For my own reference:
->
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-
-Lee, can you pick this patch up please?
-
->
->> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
->> index 4264021..6d4e3ec 100644
->> --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
->> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
->> @@ -12,6 +12,7 @@ frequencies.
->>  		    "qcom,rpm-apq8064"
->>  		    "qcom,rpm-msm8660"
->>  		    "qcom,rpm-msm8960"
->> +		    "qcom,rpm-ipq8064"
->>  
->>  - reg:
->>  	Usage: required
->> @@ -67,6 +68,7 @@ of valid subnodes that can operate on these resources.
->>  		    "qcom,rpm-pm8901-ftsmps"
->>  		    "qcom,rpm-pm8921-smps"
->>  		    "qcom,rpm-pm8921-ftsmps"
->> +		    "qcom,rpm-smb208"
->>  
->>  - reg:
->>  	Usage: required
->> @@ -76,7 +78,9 @@ of valid subnodes that can operate on these resources.
->>  		    QCOM_RPM_PM8058_SMPS0 - QCOM_RPM_PM8058_SMPS4,
->>  		    QCOM_RPM_PM8821_SMPS1 - QCOM_RPM_PM8821_SMPS2,
->>  		    QCOM_RPM_PM8901_SMPS0 - QCOM_RPM_PM8901_SMPS4,
->> -		    QCOM_RPM_PM8921_SMPS1 - QCOM_RPM_PM8921_SMPS8
->> +		    QCOM_RPM_PM8921_SMPS1 - QCOM_RPM_PM8921_SMPS8,
->> +		    QCOM_RPM_SMB208_S1a, QCOM_RPM_SMB208_S1b,
->> +		    QCOM_RPM_SMB208_S2a, QCOM_RPM_SMB208_S2b
->>  
->>  - bias-pull-down:
->>  	Usage: optional
->> diff --git a/include/dt-bindings/mfd/qcom-rpm.h b/include/dt-bindings/mfd/qcom-rpm.h
->> index 388a6f3..13a9d4b 100644
->> --- a/include/dt-bindings/mfd/qcom-rpm.h
->> +++ b/include/dt-bindings/mfd/qcom-rpm.h
->> @@ -141,6 +141,12 @@
->>  #define QCOM_RPM_SYS_FABRIC_MODE		131
->>  #define QCOM_RPM_USB_OTG_SWITCH			132
->>  #define QCOM_RPM_VDDMIN_GPIO			133
->> +#define QCOM_RPM_NSS_FABRIC_0_CLK		134
->> +#define QCOM_RPM_NSS_FABRIC_1_CLK		135
->> +#define QCOM_RPM_SMB208_S1a			136
->> +#define QCOM_RPM_SMB208_S1b			137
->> +#define QCOM_RPM_SMB208_S2a			138
->> +#define QCOM_RPM_SMB208_S2b			139
->>  
->>  /*
->>   * Constants used to select force mode for regulators.
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+RGVhciBEYW5pZWwsCgpPbiBXZWQsIDE4IE1hciAyMDE1IDA5OjUyOjMzICswMDAwCkRhbmllbCBT
+dG9uZSA8ZGFuaWVsQGZvb2lzaGJhci5vcmc+IHdyb3RlOgoKPiBIaSwKPiAKPiBPbiAxOCBNYXJj
+aCAyMDE1IGF0IDA4OjE2LCBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ftc3VuZy5jb20+
+Cj4gd3JvdGU6Cj4gPiArI2RlZmluZSBSRUcoZHNpLCByZWcpICAoKGRzaSktPnJlZ19iYXNlICsK
+PiA+IGRzaS0+ZHJpdmVyX2RhdGEtPnJlZ3NbKHJlZyldKQo+IAo+IFRoaXMgc2VlbXMgbGlrZSBh
+IGdvb2QgY2hhbmdlIGluIGdlbmVyYWwsIGJ1dCBwbGVhc2Ugc3BsaXQgaXQgdXA6IGl0Cj4gbWFr
+ZXMgYmlzZWN0aW9uIG11Y2ggZWFzaWVyIGlmIHlvdSBoYXZlIG9uZSBwYXRjaCB3aGljaCBhZGRz
+IG5vCj4gZnVuY3Rpb25hbGl0eSBhbmQgc2hvdWxkIGhhdmUgZXhhY3RseSB0aGUgc2FtZSBiZWhh
+dmlvdXIsIGFuZCB0aGVuCj4gYW5vdGhlciBwYXRjaCB3aGljaCBpbnRyb2R1Y2VzIHlvdXIgY2hh
+bmdlcy4KClllcy4gSSBhZ3JlZSB3aXRoIHlvdS4KCj4gCj4gPiBAQCAtNDMxLDE1ICs1NzksMTEg
+QEAgc3RhdGljIHVuc2lnbmVkIGxvbmcKPiA+IGV4eW5vc19kc2lfc2V0X3BsbChzdHJ1Y3QgZXh5
+bm9zX2RzaSAqZHNpLCB1MTYgbTsKPiA+ICAgICAgICAgdTMyIHJlZzsKPiA+Cj4gPiAtICAgICAg
+IGNsa19zZXRfcmF0ZShkc2ktPnBsbF9jbGssIGRzaS0+cGxsX2Nsa19yYXRlKTsKPiA+IC0KPiA+
+IC0gICAgICAgZmluID0gY2xrX2dldF9yYXRlKGRzaS0+cGxsX2Nsayk7Cj4gPiAtICAgICAgIGlm
+ICghZmluKSB7Cj4gPiAtICAgICAgICAgICAgICAgZGV2X2Vycihkc2ktPmRldiwgImZhaWxlZCB0
+byBnZXQgUExMIGNsb2NrCj4gPiBmcmVxdWVuY3lcbiIpOwo+ID4gLSAgICAgICAgICAgICAgIHJl
+dHVybiAwOwo+ID4gLSAgICAgICB9Cj4gPiAtCj4gPiAtICAgICAgIGRldl9kYmcoZHNpLT5kZXYs
+ICJQTEwgaW5wdXQgZnJlcXVlbmN5OiAlbHVcbiIsIGZpbik7Cj4gPiArICAgICAgIC8qCj4gPiAr
+ICAgICAgICAqIFRoZSBpbnB1dCBQTEwgY2xvY2sgZm9yIE1JUEkgRFNJIGluIEV4eW5vczU0MzMg
+c2VlbXMgdG8KPiA+IGJlIGZpeGVkCj4gPiArICAgICAgICAqIGJ5IE9TQyBDTEsuCj4gPiArICAg
+ICAgICAqLwo+ID4gKyAgICAgICBmaW4gPSAyNCAqIE1IWjsKPiAKPiBFciwgaXMgdGhpcyBhbHdh
+eXMgdHJ1ZSBvbiBvdGhlciBwbGF0Zm9ybXMgYXMgd2VsbD8gU2hvdWxkbid0IHRoaXMgYmUKPiBh
+IHBhcnQgb2YgdGhlIERldmljZVRyZWUgZGVzY3JpcHRpb24/CgpJIGZvcmdvdCB0byBjaGFuZ2Ug
+dGhlIGNvbW1lbnQgaW4gZGV2ZWxvcG1lbnQuIEZpbmFsbHkgaXQgaXMgZm91bmQgdGhhdAphbGwg
+ZXh5bm9zIG1pcGkgZHNpJ3MgZmluIGlzIE9TQyBjbGsgd2hpY2ggaXMgMjQgTUh6LiBTbyBJIHdp
+bGwgcmVtb3ZlCnRoZSBjb21tZW50LCBidXQgcmVtYWluIHRoZSBjb2RlIGFzIGl0IGlzLgoKPiAK
+PiA+IEBAIC01MDksNyArNjU2LDcgQEAgc3RhdGljIGludCBleHlub3NfZHNpX2VuYWJsZV9jbG9j
+ayhzdHJ1Y3QKPiA+IGV4eW5vc19kc2kgKmRzaSkgZGV2X2RiZyhkc2ktPmRldiwgImhzX2NsayA9
+ICVsdSwgYnl0ZV9jbGsgPSAlbHUsCj4gPiBlc2NfY2xrID0gJWx1XG4iLCBoc19jbGssIGJ5dGVf
+Y2xrLCBlc2NfY2xrKTsKPiA+Cj4gPiAtICAgICAgIHJlZyA9IHJlYWRsKGRzaS0+cmVnX2Jhc2Ug
+KyBEU0lNX0NMS0NUUkxfUkVHKTsKPiA+ICsgICAgICAgcmVnID0gcmVhZGwoUkVHKGRzaSwgRFNJ
+TV9DTEtDVFJMX1JFRykpOwo+IAo+IEluc3RlYWQgb2YgdGhpcyByZWFkbChSRUcoKSkgcGF0dGVy
+biB5b3UgaGF2ZSBldmVyeXdoZXJlLCBtYXliZSBpdAo+IHdvdWxkIGJlIGVhc2llciB0byBpbnRy
+b2R1Y2UgYSBkc2lfcmVhZF9yZWcoZHNpLCByZWdfZW51bV92YWx1ZSkKPiBoZWxwZXIsIGFuZCB0
+aGUgc2FtZSBmb3Igd3JpdGVfcmVnLgoKSSB0aGluayB0aGF0IGl0IGNhbiBtYWtlIHRoZSBjb2Rl
+IG1vcmUgcmVhZGFibGUuIEkgYWdyZWUuCgo+IAo+ID4gQEAgLTE3MjAsMTggKzE4NzMsMTYgQEAg
+c3RhdGljIGludCBleHlub3NfZHNpX3Byb2JlKHN0cnVjdAo+ID4gcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KSByZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiA+ICAgICAgICAgfQo+ID4KPiA+IC0gICAgICAg
+ZHNpLT5wbGxfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgInBsbF9jbGsiKTsKPiA+IC0gICAgICAg
+aWYgKElTX0VSUihkc2ktPnBsbF9jbGspKSB7Cj4gPiAtICAgICAgICAgICAgICAgZGV2X2luZm8o
+ZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgcGxsIGlucHV0Cj4gPiBjbG9ja1xuIik7Cj4gPiAtICAg
+ICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihkc2ktPnBsbF9jbGspOwo+ID4gLSAgICAgICAgICAg
+ICAgIGdvdG8gZXJyX2RlbF9jb21wb25lbnQ7Cj4gPiAtICAgICAgIH0KPiA+IC0KPiA+IC0gICAg
+ICAgZHNpLT5idXNfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImJ1c19jbGsiKTsKPiA+IC0gICAg
+ICAgaWYgKElTX0VSUihkc2ktPmJ1c19jbGspKSB7Cj4gPiAtICAgICAgICAgICAgICAgZGV2X2lu
+Zm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgYnVzIGNsb2NrXG4iKTsKPiA+IC0gICAgICAgICAg
+ICAgICByZXQgPSBQVFJfRVJSKGRzaS0+YnVzX2Nsayk7Cj4gPiAtICAgICAgICAgICAgICAgZ290
+byBlcnJfZGVsX2NvbXBvbmVudDsKPiA+ICsgICAgICAgZHNpLT5jbGtzID0gZGV2bV9remFsbG9j
+KGRldiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZW9mKCpkc2ktPmNs
+a3MpICoKPiA+IGRzaS0+ZHJpdmVyX2RhdGEtPm51bV9jbGtzLAo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBHRlBfS0VSTkVMKTsKPiA+ICsgICAgICAgZm9yIChpID0gMDsgaSA8
+IGRzaS0+ZHJpdmVyX2RhdGEtPm51bV9jbGtzOyBpKyspIHsKPiA+ICsgICAgICAgICAgICAgICBk
+c2ktPmNsa3NbaV0gPSBkZXZtX2Nsa19nZXQoZGV2LCBjbGtfbmFtZXNbaV0pOwo+ID4gKyAgICAg
+ICAgICAgICAgIGlmIChJU19FUlIoZHNpLT5jbGtzW2ldKSkgewo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgZGV2X2luZm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgcGxsIGlucHV0Cj4gPiBj
+bG9ja1xuIik7Cj4gCj4gVGhpcyBlcnJvciBtZXNzYWdlIHNlZW1zIHdyb25nOyBpdCBzaG91bGQg
+Y29udGFpbiB0aGUgbmFtZSBvZiB0aGUKPiBhY3R1YWwgZmFpbGluZyBjbG9jay4KCk9oLiBJIGZv
+cmdvdC4gSSB3aWxsIGNoYW5nZSBpdC4KClRoYW5rcyBmb3IgeW91ciByZXZpZXcuIEkgd2lsbCBz
+ZW5kIGl0IGFnYWluIHdpdGggdGhlIGNoYW5nZXMgeW91CnN1Z2dlc3RlZC4KCj4gCj4gQ2hlZXJz
+LAo+IERhbmllbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
