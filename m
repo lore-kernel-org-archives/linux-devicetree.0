@@ -1,74 +1,45 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [patch 6/7] dt: dtb version: dtsi files
-Date: Thu, 19 Mar 2015 19:46:03 +0100
-Message-ID: <20150319184603.GA4946@pengutronix.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node
+ binding
+Date: Thu, 19 Mar 2015 18:53:06 +0000
+Message-ID: <20150319185306.GB11683@leverpostej>
 References: <550A42AC.8060104@gmail.com>
- <550A44F9.9060504@gmail.com>
+ <550A4382.4030209@gmail.com>
+ <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com>
+ <20150319184139.GG8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <550A44F9.9060504@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20150319184139.GG8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2015 at 08:39:37PM -0700, Frank Rowand wrote:
-> From: Frank Rowand <frank.rowand@sonymobile.com>
-> 
-> Create a .dtsi file to contain the /chosen/dtb-info node and populate the
-> properties in that node.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
-> ---
->  arch/arm/boot/dts/skeleton.dtsi              |    2 
->  include/dt-bindings/version.dtsi             |   19 +++++
-> 
-> Index: b/include/dt-bindings/version.dtsi
-> ===================================================================
-> --- /dev/null
-> +++ b/include/dt-bindings/version.dtsi
-> @@ -0,0 +1,19 @@
-> +
-> +#include <utsrelease.h>
-> +#include <compile.h>
-> +#include <compile_dtb.h>
-> +
-> +/ {
-> +	chosen {
-> +		dtb-info {
-> +			version = UTS_RELEASE, " ", DTB_VERSION;
-> +			version-linux =
-> +				UTS_RELEASE,
-> +				" (", LINUX_COMPILE_BY, "@", LINUX_COMPILE_HOST, ") ",
-> +				"(", LINUX_COMPILER, ") ",
-> +				UTS_VERSION;
-> +			dtb-path = ___DTB_DTB_PATH;
-> +			dts-path = ___DTB_DTS_PATH;
-> +		};
-> +	};
-> +};
+> And yes, you are right - anything like this which we add immediately
+> becames a user ABI which becomes *very* difficult to change later, so
+> in order to accept anything like this, we have to be absolutely sure
+> that this is something we really really really really want to do.  Let
+> me put it another way: once this is accepted, it will probably be
+> impossible to ever change it.
 
-People are working on reproducible builds to be able to build bit
-identical packages for a whole Distribution [1]. While I don't know
-how feasible this really is I think we should not actively work on making
-that impossible. The people working on reproducible builds state that
-timestamps in binaries are bad, because when you can reproduce it it
-doesn't matter if it was build yesterday or a decade ago.
+Agreed.
 
-Like others already said for security reasons (and also for
-reproducibility) I don't want to leak the pathes or machine names I use to
-build dtbs into the binaries.
+Having debugged issues with bad DTBs in the past without having this
+information, I don't see it as being majorly helpful -- the DTB is
+relatively simple and can be decompiled.
 
-So all this should at least be configurable.
+You don't gain much from being able to read which file it was built from
+on a random server you don't have access to, and if you do have access
+to the source it's relatively easy to discover the file it was built
+from.
 
-Sascha
+So unless there's a really compelling case for this, I don't see the
+point in having it.
 
-[1] https://wiki.debian.org/ReproducibleBuilds
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
