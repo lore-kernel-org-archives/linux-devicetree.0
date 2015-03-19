@@ -1,146 +1,78 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 05/12] usb: chipidea: introduce ci_platform_config
-Date: Thu, 19 Mar 2015 09:19:16 +0800
-Message-ID: <1426727963-32280-6-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH 04/12] usb: chipidea: imx: add stream mode enable for device mode at imx6sl/imx6sx
+Date: Thu, 19 Mar 2015 09:19:15 +0800
+Message-ID: <1426727963-32280-5-git-send-email-peter.chen@freescale.com>
 References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1426727963-32280-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is used to configure controller parameters according to
-platform data, like speed, interrupt threshold, stream mode, etc.
+Stream mode enable is known for better performance, this stream mode
+enable patch has been passed with stress tests at device mode for
+imx6sl and imx6sx, and no issue is found.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/chipidea/ci.h   |  2 ++
- drivers/usb/chipidea/core.c | 57 +++++++++++++++++++++++++++++++--------------
- drivers/usb/chipidea/host.c |  6 +----
- 3 files changed, 43 insertions(+), 22 deletions(-)
+ drivers/usb/chipidea/ci_hdrc_imx.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-index aeec5f0..888606b 100644
---- a/drivers/usb/chipidea/ci.h
-+++ b/drivers/usb/chipidea/ci.h
-@@ -426,4 +426,6 @@ u8 hw_port_test_get(struct ci_hdrc *ci);
- int hw_wait_reg(struct ci_hdrc *ci, enum ci_hw_regs reg, u32 mask,
- 				u32 value, unsigned int timeout_ms);
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index 389f0e0..5373984 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -29,26 +29,31 @@ struct ci_hdrc_imx_platform_flag {
+ };
  
-+void ci_platform_config(struct ci_hdrc *ci, int usb_mode);
-+
- #endif	/* __DRIVERS_USB_CHIPIDEA_CI_H */
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 4d79392..f713e32 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -403,6 +403,44 @@ static int ci_usb_phy_init(struct ci_hdrc *ci)
- 	return ret;
- }
+ static const struct ci_hdrc_imx_platform_flag imx27_usb_data = {
++		CI_HDRC_DISABLE_STREAMING,
+ };
  
-+
-+/**
-+ * ci_platform_config: do controller configure
-+ * @ci: the controller
-+ * @usb_mode: the usb mode
-+ *
-+ */
-+void ci_platform_config(struct ci_hdrc *ci, int usb_mode)
-+{
-+	if (usb_mode == USBMODE_CM_DC) {
-+		if (ci->platdata->flags & CI_HDRC_DISABLE_DEVICE_STREAMING)
-+			hw_write(ci, OP_USBMODE, USBMODE_CI_SDIS,
-+					USBMODE_CI_SDIS);
-+
-+		/*
-+		 * Set interrupt interval for device mode
-+		 * host set ITC according to ehci-hcd module
-+		 * parameter log2_irq_thresh
-+		 */
-+		hw_write(ci, OP_USBCMD, 0xff0000,
-+			ci->platdata->gadget_itc_setting << 16);
-+	} else if (usb_mode == USBMODE_CM_HC) {
-+		if (ci->platdata->flags & CI_HDRC_DISABLE_HOST_STREAMING)
-+			hw_write(ci, OP_USBMODE, USBMODE_CI_SDIS,
-+					USBMODE_CI_SDIS);
-+	} else {
-+		dev_warn(ci->dev, "USB mode in still not set\n");
-+	}
-+
-+	if (ci->platdata->flags & CI_HDRC_FORCE_FULLSPEED) {
-+		if (ci->hw_bank.lpm)
-+			hw_write(ci, OP_DEVLC, DEVLC_PFSC, DEVLC_PFSC);
-+		else
-+			hw_write(ci, OP_PORTSC, PORTSC_PFSC, PORTSC_PFSC);
-+	}
-+
-+}
-+
- /**
-  * hw_controller_reset: do controller reset
-  * @ci: the controller
-@@ -447,35 +485,20 @@ int hw_device_reset(struct ci_hdrc *ci)
- 		ci->platdata->notify_event(ci,
- 			CI_HDRC_CONTROLLER_RESET_EVENT);
+ static const struct ci_hdrc_imx_platform_flag imx28_usb_data = {
+ 	.flags = CI_HDRC_IMX28_WRITE_FIX |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_STREAMING,
+ };
  
--	if (ci->platdata->flags & CI_HDRC_DISABLE_DEVICE_STREAMING)
--		hw_write(ci, OP_USBMODE, USBMODE_CI_SDIS, USBMODE_CI_SDIS);
--
--	if (ci->platdata->flags & CI_HDRC_FORCE_FULLSPEED) {
--		if (ci->hw_bank.lpm)
--			hw_write(ci, OP_DEVLC, DEVLC_PFSC, DEVLC_PFSC);
--		else
--			hw_write(ci, OP_PORTSC, PORTSC_PFSC, PORTSC_PFSC);
--	}
--
- 	/* USBMODE should be configured step by step */
- 	hw_write(ci, OP_USBMODE, USBMODE_CM, USBMODE_CM_IDLE);
- 	hw_write(ci, OP_USBMODE, USBMODE_CM, USBMODE_CM_DC);
- 	/* HW >= 2.3 */
- 	hw_write(ci, OP_USBMODE, USBMODE_SLOM, USBMODE_SLOM);
+ static const struct ci_hdrc_imx_platform_flag imx6q_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_STREAMING,
+ };
  
--	/*
--	 * Set interrupt interval for device mode
--	 * host set ITC according to ehci-hcd module parameter log2_irq_thresh
--	 */
--	hw_write(ci, OP_USBCMD, 0xff0000,
--		ci->platdata->gadget_itc_setting << 16);
--
- 	if (hw_read(ci, OP_USBMODE, USBMODE_CM) != USBMODE_CM_DC) {
- 		pr_err("cannot enter in %s device mode", ci_role(ci)->name);
- 		pr_err("lpm = %i", ci->hw_bank.lpm);
- 		return -ENODEV;
- 	}
+ static const struct ci_hdrc_imx_platform_flag imx6sl_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_HOST_STREAMING,
+ };
  
-+	ci_platform_config(ci, USBMODE_CM_DC);
-+
- 	return 0;
- }
+ static const struct ci_hdrc_imx_platform_flag imx6sx_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_HOST_STREAMING,
+ };
  
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index b262c1c..c4f76b7 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -141,11 +141,7 @@ static int host_start(struct ci_hdrc *ci)
- 		}
- 	}
- 
--	if (ci->platdata->flags & CI_HDRC_FORCE_FULLSPEED)
--		hw_write(ci, OP_PORTSC, PORTSC_PFSC, PORTSC_PFSC);
--
--	if (ci->platdata->flags & CI_HDRC_DISABLE_HOST_STREAMING)
--		hw_write(ci, OP_USBMODE, USBMODE_CI_SDIS, USBMODE_CI_SDIS);
-+	ci_platform_config(ci, USBMODE_CM_HC);
- 
- 	return ret;
- 
+ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
+@@ -126,7 +131,6 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 	struct ci_hdrc_platform_data pdata = {
+ 		.name		= dev_name(&pdev->dev),
+ 		.capoffset	= DEF_CAPOFFSET,
+-		.flags		= CI_HDRC_DISABLE_STREAMING,
+ 	};
+ 	int ret;
+ 	const struct of_device_id *of_id =
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
