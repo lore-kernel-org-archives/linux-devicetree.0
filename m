@@ -1,194 +1,112 @@
-From: kongxinwei <kong.kongxinwei@hisilicon.com>
-Subject: [PATCH 2/3] dts: hi6220: enable thermal sensor for hisilicon SoC
-Date: Thu, 19 Mar 2015 15:57:28 +0800
-Message-ID: <1426751849-10604-3-git-send-email-kong.kongxinwei@hisilicon.com>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4 v4] mailbox: Enable BCM2835 mailbox support
+Date: Thu, 19 Mar 2015 07:58:36 +0000
+Message-ID: <20150319075836.GU3318@x1>
+References: <1426213936-4139-1-git-send-email-eric@anholt.net>
+ <1426213936-4139-3-git-send-email-eric@anholt.net>
+ <20150318084255.GJ3318@x1>
+ <87bnjqorpe.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: rui.zhuang@intel.com, edubezval@gmail.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87bnjqorpe.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There have two parts for thermal sensor:
+On Wed, 18 Mar 2015, Eric Anholt wrote:
 
-1. The first part is related with thermal sensor, every sensor need to
-pass the sensor id, the threshold and reset temperature; so the sensor
-will be registered as sensor devices;
+> Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> 
+> > On Thu, 12 Mar 2015, Eric Anholt wrote:
+> >
+> >> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> >> 
+> >> Implement BCM2835 mailbox support as a device registered with the
+> >> general purpose mailbox framework. Implementation based on commits by
+> >> Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on which to base the
+> >> implementation.
+> >> 
+> >> [1] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013-April/000528.html
+> >> [2] http://lists.infradead.org/pipermail/linux-rpi-kernel/2013-May/000546.html
+> >> 
+> >> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> >> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
+> >> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> >> Signed-off-by: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> >> Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> 
+> >> 
+> >> v2: Squashed Craig's work for review, carried over to new version of
+> >>     Mailbox framework (changes by Lubomir)
+> >> 
+> >> v3: Fix multi-line comment style.  Refer to the documentation by
+> >>     filename.  Only declare one MODULE_AUTHOR.  Alphabetize includes.
+> >>     Drop some excessive dev_dbg()s (changes by anholt).
+> >> 
+> >> v4: Use the new bcm2835_peripheral_read_workaround(), drop the
+> >
+> > Can you explain to me why this is required (and don't just point me in
+> > the direction of the other patch ;) ).  You appear to be using the
+> > non-relaxed variants of readl and writel, which already do memory
+> > barriers, so I'm a little perplexed as to how the problem can arise.
+> 
+> Hmm.
+> 
+> A shorter restatement of the architecture requirement would be, I think,
+> "Don't let there be two outstanding reads of different peripherals on
+> the AXI bus, or the CPU might mis-assign the read results.  Use rmb() to
+> wait for the previous bus reads when you need to prevent this"
+> 
+> arch/arm/include/asm/io.h's readl() does __iormb() after each
+> __raw_readl().  Imagine taking an interrupt for a new peripheral between
+> the driver's __raw_readl() and the following __iormb(): Now you've got
+> two __raw_readl()s in between iormb()s and you can theoretically get
+> unordered reads.
+> 
+> We could hope that the architecture IRQ handler would happen to do an
+> incidental rmb(), resolving the need to protect from interrupt handling
+> inside of device drivers.  The interrupt controller's presence at
+> 0x7e00b200 sounds like it's an AXI peripheral, so it would need to be
+> ensuring ordering of reads.  However, it's doing readl_relaxed()s.  So
+> my rmb() at the start of my irq handler is silly -- if somebody got
+> interrupted between readl and rmb, we've already had a chance to get the
+> wrong result inside of the IRQ chip's status read.
+> 
+> My new idea for handling this would be to:
+> 
+> 1) Assume drivers don't exit with reads outstanding.  This means they
+> don't do a readl_relaxed() from an AXI peripheral at the end of a path
+> without doing something with the result.
+> 
+> 2) Make bcm2835_handle_irq() do this rmb() at the top, with the big
+> explanation, to avoid a race against the interrupted code device being
+> inside a readl() before the __iormb().  We don't worry about the 1-2
+> readl_relaxed()s inside of bcm2835_handle_irq(), because their return
+> values get waited on before continuing on to calling the device driver,
+> so the device driver knows its IRQ handler is being entered with no AXI
+> reads outstanding.
 
-2. The second part is related with thermal zones, in this part it will
-define the thermal zones and which sensor device should be bound to. it
-also need specify the polling interval for every thermal zone.
+That's a fantastic explanation.  Thanks for taking the time to
+write this out so diligently.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 153 ++++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+Doing this at a sub-arch level sounds a little wrong to me.  I don't
+think Broadcom are the only vendor who do not ensure correct read
+order, and writing <vendor>_peripheral_read_workarounds() all over the
+place sounds less than graceful.  Granted, if there were a greater
+need and this can't be fixed another way we could knock off the
+<vendor>_ part and make the call generic, but is there no way we can
+deal with this at the architecture level?
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-new file mode 100644
-index 0000000..da49790
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -0,0 +1,153 @@
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+/ {
-+
-+	tsensor: tsensor@0,f7030700 {
-+		compatible = "hisilicon,tsensor";
-+		reg = <0x0 0xf7030700 0x0 0x1000>;
-+		interrupts = <0 7 0x4>;
-+		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
-+		clock-names = "thermal_clk";
-+		#thermal-sensor-cells = <1>;
-+
-+		local_sensor {
-+			hisilicon,tsensor-id = <0>;
-+			hisilicon,tsensor-thres-temp = <80000>;
-+			hisilicon,tsensor-reset-temp = <100000>;
-+			hisilicon,tsensor-bind-irq;
-+		};
-+
-+		acpu1_sensor {
-+			hisilicon,tsensor-id = <1>;
-+			hisilicon,tsensor-thres-temp = <80000>;
-+			hisilicon,tsensor-reset-temp = <100000>;
-+		};
-+
-+		acpu0_sensor {
-+			hisilicon,tsensor-id = <2>;
-+			hisilicon,tsensor-thres-temp = <80000>;
-+			hisilicon,tsensor-reset-temp = <100000>;
-+		};
-+
-+		gpu_sensor {
-+			hisilicon,tsensor-id = <3>;
-+			hisilicon,tsensor-thres-temp = <80000>;
-+			hisilicon,tsensor-reset-temp = <100000>;
-+		};
-+	};
-+
-+	thermal-zones {
-+		local: local {
-+			/* milliseconds */
-+			polling-delay-passive = <1000>;
-+			/* milliseconds */
-+			polling-delay = <5000>;
-+
-+			/* sensor	ID */
-+			thermal-sensors = <&tsensor  0>;
-+
-+			trips {
-+				local_alert: local_alert {
-+					/* millicelsius */
-+					temperature = <70000>;
-+					/* millicelsius */
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				local_crit: local_crit {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				/* There are currently no cooling maps
-+				because there are no cooling devices */
-+			};
-+		};
-+
-+		cluster1: cluster1 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+
-+			/* sensor	ID */
-+			thermal-sensors = <&tsensor  1>;
-+
-+			trips {
-+				cluster1_alert: cluster1_alert {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cluster1_crit: cluster1_crit {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				/* There are currently no cooling maps
-+				because there are no cooling devices */
-+			};
-+		};
-+
-+		cluster0: cluster0 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+
-+			/* sensor	ID */
-+			thermal-sensors = <&tsensor  2>;
-+
-+			trips {
-+				cluster0_alert: cluster0_alert {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cluster0_crit: cluster0_crit {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cluster0_alert>;
-+					cooling-device =
-+					    <&cpu0 THERMAL_NO_LIMIT
-+						THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		gpu: gpu {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+
-+			/* sensor	ID */
-+			thermal-sensors = <&tsensor  3>;
-+
-+			trips {
-+				gpu_alert: gpu_alert {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				gpu_crit: gpu_crit {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				/* There are currently no cooling maps
-+				because there are no cooling devices */
-+			};
-+		};
-+	};
-+}
--- 
-1.9.1
-
-
+The whole point of doing readl_relaxed()s is that you can be assured
+that the architecture guarantee ordering.  If that's not the case,
+then we need to be using readl()s in the IRQ handler instead. 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
