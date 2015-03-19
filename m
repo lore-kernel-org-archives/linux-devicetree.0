@@ -1,62 +1,37 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Thu, 19 Mar 2015 11:48:09 +0100
-Message-ID: <20150319104809.GC914@katana>
-References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com>
- <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20150318123012.GA3580@katana>
- <55097C46.9010605@gmail.com>
- <20150318140037.GE3580@katana>
- <550A05E5.3050100@gmail.com>
- <20150319100944.GA914@katana>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150319100944.GA914@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Beata Michalska <b.michalska@samsung.com>
+Subject: [PATCH] ARM: dts: Update video-phy node with syscon phandle for
+ Exynos3250
+Date: Thu, 19 Mar 2015 11:56:27 +0100
+Message-ID: <1426762587-24923-1-git-send-email-b.michalska@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org, kishon@ti.com, s.nawrocki@samsung.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+As a follow-up to recent changes to Exynos mipi video phy
+driver, introducing support for PMU regmap in commit
+e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression
+by adding support for PMU regmap") add a syscon phandle to
+video-phy node to bring back to life both MIPI DSI displays
+and MIPI CSIS-2 camera sensors on Exynos3250.
 
---QRj9sO5tAVLaXnSD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Beata Michalska <b.michalska@samsung.com>
+---
+ arch/arm/boot/dts/exynos3250.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-> > I am still not too eager working on it but if you insist, I can see
-> > what I can do as long as Stephen sticks with testing it on Tegra. ;)
->=20
-> Please decide if you want to work on it. Remember, I am not short of
-> patches to deal with.
-
-Maybe sounds more harsh than it was meant. I just want to know if I need
-to schedule time for this issue.
-
-
---QRj9sO5tAVLaXnSD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVCqloAAoJEBQN5MwUoCm2V6MQAKnNXhfEyuvWMqwoKYs8VOcC
-LoOLH2e/JLsjOsCHZ76FgTZOFJJ5rmXWuryX2Ld0ZlRI9rPRE5prdIOOhBZ3WcqK
-aD/naSgWyGTU8f73G360/YjMIvT8BUaimBedBbdzYm5w7WrsZQhYaJlvYCEx3G37
-X/8kNeDwUYaD0vpySJwTaBvrIKivx79IYBfb1zhcC+/STyxEG4EP3m4gQnDRKYSX
-CJu9lubLnbEO8QthBeTm+m+3SzBmy9636rf++2cX783V1QZY5w3+nTov706guutV
-rdELkRwRY5YEzrPAWAqlV4M0ZMy+Ge0tzLaJLNzNP2Axc4JxzJq+O7yZAbn8TFnU
-mB/XOUV+3PHNto1j+8yL5WhQVGZ2aVmu5+ZZOqYOKnhMHuLWej+19BMjIH1p4b1m
-gHX1YsfjUj8im+mPAn5PjcW7RA+0u1VpocInKBPIysbxOBJ7FIctPsV8IRXWiqCo
-nxJvCkZdoReGvb0o+gIwzIfWeX7hDM3xymH42RuFszbxJ4cpApDfKdiP5Fz7Dung
-L4TaS5UahFCK1YNatrUU0F7nAv1esXy8RlRKMoYQzRSuJAud+T3WCUYIoydwpUzQ
-kYLCfsmgX1udZCPgm6H3xv5iV34tRk/M7Cz7bDPUNM86cuC1ksTJ3KObRUnNipUE
-ihzMRdXScJf5490J5l7H
-=v/Uo
------END PGP SIGNATURE-----
-
---QRj9sO5tAVLaXnSD--
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index ac6b0ae..6c89670 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -137,6 +137,7 @@
+ 			compatible = "samsung,s5pv210-mipi-video-phy";
+ 			reg = <0x10020710 8>;
+ 			#phy-cells = <1>;
++			syscon = <&pmu_system_controller>;
+ 		};
+ 
+ 		pd_cam: cam-power-domain@10023C00 {
+-- 
+1.7.9.5
