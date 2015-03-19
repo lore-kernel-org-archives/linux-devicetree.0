@@ -1,86 +1,147 @@
-From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] drm/panel: simple: Add support for Innolux ZJ070NA-01P
-Date: Thu, 19 Mar 2015 12:22:44 +0100
-Message-ID: <1426764164-30045-1-git-send-email-m.grzeschik@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V2 7/8] ARM: cpuidle: Register per cpuidle device
+Date: Thu, 19 Mar 2015 12:27:20 +0100
+Message-ID: <550AB298.6040907@linaro.org>
+References: <1426704372-20406-1-git-send-email-daniel.lezcano@linaro.org> <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org> <20150319110806.GE24556@red-moon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150319110806.GE24556@red-moon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The Innolux ZJ070NA-01P is a 7.0" TFT LCD panel with an integrated LED
-backlight unit.
+On 03/19/2015 12:08 PM, Lorenzo Pieralisi wrote:
+> On Wed, Mar 18, 2015 at 06:46:11PM +0000, Daniel Lezcano wrote:
+>> Some architectures have some cpus which does not support idle states=
+=2E
+>>
+>> Let the underlying low level code to return -ENOSYS when it is not
+>> possible to set an idle state.
+>
+> http://www.spinics.net/lists/linux-acpi/msg55550.html
+>
+> -ENXIO ?
 
-This panel is used on the Technexion Toucan.
+Ack, it makes more sense.
 
-Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- .../bindings/panel/innolux,zj070na-01p.txt         |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/innolux,zj070na-01p.txt
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>   drivers/cpuidle/cpuidle-arm.c | 45 +++++++++++++++++++++++++++++++=
+++++++++++--
+>>   1 file changed, 43 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle=
+-arm.c
+>> index 1c94b88..0682ed0 100644
+>> --- a/drivers/cpuidle/cpuidle-arm.c
+>> +++ b/drivers/cpuidle/cpuidle-arm.c
+>> @@ -17,11 +17,14 @@
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>> +#include <linux/slab.h>
+>>
+>>   #include <asm/cpuidle.h>
+>>
+>>   #include "dt_idle_states.h"
+>>
+>> +static DEFINE_PER_CPU(struct cpuidle_device, *cpuidle_arm_dev);
+>> +
+>>   /*
+>>    * arm_enter_idle_state - Programs CPU to enter the specified stat=
+e
+>>    *
+>> @@ -94,6 +97,7 @@ static int __init arm_idle_init(void)
+>>   {
+>>   	int cpu, ret;
+>>   	struct cpuidle_driver *drv =3D &arm_idle_driver;
+>> +	struct cpuidle_device *dev;
+>>
+>>   	/*
+>>   	 * Initialize idle states data, starting at index 1.
+>> @@ -105,18 +109,55 @@ static int __init arm_idle_init(void)
+>>   	if (ret <=3D 0)
+>>   		return ret ? : -ENODEV;
+>>
+>> +	ret =3D cpuidle_register_driver(drv);
+>> +	if (ret) {
+>> +		pr_err("Failed to register cpuidle driver\n");
+>> +		return ret;
+>> +	}
+>> +
+>>   	/*
+>>   	 * Call arch CPU operations in order to initialize
+>>   	 * idle states suspend back-end specific data
+>>   	 */
+>>   	for_each_possible_cpu(cpu) {
+>>   		ret =3D arm_cpuidle_init(cpu);
+>> +
+>> +		/* This cpu does not support any idle states */
+>> +		if (ret =3D=3D -ENOSYS)
+>> +			continue;
+>> +
+>>   		if (ret) {
+>>   			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
+>> -			return ret;
+>> +			goto out_fail;
+>> +		}
+>> +
+>> +		dev =3D kzalloc(sizeof(*dev), GFP_KERNEL);
+>> +		if (!dev) {
+>> +			pr_err("Failed to allocate cpuidle device\n");
+>> +			goto out_fail;
+>> +		}
+>> +
+>> +		dev->cpu =3D cpu;
+>> +		per_cpu(cpuidle_arm_dev, cpu) =3D dev;
+>> +
+>> +		ret =3D cpuidle_register_device(dev);
+>> +		if (ret) {
+>> +			pr_err("Failed to register cpuidle device for CPU %d\n",
+>> +			       cpu);
+>> +			kfree(dev);
+>> +			goto out_fail;
+>>   		}
+>>   	}
+>> +out:
+>> +	return ret;
+>
+> return 0;
+>
+>>
+>> -	return cpuidle_register(drv, NULL);
+>> +out_fail:
+>> +	for (cpu--; cpu <=3D 0; cpu--) {
+>
+> This loop is wrong.
 
-diff --git a/Documentation/devicetree/bindings/panel/innolux,zj070na-01p.txt b/Documentation/devicetree/bindings/panel/innolux,zj070na-01p.txt
-new file mode 100644
-index 0000000..824f87f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/innolux,zj070na-01p.txt
-@@ -0,0 +1,7 @@
-+Innolux Corporation 7.0" WSVGA (1024x600) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "innolux,zj070na-01p"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 39806c3..3e9aa62 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -733,6 +733,29 @@ static const struct panel_desc innolux_n156bge_l21 = {
- 	},
- };
- 
-+static const struct drm_display_mode innolux_zj070na_01p_mode = {
-+	.clock = 51501,
-+	.hdisplay = 1024,
-+	.hsync_start = 1024 + 128,
-+	.hsync_end = 1024 + 128 + 64,
-+	.htotal = 1024 + 128 + 64 + 128,
-+	.vdisplay = 600,
-+	.vsync_start = 600 + 16,
-+	.vsync_end = 600 + 16 + 4,
-+	.vtotal = 600 + 16 + 4 + 16,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc innolux_zj070na_01p = {
-+	.modes = &innolux_zj070na_01p_mode,
-+	.num_modes = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 1024,
-+		.height = 600,
-+	},
-+};
-+
- static const struct drm_display_mode lg_lp129qe_mode = {
- 	.clock = 285250,
- 	.hdisplay = 2560,
-@@ -835,6 +858,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "innolux,n156bge-l21",
- 		.data = &innolux_n156bge_l21,
- 	}, {
-+		.compatible = "innolux,zj070na-01p",
-+		.data = &innolux_zj070na_01p,
-+	}, {
- 		.compatible = "lg,lp129qe",
- 		.data = &lg_lp129qe,
- 	}, {
--- 
-2.1.4
+Why is it wrong ? We have to initialize at cpu - 1 to unregister the=20
+previous registered cpu, not the current one, no ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +		dev =3D per_cpu(cpuidle_arm_dev, cpu);
+>> +		cpuidle_unregister_device(dev);
+>> +		kfree(dev);
+>> +	}
+>> +	cpuidle_unregister_driver(drv);
+>> +	goto out;
+>
+> You just:
+>
+> return ret;
+>
+> little point in jumping around to just return.
+
+Ok.
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
