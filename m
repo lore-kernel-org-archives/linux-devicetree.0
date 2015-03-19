@@ -1,43 +1,102 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Thu, 19 Mar 2015 21:52:53 +0100
-Message-ID: <550B3725.10209@gmail.com>
-References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com> <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com> <20150318123012.GA3580@katana> <55097C46.9010605@gmail.com> <20150318140037.GE3580@katana> <550A05E5.3050100@gmail.com> <20150319100944.GA914@katana> <550AEF9D.6090307@wwwdotorg.org> <20150319160208.GF7657@katana>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150319160208.GF7657@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] pci: iproc: Add Broadcom iProc PCIe support
+Date: Thu, 19 Mar 2015 16:05:27 -0500
+Message-ID: <20150319210527.GI26935@google.com>
+References: <1426207732-31625-1-git-send-email-rjui@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426207732-31625-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.03.2015 17:02, Wolfram Sang wrote:
->> Perhaps better would be to have a mux-specific function to iterate over a
->> mux's child nodes and instantiate buses for those. That function would check
->> whether each bus node was disabled or not. That'd isolate the special case
->> into the place where it was relevant.
->
-> ... so I wonder what you think about putting the
-> of_device_is_available() check into i2c_add_mux_adapter() once the
-> reg-property and chan_id have been matched?
->
+[+cc Florian]
 
-Ok, I see what you mean. I had a look at the place in question and
-wonder what to return from i2c_add_mux_adapter() in the disabled
-case so that i2c-mux-pinctrl is still happy with the returned value.
+On Thu, Mar 12, 2015 at 05:48:48PM -0700, Ray Jui wrote:
+> This patch series adds the support for Broadcom iProc PCIe controller
+> 
+> pcie-iproc.c servers as the common core driver, and front-end bus
+> interface needs to be added to support different bus interfaces
+> 
+> pcie-iproc-pltfm.c contains the support for the platform bus interface
+> 
+> Changes from v6:
+>  - Fix print formatting
+>  - Fix section mismatch warning by removing __init from the probe function
+>  - Fix Kconfig to force it only compiling for ARM based platforms
+> 
+> Changes from v5:
+>  - Sync code base to v4.0-rc2
+>  - Change export symbols of common PCI functions to GPL only
+>  - Add comment to describe how configuration register access are protected
+>    at the higher layer through 'pci_lock'
+>  - Use generic PCI functions for configuration register access and implement
+>    'map_bus' callback to support it
+>  - Move 'pci_fixup_irqs' to before devices are added to the bus
+>  - Remove 'extern' from function prototype declared in the header
+> 
+> Changes from v4:
+>  - iProc PCIe driver module support was not included in patch series v4.
+>    This patch series (v5) fixes it
+> 
+> Changes from v3:
+>  - Export symbols of several PCI functions so they can be used by drivers
+>    compiled as kernel module
+>  - Add additional support to the Broadcom iProc PCIe driver so it can be
+>    installed/uninstalled as kernel loadable module
+> 
+> Changes from v2:
+>  - Major rework of the PCIe driver to factor out common generic code from
+>    front-end bus interface. Support for generic platform bus interface is
+>    also added
+>  - Adapt to several new PCI APIs that have been introduced lately
+> 
+> Changes from v1:
+>  - Add standard PCI interrupt DT properties "#interrupt-cells",
+>    "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
+>    supported by using standard PCI OF IRQ parsing function
+>  - Get rid of custom IRQ mapping function in the driver. Use
+>    of_irq_parse_and_map_pci instead
+> 
+> Ray Jui (4):
+>   PCI: Export symbols of PCI functions
+>   pci: iProc: define iProc PCIe platform bus binding
+>   pci: iproc: Add Broadcom iProc PCIe support
+>   ARM: dts: enable PCIe support for Cygnus
 
-I guess what you want to have is that i2c_add_adapter() is not called
-for the disabled case, right?
+I applied patches 1-3 to pci/host-iproc for v4.1, thanks!  I didn't apply
+patch 4 because Florian said he'd already applied it to devicetree/next.
 
-Is the i2c_adapter struct prepared in i2c_mux_add_adapter() still valid
-if i2c_add_adapter() is not called?
+I normally look for a MAINTAINERS entry, but your existing entry for
+"BROADCOM CYGNUS/IPROC ARM ARCHITECTURE" has wildcards that already include
+these new files.
 
-Sorry, I am not too deep into i2c subsystem, I just reworked i2c-mux-
-pinctrl to make it work on Dove. If you are fine with giving me some
-guidance how you prefer to have it done, I can try to free some spare
-time. Unfortunately there is already little of it, so please don't
-expect a quick tested patch.
-
-Sebastian
+>  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   63 +++++
+>  arch/arm/boot/dts/bcm-cygnus.dtsi                  |   42 +++
+>  arch/arm/boot/dts/bcm958300k.dts                   |    8 +
+>  drivers/pci/host/Kconfig                           |   17 ++
+>  drivers/pci/host/Makefile                          |    2 +
+>  drivers/pci/host/pcie-iproc-pltfm.c                |  108 ++++++++
+>  drivers/pci/host/pcie-iproc.c                      |  268 ++++++++++++++++++++
+>  drivers/pci/host/pcie-iproc.h                      |   42 +++
+>  drivers/pci/pci.c                                  |    1 +
+>  drivers/pci/probe.c                                |    1 +
+>  drivers/pci/remove.c                               |    2 +
+>  drivers/pci/setup-bus.c                            |    1 +
+>  drivers/pci/setup-irq.c                            |    1 +
+>  13 files changed, 556 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
+>  create mode 100644 drivers/pci/host/pcie-iproc.c
+>  create mode 100644 drivers/pci/host/pcie-iproc.h
+> 
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
