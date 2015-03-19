@@ -1,92 +1,64 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node binding
-Date: Thu, 19 Mar 2015 09:42:41 -0700
-Message-ID: <550AFC81.20103@gmail.com>
-References: <550A42AC.8060104@gmail.com> <550A4382.4030209@gmail.com> <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Thu, 19 Mar 2015 16:46:18 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503191645350.9480@utopia.booyaka.com>
+References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com> <550AEE6B.5080301@wwwdotorg.org>
+ <alpine.DEB.2.02.1503191601520.9480@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+sPkZtreQ0sp8KXpkUVpFy=Yh9dr249u8uyoa8yksjmg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kbuild@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1503191601520.9480-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/19/2015 6:23 AM, Rob Herring wrote:
-> On Wed, Mar 18, 2015 at 10:33 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@sonymobile.com>
->>
->> Add /chosen/dtb-node binding.
-> 
-> Why? Please write better commit messages.
+On Thu, 19 Mar 2015, Paul Walmsley wrote:
 
-Will update.
+> On Thu, 19 Mar 2015, Stephen Warren wrote:
+> 
+> > On 03/19/2015 09:26 AM, Paul Walmsley wrote:
+> > > On Tue, 17 Mar 2015, Russell King - ARM Linux wrote:
+> > > 
+> > > > On Tue, Mar 17, 2015 at 01:32:21AM -0700, Paul Walmsley wrote:
+> > > > >   Required properties:
+> > > > >   - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
+> > > > > -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
+> > > > > -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
+> > > > > -  tegra132, or tegra210.
+> > > > > -- reg : Should contain 1 register ranges(address and length)
+> > > > > +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and
+> > > > > Tegra124, must
+> > > > > +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is
+> > > > > tegra114
+> > > > > +  or tegra124.  For Tegra132, the compatible string must contain
+> > > > > +  "nvidia,tegra132-ahb".
+> > > > > +
+> > > > > +- reg : Should contain 1 register ranges(address and length).  On
+> > > > > Tegra20,
+> > > > > +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical
+> > > > > base
+> > > > > +  address of the IP block must end in 0x04.  On DT files for later
+> > > > > chips, the
+> > > > > +  actual hardware base address of the IP block should be used.
+> > > > 
+> > > > You could check that in the driver.  If you can check it in the driver,
+> > > > you can also decide to ignore it if it were offset by 0x04 (possibly
+> > > > printing a warning.)  That opens up the ability to fix the older Tegra
+> > > > DT files going forward while still remaining compatible with existing
+> > > > DT files, and avoiding the need for a complex note about this.
+> > > 
+> > > That's fine, I'll do that and drop this patch.
+> > 
+> > Don't we still want to update the DT binding documentation to state what the
+> > preferred base address (or at least set of legal base addresses) is/are?
+> 
+> As far as I know, the DT binding documents are intended to be a 
+> reference for IP block integration data like base addresses. 
 
-> 
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
->> ---
->>  Documentation/devicetree/bindings/chosen.txt |   37 +++++++++++
->>
->> Index: b/Documentation/devicetree/bindings/chosen.txt
->> ===================================================================
->> --- a/Documentation/devicetree/bindings/chosen.txt
->> +++ b/Documentation/devicetree/bindings/chosen.txt
->> @@ -46,6 +46,43 @@ on PowerPC "stdout" if "stdout-path" is
->>  should only use the "stdout-path" property.
->>
->>
->> +dtb-info node
->> +----------------
->> +
->> +Information that describes where the device tree blob (DTB) came from and the
->> +environment it was created in.
->> +
->> +This node is normally created by including arch/arm/boot/dts/skeleton.dtsi,
->> +which includes include/dt-bindings/version.dtsi.
->> +
->> +Properties:
->> +
->> +version
->> +       The version of the DTB.  This is analagous to the linux kernel version.
->> +
->> +       This is a format free field intended for human consumption.  User space
->> +       programs should not have any expections about this property.
->> +
->> +       The DTB number in this property is incremented each time a make that
->> +       creates one or more DTBs is invoked.  If the make creates multiple
->> +       DTBs then this number is only incremented once.
->> +
->> +       The DTB number is stored in file .version_dtb.
->> +
->> +version-linux
->> +       The version of the linux kernel most recently built in the source
->> +       control system that contains the source used to build the DTB.
->> +
->> +       The linux kernel version number is not incremented for a make that
->> +       creates a DTB.
->> +
->> +dtb-path
->> +       The build directory relative path of the DTB.
->> +
->> +dts-path
->> +       The absolute path of the .dts file compiled to create the DTB.
-> 
-> So these become an ABI and we can never change the directory structure?
+The above is missing an important word: it should have read "are _not_ 
+intended"
 
-Nope.  This is describing where the dtb and the dts were on the build host
-when the dtb was built.  The computer where the dtb is currently located
-when this information is useful (on the "target") is probably not even the
-same computer the dtb was built on.
 
-Mark Rutland asks a lot more questions about this
-so I'll answer some more in reply to his comments.
-
-> 
-> The problem with informational fields is someone, somewhere will rely
-> on them and then we are stuck with them. Look at /proc/cpuinfo.
-> 
-> Rob
-> 
+- Paul
