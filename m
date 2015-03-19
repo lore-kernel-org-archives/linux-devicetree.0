@@ -1,68 +1,85 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [patch 1/7] dt: dtb version: consolidate documentation of chosen
- node bindings
-Date: Thu, 19 Mar 2015 13:40:27 +0000
-Message-ID: <20150319134027.GE18473@leverpostej>
-References: <550A42AC.8060104@gmail.com>
- <550A4326.2070801@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [PATCH 1/2] drm/panel: simple: Add support for Shelly SCA07010-BFN-LNN
+Date: Thu, 19 Mar 2015 14:43:00 +0100
+Message-ID: <c661ab7f0d1829c7cac7875ce44eb3293a7515a9.1426772560.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <550A4326.2070801@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, thierry.reding@gmail.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 03:31:50AM +0000, Frank Rowand wrote:
-> From: Frank Rowand <frank.rowand@sonymobile.com>
-> 
-> Documentation of bindings in node /chosen are scattered in several bindings
-> files.  If not already in Documentation/devicetree/bindings/chosen.txt, add
-> a pointer in that file to where the property and node bindings are described.
-> 
-> This is a clean up in anticipation of adding another node binding in /chosen.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
-> ---
->  Documentation/devicetree/bindings/chosen.txt |   31 +++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> Index: b/Documentation/devicetree/bindings/chosen.txt
-> ===================================================================
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -44,3 +44,34 @@ Implementation note: Linux will look for
->  on PowerPC "stdout" if "stdout-path" is not found.  However, the
->  "linux,stdout-path" and "stdout" properties are deprecated. New platforms
->  should only use the "stdout-path" property.
-> +
-> +
-> +Properties documented in other bindings
-> +---------------------------------------
-> +#address-cells                          video/simple-framebuffer-sunxi.txt
-> +
-> +#size-cells                             video/simple-framebuffer-sunxi.txt
-> +
-> +bootargs                                booting-without-of.txt
-> +                                        usage-model.txt
-> +
-> +initrd-end                              usage-model.txt
-> +initrd-start                            usage-model.txt
-> +
-> +interrupt-controller (obsolete)         booting-without-of.txt
-> +
-> +linux,pci-probe-only                    pci/host-generic-pci.txt
-> +
-> +linux,stdout-path                       booting-without-of.txt
-> +
-> +ranges                                  video/simple-framebuffer-sunxi.txt
-> +
-> +stdout-path                             video/simple-framebuffer.txt
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
 
-The usual form of stdout-path is documented immediately above this
-section. That should probably be updated to refer to the
-video/simple-framebuffer.txt case.
+The Shelly SCA07010-BFN-LNN is a 7.0" WVGA TFT LCD panel.
+This panel with backlight is found in PDA 7" LCD screen (TM70xx series for
+instance).
 
-Mark.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+ .../bindings/panel/shelly,sca07010-bfn-lnn.txt     |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/shelly,sca07010-bfn-lnn.txt
+
+diff --git a/Documentation/devicetree/bindings/panel/shelly,sca07010-bfn-lnn.txt b/Documentation/devicetree/bindings/panel/shelly,sca07010-bfn-lnn.txt
+new file mode 100644
+index 000000000000..fc1ea9e26c94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/shelly,sca07010-bfn-lnn.txt
+@@ -0,0 +1,7 @@
++Shelly SCA07010-BFN-LNN 7.0" WVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "shelly,sca07010-bfn-lnn"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 3e9aa628169c..6e4a85f50d71 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -802,6 +802,29 @@ static const struct panel_desc samsung_ltn101nt05 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode shelly_sca07010_bfn_lnn_mode = {
++	.clock = 33300,
++	.hdisplay = 800,
++	.hsync_start = 800 + 1,
++	.hsync_end = 800 + 1 + 64,
++	.htotal = 800 + 1 + 64 + 64,
++	.vdisplay = 480,
++	.vsync_start = 480 + 1,
++	.vsync_end = 480 + 1 + 23,
++	.vtotal = 480 + 1 + 23 + 22,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc shelly_sca07010_bfn_lnn = {
++	.modes = &shelly_sca07010_bfn_lnn_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++};
++
+ static const struct of_device_id platform_of_match[] = {
+ 	{
+ 		.compatible = "auo,b101aw03",
+@@ -867,6 +890,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "samsung,ltn101nt05",
+ 		.data = &samsung_ltn101nt05,
+ 	}, {
++		.compatible = "shelly,sca07010-bfn-lnn",
++		.data = &shelly_sca07010_bfn_lnn,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
+-- 
+2.1.3
