@@ -1,84 +1,101 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 00/12] USB: chipidea: patchset for performance improvement
-Date: Thu, 19 Mar 2015 09:19:11 +0800
-Message-ID: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH 02/12] usb: chipidea: set ITC to 0 for device mode
+Date: Thu, 19 Mar 2015 09:19:13 +0800
+Message-ID: <1426727963-32280-3-git-send-email-peter.chen@freescale.com>
+References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426727963-32280-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+ITC (Interrupt Threshold Control) is used to set the maximum rate at which
+the host/device controller will issue interrupts. The default value is 8 (1ms)
+for it. EHCI core will modify it to 1, but device mode keeps it as default
+value.
 
-In this patch set, I add some interfaces for tuning the performance
-of chipidea usb driver. With this set, the USB performance can be improved
-at some user cases with suitable parameters. The main changes:
+In some use cases like Android ADB, it only has one usb request for each
+direction, and maximum payload data is only 4KB, so the speed is 4MB/s
+at most, it needs controller to trigger interrupt as fast as possible
+to increase the speed. The USB performance will be better if the interrupt
+can be triggered faster.
 
-- Interface to tune interrupt threshold control, and set
-'Immediate' for default value
-- The glue layer can disable stream mode according to USB role
-- Interface to tune AHB burst configuration at SBUSCFG
-- Interface to tune tx/rx burst size
-- i.mx changes for achieving better performance, it can reduce
-  the latecy between bus and USB FIFO, and reduce the overrun
-  and underrun occurrences, it is useful for the system bus is busy.
-  we see great improvement for ISO transfer, eg, high resolution
-  USB camera when the bus is busy.
+Reduce ITC value is benefit for USB performance, and the interrupt number
+is increased at the same time, it may increase cpu utilization too.
+Most of use case cares about performance, but some may care about
+cpu utilization, so, we leave a platform interface for user.
+We set ITC as 0 (immediate) as default value.
 
-Below are some test results at imx6sx sdb board
-(set ehci_hcd.park=3 at bootargs), the tests are done
-at v4.0 kernel, no other bus loading during the tests,
-so we have not seen performance change for some use cases.
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/usb/chipidea/core.c  | 19 +++++++++++++++++++
+ include/linux/usb/chipidea.h |  2 ++
+ 2 files changed, 21 insertions(+)
 
-USB Mass Storage (Host mode)
-With Patch Set		Without Patch Set
-R: 26.9 MB/s		27 MB/s
-W: 25.2 MB/s		24.5 MB/s
-
-1G USB Ethernet Card
-With Patch Set		Without Patch Set
-TX: 186 Mb/s		185 Mb/s
-RX: 219 Mb/s		216 Mb/s
-
-g_ncm (Device Mode)
-With Patch Set		Without Patch Set
-TX: 166MB/s		163MB/s
-RX: 230MB/s		184MB/s
-
-Peter Chen (12):
-  Doc: usb: ci-hdrc-imx: add gadget-itc-setting for binding doc
-  usb: chipidea: set ITC to 0 for device mode
-  usb: chipidea: define stream mode disable for both roles
-  usb: chipidea: imx: add stream mode enable for device mode at
-    imx6sl/imx6sx
-  usb: chipidea: introduce ci_platform_config
-  Doc: usb: ci-hdrc-imx: add ahb-burst-config for binding doc
-  ARM: imx6: set ahb-burst-config as 0 for USB
-  usb: chipidea: add ahb burst configuration
-  usb: chipidea: usbmisc_imx: add unburst setting for imx6
-  Doc: usb: ci-hdrc-imx: add tx(rx)-burst-config-dword for binding doc
-  ARM: imx6: change default burst size for USB
-  usb: chipidea: add burst size configuration interface
-
- .../devicetree/bindings/usb/ci-hdrc-imx.txt        |  12 +++
- arch/arm/boot/dts/imx6qdl.dtsi                     |  12 +++
- arch/arm/boot/dts/imx6sl.dtsi                      |   9 ++
- arch/arm/boot/dts/imx6sx.dtsi                      |   9 ++
- drivers/usb/chipidea/bits.h                        |   7 ++
- drivers/usb/chipidea/ci.h                          |   3 +
- drivers/usb/chipidea/ci_hdrc_imx.c                 |  14 ++-
- drivers/usb/chipidea/core.c                        | 119 +++++++++++++++++++--
- drivers/usb/chipidea/host.c                        |   6 +-
- drivers/usb/chipidea/usbmisc_imx.c                 |  12 ++-
- include/linux/usb/chipidea.h                       |  11 +-
- 11 files changed, 191 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 74fea4f..8af9cbf 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -463,6 +463,13 @@ int hw_device_reset(struct ci_hdrc *ci)
+ 	/* HW >= 2.3 */
+ 	hw_write(ci, OP_USBMODE, USBMODE_SLOM, USBMODE_SLOM);
+ 
++	/*
++	 * Set interrupt interval for device mode
++	 * host set ITC according to ehci-hcd module parameter log2_irq_thresh
++	 */
++	hw_write(ci, OP_USBCMD, 0xff0000,
++		ci->platdata->gadget_itc_setting << 16);
++
+ 	if (hw_read(ci, OP_USBMODE, USBMODE_CM) != USBMODE_CM_DC) {
+ 		pr_err("cannot enter in %s device mode", ci_role(ci)->name);
+ 		pr_err("lpm = %i", ci->hw_bank.lpm);
+@@ -560,6 +567,8 @@ static irqreturn_t ci_irq(int irq, void *data)
+ static int ci_get_platdata(struct device *dev,
+ 		struct ci_hdrc_platform_data *platdata)
+ {
++	int ret;
++
+ 	if (!platdata->phy_mode)
+ 		platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
+ 
+@@ -591,6 +600,16 @@ static int ci_get_platdata(struct device *dev,
+ 	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+ 		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+ 
++	if (of_find_property(dev->of_node, "gadget-itc-setting", NULL)) {
++		ret = of_property_read_u32(dev->of_node, "gadget-itc-setting",
++			&platdata->gadget_itc_setting);
++		if (ret) {
++			dev_err(dev,
++				"failed to get gadget-itc-setting value\n");
++			return ret;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index ab94f78..e69d829 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -35,6 +35,8 @@ struct ci_hdrc_platform_data {
+ 	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
+ 	bool			tpl_support;
++	/* interrupt threshold value for gadget */
++	u32			gadget_itc_setting;
+ };
+ 
+ /* Default offset of capability registers */
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
