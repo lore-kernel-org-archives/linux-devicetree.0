@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 12/12] usb: chipidea: add burst size configuration interface
-Date: Thu, 19 Mar 2015 09:19:23 +0800
-Message-ID: <1426727963-32280-13-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH 11/12] ARM: imx6: change default burst size for USB
+Date: Thu, 19 Mar 2015 09:19:22 +0800
+Message-ID: <1426727963-32280-12-git-send-email-peter.chen@freescale.com>
 References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,134 +12,119 @@ To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The user can adjust it through dts or other platform interfaces.
+It can improve the USB performance when choosing larger
+burst size at some systems (bus size is larger), there is
+no side effect if this burst size is larger than bus size.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/chipidea/bits.h  |  4 ++++
- drivers/usb/chipidea/ci.h    |  1 +
- drivers/usb/chipidea/core.c  | 39 +++++++++++++++++++++++++++++++++++++++
- include/linux/usb/chipidea.h |  2 ++
- 4 files changed, 46 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++++++
+ arch/arm/boot/dts/imx6sl.dtsi  | 6 ++++++
+ arch/arm/boot/dts/imx6sx.dtsi  | 6 ++++++
+ 3 files changed, 20 insertions(+)
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index 3af6213..466ce89 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -56,6 +56,10 @@
- #define DEVICEADDR_USBADRA    BIT(24)
- #define DEVICEADDR_USBADR     (0x7FUL << 25)
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 2430cc9..4446218 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -836,6 +836,8 @@
+ 				fsl,usbphy = <&usbphy1>;
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
-+/* BURSTSIZE */
-+#define RX_BURST_MASK		0xff
-+#define TX_BURST_MASK		0xff00
-+
- /* PORTSC */
- #define PORTSC_CCS            BIT(0)
- #define PORTSC_CSC            BIT(1)
-diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-index 888606b..232156b 100644
---- a/drivers/usb/chipidea/ci.h
-+++ b/drivers/usb/chipidea/ci.h
-@@ -50,6 +50,7 @@ enum ci_hw_regs {
- 	OP_USBINTR,
- 	OP_DEVICEADDR,
- 	OP_ENDPTLISTADDR,
-+	OP_BURSTSIZE,
- 	OP_PORTSC,
- 	OP_DEVLC,
- 	OP_OTGSC,
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index c0e6bb1..beb4236 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -84,6 +84,7 @@ static const u8 ci_regs_nolpm[] = {
- 	[OP_USBINTR]		= 0x08U,
- 	[OP_DEVICEADDR]		= 0x14U,
- 	[OP_ENDPTLISTADDR]	= 0x18U,
-+	[OP_BURSTSIZE]		= 0x20U,
- 	[OP_PORTSC]		= 0x44U,
- 	[OP_DEVLC]		= 0x84U,
- 	[OP_OTGSC]		= 0x64U,
-@@ -106,6 +107,7 @@ static const u8 ci_regs_lpm[] = {
- 	[OP_USBINTR]		= 0x08U,
- 	[OP_DEVICEADDR]		= 0x14U,
- 	[OP_ENDPTLISTADDR]	= 0x18U,
-+	[OP_BURSTSIZE]		= 0x20U,
- 	[OP_PORTSC]		= 0x44U,
- 	[OP_DEVLC]		= 0x84U,
- 	[OP_OTGSC]		= 0xC4U,
-@@ -412,6 +414,7 @@ static int ci_usb_phy_init(struct ci_hdrc *ci)
-  */
- void ci_platform_config(struct ci_hdrc *ci, int usb_mode)
- {
-+	u32 ahb_burst_config;
- 	bool override_needed;
+@@ -847,6 +849,8 @@
+ 				fsl,usbphy = <&usbphy2>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
- 	if (usb_mode == USBMODE_CM_DC) {
-@@ -447,6 +450,22 @@ void ci_platform_config(struct ci_hdrc *ci, int usb_mode)
- 	if (override_needed)
- 		hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
- 			ci->platdata->ahbburst_config);
-+
-+	ahb_burst_config = hw_read_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK);
-+
-+	/* Override tx burst size if needed */
-+	override_needed = hw_read(ci, OP_BURSTSIZE, RX_BURST_MASK) !=
-+			(ci->platdata->rx_burst_size & RX_BURST_MASK);
-+	if (!ahb_burst_config && override_needed)
-+		hw_write(ci, OP_BURSTSIZE, RX_BURST_MASK,
-+			ci->platdata->rx_burst_size);
-+
-+	/* Override tx burst size if needed */
-+	override_needed = ((hw_read(ci, OP_BURSTSIZE, TX_BURST_MASK) >>
-+			__ffs(TX_BURST_MASK)) != ci->platdata->tx_burst_size);
-+	if (!ahb_burst_config && override_needed)
-+		hw_write(ci, OP_BURSTSIZE, TX_BURST_MASK,
-+			ci->platdata->tx_burst_size << __ffs(TX_BURST_MASK));
- }
+@@ -857,6 +861,8 @@
+ 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
+ 				fsl,usbmisc = <&usbmisc 2>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
- /**
-@@ -651,6 +670,26 @@ static int ci_get_platdata(struct device *dev,
- 		}
- 	}
+@@ -867,6 +873,8 @@
+ 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
+ 				fsl,usbmisc = <&usbmisc 3>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
-+	if (of_find_property(dev->of_node, "tx-burst-size-dword", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "tx-burst-size-dword",
-+			&platdata->tx_burst_size);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get tx-burst-size-dword value\n");
-+			return ret;
-+		}
-+	}
-+
-+	if (of_find_property(dev->of_node, "rx-burst-size-dword", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "rx-burst-size-dword",
-+			&platdata->rx_burst_size);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get rx-burst-size-dword value\n");
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 9f283cc..9117c4c 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -681,6 +681,8 @@
+ 				fsl,usbphy = <&usbphy1>;
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 4d7ceb3..b5f0d7b 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -42,6 +42,8 @@ struct ci_hdrc_platform_data {
- 	/* interrupt threshold value for gadget */
- 	u32			gadget_itc_setting;
- 	u32			ahbburst_config;
-+	u32			tx_burst_size;
-+	u32			rx_burst_size;
- };
+@@ -692,6 +694,8 @@
+ 				fsl,usbphy = <&usbphy2>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
- /* Default offset of capability registers */
+@@ -702,6 +706,8 @@
+ 				clocks = <&clks IMX6SL_CLK_USBOH3>;
+ 				fsl,usbmisc = <&usbmisc 2>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 0cdfa01..464cc3a 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -743,6 +743,8 @@
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				fsl,anatop = <&anatop>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -754,6 +756,8 @@
+ 				fsl,usbphy = <&usbphy2>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -766,6 +770,8 @@
+ 				phy_type = "hsic";
+ 				fsl,anatop = <&anatop>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
 1.9.1
 
