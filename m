@@ -1,70 +1,62 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 00/12] USB: chipidea: patchset for performance improvement
-Date: Thu, 19 Mar 2015 11:36:29 +0100
-Message-ID: <20150319103629.GI14457@ns203013.ovh.net>
-References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
+ nodes
+Date: Thu, 19 Mar 2015 11:48:09 +0100
+Message-ID: <20150319104809.GC914@katana>
+References: <1425039885-5137-2-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20150318123012.GA3580@katana>
+ <55097C46.9010605@gmail.com>
+ <20150318140037.GE3580@katana>
+ <550A05E5.3050100@gmail.com>
+ <20150319100944.GA914@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20150319100944.GA914@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09:19 Thu 19 Mar     , Peter Chen wrote:
-> Hi all,
-> 
-> In this patch set, I add some interfaces for tuning the performance
-> of chipidea usb driver. With this set, the USB performance can be improved
-> at some user cases with suitable parameters. The main changes:
-> 
-> - Interface to tune interrupt threshold control, and set
-> 'Immediate' for default value
-> - The glue layer can disable stream mode according to USB role
-> - Interface to tune AHB burst configuration at SBUSCFG
-> - Interface to tune tx/rx burst size
-> - i.mx changes for achieving better performance, it can reduce
->   the latecy between bus and USB FIFO, and reduce the overrun
->   and underrun occurrences, it is useful for the system bus is busy.
->   we see great improvement for ISO transfer, eg, high resolution
->   USB camera when the bus is busy.
-> 
-> Below are some test results at imx6sx sdb board
-> (set ehci_hcd.park=3 at bootargs), the tests are done
-> at v4.0 kernel, no other bus loading during the tests,
-> so we have not seen performance change for some use cases.
-> 
-> USB Mass Storage (Host mode)
-> With Patch Set		Without Patch Set
-> R: 26.9 MB/s		27 MB/s
-> W: 25.2 MB/s		24.5 MB/s
-> 
-> 1G USB Ethernet Card
-> With Patch Set		Without Patch Set
-> TX: 186 Mb/s		185 Mb/s
-> RX: 219 Mb/s		216 Mb/s
-> 
-> g_ncm (Device Mode)
-> With Patch Set		Without Patch Set
-> TX: 166MB/s		163MB/s
-> RX: 230MB/s		184MB/s
 
-The improve is not drag sticks except for gcm RX
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The most interesting path will be on full system loaded
+> > I am still not too eager working on it but if you insist, I can see
+> > what I can do as long as Stephen sticks with testing it on Tegra. ;)
+>=20
+> Please decide if you want to work on it. Remember, I am not short of
+> patches to deal with.
 
-can you test it and provide data?
+Maybe sounds more harsh than it was meant. I just want to know if I need
+to schedule time for this issue.
 
-Best Regards,
-J.
+
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVCqloAAoJEBQN5MwUoCm2V6MQAKnNXhfEyuvWMqwoKYs8VOcC
+LoOLH2e/JLsjOsCHZ76FgTZOFJJ5rmXWuryX2Ld0ZlRI9rPRE5prdIOOhBZ3WcqK
+aD/naSgWyGTU8f73G360/YjMIvT8BUaimBedBbdzYm5w7WrsZQhYaJlvYCEx3G37
+X/8kNeDwUYaD0vpySJwTaBvrIKivx79IYBfb1zhcC+/STyxEG4EP3m4gQnDRKYSX
+CJu9lubLnbEO8QthBeTm+m+3SzBmy9636rf++2cX783V1QZY5w3+nTov706guutV
+rdELkRwRY5YEzrPAWAqlV4M0ZMy+Ge0tzLaJLNzNP2Axc4JxzJq+O7yZAbn8TFnU
+mB/XOUV+3PHNto1j+8yL5WhQVGZ2aVmu5+ZZOqYOKnhMHuLWej+19BMjIH1p4b1m
+gHX1YsfjUj8im+mPAn5PjcW7RA+0u1VpocInKBPIysbxOBJ7FIctPsV8IRXWiqCo
+nxJvCkZdoReGvb0o+gIwzIfWeX7hDM3xymH42RuFszbxJ4cpApDfKdiP5Fz7Dung
+L4TaS5UahFCK1YNatrUU0F7nAv1esXy8RlRKMoYQzRSuJAud+T3WCUYIoydwpUzQ
+kYLCfsmgX1udZCPgm6H3xv5iV34tRk/M7Cz7bDPUNM86cuC1ksTJ3KObRUnNipUE
+ihzMRdXScJf5490J5l7H
+=v/Uo
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--
