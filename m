@@ -1,132 +1,129 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] i2c: driver for the Conexant Digicolor I2C
- controller
-Date: Thu, 19 Mar 2015 12:00:02 +0100
-Message-ID: <20150319110002.GD914@katana>
-References: <844001df525b3073e50cbd95f357c0eb9912a394.1426758858.git.baruch@tkos.co.il>
- <866aada336ddbeec18749a1c301ab9b365baadde.1426758858.git.baruch@tkos.co.il>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V2 7/8] ARM: cpuidle: Register per cpuidle device
+Date: Thu, 19 Mar 2015 11:08:06 +0000
+Message-ID: <20150319110806.GE24556@red-moon>
+References: <1426704372-20406-1-git-send-email-daniel.lezcano@linaro.org>
+ <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wULyF7TL5taEdwHz"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <866aada336ddbeec18749a1c301ab9b365baadde.1426758858.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1426704372-20406-8-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 18, 2015 at 06:46:11PM +0000, Daniel Lezcano wrote:
+> Some architectures have some cpus which does not support idle states.
+> 
+> Let the underlying low level code to return -ENOSYS when it is not
+> possible to set an idle state.
 
---wULyF7TL5taEdwHz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+http://www.spinics.net/lists/linux-acpi/msg55550.html
 
-On Thu, Mar 19, 2015 at 11:54:18AM +0200, Baruch Siach wrote:
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+-ENXIO ?
+
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
-> v2:
->    * Address the comment of Wolfram Sang:
->     - Advertise the I2C_FUNC_NOSTART capability
->     - Rebase on v4.0-rc1
+>  drivers/cpuidle/cpuidle-arm.c | 45 +++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 43 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+> index 1c94b88..0682ed0 100644
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -17,11 +17,14 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/slab.h>
+>  
+>  #include <asm/cpuidle.h>
+>  
+>  #include "dt_idle_states.h"
+>  
+> +static DEFINE_PER_CPU(struct cpuidle_device, *cpuidle_arm_dev);
+> +
+>  /*
+>   * arm_enter_idle_state - Programs CPU to enter the specified state
+>   *
+> @@ -94,6 +97,7 @@ static int __init arm_idle_init(void)
+>  {
+>  	int cpu, ret;
+>  	struct cpuidle_driver *drv = &arm_idle_driver;
+> +	struct cpuidle_device *dev;
+>  
+>  	/*
+>  	 * Initialize idle states data, starting at index 1.
+> @@ -105,18 +109,55 @@ static int __init arm_idle_init(void)
+>  	if (ret <= 0)
+>  		return ret ? : -ENODEV;
+>  
+> +	ret = cpuidle_register_driver(drv);
+> +	if (ret) {
+> +		pr_err("Failed to register cpuidle driver\n");
+> +		return ret;
+> +	}
+> +
+>  	/*
+>  	 * Call arch CPU operations in order to initialize
+>  	 * idle states suspend back-end specific data
+>  	 */
+>  	for_each_possible_cpu(cpu) {
+>  		ret = arm_cpuidle_init(cpu);
+> +
+> +		/* This cpu does not support any idle states */
+> +		if (ret == -ENOSYS)
+> +			continue;
+> +
+>  		if (ret) {
+>  			pr_err("CPU %d failed to init idle CPU ops\n", cpu);
+> -			return ret;
+> +			goto out_fail;
+> +		}
+> +
+> +		dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> +		if (!dev) {
+> +			pr_err("Failed to allocate cpuidle device\n");
+> +			goto out_fail;
+> +		}
+> +
+> +		dev->cpu = cpu;
+> +		per_cpu(cpuidle_arm_dev, cpu) = dev;
+> +
+> +		ret = cpuidle_register_device(dev);
+> +		if (ret) {
+> +			pr_err("Failed to register cpuidle device for CPU %d\n",
+> +			       cpu);
+> +			kfree(dev);
+> +			goto out_fail;
+>  		}
+>  	}
+> +out:
+> +	return ret;
 
-Please fix:
+return 0;
 
-Applying: i2c: driver for the Conexant Digicolor I2C controller
-    CHECKPATCH
-...
+>  
+> -	return cpuidle_register(drv, NULL);
+> +out_fail:
+> +	for (cpu--; cpu <= 0; cpu--) {
 
-ERROR: code indent should use tabs where possible
-#119: FILE: drivers/i2c/busses/i2c-digicolor.c:68:
-+        STATE_IDLE,$
+This loop is wrong.
 
-WARNING: please, no spaces at the start of a line
-#119: FILE: drivers/i2c/busses/i2c-digicolor.c:68:
-+        STATE_IDLE,$
+> +		dev = per_cpu(cpuidle_arm_dev, cpu);
+> +		cpuidle_unregister_device(dev);
+> +		kfree(dev);
+> +	}
+> +	cpuidle_unregister_driver(drv);
+> +	goto out;
 
-ERROR: code indent should use tabs where possible
-#120: FILE: drivers/i2c/busses/i2c-digicolor.c:69:
-+        STATE_START,$
+You just:
 
-WARNING: please, no spaces at the start of a line
-#120: FILE: drivers/i2c/busses/i2c-digicolor.c:69:
-+        STATE_START,$
+return ret;
 
-ERROR: code indent should use tabs where possible
-#121: FILE: drivers/i2c/busses/i2c-digicolor.c:70:
-+        STATE_ADDR,$
+little point in jumping around to just return.
 
-WARNING: please, no spaces at the start of a line
-#121: FILE: drivers/i2c/busses/i2c-digicolor.c:70:
-+        STATE_ADDR,$
-
-ERROR: code indent should use tabs where possible
-#122: FILE: drivers/i2c/busses/i2c-digicolor.c:71:
-+        STATE_WRITE,$
-
-WARNING: please, no spaces at the start of a line
-#122: FILE: drivers/i2c/busses/i2c-digicolor.c:71:
-+        STATE_WRITE,$
-
-ERROR: code indent should use tabs where possible
-#123: FILE: drivers/i2c/busses/i2c-digicolor.c:72:
-+        STATE_READ,$
-
-WARNING: please, no spaces at the start of a line
-#123: FILE: drivers/i2c/busses/i2c-digicolor.c:72:
-+        STATE_READ,$
-
-ERROR: code indent should use tabs where possible
-#124: FILE: drivers/i2c/busses/i2c-digicolor.c:73:
-+        STATE_STOP,$
-
-WARNING: please, no spaces at the start of a line
-#124: FILE: drivers/i2c/busses/i2c-digicolor.c:73:
-+        STATE_STOP,$
-
-CHECK: spaces preferred around that '+' (ctx:VxV)
-#160: FILE: drivers/i2c/busses/i2c-digicolor.c:109:
-+	bool last = (i2c->msgbuf_ptr+1 == i2c->msg->len);
- 	                            ^
-
-WARNING: Missing a blank line after declarations
-#161: FILE: drivers/i2c/busses/i2c-digicolor.c:110:
-+	bool last = (i2c->msgbuf_ptr+1 == i2c->msg->len);
-+	dc_i2c_cmd(i2c, last ? II_CMD_GET_NOACK : II_CMD_GET_ACK);
-
-CHECK: Logical continuations should be on the previous line
-#226: FILE: drivers/i2c/busses/i2c-digicolor.c:175:
-+	if (cmd_status == II_CMD_STATUS_ACK_BAD
-+	    || cmd_status == II_CMD_STATUS_ABORT) {
-
-CHECK: spaces preferred around that '-' (ctx:VxV)
-#329: FILE: drivers/i2c/busses/i2c-digicolor.c:278:
-+	writeb_relaxed(clocktime-1, i2c->regs + II_CLOCKTIME);
- 	                        ^
-
-There are more checkpatch warnings I don't care about much.
-You can decide about them.
-
-
---wULyF7TL5taEdwHz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVCqwyAAoJEBQN5MwUoCm2gKQP/35P0OsokMIRwSP3qmIe16Ci
-yEg2Lc5OHSMewXDb8zyJeXUstlQUc7zJT4eIwcvtkFeJdD+FOq7feIocZ9FxCwxe
-TOI7+TCGIxA7D0MlQdiZQQsUJPiP2RQuk55g544AukFxb5ScT6MTsM6NKS8N8Frp
-LJrr8NTasUt5tMlZnM0PknQFabVizXE95pyCv1yi8Gr71F5MvdvHtILLRsRs1DhI
-ogUKNX/IUFBKgRSp/Oy+GMvqz4ce+ozcaZ/CIN2mmW41AtDS5SgHzGF3moa8Hlqg
-B8O5lTtXsrh3v7vWFJz6I8M0RcJGYbHY5C2Rmt+mXMHgXVpcnmHBfXm0QtxhDpW2
-XOp4+4XWpU7t6An3dGbmcSVKl5bNLHyWG7mFBTVzGpiSLp6wHnhLfk1Ikvr+Z1bu
-KUPuSTHGd6onqRn5r3r4QIvHs1by+Oq7IvnQoK9hJKlpT4wUPY/i4YN5Hr/4Ycs+
-2LcBazkQKrepwYJusnod8yA4d4nLIuUInQgRaXFQ2Sh5fh332ZOPYogOB5CsVkYF
-HOyM850WYrifYqeZUU6Y+7+L8bstVPOQ/feRY6c7aL6r+6Zh0TXduxQBvrJv8o5I
-zWvFze/AyAkZYkdPyf9rgg5PgwijCnwJXGGnrLYNCJWh5DyZYgPwHaUsJmnivKJ2
-4EAYHkRDvcm1OnMox4ql
-=R6K0
------END PGP SIGNATURE-----
-
---wULyF7TL5taEdwHz--
+Lorenzo
