@@ -1,54 +1,39 @@
-From: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx27: fix typo in makefile
-Date: Thu, 19 Mar 2015 18:43:28 +0000
-Message-ID: <CALeDE9OV_gLz9BBPL4Lv5+H0900XyFB_+CwRTAZ5HmYo4952YQ@mail.gmail.com>
-References: <1426789318-30637-1-git-send-email-vincent.stehle@freescale.com>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
+ address change
+Date: Thu, 19 Mar 2015 18:46:59 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503191845060.9480@utopia.booyaka.com>
+References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com> <550AEE6B.5080301@wwwdotorg.org>
+ <alpine.DEB.2.02.1503191601520.9480@utopia.booyaka.com> <550AFF52.6070503@wwwdotorg.org> <alpine.DEB.2.02.1503191706340.9480@utopia.booyaka.com> <550B155E.9050308@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426789318-30637-1-git-send-email-vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Vincent_Stehl=C3=A9?= <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550B155E.9050308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 6:21 PM, Vincent Stehl=C3=A9
-<vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Commit cb612390e546 ("ARM: dts: Only build dtb if associated Arch and=
-/or SoC is
-> enabled") conditioned the generation of i.MX27 systems dts with
-> CONFIG_SOC_IMX31; fix this typo.
->
-> Signed-off-by: Vincent Stehl=C3=A9 <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Thu, 19 Mar 2015, Stephen Warren wrote:
 
-Signed-off-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> We should not document Linux 4.1 as the cut-off. DT bindings are supposed to
+> be OS agnostic. While it's practically unlikely, it is entirely possible for
+> some other OS to have already implemented support for this binding, and the
+> current binding is an ABI. We have no control over if/when any non-Linux code
+> is updated to add support for a 0-based offset for existing SoCs, and
+> certainly no versions of Linux or any other OS can be updated retro-actively
+> except perhaps a few linux-stable versions. We can however write the binding
+> in such a way as support for new SoCs requires the new 0-based address, since
+> there is no binding specification for those new chips yet, and the time when
+> you add the new binding documentation is the first time any OS could possibly
+> add conformant support for it.
+> 
+> In summary, I believe the binding document must state that T20/30/114/124
+> require the offset of 4 in reg value, and newer chips require no offset in the
+> reg value. We can still always accept either in the Linux kernel going forward
+> based on the principle of being lenient re: input data.
 
-> Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a1c776b..992ea0b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -215,7 +215,7 @@ dtb-$(CONFIG_SOC_IMX25) +=3D \
->         imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dtb \
->         imx25-karo-tx25.dtb \
->         imx25-pdk.dtb
-> -dtb-$(CONFIG_SOC_IMX31) +=3D \
-> +dtb-$(CONFIG_SOC_IMX27) +=3D \
->         imx27-apf27.dtb \
->         imx27-apf27dev.dtb \
->         imx27-eukrea-mbimxsd27-baseboard.dtb \
-> --
-> 2.1.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That's fine.  I'll send a patch for that.
+
+
+- Paul
