@@ -1,87 +1,157 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv2 3/3] Documentation: DT bindings: Tegra AHB: note base
- address change
-Date: Thu, 19 Mar 2015 10:54:42 -0600
-Message-ID: <550AFF52.6070503@wwwdotorg.org>
-References: <20150317083221.32662.14647.stgit@baseline> <20150317083221.32662.96822.stgit@baseline> <20150317103806.GU8656@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1503191525450.9480@utopia.booyaka.com> <550AEE6B.5080301@wwwdotorg.org> <alpine.DEB.2.02.1503191601520.9480@utopia.booyaka.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: brcmstb: add nodes for SATA controller
+ and PHY
+Date: Thu, 19 Mar 2015 18:02:16 +0100
+Message-ID: <550B0118.3040104@redhat.com>
+References: <1426728222-8197-1-git-send-email-computersforpeace@gmail.com> <1426728222-8197-5-git-send-email-computersforpeace@gmail.com> <550AAEA1.5080301@redhat.com> <20150319155358.GA19571@brian-ubuntu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1503191601520.9480-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20150319155358.GA19571@brian-ubuntu>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2015 10:17 AM, Paul Walmsley wrote:
-> On Thu, 19 Mar 2015, Stephen Warren wrote:
+Hi,
+
+On 19-03-15 16:53, Brian Norris wrote:
+> Hi Hans,
 >
->> On 03/19/2015 09:26 AM, Paul Walmsley wrote:
->>> On Tue, 17 Mar 2015, Russell King - ARM Linux wrote:
+> Thanks for the review.
+>
+> On Thu, Mar 19, 2015 at 12:10:25PM +0100, Hans de Goede wrote:
+>> On 19-03-15 02:23, Brian Norris wrote:
+>>> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>> Light dependency on:
+>>>    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331921.html
+>>> for the surrounding text.
 >>>
->>>> On Tue, Mar 17, 2015 at 01:32:21AM -0700, Paul Walmsley wrote:
->>>>>    Required properties:
->>>>>    - compatible : For Tegra20, must contain "nvidia,tegra20-ahb".  For
->>>>> -  Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
->>>>> -  '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
->>>>> -  tegra132, or tegra210.
->>>>> -- reg : Should contain 1 register ranges(address and length)
->>>>> +  Tegra30, must contain "nvidia,tegra30-ahb".  For Tegra114 and
->>>>> Tegra124, must
->>>>> +  contain '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is
->>>>> tegra114
->>>>> +  or tegra124.  For Tegra132, the compatible string must contain
->>>>> +  "nvidia,tegra132-ahb".
->>>>> +
->>>>> +- reg : Should contain 1 register ranges(address and length).  On
->>>>> Tegra20,
->>>>> +  Tegra30, Tegra114, and Tegra124 chips, the low byte of the physical
->>>>> base
->>>>> +  address of the IP block must end in 0x04.  On DT files for later
->>>>> chips, the
->>>>> +  actual hardware base address of the IP block should be used.
->>>>
->>>> You could check that in the driver.  If you can check it in the driver,
->>>> you can also decide to ignore it if it were offset by 0x04 (possibly
->>>> printing a warning.)  That opens up the ability to fix the older Tegra
->>>> DT files going forward while still remaining compatible with existing
->>>> DT files, and avoiding the need for a complex note about this.
+>>>   arch/arm/boot/dts/bcm7445.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 36 insertions(+)
 >>>
->>> That's fine, I'll do that and drop this patch.
+>>> diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
+>>> index 9eaeac8dce1b..7a7c4d8c2afe 100644
+>>> --- a/arch/arm/boot/dts/bcm7445.dtsi
+>>> +++ b/arch/arm/boot/dts/bcm7445.dtsi
+>>> @@ -108,6 +108,42 @@
+>>>   			brcm,int-map-mask = <0x25c>, <0x7000000>;
+>>>   			brcm,int-fwd-mask = <0x70000>;
+>>>   		};
+>>> +
+>>> +		sata@f045a000 {
+>>> +			compatible = "brcm,bcm7445-ahci", "brcm,sata3-ahci";
+>>> +			reg-names = "ahci", "top-ctrl";
+>>> +			reg = <0x45a000 0xa9c>, <0x458040 0x24>;
 >>
->> Don't we still want to update the DT binding documentation to state what the
->> preferred base address (or at least set of legal base addresses) is/are?
+>> Why not simply drop the second register range here, and the minimal top-ctrl
+>> poking you need in the phy driver's phy_init function ?
 >
-> As far as I know, the DT binding documents are intended to be a
-> reference for IP block integration data like base addresses.  At least,
-> that is not how they've been used in the past, in the cases that I'm
-> familiar with.
+> I agree it's a little ugly, but your recommended solution will not work.
 >
-> I can see some marginal utility in changing the base address in the
-> example.  But since the worst possible outcome of using the old address is
-> a warning message at boot, that margin seems quite small indeed.  Anyone
-> who would blindly use the base address from the example to create a DT
-> file for a new Tegra SoC isn't doing it correctly.
+> The 'top-ctrl' register range includes several SATA functionalities,
+> some of which are required for the PHY and some of which are definitely
+> required for the SATA driver.
 
-The binding document is supposed to say what value the reg property 
-should have. If we require some unusual offset in the reg property (i.e. 
-something other than what the HW documentation describes as the module 
-base address), that ought to be documented. We do have this situation 
-for this module at present, although the documentation unfortunately 
-doesn't explicitly call this out even though the example alludes to it.
+I see, but the phy driver is required for the SATA driver anyways,
+and since the BUS_CTRL setting seems to be static it might just as
+well be set by the phy driver. The phy driver also poking some
+common sata glue bits like this busctrl register is not unheard of,
+esp. when these glue bits are in the phy register range.
 
-I do think we should at least fix the example so it isn't confusing and 
-inconsistent with expected practice. We could either switch the example 
-to Tegra210 so we only provide the best example going forward, or have 
-separate examples for Tegra20/210 to highlight the difference.
+> We have:
+>
+> 0x00   VERSION
+> 0x04   BUS_CTRL
+> 0x08   TP_CTRL
+> 0x0C   PHY_CTRL_1
+> 0x10   PHY_CTRL_2
+> 0x14   PHY_CTRL_3
+> 0x18   PHY_CTRL_4
+> 0x1C   TP_OUT
+> 0x20   CLIENT_INIT_CTRL
+>
+> We *definitely* need the BUS_CTRL register in the SATA driver, since it
+> controls the endianness of the AHCI register set as well as a few other
+> important bits we may use in the future.
 
-We should also add documentation that Chips before Tegra210 (or 
-Tegra132?) *require* the extra offset. Any code or DT written to the 
-existing (admittedly slightly implicit) binding needs to continue to 
-work, so we should document this unusual requirement, even if we enhance 
-the Linux driver to accept either mode of operation. Other OSs and old 
-versions of Linux will still need the exception for older SoCs.
+Are these bits non static, e.g. something which you may want to change at
+another time then init/shutdown/suspend/resume ? If they are static I still
+think this all clearly belongs in the phy driver, since this looks a lot
+like it is a single hardware block.
+
+If otoh these other bits may need runtime poking for e.g. sata error recovery,
+then I can understand why you want the bus ctrl register in the sata driver,
+but in that case it should only be mapped by the sata driver, and the phy driver
+register ranges should not cover it.
+
+> So we can't just "drop" the
+> "minimal poking" and expect things to work, just because that makes the
+> device tree look nicer :)
+
+I was not suggesting to drop it I was suggesting moving the poke to phy_init,
+and given the registermap you've shown above I still think that this belongs
+more in the phy driver then anywhere else.
+
+> The problem is what to do with the PHY_CTRL registers that are kept in
+> the middle of the block. These really belong as part of the PHY
+> power-on/power-off control sequence (i.e., PHY driver).
+>
+> Do you have any better suggestions that don't involve dropping the
+> BUS_CTRL register from the SATA driver?
+
+Nope, if you really believe that the bus-ctrl register should be part of
+the sata driver, then please just split the register ranges at a per register
+level, to remove the overlap + the hack of not claiming the resource on one side.
+
+>> This avoids the weird / ugly register overlap with the phy driver, and I think you
+>> can then just use the ahci_platform driver unmodified.
+>>
+>>> +			interrupts = <GIC_SPI 30 0>;
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +
+>>> +			sata0: sata-port@0 {
+>>> +				reg = <0>;
+>>> +				phys = <&sata_phy 0>;
+>>> +			};
+>>> +
+>>> +			sata1: sata-port@1 {
+>>> +				reg = <1>;
+>>> +				phys = <&sata_phy 1>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		sata_phy: sata-phy@f0458100 {
+>>> +			compatible = "brcm,bcm7445-sata-phy", "brcm,phy-sata3";
+>>> +			reg = <0x458100 0x1e00>, <0x45804c 0x10>;
+>>
+>> Why not simply use: reg = <0x458000 0x2000>, to me it seems that what you should
+>> really be using here.
+>
+> 0x458000 to 0x45800f and 0x458080 to 0x4580af belong to a debug
+> interrupt controller, which handles bus error handling. It's currently
+> unused, and it definitely doesn't belong here.
+>
+> The 'phy' register range is actually documented as two sets of identical
+> registers:
+>
+> 0x458100 - 0x458fff  Port0 SATA PHY registers
+> 0x459100 - 0x459fff  Port1 SATA PHY registers
+>
+> with a hole between them. I definitely don't want to do the combining
+> that you suggested, but I could probably split them apart if that really
+> helps...
+
+If this is the documented register range, then I think that splitting them makes
+sense, and assuming that the init code for both ports is the same it may
+even make for cleaner code.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
