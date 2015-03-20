@@ -1,78 +1,43 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v7 1/2] DT: hwspinlock: Add binding documentation for Qualcomm hwmutex
-Date: Thu, 19 Mar 2015 18:48:10 -0700
-Message-ID: <1426816091-29171-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Qualcomm PM8941 power key driver
+Date: Fri, 20 Mar 2015 02:54:33 +0100
+Message-ID: <CAJAp7Oi0YbrTcJ1+ziWk0J02_qB=syQV=stLnXy2+txA2ZWQpw@mail.gmail.com>
+References: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1424080516.2328.1.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Suman Anna <s-anna@ti.com>, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424080516.2328.1.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the Qualcomm Hardware Mutex.
+On Mon, Feb 16, 2015 at 10:55 AM, Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
+>
+> On Fri, 2015-01-23 at 16:19 -0800, Bjorn Andersson wrote:
+>> These patches add dt bindings and a device driver for the power key block in
+>> the Qualcomm PM8941 pmic.
+>>
+>> Changes since v1:
+>>  * Use a reboot_notifier to set power off/reboot mode
+>>  * Use irq flags from devicetree
+>>  * Some style fixes
+>>
+>> Courtney Cavin (2):
+>>   input: Add Qualcomm PM8941 power key driver
+>>   input: pm8941-pwrkey: Add DT binding documentation
+>
+> Tested-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>
 
-Reviewed-by: Andy Gross <agross@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
+Thanks for your testing Ivan.
 
-Changes since v6:
-- Corrected indentation error in example
+Dmitry, can you apply this? (It still applies cleanly to linux-next)
 
-Changes since v5:
-- Extracted the dt binding documentation into a separate patch
-- Moved the driver to consume a syscon
-- Dropped previously suggested generic hwlock dt bindings
-
- .../devicetree/bindings/hwlock/qcom-hwspinlock.txt | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-
-diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-new file mode 100644
-index 0000000..4f8ebd9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-@@ -0,0 +1,39 @@
-+Qualcomm Hardware Mutex Block:
-+
-+The hardware block provides mutexes utilized between different processors on
-+the SoC as part of the communication protocol used by these processors.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,sfpb-mutex",
-+		    "qcom,tcsr-mutex"
-+
-+- syscon:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: one cell containing:
-+		    syscon phandle
-+		    offset of the hwmutex block within the syscon
-+		    stride of the hwmutex registers
-+
-+- #hwlock-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1, the specified cell represent the lock id
-+		    (hwlock standard property, see hwlock.txt)
-+
-+Example:
-+
-+	tcsr: syscon@1a400000 {
-+		compatible = "qcom,tcsr-msm8974", "syscon";
-+		reg = <0xfd484000 0x2000>;
-+	};
-+
-+	hwlock@fd484000 {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr 0 0x80>;
-+
-+		#hwlock-cells = <1>;
-+	};
--- 
-1.8.2.2
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
