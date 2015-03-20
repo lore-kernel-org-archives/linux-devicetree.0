@@ -1,91 +1,67 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/3] ARM: dts: OMAP5+: separate the cpu thermal zone definition from omap4
-Date: Fri, 20 Mar 2015 14:47:39 -0500
-Message-ID: <1426880861-9266-2-git-send-email-nm@ti.com>
-References: <1426880861-9266-1-git-send-email-nm@ti.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power
+ on/off UART attached devices.
+Date: Fri, 20 Mar 2015 20:50:19 +0100
+Message-ID: <20150320195019.GC28194@amd>
+References: <20150318055437.21025.13990.stgit@notabene.brown>
+ <20150318055831.21025.33670.stgit@notabene.brown>
+ <C53A3E5D-5AEA-4F0F-88A9-F9BC8CB0D0D6@goldelico.com>
+ <20150320195451.146a7915@notabene.brown>
+ <14FB51CF-9568-4BF4-B917-2C019D992FDB@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426880861-9266-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <14FB51CF-9568-4BF4-B917-2C019D992FDB-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+Hi!
 
-OMAP4 has a finer counter granularity, which allows for a delay of 1000ms
-in the thermal zone polling intervals. OMAP5/DRA7 have different counter
-mechanism, which allows at maximum a 500ms timer. Adjust the cpu thermal
-zone accordingly for OMAP5/DRA7.
+> >>=20
+> >> Wouldn=E2=80=99t it be easier to simply write
+> >>=20
+> >> &uart1 {
+> >> 	vdd-suppy =3D <&vaux4>;
+> >> }
+> >=20
+> > Easier to write: certainly.
+> > Easier to justify? No.
+>=20
+> I just justified.
+>=20
+> > Easier to get merged upstream?  Definitely not.
+>=20
+> Are you the maintainer?
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- arch/arm/boot/dts/omap5-cpu-thermal.dtsi |   41 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/omap5.dtsi             |    2 +-
- 2 files changed, 42 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/omap5-cpu-thermal.dtsi
+And you? I believe Neil is right here, and this kind of shortcut can
+not be taken.
 
-diff --git a/arch/arm/boot/dts/omap5-cpu-thermal.dtsi b/arch/arm/boot/dts/omap5-cpu-thermal.dtsi
-new file mode 100644
-index 000000000000..4a6427c1e47e
---- /dev/null
-+++ b/arch/arm/boot/dts/omap5-cpu-thermal.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * Device Tree Source for OMAP4/5 SoC CPU thermal
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ * Contact: Tero Kristo <t-kristo@ti.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+cpu_thermal: cpu_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+
-+			/* sensor       ID */
-+	thermal-sensors = <&bandgap     0>;
-+
-+	cpu_trips: trips {
-+		cpu_alert0: cpu_alert {
-+			temperature = <100000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		cpu_crit: cpu_crit {
-+			temperature = <125000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+
-+	cpu_cooling_maps: cooling-maps {
-+		map0 {
-+			trip = <&cpu_alert0>;
-+			cooling-device =
-+				<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index ddff674bd05e..e650d4eb59dd 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -67,7 +67,7 @@
- 	};
- 
- 	thermal-zones {
--		#include "omap4-cpu-thermal.dtsi"
-+		#include "omap5-cpu-thermal.dtsi"
- 		#include "omap5-gpu-thermal.dtsi"
- 		#include "omap5-core-thermal.dtsi"
- 	};
--- 
-1.7.9.5
+> > After all, the uart itself doesn't require a power supply.
+> > It is the device connected to the uart which requires the power sup=
+ply.
+>=20
+> Yes.
+
+There's UART, long rs/232 cable, and a GPS.
+
+UART needs some kind of power supply, to present voltages on the
+rs/232 cable.
+
+GPS needs some kind of power supply to work.
+
+They are different power supplies, and we should have way to tell them
+apart.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
