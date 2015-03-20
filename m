@@ -1,105 +1,96 @@
-From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v1 2/3] Phy: DT binding documentation for Broadcom Cygnus USB PHY driver
-Date: Fri, 20 Mar 2015 14:25:26 -0700
-Message-ID: <1426886727-537-3-git-send-email-arun.ramamurthy@broadcom.com>
+From: Dmitry Torokhov <dtor@google.com>
+Subject: Re: [PATCH v1 1/3] phy: phy-core: allow specifying supply at port
+ level
+Date: Fri, 20 Mar 2015 14:31:08 -0700
+Message-ID: <20150320213108.GB25405@dtor-ws>
 References: <1426886727-537-1-git-send-email-arun.ramamurthy@broadcom.com>
+ <1426886727-537-2-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426886727-537-1-git-send-email-arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426886727-537-2-git-send-email-arun.ramamurthy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom's Cygnus chip has a USB 2.0 host controller connected to
-three separate phys. One of the phs (port 2) is also connectd to
-a usb 2.0 device controller
+Hi Arun,
 
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Fri, Mar 20, 2015 at 02:25:25PM -0700, Arun Ramamurthy wrote:
+> Multi-port phy's may have per-port power supplies. Let's change phy core
+> to first attempt to look up the supply at the port level, and then, if
+> not found, check parent device.
+> 
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+>
 
----
- .../bindings/phy/brcm,cygnus-usb-phy.txt           | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+This should have had:
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-new file mode 100644
-index 0000000..002bd59
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-@@ -0,0 +1,65 @@
-+BROADCOM CYGNUS USB PHY
-+
-+Required Properties:
-+	- compatible:  brcm,cygnus-usb-phy
-+	- reg : usbphy_regs - Base address of phy registers
-+			usb2h_idm_regs - Base address of host idm registers
-+			usb2d_idm_regs - Base address of device idm registers
-+The node that uses the phy must provide one integers, 0 for device and 1 for host
-+
-+NOTE: port 0 and port 1 are host only and port 2 can be configured for host or device.
-+
-+Example of phy :
-+	usbphy0: usbphy@0x0301c000 {
-+		compatible = "brcm,cygnus-usb-phy";
-+		reg = <0x0301c000 0x2000>,
-+		      <0x18115000 0x1000>,
-+		      <0x18111000 0x1000>;
-+		status = "okay";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		usbphy0_0: usbphy0@0 {
-+			#phy-cells = <1>;
-+			reg = <0>;
-+			status = "okay";
-+			phy-supply = <&vbus_p0>;
-+		};
-+
-+		usbphy0_1: usbphy0@1 {
-+			#phy-cells = <1>;
-+			reg = <1>;
-+			status = "okay";
-+		};
-+
-+		usbphy0_2: usbphy0@2 {
-+			#phy-cells = <1>;
-+			reg = <2>;
-+			status = "okay";
-+			phy-supply = <&vbus_p2>;
-+		};
-+	};
-+
-+Example of node using the phy:
-+
-+	/* This nodes declares all three ports as host */
-+	
-+	ehci0: usb@0x18048000 {
-+		compatible = "generic-ehci";
-+		reg = <0x18048000 0x100>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&usbphy0_0 1 &usbphy0_1 1 &usbphy0_2 1>;
-+		phy-names = "usb","usb","usb";
-+		status = "okay";
-+	};
-+
-+	/* This node declares port 2 phy
-+	and configures it for device */
-+
-+	usbd_udc_dwc1: usbd_udc_dwc@0x1804c000 {
-+		compatible = "iproc-udc";
-+		reg = <0x1804c000 0x2000>;
-+		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&usbphy0_2 0>;
-+		phy-names = "usb";
-+	};
+From: Dmitry Torokhov <dtor@chromium.org>
+
+as first line of the body of e-mail as the patch was authored by me.
+
+Thanks.
+
+ ---
+>  drivers/phy/phy-core.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index a12d353..b43bb6b 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -650,16 +650,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
+>  		goto free_phy;
+>  	}
+>  
+> -	/* phy-supply */
+> -	phy->pwr = regulator_get_optional(dev, "phy");
+> -	if (IS_ERR(phy->pwr)) {
+> -		if (PTR_ERR(phy->pwr) == -EPROBE_DEFER) {
+> -			ret = -EPROBE_DEFER;
+> -			goto free_ida;
+> -		}
+> -		phy->pwr = NULL;
+> -	}
+> -
+>  	device_initialize(&phy->dev);
+>  	mutex_init(&phy->mutex);
+>  
+> @@ -673,6 +663,26 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
+>  	if (ret)
+>  		goto put_dev;
+>  
+> +	/*
+> +	 * Locate phy-supply. We first try individual port and then,
+> +	 * if supply is not found, try parent device.
+> +	 */
+> +	phy->pwr = regulator_get_optional(&phy->dev, "phy");
+> +	if (IS_ERR(phy->pwr)) {
+> +		ret = PTR_ERR(phy->pwr);
+> +		if (ret == -EPROBE_DEFER)
+> +			goto free_ida;
+> +
+> +		phy->pwr = regulator_get_optional(phy->dev.parent, "phy");
+> +		if (IS_ERR(phy->pwr)) {
+> +			ret = PTR_ERR(phy->pwr);
+> +			if (ret == -EPROBE_DEFER)
+> +				goto free_ida;
+> +
+> +			phy->pwr = NULL;
+> +		}
+> +	}
+> +
+>  	ret = device_add(&phy->dev);
+>  	if (ret)
+>  		goto put_dev;
+> -- 
+> 2.3.2
+> 
+
 -- 
-2.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
