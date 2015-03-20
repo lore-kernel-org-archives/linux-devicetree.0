@@ -1,89 +1,45 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/4 v4] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 20 Mar 2015 13:29:56 -0600
-Message-ID: <550C7534.8070100@wwwdotorg.org>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net> <1426213936-4139-3-git-send-email-eric@anholt.net> <5507A095.5090805@wwwdotorg.org> <87619xq414.fsf@eliezer.anholt.net> <550BA6B4.3030604@wwwdotorg.org> <87wq2bk2ez.fsf@eliezer.anholt.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 0/3] tty slave device support - version 3.
+Date: Fri, 20 Mar 2015 20:31:19 +0100
+Message-ID: <20150320193119.GA28194@amd>
+References: <20150318055437.21025.13990.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87wq2bk2ez.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150318055437.21025.13990.stgit@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neil@brown.name>
+Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2015 11:24 AM, Eric Anholt wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->
->> On 03/18/2015 05:28 PM, Eric Anholt wrote:
->>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>>
->>>> On 03/12/2015 08:32 PM, Eric Anholt wrote:
->>>>> diff --git a/drivers/mailbox/bcm2835-mailbox.c
->>>>> b/drivers/mailbox/bcm2835-mailbox.c
->>>>
->>>>> +#define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) &
->>>>> 0xf)) +#define MBOX_CHAN(msg)			((msg) & 0xf) +#define
->>>>> MBOX_DATA28(msg)		((msg) & ~0xf)
->>>>
->>>> Even the concept of storing channel IDs in the LSBs feels like it
->>>> might be RPi-firmware-specific rather than HW-specific?
->>>
->>> I guess?  If we found another firmware protocol, we could have
->>> that device's dt just specify a different compatible string.  But
->>> in the absence of another firmware to talk to, I'm not sure what
->>> you want here.
->>
->> I would expect the mailbox driver to expose a single channel that just
->> transports 32-bit values, since the HW doesn't impose any kind of
->> structure on the values it transports AFAIK. Clients of the mailbox
->> driver would formulate the messages they send through the mailox using
->> the macros above.
->>
->> I'm not sure whether the mailbox core allows multiple clients for the
->> same mailbox channel though? This HW appears to require it.
->
-> Yeah, that's the problem.
+Hi!
 
-I expect you'd end up representing the low-level mbox HW and the remote 
-firmware as separate nodes in DT. There's certainly precedent for 
-representing firmware in DT as a separate node. Perhaps something like:
+>  here is version 3 of support for tty-slaves.
+> 
+>  This version introduces a new bus-type for tty-slaves, and causes
+>  a tty-slave device to appear in /sys/devices between the uart and the
+>  tty.
+>  It effectively intercepts and calls from the tty to the uart (i.e. any
+>  tty_operations) and applies extra functionality at that point.
+> 
+>  Currently the only driver intercepts open and close.
+>  It powers on the device on open, and powers off at last-close.
+> 
+>  Power can be controlled by a regulator or by toggling a GPIO.
+> 
+>  I think I've incorporated most of the feed back I received from
+>  previous versions, but if I missed something - I apologize.  If
+>  this approach is structurally acceptable then I can fix up all the
+>  smaller issues.
 
-// Exports just one channel, since there's 1 channel in HW
-// Driver solely transports u32s through the registers and nothing else
-// Driver allows a single client on the channel
-mailbox: mailbox@7e00b800 {
-	compatible = "brcm,bcm2835-mbox";
-	reg = <0x7e00b880 0x40>;
-	interrupts = <0 1>;
-	#mbox-cells = <1>;
-};
+Do you have dts example? Anyway, we'll need something similar for
+bluetooth on N900. But we'd like the /dev/ttyXX not to be visible to
+the userspace in that case.
 
-// implements all RPI- (rather than bcm2835-)specific aspects of the
-// firmware interface, such as merging data and channel ID into the data
-// sent into the mailbox registers, handling multiple clients on a
-// channel, etc.
-firmware {
-	compatible = "raspberrypi,firmware";
-	mboxes = <&mailbox 8>;
-};
+Thanks,
+								Pavel
 
-The driver for the FW node could either register itself with all the 
-relevant subsystems (power domains, clocks, ...) or in turn exports its 
-services to other nodes like:
-
-   firmware {
-   	compatible = "raspberrypi,firmware";
-   	mboxes = <&mailbox 8>;
-+ 	#fw-cells = <1>; # or whatever's needed
-   };
-
-clocks {
-	compatible = "raspberrypi,clocks";
-	fw = <&firmware 0>; // or whatever channel # clocks are on
-};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
