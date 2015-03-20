@@ -1,289 +1,185 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v1 10/11] leds: max77693: add support for V4L2 Flash sub-device
-Date: Fri, 20 Mar 2015 16:03:30 +0100
-Message-ID: <1426863811-12516-11-git-send-email-j.anaszewski@samsung.com>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [RFC] pinmux: group and function definitions in the device tree
+Date: Fri, 20 Mar 2015 16:06:09 +0100
+Message-ID: <20150320150609.GB32259@odux.rfo.atmel.com>
+References: <20150319153950.GC30114@odux.rfo.atmel.com>
+ <20150319185637.GV4927@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150319185637.GV4927@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for V4L2 Flash sub-device to the max77693 LED Flash class
-driver. The support allows for V4L2 Flash sub-device to take the control
-of the LED Flash class device.
+On Thu, Mar 19, 2015 at 07:56:37PM +0100, Sascha Hauer wrote:
+> On Thu, Mar 19, 2015 at 04:39:50PM +0100, Ludovic Desroches wrote:
+> > Hi,
+> > 
+> > I would like to start a discussion about pinmuxing and device tree bindings.
+> > 
+> > I am currently writing a new pinmuxing driver using the generic pinconf.
+> > My main concern is about defining functions and which pins belong to a
+> > group.
+> > 
+> > At the moment, it seems that most drivers using the generic pinconf
+> > define this stuff in a static way. The pinctrl-at91 driver covers many
+> > devices, the new one should do the same for new Atmel devices. Having
+> > the group and function definitions in the driver could involve a huge
+> > file...
+> > I am not sure it is a good thing to embed all these information into a
+> > single zImage...
+> > 
+> > How can we achieved this? I was thinking about something like this:
+> > 
+> > pinctrl@fc06a000 {
+> > 
+> > 	[...]
+> > 
+> > 	pinctrl_defs {
+> > 		mci0 {
+> > 			mci0_ioset0_1bit_grp {
+> > 				at91,pins = <68 69 70>;
+> > 				at91,mux = <2>;
+> > 			};
+> > 
+> > 			mci0_ioset0_4bit_grp {
+> > 				at91,pins = <68 69 70 71 72 73>;
+> > 				at91,mux = <2>;
+> > 			};
+> > 
+> > 			mci0_ioset0_8bit_grp {
+> > 				at91,pins = <68 69 70 71 72 73 74 75 76 77>;
+> > 				at91,mux = <2>;
+> > 			};
+> > 		};
+> > 	};
+> 
+> Why are different groups here? Do you want to put them into the dtsi?
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
----
- drivers/leds/leds-max77693.c |  149 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 141 insertions(+), 8 deletions(-)
+We used to have a configuration per pin in our products. On next ones we
+will have some constraints ie. on the controller side we still have a
+configuration per pin but we will introduced the notion of iosets. This
+notion involves that timings are guaranteed only in one ioset. That's
+why we can't mix signals from several iosets because. On the controller side
+we can do all we want so I would like to use groups as a software protection.
 
-diff --git a/drivers/leds/leds-max77693.c b/drivers/leds/leds-max77693.c
-index 7386d69..a12bd8c 100644
---- a/drivers/leds/leds-max77693.c
-+++ b/drivers/leds/leds-max77693.c
-@@ -21,6 +21,7 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-+#include <media/v4l2-flash.h>
- 
- #define MODE_OFF		0
- #define MODE_FLASH(a)		(1 << (a))
-@@ -68,6 +69,8 @@ struct max77693_sub_led {
- 	struct led_classdev_flash fled_cdev;
- 	/* assures led-triggers compatibility */
- 	struct work_struct work_brightness_set;
-+	/* V4L2 Flash device */
-+	struct v4l2_flash *v4l2_flash;
- 
- 	/* brightness cache */
- 	unsigned int torch_brightness;
-@@ -651,7 +654,8 @@ static int max77693_led_flash_timeout_set(
- }
- 
- static int max77693_led_parse_dt(struct max77693_led_device *led,
--				struct max77693_led_config_data *cfg)
-+				struct max77693_led_config_data *cfg,
-+				struct device_node **sub_nodes)
- {
- 	struct device *dev = &led->pdev->dev;
- 	struct max77693_sub_led *sub_leds = led->sub_leds;
-@@ -697,6 +701,13 @@ static int max77693_led_parse_dt(struct max77693_led_device *led,
- 			return -EINVAL;
- 		}
- 
-+		if (sub_nodes[fled_id]) {
-+			dev_err(dev,
-+				"Conflicting \"led-sources\" DT properties\n");
-+			return -EINVAL;
-+		}
-+
-+		sub_nodes[fled_id] = child_node;
- 		sub_leds[fled_id].fled_id = fled_id;
- 
- 		of_property_read_string(child_node, "label",
-@@ -784,11 +795,12 @@ static void max77693_led_validate_configuration(struct max77693_led_device *led,
- }
- 
- static int max77693_led_get_configuration(struct max77693_led_device *led,
--				struct max77693_led_config_data *cfg)
-+				struct max77693_led_config_data *cfg,
-+				struct device_node **sub_nodes)
- {
- 	int ret;
- 
--	ret = max77693_led_parse_dt(led, cfg);
-+	ret = max77693_led_parse_dt(led, cfg, sub_nodes);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -855,9 +867,86 @@ static const char *max77693_get_led_name(struct max77693_led_device *led,
- 					     MAX77693_LED2_NAME;
- }
- 
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+
-+static int max77693_led_external_strobe_set(
-+				struct v4l2_flash *v4l2_flash,
-+				bool enable)
-+{
-+	struct max77693_sub_led *sub_led =
-+				flcdev_to_sub_led(v4l2_flash->fled_cdev);
-+	struct max77693_led_device *led = sub_led_to_led(sub_led);
-+	int fled_id = sub_led->fled_id;
-+	int ret;
-+
-+	mutex_lock(&led->lock);
-+
-+	if (enable)
-+		ret = max77693_add_mode(led, MODE_FLASH_EXTERNAL(fled_id));
-+	else
-+		ret = max77693_clear_mode(led, MODE_FLASH_EXTERNAL(fled_id));
-+
-+	mutex_unlock(&led->lock);
-+
-+	return ret;
-+}
-+
-+static void max77693_init_v4l2_ctrl_config(struct max77693_led_device *led,
-+					int fled_id,
-+					struct max77693_led_settings *s,
-+					struct v4l2_flash_ctrl_config *config)
-+{
-+	struct device *dev = &led->pdev->dev;
-+	struct max77693_dev *iodev = dev_get_drvdata(dev->parent);
-+	struct i2c_client *i2c = iodev->i2c;
-+	struct led_flash_setting *setting;
-+	struct v4l2_ctrl_config *c;
-+
-+	snprintf(config->dev_name, sizeof(config->dev_name),
-+		 "%s %d-%04x", max77693_get_led_name(led, fled_id),
-+		 i2c_adapter_id(i2c->adapter), i2c->addr);
-+
-+	c = &config->intensity;
-+	setting = &s->torch_brightness;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	c = &config->flash_intensity;
-+	setting = &s->flash_brightness;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	c = &config->flash_timeout;
-+	setting = &s->flash_timeout;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	/* Init flash faults config */
-+	config->flash_faults =	V4L2_FLASH_FAULT_OVER_VOLTAGE |
-+				V4L2_FLASH_FAULT_SHORT_CIRCUIT |
-+				V4L2_FLASH_FAULT_OVER_CURRENT;
-+
-+	config->has_external_strobe = true;
-+}
-+
-+static const struct v4l2_flash_ops v4l2_flash_ops = {
-+	.external_strobe_set = max77693_led_external_strobe_set,
-+};
-+
-+#else
-+#define max77693_init_v4l2_ctrl_config(led, fled_id, s, config)
-+#endif
-+
- static void max77693_init_fled_cdev(struct max77693_led_device *led,
- 				int fled_id,
--				struct max77693_led_config_data *cfg)
-+				struct max77693_led_config_data *cfg,
-+				struct v4l2_flash_ctrl_config *v4l2_flash_cfg)
- {
- 	struct led_classdev_flash *fled_cdev;
- 	struct led_classdev *led_cdev;
-@@ -866,6 +955,8 @@ static void max77693_init_fled_cdev(struct max77693_led_device *led,
- 
- 	/* Initialize flash settings */
- 	max77693_init_flash_settings(led, fled_id, cfg, &settings);
-+	/* Initialize V4L2 Flash config basing on initialized settings */
-+	max77693_init_v4l2_ctrl_config(led, fled_id, &settings, v4l2_flash_cfg);
- 
- 	/* Initialize LED Flash class device */
- 	fled_cdev = &sub_led->fled_cdev;
-@@ -891,15 +982,51 @@ static void max77693_init_fled_cdev(struct max77693_led_device *led,
- 	sub_led->flash_timeout = fled_cdev->timeout.val;
- }
- 
-+static int max77693_register_led(struct max77693_sub_led *sub_led,
-+				 struct v4l2_flash_ctrl_config *v4l2_flash_cfg,
-+				 struct device_node *sub_node)
-+{
-+	struct max77693_led_device *led = sub_led_to_led(sub_led);
-+	struct led_classdev_flash *fled_cdev = &sub_led->fled_cdev;
-+	struct device *dev = &led->pdev->dev;
-+	int ret;
-+
-+	/* Register in the LED subsystem */
-+	ret = led_classdev_flash_register(dev, fled_cdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	fled_cdev->led_cdev.dev->of_node = sub_node;
-+
-+	/* Register in the V4L2 subsystem. */
-+	sub_led->v4l2_flash = v4l2_flash_init(fled_cdev, &v4l2_flash_ops,
-+						v4l2_flash_cfg);
-+	if (IS_ERR(sub_led->v4l2_flash)) {
-+		ret = PTR_ERR(sub_led->v4l2_flash);
-+		goto err_v4l2_flash_init;
-+	}
-+
-+	return 0;
-+
-+err_v4l2_flash_init:
-+	of_node_put(sub_node);
-+	led_classdev_flash_unregister(fled_cdev);
-+	return ret;
-+}
-+
- static int max77693_led_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct max77693_dev *iodev = dev_get_drvdata(dev->parent);
- 	struct max77693_led_device *led;
- 	struct max77693_sub_led *sub_leds;
-+	struct device_node *sub_nodes[2] = { NULL, NULL };
- 	struct max77693_led_config_data cfg = {};
-+	struct v4l2_flash_ctrl_config v4l2_flash_config[2];
- 	int init_fled_cdev[2], i, ret;
- 
-+	memset(v4l2_flash_config, 0, sizeof(v4l2_flash_config));
-+
- 	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
- 	if (!led)
- 		return -ENOMEM;
-@@ -910,7 +1037,7 @@ static int max77693_led_probe(struct platform_device *pdev)
- 	sub_leds = led->sub_leds;
- 
- 	platform_set_drvdata(pdev, led);
--	ret = max77693_led_get_configuration(led, &cfg);
-+	ret = max77693_led_get_configuration(led, &cfg, sub_nodes);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -926,15 +1053,18 @@ static int max77693_led_probe(struct platform_device *pdev)
- 	/* Initialize LED Flash class device(s) */
- 	for (i = FLED1; i <= FLED2; ++i)
- 		if (init_fled_cdev[i])
--			max77693_init_fled_cdev(led, i, &cfg);
-+			max77693_init_fled_cdev(led, i, &cfg,
-+						&v4l2_flash_config[i]);
- 	mutex_init(&led->lock);
- 
--	/* Register LED Flash class device(s) */
-+	/* Register LED Flash class and related V4L2 Flash device(s) */
- 	for (i = FLED1; i <= FLED2; ++i) {
- 		if (!init_fled_cdev[i])
- 			continue;
- 
--		ret = led_classdev_flash_register(dev, &sub_leds[i].fled_cdev);
-+		ret = max77693_register_led(&sub_leds[i],
-+					    &v4l2_flash_config[i],
-+					    sub_nodes[i]);
- 		if (ret < 0) {
- 			/*
- 			 * At this moment FLED1 might have been already
-@@ -953,6 +1083,7 @@ err_register_led2:
- 	/* It is possible than only FLED2 was to be registered */
- 	if (!init_fled_cdev[FLED1])
- 		goto err_register_led1;
-+	v4l2_flash_release(sub_leds[FLED1].v4l2_flash);
- 	led_classdev_flash_unregister(&sub_leds[FLED1].fled_cdev);
- err_register_led1:
- 	mutex_destroy(&led->lock);
-@@ -966,11 +1097,13 @@ static int max77693_led_remove(struct platform_device *pdev)
- 	struct max77693_sub_led *sub_leds = led->sub_leds;
- 
- 	if (led->iout_joint || max77693_fled_used(led, FLED1)) {
-+		v4l2_flash_release(sub_leds[FLED1].v4l2_flash);
- 		led_classdev_flash_unregister(&sub_leds[FLED1].fled_cdev);
- 		cancel_work_sync(&sub_leds[FLED1].work_brightness_set);
- 	}
- 
- 	if (!led->iout_joint && max77693_fled_used(led, FLED2)) {
-+		v4l2_flash_release(sub_leds[FLED2].v4l2_flash);
- 		led_classdev_flash_unregister(&sub_leds[FLED2].fled_cdev);
- 		cancel_work_sync(&sub_leds[FLED2].work_brightness_set);
- 	}
--- 
-1.7.9.5
+I have several groups because I can only choose the 4bit group and use other
+pins for an other device.
+
+Example:
+
+mci0 {
+	mci0_ioset0_1bit_grp {
+		pins = <PINMUX_PIN(68, 2),
+			PINMUX_PIN(69, 2),
+			PINMUX_PIN(70, 2)>;
+	};
+	mci0_ioset0_4bit_grp {
+		pins = <PINMUX_PIN(68, 2),
+			PINMUX_PIN(69, 2),
+			PINMUX_PIN(70, 2),
+			PINMUX_PIN(71, 2),
+			PINMUX_PIN(72, 2),
+			PINMUX_PIN(73, 2)>;
+	};
+	mci0_ioset0_8bit_grp {
+		pins = <PINMUX_PIN(68, 2),
+			PINMUX_PIN(69, 2),
+			PINMUX_PIN(70, 2),
+			PINMUX_PIN(71, 2),
+			PINMUX_PIN(72, 2),
+			PINMUX_PIN(73, 2),
+			PINMUX_PIN(74, 2),
+			PINMUX_PIN(75, 2),
+			PINMUX_PIN(76, 2),
+			PINMUX_PIN(77, 2)>;
+	};
+	mci0_ioset1_1bit_grp {
+		pins = <PINMUX_PIN(153, 1),
+			PINMUX_PIN(154, 1),
+			PINMUX_PIN(155, 1)>;
+	};
+};
+
+i2c0 {
+	i2c0_ioset0_grp {
+		pins  = <PINMUX_PIN(71, 4),
+			 PINMUX_PIN(72, 4)>;
+	};
+	i2c0_ioset1_grp {
+		pins  = <PINMUX_PIN(91, 6),
+			 PINMUX_PIN(92, 6)>;
+	};
+	i2c0_ioset2_grp {
+		pins  = <PINMUX_PIN(108, 1),
+			 PINMUX_PIN(109, 1)>;
+	};
+};
+
+
+> This would mean you have to carry a lot of groups in each dtsi from
+> which only a small fraction is used. We did that on i.MX but no longer
+> do this since the dtbs get very big.
+
+Yes I would like to put it in the dtsi file. For sure we will have big
+dtbs. If we put that in the driver we will increase the size of our
+kernel. If every one does this, we will have a lot of unused code for a
+multiplatform kernel. Where is the best place to put this?
+
+> 
+> > 
+> > 	pinctrl_mci0_default: mci0_default {
+> > 		mux {
+> > 			function = "mci0";
+> > 			groups = &mci0_ioset0_8bit_grp;
+> > 		};
+> > 
+> > 		conf {
+> > 			groups = &mci0_ioset0_8bit_grp;
+> > 			bias-pullup;
+> > 		};
+> > 	};
+> > };
+> > 
+> > - A subnode for these definitions in order to not parse the whole
+> >   pinctrl node to retrieve groups and functions.
+> > - Using node names as function and group names.
+> > - Can we get generic properties to define the groups? Of course a 'pins'
+> >   property is mandatory. In my case I will need an extra one to tell the
+> >   controller how to mux the pins (a same pin can have up to 7 muxing
+> >   possibilities).
+> 
+> Did you have a look at the RFC I sent for these kind of controllers [1] and
+> the final result for the Mediatek driver currently in Linux-next [2]?.
+> 
+> The binding has both the config and the pins in a single node and thus
+> is very compact.
+> 
+
+Thanks for the links. Well I had a look to them and now I am a bit
+lost...
+
+I agree with this binding but it involves to get rid of
+pinconf_generic_dt_node_to_map_all, isn't it? What do group and function
+become? It seems these concepts have disappeared.
+
+I am disappointed because I have the feeling that the only remaining
+part of the generic pinconf are the configuration properties.
+
+> Sascha
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296491.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318452.html
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
