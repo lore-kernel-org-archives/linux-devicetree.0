@@ -1,76 +1,46 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: [PATCH v1 1/3] phy: phy-core: allow specifying supply at port level
-Date: Fri, 20 Mar 2015 14:25:25 -0700
-Message-ID: <1426886727-537-2-git-send-email-arun.ramamurthy@broadcom.com>
-References: <1426886727-537-1-git-send-email-arun.ramamurthy@broadcom.com>
+From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v1 0/3] USB PHY driver for Broadcom's Cygnus chipse
+Date: Fri, 20 Mar 2015 14:25:24 -0700
+Message-ID: <1426886727-537-1-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426886727-537-1-git-send-email-arun.ramamurthy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Multi-port phy's may have per-port power supplies. Let's change phy core
-to first attempt to look up the supply at the port level, and then, if
-not found, check parent device.
+This patchset adds the USB phy driver and documentation 
+for Broadom's Cygnus chipset. The phy is configurable from device tree
+and is capable of both device and host functions. It also provides
+a clock and reset to the host controller
 
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
----
- drivers/phy/phy-core.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+History:
+v1:
+    - Included Dmitry Torokhov's patch that addresed Kishon Vijay Abraham's 
+    comments on multiple phy model
+    - Inlucded Dmitry Torokhov's patch to use phy regulator
+    - Addressed Arnd Bergmann's comments on usage of this phy driver by
+    ehci-platform and ohci-platform driver in a separate patchset. 
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index a12d353..b43bb6b 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -650,16 +650,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 		goto free_phy;
- 	}
- 
--	/* phy-supply */
--	phy->pwr = regulator_get_optional(dev, "phy");
--	if (IS_ERR(phy->pwr)) {
--		if (PTR_ERR(phy->pwr) == -EPROBE_DEFER) {
--			ret = -EPROBE_DEFER;
--			goto free_ida;
--		}
--		phy->pwr = NULL;
--	}
--
- 	device_initialize(&phy->dev);
- 	mutex_init(&phy->mutex);
- 
-@@ -673,6 +663,26 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 	if (ret)
- 		goto put_dev;
- 
-+	/*
-+	 * Locate phy-supply. We first try individual port and then,
-+	 * if supply is not found, try parent device.
-+	 */
-+	phy->pwr = regulator_get_optional(&phy->dev, "phy");
-+	if (IS_ERR(phy->pwr)) {
-+		ret = PTR_ERR(phy->pwr);
-+		if (ret == -EPROBE_DEFER)
-+			goto free_ida;
-+
-+		phy->pwr = regulator_get_optional(phy->dev.parent, "phy");
-+		if (IS_ERR(phy->pwr)) {
-+			ret = PTR_ERR(phy->pwr);
-+			if (ret == -EPROBE_DEFER)
-+				goto free_ida;
-+
-+			phy->pwr = NULL;
-+		}
-+	}
-+
- 	ret = device_add(&phy->dev);
- 	if (ret)
- 		goto put_dev;
+Arun Ramamurthy (3):
+  phy: phy-core: allow specifying supply at port level
+  Phy: DT binding documentation for Broadcom Cygnus USB PHY driver
+  phy: cygnus-usbphy: Add Broadcom Cygnus USB phy driver
+
+ .../bindings/phy/brcm,cygnus-usb-phy.txt           |  65 +++
+ drivers/phy/Kconfig                                |  12 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-cygnus-usb.c                   | 499 +++++++++++++++++++++
+ drivers/phy/phy-core.c                             |  30 +-
+ 5 files changed, 597 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-cygnus-usb.c
+
 -- 
 2.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
