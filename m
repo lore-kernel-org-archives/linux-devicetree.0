@@ -1,52 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 2/6] wl12xx: use frequency instead of enumerations for
- pdata clocks
-Date: Fri, 20 Mar 2015 07:54:18 -0700
-Message-ID: <20150320145417.GR31346@atomide.com>
-References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
- <20150313150047.GI5264@atomide.com>
- <CAB3XZEcOytqpJ4pWoemLS3d+DCeA8C75MencDfGn_vhfEYrduw@mail.gmail.com>
- <3103538.jZ037SODdT@wuerfel>
- <87lhixphag.fsf@kamboji.qca.qualcomm.com>
- <20150316151554.GO5264@atomide.com>
- <87siczg44w.fsf@kamboji.qca.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87siczg44w.fsf@kamboji.qca.qualcomm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Eliad Peller <eliad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Sekhar Nori <nsekhar@ti.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Luciano Coelho <luca@coelho.fi>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH v1 00/11] LED / flash API integration
+Date: Fri, 20 Mar 2015 16:03:20 +0100
+Message-ID: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Kalle Valo <kvalo@codeaurora.org> [150320 07:01]:
-> Tony Lindgren <tony@atomide.com> writes:
-> 
-> >> I prefer these going through the omap tree. Like Eliad said,
-> >> drivers/net/wireless/ti does not get that many changes nowadays so the
-> >> chances of this patchset conflicting with something is very small.
-> >
-> > OK great. In that case no need to rearrange the patches, I can
-> > apply them into an immutable branch once the pending issues have
-> > been fixed if Kalle acks them.
-> >
-> > To avoid merge conflicts that branch is easiest done against
-> > v4.0-rc4. Kalle and Arnd, does that work for you guys?
-> >
-> > I can also base it on 5b7610f23562 ("ARM: OMAP2+: Fix wl12xx on
-> > dm3730-evm with mainline u-boot") that's on top of -rc2 plus few
-> > other fixes now merged to -rc4 mainline if we need a branch based
-> > on an earlier tag.
-> 
-> Sorry, it seems I forgot to answer this one:
-> 
-> Either baseline is good for me, I can't think of any problems with
-> either one. But please do remember that I'm a new maintainer, I might
-> very well miss something ;)
+This is a first non-RFC version of LED / flash API integration
+series [1]. It is based on linux-next_20150320.
 
-OK, I'll base it on -rc4 unless Arnd needs something earlier.
+======================
+Changes since RFC v13:
+======================
 
-Regards,
+- reduced number of patches - some of them have been merged
+- slightly modified max77693-led device naming
+- fixed issues in v4l2-flash helpers detected with yavta
+- cleaned up AAT1290 device tree documentation
+- added GPIOLIB dependecy to AAT1290 related entry in Kconfig
 
-Tony
+Thanks,
+Jacek Anaszewski
+
+[1] http://www.spinics.net/lists/kernel/msg1944538.html
+
+
+Jacek Anaszewski (11):
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693
+  leds: Add driver for AAT1290 current regulator
+  of: Add Skyworks Solutions, Inc. vendor prefix
+  DT: Add documentation for the Skyworks AAT1290
+  exynos4-is: Add support for v4l2-flash subdevs
+  media: Add registration helpers for V4L2 flash sub-devices
+  Documentation: leds: Add description of v4l2-flash sub-device
+  DT: Add documentation for exynos4-is 'flashes' property
+  leds: max77693: add support for V4L2 Flash sub-device
+  leds: aat1290: add support for V4L2 Flash sub-device
+
+ .../devicetree/bindings/leds/leds-aat1290.txt      |   70 ++
+ .../devicetree/bindings/media/samsung-fimc.txt     |    8 +
+ Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ Documentation/leds/leds-class-flash.txt            |   13 +
+ drivers/leds/Kconfig                               |   19 +
+ drivers/leds/Makefile                              |    2 +
+ drivers/leds/leds-aat1290.c                        |  564 ++++++++++
+ drivers/leds/leds-max77693.c                       | 1136 ++++++++++++++++++++
+ drivers/media/platform/exynos4-is/media-dev.c      |   36 +-
+ drivers/media/platform/exynos4-is/media-dev.h      |   13 +-
+ drivers/media/v4l2-core/Kconfig                    |   12 +
+ drivers/media/v4l2-core/Makefile                   |    2 +
+ drivers/media/v4l2-core/v4l2-flash.c               |  607 +++++++++++
+ include/media/v4l2-flash.h                         |  145 +++
+ 15 files changed, 2686 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
+ create mode 100644 drivers/leds/leds-aat1290.c
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/media/v4l2-flash.h
+
+-- 
+1.7.9.5
