@@ -1,59 +1,78 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4 v4] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 20 Mar 2015 10:42:35 +0530
-Message-ID: <CABb+yY0qN4KcZ9kc6eurSUWPn38f2keKe4FB2efKBAVjREcZbg@mail.gmail.com>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net>
-	<1426213936-4139-3-git-send-email-eric@anholt.net>
-	<5507A095.5090805@wwwdotorg.org>
-	<87619xq414.fsf@eliezer.anholt.net>
-	<550BA6B4.3030604@wwwdotorg.org>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
+Date: Fri, 20 Mar 2015 14:15:31 +0900
+Message-ID: <20150320141531.36e1464c@hwh-ubuntu>
+References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
+ <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
+ <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
+ <20150319100252.03be7dda@hwh-ubuntu>
+ <CAPj87rPeUS9h=GCBR7ccNhugaGoyHw3x6oZ3Spq6P8uEg4ZcUg@mail.gmail.com>
+ <20150319101810.2244b509@hwh-ubuntu> <550A979A.6070102@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550BA6B4.3030604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <550A979A.6070102@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, =?UTF-8?B?7J2064+Z7ZmU?= <dh09.lee@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 10:18 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 03/18/2015 05:28 PM, Eric Anholt wrote:
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>
->>> On 03/12/2015 08:32 PM, Eric Anholt wrote:
->>>> diff --git a/drivers/mailbox/bcm2835-mailbox.c
->>>> b/drivers/mailbox/bcm2835-mailbox.c
->>>
->>>> +#define MBOX_MSG(chan, data28)             (((data28) & ~0xf) | ((chan) &
->>>> 0xf)) +#define MBOX_CHAN(msg)                       ((msg) & 0xf) +#define
->>>> MBOX_DATA28(msg)            ((msg) & ~0xf)
->>>
->>> Even the concept of storing channel IDs in the LSBs feels like it
->>> might be RPi-firmware-specific rather than HW-specific?
->>
->> I guess?  If we found another firmware protocol, we could have
->> that device's dt just specify a different compatible string.  But
->> in the absence of another firmware to talk to, I'm not sure what
->> you want here.
->
-> I would expect the mailbox driver to expose a single channel that just
-> transports 32-bit values, since the HW doesn't impose any kind of
-> structure on the values it transports AFAIK. Clients of the mailbox
-> driver would formulate the messages they send through the mailox using
-> the macros above.
->
-Yes, it should be so.
-
-> I'm not sure whether the mailbox core allows multiple clients for the
-> same mailbox channel though? This HW appears to require it.
->
-There were tradeoffs to granting shared vs exclusive access, we chose
-latter. The platform could have a global client that serializes
-requests and dispatch received data to exact destination rather than
-mbox core iterating over all users of the channel. Some platform may
-require to execute 2 or more commands 'atomically', which would be
-messy if channels are shared.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RGVhciBBbmRyZWosCgpPbiBUaHUsIDE5IE1hciAyMDE1IDEwOjMyOjEwICswMTAwCkFuZHJ6ZWog
+SGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3RlOgoKPiBPbiAwMy8xOS8yMDE1IDAyOjE4
+IEFNLCBIeXVuZ3dvbiBId2FuZyB3cm90ZToKPiA+IERlYXIgRGFuaWVsLAo+ID4gCj4gPiBPbiBU
+aHUsIDE5IE1hciAyMDE1IDAxOjEzOjIxICswMDAwCj4gPiBEYW5pZWwgU3RvbmUgPGRhbmllbC1y
+THRZNGEvOHRGMXJvdlZDcy91VGx3QHB1YmxpYy5nbWFuZS5vcmc+IHdyb3RlOgo+ID4gCj4gPj4g
+SGkgSHl1bmd3b24sCj4gPj4KPiA+PiBPbiAxOSBNYXJjaCAyMDE1IGF0IDAxOjAyLCBIeXVuZ3dv
+biBId2FuZwo+ID4+IDxodW1hbi5od2FuZy1TemUzTzNVVTIySkJEZ2pLN3k3VFVRQHB1YmxpYy5n
+bWFuZS5vcmc+IHdyb3RlOgo+ID4+Pj4+ICsgICAgICAgLyoKPiA+Pj4+PiArICAgICAgICAqIFRo
+ZSBpbnB1dCBQTEwgY2xvY2sgZm9yIE1JUEkgRFNJIGluIEV4eW5vczU0MzMgc2VlbXMKPiA+Pj4+
+PiB0byBiZSBmaXhlZAo+ID4+Pj4+ICsgICAgICAgICogYnkgT1NDIENMSy4KPiA+Pj4+PiArICAg
+ICAgICAqLwo+ID4+Pj4+ICsgICAgICAgZmluID0gMjQgKiBNSFo7Cj4gPj4+Pgo+ID4+Pj4gRXIs
+IGlzIHRoaXMgYWx3YXlzIHRydWUgb24gb3RoZXIgcGxhdGZvcm1zIGFzIHdlbGw/IFNob3VsZG4n
+dAo+ID4+Pj4gdGhpcyBiZSBhIHBhcnQgb2YgdGhlIERldmljZVRyZWUgZGVzY3JpcHRpb24/Cj4g
+Pj4+Cj4gPj4+IEkgZm9yZ290IHRvIGNoYW5nZSB0aGUgY29tbWVudCBpbiBkZXZlbG9wbWVudC4g
+RmluYWxseSBpdCBpcyBmb3VuZAo+ID4+PiB0aGF0IGFsbCBleHlub3MgbWlwaSBkc2kncyBmaW4g
+aXMgT1NDIGNsayB3aGljaCBpcyAyNCBNSHouIFNvIEkKPiA+Pj4gd2lsbCByZW1vdmUgdGhlIGNv
+bW1lbnQsIGJ1dCByZW1haW4gdGhlIGNvZGUgYXMgaXQgaXMuCj4gPj4KPiA+PiBGYWlyIGVub3Vn
+aC4gU2hvdWxkIHBsbF9jbGsgYmUgcmVtb3ZlZCBmcm9tIHRoZSBEVCBkZXNjcmlwdGlvbgo+ID4+
+IHRoZW4sIGlmIGl0J3MgZml4ZWQgdG8gdGhlIG9zY2lsbGF0b3I/Cj4gPiAKPiA+IFllcy4gSXQg
+aXMgcmVkdW5kYW50IHRvIHJlcHJlc2VudCBwbGxfY2xrIGluIERULCBhbmQgaXQgc2hvdWxkIGJl
+Cj4gPiByZW1vdmVkLgo+IAo+IFdoeSBkbyB5b3UgdGhpbmsgT1NDIGNsayBkZXRlcm1pbmVzIHZh
+bHVlIG9mIHBsbF9jbGs/Cj4gcGxsX2NsayBpcyBtYXBwZWQgdG8gU0NMS19NSVBJWzAxXSBvciBT
+Q0xLX0RTSU0wIGdhdGUgd2l0aCBmZXcKPiBkaXZpZGVycyBhbmQgbXV4ZXMgYWJvdmUuIFNvIGF0
+IGxlYXN0IGluIHRoZW9yeSBpdCBjYW4gZGlmZmVyIGZyb20KPiBvc2MgY2xrLiBBZGRpdGlvbmFs
+bHkgdGhpcyBnYXRlIHNob3VsZCBiZSBlbmFibGVkIHNvIHlvdSBjYW5ub3QganVzdAo+IHJlbW92
+ZSBpdCBmcm9tIERULgo+IAo+IFJlZ2FyZHMKPiBBbmRyemVqCgpBcyBJIGZvdW5kLCBwbGwgY2xr
+IGlzIG5vdCBTQ0xLX01JUElbMDFdIGJ1dCBPU0MgQ0xLLiBTQ0xLX0RTSU0wIG11c3QKYmUgY29u
+dHJvbGxlZCBpbiB0aGlzIGRyaXZlciBhcyBpdCBoYXMgYmVlbiwgYXMgYSBnYXRlIGNsb2NrIG9m
+IE1JUEkKRFNJIGJsb2NrLCBidXQgbm90IGFzIGEgcGxsIGNsay4gU0NMS19EU0lNMCBpcyBub3Qg
+dGhlIGlucHV0CmNsb2NrIG9mIE1JUEkgRFBIWSB3aGljaCBwcm92aWRlcyBmaW4gaW4gdGhpcyBj
+b2RlLiBTbyBjbG9jayBzZXR0aW5nCmFuZCBnZXR0aW5nIGNvZGUgd2FzIHdyb25nLCBhbmQgbXVz
+dCBiZSByZW1vdmVkLgoKT1NDIENMSyBpcyBub3Qgc29jLWRlcGVkZW5kYW50IGJ1dCBib2FyZC1k
+ZXBlbmRhbnQsIGV2ZW4gdGhvdWdoIEkgaGF2ZQpub3Qgc2VlbiBhbnkgYm9hcmQgd2hpY2ggZG9l
+cyBub3QgdXNlIE9TQyBDTEsgYnkgMjQgTUh6LiBJdCBtdXN0IGJlCnBhcnNlZCBmcm9tIGJvYXJk
+IERUIGZpbGUsIHdoaWNoIGluIHRoaXMgY2FzZSwgd2UgY2FuIHVzZSB0aGUgdmFsdWUgaW4KcGxs
+X2Nsa19yYXRlICh0aGUgdmFyaWFibGUgbmFtZSBtdXN0IGJlIHJlbmFtZWQgYWxzbykuCgpCZWNh
+dXNlIGFtYmlndW91cyBkZXNjcmlwdGlvbiBpbiB0aGUgdGVjaG5pY2FsIGRvY3VtZW50LCBJIGNh
+biBiZQp3cm9uZy4gUGxlYXNlIGxldCBtZSBrbm93IGlmIEkgZG8gbm90IHVuZGVyc3RhbmQgc29t
+ZXRoaW5nLiBUaGFua3MgZm9yCnlvdXIgY29tbWVudC4KCkJlc3QgcmVnYXJkcywKSHl1bmd3b24g
+SHdhbmcKCj4gCj4gPiAKPiA+Pgo+ID4+PiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LiBJIHdpbGwg
+c2VuZCBpdCBhZ2FpbiB3aXRoIHRoZSBjaGFuZ2VzIHlvdQo+ID4+PiBzdWdnZXN0ZWQuCj4gPj4K
+PiA+PiBUaGFua3MgdmVyeSBtdWNoIQo+ID4+Cj4gPj4gQ2hlZXJzLAo+ID4+IERhbmllbAo+ID4g
+Cj4gPiBCZXN0IHJlZ2FyZHMsCj4gPiBIeXVuZ3dvbiBId2FuZwo+ID4gLS0KPiA+IFRvIHVuc3Vi
+c2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZQo+ID4gZGV2
+aWNldHJlZSIgaW4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvCj4gPiBtYWpvcmRvbW8tdTc5dXdY
+TDI5VFk3Nloyck01bUhYQUBwdWJsaWMuZ21hbmUub3JnIE1vcmUgbWFqb3Jkb21vCj4gPiBpbmZv
+IGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPiA+IAo+IAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
