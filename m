@@ -1,13 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 11/13] ARM: dts: sun5i: Enable USB DRC on
- UTOO P66
-Date: Fri, 20 Mar 2015 20:11:20 +0100
-Message-ID: <1426878682-14521-12-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 05/13] musb: Fix platform code being unable
+ to override ep access ops
+Date: Fri, 20 Mar 2015 20:11:14 +0100
+Message-ID: <1426878682-14521-6-git-send-email-hdegoede@redhat.com>
 References: <1426878682-14521-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB77BWGUAKGQE3GGBDBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB4XBWGUAKGQECWHJTLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1426878682-14521-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,54 +20,45 @@ To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <k
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the OTG controller on the UTOO P66 tablet.
+musb-core was setting the ops to the default indexed or flat handlers after
+checking for platform overrides. Reverse the order of this so that platform
+overrides actually work.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a13-utoo-p66.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/usb/musb/musb_core.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-index d1d4d30..6c9f5f3 100644
---- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-@@ -160,6 +160,20 @@
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 016b5b9..6e9b839 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2021,13 +2021,7 @@ musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
+ 	if (musb->ops->quirks)
+ 		musb->io.quirks = musb->ops->quirks;
  
-+	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-+		allwinner,pins = "PG1";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-+	};
-+
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PG2";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
- 	i2c_lcd_pins: i2c_lcd_pin@0 {
- 		allwinner,pins = "PG10", "PG12";
- 		allwinner,function = "gpio_out";
-@@ -218,7 +232,16 @@
- 	status = "okay";
- };
+-	/* At least tusb6010 has it's own offsets.. */
+-	if (musb->ops->ep_offset)
+-		musb->io.ep_offset = musb->ops->ep_offset;
+-	if (musb->ops->ep_select)
+-		musb->io.ep_select = musb->ops->ep_select;
+-
+-	/* ..and some devices use indexed offset or flat offset */
++	/* Set default ep access to indexed offset or flat offset ops */
+ 	if (musb->io.quirks & MUSB_INDEXED_EP) {
+ 		musb->io.ep_offset = musb_indexed_ep_offset;
+ 		musb->io.ep_select = musb_indexed_ep_select;
+@@ -2035,6 +2029,11 @@ musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
+ 		musb->io.ep_offset = musb_flat_ep_offset;
+ 		musb->io.ep_select = musb_flat_ep_select;
+ 	}
++	/* And override them with platform specific ops if specified. */
++	if (musb->ops->ep_offset)
++		musb->io.ep_offset = musb->ops->ep_offset;
++	if (musb->ops->ep_select)
++		musb->io.ep_select = musb->ops->ep_select;
  
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-+	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
-+	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
- 	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	usb1_vbus-supply = <&reg_ldo3>;
- 	status = "okay";
+ 	if (musb->ops->fifo_mode)
+ 		fifo_mode = musb->ops->fifo_mode;
 -- 
 2.3.3
