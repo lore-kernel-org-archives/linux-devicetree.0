@@ -1,121 +1,50 @@
-From: Xinwei Kong <xweikong@hotmail.com>
-Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
- driver
-Date: Fri, 20 Mar 2015 23:27:07 +0800
-Message-ID: <BLU436-SMTP12064F8642A4FE53FB4A448C10E0@phx.gbl>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
- <20150319141753.GB25967@leverpostej> <20150320060653.GC18907@leoy-linaro>
- <20150320112414.GD14766@leverpostej>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Fri, 20 Mar 2015 08:33:57 -0700
+Message-ID: <20150320153357.GT31346@atomide.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+ <1426696710-6891-6-git-send-email-eliad@wizery.com>
+ <550AD7C1.2030405@gmail.com>
+ <CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
+ <20150319212505.GN31346@atomide.com>
+ <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150320112414.GD14766@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "edubezval@gmail.com" <edubezval@gmail.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: Eliad Peller <eliad@wizery.com>, Pontus Fuchs <pontus.fuchs@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDIwMTXlubQwM+aciDIw5pelIDE5OjI0LCBNYXJrIFJ1dGxhbmQgd3JvdGU6Cj4+Pj4gKyAg
-ICAgICByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImhpc2lsaWNvbix0c2Vuc29yLXRo
-cmVzLXRlbXAiLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnNlbnNv
-ci0+dGhyZXNfdGVtcCk7Cj4+Pj4gKyAgICAgICBpZiAocmV0KSB7Cj4+Pj4gKyAgICAgICAgICAg
-ICAgIGRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBnZXQgdGhyZXMgdmFsdWUgJWQ6ICVk
-XG4iLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGluZGV4LCByZXQpOwo+Pj4+ICsgICAg
-ICAgICAgICAgICByZXR1cm4gcmV0Owo+Pj4+ICsgICAgICAgfQo+Pj4+ICsKPj4+PiArICAgICAg
-IHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAiaGlzaWxpY29uLHRzZW5zb3ItcmVzZXQt
-dGVtcCIsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmc2Vuc29yLT5y
-ZXNldF90ZW1wKTsKPj4+PiArICAgICAgIGlmIChyZXQpIHsKPj4+PiArICAgICAgICAgICAgICAg
-ZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGdldCByZXNldCB2YWx1ZSAlZDogJWRcbiIs
-Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgaW5kZXgsIHJldCk7Cj4+Pj4gKyAgICAgICAg
-ICAgICAgIHJldHVybiByZXQ7Cj4+Pj4gKyAgICAgICB9Cj4+PiBJIHNlZSBub3cgdGhhdCB0aGVz
-ZSBwcm9wZXJ0aWVzIHJlc3VsdCBpbiB0aGUgSFcgYmVpbmcgcHJvZ3JhbW1lZC4gWW91Cj4+PiBz
-aG91bGQgZmlndXJlIG91dCBob3cgdG8gcmVjb25jaWxlIHRoZXNlIHdpdGggdGhlcm1hbC16b25l
-IHRyaXAgcG9pbnRzCj4+PiByYXRoZXIgdGhhbiBoYXZpbmcgcGFyYWxsZWwgcHJvcGVydGllcy4K
-Pj4gICAKPj4gU2V0ICJ0c2Vuc29yLXRocmVzLXRlbXAiIHRvIHJlZ2lzdGVyIHNvIHRoYXQgaWYg
-dGhlcm1hbCByZWFjaGVzIHRoZQo+PiB0aHJlc2hvbGQsIHRoZSBzZW5zb3Igd2lsbCB0cmlnZ2Vy
-IGgvdyBpbnRlcnJ1cHQuCj4+Cj4+IFNldCAidHNlbnNvci1yZXNldC10ZW1wIiB0byByZWdpc3Rl
-ciBzbyB0aGF0IGlmIHRoZXJtYWwgcmVhY2hlcyB0aGUKPj4gcmVzZXQgdmFsdWUsIHRoZSBzZW5z
-b3Igd2lsbCBhc3NlcnQgU29DIHJlc2V0IHNpZ25hbCB0byB0cmlnZ2VyIGgvdwo+PiByZXNldC4K
-PiBJIHVuZGVyc3RhbmQgdGhpcy4KPgo+PiBUaGlzIGlzIGRpZmZlcmVudCB3L3QgdGhlcm1hbC16
-b25lIHRyaXAgcG9pbnRzLCB0aGUgdHJpcCBwb2ludHMgYXJlCj4+IHVzZWQgZm9yIHRpbWVyIHBv
-bGxpbmcuCj4gVGhhdCBtYXkgYmUgdGhlIGNhc2UgaW4gdGhlIGNvZGUgYXMgaXQgc3RhbmRzIHRv
-ZGF5LCBidXQgcGVyIHRoZSBiaW5kaW5nCj4gdGhlIHRyaXAgcG9pbnRzIGFyZSB0aGUgdGVtcGVy
-YXR1cmVzIGF0IHdoaWNoIGFuIGFjdGlvbiBpcyB0byBiZSB0YWtlbi4KPgo+IFRoZSB0aGVybWFs
-LXpvbmUgaGFzIHBvaWxsaW5nLWRlbGF5IGFuZCBwb2xsaW5nLWRlbGF5LXBhc3NpdmUsIGJ1dAo+
-IHRoZXJlJ3Mgbm8gcmVhc29uIHlvdSBjb3VsZG4ndCBhbHNvIHVzZSB0aGUgaW50ZXJydXB0IHRv
-IGhhbmRsZSB0aGUKPiAiaG90IiB0cmlwLXBvaW50LCBhZG4gdGhlIHJlc2V0IGF0IHRoZSAiY3Jp
-dGljYWwiIHRyaXAtcG9pbnQuIEFsbCB0aGF0J3MKPiBtaXNzaW5nIGlzIHRoZSBwbHVtYmluZyBp
-biBvcmRlciB0byBkbyBzby4KPgo+IFNvIHBsZWFzZSBjby1vcmRpbmF0ZSB3aXRoIHRoZSB0aGVy
-bWFsIGZyYW1ld29yayB0byBkbyB0aGF0LgoKSW4gb3JkZXIgdG8gY28tb3JkaW5hdGUgd2l0aCB0
-aGUgdGhlcm1hbCBmcmFtZXdvcmssIFdlIHdpbGwgZml4ICJ0c2Vuc29yLXRocmVzLXRlbXAiCmFu
-ZCAidHNlbnNvci1yZXNldC10ZW1wIiB2YWx1ZSBpbiB0aGUgZHRzLiBUaGlzIHRlbXBlcmF0dWUg
-d2lsbCBoaWdoZXIgdGhhbiB0aGVybWFsCnpvbmUgdHJpcC1wb2ludCB2YWx1ZS4gRHVyaW5nIHBv
-bGxpbmcgZGVsYXkgdGltZSBpZiBTb0MgdGVtcGVyYXR1cmUgaXMgYWJvdmUgdGhlcm1hbAp6b25l
-IHRyaXAtcG9pbnQgdmFsdWUgYW5kIGJlbG93ICJ0c2Vuc29yLXRocmVzLXRlbXAiIHZhbHVlLHRo
-ZSBzeXN0ZXJtIHdpbGwgdXNlIHRoaXMKdGhlcm1hbCBmcmFtZXdvcmsgd2F5cyB0byByZWFsaXpl
-IGJhc2ljIGZ1bmN0aW9uIHN1Y2ggYXMgY3B1IGNvb2xpbmcgZGV2aWNlLiBPdGhlcndpc2UKaXQg
-d2lsbCB1c2UgaW50ZXJycHV0IG1vZGUgdG8gY2F1c2Ugc29tZSBmdW5jdGlvbnMuCgpUaGlzIGlu
-dGVycnVwdCBtb2RlIGhlbHAgdGhlcm1hbCBmcmFtZXdvcmsgd2F5IHRvIGNvbXBsZXRlIGZ1bmN0
-aW9uLCBpbiBoaWdoIHRlbXBlcmF0dXJlCnNpdHVhdGlvbiB0aGlzIGludGVycnVwdCBpcyBiZXR0
-ZXIgdGhhbiBvdGhlciBtb2RlLiBJIHRoaW5rIHRoYXQgaXQgY2FuIHdvcmsgd2VsbC4KClhpbndl
-aQoKPj4gRG8gdSB0aGluayBiZWxvdyBtb2RpZmljYXRpb24gaXMgbW9yZSByZWFzb25hYmxlPwo+
-Pgo+PiAtIFNldCAidHNlbnNvci10aHJlcy10ZW1wIiA9IDcwMDAwMCwgd2hpY2ggZXF1YWwgdG8g
-dGhlcm1hbC16b25lCj4+ICAgIHBhc3NpdmUgdHJpcCBwb2ludCwgc28gdGhhdCB3ZSBjYW4gdXNl
-IGgvdyBpbnRlcnJ1cHQgdG8gdXBkYXRlIHRoZQo+PiAgICB0aGVybWFsIHZhbHVlIGltbWVkaWF0
-ZWx5LCByYXRoZXIgdGhhbiB1c2luZyBwb2xsaW5nIG1ldGhvZCB3L3QgbG9uZwo+PiAgICBkZWxh
-eTsKPj4KPj4gLSBTZXQgInRzZW5zb3ItcmVzZXQtdGVtcCIgPSA8MTAwMDAwPiwgd2hpY2ggaXMg
-aGlnaGVyIHRoYW4KPj4gICAgdGhlcm1hbC16b25lIGNyaXRpY2FsIHRyaXAgcG9pbnQsIHNvIHRo
-YXQgdGhlIHMvdyByZXNldCBtZXRob2QgaGFzCj4+ICAgIGhpZ2hlciBwcmlvcml0eSB0aGFuIGgv
-dyByZXNldDsgd2UgYWxzbyBjYW4gZWFzaWx5IGtub3cgdGhlIHJlc2V0IGlzCj4+ICAgIGNhdXNl
-ZCBieSB0aGVybWFsIGZyYW1ld29yazsgInRzZW5zb3ItcmVzZXQtdGVtcCIgaXMgb25seSB1c2Vk
-IHRvCj4+ICAgIHByb3RlY3QgaC93IGNpcmN1aXQuCj4gQXMgbWVudGlvbmVkIGFib3ZlLCBJIHRo
-aW5rIHRoYXQgeW91IHNob3VsZCBjby1vcmRpbmF0ZSB3aXRoIHRoZSB0aGVybWFsCj4gZnJhbWV3
-b3JrLiBZb3UncmUgd29ya25pZyBhcm91bmQgbGltaXRhdGlvbnMgaW50aGUgY29kZSBhcyBpdCBz
-dGFuZHMKPiB0b2RheSByYXRoZXIgdGhhbiBzb2x2aW5nIHRoZSBmdW5kYW1lbnRhbCBpc3N1ZS4K
-Pgo+Pj4+ICsgICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImhpc2lsaWNvbix0
-c2Vuc29yLWJpbmQtaXJxIikpIHsKPj4+PiArCj4+Pj4gKyAgICAgICAgICAgICAgIGlmIChkYXRh
-LT5pcnFfYmluZF9zZW5zb3IgIT0gLTEpCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2
-X3dhcm4oJnBkZXYtPmRldiwgImlycSBoYXMgYm91bmQgdG8gaW5kZXggJWRcbiIsCj4+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+aXJxX2JpbmRfc2Vuc29yKTsKPj4+
-PiArCj4+Pj4gKyAgICAgICAgICAgICAgIC8qIGJpbmQgaXJxIHRvIHRoaXMgc2Vuc29yICovCj4+
-Pj4gKyAgICAgICAgICAgICAgIGRhdGEtPmlycV9iaW5kX3NlbnNvciA9IGluZGV4Owo+Pj4+ICsg
-ICAgICAgfQo+Pj4gSSBkb24ndCBzZWUgd2h5IHRoaXMgc2hvdWxkIGJlIHNwZWNpZmllZCBpbiB0
-aGUgRFQuIFdoeSBkbyB5b3UgYmVsaWV2ZQo+Pj4gaXQgc2hvdWxkPwo+PiBUaGUgdGhlcm1hbCBz
-ZW5zb3IgbW9kdWxlIGhhcyBmb3VyIHNlbnNvcnMsIGJ1dCBoYXZlIG9ubHkgb25lCj4+IGludGVy
-cnVwdCBzaWduYWw7IFRoaXMgaW50ZXJydXB0IGNhbiBvbmx5IGJlIHVzZWQgYnkgb25lIHNlbnNv
-cjsKPj4gU28gd2FudCB0byB1c2UgZHRzIHRvIGJpbmQgdGhlIGludGVycnVwdCB3aXRoIG9uZSBz
-ZWxlY3RlZCBzZW5zb3IuCj4gVGhhdCdzIG5vdCBhbGwgdGhhdCBncmVhdCwgdGhvdWdoIEknbSBu
-b3QgZXhhY3RseSBzdXJlIGhvdyB0aGUga2VybmVsCj4gd291bGQgc2VsZWN0IHRoZSBiZXN0IHNl
-bnNvciB0byBtZWFzdXJlIHdpdGguIEl0IHdvdWxkIGJlIGdvb2QgaWYgeW91Cj4gY291bGQgdGFs
-ayB0byB0aGUgdGhlcm1hbCBtYWludGFpbmVycyB3LnIudC4gdGhpcy4KPgo+Pj4+ICtzdGF0aWMg
-aW50IGhpc2lfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+Pj4+
-ICt7Cj4+Pj4gKyAgICAgICBzdHJ1Y3QgaGlzaV90aGVybWFsX2RhdGEgKmRhdGE7Cj4+Pj4gKyAg
-ICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPj4+PiArICAgICAgIGludCBpOwo+Pj4+ICsgICAg
-ICAgaW50IHJldDsKPj4+PiArCj4+Pj4gKyAgICAgICBpZiAoIWNwdWZyZXFfZ2V0X2N1cnJlbnRf
-ZHJpdmVyKCkpIHsKPj4+PiArICAgICAgICAgICAgICAgZGV2X2RiZygmcGRldi0+ZGV2LCAibm8g
-Y3B1ZnJlcSBkcml2ZXIhIik7Cj4+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRVBST0JFX0RF
-RkVSOwo+Pj4+ICsgICAgICAgfQo+Pj4gU3VyZWx5IHdlIGNhcmUgYWJvdXQgbm90IGJ1cm5pbmcg
-b3V0IHRoZSBib2FyZCBldmVuIGlmIHdlIGRvbid0IGhhdmUKPj4+IGNwdWZyZXE/Cj4+Pgo+Pj4g
-SXMgdGhlcmUgYW55IG9yZGVyaW5nIGd1YXJhbnRlZSBiZXR3ZWVuIHRoZSBwcm9iaW5nIG9mIHRo
-aXMgZHJpdmVyIGFuZAo+Pj4gY3B1ZnJlcT8KPj4gWWVzLCBoZXJlIG5lZWQgYmluZGluZyB0aGUg
-dGhlcm1hbCBzZW5zb3Igdy90IGNwdSBjb29saW5nIGRldmljZSwKPj4gYW5kIGNwdSBjb29saW5n
-IGRldmljZSBpcyBiYXNlZCBvbiBjcHVmcmVxIGRyaXZlci4KPiBTdXJlLCBidXQgaWYgeW91IGRv
-bid0IGhhdmUgYSBjb29saW5nIGRldmljZSB5b3Ugc3RpbGwgd2FudCB0aGUgY3JpdGljYWwKPiB0
-ZW1wZXJhdHVyZSByZXNldCBhbmQgc28gb24sIG5vPwo+Cj4gTWFyay4KPiAtLQo+IFRvIHVuc3Vi
-c2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1w
-bSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9y
-Zwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jk
-b21vLWluZm8uaHRtbAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+* Kalle Valo <kvalo@codeaurora.org> [150319 23:04]:
+> Tony Lindgren <tony@atomide.com> writes:
+> 
+> >> > Tested OK (boot, scan, join, ping) on Pandaboard ES.
+> >> >
+> >> thanks for testing it!
+> >
+> > Great. As suggested by Kalle, I'll apply all these into
+> > omap-for-v4.1/wl12xx branch and send a pull request for
+> > the arm-soc probably on Friday if no issues are found.
+> 
+> Great, thank you. Just in case you want this:
+> 
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+
+Thanks, I can push out a new branch omap-for-v4.1/wl12xx-v2
+with your acks assuming you or somebody else have not
+merged the existing omap-for-v4.1/wl12xx branch yet into the
+wireless tree?
+
+In that case I can scrap omap-for-v4.1/wl12xx and then will
+reply with a commit that we can consider immutable that can
+be merged into various trees as needed in case of merge
+conflicts.
+
+But I'll wait for your confirmation first :)
+
+Regards,
+
+Tony
