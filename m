@@ -1,144 +1,135 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
-Date: Fri, 20 Mar 2015 09:54:21 +0100
-Message-ID: <5A83DCE5-2CB4-48FF-80E7-6E6377045188@goldelico.com>
-References: <20150318055437.21025.13990.stgit@notabene.brown> <80D7E742-4633-4CCD-B754-221387D82922@goldelico.com> <20150320194307.51cb4225@notabene.brown>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150320194307.51cb4225@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Belisko Marek <marek.belisko@gmail.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH/RFC 0/5] ARM: shmobile: rcar-gen2: Add CPG Clock Domain
+Date: Fri, 20 Mar 2015 09:54:33 +0100
+Message-ID: <CAPDyKFox=MoUX5tzxyVjLh+d61AFNsPR+LY0sP-VF+68Gs_rKw@mail.gmail.com>
+References: <1426708017-28885-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1426708017-28885-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 18 March 2015 at 20:46, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+>         Hi,
+>
+> This RFC patch series adds Clock Domain support to the R-Car Gen2 Clock
+> Pulse Generator (CPG) driver using the generic PM Domain.  This allows
+> to power-manage the module clocks of SoC devices that are part of the
+> CPG Clock Domain using Runtime PM, or for system suspend/resume.
+>
+> SoC devices that are part of the CPG Clock Domain and can be
+> power-managed through their primary clock are tagged in DT with a proper
+> "power-domains" property. Drivers for devices with multiple clocks
+> (notably du and rcar-sound) still have to manage their (multiple module)
+> clocks themselves.
+>
+> Finally, the legacy default PM domain hack in drivers/sh/pm_runtime.c is
+> disabled when running on an R-Car Gen2 SoC with genpd support.
+>
+> Compared to the legacy default PM domain hack, the CPG Clock Domain has
+> several advantages:
+>   - It only affects on-SoC devices, not all platform devices,
+>   - It only affects the on-SoC devices we want, as specified in DT,
+>   - Allmost all module clocks of all on-SoC devices (barring devices
+>     needed for wake-up[*]) are now gated during s2ram, saving more
+>     power.
+>
+> Here's a list of all devices in the CPG Clock Domain on r8a7791:
+>
+> root@koelsch:~# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>     domain                      status         slaves
+>            /device                                      runtime status
+> ----------------------------------------------------------------------
+> cpg_clocks                      on
+>     /devices/platform/e61c0000.interrupt-controller     active
+>     /devices/platform/e60b0000.i2c                      suspended
+>     /devices/platform/ffca0000.timer                    suspended
+>     /devices/platform/e6050000.gpio                     active
+>     /devices/platform/e6051000.gpio                     active
+>     /devices/platform/e6052000.gpio                     active
+>     /devices/platform/e6053000.gpio                     active
+>     /devices/platform/e6054000.gpio                     active
+>     /devices/platform/e6055000.gpio                     active
+>     /devices/platform/e6055400.gpio                     active
+>     /devices/platform/e6055800.gpio                     active
+>     /devices/platform/ee090000.pci                      active
+>     /devices/platform/ee0d0000.pci                      active
+>     /devices/platform/fe000000.pcie                     unsupported
+>     /devices/platform/e6700000.dma-controller           active
+>     /devices/platform/e6720000.dma-controller           active
+>     /devices/platform/ec700000.dma-controller           active
+>     /devices/platform/ec720000.dma-controller           suspended
+>     /devices/platform/e6e60000.serial                   active
+>     /devices/platform/e6e68000.serial                   active
+>     /devices/platform/ee300000.sata                     unsupported
+>     /devices/platform/e6b10000.spi                      suspended
+>     /devices/platform/e6e20000.spi                      suspended
+>     /devices/platform/ee700000.ethernet                 active
+>     /devices/platform/e6530000.i2c                      suspended
+>     /devices/platform/e6ef1000.video                    suspended
+>     /devices/platform/e61f0000.thermal                  active
+>     /devices/platform/ee100000.sd                       active
+>     /devices/platform/ee140000.sd                       active
+>     /devices/platform/ee160000.sd                       active
+> root@koelsch:~#
+>
+> Logically, the CPG Clock Domain operates on the SoC CPG/MSTP block.
+> As there's no single device node in DT representing this block (there
+> are separate device nodes for the CPG and for the individual MSTP
+> clocks), I bound the logic to the CPG device node.
+> Perhaps this is something we should change for future SoCs?
+>
+> As usual when involving clocks and/or PM Domains, the DTS changes depend
+> stricly on the driver change. The final patch must be applied last.
+>
+> The DTS changes also depend on the series "[PATCH 0/5] ARM: shmobile:
+> Add INTC-SYS clock to device tree" I've just sent.
+>
+> This was tested on r8a7791/koelsch.
+>
+> Thanks for your comments!
+>
+> [*] GPIO wake-up requires "[PATCH 0/3] gpio: rcar: Fix wake up using
+> gpio-keys with PM domain").
+>
+> Geert Uytterhoeven (5):
+>   [RFC] clk: shmobile: rcar-gen2: Add CPG Clock Domain support
+>   [RFC] ARM: shmobile: r8a7790 dtsi: Add CPG Clock Domain
+>   [RFC] ARM: shmobile: r8a7791 dtsi: Add CPG Clock Domain
+>   [RFC] ARM: shmobile: r8a7794 dtsi: Add CPG Clock Domain
+>   drivers: sh: Disable PM runtime for multi-platform R-Car Gen2 with
+>     genpd
+>
+>  .../clock/renesas,rcar-gen2-cpg-clocks.txt         | 26 ++++++-
+>  arch/arm/boot/dts/r8a7790.dtsi                     | 77 +++++++++++++++++++--
+>  arch/arm/boot/dts/r8a7791.dtsi                     | 80 ++++++++++++++++++++--
+>  arch/arm/boot/dts/r8a7794.dtsi                     | 29 ++++++++
+>  arch/arm/mach-shmobile/Kconfig                     |  1 +
+>  drivers/clk/shmobile/clk-rcar-gen2.c               | 63 +++++++++++++++++
+>  drivers/sh/pm_runtime.c                            | 10 +--
+>  7 files changed, 268 insertions(+), 18 deletions(-)
 
-Am 20.03.2015 um 09:43 schrieb NeilBrown <neilb@suse.de>:
+For the complete patchset.
 
-> On Fri, 20 Mar 2015 08:54:35 +0100 "Dr. H. Nikolaus Schaller"
-> <hns@goldelico.com> wrote:
->=20
->> Hi Neil,
->>=20
->> Am 18.03.2015 um 06:58 schrieb NeilBrown <neil@brown.name>:
->>=20
->>> Hi again,
->>> here is version 3 of support for tty-slaves.
->>>=20
->>> This version introduces a new bus-type for tty-slaves,
->>=20
->> Hm. I am still not convinced that a tty is a =84bus=93 and=20
->> that this is a solution for a wide-spread problem.
->=20
-> Don=92t read too much into the word "bus". =20
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Then we should find a different word.
+Kind regards
+Uffe
 
-> It is really just a mechanism for
-> grouping drivers together - with maybe a hint of a suggestions that i=
-t helps
-> communicate with the devices which the drivers drive.
->=20
-> And I'm not particularly interested in solving wide-spread problems, =
-just in
-> solving my problem in a suitably idiomatic way.
->=20
->=20
->>=20
->>> and causes
->>> a tty-slave device to appear in /sys/devices between the uart and t=
-he
->>> tty.
->>> It effectively intercepts and calls from the tty to the uart (i.e. =
-any
->>> tty_operations) and applies extra functionality at that point.
->>=20
->>>=20
->>> Currently the only driver intercepts open and close.
->>> It powers on the device on open, and powers off at last-close.
->>=20
->> That is what the missing piece in Linux is to make the w2sg0004
->> chip work.
->>=20
->>>=20
->>> Power can be controlled by a regulator or by toggling a GPIO.
->>=20
->> I think such a GPIO logic has nothing to do with serial and
->> should be left over to the regulator logic, i.e. we need a special
->> regulator-w2sg0004 driver.
->>=20
->> So I suggest to remove the GPIO logic from your=20
->>=20
->> drivers/tty/slave/serial-power-manager.c
->>=20
->> And then you can even get rid of adding a chip specific =84compatibl=
-e=93
->> entry for the subnodes.
->=20
-> But (nearly) every node has a "compatible" entry.
-> Each node describes a device, and the "compatible" string tells us wh=
-at sort
-> of device.
-
-Yes, it should - if necessary.
-
-> Surely you agree that there is a particular device that needs to be
-> controlled?
-
-No, my opinion is that a specific regulator should be controlled.
-
->  In that case there needs to be a node representing it and a
-> "compatible" string describing it.  That is how =93devicetree" works.
-
-=46or this there is the vdd-regulator =3D <&regulator> idiom and that i=
-s
-how =93devicetree=94 works as well.
-
->=20
->=20
->>=20
->>>=20
->>> I think I've incorporated most of the feed back I received from
->>> previous versions, but if I missed something - I apologize.  If
->>> this approach is structurally acceptable then I can fix up all the
->>> smaller issues.
->>=20
->> As said I would prefer that the w2sg0004 driver is just a separate
->> =84regulator=93 driver as we had proposed before.
->=20
-> You can prefer that if you wish.  But given that the w2sg0004 is not =
-in fact
-> a regulator,
-
-therefore our proposal is to make it a drivers/misc and not a drivers/r=
-egulator.
-But it has a regulator inside that can obviously be turned on or off. S=
-o I want to
-keep close to the logical energy flow.
-
-> but is in fact a GPS device, I doubt you will find a lot of
-> support for your approach (as indeed I didn=92t when I tried it...)
-
-We got a lot of support. The main opposition was about using a =93virtu=
-al=94
-gpio controller instead of a regulator API to turn the chip on and off =
-as
-directed by the tty driver.
-
-And we do not write a driver for the w2sg0004 but the regulator inside =
-that
-chip. You also won=92t expect that the omap3 driver hides everything. Y=
-ou
-expect that the twl4030 provides some regulators that can be enabled
-by subsystems inside the omap3. And if I remember correctly there are
-regulators inside the omap3 which have explicit regulator nodes in the =
-DT.
-
-The w2sg0004-regulator approach just follows this principle. Anyone wil=
-ling
-to control the power of the w2sg0004 can use this regulator interface.
-
-BR,
-Nikolaus
+>
+> --
+> 1.9.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                                             -- Linus Torvalds
