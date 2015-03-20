@@ -1,93 +1,277 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH 1/3] of/device: manage resources similar
- =?iso-8859-1?Q?to=0D?= platform_device_add
-Date: Fri, 20 Mar 2015 11:29:54 +0000
-Message-ID: <20150320112954.A3903C419C2@trevor.secretlab.ca>
-References: <1420651854-17768-1-git-send-email-s-anna@ti.com>
-	<1420651854-17768-2-git-send-email-s-anna@ti.com>
-	<CAL_Jsq+79cnCiww6g8ejki0yT59-N8eucHC3QGMbsXG4DksWuQ@mail.gmail.com>
-	<54B58D5D.5070508@ti.com>
-	<CAL_JsqLW9PRktHntLquohH3x_bPgJrrn2Y2_8RYA_HnKhpTDHg@mail.gmail.com>
-	<54B5A499.7060106@ti.com> <54C17087.7060003@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54C17087.7060003@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v4] add support for Freescale's MMA8653FC 10 bit accelerometer
+Date: Fri, 20 Mar 2015 17:01:14 +0530
+Message-ID: <550C0502.7090507@gmail.com>
+References: <1426850431-31550-1-git-send-email-martink@posteo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1426850431-31550-1-git-send-email-martink@posteo.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Martin Kepplinger <martink@posteo.de>, mark.rutland@arm.com, robh+dt@kernel.org, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmitry.torokhov@gmail.com, alexander.stein@systec-electronic.com
+Cc: hadess@hadess.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, linux-api@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Jan 2015 15:49:59 -0600
-, Suman Anna <s-anna@ti.com>
- wrote:
-> Hi Grant,
-> 
-> On 01/13/2015 05:04 PM, Suman Anna wrote:
-> > On 01/13/2015 04:00 PM, Rob Herring wrote:
-> >> On Tue, Jan 13, 2015 at 3:25 PM, Suman Anna <s-anna@ti.com> wrote:
-> >>> Hi Rob,
-> >>>
-> >>> On 01/13/2015 02:38 PM, Rob Herring wrote:
-> >>>> On Wed, Jan 7, 2015 at 11:30 AM, Suman Anna <s-anna@ti.com> wrote:
-> >>>>> Drivers can use of_platform_populate() to create platform devices
-> >>>>> for children of the device main node, and a complementary API
-> >>>>> of_platform_depopulate() is provided to delete these child platform
-> >>>>> devices. The of_platform_depopulate() leverages the platform API
-> >>>>> for performing the cleanup of these devices.
-> >>>>>
-> >>>>> The platform device resources are managed differently between
-> >>>>> of_device_add and platform_device_add, and this asymmetry causes
-> >>>>> a kernel oops in platform_device_del during removal of the resources.
-> >>>>> Manage the platform device resources similar to platform_device_add
-> >>>>> to fix this kernel oops.
-> >>>>
-> >>>> This is a known issue and has been attempted to be fixed before (I
-> >>>> believe there is a revert in mainline). The problem is there are known
-> >>>> devicetrees which have overlapping resources and they will break with
-> >>>> your change.
-> >>>
-> >>> Are you referring to 02bbde7849e6 (Revert "of: use
-> >>> platform_device_add")?
-> >>
-> >> I believe that's the one.
-> >>
-> >>> That one seems to be in registration path, and
-> >>> this crash is in the unregistration path. If so, to fix the crash,
-> >>> should we be skipping the release_resource() for now in
-> >>> platform_device_del for DT nodes, or replace platform_device_unregister
-> >>> with of_device_unregister in of_platform_device_destroy()?
-> >>
-> >> IIRC, the problem is inserting a resource twice on add from 2
-> >> different nodes, not the removal path. Perhaps we could make a
-> >> collision non-fatal for in the DT case.
-> > 
-> > We may be talking two different things here, I understand that this
-> > patch would create an issue with inserting a resource twice in the
-> > devicetrees with overlapping resources (just like the commit that was
-> > reverted above), but the crash is on devices with resources whose
-> > parent, child, sibling pointers have never been initialized (the
-> > of_device_add path does not touch these at all), and get dereferenced in
-> > platform_device_del()->release_resource(). See the following that has a
-> > better explanation [1].
-> > 
-> > regards
-> > Suman
-> > 
-> > [1]
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/274412.html
-> > 
-> > 
-> >> Grant may have some ideas on
-> >> what's needed here.
-> 
-> Ping, any suggestions here? Do we ought to replace
-> platform_device_unregister() with of_device_unregister() similar to the
-> approach taken in 02bbde7849e6 (Revert "of: use platform_device_add")?
+On 03/20/2015 04:50 PM, Martin Kepplinger wrote:
+> From: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+>
+> The MMA8653FC is a low-power, three-axis, capacitive micromachined
+> accelerometer with 10 bits of resolution with flexible user-programmable
+> options.
+>
+> Embedded interrupt functions enable overall power savings, by relieving the
+> host processor from continuously polling data, for example using the poll()
+> system call.
+>
+> The device can be configured to generate wake-up interrupt signals from any
+> combination of the configurable embedded functions, enabling the MMA8653FC
+> to monitor events while remaining in a low-power mode during periods of
+> inactivity.
+>
+> This driver provides devicetree properties to program the device's behaviour
+> and a simple, tested and documented sysfs interface. The data sheet and more
+> information is available on Freescale's website.
+>
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> ---
+>
+(...)
 
-Hi Suman,
+> +static int mma8653fc_i2c_probe(struct i2c_client *client,
+> +				       const struct i2c_device_id *id)
+> +{
+> +	struct mma8653fc *mma;
+> +	const struct mma8653fc_pdata *pdata;
+> +	int err;
+> +	u8 byte;
+> +
+> +	err = i2c_check_functionality(client->adapter,
+> +			I2C_FUNC_SMBUS_BYTE_DATA);
+> +	if (!err) {
+> +		dev_err(&client->dev, "SMBUS Byte Data not Supported\n");
+> +		return -EIO;
+> +	}
+> +
+> +	mma = kzalloc(sizeof(*mma), GFP_KERNEL);
 
-Yes, I think the solution to both problems is to create an
-of_device_unregister() function. It's not the prettiest thing, but I
-think it is for the best.
+Why not devm_* API..?
 
-g.
+> +	if (!mma) {
+> +		err = -ENOMEM;
+> +		goto err_out;
+> +	}
+> +
+> +	pdata = dev_get_platdata(&client->dev);
+> +	if (!pdata) {
+> +		pdata = mma8653fc_probe_dt(&client->dev);
+> +		if (IS_ERR(pdata)) {
+> +			err = PTR_ERR(pdata);
+> +			pr_err("pdata from DT failed\n");
+
+Use dev_err() instead of pr_err()..
+
+> +			goto err_free_mem;
+> +		}
+> +	}
+> +	mma->pdata = *pdata;
+> +	pdata = &mma->pdata;
+> +	mma->client = client;
+> +	mma->read = &mma8653fc_read;
+> +	mma->write = &mma8653fc_write;
+> +
+> +	mutex_init(&mma->mutex);
+> +
+> +	i2c_set_clientdata(client, mma);
+> +
+> +	err = sysfs_create_group(&client->dev.kobj, &mma8653fc_attr_group);
+> +	if (err)
+> +		goto err_free_mem;
+> +
+> +	mma->irq = irq_of_parse_and_map(client->dev.of_node, 0);
+> +	if (!mma->irq) {
+> +		dev_err(&client->dev, "Unable to parse or map IRQ\n");
+> +		goto no_irq;
+> +	}
+> +
+> +	err = irq_set_irq_type(mma->irq, IRQ_TYPE_EDGE_FALLING);
+> +	if (err) {
+> +		dev_err(&client->dev, "set_irq_type failed\n");
+> +		goto err_free_mem;
+> +	}
+> +
+> +	err = request_threaded_irq(mma->irq, NULL, mma8653fc_irq, IRQF_ONESHOT,
+> +				   dev_name(&mma->client->dev), mma);
+
+devm_* API..?
+
+> +	if (err) {
+> +		dev_err(&client->dev, "irq %d busy?\n", mma->irq);
+> +		goto err_free_mem;
+> +	}
+> +
+> +	if (mma->write(mma, MMA8653FC_CTRL_REG2, SOFT_RESET))
+> +		goto err_free_irq;
+> +
+> +	__mma8653fc_disable(mma);
+> +	mma->standby = true;
+> +
+> +	/* enable desired interrupts */
+> +	mma->orientation = '\0';
+> +	mma->bafro = '\0';
+> +	byte = 0;
+> +	if (pdata->int_src_data_ready) {
+> +		byte |= INT_EN_DRDY;
+> +		dev_dbg(&client->dev, "DATA READY interrupt source enabled\n");
+> +	}
+> +	if (pdata->int_src_ff_mt_x || pdata->int_src_ff_mt_y ||
+> +	    pdata->int_src_ff_mt_z) {
+> +		byte |= INT_EN_FF_MT;
+> +		dev_dbg(&client->dev, "FF MT interrupt source enabled\n");
+> +	}
+> +	if (pdata->int_src_lndprt) {
+> +		if (mma->write(mma, MMA8653FC_PL_CFG, PL_EN))
+> +			goto err_free_irq;
+> +		byte |= INT_EN_LNDPRT;
+> +		dev_dbg(&client->dev, "LNDPRT interrupt source enabled\n");
+> +	}
+> +	if (pdata->int_src_aslp) {
+> +		byte |= INT_EN_ASLP;
+> +		dev_dbg(&client->dev, "ASLP interrupt source enabled\n");
+> +	}
+> +	if (mma->write(mma, MMA8653FC_CTRL_REG4, byte))
+> +		goto err_free_irq;
+> +
+> +	/* force everything to line 1 */
+> +	if (pdata->int1) {
+> +		if (mma->write(mma, MMA8653FC_CTRL_REG5,
+> +				 (INT_CFG_ASLP | INT_CFG_LNDPRT |
+> +				 INT_CFG_FF_MT | INT_CFG_DRDY)))
+> +			goto err_free_irq;
+> +		dev_dbg(&client->dev, "using interrupt line 1\n");
+> +	}
+> +no_irq:
+> +	/* range mode */
+> +	byte = mma->read(mma, MMA8653FC_XYZ_DATA_CFG);
+> +	byte &= ~RANGE_MASK;
+> +	switch (pdata->range) {
+> +	case DYN_RANGE_2G:
+> +		byte |= RANGE2G;
+> +		dev_dbg(&client->dev, "use 2g range\n");
+> +		break;
+> +	case DYN_RANGE_4G:
+> +		byte |= RANGE4G;
+> +		dev_dbg(&client->dev, "use 4g range\n");
+> +		break;
+> +	case DYN_RANGE_8G:
+> +		byte |= RANGE8G;
+> +		dev_dbg(&client->dev, "use 8g range\n");
+> +		break;
+> +	default:
+> +		dev_err(&client->dev, "wrong range mode value\n");
+> +		goto err_free_irq;
+> +	}
+> +	if (mma->write(mma, MMA8653FC_XYZ_DATA_CFG, byte))
+> +		goto err_free_irq;
+> +
+> +	/* data calibration offsets */
+> +	if (pdata->x_axis_offset) {
+> +		if (mma->write(mma, MMA8653FC_OFF_X, pdata->x_axis_offset))
+> +			goto err_free_irq;
+> +	}
+> +	if (pdata->y_axis_offset) {
+> +		if (mma->write(mma, MMA8653FC_OFF_Y, pdata->y_axis_offset))
+> +			goto err_free_irq;
+> +	}
+> +	if (pdata->z_axis_offset) {
+> +		if (mma->write(mma, MMA8653FC_OFF_Z, pdata->z_axis_offset))
+> +			goto err_free_irq;
+> +	}
+> +
+> +	/* if autosleep, wake on both landscape and motion changes */
+> +	if (pdata->auto_wake_sleep) {
+> +		byte = 0;
+> +		byte |= WAKE_LNDPRT;
+> +		byte |= WAKE_FF_MT;
+> +		if (mma->write(mma, MMA8653FC_CTRL_REG3, byte))
+> +			goto err_free_irq;
+> +		if (mma->write(mma, MMA8653FC_CTRL_REG2, SLPE))
+> +			goto err_free_irq;
+> +		dev_dbg(&client->dev, "auto sleep enabled\n");
+> +	}
+> +
+> +	/* data rates */
+> +	byte = 0;
+> +	byte = mma->read(mma, MMA8653FC_CTRL_REG1);
+> +	if (byte < 0)
+> +		goto err_free_irq;
+> +	byte &= ~ODR_MASK;
+> +	byte |= ODR_DEFAULT;
+> +	byte &= ~ASLP_RATE_MASK;
+> +	byte |= ASLP_RATE_DEFAULT;
+> +	if (mma->write(mma, MMA8653FC_CTRL_REG1, byte))
+> +		goto err_free_irq;
+> +
+> +	/* freefall / motion config */
+> +	byte = 0;
+> +	if (pdata->motion_mode) {
+> +		byte |= FF_MT_CFG_OAE;
+> +		dev_dbg(&client->dev, "detect motion instead of freefall\n");
+> +	}
+> +	byte |= FF_MT_CFG_ELE;
+> +	if (pdata->int_src_ff_mt_x)
+> +		byte |= FF_MT_CFG_XEFE;
+> +	if (pdata->int_src_ff_mt_y)
+> +		byte |= FF_MT_CFG_YEFE;
+> +	if (pdata->int_src_ff_mt_z)
+> +		byte |= FF_MT_CFG_ZEFE;
+> +	if (mma->write(mma, MMA8653FC_FF_MT_CFG, byte))
+> +		goto err_free_irq;
+> +
+> +	if (pdata->freefall_motion_thr) {
+> +		if (mma->write(mma, MMA8653FC_FF_MT_THS,
+> +				 pdata->freefall_motion_thr))
+> +			goto err_free_irq;
+> +		/* calculate back to mg */
+> +		dev_dbg(&client->dev, "threshold set to %dmg\n",
+> +			 (63 * pdata->freefall_motion_thr) - 1);
+> +	}
+> +
+> +	byte = mma->read(mma, MMA8653FC_WHO_AM_I);
+> +	if (byte != MMA8653FC_DEVICE_ID) {
+> +		dev_err(&client->dev, "wrong device for driver\n");
+> +		goto err_free_irq;
+> +	}
+> +	dev_info(&client->dev,
+> +		 "accelerometer driver loaded. device id %x\n", byte);
+> +
+> +	return 0;
+> +
+> + err_free_irq:
+> +	if (mma->irq)
+> +		free_irq(mma->irq, mma);
+> + err_free_mem:
+> +	kfree(mma);
+
+If we use devm_* API's above steps are not required
+
+> + err_out:
+> +	return err;
+> +}
+> +
+> +static int mma8653fc_remove(struct i2c_client *client)
+> +{
+> +	struct mma8653fc *mma = i2c_get_clientdata(client);
+> +
+> +	free_irq(mma->irq, mma);
+> +	dev_dbg(&client->dev, "unregistered accelerometer\n");
+> +	kfree(mma);
+
+same as above..
+
+
+
+-- 
+Varka Bhadram
 
