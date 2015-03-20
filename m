@@ -1,71 +1,95 @@
-From: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-Subject: Re: [PATCH v2] add support for Freescale's MMA8653FC 10 bit accelerometer
-Date: Fri, 20 Mar 2015 12:26:52 +0100
-Message-ID: <550C03FC.1020303@theobroma-systems.com>
-References: <1426694157-10866-1-git-send-email-martink@posteo.de>			 <2231139.ojeyer6qnI@ws-stein> <5509AAE5.1000503@posteo.de>		 <1426697978.6764.8.camel@hadess.net> <5509BDA0.9000806@posteo.de>	 <1426701934.6764.10.camel@hadess.net> <5509C3E6.8070000@posteo.de> <1426760577.6764.14.camel@hadess.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1426760577.6764.14.camel@hadess.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>, Martin Kepplinger <martink@posteo.de>
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmitry.torokhov@gmail.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, linux-api@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V3 0/8] ARM: cpuidle: Unify the ARM64/ARM DT approach
+Date: Fri, 20 Mar 2015 12:43:53 +0100
+Message-ID: <1426851841-2072-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 2015-03-19 um 11:22 schrieb Bastien Nocera:
-> On Wed, 2015-03-18 at 19:28 +0100, Martin Kepplinger wrote:
->> Am 2015-03-18 um 19:05 schrieb Bastien Nocera:
->>> On Wed, 2015-03-18 at 19:02 +0100, Martin Kepplinger wrote:
->>>> Am 2015-03-18 um 17:59 schrieb Bastien Nocera:
->>>>> On Wed, 2015-03-18 at 17:42 +0100, Martin Kepplinger wrote:
->>>>>>
->>>>> <snip>
->>>>>> It could have gone to drivers/iio/accel if it would use an 
->>>>>> iio   interface, which would make more sense, you are right, 
->>>>>> but I 
->>>>>> simply  don't have the time to merge it in to iio.
->>>>>>
->>>>>> It doesn't use an input interface either but I don't see a 
->>>>>> good   place for an accelerometer that uses sysfs only.
->>>>>>
->>>>>> It works well, is a relatively recent chip and a clean 
->>>>>> dirver.  But  this is all I can provide.
->>>>>
->>>>> As a person who works on the user-space interaction of those 
->>>>> with   desktops [1]: Urgh.
->>>>>
->>>>> I already have 3 (probably 4) types of accelerometers to 
->>>>> contend  with,  I'm not fond of adding yet another type.
->>>>>
->>>>> Is there any way to get this hardware working outside the SoCs 
->>>>> it's  designed for (say, a device with I2C like a Raspberry 
->>>>> Pi),  so that a  kind soul could handle getting this using the 
->>>>> right  interfaces?
->>>>>
->>>>
->>>> It works on basically any SoC and is in no way limited in this  
->>>> regard. Sure, userspace has to expicitely support it and I hear 
->>>> you.  Using the iio interface would make more sense. I can only 
->>>> say I'd  love to have the time to move this driver over. I'm 
->>>> very sorry.
->>>
->>> How can we get the hardware for somebody to use on their own  
->>> laptops/embedded boards to implement this driver?
->>>
->>
->> It's connected over I2C. If the included documentation is not clear 
->> please tell me what exacly. Thanks!
-> 
-> 
-> I'll ask the question a different way: can you please give the address 
-> of a shop where that hardware is available?
-> 
+There is a big number of cpuidle drivers for the ARM architecture.
 
-there is
-http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=RDMMA865x&lang_cd=
-and http://linux-sunxi.org/Inet_K970 for example. I think I saw Android
-devices with it too, and I would guess it would be used more often if it
-were in linux.
+These drivers have been cleaned up and grouped into the drivers/cpuidle
+directory to keep track of the changes more easily and ensure the code
+is following the same scheme across the drivers.
 
-Please refer to v4 of the patch for different questions. thanks!
+That had the benefit of simplifying the code and factor out a lot of common
+parts. Beside that, as the drivers belong to the 'drivers' directory, we had
+to split the arch specific bits and the generic code in order to keep
+everything self contained. The platform driver paradigm was used for this
+purpose.
+
+Unfortunately, this approach is now no longer accepted and a different solution
+must be provided to reach the same goal: one example is the Qualcomm cpuidle
+driver upstreaming attempt.
+
+In the meantime, ARM64 developed a generic cpuidle driver based on DT definition.
+
+The DT definition provides an 'enable-method' to specify one of the cpu
+operations (PSCI, ...).
+
+This patchset unify this driver with ARM32, using the same DT definition.
+
+Thanks with this patchset we can use the 'enable-method' to specify a cpu
+operations, hence get rid of the platform driver approach and go further in the
+cpuidle driver flexibility via the DT.
+
+Changelog:
+
+ V3:
+	* Fixed unroll loop when failing to register the device
+	* Removed the per cpu cpuidle_device
+	* Remove goto statement in the registration path
+	* Fixed a compilation failure with allyesconfig on arm64
+
+ V2:
+	* Used smp_operations style for cpuidle_ops
+	* Fixed some nits in the comments
+	* Added a patch to change the name of the functions
+	* Added per cpu device registration patch
+
+Daniel Lezcano (8):
+  ARM: cpuidle: Remove duplicate header inclusion
+  ARM: cpuidle: Add a cpuidle ops structure to be used for DT
+  ARM64: cpuidle: Replace cpu_suspend by the common ARM/ARM64 function
+  ARM64: cpuidle: Rename cpu_init_idle to a common function name
+  ARM64: cpuidle: Remove arm64 reference
+  ARM: cpuidle: Enable the ARM64 driver for both ARM32/ARM64
+  ARM: cpuidle: Register per cpuidle device
+  ARM: cpuidle: Change function name to be consistent with x86
+
+ arch/arm/include/asm/cpuidle.h                     | 23 +++++++
+ arch/arm/kernel/cpuidle.c                          | 74 +++++++++++++++++++-
+ arch/arm/mach-davinci/cpuidle.c                    |  1 -
+ arch/arm/mach-imx/cpuidle-imx6q.c                  |  1 -
+ arch/arm/mach-imx/cpuidle-imx6sl.c                 |  1 -
+ arch/arm/mach-imx/cpuidle-imx6sx.c                 |  1 -
+ arch/arm/mach-omap2/cpuidle44xx.c                  |  1 -
+ arch/arm/mach-s3c64xx/cpuidle.c                    |  2 +-
+ arch/arm/mach-tegra/cpuidle-tegra20.c              |  1 -
+ arch/arm/mach-tegra/cpuidle-tegra30.c              |  1 -
+ arch/arm64/include/asm/cpuidle.h                   |  9 ++-
+ arch/arm64/kernel/cpuidle.c                        |  2 +-
+ drivers/cpuidle/Kconfig                            |  7 +-
+ drivers/cpuidle/Kconfig.arm                        | 12 +++-
+ drivers/cpuidle/Kconfig.arm64                      | 13 ----
+ drivers/cpuidle/Makefile                           |  5 +-
+ drivers/cpuidle/{cpuidle-arm64.c => cpuidle-arm.c} | 80 ++++++++++++++++------
+ drivers/cpuidle/cpuidle-at91.c                     |  1 -
+ drivers/cpuidle/cpuidle-exynos.c                   |  1 -
+ drivers/cpuidle/cpuidle-kirkwood.c                 |  1 -
+ drivers/cpuidle/cpuidle-ux500.c                    |  1 -
+ drivers/cpuidle/cpuidle-zynq.c                     |  1 -
+ include/asm-generic/vmlinux.lds.h                  |  2 +
+ 23 files changed, 178 insertions(+), 63 deletions(-)
+ delete mode 100644 drivers/cpuidle/Kconfig.arm64
+ rename drivers/cpuidle/{cpuidle-arm64.c => cpuidle-arm.c} (57%)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
