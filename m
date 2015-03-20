@@ -1,43 +1,72 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Qualcomm PM8941 power key driver
-Date: Fri, 20 Mar 2015 02:54:33 +0100
-Message-ID: <CAJAp7Oi0YbrTcJ1+ziWk0J02_qB=syQV=stLnXy2+txA2ZWQpw@mail.gmail.com>
-References: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1424080516.2328.1.camel@mm-sol.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 00/12] USB: chipidea: patchset for performance improvement
+Date: Fri, 20 Mar 2015 10:33:30 +0800
+Message-ID: <20150320023328.GA7537@shlinux2>
+References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
+ <20150319103629.GI14457@ns203013.ovh.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424080516.2328.1.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150319103629.GI14457-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 16, 2015 at 10:55 AM, Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
->
-> On Fri, 2015-01-23 at 16:19 -0800, Bjorn Andersson wrote:
->> These patches add dt bindings and a device driver for the power key block in
->> the Qualcomm PM8941 pmic.
->>
->> Changes since v1:
->>  * Use a reboot_notifier to set power off/reboot mode
->>  * Use irq flags from devicetree
->>  * Some style fixes
->>
->> Courtney Cavin (2):
->>   input: Add Qualcomm PM8941 power key driver
->>   input: pm8941-pwrkey: Add DT binding documentation
->
-> Tested-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->
+On Thu, Mar 19, 2015 at 11:36:29AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 09:19 Thu 19 Mar     , Peter Chen wrote:
+> > Hi all,
+> > 
+> > In this patch set, I add some interfaces for tuning the performance
+> > of chipidea usb driver. With this set, the USB performance can be improved
+> > at some user cases with suitable parameters. The main changes:
+> > 
+> > - Interface to tune interrupt threshold control, and set
+> > 'Immediate' for default value
+> > - The glue layer can disable stream mode according to USB role
+> > - Interface to tune AHB burst configuration at SBUSCFG
+> > - Interface to tune tx/rx burst size
+> > - i.mx changes for achieving better performance, it can reduce
+> >   the latecy between bus and USB FIFO, and reduce the overrun
+> >   and underrun occurrences, it is useful for the system bus is busy.
+> >   we see great improvement for ISO transfer, eg, high resolution
+> >   USB camera when the bus is busy.
+> > 
+> > Below are some test results at imx6sx sdb board
+> > (set ehci_hcd.park=3 at bootargs), the tests are done
+> > at v4.0 kernel, no other bus loading during the tests,
+> > so we have not seen performance change for some use cases.
+> > 
+> > USB Mass Storage (Host mode)
+> > With Patch Set		Without Patch Set
+> > R: 26.9 MB/s		27 MB/s
+> > W: 25.2 MB/s		24.5 MB/s
+> > 
+> > 1G USB Ethernet Card
+> > With Patch Set		Without Patch Set
+> > TX: 186 Mb/s		185 Mb/s
+> > RX: 219 Mb/s		216 Mb/s
+> > 
+> > g_ncm (Device Mode)
+> > With Patch Set		Without Patch Set
+> > TX: 166MB/s		163MB/s
+> > RX: 230MB/s		184MB/s
+> 
+> The improve is not drag sticks except for gcm RX
+> 
+> The most interesting path will be on full system loaded
+> 
 
-Thanks for your testing Ivan.
+Yeah, I can have a try. But we have no GPU driver and related
+apps on it, I am not sure if I can create starve bus situation.
+Any high bus loading tools suggest?
 
-Dmitry, can you apply this? (It still applies cleanly to linux-next)
+-- 
 
-Regards,
-Bjorn
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
