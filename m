@@ -1,64 +1,39 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: [PATCH v3 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Fri, 20 Mar 2015 14:31:05 +0900
-Message-ID: <1426829466-13559-3-git-send-email-ingi2.kim@samsung.com>
-References: <1426829466-13559-1-git-send-email-ingi2.kim@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1426829466-13559-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Fri, 20 Mar 2015 08:03:43 +0200
+Message-ID: <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+	<1426696710-6891-6-git-send-email-eliad@wizery.com>
+	<550AD7C1.2030405@gmail.com>
+	<CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
+	<20150319212505.GN31346@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150319212505.GN31346-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> (Tony Lindgren's message of
+	"Thu, 19 Mar 2015 14:25:06 -0700")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Pontus Fuchs <pontus.fuchs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap@vger.kernel.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree bindings for ktd2692 flash LEDs.
-Add optional properties 'flash-timeout-us' to control flash timeout
-and 'vin-supply' for flash-led regulator
+Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
 
-Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
----
- .../devicetree/bindings/leds/leds-ktd2692.txt      | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+>> > Tested OK (boot, scan, join, ping) on Pandaboard ES.
+>> >
+>> thanks for testing it!
+>
+> Great. As suggested by Kalle, I'll apply all these into
+> omap-for-v4.1/wl12xx branch and send a pull request for
+> the arm-soc probably on Friday if no issues are found.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-new file mode 100644
-index 0000000..75e16f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-@@ -0,0 +1,34 @@
-+* Kinetic Technologies - KTD2692 Flash LED Driver
-+
-+KTD2692 is the ideal power solution for high-power flash LEDs.
-+It uses ExpressWire single-wire programming for maximum flexibility.
-+
-+The ExpressWire interface through CTRL pin can control LED on/off and
-+enable/disable the IC, Movie(max 1/3 of Flash current) / Flash mode current,
-+Flash timeout, LVP(low voltage protection).
-+
-+Also, When the AUX pin is pulled high while CTRL pin is high,
-+LED current will be ramped up to the flash-mode current level.
-+
-+Required properties:
-+	- compatible: "kinetic,ktd2692"
-+	- ctrl-gpio, aux-gpio : gpio pin in order control ktd2692 flash led.
-+		There is an internal 300kOhm pull-down resistor at each pin
-+	- supply : "vin" LED supply (2.7V to 5.5V)
-+		See Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+Optional property:
-+	- flash-timeout-us : Maximum flash timeout in microseconds.
-+			flash timeout ranges from 0 to 1835000us and
-+			default is 1049000us.
-+
-+Example:
-+
-+flash-led {
-+	compatible = "kinetic,ktd2692";
-+	ctrl-gpio = <&gpc0 1 0>;
-+	aux-gpio = <&gpc0 2 0>;
-+	flash-timeout-us = <1835000>;
-+	vin-supply = <&vbat>;
-+};
-+
+Great, thank you. Just in case you want this:
+
+Acked-by: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
 -- 
-2.0.5
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
