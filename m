@@ -1,61 +1,67 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] Documentation: DT bindings: Tegra AHB: require
- the legacy base address for existing chips
-Date: Fri, 20 Mar 2015 10:02:28 -0600
-Message-ID: <550C4494.2010609@wwwdotorg.org>
-References: <20150320061102.14355.4781.stgit@mcwayne> <20150320061102.14355.87959.stgit@mcwayne>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Fri, 20 Mar 2015 09:21:38 -0700
+Message-ID: <20150320162138.GU31346@atomide.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+ <1426696710-6891-6-git-send-email-eliad@wizery.com>
+ <550AD7C1.2030405@gmail.com>
+ <CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
+ <20150319212505.GN31346@atomide.com>
+ <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
+ <20150320153357.GT31346@atomide.com>
+ <87bnjnfz1t.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150320061102.14355.87959.stgit@mcwayne>
+Content-Disposition: inline
+In-Reply-To: <87bnjnfz1t.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Pontus Fuchs <pontus.fuchs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2015 12:11 AM, Paul Walmsley wrote:
-> Per Stephen Warren, note in the Tegra AHB DT binding documentation
-> that we specifically deprecate any attempt to use the IP block's
-> actual hardware base address, and advocate the use of the legacy
-> "off-by-four" address in the 'regs' property, for Tegra chips with
-> existing upstream Linux DT files that include a Tegra AHB node.  This
-> patch updates the documentation accordingly.
->
-> Changing the existing kernel DT data isn't under consideration because
-> Linux kernel DT data policy is to preserve compatibility between newer
-> DT data files and older kernels.  However, this additional step of
-> changing the documentation should discourage others from sending
-> kernel patches to try to change the legacy kernel DT data.
-> Furthermore, for out-of-tree software (such as bootloaders or other
-> operating systems) that may rely on Linux kernel DT binding
-> documentation as an ABI (but not the Linux kernel DT data itself),
-> such a change may allow future convergence with the Linux kernel DT
-> data without additional code changes.
+* Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> [150320 08:51]:
+> Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
+> 
+> > * Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> [150319 23:04]:
+> >> Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
+> >> 
+> >> >> > Tested OK (boot, scan, join, ping) on Pandaboard ES.
+> >> >> >
+> >> >> thanks for testing it!
+> >> >
+> >> > Great. As suggested by Kalle, I'll apply all these into
+> >> > omap-for-v4.1/wl12xx branch and send a pull request for
+> >> > the arm-soc probably on Friday if no issues are found.
+> >> 
+> >> Great, thank you. Just in case you want this:
+> >> 
+> >> Acked-by: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >
+> > Thanks, I can push out a new branch omap-for-v4.1/wl12xx-v2
+> > with your acks assuming you or somebody else have not
+> > merged the existing omap-for-v4.1/wl12xx branch yet into the
+> > wireless tree?
+> >
+> > In that case I can scrap omap-for-v4.1/wl12xx and then will
+> > reply with a commit that we can consider immutable that can
+> > be merged into various trees as needed in case of merge
+> > conflicts.
+> >
+> > But I'll wait for your confirmation first :)
+> 
+> After John "retired" we actually have two set of trees now: mac80211
+> maintained by Johannes and wireless-drivers maintained by me. I haven't
+> pulled anything from your tree and I'm 100% sure Johannes hasn't either.
+> So green light from me.
 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-> index 067c9790062f..9a4295b54539 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
-> @@ -5,9 +5,12 @@ Required properties:
->     Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
->     '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
->     tegra132, or tegra210.
-> -- reg : Should contain 1 register ranges(address and length)
-> +- reg : Should contain 1 register ranges(address and length).  For
-> +  Tegra20, Tegra30, and Tegra114 chips, the value must be <0x6000c004
-> +  0x10c>.  For Tegra124, Tegra132 and Tegra210 chips, the value should
-> +  be be <0x6000c000 0x150>.
+OK, I'll set up the new branch then. I take your ack is for the
+whole series? If it's just for the $subject patch, please let
+me know.
 
-I would have expected the exception to exist on Tegra124 too since 
-that's long been supported upstream. However, since we haven't actually 
-added the AHB node into the DT files on Tegra124 yet, I suppose we can 
-assume that nobody has anywhere so the slightly retro-active change on 
-Tegra124 is OK.
+Regards,
 
-The series,
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
