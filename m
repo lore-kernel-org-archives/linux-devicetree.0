@@ -1,153 +1,52 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
- driver
-Date: Fri, 20 Mar 2015 22:53:53 +0800
-Message-ID: <20150320145353.GA20461@leoy-linaro>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
- <20150319141753.GB25967@leverpostej>
- <20150320060653.GC18907@leoy-linaro>
- <20150320112414.GD14766@leverpostej>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v6 2/6] wl12xx: use frequency instead of enumerations for
+ pdata clocks
+Date: Fri, 20 Mar 2015 07:54:18 -0700
+Message-ID: <20150320145417.GR31346@atomide.com>
+References: <1426162154-8716-1-git-send-email-eliad@wizery.com>
+ <20150313150047.GI5264@atomide.com>
+ <CAB3XZEcOytqpJ4pWoemLS3d+DCeA8C75MencDfGn_vhfEYrduw@mail.gmail.com>
+ <3103538.jZ037SODdT@wuerfel>
+ <87lhixphag.fsf@kamboji.qca.qualcomm.com>
+ <20150316151554.GO5264@atomide.com>
+ <87siczg44w.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150320112414.GD14766@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: kongxinwei <kong.kongxinwei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <87siczg44w.fsf@kamboji.qca.qualcomm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Eliad Peller <eliad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Sekhar Nori <nsekhar@ti.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Luciano Coelho <luca@coelho.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 11:24:14AM +0000, Mark Rutland wrote:
-> > > > +       ret = of_property_read_u32(np, "hisilicon,tsensor-thres-temp",
-> > > > +                                  &sensor->thres_temp);
-> > > > +       if (ret) {
-> > > > +               dev_err(&pdev->dev, "failed to get thres value %d: %d\n",
-> > > > +                       index, ret);
-> > > > +               return ret;
-> > > > +       }
-> > > > +
-> > > > +       ret = of_property_read_u32(np, "hisilicon,tsensor-reset-temp",
-> > > > +                                  &sensor->reset_temp);
-> > > > +       if (ret) {
-> > > > +               dev_err(&pdev->dev, "failed to get reset value %d: %d\n",
-> > > > +                       index, ret);
-> > > > +               return ret;
-> > > > +       }
-> > > 
-> > > I see now that these properties result in the HW being programmed. You
-> > > should figure out how to reconcile these with thermal-zone trip points
-> > > rather than having parallel properties.
-> >  
-> > Set "tsensor-thres-temp" to register so that if thermal reaches the
-> > threshold, the sensor will trigger h/w interrupt.
-> > 
-> > Set "tsensor-reset-temp" to register so that if thermal reaches the
-> > reset value, the sensor will assert SoC reset signal to trigger h/w
-> > reset.
+* Kalle Valo <kvalo@codeaurora.org> [150320 07:01]:
+> Tony Lindgren <tony@atomide.com> writes:
 > 
-> I understand this.
+> >> I prefer these going through the omap tree. Like Eliad said,
+> >> drivers/net/wireless/ti does not get that many changes nowadays so the
+> >> chances of this patchset conflicting with something is very small.
+> >
+> > OK great. In that case no need to rearrange the patches, I can
+> > apply them into an immutable branch once the pending issues have
+> > been fixed if Kalle acks them.
+> >
+> > To avoid merge conflicts that branch is easiest done against
+> > v4.0-rc4. Kalle and Arnd, does that work for you guys?
+> >
+> > I can also base it on 5b7610f23562 ("ARM: OMAP2+: Fix wl12xx on
+> > dm3730-evm with mainline u-boot") that's on top of -rc2 plus few
+> > other fixes now merged to -rc4 mainline if we need a branch based
+> > on an earlier tag.
 > 
-> > This is different w/t thermal-zone trip points, the trip points are
-> > used for timer polling.
+> Sorry, it seems I forgot to answer this one:
 > 
-> That may be the case in the code as it stands today, but per the binding
-> the trip points are the temperatures at which an action is to be taken.
-> 
-> The thermal-zone has poilling-delay and polling-delay-passive, but
-> there's no reason you couldn't also use the interrupt to handle the
-> "hot" trip-point, adn the reset at the "critical" trip-point. All that's
-> missing is the plumbing in order to do so.
-> 
-> So please co-ordinate with the thermal framework to do that.
+> Either baseline is good for me, I can't think of any problems with
+> either one. But please do remember that I'm a new maintainer, I might
+> very well miss something ;)
 
-Let's dig further more for this point, so that we can get more specific
-gudiance and have a good preparation for next version's patch set.
+OK, I'll base it on -rc4 unless Arnd needs something earlier.
 
-After i reviewed the thermal framework code, currently have one smooth
-way to co-ordinate the trip points w/t thermal framework: use the function
-*thermal_zone_device_register()* to register sensor, and can use the
-callback function .get_trip_temp to tell thermal framework for the
-trip points' temperature.
+Regards,
 
-For hisi thermal case, now the driver is using the function
-*thermal_zone_of_sensor_register* to register sensor, but use this way
-i have not found there have standard APIs which can be used by sensor
-driver to get the trip points info from thermal framework.
-
-I may miss something for thermal framework, so if have existed APIs to
-get the trip points, could pls point out?
-
-> > Do u think below modification is more reasonable?
-> > 
-> > - Set "tsensor-thres-temp" = 700000, which equal to thermal-zone
-> >   passive trip point, so that we can use h/w interrupt to update the
-> >   thermal value immediately, rather than using polling method w/t long
-> >   delay;
-> > 
-> > - Set "tsensor-reset-temp" = <100000>, which is higher than
-> >   thermal-zone critical trip point, so that the s/w reset method has
-> >   higher priority than h/w reset; we also can easily know the reset is
-> >   caused by thermal framework; "tsensor-reset-temp" is only used to
-> >   protect h/w circuit.
-> 
-> As mentioned above, I think that you should co-ordinate with the thermal
-> framework. You're worknig around limitations inthe code as it stands
-> today rather than solving the fundamental issue.
-> 
-> > > > +       if (of_property_read_bool(np, "hisilicon,tsensor-bind-irq")) {
-> > > > +
-> > > > +               if (data->irq_bind_sensor != -1)
-> > > > +                       dev_warn(&pdev->dev, "irq has bound to index %d\n",
-> > > > +                                data->irq_bind_sensor);
-> > > > +
-> > > > +               /* bind irq to this sensor */
-> > > > +               data->irq_bind_sensor = index;
-> > > > +       }
-> > > 
-> > > I don't see why this should be specified in the DT. Why do you believe
-> > > it should?
-> > 
-> > The thermal sensor module has four sensors, but have only one
-> > interrupt signal; This interrupt can only be used by one sensor;
-> > So want to use dts to bind the interrupt with one selected sensor.
-> 
-> That's not all that great, though I'm not exactly sure how the kernel
-> would select the best sensor to measure with. It would be good if you
-> could talk to the thermal maintainers w.r.t. this.
-
-This will be decided by the silicon, right? Every soc has different
-combination with cpu/gpu/vpu, so which part is hottest, this maybe
-highly dependent on individual SoC.
-
-S/W just need provide the flexibility so that later can choose
-the interrupt to bind with the sensor within the hottest part.
-
-> > > > +static int hisi_thermal_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +       struct hisi_thermal_data *data;
-> > > > +       struct resource *res;
-> > > > +       int i;
-> > > > +       int ret;
-> > > > +
-> > > > +       if (!cpufreq_get_current_driver()) {
-> > > > +               dev_dbg(&pdev->dev, "no cpufreq driver!");
-> > > > +               return -EPROBE_DEFER;
-> > > > +       }
-> > > 
-> > > Surely we care about not burning out the board even if we don't have
-> > > cpufreq?
-> > > 
-> > > Is there any ordering guarantee between the probing of this driver and
-> > > cpufreq?
-> > 
-> > Yes, here need binding the thermal sensor w/t cpu cooling device,
-> > and cpu cooling device is based on cpufreq driver.
-> 
-> Sure, but if you don't have a cooling device you still want the critical
-> temperature reset and so on, no?
-
-Okay, let's remove this dependency.
-
-Thanks,
-Leo Yan
+Tony
