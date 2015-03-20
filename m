@@ -1,128 +1,93 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
- driver
-Date: Fri, 20 Mar 2015 11:24:14 +0000
-Message-ID: <20150320112414.GD14766@leverpostej>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
- <20150319141753.GB25967@leverpostej>
- <20150320060653.GC18907@leoy-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150320060653.GC18907@leoy-linaro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kongxinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rui.zhuang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhuang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH 1/3] of/device: manage resources similar
+ =?iso-8859-1?Q?to=0D?= platform_device_add
+Date: Fri, 20 Mar 2015 11:29:54 +0000
+Message-ID: <20150320112954.A3903C419C2@trevor.secretlab.ca>
+References: <1420651854-17768-1-git-send-email-s-anna@ti.com>
+	<1420651854-17768-2-git-send-email-s-anna@ti.com>
+	<CAL_Jsq+79cnCiww6g8ejki0yT59-N8eucHC3QGMbsXG4DksWuQ@mail.gmail.com>
+	<54B58D5D.5070508@ti.com>
+	<CAL_JsqLW9PRktHntLquohH3x_bPgJrrn2Y2_8RYA_HnKhpTDHg@mail.gmail.com>
+	<54B5A499.7060106@ti.com> <54C17087.7060003@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <54C17087.7060003@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > +       ret = of_property_read_u32(np, "hisilicon,tsensor-thres-temp",
-> > > +                                  &sensor->thres_temp);
-> > > +       if (ret) {
-> > > +               dev_err(&pdev->dev, "failed to get thres value %d: %d\n",
-> > > +                       index, ret);
-> > > +               return ret;
-> > > +       }
-> > > +
-> > > +       ret = of_property_read_u32(np, "hisilicon,tsensor-reset-temp",
-> > > +                                  &sensor->reset_temp);
-> > > +       if (ret) {
-> > > +               dev_err(&pdev->dev, "failed to get reset value %d: %d\n",
-> > > +                       index, ret);
-> > > +               return ret;
-> > > +       }
+On Thu, 22 Jan 2015 15:49:59 -0600
+, Suman Anna <s-anna@ti.com>
+ wrote:
+> Hi Grant,
+> 
+> On 01/13/2015 05:04 PM, Suman Anna wrote:
+> > On 01/13/2015 04:00 PM, Rob Herring wrote:
+> >> On Tue, Jan 13, 2015 at 3:25 PM, Suman Anna <s-anna@ti.com> wrote:
+> >>> Hi Rob,
+> >>>
+> >>> On 01/13/2015 02:38 PM, Rob Herring wrote:
+> >>>> On Wed, Jan 7, 2015 at 11:30 AM, Suman Anna <s-anna@ti.com> wrote:
+> >>>>> Drivers can use of_platform_populate() to create platform devices
+> >>>>> for children of the device main node, and a complementary API
+> >>>>> of_platform_depopulate() is provided to delete these child platform
+> >>>>> devices. The of_platform_depopulate() leverages the platform API
+> >>>>> for performing the cleanup of these devices.
+> >>>>>
+> >>>>> The platform device resources are managed differently between
+> >>>>> of_device_add and platform_device_add, and this asymmetry causes
+> >>>>> a kernel oops in platform_device_del during removal of the resources.
+> >>>>> Manage the platform device resources similar to platform_device_add
+> >>>>> to fix this kernel oops.
+> >>>>
+> >>>> This is a known issue and has been attempted to be fixed before (I
+> >>>> believe there is a revert in mainline). The problem is there are known
+> >>>> devicetrees which have overlapping resources and they will break with
+> >>>> your change.
+> >>>
+> >>> Are you referring to 02bbde7849e6 (Revert "of: use
+> >>> platform_device_add")?
+> >>
+> >> I believe that's the one.
+> >>
+> >>> That one seems to be in registration path, and
+> >>> this crash is in the unregistration path. If so, to fix the crash,
+> >>> should we be skipping the release_resource() for now in
+> >>> platform_device_del for DT nodes, or replace platform_device_unregister
+> >>> with of_device_unregister in of_platform_device_destroy()?
+> >>
+> >> IIRC, the problem is inserting a resource twice on add from 2
+> >> different nodes, not the removal path. Perhaps we could make a
+> >> collision non-fatal for in the DT case.
 > > 
-> > I see now that these properties result in the HW being programmed. You
-> > should figure out how to reconcile these with thermal-zone trip points
-> > rather than having parallel properties.
->  
-> Set "tsensor-thres-temp" to register so that if thermal reaches the
-> threshold, the sensor will trigger h/w interrupt.
-> 
-> Set "tsensor-reset-temp" to register so that if thermal reaches the
-> reset value, the sensor will assert SoC reset signal to trigger h/w
-> reset.
-
-I understand this.
-
-> This is different w/t thermal-zone trip points, the trip points are
-> used for timer polling.
-
-That may be the case in the code as it stands today, but per the binding
-the trip points are the temperatures at which an action is to be taken.
-
-The thermal-zone has poilling-delay and polling-delay-passive, but
-there's no reason you couldn't also use the interrupt to handle the
-"hot" trip-point, adn the reset at the "critical" trip-point. All that's
-missing is the plumbing in order to do so.
-
-So please co-ordinate with the thermal framework to do that.
-
-> Do u think below modification is more reasonable?
-> 
-> - Set "tsensor-thres-temp" = 700000, which equal to thermal-zone
->   passive trip point, so that we can use h/w interrupt to update the
->   thermal value immediately, rather than using polling method w/t long
->   delay;
-> 
-> - Set "tsensor-reset-temp" = <100000>, which is higher than
->   thermal-zone critical trip point, so that the s/w reset method has
->   higher priority than h/w reset; we also can easily know the reset is
->   caused by thermal framework; "tsensor-reset-temp" is only used to
->   protect h/w circuit.
-
-As mentioned above, I think that you should co-ordinate with the thermal
-framework. You're worknig around limitations inthe code as it stands
-today rather than solving the fundamental issue.
-
-> > > +       if (of_property_read_bool(np, "hisilicon,tsensor-bind-irq")) {
-> > > +
-> > > +               if (data->irq_bind_sensor != -1)
-> > > +                       dev_warn(&pdev->dev, "irq has bound to index %d\n",
-> > > +                                data->irq_bind_sensor);
-> > > +
-> > > +               /* bind irq to this sensor */
-> > > +               data->irq_bind_sensor = index;
-> > > +       }
+> > We may be talking two different things here, I understand that this
+> > patch would create an issue with inserting a resource twice in the
+> > devicetrees with overlapping resources (just like the commit that was
+> > reverted above), but the crash is on devices with resources whose
+> > parent, child, sibling pointers have never been initialized (the
+> > of_device_add path does not touch these at all), and get dereferenced in
+> > platform_device_del()->release_resource(). See the following that has a
+> > better explanation [1].
 > > 
-> > I don't see why this should be specified in the DT. Why do you believe
-> > it should?
-> 
-> The thermal sensor module has four sensors, but have only one
-> interrupt signal; This interrupt can only be used by one sensor;
-> So want to use dts to bind the interrupt with one selected sensor.
-
-That's not all that great, though I'm not exactly sure how the kernel
-would select the best sensor to measure with. It would be good if you
-could talk to the thermal maintainers w.r.t. this.
-
-> > > +static int hisi_thermal_probe(struct platform_device *pdev)
-> > > +{
-> > > +       struct hisi_thermal_data *data;
-> > > +       struct resource *res;
-> > > +       int i;
-> > > +       int ret;
-> > > +
-> > > +       if (!cpufreq_get_current_driver()) {
-> > > +               dev_dbg(&pdev->dev, "no cpufreq driver!");
-> > > +               return -EPROBE_DEFER;
-> > > +       }
+> > regards
+> > Suman
 > > 
-> > Surely we care about not burning out the board even if we don't have
-> > cpufreq?
+> > [1]
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/274412.html
 > > 
-> > Is there any ordering guarantee between the probing of this driver and
-> > cpufreq?
+> > 
+> >> Grant may have some ideas on
+> >> what's needed here.
 > 
-> Yes, here need binding the thermal sensor w/t cpu cooling device,
-> and cpu cooling device is based on cpufreq driver.
+> Ping, any suggestions here? Do we ought to replace
+> platform_device_unregister() with of_device_unregister() similar to the
+> approach taken in 02bbde7849e6 (Revert "of: use platform_device_add")?
 
-Sure, but if you don't have a cooling device you still want the critical
-temperature reset and so on, no?
+Hi Suman,
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I think the solution to both problems is to create an
+of_device_unregister() function. It's not the prettiest thing, but I
+think it is for the best.
+
+g.
+
