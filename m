@@ -1,50 +1,40 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
-Date: Fri, 20 Mar 2015 08:33:57 -0700
-Message-ID: <20150320153357.GT31346@atomide.com>
-References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
- <1426696710-6891-6-git-send-email-eliad@wizery.com>
- <550AD7C1.2030405@gmail.com>
- <CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
- <20150319212505.GN31346@atomide.com>
- <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 1/3] of: Add vendor prefix for Kinetic technologies
+Date: Fri, 20 Mar 2015 10:46:48 -0500
+Message-ID: <CAL_JsqJUDQxnQ2YeaEULD3FgF=7byaD=-etdzdBMT76dE_9hOw@mail.gmail.com>
+References: <1426829466-13559-1-git-send-email-ingi2.kim@samsung.com> <1426829466-13559-2-git-send-email-ingi2.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: Eliad Peller <eliad@wizery.com>, Pontus Fuchs <pontus.fuchs@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426829466-13559-2-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sakari Ailus <sakari.ailus@iki.fi>, Jacek Anaszewski <j.anaszewski@samsung.com>, Varka Bhadram <varkabhadram@gmail.com>, sw0312.kim@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Inha Song <ideal.song@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Kalle Valo <kvalo@codeaurora.org> [150319 23:04]:
-> Tony Lindgren <tony@atomide.com> writes:
-> 
-> >> > Tested OK (boot, scan, join, ping) on Pandaboard ES.
-> >> >
-> >> thanks for testing it!
-> >
-> > Great. As suggested by Kalle, I'll apply all these into
-> > omap-for-v4.1/wl12xx branch and send a pull request for
-> > the arm-soc probably on Friday if no issues are found.
-> 
-> Great, thank you. Just in case you want this:
-> 
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+On Fri, Mar 20, 2015 at 12:31 AM, Ingi Kim <ingi2.kim@samsung.com> wrote:
+> This patch adds vendor prefix for Kinetic technologies
+>
+> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
 
-Thanks, I can push out a new branch omap-for-v4.1/wl12xx-v2
-with your acks assuming you or somebody else have not
-merged the existing omap-for-v4.1/wl12xx branch yet into the
-wireless tree?
+Acked-by: Rob Herring <robh@kernel.org>
 
-In that case I can scrap omap-for-v4.1/wl12xx and then will
-reply with a commit that we can consider immutable that can
-be merged into various trees as needed in case of merge
-conflicts.
-
-But I'll wait for your confirmation first :)
-
-Regards,
-
-Tony
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index fae26d0..90a4be1 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -100,6 +100,7 @@ isee        ISEE 2007 S.L.
+>  isil   Intersil
+>  karo   Ka-Ro electronics GmbH
+>  keymile        Keymile GmbH
+> +kinetic Kinetic Technologies
+>  lacie  LaCie
+>  lantiq Lantiq Semiconductor
+>  lenovo Lenovo Group Ltd.
+> --
+> 2.0.5
+>
