@@ -1,206 +1,101 @@
-From: Aleksey Makarov <aleksey.makarov@auriga.com>
-Subject: Re: [PATCH v4] SATA: OCTEON: support SATA on OCTEON platform
-Date: Fri, 20 Mar 2015 15:59:54 +0300
-Message-ID: <550C19CA.800@auriga.com>
-References: <1425993989-22770-1-git-send-email-aleksey.makarov@auriga.com> <2705826.IzKxg0MdBH@wuerfel>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
+Date: Fri, 20 Mar 2015 14:08:39 +0100
+Message-ID: <20150320130838.GC7734@earth>
+References: <20150318055437.21025.13990.stgit@notabene.brown>
+ <80D7E742-4633-4CCD-B754-221387D82922@goldelico.com>
+ <20150320194307.51cb4225@notabene.brown>
+ <5A83DCE5-2CB4-48FF-80E7-6E6377045188@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2705826.IzKxg0MdBH@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <5A83DCE5-2CB4-48FF-80E7-6E6377045188@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-ide@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org
+To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: NeilBrown <neilb@suse.de>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Belisko Marek <marek.belisko@gmail.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2015 05:22 PM, Arnd Bergmann wrote:
 
-[...]
+--O3RTKUHj+75w1tg5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> new file mode 100644
->> index 0000000..59e86a7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> @@ -0,0 +1,28 @@
->> +* UCTL SATA controller glue
->> +
->> +Properties:
->> +- compatible: "cavium,octeon-7130-sata-uctl"
->> +
->> +  Compatibility with the cn7130 SOC.
->> +
->> +- reg: The base address of the UCTL register bank.
->> +
->> +- #address-cells, #size-cells, and ranges must be present and hold
->> +	suitable values to map all child nodes.
->> +
->> +Example:
->> +
->> +	uctl@118006c000000 {
->> +		compatible = "cavium,octeon-7130-sata-uctl";
->> +		reg = <0x11800 0x6c000000 0x0 0x100>;
->> +		ranges; /* Direct mapping */
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
-> 
-> What is an uctl? Is that a standard bus device name?
+Hi,
 
-I am going to add a short description of what UCTL is from docs here..
+On Fri, Mar 20, 2015 at 09:54:21AM +0100, Dr. H. Nikolaus Schaller wrote:
+> [...]
+> And we do not write a driver for the w2sg0004 but the regulator inside th=
+at
+> chip.
 
-> This is also where you should set the dma-ranges for the bus.
+DT describes the hardware structure and not the Linux driver
+structure.
 
-... and mention dma-ranges in the next version of the patch.
+> You also won=E2=80=99t expect that the omap3 driver hides everything. You
+> expect that the twl4030 provides some regulators that can be enabled
+> by subsystems inside the omap3. And if I remember correctly there are
+> regulators inside the omap3 which have explicit regulator nodes in the DT.
 
->> +
->> +/**
->> + * cvmx_sata_uctl_shim_cfg
->> + * from cvmx-sata-defs.h
->> + *
->> + * Accessible by: only when A_CLKDIV_EN
->> + * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
->> + * This register allows configuration of various shim (UCTL) features.
->> + * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
->> + * indicated in INTSTAT and a new OOB error arrives.
->> + * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
->> + * indicated in INTSTAT and a new DMA error arrives.
->> + */
->> +union cvmx_sata_uctl_shim_cfg {
->> +	uint64_t u64;
->> +	struct cvmx_sata_uctl_shim_cfg_s {
->> +	/*
->> +	 * Read/write error log for out-of-bound UAHC register access.
->> +	 * 0 = read, 1 = write.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
->> +	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
->> +	/*
->> +	 * SRCID error log for out-of-bound UAHC register access.
->> +	 * The IOI outbound SRCID for the OOB error.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_osrc              : 9,
->> +	/*
->> +	 * Read/write error log for bad DMA access from UAHC.
->> +	 * 0 = read error log, 1 = write error log.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t xm_bad_dma_wrn               : 1,
->> +	__BITFIELD_FIELD(uint64_t reserved_44_46               : 3,
->> +	/*
->> +	 * ErrType error log for bad DMA access from UAHC. Encodes the type of
->> +	 * error encountered (error largest encoded value has priority).
->> +	 * See SATA_UCTL_XM_BAD_DMA_TYPE_E.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t xm_bad_dma_type              : 4,
->> +	__BITFIELD_FIELD(uint64_t reserved_13_39               : 27,
->> +	/*
->> +	 * Selects the IOI read command used by DMA accesses.
->> +	 * See SATA_UCTL_DMA_READ_CMD_E.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t dma_read_cmd                 : 1,
->> +	__BITFIELD_FIELD(uint64_t reserved_10_11               : 2,
->> +	/*
->> +	 * Selects the endian format for DMA accesses to the L2C.
->> +	 * See SATA_UCTL_ENDIAN_MODE_E.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t dma_endian_mode              : 2,
->> +	__BITFIELD_FIELD(uint64_t reserved_2_7                 : 6,
->> +	/*
->> +	 * Selects the endian format for IOI CSR accesses to the UAHC.
->> +	 * Note that when UAHC CSRs are accessed via RSL, they are returned
->> +	 * as big-endian. See SATA_UCTL_ENDIAN_MODE_E.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t csr_endian_mode              : 2,
->> +		;))))))))))))
->> +	} s;
->> +};
-> 
-> Try to avoid bit fields, as you can see here, it gets awfully ugly if you
-> want to get endianess right, better just use #defines for the bits within
-> the u64 word.
+so let's have a look at twl regulators. They can be found below
+the twl node, so they will look similar to
 
-I would prefer not to do that.  I do not think this is much better: 
+/ -> omap3 -> i2c -> twl -> regulator
 
-#define DMA_ENDIAN_MODE  8  /* Selects the endian format for DMA accesses */
-#define CSR_ENDIAN_MODE  0  /* Selects the endian format for DMA accesses */ 
-#define DMA_READ_CMD    12  /* Do not put the cache block into the L2 cache */
+So properly mapped to the w2sg0004 device this would put your
+regulator to
 
-#define SATA_UCTL_ENDIAN_MODE_E_BIG     1
-#define SATA_UCTL_ENDIAN_MODE_E_LITTLE  0
-#define SATA_UCTL_ENDIAN_MODE_E_MASK    3
+/ -> omap3 -> serial -> w2sg0004 -> regulator
 
-	v = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
-	v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << DMA_ENDIAN_MODE);
-	v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << CSR_ENDIAN_MODE);
-#ifdef __BIG_ENDIAN
-	v |= SATA_UCTL_ENDIAN_MODE_E_BIG << DMA_ENDIAN_MODE;
-	v |= SATA_UCTL_ENDIAN_MODE_E_BIG << CSR_ENDIAN_MODE;
-#else
-	v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << DMA_ENDIAN_MODE;
-	v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << CSR_ENDIAN_MODE;
-#endif
-	v |= 1 << DMA_READ_CMD;
-	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
+This will gain you nothing as far as I can tell.
 
-On the other hand, using __BITFIELD_FIELD seems to be a common practice for mips sources.
-And this particular structure was generated from something by cavium so it is for free.
+Please note that subdevices under the serial node are pretty useful,
+since then the kernel can e.g. automatically setup correct line
+disciplines for serial attached bluetooth chips and make bluetooth
+work out of the box.
 
->> +#define CVMX_SATA_UCTL_SHIM_CFG 0xE8
->> +
->> +static int ahci_octeon_probe(struct platform_device *pdev)
->> +{
->> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *node = dev->of_node;
->> +	struct resource *res;
->> +	void __iomem *base;
->> +	int ret;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	if (!res) {
->> +		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(base))
->> +		return PTR_ERR(base);
->> +
->> +	/* set-up endian mode */
->> +	shim_cfg.u64 = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
->> +#ifdef __BIG_ENDIAN
->> +	shim_cfg.s.dma_endian_mode = 1;
->> +	shim_cfg.s.csr_endian_mode = 1;
->> +#else
->> +	shim_cfg.s.dma_endian_mode = 0;
->> +	shim_cfg.s.csr_endian_mode = 0;
->> +#endif
->> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
->> +	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
->> +
->> +	if (!node) {
->> +		dev_err(dev, "no device node, failed to add octeon sata\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	ret = of_platform_populate(node, NULL, NULL, dev);
->> +	if (ret) {
->> +		dev_err(dev, "failed to add ahci-platform core\n");
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
-> 
-> The current version doesn't really do anything, other than set a single
-> register. Are you planning to extend this a lot in the future?
+I am aware, that the Linux kernel has no such thing for serial
+attached GPS devices, but that's Linux specific and irrelevant
+for the DT description.
 
-No, we are not.
+> The w2sg0004-regulator approach just follows this principle.
+> Anyone willing to control the power of the w2sg0004 can use this
+> regulator interface.
 
-> If not, just make this a derived sata driver with an extra set of
-> soc-specific registers to set up.
+=46rom a HW perspective your regulator "hides" the information, that
+there is a device attached to the serial port and instead claims,
+that a regulator is needed to make the serial port work.
 
-This is not an option, because the device tree ABI is deployed and fixed,
-and deriving sata driver does not fit it well.
+Apart from that this interface is limited in its features. I'm
+currently working on N900's bluetooth chip. This one needs to set a
+gpio before data is sent data to the chip, has a reset gpio and
+a gpio to wakeup the OMAP SoC from idle states to avoid data loss
+on the UART.
 
-Thanks
-Aleksey Makarov
+-- Sebastian
+
+--O3RTKUHj+75w1tg5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVDBvUAAoJENju1/PIO/qaHU4P/ApchsVfRUd8e/RKjoxWiTRR
+bqyyRwbwpzhG7A8UxImeWJB04xYMXbseDxCxgLolOaDXRgY6xnBnOSwlAzRTChK8
+gT82jKTXJlloRvom7K9GZ4J46rTch4KhIG1d5w3l1pdrfC6a5hW6eWLKR+nh+7Y1
+pqk+DAbu/NRX1Zmzin/Ti7BTdelb3vPT90UYcmjhDW6uH5y4oTZxUMuu19y6PWIW
+rYx8xO9TUUoLBh6SQRbfGx8hyXWK1YPeuYD6ATpbxpwPy8gvmvIFHX769TkF8o16
+pJm3YBELB4N9LvKvozWwXPsfAPP5PyuzkNSOAqTRgxgm0b2sYavsy5uycI/o9gGz
+ookC7nAlG3w/XZjX/bSOVR83R4XqT7KhxaVlOrbbhZB3Fvs0iJiOvPQVNAVpgLi0
+xVlyceLpDi1HxyOD8kcmGXGA59DL3aCtBQYngXSsKplvE5CE82JVXO2f9qPQqb1p
+JQ9/jhbF67rydkyR7ZnPl35RAagceYGNhxQt5K41r30p+pEcmCKRMK9nB5cxIy31
+R64xSUEnIwV7q613qQiqfR5Q1Mgxd3KNZdgue66vD3DiHlh2yXY3BPVSFRZF6RQe
+Rf/DPTjXnJk0s7T1OlDTg0ogQwzFbjIF7pty3P+P4197VNW3RqjAgEcuO/9rNUWO
+Z7oNDu8C2o0sJucKp+0V
+=Xeox
+-----END PGP SIGNATURE-----
+
+--O3RTKUHj+75w1tg5--
