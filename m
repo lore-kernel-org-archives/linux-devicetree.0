@@ -1,76 +1,288 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 3/4 v4] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 20 Mar 2015 10:24:20 -0700
-Message-ID: <87wq2bk2ez.fsf@eliezer.anholt.net>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net> <1426213936-4139-3-git-send-email-eric@anholt.net> <5507A095.5090805@wwwdotorg.org> <87619xq414.fsf@eliezer.anholt.net> <550BA6B4.3030604@wwwdotorg.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v4] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Fri, 20 Mar 2015 10:24:51 -0700
+Message-ID: <550C57E3.60800@gmail.com>
+References: <1426518362-24349-1-git-send-email-aleksey.makarov@auriga.com> <CAPDyKFoZsx_GtGT1NsZnFB9PPWKzsLv8dU26eWcobz4cCdKAOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550BA6B4.3030604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoZsx_GtGT1NsZnFB9PPWKzsLv8dU26eWcobz4cCdKAOw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Aleksey Makarov <aleksey.makarov@auriga.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, linux-mips@linux-mips.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
-
-> On 03/18/2015 05:28 PM, Eric Anholt wrote:
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>=20
->>> On 03/12/2015 08:32 PM, Eric Anholt wrote:
->>>> diff --git a/drivers/mailbox/bcm2835-mailbox.c
->>>> b/drivers/mailbox/bcm2835-mailbox.c
->>>=20
->>>> +#define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) &
->>>> 0xf)) +#define MBOX_CHAN(msg)			((msg) & 0xf) +#define
->>>> MBOX_DATA28(msg)		((msg) & ~0xf)
->>>=20
->>> Even the concept of storing channel IDs in the LSBs feels like it
->>> might be RPi-firmware-specific rather than HW-specific?
->>=20
->> I guess?  If we found another firmware protocol, we could have
->> that device's dt just specify a different compatible string.  But
->> in the absence of another firmware to talk to, I'm not sure what
->> you want here.
+On 03/20/2015 02:57 AM, Ulf Hansson wrote:
+> On 16 March 2015 at 16:06, Aleksey Makarov <aleksey.makarov@auriga.com> wrote:
+>> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
+>> devices.  Device parameters are configured from device tree data.
+>>
+>> eMMC, MMC and SD devices are supported.
+>>
+>> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+>> Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
+>> Signed-off-by: Peter Swain <pswain@cavium.com>
+>> Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
+>> ---
+>>   .../devicetree/bindings/mmc/octeon-mmc.txt         |   69 +
+>>   drivers/mmc/host/Kconfig                           |   10 +
+>>   drivers/mmc/host/Makefile                          |    1 +
+>>   drivers/mmc/host/octeon_mmc.c                      | 1415 ++++++++++++++++++++
+>>   4 files changed, 1495 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>>   create mode 100644 drivers/mmc/host/octeon_mmc.c
+>>
+>> This patch should be applied on top of the patchset
+>> "MIPS: OCTEON: flash: syncronize bootbus access"
+>> https://lkml.kernel.org/g/<1425565893-30614-1-git-send-email-aleksey.makarov@auriga.com>
+>>
+>> v3:
+>> https://lkml.kernel.org/g/<1425567033-31236-1-git-send-email-aleksey.makarov@auriga.com>
+>>
+>> Changes in v4:
+>> - The sparse error discovered by Aaro Koskinen has been fixed
+>> - Other sparse warnings have been silenced
+>>
+>> Changes in v3:
+>> - Rebased to v4.0-rc2
+>> - Use gpiod_*() functions instead of legacy gpio
+>> - Cosmetic changes
+>>
+>> Changes in v2: All the fixes suggested by Mark Rutland were implemented:
+>> - Device tree parsing has been fixed
+>> - Device tree docs have been fixed
+>> - Comment about errata workaroud has been added
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>> new file mode 100644
+>> index 0000000..40dd7f1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>> @@ -0,0 +1,69 @@
+>> +* OCTEON SD/MMC Host Controller
+>> +
+>> +This controller is present on some members of the Cavium OCTEON SoC
+>> +family, provide an interface for eMMC, MMC and SD devices.  There is a
+>> +single controller that may have several "slots" connected.  These
 >
-> I would expect the mailbox driver to expose a single channel that just
-> transports 32-bit values, since the HW doesn't impose any kind of
-> structure on the values it transports AFAIK. Clients of the mailbox
-> driver would formulate the messages they send through the mailox using
-> the macros above.
+> Even it it may have several slots, that's not being supported by the
+> mmc core from a MMC/SD/SDIO protocol perspective.
 >
-> I'm not sure whether the mailbox core allows multiple clients for the
-> same mailbox channel though? This HW appears to require it.
+> We have hade some discussions around this historocally, and I doubt
+> that we ever will be adding this.
+>
+> So, with that in mind I would rather see that you remove the concept
+> of "slot" entirely and thus don't do the DT configuration within a
+> child node.
 
-Yeah, that's the problem.
+As you note this is a device tree representation, and thus really has 
+nothing to do with the capabilities and internal structure of any given 
+operating system.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+The hardware really is structured as a single controller with a single 
+set of registers and register fields that can control multiple "slots". 
+  There are not multiple independent slot controllers.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+This device tree representation reflects,  with fidelity, the actual 
+hardware topology.
 
-iQIcBAEBCgAGBQJVDFfFAAoJELXWKTbR/J7oE9oP/3gypjBB1Pwne6KjrSgI+HJf
-U8aC/KS/Ppmv9LS+DB9Vzhe26fAd8FviVTrVz+gFrWT1HEkdZhDk9D156CsqRSjL
-v/CCKgYurkCOUUT3cmUcdoNhkfBwUrqT8E4lrWxvU4OojCtE5vaCBvCV0wJai6OO
-9HMccTqcF20PgCoMJiyLHOjnyzls0w31ErNc4tUgPVmUzr8yQS7jLUwAU1DC6WyA
-moErjCVSIWw8dxYEa/uz0DqM4WQSAQoZ8tS3IWxu98Yw2byJRwrCUkzKlb2N095f
-8i1Z79h7nhfjPFnzZuVeG1Sb8WZP20f5JY6Cgv8nB7oHefOm0Yl/fknCdi/PG6P1
-tkDvffdBW0mqhsMiVffL7gN14OYVs2+orL9fuYlNWVm19EEK0oHs8DNqnPxNpUQ4
-sIQrSrwrZW2+TRvEbzl4mXndOgWZrgqxfZkyWKq/gTM0epx3MR8lz1FzsjQZQA5g
-KkPv4HxVQfmjoS0Ci1n67zO/+hlNjl+Gr2OfQz6OGBPnxvdxdk93buTA3cvSAGyW
-vDQVAvXFhzfxpfHb0Q2vHprjxkYXFBkAPbzGbUsf41qoSWG4jYdiXJUjVJp0vbCk
-TFNweQCdlKfkzTT0C3OAhSY8r6UZh+eMuLJYcq44952rxoZBl7MQ8OhUF11jwjOk
-088LSK88OtBkxMG20yR1
-=TyIz
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But none of this matters, because the device tree bindings train has 
+already left the station.  You should have expressed opposition to this 
+binding back when it was first discussed:
+
+http://www.linux-mips.org/archives/linux-mips/2012-05/msg00119.html
+
+The device tree is deployed in the boot firmware of shipping devices, 
+and we are merely documenting what is there.
+
+>
+>> +slots appear as children of the main controller node.
+>> +The DMA engine is an integral part of the controller block.
+>> +
+>> +Required properties:
+>> +- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
+>> +- reg : Two entries:
+>> +       1) The base address of the MMC controller register bank.
+>> +       2) The base address of the MMC DMA engine register bank.
+>> +- interrupts :
+>> +       For "cavium,octeon-6130-mmc": two entries:
+>> +       1) The MMC controller interrupt line.
+>> +       2) The MMC DMA engine interrupt line.
+>> +       For "cavium,octeon-7890-mmc": nine entries:
+>> +       1) The next block transfer of a multiblock transfer has completed (BUF_DONE)
+>> +       2) Operation completed successfully (CMD_DONE).
+>> +       3) DMA transfer completed successfully (DMA_DONE).
+>> +       4) Operation encountered an error (CMD_ERR).
+>> +       5) DMA transfer encountered an error (DMA_ERR).
+>> +       6) Switch operation completed successfully (SWITCH_DONE).
+>> +       7) Switch operation encountered an error (SWITCH_ERR).
+>> +       8) Internal DMA engine request completion interrupt (DONE).
+>> +       9) Internal DMA FIFO underflow (FIFO).
+>
+> So are you really having that many irq lines to the controller?
+
+Yes.  It's weird, isn't it.
+
+The interrupt controller has 2^20 sources, these are just 10 of them.
+
+>
+>> +- #address-cells : Must be <1>
+>> +- #size-cells : Must be <0>
+>> +
+>> +Required properties of child nodes:
+>> +- compatible : Should be "cavium,octeon-6130-mmc-slot".
+>> +- reg : The slot number.
+>> +
+>> +Optional properties of child nodes:
+>> +- cd-gpios : Specify GPIOs for card detection
+>> +- wp-gpios : Specify GPIOs for write protection
+>> +- power-gpios : Specify GPIOs for power control
+>
+> Please consider to modell these through gpio regulators instead. In
+> that way you well automatically get the ocr mask a well.
+
+
+As stated above, it is too late to change this.  We could add additional 
+bindings if absolutely necessary.
+
+>
+>> +- cavium,bus-max-width : The number of data lines present in the slot.
+>> +       Default is 8.
+>> +- spi-max-frequency : The maximum operating frequency of the slot.
+>> +       Default is 52000000.
+>
+> Please use the common mmc binding for both the above.
+
+
+Also, ... As stated above, it is too late to change this.  We could add 
+additional bindings if necessary.
+
+
+>
+>> +- cavium,cmd-clk-skew : the amount of delay (in pS) past the clock edge
+>> +       to sample the command pin.
+>> +- cavium,dat-clk-skew : the amount of delay (in pS) past the clock edge
+>> +       to sample the data pin.
+>
+> Is this SoC specifc?
+
+Yes, that is why the property names have a "cavium," prefix.
+
+>
+[...]
+>> diff --git a/drivers/mmc/host/octeon_mmc.c b/drivers/mmc/host/octeon_mmc.c
+>> new file mode 100644
+>> index 0000000..a3f10c6
+>> --- /dev/null
+>> +++ b/drivers/mmc/host/octeon_mmc.c
+[...]
+>> +
+>> +#include <asm/byteorder.h>
+>> +#include <asm/octeon/octeon.h>
+>> +#include <asm/octeon/cvmx-mio-defs.h>
+>
+> Please don't have these kind of SOC specific includes.
+>
+
+Well it is a SOC specific driver...  But we will see if it makes sense 
+to pull the required definitions into the driver source.
+
+[...]
+
+>> +
+>> +       struct octeon_mmc_slot  *slot[OCTEON_MAX_MMC];
+>
+> See my upper comment around slots, and please remove all realted code.
+>
+
+The slots are a reflection of the structure of the hardware.  We are not 
+pushing the "slot" concept into the MMC core, so why does it matter?
+
+There must be very close coordination between all the "slots" for proper 
+operation.  Forcing us to de-encapsulate this concept will result in 
+much less elegant code.  If possible we want to avoid having people 
+gouge our their eyes when looking at the driver.
+
+Honestly, I can't see any valid reason why the "slot" concept, wholly 
+private to the driver, is at all objectionable.
+
+>> +};
+>> +
+>> +struct octeon_mmc_slot {
+>> +       struct mmc_host         *mmc;   /* slot-level mmc_core object */
+>> +       struct octeon_mmc_host  *host;  /* common hw for all 4 slots */
+>> +
+>> +       unsigned int            clock;
+>> +       unsigned int            sclock;
+>> +
+>> +       u64                     cached_switch;
+>> +       u64                     cached_rca;
+>> +
+>> +       unsigned int            cmd_cnt; /* sample delay */
+>> +       unsigned int            dat_cnt; /* sample delay */
+>> +
+>> +       int                     bus_width;
+>> +       int                     bus_id;
+>> +
+>> +       struct gpio_desc        *ro_gpiod;
+>> +       struct gpio_desc        *cd_gpiod;
+>
+> These shouldn't be needed since it's already handle by the mmc core
+> (mmc slot-gpio).
+>
+>> +       struct gpio_desc        *pwr_gpiod;
+>
+> As stated convert to gpio regulators instead.
+>
+
+We will investigate these two to see if they can be improved.
+
+[...]
+>> +       ret = of_property_read_u32(node, "reg", &id);
+>> +       if (ret) {
+>> +               dev_err(dev, "Missing or invalid reg property on %s\n",
+>> +                       of_node_full_name(node));
+>> +               return ret;
+>> +       }
+>> +
+>> +       if (id >= OCTEON_MAX_MMC || host->slot[id]) {
+>> +               dev_err(dev, "Invalid reg property on %s\n",
+>> +                       of_node_full_name(node));
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       mmc = mmc_alloc_host(sizeof(struct octeon_mmc_slot), dev);
+>> +       if (!mmc) {
+>> +               dev_err(dev, "alloc host failed\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       slot = mmc_priv(mmc);
+>> +       slot->mmc = mmc;
+>> +       slot->host = host;
+>> +
+>
+> I would like you to use mmc_of_parse() somewhere here to support the
+> common mmc DT bindings.
+
+Yes, we will try to do that.
+
+>
+[...]
+>
+>
+> So this was I quick review, unfortunate I don't have more time right
+> now. But please go ahead and adress my comments, then I will look into
+> the next version more thoroughly.
+>
+
+Ok, Thanks for looking at it.
+
+David Daney
+
+
+
