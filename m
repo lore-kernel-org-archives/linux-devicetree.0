@@ -1,127 +1,121 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node
- binding
-Date: Fri, 20 Mar 2015 15:25:19 +0000
-Message-ID: <20150320152518.GI14766@leverpostej>
-References: <550A42AC.8060104@gmail.com>
- <550A4382.4030209@gmail.com>
- <20150319134910.GF18473@leverpostej>
- <550B013B.1060002@gmail.com>
- <20150319191231.GC11683@leverpostej>
- <550B3F2E.2000303@gmail.com>
+From: Xinwei Kong <xweikong@hotmail.com>
+Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
+ driver
+Date: Fri, 20 Mar 2015 23:27:07 +0800
+Message-ID: <BLU436-SMTP12064F8642A4FE53FB4A448C10E0@phx.gbl>
+References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
+ <20150319141753.GB25967@leverpostej> <20150320060653.GC18907@leoy-linaro>
+ <20150320112414.GD14766@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <550B3F2E.2000303@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150320112414.GD14766@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "edubezval@gmail.com" <edubezval@gmail.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> > You can already check the hash if you want to check that you copies the
-> > correct version; which is better than trusting an arbitrary string,
-> > because if anything fiddles with the DTB it will change.
-> 
-> I'm confused.  If the bootloader fiddles with the DTB then I can not
-> compare a hash of the DTB from the build host to a hash of the DTB
-> on the target.  Of course the bootloader can also fiddle with the
-> dtb-info if it wants to .  Bootloaders do what they want to do.  :-(
-
-This is a fundamental issue with the approach: if bootloaders  mess with
-the DTB, then the provenance information is at best misleading.
-
-If bootloaders don't mess with the DTB, then a hash gives you reliable
-provenance information, provided you have a DB of the hashes of DTBs
-you've shipped. If you're already in the habit of distributing binaries
-that should be fine, and if you're not then it presumably doesn't matter
-anyway.
-
-> >>>> +dtb-path
-> >>>> +	The build directory relative path of the DTB.
-> >>>> +
-> >>>> +dts-path
-> >>>> +	The absolute path of the .dts file compiled to create the DTB.
-> >>>
-> >>> Why do you need the DTB path?
-> >>
-> >> Paranoia.  Even if not probable, one could build different DTBs from
-> >> the same .dts.
-> > 
-> > One could also build the same DTB from two different dts files, no?
-> > 
-> > You could build the same dtb from the same dts, but with some arbitrary
-> > things changed, such that the at either end of the process is
-> > irrelevant. Personally, I end up doing this a fair amount when testing.
-> 
-> Exactly.  And the dtb version number will change when the DTB is
-> recompiled.
-
-Consider having to work around stale object issues in the build system
-with git clean -fdx or similar. While unfortunate, this is sometimes
-necessary. Due to this, I build two different DTBs with exactly the same
-"version".
-
-If you need to tell these apart, you can do that by hash. You don't need
-the "version" to do so.
-
-(and yes, I am aware that the same is true of the kernel).
-
-> >>> Why do these differ w.r.t. absolute/relative?
-> >>
-> >> Those are the forms of the path that are present in the build
-> >> system.  If there is a good reason to change one of them to the
-> >> other form, I could add the extra complexity to massage the path.
-> >>
-> >>>
-> >>> Why would you _ever_ need an absolute path!?
-> >>
-> >> The absolute path tells you which source repository contained the source.
-> > 
-> > Except that the absolute path is realtive to the machine it was built
-> > on, so doesn't actually help.
-> 
-> Different use cases for different people.
-
-Given the reservations that have been expressed so far, it sounds like
-the set of negative use cases is larger than the set of positives.
-
-> In all cases the absolute path includes the relative path, so it is
-> just a case of extra information.  The relative portion of the path
-> is still useful for anyone who wants to know what .dts was used in
-> the build, even if they don't have access to the build machine.
-> (They do have access to the gpl v2 source code, which will have
-> at least the relative portion of the path because that is needed
-> to build the DTB from the .dts.)
-> 
-> The extra information in the absolute path could be useful to a
-> build engineer, a distro engineer, or a support person for a distro.
-> Or could just be useless extra info.
-
-I very much suspect it will end up being the latter. For example I've
-seen various iterations of certain FW ship with all-zero ID numbers, for
-which the use-cases of said ID numbers are exactly those you mention
-above.
-
-As far as I can see, the only consistent and sane way to identify a
-binary object is by its hash, which for obvious reasons cannot be
-encoded within itself (though can be computed consistently).
-
-> > On various machines I have folders called /home/mark/src/linux. These
-> > are not the same folder. If I gave you a DTB that told you it was from
-> > /home/mark/src/linux/arch/arm64/boot/dts/vendor/foo.dts, you would have
-> > difficulty acquiring that precise file.
-> 
-> If you distributed the DTB to me under the gpl v2 then you have also
-> either distributed the source to me or offered to make it available
-> to me.
-
-That being the case you don't care about the fields; we've established
-that they're meaningless to the end user.
-
-Were I to have distributed files to you, I would have archived the
-relevant build (with source, config, and so on). I can look up what I've
-distributed to you and hand you the source without needing additional
-properties in the DTB.
-
-Mark.
+Ck9uIDIwMTXlubQwM+aciDIw5pelIDE5OjI0LCBNYXJrIFJ1dGxhbmQgd3JvdGU6Cj4+Pj4gKyAg
+ICAgICByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImhpc2lsaWNvbix0c2Vuc29yLXRo
+cmVzLXRlbXAiLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnNlbnNv
+ci0+dGhyZXNfdGVtcCk7Cj4+Pj4gKyAgICAgICBpZiAocmV0KSB7Cj4+Pj4gKyAgICAgICAgICAg
+ICAgIGRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBnZXQgdGhyZXMgdmFsdWUgJWQ6ICVk
+XG4iLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGluZGV4LCByZXQpOwo+Pj4+ICsgICAg
+ICAgICAgICAgICByZXR1cm4gcmV0Owo+Pj4+ICsgICAgICAgfQo+Pj4+ICsKPj4+PiArICAgICAg
+IHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAiaGlzaWxpY29uLHRzZW5zb3ItcmVzZXQt
+dGVtcCIsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmc2Vuc29yLT5y
+ZXNldF90ZW1wKTsKPj4+PiArICAgICAgIGlmIChyZXQpIHsKPj4+PiArICAgICAgICAgICAgICAg
+ZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGdldCByZXNldCB2YWx1ZSAlZDogJWRcbiIs
+Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgaW5kZXgsIHJldCk7Cj4+Pj4gKyAgICAgICAg
+ICAgICAgIHJldHVybiByZXQ7Cj4+Pj4gKyAgICAgICB9Cj4+PiBJIHNlZSBub3cgdGhhdCB0aGVz
+ZSBwcm9wZXJ0aWVzIHJlc3VsdCBpbiB0aGUgSFcgYmVpbmcgcHJvZ3JhbW1lZC4gWW91Cj4+PiBz
+aG91bGQgZmlndXJlIG91dCBob3cgdG8gcmVjb25jaWxlIHRoZXNlIHdpdGggdGhlcm1hbC16b25l
+IHRyaXAgcG9pbnRzCj4+PiByYXRoZXIgdGhhbiBoYXZpbmcgcGFyYWxsZWwgcHJvcGVydGllcy4K
+Pj4gICAKPj4gU2V0ICJ0c2Vuc29yLXRocmVzLXRlbXAiIHRvIHJlZ2lzdGVyIHNvIHRoYXQgaWYg
+dGhlcm1hbCByZWFjaGVzIHRoZQo+PiB0aHJlc2hvbGQsIHRoZSBzZW5zb3Igd2lsbCB0cmlnZ2Vy
+IGgvdyBpbnRlcnJ1cHQuCj4+Cj4+IFNldCAidHNlbnNvci1yZXNldC10ZW1wIiB0byByZWdpc3Rl
+ciBzbyB0aGF0IGlmIHRoZXJtYWwgcmVhY2hlcyB0aGUKPj4gcmVzZXQgdmFsdWUsIHRoZSBzZW5z
+b3Igd2lsbCBhc3NlcnQgU29DIHJlc2V0IHNpZ25hbCB0byB0cmlnZ2VyIGgvdwo+PiByZXNldC4K
+PiBJIHVuZGVyc3RhbmQgdGhpcy4KPgo+PiBUaGlzIGlzIGRpZmZlcmVudCB3L3QgdGhlcm1hbC16
+b25lIHRyaXAgcG9pbnRzLCB0aGUgdHJpcCBwb2ludHMgYXJlCj4+IHVzZWQgZm9yIHRpbWVyIHBv
+bGxpbmcuCj4gVGhhdCBtYXkgYmUgdGhlIGNhc2UgaW4gdGhlIGNvZGUgYXMgaXQgc3RhbmRzIHRv
+ZGF5LCBidXQgcGVyIHRoZSBiaW5kaW5nCj4gdGhlIHRyaXAgcG9pbnRzIGFyZSB0aGUgdGVtcGVy
+YXR1cmVzIGF0IHdoaWNoIGFuIGFjdGlvbiBpcyB0byBiZSB0YWtlbi4KPgo+IFRoZSB0aGVybWFs
+LXpvbmUgaGFzIHBvaWxsaW5nLWRlbGF5IGFuZCBwb2xsaW5nLWRlbGF5LXBhc3NpdmUsIGJ1dAo+
+IHRoZXJlJ3Mgbm8gcmVhc29uIHlvdSBjb3VsZG4ndCBhbHNvIHVzZSB0aGUgaW50ZXJydXB0IHRv
+IGhhbmRsZSB0aGUKPiAiaG90IiB0cmlwLXBvaW50LCBhZG4gdGhlIHJlc2V0IGF0IHRoZSAiY3Jp
+dGljYWwiIHRyaXAtcG9pbnQuIEFsbCB0aGF0J3MKPiBtaXNzaW5nIGlzIHRoZSBwbHVtYmluZyBp
+biBvcmRlciB0byBkbyBzby4KPgo+IFNvIHBsZWFzZSBjby1vcmRpbmF0ZSB3aXRoIHRoZSB0aGVy
+bWFsIGZyYW1ld29yayB0byBkbyB0aGF0LgoKSW4gb3JkZXIgdG8gY28tb3JkaW5hdGUgd2l0aCB0
+aGUgdGhlcm1hbCBmcmFtZXdvcmssIFdlIHdpbGwgZml4ICJ0c2Vuc29yLXRocmVzLXRlbXAiCmFu
+ZCAidHNlbnNvci1yZXNldC10ZW1wIiB2YWx1ZSBpbiB0aGUgZHRzLiBUaGlzIHRlbXBlcmF0dWUg
+d2lsbCBoaWdoZXIgdGhhbiB0aGVybWFsCnpvbmUgdHJpcC1wb2ludCB2YWx1ZS4gRHVyaW5nIHBv
+bGxpbmcgZGVsYXkgdGltZSBpZiBTb0MgdGVtcGVyYXR1cmUgaXMgYWJvdmUgdGhlcm1hbAp6b25l
+IHRyaXAtcG9pbnQgdmFsdWUgYW5kIGJlbG93ICJ0c2Vuc29yLXRocmVzLXRlbXAiIHZhbHVlLHRo
+ZSBzeXN0ZXJtIHdpbGwgdXNlIHRoaXMKdGhlcm1hbCBmcmFtZXdvcmsgd2F5cyB0byByZWFsaXpl
+IGJhc2ljIGZ1bmN0aW9uIHN1Y2ggYXMgY3B1IGNvb2xpbmcgZGV2aWNlLiBPdGhlcndpc2UKaXQg
+d2lsbCB1c2UgaW50ZXJycHV0IG1vZGUgdG8gY2F1c2Ugc29tZSBmdW5jdGlvbnMuCgpUaGlzIGlu
+dGVycnVwdCBtb2RlIGhlbHAgdGhlcm1hbCBmcmFtZXdvcmsgd2F5IHRvIGNvbXBsZXRlIGZ1bmN0
+aW9uLCBpbiBoaWdoIHRlbXBlcmF0dXJlCnNpdHVhdGlvbiB0aGlzIGludGVycnVwdCBpcyBiZXR0
+ZXIgdGhhbiBvdGhlciBtb2RlLiBJIHRoaW5rIHRoYXQgaXQgY2FuIHdvcmsgd2VsbC4KClhpbndl
+aQoKPj4gRG8gdSB0aGluayBiZWxvdyBtb2RpZmljYXRpb24gaXMgbW9yZSByZWFzb25hYmxlPwo+
+Pgo+PiAtIFNldCAidHNlbnNvci10aHJlcy10ZW1wIiA9IDcwMDAwMCwgd2hpY2ggZXF1YWwgdG8g
+dGhlcm1hbC16b25lCj4+ICAgIHBhc3NpdmUgdHJpcCBwb2ludCwgc28gdGhhdCB3ZSBjYW4gdXNl
+IGgvdyBpbnRlcnJ1cHQgdG8gdXBkYXRlIHRoZQo+PiAgICB0aGVybWFsIHZhbHVlIGltbWVkaWF0
+ZWx5LCByYXRoZXIgdGhhbiB1c2luZyBwb2xsaW5nIG1ldGhvZCB3L3QgbG9uZwo+PiAgICBkZWxh
+eTsKPj4KPj4gLSBTZXQgInRzZW5zb3ItcmVzZXQtdGVtcCIgPSA8MTAwMDAwPiwgd2hpY2ggaXMg
+aGlnaGVyIHRoYW4KPj4gICAgdGhlcm1hbC16b25lIGNyaXRpY2FsIHRyaXAgcG9pbnQsIHNvIHRo
+YXQgdGhlIHMvdyByZXNldCBtZXRob2QgaGFzCj4+ICAgIGhpZ2hlciBwcmlvcml0eSB0aGFuIGgv
+dyByZXNldDsgd2UgYWxzbyBjYW4gZWFzaWx5IGtub3cgdGhlIHJlc2V0IGlzCj4+ICAgIGNhdXNl
+ZCBieSB0aGVybWFsIGZyYW1ld29yazsgInRzZW5zb3ItcmVzZXQtdGVtcCIgaXMgb25seSB1c2Vk
+IHRvCj4+ICAgIHByb3RlY3QgaC93IGNpcmN1aXQuCj4gQXMgbWVudGlvbmVkIGFib3ZlLCBJIHRo
+aW5rIHRoYXQgeW91IHNob3VsZCBjby1vcmRpbmF0ZSB3aXRoIHRoZSB0aGVybWFsCj4gZnJhbWV3
+b3JrLiBZb3UncmUgd29ya25pZyBhcm91bmQgbGltaXRhdGlvbnMgaW50aGUgY29kZSBhcyBpdCBz
+dGFuZHMKPiB0b2RheSByYXRoZXIgdGhhbiBzb2x2aW5nIHRoZSBmdW5kYW1lbnRhbCBpc3N1ZS4K
+Pgo+Pj4+ICsgICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImhpc2lsaWNvbix0
+c2Vuc29yLWJpbmQtaXJxIikpIHsKPj4+PiArCj4+Pj4gKyAgICAgICAgICAgICAgIGlmIChkYXRh
+LT5pcnFfYmluZF9zZW5zb3IgIT0gLTEpCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2
+X3dhcm4oJnBkZXYtPmRldiwgImlycSBoYXMgYm91bmQgdG8gaW5kZXggJWRcbiIsCj4+Pj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+aXJxX2JpbmRfc2Vuc29yKTsKPj4+
+PiArCj4+Pj4gKyAgICAgICAgICAgICAgIC8qIGJpbmQgaXJxIHRvIHRoaXMgc2Vuc29yICovCj4+
+Pj4gKyAgICAgICAgICAgICAgIGRhdGEtPmlycV9iaW5kX3NlbnNvciA9IGluZGV4Owo+Pj4+ICsg
+ICAgICAgfQo+Pj4gSSBkb24ndCBzZWUgd2h5IHRoaXMgc2hvdWxkIGJlIHNwZWNpZmllZCBpbiB0
+aGUgRFQuIFdoeSBkbyB5b3UgYmVsaWV2ZQo+Pj4gaXQgc2hvdWxkPwo+PiBUaGUgdGhlcm1hbCBz
+ZW5zb3IgbW9kdWxlIGhhcyBmb3VyIHNlbnNvcnMsIGJ1dCBoYXZlIG9ubHkgb25lCj4+IGludGVy
+cnVwdCBzaWduYWw7IFRoaXMgaW50ZXJydXB0IGNhbiBvbmx5IGJlIHVzZWQgYnkgb25lIHNlbnNv
+cjsKPj4gU28gd2FudCB0byB1c2UgZHRzIHRvIGJpbmQgdGhlIGludGVycnVwdCB3aXRoIG9uZSBz
+ZWxlY3RlZCBzZW5zb3IuCj4gVGhhdCdzIG5vdCBhbGwgdGhhdCBncmVhdCwgdGhvdWdoIEknbSBu
+b3QgZXhhY3RseSBzdXJlIGhvdyB0aGUga2VybmVsCj4gd291bGQgc2VsZWN0IHRoZSBiZXN0IHNl
+bnNvciB0byBtZWFzdXJlIHdpdGguIEl0IHdvdWxkIGJlIGdvb2QgaWYgeW91Cj4gY291bGQgdGFs
+ayB0byB0aGUgdGhlcm1hbCBtYWludGFpbmVycyB3LnIudC4gdGhpcy4KPgo+Pj4+ICtzdGF0aWMg
+aW50IGhpc2lfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+Pj4+
+ICt7Cj4+Pj4gKyAgICAgICBzdHJ1Y3QgaGlzaV90aGVybWFsX2RhdGEgKmRhdGE7Cj4+Pj4gKyAg
+ICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPj4+PiArICAgICAgIGludCBpOwo+Pj4+ICsgICAg
+ICAgaW50IHJldDsKPj4+PiArCj4+Pj4gKyAgICAgICBpZiAoIWNwdWZyZXFfZ2V0X2N1cnJlbnRf
+ZHJpdmVyKCkpIHsKPj4+PiArICAgICAgICAgICAgICAgZGV2X2RiZygmcGRldi0+ZGV2LCAibm8g
+Y3B1ZnJlcSBkcml2ZXIhIik7Cj4+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRVBST0JFX0RF
+RkVSOwo+Pj4+ICsgICAgICAgfQo+Pj4gU3VyZWx5IHdlIGNhcmUgYWJvdXQgbm90IGJ1cm5pbmcg
+b3V0IHRoZSBib2FyZCBldmVuIGlmIHdlIGRvbid0IGhhdmUKPj4+IGNwdWZyZXE/Cj4+Pgo+Pj4g
+SXMgdGhlcmUgYW55IG9yZGVyaW5nIGd1YXJhbnRlZSBiZXR3ZWVuIHRoZSBwcm9iaW5nIG9mIHRo
+aXMgZHJpdmVyIGFuZAo+Pj4gY3B1ZnJlcT8KPj4gWWVzLCBoZXJlIG5lZWQgYmluZGluZyB0aGUg
+dGhlcm1hbCBzZW5zb3Igdy90IGNwdSBjb29saW5nIGRldmljZSwKPj4gYW5kIGNwdSBjb29saW5n
+IGRldmljZSBpcyBiYXNlZCBvbiBjcHVmcmVxIGRyaXZlci4KPiBTdXJlLCBidXQgaWYgeW91IGRv
+bid0IGhhdmUgYSBjb29saW5nIGRldmljZSB5b3Ugc3RpbGwgd2FudCB0aGUgY3JpdGljYWwKPiB0
+ZW1wZXJhdHVyZSByZXNldCBhbmQgc28gb24sIG5vPwo+Cj4gTWFyay4KPiAtLQo+IFRvIHVuc3Vi
+c2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1w
+bSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9y
+Zwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jk
+b21vLWluZm8uaHRtbAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
