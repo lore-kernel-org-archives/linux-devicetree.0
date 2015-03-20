@@ -1,185 +1,127 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [RFC] pinmux: group and function definitions in the device tree
-Date: Fri, 20 Mar 2015 16:06:09 +0100
-Message-ID: <20150320150609.GB32259@odux.rfo.atmel.com>
-References: <20150319153950.GC30114@odux.rfo.atmel.com>
- <20150319185637.GV4927@pengutronix.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [patch 2/7] dt: dtb version: document chosen/dtb-info node
+ binding
+Date: Fri, 20 Mar 2015 15:25:19 +0000
+Message-ID: <20150320152518.GI14766@leverpostej>
+References: <550A42AC.8060104@gmail.com>
+ <550A4382.4030209@gmail.com>
+ <20150319134910.GF18473@leverpostej>
+ <550B013B.1060002@gmail.com>
+ <20150319191231.GC11683@leverpostej>
+ <550B3F2E.2000303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150319185637.GV4927@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
+In-Reply-To: <550B3F2E.2000303@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Michal Marek <mmarek@suse.cz>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2015 at 07:56:37PM +0100, Sascha Hauer wrote:
-> On Thu, Mar 19, 2015 at 04:39:50PM +0100, Ludovic Desroches wrote:
-> > Hi,
-> > 
-> > I would like to start a discussion about pinmuxing and device tree bindings.
-> > 
-> > I am currently writing a new pinmuxing driver using the generic pinconf.
-> > My main concern is about defining functions and which pins belong to a
-> > group.
-> > 
-> > At the moment, it seems that most drivers using the generic pinconf
-> > define this stuff in a static way. The pinctrl-at91 driver covers many
-> > devices, the new one should do the same for new Atmel devices. Having
-> > the group and function definitions in the driver could involve a huge
-> > file...
-> > I am not sure it is a good thing to embed all these information into a
-> > single zImage...
-> > 
-> > How can we achieved this? I was thinking about something like this:
-> > 
-> > pinctrl@fc06a000 {
-> > 
-> > 	[...]
-> > 
-> > 	pinctrl_defs {
-> > 		mci0 {
-> > 			mci0_ioset0_1bit_grp {
-> > 				at91,pins = <68 69 70>;
-> > 				at91,mux = <2>;
-> > 			};
-> > 
-> > 			mci0_ioset0_4bit_grp {
-> > 				at91,pins = <68 69 70 71 72 73>;
-> > 				at91,mux = <2>;
-> > 			};
-> > 
-> > 			mci0_ioset0_8bit_grp {
-> > 				at91,pins = <68 69 70 71 72 73 74 75 76 77>;
-> > 				at91,mux = <2>;
-> > 			};
-> > 		};
-> > 	};
+> > You can already check the hash if you want to check that you copies the
+> > correct version; which is better than trusting an arbitrary string,
+> > because if anything fiddles with the DTB it will change.
 > 
-> Why are different groups here? Do you want to put them into the dtsi?
+> I'm confused.  If the bootloader fiddles with the DTB then I can not
+> compare a hash of the DTB from the build host to a hash of the DTB
+> on the target.  Of course the bootloader can also fiddle with the
+> dtb-info if it wants to .  Bootloaders do what they want to do.  :-(
 
-We used to have a configuration per pin in our products. On next ones we
-will have some constraints ie. on the controller side we still have a
-configuration per pin but we will introduced the notion of iosets. This
-notion involves that timings are guaranteed only in one ioset. That's
-why we can't mix signals from several iosets because. On the controller side
-we can do all we want so I would like to use groups as a software protection.
+This is a fundamental issue with the approach: if bootloaders  mess with
+the DTB, then the provenance information is at best misleading.
 
-I have several groups because I can only choose the 4bit group and use other
-pins for an other device.
+If bootloaders don't mess with the DTB, then a hash gives you reliable
+provenance information, provided you have a DB of the hashes of DTBs
+you've shipped. If you're already in the habit of distributing binaries
+that should be fine, and if you're not then it presumably doesn't matter
+anyway.
 
-Example:
-
-mci0 {
-	mci0_ioset0_1bit_grp {
-		pins = <PINMUX_PIN(68, 2),
-			PINMUX_PIN(69, 2),
-			PINMUX_PIN(70, 2)>;
-	};
-	mci0_ioset0_4bit_grp {
-		pins = <PINMUX_PIN(68, 2),
-			PINMUX_PIN(69, 2),
-			PINMUX_PIN(70, 2),
-			PINMUX_PIN(71, 2),
-			PINMUX_PIN(72, 2),
-			PINMUX_PIN(73, 2)>;
-	};
-	mci0_ioset0_8bit_grp {
-		pins = <PINMUX_PIN(68, 2),
-			PINMUX_PIN(69, 2),
-			PINMUX_PIN(70, 2),
-			PINMUX_PIN(71, 2),
-			PINMUX_PIN(72, 2),
-			PINMUX_PIN(73, 2),
-			PINMUX_PIN(74, 2),
-			PINMUX_PIN(75, 2),
-			PINMUX_PIN(76, 2),
-			PINMUX_PIN(77, 2)>;
-	};
-	mci0_ioset1_1bit_grp {
-		pins = <PINMUX_PIN(153, 1),
-			PINMUX_PIN(154, 1),
-			PINMUX_PIN(155, 1)>;
-	};
-};
-
-i2c0 {
-	i2c0_ioset0_grp {
-		pins  = <PINMUX_PIN(71, 4),
-			 PINMUX_PIN(72, 4)>;
-	};
-	i2c0_ioset1_grp {
-		pins  = <PINMUX_PIN(91, 6),
-			 PINMUX_PIN(92, 6)>;
-	};
-	i2c0_ioset2_grp {
-		pins  = <PINMUX_PIN(108, 1),
-			 PINMUX_PIN(109, 1)>;
-	};
-};
-
-
-> This would mean you have to carry a lot of groups in each dtsi from
-> which only a small fraction is used. We did that on i.MX but no longer
-> do this since the dtbs get very big.
-
-Yes I would like to put it in the dtsi file. For sure we will have big
-dtbs. If we put that in the driver we will increase the size of our
-kernel. If every one does this, we will have a lot of unused code for a
-multiplatform kernel. Where is the best place to put this?
-
-> 
+> >>>> +dtb-path
+> >>>> +	The build directory relative path of the DTB.
+> >>>> +
+> >>>> +dts-path
+> >>>> +	The absolute path of the .dts file compiled to create the DTB.
+> >>>
+> >>> Why do you need the DTB path?
+> >>
+> >> Paranoia.  Even if not probable, one could build different DTBs from
+> >> the same .dts.
 > > 
-> > 	pinctrl_mci0_default: mci0_default {
-> > 		mux {
-> > 			function = "mci0";
-> > 			groups = &mci0_ioset0_8bit_grp;
-> > 		};
+> > One could also build the same DTB from two different dts files, no?
 > > 
-> > 		conf {
-> > 			groups = &mci0_ioset0_8bit_grp;
-> > 			bias-pullup;
-> > 		};
-> > 	};
-> > };
+> > You could build the same dtb from the same dts, but with some arbitrary
+> > things changed, such that the at either end of the process is
+> > irrelevant. Personally, I end up doing this a fair amount when testing.
+> 
+> Exactly.  And the dtb version number will change when the DTB is
+> recompiled.
+
+Consider having to work around stale object issues in the build system
+with git clean -fdx or similar. While unfortunate, this is sometimes
+necessary. Due to this, I build two different DTBs with exactly the same
+"version".
+
+If you need to tell these apart, you can do that by hash. You don't need
+the "version" to do so.
+
+(and yes, I am aware that the same is true of the kernel).
+
+> >>> Why do these differ w.r.t. absolute/relative?
+> >>
+> >> Those are the forms of the path that are present in the build
+> >> system.  If there is a good reason to change one of them to the
+> >> other form, I could add the extra complexity to massage the path.
+> >>
+> >>>
+> >>> Why would you _ever_ need an absolute path!?
+> >>
+> >> The absolute path tells you which source repository contained the source.
 > > 
-> > - A subnode for these definitions in order to not parse the whole
-> >   pinctrl node to retrieve groups and functions.
-> > - Using node names as function and group names.
-> > - Can we get generic properties to define the groups? Of course a 'pins'
-> >   property is mandatory. In my case I will need an extra one to tell the
-> >   controller how to mux the pins (a same pin can have up to 7 muxing
-> >   possibilities).
+> > Except that the absolute path is realtive to the machine it was built
+> > on, so doesn't actually help.
 > 
-> Did you have a look at the RFC I sent for these kind of controllers [1] and
-> the final result for the Mediatek driver currently in Linux-next [2]?.
-> 
-> The binding has both the config and the pins in a single node and thus
-> is very compact.
-> 
+> Different use cases for different people.
 
-Thanks for the links. Well I had a look to them and now I am a bit
-lost...
+Given the reservations that have been expressed so far, it sounds like
+the set of negative use cases is larger than the set of positives.
 
-I agree with this binding but it involves to get rid of
-pinconf_generic_dt_node_to_map_all, isn't it? What do group and function
-become? It seems these concepts have disappeared.
-
-I am disappointed because I have the feeling that the only remaining
-part of the generic pinconf are the configuration properties.
-
-> Sascha
+> In all cases the absolute path includes the relative path, so it is
+> just a case of extra information.  The relative portion of the path
+> is still useful for anyone who wants to know what .dts was used in
+> the build, even if they don't have access to the build machine.
+> (They do have access to the gpl v2 source code, which will have
+> at least the relative portion of the path because that is needed
+> to build the DTB from the .dts.)
 > 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296491.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318452.html
+> The extra information in the absolute path could be useful to a
+> build engineer, a distro engineer, or a support person for a distro.
+> Or could just be useless extra info.
+
+I very much suspect it will end up being the latter. For example I've
+seen various iterations of certain FW ship with all-zero ID numbers, for
+which the use-cases of said ID numbers are exactly those you mention
+above.
+
+As far as I can see, the only consistent and sane way to identify a
+binary object is by its hash, which for obvious reasons cannot be
+encoded within itself (though can be computed consistently).
+
+> > On various machines I have folders called /home/mark/src/linux. These
+> > are not the same folder. If I gave you a DTB that told you it was from
+> > /home/mark/src/linux/arch/arm64/boot/dts/vendor/foo.dts, you would have
+> > difficulty acquiring that precise file.
 > 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If you distributed the DTB to me under the gpl v2 then you have also
+> either distributed the source to me or offered to make it available
+> to me.
+
+That being the case you don't care about the fields; we've established
+that they're meaningless to the end user.
+
+Were I to have distributed files to you, I would have archived the
+relevant build (with source, config, and so on). I can look up what I've
+distributed to you and hand you the source without needing additional
+properties in the DTB.
+
+Mark.
