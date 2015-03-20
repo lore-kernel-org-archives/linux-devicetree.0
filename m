@@ -1,71 +1,57 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Fri, 20 Mar 2015 10:49:51 -0500
-Message-ID: <CAL_Jsq+q6Dzqj5NTM4xwSp013-fZdSdPxBKbju1f6cSURExA0Q@mail.gmail.com>
-References: <1426829466-13559-1-git-send-email-ingi2.kim@samsung.com> <1426829466-13559-3-git-send-email-ingi2.kim@samsung.com>
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Fri, 20 Mar 2015 17:50:38 +0200
+Message-ID: <87bnjnfz1t.fsf@kamboji.qca.qualcomm.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+	<1426696710-6891-6-git-send-email-eliad@wizery.com>
+	<550AD7C1.2030405@gmail.com>
+	<CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
+	<20150319212505.GN31346@atomide.com>
+	<87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
+	<20150320153357.GT31346@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426829466-13559-3-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sakari Ailus <sakari.ailus@iki.fi>, Jacek Anaszewski <j.anaszewski@samsung.com>, Varka Bhadram <varkabhadram@gmail.com>, sw0312.kim@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Inha Song <ideal.song@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150320153357.GT31346@atomide.com> (Tony Lindgren's message of
+	"Fri, 20 Mar 2015 08:33:57 -0700")
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Eliad Peller <eliad@wizery.com>, Pontus Fuchs <pontus.fuchs@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 12:31 AM, Ingi Kim <ingi2.kim@samsung.com> wrote:
-> This patch adds the device tree bindings for ktd2692 flash LEDs.
-> Add optional properties 'flash-timeout-us' to control flash timeout
-> and 'vin-supply' for flash-led regulator
->
-> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
-> ---
->  .../devicetree/bindings/leds/leds-ktd2692.txt      | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> new file mode 100644
-> index 0000000..75e16f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> @@ -0,0 +1,34 @@
-> +* Kinetic Technologies - KTD2692 Flash LED Driver
-> +
-> +KTD2692 is the ideal power solution for high-power flash LEDs.
-> +It uses ExpressWire single-wire programming for maximum flexibility.
-> +
-> +The ExpressWire interface through CTRL pin can control LED on/off and
-> +enable/disable the IC, Movie(max 1/3 of Flash current) / Flash mode current,
-> +Flash timeout, LVP(low voltage protection).
-> +
-> +Also, When the AUX pin is pulled high while CTRL pin is high,
-> +LED current will be ramped up to the flash-mode current level.
-> +
-> +Required properties:
-> +       - compatible: "kinetic,ktd2692"
-> +       - ctrl-gpio, aux-gpio : gpio pin in order control ktd2692 flash led.
-> +               There is an internal 300kOhm pull-down resistor at each pin
-> +       - supply : "vin" LED supply (2.7V to 5.5V)
+Tony Lindgren <tony@atomide.com> writes:
 
-This should be "vin-supply", right?
-
-> +               See Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +Optional property:
-> +       - flash-timeout-us : Maximum flash timeout in microseconds.
-> +                       flash timeout ranges from 0 to 1835000us and
-> +                       default is 1049000us.
-> +
-> +Example:
-> +
-> +flash-led {
-> +       compatible = "kinetic,ktd2692";
-> +       ctrl-gpio = <&gpc0 1 0>;
-> +       aux-gpio = <&gpc0 2 0>;
-> +       flash-timeout-us = <1835000>;
-> +       vin-supply = <&vbat>;
-> +};
-> +
-> --
-> 2.0.5
+> * Kalle Valo <kvalo@codeaurora.org> [150319 23:04]:
+>> Tony Lindgren <tony@atomide.com> writes:
+>> 
+>> >> > Tested OK (boot, scan, join, ping) on Pandaboard ES.
+>> >> >
+>> >> thanks for testing it!
+>> >
+>> > Great. As suggested by Kalle, I'll apply all these into
+>> > omap-for-v4.1/wl12xx branch and send a pull request for
+>> > the arm-soc probably on Friday if no issues are found.
+>> 
+>> Great, thank you. Just in case you want this:
+>> 
+>> Acked-by: Kalle Valo <kvalo@codeaurora.org>
 >
+> Thanks, I can push out a new branch omap-for-v4.1/wl12xx-v2
+> with your acks assuming you or somebody else have not
+> merged the existing omap-for-v4.1/wl12xx branch yet into the
+> wireless tree?
+>
+> In that case I can scrap omap-for-v4.1/wl12xx and then will
+> reply with a commit that we can consider immutable that can
+> be merged into various trees as needed in case of merge
+> conflicts.
+>
+> But I'll wait for your confirmation first :)
+
+After John "retired" we actually have two set of trees now: mac80211
+maintained by Johannes and wireless-drivers maintained by me. I haven't
+pulled anything from your tree and I'm 100% sure Johannes hasn't either.
+So green light from me.
+
+-- 
+Kalle Valo
