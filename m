@@ -1,67 +1,49 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power
- on/off UART attached devices.
-Date: Fri, 20 Mar 2015 20:50:19 +0100
-Message-ID: <20150320195019.GC28194@amd>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
- <20150318055831.21025.33670.stgit@notabene.brown>
- <C53A3E5D-5AEA-4F0F-88A9-F9BC8CB0D0D6@goldelico.com>
- <20150320195451.146a7915@notabene.brown>
- <14FB51CF-9568-4BF4-B917-2C019D992FDB@goldelico.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH net-next 3/5] net: netcp: select davinci_mdio driver by default
+Date: Fri, 20 Mar 2015 16:11:23 -0400
+Message-ID: <1426882285-4873-4-git-send-email-m-karicheri2@ti.com>
+References: <1426882285-4873-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <14FB51CF-9568-4BF4-B917-2C019D992FDB-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426882285-4873-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, WingMan Kwok <w-kwok2@ti.com>, "David S. Miller" <davem@davemloft.net>, Mugunthan V N <mugunthanvnm@ti.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Christoph Jaeger <cj@linux.com>, Lokesh Vutla <lokeshvutla@ti.com>, Markus Pargmann <mpa@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Keystone netcp driver re-uses davinci mdio driver. So enable it
+by default for keystone netcp driver.
 
-> >>=20
-> >> Wouldn=E2=80=99t it be easier to simply write
-> >>=20
-> >> &uart1 {
-> >> 	vdd-suppy =3D <&vaux4>;
-> >> }
-> >=20
-> > Easier to write: certainly.
-> > Easier to justify? No.
->=20
-> I just justified.
->=20
-> > Easier to get merged upstream?  Definitely not.
->=20
-> Are you the maintainer?
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: Mugunthan V N <mugunthanvnm@ti.com>
+CC: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+CC: Grygorii Strashko <grygorii.strashko@ti.com>
+CC: Christoph Jaeger <cj@linux.com>
+CC: Lokesh Vutla <lokeshvutla@ti.com>
+CC: Markus Pargmann <mpa@pengutronix.de>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Rob Herring <robh+dt@kernel.org>
+---
+ drivers/net/ethernet/ti/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-And you? I believe Neil is right here, and this kind of shortcut can
-not be taken.
-
-> > After all, the uart itself doesn't require a power supply.
-> > It is the device connected to the uart which requires the power sup=
-ply.
->=20
-> Yes.
-
-There's UART, long rs/232 cable, and a GPS.
-
-UART needs some kind of power supply, to present voltages on the
-rs/232 cable.
-
-GPS needs some kind of power supply to work.
-
-They are different power supplies, and we should have way to tell them
-apart.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index f6a7109..631e0af 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -88,6 +88,7 @@ config TI_CPTS
+ config TI_KEYSTONE_NETCP
+ 	tristate "TI Keystone NETCP Core Support"
+ 	select TI_CPSW_ALE
++	select TI_DAVINCI_MDIO
+ 	depends on OF
+ 	depends on KEYSTONE_NAVIGATOR_DMA && KEYSTONE_NAVIGATOR_QMSS
+ 	---help---
+-- 
+1.7.9.5
