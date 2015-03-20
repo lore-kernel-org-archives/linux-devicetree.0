@@ -1,73 +1,70 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 0/3] 96boards: add thermal senor support to hikey board
-Date: Fri, 20 Mar 2015 14:13:22 +0800
-Message-ID: <20150320061322.GD18907@leoy-linaro>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <20150319135946.GG18473@leverpostej>
- <550B8F98.3070701@hisilicon.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: [PATCH v3 3/3] Documentation: DT bindings: Tegra AHB: require the
+ legacy base address for existing chips
+Date: Fri, 20 Mar 2015 00:11:02 -0600
+Message-ID: <20150320061102.14355.87959.stgit@mcwayne>
+References: <20150320061102.14355.4781.stgit@mcwayne>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <550B8F98.3070701@hisilicon.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: kongxinwei <kong.kongxinwei@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, jorge.ramirez-ortiz@linaro.org, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150320061102.14355.4781.stgit@mcwayne>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Paul Walmsley <pwalmsley@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 11:10:16AM +0800, kongxinwei wrote:
-> hi Mark Rutland:
->=20
-> =E5=9C=A8 2015/3/19 21:59, Mark Rutland =E5=86=99=E9=81=93:
-> > On Thu, Mar 19, 2015 at 07:57:26AM +0000, kongxinwei wrote:
-> >> The Linaro connect introduce 96boards series in Hong Kong,The HiKe=
-y board
-> >> is the first board to be certified 96Boards Consumer Edition compa=
-tible.
-> >> This board is based on the HiSilicon SoC. you can get more informa=
-tion
-> >> from https://www.96boards.org.
-> >>
-> >> The hisilicon SoC contains thermal module, this thermal module has=
- 4 sensors,
-> >>
-> >> 	- sensor 0: local sensor;
-> >> 	- sensor 1: remote sensor for ACPU cluster 1;
-> >> 	- sensor 2: remote sensor for ACPU cluster 2;
-> >> 	- sensor 3: remote sensor for GPU;
-> >>
-> >> It can obtain this device temperature by operating this hardware. =
-The new
-> >> sensor driver satisfies thermal framework and to realize the ACPU =
-,GPU and
-> >> so on to cool function.
-> >>
-> >> kongxinwei (3):
-> >>   thermal: hisilicon: add new hisilicon thermal sensor driver
-> >>   dts: hi6220: enable thermal sensor for hisilicon SoC
-> >>   dt-bindings: Document the hi6220 thermal sensor bindings
-> >>
-> >>  .../bindings/thermal/hisilicon-thermal.txt         |  51 ++
-> >>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 153 ++++++
-> >>  drivers/thermal/Kconfig                            |   8 +
-> >>  drivers/thermal/Makefile                           |   1 +
-> >>  drivers/thermal/hisi_thermal.c                     | 531 ++++++++=
-+++++++++++++
-> >=20
-> > Mainline does not have a hi6220 dtsi.
-> >=20
-> > Which tree is this against?
-> >=20
-> > What are your dependencies?
-> >=20
-> > Mark.
-> >=20
-> Hikey board code are being upstreamed by our team.If hi6220 dtsi be a=
-ccepted, this patch is ok.
+Per Stephen Warren, note in the Tegra AHB DT binding documentation
+that we specifically deprecate any attempt to use the IP block's
+actual hardware base address, and advocate the use of the legacy
+"off-by-four" address in the 'regs' property, for Tegra chips with
+existing upstream Linux DT files that include a Tegra AHB node.  This
+patch updates the documentation accordingly.
 
-Xinwei, u could resend this patch after hi6220 dtsi related patches has
-been merged. Suggest this patchset are only for thermal driver.
+Changing the existing kernel DT data isn't under consideration because
+Linux kernel DT data policy is to preserve compatibility between newer
+DT data files and older kernels.  However, this additional step of
+changing the documentation should discourage others from sending
+kernel patches to try to change the legacy kernel DT data.
+Furthermore, for out-of-tree software (such as bootloaders or other
+operating systems) that may rely on Linux kernel DT binding
+documentation as an ABI (but not the Linux kernel DT data itself),
+such a change may allow future convergence with the Linux kernel DT
+data without additional code changes.
 
-Thanks,
-Leo Yan
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Cc: Paul Walmsley <pwalmsley@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../bindings/arm/tegra/nvidia,tegra20-ahb.txt      |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+index 067c9790062f..9a4295b54539 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-ahb.txt
+@@ -5,9 +5,12 @@ Required properties:
+   Tegra30, must contain "nvidia,tegra30-ahb".  Otherwise, must contain
+   '"nvidia,<chip>-ahb", "nvidia,tegra30-ahb"' where <chip> is tegra124,
+   tegra132, or tegra210.
+-- reg : Should contain 1 register ranges(address and length)
++- reg : Should contain 1 register ranges(address and length).  For
++  Tegra20, Tegra30, and Tegra114 chips, the value must be <0x6000c004
++  0x10c>.  For Tegra124, Tegra132 and Tegra210 chips, the value should
++  be be <0x6000c000 0x150>.
+ 
+-Example:
++Example (for a Tegra20 chip):
+ 	ahb: ahb@6000c004 {
+ 		compatible = "nvidia,tegra20-ahb";
+ 		reg = <0x6000c004 0x10c>; /* AHB Arbitration + Gizmo Controller */
