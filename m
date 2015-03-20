@@ -1,85 +1,83 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 3/4 v4] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 20 Mar 2015 10:38:51 -0700
-Message-ID: <87r3sjk1qs.fsf@eliezer.anholt.net>
-References: <1426213936-4139-1-git-send-email-eric@anholt.net> <1426213936-4139-3-git-send-email-eric@anholt.net> <5507A095.5090805@wwwdotorg.org> <87619xq414.fsf@eliezer.anholt.net> <550BA6B4.3030604@wwwdotorg.org> <CABb+yY0qN4KcZ9kc6eurSUWPn38f2keKe4FB2efKBAVjREcZbg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH RESEND] Doc: dt: arch_timer: discourage clock-frequency use
+Date: Fri, 20 Mar 2015 17:57:47 +0000
+Message-ID: <1426874267-24413-1-git-send-email-mark.rutland@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY0qN4KcZ9kc6eurSUWPn38f2keKe4FB2efKBAVjREcZbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+The ARM Generic Timer (AKA the architected timer, arm_arch_timer)
+features a CPU register (CNTFRQ) which firmware is intended to
+initialize, and non-secure software can read to determine the frequency
+of the timer. On CPUs with secure state, this register cannot be written
+from non-secure states.
 
-Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+The firmware of early SoCs featuring the timer did not correctly
+initialize CNTFRQ correctly on all CPUs, requiring the frequency to be
+described in DT as a workaround. This workaround is not complete however
+as it is exposed to all software in a privileged non-secure mode
+(including guests running under a hypervisor). The firmware and DTs for
+recent SoCs have followed the example set by these early SoCs.
 
-> On Fri, Mar 20, 2015 at 10:18 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 03/18/2015 05:28 PM, Eric Anholt wrote:
->>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>>
->>>> On 03/12/2015 08:32 PM, Eric Anholt wrote:
->>>>> diff --git a/drivers/mailbox/bcm2835-mailbox.c
->>>>> b/drivers/mailbox/bcm2835-mailbox.c
->>>>
->>>>> +#define MBOX_MSG(chan, data28)             (((data28) & ~0xf) | ((chan) &
->>>>> 0xf)) +#define MBOX_CHAN(msg)                       ((msg) & 0xf) +#define
->>>>> MBOX_DATA28(msg)            ((msg) & ~0xf)
->>>>
->>>> Even the concept of storing channel IDs in the LSBs feels like it
->>>> might be RPi-firmware-specific rather than HW-specific?
->>>
->>> I guess?  If we found another firmware protocol, we could have
->>> that device's dt just specify a different compatible string.  But
->>> in the absence of another firmware to talk to, I'm not sure what
->>> you want here.
->>
->> I would expect the mailbox driver to expose a single channel that just
->> transports 32-bit values, since the HW doesn't impose any kind of
->> structure on the values it transports AFAIK. Clients of the mailbox
->> driver would formulate the messages they send through the mailox using
->> the macros above.
->>
-> Yes, it should be so.
+This patch updates the arch timer binding documentation to make it
+clearer that the use of the clock-frequency property is a poor
+work-around. The MMIO generic timer binding is similarly updated, though
+this is less of a concern as there is generally no need to expose the
+MMIO timers to guest OSs.
 
-I'm getting pretty frustrated here.
+Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-So, if I build a global client serializing requests and stop presenting
-channels, what exactly is the generic mailbox infrastructure gaining me?
-I don't need add_to_rbuf.  I don't need tpoll_txdone.  I don't need
-tx_tick.  I don't need peek_data.  I don't need channels.  It doesn't
-even handle waiting on requests for me, and I keep having to do it in
-clients.  There's nothing left that the generic code is doing for me.
+This patch has fallen through the cracks a few times [1,2], though that appears
+to be my fault for not sorting out a reasonable Cc list.
 
-If I have to do any more changes ot this driver (we're at 27 hours of
-just my work on it so far...), I'd rather go back to the trivial driver
-we had before that simply, obviously did what we wanted.
+Rob, are you happy to take this through your tree?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Mark.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/282804.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/282830.html
 
-iQIcBAEBCgAGBQJVDFsrAAoJELXWKTbR/J7oVH8QALQa77rICTU5w6BkjsAUY+H6
-krUcOHa9bFGRc+6ar2lzKZJNjzdN5hLAbew+Si9PSPVgmptqMP784Kg/qk5cw7oI
-fXCKKy7l0tnDOgmIUBGqmEZ7Lszln58mKHBvPYotJUGlrOBjWPRQx+sdDncLjK4P
-p1szuZkqTVEmrBLAI3+jxc5XrEZ0cXFdB/zAo/UGD9j6fYNWbuOqdSD4ZULNsg+r
-veAEAzPsee44u8BjWfffMOnYUb4Gy4xOVX55BYLyO4mEV1QTg7flhqcV38DwcsuZ
-/Mk5voJosmZ1v9RW7QoRAiEtJzUgZtw7BlstKMlVgVKiIgt7KfRlfEscrtX0Datb
-6rh1bLru2W5jBfyRJ+ovLoZ+HzyGwWnYtQUflynkQJWvcOnerEB3cpVV423s9yZb
-shSu4WjAtDje3QVL31BrWUvYlHEs2KMWI70PKr7PkkuZu2aP/hWOpeZPhYZE0GaP
-cwnunEPK6tKxceDuIzF2XGUMJOKTTTRMMHgGppMvzmec709hW83ynaXI4eaiMpkv
-L5hjxvu67UaXgl1hiXP2RF7p7X3Fx4aymvjZXYzFMNwxH6fVS09ZJY5zhTfgnTKR
-ItAC/j0rS6ylWnr44inOTHIYOUFRP28ZypsUxHFm7uXcLOfIWOJo34HXfe/ZkVzA
-1t5XbO4sJgboK4vXbR+I
-=mOEi
------END PGP SIGNATURE-----
---=-=-=--
+
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index 256b4d8..e774128 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -17,7 +17,10 @@ to deliver its interrupts via SPIs.
+ - interrupts : Interrupt list for secure, non-secure, virtual and
+   hypervisor timers, in that order.
+ 
+-- clock-frequency : The frequency of the main counter, in Hz. Optional.
++- clock-frequency : The frequency of the main counter, in Hz. Should be present
++  only where necessary to work around broken firmware which does not configure
++  CNTFRQ on all CPUs to a uniform correct value. Use of this property is
++  strongly discouraged; fix your firmware unless absolutely impossible.
+ 
+ - always-on : a boolean property. If present, the timer is powered through an
+   always-on power domain, therefore it never loses context.
+@@ -46,7 +49,8 @@ Example:
+ 
+ - compatible : Should at least contain "arm,armv7-timer-mem".
+ 
+-- clock-frequency : The frequency of the main counter, in Hz. Optional.
++- clock-frequency : The frequency of the main counter, in Hz. Should be present
++  only when firmware has not configured the MMIO CNTFRQ registers.
+ 
+ - reg : The control frame base address.
+ 
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
