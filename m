@@ -1,57 +1,86 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
-Date: Fri, 20 Mar 2015 17:50:38 +0200
-Message-ID: <87bnjnfz1t.fsf@kamboji.qca.qualcomm.com>
-References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
-	<1426696710-6891-6-git-send-email-eliad@wizery.com>
-	<550AD7C1.2030405@gmail.com>
-	<CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
-	<20150319212505.GN31346@atomide.com>
-	<87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
-	<20150320153357.GT31346@atomide.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
+ driver
+Date: Fri, 20 Mar 2015 15:55:27 +0000
+Message-ID: <20150320155527.GJ14766@leverpostej>
+References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
+ <20150319141753.GB25967@leverpostej>
+ <20150320060653.GC18907@leoy-linaro>
+ <20150320112414.GD14766@leverpostej>
+ <20150320145353.GA20461@leoy-linaro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150320153357.GT31346@atomide.com> (Tony Lindgren's message of
-	"Fri, 20 Mar 2015 08:33:57 -0700")
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Eliad Peller <eliad@wizery.com>, Pontus Fuchs <pontus.fuchs@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150320145353.GA20461@leoy-linaro>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: kongxinwei <kong.kongxinwei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> writes:
+> > That may be the case in the code as it stands today, but per the binding
+> > the trip points are the temperatures at which an action is to be taken.
+> > 
+> > The thermal-zone has poilling-delay and polling-delay-passive, but
+> > there's no reason you couldn't also use the interrupt to handle the
+> > "hot" trip-point, adn the reset at the "critical" trip-point. All that's
+> > missing is the plumbing in order to do so.
+> > 
+> > So please co-ordinate with the thermal framework to do that.
+> 
+> Let's dig further more for this point, so that we can get more specific
+> gudiance and have a good preparation for next version's patch set.
+> 
+> After i reviewed the thermal framework code, currently have one smooth
+> way to co-ordinate the trip points w/t thermal framework: use the function
+> *thermal_zone_device_register()* to register sensor, and can use the
+> callback function .get_trip_temp to tell thermal framework for the
+> trip points' temperature.
+> 
+> For hisi thermal case, now the driver is using the function
+> *thermal_zone_of_sensor_register* to register sensor, but use this way
+> i have not found there have standard APIs which can be used by sensor
+> driver to get the trip points info from thermal framework.
+> 
+> I may miss something for thermal framework, so if have existed APIs to
+> get the trip points, could pls point out?
 
-> * Kalle Valo <kvalo@codeaurora.org> [150319 23:04]:
->> Tony Lindgren <tony@atomide.com> writes:
->> 
->> >> > Tested OK (boot, scan, join, ping) on Pandaboard ES.
->> >> >
->> >> thanks for testing it!
->> >
->> > Great. As suggested by Kalle, I'll apply all these into
->> > omap-for-v4.1/wl12xx branch and send a pull request for
->> > the arm-soc probably on Friday if no issues are found.
->> 
->> Great, thank you. Just in case you want this:
->> 
->> Acked-by: Kalle Valo <kvalo@codeaurora.org>
->
-> Thanks, I can push out a new branch omap-for-v4.1/wl12xx-v2
-> with your acks assuming you or somebody else have not
-> merged the existing omap-for-v4.1/wl12xx branch yet into the
-> wireless tree?
->
-> In that case I can scrap omap-for-v4.1/wl12xx and then will
-> reply with a commit that we can consider immutable that can
-> be merged into various trees as needed in case of merge
-> conflicts.
->
-> But I'll wait for your confirmation first :)
+I am only familiar with the binding, not the Linux implementation -- The
+latter can change to accomodate your hardware without requiring binding
+changes. Please co-ordinate with the thermal maintainers.
 
-After John "retired" we actually have two set of trees now: mac80211
-maintained by Johannes and wireless-drivers maintained by me. I haven't
-pulled anything from your tree and I'm 100% sure Johannes hasn't either.
-So green light from me.
+> > > > > +       if (of_property_read_bool(np, "hisilicon,tsensor-bind-irq")) {
+> > > > > +
+> > > > > +               if (data->irq_bind_sensor != -1)
+> > > > > +                       dev_warn(&pdev->dev, "irq has bound to index %d\n",
+> > > > > +                                data->irq_bind_sensor);
+> > > > > +
+> > > > > +               /* bind irq to this sensor */
+> > > > > +               data->irq_bind_sensor = index;
+> > > > > +       }
+> > > > 
+> > > > I don't see why this should be specified in the DT. Why do you believe
+> > > > it should?
+> > > 
+> > > The thermal sensor module has four sensors, but have only one
+> > > interrupt signal; This interrupt can only be used by one sensor;
+> > > So want to use dts to bind the interrupt with one selected sensor.
+> > 
+> > That's not all that great, though I'm not exactly sure how the kernel
+> > would select the best sensor to measure with. It would be good if you
+> > could talk to the thermal maintainers w.r.t. this.
+> 
+> This will be decided by the silicon, right? Every soc has different
+> combination with cpu/gpu/vpu, so which part is hottest, this maybe
+> highly dependent on individual SoC.
+> 
+> S/W just need provide the flexibility so that later can choose
+> the interrupt to bind with the sensor within the hottest part.
 
--- 
-Kalle Valo
+Then the property you care about is which sensor is closest to what is
+likely to be the hottest component. Given that, the kernel can decide
+how to use the interrupt.
+
+Thanks,
+Mark.
