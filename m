@@ -1,76 +1,90 @@
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v8] media: i2c: add support for omnivision's ov2659 sensor
-Date: Fri, 20 Mar 2015 12:10:51 +0000
-Message-ID: <CA+V-a8uMa9j5BHKPDakXYZn_cXwp_e8t1CyguVshJTm=A-mqMQ@mail.gmail.com>
-References: <1426852133-14539-1-git-send-email-prabhakar.csengg@gmail.com> <550C0D1C.1070200@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: Empty node & property flag accessors when !OF
+Date: Fri, 20 Mar 2015 12:12:23 +0000
+Message-ID: <20150320121223.16D69C4076B@trevor.secretlab.ca>
+References: <1421859957-24457-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<CAL_JsqKxtJH=JyruyuMLXSFfTLdswOLa=AfGEbROsSSOhLLDkg@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <550C0D1C.1070200@gmail.com>
+In-Reply-To: <CAL_JsqKxtJH=JyruyuMLXSFfTLdswOLa=AfGEbROsSSOhLLDkg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>
+To: Rob Herring <robherring2@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 12:05 PM, Varka Bhadram <varkabhadram@gmail.com> wrote:
-> On 03/20/2015 05:18 PM, Lad Prabhakar wrote:
->
->> From: Benoit Parrot <bparrot@ti.com>
->>
->> this patch adds support for omnivision's ov2659
->> sensor, the driver supports following features:
->> 1: Asynchronous probing
->> 2: DT support
->> 3: Media controller support
->>
->> Signed-off-by: Benoit Parrot <bparrot@ti.com>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> ---
->>   Changes for v8:
->>   --------------
->>   a. Now setting the link_frequency control in set_fmt
->>      callback instead of implementing g_volatile_ctrl()
->>      for it and setting it there.
->>
->>   v7: https://patchwork.kernel.org/patch/6034651/
->>   v6: https://patchwork.kernel.org/patch/6012751/
->>   v5: https://patchwork.kernel.org/patch/6000161/
->>   v4: https://patchwork.kernel.org/patch/5961661/
->>   v3: https://patchwork.kernel.org/patch/5959401/
->>   v2: https://patchwork.kernel.org/patch/5859801/
->>   v1: https://patchwork.linuxtv.org/patch/27919/
->>
->>   .../devicetree/bindings/media/i2c/ov2659.txt       |   38 +
->>   MAINTAINERS                                        |   10 +
->>   drivers/media/i2c/Kconfig                          |   11 +
->>   drivers/media/i2c/Makefile                         |    1 +
->>   drivers/media/i2c/ov2659.c                         | 1528
->> ++++++++++++++++++++
->>   include/media/ov2659.h                             |   33 +
->>   6 files changed, 1621 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/media/i2c/ov2659.txt
->>   create mode 100644 drivers/media/i2c/ov2659.c
->>   create mode 100644 include/media/ov2659.h
->>
-> (...)
->
->> +static struct ov2659_platform_data *
->> +ov2659_get_pdata(struct i2c_client *client)
->> +{
->> +       struct ov2659_platform_data *pdata;
->> +       struct device_node *endpoint;
->> +       int ret;
->> +
->> +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node) {
->> +               dev_err(&client->dev, "ov2659_get_pdata: DT Node
->> found\n");
->
->
-> ov2659_get_pdata: DT Node *not* found...?
->
-Good catch!
+On Thu, 22 Jan 2015 17:13:51 -0600
+, Rob Herring <robherring2@gmail.com>
+ wrote:
+> +Wolfram
+> 
+> On Wed, Jan 21, 2015 at 11:05 AM, Pantelis Antoniou
+> <pantelis.antoniou@konsulko.com> wrote:
+> > Introduce empty node and property flag accessors when CONFIG_OF is not
+> > defined.
+> > This allows us to use them without ifdef'ing them in places where it
+> > makes sense to do so.
+> >
+> > Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> I've asked Wolfram to apply. While not a fix itself, this is needed
+> for an I2C related fix for 3.19.
 
-Cheers,
---Prabhakar Lad
+I don't see this in mainline or linux-next, so I've applied to my tree.
+Thanks.
+
+g.
+
+> 
+> Rob
+> 
+> > ---
+> >  include/linux/of.h | 32 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >
+> > diff --git a/include/linux/of.h b/include/linux/of.h
+> > index dfde07e..7ede449 100644
+> > --- a/include/linux/of.h
+> > +++ b/include/linux/of.h
+> > @@ -616,6 +616,38 @@ static inline const char *of_prop_next_string(struct property *prop,
+> >         return NULL;
+> >  }
+> >
+> > +static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static inline int of_node_test_and_set_flag(struct device_node *n,
+> > +                                           unsigned long flag)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
+> > +{
+> > +}
+> > +
+> > +static inline void of_node_clear_flag(struct device_node *n, unsigned long flag)
+> > +{
+> > +}
+> > +
+> > +static inline int of_property_check_flag(struct property *p, unsigned long flag)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static inline void of_property_set_flag(struct property *p, unsigned long flag)
+> > +{
+> > +}
+> > +
+> > +static inline void of_property_clear_flag(struct property *p, unsigned long flag)
+> > +{
+> > +}
+> > +
+> >  #define of_match_ptr(_ptr)     NULL
+> >  #define of_match_node(_matches, _node) NULL
+> >  #endif /* CONFIG_OF */
+> > --
+> > 1.7.12
+> >
