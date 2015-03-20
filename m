@@ -1,125 +1,106 @@
-From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/3] tty slave device support - version 3.
-Date: Fri, 20 Mar 2015 19:43:07 +1100
-Message-ID: <20150320194307.51cb4225@notabene.brown>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
-	<80D7E742-4633-4CCD-B754-221387D82922@goldelico.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 5/5] ARM: dts: brcmstb: add nodes for SATA controller
+ and PHY
+Date: Fri, 20 Mar 2015 09:48:42 +0100
+Message-ID: <550BDEEA.9080503@redhat.com>
+References: <1426728222-8197-1-git-send-email-computersforpeace@gmail.com> <1426728222-8197-5-git-send-email-computersforpeace@gmail.com> <550AAEA1.5080301@redhat.com> <20150319155358.GA19571@brian-ubuntu> <550B0118.3040104@redhat.com> <20150319173640.GS32500@ld-irv-0074> <20150319191105.GU32500@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/ejbYyRP428pXQqNAX9EpGS7"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <80D7E742-4633-4CCD-B754-221387D82922-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150319191105.GU32500@ld-irv-0074>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/ejbYyRP428pXQqNAX9EpGS7
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Fri, 20 Mar 2015 08:54:35 +0100 "Dr. H. Nikolaus Schaller"
-<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+On 19-03-15 20:11, Brian Norris wrote:
+> Replying to myself, because I may or may not like having conversations
+> with myself :)
+>
+> On Thu, Mar 19, 2015 at 10:36:40AM -0700, Brian Norris wrote:
+>> On Thu, Mar 19, 2015 at 06:02:16PM +0100, Hans de Goede wrote:
+>>> On 19-03-15 16:53, Brian Norris wrote:
+>>>> On Thu, Mar 19, 2015 at 12:10:25PM +0100, Hans de Goede wrote:
+>>>>> On 19-03-15 02:23, Brian Norris wrote:
+>>>>>> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+>>>>>> ---
+>>>>>> Light dependency on:
+>>>>>>    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/331921.html
+>>>>>> for the surrounding text.
+>>>>>>
+>>>>>>   arch/arm/boot/dts/bcm7445.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>>>>>>   1 file changed, 36 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
+>>>>>> index 9eaeac8dce1b..7a7c4d8c2afe 100644
+>>>>>> --- a/arch/arm/boot/dts/bcm7445.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/bcm7445.dtsi
+>>>>>> @@ -108,6 +108,42 @@
+>>>>>>   			brcm,int-map-mask = <0x25c>, <0x7000000>;
+>>>>>>   			brcm,int-fwd-mask = <0x70000>;
+>>>>>>   		};
+>>>>>> +
+>>>>>> +		sata@f045a000 {
+>>>>>> +			compatible = "brcm,bcm7445-ahci", "brcm,sata3-ahci";
+>>>>>> +			reg-names = "ahci", "top-ctrl";
+>>>>>> +			reg = <0x45a000 0xa9c>, <0x458040 0x24>;
+>>>>>
+>>>>> Why not simply drop the second register range here, and the minimal top-ctrl
+>>>>> poking you need in the phy driver's phy_init function ?
+>>>>
+>>>> I agree it's a little ugly, but your recommended solution will not work.
+>>>>
+>>>> The 'top-ctrl' register range includes several SATA functionalities,
+>>>> some of which are required for the PHY and some of which are definitely
+>>>> required for the SATA driver.
+>>>
+>>> I see, but the phy driver is required for the SATA driver anyways,
+>>> and since the BUS_CTRL setting seems to be static it might just as
+>>> well be set by the phy driver. The phy driver also poking some
+>>> common sata glue bits like this busctrl register is not unheard of,
+>>> esp. when these glue bits are in the phy register range.
+>
+> I realized I *do* still have some reservations about moving the
+> SATA_TOP_CTRL register range under the PHY DT binding; it's because all
+> arguments for it seem to rest on descriptions of how the software would
+> *like* to handle it. It's not at all about describing the hardware
+> correctly.
 
-> Hi Neil,
->=20
-> Am 18.03.2015 um 06:58 schrieb NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>:
->=20
-> > Hi again,
-> > here is version 3 of support for tty-slaves.
-> >=20
-> > This version introduces a new bus-type for tty-slaves,
->=20
-> Hm. I am still not convinced that a tty is a =E2=80=9Ebus=E2=80=9C and=20
-> that this is a solution for a wide-spread problem.
+I had the same doubts myself when making the suggestion actually :)
 
-Don't read too much into the word "bus".  It is really just a mechanism for
-grouping drivers together - with maybe a hint of a suggestions that it helps
-communicate with the devices which the drivers drive.
+If the busctrl register purely influences the ahci functional block and
+not the phy functional block, then you are right.
 
-And I'm not particularly interested in solving wide-spread problems, just in
-solving my problem in a suitably idiomatic way.
+However if you look at the registermap, then doing as I suggest
+feels more natural as you get 2 distinct register blocks, one for ahci
+one for the phy, but if the one register in the phy range actually is a
+ahci register, then it would probably be more accurate to describe
+things that way ...
 
+> I still see SATA_TOP_CTRL as a register resource that belongs to the
+> SATA controller, not to the PHY. It just happens that it has a few
+> registers in it that are also for use in the PHY.
+>
+> So, to best describe the *hardware*, it seems we might split top-ctrl
+> into 3 portions, where the middle gets assigned to a phy description,
+> and the first and last belong to the SATA controller description.
+>
+> But to most easily describe how *software* would best handle them, we
+> might stick all the custom stuff (i.e., all of top-ctrl + phy) into the
+> PHY description.
+>
+> I still think that, practically speaking, the latter should work just
+> fine, and it's only a theoretical concern that suggests the former.
+>
+> Thoughts?
 
->=20
-> > and causes
-> > a tty-slave device to appear in /sys/devices between the uart and the
-> > tty.
-> > It effectively intercepts and calls from the tty to the uart (i.e. any
-> > tty_operations) and applies extra functionality at that point.
->=20
-> >=20
-> > Currently the only driver intercepts open and close.
-> > It powers on the device on open, and powers off at last-close.
->=20
-> That is what the missing piece in Linux is to make the w2sg0004
-> chip work.
->=20
-> >=20
-> > Power can be controlled by a regulator or by toggling a GPIO.
->=20
-> I think such a GPIO logic has nothing to do with serial and
-> should be left over to the regulator logic, i.e. we need a special
-> regulator-w2sg0004 driver.
->=20
-> So I suggest to remove the GPIO logic from your=20
->=20
-> drivers/tty/slave/serial-power-manager.c
->=20
-> And then you can even get rid of adding a chip specific =E2=80=9Ecompatib=
-le=E2=80=9C
-> entry for the subnodes.
+I do not like your original proposal with the overlapping / conflicting
+resources. I'm fine with either alternative you suggest above. So unless
+someone else weighs in you get to chose which one you like best.
 
-But (nearly) every node has a "compatible" entry.
-Each node describes a device, and the "compatible" string tells us what sort
-of device.
-Surely you agree that there is a particular device that needs to be
-controlled?  In that case there needs to be a node representing it and a
-"compatible" string describing it.  That is how "devicetree" works.
+Regards,
 
-
->=20
-> >=20
-> > I think I've incorporated most of the feed back I received from
-> > previous versions, but if I missed something - I apologize.  If
-> > this approach is structurally acceptable then I can fix up all the
-> > smaller issues.
->=20
-> As said I would prefer that the w2sg0004 driver is just a separate
-> =E2=80=9Eregulator=E2=80=9C driver as we had proposed before.
-
-You can prefer that if you wish.  But given that the w2sg0004 is not in fact
-a regulator, but is in fact a GPS device, I doubt you will find a lot of
-support for your approach (as indeed I didn't when I tried it...)
-
-Thanks,
-NeilBrown
-
-
---Sig_/ejbYyRP428pXQqNAX9EpGS7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIVAwUBVQvdnDnsnt1WYoG5AQI5Lw/7B2iFoKqne1pfk1SA8GnWZp44UTEVuWkO
-FskFWRMWwtJlScH0KsPbUgbiwt9+yAJW7F8RYM2IpAjVZbEInEVIpYC9s9OCL8p4
-Kj8l00cIvfVE+ffCMt5HzqiZ64SloS+82K7fYfb5ruMmQSi5p8V1G9rwpdSOU/gN
-ORn1iF5VygFH2VqEdr7rY0jJb9RPWOYomMGTH82zezxOY89aRrsqFyBoC6xLyjL1
-rAJQySv+7pvd/LCetyz7Pt5b/ZaVCpf6JLkDN2J9UMv+WmD5XN0h2V2HLY1YCTJ1
-dGgLj64/52YFLD4s+7G0+xNm++OBQe24UfoYZaN7RC8mRCMmIfurd4FySNmlrGEP
-Xa6B8mEKeh2dx0F66j9SumJkJHWbavgR7JbB7SvK2B98mIqfEmpmYPwjsS9pVEUg
-eQt6t6xhXZGEVKzVfXHqfnUue6UTiesa8Q0nhOuuf7RgOsZeMwsCP/V0OuDPXMwR
-edn8sqCrMqGErGIUlttFppoZzn0Lutg189aZujAWEdf29vybqJlMWBS7MN0z+pmB
-MS4lzMeM9kP+1Da8UEcvjAQfXG9U6pJ4SCVjlmFLLJxdSgjhpigp8ZAqgi+LEV7J
-W1ZgS44QRHZ2sHM8N5s8/2pZeqjB7u1fi8LOuPD9grtRcOlg+RXr/Z1NyoPt5ycf
-9s2x5vEyxT4=
-=dhVj
------END PGP SIGNATURE-----
-
---Sig_/ejbYyRP428pXQqNAX9EpGS7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
