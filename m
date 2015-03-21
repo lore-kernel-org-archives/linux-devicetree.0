@@ -1,119 +1,36 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v1 03/11] leds: Add driver for AAT1290 current regulator
-Date: Sun, 22 Mar 2015 00:55:03 +0200
-Message-ID: <20150321225502.GF16613@valkosipuli.retiisi.org.uk>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-4-git-send-email-j.anaszewski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426863811-12516-4-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 0/3] iio: adc: vf610: respect ADC clocking limitations
+Date: Sun, 22 Mar 2015 00:22:04 +0100
+Message-ID: <1426980127-16686-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, shawn.guo@linaro.org, kernel@pengutronix.de
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Respect ADC clocking limitations which lead to bogous reading on
+500MHz clocked Vybrid SoC's. Additionally, also implement a
+sysfs-property to configure the conversion mode available in this
+ADC peripherial.
 
-On Fri, Mar 20, 2015 at 04:03:23PM +0100, Jacek Anaszewski wrote:
-...
-> +static int aat1290_led_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct aat1290_led *led;
-> +	struct led_classdev *led_cdev;
-> +	struct led_classdev_flash *fled_cdev;
-> +	struct aat1290_led_settings settings;
-> +	int ret;
-> +
-> +	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
-> +	if (!led)
-> +		return -ENOMEM;
-> +
-> +	led->pdev = pdev;
-> +	platform_set_drvdata(pdev, led);
-> +
-> +	fled_cdev = &led->fled_cdev;
-> +	led_cdev = &fled_cdev->led_cdev;
-> +
-> +	ret = aat1290_led_parse_dt(led);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!led_cdev->name)
-> +		led_cdev->name = AAT1290_NAME;
-> +
-> +	/* Init flash settings */
-> +	aat1290_init_flash_settings(led, &settings);
-> +
-> +	fled_cdev->timeout = settings.flash_timeout;
-> +	fled_cdev->ops = &flash_ops;
-> +
-> +	/* Init LED class */
-> +	led_cdev->brightness_set = aat1290_led_brightness_set;
-> +	led_cdev->brightness_set_sync = aat1290_led_brightness_set_sync;
-> +	led_cdev->max_brightness = AAT1290_MM_CURRENT_SCALE_SIZE;
-> +	led_cdev->flags |= LED_DEV_CAP_FLASH;
-> +
-> +	INIT_WORK(&led->work_brightness_set, aat1290_brightness_set_work);
-> +
-> +	/* Register in the LED subsystem. */
-> +	ret = led_classdev_flash_register(&pdev->dev, fled_cdev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	mutex_init(&led->lock);
+Changes since v2:
+- Add sysfs ABI documentation
+- Fix commit message spelling errors
 
-I think you must initialise the mutex before led_classdev_flash_register(),
-as this exposes the device to the user. Remember mutex_destroy() in error
-handling.
+Changes since v1:
+- Use ext_info for conversion mode
 
-> +	return 0;
-> +}
-> +
-> +static int aat1290_led_remove(struct platform_device *pdev)
-> +{
-> +	struct aat1290_led *led = platform_get_drvdata(pdev);
-> +
-> +	led_classdev_flash_unregister(&led->fled_cdev);
-> +	cancel_work_sync(&led->work_brightness_set);
-> +
-> +	mutex_destroy(&led->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id aat1290_led_dt_match[] = {
-> +	{.compatible = "skyworks,aat1290"},
+Stefan Agner (3):
+  iio: adc: vf610: use ADC clock within specification
+  iio: adc: vf610: implement configurable conversion modes
+  ARM: dts: add property for maximum ADC clock frequencies
 
-{ .compatible ... 1290" },
-
-With the two issues fixed,
-
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-> +	{},
-> +};
-> +
-> +static struct platform_driver aat1290_led_driver = {
-> +	.probe		= aat1290_led_probe,
-> +	.remove		= aat1290_led_remove,
-> +	.driver		= {
-> +		.name	= "aat1290",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = aat1290_led_dt_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(aat1290_led_driver);
-> +
-> +MODULE_AUTHOR("Jacek Anaszewski <j.anaszewski@samsung.com>");
-> +MODULE_DESCRIPTION("Skyworks Current Regulator for Flash LEDs");
-> +MODULE_LICENSE("GPL v2");
+ Documentation/ABI/testing/sysfs-bus-iio-vf610      |   7 +
+ .../devicetree/bindings/iio/adc/vf610-adc.txt      |   9 +
+ arch/arm/boot/dts/vfxxx.dtsi                       |   4 +
+ drivers/iio/adc/vf610_adc.c                        | 225 +++++++++++++++------
+ 4 files changed, 179 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-vf610
 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+2.3.3
