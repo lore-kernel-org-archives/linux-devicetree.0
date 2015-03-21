@@ -1,88 +1,156 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv2 4/4] DTS: ARM: OMAP3-N900: Add lis3lv02d support
-Date: Sat, 21 Mar 2015 21:19:05 +0100
-Message-ID: <1426969145-4478-5-git-send-email-sre@kernel.org>
-References: <1426969145-4478-1-git-send-email-sre@kernel.org>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1426969145-4478-1-git-send-email-sre@kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Eric Piel <eric.piel@tremplin-utc.net>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.or>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V3 6/8] ARM: cpuidle: Enable the ARM64 driver for both
+ ARM32/ARM64
+Date: Sat, 21 Mar 2015 20:20:33 +0000
+Message-ID: <20150321202033.GB22354@red-moon>
+References: <1426851841-2072-1-git-send-email-daniel.lezcano@linaro.org>
+ <1426851841-2072-7-git-send-email-daniel.lezcano@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426851841-2072-7-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sebastian Reichel <sre@kernel.or>
+On Fri, Mar 20, 2015 at 11:43:59AM +0000, Daniel Lezcano wrote:
+> ARM32 and ARM64 have the same DT definitions and the same approaches.
+> 
+> The generic ARM cpuidle driver can be put in common for those two
+> architectures.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Kevin Hilman <khilman@linaro.org>
+> Acked-by: Rob Herring <robherring2@gmail.com>
+> ---
+>  drivers/cpuidle/Kconfig                            |  7 +------
+>  drivers/cpuidle/Kconfig.arm                        | 12 +++++++++++-
+>  drivers/cpuidle/Kconfig.arm64                      | 13 -------------
+>  drivers/cpuidle/Makefile                           |  5 +----
+>  drivers/cpuidle/{cpuidle-arm64.c => cpuidle-arm.c} |  0
+>  5 files changed, 13 insertions(+), 24 deletions(-)
+>  delete mode 100644 drivers/cpuidle/Kconfig.arm64
+>  rename drivers/cpuidle/{cpuidle-arm64.c => cpuidle-arm.c} (100%)
+> 
+> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
+> index c5029c1..8c7930b 100644
+> --- a/drivers/cpuidle/Kconfig
+> +++ b/drivers/cpuidle/Kconfig
+> @@ -29,15 +29,10 @@ config DT_IDLE_STATES
+>  	bool
+>  
+>  menu "ARM CPU Idle Drivers"
+> -depends on ARM
+> +depends on ARM || ARM64
+>  source "drivers/cpuidle/Kconfig.arm"
 
-This adds support for the N900's accelerometer to
-the Nokia N900 DTS file.
+Risk here is pulling in arm drivers on arm64, maybe it is better to
+add a guard in Kconfig.arm to prevent pulling in ARM drivers (on ARM64)
+instead of just doing that for Exynos.
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
- arch/arm/boot/dts/omap3-n900.dts | 52 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+>  endmenu
+>  
+> -menu "ARM64 CPU Idle Drivers"
+> -depends on ARM64
+> -source "drivers/cpuidle/Kconfig.arm64"
+> -endmenu
+> -
+>  menu "MIPS CPU Idle Drivers"
+>  depends on MIPS
+>  source "drivers/cpuidle/Kconfig.mips"
+> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+> index 8e07c94..1f067bd 100644
+> --- a/drivers/cpuidle/Kconfig.arm
+> +++ b/drivers/cpuidle/Kconfig.arm
+> @@ -14,6 +14,16 @@ config ARM_BIG_LITTLE_CPUIDLE
+>  	  define different C-states for little and big cores through the
+>  	  multiple CPU idle drivers infrastructure.
+>  
+> +config ARM_CPUIDLE
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 6040327..b02a717 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -602,6 +602,58 @@
- 	pinctrl-0 = <&i2c3_pins>;
- 
- 	clock-frequency = <400000>;
-+
-+	lis302dl: lis3lv02d@1d {
-+		compatible = "st,lis3lv02d";
-+		reg = <0x1d>;
-+
-+		Vdd-supply = <&vaux1>;
-+		Vdd_IO-supply = <&vio>;
-+
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <21 20>; /* 181 and 180 */
-+
-+		/* click flags */
-+		st,click-single-x;
-+		st,click-single-y;
-+		st,click-single-z;
-+
-+		/* Limits are 0.5g * value */
-+		st,click-threshold-x = <8>;
-+		st,click-threshold-y = <8>;
-+		st,click-threshold-z = <10>;
-+
-+		/* Click must be longer than time limit */
-+		st,click-time-limit = <9>;
-+
-+		/* Kind of debounce filter */
-+		st,click-latency = <50>;
-+
-+		/* Interrupt line 2 for click detection */
-+		st,irq2-click;
-+
-+		st,wakeup-x-hi;
-+		st,wakeup-y-hi;
-+		st,wakeup-threshold = <(800/18)>; /* millig-value / 18 to get HW values */
-+
-+		st,wakeup2-z-hi;
-+		st,wakeup2-threshold = <(900/18)>; /* millig-value / 18 to get HW values */
-+
-+		st,hipass1-disable;
-+		st,hipass2-disable;
-+
-+		st,axis-x = <1>;    /* LIS3_DEV_X */
-+		st,axis-y = <(-2)>; /* LIS3_INV_DEV_Y */
-+		st,axis-z = <(-3)>; /* LIS3_INV_DEV_Z */
-+
-+		st,min-limit-x = <(-32)>;
-+		st,min-limit-y = <3>;
-+		st,min-limit-z = <3>;
-+
-+		st,max-limit-x = <(-3)>;
-+		st,max-limit-y = <32>;
-+		st,max-limit-z = <32>;
-+	};
- };
- 
- &mmc1 {
--- 
-2.1.4
+You have to update the arm64 defconfig.
 
+> +	bool "Generic ARM/ARM64 CPU idle Driver"
+> +	select DT_IDLE_STATES
+> +	help
+> +	  Select this to enable generic cpuidle driver for ARM.
+> +	  It provides a generic idle driver whose idle states are configured
+> +	  at run-time through DT nodes. The CPUidle suspend backend is
+> +	  initialized by calling the CPU operations init idle hook
+> +	  provided by architecture code.
+> +
+>  config ARM_CLPS711X_CPUIDLE
+>  	bool "CPU Idle Driver for CLPS711X processors"
+>  	depends on ARCH_CLPS711X || COMPILE_TEST
+
+This for instance gets pulled in on allmodconfig on arm64, which is
+not useful and possibly noxious.
+
+> @@ -54,7 +64,7 @@ config ARM_AT91_CPUIDLE
+>  
+>  config ARM_EXYNOS_CPUIDLE
+>  	bool "Cpu Idle Driver for the Exynos processors"
+> -	depends on ARCH_EXYNOS
+> +	depends on ARCH_EXYNOS && !ARM64
+
+I would add a guard for all ARM drivers to prevent pulling them in
+on ARM64.
+
+With the above changes:
+
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+>  	select ARCH_NEEDS_CPU_IDLE_COUPLED if SMP
+>  	help
+>  	  Select this to enable cpuidle for Exynos processors
+> diff --git a/drivers/cpuidle/Kconfig.arm64 b/drivers/cpuidle/Kconfig.arm64
+> deleted file mode 100644
+> index 6effb36..0000000
+> --- a/drivers/cpuidle/Kconfig.arm64
+> +++ /dev/null
+> @@ -1,13 +0,0 @@
+> -#
+> -# ARM64 CPU Idle drivers
+> -#
+> -
+> -config ARM64_CPUIDLE
+> -	bool "Generic ARM64 CPU idle Driver"
+> -	select DT_IDLE_STATES
+> -	help
+> -	  Select this to enable generic cpuidle driver for ARM64.
+> -	  It provides a generic idle driver whose idle states are configured
+> -	  at run-time through DT nodes. The CPUidle suspend backend is
+> -	  initialized by calling the CPU operations init idle hook
+> -	  provided by architecture code.
+> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
+> index 4d177b9..3ba81b1 100644
+> --- a/drivers/cpuidle/Makefile
+> +++ b/drivers/cpuidle/Makefile
+> @@ -17,16 +17,13 @@ obj-$(CONFIG_ARM_ZYNQ_CPUIDLE)		+= cpuidle-zynq.o
+>  obj-$(CONFIG_ARM_U8500_CPUIDLE)         += cpuidle-ux500.o
+>  obj-$(CONFIG_ARM_AT91_CPUIDLE)          += cpuidle-at91.o
+>  obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        += cpuidle-exynos.o
+> +obj-$(CONFIG_ARM_CPUIDLE)		+= cpuidle-arm.o
+>  
+>  ###############################################################################
+>  # MIPS drivers
+>  obj-$(CONFIG_MIPS_CPS_CPUIDLE)		+= cpuidle-cps.o
+>  
+>  ###############################################################################
+> -# ARM64 drivers
+> -obj-$(CONFIG_ARM64_CPUIDLE)		+= cpuidle-arm64.o
+> -
+> -###############################################################################
+>  # POWERPC drivers
+>  obj-$(CONFIG_PSERIES_CPUIDLE)		+= cpuidle-pseries.o
+>  obj-$(CONFIG_POWERNV_CPUIDLE)		+= cpuidle-powernv.o
+> diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuidle-arm.c
+> similarity index 100%
+> rename from drivers/cpuidle/cpuidle-arm64.c
+> rename to drivers/cpuidle/cpuidle-arm.c
+> -- 
+> 1.9.1
+> 
+> 
