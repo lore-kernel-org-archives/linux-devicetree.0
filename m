@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v3 12/13] cpufreq: Add module to register cpufreq on Krait CPUs
-Date: Fri, 20 Mar 2015 23:45:31 -0700
-Message-ID: <1426920332-9340-13-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v3 06/13] clk: qcom: Add HFPLL driver
+Date: Fri, 20 Mar 2015 23:45:25 -0700
+Message-ID: <1426920332-9340-7-git-send-email-sboyd@codeaurora.org>
 References: <1426920332-9340-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <linux-pm-owner@vger.kernel.org>
 In-Reply-To: <1426920332-9340-1-git-send-email-sboyd@codeaurora.org>
@@ -10,103 +10,101 @@ To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Register a cpufreq-generic device whenever we detect that a
-"qcom,krait" compatible CPU is present in DT.
+On some devices (MSM8974 for example), the HFPLLs are
+instantiated within the Krait processor subsystem as separate
+register regions. Add a driver for these PLLs so that we can
+provide HFPLL clocks for use by the system.
 
 Cc: <devicetree@vger.kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- .../devicetree/bindings/arm/msm/qcom,pvs.txt       |  38 ++++
- drivers/cpufreq/Kconfig.arm                        |   9 +
- drivers/cpufreq/Makefile                           |   1 +
- drivers/cpufreq/qcom-cpufreq.c                     | 204 +++++++++++++++++++++
- 4 files changed, 252 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
- create mode 100644 drivers/cpufreq/qcom-cpufreq.c
+ .../devicetree/bindings/clock/qcom,hfpll.txt       |  40 ++++++++
+ drivers/clk/qcom/Kconfig                           |   8 ++
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/hfpll.c                           | 109 +++++++++++++++++++++
+ 4 files changed, 158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+ create mode 100644 drivers/clk/qcom/hfpll.c
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt b/Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
+diff --git a/Documentation/devicetree/bindings/clock/qcom,hfpll.txt b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
 new file mode 100644
-index 000000000000..e7cb10426a3b
+index 000000000000..fee92bb30344
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
-@@ -0,0 +1,38 @@
-+Qualcomm Process Voltage Scaling Tables
-+
-+The node name is required to be "qcom,pvs". There shall only be one
-+such node present in the root of the tree.
++++ b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+@@ -0,0 +1,40 @@
++High-Frequency PLL (HFPLL)
 +
 +PROPERTIES
 +
-+- qcom,pvs-format-a or qcom,pvs-format-b:
++- compatible:
 +	Usage: required
-+	Value type: <empty>
-+	Definition: Indicates the format of qcom,speedX-pvsY-bin-vZ properties.
-+		    If qcom,pvs-format-a is used the table is two columns
-+		    (frequency and voltage in that order). If qcom,pvs-format-b 		    is used the table is three columns (frequency, voltage,
-+		    and current in that order).
++	Value type: <string>
++	Definition: must be "qcom,hfpll"
 +
-+- qcom,speedX-pvsY-bin-vZ:
++- reg:
 +	Usage: required
 +	Value type: <prop-encoded-array>
-+	Definition: The PVS table corresponding to the speed bin X, pvs bin Y,
-+		    and version Z.
++	Definition: address and size of HPLL registers. An optional second
++		    element specifies the address and size of the alias
++		    register region.
++
++- clock-output-names:
++	Usage: required
++	Value type: <string>
++	Definition: Name of the PLL. Typically hfpllX where X is a CPU number
++		    starting at 0. Otherwise hfpll_Y where Y is more specific
++		    such as "l2".
++
 +Example:
 +
-+	qcom,pvs {
-+		qcom,pvs-format-a;
-+		qcom,speed0-pvs0-bin-v0 =
-+			<  384000000  950000 >,
-+			<  486000000  975000 >,
-+			<  594000000 1000000 >,
-+			<  702000000 1025000 >,
-+			<  810000000 1075000 >,
-+			<  918000000 1100000 >,
-+			< 1026000000 1125000 >,
-+			< 1134000000 1175000 >,
-+			< 1242000000 1200000 >,
-+			< 1350000000 1225000 >,
-+			< 1458000000 1237500 >,
-+			< 1512000000 1250000 >;
++1) An HFPLL for the L2 cache.
++
++	clock-controller@f9016000 {
++		compatible = "qcom,hfpll";
++		reg = <0xf9016000 0x30>;
++		clock-output-names = "hfpll_l2";
 +	};
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 1b06fc4640e2..3829d5521dfc 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -137,6 +137,15 @@ config ARM_OMAP2PLUS_CPUFREQ
- 	depends on ARCH_OMAP2PLUS
- 	default ARCH_OMAP2PLUS
- 
-+config ARM_QCOM_CPUFREQ
-+	tristate "Qualcomm based"
-+	depends on ARCH_QCOM
-+	select PM_OPP
++
++2) An HFPLL for CPU0. This HFPLL has the alias register region.
++
++	clock-controller@f908a000 {
++		compatible = "qcom,hfpll";
++		reg = <0xf908a000 0x30>, <0xf900a000 0x30>;
++		clock-output-names = "hfpll0";
++	};
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 0d7ab52b7ab0..d421fd195114 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -88,3 +88,11 @@ config MSM_MMCC_8974
+ 	  Support for the multimedia clock controller on msm8974 devices.
+ 	  Say Y if you want to support multimedia devices such as display,
+ 	  graphics, video encode/decode, camera, etc.
++
++config QCOM_HFPLL
++	tristate "High-Frequency PLL (HFPLL) Clock Controller"
++	depends on COMMON_CLK_QCOM
 +	help
-+	  This adds the CPUFreq driver for Qualcomm SoC based boards.
-+
-+	  If in doubt, say N.
-+
- config ARM_S3C_CPUFREQ
- 	bool
- 	help
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 82a1821471fd..be95ed8d6873 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+= kirkwood-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
- obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-+obj-$(CONFIG_ARM_QCOM_CPUFREQ)		+= qcom-cpufreq.o
- obj-$(CONFIG_ARM_S3C24XX_CPUFREQ)	+= s3c24xx-cpufreq.o
- obj-$(CONFIG_ARM_S3C24XX_CPUFREQ_DEBUGFS) += s3c24xx-cpufreq-debugfs.o
- obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
-diff --git a/drivers/cpufreq/qcom-cpufreq.c b/drivers/cpufreq/qcom-cpufreq.c
++	  Support for the high-frequency PLLs present on Qualcomm devices.
++	  Say Y if you want to support CPU frequency scaling on devices
++	  such as MSM8974, APQ8084, etc.
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 953f792d2133..b1076179fb17 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -21,3 +21,4 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
+ obj-$(CONFIG_MSM_GCC_8974) += gcc-msm8974.o
+ obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
+ obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
++obj-$(CONFIG_QCOM_HFPLL) += hfpll.o
+diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
 new file mode 100644
-index 000000000000..c9f86a062cdd
+index 000000000000..0092017b257d
 --- /dev/null
-+++ b/drivers/cpufreq/qcom-cpufreq.c
-@@ -0,0 +1,204 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
++++ b/drivers/clk/qcom/hfpll.c
+@@ -0,0 +1,109 @@
++/*
++ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 and
@@ -118,198 +116,102 @@ index 000000000000..c9f86a062cdd
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/cpu.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
 +#include <linux/kernel.h>
++#include <linux/init.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
 +#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/slab.h>
-+#include <linux/cpufreq-dt.h>
++#include <linux/of.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
 +
-+static void __init get_krait_bin_format_a(int *speed, int *pvs, int *pvs_ver)
++#include "clk-regmap.h"
++#include "clk-hfpll.h"
++
++static const struct hfpll_data hdata = {
++	.mode_reg = 0x00,
++	.l_reg = 0x04,
++	.m_reg = 0x08,
++	.n_reg = 0x0c,
++	.user_reg = 0x10,
++	.config_reg = 0x14,
++	.config_val = 0x430405d,
++	.status_reg = 0x1c,
++	.lock_bit = 16,
++
++	.user_val = 0x8,
++	.user_vco_mask = 0x100000,
++	.low_vco_max_rate = 1248000000,
++	.min_rate = 537600000UL,
++	.max_rate = 2900000000UL,
++};
++
++static const struct of_device_id qcom_hfpll_match_table[] = {
++	{ .compatible = "qcom,hfpll" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_hfpll_match_table);
++
++static const struct regmap_config hfpll_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.max_register	= 0x30,
++	.fast_io	= true,
++};
++
++static int qcom_hfpll_probe(struct platform_device *pdev)
 +{
++	struct clk *clk;
++	struct resource *res;
++	struct device *dev = &pdev->dev;
 +	void __iomem *base;
-+	u32 pte_efuse;
-+
-+	*speed = *pvs = *pvs_ver = 0;
-+
-+	base = ioremap(0x007000c0, 4);
-+	if (!base) {
-+		pr_warn("Unable to read efuse data. Defaulting to 0!\n");
-+		return;
-+	}
-+
-+	pte_efuse = readl_relaxed(base);
-+	iounmap(base);
-+
-+	*speed = pte_efuse & 0xf;
-+	if (*speed == 0xf)
-+		*speed = (pte_efuse >> 4) & 0xf;
-+
-+	if (*speed == 0xf) {
-+		*speed = 0;
-+		pr_warn("Speed bin: Defaulting to %d\n", *speed);
-+	} else {
-+		pr_info("Speed bin: %d\n", *speed);
-+	}
-+
-+	*pvs = (pte_efuse >> 10) & 0x7;
-+	if (*pvs == 0x7)
-+		*pvs = (pte_efuse >> 13) & 0x7;
-+
-+	if (*pvs == 0x7) {
-+		*pvs = 0;
-+		pr_warn("PVS bin: Defaulting to %d\n", *pvs);
-+	} else {
-+		pr_info("PVS bin: %d\n", *pvs);
-+	}
-+}
-+
-+static void __init get_krait_bin_format_b(int *speed, int *pvs, int *pvs_ver)
-+{
-+	u32 pte_efuse, redundant_sel;
-+	void __iomem *base;
-+
-+	*speed = 0;
-+	*pvs = 0;
-+	*pvs_ver = 0;
-+
-+	base = ioremap(0xfc4b80b0, 8);
-+	if (!base) {
-+		pr_warn("Unable to read efuse data. Defaulting to 0!\n");
-+		return;
-+	}
-+
-+	pte_efuse = readl_relaxed(base);
-+	redundant_sel = (pte_efuse >> 24) & 0x7;
-+	*speed = pte_efuse & 0x7;
-+	/* 4 bits of PVS are in efuse register bits 31, 8-6. */
-+	*pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
-+	*pvs_ver = (pte_efuse >> 4) & 0x3;
-+
-+	switch (redundant_sel) {
-+	case 1:
-+		*speed = (pte_efuse >> 27) & 0xf;
-+		break;
-+	case 2:
-+		*pvs = (pte_efuse >> 27) & 0xf;
-+		break;
-+	}
-+
-+	/* Check SPEED_BIN_BLOW_STATUS */
-+	if (pte_efuse & BIT(3)) {
-+		pr_info("Speed bin: %d\n", *speed);
-+	} else {
-+		pr_warn("Speed bin not set. Defaulting to 0!\n");
-+		*speed = 0;
-+	}
-+
-+	/* Check PVS_BLOW_STATUS */
-+	pte_efuse = readl_relaxed(base + 0x4) & BIT(21);
-+	if (pte_efuse) {
-+		pr_info("PVS bin: %d\n", *pvs);
-+	} else {
-+		pr_warn("PVS bin not set. Defaulting to 0!\n");
-+		*pvs = 0;
-+	}
-+
-+	pr_info("PVS version: %d\n", *pvs_ver);
-+	iounmap(base);
-+}
-+
-+static int __init qcom_cpufreq_populate_opps(void)
-+{
-+	int len, rows, cols, i, k, speed, pvs, pvs_ver;
-+	char table_name[] = "qcom,speedXX-pvsXX-bin-vXX";
-+	struct device_node *np;
-+	struct device *dev;
-+	int cpu = 0;
-+
-+	np = of_find_node_by_name(NULL, "qcom,pvs");
-+	if (!np)
-+		return -ENODEV;
-+
-+	if (of_property_read_bool(np, "qcom,pvs-format-a")) {
-+		get_krait_bin_format_a(&speed, &pvs, &pvs_ver);
-+		cols = 2;
-+	} else if (of_property_read_bool(np, "qcom,pvs-format-b")) {
-+		get_krait_bin_format_b(&speed, &pvs, &pvs_ver);
-+		cols = 3;
-+	} else {
-+		return -ENODEV;
-+	}
-+
-+	snprintf(table_name, sizeof(table_name),
-+			"qcom,speed%d-pvs%d-bin-v%d", speed, pvs, pvs_ver);
-+
-+	if (!of_find_property(np, table_name, &len))
-+		return -EINVAL;
-+
-+	len /= sizeof(u32);
-+	if (len % cols || len == 0)
-+		return -EINVAL;
-+
-+	rows = len / cols;
-+
-+	for (i = 0, k = 0; i < rows; i++) {
-+		u32 freq, volt;
-+
-+		of_property_read_u32_index(np, table_name, k++, &freq);
-+		of_property_read_u32_index(np, table_name, k++, &volt);
-+		while (k % cols)
-+			k++; /* Skip uA entries if present */
-+		for (cpu = 0; cpu < num_possible_cpus(); cpu++) {
-+			dev = get_cpu_device(cpu);
-+			if (!dev)
-+				return -ENODEV;
-+			if (dev_pm_opp_add(dev, freq, volt))
-+				pr_warn("failed to add OPP %u\n", freq);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init qcom_cpufreq_driver_init(void)
-+{
-+	struct cpufreq_dt_platform_data pdata = { .independent_clocks = true };
-+	struct platform_device_info devinfo = {
-+		.name = "cpufreq-dt",
-+		.data = &pdata,
-+		.size_data = sizeof(pdata),
++	struct regmap *regmap;
++	struct clk_hfpll *h;
++	struct clk_init_data init = {
++		.parent_names = (const char *[]){ "xo" },
++		.num_parents = 1,
++		.ops = &clk_ops_hfpll,
 +	};
-+	struct device *cpu_dev;
-+	struct device_node *np;
-+	int ret;
 +
-+	cpu_dev = get_cpu_device(0);
-+	if (!cpu_dev)
++	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
++	if (!h)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	regmap = devm_regmap_init_mmio(&pdev->dev, base, &hfpll_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	if (of_property_read_string_index(dev->of_node, "clock-output-names",
++						  0, &init.name))
 +		return -ENODEV;
 +
-+	np = of_node_get(cpu_dev->of_node);
-+	if (!np)
-+		return -ENOENT;
++	h->d = &hdata;
++	h->clkr.hw.init = &init;
++	spin_lock_init(&h->lock);
 +
-+	if (!of_device_is_compatible(np, "qcom,krait")) {
-+		of_node_put(np);
-+		return -ENODEV;
-+	}
-+	of_node_put(np);
++	clk = devm_clk_register_regmap(&pdev->dev, &h->clkr);
 +
-+	ret = qcom_cpufreq_populate_opps();
-+	if (ret)
-+		return ret;
-+
-+	return PTR_ERR_OR_ZERO(platform_device_register_full(&devinfo));
++	return PTR_ERR_OR_ZERO(clk);
 +}
-+module_init(qcom_cpufreq_driver_init);
 +
-+MODULE_DESCRIPTION("Qualcomm CPUfreq driver");
++static struct platform_driver qcom_hfpll_driver = {
++	.probe		= qcom_hfpll_probe,
++	.driver		= {
++		.name	= "qcom-hfpll",
++		.of_match_table = qcom_hfpll_match_table,
++	},
++};
++module_platform_driver(qcom_hfpll_driver);
++
++MODULE_DESCRIPTION("QCOM HFPLL Clock Driver");
 +MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:qcom-hfpll");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
