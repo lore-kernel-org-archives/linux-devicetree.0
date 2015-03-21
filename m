@@ -1,89 +1,42 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Sat, 21 Mar 2015 22:00:29 +0100
-Message-ID: <20150321210028.GA1078@katana>
-References: <1425903665-19343-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20150318123012.GA3580@katana> <55097C46.9010605@gmail.com>
- <20150318140037.GE3580@katana> <550A05E5.3050100@gmail.com>
- <20150319100944.GA914@katana> <550AEF9D.6090307@wwwdotorg.org>
- <20150319160208.GF7657@katana> <550B3725.10209@gmail.com>
- <20150320101925.GC2071@katana>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v1 01/11] leds: Add support for max77693 mfd flash cell
+Date: Sun, 22 Mar 2015 00:44:37 +0200
+Message-ID: <20150321224437.GD16613@valkosipuli.retiisi.org.uk>
+References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+ <1426863811-12516-2-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5625793640885012560=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150320101925.GC2071@katana>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gabriel Dobato <dobatog@gmail.com>, linux-i2c@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426863811-12516-2-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacek,
 
---===============5625793640885012560==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
-Content-Disposition: inline
+On Fri, Mar 20, 2015 at 04:03:21PM +0100, Jacek Anaszewski wrote:
+> This patch adds led-flash support to Maxim max77693 chipset.
+> A device can be exposed to user space through LED subsystem
+> sysfs interface. Device supports up to two leds which can
+> work in flash and torch mode. The leds can be triggered
+> externally or by software.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
 
+Thanks for the update once again!
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
+-- 
+Kind regards,
 
-> > I guess what you want to have is that i2c_add_adapter() is not called
-> > for the disabled case, right?
->=20
-> I think that makes sense.
-
-But maybe we should just start simple and keep calling i2c_add_adapter()
-for the disabled case. We will just skip probing devices on the bus.
-Would that help the issue you were originally trying to solve?
-
-
-
---y0ulUmNC+osPPQO6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIbBAEBAgAGBQJVDdvsAAoJEBQN5MwUoCm2s3gP9jHTKZBAwrIU/8xNnSbGSN90
-C1Vlk4gbLWGfrFDrh5WGDQYbz999exus6CfVSukbGa6OJ2Ec5rhX9+npub//wr2X
-/fDGZLukaqGFjgsxv+c8SWtp/gcDpZdIahYH1FrPBsh+sj7aMUoUQXMWHVt+8N6k
-TN0pZuDguOuoZHVZQEqMHBzTyHbN+YnDr2ADD48Dq03d06ZfAijxUj7geRuwxIeD
-W2+RQcANNc0cZX5QXOI3rDqAKg6CksiJ4nAZlw82IfbcKD8xHI9RMELgrIfeE4KA
-gwKip0xQFyJH+FW6ji9mcPYmVZg4E73UAfUj85zkSrYbUimH13tni/CXqQfJF7Vu
-mWPJThojP9el0ZzANPMvKRWFNE+KdqyRZxauak1J/sh0VL9p4nme1at7YAXzXtR8
-Jx6rjvPCz2mGk512XGkZbSukn1Eoe/0F9wHIq3OCDqrlDOZJcyeb2kNz0O/YrRJX
-ED4fzEOKhCFbtXfk3sYwypZJLaLeD2aU+X+ELl09Zfz9OkrzLb5fQCp3DEKJ+z78
-Xagha9ju81jsK2EC+r6drLXAn2wIT0caTTHVpuUqSa8hRiYRa6qMUVY6y11ZhuRL
-LTF/fA7zKjGNN//VDVSYi4PxymQcvY4Nw9dMaigVkpwxIWZfLuC7O1m6iXoZaxS5
-QEXiKrmNNjuH78RtEP0=
-=fgG8
------END PGP SIGNATURE-----
-
---y0ulUmNC+osPPQO6--
-
-
---===============5625793640885012560==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5625793640885012560==--
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
