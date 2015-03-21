@@ -1,46 +1,54 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 3/7] of: Document {little,big,native}-endian bindings
-Date: Fri, 20 Mar 2015 23:48:36 +0000
-Message-ID: <20150320234836.1B6A3C407F7@trevor.secretlab.ca>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
-	<1416872182-6440-4-git-send-email-cernekee@gmail.com>
-	<54F4624D.6000909@hurleysoftware.com>
-	<CAJiQ=7DQ6CRWddii_9HZqH0a_1ixos6FBQRzb+HM+YAh1jmkBA@mail.gmail.com>
-	<54F48B03.5040205@hurleysoftware.com>
-	<CAJiQ=7CKE5Nw=maewN_ChkySh1NReoUnddLO_ohOJQfwo_FXAg@mail.gmail.com>
-	<54F4A1B6.8030701@hurleysoftware.com>
-	<CAJiQ=7CDAifvcMkrAsseXHHC_GGMJg-+UiWVY03JAzDqSFzi+g@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7CDAifvcMkrAsseXHHC_GGMJg-+UiWVY03JAzDqSFzi+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: [PATCH v5 0/2] Add support for Broadcom iProc touchscreen
+Date: Fri, 20 Mar 2015 17:57:24 -0700
+Message-ID: <1426899446-16873-1-git-send-email-jonathar@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>
+Cc: Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 Mar 2015 10:57:41 -0800
-, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> On Mon, Mar 2, 2015 at 9:45 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
-> >> This doesn't change the behavior of pre-existing drivers that
-> >> implement the *-endian properties in a different way.  There are not
-> >> many of these drivers and they can be documented as special cases.
-> >
-> > Yeah, ok, as long as there's no expectation that existing drivers
-> > meet this criteria when they add big-endian support.
-> 
-> The intention is to make it easy for existing drivers with LE register
-> accesses (i.e. mostly drivers taken from an x86 + PCI environment) to
-> work on systems with native to BE register accesses.  8250 and USB are
-> the first two examples of this.
+This patchset contains initial support for the touchscreen on the Broadcom
+iProc family of SoCs. This driver has been validated with Cygnus and is expected
+to work on other iProc family of SoCs that use the same touchscreen controller.
 
-I think the right solution here is to drop any specified default in the
-common properties binding and replace with something like, "If a binding
-supports these properties, then that binding should also specify the
-default if none of these properties are present. In such cases,
-little-endian is the preferred default, but it is not a requirement"
+Changes from v4:
+- Debug code cleanup.
+- pdev wasn't initialized prior to calling get_tsc_config() in probe resulting
+  in null dev pointer being passed to the function.
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v3:
+- Fixed typo in Kconfig.
+
+Changes from v2:
+- Misc style changes.
+- Removed assumptions about interrupts generated in ISR. It now emits all
+  events and then syncs if necessary.
+- Removed our rotation property and replaced with the latest
+  touchscreen-inverted-x/y. Also added support for the standard optional
+  properties touchscreen-size-x/y and touchscreen-fuzz-x/y. Did not add support
+  for inverted-x/y at this time as our touchscreen is currently only oriented
+  180 degres.
+
+Changes from v1:
+- Add missing newlines to debug messages
+- Use BIT macro for defines
+- Fix logic in get_tsc_config to improve readability
+- Get rid of unnecessary remove() function
+
+Jonathan Richardson (2):
+  Input: touchscreen-iproc: Add Broadcom iProc touchscreen driver
+  Input: touchscreen-iproc: add device tree bindings
+
+ .../input/touchscreen/brcm,iproc-touchscreen.txt   |   76 +++
+ drivers/input/touchscreen/Kconfig                  |   11 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/bcm_iproc_tsc.c          |  518 ++++++++++++++++++++
+ 4 files changed, 606 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
+ create mode 100644 drivers/input/touchscreen/bcm_iproc_tsc.c
+
+-- 
+1.7.9.5
