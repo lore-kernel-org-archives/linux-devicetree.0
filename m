@@ -1,88 +1,143 @@
 From: NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 2/3] TTY: add support for tty_slave devices.
-Date: Sun, 22 Mar 2015 14:32:52 +1100
-Message-ID: <20150322143252.2896377d@notabene.brown>
+Subject: Re: [Gta04-owner] [PATCH 2/3] TTY: add support for tty_slave
+ devices.
+Date: Sun, 22 Mar 2015 14:42:09 +1100
+Message-ID: <20150322144209.14abc603@notabene.brown>
 References: <20150318055437.21025.13990.stgit@notabene.brown>
 	<20150318055831.21025.85317.stgit@notabene.brown>
-	<1426669895.2649.7.camel@tiscali.nl>
+	<20150320194150.GB28194@amd>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/jXnKlSuXQdnvz.zYJsAsfxC"; protocol="application/pgp-signature"
+ boundary="Sig_/GC5Hw7IIpGcGzwLM0jL3Gfq"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426669895.2649.7.camel@tiscali.nl>
+In-Reply-To: <20150320194150.GB28194@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, GTA04 owners <gta04-owner@goldelico.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/jXnKlSuXQdnvz.zYJsAsfxC
+--Sig_/GC5Hw7IIpGcGzwLM0jL3Gfq
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 18 Mar 2015 10:11:35 +0100 Paul Bolle <pebolle@tiscali.nl> wrote:
+On Fri, 20 Mar 2015 20:41:50 +0100 Pavel Machek <pavel@ucw.cz> wrote:
 
-> Just two nits to look into once you get to fix up all the smaller
-> issues.
-
-Thanks.  I've fixed both those nits.
-
-NeilBrown
-
-
+> Hi!
 >=20
-> NeilBrown schreef op wo 18-03-2015 om 16:58 [+1100]:
-> > --- /dev/null
-> > +++ b/drivers/tty/slave/Kconfig
-> > @@ -0,0 +1,7 @@
-> > +menuconfig TTY_SLAVE
-> > +	tristate "TTY slave devices"
-> > +	depends on OF
-> > +	help
-> > +	  Devices which attach via a uart, but need extra
-> > +	  driver support for power management etc.
-> > +
+> (And yes, I now see dts examples, sorry for the noise.)
 >=20
-> This blank line makes "git am" whine: "new blank line at EOF".
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> Minor nits below.
 >=20
 > > --- /dev/null
 > > +++ b/drivers/tty/slave/tty_slave_core.c
+> > @@ -0,0 +1,136 @@
+> > +/*
+> > + * tty-slave-core - device bus for tty slaves
 >=20
-> [...]
+> Filename actually uses underscores.
+
+The filename uses underscores because all the filenames in drivers/tty do.
+And this isn't a file name, it is more like a module name, and the module
+tools treat '-' and '_' as equivalent.
+And I prefer hyphen....
+
+I looked at other files in drivers/tty and decided noticed that they use
+spaces to separate words in this context (novel concept :-) so I've done the
+same.
+
 >=20
-> This file doesn't have a MODULE_LICENSE() macro. So I think that, if
-> this driver is built as a module and loaded, kernel/module.c will set
-> its license to "unspecified" and taint the kernel.
+> > +			container_of(parent, struct tty_slave, dev);
+> > +		tty->ops =3D &dev->ops;
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL(tty_slave_activate);
+>=20
+> Not "_GPL"?
+
+Other exports in the files are just EXPORT_SYMBOL, so I copied.
+I don't feel strongly (the code is GPL anyway) so just follow what
+surrounding code does.
+
+>=20
+> > +postcore_initcall(tty_slave_init);
+> > +module_exit(tty_slave_exit);
+>=20
+> Should it have MODULE_LICENSE tag?
+
+Yes. Added.
+
 >=20
 >=20
-> Paul Bolle
+> > +int tty_register_finalize(struct tty_driver *driver, struct device *de=
+v)
+> > +{
+> > +	int retval;
+> > +	bool cdev =3D false;
+> > +	int index =3D dev->devt - MKDEV(driver->major,
+> > +				      driver->minor_start);
+> > +	printk("REGISTER %d %d 0x%x %d\n", driver->major, driver->minor_start=
+, dev->devt, index);
 >=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> That printk should probably be removed for merge?
+
+Gone.
+
+>=20
+> > +	if (!(driver->flags & TTY_DRIVER_DYNAMIC_ALLOC)) {
+> > +		retval =3D tty_cdev_add(driver,
+> > +				      dev->devt,
+> > +				      index, 1);
+>=20
+> You can put this on one line.
+
+Indeed.  Done.
+
+>=20
+> > --- /dev/null
+> > +++ b/include/linux/tty_slave.h
+> > @@ -0,0 +1,26 @@
+> > +
+> > +struct tty_slave {
+> > +	struct device *tty_dev;
+> > +	struct tty_driver *tty_drv;
+> > +	struct tty_operations ops;
+> > +	struct device dev;
+> > +};
+>=20
+> Header files usually have #include guards, and some kind of comment on
+> top.
+>=20
+> 									Pavel
+
+Of 1996 files in include/linux, 1851 seem to do that.  That's enough to
+convince me.  I've done it too.
+
+Thanks,
+NeilBrown
 
 
---Sig_/jXnKlSuXQdnvz.zYJsAsfxC
+--Sig_/GC5Hw7IIpGcGzwLM0jL3Gfq
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIVAwUBVQ435Tnsnt1WYoG5AQLf+A//SpnA7X69kCJQa6JfSZ2jF/A2I3Q8abXz
-O8Nqg72cdwF2iNxs9l2LqSEF6kYlKJj5/PpVCktneaWoazGUXptXLPXvMGmqLWTK
-zT4VIOHyeb/ClZtJWFwBZNnp8MOMR08If3Yjz+GH9FJzRbbVvhMdGm6LbIjhR+0B
-Qbw+lI/Y9AC6EL9xLhzZwc4XkuPyNnDxhEXWnpF4A5mT5H5tdZIejWB+w7DkbkNk
-I6UgcqCUYl7tuYzyrjlURwT9EMZttJwhALPg6Vs5CPPGJPQkuog4MJGG9nFtnP+C
-XVjBLEcWU0BUab5hE0JK7DO5Y/DuHqlo7mtyy/rk9rjpsG/9N/tMDBGk3XWn9y0X
-Ymr1Hc7jzMzuQJWiJM/MNIw8RAzCVUj31wMc7Tb/JGX82aYbPZHzsRjGhQ6aiIOz
-MOJq/O5cJHJGDr6CAgHdrYUyItvTkxY3IdfM7vp7jHIFhhjac4Qjkgn4m3nQktso
-gt5nbu6wtVdfn5RXpyH+Sk43uNZvzFF02WBbBe8JnEAtq4GJqUX9TfizmY4aDshf
-5LYRwQL2cLPSilK1xst0ORL/xN1KUtrAhDLczNFoc0pDYSjISx41WEhb1ViRzjqY
-nBCuOhAWYU1BW+5bAm28XFVOmk48/fpR7rFtws03R4xGBFwZ6gkvSiDE8+UeUgnx
-K3Tpj6Zd2d8=
-=ugxe
+iQIVAwUBVQ46ETnsnt1WYoG5AQJCsBAAvAuB+FGWqj78XJoUkdIlvwdarJaU3MqI
+yJfJ17XGwg3/D1uWQnOS+dpur9mWgavu6KwwMkJXdY7bg1wDD0LnBvceWCyeAWyV
+8AYSWv5DqE6mnisiWMSRn6xdgWBbEZX6RSqeA4f6bM5RUU9KSIQtY6/NMd2TsUYY
+24CmBRhi8uJmhn21T+2JwVLOYn1NlGLcDjJgHwetzzlxNg0wHtSBR9VbpTCoYf6E
+l/D5K6+8SzijwRqgd5Fx/+dAPHt1+8UdUkSh9WcqS64pQlNS1Y+Id+nUIgMVGKPA
+34lV+eMXudV4WVfZqRPZT3t9elnFsyFoLF9qqR5/AdYvM1otCmy0kaLNTJ3+y58b
+Rde/Wdp69oXY1mhUMqmGsPDtGa06DenBC5eYh0J/nBsog4lpV4R2PCyHBPqBUIps
+5UOvWv8k8EaowaL2PDzE/qrW7Aww+q9xYaHwaivXlR9UHKfIjHECvHBEbjgfZiiY
+RbyevqKjk+buc9utZXEc4jVBXHUzWfjzBF0+Ngheno40EUZ/HbYdK9Ih/b2Dj10a
+6SmASbet7mOAgoDlR0k04nwbkp2iyRQs3mCukl3qpYDBPZ+loXBn4NMhyabsJSsM
++xIcOfWOv8KjSfNQ/F3nEUdOKvbNPWmW/DPklUcaCwbT9g7BtKhA7OWc53dy7vMz
+0gl+f+YHLoQ=
+=D4t7
 -----END PGP SIGNATURE-----
 
---Sig_/jXnKlSuXQdnvz.zYJsAsfxC--
+--Sig_/GC5Hw7IIpGcGzwLM0jL3Gfq--
