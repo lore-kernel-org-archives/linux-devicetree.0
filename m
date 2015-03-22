@@ -1,183 +1,88 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v1 06/11] exynos4-is: Add support for v4l2-flash subdevs
-Date: Sun, 22 Mar 2015 03:21:05 +0200
-Message-ID: <20150322012105.GI16613@valkosipuli.retiisi.org.uk>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-7-git-send-email-j.anaszewski@samsung.com>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 2/3] TTY: add support for tty_slave devices.
+Date: Sun, 22 Mar 2015 14:32:52 +1100
+Message-ID: <20150322143252.2896377d@notabene.brown>
+References: <20150318055437.21025.13990.stgit@notabene.brown>
+	<20150318055831.21025.85317.stgit@notabene.brown>
+	<1426669895.2649.7.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426863811-12516-7-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/jXnKlSuXQdnvz.zYJsAsfxC"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426669895.2649.7.camel@tiscali.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+--Sig_/jXnKlSuXQdnvz.zYJsAsfxC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Some comments below. Please also get an ack from Sylwester! :-)
+On Wed, 18 Mar 2015 10:11:35 +0100 Paul Bolle <pebolle@tiscali.nl> wrote:
 
-On Fri, Mar 20, 2015 at 04:03:26PM +0100, Jacek Anaszewski wrote:
-> This patch adds support for external v4l2-flash devices.
-> The support includes parsing "flashes" DT property
-> and asynchronous subdevice registration.
-> 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/media/platform/exynos4-is/media-dev.c |   36 +++++++++++++++++++++++--
->  drivers/media/platform/exynos4-is/media-dev.h |   13 ++++++++-
->  2 files changed, 46 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index f315ef9..8dd0e5d 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -451,6 +451,25 @@ rpm_put:
->  	return ret;
->  }
->  
-> +static void fimc_md_register_flash_entities(struct fimc_md *fmd)
-> +{
-> +	struct device_node *parent = fmd->pdev->dev.of_node;
-> +	struct device_node *np;
-> +	int i = 0;
-> +
-> +	do {
-> +		np = of_parse_phandle(parent, "flashes", i);
-> +		if (np) {
+> Just two nits to look into once you get to fix up all the smaller
+> issues.
 
-if (!np)
-	break;
+Thanks.  I've fixed both those nits.
 
-And you can remove checking np another time in the loop condition.
+NeilBrown
 
-> +			fmd->flash[fmd->num_flashes].asd.match_type =
-> +							V4L2_ASYNC_MATCH_OF;
-> +			fmd->flash[fmd->num_flashes].asd.match.of.node = np;
-> +			fmd->num_flashes++;
-> +			fmd->async_subdevs[fmd->num_sensors + i] =
-> +						&fmd->flash[i].asd;
 
-Have all the sensors been already registered by this point?
+>=20
+> NeilBrown schreef op wo 18-03-2015 om 16:58 [+1100]:
+> > --- /dev/null
+> > +++ b/drivers/tty/slave/Kconfig
+> > @@ -0,0 +1,7 @@
+> > +menuconfig TTY_SLAVE
+> > +	tristate "TTY slave devices"
+> > +	depends on OF
+> > +	help
+> > +	  Devices which attach via a uart, but need extra
+> > +	  driver support for power management etc.
+> > +
+>=20
+> This blank line makes "git am" whine: "new blank line at EOF".
+>=20
+> > --- /dev/null
+> > +++ b/drivers/tty/slave/tty_slave_core.c
+>=20
+> [...]
+>=20
+> This file doesn't have a MODULE_LICENSE() macro. So I think that, if
+> this driver is built as a module and loaded, kernel/module.c will set
+> its license to "unspecified" and taint the kernel.
+>=20
+>=20
+> Paul Bolle
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-> +		}
-> +	} while (np && (++i < FIMC_MAX_FLASHES));
 
-How about instead:
+--Sig_/jXnKlSuXQdnvz.zYJsAsfxC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-fmd->num_flashes < FIMC_MAX_FLASHES
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-And drop i. Also move incrementing num_flashes as last in the if.
+iQIVAwUBVQ435Tnsnt1WYoG5AQLf+A//SpnA7X69kCJQa6JfSZ2jF/A2I3Q8abXz
+O8Nqg72cdwF2iNxs9l2LqSEF6kYlKJj5/PpVCktneaWoazGUXptXLPXvMGmqLWTK
+zT4VIOHyeb/ClZtJWFwBZNnp8MOMR08If3Yjz+GH9FJzRbbVvhMdGm6LbIjhR+0B
+Qbw+lI/Y9AC6EL9xLhzZwc4XkuPyNnDxhEXWnpF4A5mT5H5tdZIejWB+w7DkbkNk
+I6UgcqCUYl7tuYzyrjlURwT9EMZttJwhALPg6Vs5CPPGJPQkuog4MJGG9nFtnP+C
+XVjBLEcWU0BUab5hE0JK7DO5Y/DuHqlo7mtyy/rk9rjpsG/9N/tMDBGk3XWn9y0X
+Ymr1Hc7jzMzuQJWiJM/MNIw8RAzCVUj31wMc7Tb/JGX82aYbPZHzsRjGhQ6aiIOz
+MOJq/O5cJHJGDr6CAgHdrYUyItvTkxY3IdfM7vp7jHIFhhjac4Qjkgn4m3nQktso
+gt5nbu6wtVdfn5RXpyH+Sk43uNZvzFF02WBbBe8JnEAtq4GJqUX9TfizmY4aDshf
+5LYRwQL2cLPSilK1xst0ORL/xN1KUtrAhDLczNFoc0pDYSjISx41WEhb1ViRzjqY
+nBCuOhAWYU1BW+5bAm28XFVOmk48/fpR7rFtws03R4xGBFwZ6gkvSiDE8+UeUgnx
+K3Tpj6Zd2d8=
+=ugxe
+-----END PGP SIGNATURE-----
 
-> +}
-> +
->  static int __of_get_csis_id(struct device_node *np)
->  {
->  	u32 reg = 0;
-> @@ -1275,6 +1294,15 @@ static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
->  	struct fimc_sensor_info *si = NULL;
->  	int i;
->  
-> +	/* Register flash subdev if detected any */
-> +	for (i = 0; i < ARRAY_SIZE(fmd->flash); i++) {
-> +		if (fmd->flash[i].asd.match.of.node == subdev->dev->of_node) {
-> +			fmd->flash[i].subdev = subdev;
-> +			fmd->num_flashes++;
-> +			return 0;
-> +		}
-> +	}
-> +
->  	/* Find platform data for this sensor subdev */
->  	for (i = 0; i < ARRAY_SIZE(fmd->sensor); i++)
->  		if (fmd->sensor[i].asd.match.of.node == subdev->dev->of_node)
-> @@ -1385,6 +1413,8 @@ static int fimc_md_probe(struct platform_device *pdev)
->  		goto err_m_ent;
->  	}
->  
-> +	fimc_md_register_flash_entities(fmd);
-> +
->  	mutex_unlock(&fmd->media_dev.graph_mutex);
->  
->  	ret = device_create_file(&pdev->dev, &dev_attr_subdev_conf_mode);
-> @@ -1401,12 +1431,14 @@ static int fimc_md_probe(struct platform_device *pdev)
->  		goto err_attr;
->  	}
->  
-> -	if (fmd->num_sensors > 0) {
-> +	if (fmd->num_sensors > 0 || fmd->num_flashes > 0) {
->  		fmd->subdev_notifier.subdevs = fmd->async_subdevs;
-> -		fmd->subdev_notifier.num_subdevs = fmd->num_sensors;
-> +		fmd->subdev_notifier.num_subdevs = fmd->num_sensors +
-> +							fmd->num_flashes;
->  		fmd->subdev_notifier.bound = subdev_notifier_bound;
->  		fmd->subdev_notifier.complete = subdev_notifier_complete;
->  		fmd->num_sensors = 0;
-> +		fmd->num_flashes = 0;
->  
->  		ret = v4l2_async_notifier_register(&fmd->v4l2_dev,
->  						&fmd->subdev_notifier);
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.h b/drivers/media/platform/exynos4-is/media-dev.h
-> index 0321454..feff9c8 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.h
-> +++ b/drivers/media/platform/exynos4-is/media-dev.h
-> @@ -34,6 +34,8 @@
->  
->  #define FIMC_MAX_SENSORS	4
->  #define FIMC_MAX_CAMCLKS	2
-> +#define FIMC_MAX_FLASHES	2
-> +#define FIMC_MAX_ASYNC_SUBDEVS (FIMC_MAX_SENSORS + FIMC_MAX_FLASHES)
->  #define DEFAULT_SENSOR_CLK_FREQ	24000000U
->  
->  /* LCD/ISP Writeback clocks (PIXELASYNCMx) */
-> @@ -93,6 +95,11 @@ struct fimc_sensor_info {
->  	struct fimc_dev *host;
->  };
->  
-> +struct fimc_flash_info {
-> +	struct v4l2_subdev *subdev;
-> +	struct v4l2_async_subdev asd;
-> +};
-> +
->  struct cam_clk {
->  	struct clk_hw hw;
->  	struct fimc_md *fmd;
-> @@ -104,6 +111,8 @@ struct cam_clk {
->   * @csis: MIPI CSIS subdevs data
->   * @sensor: array of registered sensor subdevs
->   * @num_sensors: actual number of registered sensors
-> + * @flash: array of registered flash subdevs
-> + * @num_flashes: actual number of registered flashes
->   * @camclk: external sensor clock information
->   * @fimc: array of registered fimc devices
->   * @fimc_is: fimc-is data structure
-> @@ -123,6 +132,8 @@ struct fimc_md {
->  	struct fimc_csis_info csis[CSIS_MAX_ENTITIES];
->  	struct fimc_sensor_info sensor[FIMC_MAX_SENSORS];
->  	int num_sensors;
-> +	struct fimc_flash_info flash[FIMC_MAX_FLASHES];
-> +	int num_flashes;
->  	struct fimc_camclk_info camclk[FIMC_MAX_CAMCLKS];
->  	struct clk *wbclk[FIMC_MAX_WBCLKS];
->  	struct fimc_lite *fimc_lite[FIMC_LITE_MAX_DEVS];
-> @@ -149,7 +160,7 @@ struct fimc_md {
->  	} clk_provider;
->  
->  	struct v4l2_async_notifier subdev_notifier;
-> -	struct v4l2_async_subdev *async_subdevs[FIMC_MAX_SENSORS];
-> +	struct v4l2_async_subdev *async_subdevs[FIMC_MAX_ASYNC_SUBDEVS];
->  
->  	bool user_subdev_api;
->  	spinlock_t slock;
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Sig_/jXnKlSuXQdnvz.zYJsAsfxC--
