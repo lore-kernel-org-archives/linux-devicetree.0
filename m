@@ -1,86 +1,78 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: serial atag tag in devicetree ?
-Date: Sun, 22 Mar 2015 16:01:35 -0500
-Message-ID: <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
-References: <550EA6D8.3090702@redhat.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] of: Empty node & property flag accessors when !OF
+Date: Sun, 22 Mar 2015 22:03:15 +0100
+Message-ID: <20150322210315.GA974@katana>
+References: <1421859957-24457-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <CAL_JsqKxtJH=JyruyuMLXSFfTLdswOLa=AfGEbROsSSOhLLDkg@mail.gmail.com>
+ <20150320121223.16D69C4076B@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <550EA6D8.3090702@redhat.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Ian Campbell <ijc@hellion.org.uk>, U-Boot <u-boot@lists.denx.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150320121223.16D69C4076B-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 22, 2015 at 6:26 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi All,
->
-> I'm sending this mail because Paul Kocialkowski (in the Cc)
-> has submitted a patch for upstream u-boot to set the serial
-> atag tag from u-boot for Allwinner SoCs, using the SoCs
-> SID, which is a 128 bit register containing a unique number
-> for each SoC.
 
-We shouldn't really be adding ATAGs to newer platforms...
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> In some cases a manufacturer may want to override this with
-> its own serial from say an eeprom, as such it is desirable
-> to communicate the serial from u-boot to the kernel rather
-> then reproducing the sid reading code in the kernel.
->
-> For old atag using kernels there is an atag for this, and
-> the contents of this tag will show up in /proc/cpuinfo,
-> currently there is no equivalent for this in devicetree.
->
-> I'm a bit reluctant to merge Paul's patch into u-boot
-> because of this as it will enable a feature on older
-> kernels while leaving the upstream kernel without it.
->
-> So I was wondering how to deal with this in devicetree,
-> at least one board in u-boot already sets a devicetree
-> property for this:
->
-> board/gateworks/gw_ventana/gw_ventana.c
-> 1202: *   serial# env var
-> 1207:   char *serial = getenv("serial#");
-> 1432:           setenv("serial#", str);
-> 1512:   fdt_setprop(blob, 0, "system-serial", getenv("serial#"),
-> 1513:               strlen(getenv("serial#")) + 1);
->
-> Which sets a system-serial property in the root node,
-> so at the same level where we also have the model string
-> this seems to make sense to me.
+On Fri, Mar 20, 2015 at 12:12:23PM +0000, Grant Likely wrote:
+> On Thu, 22 Jan 2015 17:13:51 -0600
+> , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>  wrote:
+> > +Wolfram
+> >=20
+> > On Wed, Jan 21, 2015 at 11:05 AM, Pantelis Antoniou
+> > <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> > > Introduce empty node and property flag accessors when CONFIG_OF is not
+> > > defined.
+> > > This allows us to use them without ifdef'ing them in places where it
+> > > makes sense to do so.
+> > >
+> > > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >=20
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >=20
+> > I've asked Wolfram to apply. While not a fix itself, this is needed
+> > for an I2C related fix for 3.19.
+>=20
+> I don't see this in mainline or linux-next, so I've applied to my tree.
+> Thanks.
 
-system-serial is new to me...
+Thanks! I didn't have the original patch and asked for a resend. That
+never happened, so it slipped through.
 
-> So do we want to add a devicetree binding for system
-> serials, and if we do should we make it a string like
-> above, or should we make it an 64 bit integer like the atag?
->
-> If we make it a string we can store longer serials, but
-> how should we deal with those wrt /proc/cpuinfo? Only show
-> the first 64 bits ?
 
-There is already "serial-number" (a string) which exists for
-OpenFirmware. Also, "copyright" corresponds to vendor/manufacturer
-string. Both of these are supported by lshw already.
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->
-> Regards,
->
-> Hans
-> _______________________________________________
-> U-Boot mailing list
-> U-Boot@lists.denx.de
-> http://lists.denx.de/mailman/listinfo/u-boot
+iQIcBAEBAgAGBQJVDy4TAAoJEBQN5MwUoCm212QP/2KL1NxVjq8cjS2faaHGiwiF
+O1gPTkTLra7OLHglui4SyEv7gpqnGf7Gq/Ib2Lb7r3DIHshxNKQkSzwgtLYm6RWj
+ruSZJNJhsGRlZ0/+5IiffPQy3zmC0IPPVHHlZW4Z+REYFoJxN8M6baIotKTc6ho/
+DqCSdrLaq9YwOi66dI5YQrTDFvLT2O4wJmm8B6LzBr0hpwbDCHJ0Sc9CZEfHrm5n
+DuWXyxzAD1E9vPzl4qsmNof0zzg/5QrVZDStx5kBUmwA8sbmSSF5Or5b/qNkanrE
+wLKxra5hWB/pYFr7H1O22gaVPU25ZL1Ld1tn6dUmknkoDzJ5Q8eHNDmqJFnlbQvb
+WyuJFPe7pZYJkJiY9uEHjdeGVEw7YY0S3RRvOe6rE2mjnaNsjqBlecNUG8DPqnrD
+QcQ4kwha+VNUqogeCYDei/Ejc4wJBkFUoeNoUkv5z2312o2TjvcJqaGsOtl1iVXL
+vfVRCiQXmhOoRPP8SKNGsXHn1teMvukWqbT9dga9jxzTgc4oSh/NNJyjLH6vtZ9J
+prq31YM2PM/Z6S03al4Kmmk6tMVxUTuEO2249JXtdfEC0lRJtXa3wP2HAQb9cEZc
+p4+FdGEMcV28J4FhNrKf0vvpvfFlYlV6I73PmOZhoW17UZ/wV1fvs3bF/r+DXEGv
+KORCGvPw1yUJe+9lUFaA
+=Rrj5
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
