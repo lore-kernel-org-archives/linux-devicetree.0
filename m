@@ -1,68 +1,58 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
-Date: Sun, 22 Mar 2015 18:56:27 +0000
-Message-ID: <20150322185627.GI6643@sirena.org.uk>
-References: <cover.1423642246.git.viresh.kumar@linaro.org>
- <20150212005220.GG11190@codeaurora.org>
- <CAKohponaLt51hiHd=uTocK_fPPwRDgkse5wc_PGG5tFQNnvfAQ@mail.gmail.com>
- <20150212082004.GJ11190@codeaurora.org>
- <CAKohpo=uJJw0=T+yfV=aAUQq+Z2-kZFJWFqxnN6B8QtSb2XHqg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC:pcm512x: Make PLL lock output selectable via device
+ tree.
+Date: Sun, 22 Mar 2015 16:24:09 +0000
+Message-ID: <20150322162409.GG6643@sirena.org.uk>
+References: <1426886563-10936-1-git-send-email-hm@hmbedded.co.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yKpjvgUFh4AHjl21"
-Return-path: <linux-pm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="xjyYRNSh/RebjC6o"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKohpo=uJJw0=T+yfV=aAUQq+Z2-kZFJWFqxnN6B8QtSb2XHqg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
+In-Reply-To: <1426886563-10936-1-git-send-email-hm@hmbedded.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Howard Mitchell <hm@hmbedded.co.uk>
+Cc: peda@axentia.se, tiwai@suse.de, lgirdwood@gmail.com, perex@perex.cz, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---yKpjvgUFh4AHjl21
+--xjyYRNSh/RebjC6o
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Feb 17, 2015 at 01:16:25PM +0530, Viresh Kumar wrote:
-> On 12 February 2015 at 16:20, Stephen Boyd <sboyd@codeaurora.org> wrote:
+On Fri, Mar 20, 2015 at 09:22:43PM +0000, Howard Mitchell wrote:
 
-> > voltages. I suppose something like opp-microvolt-names would work
-> > though but I don't know how software would correlate that to the
-> > regulator it uses because that information is elsewhere in the
+> +	if (pcm512x->pll_lock) {
 
-> I hope the CPU node will have an array of supplies to support multiple
-> regulators, right? If yes, then we can just keep the array of <t/min/max>
-> in the same order. And software should be able to correlate then?
+> +                if (of_property_read_u32(np, "pll-lock", &val) >= 0) {
+> +                        if (val > 6) {
+> +                                dev_err(dev, "Invalid pll-lock\n");
+> +                                ret = -EINVAL;
+> +                                goto err_clk;
+> +                        }
+> +                        pcm512x->pll_lock = val;
+> +                }
 
-It's probably not *too* bad for small numbers of supplies but bindings
-that require that indexes into two different arrays match up
-(particularly with different step sizes as here) do have legibility
-issues - it's easy to miscount when reading things.
+This breaks existing boards which rely on GPIO 4 being set as the lock
+output.  This is very unfortunate since it's a silly thing for the
+driver to default to but nontheless we should really continue to support
+them - at a guess Peter's board is relying on this, and even if it isn't
+someone else's might.
 
-> > device's node. Why not put the information about which clock and
-> > regulator is used into the opp node?
-
-> Don't know. I have been asked specifically to keem them out of the OPPs,
-> as they belong to the CPU or device instead.
-
-The DT should describe the hardware and how it's connected.  No power
-supplies or clocks are connected to an OPP, an OPP is a property of
-something else.
-
---yKpjvgUFh4AHjl21
+--xjyYRNSh/RebjC6o
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVDxBaAAoJECTWi3JdVIfQjqkIAIGE71HONJ2arX93F/fC2cZQ
-fipjQEMHjoPTjRItZjAadNjk2H7xyEEncHt2f1JzOcTcg81mvJNZtoQroAiSqKeQ
-alM2tAL7COxWP4RfCA97evDHuT2I/K+R0mQoEP3/tl3EgijwcLd8pgweEWRucglZ
-YEJdRWdzPoUXKTBm3CnKRA9berpj6ozrYmwrTRnVzAzYBM+fBZSxT7zvUOTyRC09
-LGFDF2kGJd9P3YriU6nLJlbaEo7AAldajH3BKhhWIi0X2HAsVYmyvLbjQLKqgygk
-kZN5Loo5pG+p+qfWA2P0q/DCcTd2+FsYfqMmiUKWiufRz9OvKTuNx62TyxyHqbI=
-=5mSd
+iQEcBAEBCAAGBQJVDuyoAAoJECTWi3JdVIfQdgYH/i3lcuCGgadJbS33VOnhHEz2
+MRrbFWtyfoQdu+NbR5qcd/i2qcP1JXpsKkCXKjWKuirX2wvQVvltJMkkVoIRVOmP
+W888YowRDECARUSfzIJ+5C27SVFvDDn/u+tuovfDQMScHJYfLDWnKKGOJt3yCsmG
+hOhs5lre87cJkV3llc1cuKGhTEfVP1SzfjlPLRUQuCsja/kYDk6CrbBfb2xk2QmM
+BU2drcKdMeIIqvy5if1/F6tPz/cEp14GpuHxN4eVDahMU6rSaoj65zwkAnGIkSe0
+dC2xVSp+Gc6gtwjv7cVciTHuoShws/0EzlhqfthhdM6zYVwmEEqAP0jUVAp2DPI=
+=nseg
 -----END PGP SIGNATURE-----
 
---yKpjvgUFh4AHjl21--
+--xjyYRNSh/RebjC6o--
