@@ -1,42 +1,68 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
-Date: Mon, 23 Mar 2015 06:51:58 +0200
-Message-ID: <87twxce2oh.fsf@kamboji.qca.qualcomm.com>
-References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
-	<1426696710-6891-6-git-send-email-eliad@wizery.com>
-	<550AD7C1.2030405@gmail.com>
-	<CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
-	<20150319212505.GN31346@atomide.com>
-	<87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
-	<20150320153357.GT31346@atomide.com>
-	<87bnjnfz1t.fsf@kamboji.qca.qualcomm.com>
-	<20150320162138.GU31346@atomide.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
+Date: Sun, 22 Mar 2015 18:56:27 +0000
+Message-ID: <20150322185627.GI6643@sirena.org.uk>
+References: <cover.1423642246.git.viresh.kumar@linaro.org>
+ <20150212005220.GG11190@codeaurora.org>
+ <CAKohponaLt51hiHd=uTocK_fPPwRDgkse5wc_PGG5tFQNnvfAQ@mail.gmail.com>
+ <20150212082004.GJ11190@codeaurora.org>
+ <CAKohpo=uJJw0=T+yfV=aAUQq+Z2-kZFJWFqxnN6B8QtSb2XHqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150320162138.GU31346-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> (Tony Lindgren's message of
-	"Fri, 20 Mar 2015 09:21:38 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Pontus Fuchs <pontus.fuchs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap@vger.kernel.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yKpjvgUFh4AHjl21"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpo=uJJw0=T+yfV=aAUQq+Z2-kZFJWFqxnN6B8QtSb2XHqg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
 
->> After John "retired" we actually have two set of trees now: mac80211
->> maintained by Johannes and wireless-drivers maintained by me. I haven't
->> pulled anything from your tree and I'm 100% sure Johannes hasn't either.
->> So green light from me.
->
-> OK, I'll set up the new branch then. I take your ack is for the
-> whole series? If it's just for the $subject patch, please let
-> me know.
+--yKpjvgUFh4AHjl21
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It was for the whole series.
+On Tue, Feb 17, 2015 at 01:16:25PM +0530, Viresh Kumar wrote:
+> On 12 February 2015 at 16:20, Stephen Boyd <sboyd@codeaurora.org> wrote:
 
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > voltages. I suppose something like opp-microvolt-names would work
+> > though but I don't know how software would correlate that to the
+> > regulator it uses because that information is elsewhere in the
+
+> I hope the CPU node will have an array of supplies to support multiple
+> regulators, right? If yes, then we can just keep the array of <t/min/max>
+> in the same order. And software should be able to correlate then?
+
+It's probably not *too* bad for small numbers of supplies but bindings
+that require that indexes into two different arrays match up
+(particularly with different step sizes as here) do have legibility
+issues - it's easy to miscount when reading things.
+
+> > device's node. Why not put the information about which clock and
+> > regulator is used into the opp node?
+
+> Don't know. I have been asked specifically to keem them out of the OPPs,
+> as they belong to the CPU or device instead.
+
+The DT should describe the hardware and how it's connected.  No power
+supplies or clocks are connected to an OPP, an OPP is a property of
+something else.
+
+--yKpjvgUFh4AHjl21
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVDxBaAAoJECTWi3JdVIfQjqkIAIGE71HONJ2arX93F/fC2cZQ
+fipjQEMHjoPTjRItZjAadNjk2H7xyEEncHt2f1JzOcTcg81mvJNZtoQroAiSqKeQ
+alM2tAL7COxWP4RfCA97evDHuT2I/K+R0mQoEP3/tl3EgijwcLd8pgweEWRucglZ
+YEJdRWdzPoUXKTBm3CnKRA9berpj6ozrYmwrTRnVzAzYBM+fBZSxT7zvUOTyRC09
+LGFDF2kGJd9P3YriU6nLJlbaEo7AAldajH3BKhhWIi0X2HAsVYmyvLbjQLKqgygk
+kZN5Loo5pG+p+qfWA2P0q/DCcTd2+FsYfqMmiUKWiufRz9OvKTuNx62TyxyHqbI=
+=5mSd
+-----END PGP SIGNATURE-----
+
+--yKpjvgUFh4AHjl21--
