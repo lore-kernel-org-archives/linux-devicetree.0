@@ -1,115 +1,48 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 2/7] power: mxs_power: add driver for mxs power subsystem
-Date: Sun, 22 Mar 2015 11:40:54 +0100
-Message-ID: <20150322104053.GA5394@earth>
-References: <1426984203-9133-1-git-send-email-stefan.wahren@i2se.com>
- <1426984203-9133-3-git-send-email-stefan.wahren@i2se.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] input: Add support for ChipOne icn8318
+ based touchscreens
+Date: Sun, 22 Mar 2015 12:00:55 +0100
+Message-ID: <550EA0E7.30608@redhat.com>
+References: <1426007133-9606-1-git-send-email-hdegoede@redhat.com> <20150322040305.GA40622@dtor-ws>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426984203-9133-3-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: shawn.guo@linaro.org, dbaryshkov@gmail.com, dwmw2@infradead.org, broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, fabio.estevam@freescale.com, marex@denx.de, devicetree@vger.kernel.org, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, kernel@pengutronix.de, sebastien.szymanski@armadeus.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB3OBXKUAKGQE5QAESQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150322040305.GA40622@dtor-ws>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
-
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sun, Mar 22, 2015 at 12:29:58AM +0000, Stefan Wahren wrote:
-> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
-> power subsystem. It's required to trigger the probing of the underlying
-> drivers like on-chip regulators.
->=20
-> [...]
+On 22-03-15 05:03, Dmitry Torokhov wrote:
+> Hi Hans,
 >
-> +config MXS_POWER
-> +	tristate "Freescale MXS power subsystem support"
-> +	depends on ARCH_MXS
-
-please add "|| COMPILE_TEST"
-
-> +	help
-> +	  Say Y here to enable support for the Freescale i.MX23/i.MX28
-> +	  power subsystem. This is a requirement to get access to on-chip
-> +	  regulators, battery charger and many more.
+> On Tue, Mar 10, 2015 at 06:05:33PM +0100, Hans de Goede wrote:
+>> +	error = devm_request_threaded_irq(dev, client->irq, NULL, icn8318_irq,
+>> +					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
 >
-> [...]
->
-> +static int mxs_power_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct device_node *np =3D dev->of_node;
-> +	struct resource *res;
-> +	struct mxs_power_data *data;
-> +	struct power_supply_config psy_cfg =3D {};
-> +	void __iomem *v5ctrl_addr;
-> +
-> +	if (!np) {
-> +		dev_err(dev, "missing device tree\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->base_addr =3D devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(data->base_addr))
-> +		return PTR_ERR(data->base_addr);
-> +
-> +	psy_cfg.drv_data =3D data;
-> +
-> +	data->ac =3D power_supply_register(dev, &ac_desc, &psy_cfg);
-> +	if (IS_ERR(data->ac))
-> +		return PTR_ERR(data->ac);
+> Shouldn't we let DT data tell us what trigger to use? I.e. just leave
+> IRQF_ONESHOT here?
 
-You can use devm_power_supply_register to simplify the driver
-a bit more.
+That is an interesting question, that new data is available is signalled by
+the irq pin of the chip going low is a property of the chip, not the board
+layout, so I believe it is best to leave this as is.
 
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	v5ctrl_addr =3D data->base_addr + HW_POWER_5VCTRL_OFFSET;
-> +
-> +	/* Make sure the current limit of the linregs are disabled. */
-> +	writel(BM_POWER_5VCTRL_ENABLE_LINREG_ILIMIT,
-> +	       v5ctrl_addr + HW_POWER_CTRL_CLR);
-> +
-> +	return of_platform_populate(np, NULL, NULL, dev);
-> +}
-> +
-> [...]
+Also note that if we want to get this from devicetree, that simply leaving out the
+flag is not enough, we must specifically get the data from devicetree and pass
+it into request_irq AFAICT. So the above would change to:
 
--- Sebastian
+	irqflags = irqd_get_trigger_type(irq_get_irq_data(client->irq)) | IRQF_ONESHOT,
+	error = devm_request_threaded_irq(dev, client->irq, NULL, icn8318_irq, irqflags,
 
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVDpwyAAoJENju1/PIO/qaj1cP/jwNaC9vUo6aYkXZy9CZBaay
-CIBllLt/vgmONs7ww50R+CSP98c3wjIhjWnxNsTLghFWgX1SPo+2t+fCpT34VpbX
-ehTJZ1eovDbpNdJIb9muenOBZUx1uFhyh1czgNpx1xnqCvhFSxzOjhIFn8kt6iI8
-qSzQGS1Y1/dQonCJZIWBc/4bLEzv3GjcXDSfe9n4L3hOweRCqDeQHTiZubT19yvd
-OVMQDiqUTELvviDEX4V/f1WNtYlHClmIc40LHAHIPPoJ9mcaFPzWoeMSucOyXz11
-uu70tQReZU/KLeRcEfqSb5CRxhKvn1KeceT3yj0FG+YjfVC3b/PE1kpgQElIqhau
-5kGMdaOQ/XVvXcyYKqPxMQ9AB8r7xexJgLYjhM8NoHRFZ5ZSfeyzgB0ZKYXY81qj
-pw74BmsjW+BK/TZHbHgAH/szS7f7BqeusbFIwJeBlVN5m3k1UnbCWZQSTOwqKuk4
-O8aAgeR6stHszqP2Ho12AN2SIO8h5sykq6lyj5Aa97bPg0SIE/UYNTMKGwTlzQsr
-MYJ7qpwt7Y4Snnc1pfHl/tQ8x+eHjYN+I9nOa4SGboltw0Y1i1mDh28nDd1lnqcw
-jr1yDbxXObO9BWigJ5yavmSP04hbdJ96BeK+fb0J2fDsThDcfILbMA4e5wHEcVFW
-8KviaXp5YxxVOoE2LWvp
-=iSJ1
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
+Hans
