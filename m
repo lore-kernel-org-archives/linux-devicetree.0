@@ -1,48 +1,64 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3] input: Add support for ChipOne icn8318
- based touchscreens
-Date: Sun, 22 Mar 2015 12:00:55 +0100
-Message-ID: <550EA0E7.30608@redhat.com>
-References: <1426007133-9606-1-git-send-email-hdegoede@redhat.com> <20150322040305.GA40622@dtor-ws>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Subject: serial atag tag in devicetree ?
+Date: Sun, 22 Mar 2015 12:26:16 +0100
+Message-ID: <550EA6D8.3090702@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB3OBXKUAKGQE5QAESQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150322040305.GA40622@dtor-ws>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 22-03-15 05:03, Dmitry Torokhov wrote:
-> Hi Hans,
->
-> On Tue, Mar 10, 2015 at 06:05:33PM +0100, Hans de Goede wrote:
->> +	error = devm_request_threaded_irq(dev, client->irq, NULL, icn8318_irq,
->> +					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->
-> Shouldn't we let DT data tell us what trigger to use? I.e. just leave
-> IRQF_ONESHOT here?
+I'm sending this mail because Paul Kocialkowski (in the Cc)
+has submitted a patch for upstream u-boot to set the serial
+atag tag from u-boot for Allwinner SoCs, using the SoCs
+SID, which is a 128 bit register containing a unique number
+for each SoC.
 
-That is an interesting question, that new data is available is signalled by
-the irq pin of the chip going low is a property of the chip, not the board
-layout, so I believe it is best to leave this as is.
+In some cases a manufacturer may want to override this with
+its own serial from say an eeprom, as such it is desirable
+to communicate the serial from u-boot to the kernel rather
+then reproducing the sid reading code in the kernel.
 
-Also note that if we want to get this from devicetree, that simply leaving out the
-flag is not enough, we must specifically get the data from devicetree and pass
-it into request_irq AFAICT. So the above would change to:
+For old atag using kernels there is an atag for this, and
+the contents of this tag will show up in /proc/cpuinfo,
+currently there is no equivalent for this in devicetree.
 
-	irqflags = irqd_get_trigger_type(irq_get_irq_data(client->irq)) | IRQF_ONESHOT,
-	error = devm_request_threaded_irq(dev, client->irq, NULL, icn8318_irq, irqflags,
+I'm a bit reluctant to merge Paul's patch into u-boot
+because of this as it will enable a feature on older
+kernels while leaving the upstream kernel without it.
+
+So I was wondering how to deal with this in devicetree,
+at least one board in u-boot already sets a devicetree
+property for this:
+
+board/gateworks/gw_ventana/gw_ventana.c
+1202: *   serial# env var
+1207:   char *serial = getenv("serial#");
+1432:           setenv("serial#", str);
+1512:   fdt_setprop(blob, 0, "system-serial", getenv("serial#"),
+1513:               strlen(getenv("serial#")) + 1);
+
+Which sets a system-serial property in the root node,
+so at the same level where we also have the model string
+this seems to make sense to me.
+
+So do we want to add a devicetree binding for system
+serials, and if we do should we make it a string like
+above, or should we make it an 64 bit integer like the atag?
+
+If we make it a string we can store longer serials, but
+how should we deal with those wrt /proc/cpuinfo? Only show
+the first 64 bits ?
 
 Regards,
 
 Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
