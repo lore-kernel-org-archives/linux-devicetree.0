@@ -1,87 +1,61 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH v2] ARM: socfpga: dts: Add adxl34x
-Date: Sun, 22 Mar 2015 22:03:51 -0500
-Message-ID: <550F8297.80809@opensource.altera.com>
-References: <1419462712-14151-1-git-send-email-walter@vanguardiasur.com.ar>
-	<20150105092153.GJ13070@pengutronix.de>
-	<CABxpGwCbFF+pJ0H_sMjqk6c9awdRuxi6j0CL_d3mH5z4Qht+ng@mail.gmail.com>
- <CABxpGwAFdLET+fg3WvMWqXdzsPQHv3hKx9cFwk9RQE9w6+rEbg@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [PATCH] drivers/of: Add empty ranges quirk for PA-Semi
+Date: Mon, 23 Mar 2015 14:16:38 +1100
+Message-ID: <1427080598.4770.214.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxpGwAFdLET+fg3WvMWqXdzsPQHv3hKx9cFwk9RQE9w6+rEbg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Walter Lozano <walter@vanguardiasur.com.ar>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc dev list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Walter,
+The "sdc" node is missing the ranges property, it needs to be treated
+as having an empty one otherwise translation fails for its children.
 
-On 3/19/15 4:27 PM, Walter Lozano wrote:
-> Hi Dinh,
-> 
-> On Mon, Mar 16, 2015 at 10:10 AM, Walter Lozano
-> <walter@vanguardiasur.com.ar> wrote:
->> On Mon, Jan 5, 2015 at 6:21 AM, Steffen Trumtrar
->> <s.trumtrar@pengutronix.de> wrote:
->>> Hi!
->>>
->>> On Wed, Dec 24, 2014 at 08:11:52PM -0300, Walter Lozano wrote:
->>>> This patch adds the DTS bindings for the adxl34x digital
->>>> accelerometer.
->>>>
->>>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
->>>> ---
->>>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   16 ++++++++++++++++
->>>>  1 file changed, 16 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>> index 16ea6f5..d343e03 100644
->>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>> @@ -60,6 +60,22 @@
->>>>       rxc-skew-ps = <2000>;
->>>>  };
->>>>
->>>> +&gpio2 {
->>>> +     status = "okay";
->>>> +};
->>>> +
->>>> +&i2c1 {
->>>> +     status = "okay";
->>>> +
->>>> +     accel1: accelerometer@53 {
->>>> +             compatible = "adxl34x";
+Tested-by: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+ drivers/of/address.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-Shouldn't this be "adi,adxl34x"? At least that's what the documentation
-says.
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index ad29069..78a7dcb 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -450,12 +450,17 @@ static struct of_bus *of_match_bus(struct device_node *np)
+ 	return NULL;
+ }
+ 
+-static int of_empty_ranges_quirk(void)
++static int of_empty_ranges_quirk(struct device_node *np)
+ {
+ 	if (IS_ENABLED(CONFIG_PPC)) {
+-		/* To save cycles, we cache the result */
++		/* To save cycles, we cache the result for global "Mac" setting */
+ 		static int quirk_state = -1;
+ 
++		/* PA-SEMI sdc DT bug */
++		if (of_device_is_compatible(np, "1682m-sdc"))
++			return true;
++
++		/* Make quirk cached */
+ 		if (quirk_state < 0)
+ 			quirk_state =
+ 				of_machine_is_compatible("Power Macintosh") ||
+@@ -490,7 +495,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	 * This code is only enabled on powerpc. --gcl
+ 	 */
+ 	ranges = of_get_property(parent, rprop, &rlen);
+-	if (ranges == NULL && !of_empty_ranges_quirk()) {
++	if (ranges == NULL && !of_empty_ranges_quirk(parent)) {
+ 		pr_debug("OF: no ranges; cannot translate\n");
+ 		return 1;
+ 	}
 
->>>> +             reg = <0x53>;
->>>> +
->>>> +             interrupt-parent = <&portc>;
->>>> +             interrupts = <3 2>;
->>>> +     };
->>>> +};
->>>> +
->>>>  &mmc0 {
->>>>       vmmc-supply = <&regulator_3_3v>;
->>>>       vqmmc-supply = <&regulator_3_3v>;
->>>
->>> I just gave it a short spin. I get some interrupts and the position property
->>> changes, so it seems to work:
->>>
->>>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
->>>
->>
->> Ping?
->> How should this continue?
-> 
-> Any news about this patch? It has been acked by Pavel Machek and
-> Steffen Trumtrar a while ago.
->
 
-Sorry, since I wasn't CC on the original patch and somehow my filter
-didn't catch it, I didn't see this patch until now.
-
-Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
