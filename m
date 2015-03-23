@@ -1,64 +1,150 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V3 7/8] ARM: cpuidle: Register per cpuidle device
-Date: Mon, 23 Mar 2015 15:42:01 +0100
-Message-ID: <55102639.4000305@linaro.org>
-References: <1426851841-2072-1-git-send-email-daniel.lezcano@linaro.org> <1426851841-2072-8-git-send-email-daniel.lezcano@linaro.org> <20150321203546.GE22354@red-moon>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH/RFC v13 04/13] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Mon, 23 Mar 2015 15:02:13 +0000
+Message-ID: <20150323150213.GN24804@x1>
+References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
+ <1426175114-14876-5-git-send-email-j.anaszewski@samsung.com>
+ <20150323120743.GG24422@x1>
+ <20150323142202.GA23919@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150321203546.GE22354@red-moon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150323142202.GA23919@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2015 09:35 PM, Lorenzo Pieralisi wrote:
-> On Fri, Mar 20, 2015 at 11:44:00AM +0000, Daniel Lezcano wrote:
->> Some architectures have some cpus which does not support idle states=
-=2E
->>
->> Let the underlying low level code to return -ENXIO when it is not
->> possible to set an idle state.
->
-> Well, this is getting interesting. We are parsing possible CPUs to
-> detect if they have common idle states in DT. If a CPU does not suppo=
-rt
-> idle states, the cpu node for that CPU should not define any idle
-> state.
->
-> The approach above will work with my heterogenous system patch, since
-> the respective CPUidle driver mask will be created by parsing the DT
-> idle states.
->
-> http://www.spinics.net/lists/arm-kernel/msg403190.html
->
-> In current approach if a "possible " CPU does not have idle states, w=
-e do
-> not init CPUidle at all.
->
-> So, to cut a long story short, what does "a cpu does not support idle
-> states" mean ?
->
-> Does it mean that firmware defines idle states for that CPU in DT but
-> initializing them fail ?
->
-> I am fine with this patch, but we need to define -ENXIO return proper=
-ly.
+On Mon, 23 Mar 2015, Pavel Machek wrote:
+> On Mon 2015-03-23 12:07:43, Lee Jones wrote:
+> > This patch requires a DT Ack.
+>=20
+> No, it requires DT people to be notified -- and they were, few times
+> by now.
+>=20
+> They clearly don't care.
 
-Ok, I think that needs more discussion.
+Well fortunately for the Kernel community, I do care.  And as this
+patch adds 3 new DT properties, has been through many iterations
+already with vast changes made over that period and there is still
+some controversy looming, I'm saying that it _does_ require a DT Ack.
 
-I will drop this patch from my patchset as we agreed on the other=20
-patches and resubmit.
-
-   -- Daniel
-
+> > > This patch adds device tree binding documentation for
+> > > the flash cell of the Maxim max77693 multifunctional device.
+> > >=20
+> > > Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> > > Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> > > Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> > > Cc: Bryan Wu <cooloney@gmail.com>
+> > > Cc: Richard Purdie <rpurdie@rpsys.net>
+>=20
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+>=20
+> > > diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b=
+/Documentation/devicetree/bindings/mfd/max77693.txt
+> > > index 38e6440..15c546e 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/max77693.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+> > > @@ -76,7 +76,53 @@ Optional properties:
+> > >      Valid values: 4300000, 4700000, 4800000, 4900000
+> > >      Default: 4300000
+> > > =20
+> > > +- led : the LED submodule device node
+> > > +
+> > > +There are two LED outputs available - FLED1 and FLED2. Each of t=
+hem can
+> > > +control a separate LED or they can be connected together to doub=
+le
+> > > +the maximum current for a single connected LED. One LED is repre=
+sented
+> > > +by one child node.
+> > > +
+> > > +Required properties:
+> > > +- compatible : Must be "maxim,max77693-led".
+> > > +
+> > > +Optional properties:
+> > > +- maxim,trigger-type : Flash trigger type.
+> > > +	Possible trigger types:
+> > > +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
+> > > +			the flash,
+> > > +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls durati=
+on
+> > > +			of the flash.
+> > > +- maxim,boost-mode :
+> > > +	In boost mode the device can produce up to 1.2A of total curren=
+t
+> > > +	on both outputs. The maximum current on each output is reduced
+> > > +	to 625mA then. If not enabled explicitly, boost setting default=
+s to
+> > > +	LEDS_BOOST_FIXED in case both current sources are used.
+> > > +	Possible values:
+> > > +		LEDS_BOOST_OFF (0) - no boost,
+> > > +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
+> > > +		LEDS_BOOST_FIXED (2) - fixed mode.
+> > > +- maxim,boost-mvout : Output voltage of the boost module in mill=
+ivolts.
+> > > +- maxim,mvsys-min : Low input voltage level in millivolts. Flash=
+ is not fired
+> > > +	if chip estimates that system voltage could drop below this lev=
+el due
+> > > +	to flash power consumption.
+> > > +
+> > > +Required properties of the LED child node:
+> > > +- led-sources : see Documentation/devicetree/bindings/leds/commo=
+n.txt;
+> > > +		device current output identifiers: 0 - FLED1, 1 - FLED2
+> > > +
+> > > +Optional properties of the LED child node:
+> > > +- label : see Documentation/devicetree/bindings/leds/common.txt
+> > > +- max-microamp : see Documentation/devicetree/bindings/leds/comm=
+on.txt
+> > > +		Range: 15625 - 250000
+> > > +- flash-max-microamp : see Documentation/devicetree/bindings/led=
+s/common.txt
+> > > +		Range: 15625 - 1000000
+> > > +- flash-timeout-us : see Documentation/devicetree/bindings/leds/=
+common.txt
+> > > +		Range: 62500 - 1000000
+> > > +
+> > >  Example:
+> > > +#include <dt-bindings/leds/common.h>
+> > > +
+> > >  	max77693@66 {
+> > >  		compatible =3D "maxim,max77693";
+> > >  		reg =3D <0x66>;
+> > > @@ -117,5 +163,20 @@ Example:
+> > >  			maxim,thermal-regulation-celsius =3D <75>;
+> > >  			maxim,battery-overcurrent-microamp =3D <3000000>;
+> > >  			maxim,charge-input-threshold-microvolt =3D <4300000>;
+> > > +
+> > > +		led {
+> > > +			compatible =3D "maxim,max77693-led";
+> > > +			maxim,trigger-type =3D <LEDS_TRIG_TYPE_LEVEL>;
+> > > +			maxim,boost-mode =3D <LEDS_BOOST_FIXED>;
+> > > +			maxim,boost-mvout =3D <5000>;
+> > > +			maxim,mvsys-min =3D <2400>;
+> > > +
+> > > +			camera_flash: flash-led {
+> > > +				label =3D "max77693-flash";
+> > > +				led-sources =3D <0>, <1>;
+> > > +				max-microamp =3D <500000>;
+> > > +				flash-max-microamp =3D <1250000>;
+> > > +				flash-timeout-us =3D <1000000>;
+> > > +			};
+> > >  		};
+> > >  	};
+> >=20
+> >=20
+>=20
 
 --=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
