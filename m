@@ -1,38 +1,54 @@
-From: Howard Mitchell <hm-n6SlHCM0l+K9FHfhHBbuYA@public.gmane.org>
-Subject: Re: [PATCH] ASoC:pcm512x: Make PLL lock output selectable via device
- tree.
-Date: Mon, 23 Mar 2015 19:15:47 +0000
-Message-ID: <55106663.5060802@hmbedded.co.uk>
-References: <1426886563-10936-1-git-send-email-hm@hmbedded.co.uk> <20150322162409.GG6643@sirena.org.uk> <550FE05F.6070204@hmbedded.co.uk> <105aef6a0e21488d8661d2a2823515d8@EMAIL.axentia.se> <20150323165621.GH14954@sirena.org.uk>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2 0/2] DRA7/X15: Thermal dts patches
+Date: Mon, 23 Mar 2015 14:39:37 -0500
+Message-ID: <1427139579-4215-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150323165621.GH14954-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, bcousson@baylibre.com, edubezval@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, j-keerthy@ti.com, t-kristo@ti.com, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 23/03/15 16:56, Mark Brown wrote:
-> On Mon, Mar 23, 2015 at 11:00:53AM +0000, Peter Rosin wrote:
->
->> Strongly agreed that we should fix this before it is published (I assumed
->> that is was included in 3.19, it felt so long ago that Mark merged it...). My
->> preference would be to remove the pll-lock things entirely though. Assuming
->> you don't need it for your board of course, but I doubt it from your description.
->> I used it to make sure I had understood the chip correctly, that's all.
-> It didn't make v3.19 so if we're very quick we can get this in as a fix.
-> Can someone resend a version which splits this into two patches, one
-> deleting the existing code to configure GPIO 4 and the other adding the
-> configurability?  I can then send the removal as a bug fix to v4.0 so we
-> don't have any compatibility issues and add the new feature for v4.1.
-Ok, will do, although it seems that both Peter and I agree that the 
-configurability is not required, so I'll just submit a patch for the 
-deletion.
+Hi
+Here are a few pending patches for DRA7 and patch hooking the
+GPIO fan to the thermal framework.
 
-- Howard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested on BeagleBoard-X15, uEVM with next-20150320. (just load up
+cpufreq_dt and gpio_fan modules with omap2plus_defconfig, run cpuburn
+to generate thermal and just wait for the fan to trigger - and it
+does- we dont hit the frequency throttling temps) (next-20150323 is
+broken for build currently).
+
+The patches are based on
+git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+branch: omap-for-v4.1/dt-v2 10709c0858d8 ARM: dts: Update Nanobone dts file
+
+Changes since V1:
+Based on review comments:
+	- patches 1/3 and 2/3 has been squashed up to introduce zone and bandgap
+	  information
+	- Dropped the entire omap5-cpu-thermal.dtsi idea. done the same way as
+	  omap5.
+	- minor updates to fan - so, all patches have been modified.
+	- Not carrying forward ack due to changes
+
+V1: http://marc.info/?l=devicetree&m=142688089417731&w=2
+
+Keerthy (1):
+  ARM: dts: DRA7: Add bandgap and related thermal nodes
+
+Nishanth Menon (1):
+  ARM: dts: am57xx-beagle-x15: Add thermal map to include fan and
+    tmp102
+
+ arch/arm/boot/dts/am57xx-beagle-x15.dts  |   49 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi              |   23 ++++++++++++++
+ arch/arm/boot/dts/dra72x.dtsi            |    5 +++
+ arch/arm/boot/dts/dra74x.dtsi            |    5 +++
+ arch/arm/boot/dts/omap4-cpu-thermal.dtsi |    4 +--
+ 5 files changed, 84 insertions(+), 2 deletions(-)
+
+-- 
+1.7.9.5
+
