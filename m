@@ -1,112 +1,72 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 08/12] mfd: axp20x: Add AXP22x regulator
- information to DT bindings
-Date: Mon, 23 Mar 2015 10:43:04 -0700
-Message-ID: <CAGb2v673WWV4q5eEGQF-nhX=Zq=ciD=yXgei-eZjKMWPDxKv4A@mail.gmail.com>
-References: <1425988764-23618-1-git-send-email-wens@csie.org>
- <1425988764-23618-9-git-send-email-wens@csie.org> <20150323115425.GC24422@x1>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 4/7] regulator: add mxs regulator driver
+Date: Mon, 23 Mar 2015 18:45:41 +0100 (CET)
+Message-ID: <1459171144.549216.1427132741792.JavaMail.open-xchange@oxbaltgw02.schlund.de>
+References: <1426984203-9133-1-git-send-email-stefan.wahren@i2se.com>
+ <1426984203-9133-5-git-send-email-stefan.wahren@i2se.com>
+ <20150322161425.GC6643@sirena.org.uk>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQNBYGUAKGQEQE7RFGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150323115425.GC24422@x1>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150322161425.GC6643@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: fabio.estevam@freescale.com, mark.rutland@arm.com, marex@denx.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dbaryshkov@gmail.com, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, lgirdwood@gmail.com, sre@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, sebastien.szymanski@armadeus.com, shawn.guo@linaro.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2015 at 4:54 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 10 Mar 2015, Chen-Yu Tsai wrote:
->
->> Add the list of regulators for AXP22x to the DT bindings.
->> This includes the names and supply names.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/axp20x.txt | 27 +++++++++++++++++=
-+++++++
->>  1 file changed, 27 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Document=
-ation/devicetree/bindings/mfd/axp20x.txt
->> index 3914a3f91ff6..0fc2f1f35cef 100644
->> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
->> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
->> @@ -49,6 +49,33 @@ LDO3               : LDO           : ldo3in-supply
->>  LDO4         : LDO           : ldo24in-supply        : shared supply
->>  LDO5         : LDO           : ldo5in-supply
->>
->> +
->
-> Nit: I'm not keen on double line spacing.
->
->> +AXP221 regulators, type, and corresponding input supply names:
->> +
->> +Regulator      Type            Supply Name             Notes
->> +---------      ----            -----------             -----
->> +DCDC1                : DC-DC buck    : vin1-supply
->> +DCDC2                : DC-DC buck    : vin2-supply
->> +DCDC3                : DC-DC buck    : vin3-supply
->> +DCDC4                : DC-DC buck    : vin4-supply
->> +DCDC5                : DC-DC buck    : vin5-supply
->> +DC1SW                : On/Off Switch : dcdc1-supply          : DCDC1 se=
-condary output
->> +DC5LDO               : LDO           : dcdc5-supply          : input fr=
-om DCDC5
->> +ALDO1                : LDO           : aldoin-supply         : shared s=
-upply
->> +ALDO2                : LDO           : aldoin-supply         : shared s=
-upply
->> +ALDO3                : LDO           : aldoin-supply         : shared s=
-upply
->> +DLDO1                : LDO           : dldoin-supply         : shared s=
-upply
->> +DLDO2                : LDO           : dldoin-supply         : shared s=
-upply
->> +DLDO3                : LDO           : dldoin-supply         : shared s=
-upply
->> +DLDO4                : LDO           : dldoin-supply         : shared s=
-upply
->> +ELDO1                : LDO           : eldoin-supply         : shared s=
-upply
->> +ELDO2                : LDO           : eldoin-supply         : shared s=
-upply
->> +ELDO3                : LDO           : eldoin-supply         : shared s=
-upply
->> +LDO_IO0              : LDO           : ips-supply            : GPIO 0
->> +LDO_IO1              : LDO           : ips-supply            : GPIO 1
->> +RTC_LDO              : LDO           : ips-supply            : always o=
-n
->> +
->> +
->
-> Nit: I'm not keen on double line spacing.
+Hi Mark,
 
-Ok. I can get rid of them. IMHO it makes different sections clearer though.
-I assume you don't want them in the original axp20x patches either?
-
-ChenYu
-
->>  Example:
->>
->>  axp209: pmic@34 {
 >
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> > + if (ldo->get_power_source)
+> > + power_source = ldo->get_power_source(reg);
+> > +
+> > + switch (power_source) {
+> > + case HW_POWER_LINREG_DCDC_OFF:
+> > + case HW_POWER_LINREG_DCDC_READY:
+> > + case HW_POWER_EXTERNAL_SOURCE_5V:
+> > + usleep_range(1000, 2000);
+> > + return 0;
+> > + }
+>
+> I'd expect the switch to be in the if here?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+yes, that's possible too.
+
+>
+> > +
+> > + usleep_range(15, 20);
+> > + start = jiffies;
+> > + while (1) {
+> > + if (readl(ldo->status_addr) & BM_POWER_STS_DC_OK)
+> > + return 0;
+> > +
+> > + if (time_after(jiffies, start + msecs_to_jiffies(20)))
+> > + break;
+> > +
+> > + schedule();
+> > + }
+>
+> So, this isn't actually quite a busy wait because we do a schedule()
+> rather than a cpu_relax() but still it could devolve into that - 20ms
+> seems a long time to burn doing that. If we're expecting this to finish
+> very quickly can we do an initial busy wait then fall back to something
+> with an actual sleep or soemthing?
+
+We will need to keep the initial usleep_range(). So do you think of the
+following:
+
+1. usleep_range
+2. busy_wait for BM_POWER_STS_DC_OK
+3. msleep (for the timeout case)
+
+Stefan
