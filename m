@@ -1,137 +1,197 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V3 0/8] ARM: cpuidle: Unify the ARM64/ARM DT approach
-Date: Mon, 23 Mar 2015 16:31:07 +0100
-Message-ID: <551031BB.4020200@linaro.org>
-References: <1426851841-2072-1-git-send-email-daniel.lezcano@linaro.org> <20150323152737.GB18904@red-moon>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v1 06/11] exynos4-is: Add support for v4l2-flash subdevs
+Date: Mon, 23 Mar 2015 16:32:12 +0100
+Message-ID: <551031FC.5010903@samsung.com>
+References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+ <1426863811-12516-7-git-send-email-j.anaszewski@samsung.com>
+ <20150322012105.GI16613@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150323152737.GB18904@red-moon>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150322012105.GI16613@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2015 04:27 PM, Lorenzo Pieralisi wrote:
-> On Fri, Mar 20, 2015 at 11:43:53AM +0000, Daniel Lezcano wrote:
->> There is a big number of cpuidle drivers for the ARM architecture.
->>
->> These drivers have been cleaned up and grouped into the drivers/cpui=
-dle
->> directory to keep track of the changes more easily and ensure the co=
-de
->> is following the same scheme across the drivers.
->>
->> That had the benefit of simplifying the code and factor out a lot of=
- common
->> parts. Beside that, as the drivers belong to the 'drivers' directory=
-, we had
->> to split the arch specific bits and the generic code in order to kee=
-p
->> everything self contained. The platform driver paradigm was used for=
- this
->> purpose.
->>
->> Unfortunately, this approach is now no longer accepted and a differe=
-nt solution
->> must be provided to reach the same goal: one example is the Qualcomm=
- cpuidle
->> driver upstreaming attempt.
->>
->> In the meantime, ARM64 developed a generic cpuidle driver based on D=
-T definition.
->>
->> The DT definition provides an 'enable-method' to specify one of the =
-cpu
->> operations (PSCI, ...).
->>
->> This patchset unify this driver with ARM32, using the same DT defini=
-tion.
->>
->> Thanks with this patchset we can use the 'enable-method' to specify =
-a cpu
->> operations, hence get rid of the platform driver approach and go fur=
-ther in the
->> cpuidle driver flexibility via the DT.
+Hi Sakari,
+
+Thanks for the review.
+
+On 03/22/2015 02:21 AM, Sakari Ailus wrote:
+> Hi Jacek,
 >
-> Tested on arm64 Juno and FVP models.
+> Some comments below. Please also get an ack from Sylwester! :-)
 
-Thanks Lorenzo for testing the patches.
+No doubt about that :)
 
-I applied the series to my tree for 4.1.
-
-   -- Daniel
-
-> Tested-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> On Fri, Mar 20, 2015 at 04:03:26PM +0100, Jacek Anaszewski wrote:
+>> This patch adds support for external v4l2-flash devices.
+>> The support includes parsing "flashes" DT property
+>> and asynchronous subdevice registration.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>   drivers/media/platform/exynos4-is/media-dev.c |   36 +++++++++++++++++++++++--
+>>   drivers/media/platform/exynos4-is/media-dev.h |   13 ++++++++-
+>>   2 files changed, 46 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+>> index f315ef9..8dd0e5d 100644
+>> --- a/drivers/media/platform/exynos4-is/media-dev.c
+>> +++ b/drivers/media/platform/exynos4-is/media-dev.c
+>> @@ -451,6 +451,25 @@ rpm_put:
+>>   	return ret;
+>>   }
+>>
+>> +static void fimc_md_register_flash_entities(struct fimc_md *fmd)
+>> +{
+>> +	struct device_node *parent = fmd->pdev->dev.of_node;
+>> +	struct device_node *np;
+>> +	int i = 0;
+>> +
+>> +	do {
+>> +		np = of_parse_phandle(parent, "flashes", i);
+>> +		if (np) {
 >
+> if (!np)
+> 	break;
+>
+> And you can remove checking np another time in the loop condition.
+
+Thanks, this will be cleaner indeed.
+
+>> +			fmd->flash[fmd->num_flashes].asd.match_type =
+>> +							V4L2_ASYNC_MATCH_OF;
+>> +			fmd->flash[fmd->num_flashes].asd.match.of.node = np;
+>> +			fmd->num_flashes++;
+>> +			fmd->async_subdevs[fmd->num_sensors + i] =
+>> +						&fmd->flash[i].asd;
+>
+> Have all the sensors been already registered by this point?
+
+Function fimc_md_register_sensor_entities is called before
+this one.
+
+>> +		}
+>> +	} while (np && (++i < FIMC_MAX_FLASHES));
+>
+> How about instead:
+>
+> fmd->num_flashes < FIMC_MAX_FLASHES
+>
+> And drop i. Also move incrementing num_flashes as last in the if.
+
+Dropping i will enforce referring to fmd->num_flashes 7 times
+in this short fragment of code.
+Maybe it would be better to use a pointer to it?
+int *nf = &fmd=>num_flashes ?
+
+>> +}
+>> +
+>>   static int __of_get_csis_id(struct device_node *np)
+>>   {
+>>   	u32 reg = 0;
+>> @@ -1275,6 +1294,15 @@ static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
+>>   	struct fimc_sensor_info *si = NULL;
+>>   	int i;
 >>
->> Changelog:
+>> +	/* Register flash subdev if detected any */
+>> +	for (i = 0; i < ARRAY_SIZE(fmd->flash); i++) {
+>> +		if (fmd->flash[i].asd.match.of.node == subdev->dev->of_node) {
+>> +			fmd->flash[i].subdev = subdev;
+>> +			fmd->num_flashes++;
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>>   	/* Find platform data for this sensor subdev */
+>>   	for (i = 0; i < ARRAY_SIZE(fmd->sensor); i++)
+>>   		if (fmd->sensor[i].asd.match.of.node == subdev->dev->of_node)
+>> @@ -1385,6 +1413,8 @@ static int fimc_md_probe(struct platform_device *pdev)
+>>   		goto err_m_ent;
+>>   	}
 >>
->>   V3:
->> 	* Fixed unroll loop when failing to register the device
->> 	* Removed the per cpu cpuidle_device
->> 	* Remove goto statement in the registration path
->> 	* Fixed a compilation failure with allyesconfig on arm64
+>> +	fimc_md_register_flash_entities(fmd);
+>> +
+>>   	mutex_unlock(&fmd->media_dev.graph_mutex);
 >>
->>   V2:
->> 	* Used smp_operations style for cpuidle_ops
->> 	* Fixed some nits in the comments
->> 	* Added a patch to change the name of the functions
->> 	* Added per cpu device registration patch
+>>   	ret = device_create_file(&pdev->dev, &dev_attr_subdev_conf_mode);
+>> @@ -1401,12 +1431,14 @@ static int fimc_md_probe(struct platform_device *pdev)
+>>   		goto err_attr;
+>>   	}
 >>
->> Daniel Lezcano (8):
->>    ARM: cpuidle: Remove duplicate header inclusion
->>    ARM: cpuidle: Add a cpuidle ops structure to be used for DT
->>    ARM64: cpuidle: Replace cpu_suspend by the common ARM/ARM64 funct=
-ion
->>    ARM64: cpuidle: Rename cpu_init_idle to a common function name
->>    ARM64: cpuidle: Remove arm64 reference
->>    ARM: cpuidle: Enable the ARM64 driver for both ARM32/ARM64
->>    ARM: cpuidle: Register per cpuidle device
->>    ARM: cpuidle: Change function name to be consistent with x86
+>> -	if (fmd->num_sensors > 0) {
+>> +	if (fmd->num_sensors > 0 || fmd->num_flashes > 0) {
+>>   		fmd->subdev_notifier.subdevs = fmd->async_subdevs;
+>> -		fmd->subdev_notifier.num_subdevs = fmd->num_sensors;
+>> +		fmd->subdev_notifier.num_subdevs = fmd->num_sensors +
+>> +							fmd->num_flashes;
+>>   		fmd->subdev_notifier.bound = subdev_notifier_bound;
+>>   		fmd->subdev_notifier.complete = subdev_notifier_complete;
+>>   		fmd->num_sensors = 0;
+>> +		fmd->num_flashes = 0;
 >>
->>   arch/arm/include/asm/cpuidle.h                     | 23 +++++++
->>   arch/arm/kernel/cpuidle.c                          | 74 ++++++++++=
-+++++++++-
->>   arch/arm/mach-davinci/cpuidle.c                    |  1 -
->>   arch/arm/mach-imx/cpuidle-imx6q.c                  |  1 -
->>   arch/arm/mach-imx/cpuidle-imx6sl.c                 |  1 -
->>   arch/arm/mach-imx/cpuidle-imx6sx.c                 |  1 -
->>   arch/arm/mach-omap2/cpuidle44xx.c                  |  1 -
->>   arch/arm/mach-s3c64xx/cpuidle.c                    |  2 +-
->>   arch/arm/mach-tegra/cpuidle-tegra20.c              |  1 -
->>   arch/arm/mach-tegra/cpuidle-tegra30.c              |  1 -
->>   arch/arm64/include/asm/cpuidle.h                   |  9 ++-
->>   arch/arm64/kernel/cpuidle.c                        |  2 +-
->>   drivers/cpuidle/Kconfig                            |  7 +-
->>   drivers/cpuidle/Kconfig.arm                        | 12 +++-
->>   drivers/cpuidle/Kconfig.arm64                      | 13 ----
->>   drivers/cpuidle/Makefile                           |  5 +-
->>   drivers/cpuidle/{cpuidle-arm64.c =3D> cpuidle-arm.c} | 80 ++++++++=
-++++++++------
->>   drivers/cpuidle/cpuidle-at91.c                     |  1 -
->>   drivers/cpuidle/cpuidle-exynos.c                   |  1 -
->>   drivers/cpuidle/cpuidle-kirkwood.c                 |  1 -
->>   drivers/cpuidle/cpuidle-ux500.c                    |  1 -
->>   drivers/cpuidle/cpuidle-zynq.c                     |  1 -
->>   include/asm-generic/vmlinux.lds.h                  |  2 +
->>   23 files changed, 178 insertions(+), 63 deletions(-)
->>   delete mode 100644 drivers/cpuidle/Kconfig.arm64
->>   rename drivers/cpuidle/{cpuidle-arm64.c =3D> cpuidle-arm.c} (57%)
+>>   		ret = v4l2_async_notifier_register(&fmd->v4l2_dev,
+>>   						&fmd->subdev_notifier);
+>> diff --git a/drivers/media/platform/exynos4-is/media-dev.h b/drivers/media/platform/exynos4-is/media-dev.h
+>> index 0321454..feff9c8 100644
+>> --- a/drivers/media/platform/exynos4-is/media-dev.h
+>> +++ b/drivers/media/platform/exynos4-is/media-dev.h
+>> @@ -34,6 +34,8 @@
 >>
->> --
->> 1.9.1
+>>   #define FIMC_MAX_SENSORS	4
+>>   #define FIMC_MAX_CAMCLKS	2
+>> +#define FIMC_MAX_FLASHES	2
+>> +#define FIMC_MAX_ASYNC_SUBDEVS (FIMC_MAX_SENSORS + FIMC_MAX_FLASHES)
+>>   #define DEFAULT_SENSOR_CLK_FREQ	24000000U
 >>
+>>   /* LCD/ISP Writeback clocks (PIXELASYNCMx) */
+>> @@ -93,6 +95,11 @@ struct fimc_sensor_info {
+>>   	struct fimc_dev *host;
+>>   };
 >>
+>> +struct fimc_flash_info {
+>> +	struct v4l2_subdev *subdev;
+>> +	struct v4l2_async_subdev asd;
+>> +};
+>> +
+>>   struct cam_clk {
+>>   	struct clk_hw hw;
+>>   	struct fimc_md *fmd;
+>> @@ -104,6 +111,8 @@ struct cam_clk {
+>>    * @csis: MIPI CSIS subdevs data
+>>    * @sensor: array of registered sensor subdevs
+>>    * @num_sensors: actual number of registered sensors
+>> + * @flash: array of registered flash subdevs
+>> + * @num_flashes: actual number of registered flashes
+>>    * @camclk: external sensor clock information
+>>    * @fimc: array of registered fimc devices
+>>    * @fimc_is: fimc-is data structure
+>> @@ -123,6 +132,8 @@ struct fimc_md {
+>>   	struct fimc_csis_info csis[CSIS_MAX_ENTITIES];
+>>   	struct fimc_sensor_info sensor[FIMC_MAX_SENSORS];
+>>   	int num_sensors;
+>> +	struct fimc_flash_info flash[FIMC_MAX_FLASHES];
+>> +	int num_flashes;
+>>   	struct fimc_camclk_info camclk[FIMC_MAX_CAMCLKS];
+>>   	struct clk *wbclk[FIMC_MAX_WBCLKS];
+>>   	struct fimc_lite *fimc_lite[FIMC_LITE_MAX_DEVS];
+>> @@ -149,7 +160,7 @@ struct fimc_md {
+>>   	} clk_provider;
+>>
+>>   	struct v4l2_async_notifier subdev_notifier;
+>> -	struct v4l2_async_subdev *async_subdevs[FIMC_MAX_SENSORS];
+>> +	struct v4l2_async_subdev *async_subdevs[FIMC_MAX_ASYNC_SUBDEVS];
+>>
+>>   	bool user_subdev_api;
+>>   	spinlock_t slock;
+>
 
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+-- 
+Best Regards,
+Jacek Anaszewski
