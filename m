@@ -1,66 +1,128 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v1 02/11] DT: Add documentation for the mfd Maxim max77693
-Date: Mon, 23 Mar 2015 10:54:11 +0100
-Message-ID: <550FE2C3.7090702@samsung.com>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-3-git-send-email-j.anaszewski@samsung.com>
- <20150321224903.GE16613@valkosipuli.retiisi.org.uk>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC] pinmux: group and function definitions in the device tree
+Date: Mon, 23 Mar 2015 11:09:13 +0100
+Message-ID: <20150323100913.GJ9742@pengutronix.de>
+References: <20150319153950.GC30114@odux.rfo.atmel.com>
+ <20150319185637.GV4927@pengutronix.de>
+ <20150320150609.GB32259@odux.rfo.atmel.com>
+ <20150323064424.GD9742@pengutronix.de>
+ <20150323090827.GD32259@odux.rfo.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150321224903.GE16613@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150323090827.GD32259@odux.rfo.atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Mon, Mar 23, 2015 at 10:08:27AM +0100, Ludovic Desroches wrote:
+> On Mon, Mar 23, 2015 at 07:44:24AM +0100, Sascha Hauer wrote:
+> > On Fri, Mar 20, 2015 at 04:06:09PM +0100, Ludovic Desroches wrote:
+> > > On Thu, Mar 19, 2015 at 07:56:37PM +0100, Sascha Hauer wrote:
+> > > > On Thu, Mar 19, 2015 at 04:39:50PM +0100, Ludovic Desroches wrote:
+> > > > > 	[...]
+> > > > > 
+> > > > > 	pinctrl_defs {
+> > > > > 		mci0 {
+> > > > > 			mci0_ioset0_1bit_grp {
+> > > > > 				at91,pins = <68 69 70>;
+> > > > > 				at91,mux = <2>;
+> > > > > 			};
+> > > > > 
+> > > > > 			mci0_ioset0_4bit_grp {
+> > > > > 				at91,pins = <68 69 70 71 72 73>;
+> > > > > 				at91,mux = <2>;
+> > > > > 			};
+> > > > > 
+> > > > > 			mci0_ioset0_8bit_grp {
+> > > > > 				at91,pins = <68 69 70 71 72 73 74 75 76 77>;
+> > > > > 				at91,mux = <2>;
+> > > > > 			};
+> > > > > 		};
+> > > > > 	};
+> > > > 
+> > > > Why are different groups here? Do you want to put them into the dtsi?
+> > > 
+> > > We used to have a configuration per pin in our products. On next ones we
+> > > will have some constraints ie. on the controller side we still have a
+> > > configuration per pin but we will introduced the notion of iosets. This
+> > > notion involves that timings are guaranteed only in one ioset. That's
+> > > why we can't mix signals from several iosets because. On the controller side
+> > > we can do all we want so I would like to use groups as a software protection.
+> > 
+> > What does happen when you mix signals of different iosets? It won't work
+> > so the developer will change it. What do you need the software
+> > protection for?
+> > 
+> 
+> I can't say it won't work, it could work in some cases. My fear is to
+> have some support cases because of this. It seems easy to spot this kind
+> of issue but experience tell us that we can loose time for this kind of
+> "stupid" error.
 
-On 03/21/2015 11:49 PM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Fri, Mar 20, 2015 at 04:03:22PM +0100, Jacek Anaszewski wrote:
->> +Optional properties of the LED child node:
->> +- label : see Documentation/devicetree/bindings/leds/common.txt
->
-> I'm still not comfortable using the label field as-is as the entity name in
-> the later patches, there's one important problem: it is not guaranteed to be
-> unique in the system.
+Hm, the software (dts in this case) developer will only mix signals of
+different iosets when he is forced to by the board designer. It's the
+board designer that has made this mistake, the software developer will
+only try to make it work anyway. I doubt that the board designer will
+design the board based on the possibilities shown in the dts files.
 
-I don't use it as-is in my patches. For max77603-led the i2c adapter id
-and client address is added to it, and for aat1290 there is '_n' suffix
-added. Nonetheless I didn't notice that the patch [1] was already
-merged. It checks if a LED class device with given name isn't already
-registered and adds a '_n" suffix if there was any. If it was exported
-I could use it in the leds-aat1290 driver and avoid depending on the
-static variable.
+> > > > > - A subnode for these definitions in order to not parse the whole
+> > > > >   pinctrl node to retrieve groups and functions.
+> > > > > - Using node names as function and group names.
+> > > > > - Can we get generic properties to define the groups? Of course a 'pins'
+> > > > >   property is mandatory. In my case I will need an extra one to tell the
+> > > > >   controller how to mux the pins (a same pin can have up to 7 muxing
+> > > > >   possibilities).
+> > > > 
+> > > > Did you have a look at the RFC I sent for these kind of controllers [1] and
+> > > > the final result for the Mediatek driver currently in Linux-next [2]?.
+> > > > 
+> > > > The binding has both the config and the pins in a single node and thus
+> > > > is very compact.
+> > > > 
+> > > 
+> > > Thanks for the links. Well I had a look to them and now I am a bit
+> > > lost...
+> > > 
+> > > I agree with this binding but it involves to get rid of
+> > > pinconf_generic_dt_node_to_map_all, isn't it? What do group and function
+> > > become? It seems these concepts have disappeared.
+> > 
+> > The binding I suggested changes nothing with pinconf, only the pinmux
+> > information is added to the same node. You can still call
+> > pinconf_generic_dt_node_to_map_all() on the nodes, it will simply ignore
+> > the pinmux information. You would have to handle them separately (or
+> > write some generic helper if you like)
+> 
+> Yes, I can still use it. What I mean is there is no generic helper at the
+> moment to get both pinmux (excepting using the function property) and
+> pinconf information. Is it planned to have something generic for the
+> pinmux property?
 
-Whereas for I2C devices the problem doesn't exist (it is guaranteed that
-no more than one I2C client with an address can be present on the
-same bus), for devices driven through GPIOs we haven't stable unique
-identifier.
+Not yet, but it would be a good idea to add something generic.
 
-I thought that we agreed on #v4l about adding numerical postfixes
-in case of such devices.
+> I see MTK_GET_PIN_NO and MTK_GET_PIN_FUNC macros, on my side,
+> I think it will feet my needs. Maybe we only need to remove the MTK
+> prefix and put these macros in another header.
+> 
+> In the mediatek driver, I have also noticed that we have a group for
+> each pin. I have the feeling that the concept of groups disappear, isn't
+> it?
 
-> Do you think this could be added to
-> Documentation/devicetree/bindings/leds/common.txt, with perhaps enforcing it
-> in the LED framework? Bryan, what do you think?
+This may be because the concept of groups doesn't most hardware.
+There really is hardware out there which can only handle the pins in
+groups (that is, a single mux switches multiple pins), but this hardware
+is not very common. Most hardware can indeed control every pin
+indivually. In this situation some drivers are consequent and make a
+group out of each pin which renders the group concept moot. Other
+drivers just interpret each device node as pin group which creates
+artificial groups which do not exist in hardware.
 
-The patch [1] seems to address the issue.
-
-> The alternative would be to simply ignore it in the entity name, but then
-> the name of the device would be different in the LED framework and Media
-> controller.
->
-
-This is the case currently - the names are different. The post fixes
-are added only to media entity name. Perhaps they should be unified.
-
-
-[1] http://www.spinics.net/lists/linux-leds/msg03137.html
+Sascha
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
