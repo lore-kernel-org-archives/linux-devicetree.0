@@ -1,61 +1,125 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] eeprom: Add a simple EEPROM framework for eeprom
- providers
-Date: Mon, 23 Mar 2015 22:05:31 +0000
-Message-ID: <55108E2B.7050305@linaro.org>
-References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org> <1426240214-2434-1-git-send-email-srinivas.kandagatla@linaro.org> <20150323210918.GS14954@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150323210918.GS14954-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v17 01/10] ARM: qcom: Add Subsystem Power Manager (SPM) driver
+Date: Mon, 23 Mar 2015 15:06:21 -0700
+Message-ID: <F7886F3F-50DF-4E1B-A6DF-5463362B2BC7@codeaurora.org>
+References: <1426882877-33008-1-git-send-email-lina.iyer@linaro.org> <1426882877-33008-2-git-send-email-lina.iyer@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1426882877-33008-2-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
 
+On Mar 20, 2015, at 1:21 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
 
-On 23/03/15 21:09, Mark Brown wrote:
-> On Fri, Mar 13, 2015 at 09:50:14AM +0000, Srinivas Kandagatla wrote:
->
-> A couple of *very* minor points below, otherwise this looks OK to me.
->
-Thankyou for the review.
+>=20
+> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora.=
+org>
+> Original tree available at -
+> git://codeaurora.org/quic/la/kernel/msm-3.10.git
+>=20
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Kevin Hilman <khilman@linaro.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> ---
+> .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  29 +-
+> drivers/soc/qcom/Kconfig                           |   7 +
+> drivers/soc/qcom/Makefile                          |   1 +
+> drivers/soc/qcom/spm.c                             | 405 ++++++++++++=
++++++++++
+> 4 files changed, 436 insertions(+), 6 deletions(-)
+> create mode 100644 drivers/soc/qcom/spm.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt =
+b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+> index 1505fb8..664aa91 100644
+> --- a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+> @@ -2,11 +2,20 @@ SPM AVS Wrapper 2 (SAW2)
+>=20
+> The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and th=
+e
+> Adaptive Voltage Scaling (AVS) hardware. The SPM is a programmable
+> -micro-controller that transitions a piece of hardware (like a proces=
+sor or
+> +power-controller that transitions a piece of hardware (like a proces=
+sor or
+> subsystem) into and out of low power modes via a direct connection to
+> the PMIC. It can also be wired up to interact with other processors i=
+n the
+> system, notifying them when a low power state is entered or exited.
+>=20
+> +Multiple revisions of the SAW hardware are supported using these Dev=
+ice Nodes.
+> +SAW2 revisions differ in the register offset and configuration data.=
+ Also, the
+> +same revision of the SAW in different SoCs may have different config=
+uration
+> +data due the the differences in hardware capabilities. Hence the SoC=
+ name, the
+> +version of the SAW hardware in that SoC and the distinction between =
+cpu (big
+> +or Little) or cache, may be needed to uniquely identify the SAW regi=
+ster
+> +configuration and initialization data. The compatible string is used=
+ to
+> +indicate this parameter.
+> +
+> PROPERTIES
+>=20
+> - compatible:
+> @@ -14,10 +23,11 @@ PROPERTIES
+> 	Value type: <string>
+> 	Definition: shall contain "qcom,saw2". A more specific value should =
+be
+> 		    one of:
 
->> +struct eeprom_device *eeprom_register(struct eeprom_config *config)
->> +{
->> +	struct eeprom_device *eeprom;
->> +	int rval;
->> +
->> +	if (!config->regmap || !config->size) {
->> +		dev_err(config->dev, "Regmap not found\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
->
-> You have a struct device in the config and the regmap API has
-> dev_get_regmap() which for most devices that don't have multiple regmaps
-> will give the right regmap.  It would be nice to support this as a
-> convenience for users.
-Yes, sure that makes sense, I will give it a try.
+Does =93qcom,saw2=94 have any meaning anymore?  I see we use it in some=
+ places, but not everywhere on the .dts.  We also see to have the L2 ju=
+st be a =93qcom,saw2=94 node, do we expect that to change?
 
->
->> +	eeprom = kzalloc(sizeof(*eeprom), GFP_KERNEL);
->> +	if (!eeprom)
->> +		return ERR_PTR(-ENOMEM);
->
-> ...
->
->> +	rval = device_add(&eeprom->dev);
->> +	if (rval)
->> +		return ERR_PTR(rval);
->
-> Don't you need a kfree() if device_add() fails?
-I will fix it in next version.
+> -			 "qcom,saw2-v1"
+> -			 "qcom,saw2-v1.1"
+> -			 "qcom,saw2-v2"
+> -			 "qcom,saw2-v2.1"
+> +			"qcom,saw2-v2"
+> +			"qcom,saw2-v2.1"
+> +			"qcom,apq8064-saw2-v1.1-cpu"
+> +			"qcom,msm8974-saw2-v2.1-cpu"
+> +			"qcom,apq8084-saw2-v2.1-cpu"
+>=20
+> - reg:
+> 	Usage: required
+> @@ -26,10 +36,17 @@ PROPERTIES
+> 		    the register region. An optional second element specifies
+> 		    the base address and size of the alias register region.
+>=20
+> +- regulator:
+> +	Usage: optional
+> +	Value type: boolean
+> +	Definition: Indicates that this SPM device acts as a regulator devi=
+ce
+> +			device for the core (CPU or Cache) the SPM is attached
+> +			to.
+>=20
+> Example:
+>=20
+> -	regulator@2099000 {
+> +	power-controller@2099000 {
+> 		compatible =3D "qcom,saw2";
+> 		reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
+> +		regulator;
+> 	};
 
---srini
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
