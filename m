@@ -1,121 +1,78 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [RFC] pinmux: group and function definitions in the device tree
-Date: Mon, 23 Mar 2015 18:29:11 +0800
-Message-ID: <37858913-F9BB-41D8-A380-7F8C44E08A4F@jcrosoft.com>
-References: <20150319153950.GC30114@odux.rfo.atmel.com>
- <20150319185637.GV4927@pengutronix.de>
- <20150320150609.GB32259@odux.rfo.atmel.com>
- <20150323064424.GD9742@pengutronix.de>
- <20150323090827.GD32259@odux.rfo.atmel.com>
- <20150323100913.GJ9742@pengutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150323100913.GJ9742@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: devicetree@vger.kernel.org, swarren@wwwdotorg.org, tony@atomide.com, linus.walleij@linaro.org, Nicolas FERRE <nicolas.ferre@atmel.com>, linux-gpio@vger.kernel.org, laurent.pinchart@ideasonboard.com, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Mon, 23 Mar 2015 11:48:56 +0100
+Message-ID: <CAPDyKFqdOuZfcvdFNq5dw-6k_eES-GMJAtq_V_YtF5AgE4QTig@mail.gmail.com>
+References: <1426518362-24349-1-git-send-email-aleksey.makarov@auriga.com>
+	<CAPDyKFoZsx_GtGT1NsZnFB9PPWKzsLv8dU26eWcobz4cCdKAOw@mail.gmail.com>
+	<550C57E3.60800@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <550C57E3.60800@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Aleksey Makarov <aleksey.makarov@auriga.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-mips@linux-mips.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gTWFyIDIzLCAyMDE1LCBhdCA2OjA5IFBNLCBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVu
-Z3V0cm9uaXguZGU+IHdyb3RlOgo+IAo+IE9uIE1vbiwgTWFyIDIzLCAyMDE1IGF0IDEwOjA4OjI3
-QU0gKzAxMDAsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOgo+PiBPbiBNb24sIE1hciAyMywgMjAx
-NSBhdCAwNzo0NDoyNEFNICswMTAwLCBTYXNjaGEgSGF1ZXIgd3JvdGU6Cj4+PiBPbiBGcmksIE1h
-ciAyMCwgMjAxNSBhdCAwNDowNjowOVBNICswMTAwLCBMdWRvdmljIERlc3JvY2hlcyB3cm90ZToK
-Pj4+PiBPbiBUaHUsIE1hciAxOSwgMjAxNSBhdCAwNzo1NjozN1BNICswMTAwLCBTYXNjaGEgSGF1
-ZXIgd3JvdGU6Cj4+Pj4+IE9uIFRodSwgTWFyIDE5LCAyMDE1IGF0IDA0OjM5OjUwUE0gKzAxMDAs
-IEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOgo+Pj4+Pj4gCVsuLi5dCj4+Pj4+PiAKPj4+Pj4+IAlw
-aW5jdHJsX2RlZnMgewo+Pj4+Pj4gCQltY2kwIHsKPj4+Pj4+IAkJCW1jaTBfaW9zZXQwXzFiaXRf
-Z3JwIHsKPj4+Pj4+IAkJCQlhdDkxLHBpbnMgPSA8NjggNjkgNzA+Owo+Pj4+Pj4gCQkJCWF0OTEs
-bXV4ID0gPDI+Owo+Pj4+Pj4gCQkJfTsKPj4+Pj4+IAo+Pj4+Pj4gCQkJbWNpMF9pb3NldDBfNGJp
-dF9ncnAgewo+Pj4+Pj4gCQkJCWF0OTEscGlucyA9IDw2OCA2OSA3MCA3MSA3MiA3Mz47Cj4+Pj4+
-PiAJCQkJYXQ5MSxtdXggPSA8Mj47Cj4+Pj4+PiAJCQl9Owo+Pj4+Pj4gCj4+Pj4+PiAJCQltY2kw
-X2lvc2V0MF84Yml0X2dycCB7Cj4+Pj4+PiAJCQkJYXQ5MSxwaW5zID0gPDY4IDY5IDcwIDcxIDcy
-IDczIDc0IDc1IDc2IDc3PjsKPj4+Pj4+IAkJCQlhdDkxLG11eCA9IDwyPjsKPj4+Pj4+IAkJCX07
-Cj4+Pj4+PiAJCX07Cj4+Pj4+PiAJfTsKPj4+Pj4gCj4+Pj4+IFdoeSBhcmUgZGlmZmVyZW50IGdy
-b3VwcyBoZXJlPyBEbyB5b3Ugd2FudCB0byBwdXQgdGhlbSBpbnRvIHRoZSBkdHNpPwo+Pj4+IAo+
-Pj4+IFdlIHVzZWQgdG8gaGF2ZSBhIGNvbmZpZ3VyYXRpb24gcGVyIHBpbiBpbiBvdXIgcHJvZHVj
-dHMuIE9uIG5leHQgb25lcyB3ZQo+Pj4+IHdpbGwgaGF2ZSBzb21lIGNvbnN0cmFpbnRzIGllLiBv
-biB0aGUgY29udHJvbGxlciBzaWRlIHdlIHN0aWxsIGhhdmUgYQo+Pj4+IGNvbmZpZ3VyYXRpb24g
-cGVyIHBpbiBidXQgd2Ugd2lsbCBpbnRyb2R1Y2VkIHRoZSBub3Rpb24gb2YgaW9zZXRzLiBUaGlz
-Cj4+Pj4gbm90aW9uIGludm9sdmVzIHRoYXQgdGltaW5ncyBhcmUgZ3VhcmFudGVlZCBvbmx5IGlu
-IG9uZSBpb3NldC4gVGhhdCdzCj4+Pj4gd2h5IHdlIGNhbid0IG1peCBzaWduYWxzIGZyb20gc2V2
-ZXJhbCBpb3NldHMgYmVjYXVzZS4gT24gdGhlIGNvbnRyb2xsZXIgc2lkZQo+Pj4+IHdlIGNhbiBk
-byBhbGwgd2Ugd2FudCBzbyBJIHdvdWxkIGxpa2UgdG8gdXNlIGdyb3VwcyBhcyBhIHNvZnR3YXJl
-IHByb3RlY3Rpb24uCj4+PiAKPj4+IFdoYXQgZG9lcyBoYXBwZW4gd2hlbiB5b3UgbWl4IHNpZ25h
-bHMgb2YgZGlmZmVyZW50IGlvc2V0cz8gSXQgd29uJ3Qgd29yawo+Pj4gc28gdGhlIGRldmVsb3Bl
-ciB3aWxsIGNoYW5nZSBpdC4gV2hhdCBkbyB5b3UgbmVlZCB0aGUgc29mdHdhcmUKPj4+IHByb3Rl
-Y3Rpb24gZm9yPwo+Pj4gCj4+IAo+PiBJIGNhbid0IHNheSBpdCB3b24ndCB3b3JrLCBpdCBjb3Vs
-ZCB3b3JrIGluIHNvbWUgY2FzZXMuIE15IGZlYXIgaXMgdG8KPj4gaGF2ZSBzb21lIHN1cHBvcnQg
-Y2FzZXMgYmVjYXVzZSBvZiB0aGlzLiBJdCBzZWVtcyBlYXN5IHRvIHNwb3QgdGhpcyBraW5kCj4+
-IG9mIGlzc3VlIGJ1dCBleHBlcmllbmNlIHRlbGwgdXMgdGhhdCB3ZSBjYW4gbG9vc2UgdGltZSBm
-b3IgdGhpcyBraW5kIG9mCj4+ICJzdHVwaWQiIGVycm9yLgo+IAo+IEhtLCB0aGUgc29mdHdhcmUg
-KGR0cyBpbiB0aGlzIGNhc2UpIGRldmVsb3BlciB3aWxsIG9ubHkgbWl4IHNpZ25hbHMgb2YKPiBk
-aWZmZXJlbnQgaW9zZXRzIHdoZW4gaGUgaXMgZm9yY2VkIHRvIGJ5IHRoZSBib2FyZCBkZXNpZ25l
-ci4gSXQncyB0aGUKPiBib2FyZCBkZXNpZ25lciB0aGF0IGhhcyBtYWRlIHRoaXMgbWlzdGFrZSwg
-dGhlIHNvZnR3YXJlIGRldmVsb3BlciB3aWxsCj4gb25seSB0cnkgdG8gbWFrZSBpdCB3b3JrIGFu
-eXdheS4gSSBkb3VidCB0aGF0IHRoZSBib2FyZCBkZXNpZ25lciB3aWxsCj4gZGVzaWduIHRoZSBi
-b2FyZCBiYXNlZCBvbiB0aGUgcG9zc2liaWxpdGllcyBzaG93biBpbiB0aGUgZHRzIGZpbGVzLgo+
-IAo+Pj4+Pj4gLSBBIHN1Ym5vZGUgZm9yIHRoZXNlIGRlZmluaXRpb25zIGluIG9yZGVyIHRvIG5v
-dCBwYXJzZSB0aGUgd2hvbGUKPj4+Pj4+ICBwaW5jdHJsIG5vZGUgdG8gcmV0cmlldmUgZ3JvdXBz
-IGFuZCBmdW5jdGlvbnMuCj4+Pj4+PiAtIFVzaW5nIG5vZGUgbmFtZXMgYXMgZnVuY3Rpb24gYW5k
-IGdyb3VwIG5hbWVzLgo+Pj4+Pj4gLSBDYW4gd2UgZ2V0IGdlbmVyaWMgcHJvcGVydGllcyB0byBk
-ZWZpbmUgdGhlIGdyb3Vwcz8gT2YgY291cnNlIGEgJ3BpbnMnCj4+Pj4+PiAgcHJvcGVydHkgaXMg
-bWFuZGF0b3J5LiBJbiBteSBjYXNlIEkgd2lsbCBuZWVkIGFuIGV4dHJhIG9uZSB0byB0ZWxsIHRo
-ZQo+Pj4+Pj4gIGNvbnRyb2xsZXIgaG93IHRvIG11eCB0aGUgcGlucyAoYSBzYW1lIHBpbiBjYW4g
-aGF2ZSB1cCB0byA3IG11eGluZwo+Pj4+Pj4gIHBvc3NpYmlsaXRpZXMpLgo+Pj4+PiAKPj4+Pj4g
-RGlkIHlvdSBoYXZlIGEgbG9vayBhdCB0aGUgUkZDIEkgc2VudCBmb3IgdGhlc2Uga2luZCBvZiBj
-b250cm9sbGVycyBbMV0gYW5kCj4+Pj4+IHRoZSBmaW5hbCByZXN1bHQgZm9yIHRoZSBNZWRpYXRl
-ayBkcml2ZXIgY3VycmVudGx5IGluIExpbnV4LW5leHQgWzJdPy4KPj4+Pj4gCj4+Pj4+IFRoZSBi
-aW5kaW5nIGhhcyBib3RoIHRoZSBjb25maWcgYW5kIHRoZSBwaW5zIGluIGEgc2luZ2xlIG5vZGUg
-YW5kIHRodXMKPj4+Pj4gaXMgdmVyeSBjb21wYWN0Lgo+Pj4+PiAKPj4+PiAKPj4+PiBUaGFua3Mg
-Zm9yIHRoZSBsaW5rcy4gV2VsbCBJIGhhZCBhIGxvb2sgdG8gdGhlbSBhbmQgbm93IEkgYW0gYSBi
-aXQKPj4+PiBsb3N0Li4uCj4+Pj4gCj4+Pj4gSSBhZ3JlZSB3aXRoIHRoaXMgYmluZGluZyBidXQg
-aXQgaW52b2x2ZXMgdG8gZ2V0IHJpZCBvZgo+Pj4+IHBpbmNvbmZfZ2VuZXJpY19kdF9ub2RlX3Rv
-X21hcF9hbGwsIGlzbid0IGl0PyBXaGF0IGRvIGdyb3VwIGFuZCBmdW5jdGlvbgo+Pj4+IGJlY29t
-ZT8gSXQgc2VlbXMgdGhlc2UgY29uY2VwdHMgaGF2ZSBkaXNhcHBlYXJlZC4KPj4+IAo+Pj4gVGhl
-IGJpbmRpbmcgSSBzdWdnZXN0ZWQgY2hhbmdlcyBub3RoaW5nIHdpdGggcGluY29uZiwgb25seSB0
-aGUgcGlubXV4Cj4+PiBpbmZvcm1hdGlvbiBpcyBhZGRlZCB0byB0aGUgc2FtZSBub2RlLiBZb3Ug
-Y2FuIHN0aWxsIGNhbGwKPj4+IHBpbmNvbmZfZ2VuZXJpY19kdF9ub2RlX3RvX21hcF9hbGwoKSBv
-biB0aGUgbm9kZXMsIGl0IHdpbGwgc2ltcGx5IGlnbm9yZQo+Pj4gdGhlIHBpbm11eCBpbmZvcm1h
-dGlvbi4gWW91IHdvdWxkIGhhdmUgdG8gaGFuZGxlIHRoZW0gc2VwYXJhdGVseSAob3IKPj4+IHdy
-aXRlIHNvbWUgZ2VuZXJpYyBoZWxwZXIgaWYgeW91IGxpa2UpCj4+IAo+PiBZZXMsIEkgY2FuIHN0
-aWxsIHVzZSBpdC4gV2hhdCBJIG1lYW4gaXMgdGhlcmUgaXMgbm8gZ2VuZXJpYyBoZWxwZXIgYXQg
-dGhlCj4+IG1vbWVudCB0byBnZXQgYm90aCBwaW5tdXggKGV4Y2VwdGluZyB1c2luZyB0aGUgZnVu
-Y3Rpb24gcHJvcGVydHkpIGFuZAo+PiBwaW5jb25mIGluZm9ybWF0aW9uLiBJcyBpdCBwbGFubmVk
-IHRvIGhhdmUgc29tZXRoaW5nIGdlbmVyaWMgZm9yIHRoZQo+PiBwaW5tdXggcHJvcGVydHk/Cj4g
-Cj4gTm90IHlldCwgYnV0IGl0IHdvdWxkIGJlIGEgZ29vZCBpZGVhIHRvIGFkZCBzb21ldGhpbmcg
-Z2VuZXJpYy4KPiAKPj4gSSBzZWUgTVRLX0dFVF9QSU5fTk8gYW5kIE1US19HRVRfUElOX0ZVTkMg
-bWFjcm9zLCBvbiBteSBzaWRlLAo+PiBJIHRoaW5rIGl0IHdpbGwgZmVldCBteSBuZWVkcy4gTWF5
-YmUgd2Ugb25seSBuZWVkIHRvIHJlbW92ZSB0aGUgTVRLCj4+IHByZWZpeCBhbmQgcHV0IHRoZXNl
-IG1hY3JvcyBpbiBhbm90aGVyIGhlYWRlci4KPj4gCj4+IEluIHRoZSBtZWRpYXRlayBkcml2ZXIs
-IEkgaGF2ZSBhbHNvIG5vdGljZWQgdGhhdCB3ZSBoYXZlIGEgZ3JvdXAgZm9yCj4+IGVhY2ggcGlu
-LiBJIGhhdmUgdGhlIGZlZWxpbmcgdGhhdCB0aGUgY29uY2VwdCBvZiBncm91cHMgZGlzYXBwZWFy
-LCBpc24ndAo+PiBpdD8KPiAKPiBUaGlzIG1heSBiZSBiZWNhdXNlIHRoZSBjb25jZXB0IG9mIGdy
-b3VwcyBkb2Vzbid0IG1vc3QgaGFyZHdhcmUuCj4gVGhlcmUgcmVhbGx5IGlzIGhhcmR3YXJlIG91
-dCB0aGVyZSB3aGljaCBjYW4gb25seSBoYW5kbGUgdGhlIHBpbnMgaW4KPiBncm91cHMgKHRoYXQg
-aXMsIGEgc2luZ2xlIG11eCBzd2l0Y2hlcyBtdWx0aXBsZSBwaW5zKSwgYnV0IHRoaXMgaGFyZHdh
-cmUKPiBpcyBub3QgdmVyeSBjb21tb24uIE1vc3QgaGFyZHdhcmUgY2FuIGluZGVlZCBjb250cm9s
-IGV2ZXJ5IHBpbgo+IGluZGl2dWFsbHkuIEluIHRoaXMgc2l0dWF0aW9uIHNvbWUgZHJpdmVycyBh
-cmUgY29uc2VxdWVudCBhbmQgbWFrZSBhCj4gZ3JvdXAgb3V0IG9mIGVhY2ggcGluIHdoaWNoIHJl
-bmRlcnMgdGhlIGdyb3VwIGNvbmNlcHQgbW9vdC4gT3RoZXIKPiBkcml2ZXJzIGp1c3QgaW50ZXJw
-cmV0IGVhY2ggZGV2aWNlIG5vZGUgYXMgcGluIGdyb3VwIHdoaWNoIGNyZWF0ZXMKPiBhcnRpZmlj
-aWFsIGdyb3VwcyB3aGljaCBkbyBub3QgZXhpc3QgaW4gaGFyZHdhcmUuCgpUaGlzIGlzIHdoYXQg
-d2UgZG8gb24gdGhlIGN1cnJlbnQgcGluY3RybC1hdDkxCgphbmQgYXMgd2UgZG8gbm90IHNlZSB0
-aGUgc3BlY2lmaWMgb2YgdGhpcyBuZXcgSVAgZm9yIGF0OTEgaXTigJlzIGRpZmZpY3VsdCB0byBz
-ZWUKaWYgd2UgY2FuIHVzZSBnZW5lcmljIG9yIG5vdC4KClBlcnNvbmFsbHkgSSBkbyBwcmVmZXIg
-d2hlbiB0aGUgbnVtYmVyIG9mIHBvc3NpYmlsaXR5IGFyZSBub3QgaGlnaCB0byBoYXZlIGEgYmln
-CnNvYyBkdHNpLgoKQnV0IGluIHRoZSBjYXNlIG9mIEkuTVggeWVzIGl04oCZcyBpbXBvc3NpYmxl
-IHRvIG1hbmFnZQoKQmVzdCBSZWdhcmRzLApKLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+[...]
+
+>>> +
+>>> +This controller is present on some members of the Cavium OCTEON SoC
+>>> +family, provide an interface for eMMC, MMC and SD devices.  There is a
+>>> +single controller that may have several "slots" connected.  These
+>>
+>>
+>> Even it it may have several slots, that's not being supported by the
+>> mmc core from a MMC/SD/SDIO protocol perspective.
+>>
+>> We have hade some discussions around this historocally, and I doubt
+>> that we ever will be adding this.
+>>
+>> So, with that in mind I would rather see that you remove the concept
+>> of "slot" entirely and thus don't do the DT configuration within a
+>> child node.
+>
+>
+> As you note this is a device tree representation, and thus really has
+> nothing to do with the capabilities and internal structure of any given
+> operating system.
+>
+> The hardware really is structured as a single controller with a single set
+> of registers and register fields that can control multiple "slots".  There
+> are not multiple independent slot controllers.
+>
+> This device tree representation reflects,  with fidelity, the actual
+> hardware topology.
+
+I understand, you have point - but...
+
+We can debate whether why you think using a child-node for a slot is
+reflecting the hardware better, but I rather don't. Everybody else
+isn't using a child node, so I don't think you should.
+
+Moreover in the SDIO case, child nodes of mmc hosts reflects the
+actual embedded functional SDIO devices. So if child nodes are going
+to be used for anything, it should be to contain properties of an
+embedded SD/MMC/SDIO card. At least that's my view.
+
+>
+> But none of this matters, because the device tree bindings train has already
+> left the station.  You should have expressed opposition to this binding back
+> when it was first discussed:
+>
+> http://www.linux-mips.org/archives/linux-mips/2012-05/msg00119.html
+
+I don't get it. What happened with the RFC above? It wasn't merged for
+any release, but the DT-bindings that was proposed was accepted? How
+is that possible?
+
+>
+> The device tree is deployed in the boot firmware of shipping devices, and we
+> are merely documenting what is there.
+
+That's a problem. :-)
+
+[...]
+
+Kind regards
+Uffe
