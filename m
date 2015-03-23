@@ -1,99 +1,55 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Mon, 23 Mar 2015 19:17:49 +0100
-Message-ID: <2619686.csNBBFyt8W@phil>
-References: <4184159.j0iXe39dFB@phil>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH/RFC v13 04/13] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Mon, 23 Mar 2015 19:28:26 +0100
+Message-ID: <55105B4A.4050903@samsung.com>
+References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
+ <1426175114-14876-5-git-send-email-j.anaszewski@samsung.com>
+ <20150323120743.GG24422@x1> <20150323142202.GA23919@amd>
+ <20150323150213.GN24804@x1> <20150323154807.GA13297@amd>
+ <20150323155937.GQ24804@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4184159.j0iXe39dFB@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20150323155937.GQ24804@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCkFtIERvbm5lcnN0YWcsIDEyLiBNw6RyeiAyMDE1LCAyMTo0NToxOSBzY2hy
-aWViIEhlaWtvIFN0dWVibmVyOgo+IEF0IGxlYXN0IHRoZSBSb2NrY2hpcCB2YXJpYW50IG9mIHRo
-ZSBkd19oZG1pIGNhbiBoYXZlIGNvbnRyb2xsYWJsZSBwb3dlcgo+IHN1cHBsaWVzIHByb3ZpZGlu
-ZyAxLjAgYW5kIDEuOFYuIFRoZXJlZm9yZSBhZGQgdGhlIHBvc3NpYmlsaXR5IGZvciB0aGUKPiBn
-ZW5lcmljIGJyaWRnZSBkcml2ZXIgdG8gZW5hYmxlIHN1cHBsaWVzIHByb3ZpZGVkIGJ5IHRoZSBo
-dy1zcGVjaWZpYwo+IGRyaXZlcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIg
-PGhlaWtvQHNudGVjaC5kZT4KCmRvZXMgdGhpcyBsb29rIG9rIG5vdz8KCkFuZCBhcyB3ZSB0YWxr
-ZWQgYWJvdXQgaW4gQ2hlbW5pdHosIHdobyB3aWxsIGJlIHRha2luZyBzdWNoIGJyaWRnZS1yZWxh
-dGVkIApjaGFuZ2VzLCBhcyB5b3UgbWVudGlvbmVkIHNvbWUgbGFzdCBicmlkZ2UtcGF0Y2hlcyBn
-b2luZyB0aHJvdWdoIFRoaWVycnkuCgoKSGVpa28KCj4gLS0tCj4gY2hhbmdlcyBzaW5jZSB2MjoK
-PiAtIHJlbmFtZSBzdXBwbGllcyB0byB0aGUgbmFtZXMgZm91bmQgaW4gdGhlIGhkbWkgSVAgZGF0
-YWJvb2sKPiBjaGFuZ2VzIHNpbmNlIHYxOgo+IC0gZm9sbG93IHN1Z2dlc3Rpb24gZnJvbSBSdXNz
-ZWxsIEtpbmcgdG8ga2VlcCByZWd1bGF0b3IgaGFuZGxpbmcgbG9jYWwKPiAgIHRvIHRoZSByb2Nr
-Y2hpcCBpbXBsZW1lbnRhdGlvbiBmb3IgdGhlIHRpbWUgYmVpbmcgYW5kIG9ubHkgZ2VuZXJhbGl6
-ZQo+ICAgd2hlbiBhIHJlYWwgc2Vjb25kIGltcGxlbWVudGF0aW9uIG5lZWRzIHJlZ3VsYXRvciBo
-YW5kbGluZwo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWku
-dHh0ICAgICB8ICA1ICsrKysKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9j
-a2NoaXAuYyAgICAgICAgfCAzMgo+ICsrKysrKysrKysrKysrKysrKysrKy0gMiBmaWxlcyBjaGFu
-Z2VkLCAzNiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0Cj4g
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4
-dCBpbmRleAo+IGE5MDVjMTQuLmJiNzQ2NDAgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQKPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+IEBAIC0y
-Miw2ICsyMiwxMSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzCj4gIC0gZGRjLWkyYy1idXM6IHBoYW5k
-bGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmluZwo+ICAtIGNs
-b2NrcywgY2xvY2stbmFtZXM6IHBoYW5kbGUgdG8gdGhlIEhETUkgQ0VDIGNsb2NrLCBuYW1lIHNo
-b3VsZCBiZSAiY2VjIgo+IAo+ICtPcHRpb25hbCBzdXBwbGllczoKPiArcm9ja2NoaXAscmszMjg4
-LWR3LWhkbWkgaGFuZGxlcyB0d28gb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXM6Cj4gKy0gdnAtc3Vw
-cGx5OiAxLjBWIHBvd2VyIHN1cHBseQo+ICstIHZwaC1zdXBwbHk6IDEuOFYgcG93ZXIgc3VwcGx5
-Cj4gKwo+ICBFeGFtcGxlOgo+ICAJaGRtaTogaGRtaUAwMTIwMDAwIHsKPiAgCQljb21wYXRpYmxl
-ID0gImZzbCxpbXg2cS1oZG1pIjsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL2R3X2hkbWktcm9ja2NoaXAuYwo+IGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hk
-bWktcm9ja2NoaXAuYyBpbmRleCBkMjM2ZmFhLi42NDdhMjQwIDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCj4gQEAgLTExLDYgKzExLDcgQEAKPiAg
-I2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICAjaW5jbHVkZSA8bGludXgvbWZk
-L3N5c2Nvbi5oPgo+ICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4gKyNpbmNsdWRlIDxsaW51
-eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1fb2YuaD4KPiAgI2lu
-Y2x1ZGUgPGRybS9kcm1QLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVscGVyLmg+Cj4g
-QEAgLTI4LDYgKzI5LDkgQEAgc3RydWN0IHJvY2tjaGlwX2hkbWkgewo+ICAJc3RydWN0IGRldmlj
-ZSAqZGV2Owo+ICAJc3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+ICAJc3RydWN0IGRybV9lbmNvZGVy
-IGVuY29kZXI7Cj4gKwlzdHJ1Y3QgcmVndWxhdG9yX2J1bGtfZGF0YSBzdXBwbGllc1syXTsKPiAr
-CWludCBuc3VwcGxpZXM7Cj4gKwlib29sIHN1cHBsaWVzX2VuYWJsZWQ7Cj4gIH07Cj4gCj4gICNk
-ZWZpbmUgdG9fcm9ja2NoaXBfaGRtaSh4KQljb250YWluZXJfb2YoeCwgc3RydWN0IHJvY2tjaGlw
-X2hkbWksIHgpCj4gQEAgLTE3OSw2ICsxODMsMTIgQEAgc3RhdGljIHN0cnVjdCBkcm1fZW5jb2Rl
-cl9mdW5jcwo+IGR3X2hkbWlfcm9ja2NoaXBfZW5jb2Rlcl9mdW5jcyA9IHsKPiAKPiAgc3RhdGlj
-IHZvaWQgZHdfaGRtaV9yb2NrY2hpcF9lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9lbmNvZGVy
-ICplbmNvZGVyKQo+ICB7Cj4gKwlzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSAqaGRtaSA9IHRvX3JvY2tj
-aGlwX2hkbWkoZW5jb2Rlcik7Cj4gKwo+ICsJaWYgKGhkbWktPm5zdXBwbGllcyA+IDAgJiYgaGRt
-aS0+c3VwcGxpZXNfZW5hYmxlZCkgewo+ICsJCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoaGRtaS0+
-bnN1cHBsaWVzLCBoZG1pLT5zdXBwbGllcyk7Cj4gKwkJaGRtaS0+c3VwcGxpZXNfZW5hYmxlZCA9
-IGZhbHNlOwo+ICsJfQo+ICB9Cj4gCj4gIHN0YXRpYyBib29sCj4gQEAgLTE5OSw3ICsyMDksMTYg
-QEAgc3RhdGljIHZvaWQgZHdfaGRtaV9yb2NrY2hpcF9lbmNvZGVyX2NvbW1pdChzdHJ1Y3QKPiBk
-cm1fZW5jb2RlciAqZW5jb2Rlcikgewo+ICAJc3RydWN0IHJvY2tjaGlwX2hkbWkgKmhkbWkgPSB0
-b19yb2NrY2hpcF9oZG1pKGVuY29kZXIpOwo+ICAJdTMyIHZhbDsKPiAtCWludCBtdXg7Cj4gKwlp
-bnQgbXV4LCByZXQ7Cj4gKwo+ICsJaWYgKGhkbWktPm5zdXBwbGllcyA+IDAgJiYgIWhkbWktPnN1
-cHBsaWVzX2VuYWJsZWQpIHsKPiArCQlyZXQgPSByZWd1bGF0b3JfYnVsa19lbmFibGUoaGRtaS0+
-bnN1cHBsaWVzLCBoZG1pLT5zdXBwbGllcyk7Cj4gKwkJaWYgKHJldCkgewo+ICsJCQlkZXZfZXJy
-KGhkbWktPmRldiwgImNvdWxkIG5vdCBlbmFibGUgaGRtaSBhbmFsb2cgc3VwcGxpZXNcbiIpOwo+
-ICsJCQlyZXR1cm47Cj4gKwkJfQo+ICsJCWhkbWktPnN1cHBsaWVzX2VuYWJsZWQgPSB0cnVlOwo+
-ICsJfQo+IAo+ICAJbXV4ID0gcm9ja2NoaXBfZHJtX2VuY29kZXJfZ2V0X211eF9pZChoZG1pLT5k
-ZXYtPm9mX25vZGUsIGVuY29kZXIpOwo+ICAJaWYgKG11eCkKPiBAQCAtMjc1LDYgKzI5NCwxNyBA
-QCBzdGF0aWMgaW50IGR3X2hkbWlfcm9ja2NoaXBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsCj4g
-c3RydWN0IGRldmljZSAqbWFzdGVyLCBpZiAoIWlvcmVzKQo+ICAJCXJldHVybiAtRU5YSU87Cj4g
-Cj4gKwloZG1pLT5zdXBwbGllc1swXS5zdXBwbHkgPSAidnAiOwo+ICsJaGRtaS0+c3VwcGxpZXNb
-MV0uc3VwcGx5ID0gInZwaCI7Cj4gKwloZG1pLT5uc3VwcGxpZXMgPSAyOwo+ICsKPiArCXJldCA9
-IGRldm1fcmVndWxhdG9yX2J1bGtfZ2V0KGhkbWktPmRldiwKPiArCQkJCSAgICAgIGhkbWktPm5z
-dXBwbGllcywgaGRtaS0+c3VwcGxpZXMpOwo+ICsJaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKQo+
-ICsJCXJldHVybiByZXQ7Cj4gKwlpZiAocmV0KQo+ICsJCWhkbWktPm5zdXBwbGllcyA9IDA7Cj4g
-Kwo+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgaGRtaSk7Cj4gCj4gIAllbmNvZGVyLT5w
-b3NzaWJsZV9jcnRjcyA9IGRybV9vZl9maW5kX3Bvc3NpYmxlX2NydGNzKGRybSwgZGV2LT5vZl9u
-b2RlKTsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 23/03/15 16:59, Lee Jones wrote:
+> On Mon, 23 Mar 2015, Pavel Machek wrote:
+> 
+>> > On Mon 2015-03-23 15:02:13, Lee Jones wrote:
+>>> > > On Mon, 23 Mar 2015, Pavel Machek wrote:
+>>>> > > > On Mon 2015-03-23 12:07:43, Lee Jones wrote:
+>>>>> > > > > This patch requires a DT Ack.
+>>>> > > > 
+>>>> > > > No, it requires DT people to be notified -- and they were, few times
+>>>> > > > by now.
+>>>> > > > 
+>>>> > > > They clearly don't care.
+>>> > > 
+>>> > > Well fortunately for the Kernel community, I do care.  And as this
+>>> > > patch adds 3 new DT properties, has been through many iterations
+>>> > > already with vast changes made over that period and there is still
+>>> > > some controversy looming, I'm saying that it _does_ require a DT
+>>> > > Ack.
+>> > 
+>> > Can you help get that ack, then? As a maintainer, you have better
+>> > chance getting reply from DT people than patch submitter.
+>
+> Hopefully they will see my plea a couple of replies back.
+> 
+> If that fails I'll go poke them via other means.  Failing that I'll go
+> see them in person and continually hit them with wet fish until one of
+> them relents.
+
+Nice, as we can see it doesn't take _that_ much to be a really good
+subsystem maintainer. I wish you good luck and hope there will be no
+need to realize the very last steps of that clever plan.
+
+-- 
+Regards,
+Sylwester
