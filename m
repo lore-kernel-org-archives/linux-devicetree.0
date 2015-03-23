@@ -1,91 +1,51 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
-Date: Mon, 23 Mar 2015 10:31:58 +0100
-Message-ID: <550FDD8E.60806@samsung.com>
-References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
- <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
- <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
- <20150319100252.03be7dda@hwh-ubuntu>
- <CAPj87rPeUS9h=GCBR7ccNhugaGoyHw3x6oZ3Spq6P8uEg4ZcUg@mail.gmail.com>
- <20150319101810.2244b509@hwh-ubuntu> <550A979A.6070102@samsung.com>
- <20150320141531.36e1464c@hwh-ubuntu>
+From: Howard Mitchell <hm-n6SlHCM0l+K9FHfhHBbuYA@public.gmane.org>
+Subject: Re: [PATCH] ASoC:pcm512x: Make PLL lock output selectable via device
+ tree.
+Date: Mon, 23 Mar 2015 09:43:59 +0000
+Message-ID: <550FE05F.6070204@hmbedded.co.uk>
+References: <1426886563-10936-1-git-send-email-hm@hmbedded.co.uk> <20150322162409.GG6643@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20150320141531.36e1464c@hwh-ubuntu>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hyungwon Hwang <human.hwang@samsung.com>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, =?UTF-8?B?7J2064+Z7ZmU?= <dh09.lee@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150322162409.GG6643-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMjAvMjAxNSAwNjoxNSBBTSwgSHl1bmd3b24gSHdhbmcgd3JvdGU6Cj4gRGVhciBBbmRy
-ZWosCj4KPiBPbiBUaHUsIDE5IE1hciAyMDE1IDEwOjMyOjEwICswMTAwCj4gQW5kcnplaiBIYWpk
-YSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4KPj4gT24gMDMvMTkvMjAxNSAwMjoxOCBB
-TSwgSHl1bmd3b24gSHdhbmcgd3JvdGU6Cj4+PiBEZWFyIERhbmllbCwKPj4+Cj4+PiBPbiBUaHUs
-IDE5IE1hciAyMDE1IDAxOjEzOjIxICswMDAwCj4+PiBEYW5pZWwgU3RvbmUgPGRhbmllbC1yTHRZ
-NGEvOHRGMXJvdlZDcy91VGx3QHB1YmxpYy5nbWFuZS5vcmc+IHdyb3RlOgo+Pj4KPj4+PiBIaSBI
-eXVuZ3dvbiwKPj4+Pgo+Pj4+IE9uIDE5IE1hcmNoIDIwMTUgYXQgMDE6MDIsIEh5dW5nd29uIEh3
-YW5nCj4+Pj4gPGh1bWFuLmh3YW5nLVN6ZTNPM1VVMjJKQkRnaks3eTdUVVFAcHVibGljLmdtYW5l
-Lm9yZz4gd3JvdGU6Cj4+Pj4+Pj4gKyAgICAgICAvKgo+Pj4+Pj4+ICsgICAgICAgICogVGhlIGlu
-cHV0IFBMTCBjbG9jayBmb3IgTUlQSSBEU0kgaW4gRXh5bm9zNTQzMyBzZWVtcwo+Pj4+Pj4+IHRv
-IGJlIGZpeGVkCj4+Pj4+Pj4gKyAgICAgICAgKiBieSBPU0MgQ0xLLgo+Pj4+Pj4+ICsgICAgICAg
-ICovCj4+Pj4+Pj4gKyAgICAgICBmaW4gPSAyNCAqIE1IWjsKPj4+Pj4+IEVyLCBpcyB0aGlzIGFs
-d2F5cyB0cnVlIG9uIG90aGVyIHBsYXRmb3JtcyBhcyB3ZWxsPyBTaG91bGRuJ3QKPj4+Pj4+IHRo
-aXMgYmUgYSBwYXJ0IG9mIHRoZSBEZXZpY2VUcmVlIGRlc2NyaXB0aW9uPwo+Pj4+PiBJIGZvcmdv
-dCB0byBjaGFuZ2UgdGhlIGNvbW1lbnQgaW4gZGV2ZWxvcG1lbnQuIEZpbmFsbHkgaXQgaXMgZm91
-bmQKPj4+Pj4gdGhhdCBhbGwgZXh5bm9zIG1pcGkgZHNpJ3MgZmluIGlzIE9TQyBjbGsgd2hpY2gg
-aXMgMjQgTUh6LiBTbyBJCj4+Pj4+IHdpbGwgcmVtb3ZlIHRoZSBjb21tZW50LCBidXQgcmVtYWlu
-IHRoZSBjb2RlIGFzIGl0IGlzLgo+Pj4+IEZhaXIgZW5vdWdoLiBTaG91bGQgcGxsX2NsayBiZSBy
-ZW1vdmVkIGZyb20gdGhlIERUIGRlc2NyaXB0aW9uCj4+Pj4gdGhlbiwgaWYgaXQncyBmaXhlZCB0
-byB0aGUgb3NjaWxsYXRvcj8KPj4+IFllcy4gSXQgaXMgcmVkdW5kYW50IHRvIHJlcHJlc2VudCBw
-bGxfY2xrIGluIERULCBhbmQgaXQgc2hvdWxkIGJlCj4+PiByZW1vdmVkLgo+PiBXaHkgZG8geW91
-IHRoaW5rIE9TQyBjbGsgZGV0ZXJtaW5lcyB2YWx1ZSBvZiBwbGxfY2xrPwo+PiBwbGxfY2xrIGlz
-IG1hcHBlZCB0byBTQ0xLX01JUElbMDFdIG9yIFNDTEtfRFNJTTAgZ2F0ZSB3aXRoIGZldwo+PiBk
-aXZpZGVycyBhbmQgbXV4ZXMgYWJvdmUuIFNvIGF0IGxlYXN0IGluIHRoZW9yeSBpdCBjYW4gZGlm
-ZmVyIGZyb20KPj4gb3NjIGNsay4gQWRkaXRpb25hbGx5IHRoaXMgZ2F0ZSBzaG91bGQgYmUgZW5h
-YmxlZCBzbyB5b3UgY2Fubm90IGp1c3QKPj4gcmVtb3ZlIGl0IGZyb20gRFQuCj4+Cj4+IFJlZ2Fy
-ZHMKPj4gQW5kcnplago+IEFzIEkgZm91bmQsIHBsbCBjbGsgaXMgbm90IFNDTEtfTUlQSVswMV0g
-YnV0IE9TQyBDTEsuIFNDTEtfRFNJTTAgbXVzdAo+IGJlIGNvbnRyb2xsZWQgaW4gdGhpcyBkcml2
-ZXIgYXMgaXQgaGFzIGJlZW4sIGFzIGEgZ2F0ZSBjbG9jayBvZiBNSVBJCj4gRFNJIGJsb2NrLCBi
-dXQgbm90IGFzIGEgcGxsIGNsay4gU0NMS19EU0lNMCBpcyBub3QgdGhlIGlucHV0Cj4gY2xvY2sg
-b2YgTUlQSSBEUEhZIHdoaWNoIHByb3ZpZGVzIGZpbiBpbiB0aGlzIGNvZGUuIFNvIGNsb2NrIHNl
-dHRpbmcKPiBhbmQgZ2V0dGluZyBjb2RlIHdhcyB3cm9uZywgYW5kIG11c3QgYmUgcmVtb3ZlZC4K
-Pgo+IE9TQyBDTEsgaXMgbm90IHNvYy1kZXBlZGVuZGFudCBidXQgYm9hcmQtZGVwZW5kYW50LCBl
-dmVuIHRob3VnaCBJIGhhdmUKPiBub3Qgc2VlbiBhbnkgYm9hcmQgd2hpY2ggZG9lcyBub3QgdXNl
-IE9TQyBDTEsgYnkgMjQgTUh6LiBJdCBtdXN0IGJlCj4gcGFyc2VkIGZyb20gYm9hcmQgRFQgZmls
-ZSwgd2hpY2ggaW4gdGhpcyBjYXNlLCB3ZSBjYW4gdXNlIHRoZSB2YWx1ZSBpbgo+IHBsbF9jbGtf
-cmF0ZSAodGhlIHZhcmlhYmxlIG5hbWUgbXVzdCBiZSByZW5hbWVkIGFsc28pLgo+Cj4gQmVjYXVz
-ZSBhbWJpZ3VvdXMgZGVzY3JpcHRpb24gaW4gdGhlIHRlY2huaWNhbCBkb2N1bWVudCwgSSBjYW4g
-YmUKPiB3cm9uZy4gUGxlYXNlIGxldCBtZSBrbm93IGlmIEkgZG8gbm90IHVuZGVyc3RhbmQgc29t
-ZXRoaW5nLiBUaGFua3MgZm9yCj4geW91ciBjb21tZW50LgoKQWZ0ZXIgc29tZSBkaWdnaW5nIEkg
-YWdyZWUgdGhhdCBkb2N1bWVudGF0aW9uIGlzIHF1aXRlIGNvbmZ1c2luZyBhbmQKY3VycmVudCBj
-b2RlIGNvdWxkIGJlIHdyb25nLiBBbnl3YXkgSSB3b25kZXIgaWYgaXQgd291bGRuJ3QgYmUgYmV0
-dGVyCnRvIGV4cGxpY2l0bHkgcHJvdmlkZSBpbnB1dCBjbG9jayBmb3IgRFNJTSwgb3IgbW9yZSBw
-cmVjaXNlbHkgZm9yIGl0cyBQTEwKaW5zdGVhZCBvZiBoYXJkY29kaW5nIDI0TUh6IGludG8gdGhl
-IGRyaXZlci4KCkFub3RoZXIgdGhpbmcgdGhhdCBib3RoZXJzIG1lIGlzIHJlbGF0aW9uIG9mIERQ
-SFlfUExMIGluIGNsb2NrIGNvbnRyb2xsZXIgdG8KTUlQSV9EUEhZIGluIEV4eW5vczc0MjAuIFRo
-ZXJlIGFyZSB0d28gY2xvY2tzIHVzZWQgYnkgTUlQSV9EUEhZOgotICJSZWYgQ2xvY2siIHBpbm5l
-ZCB0byBTQ0xLX01JUElEUEhZX000IGNvbm5lY3RlZCB0byBPU0NDTEssCi0gIlBIWSBDbG9jayIg
-cGlubmVkIHRvIElfRk9VVF9EUEhZX1BMTCBjb25uZWN0ZWQgdG8gRFBIWV9QTEwsCgpUaGUgZmly
-c3QgY2xvY2sgc2VlbXMgdG8gYmUgeW91ciBvc2MgY2xvY2ssIGJ1dCB3aGF0IGlzIHRoZSByb2xl
-IG9mIHRoZQoybmQgb25lPwoKUmVnYXJkcwpBbmRyemVqCgo+IEJlc3QgcmVnYXJkcywKPiBIeXVu
-Z3dvbiBId2FuZwo+Cj4+Pj4+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuIEkgd2lsbCBzZW5kIGl0
-IGFnYWluIHdpdGggdGhlIGNoYW5nZXMgeW91Cj4+Pj4+IHN1Z2dlc3RlZC4KPj4+PiBUaGFua3Mg
-dmVyeSBtdWNoIQo+Pj4+Cj4+Pj4gQ2hlZXJzLAo+Pj4+IERhbmllbAo+Pj4gQmVzdCByZWdhcmRz
-LAo+Pj4gSHl1bmd3b24gSHdhbmcKPj4+IC0tCj4+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMg
-bGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUKPj4+IGRldmljZXRyZWUiIGluIHRoZSBi
-b2R5IG9mIGEgbWVzc2FnZSB0bwo+Pj4gbWFqb3Jkb21vLXU3OXV3WEwyOVRZNzZaMnJNNW1IWEFA
-cHVibGljLmdtYW5lLm9yZyBNb3JlIG1ham9yZG9tbwo+Pj4gaW5mbyBhdCAgaHR0cDovL3ZnZXIu
-a2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4+PgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 22/03/15 16:24, Mark Brown wrote:
+> On Fri, Mar 20, 2015 at 09:22:43PM +0000, Howard Mitchell wrote:
+>
+>> +	if (pcm512x->pll_lock) {
+>> +                if (of_property_read_u32(np, "pll-lock", &val) >= 0) {
+>> +                        if (val > 6) {
+>> +                                dev_err(dev, "Invalid pll-lock\n");
+>> +                                ret = -EINVAL;
+>> +                                goto err_clk;
+>> +                        }
+>> +                        pcm512x->pll_lock = val;
+>> +                }
+> This breaks existing boards which rely on GPIO 4 being set as the lock
+> output.  This is very unfortunate since it's a silly thing for the
+> driver to default to but nontheless we should really continue to support
+> them - at a guess Peter's board is relying on this, and even if it isn't
+> someone else's might.
+I take your point, but the reason I pushed this patch was that I wanted 
+to use GPIO4 for pll-out and unfortunately because the pll-lock 
+configuration is after the pll-out configuration it stomps on it. If I 
+modify the patch to provide a default for pll-lock I will then be 
+obliged to specify pll-lock on another GPIO. The pcm5122 has limited IO 
+so being forced to have a GPIO for pll-lock seems wrong to me. A future 
+user of the device may well decide to use the GPIOs for other purposes 
+and therefore not want a pll-lock signal at all. Surely we should allow 
+for that possibility?
+
+Given that Peter has indicated that he'd be happy with this solution and 
+that this code hasn't reached a published kernel would it be reasonable 
+to go ahead with my current patch (happy to clean up the indent issues 
+that Peter pointed out of course)?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
