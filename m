@@ -1,38 +1,94 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: drivers/of: Add empty ranges quirk for PA-Semi
-Date: Mon, 23 Mar 2015 15:06:35 +1100
-Message-ID: <1427083595.4770.221.camel@kernel.crashing.org>
-References: <20150323035004.2D6B9140134@ozlabs.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
+ driver
+Date: Mon, 23 Mar 2015 12:46:12 +0800
+Message-ID: <20150323044612.GB20840@leoy-linaro>
+References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com>
+ <20150319141753.GB25967@leverpostej>
+ <20150320060653.GC18907@leoy-linaro>
+ <20150320112414.GD14766@leverpostej>
+ <20150320145353.GA20461@leoy-linaro>
+ <20150320155527.GJ14766@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150323035004.2D6B9140134-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: linuxppc dev list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150320155527.GJ14766@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: kongxinwei <kong.kongxinwei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-23 at 14:50 +1100, Michael Ellerman wrote:
-> On Mon, 2015-23-03 at 03:16:38 UTC, Benjamin Herrenschmidt wrote:
-> > The "sdc" node is missing the ranges property, it needs to be treated
-> > as having an empty one otherwise translation fails for its children.
+On Fri, Mar 20, 2015 at 03:55:27PM +0000, Mark Rutland wrote:
+> > > That may be the case in the code as it stands today, but per the binding
+> > > the trip points are the temperatures at which an action is to be taken.
+> > > 
+> > > The thermal-zone has poilling-delay and polling-delay-passive, but
+> > > there's no reason you couldn't also use the interrupt to handle the
+> > > "hot" trip-point, adn the reset at the "critical" trip-point. All that's
+> > > missing is the plumbing in order to do so.
+> > > 
+> > > So please co-ordinate with the thermal framework to do that.
 > > 
-> > Tested-by: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
-> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > Let's dig further more for this point, so that we can get more specific
+> > gudiance and have a good preparation for next version's patch set.
+> > 
+> > After i reviewed the thermal framework code, currently have one smooth
+> > way to co-ordinate the trip points w/t thermal framework: use the function
+> > *thermal_zone_device_register()* to register sensor, and can use the
+> > callback function .get_trip_temp to tell thermal framework for the
+> > trip points' temperature.
+> > 
+> > For hisi thermal case, now the driver is using the function
+> > *thermal_zone_of_sensor_register* to register sensor, but use this way
+> > i have not found there have standard APIs which can be used by sensor
+> > driver to get the trip points info from thermal framework.
+> > 
+> > I may miss something for thermal framework, so if have existed APIs to
+> > get the trip points, could pls point out?
 > 
-> Fixes: 746c9e9f92dd ("of/base: Fix PowerPC address parsing hack")
+> I am only familiar with the binding, not the Linux implementation -- The
+> latter can change to accomodate your hardware without requiring binding
+> changes. Please co-ordinate with the thermal maintainers.
+
+Found the functions of_thermal_get_trip_points(tz) and of_thermal_get_ntrips(tz)
+will help for this.
+
+> > > > > > +       if (of_property_read_bool(np, "hisilicon,tsensor-bind-irq")) {
+> > > > > > +
+> > > > > > +               if (data->irq_bind_sensor != -1)
+> > > > > > +                       dev_warn(&pdev->dev, "irq has bound to index %d\n",
+> > > > > > +                                data->irq_bind_sensor);
+> > > > > > +
+> > > > > > +               /* bind irq to this sensor */
+> > > > > > +               data->irq_bind_sensor = index;
+> > > > > > +       }
+> > > > > 
+> > > > > I don't see why this should be specified in the DT. Why do you believe
+> > > > > it should?
+> > > > 
+> > > > The thermal sensor module has four sensors, but have only one
+> > > > interrupt signal; This interrupt can only be used by one sensor;
+> > > > So want to use dts to bind the interrupt with one selected sensor.
+> > > 
+> > > That's not all that great, though I'm not exactly sure how the kernel
+> > > would select the best sensor to measure with. It would be good if you
+> > > could talk to the thermal maintainers w.r.t. this.
+> > 
+> > This will be decided by the silicon, right? Every soc has different
+> > combination with cpu/gpu/vpu, so which part is hottest, this maybe
+> > highly dependent on individual SoC.
+> > 
+> > S/W just need provide the flexibility so that later can choose
+> > the interrupt to bind with the sensor within the hottest part.
 > 
-> Which went into 3.18-rc6, and was CC'ed to stable. So this should probably also
-> go to stable no?
+> Then the property you care about is which sensor is closest to what is
+> likely to be the hottest component. Given that, the kernel can decide
+> how to use the interrupt.
 
-Sure, go for it.
+Will modify the driver to dynamically bind the interrupt to hottest
+sensor; Appreciate for good suggestion.
 
-Cheers,
-Ben.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Leo Yan
