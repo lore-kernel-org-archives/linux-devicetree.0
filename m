@@ -1,83 +1,131 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 2/2] watchdog: digicolor: driver for Conexant Digicolor
- CX92755 SoC
-Date: Mon, 23 Mar 2015 08:17:25 +0200
-Message-ID: <20150323061725.GK2825@tarshish>
-References: <6bc6e867b500cd3cfc629b96f90442f5c0aced3a.1427028036.git.baruch@tkos.co.il>
- <409ece75204d3911dc526a9bc0c908fc30893b26.1427028036.git.baruch@tkos.co.il>
- <550EF4DA.6040407@roeck-us.net>
- <20150322180857.GI2825@tarshish>
- <550F111F.9060400@roeck-us.net>
- <20150323053355.GJ2825@tarshish>
- <550FA9A4.5010304@roeck-us.net>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC] pinmux: group and function definitions in the device tree
+Date: Mon, 23 Mar 2015 07:44:24 +0100
+Message-ID: <20150323064424.GD9742@pengutronix.de>
+References: <20150319153950.GC30114@odux.rfo.atmel.com>
+ <20150319185637.GV4927@pengutronix.de>
+ <20150320150609.GB32259@odux.rfo.atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <550FA9A4.5010304-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20150320150609.GB32259@odux.rfo.atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Fri, Mar 20, 2015 at 04:06:09PM +0100, Ludovic Desroches wrote:
+> On Thu, Mar 19, 2015 at 07:56:37PM +0100, Sascha Hauer wrote:
+> > On Thu, Mar 19, 2015 at 04:39:50PM +0100, Ludovic Desroches wrote:
+> > > 	[...]
+> > > 
+> > > 	pinctrl_defs {
+> > > 		mci0 {
+> > > 			mci0_ioset0_1bit_grp {
+> > > 				at91,pins = <68 69 70>;
+> > > 				at91,mux = <2>;
+> > > 			};
+> > > 
+> > > 			mci0_ioset0_4bit_grp {
+> > > 				at91,pins = <68 69 70 71 72 73>;
+> > > 				at91,mux = <2>;
+> > > 			};
+> > > 
+> > > 			mci0_ioset0_8bit_grp {
+> > > 				at91,pins = <68 69 70 71 72 73 74 75 76 77>;
+> > > 				at91,mux = <2>;
+> > > 			};
+> > > 		};
+> > > 	};
+> > 
+> > Why are different groups here? Do you want to put them into the dtsi?
+> 
+> We used to have a configuration per pin in our products. On next ones we
+> will have some constraints ie. on the controller side we still have a
+> configuration per pin but we will introduced the notion of iosets. This
+> notion involves that timings are guaranteed only in one ioset. That's
+> why we can't mix signals from several iosets because. On the controller side
+> we can do all we want so I would like to use groups as a software protection.
 
-Adding LKML to Cc.
+What does happen when you mix signals of different iosets? It won't work
+so the developer will change it. What do you need the software
+protection for?
 
-On Sun, Mar 22, 2015 at 10:50:28PM -0700, Guenter Roeck wrote:
-> On 03/22/2015 10:33 PM, Baruch Siach wrote:
-> >>>>>+	wdt->restart_handler.notifier_call = dc_restart_handler;
-> >>>>>+	wdt->restart_handler.priority = 128;
-> >>>>
-> >>>>Is 128 intentional, ie is this the expected reset method for this platform ?
-> >>>>If not, it may be better to select a lower priority (eg 64). Using a watchdog
-> >>>>to reset a system should in general be a method of last resort.
-> >>>
-> >>>Copied this value from imx2_wdt. grep indicates that almost all other watchdog
-> >>>drivers implementing restart_handler use priority of 128 (except bcm47xx_wdt).
-> >>>What is the policy here?
-> >>
-> >>The policy is to do what is sensible for the platform. That can only be decided
-> >>on a case-by-case basis. The documentation suggests to use 128 for "Default restart
-> >>handler; use if no other restart handler is expected to be available, and/or if
-> >>restart functionality is sufficient to restart the entire system".
-> >>
-> >>So if this is the only means expected to be available to reset the system
-> >>for this architecture/platform, and if the watchdog resets the entire system
-> >>(not just the CPU), 128 may be ok to use. If, however, there may be other
-> >>means to reset the system, such as a GPIO pin, maybe not.
-> >
-> >This driver is for a SoC hardware block. The restart_handler priority level is
-> >hard coded in the drivers, and should thus work reasonably well for all its
-> >users. The fact that the common priority level is 128, is significant in this
-> >case IMO (as apposed to issues discussed above). Systems designers are likely
-> >take this priority level into account in their designs. If this does not match
-> >the documentation, then documentation needs to change to reflect reality.
->
-> Seems to me you are arguing (again) that it is ok to use priority 128 not
-> because of merit, but because others do it as well. As you may have noticed,
-> I kind of dislike that line of argument. Actually, I don't consider it to be
-> a valid argument in the first place.
+> i2c0 {
+> 	i2c0_ioset0_grp {
+> 		pins  = <PINMUX_PIN(71, 4),
+> 			 PINMUX_PIN(72, 4)>;
+> 	};
+> 	i2c0_ioset1_grp {
+> 		pins  = <PINMUX_PIN(91, 6),
+> 			 PINMUX_PIN(92, 6)>;
+> 	};
+> 	i2c0_ioset2_grp {
+> 		pins  = <PINMUX_PIN(108, 1),
+> 			 PINMUX_PIN(109, 1)>;
+> 	};
+> };
+> 
+> 
+> > This would mean you have to carry a lot of groups in each dtsi from
+> > which only a small fraction is used. We did that on i.MX but no longer
+> > do this since the dtbs get very big.
+> 
+> Yes I would like to put it in the dtsi file. For sure we will have big
+> dtbs. If we put that in the driver we will increase the size of our
+> kernel. If every one does this, we will have a lot of unused code for a
+> multiplatform kernel. Where is the best place to put this?
 
-I fully agree with you on other cases as I acknowledged earlier, but I 
-disagree here. The only merit of priority 128 is how it is accepted. This 
-priority level has no technical significance in or by itself. Our only 
-guidance for choosing the "right" level is what others do. That's my opinion, 
-at least.
+If you put only the needed ones in each dts then you won't have to carry
+all unused groups in all dtbs.
 
-At the technical level, this watchdog indirectly generates an external reset 
-signal that should be used to reset the entire system. This seems to be the 
-case on the Equinox evaluation board, which is the system I test this driver 
-on. I believe this conforms to the documented behaviour for the 128 priority 
-level.
+I think the idea you follow here is that you want to put all possible
+combinations (mci0_ioset0_4bit_grp, mci0_ioset1_1bit_grp) into the dtsi
+and let the board dts just pick one. For i.MX we realized that this does
+not scale because the number of possibilities is too high. Very often
+new boards had to introduce new pingroups in the dtsi because they did
+not yet exist or even did exist in a slightly different configuration.
+Out of tree dts files were painful because they often caused merge
+conflicts in the dtsi files. Also there there was the risk that two new
+groups were introduced with the same name but different meanings because
+someone else was faster (and chose the next free number in the 'ioset'
+counter).
+We removed the groups in the dtsi files altogether and put them into
+each board dts individually. This also made it easy to add the
+additional pins (Write protect, card detect) to the same groups.
 
-baruch
+> > > - A subnode for these definitions in order to not parse the whole
+> > >   pinctrl node to retrieve groups and functions.
+> > > - Using node names as function and group names.
+> > > - Can we get generic properties to define the groups? Of course a 'pins'
+> > >   property is mandatory. In my case I will need an extra one to tell the
+> > >   controller how to mux the pins (a same pin can have up to 7 muxing
+> > >   possibilities).
+> > 
+> > Did you have a look at the RFC I sent for these kind of controllers [1] and
+> > the final result for the Mediatek driver currently in Linux-next [2]?.
+> > 
+> > The binding has both the config and the pins in a single node and thus
+> > is very compact.
+> > 
+> 
+> Thanks for the links. Well I had a look to them and now I am a bit
+> lost...
+> 
+> I agree with this binding but it involves to get rid of
+> pinconf_generic_dt_node_to_map_all, isn't it? What do group and function
+> become? It seems these concepts have disappeared.
+
+The binding I suggested changes nothing with pinconf, only the pinmux
+information is added to the same node. You can still call
+pinconf_generic_dt_node_to_map_all() on the nodes, it will simply ignore
+the pinmux information. You would have to handle them separately (or
+write some generic helper if you like)
+
+Sascha
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
