@@ -1,67 +1,116 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: gpio-syscon for Keystone 2 - DT bindings mismatch code expectation?
-Date: Mon, 23 Mar 2015 21:55:45 +0000
-Message-ID: <20150323215545.GT8656@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v17 04/10] ARM: dts: qcom: Add power-controller device node for 8074 Krait CPUs
+Date: Mon, 23 Mar 2015 15:05:22 -0700
+Message-ID: <292C2E97-ED74-4F17-B592-B5EA7BDD1E8E@codeaurora.org>
+References: <1426882877-33008-1-git-send-email-lina.iyer@linaro.org> <1426882877-33008-5-git-send-email-lina.iyer@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1426882877-33008-5-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Linus, Grygorii,
 
-I'm trying to understand what's happening to make Keystone2 print
-this at boot:
+On Mar 20, 2015, at 1:21 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
 
-gpio-syscon soc:keystone_dsp_gpio@02620240: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@2620244: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@2620248: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@262024c: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@2620250: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@2620254: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@2620258: can't read the dir register offset!
-gpio-syscon soc:keystone_dsp_gpio@262025c: can't read the dir register offset!
+> Each Krait CPU in the QCOM 8074/8974 SoC has an SAW power controller =
+to
+> regulate the power to the cpu and aide the core in entering idle stat=
+es.
+> Reference the SAW instance and associate the instance with the CPU co=
+re.
+>=20
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+> arch/arm/boot/dts/qcom-msm8974.dtsi | 26 +++++++++++++++++++++++++-
+> 1 file changed, 25 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/=
+qcom-msm8974.dtsi
+> index e265ec1..5a41f44 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -21,6 +21,7 @@
+> 			reg =3D <0>;
+> 			next-level-cache =3D <&L2>;
+> 			qcom,acc =3D <&acc0>;
+> +			qcom,saw =3D <&saw0>;
+> 		};
+>=20
+> 		cpu@1 {
+> @@ -30,6 +31,7 @@
+> 			reg =3D <1>;
+> 			next-level-cache =3D <&L2>;
+> 			qcom,acc =3D <&acc1>;
+> +			qcom,saw =3D <&saw1>;
+> 		};
+>=20
+> 		cpu@2 {
+> @@ -39,6 +41,7 @@
+> 			reg =3D <2>;
+> 			next-level-cache =3D <&L2>;
+> 			qcom,acc =3D <&acc2>;
+> +			qcom,saw =3D <&saw2>;
+> 		};
+>=20
+> 		cpu@3 {
+> @@ -48,6 +51,7 @@
+> 			reg =3D <3>;
+> 			next-level-cache =3D <&L2>;
+> 			qcom,acc =3D <&acc3>;
+> +			qcom,saw =3D <&saw3>;
+> 		};
+>=20
+> 		L2: l2-cache {
+> @@ -144,7 +148,27 @@
+> 			};
+> 		};
+>=20
+> -		saw_l2: regulator@f9012000 {
+> +		saw0: power-controller@f9089000 {
+> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu=94;
 
->From what I can see in DT, these are defined as:
+Should these include =93qcom,saw=94?
 
-                dspgpio0: keystone_dsp_gpio@02620240 {
-                        compatible = "ti,keystone-dsp-gpio";
-                        gpio-controller;
-                        #gpio-cells = <2>;
-                        gpio,syscon-dev = <&devctrl 0x240>;
-                };
+> +			reg =3D <0xf9089000 0x1000>, <0xf9009000 0x1000>;
+> +		};
+> +
+> +		saw1: power-controller@f9099000 {
+> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu";
+> +			reg =3D <0xf9099000 0x1000>, <0xf9009000 0x1000>;
+> +		};
+> +
+> +		saw2: power-controller@f90a9000 {
+> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu";
+> +			reg =3D <0xf90a9000 0x1000>, <0xf9009000 0x1000>;
+> +		};
+> +
+> +		saw3: power-controller@f90b9000 {
+> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu";
+> +			reg =3D <0xf90b9000 0x1000>, <0xf9009000 0x1000>;
+> +		};
+> +
+> +		saw_l2: power-controller@f9012000 {
+> 			compatible =3D "qcom,saw2";
+> 			reg =3D <0xf9012000 0x1000>;
+> 			regulator;
+> --=20
+> 2.1.0
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-m=
+sm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-However, the patch set which introduced the code included:
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
 
-commit 5a3e3f88b0a10f8b5baf224ebda5916195fb8745
-Author: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Date:   Wed Sep 3 20:05:33 2014 +0300
-
-    gpio: syscon: retrive syscon node and regs offsets from dt
-
-which wants gpio,syscon-dev to contain a phandle and two offsets, not
-a single offset.  Moreover, the following patch:
-
-commit 2134cb997f2f1b2d960ad8705d67dc8d690ba59c
-Author: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Date:   Wed Sep 3 20:05:34 2014 +0300
-
-    gpio: syscon: reuse for keystone 2 socs
-
-added documentation which indicates that for keystone 2, only one
-offset is necessary in gpio,syscon-dev, yet there is no "compatible"
-string to stop the code requiring two offsets.
-
-This looks like a complete trainwreck.  What's going on here?
-
-Please can this get fixed... Thanks.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
