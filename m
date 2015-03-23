@@ -1,72 +1,228 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v4 2/3] leds: ktd2692: add device tree bindings for ktd2692
-Date: Wed, 25 Mar 2015 09:01:55 +0530
-Message-ID: <55122C2B.6010603@gmail.com>
-References: <1427247044-3748-1-git-send-email-ingi2.kim@samsung.com> <1427247044-3748-3-git-send-email-ingi2.kim@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4] dt-bindings: brcm: rationalize Broadcom documentation
+ naming
+Date: Sun, 22 Mar 2015 20:20:27 -0500
+Message-ID: <550F6A5B.8050906@gmail.com>
+References: <1426899982-19733-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427247044-3748-3-git-send-email-ingi2.kim@samsung.com>
+In-Reply-To: <1426899982-19733-1-git-send-email-sbranden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/25/2015 07:00 AM, Ingi Kim wrote:
-> This patch adds the device tree bindings for ktd2692 flash LEDs.
-> Add optional properties 'flash-timeout-us' to control flash timeout
-> and 'vin-supply' for flash-led regulator
->
-> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+On 03/20/2015 08:06 PM, Scott Branden wrote:
+> This patchset attempts to standardize the naming of dt-bindings
+> documents based on the Broadcom vendor prefix of brcm.
+> 
+> Although there are no guidelines currently present for how to name
+> the dt-bindings document the "vendor,binding.txt" style is in use by
+> some of the other vendors.
+> 
+> Acked-by: Lee Jones <lee@kernel.org>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
+> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> Signed-off-by: Scott Branden <sbranden@broadcom.com>
+
+Version history would be nice...
+
+Who did you want to apply this? I can, but I'm worried about merge
+conflicts here. Hopefully, you're not also doing lots of changes to
+existing bindings.
+
+Rob
+
 > ---
->   .../devicetree/bindings/leds/leds-ktd2692.txt      | 33 ++++++++++++++++++++++
->   1 file changed, 33 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> new file mode 100644
-> index 0000000..f78512f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
-> @@ -0,0 +1,33 @@
-> +* Kinetic Technologies - KTD2692 Flash LED Driver
-> +
-> +KTD2692 is the ideal power solution for high-power flash LEDs.
-> +It uses ExpressWire single-wire programming for maximum flexibility.
-> +
-> +The ExpressWire interface through CTRL pin can control LED on/off and
-> +enable/disable the IC, Movie(max 1/3 of Flash current) / Flash mode current,
-> +Flash timeout, LVP(low voltage protection).
-> +
-> +Also, When the AUX pin is pulled high while CTRL pin is high,
-> +LED current will be ramped up to the flash-mode current level.
-> +
-> +Required properties:
-> +	- compatible: "kinetic,ktd2692"
-> +	- ctrl-gpio, aux-gpio : gpio pins in order control ktd2692 flash led.
-> +		There is an internal 300kOhm pull-down resistor at each pin
-> +	- vin-supply : "vin" LED supply (2.7V to 5.5V)
-> +		See Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-
-Above bindings are not that readable to me. Remove the tab spaces before properties.
-
-> +Optional property:
-> +	- flash-timeout-us : Maximum flash timeout in microseconds.
-> +			flash timeout ranges from 0 to 1835000us and
-> +			default is 1049000us.
-> +
-> +Example:
-> +
-> +flash-led {
-> +	compatible = "kinetic,ktd2692";
-> +	ctrl-gpio = <&gpc0 1 0>;
-> +	aux-gpio = <&gpc0 2 0>;
-> +	flash-timeout-us = <1835000>;
-> +	vin-supply = <&vbat>;
-> +};
-
-
--- 
-Varka Bhadram
+>  .../arm/bcm/{brcm,bcm11351-cpu-method => brcm,bcm11351-cpu-method.txt}    | 0
+>  .../devicetree/bindings/arm/bcm/{bcm11351.txt => brcm,bcm11351.txt}       | 0
+>  .../devicetree/bindings/arm/bcm/{bcm21664.txt => brcm,bcm21664.txt}       | 0
+>  .../devicetree/bindings/arm/{bcm2835.txt => bcm/brcm,bcm2835.txt}         | 0
+>  .../devicetree/bindings/arm/{bcm4708.txt => bcm/brcm,bcm4708.txt}         | 0
+>  .../devicetree/bindings/arm/bcm/{bcm63138.txt => brcm,bcm63138.txt}       | 0
+>  .../devicetree/bindings/arm/{brcm-brcmstb.txt => bcm/brcm,brcmstb.txt}    | 0
+>  Documentation/devicetree/bindings/arm/bcm/{cygnus.txt => brcm,cygnus.txt} | 0
+>  Documentation/devicetree/bindings/bus/{bcma.txt => brcm,bus-axi.txt}      | 0
+>  .../devicetree/bindings/clock/{bcm-kona-clock.txt => brcm,kona-ccu.txt}   | 0
+>  .../devicetree/bindings/dma/{bcm2835-dma.txt => brcm,bcm2835-dma.txt}     | 0
+>  .../devicetree/bindings/gpio/{gpio-bcm-kona.txt => brcm,kona-gpio.txt}    | 0
+>  .../devicetree/bindings/i2c/{i2c-bcm-kona.txt => brcm,kona-i2c.txt}       | 0
+>  Documentation/devicetree/bindings/mfd/{bcm590xx.txt => brcm,bcm59056.txt} | 0
+>  .../bindings/mips/brcm/{bcm3384-intc.txt => brcm,bcm3384-intc.txt}        | 0
+>  Documentation/devicetree/bindings/mips/brcm/{bmips.txt => brcm,bmips.txt} | 0
+>  .../devicetree/bindings/mips/brcm/{cm-dsl.txt => brcm,cm-dsl.txt}         | 0
+>  Documentation/devicetree/bindings/misc/{smc.txt => brcm,kona-smc.txt}     | 0
+>  .../devicetree/bindings/mmc/{kona-sdhci.txt => brcm,kona-sdhci.txt}       | 0
+>  .../bindings/net/{broadcom-sf2.txt => brcm,bcm7445-switch-v4.0.txt}       | 0
+>  .../devicetree/bindings/net/{broadcom-bcmgenet.txt => brcm,bcmgenet.txt}  | 0
+>  .../bindings/net/{broadcom-systemport.txt => brcm,systemport.txt}         | 0
+>  .../bindings/net/{broadcom-mdio-unimac.txt => brcm,unimac-mdio.txt}       | 0
+>  .../devicetree/bindings/phy/{bcm-phy.txt => brcm,kona-usb2-phy.txt}       | 0
+>  .../devicetree/bindings/pwm/{bcm-kona-pwm.txt => brcm,kona-pwm.txt}       | 0
+>  .../{arm/bcm/kona-resetmgr.txt => reset/brcm,bcm21664-resetmgr.txt}       | 0
+>  .../bindings/serial/{bcm63xx-uart.txt => brcm,bcm6345-uart.txt}           | 0
+>  .../devicetree/bindings/sound/{bcm2835-i2s.txt => brcm,bcm2835-i2s.txt}   | 0
+>  .../bindings/{arm/bcm/kona-timer.txt => timer/brcm,kona-timer.txt}        | 0
+>  .../devicetree/bindings/{mips/brcm/usb.txt => usb/brcm,bcm3384-usb.txt}   | 0
+>  .../bindings/{arm/bcm/kona-wdt.txt => watchdog/brcm,kona-wdt.txt}         | 0
+>  31 files changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/arm/bcm/{brcm,bcm11351-cpu-method => brcm,bcm11351-cpu-method.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/bcm/{bcm11351.txt => brcm,bcm11351.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/bcm/{bcm21664.txt => brcm,bcm21664.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/{bcm2835.txt => bcm/brcm,bcm2835.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/{bcm4708.txt => bcm/brcm,bcm4708.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/bcm/{bcm63138.txt => brcm,bcm63138.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/{brcm-brcmstb.txt => bcm/brcm,brcmstb.txt} (100%)
+>  rename Documentation/devicetree/bindings/arm/bcm/{cygnus.txt => brcm,cygnus.txt} (100%)
+>  rename Documentation/devicetree/bindings/bus/{bcma.txt => brcm,bus-axi.txt} (100%)
+>  rename Documentation/devicetree/bindings/clock/{bcm-kona-clock.txt => brcm,kona-ccu.txt} (100%)
+>  rename Documentation/devicetree/bindings/dma/{bcm2835-dma.txt => brcm,bcm2835-dma.txt} (100%)
+>  rename Documentation/devicetree/bindings/gpio/{gpio-bcm-kona.txt => brcm,kona-gpio.txt} (100%)
+>  rename Documentation/devicetree/bindings/i2c/{i2c-bcm-kona.txt => brcm,kona-i2c.txt} (100%)
+>  rename Documentation/devicetree/bindings/mfd/{bcm590xx.txt => brcm,bcm59056.txt} (100%)
+>  rename Documentation/devicetree/bindings/mips/brcm/{bcm3384-intc.txt => brcm,bcm3384-intc.txt} (100%)
+>  rename Documentation/devicetree/bindings/mips/brcm/{bmips.txt => brcm,bmips.txt} (100%)
+>  rename Documentation/devicetree/bindings/mips/brcm/{cm-dsl.txt => brcm,cm-dsl.txt} (100%)
+>  rename Documentation/devicetree/bindings/misc/{smc.txt => brcm,kona-smc.txt} (100%)
+>  rename Documentation/devicetree/bindings/mmc/{kona-sdhci.txt => brcm,kona-sdhci.txt} (100%)
+>  rename Documentation/devicetree/bindings/net/{broadcom-sf2.txt => brcm,bcm7445-switch-v4.0.txt} (100%)
+>  rename Documentation/devicetree/bindings/net/{broadcom-bcmgenet.txt => brcm,bcmgenet.txt} (100%)
+>  rename Documentation/devicetree/bindings/net/{broadcom-systemport.txt => brcm,systemport.txt} (100%)
+>  rename Documentation/devicetree/bindings/net/{broadcom-mdio-unimac.txt => brcm,unimac-mdio.txt} (100%)
+>  rename Documentation/devicetree/bindings/phy/{bcm-phy.txt => brcm,kona-usb2-phy.txt} (100%)
+>  rename Documentation/devicetree/bindings/pwm/{bcm-kona-pwm.txt => brcm,kona-pwm.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/bcm/kona-resetmgr.txt => reset/brcm,bcm21664-resetmgr.txt} (100%)
+>  rename Documentation/devicetree/bindings/serial/{bcm63xx-uart.txt => brcm,bcm6345-uart.txt} (100%)
+>  rename Documentation/devicetree/bindings/sound/{bcm2835-i2s.txt => brcm,bcm2835-i2s.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/bcm/kona-timer.txt => timer/brcm,kona-timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{mips/brcm/usb.txt => usb/brcm,bcm3384-usb.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/bcm/kona-wdt.txt => watchdog/brcm,kona-wdt.txt} (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm11351.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/bcm11351.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm21664.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/bcm21664.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm2835.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm4708.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm63138.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,bcm63138.txt
+> diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/cygnus.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,cygnus.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+> rename to Documentation/devicetree/bindings/arm/bcm/brcm,cygnus.txt
+> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documentation/devicetree/bindings/bus/brcm,bus-axi.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/bus/bcma.txt
+> rename to Documentation/devicetree/bindings/bus/brcm,bus-axi.txt
+> diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/brcm,kona-ccu.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+> rename to Documentation/devicetree/bindings/clock/brcm,kona-ccu.txt
+> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+> rename to Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt b/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
+> rename to Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-bcm-kona.txt b/Documentation/devicetree/bindings/i2c/brcm,kona-i2c.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/i2c/i2c-bcm-kona.txt
+> rename to Documentation/devicetree/bindings/i2c/brcm,kona-i2c.txt
+> diff --git a/Documentation/devicetree/bindings/mfd/bcm590xx.txt b/Documentation/devicetree/bindings/mfd/brcm,bcm59056.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mfd/bcm590xx.txt
+> rename to Documentation/devicetree/bindings/mfd/brcm,bcm59056.txt
+> diff --git a/Documentation/devicetree/bindings/mips/brcm/bcm3384-intc.txt b/Documentation/devicetree/bindings/mips/brcm/brcm,bcm3384-intc.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mips/brcm/bcm3384-intc.txt
+> rename to Documentation/devicetree/bindings/mips/brcm/brcm,bcm3384-intc.txt
+> diff --git a/Documentation/devicetree/bindings/mips/brcm/bmips.txt b/Documentation/devicetree/bindings/mips/brcm/brcm,bmips.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mips/brcm/bmips.txt
+> rename to Documentation/devicetree/bindings/mips/brcm/brcm,bmips.txt
+> diff --git a/Documentation/devicetree/bindings/mips/brcm/cm-dsl.txt b/Documentation/devicetree/bindings/mips/brcm/brcm,cm-dsl.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mips/brcm/cm-dsl.txt
+> rename to Documentation/devicetree/bindings/mips/brcm/brcm,cm-dsl.txt
+> diff --git a/Documentation/devicetree/bindings/misc/smc.txt b/Documentation/devicetree/bindings/misc/brcm,kona-smc.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/misc/smc.txt
+> rename to Documentation/devicetree/bindings/misc/brcm,kona-smc.txt
+> diff --git a/Documentation/devicetree/bindings/mmc/kona-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,kona-sdhci.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mmc/kona-sdhci.txt
+> rename to Documentation/devicetree/bindings/mmc/brcm,kona-sdhci.txt
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-sf2.txt b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/net/broadcom-sf2.txt
+> rename to Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt b/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
+> rename to Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-systemport.txt b/Documentation/devicetree/bindings/net/brcm,systemport.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/net/broadcom-systemport.txt
+> rename to Documentation/devicetree/bindings/net/brcm,systemport.txt
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-mdio-unimac.txt b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/net/broadcom-mdio-unimac.txt
+> rename to Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
+> diff --git a/Documentation/devicetree/bindings/phy/bcm-phy.txt b/Documentation/devicetree/bindings/phy/brcm,kona-usb2-phy.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/phy/bcm-phy.txt
+> rename to Documentation/devicetree/bindings/phy/brcm,kona-usb2-phy.txt
+> diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> rename to Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt b/Documentation/devicetree/bindings/reset/brcm,bcm21664-resetmgr.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt
+> rename to Documentation/devicetree/bindings/reset/brcm,bcm21664-resetmgr.txt
+> diff --git a/Documentation/devicetree/bindings/serial/bcm63xx-uart.txt b/Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/serial/bcm63xx-uart.txt
+> rename to Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt
+> diff --git a/Documentation/devicetree/bindings/sound/bcm2835-i2s.txt b/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/sound/bcm2835-i2s.txt
+> rename to Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/kona-timer.txt b/Documentation/devicetree/bindings/timer/brcm,kona-timer.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/kona-timer.txt
+> rename to Documentation/devicetree/bindings/timer/brcm,kona-timer.txt
+> diff --git a/Documentation/devicetree/bindings/mips/brcm/usb.txt b/Documentation/devicetree/bindings/usb/brcm,bcm3384-usb.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mips/brcm/usb.txt
+> rename to Documentation/devicetree/bindings/usb/brcm,bcm3384-usb.txt
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/kona-wdt.txt b/Documentation/devicetree/bindings/watchdog/brcm,kona-wdt.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/bcm/kona-wdt.txt
+> rename to Documentation/devicetree/bindings/watchdog/brcm,kona-wdt.txt
+> 
