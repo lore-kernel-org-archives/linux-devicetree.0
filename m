@@ -1,128 +1,105 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v17 04/10] ARM: dts: qcom: Add power-controller device
- node for 8074 Krait CPUs
-Date: Mon, 23 Mar 2015 17:06:28 -0600
-Message-ID: <20150323230628.GA1790@linaro.org>
-References: <1426882877-33008-1-git-send-email-lina.iyer@linaro.org>
- <1426882877-33008-5-git-send-email-lina.iyer@linaro.org>
- <292C2E97-ED74-4F17-B592-B5EA7BDD1E8E@codeaurora.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [U-Boot] serial atag tag in devicetree ?
+Date: Mon, 23 Mar 2015 18:12:57 -0500
+Message-ID: <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ@mail.gmail.com>
+References: <550EA6D8.3090702@redhat.com> <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
+ <550FF971.407@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <292C2E97-ED74-4F17-B592-B5EA7BDD1E8E@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550FF971.407-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23 2015 at 16:05 -0600, Kumar Gala wrote:
+On Mon, Mar 23, 2015 at 6:30 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
 >
->On Mar 20, 2015, at 1:21 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
 >
->> Each Krait CPU in the QCOM 8074/8974 SoC has an SAW power controller=
- to
->> regulate the power to the cpu and aide the core in entering idle sta=
-tes.
->> Reference the SAW instance and associate the instance with the CPU c=
-ore.
+> On 22-03-15 22:01, Rob Herring wrote:
 >>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
->> ---
->> arch/arm/boot/dts/qcom-msm8974.dtsi | 26 +++++++++++++++++++++++++-
->> 1 file changed, 25 insertions(+), 1 deletion(-)
+>> On Sun, Mar 22, 2015 at 6:26 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> wrote:
+>>>
+>>> Hi All,
+>>>
+>>> I'm sending this mail because Paul Kocialkowski (in the Cc)
+>>> has submitted a patch for upstream u-boot to set the serial
+>>> atag tag from u-boot for Allwinner SoCs, using the SoCs
+>>> SID, which is a 128 bit register containing a unique number
+>>> for each SoC.
 >>
->> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts=
-/qcom-msm8974.dtsi
->> index e265ec1..5a41f44 100644
->> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
->> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
->> @@ -21,6 +21,7 @@
->> 			reg =3D <0>;
->> 			next-level-cache =3D <&L2>;
->> 			qcom,acc =3D <&acc0>;
->> +			qcom,saw =3D <&saw0>;
->> 		};
 >>
->> 		cpu@1 {
->> @@ -30,6 +31,7 @@
->> 			reg =3D <1>;
->> 			next-level-cache =3D <&L2>;
->> 			qcom,acc =3D <&acc1>;
->> +			qcom,saw =3D <&saw1>;
->> 		};
+>> We shouldn't really be adding ATAGs to newer platforms...
 >>
->> 		cpu@2 {
->> @@ -39,6 +41,7 @@
->> 			reg =3D <2>;
->> 			next-level-cache =3D <&L2>;
->> 			qcom,acc =3D <&acc2>;
->> +			qcom,saw =3D <&saw2>;
->> 		};
+>>> In some cases a manufacturer may want to override this with
+>>> its own serial from say an eeprom, as such it is desirable
+>>> to communicate the serial from u-boot to the kernel rather
+>>> then reproducing the sid reading code in the kernel.
+>>>
+>>> For old atag using kernels there is an atag for this, and
+>>> the contents of this tag will show up in /proc/cpuinfo,
+>>> currently there is no equivalent for this in devicetree.
+>>>
+>>> I'm a bit reluctant to merge Paul's patch into u-boot
+>>> because of this as it will enable a feature on older
+>>> kernels while leaving the upstream kernel without it.
+>>>
+>>> So I was wondering how to deal with this in devicetree,
+>>> at least one board in u-boot already sets a devicetree
+>>> property for this:
+>>>
+>>> board/gateworks/gw_ventana/gw_ventana.c
+>>> 1202: *   serial# env var
+>>> 1207:   char *serial = getenv("serial#");
+>>> 1432:           setenv("serial#", str);
+>>> 1512:   fdt_setprop(blob, 0, "system-serial", getenv("serial#"),
+>>> 1513:               strlen(getenv("serial#")) + 1);
+>>>
+>>> Which sets a system-serial property in the root node,
+>>> so at the same level where we also have the model string
+>>> this seems to make sense to me.
 >>
->> 		cpu@3 {
->> @@ -48,6 +51,7 @@
->> 			reg =3D <3>;
->> 			next-level-cache =3D <&L2>;
->> 			qcom,acc =3D <&acc3>;
->> +			qcom,saw =3D <&saw3>;
->> 		};
 >>
->> 		L2: l2-cache {
->> @@ -144,7 +148,27 @@
->> 			};
->> 		};
+>> system-serial is new to me...
 >>
->> -		saw_l2: regulator@f9012000 {
->> +		saw0: power-controller@f9089000 {
->> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu=E2=80=9D;
+>>> So do we want to add a devicetree binding for system
+>>> serials, and if we do should we make it a string like
+>>> above, or should we make it an 64 bit integer like the atag?
+>>>
+>>> If we make it a string we can store longer serials, but
+>>> how should we deal with those wrt /proc/cpuinfo? Only show
+>>> the first 64 bits ?
+>>
+>>
+>> There is already "serial-number" (a string) which exists for
+>> OpenFirmware. Also, "copyright" corresponds to vendor/manufacturer
+>> string. Both of these are supported by lshw already.
 >
->Should these include =E2=80=9Cqcom,saw=E2=80=9D?
 >
-I believe the qcom,saw2 is a way for the regulator node to identify
-which node is also a regulator.
+> Ok, so if I understand you correctly then you're saying that we
+> should set a "serial-number" string property at the dt root level
+> and that this may contain pretty much anything, e.g. in the
+> sunxi case the full 128 bit SID in hex.
 
-Only saw_l2 is a regulator node as well on 8074 and thereby needs qcom,=
-saw2.
+Right.
 
->> +			reg =3D <0xf9089000 0x1000>, <0xf9009000 0x1000>;
->> +		};
->> +
->> +		saw1: power-controller@f9099000 {
->> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu";
->> +			reg =3D <0xf9099000 0x1000>, <0xf9009000 0x1000>;
->> +		};
->> +
->> +		saw2: power-controller@f90a9000 {
->> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu";
->> +			reg =3D <0xf90a9000 0x1000>, <0xf9009000 0x1000>;
->> +		};
->> +
->> +		saw3: power-controller@f90b9000 {
->> +			compatible =3D "qcom,msm8974-saw2-v2.1-cpu";
->> +			reg =3D <0xf90b9000 0x1000>, <0xf9009000 0x1000>;
->> +		};
->> +
->> +		saw_l2: power-controller@f9012000 {
->> 			compatible =3D "qcom,saw2";
->> 			reg =3D <0xf9012000 0x1000>;
->> 			regulator;
->> --
->> 2.1.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-arm-=
-msm" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->--=20
->Qualcomm Innovation Center, Inc.
->The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Fo=
-rum,
->a Linux Foundation Collaborative Project
->
+> Is the use of the "serial-number" string property already documented
+> somewhere? If not I'll submit a kernel patch to document it.
+
+Not that I'm aware of. It is something that predates our documentation
+requirements. It could be in OpenFirmware specs. Documenting it in the
+DT bindings does not hurt.
+
+> And for older kernels we should not set any serial atag (u-boot
+> always sets it, so this leaves it at 0) and old kernel users are
+> out of luck wrt getting to the serial ?
+
+If there is sufficient reason to support this on old kernels you could.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
