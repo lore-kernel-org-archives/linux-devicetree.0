@@ -1,95 +1,234 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: serial atag tag in devicetree ?
-Date: Mon, 23 Mar 2015 12:30:57 +0100
-Message-ID: <550FF971.407@redhat.com>
-References: <550EA6D8.3090702@redhat.com>
- <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] Add device tree support to adp1653 flash driver
+Date: Mon, 23 Mar 2015 12:34:30 +0100
+Message-ID: <20150323113430.GB7871@amd>
+References: <20150313204840.GA29290@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Ian Campbell <ijc@hellion.org.uk>, U-Boot <u-boot@lists.denx.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150313204840.GA29290@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi!
 
-On 22-03-15 22:01, Rob Herring wrote:
-> On Sun, Mar 22, 2015 at 6:26 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi All,
->>
->> I'm sending this mail because Paul Kocialkowski (in the Cc)
->> has submitted a patch for upstream u-boot to set the serial
->> atag tag from u-boot for Allwinner SoCs, using the SoCs
->> SID, which is a 128 bit register containing a unique number
->> for each SoC.
->
-> We shouldn't really be adding ATAGs to newer platforms...
->
->> In some cases a manufacturer may want to override this with
->> its own serial from say an eeprom, as such it is desirable
->> to communicate the serial from u-boot to the kernel rather
->> then reproducing the sid reading code in the kernel.
->>
->> For old atag using kernels there is an atag for this, and
->> the contents of this tag will show up in /proc/cpuinfo,
->> currently there is no equivalent for this in devicetree.
->>
->> I'm a bit reluctant to merge Paul's patch into u-boot
->> because of this as it will enable a feature on older
->> kernels while leaving the upstream kernel without it.
->>
->> So I was wondering how to deal with this in devicetree,
->> at least one board in u-boot already sets a devicetree
->> property for this:
->>
->> board/gateworks/gw_ventana/gw_ventana.c
->> 1202: *   serial# env var
->> 1207:   char *serial = getenv("serial#");
->> 1432:           setenv("serial#", str);
->> 1512:   fdt_setprop(blob, 0, "system-serial", getenv("serial#"),
->> 1513:               strlen(getenv("serial#")) + 1);
->>
->> Which sets a system-serial property in the root node,
->> so at the same level where we also have the model string
->> this seems to make sense to me.
->
-> system-serial is new to me...
->
->> So do we want to add a devicetree binding for system
->> serials, and if we do should we make it a string like
->> above, or should we make it an 64 bit integer like the atag?
->>
->> If we make it a string we can store longer serials, but
->> how should we deal with those wrt /proc/cpuinfo? Only show
->> the first 64 bits ?
->
-> There is already "serial-number" (a string) which exists for
-> OpenFirmware. Also, "copyright" corresponds to vendor/manufacturer
-> string. Both of these are supported by lshw already.
+> Nokia N900 is switching to device tree, make sure we can use flash
+> there, too.
+> 
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-Ok, so if I understand you correctly then you're saying that we
-should set a "serial-number" string property at the dt root level
-and that this may contain pretty much anything, e.g. in the
-sunxi case the full 128 bit SID in hex.
+Sakari, you are marked as a matinainer for this driver. Can you take
+the patch so that it makes it into 4.1?
 
-Is the use of the "serial-number" string property already documented
-somewhere? If not I'll submit a kernel patch to document it.
+Thanks,
+								Pavel
 
-And for older kernels we should not set any serial atag (u-boot
-always sets it, so this leaves it at 0) and old kernel users are
-out of luck wrt getting to the serial ?
+> diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp1653.c
+> index 873fe19..0341009 100644
+> --- a/drivers/media/i2c/adp1653.c
+> +++ b/drivers/media/i2c/adp1653.c
+> @@ -8,6 +8,7 @@
+>   * Contributors:
+>   *	Sakari Ailus <sakari.ailus@iki.fi>
+>   *	Tuukka Toivonen <tuukkat76@gmail.com>
+> + *	Pavel Machek <pavel@ucw.cz>
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License
+> @@ -34,6 +35,8 @@
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/slab.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/gpio.h>
+>  #include <media/adp1653.h>
+>  #include <media/v4l2-device.h>
+>  
+> @@ -306,9 +309,17 @@ adp1653_init_device(struct adp1653_flash *flash)
+>  static int
+>  __adp1653_set_power(struct adp1653_flash *flash, int on)
+>  {
+> -	int ret;
+> +	int ret = 0;
+> +
+> +	if (flash->platform_data->power) {
+> +		ret = flash->platform_data->power(&flash->subdev, on);
+> +	} else {
+> +		gpio_set_value(flash->platform_data->power_gpio, on);
+> +		if (on)
+> +			/* Some delay is apparently required. */
+> +			udelay(20);
+> +	}
+>  
+> -	ret = flash->platform_data->power(&flash->subdev, on);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -316,8 +327,13 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
+>  		return 0;
+>  
+>  	ret = adp1653_init_device(flash);
+> -	if (ret < 0)
+> +	if (ret >= 0)
+> +		return ret;
+> +
+> +	if (flash->platform_data->power)
+>  		flash->platform_data->power(&flash->subdev, 0);
+> +	else
+> +		gpio_set_value(flash->platform_data->power_gpio, 0);
+>  
+>  	return ret;
+>  }
+> @@ -407,21 +423,77 @@ static int adp1653_resume(struct device *dev)
+>  
+>  #endif /* CONFIG_PM */
+>  
+> +static int adp1653_of_init(struct i2c_client *client,
+> +			   struct adp1653_flash *flash,
+> +			   struct device_node *node)
+> +{
+> +	u32 val;
+> +	struct adp1653_platform_data *pd;
+> +	enum of_gpio_flags flags;
+> +	int gpio;
+> +	struct device_node *child;
+> +
+> +	if (!node)
+> +		return -EINVAL;
+> +
+> +	pd = devm_kzalloc(&client->dev, sizeof(*pd), GFP_KERNEL);
+> +	if (!pd)
+> +		return -ENOMEM;
+> +	flash->platform_data = pd;
+> +
+> +	child = of_get_child_by_name(node, "flash");
+> +	if (!child)
+> +		return -EINVAL;
+> +	if (of_property_read_u32(child, "flash-timeout-microsec", &val))
+> +		return -EINVAL;
+> +
+> +	pd->max_flash_timeout = val;
+> +	if (of_property_read_u32(child, "flash-max-microamp", &val))
+> +		return -EINVAL;
+> +	pd->max_flash_intensity = val/1000;
+> +
+> +	if (of_property_read_u32(child, "max-microamp", &val))
+> +		return -EINVAL;
+> +	pd->max_torch_intensity = val/1000;
+> +
+> +	child = of_get_child_by_name(node, "indicator");
+> +	if (!child)
+> +		return -EINVAL;
+> +	if (of_property_read_u32(child, "max-microamp", &val))
+> +		return -EINVAL;
+> +	pd->max_indicator_intensity = val;
+> +
+> +	if (!of_find_property(node, "gpios", NULL)) {
+> +		dev_err(&client->dev, "No gpio node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pd->power_gpio = of_get_gpio_flags(node, 0, &flags);
+> +	if (pd->power_gpio < 0) {
+> +		dev_err(&client->dev, "Error getting GPIO\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +
+>  static int adp1653_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *devid)
+>  {
+>  	struct adp1653_flash *flash;
+>  	int ret;
+>  
+> -	/* we couldn't work without platform data */
+> -	if (client->dev.platform_data == NULL)
+> -		return -ENODEV;
+> -
+>  	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
+>  	if (flash == NULL)
+>  		return -ENOMEM;
+>  
+>  	flash->platform_data = client->dev.platform_data;
+> +	if (!flash->platform_data) {
+> +		ret = adp1653_of_init(client, flash, client->dev.of_node);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	mutex_init(&flash->power_lock);
+>  
+> @@ -438,10 +510,10 @@ static int adp1653_probe(struct i2c_client *client,
+>  		goto free_and_quit;
+>  
+>  	flash->subdev.entity.type = MEDIA_ENT_T_V4L2_SUBDEV_FLASH;
+> -
+>  	return 0;
+>  
+>  free_and_quit:
+> +	dev_err(&client->dev, "adp1653: failed to register device\n");
+>  	v4l2_ctrl_handler_free(&flash->ctrls);
+>  	return ret;
+>  }
+> @@ -464,7 +536,7 @@ static const struct i2c_device_id adp1653_id_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, adp1653_id_table);
+>  
+> -static struct dev_pm_ops adp1653_pm_ops = {
+> +static const struct dev_pm_ops adp1653_pm_ops = {
+>  	.suspend	= adp1653_suspend,
+>  	.resume		= adp1653_resume,
+>  };
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adp1653.txt b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+> new file mode 100644
+> index 0000000..0fc28a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+> @@ -0,0 +1,37 @@
+> +* Analog Devices ADP1653 flash LED driver
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must contain be "adi,adp1653"
+> +
+> +  - reg: I2C slave address
+> +
+> +  - gpios: References to the GPIO that controls the power for the chip.
+> +
+> +There are two led outputs available - flash and indicator. One led is
+> +represented by one child node, nodes need to be named "flash" and "indicator".
+> +
+> +Required properties of the LED child node:
+> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Required properties of the flash LED child node:
+> +
+> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +	adp1653: led-controller@30 {
+> +		compatible = "adi,adp1653";
+> +		reg = <0x30>;
+> +		gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
+> +
+> +		flash {
+> +			flash-timeout-us = <500000>;
+> +			flash-max-microamp = <320000>;
+> +			max-microamp = <50000>;
+> +		};
+> +		indicator {
+> +			max-microamp = <17500>;
+> +		};
+> +	};
+> 
 
-Regards,
-
-Hans
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
