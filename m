@@ -1,91 +1,85 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: add property for maximum ADC clock
- frequencies
-Date: Mon, 23 Mar 2015 21:30:31 +0800
-Message-ID: <20150323133030.GD28410@dragon>
-References: <1426518614-20201-1-git-send-email-stefan@agner.ch>
- <1426518614-20201-4-git-send-email-stefan@agner.ch>
- <80ba0aa345e8bb04e23e2988f51a851d@agner.ch>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] dts: cubox: Map gpio-keys to gpio3 8
+Date: Mon, 23 Mar 2015 21:32:54 +0800
+Message-ID: <20150323133252.GE28410@dragon>
+References: <1426542829-16786-1-git-send-email-george.joseph@fairview5.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <80ba0aa345e8bb04e23e2988f51a851d@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: kernel@pengutronix.de, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1426542829-16786-1-git-send-email-george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 04:17:55PM +0100, Stefan Agner wrote:
-> Forgot to add i.MX/Vybrid maintainers Shawn and Sascha.
+On Mon, Mar 16, 2015 at 03:53:49PM -0600, George Joseph wrote:
+> The Cubox has a recessed button between the HDMI and RJ-45 connectors
+> that wasn't mapped in the device tree, so I've mapped it to gpio-keys
+> BTN_0.
 > 
-> On 2015-03-16 16:10, Stefan Agner wrote:
-> > The ADC clock frequency is limited depending on modes used. Add
-> > device tree property which allow to set the mode used and the
-> > maximum frequency ratings for the instance. These allows to
-> > set the ADC clock to a frequency which is within specification
-> > according to the actual mode used.
-> > 
-> > Acked-by: Fugang Duan <B38611@freescale.com>
-> > Signed-off-by: Stefan Agner <stefan@agner.ch>
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/vf610-adc.txt | 9 +++++++++
+> Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+> Tested-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
 
-Bindings doc shouldn't be part of dts change, and needs to be approved
-by DT maintainers.
+Russell,
+
+Are you fine with this patch?
 
 Shawn
 
-> >  arch/arm/boot/dts/vfxxx.dtsi                            | 4 ++++
-> >  2 files changed, 13 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> > b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> > index 1a4a43d..3eb40e2 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> > +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> > @@ -11,6 +11,13 @@ Required properties:
-> >  - clock-names: Must contain "adc", matching entry in the clocks property.
-> >  - vref-supply: The regulator supply ADC reference voltage.
-> >  
-> > +Recommended properties:
-> > +- fsl,adck-max-frequency: Maximum frequencies according to datasheets operating
-> > +  requirements. Three values are required, depending on conversion mode:
-> > +  - Frequency in normal mode (ADLPC=0, ADHSC=0)
-> > +  - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
-> > +  - Frequency in low-power mode (ADLPC=1, ADHSC=0)
-> > +
-> >  Example:
-> >  adc0: adc@4003b000 {
-> >  	compatible = "fsl,vf610-adc";
-> > @@ -18,5 +25,7 @@ adc0: adc@4003b000 {
-> >  	interrupts = <0 53 0x04>;
-> >  	clocks = <&clks VF610_CLK_ADC0>;
-> >  	clock-names = "adc";
-> > +	fsl,adck-max-frequency = <30000000>, <40000000>,
-> > +				<20000000>;
-> >  	vref-supply = <&reg_vcc_3v3_mcu>;
-> >  };
-> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> > index a29c7ce..c6609bd 100644
-> > --- a/arch/arm/boot/dts/vfxxx.dtsi
-> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> > @@ -189,6 +189,8 @@
-> >  				clocks = <&clks VF610_CLK_ADC0>;
-> >  				clock-names = "adc";
-> >  				status = "disabled";
-> > +				fsl,adck-max-frequency = <30000000>, <40000000>,
-> > +							<20000000>;
-> >  			};
-> >  
-> >  			wdoga5: wdog@4003e000 {
-> > @@ -387,6 +389,8 @@
-> >  				clocks = <&clks VF610_CLK_ADC1>;
-> >  				clock-names = "adc";
-> >  				status = "disabled";
-> > +				fsl,adck-max-frequency = <30000000>, <40000000>,
-> > +							<20000000>;
-> >  			};
-> >  
-> >  			esdhc1: esdhc@400b2000 {
+> ---
+>  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
+> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> index 6a524ca..de6e3a8 100644
+> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> @@ -3,6 +3,8 @@
+>   */
+>  #include "imx6qdl-microsom.dtsi"
+>  #include "imx6qdl-microsom-ar8035.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>  
+>  / {
+>  	ir_recv: ir-receiver {
+> @@ -66,6 +68,18 @@
+>  		spdif-controller = <&spdif>;
+>  		spdif-out;
+>  	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-0 = <&pinctrl_gpio_key>;
+> +		pinctrl-names = "default";
+> +
+> +		button_0 {
+> +			label = "Button 0";
+> +			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
+> +			linux,code = <BTN_0>;
+> +		};
+> +	};
+>  };
+>  
+>  &hdmi {
+> @@ -170,6 +184,12 @@
+>  				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
+>  			>;
+>  		};
+> +
+> +		pinctrl_gpio_key: gpio-key {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_DA8__GPIO3_IO08	0x17059
+> +			>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
