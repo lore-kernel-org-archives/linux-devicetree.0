@@ -1,43 +1,66 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/3] ARM: dts: OMAP5+: separate the cpu thermal zone definition
- from omap4
-Date: Mon, 23 Mar 2015 12:00:53 -0500
-Message-ID: <551046C5.1080901@ti.com>
-References: <1426880861-9266-1-git-send-email-nm@ti.com> <1426880861-9266-2-git-send-email-nm@ti.com> <20150320215402.GB7346@developer.amazonguestwifi.org> <550FE807.6020107@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 00/13] musb: Add support for the
+ Allwinner sunxi musb controller
+Date: Mon, 23 Mar 2015 09:49:16 -0700
+Message-ID: <20150323164916.GA15676@lukather>
+References: <1426878682-14521-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <550FE807.6020107@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Keerthy <j-keerthy@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSUWYGUAKGQEFFADLKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426878682-14521-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2015 05:16 AM, Tero Kristo wrote:
-> On 03/20/2015 11:54 PM, Eduardo Valentin wrote:
->> On Fri, Mar 20, 2015 at 02:47:39PM -0500, Nishanth Menon wrote:
->>> From: Tero Kristo <t-kristo@ti.com>
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-[...]
+Hi Hans,
 
->> Can't we simple change the polling value for the omap5 case and reuse
->> the omap4 file?
+On Fri, Mar 20, 2015 at 08:11:09PM +0100, Hans de Goede wrote:
+> Hi All,
 > 
-> Hmm yea, I posted a patch like this before for o5 and it was queued 
-> already. See:
+> Here is v2 of my patch-set to add support for the musb variant found on
+> Allwinner sunxi SoCs.
 > 
-> http://thread.gmane.org/gmane.linux.ports.arm.omap/123729
+> Changes since the original posting:
+> -Removed the sunxi specific phy functions, instead the id / vbus gpio polling
+>  has been moved to the phy-sun4i-usb driver and their status is exported
+>  through extcon for the sunxi-musb glue
+> -Stop using syscon, instead Maxime Ripard's sunxi SRAM controller driver is now
+>  used
 > 
-> The dra7 part was missing from this set though, so patches 2/3 do not 
-> directly work with that one and will require some changes similar to the 
-> linked omap4 one.
+> This should address all review remarks against v1 of this patch-set, so
+> hopefully we can start merging this upstream.
+> 
+> The "musb: Add support for the Allwinner sunxi musb" commit relies on
+> Maxime's SRAM controller patches, so those need to get merged first,
+> but the phy-sun4i-usb and musb preparation patches can be merged already
+> (assuming there are no objections).
+> 
+> And then once the SRAM controller patches are in next we can also merge
+> the "musb: Add support for the Allwinner sunxi musb" commit and the dts
+> changes.
 
-OK. will do that and as part of that, I will squash up patch 1 and 2
-Since it is needed only when we introduce DRA7 thermal description -
-Apologies on missing the O5 patch.
+All the DT bits look fine to me. I'll wait for Felipe and Kishon
+comments before merging those.
 
+Thanks!
+Maxime
 
 -- 
-Regards,
-Nishanth Menon
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--nFreZHaLTZJo0R7j--
