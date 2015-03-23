@@ -1,94 +1,253 @@
-From: kongxinwei <xweikong@hotmail.com>
-Subject: Re: [PATCH 1/3] thermal: hisilicon: add new hisilicon thermal sensor
- driver
-Date: Mon, 23 Mar 2015 16:30:59 +0800
-Message-ID: <BLU436-SMTP68AF510203FB039DA92B6CC10D0@phx.gbl>
-References: <1426751849-10604-1-git-send-email-kong.kongxinwei@hisilicon.com> <1426751849-10604-2-git-send-email-kong.kongxinwei@hisilicon.com> <20150319141753.GB25967@leverpostej> <20150320060653.GC18907@leoy-linaro> <20150320112414.GD14766@leverpostej> <20150320145353.GA20461@leoy-linaro> <20150320155527.GJ14766@leverpostej> <20150323044612.GB20840@leoy-linaro>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Mon, 23 Mar 2015 09:42:37 +0100
+Message-ID: <20150323084237.GG9742@pengutronix.de>
+References: <1426917922-61356-1-git-send-email-eddie.huang@mediatek.com>
+ <1426917922-61356-3-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150323044612.GB20840@leoy-linaro>
-Sender: linux-pm-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: kongxinwei <kong.kongxinwei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhuang@intel.com" <rui.zhuang@intel.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426917922-61356-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Mar 21, 2015 at 02:05:21PM +0800, Eddie Huang wrote:
+> From: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> The mediatek SoCs have I2C controller that handle I2C transfer.
+> This patch include common I2C bus driver.
+> This driver is compatible with I2C controller on mt65xx/mt81xx.
+> 
+> Signed-off-by: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/i2c/busses/Kconfig      |   9 +
+>  drivers/i2c/busses/Makefile     |   1 +
+>  drivers/i2c/busses/i2c-mt65xx.c | 705 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 715 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
+> 
+> +
+> +static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+> +{
+> +	if (i2c->have_pmic)
+> +		clk_disable_unprepare(i2c->clk_pmic);
+> +
+> +	clk_disable_unprepare(i2c->clk_main);
+> +	clk_disable_unprepare(i2c->clk_dma);
+> +}
+> +
+> +static inline void mtk_i2c_init_hw(struct mtk_i2c *i2c)
 
-On 03/23/2015 12:46 PM, Leo Yan wrote:
-> On Fri, Mar 20, 2015 at 03:55:27PM +0000, Mark Rutland wrote:
->>>> That may be the case in the code as it stands today, but per the binding
->>>> the trip points are the temperatures at which an action is to be taken.
->>>>
->>>> The thermal-zone has poilling-delay and polling-delay-passive, but
->>>> there's no reason you couldn't also use the interrupt to handle the
->>>> "hot" trip-point, adn the reset at the "critical" trip-point. All that's
->>>> missing is the plumbing in order to do so.
->>>>
->>>> So please co-ordinate with the thermal framework to do that.
->>> Let's dig further more for this point, so that we can get more specific
->>> gudiance and have a good preparation for next version's patch set.
->>>
->>> After i reviewed the thermal framework code, currently have one smooth
->>> way to co-ordinate the trip points w/t thermal framework: use the function
->>> *thermal_zone_device_register()* to register sensor, and can use the
->>> callback function .get_trip_temp to tell thermal framework for the
->>> trip points' temperature.
->>>
->>> For hisi thermal case, now the driver is using the function
->>> *thermal_zone_of_sensor_register* to register sensor, but use this way
->>> i have not found there have standard APIs which can be used by sensor
->>> driver to get the trip points info from thermal framework.
->>>
->>> I may miss something for thermal framework, so if have existed APIs to
->>> get the trip points, could pls point out?
->> I am only familiar with the binding, not the Linux implementation -- The
->> latter can change to accomodate your hardware without requiring binding
->> changes. Please co-ordinate with the thermal maintainers.
-> Found the functions of_thermal_get_trip_points(tz) and of_thermal_get_ntrips(tz)
-> will help for this.
->
->>>>>>> +       if (of_property_read_bool(np, "hisilicon,tsensor-bind-irq")) {
->>>>>>> +
->>>>>>> +               if (data->irq_bind_sensor != -1)
->>>>>>> +                       dev_warn(&pdev->dev, "irq has bound to index %d\n",
->>>>>>> +                                data->irq_bind_sensor);
->>>>>>> +
->>>>>>> +               /* bind irq to this sensor */
->>>>>>> +               data->irq_bind_sensor = index;
->>>>>>> +       }
->>>>>> I don't see why this should be specified in the DT. Why do you believe
->>>>>> it should?
->>>>> The thermal sensor module has four sensors, but have only one
->>>>> interrupt signal; This interrupt can only be used by one sensor;
->>>>> So want to use dts to bind the interrupt with one selected sensor.
->>>> That's not all that great, though I'm not exactly sure how the kernel
->>>> would select the best sensor to measure with. It would be good if you
->>>> could talk to the thermal maintainers w.r.t. this.
->>> This will be decided by the silicon, right? Every soc has different
->>> combination with cpu/gpu/vpu, so which part is hottest, this maybe
->>> highly dependent on individual SoC.
->>>
->>> S/W just need provide the flexibility so that later can choose
->>> the interrupt to bind with the sensor within the hottest part.
->> Then the property you care about is which sensor is closest to what is
->> likely to be the hottest component. Given that, the kernel can decide
->> how to use the interrupt.
-> Will modify the driver to dynamically bind the interrupt to hottest
-> sensor; Appreciate for good suggestion.
->
-> Thanks,
-> Leo Yan
+Please let the compiler decide whether to inline this or not.
 
-Hi mark:
-    Thank you for your comments,please wait the next version to slove your
-presenting problem.
+> +{
+> +	mtk_i2c_writew(I2C_SOFT_RST, i2c, OFFSET_SOFTRESET);
+> +	/* Set ioconfig */
+> +	if (i2c->use_push_pull)
+> +		mtk_i2c_writew(I2C_IO_CONFIG_PUSH_PULL, i2c, OFFSET_IO_CONFIG);
+> +	else
+> +		mtk_i2c_writew(I2C_IO_CONFIG_OPEN_DRAIN, i2c, OFFSET_IO_CONFIG);
+> +
+> +	if (i2c->platform_compat & COMPAT_MT6577)
+> +		mtk_i2c_writew(I2C_DCM_DISABLE, i2c, OFFSET_DCM_EN);
+> +
+> +	mtk_i2c_writew(i2c->timing_reg, i2c, OFFSET_TIMING);
+> +	mtk_i2c_writew(i2c->high_speed_reg, i2c, OFFSET_HS);
+> +}
+> +
 
-Thanks.
-Xinwei
+[...]
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	step_cnt = step_div;
+> +	sclk = hclk / (2 * sample_cnt * step_cnt);
+> +	if (sclk > khz) {
+> +		dev_dbg(i2c->dev, "%s mode: unsupported speed (%ldkhz)\n",
+> +			(mode == HS_MODE) ? "HS" : "ST/FT", (long int)khz);
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	step_cnt--;
+> +	sample_cnt--;
+> +
+> +	if (mode == HS_MODE) {
 
+This is the only place where the HS_MODE is actually tested for.
+Dropping this enum and using i2c->speed_hz > MAX_FS_MODE_SPEED directly
+here would improve readability.
+
+> +		/* Set the hign speed mode register */
+> +		i2c->timing_reg = I2C_FS_TIME_INIT_VALUE;
+> +		i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
+> +			(sample_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 12 |
+> +			(step_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 8;
+> +	} else {
+> +		i2c->timing_reg =
+> +			(sample_cnt & I2C_TIMING_SAMPLE_COUNT_MASK) << 8 |
+> +			(step_cnt & I2C_TIMING_STEP_DIV_MASK) << 0;
+> +		/* Disable the high speed transaction */
+> +		i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+[...]
+
+> +	if (i2c->speed_hz > 400000)
+> +		control_reg |= I2C_CONTROL_RS;
+> +	if (i2c->op == I2C_MASTER_WRRD)
+> +		control_reg |= I2C_CONTROL_DIR_CHANGE | I2C_CONTROL_RS;
+> +	mtk_i2c_writew(control_reg, i2c, OFFSET_CONTROL);
+> +
+> +	/* set start condition */
+> +	if (i2c->speed_hz <= 100000)
+> +		mtk_i2c_writew(I2C_ST_START_CON, i2c, OFFSET_EXT_CONF);
+> +	else
+> +		mtk_i2c_writew(I2C_FS_START_CON, i2c, OFFSET_EXT_CONF);
+> +
+> +	if (~control_reg & I2C_CONTROL_RS)
+> +		mtk_i2c_writew(I2C_DELAY_LEN, i2c, OFFSET_DELAY_LEN);
+
+speed <= 400000 here to make this more obvious?
+
+> +
+> +	addr_reg = msgs->addr << 1;
+> +	if (i2c->op == I2C_MASTER_RD)
+> +		addr_reg |= 0x1;
+> +	mtk_i2c_writew(addr_reg, i2c, OFFSET_SLAVE_ADDR);
+> +
+> +	/* Clear interrupt status */
+> +	mtk_i2c_writew(I2C_HS_NACKERR | I2C_ACKERR | I2C_TRANSAC_COMP,
+> +		i2c, OFFSET_INTR_STAT);
+> +	mtk_i2c_writew(I2C_FIFO_ADDR_CLR, i2c, OFFSET_FIFO_ADDR_CLR);
+> +
+> +	/* Enable interrupt */
+> +	mtk_i2c_writew(I2C_HS_NACKERR | I2C_ACKERR | I2C_TRANSAC_COMP,
+> +		i2c, OFFSET_INTR_MASK);
+
+Why do you enable/disable interrupts for each transfer? Enabling them
+once and just acknowledge them in the interrupt handler should be
+enough.
+
+> +	if (!i2c->trans_stop && tmo == 0) {
+> +		dev_dbg(i2c->dev, "addr: %x, transfer timeout\n", msgs->addr);
+> +		mtk_i2c_init_hw(i2c);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	spin_lock(&i2c->irqlock);
+> +	irqstat = i2c->irq_stat;
+> +	spin_unlock(&i2c->irqlock);
+
+A plain spin_lock can't protect you against the interrupt handler, see
+https://www.kernel.org/pub/linux/kernel/people/rusty/kernel-locking/c214.html.
+You need at least spin_lock_irq().
+
+Anyway, I think this spin_lock can be removed since it only protects the
+irq_stat variable. This is written only in the interrupt handler and
+then tested for in thread context. The thread waits for the interrupt
+handler to be finished anyway.
+
+> +static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
+> +{
+> +	struct mtk_i2c *i2c = dev_id;
+> +
+> +	/* Clear interrupt mask */
+> +	mtk_i2c_writew(~(I2C_HS_NACKERR | I2C_ACKERR | I2C_TRANSAC_COMP),
+> +		i2c, OFFSET_INTR_MASK);
+> +
+> +	spin_lock(&i2c->irqlock);
+> +	i2c->irq_stat = mtk_i2c_readw(i2c, OFFSET_INTR_STAT);
+> +	i2c->trans_stop = true;
+
+A struct completion seems more what you want here. This makes the
+trans_stop variable unnecessary (it contains no information anyway).
+
+See the tegra driver as an example.
+
+> +	spin_unlock(&i2c->irqlock);
+> +	mtk_i2c_writew(I2C_HS_NACKERR | I2C_ACKERR
+> +			| I2C_TRANSAC_COMP, i2c, OFFSET_INTR_STAT);
+> +	wake_up(&i2c->wait);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+
+[...]
+
+> +static int mtk_i2c_probe(struct platform_device *pdev)
+> +{
+> +	int ret = 0;
+> +	struct mtk_i2c *i2c;
+> +	struct clk *clk;
+> +	unsigned int clk_src_in_hz;
+> +	unsigned int clk_src_div;
+> +	struct resource *res;
+> +
+> +	i2c = devm_kzalloc(&pdev->dev, sizeof(struct mtk_i2c), GFP_KERNEL);
+
+sizeof(*i2c) instead. This will make it harder to allocate the memory
+for a wrong struct size.
+
+> +	if (i2c == NULL)
+> +		return -ENOMEM;
+> +
+> +	ret = mtk_i2c_parse_dt(pdev->dev.of_node, i2c, &clk_src_div);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	i2c->platform_compat = mtk_get_device_prop(pdev);
+> +	if (i2c->have_pmic && (i2c->platform_compat & COMPAT_MT6577))
+> +		return -EINVAL;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +
+> +	i2c->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(i2c->base))
+> +		return PTR_ERR(i2c->base);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +
+> +	i2c->pdmabase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(i2c->pdmabase))
+> +		return PTR_ERR(i2c->pdmabase);
+> +
+> +	i2c->irqnr = platform_get_irq(pdev, 0);
+> +	if (i2c->irqnr <= 0)
+> +		return -EINVAL;
+
+i2c->irqnr is never used outside this function, so you can drop it from
+struct mtk_i2c and make this a local variable.
+
+Contrary to what Uwe said this variable should be a signed variable
+because platform_get_irq() returns a signed integer which may contain a
+negative error code. This will never be catched if you use an unsigned
+variable.
+
+Also you should forward the error instead of returning -EINVAL.
+
+> +static int mtk_i2c_remove(struct platform_device *pdev)
+> +{
+> +	struct mtk_i2c *i2c = platform_get_drvdata(pdev);
+> +
+> +	i2c_del_adapter(&i2c->adap);
+> +	platform_set_drvdata(pdev, NULL);
+
+This is unnecessary. This pointer is unused when no driver is bound to
+the device and no driver will expect it to be valid in probe().
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
