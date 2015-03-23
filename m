@@ -1,105 +1,137 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [U-Boot] serial atag tag in devicetree ?
-Date: Mon, 23 Mar 2015 18:12:57 -0500
-Message-ID: <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ@mail.gmail.com>
-References: <550EA6D8.3090702@redhat.com> <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
- <550FF971.407@redhat.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v17 01/10] ARM: qcom: Add Subsystem Power Manager (SPM)
+ driver
+Date: Mon, 23 Mar 2015 17:15:34 -0600
+Message-ID: <20150323231534.GB1790@linaro.org>
+References: <1426882877-33008-1-git-send-email-lina.iyer@linaro.org>
+ <1426882877-33008-2-git-send-email-lina.iyer@linaro.org>
+ <F7886F3F-50DF-4E1B-A6DF-5463362B2BC7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550FF971.407-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <F7886F3F-50DF-4E1B-A6DF-5463362B2BC7@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2015 at 6:30 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
+On Mon, Mar 23 2015 at 16:06 -0600, Kumar Gala wrote:
 >
+>On Mar 20, 2015, at 1:21 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
 >
-> On 22-03-15 22:01, Rob Herring wrote:
 >>
->> On Sun, Mar 22, 2015 at 6:26 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> wrote:
->>>
->>> Hi All,
->>>
->>> I'm sending this mail because Paul Kocialkowski (in the Cc)
->>> has submitted a patch for upstream u-boot to set the serial
->>> atag tag from u-boot for Allwinner SoCs, using the SoCs
->>> SID, which is a 128 bit register containing a unique number
->>> for each SoC.
+>> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+>> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora=
+=2Eorg>
+>> Original tree available at -
+>> git://codeaurora.org/quic/la/kernel/msm-3.10.git
 >>
+>> Cc: Stephen Boyd <sboyd@codeaurora.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Kevin Hilman <khilman@linaro.org>
+>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>> ---
+>> .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  29 +-
+>> drivers/soc/qcom/Kconfig                           |   7 +
+>> drivers/soc/qcom/Makefile                          |   1 +
+>> drivers/soc/qcom/spm.c                             | 405 +++++++++++=
+++++++++++
+>> 4 files changed, 436 insertions(+), 6 deletions(-)
+>> create mode 100644 drivers/soc/qcom/spm.c
 >>
->> We shouldn't really be adding ATAGs to newer platforms...
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt=
+ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>> index 1505fb8..664aa91 100644
+>> --- a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>> @@ -2,11 +2,20 @@ SPM AVS Wrapper 2 (SAW2)
 >>
->>> In some cases a manufacturer may want to override this with
->>> its own serial from say an eeprom, as such it is desirable
->>> to communicate the serial from u-boot to the kernel rather
->>> then reproducing the sid reading code in the kernel.
->>>
->>> For old atag using kernels there is an atag for this, and
->>> the contents of this tag will show up in /proc/cpuinfo,
->>> currently there is no equivalent for this in devicetree.
->>>
->>> I'm a bit reluctant to merge Paul's patch into u-boot
->>> because of this as it will enable a feature on older
->>> kernels while leaving the upstream kernel without it.
->>>
->>> So I was wondering how to deal with this in devicetree,
->>> at least one board in u-boot already sets a devicetree
->>> property for this:
->>>
->>> board/gateworks/gw_ventana/gw_ventana.c
->>> 1202: *   serial# env var
->>> 1207:   char *serial = getenv("serial#");
->>> 1432:           setenv("serial#", str);
->>> 1512:   fdt_setprop(blob, 0, "system-serial", getenv("serial#"),
->>> 1513:               strlen(getenv("serial#")) + 1);
->>>
->>> Which sets a system-serial property in the root node,
->>> so at the same level where we also have the model string
->>> this seems to make sense to me.
+>> The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and t=
+he
+>> Adaptive Voltage Scaling (AVS) hardware. The SPM is a programmable
+>> -micro-controller that transitions a piece of hardware (like a proce=
+ssor or
+>> +power-controller that transitions a piece of hardware (like a proce=
+ssor or
+>> subsystem) into and out of low power modes via a direct connection t=
+o
+>> the PMIC. It can also be wired up to interact with other processors =
+in the
+>> system, notifying them when a low power state is entered or exited.
 >>
+>> +Multiple revisions of the SAW hardware are supported using these De=
+vice Nodes.
+>> +SAW2 revisions differ in the register offset and configuration data=
+=2E Also, the
+>> +same revision of the SAW in different SoCs may have different confi=
+guration
+>> +data due the the differences in hardware capabilities. Hence the So=
+C name, the
+>> +version of the SAW hardware in that SoC and the distinction between=
+ cpu (big
+>> +or Little) or cache, may be needed to uniquely identify the SAW reg=
+ister
+>> +configuration and initialization data. The compatible string is use=
+d to
+>> +indicate this parameter.
+>> +
+>> PROPERTIES
 >>
->> system-serial is new to me...
->>
->>> So do we want to add a devicetree binding for system
->>> serials, and if we do should we make it a string like
->>> above, or should we make it an 64 bit integer like the atag?
->>>
->>> If we make it a string we can store longer serials, but
->>> how should we deal with those wrt /proc/cpuinfo? Only show
->>> the first 64 bits ?
->>
->>
->> There is already "serial-number" (a string) which exists for
->> OpenFirmware. Also, "copyright" corresponds to vendor/manufacturer
->> string. Both of these are supported by lshw already.
+>> - compatible:
+>> @@ -14,10 +23,11 @@ PROPERTIES
+>> 	Value type: <string>
+>> 	Definition: shall contain "qcom,saw2". A more specific value should=
+ be
+>> 		    one of:
 >
+>Does =E2=80=9Cqcom,saw2=E2=80=9D have any meaning anymore?  I see we u=
+se it in some places, but not everywhere on the .dts.  We also see to h=
+ave the L2 just be a =E2=80=9Cqcom,saw2=E2=80=9D node, do we expect tha=
+t to change?
 >
-> Ok, so if I understand you correctly then you're saying that we
-> should set a "serial-number" string property at the dt root level
-> and that this may contain pretty much anything, e.g. in the
-> sunxi case the full 128 bit SID in hex.
+It does help match a regulator node as opposed to the specific values
+below.
 
-Right.
-
-> Is the use of the "serial-number" string property already documented
-> somewhere? If not I'll submit a kernel patch to document it.
-
-Not that I'm aware of. It is something that predates our documentation
-requirements. It could be in OpenFirmware specs. Documenting it in the
-DT bindings does not hurt.
-
-> And for older kernels we should not set any serial atag (u-boot
-> always sets it, so this leaves it at 0) and old kernel users are
-> out of luck wrt getting to the serial ?
-
-If there is sufficient reason to support this on old kernels you could.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> -			 "qcom,saw2-v1"
+>> -			 "qcom,saw2-v1.1"
+>> -			 "qcom,saw2-v2"
+>> -			 "qcom,saw2-v2.1"
+>> +			"qcom,saw2-v2"
+>> +			"qcom,saw2-v2.1"
+>> +			"qcom,apq8064-saw2-v1.1-cpu"
+>> +			"qcom,msm8974-saw2-v2.1-cpu"
+>> +			"qcom,apq8084-saw2-v2.1-cpu"
+>>
+>> - reg:
+>> 	Usage: required
+>> @@ -26,10 +36,17 @@ PROPERTIES
+>> 		    the register region. An optional second element specifies
+>> 		    the base address and size of the alias register region.
+>>
+>> +- regulator:
+>> +	Usage: optional
+>> +	Value type: boolean
+>> +	Definition: Indicates that this SPM device acts as a regulator dev=
+ice
+>> +			device for the core (CPU or Cache) the SPM is attached
+>> +			to.
+>>
+>> Example:
+>>
+>> -	regulator@2099000 {
+>> +	power-controller@2099000 {
+>> 		compatible =3D "qcom,saw2";
+>> 		reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
+>> +		regulator;
+>> 	};
+>
+>--=20
+>Qualcomm Innovation Center, Inc.
+>The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Fo=
+rum,
+>a Linux Foundation Collaborative Project
+>
