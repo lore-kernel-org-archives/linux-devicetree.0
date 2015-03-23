@@ -1,36 +1,39 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3] mfd: Add specific compatible strings for Qualcomm's
- SPMI PMIC's
-Date: Mon, 23 Mar 2015 13:06:28 -0700
-Message-ID: <20150323200628.GA21712@codeaurora.org>
-References: <1426589244-16740-1-git-send-email-iivanov@mm-sol.com>
- <20150323132109.GF24804@x1>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] driver core: Implement device property accessors through
+ fwnode ones
+Date: Mon, 23 Mar 2015 21:13:21 +0100
+Message-ID: <20150323201321.GA2071@kroah.com>
+References: <1422278260-108175-1-git-send-email-heikki.krogerus@linux.intel.com>
+ <CACxGe6tiDszPDpP_u1yxNgMA8HjagDKtGuu35hfkyJtZdGE0Aw@mail.gmail.com>
+ <10066684.kPKm7OTnxF@vostro.rjw.lan>
+ <9998673.jvqRF9ZONz@vostro.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150323132109.GF24804@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <9998673.jvqRF9ZONz@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/23, Lee Jones wrote:
-> I want to see if Stephen B is now happy with this.
+On Mon, Mar 23, 2015 at 12:10:30AM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Not CC'ing him as a previous review is bad form IMO.
+> Now that the ACPI companions of devices are pointed to by the fwnode
+> field in struct device, the device_property_*() accessor functions
+> can be modified to use their fwnode_property_*() counterparts
+> internally with minimum extra overhead in the IS_ENABLED(CONFIG_OF)
+> case, so make those changes.
 > 
-> > Some of the PMIC's could have specific regmap configuration
-> > tables in future, so add specific compatible strings for known
-> > PMIC's. Also print runtime detected chip revision information.
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > ---
+> This allows us to get rid of the rather ugly DEV_PROP_READ_ARRAY()
+> macro among other things.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> On top of
+> 
+> http://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git/commit/?h=linux-next&id=ce793486e23e0162a732c605189c8028e0910e86
 
-Looks OK to me.
-
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
