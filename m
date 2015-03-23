@@ -1,51 +1,66 @@
-From: Howard Mitchell <hm-n6SlHCM0l+K9FHfhHBbuYA@public.gmane.org>
-Subject: Re: [PATCH] ASoC:pcm512x: Make PLL lock output selectable via device
- tree.
-Date: Mon, 23 Mar 2015 09:43:59 +0000
-Message-ID: <550FE05F.6070204@hmbedded.co.uk>
-References: <1426886563-10936-1-git-send-email-hm@hmbedded.co.uk> <20150322162409.GG6643@sirena.org.uk>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v1 02/11] DT: Add documentation for the mfd Maxim max77693
+Date: Mon, 23 Mar 2015 10:54:11 +0100
+Message-ID: <550FE2C3.7090702@samsung.com>
+References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+ <1426863811-12516-3-git-send-email-j.anaszewski@samsung.com>
+ <20150321224903.GE16613@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150322162409.GG6643-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150321224903.GE16613@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22/03/15 16:24, Mark Brown wrote:
-> On Fri, Mar 20, 2015 at 09:22:43PM +0000, Howard Mitchell wrote:
->
->> +	if (pcm512x->pll_lock) {
->> +                if (of_property_read_u32(np, "pll-lock", &val) >= 0) {
->> +                        if (val > 6) {
->> +                                dev_err(dev, "Invalid pll-lock\n");
->> +                                ret = -EINVAL;
->> +                                goto err_clk;
->> +                        }
->> +                        pcm512x->pll_lock = val;
->> +                }
-> This breaks existing boards which rely on GPIO 4 being set as the lock
-> output.  This is very unfortunate since it's a silly thing for the
-> driver to default to but nontheless we should really continue to support
-> them - at a guess Peter's board is relying on this, and even if it isn't
-> someone else's might.
-I take your point, but the reason I pushed this patch was that I wanted 
-to use GPIO4 for pll-out and unfortunately because the pll-lock 
-configuration is after the pll-out configuration it stomps on it. If I 
-modify the patch to provide a default for pll-lock I will then be 
-obliged to specify pll-lock on another GPIO. The pcm5122 has limited IO 
-so being forced to have a GPIO for pll-lock seems wrong to me. A future 
-user of the device may well decide to use the GPIOs for other purposes 
-and therefore not want a pll-lock signal at all. Surely we should allow 
-for that possibility?
+Hi Sakari,
 
-Given that Peter has indicated that he'd be happy with this solution and 
-that this code hasn't reached a published kernel would it be reasonable 
-to go ahead with my current patch (happy to clean up the indent issues 
-that Peter pointed out of course)?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 03/21/2015 11:49 PM, Sakari Ailus wrote:
+> Hi Jacek,
+>
+> On Fri, Mar 20, 2015 at 04:03:22PM +0100, Jacek Anaszewski wrote:
+>> +Optional properties of the LED child node:
+>> +- label : see Documentation/devicetree/bindings/leds/common.txt
+>
+> I'm still not comfortable using the label field as-is as the entity name in
+> the later patches, there's one important problem: it is not guaranteed to be
+> unique in the system.
+
+I don't use it as-is in my patches. For max77603-led the i2c adapter id
+and client address is added to it, and for aat1290 there is '_n' suffix
+added. Nonetheless I didn't notice that the patch [1] was already
+merged. It checks if a LED class device with given name isn't already
+registered and adds a '_n" suffix if there was any. If it was exported
+I could use it in the leds-aat1290 driver and avoid depending on the
+static variable.
+
+Whereas for I2C devices the problem doesn't exist (it is guaranteed that
+no more than one I2C client with an address can be present on the
+same bus), for devices driven through GPIOs we haven't stable unique
+identifier.
+
+I thought that we agreed on #v4l about adding numerical postfixes
+in case of such devices.
+
+> Do you think this could be added to
+> Documentation/devicetree/bindings/leds/common.txt, with perhaps enforcing it
+> in the LED framework? Bryan, what do you think?
+
+The patch [1] seems to address the issue.
+
+> The alternative would be to simply ignore it in the entity name, but then
+> the name of the device would be different in the LED framework and Media
+> controller.
+>
+
+This is the case currently - the names are different. The post fixes
+are added only to media entity name. Perhaps they should be unified.
+
+
+[1] http://www.spinics.net/lists/linux-leds/msg03137.html
+
+-- 
+Best Regards,
+Jacek Anaszewski
