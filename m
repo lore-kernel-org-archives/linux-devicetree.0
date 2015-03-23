@@ -1,125 +1,78 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v17 01/10] ARM: qcom: Add Subsystem Power Manager (SPM) driver
-Date: Mon, 23 Mar 2015 15:06:21 -0700
-Message-ID: <F7886F3F-50DF-4E1B-A6DF-5463362B2BC7@codeaurora.org>
-References: <1426882877-33008-1-git-send-email-lina.iyer@linaro.org> <1426882877-33008-2-git-send-email-lina.iyer@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1426882877-33008-2-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [PATCH 2/2] rtc: driver for Conexant Digicolor CX92755 on-chip
+ RTC
+Date: Mon, 23 Mar 2015 15:33:34 -0700
+Message-ID: <20150323153334.a373431dd5af6b669f716d83@linux-foundation.org>
+References: <fa36a31a1d58d626ca0cb01ca0dece85aa2dfcb9.1427117334.git.baruch@tkos.co.il>
+	<374ef109005ed14c3a0052a9da5226b87f8dc215.1427117334.git.baruch@tkos.co.il>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <374ef109005ed14c3a0052a9da5226b87f8dc215.1427117334.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 23 Mar 2015 15:28:54 +0200 Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-On Mar 20, 2015, at 1:21 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
-
->=20
-> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora.=
-org>
-> Original tree available at -
-> git://codeaurora.org/quic/la/kernel/msm-3.10.git
->=20
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Kevin Hilman <khilman@linaro.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
-> .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  29 +-
-> drivers/soc/qcom/Kconfig                           |   7 +
-> drivers/soc/qcom/Makefile                          |   1 +
-> drivers/soc/qcom/spm.c                             | 405 ++++++++++++=
-+++++++++
-> 4 files changed, 436 insertions(+), 6 deletions(-)
-> create mode 100644 drivers/soc/qcom/spm.c
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt =
-b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
-> index 1505fb8..664aa91 100644
-> --- a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
-> @@ -2,11 +2,20 @@ SPM AVS Wrapper 2 (SAW2)
->=20
-> The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and th=
-e
-> Adaptive Voltage Scaling (AVS) hardware. The SPM is a programmable
-> -micro-controller that transitions a piece of hardware (like a proces=
-sor or
-> +power-controller that transitions a piece of hardware (like a proces=
-sor or
-> subsystem) into and out of low power modes via a direct connection to
-> the PMIC. It can also be wired up to interact with other processors i=
-n the
-> system, notifying them when a low power state is entered or exited.
->=20
-> +Multiple revisions of the SAW hardware are supported using these Dev=
-ice Nodes.
-> +SAW2 revisions differ in the register offset and configuration data.=
- Also, the
-> +same revision of the SAW in different SoCs may have different config=
-uration
-> +data due the the differences in hardware capabilities. Hence the SoC=
- name, the
-> +version of the SAW hardware in that SoC and the distinction between =
-cpu (big
-> +or Little) or cache, may be needed to uniquely identify the SAW regi=
-ster
-> +configuration and initialization data. The compatible string is used=
- to
-> +indicate this parameter.
+> Add driver for the RTC hardware block on the Conexant CX92755 SoC, from the
+> Digicolor series of SoCs. Tested on the Equinox evaluation board for the
+> CX92755 chip.
+> 
+> ...
+>
+> +static int dc_rtc_read(struct dc_rtc *rtc, unsigned long *val)
+> +{
+> +	u8 read_cmds[] = {CMD_READ, CMD_NOP};
+> +	u32 reference, time1, time2;
+> +	int ret;
 > +
-> PROPERTIES
->=20
-> - compatible:
-> @@ -14,10 +23,11 @@ PROPERTIES
-> 	Value type: <string>
-> 	Definition: shall contain "qcom,saw2". A more specific value should =
-be
-> 		    one of:
+> +	ret = dc_rtc_cmds(rtc, read_cmds, ARRAY_SIZE(read_cmds));
 
-Does =93qcom,saw2=94 have any meaning anymore?  I see we use it in some=
- places, but not everywhere on the .dts.  We also see to have the L2 ju=
-st be a =93qcom,saw2=94 node, do we expect that to change?
+This is asking the compiler to build read_cmds[] on the stack each time
+dc_rtc_read() is called.
 
-> -			 "qcom,saw2-v1"
-> -			 "qcom,saw2-v1.1"
-> -			 "qcom,saw2-v2"
-> -			 "qcom,saw2-v2.1"
-> +			"qcom,saw2-v2"
-> +			"qcom,saw2-v2.1"
-> +			"qcom,apq8064-saw2-v1.1-cpu"
-> +			"qcom,msm8974-saw2-v2.1-cpu"
-> +			"qcom,apq8084-saw2-v2.1-cpu"
->=20
-> - reg:
-> 	Usage: required
-> @@ -26,10 +36,17 @@ PROPERTIES
-> 		    the register region. An optional second element specifies
-> 		    the base address and size of the alias register region.
->=20
-> +- regulator:
-> +	Usage: optional
-> +	Value type: boolean
-> +	Definition: Indicates that this SPM device acts as a regulator devi=
-ce
-> +			device for the core (CPU or Cache) the SPM is attached
-> +			to.
->=20
-> Example:
->=20
-> -	regulator@2099000 {
-> +	power-controller@2099000 {
-> 		compatible =3D "qcom,saw2";
-> 		reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
-> +		regulator;
-> 	};
+If we instead create the array at compile time:
 
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
++++ a/drivers/rtc/rtc-digicolor.c
+@@ -42,7 +42,7 @@ struct dc_rtc {
+ 	void __iomem		*regs;
+ };
+ 
+-static int dc_rtc_cmds(struct dc_rtc *rtc, u8 *cmds, int len)
++static int dc_rtc_cmds(struct dc_rtc *rtc, const u8 *cmds, int len)
+ {
+ 	u8 val;
+ 	int i, ret;
+@@ -62,7 +62,7 @@ static int dc_rtc_cmds(struct dc_rtc *rt
+ 
+ static int dc_rtc_read(struct dc_rtc *rtc, unsigned long *val)
+ {
+-	u8 read_cmds[] = {CMD_READ, CMD_NOP};
++	static const u8 read_cmds[] = {CMD_READ, CMD_NOP};
+ 	u32 reference, time1, time2;
+ 	int ret;
+ 
+@@ -86,7 +86,7 @@ static int dc_rtc_read(struct dc_rtc *rt
+ 
+ static int dc_rtc_write(struct dc_rtc *rtc, u32 val)
+ {
+-	u8 write_cmds[] = {CMD_WRITE, CMD_NOP, CMD_RESET, CMD_NOP};
++	static const u8 write_cmds[] = {CMD_WRITE, CMD_NOP, CMD_RESET, CMD_NOP};
+ 
+ 	writel_relaxed(val, rtc->regs + DC_RTC_REFERENCE);
+ 	return dc_rtc_cmds(rtc, write_cmds, ARRAY_SIZE(write_cmds));
+
+The code gets a bit smaller and faster:
+
+   text    data     bss     dec     hex filename
+   1628     400     512    2540     9ec drivers/rtc/rtc-digicolor.o-before
+   1593     400     536    2529     9e1 drivers/rtc/rtc-digicolor.o-after
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
