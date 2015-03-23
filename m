@@ -1,38 +1,36 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH net-next 0/5] NetCP: Add support for version 1.5
-Date: Mon, 23 Mar 2015 11:13:33 -0400
-Message-ID: <55102D9D.3080802@ti.com>
-References: <1426882285-4873-1-git-send-email-m-karicheri2@ti.com> <20150320.220334.1613709882223685682.davem@davemloft.net>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2] dts: cubox: Map gpio-keys to gpio3 8
+Date: Mon, 23 Mar 2015 15:19:12 +0000
+Message-ID: <20150323151912.GS8656@n2100.arm.linux.org.uk>
+References: <1426542829-16786-1-git-send-email-george.joseph@fairview5.com>
+ <20150323133252.GE28410@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150320.220334.1613709882223685682.davem@davemloft.net>
+Content-Disposition: inline
+In-Reply-To: <20150323133252.GE28410@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mugunthanvnm@ti.com, prabhakar.csengg@gmail.com, grygorii.strashko@ti.com, cj@linux.com, lokeshvutla@ti.com, mpa@pengutronix.de, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: George Joseph <george.joseph@fairview5.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2015 10:03 PM, David Miller wrote:
-> From: Murali Karicheri<m-karicheri2@ti.com>
-> Date: Fri, 20 Mar 2015 16:11:20 -0400
->
->> NetCP 1.5 is used in newer K2 SoCs from Texas Instruments
->> such as K2E, K2L etc. This patch series add support for Ethss
->> driver for this version of NetCP. While at it, fix couple of
->> bugs in the original driver.
->>
->> One of the earlier patch "net: netcp: select davinci_mdio driver
->> by default" is folded onto this series.
->>
->> Please review and let me know your comments.
->
-> Series applied to net-next, thanks.
-David,
+On Mon, Mar 23, 2015 at 09:32:54PM +0800, Shawn Guo wrote:
+> On Mon, Mar 16, 2015 at 03:53:49PM -0600, George Joseph wrote:
+> > The Cubox has a recessed button between the HDMI and RJ-45 connectors
+> > that wasn't mapped in the device tree, so I've mapped it to gpio-keys
+> > BTN_0.
+> > 
+> > Signed-off-by: George Joseph <george.joseph@fairview5.com>
+> > Tested-by: George Joseph <george.joseph@fairview5.com>
+> 
+> Russell,
+> 
+> Are you fine with this patch?
 
-Thanks for applying the series.
+No.  It's not submitted against a version of the DT file which has the
+new licensing, so it cocks up that change (and would mean I'd need
+George to agree to the new license.)
 
-Regards,
 -- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
