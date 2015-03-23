@@ -1,65 +1,36 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 5/7] ARM: dts: enable regulator support for i.MX23/i.MX28
-Date: Mon, 23 Mar 2015 18:54:34 +0100 (CET)
-Message-ID: <1469391177.549604.1427133274978.JavaMail.open-xchange@oxbaltgw02.schlund.de>
-References: <1426984203-9133-1-git-send-email-stefan.wahren@i2se.com>
- <1426984203-9133-6-git-send-email-stefan.wahren@i2se.com>
- <20150323060706.GB4946@pengutronix.de>
-Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
+ driver
+Date: Mon, 23 Mar 2015 10:57:05 -0700
+Message-ID: <551053F1.7070308@broadcom.com>
+References: <1426899446-16873-1-git-send-email-jonathar@broadcom.com> <1426899446-16873-2-git-send-email-jonathar@broadcom.com> <20150322042413.GB40622@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150323060706.GB4946@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>, broonie@kernel.org
-Cc: fabio.estevam@freescale.com, mark.rutland@arm.com, marex@denx.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dbaryshkov@gmail.com, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, lgirdwood@gmail.com, sre@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, sebastien.szymanski@armadeus.com, shawn.guo@linaro.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150322042413.GB40622@dtor-ws>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FzY2hhLAoKPiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+IGhhdCBh
-bSAyMy4gTcOkcnogMjAxNSB1bSAwNzowNwo+IGdlc2NocmllYmVuOgo+Cj4KPiBPbiBTdW4sIE1h
-ciAyMiwgMjAxNSBhdCAxMjozMDowMUFNICswMDAwLCBTdGVmYW4gV2FocmVuIHdyb3RlOgo+ID4g
-VGhpcyBwYXRjaCBlbmFibGVzIHRoZSBvbi1jaGlwIHJlZ3VsYXRvciBzdXBwb3J0IGZvciBhbGwg
-aS5NWDIzIGFuZAo+ID4gaS5NWDI4IGJvYXJkcy4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGVm
-YW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4gLS0tCj4gPiBhcmNoL2FybS9i
-b290L2R0cy9pbXgyMy5kdHNpIHwgNjcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKystCj4gPiBhcmNoL2FybS9ib290L2R0cy9pbXgyOC5kdHNpIHwgNjcgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCj4gPiAyIGZpbGVzIGNoYW5nZWQsIDEz
-MiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9pbXgyMy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjMuZHRzaQo+
-ID4gaW5kZXggYmJjZmI1YS4uYmUwYWVlOCAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDIzLmR0c2kKPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDIzLmR0c2kKPiA+
-IEBAIC00MDQsOCArNDA0LDczIEBACj4gPiB9Owo+ID4KPiA+IHBvd2VyQDgwMDQ0MDAwIHsKPiA+
-ICsgY29tcGF0aWJsZSA9ICJmc2wsaW14MjMtcG93ZXIiOwo+ID4gKyAjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKPiA+ICsgI3NpemUtY2VsbHMgPSA8MT47Cj4gPiByZWcgPSA8MHg4MDA0NDAwMCAweDIw
-MDA+Owo+ID4gLSBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gKyBpbnRlcnJ1cHRzID0gPDM+Owo+
-ID4gKyByYW5nZXM7Cj4gPiArCj4gPiArIGRjZGM6IHJlZ3VsYXRvckA4MDA0NDAxMCB7Cj4gPiAr
-IHJlZyA9IDwweDgwMDQ0MDEwIDB4MTA+LAo+ID4gKyA8MHg4MDA0NDA5MCAweDEwPiwKPiA+ICsg
-PDB4ODAwNDQwYzAgMHgxMD47Cj4gPiArIHJlZy1uYW1lcyA9ICJiYXNlLWFkZHJlc3MiLAo+ID4g
-KyAibWlzYy1hZGRyZXNzIiwKPiA+ICsgInN0YXR1cy1hZGRyZXNzIjsKPiA+ICsgY29tcGF0aWJs
-ZSA9ICJmc2wsaW14MjMtZGNkYyI7Cj4gPiArIHJlZ3VsYXRvci1uYW1lID0gImRjZGMiOwo+ID4g
-KyByZWd1bGF0b3ItYm9vdC1vbjsKPiA+ICsgcmVndWxhdG9yLWFsd2F5cy1vbjsKPiA+ICsgfTsK
-Pgo+IEl0IGlzIHZlcnkgdW51c3VhbCB0byBkZXNjcmliZSB0aGUgcmVndWxhdG9ycyBvZiBhIGRl
-dmljZSBvbiBhIHJlZ2lzdGVyCj4gbGV2ZWwgbGlrZSB0aGlzIGFuZCB0byBpb21lbWFwIGVhY2gg
-cmVnaXN0ZXIgaW5kaXZpZHVhbGx5LiBJIHRoaW5rIHlvdQo+IHNob3VsZCBkcm9wIHRoZSByZWdp
-c3RlcnMgaGVyZSBhbmQgcHV0IHRoaXMga25vd2xlZGdlIGludG8gdGhlIGRyaXZlcgo+IGxpa2Ug
-KG5lYXJseT8pIGFsbCBvdGhlcnMgZG8uCgpkbyBtZWFuIGRyb3BwaW5nIHRoZSBiYXNlIGFkZHJl
-c3Mgb2YgdGhlIHJlZ3VsYXRvciwgdG9vPwoKSG93IHdvdWxkIHlvdSBpbXBsZW1lbnQgaXQgKGJh
-cmUgcmVnaXN0ZXIgYWRkcmVzcyBvciByZWdtYXAgb3Igc3lzY29uKSwgc2luY2UKdGhlcmUKYXJl
-IG92ZXJsYXBwaW5nIHJlZ2lzdGVyIHJlZ2lvbnMgZm9yIGRpZmZlcmVudCBkcml2ZXI/CgpATWFy
-azogV2hhdCdzIHlvdXIgb3Bpbmlvbj8KClN0ZWZhbgoKPgo+IFNhc2NoYQo+Cj4gLS0KPiBQZW5n
-dXRyb25peCBlLksuIHwgfAo+IEluZHVzdHJpYWwgTGludXggU29sdXRpb25zIHwgaHR0cDovL3d3
-dy5wZW5ndXRyb25peC5kZS8gfAo+IFBlaW5lciBTdHIuIDYtOCwgMzExMzcgSGlsZGVzaGVpbSwg
-R2VybWFueSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMCB8Cj4gQW10c2dlcmljaHQgSGlsZGVz
-aGVpbSwgSFJBIDI2ODYgfCBGYXg6ICs0OS01MTIxLTIwNjkxNy01NTU1IHwKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 15-03-21 09:24 PM, Dmitry Torokhov wrote:
+> Hi Jonathan,
+> 
+> On Fri, Mar 20, 2015 at 05:57:25PM -0700, Jonathan Richardson wrote:
+>> +config TOUCHSCREEN_IPROC
+>> +	tristate "IPROC touch panel driver support"
+> 
+> I think this should depend on ARCH_BCM_IPROC || COMPILE_TEST, right?
+> 
+> (No need to resubmit).
+
+Hi Dmitry. That is correct - thanks.
+> 
+> Thanks.
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
