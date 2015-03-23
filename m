@@ -1,85 +1,99 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dts: cubox: Map gpio-keys to gpio3 8
-Date: Mon, 23 Mar 2015 21:32:54 +0800
-Message-ID: <20150323133252.GE28410@dragon>
-References: <1426542829-16786-1-git-send-email-george.joseph@fairview5.com>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
+Date: Mon, 23 Mar 2015 22:42:04 +0900
+Message-ID: <20150323224204.080984ec@hwh-ubuntu>
+References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
+ <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
+ <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
+ <20150319100252.03be7dda@hwh-ubuntu>
+ <CAPj87rPeUS9h=GCBR7ccNhugaGoyHw3x6oZ3Spq6P8uEg4ZcUg@mail.gmail.com>
+ <20150319101810.2244b509@hwh-ubuntu> <550A979A.6070102@samsung.com>
+ <20150320141531.36e1464c@hwh-ubuntu> <550FDD8E.60806@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426542829-16786-1-git-send-email-george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <550FDD8E.60806@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, =?UTF-8?B?7J2064+Z7ZmU?= <dh09.lee@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 03:53:49PM -0600, George Joseph wrote:
-> The Cubox has a recessed button between the HDMI and RJ-45 connectors
-> that wasn't mapped in the device tree, so I've mapped it to gpio-keys
-> BTN_0.
-> 
-> Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-> Tested-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-
-Russell,
-
-Are you fine with this patch?
-
-Shawn
-
-> ---
->  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> index 6a524ca..de6e3a8 100644
-> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> @@ -3,6 +3,8 @@
->   */
->  #include "imx6qdl-microsom.dtsi"
->  #include "imx6qdl-microsom-ar8035.dtsi"
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	ir_recv: ir-receiver {
-> @@ -66,6 +68,18 @@
->  		spdif-controller = <&spdif>;
->  		spdif-out;
->  	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-0 = <&pinctrl_gpio_key>;
-> +		pinctrl-names = "default";
-> +
-> +		button_0 {
-> +			label = "Button 0";
-> +			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
-> +			linux,code = <BTN_0>;
-> +		};
-> +	};
->  };
->  
->  &hdmi {
-> @@ -170,6 +184,12 @@
->  				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
->  			>;
->  		};
-> +
-> +		pinctrl_gpio_key: gpio-key {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_DA8__GPIO3_IO08	0x17059
-> +			>;
-> +		};
->  	};
->  };
->  
-> -- 
-> 2.1.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RGVhciBBbmRyZWosCgpPbiBNb24sIDIzIE1hciAyMDE1IDEwOjMxOjU4ICswMTAwCkFuZHJ6ZWog
+SGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3RlOgoKPiBPbiAwMy8yMC8yMDE1IDA2OjE1
+IEFNLCBIeXVuZ3dvbiBId2FuZyB3cm90ZToKPiA+IERlYXIgQW5kcmVqLAo+ID4KPiA+IE9uIFRo
+dSwgMTkgTWFyIDIwMTUgMTA6MzI6MTAgKzAxMDAKPiA+IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
+c2Ftc3VuZy5jb20+IHdyb3RlOgo+ID4KPiA+PiBPbiAwMy8xOS8yMDE1IDAyOjE4IEFNLCBIeXVu
+Z3dvbiBId2FuZyB3cm90ZToKPiA+Pj4gRGVhciBEYW5pZWwsCj4gPj4+Cj4gPj4+IE9uIFRodSwg
+MTkgTWFyIDIwMTUgMDE6MTM6MjEgKzAwMDAKPiA+Pj4gRGFuaWVsIFN0b25lIDxkYW5pZWwtckx0
+WTRhLzh0RjFyb3ZWQ3MvdVRsd0BwdWJsaWMuZ21hbmUub3JnPgo+ID4+PiB3cm90ZToKPiA+Pj4K
+PiA+Pj4+IEhpIEh5dW5nd29uLAo+ID4+Pj4KPiA+Pj4+IE9uIDE5IE1hcmNoIDIwMTUgYXQgMDE6
+MDIsIEh5dW5nd29uIEh3YW5nCj4gPj4+PiA8aHVtYW4uaHdhbmctU3plM08zVVUyMkpCRGdqSzd5
+N1RVUUBwdWJsaWMuZ21hbmUub3JnPiB3cm90ZToKPiA+Pj4+Pj4+ICsgICAgICAgLyoKPiA+Pj4+
+Pj4+ICsgICAgICAgICogVGhlIGlucHV0IFBMTCBjbG9jayBmb3IgTUlQSSBEU0kgaW4gRXh5bm9z
+NTQzMwo+ID4+Pj4+Pj4gc2VlbXMgdG8gYmUgZml4ZWQKPiA+Pj4+Pj4+ICsgICAgICAgICogYnkg
+T1NDIENMSy4KPiA+Pj4+Pj4+ICsgICAgICAgICovCj4gPj4+Pj4+PiArICAgICAgIGZpbiA9IDI0
+ICogTUhaOwo+ID4+Pj4+PiBFciwgaXMgdGhpcyBhbHdheXMgdHJ1ZSBvbiBvdGhlciBwbGF0Zm9y
+bXMgYXMgd2VsbD8gU2hvdWxkbid0Cj4gPj4+Pj4+IHRoaXMgYmUgYSBwYXJ0IG9mIHRoZSBEZXZp
+Y2VUcmVlIGRlc2NyaXB0aW9uPwo+ID4+Pj4+IEkgZm9yZ290IHRvIGNoYW5nZSB0aGUgY29tbWVu
+dCBpbiBkZXZlbG9wbWVudC4gRmluYWxseSBpdCBpcwo+ID4+Pj4+IGZvdW5kIHRoYXQgYWxsIGV4
+eW5vcyBtaXBpIGRzaSdzIGZpbiBpcyBPU0MgY2xrIHdoaWNoIGlzIDI0Cj4gPj4+Pj4gTUh6LiBT
+byBJIHdpbGwgcmVtb3ZlIHRoZSBjb21tZW50LCBidXQgcmVtYWluIHRoZSBjb2RlIGFzIGl0IGlz
+Lgo+ID4+Pj4gRmFpciBlbm91Z2guIFNob3VsZCBwbGxfY2xrIGJlIHJlbW92ZWQgZnJvbSB0aGUg
+RFQgZGVzY3JpcHRpb24KPiA+Pj4+IHRoZW4sIGlmIGl0J3MgZml4ZWQgdG8gdGhlIG9zY2lsbGF0
+b3I/Cj4gPj4+IFllcy4gSXQgaXMgcmVkdW5kYW50IHRvIHJlcHJlc2VudCBwbGxfY2xrIGluIERU
+LCBhbmQgaXQgc2hvdWxkIGJlCj4gPj4+IHJlbW92ZWQuCj4gPj4gV2h5IGRvIHlvdSB0aGluayBP
+U0MgY2xrIGRldGVybWluZXMgdmFsdWUgb2YgcGxsX2Nsaz8KPiA+PiBwbGxfY2xrIGlzIG1hcHBl
+ZCB0byBTQ0xLX01JUElbMDFdIG9yIFNDTEtfRFNJTTAgZ2F0ZSB3aXRoIGZldwo+ID4+IGRpdmlk
+ZXJzIGFuZCBtdXhlcyBhYm92ZS4gU28gYXQgbGVhc3QgaW4gdGhlb3J5IGl0IGNhbiBkaWZmZXIg
+ZnJvbQo+ID4+IG9zYyBjbGsuIEFkZGl0aW9uYWxseSB0aGlzIGdhdGUgc2hvdWxkIGJlIGVuYWJs
+ZWQgc28geW91IGNhbm5vdAo+ID4+IGp1c3QgcmVtb3ZlIGl0IGZyb20gRFQuCj4gPj4KPiA+PiBS
+ZWdhcmRzCj4gPj4gQW5kcnplago+ID4gQXMgSSBmb3VuZCwgcGxsIGNsayBpcyBub3QgU0NMS19N
+SVBJWzAxXSBidXQgT1NDIENMSy4gU0NMS19EU0lNMAo+ID4gbXVzdCBiZSBjb250cm9sbGVkIGlu
+IHRoaXMgZHJpdmVyIGFzIGl0IGhhcyBiZWVuLCBhcyBhIGdhdGUgY2xvY2sKPiA+IG9mIE1JUEkg
+RFNJIGJsb2NrLCBidXQgbm90IGFzIGEgcGxsIGNsay4gU0NMS19EU0lNMCBpcyBub3QgdGhlIGlu
+cHV0Cj4gPiBjbG9jayBvZiBNSVBJIERQSFkgd2hpY2ggcHJvdmlkZXMgZmluIGluIHRoaXMgY29k
+ZS4gU28gY2xvY2sgc2V0dGluZwo+ID4gYW5kIGdldHRpbmcgY29kZSB3YXMgd3JvbmcsIGFuZCBt
+dXN0IGJlIHJlbW92ZWQuCj4gPgo+ID4gT1NDIENMSyBpcyBub3Qgc29jLWRlcGVkZW5kYW50IGJ1
+dCBib2FyZC1kZXBlbmRhbnQsIGV2ZW4gdGhvdWdoIEkKPiA+IGhhdmUgbm90IHNlZW4gYW55IGJv
+YXJkIHdoaWNoIGRvZXMgbm90IHVzZSBPU0MgQ0xLIGJ5IDI0IE1Iei4gSXQKPiA+IG11c3QgYmUg
+cGFyc2VkIGZyb20gYm9hcmQgRFQgZmlsZSwgd2hpY2ggaW4gdGhpcyBjYXNlLCB3ZSBjYW4gdXNl
+Cj4gPiB0aGUgdmFsdWUgaW4gcGxsX2Nsa19yYXRlICh0aGUgdmFyaWFibGUgbmFtZSBtdXN0IGJl
+IHJlbmFtZWQgYWxzbykuCj4gPgo+ID4gQmVjYXVzZSBhbWJpZ3VvdXMgZGVzY3JpcHRpb24gaW4g
+dGhlIHRlY2huaWNhbCBkb2N1bWVudCwgSSBjYW4gYmUKPiA+IHdyb25nLiBQbGVhc2UgbGV0IG1l
+IGtub3cgaWYgSSBkbyBub3QgdW5kZXJzdGFuZCBzb21ldGhpbmcuIFRoYW5rcwo+ID4gZm9yIHlv
+dXIgY29tbWVudC4KPiAKPiBBZnRlciBzb21lIGRpZ2dpbmcgSSBhZ3JlZSB0aGF0IGRvY3VtZW50
+YXRpb24gaXMgcXVpdGUgY29uZnVzaW5nIGFuZAo+IGN1cnJlbnQgY29kZSBjb3VsZCBiZSB3cm9u
+Zy4gQW55d2F5IEkgd29uZGVyIGlmIGl0IHdvdWxkbid0IGJlIGJldHRlcgo+IHRvIGV4cGxpY2l0
+bHkgcHJvdmlkZSBpbnB1dCBjbG9jayBmb3IgRFNJTSwgb3IgbW9yZSBwcmVjaXNlbHkgZm9yIGl0
+cwo+IFBMTCBpbnN0ZWFkIG9mIGhhcmRjb2RpbmcgMjRNSHogaW50byB0aGUgZHJpdmVyLgoKT0su
+IEkgYWdyZWUuIEl0IHdpbGwgYmUgbW9yZSBleHBsaWNpdCB0byBnZXQgdGhlIGNsb2NrIHJhdGUg
+ZnJvbSBEVC4KCj4gCj4gQW5vdGhlciB0aGluZyB0aGF0IGJvdGhlcnMgbWUgaXMgcmVsYXRpb24g
+b2YgRFBIWV9QTEwgaW4gY2xvY2sKPiBjb250cm9sbGVyIHRvIE1JUElfRFBIWSBpbiBFeHlub3M3
+NDIwLiBUaGVyZSBhcmUgdHdvIGNsb2NrcyB1c2VkIGJ5Cj4gTUlQSV9EUEhZOgo+IC0gIlJlZiBD
+bG9jayIgcGlubmVkIHRvIFNDTEtfTUlQSURQSFlfTTQgY29ubmVjdGVkIHRvIE9TQ0NMSywKPiAt
+ICJQSFkgQ2xvY2siIHBpbm5lZCB0byBJX0ZPVVRfRFBIWV9QTEwgY29ubmVjdGVkIHRvIERQSFlf
+UExMLAo+IAo+IFRoZSBmaXJzdCBjbG9jayBzZWVtcyB0byBiZSB5b3VyIG9zYyBjbG9jaywgYnV0
+IHdoYXQgaXMgdGhlIHJvbGUgb2YKPiB0aGUgMm5kIG9uZT8KCkhtbSwgSSBjb3VsZG4ndCBmaW5k
+IHNpbWlsYXIgY2xvY2sgaW4gRXh5bm9zNTQzMywgYWxzbyBJIGRvbid0IGhhdmUKdGhlIG1hbnVh
+bCBmb3IgRXh5bm9zNzQyMC4KCkJlc3QgcmVnYXJkcywKSHl1bmd3b24gSHdhbmcKCgo+IAo+IFJl
+Z2FyZHMKPiBBbmRyemVqCj4gCj4gPiBCZXN0IHJlZ2FyZHMsCj4gPiBIeXVuZ3dvbiBId2FuZwo+
+ID4KPiA+Pj4+PiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LiBJIHdpbGwgc2VuZCBpdCBhZ2FpbiB3
+aXRoIHRoZSBjaGFuZ2VzCj4gPj4+Pj4geW91IHN1Z2dlc3RlZC4KPiA+Pj4+IFRoYW5rcyB2ZXJ5
+IG11Y2ghCj4gPj4+Pgo+ID4+Pj4gQ2hlZXJzLAo+ID4+Pj4gRGFuaWVsCj4gPj4+IEJlc3QgcmVn
+YXJkcywKPiA+Pj4gSHl1bmd3b24gSHdhbmcKPiA+Pj4gLS0KPiA+Pj4gVG8gdW5zdWJzY3JpYmUg
+ZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlCj4gPj4+IGRldmljZXRy
+ZWUiIGluIHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0bwo+ID4+PiBtYWpvcmRvbW8tdTc5dXdYTDI5
+VFk3Nloyck01bUhYQUBwdWJsaWMuZ21hbmUub3JnIE1vcmUgbWFqb3Jkb21vCj4gPj4+IGluZm8g
+YXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+ID4+Pgo+IAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
