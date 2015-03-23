@@ -1,44 +1,63 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Mon, 23 Mar 2015 19:32:11 +0100
-Message-ID: <20150323183211.GB1128@katana>
-References: <55097C46.9010605@gmail.com>
- <20150318140037.GE3580@katana>
- <550A05E5.3050100@gmail.com>
- <20150319100944.GA914@katana>
- <550AEF9D.6090307@wwwdotorg.org>
- <20150319160208.GF7657@katana>
- <550B3725.10209@gmail.com>
- <20150320101925.GC2071@katana>
- <20150321210028.GA1078@katana>
- <550EBDBC.9000903@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 5/7] ARM: dts: enable regulator support for i.MX23/i.MX28
+Date: Mon, 23 Mar 2015 11:37:40 -0700
+Message-ID: <20150323183740.GI14954@sirena.org.uk>
+References: <1426984203-9133-1-git-send-email-stefan.wahren@i2se.com>
+ <1426984203-9133-6-git-send-email-stefan.wahren@i2se.com>
+ <20150323060706.GB4946@pengutronix.de>
+ <1469391177.549604.1427133274978.JavaMail.open-xchange@oxbaltgw02.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZOudaV4lSIjFTlHv"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <550EBDBC.9000903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1469391177.549604.1427133274978.JavaMail.open-xchange@oxbaltgw02.schlund.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, rjw@rjwysocki.net, kernel@pengutronix.de, dbaryshkov@gmail.com, pawel.moll@arm.com, galak@codeaurora.org, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, shawn.guo@linaro.org, sre@kernel.org, fabio.estevam@freescale.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dwmw2@infradead.org, viresh.kumar@linaro.org, mark.rutland@arm.com, sebastien.szymanski@armadeus.com, marex@denx.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-> If modifying i2c-mux-pinctrl to respect the sub-bus status property is
-> such a big issue, I'd rather leave the driver as is and expose all
-> sub-busses to userspace.
+--ZOudaV4lSIjFTlHv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well, dunno what 'big issue' is in your book :) What definately needs to
-be done is:
+On Mon, Mar 23, 2015 at 06:54:34PM +0100, Stefan Wahren wrote:
+> > Sascha Hauer <s.hauer@pengutronix.de> hat am 23. M=E4rz 2015 um 07:07
 
-* handle "status" at mux-core level, not mux-driver
-* that probably needs us to convert i2c_add_mux_adapter() to return
-  ERR_PTRs instead of NULL, so we can distinguish the "disabled" case
-* that would mean to fix all existing users
+> > It is very unusual to describe the regulators of a device on a register
+> > level like this and to iomemap each register individually. I think you
+> > should drop the registers here and put this knowledge into the driver
+> > like (nearly?) all others do.
 
-That's all not groundbreaking stuff, but needs caution and thoroughness.
-There might be some gory details left, though...
+> do mean dropping the base address of the regulator, too?
 
-Regards,
+> How would you implement it (bare register address or regmap or syscon), s=
+ince
+> there
+> are overlapping register regions for different driver?
 
-   Wolfram
+> @Mark: What's your opinion?
+
+This might be the sort of thing normally handled by a system controller,
+I have to say I had assumed this had all been discussed in the previous
+iterations of this seriee.
+
+--ZOudaV4lSIjFTlHv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVEF1zAAoJECTWi3JdVIfQ1JsH/im8wTBhWKbNj+3o3UQwO5TL
+JMOUN0sEraXzYQ1SfxaeAHq2977f57H5kU+UZiLfMm7ZBjlcdPynppi2/F9EqsYn
+xADKjFwQ4Vr5bd9IJrzZyWF61K9ZsoLFc4EaPey/hmf3Ejb5Xf/4aMgVRrp0fWhw
+LPaKvKQcpGyWVx2/LCMVJNUfrkMB/u2x30f7uDweu19EVEQ7tAeHfIfDfUZrcvfh
+cmgwTqMuH+g2Ms/ncKwPJQiCBNKutuC8uWfDHmkdSQQvMhi5WpPPobNrQuoTICHF
+q8jrGh+fLnh3h8FfDGjkmclzEkfx0rkkgaslICtJtV3eoBcOV9P33bpo61NrgEw=
+=bRh2
+-----END PGP SIGNATURE-----
+
+--ZOudaV4lSIjFTlHv--
