@@ -1,137 +1,55 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v17 01/10] ARM: qcom: Add Subsystem Power Manager (SPM)
- driver
-Date: Mon, 23 Mar 2015 17:15:34 -0600
-Message-ID: <20150323231534.GB1790@linaro.org>
-References: <1426882877-33008-1-git-send-email-lina.iyer@linaro.org>
- <1426882877-33008-2-git-send-email-lina.iyer@linaro.org>
- <F7886F3F-50DF-4E1B-A6DF-5463362B2BC7@codeaurora.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 1/3] powerpc/mpc85xx: Add FMan clock nodes
+Date: Mon, 23 Mar 2015 18:30:49 -0500
+Message-ID: <1427153449.22867.19.camel@freescale.com>
+References: <1424964417-13760-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <F7886F3F-50DF-4E1B-A6DF-5463362B2BC7@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1424964417-13760-1-git-send-email-Emilian.Medve@Freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Emil Medve <Emilian.Medve@Freescale.com>
+Cc: devicetree@vger.kernel.org, afleming@gmail.com, linuxppc-dev@lists.ozlabs.org, Igal Liberman <Igal.Liberman@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23 2015 at 16:06 -0600, Kumar Gala wrote:
->
->On Mar 20, 2015, at 1:21 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
->
->>
->> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
->> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora=
-=2Eorg>
->> Original tree available at -
->> git://codeaurora.org/quic/la/kernel/msm-3.10.git
->>
->> Cc: Stephen Boyd <sboyd@codeaurora.org>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Kevin Hilman <khilman@linaro.org>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->> ---
->> .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  29 +-
->> drivers/soc/qcom/Kconfig                           |   7 +
->> drivers/soc/qcom/Makefile                          |   1 +
->> drivers/soc/qcom/spm.c                             | 405 +++++++++++=
-++++++++++
->> 4 files changed, 436 insertions(+), 6 deletions(-)
->> create mode 100644 drivers/soc/qcom/spm.c
->>
->> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt=
- b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
->> index 1505fb8..664aa91 100644
->> --- a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
->> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
->> @@ -2,11 +2,20 @@ SPM AVS Wrapper 2 (SAW2)
->>
->> The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and t=
-he
->> Adaptive Voltage Scaling (AVS) hardware. The SPM is a programmable
->> -micro-controller that transitions a piece of hardware (like a proce=
-ssor or
->> +power-controller that transitions a piece of hardware (like a proce=
-ssor or
->> subsystem) into and out of low power modes via a direct connection t=
-o
->> the PMIC. It can also be wired up to interact with other processors =
-in the
->> system, notifying them when a low power state is entered or exited.
->>
->> +Multiple revisions of the SAW hardware are supported using these De=
-vice Nodes.
->> +SAW2 revisions differ in the register offset and configuration data=
-=2E Also, the
->> +same revision of the SAW in different SoCs may have different confi=
-guration
->> +data due the the differences in hardware capabilities. Hence the So=
-C name, the
->> +version of the SAW hardware in that SoC and the distinction between=
- cpu (big
->> +or Little) or cache, may be needed to uniquely identify the SAW reg=
-ister
->> +configuration and initialization data. The compatible string is use=
-d to
->> +indicate this parameter.
->> +
->> PROPERTIES
->>
->> - compatible:
->> @@ -14,10 +23,11 @@ PROPERTIES
->> 	Value type: <string>
->> 	Definition: shall contain "qcom,saw2". A more specific value should=
- be
->> 		    one of:
->
->Does =E2=80=9Cqcom,saw2=E2=80=9D have any meaning anymore?  I see we u=
-se it in some places, but not everywhere on the .dts.  We also see to h=
-ave the L2 just be a =E2=80=9Cqcom,saw2=E2=80=9D node, do we expect tha=
-t to change?
->
-It does help match a regulator node as opposed to the specific values
-below.
-
->> -			 "qcom,saw2-v1"
->> -			 "qcom,saw2-v1.1"
->> -			 "qcom,saw2-v2"
->> -			 "qcom,saw2-v2.1"
->> +			"qcom,saw2-v2"
->> +			"qcom,saw2-v2.1"
->> +			"qcom,apq8064-saw2-v1.1-cpu"
->> +			"qcom,msm8974-saw2-v2.1-cpu"
->> +			"qcom,apq8084-saw2-v2.1-cpu"
->>
->> - reg:
->> 	Usage: required
->> @@ -26,10 +36,17 @@ PROPERTIES
->> 		    the register region. An optional second element specifies
->> 		    the base address and size of the alias register region.
->>
->> +- regulator:
->> +	Usage: optional
->> +	Value type: boolean
->> +	Definition: Indicates that this SPM device acts as a regulator dev=
-ice
->> +			device for the core (CPU or Cache) the SPM is attached
->> +			to.
->>
->> Example:
->>
->> -	regulator@2099000 {
->> +	power-controller@2099000 {
->> 		compatible =3D "qcom,saw2";
->> 		reg =3D <0x02099000 0x1000>, <0x02009000 0x1000>;
->> +		regulator;
->> 	};
->
->--=20
->Qualcomm Innovation Center, Inc.
->The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Fo=
-rum,
->a Linux Foundation Collaborative Project
->
+T24gVGh1LCAyMDE1LTAyLTI2IGF0IDA5OjI2IC0wNjAwLCBFbWlsIE1lZHZlIHdyb3RlOgo+IEZy
+b206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+Cj4g
+LS0tCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kgICAgfCAxMSAr
+KysrKysrKysrKwo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNp
+IHwgIDggKysrKysrKysKPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3Qu
+ZHRzaSB8ICA4ICsrKysrKysrCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1w
+b3N0LmR0c2kgfCAxNiArKysrKysrKysrKysrKysrCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvcDUwMjBzaS1wb3N0LmR0c2kgfCAxMyArKysrKysrKysrKysrCj4gIGFyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvcDUwNDBzaS1wb3N0LmR0c2kgfCAyNiArKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5kdHNpIHwgIDgg
+KysrKysrKysKPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaSB8
+IDExICsrKysrKysrKysrCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1wb3N0
+LmR0c2kgfCAyMCArKysrKysrKysrKysrKysrKysrKwo+ICA5IGZpbGVzIGNoYW5nZWQsIDEyMSBp
+bnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+YjRzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNp
+Cj4gaW5kZXggZjhjMzI1ZS4uMzg2MjFlZiAxMDA2NDQKPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9iNHNpLXBvc3QuZHRzaQo+IEBAIC0zOTUsNiArMzk1LDE3IEBACj4gIAkJcmVnID0gPDB4ZTAw
+MDAgMHhlMDA+Owo+ICAJCWZzbCxoYXMtcnN0Y3I7Cj4gIAkJZnNsLGxpb2RuLWJpdHMgPSA8MTI+
+Owo+ICsKPiArCQlmbTBjbGs6IGZtMC1jbGstbXV4IHsKPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+
+Owo+ICsJCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWNsay1tdXgiOwo+ICsJCQljbG9ja3MgPSA8
+JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZwbGwwIDI+LCA8JnBsbDAgMz4sCj4gKwkJCQkgPCZwbGF0
+Zm9ybV9wbGwgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJw
+bGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjMiLAo+ICsJCQkJICAgICAgInBsbDAtZGl2NCIs
+ICJwbGF0Zm9ybS1wbGwiLCAicGxsMS1kaXYyIiwKPiArCQkJCSAgICAgICJwbGwxLWRpdjMiOwo+
+ICsJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAiZm0wLWNsayI7Cj4gKwkJfTsKCldoZXJlJ3MgdGhl
+IGJpbmRpbmcgZm9yIGZzbCxmbWFuLWNsay1tdXg/CgotU2NvdHQKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0
+CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9saW51eHBwYy1kZXY=
