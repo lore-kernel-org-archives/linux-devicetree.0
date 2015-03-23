@@ -1,80 +1,45 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH] Input: sun4i-ts - allow to adjust some
- settings via device-tree properties.
-Date: Mon, 23 Mar 2015 09:12:22 -0700
-Message-ID: <20150323161222.GC8666@dtor-ws>
-References: <1426175150-27005-1-git-send-email-karme@karme.de>
- <20150318103744.GR4638@lukather>
- <55095B26.209@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+Subject: Re: [PATCH v2] dts: cubox: Map gpio-keys to gpio3 8
+Date: Mon, 23 Mar 2015 10:15:14 -0600
+Message-ID: <CAHKv19BRZanUe+czmM-r8+dk0jybLK1niW28DNvBMJVf4MYb9w@mail.gmail.com>
+References: <1426542829-16786-1-git-send-email-george.joseph@fairview5.com>
+	<20150323133252.GE28410@dragon>
+	<20150323151912.GS8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRB2XWYCUAKGQEL7MW3HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55095B26.209-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Thiele <karme-k/3wkfGq5Xs@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150323151912.GS8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kern." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2015 at 12:01:58PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 18-03-15 11:37, Maxime Ripard wrote:
-> >On Thu, Mar 12, 2015 at 04:45:50PM +0100, Jens Thiele wrote:
-> >>This commit introduces two new optional device-tree properties:
-> >>"tp-sensitive-adjust": adjust sensitivity of pen down detection
-> >>"filter-type": select median and averaging filter
-> >>
-> >>The previous fixed defaults, didn't work well for the Olimex
-> >>A13-LCD10TS (I have).
-> >>
-> >>Signed-off-by: Jens Thiele <karme-k/3wkfGq5Xs@public.gmane.org>
-> >>---
-> >>  .../devicetree/bindings/input/touchscreen/sun4i.txt |   19 +++++++++++++++++--
-> >>  drivers/input/touchscreen/sun4i-ts.c                |   17 +++++++++++++----
-> >>  2 files changed, 30 insertions(+), 6 deletions(-)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> >>index 433332d..c93edfa 100644
-> >>--- a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> >>+++ b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> >>@@ -8,8 +8,20 @@ Required properties:
-> >>   - #thermal-sensor-cells: shall be 0
-> >>
-> >>  Optional properties:
-> >>- - allwinner,ts-attached: boolean indicating that an actual touchscreen is
-> >>-			  attached to the controller
-> >>+ - allwinner,ts-attached	 : boolean indicating that an actual touchscreen
-> >>+				   is attached to the controller
-> >>+ - allwinner,tp-sensitive-adjust : integer (4 bits)
-> >>+				   adjust sensitivity of pen down detection
-> >>+				   between 0 (least sensitive) and 15
-> >>+				   (defaults to 15)
-> >>+ - allwinner,filter-type 	 : integer (2 bits)
-> >>+   				   select median and averaging filter
-> >>+				   samples used for median / averaging filter
-> >>+				   0: 4/2
-> >>+				   1: 5/3
-> >>+				   2: 8/4
-> >>+				   3: 16/8
-> >>+				   (defaults to 1)
-> >
-> >You shouldn't rely on any bits length in your binding.
-> >
-> >And this looks really more of a configuration option, and would be
-> >better exposed through sysfs.
-> 
-> Erm, no, this is to adjust for properties of the touchscreen, so this is
-> hardware configuration, and as such definitely belongs in the dts.
+On Mon, Mar 23, 2015 at 9:19 AM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Mon, Mar 23, 2015 at 09:32:54PM +0800, Shawn Guo wrote:
+>> On Mon, Mar 16, 2015 at 03:53:49PM -0600, George Joseph wrote:
+>> > The Cubox has a recessed button between the HDMI and RJ-45 connectors
+>> > that wasn't mapped in the device tree, so I've mapped it to gpio-keys
+>> > BTN_0.
+>> >
+>> > Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+>> > Tested-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+>>
+>> Russell,
+>>
+>> Are you fine with this patch?
+>
+> No.  It's not submitted against a version of the DT file which has the
+> new licensing, so it cocks up that change (and would mean I'd need
+> George to agree to the new license.)
 
-Applied, thank you.
+Didn't know there was a new license.  Tell me what you need and I'll fix it.
 
--- 
-Dmitry
+>
+> --
+> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+> according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
