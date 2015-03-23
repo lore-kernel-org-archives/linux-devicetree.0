@@ -1,51 +1,51 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v1 01/11] leds: Add support for max77693 mfd flash cell
-Date: Mon, 23 Mar 2015 14:22:39 +0100
-Message-ID: <5510139F.4030807@samsung.com>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-2-git-send-email-j.anaszewski@samsung.com>
- <20150321224437.GD16613@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150321224437.GD16613@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH 1/2] rtc: digicolor: document device tree binding
+Date: Mon, 23 Mar 2015 15:28:53 +0200
+Message-ID: <fa36a31a1d58d626ca0cb01ca0dece85aa2dfcb9.1427117334.git.baruch@tkos.co.il>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Add a device tree binding documentation to the Real Time Clock hardware block
+on the Conexant CX92755 SoC. The CX92755 is from the Digicolor SoCs series.
+Other SoCs in that series may share the same hardware block.
 
-Thanks for the review.
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/rtc/digicolor-rtc.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/digicolor-rtc.txt
 
-On 03/21/2015 11:44 PM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Fri, Mar 20, 2015 at 04:03:21PM +0100, Jacek Anaszewski wrote:
->> This patch adds led-flash support to Maxim max77693 chipset.
->> A device can be exposed to user space through LED subsystem
->> sysfs interface. Device supports up to two leds which can
->> work in flash and torch mode. The leds can be triggered
->> externally or by software.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->
-> Thanks for the update once again!
->
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->
-
-There will be one more version of this patch due to some changes
-around flash settings and v4l2-flash config initialization, requested
-in the review of v4l2-flash helpers related patches.
-
+diff --git a/Documentation/devicetree/bindings/rtc/digicolor-rtc.txt b/Documentation/devicetree/bindings/rtc/digicolor-rtc.txt
+new file mode 100644
+index 000000000000..d464986012cd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/digicolor-rtc.txt
+@@ -0,0 +1,17 @@
++Conexant Digicolor Real Time Clock controller
++
++This binding currently supports the CX92755 SoC.
++
++Required properties:
++- compatible: should be "cnxt,cx92755-rtc"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: rtc alarm interrupt
++
++Example:
++
++	rtc@f0000c30 {
++		compatible = "cnxt,cx92755-rtc";
++		reg = <0xf0000c30 0x18>;
++		interrupts = <25>;
++	};
 -- 
-Best Regards,
-Jacek Anaszewski
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
