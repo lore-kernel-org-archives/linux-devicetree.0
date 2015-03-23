@@ -1,147 +1,148 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC v13 04/13] DT: Add documentation for the mfd Maxim
- max77693
-Date: Mon, 23 Mar 2015 15:02:13 +0000
-Message-ID: <20150323150213.GN24804@x1>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
- <1426175114-14876-5-git-send-email-j.anaszewski@samsung.com>
- <20150323120743.GG24422@x1>
- <20150323142202.GA23919@amd>
+Subject: Re: [PATCH 3/3] mailbox: Add support for ST's Mailbox IP
+Date: Mon, 23 Mar 2015 15:06:46 +0000
+Message-ID: <20150323150646.GO24804@x1>
+References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+ <1425379283-1567-4-git-send-email-lee.jones@linaro.org>
+ <3926609.Ff6LCkuuMX@wuerfel>
+ <CAJe_ZhdjPa3C_TUDAPA3fS3K83FGB-GaAjVBjtsow2mp5h8NRw@mail.gmail.com>
+ <20150318131722.GN3318@x1>
+ <CABb+yY0wmy+oYUsVkStrMVmfGjvedDPn+wsN_yjvdMRQoVEHOg@mail.gmail.com>
+ <20150318153421.GP3318@x1>
+ <CABb+yY0HufMEDy7ANj8KV0hamvM-Tgy4GBkwD73wm3DMumcbaQ@mail.gmail.com>
+ <20150319091742.GX3318@x1>
+ <CABb+yY3GZG0Dg5Vzsp1Cv+C1_yc8SxuqGFXLi3_wg7TrBbk6jw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150323142202.GA23919@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+In-Reply-To: <CABb+yY3GZG0Dg5Vzsp1Cv+C1_yc8SxuqGFXLi3_wg7TrBbk6jw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Mar 2015, Pavel Machek wrote:
-> On Mon 2015-03-23 12:07:43, Lee Jones wrote:
-> > This patch requires a DT Ack.
->=20
-> No, it requires DT people to be notified -- and they were, few times
-> by now.
->=20
-> They clearly don't care.
+On Thu, 19 Mar 2015, Jassi Brar wrote:
 
-Well fortunately for the Kernel community, I do care.  And as this
-patch adds 3 new DT properties, has been through many iterations
-already with vast changes made over that period and there is still
-some controversy looming, I'm saying that it _does_ require a DT Ack.
+> On Thu, Mar 19, 2015 at 2:47 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > On Thu, 19 Mar 2015, Jassi Brar wrote:
+> >
+> >> On Wed, Mar 18, 2015 at 9:04 PM, Lee Jones <lee.jones@linaro.org> =
+wrote:
+> >> > On Wed, 18 Mar 2015, Jassi Brar wrote:
+> >> >
+> >> >> On Wed, Mar 18, 2015 at 6:47 PM, Lee Jones <lee.jones@linaro.or=
+g> wrote:
+> >> >> > On Tue, 03 Mar 2015, Jassi Brar wrote:
+> >> >> >
+> >> >> >> On 3 March 2015 at 17:04, Arnd Bergmann <arnd@arndb.de> wrot=
+e:
+> >> >> >> > On Tuesday 03 March 2015 10:41:23 Lee Jones wrote:
+> >> >> >> >> +
+> >> >> >> >> +/*
+> >> >> >> >> + * struct sti_mbox_msg - sti mailbox message description
+> >> >> >> >> + * @dsize:             data payload size
+> >> >> >> >> + * @pdata:             message data payload
+> >> >> >> >> + */
+> >> >> >> >> +struct sti_mbox_msg {
+> >> >> >> >> +       u32             dsize;
+> >> >> >> >> +       u8              *pdata;
+> >> >> >> >> +};
+> >> >> >> >
+> >> >> >> > As mentioned in another thread, we may just want to add a =
+'size'
+> >> >> >> > argument to the message send function, and a default helpe=
+r for
+> >> >> >> > messages with size of 32 bits.
+> >> >> >> >
+> >> >> >> Case-a) 'size' is a member of the payload structure itself
+> >> >> >>     The extra 'size' argument would only be used for sanity =
+check.
+> >> >> >>     This driver seems so. Lee, can you not do without 'dsize=
+'?
+> >> >> >>
+> >> >> >> Case-b) 'size' is not a member of payload structure:
+> >> >> >>      b1)  payload is fixed length, that is 'size' :=3D sizeo=
+f(struct my_payload)
+> >> >> >>             Here the size argument is redundant.
+> >> >> >>
+> >> >> >>      b2)  payload length varies
+> >> >> >>             This case is highly unlikely because there would=
+ be no way
+> >> >> >> for remote to know how many bytes to read as the payload. No=
+t to mean
+> >> >> >> we can't do without the 'size' argument.
+> >> >> >>
+> >> >> >> Your opinion has huge weight, but I would like to be enlight=
+ened
+> >> >> >> before agreeing.
+> >> >> >
+> >> >> > Let's simplify this.
+> >> >> >
+> >> >> > If you want to have varying length payloads, you have to carr=
+y the
+> >> >> > size in the payload.  If you wish to force fixed size payload=
+s, then
+> >> >> > you may do without a size segment.
+> >> >> >
+> >> >> > Do you really want to force all users of Mailbox to use fixed=
+ size
+> >> >> > payloads?
+> >> >> >
+> >> >> No. I only observed the fact that every known mailbox controlle=
+r
+> >> >> driver already has a way to figure out the payload length becau=
+se
+> >> >> either the protocol uses fixed length payloads or has the 'size=
+' field
+> >> >> in every payload.
+> >> >> I am yet to see a platform that uses both, then the 'size' argu=
+ment
+> >> >> will be helpful but still not necessary.
+> >> >
+> >> > I see.  So your real concern is that controllers shouldn't have =
+two
+> >> > means of obtaining size.
+> >> >
+> >> I think right now there's not much need to expand the api for 'u32=
+'
+> >> sized payloads.
+> >>
+> >> > Arnd's idea of placing the message size as part of the send_mess=
+age()
+> >> > call is fine, but it's still going to end up in the payload isn'=
+t it?
+> >> >
+> >> ... or it will be implied by sizeof(struct my_packet) if the proto=
+col
+> >> has finite set of payloads.
+> >>
+> >> > And what about receiving?
+> >> >
+> >> Similar to sending - controller driver passes pointer to RX buffer
+> >> which the client parses. Remember the protocol would already have =
+a
+> >> way to communicate payload length.
+> >
+> > So this is the bit that's getting me.  How do you pass payload leng=
+th
+> > to the remote processor if you don't have it in the payload?
+> >
+> Some protocol may use signature to identify a packet type.
+> For example, the remote supports upto 100 commands, each having uniqu=
+e
+> 8bit code. At fixed offset of any payload is the command code. All th=
+e
+> remote needs to do is read the u8 value of predefined offset and use
+> it dispatch the payload to handler of that command. The command
+> handler would know the format of such requests.
 
-> > > This patch adds device tree binding documentation for
-> > > the flash cell of the Maxim max77693 multifunctional device.
-> > >=20
-> > > Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> > > Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> > > Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > > Cc: Lee Jones <lee.jones@linaro.org>
-> > > Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> > > Cc: Bryan Wu <cooloney@gmail.com>
-> > > Cc: Richard Purdie <rpurdie@rpsys.net>
->=20
-> Acked-by: Pavel Machek <pavel@ucw.cz>
->=20
->=20
-> > > diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b=
-/Documentation/devicetree/bindings/mfd/max77693.txt
-> > > index 38e6440..15c546e 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> > > +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> > > @@ -76,7 +76,53 @@ Optional properties:
-> > >      Valid values: 4300000, 4700000, 4800000, 4900000
-> > >      Default: 4300000
-> > > =20
-> > > +- led : the LED submodule device node
-> > > +
-> > > +There are two LED outputs available - FLED1 and FLED2. Each of t=
-hem can
-> > > +control a separate LED or they can be connected together to doub=
-le
-> > > +the maximum current for a single connected LED. One LED is repre=
-sented
-> > > +by one child node.
-> > > +
-> > > +Required properties:
-> > > +- compatible : Must be "maxim,max77693-led".
-> > > +
-> > > +Optional properties:
-> > > +- maxim,trigger-type : Flash trigger type.
-> > > +	Possible trigger types:
-> > > +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
-> > > +			the flash,
-> > > +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls durati=
-on
-> > > +			of the flash.
-> > > +- maxim,boost-mode :
-> > > +	In boost mode the device can produce up to 1.2A of total curren=
-t
-> > > +	on both outputs. The maximum current on each output is reduced
-> > > +	to 625mA then. If not enabled explicitly, boost setting default=
-s to
-> > > +	LEDS_BOOST_FIXED in case both current sources are used.
-> > > +	Possible values:
-> > > +		LEDS_BOOST_OFF (0) - no boost,
-> > > +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-> > > +		LEDS_BOOST_FIXED (2) - fixed mode.
-> > > +- maxim,boost-mvout : Output voltage of the boost module in mill=
-ivolts.
-> > > +- maxim,mvsys-min : Low input voltage level in millivolts. Flash=
- is not fired
-> > > +	if chip estimates that system voltage could drop below this lev=
-el due
-> > > +	to flash power consumption.
-> > > +
-> > > +Required properties of the LED child node:
-> > > +- led-sources : see Documentation/devicetree/bindings/leds/commo=
-n.txt;
-> > > +		device current output identifiers: 0 - FLED1, 1 - FLED2
-> > > +
-> > > +Optional properties of the LED child node:
-> > > +- label : see Documentation/devicetree/bindings/leds/common.txt
-> > > +- max-microamp : see Documentation/devicetree/bindings/leds/comm=
-on.txt
-> > > +		Range: 15625 - 250000
-> > > +- flash-max-microamp : see Documentation/devicetree/bindings/led=
-s/common.txt
-> > > +		Range: 15625 - 1000000
-> > > +- flash-timeout-us : see Documentation/devicetree/bindings/leds/=
-common.txt
-> > > +		Range: 62500 - 1000000
-> > > +
-> > >  Example:
-> > > +#include <dt-bindings/leds/common.h>
-> > > +
-> > >  	max77693@66 {
-> > >  		compatible =3D "maxim,max77693";
-> > >  		reg =3D <0x66>;
-> > > @@ -117,5 +163,20 @@ Example:
-> > >  			maxim,thermal-regulation-celsius =3D <75>;
-> > >  			maxim,battery-overcurrent-microamp =3D <3000000>;
-> > >  			maxim,charge-input-threshold-microvolt =3D <4300000>;
-> > > +
-> > > +		led {
-> > > +			compatible =3D "maxim,max77693-led";
-> > > +			maxim,trigger-type =3D <LEDS_TRIG_TYPE_LEVEL>;
-> > > +			maxim,boost-mode =3D <LEDS_BOOST_FIXED>;
-> > > +			maxim,boost-mvout =3D <5000>;
-> > > +			maxim,mvsys-min =3D <2400>;
-> > > +
-> > > +			camera_flash: flash-led {
-> > > +				label =3D "max77693-flash";
-> > > +				led-sources =3D <0>, <1>;
-> > > +				max-microamp =3D <500000>;
-> > > +				flash-max-microamp =3D <1250000>;
-> > > +				flash-timeout-us =3D <1000000>;
-> > > +			};
-> > >  		};
-> > >  	};
-> >=20
-> >=20
->=20
+Okay, I see what you're saying.  We'll push the knowledge of 'command
+type', 'size' and anything else we wish to encode into the message
+back into the client so the controller doesn't have to worry about
+it.  Sounds reasonable to me.
 
 --=20
 Lee Jones
