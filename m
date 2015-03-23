@@ -1,118 +1,107 @@
-From: NeilBrown <neil@brown.name>
-Subject: [PATCH 2/2] twl4030_charger: find associated phy by more reliable
- means.
-Date: Mon, 23 Mar 2015 09:52:48 +1100
-Message-ID: <20150322225248.22311.50385.stgit@notabene.brown>
-References: <20150322225053.22311.45510.stgit@notabene.brown>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v3 03/12] irqchip: vf610-mscm: support NVIC parent
+Date: Mon, 23 Mar 2015 00:11:28 +0000
+Message-ID: <20150323001128.GL15137@io.lakedaemon.net>
+References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
+ <1426203380-7155-4-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150322225053.22311.45510.stgit@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sebastian Reichel <sre@kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, NeilBrown <neilb@suse.de>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1426203380-7155-4-git-send-email-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, olof@lixom.net, galak@codeaurora.org, tglx@linutronix.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+Stefan,
 
-twl4030_charger currently finds the associated phy
-using usb_get_phy() which will return the first USB2 phy.
-If your platform has multiple such phys (as mine does),
-this is not reliable (and reliably fails on the GTA04).
+On Fri, Mar 13, 2015 at 12:36:11AM +0100, Stefan Agner wrote:
+> Support the NVIC interrupt controller as node parent of the MSCM
+> interrupt router. On the dual-core variants of Vybird (VF6xx), the
+> NVIC interrupt controller is used by the Cortex-M4. To support
+> running Linux on this core too, MSCM needs NVIC parent support too.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
+>  1 file changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
+> index 9521057..bb0e1a3 100644
+> --- a/drivers/irqchip/irq-vf610-mscm-ir.c
+> +++ b/drivers/irqchip/irq-vf610-mscm-ir.c
+...
+> @@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+>  	writew_relaxed(chip_data->cpu_mask,
+>  		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+>  
+> -	irq_chip_unmask_parent(data);
+> +	if (parent->chip->irq_enable)
+> +		parent->chip->irq_enable(parent);
+> +	else
+> +		parent->chip->irq_unmask(parent);
+> +
+>  }
+>  
+>  static void vf610_mscm_ir_disable(struct irq_data *data)
+>  {
+>  	irq_hw_number_t hwirq = data->hwirq;
+>  	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
+> +	struct irq_data *parent = data->parent_data;
+>  
+>  	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+>  
+> -	irq_chip_mask_parent(data);
+> +	if (parent->chip->irq_enable)
+> +		parent->chip->irq_disable(parent);
 
-Change to use devm_usb_get_phy_by_node(), having found the
-node by looking for an appropriately named sibling in
-device-tree.
+copy/paste?
 
-This makes usb-charging dependent on correct device-tree
-configuration.
+> @@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
+>  					      domain->host_data);
+>  
+>  	gic_data.np = domain->parent->of_node;
+> -	gic_data.args_count = 3;
+> -	gic_data.args[0] = GIC_SPI;
+> -	gic_data.args[1] = irq_data->args[0];
+> -	gic_data.args[2] = irq_data->args[1];
+> +
+> +	if (mscm_ir_data->is_nvic) {
+> +		gic_data.args_count = 1;
+> +		gic_data.args[0] = irq_data->args[0];
+> +	} else {
+> +		gic_data.args_count = 3;
+> +		gic_data.args[0] = GIC_SPI;
+> +		gic_data.args[1] = irq_data->args[0];
+> +		gic_data.args[2] = irq_data->args[1];
+> +	}
+> +
+>  	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
+>  }
+>  
+> @@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
+>  		goto out_unmap;
+>  	}
+>  
+> +	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
+> +		mscm_ir_data->is_nvic = true;
+> +
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- .../devicetree/bindings/power/twl-charger.txt      |   10 ++++++++++
- .../devicetree/bindings/usb/twlxxxx-usb.txt        |    3 +++
- drivers/power/twl4030_charger.c                    |   21 +++++++++-----------
- 3 files changed, 22 insertions(+), 12 deletions(-)
+Could you walk me through how DT backwards compatibility is being
+preserved/broken here?  I'm not saying it's wrong, but every other conversion
+to stacked domains involves a compatibility break.  At the very least, I'd like
+to see it discussed in the commit log.
 
-diff --git a/Documentation/devicetree/bindings/power/twl-charger.txt b/Documentation/devicetree/bindings/power/twl-charger.txt
-index d5c706216df5..3b4ea1b73b38 100644
---- a/Documentation/devicetree/bindings/power/twl-charger.txt
-+++ b/Documentation/devicetree/bindings/power/twl-charger.txt
-@@ -1,5 +1,15 @@
- TWL BCI (Battery Charger Interface)
- 
-+The battery charger needs to interact with the USB phy in order
-+to know when charging is permissible, and when there is a connection
-+or disconnection.
-+
-+The choice of phy cannot be configured at a hardware level, so there
-+is no value in explicit configuration in device-tree.  Rather
-+if there is a sibling of the BCI node which is compatible with
-+"ti,twl4030-usb", then that is used to determine when and how
-+use USB power for charging.
-+
- Required properties:
- - compatible:
-   - "ti,twl4030-bci"
-diff --git a/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt b/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
-index 0aee0ad3f035..17327a296110 100644
---- a/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
-@@ -30,6 +30,9 @@ TWL4030 USB PHY AND COMPARATOR
-  - usb_mode : The mode used by the phy to connect to the controller. "1"
-    specifies "ULPI" mode and "2" specifies "CEA2011_3PIN" mode.
- 
-+If a sibling node is compatible "ti,twl4030-bci", then it will find
-+this device and query it for USB power status.
-+
- twl4030-usb {
- 	compatible = "ti,twl4030-usb";
- 	interrupts = < 10 4 >;
-diff --git a/drivers/power/twl4030_charger.c b/drivers/power/twl4030_charger.c
-index d35b83e635b5..b07f4e2f2dde 100644
---- a/drivers/power/twl4030_charger.c
-+++ b/drivers/power/twl4030_charger.c
-@@ -629,10 +629,15 @@ static int __init twl4030_bci_probe(struct platform_device *pdev)
- 
- 	INIT_WORK(&bci->work, twl4030_bci_usb_work);
- 
--	bci->transceiver = usb_get_phy(USB_PHY_TYPE_USB2);
--	if (!IS_ERR_OR_NULL(bci->transceiver)) {
--		bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
--		usb_register_notifier(bci->transceiver, &bci->usb_nb);
-+	bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
-+	if (bci->dev->of_node) {
-+		struct device_node *phynode;
-+
-+		phynode = of_find_compatible_node(bci->dev->of_node->parent,
-+						  NULL, "ti,twl4030-usb");
-+		if (phynode)
-+			bci->transceiver = devm_usb_get_phy_by_node(
-+				bci->dev, phynode, &bci->usb_nb);
- 	}
- 
- 	/* Enable interrupts now. */
-@@ -662,10 +667,6 @@ static int __init twl4030_bci_probe(struct platform_device *pdev)
- 	return 0;
- 
- fail_unmask_interrupts:
--	if (!IS_ERR_OR_NULL(bci->transceiver)) {
--		usb_unregister_notifier(bci->transceiver, &bci->usb_nb);
--		usb_put_phy(bci->transceiver);
--	}
- 	free_irq(bci->irq_bci, bci);
- fail_bci_irq:
- 	free_irq(bci->irq_chg, bci);
-@@ -694,10 +695,6 @@ static int __exit twl4030_bci_remove(struct platform_device *pdev)
- 	twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, 0xff,
- 			 TWL4030_INTERRUPTS_BCIIMR2A);
- 
--	if (!IS_ERR_OR_NULL(bci->transceiver)) {
--		usb_unregister_notifier(bci->transceiver, &bci->usb_nb);
--		usb_put_phy(bci->transceiver);
--	}
- 	free_irq(bci->irq_bci, bci);
- 	free_irq(bci->irq_chg, bci);
- 	power_supply_unregister(&bci->usb);
+thx,
+
+Jason.
