@@ -1,298 +1,91 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: [PATCH 2/2] rtc: driver for Conexant Digicolor CX92755 on-chip RTC
-Date: Mon, 23 Mar 2015 15:28:54 +0200
-Message-ID: <374ef109005ed14c3a0052a9da5226b87f8dc215.1427117334.git.baruch@tkos.co.il>
-References: <fa36a31a1d58d626ca0cb01ca0dece85aa2dfcb9.1427117334.git.baruch@tkos.co.il>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fa36a31a1d58d626ca0cb01ca0dece85aa2dfcb9.1427117334.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: add property for maximum ADC clock
+ frequencies
+Date: Mon, 23 Mar 2015 21:30:31 +0800
+Message-ID: <20150323133030.GD28410@dragon>
+References: <1426518614-20201-1-git-send-email-stefan@agner.ch>
+ <1426518614-20201-4-git-send-email-stefan@agner.ch>
+ <80ba0aa345e8bb04e23e2988f51a851d@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <80ba0aa345e8bb04e23e2988f51a851d@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: kernel@pengutronix.de, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add driver for the RTC hardware block on the Conexant CX92755 SoC, from the
-Digicolor series of SoCs. Tested on the Equinox evaluation board for the
-CX92755 chip.
+On Mon, Mar 16, 2015 at 04:17:55PM +0100, Stefan Agner wrote:
+> Forgot to add i.MX/Vybrid maintainers Shawn and Sascha.
+> 
+> On 2015-03-16 16:10, Stefan Agner wrote:
+> > The ADC clock frequency is limited depending on modes used. Add
+> > device tree property which allow to set the mode used and the
+> > maximum frequency ratings for the instance. These allows to
+> > set the ADC clock to a frequency which is within specification
+> > according to the actual mode used.
+> > 
+> > Acked-by: Fugang Duan <B38611@freescale.com>
+> > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/vf610-adc.txt | 9 +++++++++
 
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
----
- drivers/rtc/Kconfig         |  10 ++
- drivers/rtc/Makefile        |   1 +
- drivers/rtc/rtc-digicolor.c | 227 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 238 insertions(+)
- create mode 100644 drivers/rtc/rtc-digicolor.c
+Bindings doc shouldn't be part of dts change, and needs to be approved
+by DT maintainers.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index b5b5c3d485d6..faeee2d2550b 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1111,6 +1111,16 @@ config RTC_DRV_DAVINCI
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-davinci.
- 
-+config RTC_DRV_DIGICOLOR
-+	tristate "Conexant Digicolor RTC"
-+	depends on ARCH_DIGICOLOR
-+	help
-+	  If you say yes here you get support for the RTC on Conexant
-+	  Digicolor platforms. This currently includes the CX92755 SoC.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-digicolor.
-+
- config RTC_DRV_IMXDI
- 	tristate "Freescale IMX DryIce Real Time Clock"
- 	depends on ARCH_MXC
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 69c87062b098..c31731c29762 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_RTC_DRV_DA9052)	+= rtc-da9052.o
- obj-$(CONFIG_RTC_DRV_DA9055)	+= rtc-da9055.o
- obj-$(CONFIG_RTC_DRV_DA9063)	+= rtc-da9063.o
- obj-$(CONFIG_RTC_DRV_DAVINCI)	+= rtc-davinci.o
-+obj-$(CONFIG_RTC_DRV_DIGICOLOR)	+= rtc-digicolor.o
- obj-$(CONFIG_RTC_DRV_DM355EVM)	+= rtc-dm355evm.o
- obj-$(CONFIG_RTC_DRV_VRTC)	+= rtc-mrst.o
- obj-$(CONFIG_RTC_DRV_DS1216)	+= rtc-ds1216.o
-diff --git a/drivers/rtc/rtc-digicolor.c b/drivers/rtc/rtc-digicolor.c
-new file mode 100644
-index 000000000000..658aeab0c161
---- /dev/null
-+++ b/drivers/rtc/rtc-digicolor.c
-@@ -0,0 +1,227 @@
-+/*
-+ * Real Time Clock driver for Conexant Digicolor
-+ *
-+ * Copyright (C) 2015 Paradox Innovation Ltd.
-+ *
-+ * Author: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation; either version 2 of the License, or (at your
-+ * option) any later version.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+#include <linux/of.h>
-+
-+#define DC_RTC_CONTROL		0x0
-+#define DC_RTC_TIME		0x8
-+#define DC_RTC_REFERENCE	0xc
-+#define DC_RTC_ALARM		0x10
-+#define DC_RTC_INTFLAG_CLEAR	0x14
-+#define DC_RTC_INTENABLE	0x16
-+
-+#define DC_RTC_CMD_MASK		0xf
-+#define DC_RTC_GO_BUSY		BIT(7)
-+
-+#define CMD_NOP			0
-+#define CMD_RESET		1
-+#define CMD_WRITE		3
-+#define CMD_READ		4
-+
-+#define CMD_DELAY_US		(10*1000)
-+#define CMD_TIMEOUT_US		(500*CMD_DELAY_US)
-+
-+struct dc_rtc {
-+	struct rtc_device	*rtc_dev;
-+	void __iomem		*regs;
-+};
-+
-+static int dc_rtc_cmds(struct dc_rtc *rtc, u8 *cmds, int len)
-+{
-+	u8 val;
-+	int i, ret;
-+
-+	for (i = 0; i < len; i++) {
-+		writeb_relaxed((cmds[i] & DC_RTC_CMD_MASK) | DC_RTC_GO_BUSY,
-+			       rtc->regs + DC_RTC_CONTROL);
-+		ret = readb_relaxed_poll_timeout(
-+			rtc->regs + DC_RTC_CONTROL, val,
-+			!(val & DC_RTC_GO_BUSY), CMD_DELAY_US, CMD_TIMEOUT_US);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dc_rtc_read(struct dc_rtc *rtc, unsigned long *val)
-+{
-+	u8 read_cmds[] = {CMD_READ, CMD_NOP};
-+	u32 reference, time1, time2;
-+	int ret;
-+
-+	ret = dc_rtc_cmds(rtc, read_cmds, ARRAY_SIZE(read_cmds));
-+	if (ret < 0)
-+		return ret;
-+
-+	reference = readl_relaxed(rtc->regs + DC_RTC_REFERENCE);
-+	time1 = readl_relaxed(rtc->regs + DC_RTC_TIME);
-+	/* Read twice to ensure consistency */
-+	while (1) {
-+		time2 = readl_relaxed(rtc->regs + DC_RTC_TIME);
-+		if (time1 == time2)
-+			break;
-+		time1 = time2;
-+	}
-+
-+	*val = reference + time1;
-+	return 0;
-+}
-+
-+static int dc_rtc_write(struct dc_rtc *rtc, u32 val)
-+{
-+	u8 write_cmds[] = {CMD_WRITE, CMD_NOP, CMD_RESET, CMD_NOP};
-+
-+	writel_relaxed(val, rtc->regs + DC_RTC_REFERENCE);
-+	return dc_rtc_cmds(rtc, write_cmds, ARRAY_SIZE(write_cmds));
-+}
-+
-+static int dc_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct dc_rtc *rtc = dev_get_drvdata(dev);
-+	unsigned long now;
-+	int ret;
-+
-+	ret = dc_rtc_read(rtc, &now);
-+	if (ret < 0)
-+		return ret;
-+	rtc_time64_to_tm(now, tm);
-+
-+	return 0;
-+}
-+
-+static int dc_rtc_set_mmss(struct device *dev, unsigned long secs)
-+{
-+	struct dc_rtc *rtc = dev_get_drvdata(dev);
-+
-+	return dc_rtc_write(rtc, secs);
-+}
-+
-+static int dc_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct dc_rtc *rtc = dev_get_drvdata(dev);
-+	u32 alarm_reg, reference;
-+	unsigned long now;
-+	int ret;
-+
-+	alarm_reg = readl_relaxed(rtc->regs + DC_RTC_ALARM);
-+	reference = readl_relaxed(rtc->regs + DC_RTC_REFERENCE);
-+	rtc_time64_to_tm(reference + alarm_reg, &alarm->time);
-+
-+	ret = dc_rtc_read(rtc, &now);
-+	if (ret < 0)
-+		return ret;
-+
-+	alarm->pending = alarm_reg + reference > now;
-+	alarm->enabled = readl_relaxed(rtc->regs + DC_RTC_INTENABLE);
-+
-+	return 0;
-+}
-+
-+static int dc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct dc_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t alarm_time;
-+	u32 reference;
-+
-+	alarm_time = rtc_tm_to_time64(&alarm->time);
-+
-+	reference = readl_relaxed(rtc->regs + DC_RTC_REFERENCE);
-+	writel_relaxed(alarm_time - reference, rtc->regs + DC_RTC_ALARM);
-+
-+	writeb_relaxed(!!alarm->enabled, rtc->regs + DC_RTC_INTENABLE);
-+
-+	return 0;
-+}
-+
-+static int dc_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct dc_rtc *rtc = dev_get_drvdata(dev);
-+
-+	writeb_relaxed(!!enabled, rtc->regs + DC_RTC_INTENABLE);
-+
-+	return 0;
-+}
-+
-+static struct rtc_class_ops dc_rtc_ops = {
-+	.read_time		= dc_rtc_read_time,
-+	.set_mmss		= dc_rtc_set_mmss,
-+	.read_alarm		= dc_rtc_read_alarm,
-+	.set_alarm		= dc_rtc_set_alarm,
-+	.alarm_irq_enable	= dc_rtc_alarm_irq_enable,
-+};
-+
-+static irqreturn_t dc_rtc_irq(int irq, void *dev_id)
-+{
-+	struct dc_rtc *rtc = dev_id;
-+
-+	writeb_relaxed(1, rtc->regs + DC_RTC_INTFLAG_CLEAR);
-+	rtc_update_irq(rtc->rtc_dev, 1, RTC_AF | RTC_IRQF);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init dc_rtc_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct dc_rtc *rtc;
-+	int irq, ret;
-+
-+	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rtc->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rtc->regs))
-+		return PTR_ERR(rtc->regs);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+	ret = devm_request_irq(&pdev->dev, irq, dc_rtc_irq, 0, pdev->name, rtc);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, rtc);
-+	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
-+						&dc_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id dc_dt_ids[] = {
-+	{ .compatible = "cnxt,cx92755-rtc" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dc_dt_ids);
-+
-+static struct platform_driver dc_rtc_driver = {
-+	.driver = {
-+		.name = "digicolor_rtc",
-+		.of_match_table = of_match_ptr(dc_dt_ids),
-+	},
-+};
-+module_platform_driver_probe(dc_rtc_driver, dc_rtc_probe);
-+
-+MODULE_AUTHOR("Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>");
-+MODULE_DESCRIPTION("Conexant Digicolor Realtime Clock Driver (RTC)");
-+MODULE_LICENSE("GPL");
--- 
-2.1.4
+Shawn
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >  arch/arm/boot/dts/vfxxx.dtsi                            | 4 ++++
+> >  2 files changed, 13 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> > b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> > index 1a4a43d..3eb40e2 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> > @@ -11,6 +11,13 @@ Required properties:
+> >  - clock-names: Must contain "adc", matching entry in the clocks property.
+> >  - vref-supply: The regulator supply ADC reference voltage.
+> >  
+> > +Recommended properties:
+> > +- fsl,adck-max-frequency: Maximum frequencies according to datasheets operating
+> > +  requirements. Three values are required, depending on conversion mode:
+> > +  - Frequency in normal mode (ADLPC=0, ADHSC=0)
+> > +  - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
+> > +  - Frequency in low-power mode (ADLPC=1, ADHSC=0)
+> > +
+> >  Example:
+> >  adc0: adc@4003b000 {
+> >  	compatible = "fsl,vf610-adc";
+> > @@ -18,5 +25,7 @@ adc0: adc@4003b000 {
+> >  	interrupts = <0 53 0x04>;
+> >  	clocks = <&clks VF610_CLK_ADC0>;
+> >  	clock-names = "adc";
+> > +	fsl,adck-max-frequency = <30000000>, <40000000>,
+> > +				<20000000>;
+> >  	vref-supply = <&reg_vcc_3v3_mcu>;
+> >  };
+> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> > index a29c7ce..c6609bd 100644
+> > --- a/arch/arm/boot/dts/vfxxx.dtsi
+> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> > @@ -189,6 +189,8 @@
+> >  				clocks = <&clks VF610_CLK_ADC0>;
+> >  				clock-names = "adc";
+> >  				status = "disabled";
+> > +				fsl,adck-max-frequency = <30000000>, <40000000>,
+> > +							<20000000>;
+> >  			};
+> >  
+> >  			wdoga5: wdog@4003e000 {
+> > @@ -387,6 +389,8 @@
+> >  				clocks = <&clks VF610_CLK_ADC1>;
+> >  				clock-names = "adc";
+> >  				status = "disabled";
+> > +				fsl,adck-max-frequency = <30000000>, <40000000>,
+> > +							<20000000>;
+> >  			};
+> >  
+> >  			esdhc1: esdhc@400b2000 {
+> 
