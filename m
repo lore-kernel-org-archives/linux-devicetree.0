@@ -1,99 +1,209 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: Re: [PATCH v2 4/6] drm/exynos: dsi: add support for Exynos5433 SoC
-Date: Mon, 23 Mar 2015 22:42:04 +0900
-Message-ID: <20150323224204.080984ec@hwh-ubuntu>
-References: <1426666591-16103-1-git-send-email-human.hwang@samsung.com>
- <1426666591-16103-5-git-send-email-human.hwang@samsung.com>
- <CAPj87rPBZ7rG8BScFhp4tyKfOOJVCYoW8pgCMvHttT=NAbma9Q@mail.gmail.com>
- <20150319100252.03be7dda@hwh-ubuntu>
- <CAPj87rPeUS9h=GCBR7ccNhugaGoyHw3x6oZ3Spq6P8uEg4ZcUg@mail.gmail.com>
- <20150319101810.2244b509@hwh-ubuntu> <550A979A.6070102@samsung.com>
- <20150320141531.36e1464c@hwh-ubuntu> <550FDD8E.60806@samsung.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] pinmux: group and function definitions in the device tree
+Date: Mon, 23 Mar 2015 15:00:20 +0100
+Message-ID: <20150323140019.GH32259@odux.rfo.atmel.com>
+References: <20150319153950.GC30114@odux.rfo.atmel.com>
+ <20150319185637.GV4927@pengutronix.de>
+ <20150320150609.GB32259@odux.rfo.atmel.com>
+ <20150323064424.GD9742@pengutronix.de>
+ <20150323090827.GD32259@odux.rfo.atmel.com>
+ <20150323100913.GJ9742@pengutronix.de>
+ <37858913-F9BB-41D8-A380-7F8C44E08A4F@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <550FDD8E.60806@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, =?UTF-8?B?7J2064+Z7ZmU?= <dh09.lee@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <37858913-F9BB-41D8-A380-7F8C44E08A4F-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Nicolas FERRE <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBBbmRyZWosCgpPbiBNb24sIDIzIE1hciAyMDE1IDEwOjMxOjU4ICswMTAwCkFuZHJ6ZWog
-SGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3RlOgoKPiBPbiAwMy8yMC8yMDE1IDA2OjE1
-IEFNLCBIeXVuZ3dvbiBId2FuZyB3cm90ZToKPiA+IERlYXIgQW5kcmVqLAo+ID4KPiA+IE9uIFRo
-dSwgMTkgTWFyIDIwMTUgMTA6MzI6MTAgKzAxMDAKPiA+IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+IHdyb3RlOgo+ID4KPiA+PiBPbiAwMy8xOS8yMDE1IDAyOjE4IEFNLCBIeXVu
-Z3dvbiBId2FuZyB3cm90ZToKPiA+Pj4gRGVhciBEYW5pZWwsCj4gPj4+Cj4gPj4+IE9uIFRodSwg
-MTkgTWFyIDIwMTUgMDE6MTM6MjEgKzAwMDAKPiA+Pj4gRGFuaWVsIFN0b25lIDxkYW5pZWwtckx0
-WTRhLzh0RjFyb3ZWQ3MvdVRsd0BwdWJsaWMuZ21hbmUub3JnPgo+ID4+PiB3cm90ZToKPiA+Pj4K
-PiA+Pj4+IEhpIEh5dW5nd29uLAo+ID4+Pj4KPiA+Pj4+IE9uIDE5IE1hcmNoIDIwMTUgYXQgMDE6
-MDIsIEh5dW5nd29uIEh3YW5nCj4gPj4+PiA8aHVtYW4uaHdhbmctU3plM08zVVUyMkpCRGdqSzd5
-N1RVUUBwdWJsaWMuZ21hbmUub3JnPiB3cm90ZToKPiA+Pj4+Pj4+ICsgICAgICAgLyoKPiA+Pj4+
-Pj4+ICsgICAgICAgICogVGhlIGlucHV0IFBMTCBjbG9jayBmb3IgTUlQSSBEU0kgaW4gRXh5bm9z
-NTQzMwo+ID4+Pj4+Pj4gc2VlbXMgdG8gYmUgZml4ZWQKPiA+Pj4+Pj4+ICsgICAgICAgICogYnkg
-T1NDIENMSy4KPiA+Pj4+Pj4+ICsgICAgICAgICovCj4gPj4+Pj4+PiArICAgICAgIGZpbiA9IDI0
-ICogTUhaOwo+ID4+Pj4+PiBFciwgaXMgdGhpcyBhbHdheXMgdHJ1ZSBvbiBvdGhlciBwbGF0Zm9y
-bXMgYXMgd2VsbD8gU2hvdWxkbid0Cj4gPj4+Pj4+IHRoaXMgYmUgYSBwYXJ0IG9mIHRoZSBEZXZp
-Y2VUcmVlIGRlc2NyaXB0aW9uPwo+ID4+Pj4+IEkgZm9yZ290IHRvIGNoYW5nZSB0aGUgY29tbWVu
-dCBpbiBkZXZlbG9wbWVudC4gRmluYWxseSBpdCBpcwo+ID4+Pj4+IGZvdW5kIHRoYXQgYWxsIGV4
-eW5vcyBtaXBpIGRzaSdzIGZpbiBpcyBPU0MgY2xrIHdoaWNoIGlzIDI0Cj4gPj4+Pj4gTUh6LiBT
-byBJIHdpbGwgcmVtb3ZlIHRoZSBjb21tZW50LCBidXQgcmVtYWluIHRoZSBjb2RlIGFzIGl0IGlz
-Lgo+ID4+Pj4gRmFpciBlbm91Z2guIFNob3VsZCBwbGxfY2xrIGJlIHJlbW92ZWQgZnJvbSB0aGUg
-RFQgZGVzY3JpcHRpb24KPiA+Pj4+IHRoZW4sIGlmIGl0J3MgZml4ZWQgdG8gdGhlIG9zY2lsbGF0
-b3I/Cj4gPj4+IFllcy4gSXQgaXMgcmVkdW5kYW50IHRvIHJlcHJlc2VudCBwbGxfY2xrIGluIERU
-LCBhbmQgaXQgc2hvdWxkIGJlCj4gPj4+IHJlbW92ZWQuCj4gPj4gV2h5IGRvIHlvdSB0aGluayBP
-U0MgY2xrIGRldGVybWluZXMgdmFsdWUgb2YgcGxsX2Nsaz8KPiA+PiBwbGxfY2xrIGlzIG1hcHBl
-ZCB0byBTQ0xLX01JUElbMDFdIG9yIFNDTEtfRFNJTTAgZ2F0ZSB3aXRoIGZldwo+ID4+IGRpdmlk
-ZXJzIGFuZCBtdXhlcyBhYm92ZS4gU28gYXQgbGVhc3QgaW4gdGhlb3J5IGl0IGNhbiBkaWZmZXIg
-ZnJvbQo+ID4+IG9zYyBjbGsuIEFkZGl0aW9uYWxseSB0aGlzIGdhdGUgc2hvdWxkIGJlIGVuYWJs
-ZWQgc28geW91IGNhbm5vdAo+ID4+IGp1c3QgcmVtb3ZlIGl0IGZyb20gRFQuCj4gPj4KPiA+PiBS
-ZWdhcmRzCj4gPj4gQW5kcnplago+ID4gQXMgSSBmb3VuZCwgcGxsIGNsayBpcyBub3QgU0NMS19N
-SVBJWzAxXSBidXQgT1NDIENMSy4gU0NMS19EU0lNMAo+ID4gbXVzdCBiZSBjb250cm9sbGVkIGlu
-IHRoaXMgZHJpdmVyIGFzIGl0IGhhcyBiZWVuLCBhcyBhIGdhdGUgY2xvY2sKPiA+IG9mIE1JUEkg
-RFNJIGJsb2NrLCBidXQgbm90IGFzIGEgcGxsIGNsay4gU0NMS19EU0lNMCBpcyBub3QgdGhlIGlu
-cHV0Cj4gPiBjbG9jayBvZiBNSVBJIERQSFkgd2hpY2ggcHJvdmlkZXMgZmluIGluIHRoaXMgY29k
-ZS4gU28gY2xvY2sgc2V0dGluZwo+ID4gYW5kIGdldHRpbmcgY29kZSB3YXMgd3JvbmcsIGFuZCBt
-dXN0IGJlIHJlbW92ZWQuCj4gPgo+ID4gT1NDIENMSyBpcyBub3Qgc29jLWRlcGVkZW5kYW50IGJ1
-dCBib2FyZC1kZXBlbmRhbnQsIGV2ZW4gdGhvdWdoIEkKPiA+IGhhdmUgbm90IHNlZW4gYW55IGJv
-YXJkIHdoaWNoIGRvZXMgbm90IHVzZSBPU0MgQ0xLIGJ5IDI0IE1Iei4gSXQKPiA+IG11c3QgYmUg
-cGFyc2VkIGZyb20gYm9hcmQgRFQgZmlsZSwgd2hpY2ggaW4gdGhpcyBjYXNlLCB3ZSBjYW4gdXNl
-Cj4gPiB0aGUgdmFsdWUgaW4gcGxsX2Nsa19yYXRlICh0aGUgdmFyaWFibGUgbmFtZSBtdXN0IGJl
-IHJlbmFtZWQgYWxzbykuCj4gPgo+ID4gQmVjYXVzZSBhbWJpZ3VvdXMgZGVzY3JpcHRpb24gaW4g
-dGhlIHRlY2huaWNhbCBkb2N1bWVudCwgSSBjYW4gYmUKPiA+IHdyb25nLiBQbGVhc2UgbGV0IG1l
-IGtub3cgaWYgSSBkbyBub3QgdW5kZXJzdGFuZCBzb21ldGhpbmcuIFRoYW5rcwo+ID4gZm9yIHlv
-dXIgY29tbWVudC4KPiAKPiBBZnRlciBzb21lIGRpZ2dpbmcgSSBhZ3JlZSB0aGF0IGRvY3VtZW50
-YXRpb24gaXMgcXVpdGUgY29uZnVzaW5nIGFuZAo+IGN1cnJlbnQgY29kZSBjb3VsZCBiZSB3cm9u
-Zy4gQW55d2F5IEkgd29uZGVyIGlmIGl0IHdvdWxkbid0IGJlIGJldHRlcgo+IHRvIGV4cGxpY2l0
-bHkgcHJvdmlkZSBpbnB1dCBjbG9jayBmb3IgRFNJTSwgb3IgbW9yZSBwcmVjaXNlbHkgZm9yIGl0
-cwo+IFBMTCBpbnN0ZWFkIG9mIGhhcmRjb2RpbmcgMjRNSHogaW50byB0aGUgZHJpdmVyLgoKT0su
-IEkgYWdyZWUuIEl0IHdpbGwgYmUgbW9yZSBleHBsaWNpdCB0byBnZXQgdGhlIGNsb2NrIHJhdGUg
-ZnJvbSBEVC4KCj4gCj4gQW5vdGhlciB0aGluZyB0aGF0IGJvdGhlcnMgbWUgaXMgcmVsYXRpb24g
-b2YgRFBIWV9QTEwgaW4gY2xvY2sKPiBjb250cm9sbGVyIHRvIE1JUElfRFBIWSBpbiBFeHlub3M3
-NDIwLiBUaGVyZSBhcmUgdHdvIGNsb2NrcyB1c2VkIGJ5Cj4gTUlQSV9EUEhZOgo+IC0gIlJlZiBD
-bG9jayIgcGlubmVkIHRvIFNDTEtfTUlQSURQSFlfTTQgY29ubmVjdGVkIHRvIE9TQ0NMSywKPiAt
-ICJQSFkgQ2xvY2siIHBpbm5lZCB0byBJX0ZPVVRfRFBIWV9QTEwgY29ubmVjdGVkIHRvIERQSFlf
-UExMLAo+IAo+IFRoZSBmaXJzdCBjbG9jayBzZWVtcyB0byBiZSB5b3VyIG9zYyBjbG9jaywgYnV0
-IHdoYXQgaXMgdGhlIHJvbGUgb2YKPiB0aGUgMm5kIG9uZT8KCkhtbSwgSSBjb3VsZG4ndCBmaW5k
-IHNpbWlsYXIgY2xvY2sgaW4gRXh5bm9zNTQzMywgYWxzbyBJIGRvbid0IGhhdmUKdGhlIG1hbnVh
-bCBmb3IgRXh5bm9zNzQyMC4KCkJlc3QgcmVnYXJkcywKSHl1bmd3b24gSHdhbmcKCgo+IAo+IFJl
-Z2FyZHMKPiBBbmRyemVqCj4gCj4gPiBCZXN0IHJlZ2FyZHMsCj4gPiBIeXVuZ3dvbiBId2FuZwo+
-ID4KPiA+Pj4+PiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LiBJIHdpbGwgc2VuZCBpdCBhZ2FpbiB3
-aXRoIHRoZSBjaGFuZ2VzCj4gPj4+Pj4geW91IHN1Z2dlc3RlZC4KPiA+Pj4+IFRoYW5rcyB2ZXJ5
-IG11Y2ghCj4gPj4+Pgo+ID4+Pj4gQ2hlZXJzLAo+ID4+Pj4gRGFuaWVsCj4gPj4+IEJlc3QgcmVn
-YXJkcywKPiA+Pj4gSHl1bmd3b24gSHdhbmcKPiA+Pj4gLS0KPiA+Pj4gVG8gdW5zdWJzY3JpYmUg
-ZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlCj4gPj4+IGRldmljZXRy
-ZWUiIGluIHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0bwo+ID4+PiBtYWpvcmRvbW8tdTc5dXdYTDI5
-VFk3Nloyck01bUhYQUBwdWJsaWMuZ21hbmUub3JnIE1vcmUgbWFqb3Jkb21vCj4gPj4+IGluZm8g
-YXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+ID4+Pgo+IAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Mar 23, 2015 at 06:29:11PM +0800, Jean-Christophe PLAGNIOL-VILL=
+ARD wrote:
+>=20
+> > On Mar 23, 2015, at 6:09 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> =
+wrote:
+> >=20
+> > On Mon, Mar 23, 2015 at 10:08:27AM +0100, Ludovic Desroches wrote:
+> >> On Mon, Mar 23, 2015 at 07:44:24AM +0100, Sascha Hauer wrote:
+> >>> On Fri, Mar 20, 2015 at 04:06:09PM +0100, Ludovic Desroches wrote=
+:
+> >>>> On Thu, Mar 19, 2015 at 07:56:37PM +0100, Sascha Hauer wrote:
+> >>>>> On Thu, Mar 19, 2015 at 04:39:50PM +0100, Ludovic Desroches wro=
+te:
+> >>>>>> 	[...]
+> >>>>>>=20
+> >>>>>> 	pinctrl_defs {
+> >>>>>> 		mci0 {
+> >>>>>> 			mci0_ioset0_1bit_grp {
+> >>>>>> 				at91,pins =3D <68 69 70>;
+> >>>>>> 				at91,mux =3D <2>;
+> >>>>>> 			};
+> >>>>>>=20
+> >>>>>> 			mci0_ioset0_4bit_grp {
+> >>>>>> 				at91,pins =3D <68 69 70 71 72 73>;
+> >>>>>> 				at91,mux =3D <2>;
+> >>>>>> 			};
+> >>>>>>=20
+> >>>>>> 			mci0_ioset0_8bit_grp {
+> >>>>>> 				at91,pins =3D <68 69 70 71 72 73 74 75 76 77>;
+> >>>>>> 				at91,mux =3D <2>;
+> >>>>>> 			};
+> >>>>>> 		};
+> >>>>>> 	};
+> >>>>>=20
+> >>>>> Why are different groups here? Do you want to put them into the=
+ dtsi?
+> >>>>=20
+> >>>> We used to have a configuration per pin in our products. On next=
+ ones we
+> >>>> will have some constraints ie. on the controller side we still h=
+ave a
+> >>>> configuration per pin but we will introduced the notion of ioset=
+s. This
+> >>>> notion involves that timings are guaranteed only in one ioset. T=
+hat's
+> >>>> why we can't mix signals from several iosets because. On the con=
+troller side
+> >>>> we can do all we want so I would like to use groups as a softwar=
+e protection.
+> >>>=20
+> >>> What does happen when you mix signals of different iosets? It won=
+'t work
+> >>> so the developer will change it. What do you need the software
+> >>> protection for?
+> >>>=20
+> >>=20
+> >> I can't say it won't work, it could work in some cases. My fear is=
+ to
+> >> have some support cases because of this. It seems easy to spot thi=
+s kind
+> >> of issue but experience tell us that we can loose time for this ki=
+nd of
+> >> "stupid" error.
+> >=20
+> > Hm, the software (dts in this case) developer will only mix signals=
+ of
+> > different iosets when he is forced to by the board designer. It's t=
+he
+> > board designer that has made this mistake, the software developer w=
+ill
+> > only try to make it work anyway. I doubt that the board designer wi=
+ll
+> > design the board based on the possibilities shown in the dts files.
+> >=20
+> >>>>>> - A subnode for these definitions in order to not parse the wh=
+ole
+> >>>>>>  pinctrl node to retrieve groups and functions.
+> >>>>>> - Using node names as function and group names.
+> >>>>>> - Can we get generic properties to define the groups? Of cours=
+e a 'pins'
+> >>>>>>  property is mandatory. In my case I will need an extra one to=
+ tell the
+> >>>>>>  controller how to mux the pins (a same pin can have up to 7 m=
+uxing
+> >>>>>>  possibilities).
+> >>>>>=20
+> >>>>> Did you have a look at the RFC I sent for these kind of control=
+lers [1] and
+> >>>>> the final result for the Mediatek driver currently in Linux-nex=
+t [2]?.
+> >>>>>=20
+> >>>>> The binding has both the config and the pins in a single node a=
+nd thus
+> >>>>> is very compact.
+> >>>>>=20
+> >>>>=20
+> >>>> Thanks for the links. Well I had a look to them and now I am a b=
+it
+> >>>> lost...
+> >>>>=20
+> >>>> I agree with this binding but it involves to get rid of
+> >>>> pinconf_generic_dt_node_to_map_all, isn't it? What do group and =
+function
+> >>>> become? It seems these concepts have disappeared.
+> >>>=20
+> >>> The binding I suggested changes nothing with pinconf, only the pi=
+nmux
+> >>> information is added to the same node. You can still call
+> >>> pinconf_generic_dt_node_to_map_all() on the nodes, it will simply=
+ ignore
+> >>> the pinmux information. You would have to handle them separately =
+(or
+> >>> write some generic helper if you like)
+> >>=20
+> >> Yes, I can still use it. What I mean is there is no generic helper=
+ at the
+> >> moment to get both pinmux (excepting using the function property) =
+and
+> >> pinconf information. Is it planned to have something generic for t=
+he
+> >> pinmux property?
+> >=20
+> > Not yet, but it would be a good idea to add something generic.
+> >=20
+> >> I see MTK_GET_PIN_NO and MTK_GET_PIN_FUNC macros, on my side,
+> >> I think it will feet my needs. Maybe we only need to remove the MT=
+K
+> >> prefix and put these macros in another header.
+> >>=20
+> >> In the mediatek driver, I have also noticed that we have a group f=
+or
+> >> each pin. I have the feeling that the concept of groups disappear,=
+ isn't
+> >> it?
+> >=20
+> > This may be because the concept of groups doesn't most hardware.
+> > There really is hardware out there which can only handle the pins i=
+n
+> > groups (that is, a single mux switches multiple pins), but this har=
+dware
+> > is not very common. Most hardware can indeed control every pin
+> > indivually. In this situation some drivers are consequent and make =
+a
+> > group out of each pin which renders the group concept moot. Other
+> > drivers just interpret each device node as pin group which creates
+> > artificial groups which do not exist in hardware.
+>=20
+> This is what we do on the current pinctrl-at91
+>=20
+
+It is a bit different with pinctrl-at91, we don't have npins groups.
+Even if there is no hardware reality behind we have groups of pins.
+
+> and as we do not see the specific of this new IP for at91 it=E2=80=99=
+s difficult to see
+> if we can use generic or not.
+>=20
+
+We can use the generic pinconf for sure. My main concern were the
+concepts of groups and functions. But it seems, now, we can't get rid o=
+f these
+concepts.
+
+I am trying to figure out what we loose (or not) if using a mapping suc=
+h as
+'a pin =3D a group'. For example I am thinking about sysfs, it is proba=
+bly
+more human readable to have some groups with a name related to the
+device they are connected as done in pinctrl-at91.
+
+> Personally I do prefer when the number of possibility are not high to=
+ have a big
+> soc dtsi.
+>=20
+> But in the case of I.MX yes it=E2=80=99s impossible to manage
+>=20
+> Best Regards,
+> J.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
