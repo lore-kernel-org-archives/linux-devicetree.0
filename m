@@ -1,52 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: pcm512x: Remove hardcoding of pll-lock to GPIO4
-Date: Mon, 23 Mar 2015 14:38:44 -0700
-Message-ID: <20150323213844.GV14954@sirena.org.uk>
-References: <1427145421-5544-1-git-send-email-hm@hmbedded.co.uk>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: gpio-syscon for Keystone 2 - DT bindings mismatch code expectation?
+Date: Mon, 23 Mar 2015 21:55:45 +0000
+Message-ID: <20150323215545.GT8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TG7lY2/6mW/akb80"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1427145421-5544-1-git-send-email-hm-n6SlHCM0l+K9FHfhHBbuYA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Howard Mitchell <hm-n6SlHCM0l+K9FHfhHBbuYA@public.gmane.org>
-Cc: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Linus, Grygorii,
 
---TG7lY2/6mW/akb80
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm trying to understand what's happening to make Keystone2 print
+this at boot:
 
-On Mon, Mar 23, 2015 at 09:17:01PM +0000, Howard Mitchell wrote:
-> Currently GPIO4 is hardcoded to output the pll-lock signal.
-> Unfortunately this is after the pll-out GPIO is configured which
-> is selectable in the device tree. Therefore it is not possible to
-> use GPIO4 for pll-out. Therefore this patch removes the
-> configuration of GPIO4.
+gpio-syscon soc:keystone_dsp_gpio@02620240: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@2620244: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@2620248: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@262024c: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@2620250: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@2620254: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@2620258: can't read the dir register offset!
+gpio-syscon soc:keystone_dsp_gpio@262025c: can't read the dir register offset!
 
-Applied, thanks.  Please pay attention to your CC lists - try to avoid
-CC irrelevant people on your mails.  This helps cut down on people's
-mail loads.
+>From what I can see in DT, these are defined as:
 
---TG7lY2/6mW/akb80
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+                dspgpio0: keystone_dsp_gpio@02620240 {
+                        compatible = "ti,keystone-dsp-gpio";
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        gpio,syscon-dev = <&devctrl 0x240>;
+                };
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+However, the patch set which introduced the code included:
 
-iQEcBAEBCAAGBQJVEIfjAAoJECTWi3JdVIfQu/IH/3yzgU/nLeKm32oWI7d9mpK/
-+DkfQiRT22DMAnUkCvAj7ZRhqeet7JS8Uu+eHISy5OCnR/lpn0dKEooZavazrelj
-uU3zRuR+FzpEf+RApjLgN/B/9an2TqpNzjdmLOlDBF1q8Glbbce2zaywXbT57Nlu
-CAgbh6+kKrDfuMwrP0+DYU0kICGcLJBdCLWrXGz+a1pTzbOQrRWmOePjjYGVUqc+
-wgYX5DEVmn98xUGCZw2VfH5eEUSor2QBGd47ZwBS11UkbSBzu6x5i7pqPDJmBGW2
-cGzwTGh99N0zr+7DBnscGhpVKyXS2n3FpHAO3MyHqdjYj+oYUO215+KMfTJt7aE=
-=SWXY
------END PGP SIGNATURE-----
+commit 5a3e3f88b0a10f8b5baf224ebda5916195fb8745
+Author: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Date:   Wed Sep 3 20:05:33 2014 +0300
 
---TG7lY2/6mW/akb80--
+    gpio: syscon: retrive syscon node and regs offsets from dt
+
+which wants gpio,syscon-dev to contain a phandle and two offsets, not
+a single offset.  Moreover, the following patch:
+
+commit 2134cb997f2f1b2d960ad8705d67dc8d690ba59c
+Author: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Date:   Wed Sep 3 20:05:34 2014 +0300
+
+    gpio: syscon: reuse for keystone 2 socs
+
+added documentation which indicates that for keystone 2, only one
+offset is necessary in gpio,syscon-dev, yet there is no "compatible"
+string to stop the code requiring two offsets.
+
+This looks like a complete trainwreck.  What's going on here?
+
+Please can this get fixed... Thanks.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
