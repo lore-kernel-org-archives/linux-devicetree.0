@@ -1,55 +1,37 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC v13 04/13] DT: Add documentation for the mfd Maxim
- max77693
-Date: Mon, 23 Mar 2015 15:59:37 +0000
-Message-ID: <20150323155937.GQ24804@x1>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
- <1426175114-14876-5-git-send-email-j.anaszewski@samsung.com>
- <20150323120743.GG24422@x1>
- <20150323142202.GA23919@amd>
- <20150323150213.GN24804@x1>
- <20150323154807.GA13297@amd>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 1/2] Input: touchscreen-iproc: Add Broadcom iProc
+ touchscreen driver
+Date: Mon, 23 Mar 2015 09:01:33 -0700
+Message-ID: <20150323160133.GB8666@dtor-ws>
+References: <1426899446-16873-1-git-send-email-jonathar@broadcom.com>
+ <1426899446-16873-2-git-send-email-jonathar@broadcom.com>
+ <550FE779.8010703@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150323154807.GA13297@amd>
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+In-Reply-To: <550FE779.8010703@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Mar 2015, Pavel Machek wrote:
+Hi Bo,
 
-> On Mon 2015-03-23 15:02:13, Lee Jones wrote:
-> > On Mon, 23 Mar 2015, Pavel Machek wrote:
-> > > On Mon 2015-03-23 12:07:43, Lee Jones wrote:
-> > > > This patch requires a DT Ack.
-> > >=20
-> > > No, it requires DT people to be notified -- and they were, few ti=
-mes
-> > > by now.
-> > >=20
-> > > They clearly don't care.
-> >=20
-> > Well fortunately for the Kernel community, I do care.  And as this
-> > patch adds 3 new DT properties, has been through many iterations
-> > already with vast changes made over that period and there is still
-> > some controversy looming, I'm saying that it _does_ require a DT
-> > Ack.
->=20
-> Can you help get that ack, then? As a maintainer, you have better
-> chance getting reply from DT people than patch submitter.
+On Mon, Mar 23, 2015 at 06:14:17PM +0800, Bo Shen wrote:
+> Hi Jonathan Richardson,
+> 
+> On 03/21/2015 08:57 AM, Jonathan Richardson wrote:
+> >+static struct platform_driver iproc_ts_driver = {
+> >+	.probe = iproc_ts_probe,
+> 
+> Just a little curious, is the .remove function missing or it doesn't
+> need it.
 
-Hopefully they will see my plea a couple of replies back.
+When all resources used by a driver are managed (i.e. acquired via devm
+API) such driver does not need remove() method.
 
-If that fails I'll go poke them via other means.  Failing that I'll go
-see them in person and continually hit them with wet fish until one of
-them relents.
+Thanks.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Dmitry
