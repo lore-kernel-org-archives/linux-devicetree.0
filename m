@@ -1,40 +1,84 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] Input: touchscreen-iproc: Add Broadcom iProc
- touchscreen driver
-Date: Mon, 23 Mar 2015 11:05:47 -0700
-Message-ID: <20150323180547.GA26691@dtor-ws>
-References: <1426899446-16873-1-git-send-email-jonathar@broadcom.com>
- <1426899446-16873-2-git-send-email-jonathar@broadcom.com>
- <20150322042413.GB40622@dtor-ws>
- <551053F1.7070308@broadcom.com>
+From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: hummingboard: Setup pwm lines
+Date: Mon, 23 Mar 2015 20:06:27 +0200
+Message-ID: <55105623.1010804@solid-run.com>
+References: <E1YSWZL-0002Aw-B5@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <551053F1.7070308-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <E1YSWZL-0002Aw-B5-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2015 at 10:57:05AM -0700, Jonathan Richardson wrote:
-> On 15-03-21 09:24 PM, Dmitry Torokhov wrote:
-> > Hi Jonathan,
-> > 
-> > On Fri, Mar 20, 2015 at 05:57:25PM -0700, Jonathan Richardson wrote:
-> >> +config TOUCHSCREEN_IPROC
-> >> +	tristate "IPROC touch panel driver support"
-> > 
-> > I think this should depend on ARCH_BCM_IPROC || COMPILE_TEST, right?
-> > 
-> > (No need to resubmit).
-> 
-> Hi Dmitry. That is correct - thanks.
+On 03/02/2015 10:03 PM, Russell King wrote:
+> From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+>
+> Setup pwm lines as follows -
+> pwm1: In case HummingBoard base carrier; this pin drives through a serial
+>        capacitor the mono out of the audio jack.
+>        In case HummingBoard pro the this pad can be reached by wiring to
+>        C8 capacitors on the board.
+> pwm2: Setup pwm2 on gpio-1 but leave the default function of the iopad as
+>        a gpio.
+>        The user can change the io pad mux in user space and therefore use
+>        this function on gpio-1 (pin number 7 on the 26 pin header).
+> pwm3,pwm4: unused
+>
+> Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> [tweaked alias for pwm pinctrl group --rmk]
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> ---
+> For acks please.
+Ack.
+>
+>   arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> index 93588c987d2c..c0dc5948fa3c 100644
+> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> @@ -164,6 +164,10 @@
+>   			>;
+>   		};
+>   
+> +		pinctrl_hummingboard_pwm1: pwm1grp {
+> +			fsl,pins = <MX6QDL_PAD_DISP0_DAT8__PWM1_OUT 0x1b0b1>;
+> +		};
+> +
+>   		pinctrl_hummingboard_spdif: hummingboard-spdif {
+>   			fsl,pins = <MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x13091>;
+>   		};
+> @@ -203,6 +207,25 @@
+>   	};
+>   };
+>   
+> +&pwm1 {
+> +	 pinctrl-names = "default";
+> +	 pinctrl-0 = <&pinctrl_hummingboard_pwm1>;
+> +	 status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	 pinctrl-names = "default";
+> +	 status = "okay";
+> +};
+> +
+> +&pwm3 {
+> +	status = "disabled";
+> +};
+> +
+> +&pwm4 {
+> +	status = "disabled";
+> +};
+> +
+>   &spdif {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&pinctrl_hummingboard_spdif>;
 
-Excellent. Queued for 4.1.
-
--- 
-Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
