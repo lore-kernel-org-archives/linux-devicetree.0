@@ -1,107 +1,53 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 03/12] irqchip: vf610-mscm: support NVIC parent
-Date: Mon, 23 Mar 2015 00:11:28 +0000
-Message-ID: <20150323001128.GL15137@io.lakedaemon.net>
-References: <1426203380-7155-1-git-send-email-stefan@agner.ch>
- <1426203380-7155-4-git-send-email-stefan@agner.ch>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v3 1/3] of: Add vendor prefix for Kinetic technologies
+Date: Mon, 23 Mar 2015 11:20:24 +0900
+Message-ID: <550F7868.4020803@samsung.com>
+References: <1426829466-13559-1-git-send-email-ingi2.kim@samsung.com>
+ <1426829466-13559-2-git-send-email-ingi2.kim@samsung.com>
+ <CAL_JsqJUDQxnQ2YeaEULD3FgF=7byaD=-etdzdBMT76dE_9hOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1426203380-7155-4-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, olof@lixom.net, galak@codeaurora.org, tglx@linutronix.de, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAL_JsqJUDQxnQ2YeaEULD3FgF=7byaD=-etdzdBMT76dE_9hOw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sakari Ailus <sakari.ailus@iki.fi>, Jacek Anaszewski <j.anaszewski@samsung.com>, Varka Bhadram <varkabhadram@gmail.com>, sw0312.kim@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Inha Song <ideal.song@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Stefan,
+Hi Rob,
 
-On Fri, Mar 13, 2015 at 12:36:11AM +0100, Stefan Agner wrote:
-> Support the NVIC interrupt controller as node parent of the MSCM
-> interrupt router. On the dual-core variants of Vybird (VF6xx), the
-> NVIC interrupt controller is used by the Cortex-M4. To support
-> running Linux on this core too, MSCM needs NVIC parent support too.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
->  1 file changed, 26 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
-> index 9521057..bb0e1a3 100644
-> --- a/drivers/irqchip/irq-vf610-mscm-ir.c
-> +++ b/drivers/irqchip/irq-vf610-mscm-ir.c
-...
-> @@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
->  	writew_relaxed(chip_data->cpu_mask,
->  		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
->  
-> -	irq_chip_unmask_parent(data);
-> +	if (parent->chip->irq_enable)
-> +		parent->chip->irq_enable(parent);
-> +	else
-> +		parent->chip->irq_unmask(parent);
-> +
->  }
->  
->  static void vf610_mscm_ir_disable(struct irq_data *data)
->  {
->  	irq_hw_number_t hwirq = data->hwirq;
->  	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
-> +	struct irq_data *parent = data->parent_data;
->  
->  	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
->  
-> -	irq_chip_mask_parent(data);
-> +	if (parent->chip->irq_enable)
-> +		parent->chip->irq_disable(parent);
+On 2015=EB=85=84 03=EC=9B=94 21=EC=9D=BC 00:46, Rob Herring wrote:
+> On Fri, Mar 20, 2015 at 12:31 AM, Ingi Kim <ingi2.kim@samsung.com> wr=
+ote:
+>> This patch adds vendor prefix for Kinetic technologies
+>>
+>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+>=20
 
-copy/paste?
+Sure, I'll fix
+Thanks
 
-> @@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
->  					      domain->host_data);
->  
->  	gic_data.np = domain->parent->of_node;
-> -	gic_data.args_count = 3;
-> -	gic_data.args[0] = GIC_SPI;
-> -	gic_data.args[1] = irq_data->args[0];
-> -	gic_data.args[2] = irq_data->args[1];
-> +
-> +	if (mscm_ir_data->is_nvic) {
-> +		gic_data.args_count = 1;
-> +		gic_data.args[0] = irq_data->args[0];
-> +	} else {
-> +		gic_data.args_count = 3;
-> +		gic_data.args[0] = GIC_SPI;
-> +		gic_data.args[1] = irq_data->args[0];
-> +		gic_data.args[2] = irq_data->args[1];
-> +	}
-> +
->  	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
->  }
->  
-> @@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
->  		goto out_unmap;
->  	}
->  
-> +	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
-> +		mscm_ir_data->is_nvic = true;
-> +
-
-Could you walk me through how DT backwards compatibility is being
-preserved/broken here?  I'm not saying it's wrong, but every other conversion
-to stacked domains involves a compatibility break.  At the very least, I'd like
-to see it discussed in the commit log.
-
-thx,
-
-Jason.
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b=
+/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index fae26d0..90a4be1 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -100,6 +100,7 @@ isee        ISEE 2007 S.L.
+>>  isil   Intersil
+>>  karo   Ka-Ro electronics GmbH
+>>  keymile        Keymile GmbH
+>> +kinetic Kinetic Technologies
+>>  lacie  LaCie
+>>  lantiq Lantiq Semiconductor
+>>  lenovo Lenovo Group Ltd.
+>> --
+>> 2.0.5
+>>
+>=20
