@@ -1,33 +1,135 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 12/12] ARM: dts: sun6i: hummingbird: Add basic support
- for the WiFi module
-Date: Mon, 23 Mar 2015 17:24:55 -0700
-Message-ID: <CAGb2v64+-KW5JsAvHhvt4jFD=CAkf37D5XyJ4B1f0WUXWLBodA@mail.gmail.com>
-References: <1425988764-23618-1-git-send-email-wens@csie.org>
- <1425988764-23618-13-git-send-email-wens@csie.org> <20150323221629.GG15676@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150323221629.GG15676@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+From: Inha Song <ideal.song@samsung.com>
+Subject: [alsa-devel] [PATCH v2] ARM: dts: Support audio on
+ Exynos5422-odroidxu3 using simple-audio-card
+Date: Tue, 24 Mar 2015 10:19:35 +0900
+Message-ID: <1427159975-3488-1-git-send-email-ideal.song@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org
+Cc: s.nawrocki@samsung.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, Inha Song <ideal.song@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2015 at 3:16 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Tue, Mar 10, 2015 at 07:59:23PM +0800, Chen-Yu Tsai wrote:
->> The Hummingbird A31 has an AMPAK AP6210 WiFi+Bluetooth module. The
->> WiFi part is a BCM43362 IC connected to MMC1 in the A31 SoC via SDIO.
->> The IC also takes a power enable signal via GPIO.
->>
->> The WiFi module supports out-of-band interrupt signaling via GPIO,
->> but this is not supported in this patch.
->>
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->
-> Applied, thanks!
+Add MAX98090 audio codec, I2S interface and the sound nodes to support
+audio on Exynos5422 SoC Based Odroid-XU3 board. Now we can support audio
+in Odroid-XU3 board using simple-audio-card DT binding.
 
-Thanks, but I don't see this particular patch in dt-for-4.1 you just pushed.
+Signed-off-by: Inha Song <ideal.song@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ arch/arm/boot/dts/exynos5420.dtsi          |  9 +++++
+ arch/arm/boot/dts/exynos5422-odroidxu3.dts | 59 ++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
 
-ChenYu
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 4eaeabe..e459c1d 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -415,6 +415,9 @@
+ 			<&clock_audss EXYNOS_I2S_BUS>,
+ 			<&clock_audss EXYNOS_SCLK_I2S>;
+ 		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
++		#clock-cells = <1>;
++		clock-output-names = "i2s_cdclk0";
++		#sound-dai-cells = <1>;
+ 		samsung,idma-addr = <0x03000000>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s0_bus>;
+@@ -429,6 +432,9 @@
+ 		dma-names = "tx", "rx";
+ 		clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
+ 		clock-names = "iis", "i2s_opclk0";
++		#clock-cells = <1>;
++		clock-output-names = "i2s_cdclk1";
++		#sound-dai-cells = <1>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s1_bus>;
+ 		status = "disabled";
+@@ -442,6 +448,9 @@
+ 		dma-names = "tx", "rx";
+ 		clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
+ 		clock-names = "iis", "i2s_opclk0";
++		#clock-cells = <1>;
++		clock-output-names = "i2s_cdclk2";
++		#sound-dai-cells = <1>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s2_bus>;
+ 		status = "disabled";
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+index edc25cf..c038f0d 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+@@ -11,6 +11,7 @@
+ */
+ 
+ /dts-v1/;
++#include <dt-bindings/sound/samsung-i2s.h>
+ #include "exynos5800.dtsi"
+ 
+ / {
+@@ -285,6 +286,64 @@
+ 	rtc@101E0000 {
+ 		status = "okay";
+ 	};
++
++	sound: sound {
++		compatible = "simple-audio-card";
++
++		simple-audio-card,name = "Odroid-XU3";
++		simple-audio-card,widgets =
++			"Headphone", "Headphone Jack",
++			"Speakers", "Speakers";
++		simple-audio-card,routing =
++			"Headphone Jack", "HPL",
++			"Headphone Jack", "HPR",
++			"Headphone Jack", "MICBIAS",
++			"IN1", "Headphone Jack",
++			"Speakers", "SPKL",
++			"Speakers", "SPKR";
++
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&link0_codec>;
++		simple-audio-card,frame-master = <&link0_codec>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&i2s0 0>;
++			system-clock-frequency = <19200000>;
++		};
++
++		link0_codec: simple-audio-card,codec {
++			sound-dai = <&max98090>;
++			clocks = <&i2s0 CLK_I2S_CDCLK>;
++		};
++	};
++};
++
++&clock_audss {
++	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
++			<&clock_audss EXYNOS_MOUT_I2S>,
++			<&clock_audss EXYNOS_DOUT_AUD_BUS>;
++	assigned-clock-parents = <&clock CLK_FIN_PLL>,
++			<&clock_audss EXYNOS_MOUT_AUDSS>;
++	assigned-clock-rates = <0>,
++			<0>,
++			<19200000>;
++};
++
++&hsi2c_5 {
++	status = "okay";
++	max98090: max98090@10 {
++		compatible = "maxim,max98090";
++		reg = <0x10>;
++		interrupt-parent = <&gpx3>;
++		interrupts = <2 0>;
++		clocks = <&i2s0 CLK_I2S_CDCLK>;
++		clock-names = "mclk";
++		#sound-dai-cells = <0>;
++	};
++};
++
++&i2s0 {
++	status = "okay";
+ };
+ 
+ &hdmi {
+-- 
+2.0.0.390.gcb682f8
