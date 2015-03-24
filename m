@@ -1,52 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/9] regmap: Introduce regmap_get_reg_stride.
-Date: Tue, 24 Mar 2015 15:37:45 -0700
-Message-ID: <20150324223745.GC28997@sirena.org.uk>
-References: <1427236116-18531-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1427236200-18625-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V6 00/25] Generic BMIPS kernel
+Date: Tue, 24 Mar 2015 15:48:08 -0700
+Message-ID: <5511E9A8.6090908@gmail.com>
+References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bKyqfOwhbdpXa4YI"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1427236200-18625-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org
+To: Kevin Cernekee <cernekee@gmail.com>, ralf@linux-mips.org
+Cc: jaedon.shin@gmail.com, abrestic@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 25/12/14 09:48, Kevin Cernekee wrote:
+> V5->V6: Incorporate several fixes/enhancements from Jaedon Shin:
+> 
+>  - Fix register read/modify/write in RAC flush code.
+> 
+>  - Fix use of "SYS_HAS_CPU_BMIPS32_3300" Kconfig symbol.
+> 
+>  - Add base platform support for 7358 and 7362.
+> 
+> The DTS files follow Andrew Bresticker's new per-vendor directory layout.
+> 
+> This series applies on top of Linus' current head of tree.
+> 
+> Patch 01 (Fix outdated use of mips_cpu_intc_init()) is REQUIRED for 3.19
+> to fix a build failure seen in 3.19-rc.  The other patches can
+> be queued for 3.20 or later.
 
---bKyqfOwhbdpXa4YI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Jason, can you merge the irqchip patches through your tree? They still
+apply cleanly to your irqchip/core branch as of today, except the last
+one which has a small hunk to be fixed in drivers/irqchip/Makefile.
 
-On Tue, Mar 24, 2015 at 10:30:00PM +0000, Srinivas Kandagatla wrote:
-
-> + /* regmap_get_reg_stride(): Report the register address stride
-> + *
-> + * Report the register address stride, mainly intended to for use by
-> + * generic infrastructure built on top of regmap.
-> + */
-> +int regmap_get_reg_stride(struct regmap *map)
-
-Please fix the indentation for the comment block and add kerneldoc for
-the argument.  This is an exported function so it should also be /** not
-/*
-
---bKyqfOwhbdpXa4YI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVEec4AAoJECTWi3JdVIfQk2EH+gMp/An+PZhn3+0bIfG4npmq
-kr5ej2DYhy5APaTbjTNDXiEDUaMV3q/jmcPTDsxzue/MVoL6JHpirEiKZikhRhIx
-4ZgicUk3WQxiSpLBX/WfyNlOwDq1Am4Rpa6F/cRo6p3Jl5S3MesH4C5FkAGze4A9
-W8UZjmNm+K3vSAdbWlludBo41j2edWG3Owd6MdvLk9dG4N0e9K2mhZFp/3w2aOzF
-1VR6q78aAJTfk4+AU5ap7P0busIyuwY1mnsa6Vwwu1dB2mL8cpACZPrYaKREwTPk
-QdBLFq0OQCbWJgpDIMPQnB4X2JXCt7cD/Cyt7Y2L5ot0mcgrquY2DwnVZezCst4=
-=/6Tr
------END PGP SIGNATURE-----
-
---bKyqfOwhbdpXa4YI--
+Thanks!
+-- 
+Florian
