@@ -1,107 +1,445 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [alsa-devel] [PATCH RESEND] ARM: dts: Support audio on
- Exynos5422-odroidxu3 using simple-audio-card
-Date: Tue, 24 Mar 2015 21:58:29 +0900
-Message-ID: <02cf01d06632$39be11a0$ad3a34e0$@kernel.org>
-References: <1427079093-28483-1-git-send-email-ideal.song@samsung.com>
- <550FF0FF.4000604@samsung.com>
+From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Re-license SolidRun iMX6 platform DT GPL v2/X11
+Date: Tue, 24 Mar 2015 15:00:02 +0200
+Message-ID: <55115FD2.7010403@solid-run.com>
+References: <E1YSWWI-00026i-QE@rmk-PC.arm.linux.org.uk> <20150324121103.GG28410@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <550FF0FF.4000604@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Inha Song' <ideal.song@samsung.com>
-Cc: broonie@kernel.org, kgene@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150324121103.GG28410@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sylwester Nawrocki wrote:
-> 
-> On 23/03/15 03:51, Inha Song wrote:
-> > Add MAX98090 audio codec, I2S interface and the sound nodes to support
-> > audio on Exynos5422 SoC Based Odroid-XU3 board. Now we can support audio
-> > in Odroid-XU3 board using simple-audio-card DT binding.
-> >
-> > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > ---
-> >  arch/arm/boot/dts/exynos5420.dtsi          |  9 +++++
-> >  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 57 ++++++++++++++++++++++++++++++
-> >  2 files changed, 66 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> > index 4eaeabe..e459c1d 100644
-> > --- a/arch/arm/boot/dts/exynos5420.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> > @@ -415,6 +415,9 @@
-> >  			<&clock_audss EXYNOS_I2S_BUS>,
-> >  			<&clock_audss EXYNOS_SCLK_I2S>;
-> >  		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-> > +		#clock-cells = <1>;
-> > +		clock-output-names = "i2s_cdclk0";
-> > +		#sound-dai-cells = <1>;
-> >  		samsung,idma-addr = <0x03000000>;
-> >  		pinctrl-names = "default";
-> >  		pinctrl-0 = <&i2s0_bus>;
-> > @@ -429,6 +432,9 @@
-> >  		dma-names = "tx", "rx";
-> >  		clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
-> >  		clock-names = "iis", "i2s_opclk0";
-> > +		#clock-cells = <1>;
-> > +		clock-output-names = "i2s_cdclk1";
-> > +		#sound-dai-cells = <1>;
-> >  		pinctrl-names = "default";
-> >  		pinctrl-0 = <&i2s1_bus>;
-> >  		status = "disabled";
-> > @@ -442,6 +448,9 @@
-> >  		dma-names = "tx", "rx";
-> >  		clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
-> >  		clock-names = "iis", "i2s_opclk0";
-> > +		#clock-cells = <1>;
-> > +		clock-output-names = "i2s_cdclk2";
-> > +		#sound-dai-cells = <1>;
-> >  		pinctrl-names = "default";
-> >  		pinctrl-0 = <&i2s2_bus>;
-> >  		status = "disabled";
-> > diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> > index edc25cf..9275ad6 100644
-> > --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> > @@ -11,6 +11,7 @@
-> >  */
-> >
-> >  /dts-v1/;
-> > +#include <dt-bindings/sound/samsung-i2s.h>
-> >  #include "exynos5800.dtsi"
-> >
-> >  / {
-> > @@ -285,6 +286,62 @@
-> >  	rtc@101E0000 {
-> >  		status = "okay";
-> >  	};
-> > +
-> > +	sound: sound {
-> > +		compatible = "simple-audio-card";
-> > +		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
-> > +				<&clock_audss EXYNOS_MOUT_I2S>,
-> > +				<&clock_audss EXYNOS_DOUT_AUD_BUS>;
-> > +		assigned-clock-parents = <&clock CLK_FIN_PLL>,
-> > +				<&clock_audss EXYNOS_MOUT_AUDSS>;
-> > +		assigned-clock-rates = <0>,
-> > +				<0>,
-> > +				<19200000>;
-> 
-> The patch looks good, except it would be more appropriate to move the
-> above properties to &clock_audss { }; node in this file.
-> With that change feel free to add:
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> 
-> As a side note, this is a dts patch and of course Kukjin maintains that.
-> You would likely get it applied sooner if you would have addressed it
-> directly to Kukjin, rather than Mark or me.
-> 
-Yes, please. I'll apply this once you address comments per Sylwester's
-suggestion.
+On 03/24/2015 02:11 PM, Shawn Guo wrote:
+> On Mon, Mar 02, 2015 at 08:00:50PM +0000, Russell King wrote:
+>> Update SolidRun iMX6 platforms DT descriptions to be dual-licensed.
+>>
+>> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+>> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> ---
+>> Sascha, Rabeeh, I need an ack from you for this change we have changes
+>> from both of you in the mainline kernel.  Thanks.
+> Rabeeh,
+>
+> Sascha has ACK-ed the patch, and what about you?
+Acked-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
 
 Thanks,
-Kukjin
+Rabeeh
+
+>
+> Shawn
+>
+>>   arch/arm/boot/dts/imx6dl-cubox-i.dts           | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6dl-hummingboard.dts      | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6q-cubox-i.dts            | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6q-hummingboard.dts       | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6qdl-cubox-i.dtsi         | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6qdl-hummingboard.dtsi    | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi | 38 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/imx6qdl-microsom.dtsi        | 38 ++++++++++++++++++++++++++
+>>   8 files changed, 304 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+>> index 58aa8f2b0f26..e0b7fe8e18f8 100644
+>> --- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
+>> +++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+>> @@ -1,5 +1,43 @@
+>>   /*
+>>    * Copyright (C) 2014 Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   /dts-v1/;
+>>   
+>> diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts b/arch/arm/boot/dts/imx6dl-hummingboard.dts
+>> index 44a0e6736bb1..7369d2d7da3e 100644
+>> --- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
+>> +++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
+>> @@ -1,6 +1,44 @@
+>>   /*
+>>    * Copyright (C) 2014 Rabeeh Khoury (rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org)
+>>    * Based on dt work by Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   /dts-v1/;
+>>   
+>> diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts b/arch/arm/boot/dts/imx6q-cubox-i.dts
+>> index 9efd8b0c8011..670bd8c4c847 100644
+>> --- a/arch/arm/boot/dts/imx6q-cubox-i.dts
+>> +++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
+>> @@ -1,5 +1,43 @@
+>>   /*
+>>    * Copyright (C) 2014 Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   /dts-v1/;
+>>   
+>> diff --git a/arch/arm/boot/dts/imx6q-hummingboard.dts b/arch/arm/boot/dts/imx6q-hummingboard.dts
+>> index c2bf8476ce45..0f6044553a24 100644
+>> --- a/arch/arm/boot/dts/imx6q-hummingboard.dts
+>> +++ b/arch/arm/boot/dts/imx6q-hummingboard.dts
+>> @@ -1,6 +1,44 @@
+>>   /*
+>>    * Copyright (C) 2014 Rabeeh Khoury (rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org)
+>>    * Based on dt work by Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   /dts-v1/;
+>>   
+>> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+>> index 6a524ca011e7..04fa77496707 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+>> @@ -1,5 +1,43 @@
+>>   /*
+>>    * Copyright (C) 2014 Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   #include "imx6qdl-microsom.dtsi"
+>>   #include "imx6qdl-microsom-ar8035.dtsi"
+>> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+>> index 62841e85a91e..674cb237298f 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+>> @@ -1,5 +1,43 @@
+>>   /*
+>>    * Copyright (C) 2013,2014 Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   #include "imx6qdl-microsom.dtsi"
+>>   #include "imx6qdl-microsom-ar8035.dtsi"
+>> diff --git a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+>> index db9f45b2c573..4a1820309cdb 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+>> @@ -3,6 +3,44 @@
+>>    *
+>>    * This describes the hookup for an AR8035 to the iMX6 on the SolidRun
+>>    * MicroSOM.
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   &fec {
+>>   	pinctrl-names = "default";
+>> diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+>> index 79eac6849d4c..349f82be816e 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+>> @@ -1,5 +1,43 @@
+>>   /*
+>>    * Copyright (C) 2013,2014 Russell King
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>    */
+>>   
+>>   &iomuxc {
+>> -- 
+>> 1.8.3.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
