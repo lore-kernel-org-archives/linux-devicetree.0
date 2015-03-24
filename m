@@ -1,89 +1,82 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5] drm/panel: Add support for AUO b101ean01 panel
-Date: Tue, 24 Mar 2015 12:02:02 +0100
-Message-ID: <20150324110201.GK18115@ulmo.nvidia.com>
-References: <1425089938-27397-1-git-send-email-hl@rock-chips.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] of: Add vendor prefix for Ampire Co., Ltd.
+Date: Tue, 24 Mar 2015 12:04:18 +0100
+Message-ID: <20150324110417.GL18115@ulmo.nvidia.com>
+References: <1423677011-17993-1-git-send-email-p.zabel@pengutronix.de>
+ <1423677011-17993-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1257825905=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1425089938-27397-1-git-send-email-hl@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: huang lin <hl@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dbasehore@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KSn4sQg3MnruwCB4"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423677011-17993-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1257825905==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dxRQSzdsN/lOP445"
-Content-Disposition: inline
-
-
---dxRQSzdsN/lOP445
+--KSn4sQg3MnruwCB4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 28, 2015 at 10:18:58AM +0800, huang lin wrote:
-> The AUO b101ean01 panel is a 10.1" 1280x800 panel,
-> which can be supported by the simple panel driver.
+On Wed, Feb 11, 2015 at 06:50:08PM +0100, Philipp Zabel wrote:
+> Add Ampire Co., Ltd. to the list of device tree vendor prefixes.
 >=20
-> Signed-off-by: huang lin <hl@rock-chips.com>
->=20
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->=20
-> Changes in v5:
-> - increase the vsync time
->=20
->  .../devicetree/bindings/panel/auo,b101ean01.txt    |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++=
-++++++
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/auo,b101ean01=
-=2Etxt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Applied, thanks.
+Hi Rob,
+
+You acked patch 4/5 in this series but didn't explicitly ack this patch.
+Shall I assume that it applies to this as well?
+
 Thierry
 
---dxRQSzdsN/lOP445
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
+mentation/devicetree/bindings/vendor-prefixes.txt
+> index c0333a9..1ca9ea1 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -15,6 +15,7 @@ altr	Altera Corp.
+>  amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+>  amd	Advanced Micro Devices (AMD), Inc.
+>  amlogic	Amlogic, Inc.
+> +ampire	Ampire Co., Ltd.
+>  ams	AMS AG
+>  amstaos	AMS-Taos Inc.
+>  apm	Applied Micro Circuits Corporation (APM)
+> --=20
+> 2.1.4
+>=20
+
+--KSn4sQg3MnruwCB4
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJVEUQpAAoJEN0jrNd/PrOhFEAP/2E2tDKZB+z+oRwG7wG9PlPw
-AvihD8EwrZMbxvMbWM6x7GqA3OdHz5d6zBu7/GYAoz81Q55ftsx0mU4arx9BMUF7
-hZa4HBu64Bwe2VQ6y8geRFp7emfRmmqYQkvdEu+etvunI953FNsVY89pQrNyzox9
-X5kCgu5YiWIvhMATLZY6xLF06TYU1K5zu6XbQ+s31vXKgypsFrG7L1cEJD9TWOm3
-RP64c3MA3oRIjbi1zjBScqdXPN0uv0VvJ0EhSjQUn6vTQKzlJCGMBbFgzAPTzvm+
-NFVsxeKBLRuyOGGyiKR3rr9yOUYAb9F7vcSxLd6fgzoD8cnImE6LZEfbKmqMgiJn
-b+Ez+5zzQYI7E4ySqhTPrP7rPAmx8lOsTvoExeyfNU+Tz8pQmQIAkrs7DEbWeL9H
-gToaTwghQOq3Okf61pZgRpxqiAFvcarsxNa83F6ga7V72KXrdJqaAcgxisGjm/lg
-j4JoON/jA14abQkF6BnXgg2O07lY7wy5vWGvVYEPsgYhFZTHh5G7t9Zoudl01Fr5
-TlCmSFwLN2VXMXx7toZIXWN94JlbCGq+dwAJGckXoN1BSkWKPaJo2z6SH08kx2wx
-rYJgu57J0O6cg6Xc6i+xcOxpHXi+5Ne1imtDm2so45gY1Yi7PCax820iwUUIhrSr
-U/uyl1jPocWgPGGMI5wF
-=IPj+
+iQIcBAABCAAGBQJVEUSwAAoJEN0jrNd/PrOhcdkP/3GkgqXIYbOCLRxW8sAuqyIW
+AeVhPExjGpwyNy4KdKZPCFgfLOc7Ve9JKjBqr7MzL48HjUwY5renLva9mvPQUSIR
+AYagyCAZMV7da6Hmunk/eME3P+66UA2p460Ygbv4l+FZXOa/9HvVtiloHtJuKc9Q
+8ksqnGqJHvdu5XtOYTI8JtrjC+Q+r1FxYfUj/pYeren3sYMCF9sWF43bjnl2AbLG
+gSnIZaN3/aXcRVXkMd0zeuHDU3m4wbnStyLw++Azl8bocZWQHN2ZG9M//UaE49Dr
+nVobT3TeuQBhFkfEAB90ngm2err+KbqxmCkYciMftxGEm1BllwzASJbstFxIbGQ7
+/EcQA+6mTv5HMO7HWYh0QwxWpKDc0yl3m3UCBKHCNgcck2Z8mKWVthZOPW9/ODtV
+XeLh3aPQAnS5RQDAyTf5ZDxwBV4lTjl71cM33dA7zKdi/qyBGmT/xJD6/r/00Jiu
+P4E0kMVScygEsM7WpZu/VuhxMtCTwihTUwfusVdFP7lCPmi2DSjmd17dxxGze0xt
+8BK80lWIjtTMQkmQd8RA6hAMF8kgsPk/DJRs8W4O9XIidUsmsfPx4RmgiIs0ykNw
+xgsreCBs5jaoOnWoo59JkPlpheftwnTOCqtXunSHZ3gGoxQ+KWk2cuCqDCa1kXBR
+9n1ZdqRfhYg9TRQRCbk2
+=2wXm
 -----END PGP SIGNATURE-----
 
---dxRQSzdsN/lOP445--
-
---===============1257825905==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1257825905==--
+--KSn4sQg3MnruwCB4--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
