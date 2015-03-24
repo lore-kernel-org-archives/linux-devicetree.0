@@ -1,79 +1,69 @@
-From: Juergen Borleis <juergen@kreuzholzen.de>
-Subject: Re: [PATCH 7/7] ARM: dts: add OPPs for i.MX23/i.MX28
-Date: Tue, 24 Mar 2015 21:45:23 +0100
-Message-ID: <201503242145.26370.juergen@kreuzholzen.de>
-References: <1426984203-9133-1-git-send-email-stefan.wahren@i2se.com>
- <1426984203-9133-8-git-send-email-stefan.wahren@i2se.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/7] eeprom: Add a simple EEPROM framework for eeprom
+ providers
+Date: Tue, 24 Mar 2015 13:55:41 -0700
+Message-ID: <20150324205541.GC17265@sirena.org.uk>
+References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1426240214-2434-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150323210918.GS14954@sirena.org.uk>
+ <55108E2B.7050305@linaro.org>
+ <55112BD6.2070600@linaro.org>
+ <20150324172346.GW17265@sirena.org.uk>
+ <5511AE38.3000108@linaro.org>
+ <20150324190226.GB17265@sirena.org.uk>
+ <5511BA75.3020305@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1426984203-9133-8-git-send-email-stefan.wahren@i2se.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mjeOt6n4R71vn6wN"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, mark.rutland@arm.com, marex@denx.de, fabio.estevam@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dbaryshkov@gmail.com, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, sre@kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, broonie@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, sebastien.szymanski@armadeus.com, shawn.guo@linaro.org, dwmw2@infradead.org
+In-Reply-To: <5511BA75.3020305@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Stefan Wahren wrote:
-> [...]
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 98c1be6..21c1921 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -38,12 +38,23 @@
->  	};
->
->  	cpus {
-> -		#address-cells = <0>;
-> +		#address-cells = <1>;
->  		#size-cells = <0>;
->
-> -		cpu {
-> +		cpu@0 {
->  			compatible = "arm,arm926ej-s";
->  			device_type = "cpu";
-> +			reg = <0x0>;
-> +			operating-points = <
-> +				/* kHz	uV */
-> +				261819  1350000
-> +				360000  1350000
-> +				392728  1450000
-> +				454737  1550000
-> +			>;
-> +			clocks = <&clks 4>;
-> +			clock-latency = <61036>; /* two CLK32 periods */
-> +			cpu-supply = <&reg_vddd>;
->  		};
->  	};
 
-Maybe you should take into account not to reduce VDD below 1.55 V if the SDRAM 
-controller runs above 196 MHz. The i.MX28 datasheet[1] lists these 
-restrictions. VDD powers the SDRAM controller as well. From the datasheet the 
-table "Frequency versus Voltage for EMICLK" shows:
-                     
-             EMICLK Fmax (MHz)
-VDDD (V)      DDR2       mDDR
---------------------------------
- 1.550       205.71     205.71
- 1.450       196.36     196.36
- 1.350       196.36     196.36
+--mjeOt6n4R71vn6wN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-jbe
+On Tue, Mar 24, 2015 at 07:26:45PM +0000, Srinivas Kandagatla wrote:
+> On 24/03/15 19:02, Mark Brown wrote:
+> >On Tue, Mar 24, 2015 at 06:34:32PM +0000, Srinivas Kandagatla wrote:
+> >>>On 24/03/15 17:23, Mark Brown wrote:
 
-[1]
-  i.MX28 Applications
-Processors for Consumer
-     Products
-  Silicon Version 1.2
+> >>>>> >>regmap_get_size(regmap)
 
-Document Number: IMX28CEC
-   Rev. 3, 07/2012
+> >>>> >This is already there.
+
+> >>>Sorry, I can't see any such api atleast in v4.0-rc5 and linux-next? Are you
+> >>>referring to another api which does the same job?
+
+> >regmap_get_val_bytes()
+
+> This would return value bytes, but I wanted is the regmap->max_register
+> value which would be used for sanity checks in eeprom-core.
+
+Then you *really* want to pick a better name then, I'd never have
+inferred that meaning from "size" (consider sparse register maps for
+example).  Like I said, send patches (preferrably showing the users as
+well).
+
+--mjeOt6n4R71vn6wN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVEc9FAAoJECTWi3JdVIfQMvgH/0FxHeCACWt0iw0MmGE4zaTx
+sZA0bIAUEhDlOxU8EvjuWLLG0eB4rioQPFf0bBrWoRbLvQqSrKK3S7TCt9mQrSUv
++2sFs3Wk6C0n2m+PPSmaeR0264fJ02GnRGV7PtII2VOFBxhknGLP2Fa0ZucqNhXV
+OePO4v9Qsqfmakp5gx65w7ZyUeRYzBw4sOJATwRqBAYxAwMHea8GieB9EF5NHe2u
+atjeHjwpuFXlt8T7ewZRW6Q3Nlwi6ChtsESBMu2N6YCvMqJjxsU/cujW1dWm53JN
+pZdvKlwQk1Z2783oqh1sv0G4XqeNZd1LM6fwt3eCpy/DuOdR7/WgBmTHe3r9zxg=
+=LY5g
+-----END PGP SIGNATURE-----
+
+--mjeOt6n4R71vn6wN--
