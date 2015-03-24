@@ -1,64 +1,177 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 8/8] ARM: tegra: Add Tegra124 ACTMON support
-Date: Tue, 24 Mar 2015 11:32:19 +0100
-Message-ID: <20150324103218.GE18115@ulmo.nvidia.com>
-References: <1426584991-11110-1-git-send-email-tomeu.vizoso@collabora.com>
- <1426584991-11110-9-git-send-email-tomeu.vizoso@collabora.com>
+From: victorascroft-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH 00/12] USB: chipidea: patchset for performance improvement
+Date: Tue, 24 Mar 2015 16:02:53 +0530
+Message-ID: <20150324103253.GC4707@Sanchayan-Arch>
+References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jKBxcB1XkHIR0Eqt"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426584991-11110-9-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1426727963-32280-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Peter, 
 
---jKBxcB1XkHIR0Eqt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 15-03-19 09:19:11, Peter Chen wrote:
+> Hi all,
+> 
+> In this patch set, I add some interfaces for tuning the performance
+> of chipidea usb driver. With this set, the USB performance can be improved
+> at some user cases with suitable parameters. The main changes:
+> 
+> - Interface to tune interrupt threshold control, and set
+> 'Immediate' for default value
+> - The glue layer can disable stream mode according to USB role
+> - Interface to tune AHB burst configuration at SBUSCFG
+> - Interface to tune tx/rx burst size
+> - i.mx changes for achieving better performance, it can reduce
+>   the latecy between bus and USB FIFO, and reduce the overrun
+>   and underrun occurrences, it is useful for the system bus is busy.
+>   we see great improvement for ISO transfer, eg, high resolution
+>   USB camera when the bus is busy.
+> 
+> Below are some test results at imx6sx sdb board
+> (set ehci_hcd.park=3 at bootargs), the tests are done
+> at v4.0 kernel, no other bus loading during the tests,
+> so we have not seen performance change for some use cases.
+> 
+> USB Mass Storage (Host mode)
+> With Patch Set		Without Patch Set
+> R: 26.9 MB/s		27 MB/s
+> W: 25.2 MB/s		24.5 MB/s
+> 
+> 1G USB Ethernet Card
+> With Patch Set		Without Patch Set
+> TX: 186 Mb/s		185 Mb/s
+> RX: 219 Mb/s		216 Mb/s
+> 
+> g_ncm (Device Mode)
+> With Patch Set		Without Patch Set
+> TX: 166MB/s		163MB/s
+> RX: 230MB/s		184MB/s
+> 
 
-On Tue, Mar 17, 2015 at 10:36:18AM +0100, Tomeu Vizoso wrote:
-> Add device node for the ACTMON block to the Tegra124 device tree.
->=20
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> ---
->=20
-> v6:	* Remove operating-points property
->=20
-> v2:	* Add operating-points property
-> ---
->  arch/arm/boot/dts/tegra124.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+I tested these patches on a Colibri Vybrid VF61. Have not applied the 
+7th and 11th patch, but, the changes these patches introduce, I added 
+them to our device tree node. These would be  the addition of 
+ahb-burst-config = <0x0> and tx-burst-size-dword = <0x10> and 
+rx-burst-size-dword = <0x10> to the usb node in vfxxx.dtsi file for both 
+the peripheral and host usb nodes.
 
-Applied, thanks.
+I used hdparm and dd for the tests. Some of the readings are below.
 
-Thierry
+With this patchset applied
 
---jKBxcB1XkHIR0Eqt
-Content-Type: application/pgp-signature
+Reads
+hdparm -t --direct /dev/sda
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+/dev/sda:
+ Timing O_DIRECT disk reads:  36 MB in  3.05 seconds =  11.80 MB/sec
 
-iQIcBAABCAAGBQJVET0yAAoJEN0jrNd/PrOhLYcP/0ny/HqIFX127rQh3w0BPEgL
-8+TpX9Td9cOcIc5lhrs+mSFAQXruYr4YZi3buVh1JUGIv3WmKXhT6a5aJffFt9X3
-N9BU1XKPTpj66SmjKJifHtx4+t+6nGFHxRqeWr5IBQLy0KSq92ROMdMOGxheFObt
-tIgMIZE5m4Jo1g4fRoJ8s7R62RQ+igf4WTIsiNbrz2eF3I3t41erroWGam4sPPF0
-YYi+RKhqrWDVqZfHbtY/y8++4Km5vI77s8xmhNAXYHr0RvC2oP5ki04aCWtfZZvF
-JxBoB1lQYwlOzVQbcgceo7+UEtY6Qv8+EPAE0vy/G9a7t6UlxxTQwq3v76sN5s5u
-PPB8dV0dGybVj4g5fNvRWpNOMUlDUA6XuEv0yisnzKBb1U6mdIJ7Wxrx1p1YGKQh
-ST5S89w9Ok+le6WB8W0jbndeSRO/KN7Ghey60ze8FJqdG1+wM3myHiHDW5DDaxvL
-WrfoSQshR0C7tvQnOZU0Nvi1geWibpjNSW7TsHXdTTk0L67YcDCyk6XQ79h60zVC
-rnLZCRYgFxjkbUk3picBq+mfi1ksyoZiCZ1u1T4338mM73QXCyBgq+HIjYOhxyRr
-kHWR34Z6PX3OCNyRzpfOJ3lTXj2Eh4FKEjynPEetG7BqN75iDcc7mTLJX3+FO7IF
-7176s+OmaCDOs++fdd0C
-=amsA
------END PGP SIGNATURE-----
+Writes
+root@colibri-vf:~# time dd if=/dev/zero bs=128k count=4096
+of=/media/sda1/tmpfile
+4096+0 records in
+4096+0 records out
 
---jKBxcB1XkHIR0Eqt--
+real    1m11.671s
+user    0m0.010s
+sys     0m10.130s
+
+USB Client - RNDIS
+
+root@colibri-vf:~# iperf -c 192.168.1.1
+------------------------------------------------------------
+Client connecting to 192.168.1.1, TCP port 5001
+TCP window size: 43.8 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.1.2 port 41317 connected with 192.168.1.1 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec   105 MBytes  88.2 Mbits/sec
+
+Without this patchset applied
+
+Reads
+hdparm -t --direct /dev/sda
+
+/dev/sda:
+ Timing O_DIRECT disk reads:  78 MB in  3.06 seconds =  25.50 MB/sec
+
+Writes
+root@colibri-vf:~# time dd if=/dev/zero bs=128k count=4096
+of=/media/sda1/tmpfil
+4096+0 records in
+4096+0 records out
+
+real    0m43.807s
+user    0m0.050s
+sys     0m9.960s
+
+USB Client - RNDIS
+
+root@colibri-vf:~# iperf -c 192.168.1.1
+------------------------------------------------------------
+Client connecting to 192.168.1.1, TCP port 5001
+TCP window size: 43.8 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.1.2 port 49857 connected with 192.168.1.1 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec   138 MBytes   116 Mbits/sec
+
+
+Perhaps I am missing something? I have the ehci_hcd.park=3 set.
+
+root@colibri-vf:~# cat /proc/cmdline
+ehci_hcd.park=3 ubi.mtd=ubi root=ubi0:rootfs rootfstype=ubifs
+ubi.fm_autoconvert=1 mtdparts=vf610_nfc:128k(vf-bcb)ro,1408k(
+u-boot)ro,512k(u-boot-env),-(ubi) fec_mac= consoleblank=0 console=tty1
+console=ttyLP0,115200n8 mem=256M
+
+Is there any other parameter or variable I need to set?
+
+- Sanchayan
+
+> Peter Chen (12):
+>   Doc: usb: ci-hdrc-imx: add gadget-itc-setting for binding doc
+>   usb: chipidea: set ITC to 0 for device mode
+>   usb: chipidea: define stream mode disable for both roles
+>   usb: chipidea: imx: add stream mode enable for device mode at
+>     imx6sl/imx6sx
+>   usb: chipidea: introduce ci_platform_config
+>   Doc: usb: ci-hdrc-imx: add ahb-burst-config for binding doc
+>   ARM: imx6: set ahb-burst-config as 0 for USB
+>   usb: chipidea: add ahb burst configuration
+>   usb: chipidea: usbmisc_imx: add unburst setting for imx6
+>   Doc: usb: ci-hdrc-imx: add tx(rx)-burst-config-dword for binding doc
+>   ARM: imx6: change default burst size for USB
+>   usb: chipidea: add burst size configuration interface
+> 
+>  .../devicetree/bindings/usb/ci-hdrc-imx.txt        |  12 +++
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |  12 +++
+>  arch/arm/boot/dts/imx6sl.dtsi                      |   9 ++
+>  arch/arm/boot/dts/imx6sx.dtsi                      |   9 ++
+>  drivers/usb/chipidea/bits.h                        |   7 ++
+>  drivers/usb/chipidea/ci.h                          |   3 +
+>  drivers/usb/chipidea/ci_hdrc_imx.c                 |  14 ++-
+>  drivers/usb/chipidea/core.c                        | 119 +++++++++++++++++++--
+>  drivers/usb/chipidea/host.c                        |   6 +-
+>  drivers/usb/chipidea/usbmisc_imx.c                 |  12 ++-
+>  include/linux/usb/chipidea.h                       |  11 +-
+>  11 files changed, 191 insertions(+), 23 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
