@@ -1,49 +1,144 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Qualcomm PM8941 power key driver
-Date: Tue, 24 Mar 2015 11:42:22 -0700
-Message-ID: <20150324184222.GB27693@dtor-ws>
-References: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1424080516.2328.1.camel@mm-sol.com>
- <CAJAp7Oi0YbrTcJ1+ziWk0J02_qB=syQV=stLnXy2+txA2ZWQpw@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 2/2] ARM: cpuidle: Document the code
+Date: Tue, 24 Mar 2015 18:51:44 +0000
+Message-ID: <20150324185144.GB27311@red-moon>
+References: <20150323225828.GC15435@e102568-lin.cambridge.arm.com>
+ <1427190842-30675-1-git-send-email-daniel.lezcano@linaro.org>
+ <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJAp7Oi0YbrTcJ1+ziWk0J02_qB=syQV=stLnXy2+txA2ZWQpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 02:54:33AM +0100, Bjorn Andersson wrote:
-> On Mon, Feb 16, 2015 at 10:55 AM, Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
-> >
-> > On Fri, 2015-01-23 at 16:19 -0800, Bjorn Andersson wrote:
-> >> These patches add dt bindings and a device driver for the power key block in
-> >> the Qualcomm PM8941 pmic.
-> >>
-> >> Changes since v1:
-> >>  * Use a reboot_notifier to set power off/reboot mode
-> >>  * Use irq flags from devicetree
-> >>  * Some style fixes
-> >>
-> >> Courtney Cavin (2):
-> >>   input: Add Qualcomm PM8941 power key driver
-> >>   input: pm8941-pwrkey: Add DT binding documentation
-> >
-> > Tested-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> >
+On Tue, Mar 24, 2015 at 09:54:02AM +0000, Daniel Lezcano wrote:
+> Add kernel-doc format documentation in the code.
 > 
-> Thanks for your testing Ivan.
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  arch/arm/kernel/cpuidle.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 > 
-> Dmitry, can you apply this? (It still applies cleanly to linux-next)
-> 
+> diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
+> index 2b0dae3..9219613 100644
+> --- a/arch/arm/kernel/cpuidle.c
+> +++ b/arch/arm/kernel/cpuidle.c
+> @@ -21,6 +21,17 @@ static const struct of_cpuidle_method __cpuidle_method_of_table_sentinel
+>  
+>  static struct cpuidle_ops cpuidle_ops[NR_CPUS];
+>  
+> +/*
 
-Queued for 4.1, thank you.
+You miss a star here to comply with kernel-doc (comment valid throughout
+the patch for all functions).
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> + * arm_cpuidle_simple_enter() - a wrapper to cpu_do_idle()
+> + * @dev: not used
+> + * @drv: not used
+> + * @index: not used
+> + *
+> + * A trivial wrapper to allow the cpu_do_idle function to be assigned as a
+> + * cpuidle callback by matching the function signature.
+> + *
+> + * Returns the index passed as parameter
+> + */
+>  int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
+>  		struct cpuidle_driver *drv, int index)
+>  {
+> @@ -29,6 +40,16 @@ int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
+>  	return index;
+>  }
+>  
+> +/*
+> + * arm_cpuidle_suspend() - function to enter low power idle states
+> + * @index: an integer used as an identifier for the low level PM callbacks
+> + *
+> + * This function calls the underlying arch specific low level PM code as
+> + * registered at the init time.
+> + *
+> + * Returns -EOPNOTSUPP if no suspend callback is defined, the result of the
+> + * callback otherwise.
+> + */
+>  int arm_cpuidle_suspend(int index)
+>  {
+>  	int ret = -EOPNOTSUPP;
+> @@ -40,6 +61,15 @@ int arm_cpuidle_suspend(int index)
+>  	return ret;
+>  }
+>  
+> +/*
+> + * arm_cpuidle_get_ops() - find a registered cpuidle_ops by name
+> + * @method: the method name
+> + *
+> + * Search in the __cpuidle_method_of_table array the cpuidle ops matching the
+> + * method name.
+> + *
+> + * Returns a struct cpuidle_ops pointer, NULL if not found.
+> + */
+>  static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *method)
+>  {
+>  	struct of_cpuidle_method *m = __cpuidle_method_of_table;
+> @@ -51,6 +81,19 @@ static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *method)
+>  	return NULL;
+>  }
+>  
+> +/*
+> + * arm_cpuidle_read_ops() - Initialize the cpuidle ops with the device tree
+> + * @dn: a struct device node corresponding to a cpu node
+
+It is a pointer, not a struct.
+
+> + * @cpu: the cpu identifier
+> + *
+> + * Get the method name defined in the 'enabled-method' property, retrieve the
+> + * associated cpuidle_ops and do a struct copy. This copy is needed because all
+> + * cpuidle_ops are tagged __initdata and will be unloaded after the init
+> + * process.
+> + *
+> + * Return 0 on sucess, -ENOENT if no enabled-method is defined, -EOPNOTSUPP if
+> + * no cpuidle_ops is registered for the enabled-method.
+> + */
+>  static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
+>  {
+>  	const char *enable_method;
+> @@ -75,6 +118,21 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * arm_cpuidle_init() - Initialize cpuidle_ops for a specific cpu
+> + * @cpu: the cpu to be initialized
+> + *
+> + * Initialize the cpuidle ops with the device for the cpu and then call
+> + * the cpu's idle initialization callback. This may fail if the underlying HW
+> + * is not operational.
+> + *
+> + * Returns:
+> + *  0 on success,
+> + *  -ENODEV if it fails to find the cpu node in the device tree,
+> + *  -EOPNOTSUPP if it does not find a registered cpuidle_ops for this cpu,
+> + *  -ENOENT if it fails to find a enabled-method property,
+
+Ultra-nit: "an enabled-method"
+
+> + *  -ENXIO if the HW reports a failure or a misconfiguration
+
+-ENOMEM is missing.
+
+Apart from these ultraminor changes (and thanks for putting it
+together):
+
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+> + */
+>  int __init arm_cpuidle_init(int cpu)
+>  {
+>  	struct device_node *cpu_node = of_cpu_device_node_get(cpu);
+> -- 
+> 1.9.1
+> 
+> 
