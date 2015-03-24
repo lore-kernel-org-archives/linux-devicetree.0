@@ -1,89 +1,89 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 2/2] rtc: driver for Conexant Digicolor CX92755 on-chip
- RTC
-Date: Tue, 24 Mar 2015 07:31:24 +0200
-Message-ID: <20150324053124.GN2825@tarshish>
-References: <fa36a31a1d58d626ca0cb01ca0dece85aa2dfcb9.1427117334.git.baruch@tkos.co.il>
- <374ef109005ed14c3a0052a9da5226b87f8dc215.1427117334.git.baruch@tkos.co.il>
- <20150323153334.a373431dd5af6b669f716d83@linux-foundation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150323153334.a373431dd5af6b669f716d83-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
+Subject: [PATCH] coresight: adding basic support for Spreadtrum SC9836
+Date: Tue, 24 Mar 2015 13:48:33 +0800
+Message-ID: <1427176113-23411-1-git-send-email-zhang.chunyan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org, arnd@arndb.de
+Cc: mathieu.poirier@linaro.org, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, kaixu.xia@linaro.org, zhizhou.zhang@spreadtrum.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Support only for ETB, FUNNEL, STM are included currently.
+Support for ETM, TPIU and the replicator linked to it are not included in
+this version patch.
 
-On Mon, Mar 23, 2015 at 03:33:34PM -0700, Andrew Morton wrote:
-> On Mon, 23 Mar 2015 15:28:54 +0200 Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > Add driver for the RTC hardware block on the Conexant CX92755 SoC, from 
-> > the
-> > Digicolor series of SoCs. Tested on the Equinox evaluation board for the
-> > CX92755 chip.
-> > 
-> > ...
-> >
-> > +static int dc_rtc_read(struct dc_rtc *rtc, unsigned long *val)
-> > +{
-> > +	u8 read_cmds[] = {CMD_READ, CMD_NOP};
-> > +	u32 reference, time1, time2;
-> > +	int ret;
-> > +
-> > +	ret = dc_rtc_cmds(rtc, read_cmds, ARRAY_SIZE(read_cmds));
-> 
-> This is asking the compiler to build read_cmds[] on the stack each time
-> dc_rtc_read() is called.
-> 
-> If we instead create the array at compile time:
-> 
-> +++ a/drivers/rtc/rtc-digicolor.c
-> @@ -42,7 +42,7 @@ struct dc_rtc {
->  	void __iomem		*regs;
->  };
->  
-> -static int dc_rtc_cmds(struct dc_rtc *rtc, u8 *cmds, int len)
-> +static int dc_rtc_cmds(struct dc_rtc *rtc, const u8 *cmds, int len)
->  {
->  	u8 val;
->  	int i, ret;
-> @@ -62,7 +62,7 @@ static int dc_rtc_cmds(struct dc_rtc *rt
->  
->  static int dc_rtc_read(struct dc_rtc *rtc, unsigned long *val)
->  {
-> -	u8 read_cmds[] = {CMD_READ, CMD_NOP};
-> +	static const u8 read_cmds[] = {CMD_READ, CMD_NOP};
->  	u32 reference, time1, time2;
->  	int ret;
->  
-> @@ -86,7 +86,7 @@ static int dc_rtc_read(struct dc_rtc *rt
->  
->  static int dc_rtc_write(struct dc_rtc *rtc, u32 val)
->  {
-> -	u8 write_cmds[] = {CMD_WRITE, CMD_NOP, CMD_RESET, CMD_NOP};
-> +	static const u8 write_cmds[] = {CMD_WRITE, CMD_NOP, CMD_RESET, CMD_NOP};
->  
->  	writel_relaxed(val, rtc->regs + DC_RTC_REFERENCE);
->  	return dc_rtc_cmds(rtc, write_cmds, ARRAY_SIZE(write_cmds));
-> 
-> The code gets a bit smaller and faster:
-> 
->    text    data     bss     dec     hex filename
->    1628     400     512    2540     9ec drivers/rtc/rtc-digicolor.o-before
->    1593     400     536    2529     9e1 drivers/rtc/rtc-digicolor.o-after
+Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+---
+ arch/arm64/boot/dts/sprd/sc9836.dtsi | 57 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-Thanks for the tip, and for taking the driver through your tree.
-
-baruch
-
+diff --git a/arch/arm64/boot/dts/sprd/sc9836.dtsi b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+index f92f1b4..2ca80f3 100644
+--- a/arch/arm64/boot/dts/sprd/sc9836.dtsi
++++ b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+@@ -45,6 +45,63 @@
+ 		};
+ 	};
+ 
++	etb@10003000 {
++		compatible = "arm,coresight-etb10", "arm,primecell";
++		reg = <0 0x10003000 0 0x1000>;
++		arm,primecell-periphid = <0x0003b907>;
++		coresight-default-sink;
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		port {
++			etb_in: endpoint {
++				slave-mode;
++				remote-endpoint = <&funnel_out_port0>;
++			};
++		};
++	};
++
++	funnel@10001000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x10001000 0 0x1000>;
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* funnel output port */
++			port@0 {
++				reg = <0>;
++				funnel_out_port0: endpoint {
++					remote-endpoint = <&etb_in>;
++				};
++			};
++
++			/* funnel input port 0~3 is reserved for ETMs */
++			port@1 {
++				reg = <4>;
++				funnel_in_port4: endpoint {
++					slave-mode;
++					remote-endpoint = <&stm_out>;
++				};
++			};
++		};
++	};
++
++	stm@10006000 {
++		compatible = "arm,coresight-stm", "arm,primecell";
++		reg = <0 0x10006000 0 0x1000>,
++		      <0 0x01000000 0 0x180000>;
++		reg-names = "stm-base", "stm-stimulus-base";
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		port {
++			stm_out: endpoint {
++				remote-endpoint = <&funnel_in_port4>;
++			};
++		};
++	};
++
+ 	gic: interrupt-controller@12001000 {
+ 		compatible = "arm,gic-400";
+ 		reg = <0 0x12001000 0 0x1000>,
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
