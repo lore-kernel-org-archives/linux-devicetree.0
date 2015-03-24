@@ -1,57 +1,27 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH] ARM: Exynos5420: dt: Fixed the checkpatch.pl WARNING
- misspelled
-Date: Tue, 24 Mar 2015 22:11:56 +0900
-Message-ID: <02fb01d06634$1ac4ebf0$504ec3d0$@kernel.org>
-References: <1426883031-3518-1-git-send-email-linux.amoon@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Re-license SolidRun iMX6 platform DT GPL v2/X11
+Date: Tue, 24 Mar 2015 21:14:51 +0800
+Message-ID: <20150324131450.GK28410@dragon>
+References: <E1YSWWI-00026i-QE@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1426883031-3518-1-git-send-email-linux.amoon@gmail.com>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Anand Moon' <linux.amoon@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Russell King' <linux@arm.linux.org.uk>, 'Kukjin Kim' <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1YSWWI-00026i-QE-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Anand Moon wrote:
+On Mon, Mar 02, 2015 at 08:00:50PM +0000, Russell King wrote:
+> Update SolidRun iMX6 platforms DT descriptions to be dual-licensed.
 > 
-> Changes fixes the misspelled of #interrups-cell.
-> 
-> arch/arm/boot/dts/exynos5420.dtsi:224: WARNING: 'interrups'
-> 	 may be misspelled - perhaps 'interrupts'?
-> 
-> Tested on OdroidXU3 board.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index c0e98cf..a78ac1f 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -221,7 +221,7 @@
->  		compatible = "samsung,exynos4210-mct";
->  		reg = <0x101C0000 0x800>;
->  		interrupt-controller;
-> -		#interrups-cells = <1>;
-> +		#interrupt-cells = <1>;
+> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 
-Oops, what's happened :(
-I'm seeing the typo in exynos5250.dtsi as well...
-
-arch/arm/boot/dts/exynos5250.dtsi:146:          #interrups-cells = <2>;
-
-I'll apply with above fix.
-
-Thanks,
-Kukjin
-
->  		interrupt-parent = <&mct_map>;
->  		interrupts = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>,
->  				<8>, <9>, <10>, <11>;
-> --
-> 1.9.1
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
