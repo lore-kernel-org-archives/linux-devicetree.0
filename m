@@ -1,52 +1,38 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [RESEND PATCH v6 0/2] ARM: hip04: add GPIO support
-Date: Wed, 25 Mar 2015 14:57:43 +0800
-Message-ID: <1427266665-226718-1-git-send-email-wangzhou1@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 1/2] of: Allow selection of OF_DYNAMIC and OF_OVERLAY if
+ OF_UNITTEST
+Date: Tue, 24 Mar 2015 15:54:28 -0700
+Message-ID: <20150324225428.94AF4C4091C@trevor.secretlab.ca>
+References: <1422029405-9353-1-git-send-email-geert+renesas@glider.be>
+	<1422029405-9353-2-git-send-email-geert+renesas@glider.be>
+	<20150320122502.EB491C40724@trevor.secretlab.ca>
+	<CAL_Jsq+mVvSs-9jLEHyYec2RYfqpCSev3k0oUu=7PE06h+gFXQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+mVvSs-9jLEHyYec2RYfqpCSev3k0oUu=7PE06h+gFXQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
-synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
-corresponding dts. The default value of ARCH_NR_GPIOS is used to find gpio
-base here.
+On Fri, 20 Mar 2015 08:32:12 -0500
+, Rob Herring <robherring2@gmail.com>
+ wrote:
+> On Fri, Mar 20, 2015 at 7:25 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> > On Fri, 23 Jan 2015 17:10:04 +0100
+> > , Geert Uytterhoeven <geert+renesas@glider.be>
+> >  wrote:
+> >> Currently OF_DYNAMIC and OF_OVERLAY are not visible to the user, and are
+> >> selected automatically only when needed.
+> >>
+> >> Allow them to be enabled manually to improve device tree unit test
+> >> coverage.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > I like the change. Merged, thanks.
+> 
+> Making OF_OVERLAY visible is already in 4.0-rc4.
 
-Now this patchset is based on v4.0-rc5
+Yes, I modified the patch to fit.
 
-Change in v6:
-- Change E-mail address in signed-off-by to "wangzhou1@hisilicon.com"
-Change in v5:
-- Base on v3.19-rc1
-- Just use default value of ARCH_NR_GPIOS to find gpio base. Remove the new
-  added patch(3/4) in v4.
-Change in v4:
-- Delete "default 128 if ARCH_HIP04" in arch/arm/Kconfig
-- add a new patch to support find GPIO base number in increasing order
-- add gpio-number-forward property in snps gpio binding doc
-Change in v3:
-- Move CONFIG_GPIO_DWAPB to hisi_defconfig
-- Add CONFIG_GPIOLIB, CONFIG_GPIO_SYSFS in hisi_defconfig
-Change in v2:
-- Add select GPIO_DWAPB in arch/arm/mach-hisi/Kconfig
-
-Link for v4:
-- http://www.spinics.net/lists/arm-kernel/msg383883.html
-Link for v3:
-- http://www.spinics.net/lists/devicetree/msg60324.html
-
-
-Zhou Wang (2):
-  ARM: hip04: add GPIO configure in hisi_defconfig
-  ARM: dts: hip04: add GPIO pieces
-
- arch/arm/boot/dts/hip04.dtsi    | 75 +++++++++++++++++++++++++++++++++++++++++
- arch/arm/configs/hisi_defconfig |  1 +
- 2 files changed, 76 insertions(+)
-
--- 
-1.9.1
-
+g.
