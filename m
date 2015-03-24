@@ -1,121 +1,154 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/5] net: allwinner: emac: Claim our SRAM
-Date: Tue, 24 Mar 2015 08:22:17 -0700
-Message-ID: <20150324152217.GC4951@lukather>
-References: <1426877569-11493-1-git-send-email-hdegoede@redhat.com>
- <1426877569-11493-6-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v7 3/8] ARM: dt: Binding documentation for imx25
+ touchscreen controller
+Date: Tue, 24 Mar 2015 17:10:58 +0100
+Message-ID: <20150324161058.GJ28604@pengutronix.de>
+References: <1425369498-25541-1-git-send-email-mpa@pengutronix.de>
+ <1425369498-25541-4-git-send-email-mpa@pengutronix.de>
+ <54FB3740.6010908@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR43Y2UAKGQEPTI7V5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426877569-11493-6-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3749861383670816760=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54FB3740.6010908@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lars-Peter Clausen <lars@metafoo.de>, Samuel Ortiz <sameo@linux.intel.com>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---zCKi3GIZzVBPywwA
-Content-Type: text/plain; charset=UTF-8
+
+--===============3749861383670816760==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="liqSWPDvh3eyfZ9k"
 Content-Disposition: inline
 
-On Fri, Mar 20, 2015 at 07:52:49PM +0100, Hans de Goede wrote:
-> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> The SRAM the EMAC is using might not have been mapped accordingly by the
-> bootloader, preventing the EMAC to work properly.
-> 
-> Ask for that SRAM to be mapped at probe time to make sure that this never
-> happens.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Make sure SUNXI_SRAM gets enabled in Kconfig]
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/net/ethernet/allwinner/sun4i-emac.c | 13 +++++++++++--
->  drivers/net/ethernet/stmicro/stmmac/Kconfig |  1 +
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-> index f3470d9..9d0136b 100644
-> --- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-> +++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-> @@ -29,6 +29,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/phy.h>
->  
-> +#include <linux/soc/sunxi/sunxi_sram.h>
-> +
->  #include "sun4i-emac.h"
->  
->  #define DRV_NAME		"sun4i-emac"
-> @@ -857,11 +859,15 @@ static int emac_probe(struct platform_device *pdev)
->  
->  	clk_prepare_enable(db->clk);
->  
-> +	ret = sunxi_sram_claim(SUNXI_SRAM_EMAC, "emac");
-> +	if (ret)
-> +		dev_warn(&pdev->dev, "Couldn't map SRAM to device\n");
-> +
->  	db->phy_node = of_parse_phandle(np, "phy", 0);
->  	if (!db->phy_node) {
->  		dev_err(&pdev->dev, "no associated PHY\n");
->  		ret = -ENODEV;
-> -		goto out;
-> +		goto out_release_sram;
->  	}
->  
->  	/* Read MAC-address from DT */
-> @@ -893,7 +899,7 @@ static int emac_probe(struct platform_device *pdev)
->  	if (ret) {
->  		dev_err(&pdev->dev, "Registering netdev failed!\n");
->  		ret = -ENODEV;
-> -		goto out;
-> +		goto out_release_sram;
->  	}
->  
->  	dev_info(&pdev->dev, "%s: at %p, IRQ %d MAC: %pM\n",
-> @@ -901,6 +907,8 @@ static int emac_probe(struct platform_device *pdev)
->  
->  	return 0;
->  
-> +out_release_sram:
-> +	sunxi_sram_release(SUNXI_SRAM_EMAC);
->  out:
->  	dev_err(db->dev, "not found (%d).\n", ret);
->  
-> @@ -914,6 +922,7 @@ static int emac_remove(struct platform_device *pdev)
->  	struct net_device *ndev = platform_get_drvdata(pdev);
->  
->  	unregister_netdev(ndev);
-> +	sunxi_sram_release(SUNXI_SRAM_EMAC);
->  	free_netdev(ndev);
->  
->  	dev_dbg(&pdev->dev, "released and freed device\n");
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index 7d3af19..785ca22 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -16,6 +16,7 @@ if STMMAC_ETH
->  config STMMAC_PLATFORM
->  	tristate "STMMAC Platform bus support"
->  	depends on STMMAC_ETH
-> +	select SUNXI_SRAM if ARCH_SUNXI
->  	default y
->  	---help---
->  	  This selects the platform specific bus support for the stmmac driver.
 
-Shouldn't that be in emac's Kconfig option instead?
+--liqSWPDvh3eyfZ9k
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---zCKi3GIZzVBPywwA--
+On Sat, Mar 07, 2015 at 05:37:04PM +0000, Jonathan Cameron wrote:
+> On 03/03/15 07:58, Markus Pargmann wrote:
+> > This is the touchscreen conversion queue binding documentation. It uses
+> > the shared imx25 ADC.
+> >=20
+> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> Looks fine, one more general binding approach comment though.
+> A lot of the vendor specific elements in here are awfully generic.
+> Does it not make sense to have them as standard attributes for
+> touch screen drivers?
+> > ---
+> >=20
+> > Notes:
+> >     Changes in v5:
+> >      - Fix signed/unsigned comparison
+> >      - Fix unused variable settling_time by putting it in the correct a=
+rgument list
+> >      - Use continous conversion queue with the repeat feature and a pro=
+per
+> >        repeat-wait. Previously the touchscreen caused massive number of=
+ interrupts.
+> >=20
+> >  .../bindings/input/touchscreen/fsl-mx25-tcq.txt    | 29 ++++++++++++++=
+++++++++
+> >  1 file changed, 29 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
+/fsl-mx25-tcq.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl-mx=
+25-tcq.txt b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-t=
+cq.txt
+> > new file mode 100644
+> > index 000000000000..4214a99d197a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.=
+txt
+> > @@ -0,0 +1,29 @@
+> > +Freescale mx25 TS conversion queue module
+> > +
+> > +mx25 touchscreen conversion queue module which controls the ADC unit o=
+f the
+> > +mx25 for attached touchscreens.
+> > +
+> > +Required properties:
+> > + - compatible: Should be "fsl,imx25-tcq".
+> > + - reg: Memory range of the device.
+> > + - interrupts: Should be the interrupt number associated with this mod=
+ule within
+> > +   the tscadc unit (<0>).
+> > + - interrupt-parent: Should be a phandle to the tscadc unit.
+> > + - fsl,wires: Should be '<4>' or '<5>'
+> > +
+> > +Optional properties:
+> > + - fsl,pen-debounce: Pen debounce time.
+> > + - fsl,pen-threshold: Pen-down threshold for the touchscreen.
+> > + - fsl,settling-time: Settling time in nanoseconds.
+> Obviously it's up to Dmitry etc, but are these not standard enough attrib=
+utes to
+> not be vendor specific?  I'd expect say touch-pen-debouce and touch-pen-t=
+hreshold
+> etc to be standard binding elements for touch screens.
+
+Seems like a good idea. I just discovered that there is a 'touchscreen-fuzz=
+-pressure'
+which seems to be the same as fsl,pen-threshold. So this should be
+replaced in my patches. The other properties do not exist.
+
+Dmitry, what do you think about some standard properties for the
+remaining?
+
+Best Regards,
+
+Markus
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--liqSWPDvh3eyfZ9k
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVEYySAAoJEEpcgKtcEGQQOLAP+QFnOQA6/FPTVapckMK7i84b
+7fhvPB12SsGH0mculX5SxmLgwEr0Ab9A+97HyiIn0rvuDxtKZ5kTvov4tOl8vspW
+4H1aA6hfpe+2+G2QHIcoRIpk9ulwDtPOhgpv1FsdgkFOdQWiLIDTE0hWGJfKBgUo
+tKBjBHFIP34nytS9Z16yB+k4+hG1elwZg1EKp67j4RUzvP4g8J/0Y5Jn1JA2KS55
+C9hCSpxyLIvyzYD+bfyM1H2nm6GacysWtWgXEM4wrZCJgxpuMHcQFKUgLs2oV/YN
+15opOvwLZFQVj6iKV2oVihXYykdNPHcwGCj9PeAz476/5hlacQlzpL907yAytqsT
+EHoAlAMt8TOCMhC3/z6G3CLxTKW8+5NC5Q8ZKPiIjRDZntKiS5oY1s3fyq3W4sO1
+yEijtAgxrGC6ES3lrHlg5ucP4sMU6yP6+sOSoocFk3Id63CZrPKeIzPWZ8SiMbYB
+IBwQC42bBuIaLHzE43v1Q/199+xKXKS8uYgMp5RJKeh4Q/blSThKq9vHyjaAkMQX
+AztlQDjJFwFROb+huOQmzZMTjgnut58hNAC2FgpdpkwUkyXBf0RJ3R6WRPTjc0hG
+zBkN62q6G7ZeCD0coPLKCgASKd6D27bpFRn0ZotQMGFpzxW9LwBEFgDRQpU1IRgc
+RmmKmDKcnMM8jotgkE5K
+=DKoQ
+-----END PGP SIGNATURE-----
+
+--liqSWPDvh3eyfZ9k--
+
+
+--===============3749861383670816760==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3749861383670816760==--
