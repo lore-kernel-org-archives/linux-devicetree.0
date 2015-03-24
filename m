@@ -1,68 +1,80 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v6 5/9] watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
-Date: Tue, 24 Mar 2015 09:25:36 +0000
-Message-ID: <1427189140-1935-6-git-send-email-lee.jones@linaro.org>
-References: <1427189140-1935-1-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v6 0/9] mfd: watchdog: rtc: New driver for ST's LPC IP
+Date: Tue, 24 Mar 2015 09:25:31 +0000
+Message-ID: <1427189140-1935-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427189140-1935-1-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
 Cc: lee.jones@linaro.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On current ST platforms the LPC controls a number of functions including
-Watchdog and Real Time Clock.  This patch provides the bindings used to
-configure LPC in Watchdog mode.
+[Alessandro: This just needs RTC Acks now]
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/watchdog/st_lpc_wdt.txt    | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ST's Low Power Controller (LPC) controls two devices; watchdog and RTC.
+Only one of the devices can be used at any one time, which is enforced
+by the Device Driver model.
+
+This driver set provides everything you need to choose one (and only
+one) of the LPC devices to run per I/P block, of which there are two
+on the enabled STiH407 h/w.
+
+Version 6:
+ - RTC: GPL v2 => GPL to reflect the information in the header
+ - Applied another Reviewed-by from Guenter
+ 
+Version 5:
+ - Disable WDT clock over suspend
+ - WDT: GPL v2 => GPL to reflect the information in the header
+ - Change module name in Kconfig help and file header
+
+Version 4:
+ - Use {readl,writel}_relaxed() calls
+ - Add Guenter's Reviewed-by
+ - Rebased onto v4.0-rc1
+
+Version 3:
+ - Move Regmap pointer into core device data structure
+ - Remove error message from devm_ioremap_resource
+
+Version 2:
+ - Only calculate keepalive once in probe()
+ - Check for a 0 clk_rate
+ - Set limits using predefined attributes from watchdog_device
+ - CONFIG_PM => CONFIG_SLEEP
+ - Call st_wdog_setup() on resume
+ - Remove MFD driver -- instead rely on driver probing mechanism
+   which continues attempting to bind to different drivers until
+   one does not return -ENODEV
+
+Lee Jones (9):
+  mfd: dt-bindings: Provide human readable defines for LPC mode choosing
+  ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
+  ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
+  ARM: STi: DT: STiH407: Add Device Tree node for the LPC
+  watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
+  watchdog: st_wdt: Add new driver for ST's LPC Watchdog
+  rtc: bindings: Provide ST bindings for ST's LPC RTC device
+  rtc: st: add new driver for ST's LPC RTC
+  MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
+
+ .../devicetree/bindings/rtc/rtc-st-lpc.txt         |  25 ++
+ .../devicetree/bindings/watchdog/st_lpc_wdt.txt    |  38 +++
+ MAINTAINERS                                        |   2 +
+ arch/arm/boot/dts/stih407-family.dtsi              |  20 ++
+ arch/arm/configs/multi_v7_defconfig                |   2 +
+ drivers/rtc/Kconfig                                |  12 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-st-lpc.c                           | 354 +++++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  13 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/st_lpc_wdt.c                      | 344 ++++++++++++++++++++
+ include/dt-bindings/mfd/st-lpc.h                   |  15 +
+ 12 files changed, 827 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
  create mode 100644 Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+ create mode 100644 drivers/rtc/rtc-st-lpc.c
+ create mode 100644 drivers/watchdog/st_lpc_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st-lpc.h
 
-diff --git a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-new file mode 100644
-index 0000000..1bdf023
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
-@@ -0,0 +1,38 @@
-+STMicroelectronics Low Power Controller (LPC) - Watchdog
-+========================================================
-+
-+LPC currently supports Watchdog OR Real Time Clock functionality.
-+
-+[See: ../rtc/rtc-st-lpc.txt for RTC options]
-+
-+Required properties
-+
-+- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
-+				  "st,stih415-lpc" "st,stid127-lpc"
-+- reg		: LPC registers base address + size
-+- interrupts    : LPC interrupt line number and associated flags
-+- clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
-+- st,lpc-mode	: The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
-+		  ST_LPC_MODE_WDT [1].  One (and only one) mode must be
-+		  selected.
-+
-+Required properties [watchdog mode]
-+
-+- st,syscfg	: Phandle to syscfg node used to enable watchdog and configure
-+		  CPU reset type.
-+- timeout-sec	: Watchdog timeout in seconds
-+
-+Optional properties [watchdog mode]
-+
-+- st,warm-reset	: If present reset type will be 'warm' - if not it will be cold
-+
-+Example:
-+	lpc@fde05000 {
-+		compatible	= "st,stih416-lpc-watchdog";
-+		reg		= <0xfde05000 0x1000>;
-+		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
-+		st,syscfg	= <&syscfg_core>;
-+		timeout-sec	= <120>;
-+		st,lpc-mode	= <ST_LPC_MODE_WDT>;
-+		st,warm-reset;
-+	};
 -- 
 1.9.1
