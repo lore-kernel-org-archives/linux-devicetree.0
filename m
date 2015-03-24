@@ -1,70 +1,79 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [U-Boot] serial atag tag in devicetree ?
-Date: Tue, 24 Mar 2015 09:01:53 +0100
-Message-ID: <551119F1.2060002@redhat.com>
-References: <550EA6D8.3090702@redhat.com> <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com> <550FF971.407@redhat.com> <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ@mail.gmail.com>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [PATCH v7 3/5] power: max77843_battery: Add Max77843 fuel gauge
+ device driver
+Date: Tue, 24 Mar 2015 17:02:30 +0900
+Message-ID: <55111A16.4090800@samsung.com>
+References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
+ <1425291038-18269-4-git-send-email-jaewon02.kim@samsung.com>
+ <20150307201426.GG5233@earth> <54FCEB17.70809@samsung.com>
+ <CAJKOXPcLa8jGBS9r=iAbuco5+9=XcjsEFazFtAWinYUQDArkUQ@mail.gmail.com>
+ <54FEF52E.7060409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <54FEF52E.7060409@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 24-03-15 00:12, Rob Herring wrote:
-> On Mon, Mar 23, 2015 at 6:30 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+On 03/10/2015 10:44 PM, Beomho Seo wrote:
+> On 03/09/2015 07:01 PM, Krzysztof Kozlowski wrote:
+>> 2015-03-09 1:36 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+>>> On 03/08/2015 05:14 AM, Sebastian Reichel wrote:
+>>>> Hi,
+>>>>
+>>>> On Mon, Mar 02, 2015 at 07:10:36PM +0900, Jaewon Kim wrote:
+>>>>> From: Beomho Seo <beomho.seo@samsung.com>
+>>>>>
+>>>>> This patch adds device driver of max77843 fuel gauge.
+>>>>> The driver support for battery fuel gauge in Maxim Max77843.
+>>>>> It is fuel-gauge systems for lithuum-ion batteries in handled and
+>>>>> portable devices.
+>>>>>
+>>>>> Cc: Sebastian Reichel <sre@kernel.org>
+>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>>>>
+>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+>>>>
+>>>> I can't take it as is, since it depends on the private header file
+>>>> of PATCH 1.
+>>>>
+>>>> -- Sebastian
+>>>>
+>>>
+>>> This patch reviewed by Sebastian.
+>>> Could you Please merge that your git tree ?
+>>
 >> Hi,
 >>
+>> Sorry for late response, but I finally got some time to look at this.
+>> This driver looks very similar to max17042_battery.c fuel gauge
+>> driver. Obtaining some properties looks exactly the same. The
+>> difference seems to be in new properties. The I2C address is the same.
 >>
->> On 22-03-15 22:01, Rob Herring wrote:
-
-<snip>
-
->>> There is already "serial-number" (a string) which exists for
->>> OpenFirmware. Also, "copyright" corresponds to vendor/manufacturer
->>> string. Both of these are supported by lshw already.
+>> I highly recommend to extend the max17042 driver instead. It already
+>> supports also max17047, max17050 and max77693.
 >>
+>> Best regards,
+>> Krzysztof
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >>
->> Ok, so if I understand you correctly then you're saying that we
->> should set a "serial-number" string property at the dt root level
->> and that this may contain pretty much anything, e.g. in the
->> sunxi case the full 128 bit SID in hex.
->
-> Right.
->
->> Is the use of the "serial-number" string property already documented
->> somewhere? If not I'll submit a kernel patch to document it.
->
-> Not that I'm aware of. It is something that predates our documentation
-> requirements. It could be in OpenFirmware specs. Documenting it in the
-> DT bindings does not hurt.
+> 
+> OK. I will follow your opinion about fuel gauge. I will extend the max17042 driver.
+> After test on my board, I will send a new patch set.
+> 
+> Best regards,
+> Beomho Seo
 
-Ok.
+Krzysztof, gentle ping?
 
->> And for older kernels we should not set any serial atag (u-boot
->> always sets it, so this leaves it at 0) and old kernel users are
->> out of luck wrt getting to the serial ?
->
-> If there is sufficient reason to support this on old kernels you could.
+I will extend the max17042 driver.
 
-One problem with supporting this for older kernels is that if a non 0
-serial gets shown in /proc/cpuinfo with older atag booted kernels, we
-should really show the same number in /proc/cpuinfo which means adding
-code to the kernel to get the devicetree "serial-number" string property
-and somehow put that into the 64 bits which we have in /proc/cpuinfo,
-but given that the "serial-number" string could be hex or decimal or
-what ever and > 64 bits that will likely require a platform specific
-solution. All doable, but the question then becomes is this worth the
-effort ?
+Best regards,
+Beomho Seo
 
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
