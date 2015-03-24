@@ -1,86 +1,62 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v3 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Tue, 24 Mar 2015 18:21:34 +0100
-Message-ID: <CALszF6Dg7t9+F9NG+xREPQeaAj7T6D1GuGabkr8EvOAAdtg7yA@mail.gmail.com>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
-	<1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
-	<CAHp75Vd7+oLiLLuyocYh95TebtocWrRho6xNjuSUt8fYGp8npg@mail.gmail.com>
-	<CALszF6BWuUYRh+3rWnSQLApkAHA5dQXw=6x6D_evRtb+5B_ukA@mail.gmail.com>
-	<CAHp75Vdf6=z1d5+eYJ+QGTko9kkZf-oPfoWaf8FRoTdqcdWxjw@mail.gmail.com>
-	<CALszF6A5Zu7i0hxSLTS-nfOAXmd0__jLjB=fHxK93Ex5Vbi9LA@mail.gmail.com>
-	<550AE41C.8070803@hurleysoftware.com>
-	<CALszF6DX2pz_US6uqQwBjmZhfgjw5PP1UAy9H+c-_Kgkk_Z72w@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/7] eeprom: Add a simple EEPROM framework for eeprom
+ providers
+Date: Tue, 24 Mar 2015 10:23:46 -0700
+Message-ID: <20150324172346.GW17265@sirena.org.uk>
+References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1426240214-2434-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150323210918.GS14954@sirena.org.uk>
+ <55108E2B.7050305@linaro.org>
+ <55112BD6.2070600@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oNLI4EWr1RPQuPCf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALszF6DX2pz_US6uqQwBjmZhfgjw5PP1UAy9H+c-_Kgkk_Z72w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <55112BD6.2070600@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-founda>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
 
-2015-03-19 18:35 GMT+01:00 Maxime Coquelin <mcoquelin.stm32@gmail.com>:
-> 2015-03-19 15:58 GMT+01:00 Peter Hurley <peter@hurleysoftware.com>:
->> On 03/19/2015 09:55 AM, Maxime Coquelin wrote:
->>>>>>> +static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
->>>>>>> +                           struct ktermios *old)
->> [...]
->>>>>>> +       usardiv = (port->uartclk * 25) / (baud * 4);
->>>>>>> +       mantissa = (usardiv / 100) << USART_BRR_DIV_M_SHIFT;
->>>>>>> +       fraction = DIV_ROUND_CLOSEST((usardiv % 100) * 16, 100);
->>>>>>> +       if (fraction & ~USART_BRR_DIV_F_MASK) {
->>>>>>> +               fraction = 0;
->>>>>>> +               mantissa += (1 << USART_BRR_DIV_M_SHIFT);
->>>>>>> +       }
->> [...]
->>> Really, I would prefer keeping this fractional divider as it is
->>> implemented today.
->>
->> You have to admit that's basically an unintelligible mess;
->> how would anyone ever be able to refactor and replace that with a
->> common divider implementation?
->>
->> At the very least, please comment on the formula and format.
->
-> Ok, I will refactor the implementation, and comment it.
+--oNLI4EWr1RPQuPCf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The implementation was indeed a mess.
-I found some time to refactor the code, and also added support for 8
-times oversampling (16 by default).
-It will allow to achieve higher speeds, with the side effect of being
-less tolerant to clock deviations.
+On Tue, Mar 24, 2015 at 09:18:14AM +0000, Srinivas Kandagatla wrote:
 
-What do you think about the code below?
+> I did try your suggestion, by which I could remove the regmap from config.
+> One thing I did not like was eeprom-core getting size/stride info directly
+> from providers and regmap from regmap apis. I was wondering if we could take
+> a step further and introduce new regmap helpers like
 
+> regmap_get_size(regmap)
 
-    usartdiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
+This is already there.
 
-    /*
-     * The USART supports 16 or 8 times oversampling.
-     * By default we prefer 16 times oversampling, so that the receiver
-     * has a better tolerance to clock deviations.
-     * 8 times oversampling is only used to achieve higher speeds.
-     */
-    if (usartdiv < 16) {
-        oversampling = 8;
-        stm32_set_bits(port, USART_CR1, USART_CR1_OVER8);
-    } else {
-        oversampling = 16;
-        stm32_clr_bits(port, USART_CR1, USART_CR1_OVER8);
-    }
+> regmap_get_stride(regmap)
 
-    mantissa = (usartdiv / oversampling) << USART_BRR_DIV_M_SHIFT;
-    fraction = usartdiv % oversampling;
-    writel_relaxed(mantissa | fraction, port->membase + USART_BRR)
+> Which would be give eeprom-core the size and stride info, doing this way
+> would cut down regmap related things from eeprom_config structure to minimal
+> and also the source of information would come from just regmap apis.
 
-Thanks,
-Maxime
->
-> Regards,
-> Maxime
->
->>
->> Regards,
->> Peter Hurley
+Documentation/SubmittingPatches...
+
+--oNLI4EWr1RPQuPCf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVEZ2hAAoJECTWi3JdVIfQ80EH/2BOc+yTnqkp0l/jbAggXbi0
+vrr0TP4o/37AHzkGBQfqLn+NB3gp7iekx1PmtNkXOXurR2odcyb8pCZ+qv20db7G
+H0QsmLr7T2RqnhoO1DBFmeltpPu20TuPfpYIjb+jdIgrhMOoVnFZHrUvtnq5W2Ch
+3a5Whx0/t6m6oe0LX+0bB/mZghcmeLh1TxUVSri6OMRYOE7GQvieZEooBFji5Hk5
+O/BJvSQqsZJOgZcjUYuElKc495ocmwlqFqRYkXsqhHRJN5JeS9YfbQXTz9tQkISu
+50n6vQ9lwLfs+mGDzoTNR9l95t5mOZ2dyjST/FXfGQfRMnYWv1HFL2i7xXzh6YE=
+=WEWy
+-----END PGP SIGNATURE-----
+
+--oNLI4EWr1RPQuPCf--
