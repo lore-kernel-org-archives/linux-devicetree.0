@@ -1,119 +1,69 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 2/2] ARM: cpuidle: Document the code
-Date: Tue, 24 Mar 2015 10:54:02 +0100
-Message-ID: <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org>
-References: <20150323225828.GC15435@e102568-lin.cambridge.arm.com>
- <1427190842-30675-1-git-send-email-daniel.lezcano@linaro.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v6 03/12] drm/panel: add support for Samsung LTN140AT29
+ panel
+Date: Tue, 24 Mar 2015 11:27:09 +0100
+Message-ID: <20150324102708.GC18115@ulmo.nvidia.com>
+References: <1426672363-30667-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1426672363-30667-4-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427190842-30675-1-git-send-email-daniel.lezcano@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1426672363-30667-4-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com
-Cc: rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lina.iyer@linaro.org, sboyd@codeaurora.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-tegra@vger.kernel.org, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add kernel-doc format documentation in the code.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- arch/arm/kernel/cpuidle.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+--V88s5gaDVPzZ0KCq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
-index 2b0dae3..9219613 100644
---- a/arch/arm/kernel/cpuidle.c
-+++ b/arch/arm/kernel/cpuidle.c
-@@ -21,6 +21,17 @@ static const struct of_cpuidle_method __cpuidle_method_of_table_sentinel
- 
- static struct cpuidle_ops cpuidle_ops[NR_CPUS];
- 
-+/*
-+ * arm_cpuidle_simple_enter() - a wrapper to cpu_do_idle()
-+ * @dev: not used
-+ * @drv: not used
-+ * @index: not used
-+ *
-+ * A trivial wrapper to allow the cpu_do_idle function to be assigned as a
-+ * cpuidle callback by matching the function signature.
-+ *
-+ * Returns the index passed as parameter
-+ */
- int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
- 		struct cpuidle_driver *drv, int index)
- {
-@@ -29,6 +40,16 @@ int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
- 	return index;
- }
- 
-+/*
-+ * arm_cpuidle_suspend() - function to enter low power idle states
-+ * @index: an integer used as an identifier for the low level PM callbacks
-+ *
-+ * This function calls the underlying arch specific low level PM code as
-+ * registered at the init time.
-+ *
-+ * Returns -EOPNOTSUPP if no suspend callback is defined, the result of the
-+ * callback otherwise.
-+ */
- int arm_cpuidle_suspend(int index)
- {
- 	int ret = -EOPNOTSUPP;
-@@ -40,6 +61,15 @@ int arm_cpuidle_suspend(int index)
- 	return ret;
- }
- 
-+/*
-+ * arm_cpuidle_get_ops() - find a registered cpuidle_ops by name
-+ * @method: the method name
-+ *
-+ * Search in the __cpuidle_method_of_table array the cpuidle ops matching the
-+ * method name.
-+ *
-+ * Returns a struct cpuidle_ops pointer, NULL if not found.
-+ */
- static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *method)
- {
- 	struct of_cpuidle_method *m = __cpuidle_method_of_table;
-@@ -51,6 +81,19 @@ static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *method)
- 	return NULL;
- }
- 
-+/*
-+ * arm_cpuidle_read_ops() - Initialize the cpuidle ops with the device tree
-+ * @dn: a struct device node corresponding to a cpu node
-+ * @cpu: the cpu identifier
-+ *
-+ * Get the method name defined in the 'enabled-method' property, retrieve the
-+ * associated cpuidle_ops and do a struct copy. This copy is needed because all
-+ * cpuidle_ops are tagged __initdata and will be unloaded after the init
-+ * process.
-+ *
-+ * Return 0 on sucess, -ENOENT if no enabled-method is defined, -EOPNOTSUPP if
-+ * no cpuidle_ops is registered for the enabled-method.
-+ */
- static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
- {
- 	const char *enable_method;
-@@ -75,6 +118,21 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
- 	return 0;
- }
- 
-+/*
-+ * arm_cpuidle_init() - Initialize cpuidle_ops for a specific cpu
-+ * @cpu: the cpu to be initialized
-+ *
-+ * Initialize the cpuidle ops with the device for the cpu and then call
-+ * the cpu's idle initialization callback. This may fail if the underlying HW
-+ * is not operational.
-+ *
-+ * Returns:
-+ *  0 on success,
-+ *  -ENODEV if it fails to find the cpu node in the device tree,
-+ *  -EOPNOTSUPP if it does not find a registered cpuidle_ops for this cpu,
-+ *  -ENOENT if it fails to find a enabled-method property,
-+ *  -ENXIO if the HW reports a failure or a misconfiguration
-+ */
- int __init arm_cpuidle_init(int cpu)
- {
- 	struct device_node *cpu_node = of_cpu_device_node_get(cpu);
--- 
-1.9.1
+On Wed, Mar 18, 2015 at 10:52:18AM +0100, Tomeu Vizoso wrote:
+> From: St=C3=A9phane Marchesin <marcheu@chromium.org>
+>=20
+> This panel is used by the Nyan Blaze board and supported by the simple-pa=
+nel
+> driver.
+>=20
+> Signed-off-by: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> [tomeu.vizoso@collabora.com: add device tree binding document]
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Acked-by: Stephen Warren <swarren@nvidia.com>
+> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  .../bindings/panel/samsung,ltn140at29-301.txt      |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++=
+++++++
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,ltn14=
+0at29-301.txt
+
+Applied, thanks.
+Thierry
+
+--V88s5gaDVPzZ0KCq
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJVETv8AAoJEN0jrNd/PrOh3N0QAJFXOILy5yQWubjFj6FVGkXV
+ZCS+BeTB5+x2mRDnhDqyqU2cQPmcgbC5p5OqZSVW/JBKeKxfyDMVbvctXSeAeHBz
+a7pIdpvJkBzZtX6DZ/1keGgWy/Sj+oKvo1clYtaFinuufIRNyN2HRB8nHoB1NNFx
+kYQRij9vEXNWoKOpILWSo8ZfTFdWxQMXhDB+NJuL3G/ySLHUx6FqIHzLHOd2dCec
+gER8GgQoARtd2uVO7j/Ch3nF4/WLHw8Sr2HinlZUYuJj65okUQ/xufBhmuzQfioU
+hG4yX2dw3cu3I4bC5QuXJjNetdkijMly7EFi90ZxEWADHIap0bCeoXjd+6kqJSzL
+O5Fi5dkUFd+8BHL3ZSgLrdDTP0sXqqd+oFIvb3ML9z/I8JkqpoxeoKquHtldTnub
+X9tr4qP2LzR6TAg0KvrsRszlHHUBu/AIoNK1DJyqXubwl+vkaNqmOdWyYBBmjmIW
+4I5ulKBChMDTGAzcXOZ8RfL4bP6HRnml0MnhvgG/YBNY9rRne3B3eGBBaKkfVIhU
+Askfx5+nly5KphqQSR2p5H8ra0SYL72z+9982Bshkh4yBmCWBlXqIA2xyKEjyICW
+eHhw+AqYD1t9xEeS1EyEbrmdsqdvls90G+P7jNvWeuKGAywd4wMsXKvFucN2PiqY
+86yZuq+GehLSr4aIs6cS
+=VKDr
+-----END PGP SIGNATURE-----
+
+--V88s5gaDVPzZ0KCq--
