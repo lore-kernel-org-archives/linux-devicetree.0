@@ -1,36 +1,43 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v6 9/9] MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
-Date: Tue, 24 Mar 2015 09:25:40 +0000
-Message-ID: <1427189140-1935-10-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v6 2/9] ARM: multi_v7_defconfig: Enable support for ST's LPC
+ Watchdog
+Date: Tue, 24 Mar 2015 09:25:33 +0000
+Message-ID: <1427189140-1935-3-git-send-email-lee.jones@linaro.org>
 References: <1427189140-1935-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1427189140-1935-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
 Cc: lee.jones@linaro.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6239a30..2bc71e7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1461,10 +1461,12 @@ F:	drivers/phy/phy-stih407-usb.c
- F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/reset/sti/
-+F:	drivers/rtc/rtc-st-lpc.c
- F:	drivers/tty/serial/st-asc.c
- F:	drivers/usb/dwc3/dwc3-st.c
- F:	drivers/usb/host/ehci-st.c
- F:	drivers/usb/host/ohci-st.c
-+F:	drivers/watchdog/st_lpc_wdt.c
- F:	drivers/ata/ahci_st.c
- 
- ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index b7e6b6fb..138e68a 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -324,6 +324,7 @@ CONFIG_WATCHDOG=y
+ CONFIG_XILINX_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_ORION_WATCHDOG=y
++CONFIG_ST_LPC_WATCHDOG=y
+ CONFIG_SUNXI_WATCHDOG=y
+ CONFIG_MESON_WATCHDOG=y
+ CONFIG_MFD_AS3711=y
 -- 
 1.9.1
