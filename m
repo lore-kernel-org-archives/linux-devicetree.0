@@ -1,62 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/7] eeprom: Add a simple EEPROM framework for eeprom
- providers
-Date: Tue, 24 Mar 2015 10:23:46 -0700
-Message-ID: <20150324172346.GW17265@sirena.org.uk>
-References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1426240214-2434-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150323210918.GS14954@sirena.org.uk>
- <55108E2B.7050305@linaro.org>
- <55112BD6.2070600@linaro.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] input: Add support for ChipOne icn8318
+ based touchscreens
+Date: Tue, 24 Mar 2015 18:45:03 +0100
+Message-ID: <5511A29F.1010404@redhat.com>
+References: <1426007133-9606-1-git-send-email-hdegoede@redhat.com> <20150322040305.GA40622@dtor-ws> <550EA0E7.30608@redhat.com> <20150322224214.GA9792@dtor-ws>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oNLI4EWr1RPQuPCf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55112BD6.2070600@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBJGFY2UAKGQETXLO3EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150322224214.GA9792@dtor-ws>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---oNLI4EWr1RPQuPCf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 03/22/2015 11:42 PM, Dmitry Torokhov wrote:
+> On Sun, Mar 22, 2015 at 12:00:55PM +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 22-03-15 05:03, Dmitry Torokhov wrote:
+>>> Hi Hans,
+>>>
+>>> On Tue, Mar 10, 2015 at 06:05:33PM +0100, Hans de Goede wrote:
+>>>> +	error = devm_request_threaded_irq(dev, client->irq, NULL, icn8318_irq,
+>>>> +					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>>>
+>>> Shouldn't we let DT data tell us what trigger to use? I.e. just leave
+>>> IRQF_ONESHOT here?
+>>
+>> That is an interesting question, that new data is available is signalled by
+>> the irq pin of the chip going low is a property of the chip, not the board
+>> layout, so I believe it is best to leave this as is.
+>
+> My concern is that even if pin behavior is property of chip maybe on
+> some boards we want to use level-triggered interrupts instead of edge?
+> And if we indeed want to hard-code the trigger then shouldn't the
+> binding document use onecell mapping (so that users do not attempt to
+> configure triggers from DT)?
 
-On Tue, Mar 24, 2015 at 09:18:14AM +0000, Srinivas Kandagatla wrote:
+The number of irq cells is specified by the interrupt controller driver
+rather then by the device binding.
 
-> I did try your suggestion, by which I could remove the regmap from config.
-> One thing I did not like was eeprom-core getting size/stride info directly
-> from providers and regmap from regmap apis. I was wondering if we could take
-> a step further and introduce new regmap helpers like
+>
+>>
+>> Also note that if we want to get this from devicetree, that simply leaving out the
+>> flag is not enough, we must specifically get the data from devicetree and pass
+>> it into request_irq AFAICT. So the above would change to:
+>>
+>> 	irqflags = irqd_get_trigger_type(irq_get_irq_data(client->irq)) | IRQF_ONESHOT,
+>> 	error = devm_request_threaded_irq(dev, client->irq, NULL, icn8318_irq, irqflags,
+>
+> No, of_irq_get() that i2c core calls before probing driver should
+> already set the trigger type for us. There is no need for the individual
+> drivers to do that.
 
-> regmap_get_size(regmap)
+Ah I see, ok I've just tested removing the IRQF_TRIGGER_FALLING flag and indeed
+things still work fine, so feel free to merge this patch with that flagged dropped.
 
-This is already there.
+Regards,
 
-> regmap_get_stride(regmap)
-
-> Which would be give eeprom-core the size and stride info, doing this way
-> would cut down regmap related things from eeprom_config structure to minimal
-> and also the source of information would come from just regmap apis.
-
-Documentation/SubmittingPatches...
-
---oNLI4EWr1RPQuPCf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVEZ2hAAoJECTWi3JdVIfQ80EH/2BOc+yTnqkp0l/jbAggXbi0
-vrr0TP4o/37AHzkGBQfqLn+NB3gp7iekx1PmtNkXOXurR2odcyb8pCZ+qv20db7G
-H0QsmLr7T2RqnhoO1DBFmeltpPu20TuPfpYIjb+jdIgrhMOoVnFZHrUvtnq5W2Ch
-3a5Whx0/t6m6oe0LX+0bB/mZghcmeLh1TxUVSri6OMRYOE7GQvieZEooBFji5Hk5
-O/BJvSQqsZJOgZcjUYuElKc495ocmwlqFqRYkXsqhHRJN5JeS9YfbQXTz9tQkISu
-50n6vQ9lwLfs+mGDzoTNR9l95t5mOZ2dyjST/FXfGQfRMnYWv1HFL2i7xXzh6YE=
-=WEWy
------END PGP SIGNATURE-----
-
---oNLI4EWr1RPQuPCf--
+Hans
