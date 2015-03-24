@@ -1,144 +1,69 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 2/2] ARM: cpuidle: Document the code
-Date: Tue, 24 Mar 2015 18:51:44 +0000
-Message-ID: <20150324185144.GB27311@red-moon>
-References: <20150323225828.GC15435@e102568-lin.cambridge.arm.com>
- <1427190842-30675-1-git-send-email-daniel.lezcano@linaro.org>
- <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/7] eeprom: Add a simple EEPROM framework for eeprom
+ providers
+Date: Tue, 24 Mar 2015 12:02:26 -0700
+Message-ID: <20150324190226.GB17265@sirena.org.uk>
+References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1426240214-2434-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150323210918.GS14954@sirena.org.uk>
+ <55108E2B.7050305@linaro.org>
+ <55112BD6.2070600@linaro.org>
+ <20150324172346.GW17265@sirena.org.uk>
+ <5511AE38.3000108@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2R+TDOstMAPx/aG/"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+In-Reply-To: <5511AE38.3000108@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2015 at 09:54:02AM +0000, Daniel Lezcano wrote:
-> Add kernel-doc format documentation in the code.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  arch/arm/kernel/cpuidle.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
-> index 2b0dae3..9219613 100644
-> --- a/arch/arm/kernel/cpuidle.c
-> +++ b/arch/arm/kernel/cpuidle.c
-> @@ -21,6 +21,17 @@ static const struct of_cpuidle_method __cpuidle_method_of_table_sentinel
->  
->  static struct cpuidle_ops cpuidle_ops[NR_CPUS];
->  
-> +/*
 
-You miss a star here to comply with kernel-doc (comment valid throughout
-the patch for all functions).
+--2R+TDOstMAPx/aG/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> + * arm_cpuidle_simple_enter() - a wrapper to cpu_do_idle()
-> + * @dev: not used
-> + * @drv: not used
-> + * @index: not used
-> + *
-> + * A trivial wrapper to allow the cpu_do_idle function to be assigned as a
-> + * cpuidle callback by matching the function signature.
-> + *
-> + * Returns the index passed as parameter
-> + */
->  int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
->  		struct cpuidle_driver *drv, int index)
->  {
-> @@ -29,6 +40,16 @@ int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
->  	return index;
->  }
->  
-> +/*
-> + * arm_cpuidle_suspend() - function to enter low power idle states
-> + * @index: an integer used as an identifier for the low level PM callbacks
-> + *
-> + * This function calls the underlying arch specific low level PM code as
-> + * registered at the init time.
-> + *
-> + * Returns -EOPNOTSUPP if no suspend callback is defined, the result of the
-> + * callback otherwise.
-> + */
->  int arm_cpuidle_suspend(int index)
->  {
->  	int ret = -EOPNOTSUPP;
-> @@ -40,6 +61,15 @@ int arm_cpuidle_suspend(int index)
->  	return ret;
->  }
->  
-> +/*
-> + * arm_cpuidle_get_ops() - find a registered cpuidle_ops by name
-> + * @method: the method name
-> + *
-> + * Search in the __cpuidle_method_of_table array the cpuidle ops matching the
-> + * method name.
-> + *
-> + * Returns a struct cpuidle_ops pointer, NULL if not found.
-> + */
->  static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *method)
->  {
->  	struct of_cpuidle_method *m = __cpuidle_method_of_table;
-> @@ -51,6 +81,19 @@ static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *method)
->  	return NULL;
->  }
->  
-> +/*
-> + * arm_cpuidle_read_ops() - Initialize the cpuidle ops with the device tree
-> + * @dn: a struct device node corresponding to a cpu node
+On Tue, Mar 24, 2015 at 06:34:32PM +0000, Srinivas Kandagatla wrote:
+> On 24/03/15 17:23, Mark Brown wrote:
 
-It is a pointer, not a struct.
+> >>regmap_get_size(regmap)
 
-> + * @cpu: the cpu identifier
-> + *
-> + * Get the method name defined in the 'enabled-method' property, retrieve the
-> + * associated cpuidle_ops and do a struct copy. This copy is needed because all
-> + * cpuidle_ops are tagged __initdata and will be unloaded after the init
-> + * process.
-> + *
-> + * Return 0 on sucess, -ENOENT if no enabled-method is defined, -EOPNOTSUPP if
-> + * no cpuidle_ops is registered for the enabled-method.
-> + */
->  static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
->  {
->  	const char *enable_method;
-> @@ -75,6 +118,21 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
->  	return 0;
->  }
->  
-> +/*
-> + * arm_cpuidle_init() - Initialize cpuidle_ops for a specific cpu
-> + * @cpu: the cpu to be initialized
-> + *
-> + * Initialize the cpuidle ops with the device for the cpu and then call
-> + * the cpu's idle initialization callback. This may fail if the underlying HW
-> + * is not operational.
-> + *
-> + * Returns:
-> + *  0 on success,
-> + *  -ENODEV if it fails to find the cpu node in the device tree,
-> + *  -EOPNOTSUPP if it does not find a registered cpuidle_ops for this cpu,
-> + *  -ENOENT if it fails to find a enabled-method property,
+> >This is already there.
 
-Ultra-nit: "an enabled-method"
+> Sorry, I can't see any such api atleast in v4.0-rc5 and linux-next? Are you
+> referring to another api which does the same job?
 
-> + *  -ENXIO if the HW reports a failure or a misconfiguration
+regmap_get_val_bytes()
 
--ENOMEM is missing.
+> >>Which would be give eeprom-core the size and stride info, doing this way
+> >>would cut down regmap related things from eeprom_config structure to minimal
+> >>and also the source of information would come from just regmap apis.
 
-Apart from these ultraminor changes (and thanks for putting it
-together):
+> >Documentation/SubmittingPatches...
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Am not sure what you meant here, Am guessing that you asked me to keep the
+> respective maintainers in the loop and follow the guide, when I resend the
+> patch?
 
-> + */
->  int __init arm_cpuidle_init(int cpu)
->  {
->  	struct device_node *cpu_node = of_cpu_device_node_get(cpu);
-> -- 
-> 1.9.1
-> 
-> 
+I'm saying that you should send patches if you want to add features.
+
+--2R+TDOstMAPx/aG/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVEbTBAAoJECTWi3JdVIfQYTQH/26ravmygSn6ca+VL7Gzsi45
+euom6rsVismkzG9kSfwnYG/Tudg75zoAppUVykE/pLyCeXzqj/VNek3mVxt3sDLJ
+C1s+vu6DQezqDO0QRXgUILE82EeZKpS1bVx4PbhdFCUFUZRCGNauUx5M0F/DU3ip
+6Oi45FRgovGa/0+YuH9Bu8f9hxUO3jYuK6fBF/ssdrN/fajPv5/IWJtItXqlTWxI
+f8VMDlPTmfm9ul6/chiomtJ8LoXn33uZ54STrE6ngDd08FYEpkxufIcKVSMu8+gZ
+JnP0wvHU35QS05tv59sVsugBBsqMjZawMU9B/Xu4pSeRE6BYBIlWLyWzs/wr73I=
+=VzhL
+-----END PGP SIGNATURE-----
+
+--2R+TDOstMAPx/aG/--
