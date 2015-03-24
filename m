@@ -1,228 +1,80 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v1 06/11] exynos4-is: Add support for v4l2-flash subdevs
-Date: Tue, 24 Mar 2015 09:52:41 +0100
-Message-ID: <551125D9.5080702@samsung.com>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-7-git-send-email-j.anaszewski@samsung.com>
- <20150322012105.GI16613@valkosipuli.retiisi.org.uk>
- <551031FC.5010903@samsung.com>
- <20150323223935.GR16613@valkosipuli.retiisi.org.uk>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] eeprom: Add a simple EEPROM framework for eeprom
+ providers
+Date: Tue, 24 Mar 2015 09:18:14 +0000
+Message-ID: <55112BD6.2070600@linaro.org>
+References: <1426240157-2383-1-git-send-email-srinivas.kandagatla@linaro.org> <1426240214-2434-1-git-send-email-srinivas.kandagatla@linaro.org> <20150323210918.GS14954@sirena.org.uk> <55108E2B.7050305@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150323223935.GR16613@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55108E2B.7050305-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 03/23/2015 11:39 PM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Mon, Mar 23, 2015 at 04:32:12PM +0100, Jacek Anaszewski wrote:
->> Hi Sakari,
->>
->> Thanks for the review.
->>
->> On 03/22/2015 02:21 AM, Sakari Ailus wrote:
->>> Hi Jacek,
->>>
->>> Some comments below. Please also get an ack from Sylwester! :-)
->>
->> No doubt about that :)
->>
->>> On Fri, Mar 20, 2015 at 04:03:26PM +0100, Jacek Anaszewski wrote:
->>>> This patch adds support for external v4l2-flash devices.
->>>> The support includes parsing "flashes" DT property
->>>> and asynchronous subdevice registration.
->>>>
->>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->>>> ---
->>>>   drivers/media/platform/exynos4-is/media-dev.c |   36 +++++++++++++++++++++++--
->>>>   drivers/media/platform/exynos4-is/media-dev.h |   13 ++++++++-
->>>>   2 files changed, 46 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
->>>> index f315ef9..8dd0e5d 100644
->>>> --- a/drivers/media/platform/exynos4-is/media-dev.c
->>>> +++ b/drivers/media/platform/exynos4-is/media-dev.c
->>>> @@ -451,6 +451,25 @@ rpm_put:
->>>>   	return ret;
->>>>   }
->>>>
->>>> +static void fimc_md_register_flash_entities(struct fimc_md *fmd)
->>>> +{
->>>> +	struct device_node *parent = fmd->pdev->dev.of_node;
->>>> +	struct device_node *np;
->>>> +	int i = 0;
->>>> +
->>>> +	do {
->>>> +		np = of_parse_phandle(parent, "flashes", i);
->>>> +		if (np) {
->>>
->>> if (!np)
->>> 	break;
->>>
->>> And you can remove checking np another time in the loop condition.
->>
->> Thanks, this will be cleaner indeed.
->>
->>>> +			fmd->flash[fmd->num_flashes].asd.match_type =
->>>> +							V4L2_ASYNC_MATCH_OF;
->>>> +			fmd->flash[fmd->num_flashes].asd.match.of.node = np;
->>>> +			fmd->num_flashes++;
->>>> +			fmd->async_subdevs[fmd->num_sensors + i] =
->>>> +						&fmd->flash[i].asd;
->>>
->>> Have all the sensors been already registered by this point?
->>
->> Function fimc_md_register_sensor_entities is called before
->> this one.
->
-> Ok. Then it's fine. I just thing this would be much cleaner if there was no
-> assumption that fmd->num_flashes is necessarily zero (and all sensors have
-> been registered).
-
-Do you think this should be approached differently? I don't catch your
-point here, could you be more specific? :)
-
->>>> +		}
->>>> +	} while (np && (++i < FIMC_MAX_FLASHES));
->>>
->>> How about instead:
->>>
->>> fmd->num_flashes < FIMC_MAX_FLASHES
->>>
->>> And drop i. Also move incrementing num_flashes as last in the if.
->>
->> Dropping i will enforce referring to fmd->num_flashes 7 times
->> in this short fragment of code.
->> Maybe it would be better to use a pointer to it?
->> int *nf = &fmd=>num_flashes ?
->
-> You could also do
->
-> const int nf = fmd->num_flashes;
-
-fmd->num_flashes is incremented in the loop, so the constant
-will not work here. There is a tradeoff - counter variable
-or many references to the fmd->num_flashes.
-
->
-> in the beginning of the loop.
->
-> Up to you. Either is IMO better than an unrelated counter variable i. :-)
->
->>>> +}
->>>> +
->>>>   static int __of_get_csis_id(struct device_node *np)
->>>>   {
->>>>   	u32 reg = 0;
->>>> @@ -1275,6 +1294,15 @@ static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
->>>>   	struct fimc_sensor_info *si = NULL;
->>>>   	int i;
->>>>
->>>> +	/* Register flash subdev if detected any */
->>>> +	for (i = 0; i < ARRAY_SIZE(fmd->flash); i++) {
->>>> +		if (fmd->flash[i].asd.match.of.node == subdev->dev->of_node) {
->>>> +			fmd->flash[i].subdev = subdev;
->>>> +			fmd->num_flashes++;
->>>> +			return 0;
->>>> +		}
->>>> +	}
->>>> +
->>>>   	/* Find platform data for this sensor subdev */
->>>>   	for (i = 0; i < ARRAY_SIZE(fmd->sensor); i++)
->>>>   		if (fmd->sensor[i].asd.match.of.node == subdev->dev->of_node)
->>>> @@ -1385,6 +1413,8 @@ static int fimc_md_probe(struct platform_device *pdev)
->>>>   		goto err_m_ent;
->>>>   	}
->>>>
->>>> +	fimc_md_register_flash_entities(fmd);
->>>> +
->>>>   	mutex_unlock(&fmd->media_dev.graph_mutex);
->>>>
->>>>   	ret = device_create_file(&pdev->dev, &dev_attr_subdev_conf_mode);
->>>> @@ -1401,12 +1431,14 @@ static int fimc_md_probe(struct platform_device *pdev)
->>>>   		goto err_attr;
->>>>   	}
->>>>
->>>> -	if (fmd->num_sensors > 0) {
->>>> +	if (fmd->num_sensors > 0 || fmd->num_flashes > 0) {
->>>>   		fmd->subdev_notifier.subdevs = fmd->async_subdevs;
->>>> -		fmd->subdev_notifier.num_subdevs = fmd->num_sensors;
->>>> +		fmd->subdev_notifier.num_subdevs = fmd->num_sensors +
->>>> +							fmd->num_flashes;
->>>>   		fmd->subdev_notifier.bound = subdev_notifier_bound;
->>>>   		fmd->subdev_notifier.complete = subdev_notifier_complete;
->>>>   		fmd->num_sensors = 0;
->>>> +		fmd->num_flashes = 0;
->>>>
->>>>   		ret = v4l2_async_notifier_register(&fmd->v4l2_dev,
->>>>   						&fmd->subdev_notifier);
->>>> diff --git a/drivers/media/platform/exynos4-is/media-dev.h b/drivers/media/platform/exynos4-is/media-dev.h
->>>> index 0321454..feff9c8 100644
->>>> --- a/drivers/media/platform/exynos4-is/media-dev.h
->>>> +++ b/drivers/media/platform/exynos4-is/media-dev.h
->>>> @@ -34,6 +34,8 @@
->>>>
->>>>   #define FIMC_MAX_SENSORS	4
->>>>   #define FIMC_MAX_CAMCLKS	2
->>>> +#define FIMC_MAX_FLASHES	2
->>>> +#define FIMC_MAX_ASYNC_SUBDEVS (FIMC_MAX_SENSORS + FIMC_MAX_FLASHES)
->>>>   #define DEFAULT_SENSOR_CLK_FREQ	24000000U
->>>>
->>>>   /* LCD/ISP Writeback clocks (PIXELASYNCMx) */
->>>> @@ -93,6 +95,11 @@ struct fimc_sensor_info {
->>>>   	struct fimc_dev *host;
->>>>   };
->>>>
->>>> +struct fimc_flash_info {
->>>> +	struct v4l2_subdev *subdev;
->>>> +	struct v4l2_async_subdev asd;
->>>> +};
->>>> +
->>>>   struct cam_clk {
->>>>   	struct clk_hw hw;
->>>>   	struct fimc_md *fmd;
->>>> @@ -104,6 +111,8 @@ struct cam_clk {
->>>>    * @csis: MIPI CSIS subdevs data
->>>>    * @sensor: array of registered sensor subdevs
->>>>    * @num_sensors: actual number of registered sensors
->>>> + * @flash: array of registered flash subdevs
->>>> + * @num_flashes: actual number of registered flashes
->>>>    * @camclk: external sensor clock information
->>>>    * @fimc: array of registered fimc devices
->>>>    * @fimc_is: fimc-is data structure
->>>> @@ -123,6 +132,8 @@ struct fimc_md {
->>>>   	struct fimc_csis_info csis[CSIS_MAX_ENTITIES];
->>>>   	struct fimc_sensor_info sensor[FIMC_MAX_SENSORS];
->>>>   	int num_sensors;
->>>> +	struct fimc_flash_info flash[FIMC_MAX_FLASHES];
->>>> +	int num_flashes;
->>>>   	struct fimc_camclk_info camclk[FIMC_MAX_CAMCLKS];
->>>>   	struct clk *wbclk[FIMC_MAX_WBCLKS];
->>>>   	struct fimc_lite *fimc_lite[FIMC_LITE_MAX_DEVS];
->>>> @@ -149,7 +160,7 @@ struct fimc_md {
->>>>   	} clk_provider;
->>>>
->>>>   	struct v4l2_async_notifier subdev_notifier;
->>>> -	struct v4l2_async_subdev *async_subdevs[FIMC_MAX_SENSORS];
->>>> +	struct v4l2_async_subdev *async_subdevs[FIMC_MAX_ASYNC_SUBDEVS];
->>>>
->>>>   	bool user_subdev_api;
->>>>   	spinlock_t slock;
->>>
->>
->>
->
 
 
--- 
-Best Regards,
-Jacek Anaszewski
+On 23/03/15 22:05, Srinivas Kandagatla wrote:
+>
+>
+> On 23/03/15 21:09, Mark Brown wrote:
+>> On Fri, Mar 13, 2015 at 09:50:14AM +0000, Srinivas Kandagatla wrote:
+>>
+>> A couple of *very* minor points below, otherwise this looks OK to me.
+>>
+> Thankyou for the review.
+>
+>>> +struct eeprom_device *eeprom_register(struct eeprom_config *config)
+>>> +{
+>>> +    struct eeprom_device *eeprom;
+>>> +    int rval;
+>>> +
+>>> +    if (!config->regmap || !config->size) {
+>>> +        dev_err(config->dev, "Regmap not found\n");
+>>> +        return ERR_PTR(-EINVAL);
+>>> +    }
+>>
+>> You have a struct device in the config and the regmap API has
+>> dev_get_regmap() which for most devices that don't have multiple regmaps
+>> will give the right regmap.  It would be nice to support this as a
+>> convenience for users.
+> Yes, sure that makes sense, I will give it a try.
+>
+I did try your suggestion, by which I could remove the regmap from 
+config. One thing I did not like was eeprom-core getting size/stride 
+info directly from providers and regmap from regmap apis. I was 
+wondering if we could take a step further and introduce new regmap 
+helpers like
+
+regmap_get_size(regmap)
+regmap_get_stride(regmap)
+
+Which would be give eeprom-core the size and stride info, doing this way 
+would cut down regmap related things from eeprom_config structure to 
+minimal and also the source of information would come from just regmap apis.
+
+
+--srini
+
+>>
+>>> +    eeprom = kzalloc(sizeof(*eeprom), GFP_KERNEL);
+>>> +    if (!eeprom)
+>>> +        return ERR_PTR(-ENOMEM);
+>>
+>> ...
+>>
+>>> +    rval = device_add(&eeprom->dev);
+>>> +    if (rval)
+>>> +        return ERR_PTR(rval);
+>>
+>> Don't you need a kfree() if device_add() fails?
+> I will fix it in next version.
+>
+> --srini
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
