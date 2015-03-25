@@ -1,246 +1,115 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 RESEND] drivers: hwspinlock: add CSR atlas7 implementation
-Date: Thu, 26 Mar 2015 07:03:05 +0800
-Message-ID: <1427324585-3936-1-git-send-email-21cnbao@gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC][PATCH 2/2] phy: miphy365x: Convert to use phy.h instead
+ of phy-miphy365x.h
+Date: Thu, 26 Mar 2015 04:41:48 +0530
+Message-ID: <551340B4.2010001@ti.com>
+References: <1425520379.1637.7.camel@phoenix>	<1425520665.1637.10.camel@phoenix>	<54FD8795.6020409@ti.com> <CAFRkauBNEgMiQtHxVuz_rif7+AWBjXoLVydidzjxK-oMWYxCrA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFRkauBNEgMiQtHxVuz_rif7+AWBjXoLVydidzjxK-oMWYxCrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+To: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>
++Maxime, Srinivas, patrice
 
-Add hwspinlock support for the CSR atlas7 SoC.
+On Monday 09 March 2015 06:55 PM, Axel Lin wrote:
+> 2015-03-09 19:44 GMT+08:00 Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>:
+>> Hi,
+>>
+>>
+>> On Thursday 05 March 2015 07:27 AM, Axel Lin wrote:
+>>>
+>>> The defines in phy-miphy365x.h are all covered in phy.h:
+>>>
+>>> MIPHY_TYPE_SATA == PHY_TYPE_STA
+>>> MIPHY_TYPE_PCIE == PHY_TYPE_PCIE
+>>> MIPPHY_TYPE_USB == PHY_TYPE_USB2
+>>>
+>>> So covert to use phy.h and then delete phy-miphy365x.h.
+>>>
+>>> Signed-off-by: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/ata/ahci-st.txt       |  2 +-
+>>>   Documentation/devicetree/bindings/phy/phy-miphy365x.txt |  8 ++++----
+>>>   arch/arm/boot/dts/stih416.dtsi                          |  4 ++--
+>>>   drivers/phy/phy-miphy365x.c                             | 14
+>>> +++++++-------
+>>>   include/dt-bindings/phy/phy-miphy365x.h                 | 14
+>>> --------------
+>>>   5 files changed, 14 insertions(+), 28 deletions(-)
+>>>   delete mode 100644 include/dt-bindings/phy/phy-miphy365x.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>> b/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>> index 0574a77..070748b 100644
+>>> --- a/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>> +++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>> @@ -21,7 +21,7 @@ Example:
+>>>                 reg             = <0xfe380000 0x1000>;
+>>>                 interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
+>>>                 interrupt-names = "hostc";
+>>> -               phys            = <&miphy365x_phy MIPHY_PORT_0
+>>> MIPHY_TYPE_SATA>;
+>>> +               phys            = <&miphy365x_phy MIPHY_PORT_0
+>>> PHY_TYPE_SATA>;
+>>>                 phy-names       = "ahci_phy";
+>>>                 resets          = <&powerdown STIH416_SATA0_POWERDOWN>,
+>>>                                   <&softreset STIH416_SATA0_SOFTRESET>;
+>>> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>> b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>> index 9802d5d..087294d 100644
+>>> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>> @@ -20,8 +20,8 @@ Required nodes        :  A sub-node is required for each
+>>> channel the controller
+>>>   Required properties (port (child) node):
+>>>   - #phy-cells  : Should be 1 (See second example)
+>>>                   Cell after port phandle is device type from:
+>>> -                       - MIPHY_TYPE_SATA
+>>> -                       - MIPHY_TYPE_PCI
+>>> +                       - PHY_TYPE_SATA
+>>> +                       - PHY_TYPE_PCIE
+>>>   - reg         : Address and length of register sets for each device in
+>>>                   "reg-names"
+>>>   - reg-names     : The names of the register addresses corresponding to
+>>> the
+>>> @@ -68,10 +68,10 @@ property, containing a phandle to the phy port node
+>>> and a device type.
+>>>
+>>>   Example:
+>>>
+>>> -#include <dt-bindings/phy/phy-miphy365x.h>
+>>> +#include <dt-bindings/phy/phy.h>
+>>>
+>>>         sata0: sata@fe380000 {
+>>>                 ...
+>>> -               phys      = <&phy_port0 MIPHY_TYPE_SATA>;
+>>> +               phys      = <&phy_port0 PHY_TYPE_SATA>;
+>>>                 ...
+>>>         };
+>>> diff --git a/arch/arm/boot/dts/stih416.dtsi
+>>> b/arch/arm/boot/dts/stih416.dtsi
+>>> index ea28eba..eeb7afe 100644
+>>> --- a/arch/arm/boot/dts/stih416.dtsi
+>>> +++ b/arch/arm/boot/dts/stih416.dtsi
+>>
+>>
+>> Can you split the patch so that I can queue the PHY part?
+> 
+> In my opinion, apply the patch as is should be fine and we don't have any
+> build breakage. I think the change in each file is pretty trivial and won't
+> cause problem. otherwise, I will have to send patches for the conversion
+> in each file and then wait until all patches are merged. Then send another
+> patch to delete include/dt-bindings/phy/phy-miphy365x.h.
 
-The Hardware Spinlock device on atlas7 provides hardware assistance
-for synchronization between the multiple processors in the system
-(dual Cortex-A7, CAN bus Cortex-M3 and audio DSP).
+Okay. I can queue after getting Ack from arch/arm/boot/dts/sti* maintainers.
 
-Signed-off-by: Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>
-Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
----
- .../bindings/hwspinlock/sirf,hwspinlock.txt        |  18 +++
- drivers/hwspinlock/Kconfig                         |  12 ++
- drivers/hwspinlock/Makefile                        |   1 +
- drivers/hwspinlock/sirf_hwspinlock.c               | 151 +++++++++++++++++++++
- 4 files changed, 182 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwspinlock/sirf,hwspinlock.txt
- create mode 100644 drivers/hwspinlock/sirf_hwspinlock.c
-
-diff --git a/Documentation/devicetree/bindings/hwspinlock/sirf,hwspinlock.txt b/Documentation/devicetree/bindings/hwspinlock/sirf,hwspinlock.txt
-new file mode 100644
-index 0000000..b22c492
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwspinlock/sirf,hwspinlock.txt
-@@ -0,0 +1,18 @@
-+SIRF Hardware spinlock device Binding
-+-----------------------------------------------
-+
-+Required properties :
-+- compatible : shall contain only one of the following:
-+	"sirf,hwspinlock"
-+
-+- reg : the register address of hwspinlock
-+
-+- num-spinlocks : how many spinlocks this device provides
-+
-+Example:
-+	hwspinlock {
-+		compatible = "sirf,hwspinlock";
-+		reg = <0x13240000 0x00010000>;
-+
-+		num-spinlocks = <30>;
-+	};
-diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
-index 3612cb5..fc400e4 100644
---- a/drivers/hwspinlock/Kconfig
-+++ b/drivers/hwspinlock/Kconfig
-@@ -29,4 +29,16 @@ config HSEM_U8500
- 
- 	  If unsure, say N.
- 
-+config HWSPINLOCK_SIRF
-+	tristate "SIRF Hardware Spinlock device"
-+	depends on ARCH_SIRF
-+	select HWSPINLOCK
-+	help
-+	  Say y here to support the SIRF Hardware Spinlock device, which
-+	  provides a synchronisation mechanism for the various processor
-+	  on the SoC.
-+
-+	  It's safe to say n here if you're not interested in SIRF hardware
-+	  spinlock or just want a bare minimum kernel.
-+
- endmenu
-diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
-index 93eb64b..472b82d 100644
---- a/drivers/hwspinlock/Makefile
-+++ b/drivers/hwspinlock/Makefile
-@@ -5,3 +5,4 @@
- obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
- obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
- obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
-+obj-$(CONFIG_HWSPINLOCK_SIRF)		+= sirf_hwspinlock.o
-diff --git a/drivers/hwspinlock/sirf_hwspinlock.c b/drivers/hwspinlock/sirf_hwspinlock.c
-new file mode 100644
-index 0000000..b68722a
---- /dev/null
-+++ b/drivers/hwspinlock/sirf_hwspinlock.c
-@@ -0,0 +1,151 @@
-+/*
-+ * SIRF hardware spinlock driver
-+ *
-+ * Copyright (c) 2014 Cambridge Silicon Radio Limited, a CSR plc group company.
-+ *
-+ * Licensed under GPLv2.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/bitops.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/hwspinlock.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include "hwspinlock_internal.h"
-+
-+struct sirf_hwspinlock {
-+	void __iomem *io_base;
-+	struct hwspinlock_device bank;
-+};
-+
-+/* Hardware spinlock register offsets */
-+#define HW_SPINLOCK_RD_DEBUG	0x400
-+#define HW_SPINLOCK_BASE	0x404
-+#define HW_SPINLOCK_OFFSET(x)	(HW_SPINLOCK_BASE + 0x4 * (x))
-+
-+/* Possible values of HW_SPINLOCK_REG */
-+#define HW_SPINLOCK_LOCKED	0
-+#define HW_SPINLOCK_FREE	1
-+
-+static int sirf_hwspinlock_trylock(struct hwspinlock *lock)
-+{
-+	void __iomem *lock_addr = lock->priv;
-+
-+	/* attempt to acquire the lock by reading its value */
-+	return (HW_SPINLOCK_FREE == readl(lock_addr));
-+}
-+
-+static void sirf_hwspinlock_unlock(struct hwspinlock *lock)
-+{
-+	void __iomem *lock_addr = lock->priv;
-+
-+	/* release the lock by writing 0 to it */
-+	writel(HW_SPINLOCK_LOCKED, lock_addr);
-+}
-+
-+static void sirf_hwspinlock_relax(struct hwspinlock *lock)
-+{
-+	ndelay(50);
-+}
-+
-+static const struct hwspinlock_ops sirf_hwspinlock_ops = {
-+	.trylock = sirf_hwspinlock_trylock,
-+	.unlock = sirf_hwspinlock_unlock,
-+	.relax = sirf_hwspinlock_relax,
-+};
-+
-+static int sirf_hwspinlock_probe(struct platform_device *pdev)
-+{
-+	struct sirf_hwspinlock *hwspin;
-+	struct hwspinlock *hwlock;
-+	u32 num_of_locks;
-+	int idx, ret;
-+
-+	ret = of_property_read_u32(pdev->dev.of_node,
-+			"num-spinlocks", &num_of_locks);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Unable to find hwspinlock number. ret=%d\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	hwspin = devm_kzalloc(&pdev->dev, sizeof(*hwspin) +
-+			sizeof(*hwlock) * num_of_locks, GFP_KERNEL);
-+	if (!hwspin)
-+		return -ENOMEM;
-+
-+	/* retrieve io base */
-+	hwspin->io_base = of_iomap(pdev->dev.of_node, 0);
-+	if (!hwspin->io_base)
-+		ret = -ENOMEM;
-+
-+	for (idx = 0; idx < num_of_locks; idx++) {
-+		hwlock = &hwspin->bank.lock[idx];
-+		hwlock->priv = hwspin->io_base + HW_SPINLOCK_OFFSET(idx);
-+	}
-+
-+	platform_set_drvdata(pdev, hwspin);
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = hwspin_lock_register(&hwspin->bank, &pdev->dev,
-+				&sirf_hwspinlock_ops, 0, num_of_locks);
-+	if (ret)
-+		goto reg_failed;
-+
-+	return 0;
-+
-+reg_failed:
-+	pm_runtime_disable(&pdev->dev);
-+	iounmap(hwspin->io_base);
-+
-+	return ret;
-+}
-+
-+static int sirf_hwspinlock_remove(struct platform_device *pdev)
-+{
-+	struct sirf_hwspinlock *hwspin = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = hwspin_lock_unregister(&hwspin->bank);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	pm_runtime_disable(&pdev->dev);
-+
-+	iounmap(hwspin->io_base);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sirf_hwpinlock_ids[] = {
-+	{ .compatible = "sirf,hwspinlock", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sirf_hwpinlock_ids);
-+
-+static struct platform_driver sirf_hwspinlock_driver = {
-+	.probe = sirf_hwspinlock_probe,
-+	.remove = sirf_hwspinlock_remove,
-+	.driver = {
-+		.name = "atlas7_hwspinlock",
-+		.of_match_table = of_match_ptr(sirf_hwpinlock_ids),
-+	},
-+};
-+
-+module_platform_driver(sirf_hwspinlock_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("SIRF Hardware spinlock driver");
-+MODULE_AUTHOR("Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>");
--- 
-1.9.1
-
+Cheers
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
