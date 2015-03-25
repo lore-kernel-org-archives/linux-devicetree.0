@@ -1,65 +1,124 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v3 8/9] eeprom: qfprom: Add bindings for qfprom
-Date: Wed, 25 Mar 2015 01:28:33 +0100
-Message-ID: <CAJAp7OgTaJ0FTD1pEgxOxt24_1fAmdK+7v4VuvDojHkoKkJHqg@mail.gmail.com>
-References: <1427236116-18531-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<1427236268-18882-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Wed, 25 Mar 2015 09:39:41 +0900
+Message-ID: <551203CD.4020506@samsung.com>
+References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
+ <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
+ <20150307201340.GF5233@earth> <54FCEABE.9000007@samsung.com>
+ <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
+ <54FD880E.30903@samsung.com> <1425903199.13415.9.camel@AMDC1943>
+ <54FEF541.6000305@samsung.com> <551119DE.2070402@samsung.com>
+ <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1427236268-18882-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2015 at 11:31 PM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-> This patch adds bindings for qfprom found in QCOM SOCs. QFPROM driver
-> is based on simple eeprom framework.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../devicetree/bindings/eeprom/qfprom.txt          | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/eeprom/qfprom.txt
->
-> diff --git a/Documentation/devicetree/bindings/eeprom/qfprom.txt b/Documentation/devicetree/bindings/eeprom/qfprom.txt
-> new file mode 100644
-> index 0000000..d5baed6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/eeprom/qfprom.txt
-> @@ -0,0 +1,23 @@
-> += Qualcomm QFPROM device tree bindings =
-> +
-> +This binding is intended to represent QFPROM which is found in most QCOM SOCs.
-> +
-> +Required properties:
-> +- compatible: should be "qcom,qfprom"
-> +- reg: Should contain registers location and length
-> +
-> += Data cells =
-> +Are child nodes of qfprom, bindings of which as described in
-> +bindings/eeprom/eeprom.txt
-> +
-> +Example:
-> +
-> +       qfprom: qfprom@00700000 {
-> +               compatible      = "qcom,qfprom";
-> +               reg             = <0x00700000 0x1000>;
+On 03/24/2015 05:38 PM, Krzysztof Kozlowski wrote:
+> 2015-03-24 9:01 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+>> On 03/10/2015 10:44 PM, Beomho Seo wrote:
+>>> On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
+>>>> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
+>>>>> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
+>>>>>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+>>>>>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
+>>>>>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
+>>>>>>>>> From: Beomho Seo <beomho.seo@samsung.com>
+>>>>>>>>>
+>>>>>>>>> This patch adds device driver of max77843 charger. This driver provide
+>>>>>>>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
+>>>>>>>>> charging mode so on.). Additionally, control charging paramters to use
+>>>>>>>>> i2c interface.
+>>>>>>>>>
+>>>>>>>>> Cc: Sebastian Reichel <sre@kernel.org>
+>>>>>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>>>>>>>>
+>>>>>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+>>>>>>>>
+>>>>>>>> I can't take it as is, since it depends on the private header file
+>>>>>>>> of PATCHv1.
+>>>>>>>>
+>>>>>>>> -- Sebastian
+>>>>>>>>
+>>>>>>>
+>>>>>>> This patch reviewed by Sebastian.
+>>>>>>> Could you Please merge that your git tree ?
+>>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> ... and again we are adding a new driver for very similar chipset to
+>>>>>> already supported. I looked at spec and the charger's registers are
+>>>>>> almost the same as for max77693. Their layout and addresses are the
+>>>>>> same. I see some minor differences, probably the most important would
+>>>>>> be different values current (fast-charge, top-off). But still 90% of
+>>>>>> registers are the same... Do we really have to add new driver?
+>>>>>>
+>>>>>> Best regards,
+>>>>>> Krzysztof
+>>>>>> --
+>>>>>> To unsubscribe from this list: send the line "unsubscribe linux-input" in
+>>>>>> the body of a message to majordomo@vger.kernel.org
+>>>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>>>
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> Thank you for your comment. As you say, both chip set are similar.
+>>>>> But new driver need for support max77843. It is support different below
+>>>>> - Provide Battery presence information.
+>>>>
+>>>> Another set of power supply properties could be added for that chip.
+>>>> This way the get_property() function would be the same but actually the
+>>>> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
+>>>>
+>>>>> - Can OTG FET control.
+>>>>
+>>>> Where the OTG FET feature is it enabled in your driver? I couldn't find
+>>>> it.
+>>>>
+>>>
+>>> Sorry. This driver don't control OTG FET feature.
+>>>
+>>>>> - Bigger Fast charge current, Top Off current Threshold selection.
+>>>>> - Various and bigger OTG current limitation.
+>>>>> - Bigger primary charger termination voltage setting.
+>>>>> - Different maximum input current limit selection(Different step).
+>>>>
+>>>> Yes, I mentioned some of these differences (the Fast/top-off
+>>>> differences). These are differences in values so it does not require new
+>>>> driver. There is need to develop new driver just to support different
+>>>> current (3.0 A instead of 2.1 A) or voltage threshold.
+>>>>
+>>>
+>>> They are different charging current, OTG current limitation, top off current,
+>>> charging limitation value. In case OTG current limitation different not
+>>> limitation value but using register bit(max77843 use[7:6] max77693 use[7]
+>>> bit only). Even if this driver not support all feature, some register
+>>> different with max77693(support value, use register bit).
+>>>
+>>> If this driver will combined with max77693 may even be beneficial for
+>>> new Maxim driver. But the present, this driver is related with
+>>> max77843 core driver and max77843-regulator. So I hope this driver
+>>> merge first. And then will extend two driver(max77843 charger and max77693 charger).
+> 
+> I still prefer merging common drivers into one instead of creating
+> some more of them.
+> However I understand your point and I am not entirely opposed against.
+> Especially that you invested quite a bit of time for developing this
+> and my feedback was quite late. To summarize I am fine with your
+> approach.
+> 
+> Best regards,
+> Krzysztof
+> 
 
-The qfprom block starts at 0x700000 and is 0x8000 long.
+Then, Can I request merge this patch ?
 
-The registers at the beginning of this block are raw R/W fuse bits and
-should not be read directly. Instead there is an ecc corrected shadow
-copy of these registers at 0x4000.
-
-> +               ...
-> +               /* Data cells */
-> +               tsens_calibration: calib@404 {
-> +                       reg = <0x404 0x10>;
-> +               };
-> +       };
-
-Regards,
-Bjorn
+Best regards,
+Beomho
