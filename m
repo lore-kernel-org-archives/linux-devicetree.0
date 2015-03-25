@@ -1,54 +1,55 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Wed, 25 Mar 2015 15:07:25 +0100
-Message-ID: <20150325140725.GA11499@kroah.com>
-References: <20150216130549.GF14545@x1>
- <1170550770.470129293.1424093248596.JavaMail.root@zimbra1-e1.priv.proxad.net>
- <20150216162712.GR14545@x1>
- <87fva5a4i2.fsf@free.fr>
- <20150217074310.GT14545@x1>
- <alpine.LFD.2.11.1502171221300.22104@knanqh.ubzr>
- <20150218080719.GB5781@x1>
- <87a9088tam.fsf@free.fr>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] of: Allow selection of OF_DYNAMIC and OF_OVERLAY if OF_UNITTEST
+Date: Wed, 25 Mar 2015 15:14:27 +0100
+Message-ID: <CAMuHMdUf+W_0RhkPwUdUp7-XCjwmWVN+U_cdec1jF9fFVH-xvQ@mail.gmail.com>
+References: <1422029405-9353-1-git-send-email-geert+renesas@glider.be>
+	<1422029405-9353-2-git-send-email-geert+renesas@glider.be>
+	<20150320122502.EB491C40724@trevor.secretlab.ca>
+	<CAL_Jsq+mVvSs-9jLEHyYec2RYfqpCSev3k0oUu=7PE06h+gFXQ@mail.gmail.com>
+	<20150324225428.94AF4C4091C@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87a9088tam.fsf@free.fr>
+In-Reply-To: <20150324225428.94AF4C4091C@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 05:02:57PM +0100, Robert Jarzmik wrote:
-> Lee Jones <lee.jones@linaro.org> writes:
-> >> > Arnd, Greg,
-> >> > 
-> >> >   Perhaps you have some ideas WRT programmables (PLDs/CPLDs/FPGAs)?
-> 
-> Hi Arnd and Greg,
-> 
-> I have this driver I'm upstreaming, which comes out of
-> arch/arm/mach-pxa/lubbock.c. As for the reason it is extracted, see submitted
-> commit [1] for reference.
-> 
-> The main question is : where does it belong in the kernel ?
-> 
-> The driver is :
->  - for the CPLDs on the Lubbock development platform, which is more or less an
->    old motherboard for Intel Xscale pxa255 SoC (see [2] for more details)
->  - these CPLDs control :
->    - interrupt muxing towards the SoC
->    - several leds
->    - switches read back
->    For the whole patch, see [4]
-> 
-> Lee's position is that it doesn't belong to drivers/mfd, see [3].
-> 
-> So where should I submit it ? And more generally, where should CPLDs drivers be
-> pushed in the kernel tree ?
-> 
-> If there is no solution, I'll fallback through arch/arm/plat-pxa, not very nice,
-> but it has to land somewhere, I don't want lubbock to remain broken.
+Hi Grant,
 
-drivers/platform/arm ?
+On Tue, Mar 24, 2015 at 11:54 PM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Fri, 20 Mar 2015 08:32:12 -0500
+> , Rob Herring <robherring2@gmail.com>
+>  wrote:
+>> On Fri, Mar 20, 2015 at 7:25 AM, Grant Likely <grant.likely@linaro.org> wrote:
+>> > On Fri, 23 Jan 2015 17:10:04 +0100
+>> > , Geert Uytterhoeven <geert+renesas@glider.be>
+>> >  wrote:
+>> >> Currently OF_DYNAMIC and OF_OVERLAY are not visible to the user, and are
+>> >> selected automatically only when needed.
+>> >>
+>> >> Allow them to be enabled manually to improve device tree unit test
+>> >> coverage.
+>> >>
+>> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> >
+>> > I like the change. Merged, thanks.
+>>
+>> Making OF_OVERLAY visible is already in 4.0-rc4.
+>
+> Yes, I modified the patch to fit.
+
+I had seen Rob's comment, but due to travelling I hadn't sent an updated
+version yet. Thanks for taking care!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
