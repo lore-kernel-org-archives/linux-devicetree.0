@@ -1,124 +1,97 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Wed, 25 Mar 2015 09:39:41 +0900
-Message-ID: <551203CD.4020506@samsung.com>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
- <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
- <20150307201340.GF5233@earth> <54FCEABE.9000007@samsung.com>
- <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
- <54FD880E.30903@samsung.com> <1425903199.13415.9.camel@AMDC1943>
- <54FEF541.6000305@samsung.com> <551119DE.2070402@samsung.com>
- <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v1 07/11] media: Add registration helpers for V4L2 flash
+ sub-devices
+Date: Wed, 25 Mar 2015 02:40:38 +0200
+Message-ID: <20150325004037.GE18321@valkosipuli.retiisi.org.uk>
+References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+ <1426863811-12516-8-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426863811-12516-8-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2015 05:38 PM, Krzysztof Kozlowski wrote:
-> 2015-03-24 9:01 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
->> On 03/10/2015 10:44 PM, Beomho Seo wrote:
->>> On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
->>>> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
->>>>> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
->>>>>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
->>>>>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
->>>>>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
->>>>>>>>> From: Beomho Seo <beomho.seo@samsung.com>
->>>>>>>>>
->>>>>>>>> This patch adds device driver of max77843 charger. This driver provide
->>>>>>>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
->>>>>>>>> charging mode so on.). Additionally, control charging paramters to use
->>>>>>>>> i2c interface.
->>>>>>>>>
->>>>>>>>> Cc: Sebastian Reichel <sre@kernel.org>
->>>>>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->>>>>>>>
->>>>>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
->>>>>>>>
->>>>>>>> I can't take it as is, since it depends on the private header file
->>>>>>>> of PATCHv1.
->>>>>>>>
->>>>>>>> -- Sebastian
->>>>>>>>
->>>>>>>
->>>>>>> This patch reviewed by Sebastian.
->>>>>>> Could you Please merge that your git tree ?
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> ... and again we are adding a new driver for very similar chipset to
->>>>>> already supported. I looked at spec and the charger's registers are
->>>>>> almost the same as for max77693. Their layout and addresses are the
->>>>>> same. I see some minor differences, probably the most important would
->>>>>> be different values current (fast-charge, top-off). But still 90% of
->>>>>> registers are the same... Do we really have to add new driver?
->>>>>>
->>>>>> Best regards,
->>>>>> Krzysztof
->>>>>> --
->>>>>> To unsubscribe from this list: send the line "unsubscribe linux-input" in
->>>>>> the body of a message to majordomo@vger.kernel.org
->>>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>>>
->>>>>
->>>>> Hi,
->>>>>
->>>>> Thank you for your comment. As you say, both chip set are similar.
->>>>> But new driver need for support max77843. It is support different below
->>>>> - Provide Battery presence information.
->>>>
->>>> Another set of power supply properties could be added for that chip.
->>>> This way the get_property() function would be the same but actually the
->>>> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
->>>>
->>>>> - Can OTG FET control.
->>>>
->>>> Where the OTG FET feature is it enabled in your driver? I couldn't find
->>>> it.
->>>>
->>>
->>> Sorry. This driver don't control OTG FET feature.
->>>
->>>>> - Bigger Fast charge current, Top Off current Threshold selection.
->>>>> - Various and bigger OTG current limitation.
->>>>> - Bigger primary charger termination voltage setting.
->>>>> - Different maximum input current limit selection(Different step).
->>>>
->>>> Yes, I mentioned some of these differences (the Fast/top-off
->>>> differences). These are differences in values so it does not require new
->>>> driver. There is need to develop new driver just to support different
->>>> current (3.0 A instead of 2.1 A) or voltage threshold.
->>>>
->>>
->>> They are different charging current, OTG current limitation, top off current,
->>> charging limitation value. In case OTG current limitation different not
->>> limitation value but using register bit(max77843 use[7:6] max77693 use[7]
->>> bit only). Even if this driver not support all feature, some register
->>> different with max77693(support value, use register bit).
->>>
->>> If this driver will combined with max77693 may even be beneficial for
->>> new Maxim driver. But the present, this driver is related with
->>> max77843 core driver and max77843-regulator. So I hope this driver
->>> merge first. And then will extend two driver(max77843 charger and max77693 charger).
-> 
-> I still prefer merging common drivers into one instead of creating
-> some more of them.
-> However I understand your point and I am not entirely opposed against.
-> Especially that you invested quite a bit of time for developing this
-> and my feedback was quite late. To summarize I am fine with your
-> approach.
-> 
-> Best regards,
-> Krzysztof
-> 
+Hi Jacek,
 
-Then, Can I request merge this patch ?
+One more comment on this one:
 
-Best regards,
-Beomho
+On Fri, Mar 20, 2015 at 04:03:27PM +0100, Jacek Anaszewski wrote:
+...
+> +struct v4l2_flash *v4l2_flash_init(struct led_classdev_flash *fled_cdev,
+> +				   const struct v4l2_flash_ops *ops,
+> +				   struct v4l2_flash_ctrl_config *config)
+> +{
+> +	struct v4l2_flash *v4l2_flash;
+> +	struct led_classdev *led_cdev = &fled_cdev->led_cdev;
+> +	struct v4l2_subdev *sd;
+> +	int ret;
+> +
+> +	if (!fled_cdev || !ops || !config)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	v4l2_flash = devm_kzalloc(led_cdev->dev, sizeof(*v4l2_flash),
+> +					GFP_KERNEL);
+> +	if (!v4l2_flash)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	sd = &v4l2_flash->sd;
+> +	v4l2_flash->fled_cdev = fled_cdev;
+> +	v4l2_flash->ops = ops;
+> +	sd->dev = led_cdev->dev;
+> +	v4l2_subdev_init(sd, &v4l2_flash_subdev_ops);
+> +	sd->internal_ops = &v4l2_flash_subdev_internal_ops;
+> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	strlcpy(sd->name, config->dev_name, sizeof(sd->name));
+> +
+> +	ret = media_entity_init(&sd->entity, 0, NULL, 0);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+> +
+> +	sd->entity.type = MEDIA_ENT_T_V4L2_SUBDEV_FLASH;
+> +
+> +	ret = v4l2_flash_init_controls(v4l2_flash, config);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+> +
+> +	of_node_get(led_cdev->dev->of_node);
+> +
+> +	ret = v4l2_async_register_subdev(sd);
+> +	if (ret < 0)
+> +		goto err_async_register_sd;
+> +
+> +	return v4l2_flash;
+> +
+> +err_async_register_sd:
+> +	of_node_put(led_cdev->dev->of_node);
+> +	v4l2_ctrl_handler_free(sd->ctrl_handler);
+> +	media_entity_cleanup(&sd->entity);
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_flash_init);
+> +
+> +void v4l2_flash_release(struct v4l2_flash *v4l2_flash)
+> +{
+> +	struct v4l2_subdev *sd = &v4l2_flash->sd;
+> +	struct led_classdev *led_cdev = &v4l2_flash->fled_cdev->led_cdev;
+> +
+> +	v4l2_async_unregister_subdev(sd);
+> +	of_node_put(led_cdev->dev->of_node);
+> +	v4l2_ctrl_handler_free(sd->ctrl_handler);
+> +	media_entity_cleanup(&sd->entity);
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_flash_release);
+
+It'd be very nice if v4l2_flash_release() could graciously behave with NULL
+or negative error code as an argument, such as those produced by
+v4l2_flash_init(). This makes error handling a lot easier in drivers.
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
