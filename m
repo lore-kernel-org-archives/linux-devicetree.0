@@ -1,91 +1,72 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v1 09/11] DT: Add documentation for exynos4-is 'flashes'
- property
-Date: Wed, 25 Mar 2015 09:52:02 +0100
-Message-ID: <55127732.7020004@samsung.com>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-10-git-send-email-j.anaszewski@samsung.com>
- <20150325010641.GI18321@valkosipuli.retiisi.org.uk>
+From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH V6 15/25] MIPS: BMIPS: Flush the readahead cache after DMA
+Date: Wed, 25 Mar 2015 10:23:58 +0100
+Message-ID: <20150325092358.GA31933@linux-mips.org>
+References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
+ <1419529760-9520-16-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150325010641.GI18321@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1419529760-9520-16-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Thu, Dec 25, 2014 at 09:49:10AM -0800, Kevin Cernekee wrote:
 
-On 03/25/2015 02:06 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Fri, Mar 20, 2015 at 04:03:29PM +0100, Jacek Anaszewski wrote:
->> This patch adds a description of 'flashes' property
->> to the samsung-fimc.txt.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>   .../devicetree/bindings/media/samsung-fimc.txt     |    8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> index 922d6f8..cb0e263 100644
->> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> @@ -40,6 +40,13 @@ should be inactive. For the "active-a" state the camera port A must be activated
->>   and the port B deactivated and for the state "active-b" it should be the other
->>   way around.
->>
->> +Optional properties:
->> +
->> +- flashes - Array of phandles to the flash LEDs that can be controlled by the
->> +	    sub-devices contained in this media device. Flash LED is
->> +	    represented by a child node of a flash LED device
->
-> This should be in
-> Documentation/devicetree/bindings/media/video-interfaces.txt.
->
-> Should flash devices be associated with sensors somehow rather than ISPs?
-> That's how they commonly are arranged, however that doesn't limit placing
-> them in silly places.
->
-> I'm not necessarily saying the flashes-property should be present in
-> sensor's DT nodes, but it'd be good to be able to make the association if
-> it's there.
+> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate fro=
+m
+> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
+> may cause parts of the DMA buffer to be prefetched into the RAC.  To
+> avoid possible coherency problems, flush the RAC upon DMA completion.
+>=20
+> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/mips/mm/dma-default.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
+> index af5f046..38ee47a 100644
+> --- a/arch/mips/mm/dma-default.c
+> +++ b/arch/mips/mm/dma-default.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/highmem.h>
+>  #include <linux/dma-contiguous.h>
+> =20
+> +#include <asm/bmips.h>
+>  #include <asm/cache.h>
+>  #include <asm/cpu-type.h>
+>  #include <asm/io.h>
 
-I know of a SoC, which drives the flash from its on-chip ISP. The GPIO
-connected to the flash controller's external strobe pin can be
-configured so that the signal is routed to it from the ISP or from
-CPU (for software strobe mode).
+Aside of platform-specific headers having no business of getting
+included directly in a generic arch file, this also breaks the build
+of many platforms:
 
-I think that Sylwester could say more in this subject.
+  CC      arch/mips/mm/dma-default.o
+In file included from arch/mips/mm/dma-default.c:21:0:
+=2E/arch/mips/include/asm/bmips.h: In function =E2=80=98bmips_read_zscm=
+_reg=E2=80=99:
+=2E/arch/mips/include/asm/bmips.h:97:160: error: cast to pointer from i=
+nteger of different size [-Werror=3Dint-to-pointer-cast]
+  cache_op(Index_Load_Tag_S, ZSCM_REG_BASE + offset);
+                                                                       =
+                                                                       =
+                  ^
+=2E/arch/mips/include/asm/bmips.h: In function =E2=80=98bmips_write_zsc=
+m_reg=E2=80=99:
+=2E/arch/mips/include/asm/bmips.h:118:160: error: cast to pointer from =
+integer of different size [-Werror=3Dint-to-pointer-cast]
+  cache_op(Index_Store_Tag_S, ZSCM_REG_BASE + offset);
 
+I think the broken platforms are all the 64 bit platforms.
 
->> +	    (see Documentation/devicetree/bindings/leds/common.txt).
->> +
->>   The 'camera' node must include at least one 'fimc' child node.
->>
->>
->> @@ -166,6 +173,7 @@ Example:
->>   		clock-output-names = "cam_a_clkout", "cam_b_clkout";
->>   		pinctrl-names = "default";
->>   		pinctrl-0 = <&cam_port_a_clk_active>;
->> +		flashes = <&camera_flash>, <&system_torch>;
->>   		status = "okay";
->>   		#address-cells = <1>;
->>   		#size-cells = <1>;
->
-> There will be other kind of devices that have somewhat similar relationship.
-> They just haven't been defined yet. Lens controllers or EEPROM for instance.
-> The two are an integral part of a module, something which is not modelled in
-> DT in any way, but perhaps should be.
-
-Do you suggest using more generic name than 'flashes'?
-
--- 
-Best Regards,
-Jacek Anaszewski
+  Ralf
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
