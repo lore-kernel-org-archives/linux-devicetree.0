@@ -1,72 +1,66 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH V6 15/25] MIPS: BMIPS: Flush the readahead cache after DMA
-Date: Wed, 25 Mar 2015 10:23:58 +0100
-Message-ID: <20150325092358.GA31933@linux-mips.org>
-References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
- <1419529760-9520-16-git-send-email-cernekee@gmail.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [RESEND PATCH v6 0/2] ARM: hip04: add GPIO support
+Date: Wed, 25 Mar 2015 17:35:13 +0800
+Message-ID: <55128151.3060105@hisilicon.com>
+References: <1427266665-226718-1-git-send-email-wangzhou1@hisilicon.com> <CAD6h2NQQXgROxw4hLEH=OBw8WeEyr5by8ZDGEW7DQ1AuO0207Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419529760-9520-16-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAD6h2NQQXgROxw4hLEH=OBw8WeEyr5by8ZDGEW7DQ1AuO0207Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 25, 2014 at 09:49:10AM -0800, Kevin Cernekee wrote:
+On 2015/3/25 15:02, Haojian Zhuang wrote:
+> On 25 March 2015 at 14:57, Zhou Wang <wangzhou1@hisilicon.com> wrote:
+>> This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
+>> synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
+>> corresponding dts. The default value of ARCH_NR_GPIOS is used to find gpio
+>> base here.
+>>
+>> Now this patchset is based on v4.0-rc5
+>>
+>> Change in v6:
+>> - Change E-mail address in signed-off-by to "wangzhou1@hisilicon.com"
+>> Change in v5:
+>> - Base on v3.19-rc1
+>> - Just use default value of ARCH_NR_GPIOS to find gpio base. Remove the new
+>>   added patch(3/4) in v4.
+>> Change in v4:
+>> - Delete "default 128 if ARCH_HIP04" in arch/arm/Kconfig
+>> - add a new patch to support find GPIO base number in increasing order
+>> - add gpio-number-forward property in snps gpio binding doc
+>> Change in v3:
+>> - Move CONFIG_GPIO_DWAPB to hisi_defconfig
+>> - Add CONFIG_GPIOLIB, CONFIG_GPIO_SYSFS in hisi_defconfig
+>> Change in v2:
+>> - Add select GPIO_DWAPB in arch/arm/mach-hisi/Kconfig
+>>
+>> Link for v4:
+>> - http://www.spinics.net/lists/arm-kernel/msg383883.html
+>> Link for v3:
+>> - http://www.spinics.net/lists/devicetree/msg60324.html
+>>
+>>
+>> Zhou Wang (2):
+>>   ARM: hip04: add GPIO configure in hisi_defconfig
+>>   ARM: dts: hip04: add GPIO pieces
+>>
+>>  arch/arm/boot/dts/hip04.dtsi    | 75 +++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/configs/hisi_defconfig |  1 +
+>>  2 files changed, 76 insertions(+)
+>>
+>> --
+>> 1.9.1
+>>
+> Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+> 
+> .
+>
 
-> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate fro=
-m
-> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
-> may cause parts of the DMA buffer to be prefetched into the RAC.  To
-> avoid possible coherency problems, flush the RAC upon DMA completion.
->=20
-> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/mips/mm/dma-default.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
-> index af5f046..38ee47a 100644
-> --- a/arch/mips/mm/dma-default.c
-> +++ b/arch/mips/mm/dma-default.c
-> @@ -18,6 +18,7 @@
->  #include <linux/highmem.h>
->  #include <linux/dma-contiguous.h>
-> =20
-> +#include <asm/bmips.h>
->  #include <asm/cache.h>
->  #include <asm/cpu-type.h>
->  #include <asm/io.h>
+Thanks!
+Zhou Wang
 
-Aside of platform-specific headers having no business of getting
-included directly in a generic arch file, this also breaks the build
-of many platforms:
 
-  CC      arch/mips/mm/dma-default.o
-In file included from arch/mips/mm/dma-default.c:21:0:
-=2E/arch/mips/include/asm/bmips.h: In function =E2=80=98bmips_read_zscm=
-_reg=E2=80=99:
-=2E/arch/mips/include/asm/bmips.h:97:160: error: cast to pointer from i=
-nteger of different size [-Werror=3Dint-to-pointer-cast]
-  cache_op(Index_Load_Tag_S, ZSCM_REG_BASE + offset);
-                                                                       =
-                                                                       =
-                  ^
-=2E/arch/mips/include/asm/bmips.h: In function =E2=80=98bmips_write_zsc=
-m_reg=E2=80=99:
-=2E/arch/mips/include/asm/bmips.h:118:160: error: cast to pointer from =
-integer of different size [-Werror=3Dint-to-pointer-cast]
-  cache_op(Index_Store_Tag_S, ZSCM_REG_BASE + offset);
-
-I think the broken platforms are all the 64 bit platforms.
-
-  Ralf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
