@@ -1,97 +1,68 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v1 07/11] media: Add registration helpers for V4L2 flash
- sub-devices
-Date: Wed, 25 Mar 2015 02:40:38 +0200
-Message-ID: <20150325004037.GE18321@valkosipuli.retiisi.org.uk>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-8-git-send-email-j.anaszewski@samsung.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: m25p80: add "nor-jedec"
+ binding
+Date: Tue, 24 Mar 2015 17:55:34 -0700
+Message-ID: <20150325005534.GC2677@norris-Latitude-E6410>
+References: <1426111046-29900-1-git-send-email-computersforpeace@gmail.com>
+ <20150312105824.GD30145@leverpostej>
+ <20150320191258.GW32500@ld-irv-0074>
+ <CACna6ryvD2Dn2eQPMvoJ+1Yt75=w1J6OR=tvOSZsMsBgD2O4yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426863811-12516-8-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
+In-Reply-To: <CACna6ryvD2Dn2eQPMvoJ+1Yt75=w1J6OR=tvOSZsMsBgD2O4yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+On Sun, Mar 22, 2015 at 12:30:05AM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> On 20 March 2015 at 20:12, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
+ wrote:
+> > Yes, and that is an eventual goal I suppose, but the current list i=
+s
+> > excessive and is most likely not currently relied on by any one. So=
+ I
+> > don't just want to C&P the entire list into this binding immediatel=
+y.
+> >
+> > I guess my plan looks like this:
+> >
+> > 1. add "nor-jedec" binding, to provide lowest common denominator bi=
+nding
+> > (this series)
+> >
+> > 2. stop adding to the m25p_ids[] table unless necessary (enabled by=
+ this
+> > series)
+> >
+> > 3. gauge whether we can remove certain entries from m25p_ids[] (e.g=
+=2E, if
+> > they were only used in platform_data, not DT; or if they were very
+> > recently added just to synchronize with spi-nor.c)
+>=20
+> Why we can't remove (slowly) all entries from m25p_ids that don't nee=
+d
+> any extra handling?
+>=20
+> If we'll have DT with
+> "spansion,m25p80", "nor-jedec"
+> and then m25p80.c will handle both: "m25p80" and "nor-jedec" without
+> any difference, what's the point of keeping "m25p80" entry?
 
-One more comment on this one:
+ABI stability. A lot of DTBs might be using m25p80 already, and they
+aren't supposed to have to update just because SW decided to drop them.
+But see [1] for the official word on ABI stability. I think that leaves
+room for removing most/all of these eventually.
 
-On Fri, Mar 20, 2015 at 04:03:27PM +0100, Jacek Anaszewski wrote:
-...
-> +struct v4l2_flash *v4l2_flash_init(struct led_classdev_flash *fled_cdev,
-> +				   const struct v4l2_flash_ops *ops,
-> +				   struct v4l2_flash_ctrl_config *config)
-> +{
-> +	struct v4l2_flash *v4l2_flash;
-> +	struct led_classdev *led_cdev = &fled_cdev->led_cdev;
-> +	struct v4l2_subdev *sd;
-> +	int ret;
-> +
-> +	if (!fled_cdev || !ops || !config)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	v4l2_flash = devm_kzalloc(led_cdev->dev, sizeof(*v4l2_flash),
-> +					GFP_KERNEL);
-> +	if (!v4l2_flash)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	sd = &v4l2_flash->sd;
-> +	v4l2_flash->fled_cdev = fled_cdev;
-> +	v4l2_flash->ops = ops;
-> +	sd->dev = led_cdev->dev;
-> +	v4l2_subdev_init(sd, &v4l2_flash_subdev_ops);
-> +	sd->internal_ops = &v4l2_flash_subdev_internal_ops;
-> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	strlcpy(sd->name, config->dev_name, sizeof(sd->name));
-> +
-> +	ret = media_entity_init(&sd->entity, 0, NULL, 0);
-> +	if (ret < 0)
-> +		return ERR_PTR(ret);
-> +
-> +	sd->entity.type = MEDIA_ENT_T_V4L2_SUBDEV_FLASH;
-> +
-> +	ret = v4l2_flash_init_controls(v4l2_flash, config);
-> +	if (ret < 0)
-> +		return ERR_PTR(ret);
-> +
-> +	of_node_get(led_cdev->dev->of_node);
-> +
-> +	ret = v4l2_async_register_subdev(sd);
-> +	if (ret < 0)
-> +		goto err_async_register_sd;
-> +
-> +	return v4l2_flash;
-> +
-> +err_async_register_sd:
-> +	of_node_put(led_cdev->dev->of_node);
-> +	v4l2_ctrl_handler_free(sd->ctrl_handler);
-> +	media_entity_cleanup(&sd->entity);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_flash_init);
-> +
-> +void v4l2_flash_release(struct v4l2_flash *v4l2_flash)
-> +{
-> +	struct v4l2_subdev *sd = &v4l2_flash->sd;
-> +	struct led_classdev *led_cdev = &v4l2_flash->fled_cdev->led_cdev;
-> +
-> +	v4l2_async_unregister_subdev(sd);
-> +	of_node_put(led_cdev->dev->of_node);
-> +	v4l2_ctrl_handler_free(sd->ctrl_handler);
-> +	media_entity_cleanup(&sd->entity);
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_flash_release);
+Brian
 
-It'd be very nice if v4l2_flash_release() could graciously behave with NULL
-or negative error code as an argument, such as those produced by
-v4l2_flash_init(). This makes error handling a lot easier in drivers.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+[1] Documentation/devicetree/bindings/ABI.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
