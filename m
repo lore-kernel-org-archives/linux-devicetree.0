@@ -1,58 +1,129 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 2/2] ARM: cpuidle: Document the code
-Date: Wed, 25 Mar 2015 08:03:56 +0100
-Message-ID: <55125DDC.9000901@linaro.org>
-References: <20150323225828.GC15435@e102568-lin.cambridge.arm.com> <1427190842-30675-1-git-send-email-daniel.lezcano@linaro.org> <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org> <20150324185144.GB27311@red-moon>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v3 5/9] eeprom: Add bindings for simple eeprom framework
+Date: Wed, 25 Mar 2015 08:10:06 +0100
+Message-ID: <20150325071006.GC4946@pengutronix.de>
+References: <1427236116-18531-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1427236230-18751-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150324185144.GB27311@red-moon>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1427236230-18751-1-git-send-email-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2015 07:51 PM, Lorenzo Pieralisi wrote:
-> On Tue, Mar 24, 2015 at 09:54:02AM +0000, Daniel Lezcano wrote:
->> Add kernel-doc format documentation in the code.
->>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
+On Tue, Mar 24, 2015 at 10:30:30PM +0000, Srinivas Kandagatla wrote:
+> This patch adds bindings for simple eeprom framework which allows eeprom
+> consumers to talk to eeprom providers to get access to eeprom cell data.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> [Maxime Ripard: intial version of eeprom framework]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../devicetree/bindings/eeprom/eeprom.txt          | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> new file mode 100644
+> index 0000000..8348d18
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> @@ -0,0 +1,70 @@
+> += EEPROM Data Device Tree Bindings =
+> +
+> +This binding is intended to represent the location of hardware
+> +configuration data stored in EEPROMs.
+> +
+> +On a significant proportion of boards, the manufacturer has stored
+> +some data on an EEPROM-like device, for the OS to be able to retrieve
+> +these information and act upon it. Obviously, the OS has to know
+> +about where to retrieve these data from, and where they are stored on
+> +the storage device.
+> +
+> +This document is here to document this.
+> +
+> += Data providers =
+> +Contains bindings specific to provider drivers and data cells as children
+> +to this node.
+> +
+> += Data cells =
+> +These are the child nodes of the provider which contain data cell
+> +information like offset and size in eeprom provider.
+> +
+> +Required properties:
+> +reg:	specifies the offset in byte within that storage device, and the length
+> +	in bytes of the data we care about.
+> +	There could be more then one offset-length pairs in this property.
+> +
+> +Optional properties:
+> +As required by specific data parsers/interpreters.
+> +
+> +For example:
+> +
+> +	/* Provider */
+> +	qfprom: qfprom@00700000 {
+> +		compatible 	= "qcom,qfprom";
+> +		reg		= <0x00700000 0x1000>;
+> +		...
+> +
+> +		/* Data cells */
+> +		tsens_calibration: calib@404 {
+> +			reg = <0x404 0x10>;
+> +		};
+> +
+> +		serial_number: sn {
+> +			reg = <0x104 0x4>, <0x204 0x4>, <0x30c 0x4>;
+> +
+> +		};
+> +		...
+> +	};
+> +
+> += Data consumers =
+> +Are device nodes which consume eeprom data cells.
+> +
+> +Required properties:
+> +
+> +eeproms: List of phandle and data cell the device might be interested in.
+> +
+> +Optional properties:
+> +
+> +eeprom-names: List of data cell name strings sorted in the same order
+> +	      as the eeproms property. Consumers drivers will use
+> +	      eeprom-names to differentiate between multiple cells,
+> +	      and hence being able to know what these cells are for.
+> +
+> +For example:
+> +
+> +	tsens {
+> +		...
+> +		eeproms = <&tsens_calibration>;
+> +		eeprom-names = "calibration";
+> +	};
 
-[ ... ]
+This is somewhat complicated. Also having 'eeprom' in the binding is not
+nice since it could be FRAM or something else. How about:
 
->> + * Returns:
->> + *  0 on success,
->> + *  -ENODEV if it fails to find the cpu node in the device tree,
->> + *  -EOPNOTSUPP if it does not find a registered cpuidle_ops for th=
-is cpu,
->> + *  -ENOENT if it fails to find a enabled-method property,
->
-> Ultra-nit: "an enabled-method"
->
->> + *  -ENXIO if the HW reports a failure or a misconfiguration
->
-> -ENOMEM is missing.
->
-> Apart from these ultraminor changes (and thanks for putting it
-> together):
->
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->
+	tsens {
+		calibration = <&tsens_calibration>;
+	};
 
-Thanks for review Lorenzo. I fixed the comment and pushed in my tree fo=
-r=20
-4.1.
 
-  -- Daniel
+Sascha
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
