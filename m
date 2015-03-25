@@ -1,66 +1,124 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [RESEND PATCH v6 0/2] ARM: hip04: add GPIO support
-Date: Wed, 25 Mar 2015 17:35:13 +0800
-Message-ID: <55128151.3060105@hisilicon.com>
-References: <1427266665-226718-1-git-send-email-wangzhou1@hisilicon.com> <CAD6h2NQQXgROxw4hLEH=OBw8WeEyr5by8ZDGEW7DQ1AuO0207Q@mail.gmail.com>
+From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] coresight: adding basic support for Spreadtrum SC9836
+Date: Wed, 25 Mar 2015 20:19:36 +0800
+Message-ID: <CAG2=9p-ShT6KAYZFbvc=eMszK+UgMXa8W7cdp9QwPR7M1RpHfg@mail.gmail.com>
+References: <1427176113-23411-1-git-send-email-zhang.chunyan@linaro.org>
+	<CANLsYkw+dzHU5QtqM-Pw8s-C-K4aqd0ATKd_SidwVf6uqyd9cA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAD6h2NQQXgROxw4hLEH=OBw8WeEyr5by8ZDGEW7DQ1AuO0207Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANLsYkw+dzHU5QtqM-Pw8s-C-K4aqd0ATKd_SidwVf6uqyd9cA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Kaixu Xia <kaixu.xia-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhizhou <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/3/25 15:02, Haojian Zhuang wrote:
-> On 25 March 2015 at 14:57, Zhou Wang <wangzhou1@hisilicon.com> wrote:
->> This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
->> synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
->> corresponding dts. The default value of ARCH_NR_GPIOS is used to find gpio
->> base here.
+On Tue, Mar 24, 2015 at 11:08 PM, Mathieu Poirier
+<mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 23 March 2015 at 23:48, Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Support only for ETB, FUNNEL, STM are included currently.
+>> Support for ETM, TPIU and the replicator linked to it are not included in
+>> this version patch.
 >>
->> Now this patchset is based on v4.0-rc5
+>> Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/sprd/sc9836.dtsi | 57 ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 57 insertions(+)
 >>
->> Change in v6:
->> - Change E-mail address in signed-off-by to "wangzhou1@hisilicon.com"
->> Change in v5:
->> - Base on v3.19-rc1
->> - Just use default value of ARCH_NR_GPIOS to find gpio base. Remove the new
->>   added patch(3/4) in v4.
->> Change in v4:
->> - Delete "default 128 if ARCH_HIP04" in arch/arm/Kconfig
->> - add a new patch to support find GPIO base number in increasing order
->> - add gpio-number-forward property in snps gpio binding doc
->> Change in v3:
->> - Move CONFIG_GPIO_DWAPB to hisi_defconfig
->> - Add CONFIG_GPIOLIB, CONFIG_GPIO_SYSFS in hisi_defconfig
->> Change in v2:
->> - Add select GPIO_DWAPB in arch/arm/mach-hisi/Kconfig
+>> diff --git a/arch/arm64/boot/dts/sprd/sc9836.dtsi b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+>> index f92f1b4..2ca80f3 100644
+>> --- a/arch/arm64/boot/dts/sprd/sc9836.dtsi
+>> +++ b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+>> @@ -45,6 +45,63 @@
+>>                 };
+>>         };
 >>
->> Link for v4:
->> - http://www.spinics.net/lists/arm-kernel/msg383883.html
->> Link for v3:
->> - http://www.spinics.net/lists/devicetree/msg60324.html
->>
->>
->> Zhou Wang (2):
->>   ARM: hip04: add GPIO configure in hisi_defconfig
->>   ARM: dts: hip04: add GPIO pieces
->>
->>  arch/arm/boot/dts/hip04.dtsi    | 75 +++++++++++++++++++++++++++++++++++++++++
->>  arch/arm/configs/hisi_defconfig |  1 +
->>  2 files changed, 76 insertions(+)
->>
+>> +       etb@10003000 {
+>> +               compatible = "arm,coresight-etb10", "arm,primecell";
+>> +               reg = <0 0x10003000 0 0x1000>;
+>> +               arm,primecell-periphid = <0x0003b907>;
+>
+> Specifying the primecell id in the device tree like this is usually to
+> avoid probing of the memory space by the AMBA mechanic when bus
+> components are discovered.  As such components are probed and
+> initialised when their drivers are registered with the diver core
+> later in the boot process.
+>
+> Is there a good reason why this is done here?  Especially when the
+> funnel and STM don't specify their cell IDs in the DT.
+
+Actually today I found that is not a ETB but TMC, so if I didn't set
+peripheral id for it in DT, it can't be initialized as ETB.
+
+I will correct it to be a TMC in upcoming version patch.
+
+>
+>> +               coresight-default-sink;
+>
+> Please remove the above - this feature no longer exists.
+
+ok, I will remove it in next version.
+
+>
+>> +               clocks = <&clk26mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       etb_in: endpoint {
+>> +                               slave-mode;
+>> +                               remote-endpoint = <&funnel_out_port0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       funnel@10001000 {
+>> +               compatible = "arm,coresight-funnel", "arm,primecell";
+>> +               reg = <0 0x10001000 0 0x1000>;
+>> +               clocks = <&clk26mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       /* funnel output port */
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               funnel_out_port0: endpoint {
+>> +                                       remote-endpoint = <&etb_in>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       /* funnel input port 0~3 is reserved for ETMs */
+>> +                       port@1 {
+>> +                               reg = <4>;
+>> +                               funnel_in_port4: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&stm_out>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       stm@10006000 {
+>> +               compatible = "arm,coresight-stm", "arm,primecell";
+>> +               reg = <0 0x10006000 0 0x1000>,
+>> +                     <0 0x01000000 0 0x180000>;
+>> +               reg-names = "stm-base", "stm-stimulus-base";
+>> +               clocks = <&clk26mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       stm_out: endpoint {
+>> +                               remote-endpoint = <&funnel_in_port4>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>>         gic: interrupt-controller@12001000 {
+>>                 compatible = "arm,gic-400";
+>>                 reg = <0 0x12001000 0 0x1000>,
 >> --
 >> 1.9.1
 >>
-> Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
-> 
-> .
->
-
-Thanks!
-Zhou Wang
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
