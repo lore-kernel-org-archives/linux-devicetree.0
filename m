@@ -1,68 +1,65 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: m25p80: add "nor-jedec"
- binding
-Date: Tue, 24 Mar 2015 17:55:34 -0700
-Message-ID: <20150325005534.GC2677@norris-Latitude-E6410>
-References: <1426111046-29900-1-git-send-email-computersforpeace@gmail.com>
- <20150312105824.GD30145@leverpostej>
- <20150320191258.GW32500@ld-irv-0074>
- <CACna6ryvD2Dn2eQPMvoJ+1Yt75=w1J6OR=tvOSZsMsBgD2O4yg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v1 02/11] DT: Add documentation for the mfd Maxim max77693
+Date: Wed, 25 Mar 2015 02:55:43 +0200
+Message-ID: <20150325005542.GG18321@valkosipuli.retiisi.org.uk>
+References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+ <1426863811-12516-3-git-send-email-j.anaszewski@samsung.com>
+ <20150321224903.GE16613@valkosipuli.retiisi.org.uk>
+ <550FE2C3.7090702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACna6ryvD2Dn2eQPMvoJ+1Yt75=w1J6OR=tvOSZsMsBgD2O4yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <550FE2C3.7090702@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 22, 2015 at 12:30:05AM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
-> On 20 March 2015 at 20:12, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
-> > Yes, and that is an eventual goal I suppose, but the current list i=
-s
-> > excessive and is most likely not currently relied on by any one. So=
- I
-> > don't just want to C&P the entire list into this binding immediatel=
-y.
-> >
-> > I guess my plan looks like this:
-> >
-> > 1. add "nor-jedec" binding, to provide lowest common denominator bi=
-nding
-> > (this series)
-> >
-> > 2. stop adding to the m25p_ids[] table unless necessary (enabled by=
- this
-> > series)
-> >
-> > 3. gauge whether we can remove certain entries from m25p_ids[] (e.g=
-=2E, if
-> > they were only used in platform_data, not DT; or if they were very
-> > recently added just to synchronize with spi-nor.c)
->=20
-> Why we can't remove (slowly) all entries from m25p_ids that don't nee=
-d
-> any extra handling?
->=20
-> If we'll have DT with
-> "spansion,m25p80", "nor-jedec"
-> and then m25p80.c will handle both: "m25p80" and "nor-jedec" without
-> any difference, what's the point of keeping "m25p80" entry?
+Hi Jacek,
 
-ABI stability. A lot of DTBs might be using m25p80 already, and they
-aren't supposed to have to update just because SW decided to drop them.
-But see [1] for the official word on ABI stability. I think that leaves
-room for removing most/all of these eventually.
+On Mon, Mar 23, 2015 at 10:54:11AM +0100, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> On 03/21/2015 11:49 PM, Sakari Ailus wrote:
+> >Hi Jacek,
+> >
+> >On Fri, Mar 20, 2015 at 04:03:22PM +0100, Jacek Anaszewski wrote:
+> >>+Optional properties of the LED child node:
+> >>+- label : see Documentation/devicetree/bindings/leds/common.txt
+> >
+> >I'm still not comfortable using the label field as-is as the entity name in
+> >the later patches, there's one important problem: it is not guaranteed to be
+> >unique in the system.
+> 
+> I don't use it as-is in my patches. For max77603-led the i2c adapter id
+> and client address is added to it, and for aat1290 there is '_n' suffix
+> added. Nonetheless I didn't notice that the patch [1] was already
+> merged. It checks if a LED class device with given name isn't already
+> registered and adds a '_n" suffix if there was any. If it was exported
+> I could use it in the leds-aat1290 driver and avoid depending on the
+> static variable.
+> 
+> Whereas for I2C devices the problem doesn't exist (it is guaranteed that
+> no more than one I2C client with an address can be present on the
+> same bus), for devices driven through GPIOs we haven't stable unique
+> identifier.
+> 
+> I thought that we agreed on #v4l about adding numerical postfixes
+> in case of such devices.
+> 
+> >Do you think this could be added to
+> >Documentation/devicetree/bindings/leds/common.txt, with perhaps enforcing it
+> >in the LED framework? Bryan, what do you think?
+> 
+> The patch [1] seems to address the issue.
 
-Brian
+Replied to that, you're cc'd.
 
-[1] Documentation/devicetree/bindings/ABI.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For this patch:
+
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
