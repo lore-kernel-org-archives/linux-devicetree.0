@@ -1,51 +1,48 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V3 2/8] ARM: cpuidle: Add a cpuidle ops structure to be
- used for DT
-Date: Wed, 25 Mar 2015 14:34:30 -0700
-Message-ID: <20150325213430.GA30227@codeaurora.org>
-References: <1426851841-2072-1-git-send-email-daniel.lezcano@linaro.org>
- <1426851841-2072-3-git-send-email-daniel.lezcano@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 5/6] ARM: dts: add wl12xx/wl18xx bindings
+Date: Wed, 25 Mar 2015 14:42:31 -0700
+Message-ID: <20150325214230.GB31346@atomide.com>
+References: <1426696710-6891-1-git-send-email-eliad@wizery.com>
+ <1426696710-6891-6-git-send-email-eliad@wizery.com>
+ <550AD7C1.2030405@gmail.com>
+ <CAB3XZEfpD7YkwdU7OJJaNFy=MnYVY3-fOVxkA48Vu01LzU0GFg@mail.gmail.com>
+ <20150319212505.GN31346@atomide.com>
+ <87h9tgi4sg.fsf@kamboji.qca.qualcomm.com>
+ <20150320153357.GT31346@atomide.com>
+ <87bnjnfz1t.fsf@kamboji.qca.qualcomm.com>
+ <20150320162138.GU31346@atomide.com>
+ <87twxce2oh.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426851841-2072-3-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rjw@rjwysocki.net, lorenzo.pieralisi@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lina.iyer@linaro.org
+In-Reply-To: <87twxce2oh.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Pontus Fuchs <pontus.fuchs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20, Daniel Lezcano wrote:
-> The current state of the different cpuidle drivers is the different PM
-> operations are passed via the platform_data using the platform driver
-> paradigm.
+* Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> [150322 21:52]:
+> Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
 > 
-> This approach allowed to split the low level PM code from the arch specific
-> and the generic cpuidle code.
+> >> After John "retired" we actually have two set of trees now: mac80211
+> >> maintained by Johannes and wireless-drivers maintained by me. I haven't
+> >> pulled anything from your tree and I'm 100% sure Johannes hasn't either.
+> >> So green light from me.
+> >
+> > OK, I'll set up the new branch then. I take your ack is for the
+> > whole series? If it's just for the $subject patch, please let
+> > me know.
 > 
-> Unfortunately there are complaints about this approach as, in the context of the
-> single kernel image, we have multiple drivers loaded in memory for nothing and
-> the platform driver is not adequate for cpuidle.
-> 
-> This patch provides a common interface via cpuidle ops for all new cpuidle
-> driver and a definition for the device tree.
-> 
-> It will allow with the next patches to a have a common definition with ARM64
-> and share the same cpuidle driver.
-> 
-> The code is optimized to use the __init section intensively in order to reduce
-> the memory footprint after the driver is initialized and unify the function
-> names with ARM64.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Kevin Hilman <khilman@linaro.org>
-> Acked-by: Rob Herring <robherring2@gmail.com>
+> It was for the whole series.
 
-Thanks for moving to OF tables. We can merge smp ops and cpuidle
-ops later on.
+OK thanks, I've sent of the pull request for arm-soc for this series
+as "[GIT PULL] wireless wl12xx and omap device tree changes for v4.1".
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+Regards,
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
