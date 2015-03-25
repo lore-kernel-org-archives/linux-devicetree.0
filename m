@@ -1,56 +1,58 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [RESEND PATCH v6 0/2] ARM: hip04: add GPIO support
-Date: Wed, 25 Mar 2015 15:02:13 +0800
-Message-ID: <CAD6h2NQQXgROxw4hLEH=OBw8WeEyr5by8ZDGEW7DQ1AuO0207Q@mail.gmail.com>
-References: <1427266665-226718-1-git-send-email-wangzhou1@hisilicon.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/2] ARM: cpuidle: Document the code
+Date: Wed, 25 Mar 2015 08:03:56 +0100
+Message-ID: <55125DDC.9000901@linaro.org>
+References: <20150323225828.GC15435@e102568-lin.cambridge.arm.com> <1427190842-30675-1-git-send-email-daniel.lezcano@linaro.org> <1427190842-30675-2-git-send-email-daniel.lezcano@linaro.org> <20150324185144.GB27311@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1427266665-226718-1-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150324185144.GB27311@red-moon>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lina.iyer@linaro.org" <lina.iyer@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25 March 2015 at 14:57, Zhou Wang <wangzhou1@hisilicon.com> wrote:
-> This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
-> synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
-> corresponding dts. The default value of ARCH_NR_GPIOS is used to find gpio
-> base here.
+On 03/24/2015 07:51 PM, Lorenzo Pieralisi wrote:
+> On Tue, Mar 24, 2015 at 09:54:02AM +0000, Daniel Lezcano wrote:
+>> Add kernel-doc format documentation in the code.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+
+[ ... ]
+
+>> + * Returns:
+>> + *  0 on success,
+>> + *  -ENODEV if it fails to find the cpu node in the device tree,
+>> + *  -EOPNOTSUPP if it does not find a registered cpuidle_ops for th=
+is cpu,
+>> + *  -ENOENT if it fails to find a enabled-method property,
 >
-> Now this patchset is based on v4.0-rc5
+> Ultra-nit: "an enabled-method"
 >
-> Change in v6:
-> - Change E-mail address in signed-off-by to "wangzhou1@hisilicon.com"
-> Change in v5:
-> - Base on v3.19-rc1
-> - Just use default value of ARCH_NR_GPIOS to find gpio base. Remove the new
->   added patch(3/4) in v4.
-> Change in v4:
-> - Delete "default 128 if ARCH_HIP04" in arch/arm/Kconfig
-> - add a new patch to support find GPIO base number in increasing order
-> - add gpio-number-forward property in snps gpio binding doc
-> Change in v3:
-> - Move CONFIG_GPIO_DWAPB to hisi_defconfig
-> - Add CONFIG_GPIOLIB, CONFIG_GPIO_SYSFS in hisi_defconfig
-> Change in v2:
-> - Add select GPIO_DWAPB in arch/arm/mach-hisi/Kconfig
+>> + *  -ENXIO if the HW reports a failure or a misconfiguration
 >
-> Link for v4:
-> - http://www.spinics.net/lists/arm-kernel/msg383883.html
-> Link for v3:
-> - http://www.spinics.net/lists/devicetree/msg60324.html
+> -ENOMEM is missing.
 >
+> Apart from these ultraminor changes (and thanks for putting it
+> together):
 >
-> Zhou Wang (2):
->   ARM: hip04: add GPIO configure in hisi_defconfig
->   ARM: dts: hip04: add GPIO pieces
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 >
->  arch/arm/boot/dts/hip04.dtsi    | 75 +++++++++++++++++++++++++++++++++++++++++
->  arch/arm/configs/hisi_defconfig |  1 +
->  2 files changed, 76 insertions(+)
->
-> --
-> 1.9.1
->
-Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+
+Thanks for review Lorenzo. I fixed the comment and pushed in my tree fo=
+r=20
+4.1.
+
+  -- Daniel
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
