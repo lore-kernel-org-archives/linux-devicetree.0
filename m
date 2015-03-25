@@ -1,93 +1,141 @@
-From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [RESEND PATCH v3 1/2] dma: Add Xilinx Central DMA DT Binding Documentation
-Date: Wed, 25 Mar 2015 10:36:54 +0530
-Message-ID: <1568e880-ee7f-4aa5-a5de-8c615be0ca6c@BN1BFFO11FD008.protection.gbl>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/5] of: overlay: Master enable switch
+Date: Wed, 25 Mar 2015 00:25:26 -0500
+Message-ID: <CAL_JsqKZZW=Vq9Mry9H0yjnv=TW8P=xzyX3EjQP+B15U0roaBA@mail.gmail.com>
+References: <1426624257-23003-1-git-send-email-pantelis.antoniou@konsulko.com> <1426624257-23003-4-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426624257-23003-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: appand-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation of Xilinx Central DMA Engine.
+On Tue, Mar 17, 2015 at 3:30 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Implement a throw once master enable switch to protect against any
+> further overlay applications if the administrator desires so.
 
-Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3:
-- Used proper alignment for all the properties.
-Changes in v2:
-- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
-  to match the implementation.
+sysfs documentation?
 
- .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/overlay.c | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 65 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index f17f5ef..6688797 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/err.h>
+>  #include <linux/idr.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/atomic.h>
+>
+>  #include "of_private.h"
+>
+> @@ -55,6 +56,9 @@ struct of_overlay {
+>         struct kobject kobj;
+>  };
+>
+> +/* master enable switch; once set to 0 can't be re-enabled */
+> +static atomic_t ov_enable = ATOMIC_INIT(1);
+> +
+>  static int of_overlay_apply_one(struct of_overlay *ov,
+>                 struct device_node *target, const struct device_node *overlay);
+>
+> @@ -345,6 +349,60 @@ static struct kobj_type of_overlay_ktype = {
+>
+>  static struct kset *ov_kset;
+>
+> +static ssize_t enable_read(struct file *filp, struct kobject *kobj,
+> +               struct bin_attribute *bin_attr, char *buf,
+> +               loff_t offset, size_t count)
+> +{
+> +       char tbuf[3];
+> +
+> +       if (offset < 0)
+> +               return -EINVAL;
+> +
+> +       if (offset >= sizeof(tbuf))
+> +               return 0;
+> +
+> +       if (count > sizeof(tbuf) - offset)
+> +               count = sizeof(tbuf) - offset;
+> +
+> +       /* fill in temp */
+> +       tbuf[0] = '0' + atomic_read(&ov_enable);
+> +       tbuf[1] = '\n';
+> +       tbuf[2] = '\0';
+> +
+> +       /* copy to buffer */
+> +       memcpy(buf, tbuf + offset, count);
+> +
+> +       return count;
+> +}
+> +
+> +static ssize_t enable_write(struct file *filp, struct kobject *kobj,
+> +               struct bin_attribute *bin_attr, char *buf,
+> +               loff_t off, size_t count)
+> +{
+> +       int new_enable;
+> +
+> +       if (off != 0 || (buf[0] != '0' && buf[1] != '1'))
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-new file mode 100644
-index 0000000..aba3b10
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-@@ -0,0 +1,54 @@
-+Xilinx AXI CDMA engine, it does transfers between memory-mapped source
-+address and a memory-mapped destination address.
-+
-+Required properties:
-+- compatible		: Should be "xlnx,axi-cdma-1.00.a"
-+- #dma-cells		: Should be <1>, see "dmas" property below
-+- reg			: Should contain cdma registers location and length.
-+- dma-channel child node: Should have only one channel
-+
-+Optional properties:
-+- xlnx,include-sg	: Tells whether configured for Scatter-mode in
-+			  the hardware.
-+
-+Required child node properties:
-+- compatible		: It should be "xlnx,axi-cdma-channel".
-+- interrupts		: Should contain per channel CDMA interrupts.
-+- xlnx,datawidth	: Should contain the stream data width, take values
-+			  {32,64...1024}.
-+
-+Option child node properties:
-+- xlnx,include-dre	: Tells whether hardware is configured for Data
-+			  Realignment Engine.
-+
-+Example:
-+++++++++
-+
-+axi_cdma_0: axicdma@7e200000 {
-+       compatible = "xlnx,axi-cdma-1.00.a";
-+       #dma_cells = <1>;
-+       reg = < 0x7e200000 0x10000 >;
-+       dma-channel@7e200000 {
-+               compatible = "xlnx,axi-cdma-channel";
-+               interrupts = < 0 55 4 >;
-+               xlnx,datawidth = <0x40>;
-+       } ;
-+} ;
-+
-+
-+* DMA client
-+
-+Required properties:
-+- dmas		: a list of <[Central DMA device phandle] [Channel ID]> pairs,
-+		  where Channel ID is '0' for write/tx and '1' for read/rx
-+                  channel.
-+- dma-names	: a list of DMA channel names, one per "dmas" entry
-+
-+Example:
-+++++++++
-+
-+cdmatest_0: cdmatest@0 {
-+       compatible ="xlnx,axi-cdma-test-1.00.a";
-+       dmas = <&axi_cdma_0 0>;
-+       dma-names = "cdma0";
-+} ;
--- 
-2.1.2
+Is buf[1] correct here?
 
+> +               return -EINVAL;
+> +
+> +       new_enable = buf[0] - '0';
+> +       if (new_enable != 0 && new_enable != 1)
+
+Make unsigned just "if (new_enable > 1)".
+
+> +               return -EINVAL;
+> +
+> +       /* NOP for same value */
+> +       if (new_enable == atomic_read(&ov_enable))
+> +               return count;
+> +
+> +       /* if we've disabled it, no going back */
+> +       if (atomic_read(&ov_enable) == 0)
+> +               return -EPERM;
+> +
+> +       atomic_set(&ov_enable, new_enable);
+> +       return count;
+> +}
+> +
+> +/* just a single char + '\n' + '\0' */
+> +static BIN_ATTR_RW(enable, 3);
+> +
+>  /**
+>   * of_overlay_create() - Create and apply an overlay
+>   * @tree:      Device node containing all the overlays
+> @@ -360,6 +418,10 @@ int of_overlay_create(struct device_node *tree)
+>         struct of_overlay *ov;
+>         int err, id;
+>
+> +       /* administratively disabled */
+> +       if (!atomic_read(&ov_enable))
+> +               return -EPERM;
+> +
+>         /* allocate the overlay structure */
+>         ov = kzalloc(sizeof(*ov), GFP_KERNEL);
+>         if (ov == NULL)
+> @@ -596,5 +658,7 @@ int of_overlay_init(void)
+>         if (!ov_kset)
+>                 return -ENOMEM;
+>
+> -       return 0;
+> +       rc = sysfs_create_bin_file(&ov_kset->kobj, &bin_attr_enable);
+> +       WARN(rc, "%s: error adding enable attribute\n", __func__);
+> +       return rc;
+>  }
+> --
+> 1.7.12
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
