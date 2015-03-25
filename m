@@ -1,35 +1,91 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/9] ARM: dt: dove: add Dove PMU DT entry to dove.dtsi
-Date: Wed, 25 Mar 2015 09:25:23 +0100
-Message-ID: <CACRpkdaCZmvPK6YbFObNfNNs7ZNn=3dQEydftW2beZ63d4-eKA@mail.gmail.com>
-References: <20150312183020.GU8656@n2100.arm.linux.org.uk>
-	<E1YW7tB-0003mM-1L@rmk-PC.arm.linux.org.uk>
-	<55072092.9040207@free-electrons.com>
-	<20150317134335.GV8656@n2100.arm.linux.org.uk>
-	<5508439F.4000507@gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v1 09/11] DT: Add documentation for exynos4-is 'flashes'
+ property
+Date: Wed, 25 Mar 2015 09:52:02 +0100
+Message-ID: <55127732.7020004@samsung.com>
+References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
+ <1426863811-12516-10-git-send-email-j.anaszewski@samsung.com>
+ <20150325010641.GI18321@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5508439F.4000507-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150325010641.GI18321@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 4:09 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Sakari,
 
-> If we do this, we should have a look at syscon and potentially also
-> simple-mfd which will allow us to share the registers and register
-> platform_devices for the sub-nodes.
+On 03/25/2015 02:06 AM, Sakari Ailus wrote:
+> Hi Jacek,
+>
+> On Fri, Mar 20, 2015 at 04:03:29PM +0100, Jacek Anaszewski wrote:
+>> This patch adds a description of 'flashes' property
+>> to the samsung-fimc.txt.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>   .../devicetree/bindings/media/samsung-fimc.txt     |    8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> index 922d6f8..cb0e263 100644
+>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> @@ -40,6 +40,13 @@ should be inactive. For the "active-a" state the camera port A must be activated
+>>   and the port B deactivated and for the state "active-b" it should be the other
+>>   way around.
+>>
+>> +Optional properties:
+>> +
+>> +- flashes - Array of phandles to the flash LEDs that can be controlled by the
+>> +	    sub-devices contained in this media device. Flash LED is
+>> +	    represented by a child node of a flash LED device
+>
+> This should be in
+> Documentation/devicetree/bindings/media/video-interfaces.txt.
+>
+> Should flash devices be associated with sensors somehow rather than ISPs?
+> That's how they commonly are arranged, however that doesn't limit placing
+> them in silly places.
+>
+> I'm not necessarily saying the flashes-property should be present in
+> sensor's DT nodes, but it'd be good to be able to make the association if
+> it's there.
 
-I've just sent a pull request for simple-mfd to the ARM SoC
-maintainers. I see that you Free Electron guys make good use
-of it.
+I know of a SoC, which drives the flash from its on-chip ISP. The GPIO
+connected to the flash controller's external strobe pin can be
+configured so that the signal is routed to it from the ISP or from
+CPU (for software strobe mode).
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think that Sylwester could say more in this subject.
+
+
+>> +	    (see Documentation/devicetree/bindings/leds/common.txt).
+>> +
+>>   The 'camera' node must include at least one 'fimc' child node.
+>>
+>>
+>> @@ -166,6 +173,7 @@ Example:
+>>   		clock-output-names = "cam_a_clkout", "cam_b_clkout";
+>>   		pinctrl-names = "default";
+>>   		pinctrl-0 = <&cam_port_a_clk_active>;
+>> +		flashes = <&camera_flash>, <&system_torch>;
+>>   		status = "okay";
+>>   		#address-cells = <1>;
+>>   		#size-cells = <1>;
+>
+> There will be other kind of devices that have somewhat similar relationship.
+> They just haven't been defined yet. Lens controllers or EEPROM for instance.
+> The two are an integral part of a module, something which is not modelled in
+> DT in any way, but perhaps should be.
+
+Do you suggest using more generic name than 'flashes'?
+
+-- 
+Best Regards,
+Jacek Anaszewski
