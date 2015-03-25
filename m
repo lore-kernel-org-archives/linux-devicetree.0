@@ -1,52 +1,81 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Wed, 25 Mar 2015 17:51:57 +0100
-Message-ID: <1427302317.3441.65.camel@pengutronix.de>
-References: <4184159.j0iXe39dFB@phil> <2619686.csNBBFyt8W@phil>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH V6 15/25] MIPS: BMIPS: Flush the readahead cache after DMA
+Date: Wed, 25 Mar 2015 10:08:47 -0700
+Message-ID: <CAJiQ=7Cca_rc+g5uo-7h6PUSu3QCbC=Ev1-hnqoqz1wy_EKeZQ@mail.gmail.com>
+References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
+ <1419529760-9520-16-git-send-email-cernekee@gmail.com> <20150325092358.GA31933@linux-mips.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2619686.csNBBFyt8W@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150325092358.GA31933@linux-mips.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Jaedon Shin <jaedon.shin@gmail.com>, Andrew Bresticker <abrestic@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Jonas Gorski <jogo@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Brian Norris <computersforpeace@gmail.com>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 23.03.2015, 19:17 +0100 schrieb Heiko Stuebner:
-> Hi Philipp,
->=20
-> Am Donnerstag, 12. M=C3=A4rz 2015, 21:45:19 schrieb Heiko Stuebner:
-> > At least the Rockchip variant of the dw_hdmi can have controllable =
-power
-> > supplies providing 1.0 and 1.8V. Therefore add the possibility for =
-the
-> > generic bridge driver to enable supplies provided by the hw-specifi=
-c
-> > drivers.
-> >=20
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->=20
-> does this look ok now?
+On Wed, Mar 25, 2015 at 2:23 AM, Ralf Baechle <ralf@linux-mips.org> wro=
+te:
+> On Thu, Dec 25, 2014 at 09:49:10AM -0800, Kevin Cernekee wrote:
+>
+>> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate fr=
+om
+>> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffe=
+r
+>> may cause parts of the DMA buffer to be prefetched into the RAC.  To
+>> avoid possible coherency problems, flush the RAC upon DMA completion=
+=2E
+>>
+>> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+>> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+>> ---
+>>  arch/mips/mm/dma-default.c | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>>
+>> diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
+>> index af5f046..38ee47a 100644
+>> --- a/arch/mips/mm/dma-default.c
+>> +++ b/arch/mips/mm/dma-default.c
+>> @@ -18,6 +18,7 @@
+>>  #include <linux/highmem.h>
+>>  #include <linux/dma-contiguous.h>
+>>
+>> +#include <asm/bmips.h>
+>>  #include <asm/cache.h>
+>>  #include <asm/cpu-type.h>
+>>  #include <asm/io.h>
+>
+> Aside of platform-specific headers having no business of getting
+> included directly in a generic arch file
 
-Yes, thank you.
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+<asm/bmips.h> covers all BMIPS CPUs across multiple platforms.
 
-> And as we talked about in Chemnitz, who will be taking such bridge-re=
-lated=20
-> changes, as you mentioned some last bridge-patches going through Thie=
-rry.
+The intention was to add code needed to support BMIPS CPUs into a
+central place, rather than duplicating it in the platform code for
+each of the BMIPS-based systems: arch/mips/{bcm63xx,bmips,brcmstb}.
 
-Indeed, recent drm/bridge fixes were merged through the drm/panel tree.
-Thierry, will you continue to do that or should I collect the dw_hdmi
-patches?
+> this also breaks the build
+> of many platforms:
+>
+>   CC      arch/mips/mm/dma-default.o
+> In file included from arch/mips/mm/dma-default.c:21:0:
+> ./arch/mips/include/asm/bmips.h: In function =E2=80=98bmips_read_zscm=
+_reg=E2=80=99:
+> ./arch/mips/include/asm/bmips.h:97:160: error: cast to pointer from i=
+nteger of different size [-Werror=3Dint-to-pointer-cast]
+>   cache_op(Index_Load_Tag_S, ZSCM_REG_BASE + offset);
+>                                                                      =
+                                                                       =
+                    ^
+> ./arch/mips/include/asm/bmips.h: In function =E2=80=98bmips_write_zsc=
+m_reg=E2=80=99:
+> ./arch/mips/include/asm/bmips.h:118:160: error: cast to pointer from =
+integer of different size [-Werror=3Dint-to-pointer-cast]
+>   cache_op(Index_Store_Tag_S, ZSCM_REG_BASE + offset);
+>
+> I think the broken platforms are all the 64 bit platforms.
 
-regards
-Philipp
+Hmm, looks like I might need to use 0x97000000UL for ZSCM_REG_BASE.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If this fixes the build should I resubmit, or do you really want the
+BMIPS flush code moved into another file?
