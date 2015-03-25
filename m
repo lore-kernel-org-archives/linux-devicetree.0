@@ -1,48 +1,83 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 0/5] Update the OF unittest and some small fix
-Date: Tue, 24 Mar 2015 23:43:43 -0500
-Message-ID: <CAL_JsqJXK31amM8xJ81wZ7O0xv_A7YOHP3GPxsyAnTNU7i1jFA@mail.gmail.com>
-References: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch] dt: OF_UNITTEST make dependency broken
+Date: Tue, 24 Mar 2015 23:44:23 -0500
+Message-ID: <CAL_JsqJB15xGBPv71tVHvS4YiHKS1o5XqUgbwkuz6uodnD=ETA@mail.gmail.com>
+References: <550338CA.50003@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wang Long <long.wanglong@huawei.com>
-Cc: Gaurav Minocha <gaurav.minocha.os@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, peifeiyue@huawei.com, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <550338CA.50003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 3:36 AM, Wang Long <long.wanglong@huawei.com> wrote:
-> This series patches do some small fixes in drivers/of/unittest.c,
-> and update the Documenttion.
+On Fri, Mar 13, 2015 at 2:21 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 >
-> At last, replace selftest with unittest in the c, dtsi
-> and binding files.
+> If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
+> be incremented, even if there are not source changes.  This is caused by
+> a lack of dependency tracking and checking for
+> drivers/of/unittest-data/testcases.dtb.o.
 >
-> * v2 <- v1:
->         - According to Gaurav's advice. make the rename
->         file patch correctly.
 >
-> Wang Long (5):
->   of/unittest: remove the duplicate of_changeset_init
->   of/unittest: Fix the wrong expected value in
->     of_selftest_property_string
->   Documentation: update the of_selftest.txt
->   Documentation: rename of_selftest.txt to of_unittest.txt
->   of/unittest: replace 'selftest' with 'unittest'
+> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-I've applied the series. Thanks.
+Applied. Thanks.
 
 Rob
 
 >
->  Documentation/devicetree/bindings/unittest.txt     |  44 +-
->  .../{of_selftest.txt => of_unittest.txt}           |  35 +-
->  drivers/of/unittest-data/tests-overlay.dtsi        | 108 ++--
->  drivers/of/unittest.c                              | 703 ++++++++++-----------
->  4 files changed, 445 insertions(+), 445 deletions(-)
->  rename Documentation/devicetree/{of_selftest.txt => of_unittest.txt} (87%)
+> ---
 >
-> --
-> 1.8.3.4
 >
+>  drivers/of/Makefile                 |    5 +++--
+>  drivers/of/unittest-data/.gitignore |    2 ++
+>  drivers/of/unittest-data/Makefile   |    7 +++++++
+>  3 files changed, 12 insertions(+), 2 deletions(-)
+>
+> Index: b/drivers/of/Makefile
+> ===================================================================
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -6,8 +6,7 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+>  obj-$(CONFIG_OF_ADDRESS)  += address.o
+>  obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_NET)   += of_net.o
+> -obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
+> -of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
+> +obj-$(CONFIG_OF_UNITTEST) += unittest.o
+>  obj-$(CONFIG_OF_MDIO)  += of_mdio.o
+>  obj-$(CONFIG_OF_PCI)   += of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+> @@ -16,5 +15,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
+>  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+>  obj-$(CONFIG_OF_OVERLAY) += overlay.o
+>
+> +obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+> +
+>  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+>  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+> Index: b/drivers/of/unittest-data/Makefile
+> ===================================================================
+> --- /dev/null
+> +++ b/drivers/of/unittest-data/Makefile
+> @@ -0,0 +1,7 @@
+> +obj-y += testcases.dtb.o
+> +
+> +targets += testcases.dtb testcases.dtb.S
+> +
+> +.SECONDARY: \
+> +       $(obj)/testcases.dtb.S \
+> +       $(obj)/testcases.dtb
+> Index: b/drivers/of/unittest-data/.gitignore
+> ===================================================================
+> --- /dev/null
+> +++ b/drivers/of/unittest-data/.gitignore
+> @@ -0,0 +1,2 @@
+> +testcases.dtb
+> +testcases.dtb.S
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
