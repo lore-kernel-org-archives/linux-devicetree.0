@@ -1,85 +1,112 @@
 From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power on/off UART attached devices.
-Date: Wed, 25 Mar 2015 22:22:30 +0100
-Message-ID: <9D2722FD-1A17-44CF-AC96-A4EC7DC3FD6A@goldelico.com>
-References: <20150318055437.21025.13990.stgit@notabene.brown> <20150318055831.21025.33670.stgit@notabene.brown> <C53A3E5D-5AEA-4F0F-88A9-F9BC8CB0D0D6@goldelico.com> <20150320195451.146a7915@notabene.brown> <14FB51CF-9568-4BF4-B917-2C019D992FDB@goldelico.com> <20150321103122.23603014@notabene.brown> <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com> <20150325204202.GC381@amd>
+Date: Wed, 25 Mar 2015 22:25:31 +0100
+Message-ID: <1F3B5E32-1330-457C-AE25-791319293C38@goldelico.com>
+References: <20150318055437.21025.13990.stgit@notabene.brown> <20150318055831.21025.33670.stgit@notabene.brown> <C53A3E5D-5AEA-4F0F-88A9-F9BC8CB0D0D6@goldelico.com> <20150320195451.146a7915@notabene.brown> <14FB51CF-9568-4BF4-B917-2C019D992FDB@goldelico.com> <20150321103122.23603014@notabene.brown> <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com> <20150325014543.GA967@earth> <6B657A35-68BD-45F6-BD55-A3D6AC1055C8@goldelico.com> <20150325205344.GD381@amd>
 Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150325204202.GC381@amd>
+In-Reply-To: <20150325205344.GD381@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pavel Machek <pavel@ucw.cz>
-Cc: NeilBrown <neilb@suse.de>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neilb@suse.de>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Am 25.03.2015 um 21:42 schrieb Pavel Machek <pavel@ucw.cz>:
+Am 25.03.2015 um 21:53 schrieb Pavel Machek <pavel@ucw.cz>:
 
 > Hi!
 >=20
->>> In the case of our GPS, it receives control over the serial connect=
-ion from
->>> the UART,
+>>>> AFAIK the chip simply starts to emit NMEA records if powered on.
+>>>> There is no command going over the serial interface to address it
+>>>> or control it.
+>>>=20
+>>> Right, since GPS basically doesn't need any configuration/control.
+>>> That=92s not true for other UART attached devices, though.
 >>=20
->> Ahem - does it?
->>=20
->> AFAIK the chip simply starts to emit NMEA records if powered on. The=
-re is no
->> command going over the serial interface to address it or control it.
+>> Do you have an example? Usually an UART data stream is transparently
+>> presented to a /dev/tty - and user-space daemon can configure/contro=
+l the
+>> attached device. In most cases it can mix payload data and control c=
+ommand
+>> by some AT command and escape sequences.
 >=20
-> Well _most_ GPSes enable you to control them over the serial
-> line. (Things like sampling rate, AGPS data upload, =85)
+> Bluetooth H4P protocol is one example.
+>=20
+>>> well parent > child is not about power control, but about "primary"
+>>> control.
+>>=20
+>> Can you clearly and precisely define what =93primary=94 control is? =
+I think
+>> two people will have three opinions about that.
+>=20
+> This has not be a problem so far...
+>=20
+>> For example I would see the w2sg0004 on/off gpio as the primary =93c=
+ontrol=94
+>> which makes the light (NMES records) turned on.
+>=20
+> ...and I don't think it is a problem now.
+>=20
+>>> Main reason is, that I would need to go
+>>> through the UART to =93communicate" with the w2sg0004.
+>>=20
+>> You can always "communicate=94 through the UART. Even without DT. As=
+ long as
+>> the connected chip is powered up by any means (could be some fixed-r=
+egulator
+>> or hard wired).
+>=20
+> But you don't know "how" to communicate through the uart.
 
-Yes, I know.
+Maybe we are talking using different assumptions. As long as you have a=
+ user space
+gpsd daemon that talks to the gps chip the kernel simply has to transpa=
+rently (except
+line disciplines) pass the data to the uart.
 
-But is this something the kernel is/must be aware? And
-must it be represented by the DT? Or does it have to influence
-the way the DT is structured?
-
-Well, if GPS data is presented through iio, these commands must
-be handled by some driver.
+=46or that there is no need to describe anything in DT.
 
 >=20
->>> I think the GPS is =93primarily" a uart-attached device.
+>> Let me raise the question:
 >>=20
->> But not in the same way as an I2C device.
->>=20
->> Especially the serial interface is not a bus and not used for signal=
-ling and
->> power control. It is payload data (only).
+>> Why do we need to describe in the DT (independently of Linux power c=
+ontrol
+>> structures and drivers!) that the GPS data interface is connected to=
+ a specific UART?
 >=20
-> Serial interface looks a lot like a (point-to-point) bus to
-> me. Similar to SATA, for example.
+> Because we want the phone to boot knowing "I have a bluetooth" or "I
+> have a GPS", as it would if it was connected using USB, and not havin=
+g
+> user figure out what commands he needs to do to enable reasonable
+> hardware support (and getting it wrong, because you need to specify
+> _many_ critical parameters to hciattach).
 
-In that sense a gpio looks also a lot like a 1-bit bus...
+Yes, this is indeed something I also would like to see for the GTA04 (a=
+nd other)
+devices.
 
-Anyways, there are no subnodes (clients) of a gpio but the
-<&gpiocontroller> pattern is used.
+So the reason is that some kernel driver wants to use the tty/uart to c=
+ommunicate
+directly with the chip. This is very similar to a gpio that some driver=
+ wants to use.
 
-In other words: a driver that wants to control a gpio asks for a
-reference of the gpio controller and uses the gpiolib to control it.
+Thus please consider the
 
-In the same way, a driver that wants to use an uart could ask
-for a reference to the tty/uart driver and use some functions to
-control it (and send commands). So a hypothetical gps-iio
-driver could set sampling rate etc.
+/ {
+	bt {
+		compatible =3D "vendor,product=93;
+		uart =3D <&uart1>;
+		enable =3D <&gpio17 34 0>;
+	};
+};
 
-And it can also ask the tty/uart: =84please register me and notify if
-some syscall wants you to open() or close() so that I (the driver of
-the GPS chip) can turn on power of the GPS chip (and only I know
-how to do that - nobody else has to care)=93.
+approach.
 
-I am just playing the Devil's advocate to find out what the really
-common principle is and how the DT for clients of a serial interface
-should really be represented in a DT in a way that is agnostic to
-a specific driver structure, driver functions and user space.
-
-And to find out if we need tty/slaves (as proposed in the title of this
-patch series) at all. Or if there is a better way to describe the relat=
-ion
-of the gps chip driver and the tty/uart.
+And if you want to hide uart1 from the user-space, that should be a pro=
+perty
+of the uart1 node (whereever it is defined).
 
 BR,
 Nikolaus--
