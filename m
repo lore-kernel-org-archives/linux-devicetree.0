@@ -1,156 +1,94 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] of: unittest: overlay: Keep track of created overlays
-Date: Tue, 24 Mar 2015 23:53:03 -0500
-Message-ID: <CAL_JsqKjGb5coH9aDPoSm63YV+E7d+A_VpzgA8W2iSuQ4ViAaw@mail.gmail.com>
-References: <1426624257-23003-1-git-send-email-pantelis.antoniou@konsulko.com> <1426624257-23003-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [RESEND PATCH v3 1/2] dma: Add Xilinx Central DMA DT Binding Documentation
+Date: Wed, 25 Mar 2015 10:36:54 +0530
+Message-ID: <1568e880-ee7f-4aa5-a5de-8c615be0ca6c@BN1BFFO11FD008.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426624257-23003-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: appand-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 3:30 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> During the course of the overlay selftests some of them remain
-> applied. While this does not pose a real problem, make sure you track
-> them and destroy them at the end of the test.
+Device-tree binding documentation of Xilinx Central DMA Engine.
 
-This is going to need to be rebased on my tree as there has been some
-selftest->unitest renaming.
+Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+- Used proper alignment for all the properties.
+Changes in v2:
+- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
+  to match the implementation.
 
-Rob
+ .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
 
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/of/unittest.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 4e60682..c711534 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -23,6 +23,8 @@
->  #include <linux/i2c.h>
->  #include <linux/i2c-mux.h>
->
-> +#include <linux/bitops.h>
-> +
->  #include "of_private.h"
->
->  static struct selftest_results {
-> @@ -1115,6 +1117,59 @@ static const char *overlay_path(int nr)
->
->  static const char *bus_path = "/testcase-data/overlay-node/test-bus";
->
-> +/* it is guaranteed that overlay ids are assigned in sequence */
-> +#define MAX_SELFTEST_OVERLAYS  256
-> +static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_SELFTEST_OVERLAYS)];
-> +static int overlay_first_id = -1;
-> +
-> +static void of_selftest_track_overlay(int id)
-> +{
-> +       if (overlay_first_id < 0)
-> +               overlay_first_id = id;
-> +       id -= overlay_first_id;
-> +
-> +       /* we shouldn't need that many */
-> +       BUG_ON(id >= MAX_SELFTEST_OVERLAYS);
-> +       overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
-> +}
-> +
-> +static void of_selftest_untrack_overlay(int id)
-> +{
-> +       if (overlay_first_id < 0)
-> +               return;
-> +       id -= overlay_first_id;
-> +       BUG_ON(id >= MAX_SELFTEST_OVERLAYS);
-> +       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
-> +}
-> +
-> +static void of_selftest_destroy_tracked_overlays(void)
-> +{
-> +       int id, ret, defers;
-> +
-> +       if (overlay_first_id < 0)
-> +               return;
-> +
-> +       /* try until no defers */
-> +       do {
-> +               defers = 0;
-> +               /* remove in reverse order */
-> +               for (id = MAX_SELFTEST_OVERLAYS - 1; id >= 0; id--) {
-> +                       if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
-> +                               continue;
-> +
-> +                       ret = of_overlay_destroy(id + overlay_first_id);
-> +                       if (ret != 0) {
-> +                               defers++;
-> +                               pr_warn("%s: overlay destroy failed for #%d\n",
-> +                                       __func__, id + overlay_first_id);
-> +                               continue;
-> +                       }
-> +
-> +                       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
-> +               }
-> +       } while (defers > 0);
-> +}
-> +
->  static int of_selftest_apply_overlay(int selftest_nr, int overlay_nr,
->                 int *overlay_id)
->  {
-> @@ -1136,6 +1191,7 @@ static int of_selftest_apply_overlay(int selftest_nr, int overlay_nr,
->                 goto out;
->         }
->         id = ret;
-> +       of_selftest_track_overlay(id);
->
->         ret = 0;
->
-> @@ -1349,6 +1405,7 @@ static void of_selftest_overlay_6(void)
->                         return;
->                 }
->                 ov_id[i] = ret;
-> +               of_selftest_track_overlay(ov_id[i]);
->         }
->
->         for (i = 0; i < 2; i++) {
-> @@ -1373,6 +1430,7 @@ static void of_selftest_overlay_6(void)
->                                                 PDEV_OVERLAY));
->                         return;
->                 }
-> +               of_selftest_untrack_overlay(ov_id[i]);
->         }
->
->         for (i = 0; i < 2; i++) {
-> @@ -1417,6 +1475,7 @@ static void of_selftest_overlay_8(void)
->                         return;
->                 }
->                 ov_id[i] = ret;
-> +               of_selftest_track_overlay(ov_id[i]);
->         }
->
->         /* now try to remove first overlay (it should fail) */
-> @@ -1439,6 +1498,7 @@ static void of_selftest_overlay_8(void)
->                                                 PDEV_OVERLAY));
->                         return;
->                 }
-> +               of_selftest_untrack_overlay(ov_id[i]);
->         }
->
->         selftest(1, "overlay test %d passed\n", 8);
-> @@ -1861,6 +1921,8 @@ static void __init of_selftest_overlay(void)
->         of_selftest_overlay_i2c_cleanup();
->  #endif
->
-> +       of_selftest_destroy_tracked_overlays();
-> +
->  out:
->         of_node_put(bus_np);
->  }
-> --
-> 1.7.12
->
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+new file mode 100644
+index 0000000..aba3b10
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+@@ -0,0 +1,54 @@
++Xilinx AXI CDMA engine, it does transfers between memory-mapped source
++address and a memory-mapped destination address.
++
++Required properties:
++- compatible		: Should be "xlnx,axi-cdma-1.00.a"
++- #dma-cells		: Should be <1>, see "dmas" property below
++- reg			: Should contain cdma registers location and length.
++- dma-channel child node: Should have only one channel
++
++Optional properties:
++- xlnx,include-sg	: Tells whether configured for Scatter-mode in
++			  the hardware.
++
++Required child node properties:
++- compatible		: It should be "xlnx,axi-cdma-channel".
++- interrupts		: Should contain per channel CDMA interrupts.
++- xlnx,datawidth	: Should contain the stream data width, take values
++			  {32,64...1024}.
++
++Option child node properties:
++- xlnx,include-dre	: Tells whether hardware is configured for Data
++			  Realignment Engine.
++
++Example:
++++++++++
++
++axi_cdma_0: axicdma@7e200000 {
++       compatible = "xlnx,axi-cdma-1.00.a";
++       #dma_cells = <1>;
++       reg = < 0x7e200000 0x10000 >;
++       dma-channel@7e200000 {
++               compatible = "xlnx,axi-cdma-channel";
++               interrupts = < 0 55 4 >;
++               xlnx,datawidth = <0x40>;
++       } ;
++} ;
++
++
++* DMA client
++
++Required properties:
++- dmas		: a list of <[Central DMA device phandle] [Channel ID]> pairs,
++		  where Channel ID is '0' for write/tx and '1' for read/rx
++                  channel.
++- dma-names	: a list of DMA channel names, one per "dmas" entry
++
++Example:
++++++++++
++
++cdmatest_0: cdmatest@0 {
++       compatible ="xlnx,axi-cdma-test-1.00.a";
++       dmas = <&axi_cdma_0 0>;
++       dma-names = "cdma0";
++} ;
+-- 
+2.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
