@@ -1,86 +1,48 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Wed, 25 Mar 2015 05:11:51 +0100
-Message-ID: <CAMuHMdV8_uKQQgYkRPFOBgrqgw_y9A7T84ukfgWZpJmTL0eFCQ@mail.gmail.com>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
-	<20150304120003.GL32624@x1>
-	<20150306190812.11109.82130@quantum>
-	<20150309092804.GB3427@x1>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 0/5] Update the OF unittest and some small fix
+Date: Tue, 24 Mar 2015 23:43:43 -0500
+Message-ID: <CAL_JsqJXK31amM8xJ81wZ7O0xv_A7YOHP3GPxsyAnTNU7i1jFA@mail.gmail.com>
+References: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150309092804.GB3427@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wang Long <long.wanglong@huawei.com>
+Cc: Gaurav Minocha <gaurav.minocha.os@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, peifeiyue@huawei.com, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On Mon, Mar 9, 2015 at 10:28 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 06 Mar 2015, Mike Turquette wrote:
->> Quoting Lee Jones (2015-03-04 04:00:03)
->> > Mike,
->> >
->> > Do you want me to resend this set with Robert's Reviewed-by applied,
->> > or are you happy to apply it yourself?
->>
->> No need for the resend. I am hoping for a final review from a DT human.
->>
->> This approach looks fine to me. In practice I think it is restricted to
->> hardware blocks that don't exist in DT yet (e.g. no driver, in the case
->> of your interconnect) and that restriction is probably for the best.
+On Wed, Mar 11, 2015 at 3:36 AM, Wang Long <long.wanglong@huawei.com> wrote:
+> This series patches do some small fixes in drivers/of/unittest.c,
+> and update the Documenttion.
 >
-> Agreed.
+> At last, replace selftest with unittest in the c, dtsi
+> and binding files.
+>
+> * v2 <- v1:
+>         - According to Gaurav's advice. make the rename
+>         file patch correctly.
+>
+> Wang Long (5):
+>   of/unittest: remove the duplicate of_changeset_init
+>   of/unittest: Fix the wrong expected value in
+>     of_selftest_property_string
+>   Documentation: update the of_selftest.txt
+>   Documentation: rename of_selftest.txt to of_unittest.txt
+>   of/unittest: replace 'selftest' with 'unittest'
 
-I think this restriction should be documented in the DT binding more clearly,
-as adding a "clk-always-on" node prohibits you from handling the clock
-correctly in
-the future.
+I've applied the series. Thanks.
 
-Still, for simple devices where you don't have a driver, but have "predictable"
-bindings (e.g. a bus like "simple-pm-bus"), I think it's better to add
-a device node
-for that simple device now, incl. a reference to the clock, and have a simple
-driver that binds to the device, or platform code that looks for a
-compatible node,
-and enables the clock. That way you don't have to make any chances to the DTS
-later, when you'll have a real driver.
+Rob
 
->> > > v2 => v3:
->> > >   - Ensure DT actually reflects h/w
->> > >     - i.e. Nodes should not contain a mishmash of different IP
->> > >       blocks, but should identify related h/w.  In the current
->> > >       example we use interconnects
->> > >   - Change naming from clkdomain to clk-always-on
->> > >   - Place "do not abuse" warning in documentation
->> > >
->> > > v1 => v2:
->> > >   - Turned the ST specific driver into a generic one
->> > >
->> > > Hardware can have a bunch of clocks which must not be turned off.
->> > > If drivers a) fail to obtain a reference to any of these or b) give
->> > > up a previously obtained reference during suspend, the common clk
->> > > framework will attempt to turn them off and the hardware will
->> > > subsequently die.  The only way to recover from this failure is to
->> > > restart.
->> > >
->> > > To avoid either of these two scenarios from catastrophically
->> > > disabling the running system we have implemented a clock domain
->> > > where clocks are consumed and references are taken, thus preventing
->> > > them from being shut down by the framework.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>  Documentation/devicetree/bindings/unittest.txt     |  44 +-
+>  .../{of_selftest.txt => of_unittest.txt}           |  35 +-
+>  drivers/of/unittest-data/tests-overlay.dtsi        | 108 ++--
+>  drivers/of/unittest.c                              | 703 ++++++++++-----------
+>  4 files changed, 445 insertions(+), 445 deletions(-)
+>  rename Documentation/devicetree/{of_selftest.txt => of_unittest.txt} (87%)
+>
+> --
+> 1.8.3.4
+>
