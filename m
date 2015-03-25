@@ -1,221 +1,86 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/6] i2c: qup: Add bam dma capabilities
-Date: Wed, 25 Mar 2015 15:10:56 +0200
-Message-ID: <1427289056.25053.21.camel@mm-sol.com>
-References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org>
-	 <1426268992-19298-4-git-send-email-sricharan@codeaurora.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v6 5/9] watchdog: bindings: Provide ST bindings for ST's
+ LPC Watchdog device
+Date: Wed, 25 Mar 2015 06:27:58 -0700
+Message-ID: <5512B7DE.60108@roeck-us.net>
+References: <1427189140-1935-1-git-send-email-lee.jones@linaro.org> <1427189140-1935-6-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426268992-19298-4-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427189140-1935-6-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Sricharan,
-
-On Fri, 2015-03-13 at 23:19 +0530, Sricharan R wrote:
-
-
->  #define QUP_I2C_MASTER_GEN     0x408
-> +#define QUP_I2C_MASTER_CONFIG  0x408
-> 
-
-Unused.
-
->  #define QUP_READ_LIMIT                 256
-> +#define MX_TX_RX_LEN                   SZ_64K
-> +#define MX_BLOCKS                      (MX_TX_RX_LEN / QUP_READ_LIMIT)
+On 03/24/2015 02:25 AM, Lee Jones wrote:
+> On current ST platforms the LPC controls a number of functions including
+> Watchdog and Real Time Clock.  This patch provides the bindings used to
+> configure LPC in Watchdog mode.
+>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   .../devicetree/bindings/watchdog/st_lpc_wdt.txt    | 38 ++++++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+> new file mode 100644
+> index 0000000..1bdf023
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+> @@ -0,0 +1,38 @@
+> +STMicroelectronics Low Power Controller (LPC) - Watchdog
+> +========================================================
 > +
-> +#define TOUT_MAX                       300 /* Max timeout for 32k tx/tx */
-> 
-
-seconds, muliseconds?
-
->  struct qup_i2c_config {
->         int tag_ver;
->         int max_freq;
->  };
-> 
-> +struct tag {
-
-Please use consistent naming convention.
-
-> +       u8 *start;
-> +       dma_addr_t addr;
-> +};
+> +LPC currently supports Watchdog OR Real Time Clock functionality.
 > +
->  struct qup_i2c_dev {
->         struct device*dev;
->         void __iomem*base;
-> @@ -157,9 +181,35 @@ struct qup_i2c_dev {
->         /* QUP core errors */
->         u32     qup_err;
-> 
-> +       /* dma parameters */
-> +       bool    is_dma;
-> +       struct  dma_pool *dpool;
-> +       struct  tag start_tag;
-> +       struct  tag scratch_tag;
-> +       struct  tag footer_tag;
-> +       struct  dma_chan *dma_tx;
-> +       struct  dma_chan *dma_rx;
-> +       struct  scatterlist *sg_tx;
-> +       struct  scatterlist *sg_rx;
-> +       dma_addr_tsg_tx_phys;
-> +       dma_addr_tsg_rx_phys;
-
-Maybe these could be organized in structure per direction.
-
+> +[See: ../rtc/rtc-st-lpc.txt for RTC options]
 > +
->         struct completionxfer;
->  };
-> 
-> +struct i2c_bam_xfer {
-
-Unused.
-
-> +       struct qup_i2c_dev *qup;
-> +       u32 start_len;
+> +Required properties
 > +
-> +       u32 rx_nents;
-> +       u32 tx_nents;
+> +- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
+> +				  "st,stih415-lpc" "st,stid127-lpc"
+> +- reg		: LPC registers base address + size
+> +- interrupts    : LPC interrupt line number and associated flags
+> +- clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
+> +- st,lpc-mode	: The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
+> +		  ST_LPC_MODE_WDT [1].  One (and only one) mode must be
+> +		  selected.
 > +
-> +       struct dma_async_tx_descriptor *tx_desc;
-> +       dma_cookie_t tx_cookie;
-> +       struct dma_async_tx_descriptor *rx_desc;
-> +       dma_cookie_t rx_cookie;
-
-structure per direction.
-
-> +};
+> +Required properties [watchdog mode]
 > +
-> 
-
-> +static void bam_i2c_callback(void *data)
-> +{
-
-Please use consistent naming, here and bellow.
-
-> +       struct qup_i2c_dev *qup = data;
+> +- st,syscfg	: Phandle to syscfg node used to enable watchdog and configure
+> +		  CPU reset type.
+> +- timeout-sec	: Watchdog timeout in seconds
 > +
-> +       complete(&qup->xfer);
-> +}
+> +Optional properties [watchdog mode]
 > +
-> +static int get_start_tag(u8 *tag, struct i2c_msg *msg, int first, int last,
-> +                       int blen)
-> +{
-> +       u8 addr = (msg->addr << 1) | ((msg->flags & I2C_M_RD) == I2C_M_RD);
-> +       u8 op;
-> +       int len = 0;
+> +- st,warm-reset	: If present reset type will be 'warm' - if not it will be cold
 > +
-> +       /* always issue stop for each read block */
-> +       if (last) {
-> +               if (msg->flags & I2C_M_RD)
-> +                       op = QUP_TAG_V2_DATARD_STOP;
-> +               else
-> +                       op = QUP_TAG_V2_DATAWR_STOP;
-> +       } else {
-> +               if (msg->flags & I2C_M_RD)
-> +                       op = QUP_TAG_V2_DATARD;
-> +               else
-> +                       op = QUP_TAG_V2_DATAWR;
-> +       }
-> +
-> +       if (msg->flags & I2C_M_TEN) {
-> +               len += 5;
-> +               tag[0] = QUP_TAG_V2_START;
-> +               tag[1] = addr;
-> +               tag[2] = op;
-> +               tag[3] = blen;
-> +
-> +               if (msg->flags & I2C_M_RD && last) {
-> +                       len += 2;
-> +                       tag[4] = QUP_BAM_INPUT_EOT;
-> +                       tag[5] = QUP_BAM_FLUSH_STOP;
-> +               }
-> +       } else {
-> +               if (first) {
-> +                       tag[len++] = QUP_TAG_V2_START;
-> +                       tag[len++] = addr;
-> +               }
-> +
-> +               tag[len++] = op;
-> +               tag[len++] = blen;
-> +
-> +               if (msg->flags & I2C_M_RD & last) {
-> +                       tag[len++] = QUP_BAM_INPUT_EOT;
-> +                       tag[len++] = QUP_BAM_FLUSH_STOP;
-> +               }
-> +       }
-> +
-> +       return len;
-> +}
+> +Example:
+> +	lpc@fde05000 {
+> +		compatible	= "st,stih416-lpc-watchdog";
 
-Maybe could be split to 2 functions?
+Hi Lee,
 
-> -static const struct i2c_algorithm qup_i2c_algo = {
-> +static struct i2c_algorithm qup_i2c_algo = {
+Just noticed: That doesn't match the above description, nor the match statement
+in the drivers.
 
-Why?
+Guenter
 
->         .master_xfer= qup_i2c_xfer,
->         .functionality= qup_i2c_func,
->  };
-> @@ -839,6 +1136,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
->         u32 clk_freq = 100000;
->         const struct qup_i2c_config *config;
->         const struct of_device_id *of_id;
-> +       int blocks;
-> 
->         qup = devm_kzalloc(&pdev->dev, sizeof(*qup), GFP_KERNEL);
->         if (!qup)
-> @@ -875,6 +1173,53 @@ static int qup_i2c_probe(struct platform_device *pdev)
->                 return qup->irq;
->         }
-> 
-> +       if (of_device_is_compatible(pdev->dev.of_node, "qcom,i2c-qup-v2.1.1") ||
-> +               of_device_is_compatible(pdev->dev.of_node,
-> +                       "qcom,i2c-qup-v2.2.1")) {
 
-Logic will be simpler if you check just for version 1 of the controller.
-
-> +               qup->dma_rx = dma_request_slave_channel(&pdev->dev, "bam-rx");
-> +
-
-Please use dma_request_slave_channel_reason.
-
-As Andy noted, please use just "rx", "tx"
-
-> +               if (!qup->dma_rx)
-> +                       return -EPROBE_DEFER;
-
-Don't mask other errors, here and bellow. DMA support should be optional.
-
->                 dev_err(qup->dev, "Could not get core clock\n");
-> @@ -989,6 +1334,14 @@ static int qup_i2c_remove(struct platform_device *pdev)
->  {
->         struct qup_i2c_dev *qup = platform_get_drvdata(pdev);
-> 
-> +       dma_pool_free(qup->dpool, qup->start_tag.start,
-> +                                                               qup->start_tag.addr);
-> +       dma_pool_free(qup->dpool, qup->scratch_tag.start,
-> +                                                               qup->scratch_tag.addr);
-> +       dma_pool_free(qup->dpool, qup->footer_tag.start,
-> +                                                               qup->footer_tag.addr);
-> +       dma_pool_destroy(qup->dpool);
-
-Only if is_dma, right?
-
-DMA mapping code omitted from review. I don't understand it well enough, sorry.
-
-Regards,
-Ivan
+> +		reg		= <0xfde05000 0x1000>;
+> +		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
+> +		st,syscfg	= <&syscfg_core>;
+> +		timeout-sec	= <120>;
+> +		st,lpc-mode	= <ST_LPC_MODE_WDT>;
+> +		st,warm-reset;
+> +	};
+>
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
