@@ -1,91 +1,51 @@
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: [PATCH v2] coresight: adding basic support for Spreadtrum SC9836
-Date: Wed, 25 Mar 2015 20:52:11 +0800
-Message-ID: <1427287931-9363-1-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, arnd@arndb.de
-Cc: mathieu.poirier@linaro.org, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, kaixu.xia@linaro.org, zhizhou.zhang@spreadtrum.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 0/2] dmaengine: usb-dmac: Add Renesas USB DMA Controller
+Date: Wed, 25 Mar 2015 22:04:25 +0900
+Message-ID: <1427288667-5820-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, laurent.pinchart@ideasonboard.com, horms@verge.net.au, kuninori.morimoto.gx@renesas.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Support only for ETF, FUNNEL, STM are included currently.
-Support for ETM, TPIU and the replicator linked to it are not included in
-this version patch.
+This patch set is based on slave-dma.git / next branch.
+(commit id = ebb3abd4042e2ab5f97c43a6f71b206947255fd6)
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
----
-Change for v2:
- - Corrected the TMC whose space is wrongly used as ETB in v1.
- - Removed "coresight-default-sink" from the DT.
----
- arch/arm64/boot/dts/sprd/sc9836.dtsi | 55 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+Changes from v2:
+ - Change descriptor management to store the residue in descriptor instead
+   of the channel.
+ - Change acceptable any sg_len.
+ - Modify usb_dmac_tx_status() to calculate the residue for flight
+   descriptors.
+ - Remove a local tasklet.
+ - Remove #ifdef CONFIG_PM.
+ Remarks: No change in patch [1/2].
 
-diff --git a/arch/arm64/boot/dts/sprd/sc9836.dtsi b/arch/arm64/boot/dts/sprd/sc9836.dtsi
-index f92f1b4..ee34e1a 100644
---- a/arch/arm64/boot/dts/sprd/sc9836.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9836.dtsi
-@@ -45,6 +45,61 @@
- 		};
- 	};
- 
-+	etf@10003000 {
-+		compatible = "arm,coresight-tmc", "arm,primecell";
-+		reg = <0 0x10003000 0 0x1000>;
-+		clocks = <&clk26mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etf_in: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&funnel_out_port0>;
-+			};
-+		};
-+	};
-+
-+	funnel@10001000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x10001000 0 0x1000>;
-+		clocks = <&clk26mhz>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* funnel output port */
-+			port@0 {
-+				reg = <0>;
-+				funnel_out_port0: endpoint {
-+					remote-endpoint = <&etf_in>;
-+				};
-+			};
-+
-+			/* funnel input port 0~3 is reserved for ETMs */
-+			port@1 {
-+				reg = <4>;
-+				funnel_in_port4: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&stm_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	stm@10006000 {
-+		compatible = "arm,coresight-stm", "arm,primecell";
-+		reg = <0 0x10006000 0 0x1000>,
-+		      <0 0x01000000 0 0x180000>;
-+		reg-names = "stm-base", "stm-stimulus-base";
-+		clocks = <&clk26mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			stm_out: endpoint {
-+				remote-endpoint = <&funnel_in_port4>;
-+			};
-+		};
-+	};
-+
- 	gic: interrupt-controller@12001000 {
- 		compatible = "arm,gic-400";
- 		reg = <0 0x12001000 0 0x1000>,
+Changes from v1:
+ - Use virt-dma infrastructure instead of local descriptor management.
+ - Change acceptable sg_len to 1.
+   (because a client driver will use dmaengine_prep_slave_single().)
+ - Remove usb_dmac_sleep_{suspend,resume} functions.
+ - Add usb_dmac_chan_halt() in usb_dmac_runtime_suspend().
+ - Use a tasklet instead of a kernel thread.
+ - Add tasklet_kill() in usb_dmac_remove().
+ - Fix MODULE_AUTHOR string.
+ Remarks: No change in patch [1/2].
+
+Yoshihiro Shimoda (2):
+  dmaengine: renesas,usb-dmac: Add device tree bindings documentation
+  dmaengine: usb-dmac: Add Renesas USB DMA Controller (USB-DMAC) driver
+
+ .../devicetree/bindings/dma/renesas,usb-dmac.txt   |  37 +
+ drivers/dma/sh/Kconfig                             |   9 +
+ drivers/dma/sh/Makefile                            |   1 +
+ drivers/dma/sh/usb-dmac.c                          | 906 +++++++++++++++++++++
+ 4 files changed, 953 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+ create mode 100644 drivers/dma/sh/usb-dmac.c
+
 -- 
 1.9.1
+
