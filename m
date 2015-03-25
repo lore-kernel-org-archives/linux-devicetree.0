@@ -1,82 +1,53 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch] dt: OF_UNITTEST make dependency broken
-Date: Tue, 24 Mar 2015 23:44:23 -0500
-Message-ID: <CAL_JsqJB15xGBPv71tVHvS4YiHKS1o5XqUgbwkuz6uodnD=ETA@mail.gmail.com>
-References: <550338CA.50003@gmail.com>
+Subject: Re: [PATCH] of: base: improve of_get_next_child() kernel-doc
+Date: Tue, 24 Mar 2015 23:45:16 -0500
+Message-ID: <CAL_JsqKvEYC9NUB2ZNgAgr7KrimT9ZmvGdxjJhNE+5uF9n+nkQ@mail.gmail.com>
+References: <360c70ee4131ea8048b193bfff359360bb854fe3.1426766621.git.baruch@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <550338CA.50003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <360c70ee4131ea8048b193bfff359360bb854fe3.1426766621.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2015 at 2:21 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On Thu, Mar 19, 2015 at 7:03 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> Add two new facts to of_get_next_child() documentation:
 >
-> If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
-> be incremented, even if there are not source changes.  This is caused by
-> a lack of dependency tracking and checking for
-> drivers/of/unittest-data/testcases.dtb.o.
+>    * of_get_next_child() returns NULL when there is not next child
 >
+>    * of_get_next_child() decrements the refcount of prev
 >
-> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 
 Applied. Thanks.
 
 Rob
 
->
 > ---
+>  drivers/of/base.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index adb8764861c0..5ca5f900de9c 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -640,8 +640,9 @@ static struct device_node *__of_get_next_child(const struct device_node *node,
+>   *     @node:  parent node
+>   *     @prev:  previous child of the parent node, or NULL to get first
+>   *
+> - *     Returns a node pointer with refcount incremented, use
+> - *     of_node_put() on it when done.
+> + *     Returns a node pointer with refcount incremented, use of_node_put() on
+> + *     it when done. Returns NULL when prev is the last child. Decrements the
+> + *     refcount of prev.
+>   */
+>  struct device_node *of_get_next_child(const struct device_node *node,
+>         struct device_node *prev)
+> --
+> 2.1.4
 >
->  drivers/of/Makefile                 |    5 +++--
->  drivers/of/unittest-data/.gitignore |    2 ++
->  drivers/of/unittest-data/Makefile   |    7 +++++++
->  3 files changed, 12 insertions(+), 2 deletions(-)
->
-> Index: b/drivers/of/Makefile
-> ===================================================================
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -6,8 +6,7 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
->  obj-$(CONFIG_OF_ADDRESS)  += address.o
->  obj-$(CONFIG_OF_IRQ)    += irq.o
->  obj-$(CONFIG_OF_NET)   += of_net.o
-> -obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
-> -of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
-> +obj-$(CONFIG_OF_UNITTEST) += unittest.o
->  obj-$(CONFIG_OF_MDIO)  += of_mdio.o
->  obj-$(CONFIG_OF_PCI)   += of_pci.o
->  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-> @@ -16,5 +15,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
->  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
->  obj-$(CONFIG_OF_OVERLAY) += overlay.o
->
-> +obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-> +
->  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
->  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
-> Index: b/drivers/of/unittest-data/Makefile
-> ===================================================================
-> --- /dev/null
-> +++ b/drivers/of/unittest-data/Makefile
-> @@ -0,0 +1,7 @@
-> +obj-y += testcases.dtb.o
-> +
-> +targets += testcases.dtb testcases.dtb.S
-> +
-> +.SECONDARY: \
-> +       $(obj)/testcases.dtb.S \
-> +       $(obj)/testcases.dtb
-> Index: b/drivers/of/unittest-data/.gitignore
-> ===================================================================
-> --- /dev/null
-> +++ b/drivers/of/unittest-data/.gitignore
-> @@ -0,0 +1,2 @@
-> +testcases.dtb
-> +testcases.dtb.S
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
