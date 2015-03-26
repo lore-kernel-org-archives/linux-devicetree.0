@@ -1,159 +1,217 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Thu, 26 Mar 2015 19:38:18 +0000
-Message-ID: <20150326193818.GQ5951@x1>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
- <20150304120003.GL32624@x1>
- <20150306190812.11109.82130@quantum>
- <20150309092804.GB3427@x1>
- <CAMuHMdV8_uKQQgYkRPFOBgrqgw_y9A7T84ukfgWZpJmTL0eFCQ@mail.gmail.com>
- <20150326135144.GI5951@x1>
- <CAMuHMdVpXCFk9Z68OeVt0924dhR_9vdLYmBkWun1UGY3NJJ4wg@mail.gmail.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v3 04/15] clocksource: Add ARM System timer driver
+Date: Thu, 26 Mar 2015 21:19:58 +0100
+Message-ID: <CALszF6CtEf0w8AoaMwFzn34ACMjkW6obT5_MrduBdUOm7T=zNw@mail.gmail.com>
+References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
+	<1426197361-19290-5-git-send-email-maxime.coquelin@st.com>
+	<5513D64A.7060702@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVpXCFk9Z68OeVt0924dhR_9vdLYmBkWun1UGY3NJJ4wg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5513D64A.7060702@linaro.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.sa>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Mar 2015, Geert Uytterhoeven wrote:
+Hi Daniel,
 
-> Hi Lee,
->=20
-> On Thu, Mar 26, 2015 at 2:51 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > On Wed, 25 Mar 2015, Geert Uytterhoeven wrote:
-> >> On Mon, Mar 9, 2015 at 10:28 AM, Lee Jones <lee.jones@linaro.org> =
-wrote:
-> >> > On Fri, 06 Mar 2015, Mike Turquette wrote:
-> >> >> This approach looks fine to me. In practice I think it is restr=
-icted to
-> >> >> hardware blocks that don't exist in DT yet (e.g. no driver, in =
-the case
-> >> >> of your interconnect) and that restriction is probably for the =
-best.
-> >> >
-> >> > Agreed.
-> >>
-> >> I think this restriction should be documented in the DT binding mo=
-re clearly,
-> >> as adding a "clk-always-on" node prohibits you from handling the c=
-lock
-> >> correctly in
-> >> the future.
-> >
-> > Would you mind taking the time to explain what you think those
-> > limitations are?
->=20
-> If you add a "clk-always-on" node, the clock will always on using tha=
-t DT.
-> That will still be true later, when you get a better understanding of=
- the
-> hardware, and might discover you're gonna need a driver for the curre=
-ntly
-> hidden core component that's driven by the clock, and may want to man=
-age
-> that clock.
+  Thanks for the review. Please find my answers below.
 
-So I have two points here.
+2015-03-26 10:50 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> On 03/12/2015 10:55 PM, Maxime Coquelin wrote:
+>>
+>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>
+>> This patch adds clocksource support for ARMv7-M's System timer,
+>> also known as SysTick.
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>
+>
+> Hi Maxime,
+>
+> the driver looks good. Three comments below.
+>
+>   -- Daniel
+>
+>
+>> ---
+>>   drivers/clocksource/Kconfig          |  7 ++++
+>>   drivers/clocksource/Makefile         |  1 +
+>>   drivers/clocksource/armv7m_systick.c | 78
+>> ++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 86 insertions(+)
+>>   create mode 100644 drivers/clocksource/armv7m_systick.c
+>>
+>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconf=
+ig
+>> index 1c2506f..b82e58b 100644
+>> --- a/drivers/clocksource/Kconfig
+>> +++ b/drivers/clocksource/Kconfig
+>> @@ -134,6 +134,13 @@ config CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+>>         help
+>>          Use ARM global timer clock source as sched_clock
+>>
+>> +config ARMV7M_SYSTICK
+>> +       bool
+>> +       select CLKSRC_OF if OF
+>> +       select CLKSRC_MMIO
+>> +       help
+>> +         This options enables support for the ARMv7M system timer u=
+nit
+>> +
+>>   config ATMEL_PIT
+>>         select CLKSRC_OF if OF
+>>         def_bool SOC_AT91SAM9 || SOC_SAMA5
+>> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Make=
+file
+>> index 752d5c7..1c9a643 100644
+>> --- a/drivers/clocksource/Makefile
+>> +++ b/drivers/clocksource/Makefile
+>> @@ -44,6 +44,7 @@ obj-$(CONFIG_MTK_TIMER)               +=3D mtk_tim=
+er.o
+>>
+>>   obj-$(CONFIG_ARM_ARCH_TIMER)          +=3D arm_arch_timer.o
+>>   obj-$(CONFIG_ARM_GLOBAL_TIMER)                +=3D arm_global_time=
+r.o
+>> +obj-$(CONFIG_ARMV7M_SYSTICK)           +=3D armv7m_systick.o
+>>   obj-$(CONFIG_CLKSRC_METAG_GENERIC)    +=3D metag_generic.o
+>>   obj-$(CONFIG_ARCH_HAS_TICK_BROADCAST) +=3D dummy_timer.o
+>>   obj-$(CONFIG_ARCH_KEYSTONE)           +=3D timer-keystone.o
+>> diff --git a/drivers/clocksource/armv7m_systick.c
+>> b/drivers/clocksource/armv7m_systick.c
+>> new file mode 100644
+>> index 0000000..23d8249
+>> --- /dev/null
+>> +++ b/drivers/clocksource/armv7m_systick.c
+>> @@ -0,0 +1,78 @@
+>> +/*
+>> + * Copyright (C) Maxime Coquelin 2015
+>> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> + * License terms:  GNU General Public License (GPL), version 2
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/clocksource.h>
+>> +#include <linux/clockchips.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/bitops.h>
+>> +
+>> +#define SYST_CSR       0x00
+>> +#define SYST_RVR       0x04
+>> +#define SYST_CVR       0x08
+>> +#define SYST_CALIB     0x0c
+>> +
+>> +#define SYST_CSR_ENABLE BIT(0)
+>> +
+>> +#define SYSTICK_LOAD_RELOAD_MASK 0x00FFFFFF
+>> +
+>> +static void __init system_timer_of_register(struct device_node *np)
+>> +{
+>> +       struct clk *clk;
+>> +       void __iomem *base;
+>> +       u32 rate =3D 0;
+>> +       int ret;
+>> +
+>> +       base =3D of_iomap(np, 0);
+>> +       if (!base) {
+>> +               pr_warn("system-timer: invalid base address\n");
+>> +               return;
+>> +       }
+>> +
+>> +       clk =3D of_clk_get(np, 0);
+>> +       if (!IS_ERR(clk)) {
+>> +               ret =3D clk_prepare_enable(clk);
+>> +               if (ret) {
+>> +                       clk_put(clk);
+>> +                       goto out_unmap;
+>> +               }
+>> +
+>> +               rate =3D clk_get_rate(clk);
+>> +       }
+>> +
+>> +       /* If no clock found, try to get clock-frequency property */
+>> +       if (!rate) {
+>> +               ret =3D of_property_read_u32(np, "clock-frequency", =
+&rate);
+>> +               if (ret)
+>> +                       goto out_unmap;
+>
+>
+> Shouldn't be 'goto out_clk_disable' ?
 
-=46irst point; I think you're looking at an older version of my set.
-The newer one can be found at [1] and no longer uses 'always-on'
-nodes.  Instead the 'clk-always-on' property is applied to the
-provider.  See the documentation patch [2] for more details.
+No, because I assumed !rate means we failed to get the clock.
+Actually, clk_get_rate could return 0, so relying on rate value is not =
+safe.
 
-Second point; this binding is _not_ to be used as a hack because the
-hardware isn't understood.  Genuine uses are for clocks that must not
-be turned off ever, else bad things will happen.  If the hardware is
-not understood, use 'clk-disable-unused' on the kernel cmdline
-instead.
+I propose to get clock-frequency property if IS_ERR(clk).
 
-> When that happens, you're gonna need a DT update to make use of the
-> newly introduced driver and the features it provides (e.g. better pow=
-er
-> management).
+Is it fine for you?
 
-The whole point of this set is to manage clocks that can't be power
-managed.  Using the 'clk-always-on' property labels the clock with a
-big-red-sign saying "DO NOT TURN ME OFF, OR RISK CATASTROPHIC
-=46AILURE", not a "TODO: Fix-me when you understand me".
+>
+>> +       }
+>> +
+>> +       writel_relaxed(SYSTICK_LOAD_RELOAD_MASK, base + SYST_RVR);
+>> +       writel_relaxed(SYST_CSR_ENABLE, base + SYST_CSR);
+>> +
+>> +       ret =3D clocksource_mmio_init(base + SYST_CVR, "arm_system_t=
+imer",
+>> rate,
+>> +                       200, 24, clocksource_mmio_readl_down);
+>> +       if (ret) {
+>> +               pr_err("failed to init clocksource (%d)\n", ret);
+>> +               goto out_clk_disable;
+>> +       }
+>> +
+>> +       pr_info("ARM System timer initialized as clocksource\n");
+>> +
+>> +       return;
+>> +
+>> +out_clk_disable:
+>> +       if (!IS_ERR(clk))
+>
+>
+> Why do you need this check ?
 
-> On the other hand, if you would describe the actual hardware topology=
- in DT,
-> the device node for the future driver would already be there, and no =
-DT update
-> is needed (assuming you can guess right w.r.t. its bindings; usually =
-these are
-> transparent buses, for which bindings are fairly generic, cfr. e.g.
-> "simple-pm-bus").
+To handle the case were no clock was found, but a clk-frequency value
+was provided.
 
-In our case the devices these clocks control will never be added to
-Device Tree.  Linux can't see them, they have no registers and they
-can't be controlled.  Added a device driver for all such devices would
-be foolhardy.
+>
+> It isn't missing a clk_put ?
 
-> Until you have (a need for) a real driver, you do need some platform =
-code that
-> makes sure the clock is enabled. When a real driver is introduced, th=
-e
-> platform code has to be updated, but DT doesn't have to change.
+Right, thanks for spotting this.
 
-No, this binding is _not_ for that use-case.  If your platform is
-incomplete you must use 'clk-disable-unused'. =20
+I wonder if it makes sense to implement the error path.
+If we fail to initialize the clocksource, the system will be unusable.
 
-> (The same is true for devices where the current driver isn't aware of=
- the
->  clock, and shouldn't be, but you still need to enable the clock unti=
-l the
->  driver has Runtime PM support (E.g. ARM GIC on shmobile, cfr.
->  https://www.marc.info/?l=3Dlinux-pm&m=3D142670617929493&w=3D3 (good,=
- now
->  we have a bidirectional link between these two threads :-) Using a
->  "clk-always-on" property there instead of adding a reference to the =
-clock
->  in the existing GIC device node would be just lying.)
+Maybe I should just perform a BUG_ON() in the error cases, as most of
+the other clocksource drivers do.
+What is your view?
 
-If this clock should _genuinely_ be always-on, then use my new
-binding in the clock controller node and the Clk framework will not
-turn it off.
+Regards,
+Maxime
 
-> If we start seeing many users, perhaps we need a general framework wh=
-ere
-> the platform code can register a list of clocks that must be enabled =
-(properly,
-> i.e. using clk_prepare_enable())? But I don't think the list should b=
-e put
-> in DT: DT describes hardware, not behavior.
-
-I did this in the very first iteration of this set.  The DT guys
-didn't like it, which is why I re-wrote it to look like [1].
-
-> If you don't care about DT stability, and can afford always updating =
-your DT
-> with your kernel, the above doesn't apply. I heard during the ELC hal=
-lways
-> chats this is actually the case for you?
-
-My ears burning eh?  Do tell...
-
-I think you currently misunderstand the use-case for this set.  I hope
-my points above will clarify the point somewhat.  Once we write the
-bindings and the DT nodes in [1], I don't plan for them to be changed,
-thus our DT will stay stable in this regard.
-
-NB: Yes, we are quite fortunate by the fact that most of are bindings
-can be considered fairly transient, but that is irrelevant in this
-particular case.
-
-[1] https://lkml.org/lkml/2015/2/27/548
-[2] https://lkml.org/lkml/2015/2/27/551
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>
+>> +               clk_disable_unprepare(clk);
+>> +out_unmap:
+>> +       iounmap(base);
+>> +       WARN(ret, "ARM System timer register failed (%d)\n", ret);
+>> +}
+>> +
+>> +CLOCKSOURCE_OF_DECLARE(arm_systick, "arm,armv7m-systick",
+>> +                       system_timer_of_register);
+>>
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
