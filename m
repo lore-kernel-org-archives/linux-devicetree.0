@@ -1,120 +1,52 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 3/7] dmaengine: Add driver for TI DMA crossbar on DRA7x
-Date: Thu, 26 Mar 2015 21:07:27 +0530
-Message-ID: <20150326153727.GN32683@intel.com>
-References: <1426080210-841-1-git-send-email-peter.ujfalusi@ti.com>
- <1426080210-841-4-git-send-email-peter.ujfalusi@ti.com>
- <20150326105603.GK32683@intel.com>
- <5513FC22.2030304@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3  10/15] serial: stm32-usart: Add STM32 USART Driver
+Date: Thu, 26 Mar 2015 15:46:18 +0000
+Message-ID: <20150326154618.GO8656@n2100.arm.linux.org.uk>
+References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
+ <1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
+ <5511ABAA.2010303@hurleysoftware.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5513FC22.2030304@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
+In-Reply-To: <5511ABAA.2010303-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj@k>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2015 at 02:31:30PM +0200, Peter Ujfalusi wrote:
-> On 03/26/2015 12:56 PM, Vinod Koul wrote:
-> >> +#define TI_XBAR_OUTPUTS	127
-> >> +#define TI_XBAR_INPUTS	256
-> > Ideally this should be moved to DT. Will next revision of this chip always
-> > support these output and inputs?
+On Tue, Mar 24, 2015 at 02:23:38PM -0400, Peter Hurley wrote:
+> Hi Maxime,
 > 
-> They are coming from DT. I'm using these as fall back values in case we can
-> not get this from DT and a warning will be printed in case if this unlikely
-> event happens.
-Oops missed, that. Looks fine then
+> On 03/12/2015 05:55 PM, Maxime Coquelin wrote:
+> > +static unsigned int stm32_get_mctrl(struct uart_port *port)
+> > +{
+> > +	/*
+> > +	 * This routine is used for geting signals of: DTR, DCD, DSR, RI,
+> > +	 * and CTS/RTS
 
-> 
-> >> +
-> >> +static DEFINE_IDR(map_idr);
-> >> +
-> >> +struct ti_dma_xbar_data {
-> >> +	struct dma_router dmarouter;
-> >> +	struct regmap *regmap;
-> >> +
-> >> +	uint safe_val; /* Value to rest the crossbar lines */
-> >> +	uint xbar_requests; /* number of DMA requests connected to XBAR */
-> >> +	uint dma_requests; /* number of DMA requests forwarded to DMA */
-> >> +
-> >> +	void __iomem *iomem;
-> >> +};
-> >> +
-> >> +struct ti_dma_xbar_map {
-> >> +	int xbar_in;
-> >> +	int xbar_out;
-> >> +};
-> >> +
-> >> +static void ti_dma_xbar_free(struct device *dev, void *route_data)
-> >> +{
-> >> +	struct ti_dma_xbar_data *xbar = dev_get_drvdata(dev);
-> >> +	struct ti_dma_xbar_map *map = route_data;
-> >> +
-> >> +	dev_dbg(dev, "Unmapping XBAR%d (was routed to %d)\n",
-> >> +		map->xbar_in, map->xbar_out);
-> >> +
-> >> +	regmap_write(xbar->regmap, map->xbar_out * 2, 0);
-> > just out of curiosity how much do you save using regmap :)
-> 
-> good point, not much I guess. I had it implemented w/o regmap as well, but
-> thought why not use regmap if it is available.
-Yes but there is overhead involved in setting it up. I though you have some
-latency issues. It is okay to have it :)
-Cache is anyways fastest :)
+It's also worth noting that this comment is wrong.  This is used to get
+the state of DCD, DSR, RI and CTS.  DTR and RTS are *not* included
+because the core tracks their state.
 
-> >> +static int ti_dma_xbar_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct device_node *node = pdev->dev.of_node;
-> >> +	struct device_node *dma_node;
-> >> +	struct ti_dma_xbar_data *xbar;
-> >> +	struct resource *res;
-> >> +	void __iomem *iomem;
-> >> +	int i, ret;
-> >> +
-> >> +	if (!node)
-> >> +		return -ENODEV;
-> >> +
-> >> +	dma_node = of_parse_phandle(node, "dma-device", 0);
-> >> +	if (!dma_node) {
-> >> +		dev_err(&pdev->dev, "Can't get target DMA node\n");
-> >> +		return -ENODEV;
-> >> +	}
-> >> +
-> >> +	xbar = devm_kzalloc(&pdev->dev, sizeof(*xbar), GFP_KERNEL);
-> >> +	if (!xbar)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	if (of_property_read_u32(dma_node, "dma-requests",
-> >> +				 &xbar->dma_requests)) {
-> >> +		dev_info(&pdev->dev,
-> >> +			 "Missing XBAR output information, using %u.\n",
-> >> +			 TI_XBAR_OUTPUTS);
-> >> +		xbar->dma_requests = TI_XBAR_OUTPUTS;
-> >> +	}
-> >> +	of_node_put(dma_node);
-> > _put here?
+...
+
+> > +	stm32port->clk = devm_clk_get(&pdev->dev, NULL);
+> > +
+> > +	if (WARN_ON(IS_ERR(stm32port->clk)))
 > 
-> The code takes the real dma controller's node and it should be put back after
-> I have got the information I needed from it (number of DMA requests).
+> Do you really need a stack trace here? Could this be dev_err() instead?
 > 
-> > 
-> >> +int omap_dmaxbar_init(void)
-> >> +{
-> >> +	return platform_driver_register(&ti_dma_xbar_driver);
-> >> +}
-> >> +arch_initcall(omap_dmaxbar_init);
-> > why arch_initcall?
-> 
-> It should be on the same init level as the real DMA controller. omap-dma at
-> the moment, but in some platforms this can work with the edma as well.
-> Since all device in the system (well most of them anyway) uses DMA it is
-> better to not delay their probe with deferring because the crossbar driver is
-> still not loaded
-Deferring if resources not available is the right thing and helps you get rid
-of init level ordering magic...
+> > +		return -EINVAL;
+
+Also, propagate the error code.
+
+> > +
+> > +	/* ensure that clk rate is correct by enabling the clk */
+> > +	clk_prepare_enable(stm32port->clk);
+
+And remember to check the return value of clk_prepare_enable().
 
 -- 
-~Vinod
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
