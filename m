@@ -1,126 +1,113 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Thu, 26 Mar 2015 22:25:52 +0900
-Message-ID: <551408E0.3060901@samsung.com>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
- <1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
- <20150307201340.GF5233@earth> <54FCEABE.9000007@samsung.com>
- <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
- <54FD880E.30903@samsung.com> <1425903199.13415.9.camel@AMDC1943>
- <54FEF541.6000305@samsung.com> <551119DE.2070402@samsung.com>
- <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
+Date: Thu, 26 Mar 2015 13:51:44 +0000
+Message-ID: <20150326135144.GI5951@x1>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
+ <20150304120003.GL32624@x1>
+ <20150306190812.11109.82130@quantum>
+ <20150309092804.GB3427@x1>
+ <CAMuHMdV8_uKQQgYkRPFOBgrqgw_y9A7T84ukfgWZpJmTL0eFCQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV8_uKQQgYkRPFOBgrqgw_y9A7T84ukfgWZpJmTL0eFCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2015 05:38 PM, Krzysztof Kozlowski wrote:
-> 2015-03-24 9:01 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
->> On 03/10/2015 10:44 PM, Beomho Seo wrote:
->>> On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
->>>> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
->>>>> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
->>>>>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
->>>>>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
->>>>>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
->>>>>>>>> From: Beomho Seo <beomho.seo@samsung.com>
->>>>>>>>>
->>>>>>>>> This patch adds device driver of max77843 charger. This driver provide
->>>>>>>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
->>>>>>>>> charging mode so on.). Additionally, control charging paramters to use
->>>>>>>>> i2c interface.
->>>>>>>>>
->>>>>>>>> Cc: Sebastian Reichel <sre@kernel.org>
->>>>>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->>>>>>>>
->>>>>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
->>>>>>>>
->>>>>>>> I can't take it as is, since it depends on the private header file
->>>>>>>> of PATCHv1.
->>>>>>>>
->>>>>>>> -- Sebastian
->>>>>>>>
->>>>>>>
->>>>>>> This patch reviewed by Sebastian.
->>>>>>> Could you Please merge that your git tree ?
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> ... and again we are adding a new driver for very similar chipset to
->>>>>> already supported. I looked at spec and the charger's registers are
->>>>>> almost the same as for max77693. Their layout and addresses are the
->>>>>> same. I see some minor differences, probably the most important would
->>>>>> be different values current (fast-charge, top-off). But still 90% of
->>>>>> registers are the same... Do we really have to add new driver?
->>>>>>
->>>>>> Best regards,
->>>>>> Krzysztof
->>>>>> --
->>>>>> To unsubscribe from this list: send the line "unsubscribe linux-input" in
->>>>>> the body of a message to majordomo@vger.kernel.org
->>>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>>>
->>>>>
->>>>> Hi,
->>>>>
->>>>> Thank you for your comment. As you say, both chip set are similar.
->>>>> But new driver need for support max77843. It is support different below
->>>>> - Provide Battery presence information.
->>>>
->>>> Another set of power supply properties could be added for that chip.
->>>> This way the get_property() function would be the same but actually the
->>>> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
->>>>
->>>>> - Can OTG FET control.
->>>>
->>>> Where the OTG FET feature is it enabled in your driver? I couldn't find
->>>> it.
->>>>
->>>
->>> Sorry. This driver don't control OTG FET feature.
->>>
->>>>> - Bigger Fast charge current, Top Off current Threshold selection.
->>>>> - Various and bigger OTG current limitation.
->>>>> - Bigger primary charger termination voltage setting.
->>>>> - Different maximum input current limit selection(Different step).
->>>>
->>>> Yes, I mentioned some of these differences (the Fast/top-off
->>>> differences). These are differences in values so it does not require new
->>>> driver. There is need to develop new driver just to support different
->>>> current (3.0 A instead of 2.1 A) or voltage threshold.
->>>>
->>>
->>> They are different charging current, OTG current limitation, top off current,
->>> charging limitation value. In case OTG current limitation different not
->>> limitation value but using register bit(max77843 use[7:6] max77693 use[7]
->>> bit only). Even if this driver not support all feature, some register
->>> different with max77693(support value, use register bit).
->>>
->>> If this driver will combined with max77693 may even be beneficial for
->>> new Maxim driver. But the present, this driver is related with
->>> max77843 core driver and max77843-regulator. So I hope this driver
->>> merge first. And then will extend two driver(max77843 charger and max77693 charger).
-> 
-> I still prefer merging common drivers into one instead of creating
-> some more of them.
-> However I understand your point and I am not entirely opposed against.
-> Especially that you invested quite a bit of time for developing this
-> and my feedback was quite late. To summarize I am fine with your
-> approach.
-> 
-> Best regards,
-> Krzysztof
->
+On Wed, 25 Mar 2015, Geert Uytterhoeven wrote:
 
-Dear Lee Jones,
+> Hi Lee,
+>=20
+> On Mon, Mar 9, 2015 at 10:28 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> > On Fri, 06 Mar 2015, Mike Turquette wrote:
+> >> Quoting Lee Jones (2015-03-04 04:00:03)
+> >> > Mike,
+> >> >
+> >> > Do you want me to resend this set with Robert's Reviewed-by appl=
+ied,
+> >> > or are you happy to apply it yourself?
+> >>
+> >> No need for the resend. I am hoping for a final review from a DT h=
+uman.
+> >>
+> >> This approach looks fine to me. In practice I think it is restrict=
+ed to
+> >> hardware blocks that don't exist in DT yet (e.g. no driver, in the=
+ case
+> >> of your interconnect) and that restriction is probably for the bes=
+t.
+> >
+> > Agreed.
+>=20
+> I think this restriction should be documented in the DT binding more =
+clearly,
+> as adding a "clk-always-on" node prohibits you from handling the cloc=
+k
+> correctly in
+> the future.
 
-Could you please merge that your git tree ?
+Would you mind taking the time to explain what you think those
+limitations are?
 
-Best regards,
-Beomho Seo
+> Still, for simple devices where you don't have a driver, but have "pr=
+edictable"
+> bindings (e.g. a bus like "simple-pm-bus"), I think it's better to ad=
+d
+> a device node
+> for that simple device now, incl. a reference to the clock, and have =
+a simple
+> driver that binds to the device, or platform code that looks for a
+> compatible node,
+> and enables the clock. That way you don't have to make any chances to=
+ the DTS
+> later, when you'll have a real driver.
+>=20
+> >> > > v2 =3D> v3:
+> >> > >   - Ensure DT actually reflects h/w
+> >> > >     - i.e. Nodes should not contain a mishmash of different IP
+> >> > >       blocks, but should identify related h/w.  In the current
+> >> > >       example we use interconnects
+> >> > >   - Change naming from clkdomain to clk-always-on
+> >> > >   - Place "do not abuse" warning in documentation
+> >> > >
+> >> > > v1 =3D> v2:
+> >> > >   - Turned the ST specific driver into a generic one
+> >> > >
+> >> > > Hardware can have a bunch of clocks which must not be turned o=
+ff.
+> >> > > If drivers a) fail to obtain a reference to any of these or b)=
+ give
+> >> > > up a previously obtained reference during suspend, the common =
+clk
+> >> > > framework will attempt to turn them off and the hardware will
+> >> > > subsequently die.  The only way to recover from this failure i=
+s to
+> >> > > restart.
+> >> > >
+> >> > > To avoid either of these two scenarios from catastrophically
+> >> > > disabling the running system we have implemented a clock domai=
+n
+> >> > > where clocks are consumed and references are taken, thus preve=
+nting
+> >> > > them from being shut down by the framework.
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
