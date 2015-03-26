@@ -1,108 +1,35 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v6 0/4] edac: Add APM X-Gene SoC EDAC driver
-Date: Thu, 26 Mar 2015 10:39:17 -0700
-Message-ID: <CAPw-ZTkOOh=1GgDBQ4a9KoWVA9B7GPXddwNx=VBjVTo44wYdug@mail.gmail.com>
-References: <1426573821-1937-1-git-send-email-lho@apm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RESEND PATCH 2/2] bus: ocp2scp: SYNC2 value should be changed
+ to 0x6
+Date: Thu, 26 Mar 2015 10:50:35 -0700
+Message-ID: <20150326175035.GC10805@atomide.com>
+References: <1426591491-3685-1-git-send-email-kishon@ti.com>
+ <1426591491-3685-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426573821-1937-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1426591491-3685-2-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, nm@ti.com, praneeth@ti.com, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+* Kishon Vijay Abraham I <kishon@ti.com> [150317 04:25]:
+> As per the TRMs of AM572x, OMAP4430, OMAP4460, OMAP543x, the value of
+> SYNC2 must be set to 0x6 in order to ensure correct operation.
+> 
+> So modified the SYNC2 value of OCP2SCP TIMING register to 0x6 in all the
+> platforms that use OCP2SCP driver except AM437x. Also introduced a new
+> compatible property since we don't want to modify the OCP2SCP TIMING
+> register for AM437x.
 
-Any comment with v6 of the APM EDAC driver?
+OK thanks I'll apply both into omap-for-v4.1/fixes-not-urgent as
+it seems we've gotten away with it for quite a few years now, and
+I don't see any specific description of what these fix.
 
--Loc
+If that's not the case, please let me know.
 
-On Mon, Mar 16, 2015 at 11:30 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
-> This patch adds support for the APM X-Gene SoC EDAC driver for DT.
->
-> v6:
-> * Rebase to 4.0.0-rc3
-> * Add memory scrub stub function and enable ARM64 EDAC support patch
-> * Add bit definition defines for L2RTOS registers
-> * Remove un-necessary clearing of all L1/L2 software generated registers
-> * Remove wrong notification of LSU un-correctable error
-> * Change L2 reporting of un-correcable error to correctable error
-> * Change clearing of the L2C L2RTO registers
-> * Add support for L2 HW version 1 and version 2 or above
-> * Add support for L3 HW version 1 and version 2 or above
->
-> v5:
-> * Rebase to 3.17.rc1 (next)
-> * Update binding documentation for additional SoC node binding resource
-> * Enable MCU correctable and uncorrectable interrupts if not enabled by
->   firmware
-> * Enable top level interrupt only after all MCU registered. Otherwise,
->   error interrupt will never get cleared by the corresponding MCU.
-> * Remove clearing of L1 and L2 errors during initialization time. Otherwise,
->   they will not be captured between firmware booting and error configuration.
-> * Add capture and clearing SoC register bus errors
-> * Add register bus resource to SoC DT node
->
-> v4:
-> * Fix PMD l1/l2 error reading address due to wrong variable type
-> * Fix clearing of software generated and HW errors for l1/l2
->
-> v3:
-> * Update binding documentation for PMD DT node and exampples
-> * Add binding documentation for SoC DT node
-> * Change MC, PMD, and L3C driver error injection to use debugfs
-> * Add missing IRQ for MC correctable error (code and DT)
-> * Use true/false where appropriate instead 1/0
-> * Add bit definition for L1 MMUESR register and fully decode this error
-> * Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
-> * Add check for disabled PMD (code and DT)
-> * Switch to edac_printk instead pr_err
-> * Some minor comments update
->
-> v2:
-> * Add EDAC entry in MAINTAINERS for APM EDAC driver
-> * Remove the MC scrub patch
-> * Remove the word 'Caches' from Kconfig
-> * Change all MASK defines to use BIT(x)
-> * Update comment or remove them
-> * Wrap error injection code around CONFIG_EDAC_DEBUG
-> * Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
-> * Change all function XXX_hw_init to XXX_hw_ctl
-> * Fix typo 'activie'
-> * Move calling function edac_mc_alloc after resource retrieval
-> * Check for NULL on platform_get_resource return if reference directly
-> * Add documentation for struct xgene_edac_pmd_ctx
-> * Move L1 and L2 check out of function xgene_edac_pmd_check to its own
->   functions
-> * Use for loop for configure each CPU of an PMD
-> * Replace /2 by >> 1
-> * Remove unnecessary comment on edac_device_add_device failure
-> * Make mem_err_ip static const
-> * Unwind EDAC register correctly if failed
-> ---
-> Loc Ho (5):
->   arm64: Enable EDAC on ARM64
->   MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
->   Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
->     binding
->   edac: Add APM X-Gene SoC EDAC driver
->   arm64: Add APM X-Gene SoC EDAC DTS entries
->
->  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   82 +
->  MAINTAINERS                                        |    8 +
->  arch/arm64/Kconfig                                 |    1 +
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   98 +
->  arch/arm64/include/asm/edac.h                      |   31 +
->  drivers/edac/Kconfig                               |    9 +-
->  drivers/edac/Makefile                              |    1 +
->  drivers/edac/xgene_edac.c                          | 2183 ++++++++++++++++++++
->  8 files changed, 2412 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->  create mode 100644 arch/arm64/include/asm/edac.h
->  create mode 100644 drivers/edac/xgene_edac.c
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
