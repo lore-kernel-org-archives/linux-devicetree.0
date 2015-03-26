@@ -1,352 +1,96 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/6] i2c: qup: Add V2 tags support
-Date: Thu, 26 Mar 2015 11:14:52 +0530
-Message-ID: <55139CD4.5040100@codeaurora.org>
-References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org> <1426268992-19298-3-git-send-email-sricharan@codeaurora.org> <1427286263.25053.18.camel@mm-sol.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power
+ on/off UART attached devices.
+Date: Thu, 26 Mar 2015 06:56:39 +0100
+Message-ID: <20150326055639.GA20912@amd>
+References: <20150318055831.21025.33670.stgit@notabene.brown>
+ <C53A3E5D-5AEA-4F0F-88A9-F9BC8CB0D0D6@goldelico.com>
+ <20150320195451.146a7915@notabene.brown>
+ <14FB51CF-9568-4BF4-B917-2C019D992FDB@goldelico.com>
+ <20150321103122.23603014@notabene.brown>
+ <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com>
+ <20150325014543.GA967@earth>
+ <6B657A35-68BD-45F6-BD55-A3D6AC1055C8@goldelico.com>
+ <20150325205344.GD381@amd>
+ <1F3B5E32-1330-457C-AE25-791319293C38@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427286263.25053.18.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1F3B5E32-1330-457C-AE25-791319293C38-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+Hi!
 
-On 03/25/2015 05:54 PM, Ivan T. Ivanov wrote:
->
-> Hi Sricharan,
->
-> On Fri, 2015-03-13 at 23:19 +0530, Sricharan R wrote:
->> From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>
->> QUP from version 2.1.1 onwards, supports a new format of
->> i2c command tags. Tag codes instructs the controller to
->> perform a operation like read/write. This new tagging version
->> supports bam dma and transfers of more than 256 bytes without 'stop'
->> in between. Adding the support for the same.
->>
->> For each block a data_write/read tag and data_len tag is added to
->> the output fifo. For the final block of data write_stop/read_stop
->> tag is used.
->>
->> Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>   drivers/i2c/busses/i2c-qup.c | 342 ++++++++++++++++++++++++++++++++++++++-----
->>
->
-> <snip>
->
->> +#define I2C_QUP_CLK_MAX_FREQ           3400000
->
-> unused?
->
-Ok, will remove this.
+> >>> Main reason is, that I would need to go
+> >>> through the UART to =E2=80=9Ccommunicate" with the w2sg0004.
+> >>=20
+> >> You can always "communicate=E2=80=9D through the UART. Even withou=
+t DT. As long as
+> >> the connected chip is powered up by any means (could be some fixed=
+-regulator
+> >> or hard wired).
+> >=20
+> > But you don't know "how" to communicate through the uart.
+>=20
+> Maybe we are talking using different assumptions. As long as you have=
+ a user space
+> gpsd daemon that talks to the gps chip the kernel simply has to trans=
+parently (except
+> line disciplines) pass the data to the uart.
 
->> +
->>   /* Status, Error flags */
->>   #define I2C_STATUS_WR_BUFFER_FULL      BIT(0)
->>   #define I2C_STATUS_BUS_ACTIVE          BIT(8)
->> @@ -99,6 +117,11 @@
->>
->>   #define QUP_READ_LIMIT                 256
->>
->> +struct qup_i2c_config {
->> +       int tag_ver;
->> +       int max_freq;
->> +};
->> +
->
-> Do you really need this one. It is referenced only during probe,
-> but information contained in is already available by other means.
->
-Ok, agree that this can be removed and the information can be fixed
-for V1 version and same for the rest of the other versions. That would
-need to use compatible check though.
->
->>   struct qup_i2c_dev {
->>          struct device*dev;
->>          void __iomem*base;
->> @@ -112,9 +135,20 @@ struct qup_i2c_dev {
->>          int     in_fifo_sz;
->>          int     out_blk_sz;
->>          int     in_blk_sz;
->> -
->> +       int     blocks;
->> +       u8      *block_tag_len;
->> +       int     *block_data_len;
->
-> Maybe these could be organized in struct?
->
-ok, will group it.
-> <snip>
->
->>
->> +static void qup_i2c_create_tag_v2(struct qup_i2c_dev *qup,
->> +                                               struct i2c_msg *msg)
->> +{
->> +       u16 addr = (msg->addr << 1) | ((msg->flags & I2C_M_RD) == I2C_M_RD);
->> +       int len = 0, prev_len = 0;
->> +       int blocks = 0;
->> +       int rem;
->> +       int block_len = 0;
->> +       int data_len;
->> +
->> +       qup->block_pos = 0;
->> +       qup->pos = 0;
->> +       qup->blocks = (msg->len + QUP_READ_LIMIT - 1) / (QUP_READ_LIMIT);
->
-> Braces around QUP_READ_LIMIT are not needed.
->
-ok.
->> +       rem = msg->len % QUP_READ_LIMIT;
->> +
->> +       /* 2 tag bytes for each block + 2 extra bytes for first block */
->> +       qup->tags = kzalloc((qup->blocks << 1) + 2, GFP_KERNEL);
->
-> Don't play tricks with shifts, just use multiplication.
->
-why ?
->> +       qup->block_tag_len = kzalloc(qup->blocks, GFP_KERNEL);
->> +       qup->block_data_len = kzalloc(sizeof(int) * qup->blocks, GFP_KERNEL);
->
-> Better use sizeof(*qup->block_data_len).
->
-ok.
->> +
->> +       while (blocks < qup->blocks) {
->> +               /* 0 is used to specify a READ_LIMIT of 256 bytes */
->> +               data_len = (blocks < (qup->blocks - 1)) ? 0 : rem;
->> +
->> +               /* Send START and ADDR bytes only for the first block */
->> +               if (!blocks) {
->> +                       qup->tags[len++] = QUP_TAG_V2_START;
->> +
->> +                       if (qup->is_hs) {
->> +                               qup->tags[len++] = QUP_TAG_V2_HS;
->> +                               qup->tags[len++] = QUP_TAG_V2_START;
->
-> Is this second QUP_TAG_V2_START intentional?
->
-  Yes, for HS mode 2 start tags are required.
->> +                       }
->> +
->> +                       qup->tags[len++] = addr & 0xff;
->> +                       if (msg->flags & I2C_M_TEN)
->> +                               qup->tags[len++] = addr >> 8;
->> +               }
->> +
->> +               /* Send _STOP commands for the last block */
->> +               if (blocks == (qup->blocks - 1)) {
->> +                       if (msg->flags & I2C_M_RD)
->> +                               qup->tags[len++] = QUP_TAG_V2_DATARD_STOP;
->> +                       else
->> +                               qup->tags[len++] = QUP_TAG_V2_DATAWR_STOP;
->> +               } else {
->> +                       if (msg->flags & I2C_M_RD)
->> +                               qup->tags[len++] = QUP_TAG_V2_DATARD;
->> +                       else
->> +                               qup->tags[len++] = QUP_TAG_V2_DATAWR;
->> +               }
->> +
->> +               qup->tags[len++] = data_len;
->> +               block_len = len - prev_len;
->> +               prev_len = len;
->> +               qup->block_tag_len[blocks] = block_len;
->> +
->> +               if (!data_len)
->> +                       qup->block_data_len[blocks] = QUP_READ_LIMIT;
->> +               else
->> +                       qup->block_data_len[blocks] = data_len;
->> +
->> +               qup->tags_pos = 0;
->> +               blocks++;
->> +       }
->> +
->> +       qup->tx_tag_len = len;
->> +
->> +       if (msg->flags & I2C_M_RD)
->> +               qup->rx_tag_len = (qup->blocks << 1);
->
-> here again.
->
-hmm, why not shift ?
->> +       else
->> +               qup->rx_tag_len = 0;
->> +}
->> +
->> +static u32 qup_i2c_xfer_data(struct qup_i2c_dev *qup, int len,
->> +                                                               u8 *buf, int last)
->> +{
->
-> I think that xfer is too vague in this case, prefer write or send.
->
-ok. Will change it to send.
->> +       static u32 val, idx;
->
-> static? please fix.
-  That was intentional. Using to pack tag and data in to one word across
-  two calls. So preserving val, idx across calls.
->
->> +       u32  t, rem, pos = 0;
->> +
->> +       rem = len - pos + idx;
->> +
->> +       while (rem) {
->> +               if (qup_i2c_wait_ready(qup, QUP_OUT_FULL, 0, 4)) {
->> +                       dev_err(qup->dev, "timeout for fifo out full");
->> +                       break;
->> +               }
->> +
->> +               t = (rem >= 4) ? 4 : rem;
->> +
->> +               while (idx < t)
->> +                       val |= buf[pos++] << (idx++ << 3);
->
-> here again, multiplication or shift?
->
-  I felt shifts should be readable. No ?
->> +
->> +               if (t == 4) {
->> +                       writel(val, qup->base + QUP_OUT_FIFO_BASE);
->> +                       idx = val = 0;
->> +               }
->> +
->> +               rem = len - pos;
->> +       }
->> +
->
-> What will happen if they are less than 4 bytes to send?
->
-It gets written over in the next call and gets written here itself if it 
-is the last block of data.
->> +       if (last) {
->> +               writel(val, qup->base + QUP_OUT_FIFO_BASE);
->> +               idx = val = 0;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->>
->
-> <snip>
->
->>
->> -static void qup_i2c_issue_read(struct qup_i2c_dev *qup, struct i2c_msg *msg)
->> +static void qup_i2c_issue_read_v1(struct qup_i2c_dev *qup, struct
->> +                                               i2c_msg *msg)
->
-> Please, move struct on the same line as i2c_msg.
->
-ok.
+=46orget userspace, some other operating system (or future linux) may
+want to put gps handling into the kernel. (To hide differences between
+different GPSes).
 
->>   {
->>          u32 addr, len, val;
->>
->> @@ -395,24 +576,33 @@ static void qup_i2c_issue_read(struct qup_i2c_dev *qup, struct i2c_msg *msg)
->>          /* 0 is used to specify a length 256 (QUP_READ_LIMIT) */
->>          len = (msg->len == QUP_READ_LIMIT) ? 0 : msg->len;
->>
->> -       val = ((QUP_TAG_REC | len) << QUP_MSW_SHIFT) | QUP_TAG_START | addr;
->> +       val = ((QUP_TAG_REC | len) << QUP_MSW_SHIFT) | QUP_TAG_START |
->> +                       addr;
->
-> Unrelated change?
-  hmm. Must have come for adjusting 80 chars. Will remove this here.
->
->>          writel(val, qup->base + QUP_OUT_FIFO_BASE);
->>   }
->>
->>
->
-> <snip>
->
->>
->> +static void qup_i2c_read_fifo_v2(struct qup_i2c_dev *qup, struct
->> +                                       i2c_msg *msg)
->> +{
->> +       u32 val;
->> +       int idx;
->> +       int pos = 0;
->
->> +       int total = qup->block_data_len[qup->block_pos] + 2;
->
-> Could we  have at least comment what is this +2?
->
-  Ok. The +2 is for the read tags that are extra bytes read for each
-  block. Will add comment for that.
+> > Because we want the phone to boot knowing "I have a bluetooth" or "=
+I
+> > have a GPS", as it would if it was connected using USB, and not hav=
+ing
+> > user figure out what commands he needs to do to enable reasonable
+> > hardware support (and getting it wrong, because you need to specify
+> > _many_ critical parameters to hciattach).
+>=20
+> Yes, this is indeed something I also would like to see for the GTA04 =
+(and other)
+> devices.
+>=20
+> So the reason is that some kernel driver wants to use the tty/uart to=
+ communicate
+> directly with the chip. This is very similar to a gpio that some driv=
+er wants to use.
+>=20
+> Thus please consider the
+>=20
+> / {
+> 	bt {
+> 		compatible =3D "vendor,product=E2=80=9C;
+> 		uart =3D <&uart1>;
+> 		enable =3D <&gpio17 34 0>;
+> 	};
+> };
 
-> <snip>
->
->> +
->> +static void qup_i2c_read_fifo(struct qup_i2c_dev *qup, struct i2c_msg
->> +                                                                       *msg)
->
-> Bad indent?
->
-  ok. Will fix it.
-> <snip>
->
->
->> +static const struct qup_i2c_config configs[] = {
->> +       { 0, 400000, },
->> +       { 1, 3400000, },
->> +};
->> +
->> +static const struct of_device_id qup_i2c_dt_match[] = {
->> +       { .compatible = "qcom,i2c-qup-v1.1.1", .data = &configs[0] },
->> +       { .compatible = "qcom,i2c-qup-v2.1.1", .data = &configs[1] },
->> +       { .compatible = "qcom,i2c-qup-v2.2.1", .data = &configs[1] },
->> +       {}
->> +};
->> +MODULE_DEVICE_TABLE(of, qup_i2c_dt_match);
->> +
->>   static void qup_i2c_disable_clocks(struct qup_i2c_dev *qup)
->>   {
->>          u32 config;
->> @@ -579,6 +837,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
->>          int ret, fs_div, hs_div;
->>          int src_clk_freq;
->>          u32 clk_freq = 100000;
->> +       const struct qup_i2c_config *config;
->> +       const struct of_device_id *of_id;
->>
->>          qup = devm_kzalloc(&pdev->dev, sizeof(*qup), GFP_KERNEL);
->>          if (!qup)
->> @@ -590,8 +850,15 @@ static int qup_i2c_probe(struct platform_device *pdev)
->>
->>          of_property_read_u32(node, "clock-frequency", &clk_freq);
->>
->> -       /* We support frequencies up to FAST Mode (400KHz) */
->> -       if (!clk_freq || clk_freq > 400000) {
->> +       of_id = of_match_node(qup_i2c_dt_match, node);
->> +       if (!of_id)
->> +               return -EINVAL;
->
-> this could not happen.
->
-  Correct. Will remove it.
->> +
->> +       config = of_id->data;
->> +       qup->use_v2_tags = !!config->tag_ver;
->> +
->> +       /* We support frequencies up to HIGH SPEED Mode (3400KHz) */
->> +       if (!clk_freq || clk_freq > config->max_freq) {
->
-> Looks like if controller is v > 1 it supports I2C_QUP_CLK_MAX_FREQ.
-> I don't see need for struct qup_i2c_config.
->
-Ok, this can removed if compatible check is used to differentiate 
-between V1 and rest of the versions.
+Would work, too, but I and everyone knows that subnode is better,
+easier solution.
 
-Regards,
-  Sricharan
+> approach.
+>=20
+> And if you want to hide uart1 from the user-space, that should be a p=
+roperty
+> of the uart1 node (whereever it is defined).
 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of Code Aurora Forum, hosted by The Linux Foundation
+Sorry? That would be one heck of layering violation.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
