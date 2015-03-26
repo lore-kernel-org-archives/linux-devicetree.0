@@ -1,42 +1,53 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: dts: vf610: fix missing irqs
-Date: Thu, 26 Mar 2015 08:24:05 +0100
-Message-ID: <1427354645-16629-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de
-Cc: maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/6] i2c: qup: Add V2 tags support
+Date: Thu, 26 Mar 2015 09:31:50 +0200
+Message-ID: <1427355110.7093.1.camel@mm-sol.com>
+References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org>
+	 <1426268992-19298-3-git-send-email-sricharan@codeaurora.org>
+	 <1427286263.25053.18.camel@mm-sol.com> <55139CD4.5040100@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55139CD4.5040100-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-While adding the MSCM interrupt router, all interrupts have been moved
-to vfxxx.dtsi again. However, some properties got lost. Readd the
-missing interrupt properties.
+Hi Sricharan,
 
-Offending commit:
-97e6466ab9 ("ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)"
----
- arch/arm/boot/dts/vfxxx.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On Thu, 2015-03-26 at 11:14 +0530, Sricharan R wrote:
+> 
+> > > +       if (msg->flags & I2C_M_RD)
+> > > +               qup->rx_tag_len = (qup->blocks << 1);
+> > 
+> > here again.
+> > 
+> hmm, why not shift ?
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 899645d..f9bef55 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -377,6 +377,7 @@
- 			src: src@4006e000 {
- 				compatible = "fsl,vf610-src", "syscon";
- 				reg = <0x4006e000 0x1000>;
-+				interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
- 			gpc: gpc@4006c000 {
-@@ -419,6 +420,7 @@
- 				snvsrtc: snvs-rtc-lp@34 {
- 					compatible = "fsl,sec-v4.0-mon-rtc-lp";
- 					reg = <0x34 0x58>;
-+					interrupts = <100 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks VF610_CLK_SNVS>;
- 					clock-names = "snvs-rtc";
- 				};
--- 
-2.3.3
+Because it makes reading code harder and because compiler
+ is smart enough to choose appropriate instruction for
+underling CPU architecture.
+
+> > > +       else
+> > > +               qup->rx_tag_len = 0;
+> > > +}
+> > > +
+> > > +static u32 qup_i2c_xfer_data(struct qup_i2c_dev *qup, int len,
+> > > +                                                               u8 *buf, int last)
+> > > +{
+> > 
+> > I think that xfer is too vague in this case, prefer write or send.
+> > 
+> ok. Will change it to send.
+> > > +       static u32 val, idx;
+> > 
+> > static? please fix.
+>   That was intentional. Using to pack tag and data in to one word across
+>   two calls. So preserving val, idx across calls.
+
+Sorry this is no go! Reorganize the code, please.
+
+Regards,
+Ivan
