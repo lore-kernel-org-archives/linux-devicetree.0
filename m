@@ -1,208 +1,239 @@
-From: victorascroft-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH 00/12] USB: chipidea: patchset for performance improvement
-Date: Thu, 26 Mar 2015 14:04:45 +0530
-Message-ID: <20150326083445.GA4747@Sanchayan-Arch>
-References: <1426727963-32280-1-git-send-email-peter.chen@freescale.com>
- <20150324103253.GC4707@Sanchayan-Arch>
- <20150324122146.GC2293@shlinux2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150324122146.GC2293@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RESEND PATCH v5] clk: Add PWM clock driver
+Date: Thu, 26 Mar 2015 09:41:51 +0100
+Message-ID: <1427359311-10183-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
+Some board designers, when running out of clock output pads, decide to
+(mis)use PWM output pads to provide a clock to external components.
+This driver supports this practice by providing an adapter between the
+PWM and clock bindings in the device tree. As the PWM bindings specify
+the period in the device tree, this is a fixed clock.
 
-On 15-03-24 20:21:47, Peter Chen wrote:
-> On Tue, Mar 24, 2015 at 04:02:53PM +0530, victorascroft-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > Hello Peter, 
-> > 
-> > On 15-03-19 09:19:11, Peter Chen wrote:
-> > > Hi all,
-> > > 
-> > > In this patch set, I add some interfaces for tuning the performance
-> > > of chipidea usb driver. With this set, the USB performance can be improved
-> > > at some user cases with suitable parameters. The main changes:
-> > > 
-> > > - Interface to tune interrupt threshold control, and set
-> > > 'Immediate' for default value
-> > > - The glue layer can disable stream mode according to USB role
-> > > - Interface to tune AHB burst configuration at SBUSCFG
-> > > - Interface to tune tx/rx burst size
-> > > - i.mx changes for achieving better performance, it can reduce
-> > >   the latecy between bus and USB FIFO, and reduce the overrun
-> > >   and underrun occurrences, it is useful for the system bus is busy.
-> > >   we see great improvement for ISO transfer, eg, high resolution
-> > >   USB camera when the bus is busy.
-> > > 
-> > > Below are some test results at imx6sx sdb board
-> > > (set ehci_hcd.park=3 at bootargs), the tests are done
-> > > at v4.0 kernel, no other bus loading during the tests,
-> > > so we have not seen performance change for some use cases.
-> > > 
-> > > USB Mass Storage (Host mode)
-> > > With Patch Set		Without Patch Set
-> > > R: 26.9 MB/s		27 MB/s
-> > > W: 25.2 MB/s		24.5 MB/s
-> > > 
-> > > 1G USB Ethernet Card
-> > > With Patch Set		Without Patch Set
-> > > TX: 186 Mb/s		185 Mb/s
-> > > RX: 219 Mb/s		216 Mb/s
-> > > 
-> > > g_ncm (Device Mode)
-> > > With Patch Set		Without Patch Set
-> > > TX: 166MB/s		163MB/s
-> > > RX: 230MB/s		184MB/s
-> > > 
-> > 
-> > I tested these patches on a Colibri Vybrid VF61. Have not applied the 
-> > 7th and 11th patch, but, the changes these patches introduce, I added 
-> > them to our device tree node. These would be  the addition of 
-> > ahb-burst-config = <0x0> and tx-burst-size-dword = <0x10> and 
-> > rx-burst-size-dword = <0x10> to the usb node in vfxxx.dtsi file for both 
-> > the peripheral and host usb nodes.
-> > 
-> > I used hdparm and dd for the tests. Some of the readings are below.
-> > 
-> > With this patchset applied
-> > 
-> > Reads
-> > hdparm -t --direct /dev/sda
-> > 
-> > /dev/sda:
-> >  Timing O_DIRECT disk reads:  36 MB in  3.05 seconds =  11.80 MB/sec
-> > 
-> > Writes
-> > root@colibri-vf:~# time dd if=/dev/zero bs=128k count=4096
-> > of=/media/sda1/tmpfile
-> > 4096+0 records in
-> > 4096+0 records out
-> > 
-> > real    1m11.671s
-> > user    0m0.010s
-> > sys     0m10.130s
-> > 
-> > USB Client - RNDIS
-> > 
-> > root@colibri-vf:~# iperf -c 192.168.1.1
-> > ------------------------------------------------------------
-> > Client connecting to 192.168.1.1, TCP port 5001
-> > TCP window size: 43.8 KByte (default)
-> > ------------------------------------------------------------
-> > [  3] local 192.168.1.2 port 41317 connected with 192.168.1.1 port 5001
-> > [ ID] Interval       Transfer     Bandwidth
-> > [  3]  0.0-10.0 sec   105 MBytes  88.2 Mbits/sec
-> > 
-> > Without this patchset applied
-> > 
-> > Reads
-> > hdparm -t --direct /dev/sda
-> > 
-> > /dev/sda:
-> >  Timing O_DIRECT disk reads:  78 MB in  3.06 seconds =  25.50 MB/sec
-> > 
-> > Writes
-> > root@colibri-vf:~# time dd if=/dev/zero bs=128k count=4096
-> > of=/media/sda1/tmpfil
-> > 4096+0 records in
-> > 4096+0 records out
-> > 
-> > real    0m43.807s
-> > user    0m0.050s
-> > sys     0m9.960s
-> > 
-> > USB Client - RNDIS
-> > 
-> > root@colibri-vf:~# iperf -c 192.168.1.1
-> > ------------------------------------------------------------
-> > Client connecting to 192.168.1.1, TCP port 5001
-> > TCP window size: 43.8 KByte (default)
-> > ------------------------------------------------------------
-> > [  3] local 192.168.1.2 port 49857 connected with 192.168.1.1 port 5001
-> > [ ID] Interval       Transfer     Bandwidth
-> > [  3]  0.0-10.0 sec   138 MBytes   116 Mbits/sec
-> > 
-> > 
-> > Perhaps I am missing something? I have the ehci_hcd.park=3 set.
-> > 
-> > root@colibri-vf:~# cat /proc/cmdline
-> > ehci_hcd.park=3 ubi.mtd=ubi root=ubi0:rootfs rootfstype=ubifs
-> > ubi.fm_autoconvert=1 mtdparts=vf610_nfc:128k(vf-bcb)ro,1408k(
-> > u-boot)ro,512k(u-boot-env),-(ubi) fec_mac= consoleblank=0 console=tty1
-> > console=ttyLP0,115200n8 mem=256M
-> > 
-> > Is there any other parameter or variable I need to set?
-> 
-> Hi Sanchayan,
-> 
-> The dts setting is specific for i.mx6 (maybe i.mx5 is applicate),
-> and it needs below patch to co-work with it, it is an i.mx
-> controller specific improvement (not in core).
-> > >   usb: chipidea: usbmisc_imx: add unburst setting for imx6
-> 
-> Other chipidea SoCs may have optimized parameters than default ones, it
-> needs to check with IC guys.
-> 
-> Enable stream mode should improve tx performance, you can have a try.
+Tested-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes since v4:
+- Added missing static keywords, as pointed out by Stephen Boyd
+- Turned to_clk_pwm into an inline function,
+- added MODULE_AUTHOR/DESCRIPTION/LICENSE,
+- and fixed PWM spelling issues, as pointed out by Thierry Reding
+---
+ .../devicetree/bindings/clock/pwm-clock.txt        |  26 ++++
+ drivers/clk/Kconfig                                |   7 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-pwm.c                              | 136 +++++++++++++++++++++
+ 4 files changed, 170 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
+ create mode 100644 drivers/clk/clk-pwm.c
 
-I will give this a try in a while and check, if that helps.
-
-Thanks.
-
-- Sanchayan.
-
-> 
-> > 
-> > - Sanchayan
-> > 
-> > > Peter Chen (12):
-> > >   Doc: usb: ci-hdrc-imx: add gadget-itc-setting for binding doc
-> > >   usb: chipidea: set ITC to 0 for device mode
-> > >   usb: chipidea: define stream mode disable for both roles
-> > >   usb: chipidea: imx: add stream mode enable for device mode at
-> > >     imx6sl/imx6sx
-> > >   usb: chipidea: introduce ci_platform_config
-> > >   Doc: usb: ci-hdrc-imx: add ahb-burst-config for binding doc
-> > >   ARM: imx6: set ahb-burst-config as 0 for USB
-> > >   usb: chipidea: add ahb burst configuration
-> > >   usb: chipidea: usbmisc_imx: add unburst setting for imx6
-> > >   Doc: usb: ci-hdrc-imx: add tx(rx)-burst-config-dword for binding doc
-> > >   ARM: imx6: change default burst size for USB
-> > >   usb: chipidea: add burst size configuration interface
-> > > 
-> > >  .../devicetree/bindings/usb/ci-hdrc-imx.txt        |  12 +++
-> > >  arch/arm/boot/dts/imx6qdl.dtsi                     |  12 +++
-> > >  arch/arm/boot/dts/imx6sl.dtsi                      |   9 ++
-> > >  arch/arm/boot/dts/imx6sx.dtsi                      |   9 ++
-> > >  drivers/usb/chipidea/bits.h                        |   7 ++
-> > >  drivers/usb/chipidea/ci.h                          |   3 +
-> > >  drivers/usb/chipidea/ci_hdrc_imx.c                 |  14 ++-
-> > >  drivers/usb/chipidea/core.c                        | 119 +++++++++++++++++++--
-> > >  drivers/usb/chipidea/host.c                        |   6 +-
-> > >  drivers/usb/chipidea/usbmisc_imx.c                 |  12 ++-
-> > >  include/linux/usb/chipidea.h                       |  11 +-
-> > >  11 files changed, 191 insertions(+), 23 deletions(-)
-> > > 
-> > > -- 
-> > > 1.9.1
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
-> 
-> -- 
-> 
-> Best Regards,
-> Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+new file mode 100644
+index 0000000..83db876
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+@@ -0,0 +1,26 @@
++Binding for an external clock signal driven by a PWM pin.
++
++This binding uses the common clock binding[1] and the common PWM binding[2].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/pwm/pwm.txt
++
++Required properties:
++- compatible : shall be "pwm-clock".
++- #clock-cells : from common clock binding; shall be set to 0.
++- pwms : from common PWM binding; this determines the clock frequency
++  via the period given in the PWM specifier.
++
++Optional properties:
++- clock-output-names : From common clock binding.
++- clock-frequency : Exact output frequency, in case the PWM period
++  is not exact but was rounded to nanoseconds.
++
++Example:
++	clock {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "mipi_mclk";
++		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
++	};
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 3f44f292..772d45e 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
+ 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
+ 	  using common clock framework.
+ 
++config COMMON_CLK_PWM
++	tristate "Clock driver for PWMs used as clock outputs"
++	depends on PWM
++	---help---
++	  Adapter driver so that any PWM output can be (mis)used as clock signal
++	  at 50% duty cycle.
++
+ config COMMON_CLK_PXA
+ 	def_bool COMMON_CLK && ARCH_PXA
+ 	---help---
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index d5fba5b..6a0c5cf 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
+ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
+ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
+ obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
++obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+ obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
+ obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
+ obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+new file mode 100644
+index 0000000..328fcfc
+--- /dev/null
++++ b/drivers/clk/clk-pwm.c
+@@ -0,0 +1,136 @@
++/*
++ * Copyright (C) 2014 Philipp Zabel, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * PWM (mis)used as clock output
++ */
++#include <linux/clk-provider.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++
++struct clk_pwm {
++	struct clk_hw hw;
++	struct pwm_device *pwm;
++	u32 fixed_rate;
++};
++
++static inline struct clk_pwm *to_clk_pwm(struct clk_hw *hw)
++{
++	return container_of(hw, struct clk_pwm, hw);
++}
++
++static int clk_pwm_prepare(struct clk_hw *hw)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	return pwm_enable(clk_pwm->pwm);
++}
++
++static void clk_pwm_unprepare(struct clk_hw *hw)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	pwm_disable(clk_pwm->pwm);
++}
++
++static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	return clk_pwm->fixed_rate;
++}
++
++static const struct clk_ops clk_pwm_ops = {
++	.prepare = clk_pwm_prepare,
++	.unprepare = clk_pwm_unprepare,
++	.recalc_rate = clk_pwm_recalc_rate,
++};
++
++static int clk_pwm_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct clk_init_data init;
++	struct clk_pwm *clk_pwm;
++	struct pwm_device *pwm;
++	const char *clk_name;
++	struct clk *clk;
++	int ret;
++
++	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
++	if (!clk_pwm)
++		return -ENOMEM;
++
++	pwm = devm_pwm_get(&pdev->dev, NULL);
++	if (IS_ERR(pwm))
++		return PTR_ERR(pwm);
++
++	if (!pwm->period) {
++		dev_err(&pdev->dev, "invalid PWM period\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
++		clk_pwm->fixed_rate = NSEC_PER_SEC / pwm->period;
++
++	if (pwm->period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
++	    pwm->period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
++		dev_err(&pdev->dev,
++			"clock-frequency does not match PWM period\n");
++		return -EINVAL;
++	}
++
++	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
++	if (ret < 0)
++		return ret;
++
++	clk_name = node->name;
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	init.name = clk_name;
++	init.ops = &clk_pwm_ops;
++	init.flags = CLK_IS_BASIC | CLK_IS_ROOT;
++	init.num_parents = 0;
++
++	clk_pwm->pwm = pwm;
++	clk_pwm->hw.init = &init;
++	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++
++static int clk_pwm_remove(struct platform_device *pdev)
++{
++	of_clk_del_provider(pdev->dev.of_node);
++
++	return 0;
++}
++
++static const struct of_device_id clk_pwm_dt_ids[] = {
++	{ .compatible = "pwm-clock" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
++
++static struct platform_driver clk_pwm_driver = {
++	.probe = clk_pwm_probe,
++	.remove = clk_pwm_remove,
++	.driver = {
++		.name = "pwm-clock",
++		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
++	},
++};
++
++module_platform_driver(clk_pwm_driver);
++
++MODULE_AUTHOR("Philipp Zabel <p.zabel@pengutronix.de>");
++MODULE_DESCRIPTION("PWM clock driver");
++MODULE_LICENSE("GPL");
+-- 
+2.1.4
