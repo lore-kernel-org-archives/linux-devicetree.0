@@ -1,109 +1,82 @@
-From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 2/8] of: add helper for getting endpoint node of specific
- identifiers
-Date: Thu, 26 Mar 2015 20:15:34 +0900
-Message-ID: <1427368540-28010-3-git-send-email-human.hwang@samsung.com>
-References: <1427368540-28010-1-git-send-email-human.hwang@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1427368540-28010-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org
-Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v7 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Thu, 26 Mar 2015 11:43:21 +0000
+Message-ID: <5513F0D9.5080807@arm.com>
+References: <1425466367-30556-1-git-send-email-vincent.yang@socionext.com>
+ <1425466884-30648-1-git-send-email-vincent.yang@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1425466884-30648-1-git-send-email-vincent.yang@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "andy.green@linaro.org" <andy.green@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Tetsuya Nuriya <nuriya.tetsuya@socionext.com>, "arm@kernel.org" <arm@kernel.org>, "patches@linaro.org" <patches@linaro.org>, Vincent Yang <vincent.cw.yang@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, "olof@lixom.net" <olof@lixom.net>, Vincent Yang <vincent.yang@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-When there are multiple ports or multiple endpoints in a port, they have to be
-distinguished by the value of reg property. It is common. The drivers can get
-the specific endpoint in the specific port via this function. Now the drivers
-have to implement this code in themselves or have to force the order of dt nodes
-to get the right node.
 
-Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes for v2:
- - None
 
-Changes for v3:
- - None
+On 04/03/15 11:01, Vincent Yang wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
+>
+> Add driver for the ARM Primecell Message-Handling-Unit(MHU) controller.
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Andy Green <andy.green@linaro.org>
+> Signed-off-by: Vincent Yang <vincent.yang@socionext.com>
+> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya@socionext.com>
+> ---
+>   .../devicetree/bindings/mailbox/arm-mhu.txt        |  43 +++++
+>   drivers/mailbox/Kconfig                            |   9 +
+>   drivers/mailbox/Makefile                           |   2 +
+>   drivers/mailbox/arm_mhu.c                          | 195 +++++++++++++++++++++
+>   4 files changed, 249 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>   create mode 100644 drivers/mailbox/arm_mhu.c
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> new file mode 100644
+> index 0000000..4971f03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+> @@ -0,0 +1,43 @@
+> +ARM MHU Mailbox Driver
+> +======================
+> +
+> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
+> +3 independent channels/links to communicate with remote processor(s).
+> + MHU links are hardwired on a platform. A link raises interrupt for any
+> +received data. However, there is no specified way of knowing if the sent
+> +data has been read by the remote. This driver assumes the sender polls
+> +STAT register and the remote clears it after having read the data.
+> +The last channel is specified to be a 'Secure' resource, hence can't be
+> +used by Linux running NS.
+> +
+> +Mailbox Device Node:
+> +====================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Shall be "arm,mhu" & "arm,primecell"
+> +- reg:			Contains the mailbox register address range (base
+> +			address and length)
+> +- #mbox-cells		Shall be 1 - the index of the channel needed.
+> +- interrupts:		Contains the interrupt information corresponding to
+> +			each of the 3 links of MHU.
+> +
 
- drivers/of/base.c        | 33 +++++++++++++++++++++++++++++++++
- include/linux/of_graph.h |  8 ++++++++
- 2 files changed, 41 insertions(+)
+I tried using this driver and found that AMBA driver expects apb_clk
+without which probe fails. Though your example have it, it's not
+explicit from the binding. Also AMBA binding expects the primecell id in
+the binding.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index adb8764..ffc2235 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2165,6 +2165,39 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- EXPORT_SYMBOL(of_graph_get_next_endpoint);
- 
- /**
-+ * of_graph_get_endpoint_by_regs() - get endpoint node of specific identifiers
-+ * @parent: pointer to the parent device node
-+ * @port_reg: identifier (value of reg property) of the parent port node
-+ * @reg: identifier (value of reg property) of the endpoint node
-+ *
-+ * Return: An 'endpoint' node pointer which is identified by reg and at the same
-+ * is the child of a port node identified by port_reg. reg and port_reg are
-+ * ignored when they are -1.
-+ */
-+struct device_node *of_graph_get_endpoint_by_regs(
-+	const struct device_node *parent, int port_reg, int reg)
-+{
-+	struct of_endpoint endpoint;
-+	struct device_node *node, *prev_node = NULL;
-+
-+	while (1) {
-+		node = of_graph_get_next_endpoint(parent, prev_node);
-+		of_node_put(prev_node);
-+		if (!node)
-+			break;
-+
-+		of_graph_parse_endpoint(node, &endpoint);
-+		if (((port_reg == -1) || (endpoint.port == port_reg)) &&
-+			((reg == -1) || (endpoint.id == reg)))
-+			return node;
-+
-+		prev_node = node;
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-  * of_graph_get_remote_port_parent() - get remote port's parent node
-  * @node: pointer to a local endpoint device_node
-  *
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index befef42..e859eb7 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
- 				struct of_endpoint *endpoint);
- struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 					struct device_node *previous);
-+struct device_node *of_graph_get_endpoint_by_regs(
-+		const struct device_node *parent, int port_reg, int reg);
- struct device_node *of_graph_get_remote_port_parent(
- 					const struct device_node *node);
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
-@@ -49,6 +51,12 @@ static inline struct device_node *of_graph_get_next_endpoint(
- 	return NULL;
- }
- 
-+struct device_node *of_graph_get_endpoint_by_regs(
-+		const struct device_node *parent, int port_reg, int reg)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_graph_get_remote_port_parent(
- 					const struct device_node *node)
- {
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sudeep
