@@ -1,131 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 02/11] DT: Add documentation for the mfd Maxim max77693
-Date: Thu, 26 Mar 2015 14:06:38 +0000
-Message-ID: <20150326140638.GM5951@x1>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-3-git-send-email-j.anaszewski@samsung.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: hisi: add API for allocation clk data struct
+Date: Thu, 26 Mar 2015 14:18:34 +0000
+Message-ID: <20150326141834.GI8656@n2100.arm.linux.org.uk>
+References: <1427368419-22222-1-git-send-email-leo.yan@linaro.org>
+ <1427368419-22222-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1426863811-12516-3-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+In-Reply-To: <1427368419-22222-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Mar 2015, Jacek Anaszewski wrote:
+On Thu, Mar 26, 2015 at 07:13:36PM +0800, Leo Yan wrote:
+> +struct hisi_clock_data __init *hisi_clk_init(struct device_node *np,
+> +					     int nr_clks)
+> +{
+> +	struct hisi_clock_data *clk_data;
+> +	void __iomem *base;
+> +
+> +	if (np) {
+> +		base = of_iomap(np, 0);
+> +		if (!base) {
+> +			pr_err("failed to map Hisilicon clock registers\n");
+> +			return NULL;
+> +		}
+> +		printk("%s: base %p\n", __func__, base);
 
-> This patch adds device tree binding documentation for
-> the flash cell of the Maxim max77693 multifunctional device.
->=20
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> ---
->  Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++=
-++++++++++
->  1 file changed, 61 insertions(+)
+Did you leave your debugging in?
 
-Bryan and/or one of the DT folks really need to Ack this.
+> +	} else {
+> +		pr_err("failed to find Hisilicon clock node in DTS\n");
+> +		return NULL;
+> +	}
 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77693.txt
-> index 38e6440..15c546e 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -76,7 +76,53 @@ Optional properties:
->      Valid values: 4300000, 4700000, 4800000, 4900000
->      Default: 4300000
-> =20
-> +- led : the LED submodule device node
-> +
-> +There are two LED outputs available - FLED1 and FLED2. Each of them =
-can
-> +control a separate LED or they can be connected together to double
-> +the maximum current for a single connected LED. One LED is represent=
-ed
-> +by one child node.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max77693-led".
-> +
-> +Optional properties:
-> +- maxim,trigger-type : Flash trigger type.
-> +	Possible trigger types:
-> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
-> +			the flash,
-> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
-> +			of the flash.
-> +- maxim,boost-mode :
-> +	In boost mode the device can produce up to 1.2A of total current
-> +	on both outputs. The maximum current on each output is reduced
-> +	to 625mA then. If not enabled explicitly, boost setting defaults to
-> +	LEDS_BOOST_FIXED in case both current sources are used.
-> +	Possible values:
-> +		LEDS_BOOST_OFF (0) - no boost,
-> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-> +		LEDS_BOOST_FIXED (2) - fixed mode.
-> +- maxim,boost-mvout : Output voltage of the boost module in millivol=
-ts.
-> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is =
-not fired
-> +	if chip estimates that system voltage could drop below this level d=
-ue
-> +	to flash power consumption.
-> +
-> +Required properties of the LED child node:
-> +- led-sources : see Documentation/devicetree/bindings/leds/common.tx=
-t;
-> +		device current output identifiers: 0 - FLED1, 1 - FLED2
-> +
-> +Optional properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +- max-microamp : see Documentation/devicetree/bindings/leds/common.t=
-xt
-> +		Range: 15625 - 250000
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/co=
-mmon.txt
-> +		Range: 15625 - 1000000
-> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/comm=
-on.txt
-> +		Range: 62500 - 1000000
-> +
->  Example:
-> +#include <dt-bindings/leds/common.h>
-> +
->  	max77693@66 {
->  		compatible =3D "maxim,max77693";
->  		reg =3D <0x66>;
-> @@ -117,5 +163,20 @@ Example:
->  			maxim,thermal-regulation-celsius =3D <75>;
->  			maxim,battery-overcurrent-microamp =3D <3000000>;
->  			maxim,charge-input-threshold-microvolt =3D <4300000>;
-> +
-> +		led {
-> +			compatible =3D "maxim,max77693-led";
-> +			maxim,trigger-type =3D <LEDS_TRIG_TYPE_LEVEL>;
-> +			maxim,boost-mode =3D <LEDS_BOOST_FIXED>;
-> +			maxim,boost-mvout =3D <5000>;
-> +			maxim,mvsys-min =3D <2400>;
-> +
-> +			camera_flash: flash-led {
-> +				label =3D "max77693-flash";
-> +				led-sources =3D <0>, <1>;
-> +				max-microamp =3D <500000>;
-> +				flash-max-microamp =3D <1250000>;
-> +				flash-timeout-us =3D <1000000>;
-> +			};
->  		};
->  	};
+I know you're mostly only moving this code, but it would be far better if
+it were written:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+	if (!np) {
+		pr_err("failed to find Hisilicon clock node in DTS\n");
+		return NULL;
+	}
+
+	base = of_iomap(np, 0);
+	if (!base) {
+		pr_err("failed to map Hisilicon clock registers\n");
+		return NULL;
+	}
+
+Possibly do this first as a separate patch, and then move the code.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
