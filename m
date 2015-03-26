@@ -1,67 +1,72 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 4/7] dmaengine: omap-dma: Use defines for dma channels
- and request count
-Date: Thu, 26 Mar 2015 16:27:12 +0530
-Message-ID: <20150326105712.GL32683@intel.com>
-References: <1426080210-841-1-git-send-email-peter.ujfalusi@ti.com>
- <1426080210-841-5-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426080210-841-5-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/4] dt-bindings: clk: hisilicon: Document stub clock driver
+Date: Thu, 26 Mar 2015 19:13:37 +0800
+Message-ID: <1427368419-22222-3-git-send-email-leo.yan@linaro.org>
+References: <1427368419-22222-1-git-send-email-leo.yan@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427368419-22222-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2015 at 03:23:27PM +0200, Peter Ujfalusi wrote:
-> Instead of magic numbers in the code, use define for number of logical DMA
-> channels and DMA requests.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/omap-dma.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
-> index 7dd6dd121681..56c33e93dd24 100644
-> --- a/drivers/dma/omap-dma.c
-> +++ b/drivers/dma/omap-dma.c
-> @@ -22,6 +22,9 @@
->  
->  #include "virt-dma.h"
->  
-> +#define OMAP_SDMA_REQUESTS	127
-> +#define OMAP_SDMA_CHANNELS	32
-Again why dont we put these things in DT ?
+Document the new compatible for stub clock driver which is used for CPU
+and DDR's dynamic frequency scaling.
 
--- 
-~Vinod
-> +
->  struct omap_dmadev {
->  	struct dma_device ddev;
->  	spinlock_t lock;
-> @@ -33,7 +36,7 @@ struct omap_dmadev {
->  	bool legacy;
->  	spinlock_t irq_lock;
->  	uint32_t irq_enable_mask;
-> -	struct omap_chan *lch_map[32];
-> +	struct omap_chan *lch_map[OMAP_SDMA_CHANNELS];
->  };
->  
->  struct omap_chan {
-> @@ -1115,7 +1118,7 @@ static int omap_dma_probe(struct platform_device *pdev)
->  
->  	tasklet_init(&od->task, omap_dma_sched, (unsigned long)od);
->  
-> -	for (i = 0; i < 127; i++) {
-> +	for (i = 0; i < OMAP_SDMA_REQUESTS; i++) {
->  		rc = omap_dma_chan_init(od, i);
->  		if (rc) {
->  			omap_dma_free(od);
-> -- 
-> 2.3.0
-> 
+Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/clock/hisi,stub-clock.txt  | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/hisi,stub-clock.txt
 
+diff --git a/Documentation/devicetree/bindings/clock/hisi,stub-clock.txt b/Documentation/devicetree/bindings/clock/hisi,stub-clock.txt
+new file mode 100644
+index 0000000..07ef5a11
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/hisi,stub-clock.txt
+@@ -0,0 +1,38 @@
++* Clock bindings for Hisilicon Stub Clock Driver
++
++The Hisilicon stub clock will directly send dynamic frequency scaling request
++to power controller, then the power controller will handle the request for
++cpu and ddr's frequency change.
++
++Required properties:
++- compatible: must be "hisilicon,hisi-clock-stub"
++- hisilicon,clk-stub-sram: phandle to the syscon managing the SoC internal sram;
++  the driver need use the sram to pass parameters for frequency change.
++- hisilicon,clk-stub-mc: phandle to the syscon managing the multi-cores'
++  communication; need set related register to trigger the dynamic frequency
++  scaling.
++- #clock-cells: should be <1>
++
++Each clock is assigned an identifier and client nodes use this identifier
++to specify the clock which they consume.
++
++All these identifier could be found in <dt-bindings/clock/hisi,stub-clock.h>.
++
++Example:
++
++	sram: sram {
++		compatible = "hisilicon,sram", "syscon";
++		reg = <0x0 0xFFF80000 0x0 0x12000>;
++	};
++
++	ipc_s: ipc_s {
++		compatible = "hisilicon,ipc-s", "syscon";
++		reg = <0x0 0xF7510000 0x0 0x1000>;
++	};
++
++	clock_stub: clock_stub {
++		compatible = "hisilicon,hisi-clock-stub";
++		hisilicon,clk-stub-sram = <&sram>;
++		hisilicon,clk-stub-mc = <&ipc_s>;
++		#clock-cells = <1>;
++	};
 -- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
