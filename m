@@ -1,94 +1,46 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 5/5] net: allwinner: emac: Claim our SRAM
-Date: Thu, 26 Mar 2015 15:53:45 +0100
-Message-ID: <1427381625-6942-6-git-send-email-hdegoede@redhat.com>
-References: <1427381625-6942-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] dmaengine: Add driver for TI DMA crossbar on DRA7x
+Date: Thu, 26 Mar 2015 08:22:04 -0700
+Message-ID: <20150326152204.GF31346@atomide.com>
+References: <1426080210-841-1-git-send-email-peter.ujfalusi@ti.com>
+ <1426080210-841-4-git-send-email-peter.ujfalusi@ti.com>
+ <20150326105603.GK32683@intel.com>
+ <5513FC22.2030304@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEV32CUAKGQEPSPIZ5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1427381625-6942-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5513FC22.2030304-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150326 05:32]:
+> On 03/26/2015 12:56 PM, Vinod Koul wrote:
+> >> +
+> >> +static void ti_dma_xbar_free(struct device *dev, void *route_data)
+> >> +{
+> >> +	struct ti_dma_xbar_data *xbar = dev_get_drvdata(dev);
+> >> +	struct ti_dma_xbar_map *map = route_data;
+> >> +
+> >> +	dev_dbg(dev, "Unmapping XBAR%d (was routed to %d)\n",
+> >> +		map->xbar_in, map->xbar_out);
+> >> +
+> >> +	regmap_write(xbar->regmap, map->xbar_out * 2, 0);
+> > just out of curiosity how much do you save using regmap :)
+> 
+> good point, not much I guess. I had it implemented w/o regmap as well, but
+> thought why not use regmap if it is available.
 
-The SRAM the EMAC is using might not have been mapped accordingly by the
-bootloader, preventing the EMAC to work properly.
+Regmap is nice for slow devices and devices in a shared register
+range like the omap syscon general area. For normal use, there's
+quite a bit of overhead with regmap compared to just read/write :)
 
-Ask for that SRAM to be mapped at probe time to make sure that this never
-happens.
+Regards,
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Make sure SUNXI_SRAM gets enabled in Kconfig]
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/net/ethernet/allwinner/sun4i-emac.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index f3470d9..9d0136b 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -29,6 +29,8 @@
- #include <linux/platform_device.h>
- #include <linux/phy.h>
- 
-+#include <linux/soc/sunxi/sunxi_sram.h>
-+
- #include "sun4i-emac.h"
- 
- #define DRV_NAME		"sun4i-emac"
-@@ -857,11 +859,15 @@ static int emac_probe(struct platform_device *pdev)
- 
- 	clk_prepare_enable(db->clk);
- 
-+	ret = sunxi_sram_claim(SUNXI_SRAM_EMAC, "emac");
-+	if (ret)
-+		dev_warn(&pdev->dev, "Couldn't map SRAM to device\n");
-+
- 	db->phy_node = of_parse_phandle(np, "phy", 0);
- 	if (!db->phy_node) {
- 		dev_err(&pdev->dev, "no associated PHY\n");
- 		ret = -ENODEV;
--		goto out;
-+		goto out_release_sram;
- 	}
- 
- 	/* Read MAC-address from DT */
-@@ -893,7 +899,7 @@ static int emac_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(&pdev->dev, "Registering netdev failed!\n");
- 		ret = -ENODEV;
--		goto out;
-+		goto out_release_sram;
- 	}
- 
- 	dev_info(&pdev->dev, "%s: at %p, IRQ %d MAC: %pM\n",
-@@ -901,6 +907,8 @@ static int emac_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+out_release_sram:
-+	sunxi_sram_release(SUNXI_SRAM_EMAC);
- out:
- 	dev_err(db->dev, "not found (%d).\n", ret);
- 
-@@ -914,6 +922,7 @@ static int emac_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 
- 	unregister_netdev(ndev);
-+	sunxi_sram_release(SUNXI_SRAM_EMAC);
- 	free_netdev(ndev);
- 
- 	dev_dbg(&pdev->dev, "released and freed device\n");
--- 
-2.3.3
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
