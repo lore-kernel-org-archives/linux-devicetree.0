@@ -1,169 +1,363 @@
-From: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 4/4] powerpc/85xx: support sleep feature on QorIQ SoCs with RCPM
-Date: Thu, 26 Mar 2015 18:18:15 +0800
-Message-ID: <1427365095-26396-4-git-send-email-chenhui.zhao@freescale.com>
-References: <1427365095-26396-1-git-send-email-chenhui.zhao@freescale.com>
+From: Chenhui Zhao <chenhui.zhao@freescale.com>
+Subject: [PATCH 1/4] powerpc/cache: add cache flush operation for various e500
+Date: Thu, 26 Mar 2015 18:18:12 +0800
+Message-ID: <1427365095-26396-1-git-send-email-chenhui.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427365095-26396-1-git-send-email-chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, scottwood@freescale.com, leoli@freescale.com, Jason.Jin@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-In sleep mode, the clocks of e500 cores and unused IP blocks is
-turned off. The IP blocks which are allowed to wake up the processor
-are still running.
+Various e500 core have different cache architecture, so they
+need different cache flush operations. Therefore, add a callback
+function cpu_flush_caches to the struct cpu_spec. The cache flush
+operation for the specific kind of e500 is selected at init time.
+The callback function will flush all caches inside the current cpu.
 
-The sleep mode is equal to the Standby state in Linux. Use the
-command to enter sleep mode:
-  echo standby > /sys/power/state
-
-Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Chenhui Zhao <chenhui.zhao@freescale.com>
 ---
- arch/powerpc/Kconfig                   |  3 +-
- arch/powerpc/platforms/85xx/Kconfig    |  5 +++
- arch/powerpc/platforms/85xx/Makefile   |  1 +
- arch/powerpc/platforms/85xx/qoriq_pm.c | 59 ++++++++++++++++++++++++++++++++++
- arch/powerpc/platforms/86xx/Kconfig    |  1 +
- 5 files changed, 67 insertions(+), 2 deletions(-)
- create mode 100644 arch/powerpc/platforms/85xx/qoriq_pm.c
+ arch/powerpc/include/asm/cacheflush.h     |   2 -
+ arch/powerpc/include/asm/cputable.h       |  11 +++
+ arch/powerpc/kernel/asm-offsets.c         |   3 +
+ arch/powerpc/kernel/cpu_setup_fsl_booke.S | 114 +++++++++++++++++++++++++++++-
+ arch/powerpc/kernel/cputable.c            |   4 ++
+ arch/powerpc/kernel/head_fsl_booke.S      |  74 -------------------
+ arch/powerpc/platforms/85xx/smp.c         |   3 +-
+ 7 files changed, 133 insertions(+), 78 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9846c83..162eb53 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -233,7 +233,7 @@ config ARCH_HIBERNATION_POSSIBLE
- config ARCH_SUSPEND_POSSIBLE
- 	def_bool y
- 	depends on ADB_PMU || PPC_EFIKA || PPC_LITE5200 || PPC_83xx || \
--		   (PPC_85xx && !PPC_E500MC) || PPC_86xx || PPC_PSERIES \
-+		   FSL_SOC_BOOKE || PPC_86xx || PPC_PSERIES \
- 		   || 44x || 40x
+diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+index 30b35ff..729fde4 100644
+--- a/arch/powerpc/include/asm/cacheflush.h
++++ b/arch/powerpc/include/asm/cacheflush.h
+@@ -30,8 +30,6 @@ extern void flush_dcache_page(struct page *page);
+ #define flush_dcache_mmap_lock(mapping)		do { } while (0)
+ #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
  
- config PPC_DCR_NATIVE
-@@ -747,7 +747,6 @@ config FSL_PCI
+-extern void __flush_disable_L1(void);
+-
+ extern void flush_icache_range(unsigned long, unsigned long);
+ extern void flush_icache_user_range(struct vm_area_struct *vma,
+ 				    struct page *page, unsigned long addr,
+diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+index 5cf5a6d..c776efe4 100644
+--- a/arch/powerpc/include/asm/cputable.h
++++ b/arch/powerpc/include/asm/cputable.h
+@@ -43,6 +43,13 @@ extern int machine_check_e500(struct pt_regs *regs);
+ extern int machine_check_e200(struct pt_regs *regs);
+ extern int machine_check_47x(struct pt_regs *regs);
  
- config FSL_PMC
- 	bool
--	default y
- 	depends on SUSPEND && (PPC_85xx || PPC_86xx)
- 	help
- 	  Freescale MPC85xx/MPC86xx power management controller support
-diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platforms/85xx/Kconfig
-index ae1b8a2..b7c762e 100644
---- a/arch/powerpc/platforms/85xx/Kconfig
-+++ b/arch/powerpc/platforms/85xx/Kconfig
-@@ -9,6 +9,8 @@ menuconfig FSL_SOC_BOOKE
- 	select SERIAL_8250_EXTENDED if SERIAL_8250
- 	select SERIAL_8250_SHARE_IRQ if SERIAL_8250
- 	select FSL_CORENET_RCPM if PPC_E500MC
-+	select FSL_QORIQ_PM if SUSPEND && PPC_E500MC
-+	select FSL_PMC if SUSPEND && !PPC_E500MC
- 	default y
++#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
++extern void __flush_caches_e500v2(void);
++extern void __flush_caches_e500mc(void);
++extern void __flush_caches_e5500(void);
++extern void __flush_caches_e6500(void);
++#endif
++
+ /* NOTE WELL: Update identify_cpu() if fields are added or removed! */
+ struct cpu_spec {
+ 	/* CPU is matched via (PVR & pvr_mask) == pvr_value */
+@@ -59,6 +66,10 @@ struct cpu_spec {
+ 	unsigned int	icache_bsize;
+ 	unsigned int	dcache_bsize;
  
- if FSL_SOC_BOOKE
-@@ -289,3 +291,6 @@ endif # FSL_SOC_BOOKE
++#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
++	/* flush caches inside the current cpu */
++	void (*cpu_flush_caches)(void);
++#endif
+ 	/* number of performance monitor counters */
+ 	unsigned int	num_pmcs;
+ 	enum powerpc_pmc_type pmc_type;
+diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+index 4717859..9567930 100644
+--- a/arch/powerpc/kernel/asm-offsets.c
++++ b/arch/powerpc/kernel/asm-offsets.c
+@@ -372,6 +372,9 @@ int main(void)
+ 	DEFINE(CPU_SPEC_FEATURES, offsetof(struct cpu_spec, cpu_features));
+ 	DEFINE(CPU_SPEC_SETUP, offsetof(struct cpu_spec, cpu_setup));
+ 	DEFINE(CPU_SPEC_RESTORE, offsetof(struct cpu_spec, cpu_restore));
++#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
++	DEFINE(CPU_FLUSH_CACHES, offsetof(struct cpu_spec, cpu_flush_caches));
++#endif
  
- config TQM85xx
- 	bool
-+
-+config FSL_QORIQ_PM
-+	bool
-diff --git a/arch/powerpc/platforms/85xx/Makefile b/arch/powerpc/platforms/85xx/Makefile
-index 1fe7fb9..65dfb60 100644
---- a/arch/powerpc/platforms/85xx/Makefile
-+++ b/arch/powerpc/platforms/85xx/Makefile
-@@ -2,6 +2,7 @@
- # Makefile for the PowerPC 85xx linux kernel.
- #
- obj-$(CONFIG_SMP) += smp.o
-+obj-$(CONFIG_FSL_QORIQ_PM)	  += qoriq_pm.o
+ 	DEFINE(pbe_address, offsetof(struct pbe, address));
+ 	DEFINE(pbe_orig_address, offsetof(struct pbe, orig_address));
+diff --git a/arch/powerpc/kernel/cpu_setup_fsl_booke.S b/arch/powerpc/kernel/cpu_setup_fsl_booke.S
+index dddba3e..c8c251f 100644
+--- a/arch/powerpc/kernel/cpu_setup_fsl_booke.S
++++ b/arch/powerpc/kernel/cpu_setup_fsl_booke.S
+@@ -1,7 +1,7 @@
+ /*
+  * This file contains low level CPU setup functions.
+  * Kumar Gala <galak@kernel.crashing.org>
+- * Copyright 2009 Freescale Semiconductor, Inc.
++ * Copyright 2009, 2015 Freescale Semiconductor, Inc.
+  *
+  * Based on cpu_setup_6xx code by
+  * Benjamin Herrenschmidt <benh@kernel.crashing.org>
+@@ -13,11 +13,13 @@
+  *
+  */
  
- obj-y += common.o
++#include <asm/page.h>
+ #include <asm/processor.h>
+ #include <asm/cputable.h>
+ #include <asm/ppc_asm.h>
+ #include <asm/mmu-book3e.h>
+ #include <asm/asm-offsets.h>
++#include <asm/mpc85xx.h>
  
-diff --git a/arch/powerpc/platforms/85xx/qoriq_pm.c b/arch/powerpc/platforms/85xx/qoriq_pm.c
-new file mode 100644
-index 0000000..7594f08
---- /dev/null
-+++ b/arch/powerpc/platforms/85xx/qoriq_pm.c
-@@ -0,0 +1,59 @@
-+/*
-+ * Support Power Management feature
-+ *
-+ * Copyright 2014-2015 Freescale Semiconductor Inc.
-+ *
-+ * Author: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute	it and/or modify it
-+ * under  the terms of	the GNU General	 Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
+ _GLOBAL(__e500_icache_setup)
+ 	mfspr	r0, SPRN_L1CSR1
+@@ -233,3 +235,113 @@ _GLOBAL(__setup_cpu_e5500)
+ 	mtlr	r5
+ 	blr
+ #endif
 +
-+#include <linux/kernel.h>
-+#include <linux/suspend.h>
-+#include <linux/of_platform.h>
++/* flush L1 date cache, it can apply to e500v2, e500mc and e5500 */
++_GLOBAL(flush_dcache_L1)
++	mfmsr	r10
++	wrteei	0
 +
-+#include <asm/fsl_pm.h>
++	mfspr	r3,SPRN_L1CFG0
++	rlwinm	r5,r3,9,3	/* Extract cache block size */
++	twlgti	r5,1		/* Only 32 and 64 byte cache blocks
++				 * are currently defined.
++				 */
++	li	r4,32
++	subfic	r6,r5,2		/* r6 = log2(1KiB / cache block size) -
++				 *      log2(number of ways)
++				 */
++	slw	r5,r4,r5	/* r5 = cache block size */
 +
-+static int qoriq_suspend_enter(suspend_state_t state)
-+{
-+	int ret = 0;
++	rlwinm	r7,r3,0,0xff	/* Extract number of KiB in the cache */
++	mulli	r7,r7,13	/* An 8-way cache will require 13
++				 * loads per set.
++				 */
++	slw	r7,r7,r6
 +
-+	switch (state) {
-+	case PM_SUSPEND_STANDBY:
-+		cur_cpu_spec->cpu_flush_caches();
-+		ret = qoriq_pm_ops->plat_enter_sleep();
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
++	/* save off HID0 and set DCFA */
++	mfspr	r8,SPRN_HID0
++	ori	r9,r8,HID0_DCFA@l
++	mtspr	SPRN_HID0,r9
++	isync
 +
-+	return ret;
-+}
++	LOAD_REG_IMMEDIATE(r6, KERNELBASE)
++	mr	r4, r6
++	mtctr	r7
 +
-+static int qoriq_suspend_valid(suspend_state_t state)
-+{
-+	unsigned int pm_modes;
++1:	lwz	r3,0(r4)	/* Load... */
++	add	r4,r4,r5
++	bdnz	1b
 +
-+	pm_modes = qoriq_pm_ops->get_pm_modes();
++	msync
++	mr	r4, r6
++	mtctr	r7
 +
-+	if ((state == PM_SUSPEND_STANDBY) && (pm_modes & FSL_PM_SLEEP))
-+		return 1;
++1:	dcbf	0,r4		/* ...and flush. */
++	add	r4,r4,r5
++	bdnz	1b
 +
-+	return 0;
-+}
++	/* restore HID0 */
++	mtspr	SPRN_HID0,r8
++	isync
 +
-+static const struct platform_suspend_ops qoriq_suspend_ops = {
-+	.valid = qoriq_suspend_valid,
-+	.enter = qoriq_suspend_enter,
-+};
++	wrtee r10
 +
-+static int __init qoriq_suspend_init(void)
-+{
-+	suspend_set_ops(&qoriq_suspend_ops);
++	blr
 +
-+	return 0;
-+}
-+arch_initcall(qoriq_suspend_init);
-diff --git a/arch/powerpc/platforms/86xx/Kconfig b/arch/powerpc/platforms/86xx/Kconfig
-index 1afd1e4..09638e0 100644
---- a/arch/powerpc/platforms/86xx/Kconfig
-+++ b/arch/powerpc/platforms/86xx/Kconfig
-@@ -5,6 +5,7 @@ menuconfig PPC_86xx
- 	select FSL_SOC
- 	select ALTIVEC
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
-+	select FSL_PMC if SUSPEND
- 	help
- 	  The Freescale E600 SoCs have 74xx cores.
++has_L2_cache:
++	/* skip L2 cache on P2040/P2040E as they have no L2 cache */
++	mfspr	r3, SPRN_SVR
++	/* shift right by 8 bits and clear E bit of SVR */
++	rlwinm	r4, r3, 24, ~0x800
++
++	lis	r3, SVR_P2040@h
++	ori	r3, r3, SVR_P2040@l
++	cmpw	r4, r3
++	beq	1f
++
++	li	r3, 1
++	blr
++1:
++	li	r3, 0
++	blr
++
++/* flush backside L2 cache */
++flush_backside_L2_cache:
++	mflr	r10
++	bl	has_L2_cache
++	mtlr	r10
++	cmpwi	r3, 0
++	beq	2f
++
++	/* Flush the L2 cache */
++	mfspr	r3, SPRN_L2CSR0
++	ori	r3, r3, L2CSR0_L2FL@l
++	msync
++	isync
++	mtspr	SPRN_L2CSR0,r3
++	isync
++
++	/* check if it is complete */
++1:	mfspr	r3,SPRN_L2CSR0
++	andi.	r3, r3, L2CSR0_L2FL@l
++	bne	1b
++2:
++	blr
++
++_GLOBAL(__flush_caches_e500v2)
++	mflr r0
++	bl	flush_dcache_L1
++	mtlr r0
++	blr
++
++_GLOBAL(__flush_caches_e500mc)
++_GLOBAL(__flush_caches_e5500)
++	mflr r0
++	bl	flush_dcache_L1
++	bl	flush_backside_L2_cache
++	mtlr r0
++	blr
++
++/* L1 Data Cache of e6500 contains no modified data, no flush is required */
++_GLOBAL(__flush_caches_e6500)
++	blr
+diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
+index f830468..10e48a7 100644
+--- a/arch/powerpc/kernel/cputable.c
++++ b/arch/powerpc/kernel/cputable.c
+@@ -2021,6 +2021,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.cpu_setup		= __setup_cpu_e500v2,
+ 		.machine_check		= machine_check_e500,
+ 		.platform		= "ppc8548",
++		.cpu_flush_caches	= __flush_caches_e500v2,
+ 	},
+ #else
+ 	{	/* e500mc */
+@@ -2040,6 +2041,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.cpu_setup		= __setup_cpu_e500mc,
+ 		.machine_check		= machine_check_e500mc,
+ 		.platform		= "ppce500mc",
++		.cpu_flush_caches	= __flush_caches_e500mc,
+ 	},
+ #endif /* CONFIG_PPC_E500MC */
+ #endif /* CONFIG_PPC32 */
+@@ -2064,6 +2066,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ #endif
+ 		.machine_check		= machine_check_e500mc,
+ 		.platform		= "ppce5500",
++		.cpu_flush_caches	= __flush_caches_e5500,
+ 	},
+ 	{	/* e6500 */
+ 		.pvr_mask		= 0xffff0000,
+@@ -2086,6 +2089,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ #endif
+ 		.machine_check		= machine_check_e500mc,
+ 		.platform		= "ppce6500",
++		.cpu_flush_caches	= __flush_caches_e6500,
+ 	},
+ #endif /* CONFIG_PPC_E500MC */
+ #ifdef CONFIG_PPC32
+diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+index fffd1f9..709bc50 100644
+--- a/arch/powerpc/kernel/head_fsl_booke.S
++++ b/arch/powerpc/kernel/head_fsl_booke.S
+@@ -1075,80 +1075,6 @@ _GLOBAL(set_context)
+ 	isync			/* Force context change */
+ 	blr
  
+-_GLOBAL(flush_dcache_L1)
+-	mfspr	r3,SPRN_L1CFG0
+-
+-	rlwinm	r5,r3,9,3	/* Extract cache block size */
+-	twlgti	r5,1		/* Only 32 and 64 byte cache blocks
+-				 * are currently defined.
+-				 */
+-	li	r4,32
+-	subfic	r6,r5,2		/* r6 = log2(1KiB / cache block size) -
+-				 *      log2(number of ways)
+-				 */
+-	slw	r5,r4,r5	/* r5 = cache block size */
+-
+-	rlwinm	r7,r3,0,0xff	/* Extract number of KiB in the cache */
+-	mulli	r7,r7,13	/* An 8-way cache will require 13
+-				 * loads per set.
+-				 */
+-	slw	r7,r7,r6
+-
+-	/* save off HID0 and set DCFA */
+-	mfspr	r8,SPRN_HID0
+-	ori	r9,r8,HID0_DCFA@l
+-	mtspr	SPRN_HID0,r9
+-	isync
+-
+-	lis	r4,KERNELBASE@h
+-	mtctr	r7
+-
+-1:	lwz	r3,0(r4)	/* Load... */
+-	add	r4,r4,r5
+-	bdnz	1b
+-
+-	msync
+-	lis	r4,KERNELBASE@h
+-	mtctr	r7
+-
+-1:	dcbf	0,r4		/* ...and flush. */
+-	add	r4,r4,r5
+-	bdnz	1b
+-	
+-	/* restore HID0 */
+-	mtspr	SPRN_HID0,r8
+-	isync
+-
+-	blr
+-
+-/* Flush L1 d-cache, invalidate and disable d-cache and i-cache */
+-_GLOBAL(__flush_disable_L1)
+-	mflr	r10
+-	bl	flush_dcache_L1	/* Flush L1 d-cache */
+-	mtlr	r10
+-
+-	mfspr	r4, SPRN_L1CSR0	/* Invalidate and disable d-cache */
+-	li	r5, 2
+-	rlwimi	r4, r5, 0, 3
+-
+-	msync
+-	isync
+-	mtspr	SPRN_L1CSR0, r4
+-	isync
+-
+-1:	mfspr	r4, SPRN_L1CSR0	/* Wait for the invalidate to finish */
+-	andi.	r4, r4, 2
+-	bne	1b
+-
+-	mfspr	r4, SPRN_L1CSR1	/* Invalidate and disable i-cache */
+-	li	r5, 2
+-	rlwimi	r4, r5, 0, 3
+-
+-	mtspr	SPRN_L1CSR1, r4
+-	isync
+-
+-	blr
+-
+ #ifdef CONFIG_SMP
+ /* When we get here, r24 needs to hold the CPU # */
+ 	.globl __secondary_start
+diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+index d7c1e69..fba474f 100644
+--- a/arch/powerpc/platforms/85xx/smp.c
++++ b/arch/powerpc/platforms/85xx/smp.c
+@@ -139,7 +139,8 @@ static void smp_85xx_mach_cpu_die(void)
+ 
+ 	mtspr(SPRN_TCR, 0);
+ 
+-	__flush_disable_L1();
++	cur_cpu_spec->cpu_flush_caches();
++
+ 	tmp = (mfspr(SPRN_HID0) & ~(HID0_DOZE|HID0_SLEEP)) | HID0_NAP;
+ 	mtspr(SPRN_HID0, tmp);
+ 	isync();
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
