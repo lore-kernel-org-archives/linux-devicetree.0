@@ -1,54 +1,61 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 2/2] dt-bindings: add vendor-prefix for X-Powers
-Date: Thu, 26 Mar 2015 08:26:32 +0000
-Message-ID: <20150326082632.GC5951@x1>
-References: <1424431168-25157-1-git-send-email-wens@csie.org>
- <1424431168-25157-3-git-send-email-wens@csie.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 2/6] i2c: qup: Add V2 tags support
+Date: Thu, 26 Mar 2015 14:06:01 +0530
+Message-ID: <5513C4F1.4080602@codeaurora.org>
+References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org>	 <1426268992-19298-3-git-send-email-sricharan@codeaurora.org>	 <1427286263.25053.18.camel@mm-sol.com> <55139CD4.5040100@codeaurora.org> <1427355110.7093.1.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424431168-25157-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1427355110.7093.1.camel@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Feb 2015, Chen-Yu Tsai wrote:
 
-> From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
->=20
-> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+Hi Ivan,
 
-Applied, thanks.
+On 03/26/2015 01:01 PM, Ivan T. Ivanov wrote:
+> Hi Sricharan,
+>
+> On Thu, 2015-03-26 at 11:14 +0530, Sricharan R wrote:
+>>
+>>>> +       if (msg->flags & I2C_M_RD)
+>>>> +               qup->rx_tag_len = (qup->blocks << 1);
+>>>
+>>> here again.
+>>>
+>> hmm, why not shift ?
+>
+> Because it makes reading code harder and because compiler
+>   is smart enough to choose appropriate instruction for
+> underling CPU architecture.
+>
+ok.
+>>>> +       else
+>>>> +               qup->rx_tag_len = 0;
+>>>> +}
+>>>> +
+>>>> +static u32 qup_i2c_xfer_data(struct qup_i2c_dev *qup, int len,
+>>>> +                                                               u8 *buf, int last)
+>>>> +{
+>>>
+>>> I think that xfer is too vague in this case, prefer write or send.
+>>>
+>> ok. Will change it to send.
+>>>> +       static u32 val, idx;
+>>>
+>>> static? please fix.
+>>    That was intentional. Using to pack tag and data in to one word across
+>>    two calls. So preserving val, idx across calls.
+>
+> Sorry this is no go! Reorganize the code, please.
+>
+Ok, will change this function.
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 96a17541391e..04d63ce07364 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -175,6 +175,7 @@ voipac	Voipac Technologies s.r.o.
->  winbond Winbond Electronics corp.
->  wlf	Wolfson Microelectronics
->  wm	Wondermedia Technologies, Inc.
-> +x-powers	X-Powers
->  xes	Extreme Engineering Solutions (X-ES)
->  xillybus	Xillybus Ltd.
->  xlnx	Xilinx
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+  Sricharan
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member of Code Aurora Forum, hosted by The Linux Foundation
