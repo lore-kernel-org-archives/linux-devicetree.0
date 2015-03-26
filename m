@@ -1,239 +1,125 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RESEND PATCH v5] clk: Add PWM clock driver
-Date: Thu, 26 Mar 2015 09:41:51 +0100
-Message-ID: <1427359311-10183-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RFC][PATCH 2/2] phy: miphy365x: Convert to use phy.h instead
+ of phy-miphy365x.h
+Date: Thu, 26 Mar 2015 09:48:31 +0100
+Message-ID: <5513C7DF.90200@st.com>
+References: <1425520379.1637.7.camel@phoenix>	<1425520665.1637.10.camel@phoenix>	<54FD8795.6020409@ti.com> <CAFRkauBNEgMiQtHxVuz_rif7+AWBjXoLVydidzjxK-oMWYxCrA@mail.gmail.com> <551340B4.2010001@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <551340B4.2010001-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some board designers, when running out of clock output pads, decide to
-(mis)use PWM output pads to provide a clock to external components.
-This driver supports this practice by providing an adapter between the
-PWM and clock bindings in the device tree. As the PWM bindings specify
-the period in the device tree, this is a fixed clock.
+Hi Kishon
 
-Tested-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-Changes since v4:
-- Added missing static keywords, as pointed out by Stephen Boyd
-- Turned to_clk_pwm into an inline function,
-- added MODULE_AUTHOR/DESCRIPTION/LICENSE,
-- and fixed PWM spelling issues, as pointed out by Thierry Reding
----
- .../devicetree/bindings/clock/pwm-clock.txt        |  26 ++++
- drivers/clk/Kconfig                                |   7 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-pwm.c                              | 136 +++++++++++++++++++++
- 4 files changed, 170 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
- create mode 100644 drivers/clk/clk-pwm.c
+On 03/26/2015 12:11 AM, Kishon Vijay Abraham I wrote:
+> +Maxime, Srinivas, patrice
+>
+> On Monday 09 March 2015 06:55 PM, Axel Lin wrote:
+>> 2015-03-09 19:44 GMT+08:00 Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>:
+>>> Hi,
+>>>
+>>>
+>>> On Thursday 05 March 2015 07:27 AM, Axel Lin wrote:
+>>>> The defines in phy-miphy365x.h are all covered in phy.h:
+>>>>
+>>>> MIPHY_TYPE_SATA == PHY_TYPE_STA
+>>>> MIPHY_TYPE_PCIE == PHY_TYPE_PCIE
+>>>> MIPPHY_TYPE_USB == PHY_TYPE_USB2
+>>>>
+>>>> So covert to use phy.h and then delete phy-miphy365x.h.
+>>>>
+>>>> Signed-off-by: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/ata/ahci-st.txt       |  2 +-
+>>>>    Documentation/devicetree/bindings/phy/phy-miphy365x.txt |  8 ++++----
+>>>>    arch/arm/boot/dts/stih416.dtsi                          |  4 ++--
+>>>>    drivers/phy/phy-miphy365x.c                             | 14
+>>>> +++++++-------
+>>>>    include/dt-bindings/phy/phy-miphy365x.h                 | 14
+>>>> --------------
+>>>>    5 files changed, 14 insertions(+), 28 deletions(-)
+>>>>    delete mode 100644 include/dt-bindings/phy/phy-miphy365x.h
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>>> b/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>>> index 0574a77..070748b 100644
+>>>> --- a/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>>> +++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
+>>>> @@ -21,7 +21,7 @@ Example:
+>>>>                  reg             = <0xfe380000 0x1000>;
+>>>>                  interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
+>>>>                  interrupt-names = "hostc";
+>>>> -               phys            = <&miphy365x_phy MIPHY_PORT_0
+>>>> MIPHY_TYPE_SATA>;
+>>>> +               phys            = <&miphy365x_phy MIPHY_PORT_0
+>>>> PHY_TYPE_SATA>;
+>>>>                  phy-names       = "ahci_phy";
+>>>>                  resets          = <&powerdown STIH416_SATA0_POWERDOWN>,
+>>>>                                    <&softreset STIH416_SATA0_SOFTRESET>;
+>>>> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>>> b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>>> index 9802d5d..087294d 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>>> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>>>> @@ -20,8 +20,8 @@ Required nodes        :  A sub-node is required for each
+>>>> channel the controller
+>>>>    Required properties (port (child) node):
+>>>>    - #phy-cells  : Should be 1 (See second example)
+>>>>                    Cell after port phandle is device type from:
+>>>> -                       - MIPHY_TYPE_SATA
+>>>> -                       - MIPHY_TYPE_PCI
+>>>> +                       - PHY_TYPE_SATA
+>>>> +                       - PHY_TYPE_PCIE
+>>>>    - reg         : Address and length of register sets for each device in
+>>>>                    "reg-names"
+>>>>    - reg-names     : The names of the register addresses corresponding to
+>>>> the
+>>>> @@ -68,10 +68,10 @@ property, containing a phandle to the phy port node
+>>>> and a device type.
+>>>>
+>>>>    Example:
+>>>>
+>>>> -#include <dt-bindings/phy/phy-miphy365x.h>
+>>>> +#include <dt-bindings/phy/phy.h>
+>>>>
+>>>>          sata0: sata@fe380000 {
+>>>>                  ...
+>>>> -               phys      = <&phy_port0 MIPHY_TYPE_SATA>;
+>>>> +               phys      = <&phy_port0 PHY_TYPE_SATA>;
+>>>>                  ...
+>>>>          };
+>>>> diff --git a/arch/arm/boot/dts/stih416.dtsi
+>>>> b/arch/arm/boot/dts/stih416.dtsi
+>>>> index ea28eba..eeb7afe 100644
+>>>> --- a/arch/arm/boot/dts/stih416.dtsi
+>>>> +++ b/arch/arm/boot/dts/stih416.dtsi
+>>>
+>>> Can you split the patch so that I can queue the PHY part?
+>> In my opinion, apply the patch as is should be fine and we don't have any
+>> build breakage. I think the change in each file is pretty trivial and won't
+>> cause problem. otherwise, I will have to send patches for the conversion
+>> in each file and then wait until all patches are merged. Then send another
+>> patch to delete include/dt-bindings/phy/phy-miphy365x.h.
+> Okay. I can queue after getting Ack from arch/arm/boot/dts/sti* maintainers.
 
-diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-new file mode 100644
-index 0000000..83db876
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-@@ -0,0 +1,26 @@
-+Binding for an external clock signal driven by a PWM pin.
-+
-+This binding uses the common clock binding[1] and the common PWM binding[2].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/pwm/pwm.txt
-+
-+Required properties:
-+- compatible : shall be "pwm-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- pwms : from common PWM binding; this determines the clock frequency
-+  via the period given in the PWM specifier.
-+
-+Optional properties:
-+- clock-output-names : From common clock binding.
-+- clock-frequency : Exact output frequency, in case the PWM period
-+  is not exact but was rounded to nanoseconds.
-+
-+Example:
-+	clock {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+		clock-output-names = "mipi_mclk";
-+		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 3f44f292..772d45e 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
- 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
- 	  using common clock framework.
- 
-+config COMMON_CLK_PWM
-+	tristate "Clock driver for PWMs used as clock outputs"
-+	depends on PWM
-+	---help---
-+	  Adapter driver so that any PWM output can be (mis)used as clock signal
-+	  at 50% duty cycle.
-+
- config COMMON_CLK_PXA
- 	def_bool COMMON_CLK && ARCH_PXA
- 	---help---
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index d5fba5b..6a0c5cf 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
- obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
-+obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
- obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-new file mode 100644
-index 0000000..328fcfc
---- /dev/null
-+++ b/drivers/clk/clk-pwm.c
-@@ -0,0 +1,136 @@
-+/*
-+ * Copyright (C) 2014 Philipp Zabel, Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * PWM (mis)used as clock output
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+struct clk_pwm {
-+	struct clk_hw hw;
-+	struct pwm_device *pwm;
-+	u32 fixed_rate;
-+};
-+
-+static inline struct clk_pwm *to_clk_pwm(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct clk_pwm, hw);
-+}
-+
-+static int clk_pwm_prepare(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return pwm_enable(clk_pwm->pwm);
-+}
-+
-+static void clk_pwm_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	pwm_disable(clk_pwm->pwm);
-+}
-+
-+static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return clk_pwm->fixed_rate;
-+}
-+
-+static const struct clk_ops clk_pwm_ops = {
-+	.prepare = clk_pwm_prepare,
-+	.unprepare = clk_pwm_unprepare,
-+	.recalc_rate = clk_pwm_recalc_rate,
-+};
-+
-+static int clk_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct clk_init_data init;
-+	struct clk_pwm *clk_pwm;
-+	struct pwm_device *pwm;
-+	const char *clk_name;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-+	if (!clk_pwm)
-+		return -ENOMEM;
-+
-+	pwm = devm_pwm_get(&pdev->dev, NULL);
-+	if (IS_ERR(pwm))
-+		return PTR_ERR(pwm);
-+
-+	if (!pwm->period) {
-+		dev_err(&pdev->dev, "invalid PWM period\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-+		clk_pwm->fixed_rate = NSEC_PER_SEC / pwm->period;
-+
-+	if (pwm->period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
-+	    pwm->period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-+		dev_err(&pdev->dev,
-+			"clock-frequency does not match PWM period\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_name = node->name;
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = &clk_pwm_ops;
-+	init.flags = CLK_IS_BASIC | CLK_IS_ROOT;
-+	init.num_parents = 0;
-+
-+	clk_pwm->pwm = pwm;
-+	clk_pwm->hw.init = &init;
-+	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+
-+static int clk_pwm_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_pwm_dt_ids[] = {
-+	{ .compatible = "pwm-clock" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
-+
-+static struct platform_driver clk_pwm_driver = {
-+	.probe = clk_pwm_probe,
-+	.remove = clk_pwm_remove,
-+	.driver = {
-+		.name = "pwm-clock",
-+		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(clk_pwm_driver);
-+
-+MODULE_AUTHOR("Philipp Zabel <p.zabel@pengutronix.de>");
-+MODULE_DESCRIPTION("PWM clock driver");
-+MODULE_LICENSE("GPL");
--- 
-2.1.4
+
+Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+
+
+Thanks
+
+Patrice
+
+>
+> Cheers
+> Kishon
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
