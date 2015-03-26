@@ -1,54 +1,107 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: [PATCH 2/3] ARM: at91/dt: sama5d3 add mmc0 vmmcq entry
-Date: Thu, 26 Mar 2015 17:38:24 +0000
-Message-ID: <1427391505-29129-3-git-send-email-ben.dooks@codethink.co.uk>
-References: <1427391505-29129-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Thu, 26 Mar 2015 10:39:17 -0700
+Message-ID: <CAPw-ZTkOOh=1GgDBQ4a9KoWVA9B7GPXddwNx=VBjVTo44wYdug@mail.gmail.com>
+References: <1426573821-1937-1-git-send-email-lho@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427391505-29129-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+In-Reply-To: <1426573821-1937-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SAM5D3 Xplained device tree is missing hte vqmmc node which is
-tied to 3.3V on the board. Add this to avoid the kernel warning that
-there is no vqmmc node.
+Hi Doug,
 
-atmel_mci f0000000.mmc: No vqmmc regulator found
+Any comment with v6 of the APM EDAC driver?
 
-Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
---
-CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-CC: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-CC: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-CC: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-CC: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-CC: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-CC: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-CC: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/arm/boot/dts/at91-sama5d3_xplained.dts | 1 +
- 1 file changed, 1 insertion(+)
+-Loc
 
-diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-index 652c4dd..1eb150d 100644
---- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-@@ -36,6 +36,7 @@
- 			mmc0: mmc@f0000000 {
- 				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3 &pinctrl_mmc0_dat4_7 &pinctrl_mmc0_cd>;
- 				status = "okay";
-+				vqmmc-supply = <&vcc_3v3_reg>;
- 				slot@0 {
- 					reg = <0>;
- 					bus-width = <8>;
--- 
-2.1.4
-
+On Mon, Mar 16, 2015 at 11:30 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds support for the APM X-Gene SoC EDAC driver for DT.
+>
+> v6:
+> * Rebase to 4.0.0-rc3
+> * Add memory scrub stub function and enable ARM64 EDAC support patch
+> * Add bit definition defines for L2RTOS registers
+> * Remove un-necessary clearing of all L1/L2 software generated registers
+> * Remove wrong notification of LSU un-correctable error
+> * Change L2 reporting of un-correcable error to correctable error
+> * Change clearing of the L2C L2RTO registers
+> * Add support for L2 HW version 1 and version 2 or above
+> * Add support for L3 HW version 1 and version 2 or above
+>
+> v5:
+> * Rebase to 3.17.rc1 (next)
+> * Update binding documentation for additional SoC node binding resource
+> * Enable MCU correctable and uncorrectable interrupts if not enabled by
+>   firmware
+> * Enable top level interrupt only after all MCU registered. Otherwise,
+>   error interrupt will never get cleared by the corresponding MCU.
+> * Remove clearing of L1 and L2 errors during initialization time. Otherwise,
+>   they will not be captured between firmware booting and error configuration.
+> * Add capture and clearing SoC register bus errors
+> * Add register bus resource to SoC DT node
+>
+> v4:
+> * Fix PMD l1/l2 error reading address due to wrong variable type
+> * Fix clearing of software generated and HW errors for l1/l2
+>
+> v3:
+> * Update binding documentation for PMD DT node and exampples
+> * Add binding documentation for SoC DT node
+> * Change MC, PMD, and L3C driver error injection to use debugfs
+> * Add missing IRQ for MC correctable error (code and DT)
+> * Use true/false where appropriate instead 1/0
+> * Add bit definition for L1 MMUESR register and fully decode this error
+> * Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
+> * Add check for disabled PMD (code and DT)
+> * Switch to edac_printk instead pr_err
+> * Some minor comments update
+>
+> v2:
+> * Add EDAC entry in MAINTAINERS for APM EDAC driver
+> * Remove the MC scrub patch
+> * Remove the word 'Caches' from Kconfig
+> * Change all MASK defines to use BIT(x)
+> * Update comment or remove them
+> * Wrap error injection code around CONFIG_EDAC_DEBUG
+> * Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+> * Change all function XXX_hw_init to XXX_hw_ctl
+> * Fix typo 'activie'
+> * Move calling function edac_mc_alloc after resource retrieval
+> * Check for NULL on platform_get_resource return if reference directly
+> * Add documentation for struct xgene_edac_pmd_ctx
+> * Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+>   functions
+> * Use for loop for configure each CPU of an PMD
+> * Replace /2 by >> 1
+> * Remove unnecessary comment on edac_device_add_device failure
+> * Make mem_err_ip static const
+> * Unwind EDAC register correctly if failed
+> ---
+> Loc Ho (5):
+>   arm64: Enable EDAC on ARM64
+>   MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+>   Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+>     binding
+>   edac: Add APM X-Gene SoC EDAC driver
+>   arm64: Add APM X-Gene SoC EDAC DTS entries
+>
+>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   82 +
+>  MAINTAINERS                                        |    8 +
+>  arch/arm64/Kconfig                                 |    1 +
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   98 +
+>  arch/arm64/include/asm/edac.h                      |   31 +
+>  drivers/edac/Kconfig                               |    9 +-
+>  drivers/edac/Makefile                              |    1 +
+>  drivers/edac/xgene_edac.c                          | 2183 ++++++++++++++++++++
+>  8 files changed, 2412 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>  create mode 100644 arch/arm64/include/asm/edac.h
+>  create mode 100644 drivers/edac/xgene_edac.c
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
