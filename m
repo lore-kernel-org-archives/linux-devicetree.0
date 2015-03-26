@@ -1,52 +1,74 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3  10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Thu, 26 Mar 2015 15:46:18 +0000
-Message-ID: <20150326154618.GO8656@n2100.arm.linux.org.uk>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>
- <1426197361-19290-11-git-send-email-maxime.coquelin@st.com>
- <5511ABAA.2010303@hurleysoftware.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/9] eeprom: Add a simple EEPROM framework for eeprom
+ providers
+Date: Thu, 26 Mar 2015 16:23:36 +0000
+Message-ID: <55143288.4040604@linaro.org>
+References: <1427236116-18531-1-git-send-email-srinivas.kandagatla@linaro.org> <1427236208-18667-1-git-send-email-srinivas.kandagatla@linaro.org> <20150324225317.GD28997@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5511ABAA.2010303-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj@k>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150324225317.GD28997-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2015 at 02:23:38PM -0400, Peter Hurley wrote:
-> Hi Maxime,
-> 
-> On 03/12/2015 05:55 PM, Maxime Coquelin wrote:
-> > +static unsigned int stm32_get_mctrl(struct uart_port *port)
-> > +{
-> > +	/*
-> > +	 * This routine is used for geting signals of: DTR, DCD, DSR, RI,
-> > +	 * and CTS/RTS
 
-It's also worth noting that this comment is wrong.  This is used to get
-the state of DCD, DSR, RI and CTS.  DTR and RTS are *not* included
-because the core tracks their state.
 
-...
+On 24/03/15 22:53, Mark Brown wrote:
+> On Tue, Mar 24, 2015 at 10:30:08PM +0000, Srinivas Kandagatla wrote:
+>
+>> +static ssize_t bin_attr_eeprom_write(struct file *filp, struct kobject *kobj,
+>> +				     struct bin_attribute *attr,
+>> +				     char *buf, loff_t offset, size_t count)
+>> +{
+>> +	struct device *dev = container_of(kobj, struct device, kobj);
+>> +	struct eeprom_device *eeprom = to_eeprom(dev);
+>> +	int rc;
+>> +
+>> +	if (offset > eeprom->size)
+>> +		return -EINVAL;
+>> +
+>> +	if (offset + count > eeprom->size)
+>> +		count = eeprom->size - offset;
+>> +
+>> +	rc = regmap_bulk_write(eeprom->regmap, offset,
+>> +			       buf, count/eeprom->stride);
+>
+> Are you sure that this and the read interface should be using the bulk
+> interface and not the raw interface - do we want the byte swapping that
+> the bulk interface provides?
+>
+You are correct, byte swapping is not really needed in this cases.
+It should read/write data as it is.
 
-> > +	stm32port->clk = devm_clk_get(&pdev->dev, NULL);
-> > +
-> > +	if (WARN_ON(IS_ERR(stm32port->clk)))
-> 
-> Do you really need a stack trace here? Could this be dev_err() instead?
-> 
-> > +		return -EINVAL;
+I will fix it in next version.
 
-Also, propagate the error code.
+> I'm also not entirely able to convince myself that the above error
+> checks and code line up with what I'd expect the userspace ABI to be, we
+> seem to be treating offset as both a byte offset into the data (which is
+> what I'd expect the userspace ABI to do) and a word based index into the
+> data (which is what the regmap API is doing).  For example with 16 bit
+> words offset 2 will start at the 5th byte of data but if userspace seeks
+> to offset 5 it will get the 11th byte and onwards.
 
-> > +
-> > +	/* ensure that clk rate is correct by enabling the clk */
-> > +	clk_prepare_enable(stm32port->clk);
+Thanks for spotting this, Yes, the offset from userspace should be 
+treated as byte oriented and the offset to regmap as word based index 
+into the data.
+Yes, logic here needs a fix to handle data correctly.
 
-And remember to check the return value of clk_prepare_enable().
+>
+> The stride and the word size are separate, they will frequently line up
+> for memory mapped devices but typically won't for other devices.  I
+> think you need more data mangling to handle this robustly.
+Yes, I agree I will address this too in next version.
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+thanks,
+srini
+
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
