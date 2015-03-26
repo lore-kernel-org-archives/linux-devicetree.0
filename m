@@ -1,7 +1,7 @@
 From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 1/8] drm/exynos: add Exynos5433 decon driver
-Date: Thu, 26 Mar 2015 20:15:33 +0900
-Message-ID: <1427368540-28010-2-git-send-email-human.hwang@samsung.com>
+Subject: [PATCH v3 3/8] drm/exynos: mic: add MIC driver
+Date: Thu, 26 Mar 2015 20:15:35 +0900
+Message-ID: <1427368540-28010-4-git-send-email-human.hwang@samsung.com>
 References: <1427368540-28010-1-git-send-email-human.hwang@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1427368540-28010-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -10,86 +10,72 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79u
 Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+MIC(Mobile image compressor) is newly added IP in Exynos5433. MIC
+resides between decon and mipi dsim, and compresses frame data by 50%.
+With dsi, not display port, to send frame data to the panel, the
+bandwidth is not enough. That is why this compressor is introduced.
 
-DECON(Display and Enhancement Controller) is new IP replacing FIMD in
-Exynos5433. This patch adds Exynos5433 decon driver.
-
-Signed-off-by: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
 Changes for v2:
- - change file names and variable names of decon to represnt exynos5433 instead
- of exynos to distinguish them from exynos7 decon
+ - make mic driver to be registered by exynos drm driver instead as a module
+ driver
+ - change the description of mic driver in documentation
+ - add module author at the top of the source file removing MODULE_OWNER,
+ MODULE_DESCRIPTION, MODULE_LICENSE
 
 Changes for v3:
- - fail fast when the proper image format is not set
- - remove unnecessary checking code
- - add and modify the function to make DPMS work well
- .../devicetree/bindings/video/exynos5433-decon.txt |  65 ++
+ - move if statement out of function, so that the function is not called
+ unnecessarily
+ - Make it use syscon framework for controlling system register
+
+ .../devicetree/bindings/video/exynos-mic.txt       |  51 +++
  drivers/gpu/drm/exynos/Kconfig                     |   6 +
  drivers/gpu/drm/exynos/Makefile                    |   1 +
- drivers/gpu/drm/exynos/exynos5433_drm_decon.c      | 665 +++++++++++++++++++++
  drivers/gpu/drm/exynos/exynos_drm_drv.c            |   3 +
  drivers/gpu/drm/exynos/exynos_drm_drv.h            |   1 +
- include/video/exynos5433_decon.h                   | 163 +++++
- 7 files changed, 904 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/exynos5433-decon.txt
- create mode 100644 drivers/gpu/drm/exynos/exynos5433_drm_decon.c
- create mode 100644 include/video/exynos5433_decon.h
+ drivers/gpu/drm/exynos/exynos_drm_mic.c            | 490 +++++++++++++++++++++
+ 6 files changed, 552 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/exynos-mic.txt
+ create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mic.c
 
-diff --git a/Documentation/devicetree/bindings/video/exynos5433-decon.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
+diff --git a/Documentation/devicetree/bindings/video/exynos-mic.txt b/Documentation/devicetree/bindings/video/exynos-mic.txt
 new file mode 100644
-index 0000000..377afbf
+index 0000000..0fba2ee
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
-@@ -0,0 +1,65 @@
-+Device-Tree bindings for Samsung Exynos SoC display controller (DECON)
++++ b/Documentation/devicetree/bindings/video/exynos-mic.txt
+@@ -0,0 +1,51 @@
++Device-Tree bindings for Samsung Exynos SoC mobile image compressor (MIC)
 +
-+DECON (Display and Enhancement Controller) is the Display Controller for the
-+Exynos series of SoCs which transfers the image data from a video memory
-+buffer to an external LCD interface.
++MIC (mobile image compressor) resides between decon and mipi dsi. Mipi dsi is
++not capable to transfer high resoltuion frame data as decon can send. MIC
++solves this problem by compressing the frame data by 1/2 before it is
++transferred through mipi dsi. The compressed frame data must be uncompressed in
++the panel PCB.
 +
 +Required properties:
-+- compatible: value should be "samsung,exynos5433-decon";
-+- reg: physical base address and length of the DECON registers set.
-+- interrupts: should contain a list of all DECON IP block interrupts in the
-+	      order: VSYNC, LCD_SYSTEM. The interrupt specifier format
-+	      depends on the interrupt controller used.
-+- interrupt-names: should contain the interrupt names: "vsync", "lcd_sys"
-+		   in the same order as they were listed in the interrupts
-+		   property.
++- compatible: value should be "samsung,exynos5433-mic".
++- reg: physical base address and length of the MIC registers set and system
++       register of mic.
 +- clocks: must include clock specifiers corresponding to entries in the
 +	  clock-names property.
 +- clock-names: list of clock names sorted in the same order as the clocks
-+	       property. Must contain "aclk_decon", "aclk_smmu_decon0x",
-+	       "aclk_xiu_decon0x", "pclk_smmu_decon0x", clk_decon_vclk",
-+	       "sclk_decon_eclk"
-+- ports: contains a port which is connected to mic node. address-cells and
-+	 size-cells must 1 and 0, respectively.
-+- port: contains an endpoint node which is connected to the endpoint in the mic
-+	node. The reg value muset be 0.
-+- i80-if-timings: specify whether the panel which is connected to decon uses
-+		  i80 lcd interface or mipi video interface. This node contains
-+		  no timing information as that of fimd does. Because there is
-+		  no register in decon to specify i80 interface timing value,
-+		  it is not needed, but make it remain to use same kind of node
-+		  in fimd and exynos7 decon.
++	       property. Must contain "pclk_mic0", "sclk_rgb_vclk_to_mic0".
++- samsung,disp-syscon: the reference node for syscon for DISP block.
++- ports: contains a port which is connected to decon node and dsi node.
++	 address-cells and size-cells must 1 and 0, respectively.
++- port: contains an endpoint node which is connected to the endpoint in the
++	decon node or dsi node. The reg value must be 0 and 1 respectively.
 +
 +Example:
 +SoC specific DT entry:
-+decon: decon@13800000 {
-+	compatible = "samsung,exynos5433-decon";
-+	reg = <0x13800000 0x2104>;
-+	clocks = <&cmu_disp CLK_ACLK_DECON>, <&cmu_disp CLK_ACLK_SMMU_DECON0X>,
-+		<&cmu_disp CLK_ACLK_XIU_DECON0X>,
-+		<&cmu_disp CLK_PCLK_SMMU_DECON0X>,
-+		<&cmu_disp CLK_SCLK_DECON_VCLK>,
-+		<&cmu_disp CLK_SCLK_DECON_ECLK>;
-+	clock-names = "aclk_decon", "aclk_smmu_decon0x", "aclk_xiu_decon0x",
-+		"pclk_smmu_decon0x", "sclk_decon_vclk", "sclk_decon_eclk";
-+	interrupt-names = "vsync", "lcd_sys";
-+	interrupts = <0 202 0>, <0 203 0>;
++mic: mic@13930000 {
++	compatible = "samsung,exynos5433-mic";
++	reg = <0x13930000 0x48>;
++	clocks = <&cmu_disp CLK_PCLK_MIC0>,
++	       <&cmu_disp CLK_SCLK_RGB_VCLK_TO_MIC0>;
++	clock-names = "pclk_mic0", "sclk_rgb_vclk_to_mic0";
++	samsung,disp-syscon = <&syscon_disp>;
 +
 +	ports {
 +		#address-cells = <1>;
@@ -97,58 +83,77 @@ index 0000000..377afbf
 +
 +		port@0 {
 +			reg = <0>;
-+			decon_to_mic: endpoint {
-+				remote-endpoint = <&mic_to_decon>;
++			mic_to_decon: endpoint {
++				remote-endpoint = <&decon_to_mic>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			mic_to_dsi: endpoint {
++				remote-endpoint = <&dsi_to_mic>;
 +			};
 +		};
 +	};
 +};
-+
-+Board specific DT entry:
-+&decon {
-+	i80-if-timings {
-+	};
-+};
 diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
-index c8001c2..d9dc408 100644
+index d9dc408..f78f3ef 100644
 --- a/drivers/gpu/drm/exynos/Kconfig
 +++ b/drivers/gpu/drm/exynos/Kconfig
-@@ -24,6 +24,12 @@ config DRM_EXYNOS_FIMD
+@@ -103,3 +103,9 @@ config DRM_EXYNOS_GSC
+ 	depends on DRM_EXYNOS_IPP && ARCH_EXYNOS5 && !ARCH_MULTIPLATFORM
  	help
- 	  Choose this option if you want to use Exynos FIMD for DRM.
- 
-+config DRM_EXYNOS5433_DECON
-+	bool "Exynos5433 DRM DECON"
-+	depends on DRM_EXYNOS
-+	help
-+	  Choose this option if you want to use Exynos5433 DECON for DRM.
+ 	  Choose this option if you want to use Exynos GSC for DRM.
 +
- config DRM_EXYNOS7_DECON
- 	bool "Exynos DRM DECON"
- 	depends on DRM_EXYNOS
++config DRM_EXYNOS_MIC
++	bool "Exynos DRM MIC"
++	depends on (DRM_EXYNOS && DRM_EXYNOS5433_DECON)
++	help
++	  Choose this option if you want to use Exynos MIC for DRM.
 diff --git a/drivers/gpu/drm/exynos/Makefile b/drivers/gpu/drm/exynos/Makefile
-index cc90679..fbd084d 100644
+index fbd084d..7de0b10 100644
 --- a/drivers/gpu/drm/exynos/Makefile
 +++ b/drivers/gpu/drm/exynos/Makefile
-@@ -10,6 +10,7 @@ exynosdrm-y := exynos_drm_drv.o exynos_drm_encoder.o \
+@@ -22,5 +22,6 @@ exynosdrm-$(CONFIG_DRM_EXYNOS_IPP)	+= exynos_drm_ipp.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_FIMC)	+= exynos_drm_fimc.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_ROTATOR)	+= exynos_drm_rotator.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_GSC)	+= exynos_drm_gsc.o
++exynosdrm-$(CONFIG_DRM_EXYNOS_MIC)     += exynos_drm_mic.o
  
- exynosdrm-$(CONFIG_DRM_EXYNOS_IOMMU) += exynos_drm_iommu.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_FIMD)	+= exynos_drm_fimd.o
-+exynosdrm-$(CONFIG_DRM_EXYNOS5433_DECON)	+= exynos5433_drm_decon.o
- exynosdrm-$(CONFIG_DRM_EXYNOS7_DECON)	+= exynos7_drm_decon.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_DPI)	+= exynos_drm_dpi.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_DSI)	+= exynos_drm_dsi.o
-diff --git a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+ obj-$(CONFIG_DRM_EXYNOS)		+= exynosdrm.o
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+index 4d6ad28..00cbaa2 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+@@ -562,6 +562,9 @@ static struct platform_driver *const exynos_drm_kms_drivers[] = {
+ #ifdef CONFIG_DRM_EXYNOS7_DECON
+ 	&decon_driver,
+ #endif
++#ifdef CONFIG_DRM_EXYNOS_MIC
++	&mic_driver,
++#endif
+ #ifdef CONFIG_DRM_EXYNOS_DP
+ 	&dp_driver,
+ #endif
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.h b/drivers/gpu/drm/exynos/exynos_drm_drv.h
+index 40996d8..9c94dc9 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.h
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.h
+@@ -357,4 +357,5 @@ extern struct platform_driver fimc_driver;
+ extern struct platform_driver rotator_driver;
+ extern struct platform_driver gsc_driver;
+ extern struct platform_driver ipp_driver;
++extern struct platform_driver mic_driver;
+ #endif
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_mic.c b/drivers/gpu/drm/exynos/exynos_drm_mic.c
 new file mode 100644
-index 0000000..97078c9
+index 0000000..8994eab
 --- /dev/null
-+++ b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-@@ -0,0 +1,665 @@
-+/* drivers/gpu/drm/exynos5433_drm_decon.c
-+ *
++++ b/drivers/gpu/drm/exynos/exynos_drm_mic.c
+@@ -0,0 +1,490 @@
++/*
 + * Copyright (C) 2015 Samsung Electronics Co.Ltd
 + * Authors:
-+ *	Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 + *	Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
@@ -157,853 +162,485 @@ index 0000000..97078c9
 + */
 +
 +#include <linux/platform_device.h>
++#include <video/of_videomode.h>
++#include <linux/of_address.h>
++#include <video/videomode.h>
++#include <linux/module.h>
++#include <linux/delay.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_graph.h>
 +#include <linux/clk.h>
-+#include <linux/component.h>
-+#include <linux/of_gpio.h>
++#include <drm/drmP.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
 +
-+#include <video/exynos5433_decon.h>
++/* Sysreg registers for MIC */
++#define DSD_CFG_MUX	0x1004
++#define MIC0_RGB_MUX	(1 << 0)
++#define MIC0_I80_MUX	(1 << 1)
++#define MIC0_ON_MUX	(1 << 5)
 +
-+#include "exynos_drm_drv.h"
-+#include "exynos_drm_crtc.h"
++/* MIC registers */
++#define MIC_OP				0x0
++#define MIC_IP_VER			0x0004
++#define MIC_V_TIMING_0			0x0008
++#define MIC_V_TIMING_1			0x000C
++#define MIC_IMG_SIZE			0x0010
++#define MIC_INPUT_TIMING_0		0x0014
++#define MIC_INPUT_TIMING_1		0x0018
++#define MIC_2D_OUTPUT_TIMING_0		0x001C
++#define MIC_2D_OUTPUT_TIMING_1		0x0020
++#define MIC_2D_OUTPUT_TIMING_2		0x0024
++#define MIC_3D_OUTPUT_TIMING_0		0x0028
++#define MIC_3D_OUTPUT_TIMING_1		0x002C
++#define MIC_3D_OUTPUT_TIMING_2		0x0030
++#define MIC_CORE_PARA_0			0x0034
++#define MIC_CORE_PARA_1			0x0038
++#define MIC_CTC_CTRL			0x0040
++#define MIC_RD_DATA			0x0044
 +
-+#define WINDOWS_NR	3
-+#define MIN_FB_WIDTH_FOR_16WORD_BURST	128
++#define MIC_UPD_REG			(1 << 31)
++#define MIC_ON_REG			(1 << 30)
++#define MIC_TD_ON_REG			(1 << 29)
++#define MIC_BS_CHG_OUT			(1 << 16)
++#define MIC_VIDEO_TYPE(x)		(((x) & 0xf) << 12)
++#define MIC_PSR_EN			(1 << 5)
++#define MIC_SW_RST			(1 << 4)
++#define MIC_ALL_RST			(1 << 3)
++#define MIC_CORE_VER_CONTROL		(1 << 2)
++#define MIC_MODE_SEL_COMMAND_MODE	(1 << 1)
++#define MIC_MODE_SEL_MASK		(1 << 1)
++#define MIC_CORE_EN			(1 << 0)
 +
-+struct decon_win_data {
-+	unsigned int	offset_x;
-+	unsigned int	offset_y;
-+	unsigned int	ovl_x;
-+	unsigned int	ovl_y;
-+	unsigned int	ovl_width;
-+	unsigned int	ovl_height;
-+	unsigned int	fb_width;
-+	unsigned int	fb_height;
-+	unsigned int	fb_pitch;
-+	unsigned int	bpp;
-+	unsigned int	pixel_format;
-+	dma_addr_t	dma_addr;
-+	bool		enabled;
-+	bool		resume;
++#define MIC_V_PULSE_WIDTH(x)		(((x) & 0x3fff) << 16)
++#define MIC_V_PERIOD_LINE(x)		((x) & 0x3fff)
++
++#define MIC_VBP_SIZE(x)			(((x) & 0x3fff) << 16)
++#define MIC_VFP_SIZE(x)			((x) & 0x3fff)
++
++#define MIC_IMG_V_SIZE(x)		(((x) & 0x3fff) << 16)
++#define MIC_IMG_H_SIZE(x)		((x) & 0x3fff)
++
++#define MIC_H_PULSE_WIDTH_IN(x)		(((x) & 0x3fff) << 16)
++#define MIC_H_PERIOD_PIXEL_IN(x)	((x) & 0x3fff)
++
++#define MIC_HBP_SIZE_IN(x)		(((x) & 0x3fff) << 16)
++#define MIC_HFP_SIZE_IN(x)		((x) & 0x3fff)
++
++#define MIC_H_PULSE_WIDTH_2D(x)		(((x) & 0x3fff) << 16)
++#define MIC_H_PERIOD_PIXEL_2D(x)	((x) & 0x3fff)
++
++#define MIC_HBP_SIZE_2D(x)		(((x) & 0x3fff) << 16)
++#define MIC_HFP_SIZE_2D(x)		((x) & 0x3fff)
++
++#define MIC_BS_SIZE_2D(x)	((x) & 0x3fff)
++
++enum {
++	ENDPOINT_DECON_NODE,
++	ENDPOINT_DSI_NODE,
++	NUM_ENDPOINTS
 +};
 +
-+struct decon_context {
-+	struct device			*dev;
-+	struct drm_device		*drm_dev;
-+	struct exynos_drm_crtc		*crtc;
-+	void __iomem			*addr;
-+	struct clk			*clks[6];
-+	struct decon_win_data		win_data[WINDOWS_NR];
-+	unsigned int			default_win;
-+	int				pipe;
-+	bool				suspended;
++static char *clk_names[] = { "pclk_mic0", "sclk_rgb_vclk_to_mic0" };
++#define NUM_CLKS		ARRAY_SIZE(clk_names)
++static DEFINE_MUTEX(mic_mutex);
 +
-+#define BIT_CLKS_ENABLED		0
-+#define BIT_IRQS_ENABLED		1
-+	unsigned long			enabled;
-+	bool				i80_if;
-+	atomic_t			win_updated;
++struct exynos_mic {
++	struct device *dev;
++	void __iomem *reg;
++	struct regmap *sysreg;
++	struct clk *clks[NUM_CLKS];
++
++	bool i80_mode;
++	struct videomode vm;
++	struct drm_encoder *encoder;
++	struct drm_bridge bridge;
++
++	bool enabled;
 +};
 +
-+static const char * const decon_clks_name[] = {
-+	"aclk_decon",
-+	"aclk_smmu_decon0x",
-+	"aclk_xiu_decon0x",
-+	"pclk_smmu_decon0x",
-+	"sclk_decon_vclk",
-+	"sclk_decon_eclk",
-+};
-+
-+static int decon_enable_vblank(struct exynos_drm_crtc *crtc)
++static void mic_set_path(struct exynos_mic *mic, bool enable)
 +{
-+	struct decon_context *ctx = crtc->ctx;
-+	u32 val;
++	int ret;
++	unsigned int val;
 +
-+	if (ctx->suspended)
-+		return -EPERM;
++	ret = regmap_read(mic->sysreg, DSD_CFG_MUX, &val);
++	if (ret) {
++		DRM_ERROR("mic: Failed to read system register\n");
++		return;
++	}
 +
-+	if (!test_and_set_bit(BIT_IRQS_ENABLED, &ctx->enabled)) {
-+		val = VIDINTCON0_INTEN;
-+		if (ctx->i80_if)
-+			val |= VIDINTCON0_FRAMEDONE;
++	if (enable) {
++		if (mic->i80_mode)
++			val |= MIC0_I80_MUX;
 +		else
-+			val |= VIDINTCON0_INTFRMEN;
++			val |= MIC0_RGB_MUX;
 +
-+		writel(val, ctx->addr + DECON_VIDINTCON0);
-+	}
++		val |=  MIC0_ON_MUX;
++	} else
++		val &= ~(MIC0_RGB_MUX | MIC0_I80_MUX | MIC0_ON_MUX);
 +
-+	return 0;
++	regmap_write(mic->sysreg, DSD_CFG_MUX, val);
++	if (ret)
++		DRM_ERROR("mic: Failed to read system register\n");
 +}
 +
-+static void decon_disable_vblank(struct exynos_drm_crtc *crtc)
++static int mic_sw_reset(struct exynos_mic *mic)
 +{
-+	struct decon_context *ctx = crtc->ctx;
++	unsigned int retry = 100;
++	int ret;
 +
-+	if (ctx->suspended)
-+		return;
++	writel(MIC_SW_RST, mic->reg + MIC_OP);
 +
-+	if (test_and_clear_bit(BIT_IRQS_ENABLED, &ctx->enabled))
-+		writel(0, ctx->addr + DECON_VIDINTCON0);
-+}
++	while (retry-- > 0) {
++		ret = readl(mic->reg + MIC_OP);
++		if (!(ret & MIC_SW_RST))
++			return 0;
 +
-+static void decon_commit(struct exynos_drm_crtc *crtc)
-+{
-+	struct decon_context *ctx = crtc->ctx;
-+	struct drm_display_mode *mode = &crtc->base.mode;
-+	u32 val;
-+
-+	/* enable clock gate */
-+	val = CMU_CLKGAGE_MODE_SFR_F | CMU_CLKGAGE_MODE_MEM_F;
-+	writel(val, ctx->addr + DECON_CMU);
-+
-+	/* lcd on and use command if */
-+	val = VIDOUT_LCD_ON;
-+	if (ctx->i80_if)
-+		val |= VIDOUT_COMMAND_IF;
-+	else
-+		val |= VIDOUT_RGB_IF;
-+	writel(val, ctx->addr + DECON_VIDOUTCON0);
-+
-+	val = VIDTCON2_LINEVAL(mode->vdisplay - 1) |
-+		VIDTCON2_HOZVAL(mode->hdisplay - 1);
-+	writel(val, ctx->addr + DECON_VIDTCON2);
-+
-+	if (!ctx->i80_if) {
-+		val = VIDTCON00_VBPD_F(
-+				mode->crtc_vtotal - mode->crtc_vsync_end) |
-+			VIDTCON00_VFPD_F(
-+				mode->crtc_vsync_start - mode->crtc_vdisplay);
-+		writel(val, ctx->addr + DECON_VIDTCON00);
-+
-+		val = VIDTCON01_VSPW_F(
-+				mode->crtc_vsync_end - mode->crtc_vsync_start);
-+		writel(val, ctx->addr + DECON_VIDTCON01);
-+
-+		val = VIDTCON10_HBPD_F(
-+				mode->crtc_htotal - mode->crtc_hsync_end) |
-+			VIDTCON10_HFPD_F(
-+				mode->crtc_hsync_start - mode->crtc_hdisplay);
-+		writel(val, ctx->addr + DECON_VIDTCON10);
-+
-+		val = VIDTCON11_HSPW_F(
-+				mode->crtc_hsync_end - mode->crtc_hsync_start);
-+		writel(val, ctx->addr + DECON_VIDTCON11);
++		udelay(10);
 +	}
 +
-+	/* sw trigger enable */
-+	val = TRIGCON_TRIGEN_PER_F | TRIGCON_TRIGEN_F | TRIGCON_TE_AUTO_MASK |
-+		TRIGCON_SWTRIGEN;
-+	writel(val, ctx->addr + DECON_TRIGCON);
-+
-+	/* enable output and display signal */
-+	val = VIDCON0_ENVID | VIDCON0_ENVID_F;
-+	writel(val, ctx->addr + DECON_VIDCON0);
++	return -ETIMEDOUT;
 +}
 +
-+#define COORDINATE_X(x)		(((x) & 0xfff) << 12)
-+#define COORDINATE_Y(x)		((x) & 0xfff)
-+#define OFFSIZE(x)		(((x) & 0x3fff) << 14)
-+#define PAGEWIDTH(x)		((x) & 0x3fff)
-+
-+static void decon_win_mode_set(struct exynos_drm_crtc *crtc,
-+			       struct exynos_drm_plane *plane)
++static void mic_set_porch_timing(struct exynos_mic *mic)
 +{
-+	struct decon_context *ctx = crtc->ctx;
-+	struct decon_win_data *win_data;
-+	unsigned int win;
++	struct videomode vm = mic->vm;
++	u32 reg;
 +
-+	if (!plane) {
-+		DRM_ERROR("plane is NULL\n");
-+		return;
-+	}
++	reg = MIC_V_PULSE_WIDTH(vm.vsync_len) +
++		MIC_V_PERIOD_LINE(vm.vsync_len + vm.vactive +
++				vm.vback_porch + vm.vfront_porch);
++	writel(reg, mic->reg + MIC_V_TIMING_0);
 +
-+	win = plane->zpos;
-+	if (win == DEFAULT_ZPOS)
-+		win = ctx->default_win;
++	reg = MIC_VBP_SIZE(vm.vback_porch) +
++		MIC_VFP_SIZE(vm.vfront_porch);
++	writel(reg, mic->reg + MIC_V_TIMING_1);
 +
-+	if (win < 0 || win >= WINDOWS_NR)
-+		return;
++	reg = MIC_V_PULSE_WIDTH(vm.hsync_len) +
++		MIC_V_PERIOD_LINE(vm.hsync_len + vm.hactive +
++				vm.hback_porch + vm.hfront_porch);
++	writel(reg, mic->reg + MIC_INPUT_TIMING_0);
 +
-+	win_data = &ctx->win_data[win];
-+
-+	win_data->offset_x = plane->fb_x;
-+	win_data->offset_y = plane->fb_y;
-+	win_data->fb_width = plane->fb_width;
-+	win_data->fb_height = plane->fb_height;
-+	win_data->fb_pitch = plane->pitch;
-+	win_data->ovl_x = plane->crtc_x;
-+	win_data->ovl_y = plane->crtc_y;
-+	win_data->ovl_width = plane->crtc_width;
-+	win_data->ovl_height = plane->crtc_height;
-+	win_data->dma_addr = plane->dma_addr[0];
-+	win_data->bpp = plane->bpp;
-+	win_data->pixel_format = plane->pixel_format;
++	reg = MIC_VBP_SIZE(vm.hback_porch) +
++		MIC_VFP_SIZE(vm.hfront_porch);
++	writel(reg, mic->reg + MIC_INPUT_TIMING_1);
 +}
 +
-+static void decon_win_set_pixfmt(struct decon_context *ctx, unsigned int win)
++static void mic_set_img_size(struct exynos_mic *mic)
 +{
-+	struct decon_win_data *win_data = &ctx->win_data[win];
-+	unsigned long val;
++	struct videomode *vm = &mic->vm;
++	u32 reg;
 +
-+	val = readl(ctx->addr + DECON_WINCONx(win));
-+	val &= ~WINCONx_BPPMODE_MASK;
++	reg = MIC_IMG_H_SIZE(vm->hactive) +
++		MIC_IMG_V_SIZE(vm->vactive);
 +
-+	switch (win_data->pixel_format) {
-+	case DRM_FORMAT_XRGB1555:
-+		val |= WINCONx_BPPMODE_16BPP_I1555;
-+		val |= WINCONx_HAWSWP_F;
-+		val |= WINCONx_BURSTLEN_16WORD;
-+		break;
-+	case DRM_FORMAT_RGB565:
-+		val |= WINCONx_BPPMODE_16BPP_565;
-+		val |= WINCONx_HAWSWP_F;
-+		val |= WINCONx_BURSTLEN_16WORD;
-+		break;
-+	case DRM_FORMAT_XRGB8888:
-+		val |= WINCONx_BPPMODE_24BPP_888;
-+		val |= WINCONx_WSWP_F;
-+		val |= WINCONx_BURSTLEN_16WORD;
-+		break;
-+	case DRM_FORMAT_ARGB8888:
-+		val |= WINCONx_BPPMODE_32BPP_A8888;
-+		val |= WINCONx_WSWP_F | WINCONx_BLD_PIX_F | WINCONx_ALPHA_SEL_F;
-+		val |= WINCONx_BURSTLEN_16WORD;
-+		break;
-+	default:
-+		DRM_ERROR("Proper pixel format is not set\n");
-+		return;
++	writel(reg, mic->reg + MIC_IMG_SIZE);
++}
++
++static void mic_set_output_timing(struct exynos_mic *mic)
++{
++	struct videomode vm = mic->vm;
++	u32 reg, bs_size_2d;
++
++	DRM_DEBUG("w: %u, h: %u\n", vm.hactive, vm.vactive);
++	bs_size_2d = ((vm.hactive >> 2) << 1) + (vm.vactive % 4);
++	reg = MIC_BS_SIZE_2D(bs_size_2d);
++	writel(reg, mic->reg + MIC_2D_OUTPUT_TIMING_2);
++
++	if (!mic->i80_mode) {
++		reg = MIC_H_PULSE_WIDTH_2D(vm.hsync_len) +
++			MIC_H_PERIOD_PIXEL_2D(vm.hsync_len + bs_size_2d +
++					vm.hback_porch + vm.hfront_porch);
++		writel(reg, mic->reg + MIC_2D_OUTPUT_TIMING_0);
++
++		reg = MIC_HBP_SIZE_2D(vm.hback_porch) +
++			MIC_H_PERIOD_PIXEL_2D(vm.hfront_porch);
++		writel(reg, mic->reg + MIC_2D_OUTPUT_TIMING_1);
++	}
++}
++
++static void mic_set_reg_on(struct exynos_mic *mic, bool enable)
++{
++	u32 reg = readl(mic->reg + MIC_OP);
++
++	if (enable) {
++		reg &= ~(MIC_MODE_SEL_MASK | MIC_CORE_VER_CONTROL | MIC_PSR_EN);
++		reg |= (MIC_CORE_EN | MIC_BS_CHG_OUT | MIC_ON_REG);
++
++		reg  &= ~MIC_MODE_SEL_COMMAND_MODE;
++		if (mic->i80_mode)
++			reg |= MIC_MODE_SEL_COMMAND_MODE;
++	} else {
++		reg &= ~MIC_CORE_EN;
 +	}
 +
-+	DRM_DEBUG_KMS("bpp = %u\n", win_data->bpp);
++	reg |= MIC_UPD_REG;
++	writel(reg, mic->reg + MIC_OP);
++}
++
++static struct device_node *get_remote_node(struct device_node *from, int reg)
++{
++	struct device_node *endpoint = NULL, *remote_node = NULL;
++
++	endpoint = of_graph_get_endpoint_by_regs(from, reg, -1);
++	if (!endpoint) {
++		DRM_ERROR("mic: Failed to find remote port from %s",
++				from->full_name);
++		goto exit;
++	}
++
++	remote_node = of_graph_get_remote_port_parent(endpoint);
++	if (!remote_node) {
++		DRM_ERROR("mic: Failed to find remote port parent from %s",
++							from->full_name);
++		goto exit;
++	}
++
++exit:
++	of_node_put(endpoint);
++	return remote_node;
++}
++
++static int parse_dt(struct exynos_mic *mic)
++{
++	int ret = 0, i, j;
++	struct device_node *remote_node;
++	struct device_node *nodes[3];
 +
 +	/*
-+	 * In case of exynos, setting dma-burst to 16Word causes permanent
-+	 * tearing for very small buffers, e.g. cursor buffer. Burst Mode
-+	 * switching which is based on plane size is not recommended as
-+	 * plane size varies a lot towards the end of the screen and rapid
-+	 * movement causes unstable DMA which results into iommu crash/tear.
++	 * The order of endpoints does matter.
++	 * The first node must be for decon and the second one must be for dsi.
 +	 */
++	for (i = 0, j = 0; i < NUM_ENDPOINTS; i++) {
++		remote_node = get_remote_node(mic->dev->of_node, i);
++		if (!remote_node) {
++			ret = -EPIPE;
++			goto exit;
++		}
++		nodes[j++] = remote_node;
 +
-+	if (win_data->fb_width < MIN_FB_WIDTH_FOR_16WORD_BURST) {
-+		val &= ~WINCONx_BURSTLEN_MASK;
-+		val |= WINCONx_BURSTLEN_8WORD;
++		switch (i) {
++		case ENDPOINT_DECON_NODE:
++			/* decon node */
++			if (of_get_child_by_name(remote_node,
++						"i80-if-timings"))
++				mic->i80_mode = 1;
++
++			break;
++		case ENDPOINT_DSI_NODE:
++			/* panel node */
++			remote_node = get_remote_node(remote_node, 1);
++			if (!remote_node) {
++				ret = -EPIPE;
++				goto exit;
++			}
++			nodes[j++] = remote_node;
++
++			ret = of_get_videomode(remote_node,
++							&mic->vm, 0);
++			if (ret) {
++				DRM_ERROR("mic: failed to get videomode");
++				goto exit;
++			}
++
++			break;
++		default:
++			DRM_ERROR("mic: Unknown endpoint from MIC");
++			break;
++		}
 +	}
 +
-+	writel(val, ctx->addr + DECON_WINCONx(win));
++exit:
++	while (--j > -1)
++		of_node_put(nodes[j]);
++
++	return ret;
 +}
 +
-+static void decon_shadow_protect_win(struct decon_context *ctx, int win,
-+					bool protect)
++void mic_disable(struct drm_bridge *bridge) { }
++
++void mic_post_disable(struct drm_bridge *bridge)
 +{
-+	u32 val;
-+
-+	val = readl(ctx->addr + DECON_SHADOWCON);
-+
-+	if (protect)
-+		val |= SHADOWCON_Wx_PROTECT(win);
-+	else
-+		val &= ~SHADOWCON_Wx_PROTECT(win);
-+
-+	writel(val, ctx->addr + DECON_SHADOWCON);
-+}
-+
-+static void decon_win_commit(struct exynos_drm_crtc *crtc, int zpos)
-+{
-+	struct decon_context *ctx = crtc->ctx;
-+	struct decon_win_data *win_data;
-+	unsigned int win = zpos;
-+	u32 val;
-+
-+	if (win == DEFAULT_ZPOS)
-+		win = ctx->default_win;
-+
-+	if (win < 0 || win >= WINDOWS_NR)
-+		return;
-+
-+	win_data = &ctx->win_data[win];
-+
-+	/* If suspended, enable this on resume */
-+	if (ctx->suspended) {
-+		win_data->resume = true;
-+		return;
-+	}
-+
-+	decon_shadow_protect_win(ctx, win, true);
-+
-+	val = COORDINATE_X(win_data->ovl_x) | COORDINATE_Y(win_data->ovl_y);
-+	writel(val, ctx->addr + DECON_VIDOSDxA(win));
-+
-+	val = COORDINATE_X(win_data->ovl_x + win_data->ovl_width - 1) |
-+		COORDINATE_Y(win_data->ovl_y + win_data->ovl_height - 1);
-+	writel(val, ctx->addr + DECON_VIDOSDxB(win));
-+
-+	val = VIDOSD_Wx_ALPHA_R_F(0x0) | VIDOSD_Wx_ALPHA_G_F(0x0) |
-+		VIDOSD_Wx_ALPHA_B_F(0x0);
-+	writel(val, ctx->addr + DECON_VIDOSDxC(win));
-+
-+	val = VIDOSD_Wx_ALPHA_R_F(0x0) | VIDOSD_Wx_ALPHA_G_F(0x0) |
-+		VIDOSD_Wx_ALPHA_B_F(0x0);
-+	writel(val, ctx->addr + DECON_VIDOSDxD(win));
-+
-+	writel(win_data->dma_addr, ctx->addr + DECON_VIDW0xADD0B0(win));
-+
-+	val = win_data->dma_addr + win_data->fb_pitch * win_data->ovl_height;
-+	writel(val, ctx->addr + DECON_VIDW0xADD1B0(win));
-+
-+	val = OFFSIZE(win_data->fb_pitch -
-+			win_data->ovl_width * (win_data->bpp >> 3))
-+		| PAGEWIDTH(win_data->ovl_width * (win_data->bpp >> 3));
-+	writel(val, ctx->addr + DECON_VIDW0xADD2(win));
-+
-+	decon_win_set_pixfmt(ctx, win);
-+
-+	/* window enable */
-+	val = readl(ctx->addr + DECON_WINCONx(win));
-+	val |= WINCONx_ENWIN_F;
-+	writel(val, ctx->addr + DECON_WINCONx(win));
-+
-+	decon_shadow_protect_win(ctx, win, false);
-+
-+	/* standalone update */
-+	val = readl(ctx->addr + DECON_UPDATE);
-+	val |= STANDALONE_UPDATE_F;
-+	writel(val, ctx->addr + DECON_UPDATE);
-+
-+	if (ctx->i80_if)
-+		atomic_set(&ctx->win_updated, 1);
-+
-+	win_data->enabled = true;
-+}
-+
-+static void decon_win_disable(struct exynos_drm_crtc *crtc, int zpos)
-+{
-+	struct decon_context *ctx = crtc->ctx;
-+	struct decon_win_data *win_data;
-+	unsigned int win = zpos;
-+	u32 val;
-+
-+	if (win == DEFAULT_ZPOS)
-+		win = ctx->default_win;
-+
-+	if (win < 0 || win >= WINDOWS_NR)
-+		return;
-+
-+	win_data = &ctx->win_data[win];
-+
-+	if (ctx->suspended) {
-+		win_data->resume = false;
-+		return;
-+	}
-+
-+	decon_shadow_protect_win(ctx, win, true);
-+
-+	/* window disable */
-+	val = readl(ctx->addr + DECON_WINCONx(win));
-+	val &= ~WINCONx_ENWIN_F;
-+	writel(val, ctx->addr + DECON_WINCONx(win));
-+
-+	decon_shadow_protect_win(ctx, win, false);
-+
-+	/* standalone update */
-+	val = readl(ctx->addr + DECON_UPDATE);
-+	val |= STANDALONE_UPDATE_F;
-+	writel(val, ctx->addr + DECON_UPDATE);
-+
-+	win_data->enabled = false;
-+}
-+
-+static void decon_window_suspend(struct decon_context *ctx)
-+{
-+	struct decon_win_data *win_data;
++	struct exynos_mic *mic = bridge->driver_private;
 +	int i;
 +
-+	for (i = 0; i < WINDOWS_NR; i++) {
-+		win_data = &ctx->win_data[i];
-+		win_data->resume = win_data->enabled;
-+		if (win_data->enabled)
-+			decon_win_disable(ctx->crtc, i);
-+	}
++	mutex_lock(&mic_mutex);
++	if (!mic->enabled)
++		goto already_disabled;
++
++	mic_set_path(mic, 0);
++
++	for (i = NUM_CLKS - 1; i > -1; i--)
++		clk_disable_unprepare(mic->clks[i]);
++
++	mic->enabled = 0;
++
++already_disabled:
++	mutex_unlock(&mic_mutex);
 +}
 +
-+static void decon_window_resume(struct decon_context *ctx)
++void mic_pre_enable(struct drm_bridge *bridge)
 +{
-+	struct decon_win_data *win_data;
-+	int i;
++	struct exynos_mic *mic = bridge->driver_private;
++	int ret, i;
 +
-+	for (i = 0; i < WINDOWS_NR; i++) {
-+		win_data = &ctx->win_data[i];
-+		win_data->enabled = win_data->resume;
-+		win_data->resume = false;
-+	}
-+}
++	mutex_lock(&mic_mutex);
++	if (mic->enabled)
++		goto already_enabled;
 +
-+static void decon_apply(struct decon_context *ctx)
-+{
-+	struct decon_win_data *win_data;
-+	int i;
-+
-+	for (i = 0; i < WINDOWS_NR; i++) {
-+		win_data = &ctx->win_data[i];
-+		if (win_data->enabled)
-+			decon_win_commit(ctx->crtc, i);
-+		else
-+			decon_win_disable(ctx->crtc, i);
++	for (i = 0; i < NUM_CLKS; i++) {
++		ret = clk_prepare_enable(mic->clks[i]);
++		if (ret < 0) {
++			DRM_ERROR("Failed to enable clock (%s)\n",
++							clk_names[i]);
++			goto turn_off_clks;
++		}
 +	}
 +
-+	decon_commit(ctx->crtc);
-+}
++	mic_set_path(mic, 1);
 +
-+static void decon_dpms_on(struct decon_context *ctx)
-+{
-+	int ret;
-+	int i;
-+
-+	if (!ctx->suspended)
-+		return;
-+
-+	ctx->suspended = false;
-+
-+	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
-+		ret = clk_prepare_enable(ctx->clks[i]);
-+		if (ret < 0)
-+			goto err;
++	ret = mic_sw_reset(mic);
++	if (ret) {
++		DRM_ERROR("Failed to reset\n");
++		goto turn_off_clks;
 +	}
 +
-+	set_bit(BIT_CLKS_ENABLED, &ctx->enabled);
-+
-+	decon_window_resume(ctx);
-+	decon_apply(ctx);
++	if (!mic->i80_mode)
++		mic_set_porch_timing(mic);
++	mic_set_img_size(mic);
++	mic_set_output_timing(mic);
++	mic_set_reg_on(mic, 1);
++	mic->enabled = 1;
++	mutex_unlock(&mic_mutex);
 +
 +	return;
-+err:
-+	while (--i >= 0)
-+		clk_disable_unprepare(ctx->clks[i]);
 +
-+	ctx->suspended = true;
++turn_off_clks:
++	while (--i > -1)
++		clk_disable_unprepare(mic->clks[i]);
++already_enabled:
++	mutex_unlock(&mic_mutex);
 +}
 +
-+static void decon_dpms_off(struct decon_context *ctx)
++void mic_enable(struct drm_bridge *bridge) { }
++
++void mic_destroy(struct drm_bridge *bridge)
 +{
++	struct exynos_mic *mic = bridge->driver_private;
 +	int i;
 +
-+	if (ctx->suspended)
-+		return;
++	mutex_lock(&mic_mutex);
++	if (!mic->enabled)
++		goto already_disabled;
 +
-+	clear_bit(BIT_CLKS_ENABLED, &ctx->enabled);
-+	decon_window_suspend(ctx);
++	for (i = NUM_CLKS - 1; i > -1; i--)
++		clk_disable_unprepare(mic->clks[i]);
 +
-+	for (i = ARRAY_SIZE(decon_clks_name) - 1; i >= 0; i--)
-+		clk_disable_unprepare(ctx->clks[i]);
-+
-+	ctx->suspended = true;
++already_disabled:
++	mutex_unlock(&mic_mutex);
 +}
 +
-+static void decon_dpms(struct exynos_drm_crtc *crtc, int mode)
-+{
-+	struct decon_context *ctx = crtc->ctx;
-+
-+	switch (mode) {
-+	case DRM_MODE_DPMS_ON:
-+		decon_dpms_on(ctx);
-+		break;
-+	case DRM_MODE_DPMS_STANDBY:
-+	case DRM_MODE_DPMS_SUSPEND:
-+	case DRM_MODE_DPMS_OFF:
-+		decon_dpms_off(ctx);
-+		break;
-+	default:
-+		DRM_DEBUG_KMS("unspecified mode %d\n", mode);
-+		break;
-+	}
-+}
-+
-+void decon_te_irq_handler(struct exynos_drm_crtc *crtc)
-+{
-+	struct decon_context *ctx = crtc->ctx;
-+	u32 val;
-+
-+	if (!test_bit(BIT_CLKS_ENABLED, &ctx->enabled))
-+		return;
-+
-+	if (atomic_add_unless(&ctx->win_updated, -1, 0)) {
-+		/* trigger */
-+		val = readl(ctx->addr + DECON_TRIGCON);
-+		val |= TRIGCON_SWTRIGCMD;
-+		writel(val, ctx->addr + DECON_TRIGCON);
-+	}
-+}
-+
-+static struct exynos_drm_crtc_ops decon_crtc_ops = {
-+	.dpms			= decon_dpms,
-+	.enable_vblank		= decon_enable_vblank,
-+	.disable_vblank		= decon_disable_vblank,
-+	.commit			= decon_commit,
-+	.win_mode_set		= decon_win_mode_set,
-+	.win_commit		= decon_win_commit,
-+	.win_disable		= decon_win_disable,
-+	.te_handler		= decon_te_irq_handler,
++struct drm_bridge_funcs mic_bridge_funcs = {
++	.disable = mic_disable,
++	.post_disable = mic_post_disable,
++	.pre_enable = mic_pre_enable,
++	.enable = mic_enable,
 +};
 +
-+static int decon_bind(struct device *dev, struct device *master, void *data)
-+{
-+	struct decon_context *ctx = dev_get_drvdata(dev);
-+	struct drm_device *drm_dev = data;
-+	struct exynos_drm_private *priv = drm_dev->dev_private;
-+
-+	ctx->drm_dev = drm_dev;
-+	ctx->pipe = priv->pipe++;
-+
-+	ctx->crtc = exynos_drm_crtc_create(drm_dev, ctx->pipe,
-+			EXYNOS_DISPLAY_TYPE_LCD, &decon_crtc_ops, ctx);
-+	if (IS_ERR(ctx->crtc)) {
-+		priv->pipe--;
-+		return PTR_ERR(ctx->crtc);
-+	}
-+
-+	return 0;
-+}
-+
-+static void decon_unbind(struct device *dev, struct device *master, void *data)
-+{
-+	struct decon_context *ctx = dev_get_drvdata(dev);
-+
-+	decon_dpms(ctx->crtc, DRM_MODE_DPMS_OFF);
-+}
-+
-+static const struct component_ops decon_component_ops = {
-+	.bind	= decon_bind,
-+	.unbind = decon_unbind,
-+};
-+
-+static irqreturn_t decon_vsync_irq_handler(int irq, void *dev_id)
-+{
-+	struct decon_context *ctx = dev_id;
-+	u32 val;
-+
-+	if (!test_bit(BIT_CLKS_ENABLED, &ctx->enabled))
-+		goto out;
-+
-+	val = readl(ctx->addr + DECON_VIDINTCON1);
-+	if (val & VIDINTCON1_INTFRMPEND) {
-+		drm_handle_vblank(ctx->drm_dev, ctx->pipe);
-+
-+		/* clear */
-+		writel(VIDINTCON1_INTFRMPEND, ctx->addr + DECON_VIDINTCON1);
-+	}
-+
-+out:
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t decon_lcd_sys_irq_handler(int irq, void *dev_id)
-+{
-+	struct decon_context *ctx = dev_id;
-+	u32 val;
-+
-+	if (!test_bit(BIT_CLKS_ENABLED, &ctx->enabled))
-+		goto out;
-+
-+	val = readl(ctx->addr + DECON_VIDINTCON1);
-+	if (val & VIDINTCON1_INTFRMDONEPEND) {
-+		exynos_drm_crtc_finish_pageflip(ctx->drm_dev, ctx->pipe);
-+
-+		/* clear */
-+		writel(VIDINTCON1_INTFRMDONEPEND,
-+				ctx->addr + DECON_VIDINTCON1);
-+	}
-+
-+out:
-+	return IRQ_HANDLED;
-+}
-+
-+static int exynos5433_decon_probe(struct platform_device *pdev)
++int exynos_mic_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct decon_context *ctx;
-+	struct resource *res;
-+	int ret;
++	struct exynos_mic *mic;
++	struct resource res;
++	int ret, i;
++
++	mic = devm_kzalloc(dev, sizeof(*mic), GFP_KERNEL);
++	if (!mic) {
++		DRM_ERROR("mic: Failed to allocate memory for MIC object\n");
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	mic->dev = dev;
++
++	ret = parse_dt(mic);
++	if (ret)
++		goto err;
++
++	ret = of_address_to_resource(dev->of_node, 0, &res);
++	if (ret) {
++		DRM_ERROR("mic: Failed to get mem region for MIC\n");
++		goto err;
++	}
++	mic->reg = devm_ioremap(dev, res.start, resource_size(&res));
++	if (!mic->reg) {
++		DRM_ERROR("mic: Failed to remap for MIC\n");
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	mic->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
++							"samsung,disp-syscon");
++	if (IS_ERR(mic->sysreg)) {
++		DRM_ERROR("mic: Failed to get system register.\n");
++		goto err;
++	}
++
++	mic->bridge.funcs = &mic_bridge_funcs;
++	mic->bridge.of_node = dev->of_node;
++	mic->bridge.driver_private = mic;
++	ret = drm_bridge_add(&mic->bridge);
++	if (ret) {
++		DRM_ERROR("mic: Failed to add MIC to the global bridge list\n");
++		goto err;
++	}
++
++	for (i = 0; i < NUM_CLKS; i++) {
++		mic->clks[i] = of_clk_get_by_name(dev->of_node, clk_names[i]);
++		if (IS_ERR(mic->clks[i])) {
++			DRM_ERROR("mic: Failed to get clock (%s)\n",
++								clk_names[i]);
++			ret = PTR_ERR(mic->clks[i]);
++			goto err;
++		}
++	}
++
++	DRM_DEBUG_KMS("MIC has been probed\n");
++
++err:
++	return ret;
++}
++
++static int exynos_mic_remove(struct platform_device *pdev)
++{
++	struct exynos_mic *mic = platform_get_drvdata(pdev);
 +	int i;
 +
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
++	drm_bridge_remove(&mic->bridge);
 +
-+	ctx->default_win = 0;
-+	ctx->suspended = true;
-+	ctx->dev = dev;
-+	if (of_get_child_by_name(dev->of_node, "i80-if-timings"))
-+		ctx->i80_if = true;
-+
-+	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
-+		struct clk *clk;
-+
-+		clk = devm_clk_get(ctx->dev, decon_clks_name[i]);
-+		if (IS_ERR(clk))
-+			return PTR_ERR(clk);
-+
-+		ctx->clks[i] = clk;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(dev, "cannot find IO resource\n");
-+		return -ENXIO;
-+	}
-+
-+	ctx->addr = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(ctx->addr)) {
-+		dev_err(dev, "ioremap failed\n");
-+		return PTR_ERR(ctx->addr);
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_IRQ,
-+			ctx->i80_if ? "lcd_sys" : "vsync");
-+	if (!res) {
-+		dev_err(dev, "cannot find IRQ resource\n");
-+		return -ENXIO;
-+	}
-+
-+	ret = devm_request_irq(dev, res->start, ctx->i80_if ?
-+			decon_lcd_sys_irq_handler : decon_vsync_irq_handler, 0,
-+			"drm_decon", ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "lcd_sys irq request failed\n");
-+		return ret;
-+	}
-+
-+	ret = exynos_drm_component_add(dev, EXYNOS_DEVICE_TYPE_CRTC,
-+				       EXYNOS_DISPLAY_TYPE_LCD);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, ctx);
-+
-+	ret = component_add(dev, &decon_component_ops);
-+	if (ret < 0) {
-+		exynos_drm_component_del(dev, EXYNOS_DEVICE_TYPE_CRTC);
-+		return ret;
-+	}
++	for (i = NUM_CLKS - 1; i > -1; i--)
++		clk_put(mic->clks[i]);
 +
 +	return 0;
 +}
 +
-+static int exynos5433_decon_remove(struct platform_device *pdev)
-+{
-+	component_del(&pdev->dev, &decon_component_ops);
-+	exynos_drm_component_del(&pdev->dev, EXYNOS_DEVICE_TYPE_CRTC);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id exynos5433_decon_driver_dt_match[] = {
-+	{ .compatible = "samsung,exynos5433-decon" },
-+	{},
++static const struct of_device_id exynos_mic_of_match[] = {
++	{ .compatible = "samsung,exynos5433-mic" },
++	{ }
 +};
-+MODULE_DEVICE_TABLE(of, exynos5433_decon_driver_dt_match);
++MODULE_DEVICE_TABLE(of, exynos_mic_of_match);
 +
-+struct platform_driver exynos5433_decon_driver = {
-+	.probe		= exynos5433_decon_probe,
-+	.remove		= exynos5433_decon_remove,
++struct platform_driver mic_driver = {
++	.probe		= exynos_mic_probe,
++	.remove		= exynos_mic_remove,
 +	.driver		= {
-+		.name	= "exynos5433-decon",
++		.name	= "exynos-mic",
 +		.owner	= THIS_MODULE,
-+		.of_match_table = exynos5433_decon_driver_dt_match,
++		.of_match_table = exynos_mic_of_match,
 +	},
 +};
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
-index 16d8af6..4d6ad28 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
-@@ -556,6 +556,9 @@ static struct platform_driver *const exynos_drm_kms_drivers[] = {
- #ifdef CONFIG_DRM_EXYNOS_FIMD
- 	&fimd_driver,
- #endif
-+#ifdef CONFIG_DRM_EXYNOS5433_DECON
-+	&exynos5433_decon_driver,
-+#endif
- #ifdef CONFIG_DRM_EXYNOS7_DECON
- 	&decon_driver,
- #endif
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.h b/drivers/gpu/drm/exynos/exynos_drm_drv.h
-index 9afd390..40996d8 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_drv.h
-+++ b/drivers/gpu/drm/exynos/exynos_drm_drv.h
-@@ -344,6 +344,7 @@ void exynos_drm_component_del(struct device *dev,
- 				enum exynos_drm_device_type dev_type);
- 
- extern struct platform_driver fimd_driver;
-+extern struct platform_driver exynos5433_decon_driver;
- extern struct platform_driver decon_driver;
- extern struct platform_driver dp_driver;
- extern struct platform_driver dsi_driver;
-diff --git a/include/video/exynos5433_decon.h b/include/video/exynos5433_decon.h
-new file mode 100644
-index 0000000..9e7f851
---- /dev/null
-+++ b/include/video/exynos5433_decon.h
-@@ -0,0 +1,163 @@
-+/*
-+ * Copyright (C) 2014 Samsung Electronics Co.Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundationr
-+ */
-+
-+#ifndef EXYNOS_REGS_DECON_H
-+#define EXYNOS_REGS_DECON_H
-+
-+/* Exynos543X DECON */
-+#define DECON_VIDCON0			0x0000
-+#define DECON_VIDOUTCON0		0x0010
-+#define DECON_WINCONx(n)		(0x0020 + ((n) * 4))
-+#define DECON_VIDOSDxH(n)		(0x0080 + ((n) * 4))
-+#define DECON_SHADOWCON			0x00A0
-+#define DECON_VIDOSDxA(n)		(0x00B0 + ((n) * 0x20))
-+#define DECON_VIDOSDxB(n)		(0x00B4 + ((n) * 0x20))
-+#define DECON_VIDOSDxC(n)		(0x00B8 + ((n) * 0x20))
-+#define DECON_VIDOSDxD(n)		(0x00BC + ((n) * 0x20))
-+#define DECON_VIDOSDxE(n)		(0x00C0 + ((n) * 0x20))
-+#define DECON_VIDW0xADD0B0(n)		(0x0150 + ((n) * 0x10))
-+#define DECON_VIDW0xADD0B1(n)		(0x0154 + ((n) * 0x10))
-+#define DECON_VIDW0xADD0B2(n)		(0x0158 + ((n) * 0x10))
-+#define DECON_VIDW0xADD1B0(n)		(0x01A0 + ((n) * 0x10))
-+#define DECON_VIDW0xADD1B1(n)		(0x01A4 + ((n) * 0x10))
-+#define DECON_VIDW0xADD1B2(n)		(0x01A8 + ((n) * 0x10))
-+#define DECON_VIDW0xADD2(n)		(0x0200 + ((n) * 4))
-+#define DECON_LOCALxSIZE(n)		(0x0214 + ((n) * 4))
-+#define DECON_VIDINTCON0		0x0220
-+#define DECON_VIDINTCON1		0x0224
-+#define DECON_WxKEYCON0(n)		(0x0230 + ((n - 1) * 8))
-+#define DECON_WxKEYCON1(n)		(0x0234 + ((n - 1) * 8))
-+#define DECON_WxKEYALPHA(n)		(0x0250 + ((n - 1) * 4))
-+#define DECON_WINxMAP(n)		(0x0270 + ((n) * 4))
-+#define DECON_QOSLUT07_00		0x02C0
-+#define DECON_QOSLUT15_08		0x02C4
-+#define DECON_QOSCTRL			0x02C8
-+#define DECON_BLENDERQx(n)		(0x0300 + ((n - 1) * 4))
-+#define DECON_BLENDCON			0x0310
-+#define DECON_OPE_VIDW0xADD0(n)		(0x0400 + ((n) * 4))
-+#define DECON_OPE_VIDW0xADD1(n)		(0x0414 + ((n) * 4))
-+#define DECON_FRAMEFIFO_REG7		0x051C
-+#define DECON_FRAMEFIFO_REG8		0x0520
-+#define DECON_FRAMEFIFO_STATUS		0x0524
-+#define DECON_CMU			0x1404
-+#define DECON_UPDATE			0x1410
-+#define DECON_UPDATE_SCHEME		0x1438
-+#define DECON_VIDCON1			0x2000
-+#define DECON_VIDCON2			0x2004
-+#define DECON_VIDCON3			0x2008
-+#define DECON_VIDCON4			0x200C
-+#define DECON_VIDTCON2			0x2028
-+#define DECON_FRAME_SIZE		0x2038
-+#define DECON_LINECNT_OP_THRESHOLD	0x203C
-+#define DECON_TRIGCON			0x2040
-+#define DECON_TRIGSKIP			0x2050
-+#define DECON_CRCRDATA			0x20B0
-+#define DECON_CRCCTRL			0x20B4
-+
-+/* Exynos5430 DECON */
-+#define DECON_VIDTCON0			0x2020
-+#define DECON_VIDTCON1			0x2024
-+
-+/* Exynos5433 DECON */
-+#define DECON_VIDTCON00			0x2010
-+#define DECON_VIDTCON01			0x2014
-+#define DECON_VIDTCON10			0x2018
-+#define DECON_VIDTCON11			0x201C
-+
-+/* Exynos543X DECON Internal */
-+#define DECON_W013DSTREOCON		0x0320
-+#define DECON_W233DSTREOCON		0x0324
-+#define DECON_FRAMEFIFO_REG0		0x0500
-+#define DECON_ENHANCER_CTRL		0x2100
-+
-+/* Exynos543X DECON TV */
-+#define DECON_VCLKCON0			0x0014
-+#define DECON_VIDINTCON2		0x0228
-+#define DECON_VIDINTCON3		0x022C
-+
-+/* VIDCON0 */
-+#define VIDCON0_ENVID			(1 << 1)
-+#define VIDCON0_ENVID_F			(1 << 0)
-+
-+/* VIDOUTCON0 */
-+#define VIDOUT_LCD_ON			(1 << 24)
-+#define VIDOUT_IF_F_MASK		(0x3 << 20)
-+#define VIDOUT_RGB_IF			(0x0 << 20)
-+#define VIDOUT_COMMAND_IF		(0x2 << 20)
-+
-+/* WINCONx */
-+#define WINCONx_HAWSWP_F		(1 << 16)
-+#define WINCONx_WSWP_F			(1 << 15)
-+#define WINCONx_BURSTLEN_MASK		(0x3 << 10)
-+#define WINCONx_BURSTLEN_16WORD		(0x0 << 10)
-+#define WINCONx_BURSTLEN_8WORD		(0x1 << 10)
-+#define WINCONx_BURSTLEN_4WORD		(0x2 << 10)
-+#define WINCONx_BLD_PIX_F		(1 << 6)
-+#define WINCONx_BPPMODE_MASK		(0xf << 2)
-+#define WINCONx_BPPMODE_16BPP_565	(0x5 << 2)
-+#define WINCONx_BPPMODE_16BPP_A1555	(0x6 << 2)
-+#define WINCONx_BPPMODE_16BPP_I1555	(0x7 << 2)
-+#define WINCONx_BPPMODE_24BPP_888	(0xb << 2)
-+#define WINCONx_BPPMODE_24BPP_A1887	(0xc << 2)
-+#define WINCONx_BPPMODE_25BPP_A1888	(0xd << 2)
-+#define WINCONx_BPPMODE_32BPP_A8888	(0xd << 2)
-+#define WINCONx_BPPMODE_16BPP_A4444	(0xe << 2)
-+#define WINCONx_ALPHA_SEL_F		(1 << 1)
-+#define WINCONx_ENWIN_F			(1 << 0)
-+
-+/* SHADOWCON */
-+#define SHADOWCON_Wx_PROTECT(n)		(1 << (10 + (n)))
-+
-+/* VIDOSDxD */
-+#define VIDOSD_Wx_ALPHA_R_F(n)		(((n) & 0xff) << 16)
-+#define VIDOSD_Wx_ALPHA_G_F(n)		(((n) & 0xff) << 8)
-+#define VIDOSD_Wx_ALPHA_B_F(n)		(((n) & 0xff) << 0)
-+
-+/* VIDINTCON0 */
-+#define VIDINTCON0_FRAMEDONE		(1 << 17)
-+#define VIDINTCON0_INTFRMEN		(1 << 12)
-+#define VIDINTCON0_INTEN		(1 << 0)
-+
-+/* VIDINTCON1 */
-+#define VIDINTCON1_INTFRMDONEPEND	(1 << 2)
-+#define VIDINTCON1_INTFRMPEND		(1 << 1)
-+#define VIDINTCON1_INTFIFOPEND		(1 << 0)
-+
-+/* DECON_CMU */
-+#define CMU_CLKGAGE_MODE_SFR_F		(1 << 1)
-+#define CMU_CLKGAGE_MODE_MEM_F		(1 << 0)
-+
-+/* DECON_UPDATE */
-+#define STANDALONE_UPDATE_F		(1 << 0)
-+
-+/* DECON_VIDTCON00 */
-+#define VIDTCON00_VBPD_F(x)		(((x) & 0xfff) << 16)
-+#define VIDTCON00_VFPD_F(x)		((x) & 0xfff)
-+
-+/* DECON_VIDTCON01 */
-+#define VIDTCON01_VSPW_F(x)		(((x) & 0xfff) << 16)
-+
-+/* DECON_VIDTCON10 */
-+#define VIDTCON10_HBPD_F(x)		(((x) & 0xfff) << 16)
-+#define VIDTCON10_HFPD_F(x)		((x) & 0xfff)
-+
-+/* DECON_VIDTCON11 */
-+#define VIDTCON11_HSPW_F(x)		(((x) & 0xfff) << 16)
-+
-+/* DECON_VIDTCON2 */
-+#define VIDTCON2_LINEVAL(x)		(((x) & 0xfff) << 16)
-+#define VIDTCON2_HOZVAL(x)		((x) & 0xfff)
-+
-+/* TRIGCON */
-+#define TRIGCON_TRIGEN_PER_F		(1 << 31)
-+#define TRIGCON_TRIGEN_F		(1 << 30)
-+#define TRIGCON_TE_AUTO_MASK		(1 << 29)
-+#define TRIGCON_SWTRIGCMD		(1 << 1)
-+#define TRIGCON_SWTRIGEN		(1 << 0)
-+
-+#endif /* EXYNOS_REGS_DECON_H */
 -- 
 1.9.1
 
