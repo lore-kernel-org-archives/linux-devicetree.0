@@ -1,236 +1,131 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 3/6] i2c: qup: Add bam dma capabilities
-Date: Thu, 26 Mar 2015 11:38:07 +0530
-Message-ID: <5513A247.5030503@codeaurora.org>
-References: <1426268992-19298-1-git-send-email-sricharan@codeaurora.org> <1426268992-19298-4-git-send-email-sricharan@codeaurora.org> <1427289056.25053.21.camel@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1427289056.25053.21.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 3/3] tty/slaves: add a driver to power on/off UART attached devices.
+Date: Thu, 26 Mar 2015 07:44:13 +0100
+Message-ID: <365B2C25-1782-4ADE-B620-190A4CC5E8E3@goldelico.com>
+References: <20150318055831.21025.33670.stgit@notabene.brown> <C53A3E5D-5AEA-4F0F-88A9-F9BC8CB0D0D6@goldelico.com> <20150320195451.146a7915@notabene.brown> <14FB51CF-9568-4BF4-B917-2C019D992FDB@goldelico.com> <20150321103122.23603014@notabene.brown> <C091D3C1-CE79-469A-BEA4-25E03F6E9164@goldelico.com> <20150325014543.GA967@earth> <6B657A35-68BD-45F6-BD55-A3D6AC1055C8@goldelico.com> <20150325205344.GD381@amd> <1F3B5E32-1330-457C-AE25-791319293C38@goldelico.com> <20150326055639.GA20912@amd>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150326055639.GA20912@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neilb@suse.de>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+Hi,
 
-On 03/25/2015 06:40 PM, Ivan T. Ivanov wrote:
->
-> Hi Sricharan,
->
-> On Fri, 2015-03-13 at 23:19 +0530, Sricharan R wrote:
->
->
->>   #define QUP_I2C_MASTER_GEN     0x408
->> +#define QUP_I2C_MASTER_CONFIG  0x408
->>
->
-> Unused.
->
-Ok, will remove it
->>   #define QUP_READ_LIMIT                 256
->> +#define MX_TX_RX_LEN                   SZ_64K
->> +#define MX_BLOCKS                      (MX_TX_RX_LEN / QUP_READ_LIMIT)
->> +
->> +#define TOUT_MAX                       300 /* Max timeout for 32k tx/tx */
->>
->
-> seconds, muliseconds?
->
-  Ok. Will add milliseconds.
->>   struct qup_i2c_config {
->>          int tag_ver;
->>          int max_freq;
->>   };
->>
->> +struct tag {
->
-> Please use consistent naming convention.
->
-ok.
->> +       u8 *start;
->> +       dma_addr_t addr;
->> +};
->> +
->>   struct qup_i2c_dev {
->>          struct device*dev;
->>          void __iomem*base;
->> @@ -157,9 +181,35 @@ struct qup_i2c_dev {
->>          /* QUP core errors */
->>          u32     qup_err;
->>
->> +       /* dma parameters */
->> +       bool    is_dma;
->> +       struct  dma_pool *dpool;
->> +       struct  tag start_tag;
->> +       struct  tag scratch_tag;
->> +       struct  tag footer_tag;
->> +       struct  dma_chan *dma_tx;
->> +       struct  dma_chan *dma_rx;
->> +       struct  scatterlist *sg_tx;
->> +       struct  scatterlist *sg_rx;
->> +       dma_addr_tsg_tx_phys;
->> +       dma_addr_tsg_rx_phys;
->
-> Maybe these could be organized in structure per direction.
->
-ok, will group it.
->> +
->>          struct completionxfer;
->>   };
->>
->> +struct i2c_bam_xfer {
->
-> Unused.
->
-  Right. Will remove the whole thing. Thanks.
->> +       struct qup_i2c_dev *qup;
->> +       u32 start_len;
->> +
->> +       u32 rx_nents;
->> +       u32 tx_nents;
->> +
->> +       struct dma_async_tx_descriptor *tx_desc;
->> +       dma_cookie_t tx_cookie;
->> +       struct dma_async_tx_descriptor *rx_desc;
->> +       dma_cookie_t rx_cookie;
->
-> structure per direction.
->
->> +};
->> +
->>
-  Infact should be removed.
->
->> +static void bam_i2c_callback(void *data)
->> +{
->
-> Please use consistent naming, here and bellow.
->
-ok, will change.
->> +       struct qup_i2c_dev *qup = data;
->> +
->> +       complete(&qup->xfer);
->> +}
->> +
->> +static int get_start_tag(u8 *tag, struct i2c_msg *msg, int first, int last,
->> +                       int blen)
->> +{
->> +       u8 addr = (msg->addr << 1) | ((msg->flags & I2C_M_RD) == I2C_M_RD);
->> +       u8 op;
->> +       int len = 0;
->> +
->> +       /* always issue stop for each read block */
->> +       if (last) {
->> +               if (msg->flags & I2C_M_RD)
->> +                       op = QUP_TAG_V2_DATARD_STOP;
->> +               else
->> +                       op = QUP_TAG_V2_DATAWR_STOP;
->> +       } else {
->> +               if (msg->flags & I2C_M_RD)
->> +                       op = QUP_TAG_V2_DATARD;
->> +               else
->> +                       op = QUP_TAG_V2_DATAWR;
->> +       }
->> +
->> +       if (msg->flags & I2C_M_TEN) {
->> +               len += 5;
->> +               tag[0] = QUP_TAG_V2_START;
->> +               tag[1] = addr;
->> +               tag[2] = op;
->> +               tag[3] = blen;
->> +
->> +               if (msg->flags & I2C_M_RD && last) {
->> +                       len += 2;
->> +                       tag[4] = QUP_BAM_INPUT_EOT;
->> +                       tag[5] = QUP_BAM_FLUSH_STOP;
->> +               }
->> +       } else {
->> +               if (first) {
->> +                       tag[len++] = QUP_TAG_V2_START;
->> +                       tag[len++] = addr;
->> +               }
->> +
->> +               tag[len++] = op;
->> +               tag[len++] = blen;
->> +
->> +               if (msg->flags & I2C_M_RD & last) {
->> +                       tag[len++] = QUP_BAM_INPUT_EOT;
->> +                       tag[len++] = QUP_BAM_FLUSH_STOP;
->> +               }
->> +       }
->> +
->> +       return len;
->> +}
->
-> Maybe could be split to 2 functions?
->
-hmm, ok will split couple of small ones.
->> -static const struct i2c_algorithm qup_i2c_algo = {
->> +static struct i2c_algorithm qup_i2c_algo = {
->
-> Why?
->
-  oops. Should not have been changed. Will fix.
->>          .master_xfer= qup_i2c_xfer,
->>          .functionality= qup_i2c_func,
->>   };
->> @@ -839,6 +1136,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
->>          u32 clk_freq = 100000;
->>          const struct qup_i2c_config *config;
->>          const struct of_device_id *of_id;
->> +       int blocks;
->>
->>          qup = devm_kzalloc(&pdev->dev, sizeof(*qup), GFP_KERNEL);
->>          if (!qup)
->> @@ -875,6 +1173,53 @@ static int qup_i2c_probe(struct platform_device *pdev)
->>                  return qup->irq;
->>          }
->>
->> +       if (of_device_is_compatible(pdev->dev.of_node, "qcom,i2c-qup-v2.1.1") ||
->> +               of_device_is_compatible(pdev->dev.of_node,
->> +                       "qcom,i2c-qup-v2.2.1")) {
->
-> Logic will be simpler if you check just for version 1 of the controller.
-  yes. Will fix it.
->
->> +               qup->dma_rx = dma_request_slave_channel(&pdev->dev, "bam-rx");
->> +
->
-> Please use dma_request_slave_channel_reason.
->
-> As Andy noted, please use just "rx", "tx"
->
-ok. will change it.
->> +               if (!qup->dma_rx)
->> +                       return -EPROBE_DEFER;
->
-> Don't mask other errors, here and bellow. DMA support should be optional.
->
-  Ok, will fix here.
->>                  dev_err(qup->dev, "Could not get core clock\n");
->> @@ -989,6 +1334,14 @@ static int qup_i2c_remove(struct platform_device *pdev)
->>   {
->>          struct qup_i2c_dev *qup = platform_get_drvdata(pdev);
->>
->> +       dma_pool_free(qup->dpool, qup->start_tag.start,
->> +                                                               qup->start_tag.addr);
->> +       dma_pool_free(qup->dpool, qup->scratch_tag.start,
->> +                                                               qup->scratch_tag.addr);
->> +       dma_pool_free(qup->dpool, qup->footer_tag.start,
->> +                                                               qup->footer_tag.addr);
->> +       dma_pool_destroy(qup->dpool);
->
-> Only if is_dma, right?
->
-Right. Will add the check.
-> DMA mapping code omitted from review. I don't understand it well enough, sorry.
->
-   Ok, thanks for reviewing the rest.
+Am 26.03.2015 um 06:56 schrieb Pavel Machek <pavel@ucw.cz>:
 
-Regards,
-  Sricharan
+> Hi!
+>=20
+>>>>> Main reason is, that I would need to go
+>>>>> through the UART to =93communicate" with the w2sg0004.
+>>>>=20
+>>>> You can always "communicate=94 through the UART. Even without DT. =
+As long as
+>>>> the connected chip is powered up by any means (could be some fixed=
+-regulator
+>>>> or hard wired).
+>>>=20
+>>> But you don't know "how" to communicate through the uart.
+>>=20
+>> Maybe we are talking using different assumptions. As long as you hav=
+e a user space
+>> gpsd daemon that talks to the gps chip the kernel simply has to tran=
+sparently (except
+>> line disciplines) pass the data to the uart.
+>=20
+> Forget userspace, some other operating system (or future linux) may
+> want to put gps handling into the kernel. (To hide differences betwee=
+n
+> different GPSes).
+>=20
+>>> Because we want the phone to boot knowing "I have a bluetooth" or "=
+I
+>>> have a GPS", as it would if it was connected using USB, and not hav=
+ing
+>>> user figure out what commands he needs to do to enable reasonable
+>>> hardware support (and getting it wrong, because you need to specify
+>>> _many_ critical parameters to hciattach).
+>>=20
+>> Yes, this is indeed something I also would like to see for the GTA04=
+ (and other)
+>> devices.
+>>=20
+>> So the reason is that some kernel driver wants to use the tty/uart t=
+o communicate
+>> directly with the chip. This is very similar to a gpio that some dri=
+ver wants to use.
+>>=20
+>> Thus please consider the
+>>=20
+>> / {
+>> 	bt {
+>> 		compatible =3D "vendor,product=93;
+>> 		uart =3D <&uart1>;
+>> 		enable =3D <&gpio17 34 0>;
+>> 	};
+>> };
+>=20
+> Would work, too, but I and everyone knows that subnode is better,
+> easier solution.
 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of Code Aurora Forum, hosted by The Linux Foundation
+=93Everyone=94 could be wrong and ignorant.
+
+And I thought we are not looking for the easiest solution but the right=
+ one.
+Especially if we define something that is for other operating systems a=
+s well.
+
+About easier: the one given above allows to modify the driver to presen=
+t e.g. an iio
+interface to user space (and no /dev/tty) *without changing the DT*. Be=
+cause the
+driver code decides which interface it presents. And not where it is a =
+subnode in DT.
+
+This is the level of abstraction DT nodes should have.
+
+
+It may be that you did not read my previous argumentation completely.
+
+In short, please see:
+
+	http://www.devicetree.org/Device_Tree_Usage#Devices
+
+And check of there is anything that mandates useage of a subnode in thi=
+s case.
+I simply don=92t find it.
+
+Rather, although it is also not explicitly excluded, I read hints that =
+it should *not* be
+done the subnode way.
+
+The reason is that it appears to me that the DT hierarchy is intended t=
+o describe
+how kernel drivers can *address* different components. Nothing less and=
+ nothing more.
+
+Especially there is no hint that layering in DT has anything to do with=
+ data flow
+hierarchies or a =93primary=94 interface as Sebastian calls it.
+
+>=20
+>> approach.
+>>=20
+>> And if you want to hide uart1 from the user-space, that should be a =
+property
+>> of the uart1 node (whereever it is defined).
+>=20
+> Sorry? That would be one heck of layering violation.
+
+Which layering?
+
+I think you still mix the software/kernel driver/data flow layers with =
+DT layers.
+
+DT can and must be independent on that.
+
+BR,
+Nikolaus
