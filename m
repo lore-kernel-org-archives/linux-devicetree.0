@@ -1,125 +1,121 @@
-From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [RFC][PATCH 2/2] phy: miphy365x: Convert to use phy.h instead
- of phy-miphy365x.h
-Date: Thu, 26 Mar 2015 09:48:31 +0100
-Message-ID: <5513C7DF.90200@st.com>
-References: <1425520379.1637.7.camel@phoenix>	<1425520665.1637.10.camel@phoenix>	<54FD8795.6020409@ti.com> <CAFRkauBNEgMiQtHxVuz_rif7+AWBjXoLVydidzjxK-oMWYxCrA@mail.gmail.com> <551340B4.2010001@ti.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: serial atag tag in devicetree ?
+Date: Thu, 26 Mar 2015 09:53:58 +0100
+Message-ID: <5513C926.1010708@redhat.com>
+References: <550EA6D8.3090702@redhat.com>	
+ <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>	
+ <550FF971.407@redhat.com>	
+ <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ@mail.gmail.com>	
+ <551119F1.2060002@redhat.com> <1427322910.26627.15.camel@collins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <551340B4.2010001-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1427322910.26627.15.camel@collins>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Paul Kocialkowski <contact@paulk.fr>, Rob Herring <robherring2@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Ian Campbell <ijc@hellion.org.uk>, U-Boot <u-boot@lists.denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon
-
-On 03/26/2015 12:11 AM, Kishon Vijay Abraham I wrote:
-> +Maxime, Srinivas, patrice
->
-> On Monday 09 March 2015 06:55 PM, Axel Lin wrote:
->> 2015-03-09 19:44 GMT+08:00 Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>:
->>> Hi,
->>>
->>>
->>> On Thursday 05 March 2015 07:27 AM, Axel Lin wrote:
->>>> The defines in phy-miphy365x.h are all covered in phy.h:
->>>>
->>>> MIPHY_TYPE_SATA == PHY_TYPE_STA
->>>> MIPHY_TYPE_PCIE == PHY_TYPE_PCIE
->>>> MIPPHY_TYPE_USB == PHY_TYPE_USB2
->>>>
->>>> So covert to use phy.h and then delete phy-miphy365x.h.
->>>>
->>>> Signed-off-by: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/ata/ahci-st.txt       |  2 +-
->>>>    Documentation/devicetree/bindings/phy/phy-miphy365x.txt |  8 ++++----
->>>>    arch/arm/boot/dts/stih416.dtsi                          |  4 ++--
->>>>    drivers/phy/phy-miphy365x.c                             | 14
->>>> +++++++-------
->>>>    include/dt-bindings/phy/phy-miphy365x.h                 | 14
->>>> --------------
->>>>    5 files changed, 14 insertions(+), 28 deletions(-)
->>>>    delete mode 100644 include/dt-bindings/phy/phy-miphy365x.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt
->>>> b/Documentation/devicetree/bindings/ata/ahci-st.txt
->>>> index 0574a77..070748b 100644
->>>> --- a/Documentation/devicetree/bindings/ata/ahci-st.txt
->>>> +++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
->>>> @@ -21,7 +21,7 @@ Example:
->>>>                  reg             = <0xfe380000 0x1000>;
->>>>                  interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
->>>>                  interrupt-names = "hostc";
->>>> -               phys            = <&miphy365x_phy MIPHY_PORT_0
->>>> MIPHY_TYPE_SATA>;
->>>> +               phys            = <&miphy365x_phy MIPHY_PORT_0
->>>> PHY_TYPE_SATA>;
->>>>                  phy-names       = "ahci_phy";
->>>>                  resets          = <&powerdown STIH416_SATA0_POWERDOWN>,
->>>>                                    <&softreset STIH416_SATA0_SOFTRESET>;
->>>> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>>> b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>>> index 9802d5d..087294d 100644
->>>> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>>> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>>> @@ -20,8 +20,8 @@ Required nodes        :  A sub-node is required for each
->>>> channel the controller
->>>>    Required properties (port (child) node):
->>>>    - #phy-cells  : Should be 1 (See second example)
->>>>                    Cell after port phandle is device type from:
->>>> -                       - MIPHY_TYPE_SATA
->>>> -                       - MIPHY_TYPE_PCI
->>>> +                       - PHY_TYPE_SATA
->>>> +                       - PHY_TYPE_PCIE
->>>>    - reg         : Address and length of register sets for each device in
->>>>                    "reg-names"
->>>>    - reg-names     : The names of the register addresses corresponding to
->>>> the
->>>> @@ -68,10 +68,10 @@ property, containing a phandle to the phy port node
->>>> and a device type.
->>>>
->>>>    Example:
->>>>
->>>> -#include <dt-bindings/phy/phy-miphy365x.h>
->>>> +#include <dt-bindings/phy/phy.h>
->>>>
->>>>          sata0: sata@fe380000 {
->>>>                  ...
->>>> -               phys      = <&phy_port0 MIPHY_TYPE_SATA>;
->>>> +               phys      = <&phy_port0 PHY_TYPE_SATA>;
->>>>                  ...
->>>>          };
->>>> diff --git a/arch/arm/boot/dts/stih416.dtsi
->>>> b/arch/arm/boot/dts/stih416.dtsi
->>>> index ea28eba..eeb7afe 100644
->>>> --- a/arch/arm/boot/dts/stih416.dtsi
->>>> +++ b/arch/arm/boot/dts/stih416.dtsi
->>>
->>> Can you split the patch so that I can queue the PHY part?
->> In my opinion, apply the patch as is should be fine and we don't have any
->> build breakage. I think the change in each file is pretty trivial and won't
->> cause problem. otherwise, I will have to send patches for the conversion
->> in each file and then wait until all patches are merged. Then send another
->> patch to delete include/dt-bindings/phy/phy-miphy365x.h.
-> Okay. I can queue after getting Ack from arch/arm/boot/dts/sti* maintainers.
-
-
-Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-
-
-Thanks
-
-Patrice
-
->
-> Cheers
-> Kishon
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiAyNS0wMy0xNSAyMzozNSwgUGF1bCBLb2NpYWxrb3dza2kgd3JvdGU6Cj4gTGUgbWFy
+ZGkgMjQgbWFycyAyMDE1IMOgIDA5OjAxICswMTAwLCBIYW5zIGRlIEdvZWRlIGEgw6ljcml0IDoK
+Pj4gSGksCj4+Cj4+IE9uIDI0LTAzLTE1IDAwOjEyLCBSb2IgSGVycmluZyB3cm90ZToKPj4+IE9u
+IE1vbiwgTWFyIDIzLCAyMDE1IGF0IDY6MzAgQU0sIEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJl
+ZGhhdC5jb20+IHdyb3RlOgo+Pj4+IEhpLAo+Pj4+Cj4+Pj4KPj4+PiBPbiAyMi0wMy0xNSAyMjow
+MSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Cj4+IDxzbmlwPgo+Pgo+Pj4+PiBUaGVyZSBpcyBhbHJl
+YWR5ICJzZXJpYWwtbnVtYmVyIiAoYSBzdHJpbmcpIHdoaWNoIGV4aXN0cyBmb3IKPj4+Pj4gT3Bl
+bkZpcm13YXJlLiBBbHNvLCAiY29weXJpZ2h0IiBjb3JyZXNwb25kcyB0byB2ZW5kb3IvbWFudWZh
+Y3R1cmVyCj4+Pj4+IHN0cmluZy4gQm90aCBvZiB0aGVzZSBhcmUgc3VwcG9ydGVkIGJ5IGxzaHcg
+YWxyZWFkeS4KPj4+Pgo+Pj4+Cj4+Pj4gT2ssIHNvIGlmIEkgdW5kZXJzdGFuZCB5b3UgY29ycmVj
+dGx5IHRoZW4geW91J3JlIHNheWluZyB0aGF0IHdlCj4+Pj4gc2hvdWxkIHNldCBhICJzZXJpYWwt
+bnVtYmVyIiBzdHJpbmcgcHJvcGVydHkgYXQgdGhlIGR0IHJvb3QgbGV2ZWwKPj4+PiBhbmQgdGhh
+dCB0aGlzIG1heSBjb250YWluIHByZXR0eSBtdWNoIGFueXRoaW5nLCBlLmcuIGluIHRoZQo+Pj4+
+IHN1bnhpIGNhc2UgdGhlIGZ1bGwgMTI4IGJpdCBTSUQgaW4gaGV4Lgo+Pj4KPj4+IFJpZ2h0Lgo+
+Pj4KPj4+PiBJcyB0aGUgdXNlIG9mIHRoZSAic2VyaWFsLW51bWJlciIgc3RyaW5nIHByb3BlcnR5
+IGFscmVhZHkgZG9jdW1lbnRlZAo+Pj4+IHNvbWV3aGVyZT8gSWYgbm90IEknbGwgc3VibWl0IGEg
+a2VybmVsIHBhdGNoIHRvIGRvY3VtZW50IGl0Lgo+Pj4KPj4+IE5vdCB0aGF0IEknbSBhd2FyZSBv
+Zi4gSXQgaXMgc29tZXRoaW5nIHRoYXQgcHJlZGF0ZXMgb3VyIGRvY3VtZW50YXRpb24KPj4+IHJl
+cXVpcmVtZW50cy4gSXQgY291bGQgYmUgaW4gT3BlbkZpcm13YXJlIHNwZWNzLiBEb2N1bWVudGlu
+ZyBpdCBpbiB0aGUKPj4+IERUIGJpbmRpbmdzIGRvZXMgbm90IGh1cnQuCj4+Cj4+IE9rLgo+Pgo+
+Pj4+IEFuZCBmb3Igb2xkZXIga2VybmVscyB3ZSBzaG91bGQgbm90IHNldCBhbnkgc2VyaWFsIGF0
+YWcgKHUtYm9vdAo+Pj4+IGFsd2F5cyBzZXRzIGl0LCBzbyB0aGlzIGxlYXZlcyBpdCBhdCAwKSBh
+bmQgb2xkIGtlcm5lbCB1c2VycyBhcmUKPj4+PiBvdXQgb2YgbHVjayB3cnQgZ2V0dGluZyB0byB0
+aGUgc2VyaWFsID8KPj4+Cj4+PiBJZiB0aGVyZSBpcyBzdWZmaWNpZW50IHJlYXNvbiB0byBzdXBw
+b3J0IHRoaXMgb24gb2xkIGtlcm5lbHMgeW91IGNvdWxkLgo+Pgo+PiBPbmUgcHJvYmxlbSB3aXRo
+IHN1cHBvcnRpbmcgdGhpcyBmb3Igb2xkZXIga2VybmVscyBpcyB0aGF0IGlmIGEgbm9uIDAKPj4g
+c2VyaWFsIGdldHMgc2hvd24gaW4gL3Byb2MvY3B1aW5mbyB3aXRoIG9sZGVyIGF0YWcgYm9vdGVk
+IGtlcm5lbHMsIHdlCj4+IHNob3VsZCByZWFsbHkgc2hvdyB0aGUgc2FtZSBudW1iZXIgaW4gL3By
+b2MvY3B1aW5mbyB3aGljaCBtZWFucyBhZGRpbmcKPj4gY29kZSB0byB0aGUga2VybmVsIHRvIGdl
+dCB0aGUgZGV2aWNldHJlZSAic2VyaWFsLW51bWJlciIgc3RyaW5nIHByb3BlcnR5Cj4+IGFuZCBz
+b21laG93IHB1dCB0aGF0IGludG8gdGhlIDY0IGJpdHMgd2hpY2ggd2UgaGF2ZSBpbiAvcHJvYy9j
+cHVpbmZvLAo+PiBidXQgZ2l2ZW4gdGhhdCB0aGUgInNlcmlhbC1udW1iZXIiIHN0cmluZyBjb3Vs
+ZCBiZSBoZXggb3IgZGVjaW1hbCBvcgo+PiB3aGF0IGV2ZXIgYW5kID4gNjQgYml0cyB0aGF0IHdp
+bGwgbGlrZWx5IHJlcXVpcmUgYSBwbGF0Zm9ybSBzcGVjaWZpYwo+PiBzb2x1dGlvbi4gQWxsIGRv
+YWJsZSwgYnV0IHRoZSBxdWVzdGlvbiB0aGVuIGJlY29tZXMgaXMgdGhpcyB3b3J0aCB0aGUKPj4g
+ZWZmb3J0ID8KPgo+IEFmdGVyIGludmVzdGlnYXRpbmcgYSBiaXQgbW9yZSwgSSBmb3VuZCBvdXQg
+dGhhdCB0aGUgVVNCIHNlcmlhbCBudW1iZXIKPiBpcyBleHBlY3RlZCB0byBiZSBhIHN0cmluZyBv
+ZiAzMiBieXRlcywgc28gYSAxMjggYml0IG51bWVyaWMgc2VyaWFsCj4gZG9lc24ndCBmaXQgKGl0
+IHRha2VzIDMyIGJ5dGVzIGZvciB0aGUgaGV4IHJlcHJlc2VudGF0aW9uIG9mIDEyOCBiaXRzLAo+
+IHNvIHRoZXJlIGlzIG5vIHJvb20gbGVmdCBmb3IgdGhlIHRlcm1pbmF0aW5nIG51bGwgYnl0ZSks
+IGhlbmNlIGl0IG1ha2VzCj4gc2Vuc2UgdG8ga2VlcCBhIDY0IGJpdCBsaW1pdGF0aW9uIGZvciB0
+aGUgc2VyaWFsIG51bWJlciwgaWYgdXNlcnMgYXJlCj4gZ29pbmcgdG8gcmVseSBvbiBpdCBhcyBV
+U0Igc2VyaWFsIHN0cmluZy4gTW9yZW92ZXIsIGl0IHNlZW1zIHRoYXQKPiBBbmRyb2lkIGRldmlj
+ZXMgYXJlIG1vc3RseSB1c2VkIDY0IGJpdCBudW1iZXJzIGZvciBzZXJpYWwgbnVtYmVycy8KPgo+
+IEkgd2FzIGluaXRpYWxseSBnb2luZyB0byBzdWdnZXN0IHRoYXQgd2Ugc2V0IGl0IGluIHN0b25l
+IHRoYXQgc2VyaWFsCj4gbXVzdCBiZSA2NCBudW1lcmljIGJpdHMgKGFzIGl0IHdhcyBpbiB0aGUg
+QVRBR3MgZGF5cykgYW5kIHRoYXQKPiBib290bG9hZGVycyB3b3VsZCBwYXNzIGl0IHRoYXQgd2F5
+IHRvIHRoZSBrZXJuZWwgdGhyb3VnaCBkZXZpY2UgdHJlZQo+ICh3aXRoIHR3byAzMiBiaXRzIG51
+bWVyaWMgaW50ZWdlcnMpLCBidXQgSGFucyB0YWxrZWQgbWUgb3V0IG9mIGl0Lgo+IEkganVzdCB3
+YW50IHRvIGV4cG9zZSB0aGUgc2l0dWF0aW9uIChlc3BlY2lhbGx5IHRoZSBVU0IgYW5kIEFuZHJv
+aWQKPiB0aGluZykgaGVyZSB0byBkb3VibGUtY2hlY2sgdGhhdCBldmVyeW9uZSBzdGlsbCBpcyBj
+b252aW5jZWQgdGhhdCBhCj4gc3RyaW5nIGFwcHJvYWNoIGluIGRldmljZSB0cmVlIGlzIGJlc3Qg
+KHdoaWNoIGlzIGZpbmUgd2l0aCBtZSkuCgpUaGVyZSBhcmUgYWxyZWFkeSBleGlzdGluZyB1c2Vy
+cyBvZiB0aGUgc2VyaWFsLW51bWJlciBwcm9wZXJ0eSBpbiBkZXZpY2V0cmVlLAphbmQgdGhlc2Ug
+YWxyZWFkeSB1c2UgYSBmcmVlLWZvcm1hdCBzdHJpbmcsIHNvIEFGQUlDVCB3ZSBoYXZlIG5vIGNo
+b2ljZQpidXQgdG8gZG8gdGhlIHNhbWUgYXMgdGhlIGV4aXN0aW5nIHVzZXJzLgoKQnV0IFJvYiBp
+cyB0aGUgZXhwZXJ0IGhlcmUsIHNvIGxldHMgc2VlIHdoYXQgUm9iIGhhcyB0byBzYXkuCgo+IFRo
+aXMgd2F5LCB1c2VycyB0aGF0IHN0aWxsIHdhbnQgdG8gdXNlIHRoZSBzZXJpYWwgcGFzc2VkIHRo
+cm91Z2ggZGV2aWNlCj4gdHJlZSBhcyBhIFVTQiBzZXJpYWwgbnVtYmVyIHdpbGwgaGF2ZSB0byB1
+c2UgYSBzdHJpbmcgb2YgMzIgYml0cywKPiBpbmNsdWRpbmcgdGhlIG51bGwgdGVybWluYXRpbmcg
+Ynl0ZSAod2hpY2ggaXMgd2hhdCBJJ2xsIHN1Z2dlc3QgZm9yCj4gc3VueGkgYnkgdXNpbmcgb25s
+eSA2NCBiaXRzIGZvciB0aGUgc2VyaWFsIG51bWJlcikuCj4KPiBBbHNvLCBJIHN1Z2dlc3QgdGhh
+dCB3ZSBzaG93IHRoYXQgc2VyaWFsLW51bWJlciBzdHJpbmcgYXMtaXMgaW4gY3B1aW5mbwo+IGFz
+IHdlbGwKCldlIGNhbm5vdCBkbyB0aGF0IGJlY2F1c2Ugd2UgbXVzdCBndWFyYW50ZWUgdGhhdCB0
+aGUgc2VyaWFsIHNob3duCmluIGNwdSBpbmZvIGlzIGEgNjQgYml0cyAvIDE2IGhleCB2YWx1ZXMg
+KDAgcGFkZGVkKSBudW1iZXIsIGFueXRoaW5nCmVsc2Ugd291bGQgYnJlYWsgdGhlIGtlcm5lbCA8
+LT4gdXNlcnNwYWNlIEFQSSBhbmQgcG90ZW50aWFsbHkgYnJlYWsKdXNlcnNwYWNlIGFwcHMuIFNv
+IHdlIG11c3QgZG8gdGhlIGRldmljZXRyZWUgLT4gc2VyaWFsbnVtYmVyIGxvdy9oaWdoCi0+IC9w
+cm9jL2NwaW5mbyB2ZXJzaW9uIHRvIGd1YXJhbnRlZSB0aGF0IHRoaXMgZm9ybWF0IGRvZXMgbm90
+IGNoYW5nZS4KCkFuZCBhcyBkaXNjdXNzZWQgYmVmb3JlIGlmIHlvdSB3YW50IGEgbm9uIDAgc2Vy
+aWFsIGluIGNwdWluZm8gdGhlbgp0aGUgZGV2aWNldHJlZSAtPiBzZXJpYWxudW1iZXIgbG93L2hp
+Z2ggc2hvdWxkIGJlIGRvbmUgaW4gc3VueGkKc3BlY2lmaWMga2VybmVsIGNvZGUsIGFzIG9uIHN1
+bnhpIHdlIHdpbGwga25vdyB0aGF0IHRoZSBzdHJpbmcgaW4KZGV2aWNldHJlZSB3aWxsIGJlIGEg
+aGV4IHZhbHVlLCBidXQgd2UndmUgbm8gc3VjaCBndWFyYW50ZWUgZm9yCm90aGVyIHBsYXRmb3Jt
+cywgc28gd2UgY2Fubm90IHNpbXBseSBoYXZlIGEgZ2VuZXJpYyBmdW5jdGlvbiB0bwpwb3B1bGF0
+ZSBlcmlhbG51bWJlciBsb3cvaGlnaCBmcm9tIHRoZSBkZXZpY2V0cmVlIHNlcmlhbC1udW1iZXIK
+c3RyaW5nLgoKID4gYW5kIGluc3RlYWQgbWFrZSBhIHN0cmluZyBvdXQgb2YgdGhlIHNlcmlhbCBB
+VEFHIGluIHRoZSBrZXJuZWwKPiBwcmlvciB0byBzaG93aW5nIGl0IGluIGNwdWluZm8gKGFzIG9w
+cG9zZWQgdG8gdHJhbnNsYXRpbmcgdGhlIHN0cmluZwo+IGNvbWluZyBmcm9tIGRldmljZSB0cmVl
+IHRvIGEgbnVtZXJpYyB2YWx1ZSB0aGF0IGNwdWluZm8gd2lsbCBlbmQgdXAKPiBzaG93aW5nIGFz
+IGEgc3RyaW5nIGF0IHRoZSBlbmQgb2YgdGhlIGRheSkuIFRodXMsIHRoZSBzZXJpYWwgbnVtYmVy
+Cj4gY29taW5nIGZyb20gZGV2aWNlIHRyZWUgd2lsbCBzdGlsbCBiZSBzaG93biBpbiBjcHVpbmZv
+IGFzIHdlbGwgYW5kIG5vCj4gQUJJIGdldHMgYnJva2VuLgoKWW91J3JlIGZvcmdldHRpbmcgdGhl
+IHVzZXJzcGFjZSA8LT4ga2VybmVsIEFCSSBoZXJlLCB0aGUgc2VyaWFsIGxpbmUKaW4gL3Byb2Mv
+Y3B1aW5mbyBpcyBub3QgYSBmcmVlIGZvcm0gc3RyaW5nIGl0IGlzIGEgNjQgYml0IGludCBzaG93
+bgphcyAwIHBhZGRlZCBoZXgsIGFuZCB3ZSBjYW5ub3QgY2hhbmdlIHRoYXQgYXMgY2hhbmdpbmcg
+dGhhdCB3b3VsZCBiZQphbiBBQkkgYnJlYWsuCgo+IElmIHlvdSdyZSBhbGwgb2theSB3aXRoIHRo
+aXMsIEknbGwgYmUgc2VuZGluZyBwYXRjaGVzIHRvIGJvdGggVS1Cb290IGFuZAo+IExpbnV4IHRv
+IHN0YXJ0IGRvY3VtZW50aW5nL2ltcGxlbWVudGluZyB0aGlzLgoKVGhhbmtzIGZvciB5b3VyIHdv
+cmsgb24gdGhpcywgbGV0cyBmaXJzdCBoYXNoIG91dCB0byBmZXcgcmVtYWluaW5nIHVuY2xlYXIK
+ZGV0YWlscyBhbmQgdGhlbiBJJ20gbG9va2luZyBmb3J3YXJkIHRvIHlvdXIgcGF0Y2ggc2V0IGZv
+ciB0aGlzLgoKUmVnYXJkcywKCkhhbnMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KVS1Cb290IG1haWxpbmcgbGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpo
+dHRwOi8vbGlzdHMuZGVueC5kZS9tYWlsbWFuL2xpc3RpbmZvL3UtYm9vdAo=
