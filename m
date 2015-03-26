@@ -1,30 +1,42 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Thu, 26 Mar 2015 08:16:47 +0100
-Message-ID: <CAJKOXPfYyO9GXx+fOscaFaZi6W0CDVNSmQDW6PryNZrnEaHHsg@mail.gmail.com>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
-	<1425291038-18269-3-git-send-email-jaewon02.kim@samsung.com>
-	<20150307201340.GF5233@earth>
-	<54FCEABE.9000007@samsung.com>
-	<CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
-	<54FD880E.30903@samsung.com>
-	<1425903199.13415.9.camel@AMDC1943>
-	<54FEF541.6000305@samsung.com>
-	<551119DE.2070402@samsung.com>
-	<CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
-	<551203CD.4020506@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <551203CD.4020506@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH] ARM: dts: vf610: fix missing irqs
+Date: Thu, 26 Mar 2015 08:24:05 +0100
+Message-ID: <1427354645-16629-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de
+Cc: maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-2015-03-25 1:39 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
->
-> Then, Can I request merge this patch ?
+While adding the MSCM interrupt router, all interrupts have been moved
+to vfxxx.dtsi again. However, some properties got lost. Readd the
+missing interrupt properties.
 
-Yes, but it is not up to me :).
+Offending commit:
+97e6466ab9 ("ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)"
+---
+ arch/arm/boot/dts/vfxxx.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 899645d..f9bef55 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -377,6 +377,7 @@
+ 			src: src@4006e000 {
+ 				compatible = "fsl,vf610-src", "syscon";
+ 				reg = <0x4006e000 0x1000>;
++				interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 
+ 			gpc: gpc@4006c000 {
+@@ -419,6 +420,7 @@
+ 				snvsrtc: snvs-rtc-lp@34 {
+ 					compatible = "fsl,sec-v4.0-mon-rtc-lp";
+ 					reg = <0x34 0x58>;
++					interrupts = <100 IRQ_TYPE_LEVEL_HIGH>;
+ 					clocks = <&clks VF610_CLK_SNVS>;
+ 					clock-names = "snvs-rtc";
+ 				};
+-- 
+2.3.3
