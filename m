@@ -1,52 +1,61 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Explicitly include linux/types.h in of_graph.h
-Date: Thu, 26 Mar 2015 13:46:06 -0500
-Message-ID: <CAL_Jsq+ON8z0BK64XLe=-ZYnCzJM7uxKEjP2MAxeOsiPWm0WtQ@mail.gmail.com>
-References: <1427388475-29096-1-git-send-email-broonie@kernel.org>
+Subject: Re: [PATCH v4] dt-bindings: brcm: rationalize Broadcom documentation naming
+Date: Thu, 26 Mar 2015 14:00:24 -0500
+Message-ID: <CAL_JsqLGz59fyC6h7XEh=UHOCzgTUY0Y2TSrZTHmv4U8nBpunw@mail.gmail.com>
+References: <1426899982-19733-1-git-send-email-sbranden@broadcom.com>
+ <550F6A5B.8050906@gmail.com> <55125894.2070303@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427388475-29096-1-git-send-email-broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <55125894.2070303-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-build-reports-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2015 at 11:47 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> In current -next of_graph.h fails to build due to it relying on
-> linux/types.h without explicitly including it:
+On Wed, Mar 25, 2015 at 1:41 AM, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
 >
-> ../include/linux/of_graph.h:43:71: error: unknown type name 'u32'
+> On 15-03-22 06:20 PM, Rob Herring wrote:
+>>
+>> On 03/20/2015 08:06 PM, Scott Branden wrote:
+>>>
+>>> This patchset attempts to standardize the naming of dt-bindings
+>>> documents based on the Broadcom vendor prefix of brcm.
+>>>
+>>> Although there are no guidelines currently present for how to name
+>>> the dt-bindings document the "vendor,binding.txt" style is in use by
+>>> some of the other vendors.
+>>>
+>>> Acked-by: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Acked-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>>
+>> Version history would be nice...
 >
-> caused by bfe446e37c4e (of: Add of_graph_get_port_by_id function).  Add
-> an explicit inclusion to fix this.
+> Yes, I should have added a cover letter but didn't.  The difference between
+> versions was minimal: a spelling correction in the commit message text and a
+> few additional binding files were found that were added between the
+> versions, along with the Ack's.
 >
-> Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Who did you want to apply this? I can, but I'm worried about merge
+>> conflicts here. Hopefully, you're not also doing lots of changes to
+>> existing bindings.
+>
+>
+> Yes, it would be great for you to take care of applying this.  There
+> shouldn't be any merge conflicts as none of these bindings are currently
+> being updated.  I left a clock binding document out of this patchset at Ray
+> Jui is updating/renaming the documentation for that binding in a different
+> patch already.
 
-Applied. Thanks.
+Okay, thanks. I've applied it.
 
 Rob
-
-> ---
->  include/linux/of_graph.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-> index 3c1c95a39e0c..7bc92e050608 100644
-> --- a/include/linux/of_graph.h
-> +++ b/include/linux/of_graph.h
-> @@ -14,6 +14,8 @@
->  #ifndef __LINUX_OF_GRAPH_H
->  #define __LINUX_OF_GRAPH_H
->
-> +#include <linux/types.h>
-> +
->  /**
->   * struct of_endpoint - the OF graph endpoint data structure
->   * @port: identifier (value of reg property) of a port this endpoint belongs to
-> --
-> 2.1.4
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
