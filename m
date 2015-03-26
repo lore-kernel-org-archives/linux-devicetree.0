@@ -1,102 +1,109 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v3 4/8] drm/exynos: dsi: rename pll_clk to sclk_clk
-Date: Thu, 26 Mar 2015 20:15:36 +0900
-Message-ID: <1427368540-28010-5-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 2/8] of: add helper for getting endpoint node of specific
+ identifiers
+Date: Thu, 26 Mar 2015 20:15:34 +0900
+Message-ID: <1427368540-28010-3-git-send-email-human.hwang@samsung.com>
 References: <1427368540-28010-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1427368540-28010-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, inki.dae@samsung.com, daniel@fooishbar.org
-Cc: dh09.lee@samsung.com, sw0312.kim@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, cw00.choi@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1427368540-28010-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org
+Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCByZW5hbWVzIHBsbF9jbGsgdG8gc2Nsa19jbGsuIFRoZSBjbG9jayByZWZlcmVu
-Y2VkIGJ5IHBsbF9jbGsKaXMgYWN0dWFsbHkgbm90IHRoZSBwbGwgaW5wdXQgY2xvY2sgZm9yIGRz
-aS4gVGhlIHBsbCBpbnB1dCBjbG9jayBjb21lcwpmcm9tIHRoZSBib2FyZCdzIG9zY2lsbGF0b3Ig
-ZGlyZWN0bHkuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ft
-c3VuZy5jb20+Ci0tLQpDaGFuZ2VzIGZvciB2MzoKIC0gTmV3bHkgYWRkZWQKIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vc19kc2ltLnR4dCAgICAgIHwgIDYgKystLS0KIGRyaXZl
-cnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYyAgICAgICAgICAgIHwgMzEgKysrKysr
-KystLS0tLS0tLS0tLS0tLQogMiBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAyMyBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdmlkZW8vZXh5bm9zX2RzaW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3ZpZGVvL2V4eW5vc19kc2ltLnR4dAppbmRleCA4MDJhYTdlLi4zOTk0MGNhIDEwMDY0NAot
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zX2RzaW0u
-dHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3Nf
-ZHNpbS50eHQKQEAgLTEwLDEzICsxMCwxMyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogICAtIGlu
-dGVycnVwdHM6IHNob3VsZCBjb250YWluIERTSSBpbnRlcnJ1cHQKICAgLSBjbG9ja3M6IGxpc3Qg
-b2YgY2xvY2sgc3BlY2lmaWVycywgbXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNoIHJlcXVp
-cmVkCiAgICAgZW50cnkgaW4gY2xvY2stbmFtZXMKLSAgLSBjbG9jay1uYW1lczogc2hvdWxkIGlu
-Y2x1ZGUgImJ1c19jbGsiYW5kICJwbGxfY2xrIiBlbnRyaWVzCisgIC0gY2xvY2stbmFtZXM6IHNo
-b3VsZCBpbmNsdWRlICJidXNfY2xrImFuZCAic2Nsa19taXBpIiBlbnRyaWVzCiAgIC0gcGh5czog
-bGlzdCBvZiBwaHkgc3BlY2lmaWVycywgbXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNoIHJl
-cXVpcmVkCiAgICAgZW50cnkgaW4gcGh5LW5hbWVzCiAgIC0gcGh5LW5hbWVzOiBzaG91bGQgaW5j
-bHVkZSAiZHNpbSIgZW50cnkKICAgLSB2ZGRjb3JlLXN1cHBseTogTUlQSSBEU0lNIENvcmUgdm9s
-dGFnZSBzdXBwbHkgKGUuZy4gMS4xVikKICAgLSB2ZGRpby1zdXBwbHk6IE1JUEkgRFNJTSBJL08g
-YW5kIFBMTCB2b2x0YWdlIHN1cHBseSAoZS5nLiAxLjhWKQotICAtIHNhbXN1bmcscGxsLWNsb2Nr
-LWZyZXF1ZW5jeTogc3BlY2lmaWVzIGZyZXF1ZW5jeSBvZiB0aGUgInBsbF9jbGsiIGNsb2NrCisg
-IC0gc2Ftc3VuZyxwbGwtY2xvY2stZnJlcXVlbmN5OiBzcGVjaWZpZXMgZnJlcXVlbmN5IG9mIHRo
-ZSBvc2NpbGxhdG9yIGNsb2NrCiAgIC0gI2FkZHJlc3MtY2VsbHMsICNzaXplLWNlbGxzOiBzaG91
-bGQgYmUgc2V0IHJlc3BlY3RpdmVseSB0byA8MT4gYW5kIDwwPgogICAgIGFjY29yZGluZyB0byBE
-U0kgaG9zdCBiaW5kaW5ncyAoc2VlIE1JUEkgRFNJIGJpbmRpbmdzIFsxXSkKIApAQCAtNDgsNyAr
-NDgsNyBAQCBFeGFtcGxlOgogCQlyZWcgPSA8MHgxMUM4MDAwMCAweDEwMDAwPjsKIAkJaW50ZXJy
-dXB0cyA9IDwwIDc5IDA+OwogCQljbG9ja3MgPSA8JmNsb2NrIDI4Nj4sIDwmY2xvY2sgMTQzPjsK
-LQkJY2xvY2stbmFtZXMgPSAiYnVzX2NsayIsICJwbGxfY2xrIjsKKwkJY2xvY2stbmFtZXMgPSAi
-YnVzX2NsayIsICJzY2xrX21pcGkiOwogCQlwaHlzID0gPCZtaXBpX3BoeSAxPjsKIAkJcGh5LW5h
-bWVzID0gImRzaW0iOwogCQl2ZGRjb3JlLXN1cHBseSA9IDwmdnVzYl9yZWc+OwpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUv
-ZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCmluZGV4IDA1ZmU5M2QuLjRhZjE4YjJmIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKKysrIGIvZHJp
-dmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCkBAIC0yNzcsNyArMjc3LDcgQEAg
-c3RydWN0IGV4eW5vc19kc2kgewogCiAJdm9pZCBfX2lvbWVtICpyZWdfYmFzZTsKIAlzdHJ1Y3Qg
-cGh5ICpwaHk7Ci0Jc3RydWN0IGNsayAqcGxsX2NsazsKKwlzdHJ1Y3QgY2xrICpzY2xrX2NsazsK
-IAlzdHJ1Y3QgY2xrICpidXNfY2xrOwogCXN0cnVjdCByZWd1bGF0b3JfYnVsa19kYXRhIHN1cHBs
-aWVzWzJdOwogCWludCBpcnE7CkBAIC00MzEsMTYgKzQzMSw3IEBAIHN0YXRpYyB1bnNpZ25lZCBs
-b25nIGV4eW5vc19kc2lfc2V0X3BsbChzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpLAogCXUxNiBtOwog
-CXUzMiByZWc7CiAKLQljbGtfc2V0X3JhdGUoZHNpLT5wbGxfY2xrLCBkc2ktPnBsbF9jbGtfcmF0
-ZSk7Ci0KLQlmaW4gPSBjbGtfZ2V0X3JhdGUoZHNpLT5wbGxfY2xrKTsKLQlpZiAoIWZpbikgewot
-CQlkZXZfZXJyKGRzaS0+ZGV2LCAiZmFpbGVkIHRvIGdldCBQTEwgY2xvY2sgZnJlcXVlbmN5XG4i
-KTsKLQkJcmV0dXJuIDA7Ci0JfQotCi0JZGV2X2RiZyhkc2ktPmRldiwgIlBMTCBpbnB1dCBmcmVx
-dWVuY3k6ICVsdVxuIiwgZmluKTsKLQorCWZpbiA9IGRzaS0+cGxsX2Nsa19yYXRlOwogCWZvdXQg
-PSBleHlub3NfZHNpX3BsbF9maW5kX3Btcyhkc2ksIGZpbiwgZnJlcSwgJnAsICZtLCAmcyk7CiAJ
-aWYgKCFmb3V0KSB7CiAJCWRldl9lcnIoZHNpLT5kZXYsCkBAIC0xMzA4LDEwICsxMjk5LDEwIEBA
-IHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9wb3dlcm9uKHN0cnVjdCBleHlub3NfZHNpICpkc2kpCiAJ
-CWdvdG8gZXJyX2J1c19jbGs7CiAJfQogCi0JcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+
-cGxsX2Nsayk7CisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+c2Nsa19jbGspOwogCWlm
-IChyZXQgPCAwKSB7CiAJCWRldl9lcnIoZHNpLT5kZXYsICJjYW5ub3QgZW5hYmxlIHBsbCBjbG9j
-ayAlZFxuIiwgcmV0KTsKLQkJZ290byBlcnJfcGxsX2NsazsKKwkJZ290byBlcnJfc2Nsa19jbGs7
-CiAJfQogCiAJcmV0ID0gcGh5X3Bvd2VyX29uKGRzaS0+cGh5KTsKQEAgLTEzMjMsOCArMTMxNCw4
-IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9wb3dlcm9uKHN0cnVjdCBleHlub3NfZHNpICpkc2kp
-CiAJcmV0dXJuIDA7CiAKIGVycl9waHk6Ci0JY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGxs
-X2Nsayk7Ci1lcnJfcGxsX2NsazoKKwljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5zY2xrX2Ns
-ayk7CitlcnJfc2Nsa19jbGs6CiAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+YnVzX2Nsayk7
-CiBlcnJfYnVzX2NsazoKIAlyZWd1bGF0b3JfYnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoZHNpLT5z
-dXBwbGllcyksIGRzaS0+c3VwcGxpZXMpOwpAQCAtMTM1MCw3ICsxMzQxLDcgQEAgc3RhdGljIHZv
-aWQgZXh5bm9zX2RzaV9wb3dlcm9mZihzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQogCiAJcGh5X3Bv
-d2VyX29mZihkc2ktPnBoeSk7CiAKLQljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxfY2xr
-KTsKKwljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5zY2xrX2Nsayk7CiAJY2xrX2Rpc2FibGVf
-dW5wcmVwYXJlKGRzaS0+YnVzX2Nsayk7CiAKIAlyZXQgPSByZWd1bGF0b3JfYnVsa19kaXNhYmxl
-KEFSUkFZX1NJWkUoZHNpLT5zdXBwbGllcyksIGRzaS0+c3VwcGxpZXMpOwpAQCAtMTcyMCwxMCAr
-MTcxMSwxMCBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikKIAkJcmV0dXJuIC1FUFJPQkVfREVGRVI7CiAJfQogCi0JZHNpLT5wbGxfY2xr
-ID0gZGV2bV9jbGtfZ2V0KGRldiwgInBsbF9jbGsiKTsKLQlpZiAoSVNfRVJSKGRzaS0+cGxsX2Ns
-aykpIHsKLQkJZGV2X2luZm8oZGV2LCAiZmFpbGVkIHRvIGdldCBkc2kgcGxsIGlucHV0IGNsb2Nr
-XG4iKTsKLQkJcmV0ID0gUFRSX0VSUihkc2ktPnBsbF9jbGspOworCWRzaS0+c2Nsa19jbGsgPSBk
-ZXZtX2Nsa19nZXQoZGV2LCAic2Nsa19taXBpIik7CisJaWYgKElTX0VSUihkc2ktPnNjbGtfY2xr
-KSkgeworCQlkZXZfaW5mbyhkZXYsICJmYWlsZWQgdG8gZ2V0IGRzaSBzY2xrIGNsb2NrXG4iKTsK
-KwkJcmV0ID0gUFRSX0VSUihkc2ktPnNjbGtfY2xrKTsKIAkJZ290byBlcnJfZGVsX2NvbXBvbmVu
-dDsKIAl9CiAKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+When there are multiple ports or multiple endpoints in a port, they have to be
+distinguished by the value of reg property. It is common. The drivers can get
+the specific endpoint in the specific port via this function. Now the drivers
+have to implement this code in themselves or have to force the order of dt nodes
+to get the right node.
+
+Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes for v2:
+ - None
+
+Changes for v3:
+ - None
+
+ drivers/of/base.c        | 33 +++++++++++++++++++++++++++++++++
+ include/linux/of_graph.h |  8 ++++++++
+ 2 files changed, 41 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index adb8764..ffc2235 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2165,6 +2165,39 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ EXPORT_SYMBOL(of_graph_get_next_endpoint);
+ 
+ /**
++ * of_graph_get_endpoint_by_regs() - get endpoint node of specific identifiers
++ * @parent: pointer to the parent device node
++ * @port_reg: identifier (value of reg property) of the parent port node
++ * @reg: identifier (value of reg property) of the endpoint node
++ *
++ * Return: An 'endpoint' node pointer which is identified by reg and at the same
++ * is the child of a port node identified by port_reg. reg and port_reg are
++ * ignored when they are -1.
++ */
++struct device_node *of_graph_get_endpoint_by_regs(
++	const struct device_node *parent, int port_reg, int reg)
++{
++	struct of_endpoint endpoint;
++	struct device_node *node, *prev_node = NULL;
++
++	while (1) {
++		node = of_graph_get_next_endpoint(parent, prev_node);
++		of_node_put(prev_node);
++		if (!node)
++			break;
++
++		of_graph_parse_endpoint(node, &endpoint);
++		if (((port_reg == -1) || (endpoint.port == port_reg)) &&
++			((reg == -1) || (endpoint.id == reg)))
++			return node;
++
++		prev_node = node;
++	}
++
++	return NULL;
++}
++
++/**
+  * of_graph_get_remote_port_parent() - get remote port's parent node
+  * @node: pointer to a local endpoint device_node
+  *
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index befef42..e859eb7 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
+ 				struct of_endpoint *endpoint);
+ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ 					struct device_node *previous);
++struct device_node *of_graph_get_endpoint_by_regs(
++		const struct device_node *parent, int port_reg, int reg);
+ struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node);
+ struct device_node *of_graph_get_remote_port(const struct device_node *node);
+@@ -49,6 +51,12 @@ static inline struct device_node *of_graph_get_next_endpoint(
+ 	return NULL;
+ }
+ 
++struct device_node *of_graph_get_endpoint_by_regs(
++		const struct device_node *parent, int port_reg, int reg)
++{
++	return NULL;
++}
++
+ static inline struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node)
+ {
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
