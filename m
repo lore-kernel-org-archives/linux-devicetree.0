@@ -1,117 +1,72 @@
-From: Jianwei Wang <b52261-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 2/4] arm/layerscape/ls1021a: DCU pixel clock control
-Date: Thu, 26 Mar 2015 13:37:03 +0800
-Message-ID: <1427348225-40731-2-git-send-email-b52261@freescale.com>
+From: Jianwei Wang <b52261@freescale.com>
+Subject: [PATCH v3 4/4] arm/dts/ls1021a: Add a TFT LCD panel dts node for DCU
+Date: Thu, 26 Mar 2015 13:37:05 +0800
+Message-ID: <1427348225-40731-4-git-send-email-b52261@freescale.com>
 References: <1427348225-40731-1-git-send-email-b52261@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427348225-40731-1-git-send-email-b52261-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Jianwei Wang <b52261-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1427348225-40731-1-git-send-email-b52261@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: scottwood@freescale.com, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, Jianwei Wang <b52261@freescale.com>, Jason.Jin@freescale.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable DCU pixel clock when platform devices initinalizing and
-provide enable and disable pixel clock functions for drm driver
+Add a required display-timings node for the TFT LCD panel
+the TFT LCD panel is WQVGA "480x272", and the bpp is 24.
 
-Signed-off-by: Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jianwei Wang <b52261-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Alison Wang <b18965@freescale.com>
+Signed-off-by: Xiubo Li <lixiubo@cmss.chinamobile.com>
+Signed-off-by: Jianwei Wang <b52261@freescale.com>
 ---
- arch/arm/mach-imx/mach-ls1021a.c | 36 ++++++++++++++++++++++++++++++++++++
- include/linux/fsl/dcu.h          | 22 ++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
- create mode 100644 include/linux/fsl/dcu.h
+ arch/arm/boot/dts/ls1021a-twr.dts | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
-index b89c858..4fb346d 100644
---- a/arch/arm/mach-imx/mach-ls1021a.c
-+++ b/arch/arm/mach-imx/mach-ls1021a.c
-@@ -8,9 +8,44 @@
-  */
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index a2c591e..4780b11 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -58,6 +58,32 @@
+ 	};
+ };
  
- #include <asm/mach/arch.h>
-+#include <linux/of_platform.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/fsl/dcu.h>
- 
- #include "common.h"
- 
-+void dcu_pixclk_disable(void)
-+{
-+	struct regmap *scfg_regmap;
++&dcu {
++	display = <&display>;
++	status = "okay";
 +
-+	scfg_regmap = syscon_regmap_lookup_by_compatible("fsl,ls1021a-scfg");
-+	if (IS_ERR(scfg_regmap)) {
-+		pr_err("No syscfg phandle specified\n");
-+		return;
-+	}
++	display: display@0 {
++		bits-per-pixel = <24>;
 +
-+	regmap_write(scfg_regmap, SCFG_PIXCLKCR, PXCK_DISABLE);
-+}
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: nl4827hc19 {
++				clock-frequency = <10870000>;
++				hactive = <480>;
++				vactive = <272>;
++				hback-porch = <2>;
++				hfront-porch = <2>;
++				vback-porch = <2>;
++				vfront-porch = <2>;
++				hsync-len = <41>;
++				vsync-len = <4>;
++				hsync-active = <1>;
++				vsync-active = <1>;
++			};
++		};
++	};
++};
 +
-+void dcu_pixclk_enable(void)
-+{
-+	struct regmap *scfg_regmap;
-+
-+	scfg_regmap = syscon_regmap_lookup_by_compatible("fsl,ls1021a-scfg");
-+	if (IS_ERR(scfg_regmap)) {
-+		pr_err("No syscfg phandle specified\n");
-+		return;
-+	}
-+
-+	regmap_write(scfg_regmap, SCFG_PIXCLKCR, PXCK_ENABLE);
-+}
-+
-+static void __init ls1021a_init_machine(void)
-+{
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-+	dcu_pixclk_enable();
-+}
- static const char * const ls1021a_dt_compat[] __initconst = {
- 	"fsl,ls1021a",
- 	NULL,
-@@ -18,5 +53,6 @@ static const char * const ls1021a_dt_compat[] __initconst = {
- 
- DT_MACHINE_START(LS1021A, "Freescale LS1021A")
- 	.smp		= smp_ops(ls1021a_smp_ops),
-+	.init_machine	= ls1021a_init_machine,
- 	.dt_compat	= ls1021a_dt_compat,
- MACHINE_END
-diff --git a/include/linux/fsl/dcu.h b/include/linux/fsl/dcu.h
-new file mode 100644
-index 0000000..1873057
---- /dev/null
-+++ b/include/linux/fsl/dcu.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright 2015 Freescale Semiconductor, Inc.
-+ *
-+ * Freescale DCU drm device driver
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __FSL_DCU_H__
-+#define __FSL_DCU_H__
-+
-+#define SCFG_PIXCLKCR			0x28
-+#define PXCK_ENABLE			BIT(31)
-+#define PXCK_DISABLE			0
-+
-+void dcu_pixclk_enable(void);
-+void dcu_pixclk_disable(void);
-+
-+#endif /* __FSL_DCU_H__ */
+ &dspi1 {
+ 	bus-num = <0>;
+ 	status = "okay";
 -- 
 2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
