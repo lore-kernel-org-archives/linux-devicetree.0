@@ -1,126 +1,190 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 04/11] DT: Add documentation for the mfd Maxim max77693
-Date: Fri, 27 Mar 2015 15:06:58 +0100
-Message-ID: <55156402.8000109@samsung.com>
-References: <1427464185-27950-1-git-send-email-j.anaszewski@samsung.com>
- <1427464185-27950-5-git-send-email-j.anaszewski@samsung.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
+Date: Fri, 27 Mar 2015 08:41:54 -0700
+Message-ID: <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com>
+References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1427464185-27950-5-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55155D35.1070703-cmBhpYW9OiY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-This patch has been around for a long time already and has
-undergone several modifications in response to review
-remarks. It lacks only DT maintainer's Ack.
-
-Could you express your opinion, please?
-
-
-On 03/27/2015 02:49 PM, Jacek Anaszewski wrote:
-> This patch adds device tree binding documentation for
-> the flash cell of the Maxim max77693 multifunctional device.
+2015-03-27 6:37 GMT-07:00 Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>:
 >
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
+> The following API is added:
+> - of_phy_fixed_link_set_link() allows to set link state (up/down)
+> - of_phy_fixed_link_set_speed() allows to set link speed
+> - of_phy_fixed_link_set_duplex() allows to enable/disable duplex
+>
+> This API is needed when the MDIO-less link have some other means
+> of a status passing to MAC, for example with in-band data (SGMII).
+> MAC driver can then use that API to update the PHY status.
+
+I do not think any of these changes are required, if you look at
+drivers/net/dsa/bcm_sf2.c, there is a fixed_link_update callback to
+re-act to link up/down interrupts (but this could easily be extended
+to speed/duplex as well), by directly modifying a fixed_phy_status
+structure.
+
+Can you try that approach in mvneta?
+
+>
+> CC: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> CC: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>
+> Signed-off-by: Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 > ---
->   Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
->   1 file changed, 61 insertions(+)
+>  drivers/of/of_mdio.c    |   72 +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_mdio.h |   17 +++++++++++
+>  2 files changed, 89 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-> index 38e6440..15c546ea 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -76,7 +76,53 @@ Optional properties:
->       Valid values: 4300000, 4700000, 4800000, 4900000
->       Default: 4300000
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index b3dc1e6..ade2426 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -251,6 +251,69 @@ struct phy_device *of_phy_attach(struct net_device *dev,
+>  EXPORT_SYMBOL(of_phy_attach);
 >
-> +- led : the LED submodule device node
+>  #if defined(CONFIG_FIXED_PHY)
+> +struct fixed_link_data {
+> +       struct fixed_phy_status status;
+> +       struct fixed_phy_status changed;
+> +};
 > +
-> +There are two LED outputs available - FLED1 and FLED2. Each of them can
-> +control a separate LED or they can be connected together to double
-> +the maximum current for a single connected LED. One LED is represented
-> +by one child node.
+> +static int of_phy_fixed_link_update(struct phy_device *phy,
+> +                 struct fixed_phy_status *status)
+> +{
+> +       struct fixed_link_data *priv = phy->priv;
 > +
-> +Required properties:
-> +- compatible : Must be "maxim,max77693-led".
+> +       if (priv->changed.link) {
+> +               status->link = priv->status.link;
+> +               priv->changed.link = 0;
+> +       }
+> +       if (priv->changed.speed) {
+> +               status->speed = priv->status.speed;
+> +               priv->changed.speed = 0;
+> +       }
+> +       if (priv->changed.duplex) {
+> +               status->duplex = priv->status.duplex;
+> +               priv->changed.duplex = 0;
+> +       }
+> +       if (priv->changed.pause) {
+> +               status->pause = priv->status.pause;
+> +               priv->changed.pause = 0;
+> +       }
+> +       if (priv->changed.asym_pause) {
+> +               status->asym_pause = priv->status.asym_pause;
+> +               priv->changed.asym_pause = 0;
+> +       }
+> +       return 0;
+> +}
 > +
-> +Optional properties:
-> +- maxim,trigger-type : Flash trigger type.
-> +	Possible trigger types:
-> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
-> +			the flash,
-> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
-> +			of the flash.
-> +- maxim,boost-mode :
-> +	In boost mode the device can produce up to 1.2A of total current
-> +	on both outputs. The maximum current on each output is reduced
-> +	to 625mA then. If not enabled explicitly, boost setting defaults to
-> +	LEDS_BOOST_FIXED in case both current sources are used.
-> +	Possible values:
-> +		LEDS_BOOST_OFF (0) - no boost,
-> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-> +		LEDS_BOOST_FIXED (2) - fixed mode.
-> +- maxim,boost-mvout : Output voltage of the boost module in millivolts.
-> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
-> +	if chip estimates that system voltage could drop below this level due
-> +	to flash power consumption.
+> +int of_phy_fixed_link_set_link(struct phy_device *phy, int link)
+> +{
+> +       struct fixed_link_data *priv = phy->priv;
 > +
-> +Required properties of the LED child node:
-> +- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
-> +		device current output identifiers: 0 - FLED1, 1 - FLED2
+> +       priv->status.link = link;
+> +       priv->changed.link = 1;
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(of_phy_fixed_link_set_link);
 > +
-> +Optional properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> +		Range: 15625 - 250000
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> +		Range: 15625 - 1000000
-> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
-> +		Range: 62500 - 1000000
+> +int of_phy_fixed_link_set_speed(struct phy_device *phy, int speed)
+> +{
+> +       struct fixed_link_data *priv = phy->priv;
 > +
->   Example:
-> +#include <dt-bindings/leds/common.h>
+> +       priv->status.speed = speed;
+> +       priv->changed.speed = 1;
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(of_phy_fixed_link_set_speed);
 > +
->   	max77693@66 {
->   		compatible = "maxim,max77693";
->   		reg = <0x66>;
-> @@ -117,5 +163,20 @@ Example:
->   			maxim,thermal-regulation-celsius = <75>;
->   			maxim,battery-overcurrent-microamp = <3000000>;
->   			maxim,charge-input-threshold-microvolt = <4300000>;
+> +int of_phy_fixed_link_set_duplex(struct phy_device *phy, int duplex)
+> +{
+> +       struct fixed_link_data *priv = phy->priv;
 > +
-> +		led {
-> +			compatible = "maxim,max77693-led";
-> +			maxim,trigger-type = <LEDS_TRIG_TYPE_LEVEL>;
-> +			maxim,boost-mode = <LEDS_BOOST_FIXED>;
-> +			maxim,boost-mvout = <5000>;
-> +			maxim,mvsys-min = <2400>;
+> +       priv->status.duplex = duplex;
+> +       priv->changed.duplex = 1;
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(of_phy_fixed_link_set_duplex);
 > +
-> +			camera_flash: flash-led {
-> +				label = "max77693-flash";
-> +				led-sources = <0>, <1>;
-> +				max-microamp = <500000>;
-> +				flash-max-microamp = <1250000>;
-> +				flash-timeout-us = <1000000>;
-> +			};
->   		};
->   	};
+>  /*
+>   * of_phy_is_fixed_link() and of_phy_register_fixed_link() must
+>   * support two DT bindings:
+> @@ -287,6 +350,7 @@ int of_phy_register_fixed_link(struct device_node *np)
+>         const __be32 *fixed_link_prop;
+>         int len;
+>         struct phy_device *phy;
+> +       struct fixed_link_data *priv;
 >
+>         /* New binding */
+>         fixed_link_node = of_get_child_by_name(np, "fixed-link");
+> @@ -320,6 +384,14 @@ int of_phy_register_fixed_link(struct device_node *np)
+>                 }
+>         }
+>
+> +       priv = kmalloc(sizeof(*priv), GFP_KERNEL);
+> +       if (!priv) {
+> +               fixed_phy_unregister(phy);
+> +               return -ENOMEM;
+> +       }
+> +       memset(&priv->changed, 0, sizeof(priv->changed));
+> +       phy->priv = priv;
+> +       fixed_phy_set_link_update(phy, of_phy_fixed_link_update);
+>         return 0;
+>  }
+>  EXPORT_SYMBOL(of_phy_register_fixed_link);
+> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+> index d449018..677adac 100644
+> --- a/include/linux/of_mdio.h
+> +++ b/include/linux/of_mdio.h
+> @@ -65,6 +65,9 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
+>  #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
+>  extern int of_phy_register_fixed_link(struct device_node *np);
+>  extern bool of_phy_is_fixed_link(struct device_node *np);
+> +extern int of_phy_fixed_link_set_link(struct phy_device *phy, int link);
+> +extern int of_phy_fixed_link_set_speed(struct phy_device *phy, int speed);
+> +extern int of_phy_fixed_link_set_duplex(struct phy_device *phy, int duplex);
+>  #else
+>  static inline int of_phy_register_fixed_link(struct device_node *np)
+>  {
+> @@ -74,6 +77,20 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
+>  {
+>         return false;
+>  }
+> +static inline int of_phy_fixed_link_set_link(struct phy_device *phy, int link)
+> +{
+> +       return -ENOSYS;
+> +}
+> +static inline int of_phy_fixed_link_set_speed(struct phy_device *phy,
+> +                                             int speed)
+> +{
+> +       return -ENOSYS;
+> +}
+> +static inline int of_phy_fixed_link_set_duplex(struct phy_device *phy,
+> +                                              int duplex)
+> +{
+> +       return -ENOSYS;
+> +}
+>  #endif
+>
+>
+> --
+> 1.7.9.5
+
 
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
