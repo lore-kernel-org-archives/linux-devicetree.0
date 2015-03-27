@@ -1,129 +1,188 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH V2 1/2] ARM: dts: DRA7: Add bandgap and related thermal
- nodes
-Date: Fri, 27 Mar 2015 11:32:36 +0530
-Message-ID: <5514F27C.7070904@ti.com>
-References: <1427139579-4215-1-git-send-email-nm@ti.com> <1427139579-4215-2-git-send-email-nm@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Fri, 27 Mar 2015 07:57:58 +0000
+Message-ID: <20150327075758.GB15988@x1>
+References: <54FCEABE.9000007@samsung.com>
+ <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
+ <54FD880E.30903@samsung.com>
+ <1425903199.13415.9.camel@AMDC1943>
+ <54FEF541.6000305@samsung.com>
+ <551119DE.2070402@samsung.com>
+ <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
+ <551408E0.3060901@samsung.com>
+ <20150326135412.GJ5951@x1>
+ <55149AFC.1080009@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427139579-4215-2-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, tony@atomide.com, bcousson@baylibre.com, edubezval@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, j-keerthy@ti.com, t-kristo@ti.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55149AFC.1080009@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 27 Mar 2015, Beomho Seo wrote:
+> On 03/26/2015 10:54 PM, Lee Jones wrote:
+> > On Thu, 26 Mar 2015, Beomho Seo wrote:
+> >> On 03/24/2015 05:38 PM, Krzysztof Kozlowski wrote:
+> >>> 2015-03-24 9:01 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+> >>>> On 03/10/2015 10:44 PM, Beomho Seo wrote:
+> >>>>> On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
+> >>>>>> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
+> >>>>>>> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
+> >>>>>>>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com=
+>:
+> >>>>>>>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
+> >>>>>>>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote=
+:
+> >>>>>>>>>>> From: Beomho Seo <beomho.seo@samsung.com>
+> >>>>>>>>>>>
+> >>>>>>>>>>> This patch adds device driver of max77843 charger. This d=
+river provide
+> >>>>>>>>>>> initialize each charging mode(e.g. fast charge, top-off m=
+ode and constant
+> >>>>>>>>>>> charging mode so on.). Additionally, control charging par=
+amters to use
+> >>>>>>>>>>> i2c interface.
+> >>>>>>>>>>>
+> >>>>>>>>>>> Cc: Sebastian Reichel <sre@kernel.org>
+> >>>>>>>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> >>>>>>>>>>
+> >>>>>>>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+> >>>>>>>>>>
+> >>>>>>>>>> I can't take it as is, since it depends on the private hea=
+der file
+> >>>>>>>>>> of PATCHv1.
+> >>>>>>>>>>
+> >>>>>>>>>> -- Sebastian
+> >>>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> This patch reviewed by Sebastian.
+> >>>>>>>>> Could you Please merge that your git tree ?
+> >>>>>>>>
+> >>>>>>>> Hi,
+> >>>>>>>>
+> >>>>>>>> ... and again we are adding a new driver for very similar ch=
+ipset to
+> >>>>>>>> already supported. I looked at spec and the charger's regist=
+ers are
+> >>>>>>>> almost the same as for max77693. Their layout and addresses =
+are the
+> >>>>>>>> same. I see some minor differences, probably the most import=
+ant would
+> >>>>>>>> be different values current (fast-charge, top-off). But stil=
+l 90% of
+> >>>>>>>> registers are the same... Do we really have to add new drive=
+r?
+> >>>>>>>>
+> >>>>>>>> Best regards,
+> >>>>>>>> Krzysztof
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>> Thank you for your comment. As you say, both chip set are sim=
+ilar.
+> >>>>>>> But new driver need for support max77843. It is support diffe=
+rent below
+> >>>>>>> - Provide Battery presence information.
+> >>>>>>
+> >>>>>> Another set of power supply properties could be added for that=
+ chip.
+> >>>>>> This way the get_property() function would be the same but act=
+ually the
+> >>>>>> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
+> >>>>>>
+> >>>>>>> - Can OTG FET control.
+> >>>>>>
+> >>>>>> Where the OTG FET feature is it enabled in your driver? I coul=
+dn't find
+> >>>>>> it.
+> >>>>>>
+> >>>>>
+> >>>>> Sorry. This driver don't control OTG FET feature.
+> >>>>>
+> >>>>>>> - Bigger Fast charge current, Top Off current Threshold selec=
+tion.
+> >>>>>>> - Various and bigger OTG current limitation.
+> >>>>>>> - Bigger primary charger termination voltage setting.
+> >>>>>>> - Different maximum input current limit selection(Different s=
+tep).
+> >>>>>>
+> >>>>>> Yes, I mentioned some of these differences (the Fast/top-off
+> >>>>>> differences). These are differences in values so it does not r=
+equire new
+> >>>>>> driver. There is need to develop new driver just to support di=
+fferent
+> >>>>>> current (3.0 A instead of 2.1 A) or voltage threshold.
+> >>>>>>
+> >>>>>
+> >>>>> They are different charging current, OTG current limitation, to=
+p off current,
+> >>>>> charging limitation value. In case OTG current limitation diffe=
+rent not
+> >>>>> limitation value but using register bit(max77843 use[7:6] max77=
+693 use[7]
+> >>>>> bit only). Even if this driver not support all feature, some re=
+gister
+> >>>>> different with max77693(support value, use register bit).
+> >>>>>
+> >>>>> If this driver will combined with max77693 may even be benefici=
+al for
+> >>>>> new Maxim driver. But the present, this driver is related with
+> >>>>> max77843 core driver and max77843-regulator. So I hope this dri=
+ver
+> >>>>> merge first. And then will extend two driver(max77843 charger a=
+nd max77693 charger).
+> >>>
+> >>> I still prefer merging common drivers into one instead of creatin=
+g
+> >>> some more of them.
+> >>> However I understand your point and I am not entirely opposed aga=
+inst.
+> >>> Especially that you invested quite a bit of time for developing t=
+his
+> >>> and my feedback was quite late. To summarize I am fine with your
+> >>> approach.
+> >>>
+> >>> Best regards,
+> >>> Krzysztof
+> >>>
+> >>
+> >> Dear Lee Jones,
+> >>
+> >> Could you please merge that your git tree ?
+> >=20
+> > Sorry, I'm lost.  Why am I taking this though the MFD tree?  What
+> > patches are left?  Where are they going?  Am I taking any other
+> > patches?
+> >=20
+>=20
+> Max77843 charger driver is max77843 mfd core dependency.
 
+What kind of dependancy?  Runtime or build?  Where is the patch that
+it depends on?  Is it in -next for in Mainline already?
 
-On Tuesday 24 March 2015 01:09 AM, Nishanth Menon wrote:
-> From: Keerthy <j-keerthy@ti.com>
->
-> Add bandgap and related thermal nodes. The patch adds 5 thermal
-> sensors. Only one cooling device for mpu as of now. The sensors are
-> the exact same on both dra72 and dra7. Introduce CPU, GPU, core nodes
-> for the moment as they are direct reuse of OMAP5 entities.
->
-> NOTE: OMAP4 has a finer counter granularity, which allows for a delay
-> of 1000ms in the thermal zone polling intervals. DRA7 have different
-> counter mechanism, which allows at maximum a 500ms timer. Adjust the
-> cpu thermal zone accordingly for DRA7.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> [t-kristo@ti.com: few reuse from OMAP5 entities]
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
-> Changes since V1:
-> 	- omap5-cpu-thermal.dtsi dropped
-> 	- approach similar to omap5
-> 	- added core and gpu thermal dtsi(they can be reused)
-> 	- Squashed patch #1 from v1 to patch #2 - this patch.
-> 	- Not carrying forward ack due to change
+> If you think this patch will suitable for battery tree(or other tree)=
+,
+> I would like request for merge battery tree.
 
-Thanks for updating Nishanth. Looks good to me.
+If this patch has no build dependencies on patches which are in -next,
+but not in Mainline then it will have to go in via the same tree that
+the dependencies were applied to.  If the dependencies are already in
+Mainline, or they are not build-deps, then it should go in via the
+correct tree, which I believe is Sebastian's tree.
 
-- Keerthy
+> Also, I will send again this patch and device tree binding document.
 
->
-> V1: http://marc.info/?t=142688102700006&r=1&w=2
->
->   arch/arm/boot/dts/dra7.dtsi   |   23 +++++++++++++++++++++++
->   arch/arm/boot/dts/dra72x.dtsi |    5 +++++
->   arch/arm/boot/dts/dra74x.dtsi |    5 +++++
->   3 files changed, 33 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index eea4a54d6cb3..2d6a7e3e001f 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -177,6 +177,18 @@
->   			};
->   		};
->
-> +		bandgap: bandgap@4a0021e0 {
-> +			reg = <0x4a0021e0 0xc
-> +				0x4a00232c 0xc
-> +				0x4a002380 0x2c
-> +				0x4a0023C0 0x3c
-> +				0x4a002564 0x8
-> +				0x4a002574 0x50>;
-> +				compatible = "ti,dra752-bandgap";
-> +				interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-> +				#thermal-sensor-cells = <1>;
-> +		};
-> +
->   		cm_core_aon: cm_core_aon@4a005000 {
->   			compatible = "ti,dra7-cm-core-aon";
->   			reg = <0x4a005000 0x2000>;
-> @@ -1419,6 +1431,17 @@
->   			status = "disabled";
->   		};
->   	};
-> +
-> +	thermal_zones: thermal-zones {
-> +		#include "omap4-cpu-thermal.dtsi"
-> +		#include "omap5-gpu-thermal.dtsi"
-> +		#include "omap5-core-thermal.dtsi"
-> +	};
-> +
-> +};
-> +
-> +&cpu_thermal {
-> +	polling-delay = <500>; /* milliseconds */
->   };
->
->   /include/ "dra7xx-clocks.dtsi"
-> diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
-> index e5a3d23a3df1..6ac8e3601499 100644
-> --- a/arch/arm/boot/dts/dra72x.dtsi
-> +++ b/arch/arm/boot/dts/dra72x.dtsi
-> @@ -20,6 +20,11 @@
->   			device_type = "cpu";
->   			compatible = "arm,cortex-a15";
->   			reg = <0>;
-> +
-> +			/* cooling options */
-> +			cooling-min-level = <0>;
-> +			cooling-max-level = <2>;
-> +			#cooling-cells = <2>; /* min followed by max */
->   		};
->   	};
->
-> diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
-> index 10173fab1a15..eef981f4bcd5 100644
-> --- a/arch/arm/boot/dts/dra74x.dtsi
-> +++ b/arch/arm/boot/dts/dra74x.dtsi
-> @@ -31,6 +31,11 @@
->   			clock-names = "cpu";
->
->   			clock-latency = <300000>; /* From omap-cpufreq driver */
-> +
-> +			/* cooling options */
-> +			cooling-min-level = <0>;
-> +			cooling-max-level = <2>;
-> +			#cooling-cells = <2>; /* min followed by max */
->   		};
->   		cpu@1 {
->   			device_type = "cpu";
->
+Either way you should do that.  Mark them as RESEND instead of PATCH
+and apply all of the Acks you have accumulated so far.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
