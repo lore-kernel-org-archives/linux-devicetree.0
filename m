@@ -1,34 +1,44 @@
-From: Juergen Borleis <jbe@pengutronix.de>
-Subject: ARM: dts: Fix wrong SoC type to build devicetrees for i.MX27
-Date: Fri, 27 Mar 2015 11:22:30 +0100
-Message-ID: <201503271122.30489.jbe@pengutronix.de>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: gpio-syscon for Keystone 2 - DT bindings mismatch code expectation?
+Date: Fri, 27 Mar 2015 12:21:45 +0200
+Message-ID: <55152F39.5090805@ti.com>
+References: <20150323215545.GT8656@n2100.arm.linux.org.uk> <CACRpkdYVkdLEEae8JHSsBEtMyhMx0yqN8RLhP2reoV+r5gA+JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYVkdLEEae8JHSsBEtMyhMx0yqN8RLhP2reoV+r5gA+JA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch cb612390e5469 "Only build dtb if associated Arch and/or SoC is enabled"
-uses the wrong SoC name which prevents i.MX27 related devicetrees
-from build.
-    
-Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
+On 03/27/2015 12:12 PM, Linus Walleij wrote:
+> On Mon, Mar 23, 2015 at 10:55 PM, Russell King - ARM Linux
+> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+>
+>> Linus, Grygorii,
+>>
+>> I'm trying to understand what's happening to make Keystone2 print
+>> this at boot:
+>>
+>> gpio-syscon soc:keystone_dsp_gpio@02620240: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@2620244: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@2620248: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@262024c: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@2620250: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@2620254: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@2620258: can't read the dir register offset!
+>> gpio-syscon soc:keystone_dsp_gpio@262025c: can't read the dir register offset!
+>
+> Grygorii are you looking into this?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a1c776b8dcec..992ea0b063d5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -215,7 +215,7 @@ dtb-$(CONFIG_SOC_IMX25) += \
- 	imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dtb \
- 	imx25-karo-tx25.dtb \
- 	imx25-pdk.dtb
--dtb-$(CONFIG_SOC_IMX31) += \
-+dtb-$(CONFIG_SOC_IMX27) += \
- 	imx27-apf27.dtb \
- 	imx27-apf27dev.dtb \
- 	imx27-eukrea-mbimxsd27-baseboard.dtb \
+Yes. Seems you've found the patch already )
+https://lkml.org/lkml/2015/3/24/908
+
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
