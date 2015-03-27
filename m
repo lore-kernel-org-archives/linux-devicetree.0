@@ -1,86 +1,193 @@
-From: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Fri, 27 Mar 2015 18:41:09 +0900
-Message-ID: <CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A@mail.gmail.com>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
- <1425638900-24989-3-git-send-email-yong.wu@mediatek.com> <CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
- <1426677749.22581.38.camel@mhfsdcap03>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Fri, 27 Mar 2015 10:08:51 +0000
+Message-ID: <20150327100851.GC15988@x1>
+References: <54FD880E.30903@samsung.com>
+ <1425903199.13415.9.camel@AMDC1943>
+ <54FEF541.6000305@samsung.com>
+ <551119DE.2070402@samsung.com>
+ <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
+ <551408E0.3060901@samsung.com>
+ <20150326135412.GJ5951@x1>
+ <55149AFC.1080009@samsung.com>
+ <20150327075758.GB15988@x1>
+ <551518C6.9030804@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426677749.22581.38.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <551518C6.9030804@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong Wu,
+On Fri, 27 Mar 2015, Beomho Seo wrote:
 
-Sorry for long delay, I had to figure out some time to look at this again.
+> On 03/27/2015 04:57 PM, Lee Jones wrote:
+> > On Fri, 27 Mar 2015, Beomho Seo wrote:
+> >> On 03/26/2015 10:54 PM, Lee Jones wrote:
+> >>> On Thu, 26 Mar 2015, Beomho Seo wrote:
+> >>>> On 03/24/2015 05:38 PM, Krzysztof Kozlowski wrote:
+> >>>>> 2015-03-24 9:01 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+> >>>>>> On 03/10/2015 10:44 PM, Beomho Seo wrote:
+> >>>>>>> On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
+> >>>>>>>> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
+> >>>>>>>>> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
+> >>>>>>>>>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.c=
+om>:
+> >>>>>>>>>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
+> >>>>>>>>>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wro=
+te:
+> >>>>>>>>>>>>> From: Beomho Seo <beomho.seo@samsung.com>
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> This patch adds device driver of max77843 charger. This=
+ driver provide
+> >>>>>>>>>>>>> initialize each charging mode(e.g. fast charge, top-off=
+ mode and constant
+> >>>>>>>>>>>>> charging mode so on.). Additionally, control charging p=
+aramters to use
+> >>>>>>>>>>>>> i2c interface.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Cc: Sebastian Reichel <sre@kernel.org>
+> >>>>>>>>>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> I can't take it as is, since it depends on the private h=
+eader file
+> >>>>>>>>>>>> of PATCHv1.
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> -- Sebastian
+> >>>>>>>>>>>>
+> >>>>>>>>>>>
+> >>>>>>>>>>> This patch reviewed by Sebastian.
+> >>>>>>>>>>> Could you Please merge that your git tree ?
+> >>>>>>>>>>
+> >>>>>>>>>> Hi,
+> >>>>>>>>>>
+> >>>>>>>>>> ... and again we are adding a new driver for very similar =
+chipset to
+> >>>>>>>>>> already supported. I looked at spec and the charger's regi=
+sters are
+> >>>>>>>>>> almost the same as for max77693. Their layout and addresse=
+s are the
+> >>>>>>>>>> same. I see some minor differences, probably the most impo=
+rtant would
+> >>>>>>>>>> be different values current (fast-charge, top-off). But st=
+ill 90% of
+> >>>>>>>>>> registers are the same... Do we really have to add new dri=
+ver?
+> >>>>>>>>>>
+> >>>>>>>>>> Best regards,
+> >>>>>>>>>> Krzysztof
+> >>>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> Hi,
+> >>>>>>>>>
+> >>>>>>>>> Thank you for your comment. As you say, both chip set are s=
+imilar.
+> >>>>>>>>> But new driver need for support max77843. It is support dif=
+ferent below
+> >>>>>>>>> - Provide Battery presence information.
+> >>>>>>>>
+> >>>>>>>> Another set of power supply properties could be added for th=
+at chip.
+> >>>>>>>> This way the get_property() function would be the same but a=
+ctually the
+> >>>>>>>> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
+> >>>>>>>>
+> >>>>>>>>> - Can OTG FET control.
+> >>>>>>>>
+> >>>>>>>> Where the OTG FET feature is it enabled in your driver? I co=
+uldn't find
+> >>>>>>>> it.
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> Sorry. This driver don't control OTG FET feature.
+> >>>>>>>
+> >>>>>>>>> - Bigger Fast charge current, Top Off current Threshold sel=
+ection.
+> >>>>>>>>> - Various and bigger OTG current limitation.
+> >>>>>>>>> - Bigger primary charger termination voltage setting.
+> >>>>>>>>> - Different maximum input current limit selection(Different=
+ step).
+> >>>>>>>>
+> >>>>>>>> Yes, I mentioned some of these differences (the Fast/top-off
+> >>>>>>>> differences). These are differences in values so it does not=
+ require new
+> >>>>>>>> driver. There is need to develop new driver just to support =
+different
+> >>>>>>>> current (3.0 A instead of 2.1 A) or voltage threshold.
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> They are different charging current, OTG current limitation, =
+top off current,
+> >>>>>>> charging limitation value. In case OTG current limitation dif=
+ferent not
+> >>>>>>> limitation value but using register bit(max77843 use[7:6] max=
+77693 use[7]
+> >>>>>>> bit only). Even if this driver not support all feature, some =
+register
+> >>>>>>> different with max77693(support value, use register bit).
+> >>>>>>>
+> >>>>>>> If this driver will combined with max77693 may even be benefi=
+cial for
+> >>>>>>> new Maxim driver. But the present, this driver is related wit=
+h
+> >>>>>>> max77843 core driver and max77843-regulator. So I hope this d=
+river
+> >>>>>>> merge first. And then will extend two driver(max77843 charger=
+ and max77693 charger).
+> >>>>>
+> >>>>> I still prefer merging common drivers into one instead of creat=
+ing
+> >>>>> some more of them.
+> >>>>> However I understand your point and I am not entirely opposed a=
+gainst.
+> >>>>> Especially that you invested quite a bit of time for developing=
+ this
+> >>>>> and my feedback was quite late. To summarize I am fine with you=
+r
+> >>>>> approach.
+> >>>>>
+> >>>>> Best regards,
+> >>>>> Krzysztof
+> >>>>>
+> >>>>
+> >>>> Dear Lee Jones,
+> >>>>
+> >>>> Could you please merge that your git tree ?
+> >>>
+> >>> Sorry, I'm lost.  Why am I taking this though the MFD tree?  What
+> >>> patches are left?  Where are they going?  Am I taking any other
+> >>> patches?
+> >>>
+> >>
+> >> Max77843 charger driver is max77843 mfd core dependency.
+> >=20
+> > What kind of dependancy?  Runtime or build?  Where is the patch tha=
+t
+> > it depends on?  Is it in -next for in Mainline already?
+> >=20
+>=20
+> Build. Max77843 charger driver use max77843-private.h. It is in for-m=
+fd-next branch.
+>=20
+> c7f585f mfd: max77843: Add max77843 MFD driver core driver
 
-On Wed, Mar 18, 2015 at 8:22 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->>
->> > +               imudev = piommu->dev;
->> > +
->> > +       spin_lock_irqsave(&priv->portlock, flags);
->>
->> What is protected by this spinlock?
->         We will write a register of the local arbiter while config port. If
-> some modules are in the same local arbiter, it may be overwrite. so I
-> add it here.
->>
+If that's the case, then yes, I can take this patch through the MFD
+tree with the correct Acks applied.
 
-OK. Maybe it could be called larb_lock then? It would be good to have
-structures or code that should be running under this spinlock
-annotated with proper comments. And purpose of the lock documented in
-a comment as well (probably in a kerneldoc-style documentation of
-priv).
-
->> > +static void mtk_iommu_detach_device(struct iommu_domain *domain,
->> > +                                   struct device *dev)
->> > +{
->>
->> No hardware (de)configuration or clean-up necessary?
-> I will add it. Actually we design like this:If a device have attached to
-> iommu domain, it won't detach from it.
-
-Isn't proper clean-up required for module removal? Some drivers might
-be required to be loadable modules, which should be unloadable.
-
->>
->> > +
->> > +       piommu->protect_va = devm_kmalloc(piommu->dev, MTK_PROTECT_PA_ALIGN*2,
->>
->> style: Operators like * should have space on both sides.
->>
->> > +                                         GFP_KERNEL);
->>
->> Shouldn't dma_alloc_coherent() be used for this?
->      We don't care the data in it. I think they are the same. Could you
-> help tell me why dma_alloc_coherent may be better.
-
-Can you guarantee that at the time you allocate the memory using
-devm_kmalloc() the memory is not dirty (i.e. some write back data are
-stored in CPU cache) and is not going to be written back in some time,
-overwriting data put there by IOMMU hardware?
-
->> > +
->> > +       iommu_set_fault_handler(domain, mtk_iommu_fault_handler, piommu);
->>
->> I don't see any other drivers doing this. Isn't this for upper layers,
->> so that they can set their own generic fault handlers?
->      I think that this function is related with the iommu domain, we
-> have only one multimedia iommu domain. so I add it after the iommu
-> domain are created.
-
-No, this function is for drivers of IOMMU clients (i.e. master IP
-blocks) which want to subscribe to page fault to do things like paging
-on demand and so on. It shouldn't be called by IOMMU driver. Please
-see other IOMMU drivers, for example rockchip-iommmu.c.
-
-Best regards,
-Tomasz
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
