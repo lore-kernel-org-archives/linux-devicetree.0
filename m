@@ -1,49 +1,59 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH] mtd:spi-nor: Add lock and unlock callback functions to
- struct spi_nor
-Date: Fri, 27 Mar 2015 10:40:42 -0700
-Message-ID: <20150327174042.GZ32500@ld-irv-0074>
-References: <1426493714-3748-1-git-send-email-vndao@altera.com>
- <20150319174903.GT32500@ld-irv-0074>
- <CAN1oZWxzK_CuN-kHP-843X-zKQBFHo_UXgC+oZFUtfRYjNxCvg@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v18 04/11] ARM: cpuidle: Add cpuidle support for QCOM
+ cpus
+Date: Fri, 27 Mar 2015 18:58:25 +0100
+Message-ID: <55159A41.4010700@linaro.org>
+References: <1427315136-44321-1-git-send-email-lina.iyer@linaro.org> <1427315136-44321-5-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAN1oZWxzK_CuN-kHP-843X-zKQBFHo_UXgC+oZFUtfRYjNxCvg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viet Nga Dao <vndao@altera.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1427315136-44321-5-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2015 at 09:15:48AM +0800, Viet Nga Dao wrote:
-> On Fri, Mar 20, 2015 at 1:49 AM, Brian Norris <computersforpeace@gmail.com> wrote:
-> > On Mon, Mar 16, 2015 at 01:15:14AM -0700, vndao@altera.com wrote:
-> >> From: VIET NGA DAO <vndao@altera.com>
-> >>
-> >> This patch introduces a properly-replaceable spi_nor callback that does
-> >> flash specific lock and unlock. The existing code for spi_nor_lock and
-> >> spi_nor_unlock is moved into their own functions which are stm_lock and
-> >> stm_unlock.
-> >
-> > I'm curious; is this a complete ripoff of my code [1]? You haven't
-> > credited my authorship at all. That's a big no-no. Typically you keep
-> > the 'From:' and Signed-off-by of the original author if you're going to
-> > modify/redistribute it. (Admittedly, I didn't provide the S-o-b on my
-> > informal patch.)
-> >
-> > Anyway, that's all fine this time, but please avoid doing this in the
-> > future; I can fix up the authorship, etc., and apply it, if it gets an
-> > Ack/Tested-by from one or more reviewers (e.g., you). BTW, I hope you at
-> > least tested this, right?
-> 
-> Hi Brian,
-> I am so sorry for this mistake. it is not my intention. :(  I am new
-> to kernel driver and up-streaming thing, that is why i do not know the
-> proper way. Yes, please change the authorship to you.
-> Yes, i tested it.
+On 03/25/2015 09:25 PM, Lina Iyer wrote:
+> Define ARM_QCOM_CPUIDLE config item to enable cpuidle support.
+>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Kevin Hilman <khilman@linaro.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
 
-OK, no worries. Applied my own version (only differed by whitespace) and
-added your Tested-by.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Brian
+> ---
+>   drivers/cpuidle/Kconfig.arm | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.ar=
+m
+> index 21340e0..325be7f 100644
+> --- a/drivers/cpuidle/Kconfig.arm
+> +++ b/drivers/cpuidle/Kconfig.arm
+> @@ -74,3 +74,10 @@ config ARM_MVEBU_V7_CPUIDLE
+>   	depends on ARCH_MVEBU && !ARM64
+>   	help
+>   	  Select this to enable cpuidle on Armada 370, 38x and XP processo=
+rs.
+> +
+> +config ARM_QCOM_CPUIDLE
+> +	bool "CPU Idle Driver for QCOM processors"
+> +	depends on ARCH_QCOM
+> +	select ARM_CPUIDLE
+> +	help
+> +	  Select this to enable cpuidle on QCOM processors.
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
