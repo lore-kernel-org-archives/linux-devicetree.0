@@ -1,56 +1,49 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
-Date: Fri, 27 Mar 2015 20:31:23 +0300
-Message-ID: <551593EB.9060802@list.ru>
-References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru> <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru> <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com> <551587D1.5070408@list.ru> <5515904A.1060600@gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] mtd:spi-nor: Add lock and unlock callback functions to
+ struct spi_nor
+Date: Fri, 27 Mar 2015 10:40:42 -0700
+Message-ID: <20150327174042.GZ32500@ld-irv-0074>
+References: <1426493714-3748-1-git-send-email-vndao@altera.com>
+ <20150319174903.GT32500@ld-irv-0074>
+ <CAN1oZWxzK_CuN-kHP-843X-zKQBFHo_UXgC+oZFUtfRYjNxCvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5515904A.1060600@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAN1oZWxzK_CuN-kHP-843X-zKQBFHo_UXgC+oZFUtfRYjNxCvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viet Nga Dao <vndao@altera.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-27.03.2015 20:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> On 27/03/15 09:39, Stas Sergeev wrote:
->> 27.03.2015 19:21, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Do you want mvneta to register a similar callback in of_mdio, inst=
-ead
->>>> of adding an explicit state-updating functions? Something like
->>>> of_phy_fixed_link_set_update_callback()?
->>> You don't need an of_phy_fixed_link_set_update callback, you just n=
-eed
->>> to provide a fixed_link_update callback in mvneta, that you registe=
-r,
->> That approach I in fact considered initially, as the simplest one,
->> and even had a patch. But I disliked the fact that then mvneta will
->> exploit the knowledge of the fact that of_phy_register_fixed_link()
->> uses a fixed_phy driver. What if the implementation will later chang=
-e?
->=20
-> There is no reason why it should change later, that's the entire purp=
-ose
-> of why we can tell whether it is a fixed PHY or a regular MDIO-manage=
-d
-> PHY, and drivers rely on that for their operations.
-I don't think anything is exported to the outside of of_mdio.
-It uses fixed_phy driver completely internally. Assuming that we
-can pass the created phy_device to the fixed_phy API directly, look
-like a bit of layering violation to me. But it is not that big as to
-worry about. :)
-I don't think many drivers rely on that - perhaps only dsa_slave.
-So I'll add the second one.
+On Fri, Mar 20, 2015 at 09:15:48AM +0800, Viet Nga Dao wrote:
+> On Fri, Mar 20, 2015 at 1:49 AM, Brian Norris <computersforpeace@gmail.com> wrote:
+> > On Mon, Mar 16, 2015 at 01:15:14AM -0700, vndao@altera.com wrote:
+> >> From: VIET NGA DAO <vndao@altera.com>
+> >>
+> >> This patch introduces a properly-replaceable spi_nor callback that does
+> >> flash specific lock and unlock. The existing code for spi_nor_lock and
+> >> spi_nor_unlock is moved into their own functions which are stm_lock and
+> >> stm_unlock.
+> >
+> > I'm curious; is this a complete ripoff of my code [1]? You haven't
+> > credited my authorship at all. That's a big no-no. Typically you keep
+> > the 'From:' and Signed-off-by of the original author if you're going to
+> > modify/redistribute it. (Admittedly, I didn't provide the S-o-b on my
+> > informal patch.)
+> >
+> > Anyway, that's all fine this time, but please avoid doing this in the
+> > future; I can fix up the authorship, etc., and apply it, if it gets an
+> > Ack/Tested-by from one or more reviewers (e.g., you). BTW, I hope you at
+> > least tested this, right?
+> 
+> Hi Brian,
+> I am so sorry for this mistake. it is not my intention. :(  I am new
+> to kernel driver and up-streaming thing, that is why i do not know the
+> proper way. Yes, please change the authorship to you.
+> Yes, i tested it.
 
-> Ok, you could either make of_phy_register_fixed_link() return a
-> phy_device,
-OK, if you think that's right - I'll do.
-I was under an impression that this was intentional to not return
-the phy.
+OK, no worries. Applied my own version (only differed by whitespace) and
+added your Tested-by.
 
-> I think your concerns are valid, but I don't think there is going to =
-be
-> any problem with the approach I suggested because there is a contract
-> that the fixed PHYs and regular PHYs need to
-OK, so I'll do that on Monday then.
+Brian
