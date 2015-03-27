@@ -1,106 +1,56 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v3] mtd: hisilicon: add device tree node for NAND
- controller
-Date: Fri, 27 Mar 2015 10:35:04 -0700
-Message-ID: <20150327173504.GY32500@ld-irv-0074>
-References: <1427267091-227474-1-git-send-email-wangzhou1@hisilicon.com>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
+Date: Fri, 27 Mar 2015 20:31:23 +0300
+Message-ID: <551593EB.9060802@list.ru>
+References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru> <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru> <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com> <551587D1.5070408@list.ru> <5515904A.1060600@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427267091-227474-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5515904A.1060600@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-This would go through your arm-soc submaintainer; i.e., Wei Xu
+27.03.2015 20:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On 27/03/15 09:39, Stas Sergeev wrote:
+>> 27.03.2015 19:21, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Do you want mvneta to register a similar callback in of_mdio, inst=
+ead
+>>>> of adding an explicit state-updating functions? Something like
+>>>> of_phy_fixed_link_set_update_callback()?
+>>> You don't need an of_phy_fixed_link_set_update callback, you just n=
+eed
+>>> to provide a fixed_link_update callback in mvneta, that you registe=
+r,
+>> That approach I in fact considered initially, as the simplest one,
+>> and even had a patch. But I disliked the fact that then mvneta will
+>> exploit the knowledge of the fact that of_phy_register_fixed_link()
+>> uses a fixed_phy driver. What if the implementation will later chang=
+e?
+>=20
+> There is no reason why it should change later, that's the entire purp=
+ose
+> of why we can tell whether it is a fixed PHY or a regular MDIO-manage=
+d
+> PHY, and drivers rely on that for their operations.
+I don't think anything is exported to the outside of of_mdio.
+It uses fixed_phy driver completely internally. Assuming that we
+can pass the created phy_device to the fixed_phy API directly, look
+like a bit of layering violation to me. But it is not that big as to
+worry about. :)
+I don't think many drivers rely on that - perhaps only dsa_slave.
+So I'll add the second one.
 
-But FWIW...
+> Ok, you could either make of_phy_register_fixed_link() return a
+> phy_device,
+OK, if you think that's right - I'll do.
+I was under an impression that this was intentional to not return
+the phy.
 
-On Wed, Mar 25, 2015 at 03:04:51PM +0800, Zhou Wang wrote:
-> This patch adds dts support for NAND flash controller of Hisilicon Soc Hip04.
-> Now it is based on v4.0-rc5
-> 
-> Changes in v3:
-> - Change E-mail address in signed-off-by to "wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org"
-> Changes in v2:
-> - Base on v3.19-rc1
-> - Use nand-ecc-strength, nand-ecc-step-size to replace hisi,nand-ecc-bits
-> Changes in v1:
-> - Move partition and other board related information into board dts file:
->   hip04-d01.dts
-> 
-> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  arch/arm/boot/dts/hip04-d01.dts | 27 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/hip04.dtsi    |  7 +++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d01.dts
-> index 40a9e33..ba04dd5 100644
-> --- a/arch/arm/boot/dts/hip04-d01.dts
-> +++ b/arch/arm/boot/dts/hip04-d01.dts
-> @@ -28,5 +28,32 @@
->  		uart0: uart@4007000 {
->  			status = "ok";
->  		};
-> +
-> +		nand: nand@4020000 {
-> +			nand-bus-width = <8>;
-> +			nand-ecc-mode = "hw";
-> +			nand-ecc-strength = <16>;
-> +			nand-ecc-step-size = <1024>;
-> +
-> +			partition@0 {
-> +				label = "nand_text";
-> +				reg = <0x00000000 0x00400000>;
-> +			};
-> +
-> +			partition@00400000 {
-> +				label = "nand_monitor";
-> +				reg = <0x00400000 0x00400000>;
-> +			};
-> +
-> +			partition@00800000 {
-> +				label = "nand_kernel";
-> +				reg = <0x00800000 0x00800000>;
-> +			};
-> +
-> +			partition@01000000 {
-> +				label = "nand_fs";
-> +				reg = <0x01000000 0x1f000000>;
-> +			};
-> +		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
-> index 2388145..ac32fce 100644
-> --- a/arch/arm/boot/dts/hip04.dtsi
-> +++ b/arch/arm/boot/dts/hip04.dtsi
-> @@ -269,6 +269,13 @@
->  			interrupts = <0 372 4>;
->  		};
->  
-> +		nand: nand@4020000 {
-> +			compatible = "hisilicon,504-nfc";
-> +			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
-> +			interrupts = <0 379 4>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +		};
-
-Seems reasonable and matches the binding we already accepted, so:
-
-Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
->  	};
->  
->  	etb@0,e3c42000 {
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I think your concerns are valid, but I don't think there is going to =
+be
+> any problem with the approach I suggested because there is a contract
+> that the fixed PHYs and regular PHYs need to
+OK, so I'll do that on Monday then.
