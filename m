@@ -1,177 +1,159 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 04/15] clocksource: Add ARM System timer driver
-Date: Fri, 27 Mar 2015 09:36:37 +0100
-Message-ID: <55151695.5050203@linaro.org>
-References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>	<1426197361-19290-5-git-send-email-maxime.coquelin@st.com>	<5513D64A.7060702@linaro.org> <CALszF6CtEf0w8AoaMwFzn34ACMjkW6obT5_MrduBdUOm7T=zNw@mail.gmail.com>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [PATCH v7 2/5] power: max77843_charger: Add Max77843 charger
+ device driver
+Date: Fri, 27 Mar 2015 17:45:58 +0900
+Message-ID: <551518C6.9030804@samsung.com>
+References: <54FCEABE.9000007@samsung.com>
+ <CAJKOXPcLoOp30j5ZwFv2_nT5B+nZOnV6utck5KDw3vt-tmWRew@mail.gmail.com>
+ <54FD880E.30903@samsung.com> <1425903199.13415.9.camel@AMDC1943>
+ <54FEF541.6000305@samsung.com> <551119DE.2070402@samsung.com>
+ <CAJKOXPdd5dDgH91NeytobJWg71pYOw5XnhB9N1=m2Mjmxxjv-A@mail.gmail.com>
+ <551408E0.3060901@samsung.com> <20150326135412.GJ5951@x1>
+ <55149AFC.1080009@samsung.com> <20150327075758.GB15988@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CALszF6CtEf0w8AoaMwFzn34ACMjkW6obT5_MrduBdUOm7T=zNw@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20150327075758.GB15988@x1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2015 09:19 PM, Maxime Coquelin wrote:
-> Hi Daniel,
->
->    Thanks for the review. Please find my answers below.
->
-> 2015-03-26 10:50 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>=
-:
->> On 03/12/2015 10:55 PM, Maxime Coquelin wrote:
+On 03/27/2015 04:57 PM, Lee Jones wrote:
+> On Fri, 27 Mar 2015, Beomho Seo wrote:
+>> On 03/26/2015 10:54 PM, Lee Jones wrote:
+>>> On Thu, 26 Mar 2015, Beomho Seo wrote:
+>>>> On 03/24/2015 05:38 PM, Krzysztof Kozlowski wrote:
+>>>>> 2015-03-24 9:01 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+>>>>>> On 03/10/2015 10:44 PM, Beomho Seo wrote:
+>>>>>>> On 03/09/2015 09:13 PM, Krzysztof Kozlowski wrote:
+>>>>>>>> On pon, 2015-03-09 at 20:46 +0900, Beomho Seo wrote:
+>>>>>>>>> On 03/09/2015 08:02 PM, Krzysztof Kozlowski wrote:
+>>>>>>>>>> 2015-03-09 1:35 GMT+01:00 Beomho Seo <beomho.seo@samsung.com>:
+>>>>>>>>>>> On 03/08/2015 05:13 AM, Sebastian Reichel wrote:
+>>>>>>>>>>>> On Mon, Mar 02, 2015 at 07:10:35PM +0900, Jaewon Kim wrote:
+>>>>>>>>>>>>> From: Beomho Seo <beomho.seo@samsung.com>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> This patch adds device driver of max77843 charger. This driver provide
+>>>>>>>>>>>>> initialize each charging mode(e.g. fast charge, top-off mode and constant
+>>>>>>>>>>>>> charging mode so on.). Additionally, control charging paramters to use
+>>>>>>>>>>>>> i2c interface.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Cc: Sebastian Reichel <sre@kernel.org>
+>>>>>>>>>>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Reviewed-By: Sebastian Reichel <sre@kernel.org>
+>>>>>>>>>>>>
+>>>>>>>>>>>> I can't take it as is, since it depends on the private header file
+>>>>>>>>>>>> of PATCHv1.
+>>>>>>>>>>>>
+>>>>>>>>>>>> -- Sebastian
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> This patch reviewed by Sebastian.
+>>>>>>>>>>> Could you Please merge that your git tree ?
+>>>>>>>>>>
+>>>>>>>>>> Hi,
+>>>>>>>>>>
+>>>>>>>>>> ... and again we are adding a new driver for very similar chipset to
+>>>>>>>>>> already supported. I looked at spec and the charger's registers are
+>>>>>>>>>> almost the same as for max77693. Their layout and addresses are the
+>>>>>>>>>> same. I see some minor differences, probably the most important would
+>>>>>>>>>> be different values current (fast-charge, top-off). But still 90% of
+>>>>>>>>>> registers are the same... Do we really have to add new driver?
+>>>>>>>>>>
+>>>>>>>>>> Best regards,
+>>>>>>>>>> Krzysztof
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>> Thank you for your comment. As you say, both chip set are similar.
+>>>>>>>>> But new driver need for support max77843. It is support different below
+>>>>>>>>> - Provide Battery presence information.
+>>>>>>>>
+>>>>>>>> Another set of power supply properties could be added for that chip.
+>>>>>>>> This way the get_property() function would be the same but actually the
+>>>>>>>> POWER_SUPPLY_PROP_PRESENT won't be called for max77693.
+>>>>>>>>
+>>>>>>>>> - Can OTG FET control.
+>>>>>>>>
+>>>>>>>> Where the OTG FET feature is it enabled in your driver? I couldn't find
+>>>>>>>> it.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Sorry. This driver don't control OTG FET feature.
+>>>>>>>
+>>>>>>>>> - Bigger Fast charge current, Top Off current Threshold selection.
+>>>>>>>>> - Various and bigger OTG current limitation.
+>>>>>>>>> - Bigger primary charger termination voltage setting.
+>>>>>>>>> - Different maximum input current limit selection(Different step).
+>>>>>>>>
+>>>>>>>> Yes, I mentioned some of these differences (the Fast/top-off
+>>>>>>>> differences). These are differences in values so it does not require new
+>>>>>>>> driver. There is need to develop new driver just to support different
+>>>>>>>> current (3.0 A instead of 2.1 A) or voltage threshold.
+>>>>>>>>
+>>>>>>>
+>>>>>>> They are different charging current, OTG current limitation, top off current,
+>>>>>>> charging limitation value. In case OTG current limitation different not
+>>>>>>> limitation value but using register bit(max77843 use[7:6] max77693 use[7]
+>>>>>>> bit only). Even if this driver not support all feature, some register
+>>>>>>> different with max77693(support value, use register bit).
+>>>>>>>
+>>>>>>> If this driver will combined with max77693 may even be beneficial for
+>>>>>>> new Maxim driver. But the present, this driver is related with
+>>>>>>> max77843 core driver and max77843-regulator. So I hope this driver
+>>>>>>> merge first. And then will extend two driver(max77843 charger and max77693 charger).
+>>>>>
+>>>>> I still prefer merging common drivers into one instead of creating
+>>>>> some more of them.
+>>>>> However I understand your point and I am not entirely opposed against.
+>>>>> Especially that you invested quite a bit of time for developing this
+>>>>> and my feedback was quite late. To summarize I am fine with your
+>>>>> approach.
+>>>>>
+>>>>> Best regards,
+>>>>> Krzysztof
+>>>>>
+>>>>
+>>>> Dear Lee Jones,
+>>>>
+>>>> Could you please merge that your git tree ?
 >>>
->>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>> Sorry, I'm lost.  Why am I taking this though the MFD tree?  What
+>>> patches are left?  Where are they going?  Am I taking any other
+>>> patches?
 >>>
->>> This patch adds clocksource support for ARMv7-M's System timer,
->>> also known as SysTick.
->>>
->>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 >>
->>
->> Hi Maxime,
->>
->> the driver looks good. Three comments below.
->>
->>    -- Daniel
->>
->>
+>> Max77843 charger driver is max77843 mfd core dependency.
+> 
+> What kind of dependancy?  Runtime or build?  Where is the patch that
+> it depends on?  Is it in -next for in Mainline already?
+> 
 
-[ ... ]
+Build. Max77843 charger driver use max77843-private.h. It is in for-mfd-next branch.
 
->>> +static void __init system_timer_of_register(struct device_node *np=
-)
->>> +{
->>> +       struct clk *clk;
->>> +       void __iomem *base;
->>> +       u32 rate =3D 0;
->>> +       int ret;
->>> +
->>> +       base =3D of_iomap(np, 0);
->>> +       if (!base) {
->>> +               pr_warn("system-timer: invalid base address\n");
->>> +               return;
->>> +       }
->>> +
->>> +       clk =3D of_clk_get(np, 0);
->>> +       if (!IS_ERR(clk)) {
->>> +               ret =3D clk_prepare_enable(clk);
->>> +               if (ret) {
->>> +                       clk_put(clk);
->>> +                       goto out_unmap;
->>> +               }
->>> +
->>> +               rate =3D clk_get_rate(clk);
->>> +       }
->>> +
->>> +       /* If no clock found, try to get clock-frequency property *=
-/
->>> +       if (!rate) {
->>> +               ret =3D of_property_read_u32(np, "clock-frequency",=
- &rate);
->>> +               if (ret)
->>> +                       goto out_unmap;
->>
->>
->> Shouldn't be 'goto out_clk_disable' ?
->
-> No, because I assumed !rate means we failed to get the clock.
-> Actually, clk_get_rate could return 0, so relying on rate value is no=
-t safe.
->
-> I propose to get clock-frequency property if IS_ERR(clk).
->
-> Is it fine for you?
+c7f585f mfd: max77843: Add max77843 MFD driver core driver
 
-Why not invert the conditions ? If the 'clock-frequency' is specified i=
-n=20
-the DT then it overrides the clk_get_rate(). So the resulting code will=
- be:
+>> If you think this patch will suitable for battery tree(or other tree),
+>> I would like request for merge battery tree.
+> 
+> If this patch has no build dependencies on patches which are in -next,
+> but not in Mainline then it will have to go in via the same tree that
+> the dependencies were applied to.  If the dependencies are already in
+> Mainline, or they are not build-deps, then it should go in via the
+> correct tree, which I believe is Sebastian's tree.
+> 
+>> Also, I will send again this patch and device tree binding document.
+> 
+> Either way you should do that.  Mark them as RESEND instead of PATCH
+> and apply all of the Acks you have accumulated so far.
+> 
 
-ret =3D of_property_read_u32(np, "clock-frequency", &rate);
-if (ret) {
-	clk =3D of_clk_get(np, 0);
-	if (IS_ERR(clk))
-		goto out_unmap;
+I will send new version because binding document have been modified.
+As your comment patch will be mark.
 
-	ret =3D clk_prepare_enable(clk);
-	if (ret)
-		goto out_clk_put;
-
-	rate =3D clk_get_rate(clk);
-	if (!rate)
-		goto out_clk_unprepare;
-}
-
-
-
->>> +       }
->>> +
->>> +       writel_relaxed(SYSTICK_LOAD_RELOAD_MASK, base + SYST_RVR);
->>> +       writel_relaxed(SYST_CSR_ENABLE, base + SYST_CSR);
->>> +
->>> +       ret =3D clocksource_mmio_init(base + SYST_CVR, "arm_system_=
-timer",
->>> rate,
->>> +                       200, 24, clocksource_mmio_readl_down);
->>> +       if (ret) {
->>> +               pr_err("failed to init clocksource (%d)\n", ret);
->>> +               goto out_clk_disable;
->>> +       }
->>> +
->>> +       pr_info("ARM System timer initialized as clocksource\n");
->>> +
->>> +       return;
->>> +
->>> +out_clk_disable:
->>> +       if (!IS_ERR(clk))
->>
->>
->> Why do you need this check ?
->
-> To handle the case were no clock was found, but a clk-frequency value
-> was provided.
->
->>
->> It isn't missing a clk_put ?
->
-> Right, thanks for spotting this.
->
-> I wonder if it makes sense to implement the error path.
-> If we fail to initialize the clocksource, the system will be unusable=
-=2E
->
-> Maybe I should just perform a BUG_ON() in the error cases, as most of
-> the other clocksource drivers do.
-> What is your view?
-
-I prefer to not BUG_ON in the init functions because it already happen=20
-that drivers were bugging at init time and when a driver was reused on=20
-another platform with several timers available, the board was not able=20
-to boot because one timer was not used, hence not defined in the DT. I=20
-don't know if that could be the case for this platform but I prefer to=20
-keep thing going smoothly and return from init even if that lead to a=20
-kernel hang. Of course, the errors must be displayed (pr_warn, pr_err,=20
-pr_notice, etc ...).
-
->>
->>> +               clk_disable_unprepare(clk);
->>> +out_unmap:
->>> +       iounmap(base);
->>> +       WARN(ret, "ARM System timer register failed (%d)\n", ret);
-
-pr_warn
-
-Thanks
-
-   -- Daniel
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Best regards
+Beomho Seo
