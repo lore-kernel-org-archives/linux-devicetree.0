@@ -1,175 +1,177 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: serial atag tag in devicetree ?
-Date: Fri, 27 Mar 2015 09:36:21 +0100
-Message-ID: <55151685.3060404@redhat.com>
-References: <550EA6D8.3090702@redhat.com>
- <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
- <550FF971.407@redhat.com>
- <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ@mail.gmail.com>
- <551119F1.2060002@redhat.com> <1427322910.26627.15.camel@collins>
- <5513C926.1010708@redhat.com> <1427361114.2342.7.camel@collins>
- <CAL_Jsq+konO_WYEQ=nP1wvbzPoytdJQ9jnkqppCXGmsb6sTF8Q@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v3 04/15] clocksource: Add ARM System timer driver
+Date: Fri, 27 Mar 2015 09:36:37 +0100
+Message-ID: <55151695.5050203@linaro.org>
+References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>	<1426197361-19290-5-git-send-email-maxime.coquelin@st.com>	<5513D64A.7060702@linaro.org> <CALszF6CtEf0w8AoaMwFzn34ACMjkW6obT5_MrduBdUOm7T=zNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAL_Jsq+konO_WYEQ=nP1wvbzPoytdJQ9jnkqppCXGmsb6sTF8Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: Rob Herring <robherring2@gmail.com>, Paul Kocialkowski <contact@paulk.fr>
-Cc: devicetree <devicetree@vger.kernel.org>, Ian Campbell <ijc@hellion.org.uk>, Russell King - ARM Linux <linux@arm.linux.org.uk>, U-Boot <u-boot@lists.denx.de>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CALszF6CtEf0w8AoaMwFzn34ACMjkW6obT5_MrduBdUOm7T=zNw@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyNy0wMy0xNSAwNTozMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVGh1LCBNYXIg
-MjYsIDIwMTUgYXQgNDoxMSBBTSwgUGF1bCBLb2NpYWxrb3dza2kgPGNvbnRhY3RAcGF1bGsuZnI+
-IHdyb3RlOgo+PiBMZSBqZXVkaSAyNiBtYXJzIDIwMTUgw6AgMDk6NTMgKzAxMDAsIEhhbnMgZGUg
-R29lZGUgYSDDqWNyaXQgOgo+Pj4gSGksCj4+Pgo+Pj4gT24gMjUtMDMtMTUgMjM6MzUsIFBhdWwg
-S29jaWFsa293c2tpIHdyb3RlOgo+Pj4+IExlIG1hcmRpIDI0IG1hcnMgMjAxNSDDoCAwOTowMSAr
-MDEwMCwgSGFucyBkZSBHb2VkZSBhIMOpY3JpdCA6Cj4+Pj4+IEhpLAo+Pj4+Pgo+Pj4+PiBPbiAy
-NC0wMy0xNSAwMDoxMiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Pj4+PiBPbiBNb24sIE1hciAyMywg
-MjAxNSBhdCA2OjMwIEFNLCBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPiB3cm90
-ZToKPj4+Pj4+PiBIaSwKPj4+Pj4+Pgo+Pj4+Pj4+Cj4+Pj4+Pj4gT24gMjItMDMtMTUgMjI6MDEs
-IFJvYiBIZXJyaW5nIHdyb3RlOgo+Pj4+Pgo+Pj4+PiA8c25pcD4KPj4+Pj4KPj4+Pj4+Pj4gVGhl
-cmUgaXMgYWxyZWFkeSAic2VyaWFsLW51bWJlciIgKGEgc3RyaW5nKSB3aGljaCBleGlzdHMgZm9y
-Cj4+Pj4+Pj4+IE9wZW5GaXJtd2FyZS4gQWxzbywgImNvcHlyaWdodCIgY29ycmVzcG9uZHMgdG8g
-dmVuZG9yL21hbnVmYWN0dXJlcgo+Pj4+Pj4+PiBzdHJpbmcuIEJvdGggb2YgdGhlc2UgYXJlIHN1
-cHBvcnRlZCBieSBsc2h3IGFscmVhZHkuCj4+Pj4+Pj4KPj4+Pj4+Pgo+Pj4+Pj4+IE9rLCBzbyBp
-ZiBJIHVuZGVyc3RhbmQgeW91IGNvcnJlY3RseSB0aGVuIHlvdSdyZSBzYXlpbmcgdGhhdCB3ZQo+
-Pj4+Pj4+IHNob3VsZCBzZXQgYSAic2VyaWFsLW51bWJlciIgc3RyaW5nIHByb3BlcnR5IGF0IHRo
-ZSBkdCByb290IGxldmVsCj4+Pj4+Pj4gYW5kIHRoYXQgdGhpcyBtYXkgY29udGFpbiBwcmV0dHkg
-bXVjaCBhbnl0aGluZywgZS5nLiBpbiB0aGUKPj4+Pj4+PiBzdW54aSBjYXNlIHRoZSBmdWxsIDEy
-OCBiaXQgU0lEIGluIGhleC4KPj4+Pj4+Cj4+Pj4+PiBSaWdodC4KPj4+Pj4+Cj4+Pj4+Pj4gSXMg
-dGhlIHVzZSBvZiB0aGUgInNlcmlhbC1udW1iZXIiIHN0cmluZyBwcm9wZXJ0eSBhbHJlYWR5IGRv
-Y3VtZW50ZWQKPj4+Pj4+PiBzb21ld2hlcmU/IElmIG5vdCBJJ2xsIHN1Ym1pdCBhIGtlcm5lbCBw
-YXRjaCB0byBkb2N1bWVudCBpdC4KPj4+Pj4+Cj4+Pj4+PiBOb3QgdGhhdCBJJ20gYXdhcmUgb2Yu
-IEl0IGlzIHNvbWV0aGluZyB0aGF0IHByZWRhdGVzIG91ciBkb2N1bWVudGF0aW9uCj4+Pj4+PiBy
-ZXF1aXJlbWVudHMuIEl0IGNvdWxkIGJlIGluIE9wZW5GaXJtd2FyZSBzcGVjcy4gRG9jdW1lbnRp
-bmcgaXQgaW4gdGhlCj4+Pj4+PiBEVCBiaW5kaW5ncyBkb2VzIG5vdCBodXJ0Lgo+Pj4+Pgo+Pj4+
-PiBPay4KPj4+Pj4KPj4+Pj4+PiBBbmQgZm9yIG9sZGVyIGtlcm5lbHMgd2Ugc2hvdWxkIG5vdCBz
-ZXQgYW55IHNlcmlhbCBhdGFnICh1LWJvb3QKPj4+Pj4+PiBhbHdheXMgc2V0cyBpdCwgc28gdGhp
-cyBsZWF2ZXMgaXQgYXQgMCkgYW5kIG9sZCBrZXJuZWwgdXNlcnMgYXJlCj4+Pj4+Pj4gb3V0IG9m
-IGx1Y2sgd3J0IGdldHRpbmcgdG8gdGhlIHNlcmlhbCA/Cj4+Pj4+Pgo+Pj4+Pj4gSWYgdGhlcmUg
-aXMgc3VmZmljaWVudCByZWFzb24gdG8gc3VwcG9ydCB0aGlzIG9uIG9sZCBrZXJuZWxzIHlvdSBj
-b3VsZC4KPj4+Pj4KPj4+Pj4gT25lIHByb2JsZW0gd2l0aCBzdXBwb3J0aW5nIHRoaXMgZm9yIG9s
-ZGVyIGtlcm5lbHMgaXMgdGhhdCBpZiBhIG5vbiAwCj4+Pj4+IHNlcmlhbCBnZXRzIHNob3duIGlu
-IC9wcm9jL2NwdWluZm8gd2l0aCBvbGRlciBhdGFnIGJvb3RlZCBrZXJuZWxzLCB3ZQo+Pj4+PiBz
-aG91bGQgcmVhbGx5IHNob3cgdGhlIHNhbWUgbnVtYmVyIGluIC9wcm9jL2NwdWluZm8gd2hpY2gg
-bWVhbnMgYWRkaW5nCj4+Pj4+IGNvZGUgdG8gdGhlIGtlcm5lbCB0byBnZXQgdGhlIGRldmljZXRy
-ZWUgInNlcmlhbC1udW1iZXIiIHN0cmluZyBwcm9wZXJ0eQo+Pj4+PiBhbmQgc29tZWhvdyBwdXQg
-dGhhdCBpbnRvIHRoZSA2NCBiaXRzIHdoaWNoIHdlIGhhdmUgaW4gL3Byb2MvY3B1aW5mbywKPj4+
-Pj4gYnV0IGdpdmVuIHRoYXQgdGhlICJzZXJpYWwtbnVtYmVyIiBzdHJpbmcgY291bGQgYmUgaGV4
-IG9yIGRlY2ltYWwgb3IKPj4+Pj4gd2hhdCBldmVyIGFuZCA+IDY0IGJpdHMgdGhhdCB3aWxsIGxp
-a2VseSByZXF1aXJlIGEgcGxhdGZvcm0gc3BlY2lmaWMKPj4+Pj4gc29sdXRpb24uIEFsbCBkb2Fi
-bGUsIGJ1dCB0aGUgcXVlc3Rpb24gdGhlbiBiZWNvbWVzIGlzIHRoaXMgd29ydGggdGhlCj4+Pj4+
-IGVmZm9ydCA/Cj4+Pj4KPj4+PiBBZnRlciBpbnZlc3RpZ2F0aW5nIGEgYml0IG1vcmUsIEkgZm91
-bmQgb3V0IHRoYXQgdGhlIFVTQiBzZXJpYWwgbnVtYmVyCj4+Pj4gaXMgZXhwZWN0ZWQgdG8gYmUg
-YSBzdHJpbmcgb2YgMzIgYnl0ZXMsIHNvIGEgMTI4IGJpdCBudW1lcmljIHNlcmlhbAo+Pj4+IGRv
-ZXNuJ3QgZml0IChpdCB0YWtlcyAzMiBieXRlcyBmb3IgdGhlIGhleCByZXByZXNlbnRhdGlvbiBv
-ZiAxMjggYml0cywKPj4+PiBzbyB0aGVyZSBpcyBubyByb29tIGxlZnQgZm9yIHRoZSB0ZXJtaW5h
-dGluZyBudWxsIGJ5dGUpLCBoZW5jZSBpdCBtYWtlcwo+Pj4+IHNlbnNlIHRvIGtlZXAgYSA2NCBi
-aXQgbGltaXRhdGlvbiBmb3IgdGhlIHNlcmlhbCBudW1iZXIsIGlmIHVzZXJzIGFyZQo+Pj4+IGdv
-aW5nIHRvIHJlbHkgb24gaXQgYXMgVVNCIHNlcmlhbCBzdHJpbmcuIE1vcmVvdmVyLCBpdCBzZWVt
-cyB0aGF0Cj4+Pj4gQW5kcm9pZCBkZXZpY2VzIGFyZSBtb3N0bHkgdXNlZCA2NCBiaXQgbnVtYmVy
-cyBmb3Igc2VyaWFsIG51bWJlcnMvCj4+Pj4KPj4+PiBJIHdhcyBpbml0aWFsbHkgZ29pbmcgdG8g
-c3VnZ2VzdCB0aGF0IHdlIHNldCBpdCBpbiBzdG9uZSB0aGF0IHNlcmlhbAo+Pj4+IG11c3QgYmUg
-NjQgbnVtZXJpYyBiaXRzIChhcyBpdCB3YXMgaW4gdGhlIEFUQUdzIGRheXMpIGFuZCB0aGF0Cj4+
-Pj4gYm9vdGxvYWRlcnMgd291bGQgcGFzcyBpdCB0aGF0IHdheSB0byB0aGUga2VybmVsIHRocm91
-Z2ggZGV2aWNlIHRyZWUKPj4+PiAod2l0aCB0d28gMzIgYml0cyBudW1lcmljIGludGVnZXJzKSwg
-YnV0IEhhbnMgdGFsa2VkIG1lIG91dCBvZiBpdC4KPj4+PiBJIGp1c3Qgd2FudCB0byBleHBvc2Ug
-dGhlIHNpdHVhdGlvbiAoZXNwZWNpYWxseSB0aGUgVVNCIGFuZCBBbmRyb2lkCj4+Pj4gdGhpbmcp
-IGhlcmUgdG8gZG91YmxlLWNoZWNrIHRoYXQgZXZlcnlvbmUgc3RpbGwgaXMgY29udmluY2VkIHRo
-YXQgYQo+Pj4+IHN0cmluZyBhcHByb2FjaCBpbiBkZXZpY2UgdHJlZSBpcyBiZXN0ICh3aGljaCBp
-cyBmaW5lIHdpdGggbWUpLgo+Pj4KPj4+IFRoZXJlIGFyZSBhbHJlYWR5IGV4aXN0aW5nIHVzZXJz
-IG9mIHRoZSBzZXJpYWwtbnVtYmVyIHByb3BlcnR5IGluIGRldmljZXRyZWUsCj4+PiBhbmQgdGhl
-c2UgYWxyZWFkeSB1c2UgYSBmcmVlLWZvcm1hdCBzdHJpbmcsIHNvIEFGQUlDVCB3ZSBoYXZlIG5v
-IGNob2ljZQo+Pj4gYnV0IHRvIGRvIHRoZSBzYW1lIGFzIHRoZSBleGlzdGluZyB1c2Vycy4KPj4+
-Cj4+PiBCdXQgUm9iIGlzIHRoZSBleHBlcnQgaGVyZSwgc28gbGV0cyBzZWUgd2hhdCBSb2IgaGFz
-IHRvIHNheS4KPj4+Cj4+Pj4gVGhpcyB3YXksIHVzZXJzIHRoYXQgc3RpbGwgd2FudCB0byB1c2Ug
-dGhlIHNlcmlhbCBwYXNzZWQgdGhyb3VnaCBkZXZpY2UKPj4+PiB0cmVlIGFzIGEgVVNCIHNlcmlh
-bCBudW1iZXIgd2lsbCBoYXZlIHRvIHVzZSBhIHN0cmluZyBvZiAzMiBiaXRzLAo+Pj4+IGluY2x1
-ZGluZyB0aGUgbnVsbCB0ZXJtaW5hdGluZyBieXRlICh3aGljaCBpcyB3aGF0IEknbGwgc3VnZ2Vz
-dCBmb3IKPj4+PiBzdW54aSBieSB1c2luZyBvbmx5IDY0IGJpdHMgZm9yIHRoZSBzZXJpYWwgbnVt
-YmVyKS4KPj4+Pgo+Pj4+IEFsc28sIEkgc3VnZ2VzdCB0aGF0IHdlIHNob3cgdGhhdCBzZXJpYWwt
-bnVtYmVyIHN0cmluZyBhcy1pcyBpbiBjcHVpbmZvCj4+Pj4gYXMgd2VsbAo+Pj4KPj4+IFdlIGNh
-bm5vdCBkbyB0aGF0IGJlY2F1c2Ugd2UgbXVzdCBndWFyYW50ZWUgdGhhdCB0aGUgc2VyaWFsIHNo
-b3duCj4+PiBpbiBjcHUgaW5mbyBpcyBhIDY0IGJpdHMgLyAxNiBoZXggdmFsdWVzICgwIHBhZGRl
-ZCkgbnVtYmVyLCBhbnl0aGluZwo+Pj4gZWxzZSB3b3VsZCBicmVhayB0aGUga2VybmVsIDwtPiB1
-c2Vyc3BhY2UgQVBJIGFuZCBwb3RlbnRpYWxseSBicmVhawo+Pj4gdXNlcnNwYWNlIGFwcHMuIFNv
-IHdlIG11c3QgZG8gdGhlIGRldmljZXRyZWUgLT4gc2VyaWFsbnVtYmVyIGxvdy9oaWdoCj4+PiAt
-PiAvcHJvYy9jcGluZm8gdmVyc2lvbiB0byBndWFyYW50ZWUgdGhhdCB0aGlzIGZvcm1hdCBkb2Vz
-IG5vdCBjaGFuZ2UuCj4+Pgo+Pj4gQW5kIGFzIGRpc2N1c3NlZCBiZWZvcmUgaWYgeW91IHdhbnQg
-YSBub24gMCBzZXJpYWwgaW4gY3B1aW5mbyB0aGVuCj4+PiB0aGUgZGV2aWNldHJlZSAtPiBzZXJp
-YWxudW1iZXIgbG93L2hpZ2ggc2hvdWxkIGJlIGRvbmUgaW4gc3VueGkKPj4+IHNwZWNpZmljIGtl
-cm5lbCBjb2RlLCBhcyBvbiBzdW54aSB3ZSB3aWxsIGtub3cgdGhhdCB0aGUgc3RyaW5nIGluCj4+
-PiBkZXZpY2V0cmVlIHdpbGwgYmUgYSBoZXggdmFsdWUsIGJ1dCB3ZSd2ZSBubyBzdWNoIGd1YXJh
-bnRlZSBmb3IKPj4+IG90aGVyIHBsYXRmb3Jtcywgc28gd2UgY2Fubm90IHNpbXBseSBoYXZlIGEg
-Z2VuZXJpYyBmdW5jdGlvbiB0bwo+Pj4gcG9wdWxhdGUgZXJpYWxudW1iZXIgbG93L2hpZ2ggZnJv
-bSB0aGUgZGV2aWNldHJlZSBzZXJpYWwtbnVtYmVyCj4+PiBzdHJpbmcuCj4+Pgo+Pj4gICA+IGFu
-ZCBpbnN0ZWFkIG1ha2UgYSBzdHJpbmcgb3V0IG9mIHRoZSBzZXJpYWwgQVRBRyBpbiB0aGUga2Vy
-bmVsCj4+Pj4gcHJpb3IgdG8gc2hvd2luZyBpdCBpbiBjcHVpbmZvIChhcyBvcHBvc2VkIHRvIHRy
-YW5zbGF0aW5nIHRoZSBzdHJpbmcKPj4+PiBjb21pbmcgZnJvbSBkZXZpY2UgdHJlZSB0byBhIG51
-bWVyaWMgdmFsdWUgdGhhdCBjcHVpbmZvIHdpbGwgZW5kIHVwCj4+Pj4gc2hvd2luZyBhcyBhIHN0
-cmluZyBhdCB0aGUgZW5kIG9mIHRoZSBkYXkpLiBUaHVzLCB0aGUgc2VyaWFsIG51bWJlcgo+Pj4+
-IGNvbWluZyBmcm9tIGRldmljZSB0cmVlIHdpbGwgc3RpbGwgYmUgc2hvd24gaW4gY3B1aW5mbyBh
-cyB3ZWxsIGFuZCBubwo+Pj4+IEFCSSBnZXRzIGJyb2tlbi4KPj4+Cj4+PiBZb3UncmUgZm9yZ2V0
-dGluZyB0aGUgdXNlcnNwYWNlIDwtPiBrZXJuZWwgQUJJIGhlcmUsIHRoZSBzZXJpYWwgbGluZQo+
-Pj4gaW4gL3Byb2MvY3B1aW5mbyBpcyBub3QgYSBmcmVlIGZvcm0gc3RyaW5nIGl0IGlzIGEgNjQg
-Yml0IGludCBzaG93bgo+Pj4gYXMgMCBwYWRkZWQgaGV4LCBhbmQgd2UgY2Fubm90IGNoYW5nZSB0
-aGF0IGFzIGNoYW5naW5nIHRoYXQgd291bGQgYmUKPj4+IGFuIEFCSSBicmVhay4KPj4KPj4gSU1I
-TyB0aGlzIHJlYWxseSBpcyBhbGwgYWJvdXQgaW50ZXJwcmV0YXRpb24uIElmIHlvdSBjb25zaWRl
-ciB0aGF0IHRoZQo+PiBzZXJpYWwgaXMgYWxyZWFkeSBhICpzdHJpbmcqIGFuZCBub3QgYSBoZXgt
-cmVwcmVzZW50YXRpb24gb2YgYSBudW1iZXIKPj4gKHdoaWNoIGl0IGlzIHdoZW4gdXNpbmcgQVRB
-R3MsIGJ1dCBoYXMgbm8gcmVhc29uIHRvIGJlIGluIGdlbmVyYWwpLCB0aGVuCj4+IG15IHN1Z2dl
-c3Rpb24gd2lsbCBpbnRyb2R1Y2Ugbm8gQUJJIGJyZWFrLgo+Pgo+PiBHZW5lcmFsbHkgc3BlYWtp
-bmcsIEkgZm91bmQgbm8gZG9jdW1lbnRhdGlvbiB0aGF0IGluZGljYXRlcyB0aGF0IHRoZQo+PiBz
-ZXJpYWwgaGFzIHRvIGJlIGluIHRoYXQgZm9ybWF0LiBJdCBqdXN0IGhhcHBlbnMgdG8gYmUgdGhl
-IGNhc2Ugd2hlbgo+PiB1c2luZyBBVEFHcy4KPj4KPj4gQWxzbywgSSBmb3VuZCBhbiBlbWFpbCBm
-cm9tIFJvYiBzdWdnZXN0aW5nIGhlIHdvdWxkIGJlIGZpbmUgd2l0aCB3aXJpbmcKPj4gdGhlIGR0
-cyBzZXJpYWwtbnVtYmVyIHN0cmluZyB0byBjcHVpbmZvOgo+PiBodHRwOi8vbGttbC5pdS5lZHUv
-aHlwZXJtYWlsL2xpbnV4L2tlcm5lbC8xNDEyLjAvMDI5NzUuaHRtbAo+Pgo+PiBJIHRoaW5rIGl0
-J3MgdGhlIG1vc3QgZmxleGlibGUgc29sdXRpb24gYW5kIHdlIGNhbiB0aGluayBvZiBpdCBhcyBh
-bgo+PiBleHRlbnNpb24gb2YgdGhlIGN1cnJlbnQgc2NoZW1lOiB0aGUgc2VyaWFsIHN0cmluZyB3
-aWxsIG5vIGxvbmdlciBiZQo+PiBsaW1pdGVkIHRvIGEgaGV4IHJlcHJlc2VudGF0aW9uIG9mIGEg
-bnVtYmVyIGJ1dCBjYW4gYmVjb21lIGFueSBzdHJpbmcuCj4+Cj4+IE5vdyBJIHdvdWxkIGFwcHJl
-Y2lhdGUgaXQgaWYgUm9iIGNvdWxkIHdlaWdoLWluIGFuZCBzdGF0ZSB3aGV0aGVyIGhlCj4+IGNo
-YW5nZWQgaGlzIG1pbmQgb24gdGhpcyBvciBub3QuCj4KPiBUaGUgb25seSBBQkkgaXMgb24gcGxh
-dGZvcm1zIHRoYXQgdXNlZCBBVEFHUyBhcyBhbnkgRFQgb25seSBwbGF0Zm9ybQo+IGhhcyBzbyBm
-YXIgaGFkIGEgc2VyaWFsIyBpbiBjcHVpbmZvIG9mIDE2IDAncy4gV2l0aCBhIHZhcmlhYmxlIGxl
-bmd0aAo+IHN0cmluZyB3ZSBjYW4gc3RpbGwgaGF2ZSBhIGZpeGVkIDE2IGNoYXIgaGV4IHNlcmlh
-bCBudW1iZXIgdGhhdCBpcwo+IGNvbXBhdGlibGUgd2l0aCBBVEFHUy4gSSBjYW4ndCBpbWFnaW5l
-IHRoYXQgd2UgaGF2ZSB1c2Vyc3BhY2UgdGhhdAo+IGNhcmVzIGFib3V0IHRoZSBsZW5ndGggYW5k
-IHlldCBkb2Vzbid0IGNhcmUgdGhlIHZhbHVlIGlzIGFsd2F5cyAwJ3MKPiBzaW5jZSBjb252ZXJ0
-aW5nIHRvIERULiBBcyBsb25nIGFzIHdlIGtlZXAgMTYgMCdzIGFzIHRoZSBkZWZhdWx0IEkKPiBk
-b24ndCBzZWUgYW4gaXNzdWUgd2l0aCBhbGxvd2luZyBvdGhlciBsZW5ndGhzLgoKVGhlcmUgYXJl
-IDIgcHJvYmxlbXMgd2l0aCBwbGF5aW5nIGFyb3VuZCB3aXRoIHRoZSBzZXJpYWwgbGluZSBpbgov
-cHJvYy9jcHVpbmZvOgoKMSkgTGVuZ3RoLCBjdXJyZW50bHkgaXQgaXMgYWx3YXlzIDE2IGNoYXJz
-LCBtYWtpbmcgaXQgZWl0aGVyIHNob3J0ZXIKb3IgbG9uZ2VyIG1heSBicmVhayBzb21lIHVzZXJz
-cGFjZSBwYXJzaW5nIGNvZGUgZm9yIGl0LgoKMikgQ29udGVudHMsIGN1cnJlbnRseSBpdCBpcyBh
-bHdheXMgaW4gaGV4LCBzbyB3ZSBjYW5ub3Qgc2ltcGx5CmNvcHkgYSBzdHJpbmcgZnJvbSBkZXZp
-Y2V0cmVlIGluIHRoZXJlIHdpdGhvdXQgdmVyaWZ5aW5nIHRoYXQgdGhhdApzdHJpbmcgY29udGFp
-bnMgaGV4LgoKTm93IGlmIHdlIHdlcmUgdG8gYWRkIGNvZGUgdG86CjEpIFZlcmlmeSB0aGF0IHRo
-ZSBzZXJpYWwgZnJvbSBkZXZpY2V0cmVlIGlzIGhleAoyKSBUcnVuY2F0ZSBpdCB0byAxNiBjaGFy
-cyBtYXgKClRoYXQgd291bGQgd29yaywgdGhlIGVhc2llc3Qgd2F5IHRvIGdldCB0aGVyZSBpcyB0
-byBzaW1wbHkgc3RvcmUKdGhlIHNlcmlhbCBmcm9tIGRldmljZXRyZWUgaW4gdGhlIGV4aXN0aW5n
-IHNlcmlhbCBsb3cgYW5kIGhpZ2gKMzIgYml0IGludHMuCgo+IEl0IGlzIG9ubHkgYW4gQUJJIGlm
-IHNvbWVvbmUgbm90aWNlcyBhbmQgaWYgd2UgZmluZCBhbiBBQkkgaXNzdWUgbGF0ZXIKPiB3ZSBj
-YW4gYWx3YXlzIGZpeCBpdC4KCkVybSwgbm8gaXQgaXMgYW4gQUJJIG9uY2UgaXQgaGFzIHNoaXBw
-ZWQsIGFuZCB3ZSBjYW5ub3QgYWx3YXlzIGZpeCBpdCBsYXRlcgpiZWNhdXNlIGluIHRoZSBtZWFu
-IHRpbWUgb3RoZXIgYXBwcyBtYXkgaGF2ZSBzdGFydGVkIGRlcGVuZGluZyBvbiB0aGUgbmV3CkFC
-SSBhbmQgdGhlbiB3ZSd2ZSBhIGJpZyBwcm9ibGVtLgoKVGhlcmUgYXJlIHBsZW50eSBvZiBleGFt
-cGxlcyBvZiAiaW5ub2NlbnQiIGNoYW5nZXMgdG8gZmlsZXMgaW4gL3Byb2MKYnJlYWtpbmcgc3R1
-ZmYsIHNvIHdlIHJlYWxseSByZWFsbHkgc2hvdWxkIGJlIGNhcmVmdWwgaGVyZS4KCkFsc28gSSBk
-b24ndCBzZWUgd2h5IHRoaXMgaXMgdGhhdCBpbXBvcnRhbnQgYXQgYWxsLCB3ZSBjYW4gbGltaXQK
-dGhpbmdzIHRvIG5vdCBicmVhayB0aGUgQUJJIGFuZCBhcHBzIHdobyB3YW50IHRoZSBmdWxsIHNl
-cmlhbCBpbgp0aGUgb3JpZ2luYWwgc3RyaW5nIGZvcm1hdCBjYW4gYWx3YXlzIGdldCBpdCBmcm9t
-Cgovc3lzL2Zpcm13YXJlL2RldmljZXRyZWUvYmFzZS9zZXJpYWwtbnVtYmVyCgpSZWdhcmRzLAoK
-SGFucwoKCgo+Cj4gUm9iCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KVS1Cb290IG1haWxpbmcgbGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRwOi8v
-bGlzdHMuZGVueC5kZS9tYWlsbWFuL2xpc3RpbmZvL3UtYm9vdAo=
+On 03/26/2015 09:19 PM, Maxime Coquelin wrote:
+> Hi Daniel,
+>
+>    Thanks for the review. Please find my answers below.
+>
+> 2015-03-26 10:50 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>=
+:
+>> On 03/12/2015 10:55 PM, Maxime Coquelin wrote:
+>>>
+>>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>>
+>>> This patch adds clocksource support for ARMv7-M's System timer,
+>>> also known as SysTick.
+>>>
+>>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>
+>>
+>> Hi Maxime,
+>>
+>> the driver looks good. Three comments below.
+>>
+>>    -- Daniel
+>>
+>>
+
+[ ... ]
+
+>>> +static void __init system_timer_of_register(struct device_node *np=
+)
+>>> +{
+>>> +       struct clk *clk;
+>>> +       void __iomem *base;
+>>> +       u32 rate =3D 0;
+>>> +       int ret;
+>>> +
+>>> +       base =3D of_iomap(np, 0);
+>>> +       if (!base) {
+>>> +               pr_warn("system-timer: invalid base address\n");
+>>> +               return;
+>>> +       }
+>>> +
+>>> +       clk =3D of_clk_get(np, 0);
+>>> +       if (!IS_ERR(clk)) {
+>>> +               ret =3D clk_prepare_enable(clk);
+>>> +               if (ret) {
+>>> +                       clk_put(clk);
+>>> +                       goto out_unmap;
+>>> +               }
+>>> +
+>>> +               rate =3D clk_get_rate(clk);
+>>> +       }
+>>> +
+>>> +       /* If no clock found, try to get clock-frequency property *=
+/
+>>> +       if (!rate) {
+>>> +               ret =3D of_property_read_u32(np, "clock-frequency",=
+ &rate);
+>>> +               if (ret)
+>>> +                       goto out_unmap;
+>>
+>>
+>> Shouldn't be 'goto out_clk_disable' ?
+>
+> No, because I assumed !rate means we failed to get the clock.
+> Actually, clk_get_rate could return 0, so relying on rate value is no=
+t safe.
+>
+> I propose to get clock-frequency property if IS_ERR(clk).
+>
+> Is it fine for you?
+
+Why not invert the conditions ? If the 'clock-frequency' is specified i=
+n=20
+the DT then it overrides the clk_get_rate(). So the resulting code will=
+ be:
+
+ret =3D of_property_read_u32(np, "clock-frequency", &rate);
+if (ret) {
+	clk =3D of_clk_get(np, 0);
+	if (IS_ERR(clk))
+		goto out_unmap;
+
+	ret =3D clk_prepare_enable(clk);
+	if (ret)
+		goto out_clk_put;
+
+	rate =3D clk_get_rate(clk);
+	if (!rate)
+		goto out_clk_unprepare;
+}
+
+
+
+>>> +       }
+>>> +
+>>> +       writel_relaxed(SYSTICK_LOAD_RELOAD_MASK, base + SYST_RVR);
+>>> +       writel_relaxed(SYST_CSR_ENABLE, base + SYST_CSR);
+>>> +
+>>> +       ret =3D clocksource_mmio_init(base + SYST_CVR, "arm_system_=
+timer",
+>>> rate,
+>>> +                       200, 24, clocksource_mmio_readl_down);
+>>> +       if (ret) {
+>>> +               pr_err("failed to init clocksource (%d)\n", ret);
+>>> +               goto out_clk_disable;
+>>> +       }
+>>> +
+>>> +       pr_info("ARM System timer initialized as clocksource\n");
+>>> +
+>>> +       return;
+>>> +
+>>> +out_clk_disable:
+>>> +       if (!IS_ERR(clk))
+>>
+>>
+>> Why do you need this check ?
+>
+> To handle the case were no clock was found, but a clk-frequency value
+> was provided.
+>
+>>
+>> It isn't missing a clk_put ?
+>
+> Right, thanks for spotting this.
+>
+> I wonder if it makes sense to implement the error path.
+> If we fail to initialize the clocksource, the system will be unusable=
+=2E
+>
+> Maybe I should just perform a BUG_ON() in the error cases, as most of
+> the other clocksource drivers do.
+> What is your view?
+
+I prefer to not BUG_ON in the init functions because it already happen=20
+that drivers were bugging at init time and when a driver was reused on=20
+another platform with several timers available, the board was not able=20
+to boot because one timer was not used, hence not defined in the DT. I=20
+don't know if that could be the case for this platform but I prefer to=20
+keep thing going smoothly and return from init even if that lead to a=20
+kernel hang. Of course, the errors must be displayed (pr_warn, pr_err,=20
+pr_notice, etc ...).
+
+>>
+>>> +               clk_disable_unprepare(clk);
+>>> +out_unmap:
+>>> +       iounmap(base);
+>>> +       WARN(ret, "ARM System timer register failed (%d)\n", ret);
+
+pr_warn
+
+Thanks
+
+   -- Daniel
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
