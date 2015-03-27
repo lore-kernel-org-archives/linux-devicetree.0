@@ -1,122 +1,93 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RESEND PATCH v3 1/2] dma: Add Xilinx Central DMA DT Binding
- Documentation
-Date: Fri, 27 Mar 2015 11:26:02 +0000
-Message-ID: <7586dedb-5688-4fa0-905a-695e4fcdd771@BN1BFFO11FD008.protection.gbl>
-References: <1427260014-29821-1-git-send-email-appanad@xilinx.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH v3 10/15] serial: stm32-usart: Add STM32 USART Driver
+Date: Fri, 27 Mar 2015 07:32:34 -0400
+Message-ID: <55153FD2.7070304@hurleysoftware.com>
+References: <1426197361-19290-1-git-send-email-maxime.coquelin@st.com>	<1426197361-19290-11-git-send-email-maxime.coquelin@st.com>	<5511ABAA.2010303@hurleysoftware.com> <CALszF6Ds5b9V35iuSzxnOYDL2sD3psYfYp3b+6a-2Atse6_w3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427260014-29821-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "appand-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <appand-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALszF6Ds5b9V35iuSzxnOYDL2sD3psYfYp3b+6a-2Atse6_w3Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemlo>
 List-Id: devicetree@vger.kernel.org
 
-Ping !
+On 03/26/2015 06:03 PM, Maxime Coquelin wrote:
+>>> +static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
+>>> +                         struct ktermios *old)
+>>> +{
+>>> +     unsigned int baud;
+>>> +     u32 usardiv, mantissa, fraction;
+>>> +     tcflag_t cflag;
+>>> +     u32 cr1, cr2, cr3;
+>>> +     unsigned long flags;
+>>> +
+>>> +     baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk / 16);
+>>> +     cflag = termios->c_cflag;
+>>> +
+>>> +     spin_lock_irqsave(&port->lock, flags);
+>>> +
+>>> +     /* Stop serial port and reset value */
+>>> +     writel_relaxed(0, port->membase + USART_CR1);
+>>> +
+>>> +     cr1 = USART_CR1_TE | USART_CR1_RE | USART_CR1_UE | USART_CR1_RXNEIE;
+>>> +
+>>> +     if (cflag & CSTOPB)
+>>> +             cr2 = USART_CR2_STOP_2B;
+>>> +
+>>> +     if (cflag & PARENB) {
+>>> +             cr1 |= USART_CR1_PCE;
+>>> +             if ((cflag & CSIZE) == CS8)
+>>> +                     cr1 |= USART_CR1_M;
+>>> +     }
+>>> +
+>>> +     if (cflag & PARODD)
+>>> +             cr1 |= USART_CR1_PS;
+>>> +
+>>> +     if (cflag & CRTSCTS)
+>>> +             cr3 = USART_CR3_RTSE | USART_CR3_CTSE;
+>>
+>> If this means autoflow control, then you need to define
+>> throttle()/unthrottle() methods, otherwise the serial core won't
+>> be able to throttle the remote when input buffers are about
+>> to overflow.
+>>
+>> And you should only enable the autoCTS and let the serial
+>> core enable autoRTS through set_mctrl(TIOCM_RTS).
+>>
+>> Just let me know if you need more info about how to do this.
+> 
+> Ok, let's see if I have well understood.
+> 
+> USART_CR3_RTSE should be set/cleared in set_mctrl(), depending on
+> TIOCM_RTS  value.
+> The throttle callback should disable the rx interrupt, and the
+> unthrottle enable it.
+> For CTS, it should be enabled in set_termios() if CRTSCTS, as done here.
+> 
+> Am I right?
 
-> -----Original Message-----
-> From: Kedareswara rao Appana [mailto:appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org]
-> Sent: Wednesday, March 25, 2015 10:37 AM
-> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek; Soren
-> Brinkmann; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> Cc: appand-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Appana Durga Kedareswara Rao; Srikanth
-> Thokala
-> Subject: [RESEND PATCH v3 1/2] dma: Add Xilinx Central DMA DT Binding
-> Documentation
->
-> Device-tree binding documentation of Xilinx Central DMA Engine.
->
-> Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v3:
-> - Used proper alignment for all the properties.
-> Changes in v2:
-> - Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
->   to match the implementation.
->
->  .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54
-> ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
->
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-> b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-> new file mode 100644
-> index 0000000..aba3b10
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-> @@ -0,0 +1,54 @@
-> +Xilinx AXI CDMA engine, it does transfers between memory-mapped
-> source
-> +address and a memory-mapped destination address.
-> +
-> +Required properties:
-> +- compatible         : Should be "xlnx,axi-cdma-1.00.a"
-> +- #dma-cells         : Should be <1>, see "dmas" property below
-> +- reg                        : Should contain cdma registers location and length.
-> +- dma-channel child node: Should have only one channel
-> +
-> +Optional properties:
-> +- xlnx,include-sg    : Tells whether configured for Scatter-mode in
-> +                       the hardware.
-> +
-> +Required child node properties:
-> +- compatible         : It should be "xlnx,axi-cdma-channel".
-> +- interrupts         : Should contain per channel CDMA interrupts.
-> +- xlnx,datawidth     : Should contain the stream data width, take values
-> +                       {32,64...1024}.
-> +
-> +Option child node properties:
-> +- xlnx,include-dre   : Tells whether hardware is configured for Data
-> +                       Realignment Engine.
-> +
-> +Example:
-> +++++++++
-> +
-> +axi_cdma_0: axicdma@7e200000 {
-> +       compatible = "xlnx,axi-cdma-1.00.a";
-> +       #dma_cells = <1>;
-> +       reg = < 0x7e200000 0x10000 >;
-> +       dma-channel@7e200000 {
-> +               compatible = "xlnx,axi-cdma-channel";
-> +               interrupts = < 0 55 4 >;
-> +               xlnx,datawidth = <0x40>;
-> +       } ;
-> +} ;
-> +
-> +
-> +* DMA client
-> +
-> +Required properties:
-> +- dmas               : a list of <[Central DMA device phandle] [Channel
-> ID]> pairs,
-> +               where Channel ID is '0' for write/tx and '1' for read/rx
-> +                  channel.
-> +- dma-names  : a list of DMA channel names, one per "dmas" entry
-> +
-> +Example:
-> +++++++++
-> +
-> +cdmatest_0: cdmatest@0 {
-> +       compatible ="xlnx,axi-cdma-test-1.00.a";
-> +       dmas = <&axi_cdma_0 0>;
-> +       dma-names = "cdma0";
-> +} ;
-> --
-> 2.1.2
+Yeah, basically. You also have to indicate to the serial core that you
+require throttle/unthrottle handling in this mode by setting port->status.
 
+Your set_termios() method would look like:
 
+	port->status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS);
+	if (cflag & CRTSCTS) {
+		port->status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
+		cr3 = USART_CR3_CTSE;
+	}
 
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+and your set_mctrl() method would look like:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
+		stm32_set_bits(port, USART_CR3, USART_CR3_RTSE);
+	else
+		stm32_clear_bits(port, USART_CR3, USART_CR3_RTSE);
+
+The UPSTAT_AUTOCTS doesn't really do anything right now but please
+use it anyway to indicate this driver has that functionality.
+
+Regards,
+Peter Hurley
