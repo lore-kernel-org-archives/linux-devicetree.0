@@ -1,65 +1,67 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
-Date: Fri, 27 Mar 2015 09:21:39 -0700
-Message-ID: <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com>
-References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru>
- <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5515803F.3020600@list.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>
-Cc: netdev <netdev@vger.kernel.org>, Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v18 01/11] ARM: qcom: Add Subsystem Power Manager (SPM) driver
+Date: Fri, 27 Mar 2015 11:22:30 -0500
+Message-ID: <A4C16C5A-C9AA-4860-B425-CC3C91D228D3@codeaurora.org>
+References: <1427315136-44321-1-git-send-email-lina.iyer@linaro.org> <1427315136-44321-2-git-send-email-lina.iyer@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1427315136-44321-2-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-27 9:07 GMT-07:00 Stas Sergeev <stsp@list.ru>:
-> 27.03.2015 18:41, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 2015-03-27 6:37 GMT-07:00 Stas Sergeev <stsp@list.ru>:
->>>
->>> The following API is added:
->>> - of_phy_fixed_link_set_link() allows to set link state (up/down)
->>> - of_phy_fixed_link_set_speed() allows to set link speed
->>> - of_phy_fixed_link_set_duplex() allows to enable/disable duplex
->>>
->>> This API is needed when the MDIO-less link have some other means
->>> of a status passing to MAC, for example with in-band data (SGMII).
->>> MAC driver can then use that API to update the PHY status.
->>
->> I do not think any of these changes are required, if you look at
->> drivers/net/dsa/bcm_sf2.c, there is a fixed_link_update callback to
->> re-act to link up/down interrupts (but this could easily be extended
->> to speed/duplex as well), by directly modifying a fixed_phy_status
->> structure.
->>
->> Can you try that approach in mvneta?
-> Just to make sure I properly understand what you want.
-> drivers/net/dsa/bcm_sf2.c registers the .fixed_link_update callback
-> of struct dsa_switch_driver, which is later called from net/dsa/slave=
-=2Ec's
-> dsa_slave_fixed_link_update().
 
-Right, that's because there is a two layer model, first in DSA, then
-in the switch driver.
+On Mar 25, 2015, at 3:25 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
 
-> Do you want mvneta to register a similar callback in of_mdio, instead
-> of adding an explicit state-updating functions? Something like
-> of_phy_fixed_link_set_update_callback()?
+> SPM is a hardware block that controls the peripheral logic surrounding
+> the application cores (cpu/l$). When the core executes WFI instruction,
+> the SPM takes over the putting the core in low power state as
+> configured. The wake up for the SPM is an interrupt at the GIC, which
+> then completes the rest of low power mode sequence and brings the core
+> out of low power mode.
+> 
+> The SPM has a set of control registers that configure the SPMs
+> individually based on the type of the core and the runtime conditions.
+> SPM is a finite state machine block to which a sequence is provided and
+> it interprets the bytes and executes them in sequence. Each low power
+> mode that the core can enter into is provided to the SPM as a sequence.
+> 
+> Configure the SPM to set the core (cpu or L2) into its low power mode,
+> the index of the first command in the sequence is set in the SPM_CTL
+> register. When the core executes ARM wfi instruction, it triggers the
+> SPM state machine to start executing from that index. The SPM state
+> machine waits until the interrupt occurs and starts executing the rest
+> of the sequence until it hits the end of the sequence. The end of the
+> sequence jumps the core out of its low power mode.
+> 
+> Add support for an idle driver to set up the SPM to place the core in
+> Standby or Standalone power collapse mode when the core is idle.
+> 
+> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora.org>
+> Original tree available at -
+> git://codeaurora.org/quic/la/kernel/msm-3.10.git
+> 
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Kevin Hilman <khilman@linaro.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> ---
+> drivers/soc/qcom/Kconfig  |   7 +
+> drivers/soc/qcom/Makefile |   1 +
+> drivers/soc/qcom/spm.c    | 385 ++++++++++++++++++++++++++++++++++++++++++++++
+> 3 files changed, 393 insertions(+)
+> create mode 100644 drivers/soc/qcom/spm.c
 
-You don't need an of_phy_fixed_link_set_update callback, you just need
-to provide a fixed_link_update callback in mvneta, that you register,
-if and only if you are binding to a fixed PHY which is also SGMII (you
-can use a phy-mode property to tell that). So essentially, do the same
-thing as net/dsa/slave.c, checking that a PHY is fixed, and if so,
-register a fixed_link_update callback, within mvneta, and this
-callback updates fixed_phy_status, ala drivers/net/dsa/bcm_sf2.c to
-adjust the link parameters.
+Acked-by: Kumar Gala <galak@codeaurora.org>
 
-> This will remove a few changes indeed, but perhaps not too much.
-> Please confirm if this is exactly what you want, and then I try.
+- k
 
-Let me know if this is clearer now, if not, I can certainly cook a
-patch which does what I am suggesting. Thanks!
---=20
-=46lorian
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
