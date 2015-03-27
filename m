@@ -1,51 +1,110 @@
-From: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>
-Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
-Date: Fri, 27 Mar 2015 19:39:45 +0300
-Message-ID: <551587D1.5070408@list.ru>
-References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru> <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru> <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v2 1/2] pinctrl: Add driver for Alphascale asm9260
+ pinctrl
+Date: Fri, 27 Mar 2015 18:10:43 +0100
+Message-ID: <1427476243.2334.12.camel@x220>
+References: <CACRpkdbKLkMB6WP0zp2xN+gM4ytvs=3V5hh8uKt8e=YE4gAAqQ@mail.gmail.com>
+	 <1427448973-665-1-git-send-email-linux@rempel-privat.de>
+	 <1427448973-665-2-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1427448973-665-2-git-send-email-linux@rempel-privat.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-27.03.2015 19:21, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Do you want mvneta to register a similar callback in of_mdio, instea=
-d
->> of adding an explicit state-updating functions? Something like
->> of_phy_fixed_link_set_update_callback()?
-> You don't need an of_phy_fixed_link_set_update callback, you just nee=
-d
-> to provide a fixed_link_update callback in mvneta, that you register,
-That approach I in fact considered initially, as the simplest one,
-and even had a patch. But I disliked the fact that then mvneta will
-exploit the knowledge of the fact that of_phy_register_fixed_link()
-uses a fixed_phy driver. What if the implementation will later change?
-Also what makes me uncomfortable is that since of_phy_register_fixed_li=
-nk()
-doesn't even return the struct phy_device pointer, mvneta will have
-to get around that and use for example of_phy_find_device(), or registe=
-r
-the callback later, after of_phy_connect(). dsa/slave.c does of_phy_con=
-nect()
-initially, together with fixed link registration, so it gets around the
-problem. But mvneta registers the fixed_link in .probe callback, and
-does of_phy_connect() in .open callback.
-This all made me to drop that idea despite the simplicity.
+This patch adds a mismatch between the Kconfig symbol (bool) and the
+code (which assumes a modular built too).
 
->> This will remove a few changes indeed, but perhaps not too much.
->> Please confirm if this is exactly what you want, and then I try.
-> Let me know if this is clearer now, if not, I can certainly cook a
-> patch which does what I am suggesting. Thanks!
-I can do that too, because I already did.
-Let me know if the above concerns are not important, and I'll
-restore my initial patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, 2015-03-27 at 10:36 +0100, Oleksij Rempel wrote:
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -47,6 +47,14 @@ config PINCTRL_AS3722
+>  	  open drain configuration for the GPIO pins of AS3722 devices. It also
+>  	  supports the GPIO functionality through gpiolib.
+>  
+> +config PINCTRL_ASM9260
+> +	bool "Pinctrl driver for Alphascale asm9260"
+
+This adds a bool symbol.
+
+> +	depends on MACH_ASM9260
+> +	select PINMUX
+> +	select GENERIC_PINCONF
+> +	help
+> +	  Say Y here to enable the Alphascale asm9260 pinctrl driver
+> +
+
+> -- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+
+> +obj-$(CONFIG_PINCTRL_ASM9260)	+= pinctrl-asm9260.o
+
+So this object can now only be built-in.
+
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-asm9260.c
+> @@ -0,0 +1,733 @@
+> +/*
+> + * Pinctrl driver for the Alphascale ASM9260 SoC
+> + *
+> + * Copyright (c) 2014, Oleksij Rempel <linux@rempel-privat.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+
+This include is probably not needed.
+
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinmux.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "core.h"
+> +#include "pinctrl-utils.h"
+
+> +/*
+> + * Pin control driver setup
+> + */
+> +static struct pinctrl_desc asm9260_pinctrl_desc = {
+> +	.pctlops	= &asm9260_pinctrl_ops,
+> +	.pmxops		= &asm9260_pinmux_ops,
+> +	.confops	= &asm9260_pinconf_ops,
+> +	.owner		= THIS_MODULE,
+
+THIS_MODULE is, basically, equivalent to NULL for built-in code.
+
+> +};
+> +
+
+> +MODULE_DEVICE_TABLE(of, asm9260_pinctrl_of_match);
+
+This will be preprocessed away for built-in code.
+
+> +module_platform_driver(asm9260_pinctrl_driver);
+
+The built-in equivalent of this seems to be a wrapper that
+only does
+    platform_driver_register(&asm9260_pinctrl_driver);
+
+and mark that wrapper as a device_initcall(). There appears to be no
+macro that does all that in one line.
+
+> +MODULE_AUTHOR("Oleksij Rempel <linux@rempel-privat.de>");
+> +MODULE_DESCRIPTION("Alphascale ASM9260 pinctrl driver");
+> +MODULE_LICENSE("GPL");
+
+These three macros will be, effectively, preprocessed away for built-in
+code. (By the way, you probably want to use "GPL v2" as the license
+ident if it would be possible to build this code modular.)
+
+
+Paul Bolle
