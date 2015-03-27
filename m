@@ -1,40 +1,45 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] watchdog: digicolor: driver for Conexant Digicolor
- CX92755 SoC
-Date: Thu, 26 Mar 2015 22:48:21 -0700
-Message-ID: <5514EF25.4000400@roeck-us.net>
-References: <a4554d0a61c62b85a7d66b6e3d16d07f8a498025.1427356791.git.baruch@tkos.co.il>	<148dd2d6912211bc468c30acf85a463192576039.1427356791.git.baruch@tkos.co.il> <CAM=Q2ctS6_=pzW2H+Yd3nEBgF269vfdh8yV3NbnWFP7b-MWLbA@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm: msm: Use timer DT node for qcom watchdog config
+Date: Thu, 26 Mar 2015 22:55:23 -0700
+Message-ID: <20150327055523.GC5625@codeaurora.org>
+References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM=Q2ctS6_=pzW2H+Yd3nEBgF269vfdh8yV3NbnWFP7b-MWLbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424485176-8348-1-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2015 10:40 PM, Shubhrajyoti Datta wrote:
->
->     +
->     +static int dc_restart_handler(struct notifier_block *this, unsigned long mode,
->     +                             void *cmd)
->     +{
->     +       struct dc_wdt *wdt = container_of(this, struct dc_wdt, restart_handler);
->     +
->     +       dc_wdt_set(wdt, 1);
->     +       /* wait for reset to assert... */
->     +       mdelay(500);
->
->
-> How is the 500 calculated ?
-> Also is it possible to sleep here?
->
-sleep: No. It would also be pretty pointless, since this is after all the very last step
-of rebooting the system.
+On 02/20, Mathieu Olivari wrote:
+> This change is done as a follow-up to the following thread:
+> https://lkml.org/lkml/2014/10/1/436
+> 
+> qcom-wdt is currently assuming the presence of a dedicated node in DT
+> to gets its configuration. However, on msm architecture, the watchdog is
+> usually part of the timer block. So this patch-set is changing the driver
+> and slightly enhancing the timer DT bindings to provide the relevant clocks
+> and interrupts.
+> 
+> Mathieu Olivari (3):
+>   watchdog: qcom: use timer devicetree binding
+>   ARM: qcom: add description of KPSS WDT for IPQ8064
+>   ARM: msm: add watchdog entries to DT timer binding doc
+> 
+>  Documentation/devicetree/bindings/arm/msm/timer.txt | 16 +++++++++++++---
+>  arch/arm/boot/dts/qcom-ipq8064.dtsi                 | 14 +++++++++++++-
+>  drivers/watchdog/qcom-wdt.c                         | 21 +++++++++++++++------
+>  3 files changed, 41 insertions(+), 10 deletions(-)
+> 
 
-Guenter
+Can this patchset be applied? Or should we resend with collected
+acks?
 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
