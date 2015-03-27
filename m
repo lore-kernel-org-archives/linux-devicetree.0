@@ -1,172 +1,82 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: [PATCH 4/6] of: add API for changing parameters of fixed link
-Date: Fri, 27 Mar 2015 16:37:57 +0300
-Message-ID: <55155D35.1070703@list.ru>
-References: <55155AFC.4050800@list.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55155AFC.4050800@list.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Florian Fainelli <f.fainelli@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH v2 00/11] LED / flash API integration
+Date: Fri, 27 Mar 2015 14:49:34 +0100
+Message-ID: <1427464185-27950-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This is a second non-RFC version of LED / flash API integration
+series [1]. It is based on linux-next_20150327.
 
-The following API is added:
-- of_phy_fixed_link_set_link() allows to set link state (up/down)
-- of_phy_fixed_link_set_speed() allows to set link speed
-- of_phy_fixed_link_set_duplex() allows to enable/disable duplex
+================
+Changes since v1
+================
 
-This API is needed when the MDIO-less link have some other means
-of a status passing to MAC, for example with in-band data (SGMII).
-MAC driver can then use that API to update the PHY status.
+- excluded exynos4-is media device related patches, as there is
+  consenus required related to flash devices handling in media device
+  DT bindings
+- modifications around LED Flash class settings and v4l2 flash config
+  initialization in LED Flash class drivers and v4l2-flash wrapper
+- switched to using DT node name as a device name for leds-max77693
+  and leds-aat1290 drivers, in case DT 'label' property is absent
+- dropped OF dependecy for v4l2-flash wrapper
+- moved LED_FAULTS definitions from led-class-flash.h to uapi/linux/leds.h
+- allowed for multiple clients of v4l2-flash sub-device
 
-CC: Florian Fainelli <f.fainelli@gmail.com>
-CC: Grant Likely <grant.likely@linaro.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: netdev@vger.kernel.org
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
+======================
+Changes since RFC v13:
+======================
 
-Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
----
- drivers/of/of_mdio.c    |   72 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_mdio.h |   17 +++++++++++
- 2 files changed, 89 insertions(+)
+- reduced number of patches - some of them have been merged
+- slightly modified max77693-led device naming
+- fixed issues in v4l2-flash helpers detected with yavta
+- cleaned up AAT1290 device tree documentation
+- added GPIOLIB dependecy to AAT1290 related entry in Kconfig
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index b3dc1e6..ade2426 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -251,6 +251,69 @@ struct phy_device *of_phy_attach(struct net_device *dev,
- EXPORT_SYMBOL(of_phy_attach);
+Thanks,
+Jacek Anaszewski
 
- #if defined(CONFIG_FIXED_PHY)
-+struct fixed_link_data {
-+	struct fixed_phy_status status;
-+	struct fixed_phy_status changed;
-+};
-+
-+static int of_phy_fixed_link_update(struct phy_device *phy,
-+		  struct fixed_phy_status *status)
-+{
-+	struct fixed_link_data *priv = phy->priv;
-+
-+	if (priv->changed.link) {
-+		status->link = priv->status.link;
-+		priv->changed.link = 0;
-+	}
-+	if (priv->changed.speed) {
-+		status->speed = priv->status.speed;
-+		priv->changed.speed = 0;
-+	}
-+	if (priv->changed.duplex) {
-+		status->duplex = priv->status.duplex;
-+		priv->changed.duplex = 0;
-+	}
-+	if (priv->changed.pause) {
-+		status->pause = priv->status.pause;
-+		priv->changed.pause = 0;
-+	}
-+	if (priv->changed.asym_pause) {
-+		status->asym_pause = priv->status.asym_pause;
-+		priv->changed.asym_pause = 0;
-+	}
-+	return 0;
-+}
-+
-+int of_phy_fixed_link_set_link(struct phy_device *phy, int link)
-+{
-+	struct fixed_link_data *priv = phy->priv;
-+
-+	priv->status.link = link;
-+	priv->changed.link = 1;
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_phy_fixed_link_set_link);
-+
-+int of_phy_fixed_link_set_speed(struct phy_device *phy, int speed)
-+{
-+	struct fixed_link_data *priv = phy->priv;
-+
-+	priv->status.speed = speed;
-+	priv->changed.speed = 1;
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_phy_fixed_link_set_speed);
-+
-+int of_phy_fixed_link_set_duplex(struct phy_device *phy, int duplex)
-+{
-+	struct fixed_link_data *priv = phy->priv;
-+
-+	priv->status.duplex = duplex;
-+	priv->changed.duplex = 1;
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_phy_fixed_link_set_duplex);
-+
- /*
-  * of_phy_is_fixed_link() and of_phy_register_fixed_link() must
-  * support two DT bindings:
-@@ -287,6 +350,7 @@ int of_phy_register_fixed_link(struct device_node *np)
- 	const __be32 *fixed_link_prop;
- 	int len;
- 	struct phy_device *phy;
-+	struct fixed_link_data *priv;
+[1] http://www.spinics.net/lists/kernel/msg1944538.html
 
- 	/* New binding */
- 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
-@@ -320,6 +384,14 @@ int of_phy_register_fixed_link(struct device_node *np)
- 		}
- 	}
+Jacek Anaszewski (11):
+  leds: unify the location of led-trigger API
+  leds: add uapi header file
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693
+  leds: Add driver for AAT1290 flash LED controller
+  of: Add Skyworks Solutions, Inc. vendor prefix
+  DT: Add documentation for the Skyworks AAT1290
+  media: Add registration helpers for V4L2 flash sub-devices
+  Documentation: leds: Add description of v4l2-flash sub-device
+  leds: max77693: add support for V4L2 Flash sub-device
+  leds: aat1290: add support for V4L2 Flash sub-device
 
-+	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		fixed_phy_unregister(phy);
-+		return -ENOMEM;
-+	}
-+	memset(&priv->changed, 0, sizeof(priv->changed));
-+	phy->priv = priv;
-+	fixed_phy_set_link_update(phy, of_phy_fixed_link_update);
- 	return 0;
- }
- EXPORT_SYMBOL(of_phy_register_fixed_link);
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index d449018..677adac 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -65,6 +65,9 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
- #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
- extern int of_phy_register_fixed_link(struct device_node *np);
- extern bool of_phy_is_fixed_link(struct device_node *np);
-+extern int of_phy_fixed_link_set_link(struct phy_device *phy, int link);
-+extern int of_phy_fixed_link_set_speed(struct phy_device *phy, int speed);
-+extern int of_phy_fixed_link_set_duplex(struct phy_device *phy, int duplex);
- #else
- static inline int of_phy_register_fixed_link(struct device_node *np)
- {
-@@ -74,6 +77,20 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
- {
- 	return false;
- }
-+static inline int of_phy_fixed_link_set_link(struct phy_device *phy, int link)
-+{
-+	return -ENOSYS;
-+}
-+static inline int of_phy_fixed_link_set_speed(struct phy_device *phy,
-+					      int speed)
-+{
-+	return -ENOSYS;
-+}
-+static inline int of_phy_fixed_link_set_duplex(struct phy_device *phy,
-+					       int duplex)
-+{
-+	return -ENOSYS;
-+}
- #endif
-
+ .../devicetree/bindings/leds/leds-aat1290.txt      |   70 ++
+ Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ Documentation/leds/leds-class-flash.txt            |   13 +
+ drivers/leds/Kconfig                               |   19 +
+ drivers/leds/Makefile                              |    2 +
+ drivers/leds/leds-aat1290.c                        |  518 ++++++++++
+ drivers/leds/leds-max77693.c                       | 1086 ++++++++++++++++++++
+ drivers/leds/leds.h                                |   24 -
+ drivers/media/v4l2-core/Kconfig                    |   11 +
+ drivers/media/v4l2-core/Makefile                   |    2 +
+ drivers/media/v4l2-core/v4l2-flash.c               |  619 +++++++++++
+ include/linux/led-class-flash.h                    |   16 +-
+ include/linux/leds.h                               |   24 +
+ include/media/v4l2-flash.h                         |  144 +++
+ include/uapi/linux/leds.h                          |   34 +
+ 16 files changed, 2605 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
+ create mode 100644 drivers/leds/leds-aat1290.c
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/media/v4l2-flash.h
+ create mode 100644 include/uapi/linux/leds.h
 
 -- 
 1.7.9.5
