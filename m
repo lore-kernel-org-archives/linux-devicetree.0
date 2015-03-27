@@ -1,13 +1,13 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] Renesas Ethernet AVB driver
-Date: Sat, 28 Mar 2015 02:11:42 +0300
-Message-ID: <237923615.rIRdooMS47@wasted.cogentembedded.com>
+Subject: [PATCH resend] Renesas Ethernet AVB driver
+Date: Sat, 28 Mar 2015 02:13:19 +0300
+Message-ID: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <netdev-owner@vger.kernel.org>
 Sender: netdev-owner@vger.kernel.org
-To: rebh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org
 Cc: linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
@@ -28,6 +28,8 @@ Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 This patch is against David Miller's 'net-next.git' repo.
+
+Resending with the correct Rob Herring's address...
 
  Documentation/devicetree/bindings/net/renesas,ravb.txt |   48 
  drivers/net/ethernet/renesas/Kconfig                   |   14 
