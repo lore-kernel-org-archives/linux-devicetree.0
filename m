@@ -1,71 +1,100 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
-Date: Fri, 27 Mar 2015 10:15:54 -0700
-Message-ID: <5515904A.1060600@gmail.com>
-References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru> <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru> <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com> <551587D1.5070408@list.ru>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/2] mtd: m25p80: bind to "nor-jedec" ID, for auto-detection
+Date: Fri, 27 Mar 2015 10:29:50 -0700
+Message-ID: <1427477390-24069-2-git-send-email-computersforpeace@gmail.com>
+References: <1427477390-24069-1-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <551587D1.5070408@list.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>
-Cc: netdev <netdev@vger.kernel.org>, Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427477390-24069-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/03/15 09:39, Stas Sergeev wrote:
-> 27.03.2015 19:21, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Do you want mvneta to register a similar callback in of_mdio, inste=
-ad
->>> of adding an explicit state-updating functions? Something like
->>> of_phy_fixed_link_set_update_callback()?
->> You don't need an of_phy_fixed_link_set_update callback, you just ne=
-ed
->> to provide a fixed_link_update callback in mvneta, that you register=
-,
-> That approach I in fact considered initially, as the simplest one,
-> and even had a patch. But I disliked the fact that then mvneta will
-> exploit the knowledge of the fact that of_phy_register_fixed_link()
-> uses a fixed_phy driver. What if the implementation will later change=
-?
+Use the new 'nor-jedec' binding to provide automatic detection of flash
+that use the 0x9F READ ID opcode. This can help for use cases where
+platforms just specify compatibility with "m25p80", and then see
+messages like this:
 
-There is no reason why it should change later, that's the entire purpos=
-e
-of why we can tell whether it is a fixed PHY or a regular MDIO-managed
-PHY, and drivers rely on that for their operations.
+  m25p80 spi32766.0: found s25fl256s1, expected m25p80
 
-> Also what makes me uncomfortable is that since of_phy_register_fixed_=
-link()
-> doesn't even return the struct phy_device pointer, mvneta will have
-> to get around that and use for example of_phy_find_device(), or regis=
-ter
-> the callback later, after of_phy_connect()
+Instead, they can just specify the generic string and see this:
 
-Ok, you could either make of_phy_register_fixed_link() return a
-phy_device, or as you suggest resolve the phy_device from the
-device_node later, your call.
+  m25p80 spi32766.0: s25fl256s1 (32768 Kbytes)
 
-=2E dsa/slave.c does of_phy_connect()
-> initially, together with fixed link registration, so it gets around t=
-he
-> problem. But mvneta registers the fixed_link in .probe callback, and
-> does of_phy_connect() in .open callback.
-> This all made me to drop that idea despite the simplicity.
+Also, update the language about m25p_ids[] to straighten out the
+expectations here. We should no longer need to continuously grow the
+m25p_ids[] table, and in fact, we might want to start removing entries
+which are not used in device trees so far, so we can just default to
+auto-detection as much as possible in the future.
 
-Yet that's still the cleanest/less invasive approach imho.
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v2: no change
 
->=20
->>> This will remove a few changes indeed, but perhaps not too much.
->>> Please confirm if this is exactly what you want, and then I try.
->> Let me know if this is clearer now, if not, I can certainly cook a
->> patch which does what I am suggesting. Thanks!
-> I can do that too, because I already did.
-> Let me know if the above concerns are not important, and I'll
-> restore my initial patch.
->=20
+ drivers/mtd/devices/m25p80.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-I think your concerns are valid, but I don't think there is going to be
-any problem with the approach I suggested because there is a contract
-that the fixed PHYs and regular PHYs need to
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.=
+c
+index 85e35467fba6..7c8b1694a134 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -223,6 +223,8 @@ static int m25p_probe(struct spi_device *spi)
+ 	 */
+ 	if (data && data->type)
+ 		flash_name =3D data->type;
++	else if (!strcmp(spi->modalias, "nor-jedec"))
++		flash_name =3D NULL; /* auto-detect */
+ 	else
+ 		flash_name =3D spi->modalias;
+=20
+@@ -247,9 +249,16 @@ static int m25p_remove(struct spi_device *spi)
+ }
+=20
+ /*
+- * XXX This needs to be kept in sync with spi_nor_ids.  We can't share
+- * it with spi-nor, because if this is built as a module then modpost
+- * won't be able to read it and add appropriate aliases.
++ * Do NOT add to this array without reading the following:
++ *
++ * Historically, many flash devices are bound to this driver by their =
+name. But
++ * since most of these flash are compatible to some extent, and their
++ * differences can often be differentiated by the JEDEC read-ID comman=
+d, we
++ * encourage new users to add support to the spi-nor library, and simp=
+ly bind
++ * against a generic string here (e.g., "nor-jedec").
++ *
++ * Many flash names are kept here in this list (as well as in spi-nor.=
+c) to
++ * keep them available as module aliases for existing platforms.
+  */
+ static const struct spi_device_id m25p_ids[] =3D {
+ 	{"at25fs010"},	{"at25fs040"},	{"at25df041a"},	{"at25df321a"},
+@@ -291,6 +300,12 @@ static const struct spi_device_id m25p_ids[] =3D {
+ 	{"w25x64"},	{"w25q64"},	{"w25q80"},	{"w25q80bl"},
+ 	{"w25q128"},	{"w25q256"},	{"cat25c11"},
+ 	{"cat25c03"},	{"cat25c09"},	{"cat25c17"},	{"cat25128"},
++
++	/*
++	 * Generic support for SPI NOR that can be identified by the JEDEC RE=
+AD
++	 * ID opcode (0x9F). Use this, if possible.
++	 */
++	{"nor-jedec"},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, m25p_ids);
 --=20
-=46lorian
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
