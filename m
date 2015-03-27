@@ -1,30 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 1/7] dmaengine: of_dma: Support for DMA routers
-Date: Sat, 28 Mar 2015 02:44:46 +0100
-Message-ID: <201503280244.46961.arnd@arndb.de>
-References: <1427459213-14611-1-git-send-email-peter.ujfalusi@ti.com> <1427459213-14611-2-git-send-email-peter.ujfalusi@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5 v2] ASoC: rsnd: DPCM base sampling rate convert
+ support
+Date: Fri, 27 Mar 2015 16:01:10 -0700
+Message-ID: <20150327230109.GJ1743@sirena.org.uk>
+References: <87h9t85ry1.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1427459213-14611-2-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vinod.koul@intel.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87h9t85ry1.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Das Biju <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 27 March 2015, Peter Ujfalusi wrote:
-> +Required property:
-> +- dma-device:          phandle of the DMA controller. The router is modifying
-> +                       the DMA requests for this controller.
 
-This property seems rather specific to the case at hand, I would expect that
-one might also see routers like this that are connected to more than one
-dma-device, so maybe make it a list?
+--5uO961YFyoDlzFnP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It might also be better to name this as 'dma-controllers' or 'dma-masters',
-as it is not entirely obvious (without referencing the binding document)
-whether a dma device refers to the slave or the master.
+On Thu, Mar 26, 2015 at 04:00:44AM +0000, Kuninori Morimoto wrote:
+>=20
+> Hi Mark
+>=20
+> These are v2 of remains of my previous patch set.
+> Basically, these doesn't need soc-core's new feature, but it is assuming
+> DPCM base sampling rate convert has both playback/capture in same time.
 
-	Arnd
+Applied all, thanks.
+
+--5uO961YFyoDlzFnP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVFeEuAAoJECTWi3JdVIfQFogH/jXpzUdtoUTSfPSx8vMsM8yo
+EaH/V5m3zkSXjajXazF1NCdD+rpaQff6jP7G1UmvxqtDyi/60T7qUQ7ofq7EW0OZ
+ncAW/YcyKYmRUbuEWt3Ygq4ULiUjdY8wM6cpQoZYcCnoimE+jum8XRPz4jSyccp5
+o+k8U9Xdme7X1RghGY26Mmfl6pPs8U4CNdiUzSSsWafIo2Yv+9gz4nBMgfPsLXE+
+F6tjrNgpkCZARNgCALPzdKCAGsFNJuh+1jUMfzMVp8fp1mbH+7XPmOgjaX5HHdr2
+a1UKCbQvQJrqGottUEzH68Uc2RbeKGMyOJYcRBZ2qo8oem5bYD4lt9TBqJkROFU=
+=qWBk
+-----END PGP SIGNATURE-----
+
+--5uO961YFyoDlzFnP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
