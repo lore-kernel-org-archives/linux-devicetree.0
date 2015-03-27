@@ -1,51 +1,36 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi/rockchip: Round up clock rate divisor to err on
- the safe side
-Date: Thu, 26 Mar 2015 17:46:09 -0700
-Message-ID: <20150327004609.GB3572@sirena.org.uk>
-References: <1427412625-12377-1-git-send-email-jwerner@chromium.org>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH] DT: leds: Add uniqueness requirement for 'label' property.
+Date: Thu, 26 Mar 2015 17:58:59 -0700
+Message-ID: <CAK5ve-JdZR72VnADkK1s+M+yo=J3Q=_wXw5uU4Nu3SkJT8Nosg@mail.gmail.com>
+References: <1427378590-24219-1-git-send-email-j.anaszewski@samsung.com> <55147317.8010009@iki.fi>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="T0u6oYl84yPn00Od"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427412625-12377-1-git-send-email-jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <55147317.8010009@iki.fi>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 26, 2015 at 1:59 PM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> Hi Jacek,
+>
+> Jacek Anaszewski wrote:
+>> Label is used for naming LED class devices. Since ePAPR
+>> doesn't require uniqueness for label properties, it has to be
+>> explicitly required in the LEDs common bindings documentation.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+>> Cc: devicetree@vger.kernel.org
+>
+> Thanks for the patch!
+>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>
+Looks good to me, I will merge it.
 
---T0u6oYl84yPn00Od
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Mar 26, 2015 at 04:30:24PM -0700, Julius Werner wrote:
-> The Rockchip SPI driver currently calculates its clock rate divisor by
-> integer dividing the parent rate by the target rate, and then rounding
-> the result up to the next even number (since the divisor must be
-> even).
-
-Applied both, thanks.
-
---T0u6oYl84yPn00Od
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVFKhQAAoJECTWi3JdVIfQwFkH/j+maez2s4cqChJbduOnwABh
-9CEoPMZfuEUr2xoqwALE491xrlsAVhiv58LM0/3R6OXzh/RvTkisrVS2D9T/Pd0d
-ADf9srakamClgrOTcEMeJDNB25pTXVVCkvek0SJWgrefPC2hxpl+caGv4fZmjEXU
-RepzAZQGKtn/xAX6HMso9sWzTJBZAEPaY/dmutnjt0ywS184sk6+v0X426sfFyYl
-09CkegF/ChBjkgWA7jJn+3l3O+cX8ekTMf2AdJeszUxka+9yhkUJDWbdT8YK0eiA
-KVGK1dDTlDUAlfgm4pwEwkbi28Kp/kMyTTaPow2i1Z0SE2NRzOrYvOn4jYt5l84=
-=DLmY
------END PGP SIGNATURE-----
-
---T0u6oYl84yPn00Od--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Bryan
