@@ -1,645 +1,175 @@
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: Re: [PATCH v1 1/2] thermal: hisilicon: add new hisilicon thermal
- sensor driver
-Date: Fri, 27 Mar 2015 16:30:48 +0800
-Message-ID: <55151538.3020204@hisilicon.com>
-References: <1427269825-11324-1-git-send-email-kong.kongxinwei@hisilicon.com> <1427269825-11324-2-git-send-email-kong.kongxinwei@hisilicon.com> <5513CDEE.8000807@hisilicon.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: serial atag tag in devicetree ?
+Date: Fri, 27 Mar 2015 09:36:21 +0100
+Message-ID: <55151685.3060404@redhat.com>
+References: <550EA6D8.3090702@redhat.com>
+ <CAL_JsqK0VtDj_FmA8tQ5MRmGm-o2w7ia9U2_nD0aFDtTSfns2A@mail.gmail.com>
+ <550FF971.407@redhat.com>
+ <CAL_JsqLev+DeWCzvhF7bwYk3URxpgaQDR+6OmwWHjJ2nx=HijQ@mail.gmail.com>
+ <551119F1.2060002@redhat.com> <1427322910.26627.15.camel@collins>
+ <5513C926.1010708@redhat.com> <1427361114.2342.7.camel@collins>
+ <CAL_Jsq+konO_WYEQ=nP1wvbzPoytdJQ9jnkqppCXGmsb6sTF8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5513CDEE.8000807@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: YiPing Xu <xuyiping@hisilicon.com>, rui.zhuang@intel.com, edubezval@gmail.com
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAL_Jsq+konO_WYEQ=nP1wvbzPoytdJQ9jnkqppCXGmsb6sTF8Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Rob Herring <robherring2@gmail.com>, Paul Kocialkowski <contact@paulk.fr>
+Cc: devicetree <devicetree@vger.kernel.org>, Ian Campbell <ijc@hellion.org.uk>, Russell King - ARM Linux <linux@arm.linux.org.uk>, U-Boot <u-boot@lists.denx.de>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2015/3/26 17:14, YiPing Xu wrote:
-> =E5=9C=A8 2015/3/25 15:50, Xinwei Kong =E5=86=99=E9=81=93:
->> From: kongxinwei <kong.kongxinwei@hisilicon.com>
->>
->> This patch adds the support for hisilicon thermal sensor, within
->> hisilicon SoC. there will register sensors for thermal framework
->> and use device tree to bind cooling device.
->>
->> Signed-off-by: Leo Yan <leo.yan@linaro.org>
->> Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
->> ---
->>   drivers/thermal/Kconfig        |   8 +
->>   drivers/thermal/Makefile       |   1 +
->>   drivers/thermal/hisi_thermal.c | 526 +++++++++++++++++++++++++++++=
-++++++++++++
->>   3 files changed, 535 insertions(+)
->>   create mode 100644 drivers/thermal/hisi_thermal.c
->>
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index af40db0..81aee01 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -136,6 +136,14 @@ config THERMAL_EMULATION
->>         because userland can easily disable the thermal policy by si=
-mply
->>         flooding this sysfs node with low temperature values.
->>
->> +config HISI_THERMAL
->> +    tristate "Hisilicon thermal driver"
->> +    depends on ARCH_HISI && CPU_THERMAL && OF
->> +    help
->> +      Enable this to plug hisilicon's thermal sensor driver into th=
-e Linux
->> +      thermal framework. cpufreq is used as the cooling device to t=
-hrottle
->> +      CPUs when the passive trip is crossed.
->> +
->>   config IMX_THERMAL
->>       tristate "Temperature sensor driver for Freescale i.MX SoCs"
->>       depends on CPU_THERMAL
->> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
->> index fa0dc48..08ae7ac 100644
->> --- a/drivers/thermal/Makefile
->> +++ b/drivers/thermal/Makefile
->> @@ -39,3 +39,4 @@ obj-$(CONFIG_TI_SOC_THERMAL)    +=3D ti-soc-therma=
-l/
->>   obj-$(CONFIG_INT340X_THERMAL)  +=3D int340x_thermal/
->>   obj-$(CONFIG_ST_THERMAL)    +=3D st/
->>   obj-$(CONFIG_TEGRA_SOCTHERM)    +=3D tegra_soctherm.o
->> +obj-$(CONFIG_HISI_THERMAL)     +=3D hisi_thermal.o
->> diff --git a/drivers/thermal/hisi_thermal.c b/drivers/thermal/hisi_t=
-hermal.c
->> new file mode 100644
->> index 0000000..8edf83a
->> --- /dev/null
->> +++ b/drivers/thermal/hisi_thermal.c
->=20
->    are you sure all the SOCs in hisilicon use the same thermal IP ?
->=20
->    if not, this driver should not use the "hisi_" prefix.
-
-We can use this hisi thermal driver framework to satisfy diff thermal
-IP, all of SoC will use this drvier by adding a struct about diff IP.
-We may talk about hisi thermal diff IP how to satisfy this driver.
-
-Thanks
-Xinwei
-
->=20
->> @@ -0,0 +1,526 @@
->> +/*
->> + * Hisilicon thermal sensor driver
->> + *
->> + * Copyright (c) 2014-2015 Hisilicon Limited.
->> + * Copyright (c) 2014-2015 Linaro Limited.
->> + *
->> + * Xinwei Kong <kong.kongxinwei@hisilicon.com>
->> + * Leo Yan <leo.yan@linaro.org>
->> + *
->> + * This program is free software; you can redistribute it and/or mo=
-dify
->> + * it under the terms of the GNU General Public License version 2 a=
-s
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warra=
-nty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/cpu_cooling.h>
->> +#include <linux/cpufreq.h>
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/init.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->> +#include <linux/thermal.h>
->> +#include <linux/types.h>
->> +
->> +#include "thermal_core.h"
->> +
->> +#define TEMP0_LAG            (0x0)
->> +#define TEMP0_TH            (0x4)
->> +#define TEMP0_RST_TH            (0x8)
->> +#define TEMP0_CFG            (0xC)
->> +#define TEMP0_EN            (0x10)
->> +#define TEMP0_INT_EN            (0x14)
->> +#define TEMP0_INT_CLR            (0x18)
->> +#define TEMP0_RST_MSK            (0x1C)
->> +#define TEMP0_RAW_INT            (0x20)
->> +#define TEMP0_MSK_INT            (0x24)
->> +#define TEMP0_VALUE            (0x28)
->> +
->> +#define HISI_TEMP_BASE            (-60)
->> +#define HISI_TEMP_RESET            (100000)
->> +#define HISI_TEMP_PASSIVE        (85000)
->> +
->> +#define HISI_MAX_SENSORS        4
->> +
->> +struct hisi_thermal_sensor {
->> +    struct hisi_thermal_data *thermal;
->> +    struct thermal_zone_device *tzd;
->> +    const struct thermal_trip *trip;
->> +
->> +    uint32_t id;
->> +    uint32_t thres_temp, reset_temp;
->> +};
->> +
->> +struct hisi_thermal_data {
->> +    struct platform_device *pdev;
->> +    struct clk *clk;
->> +
->> +    int irq, irq_bind_sensor;
->> +    bool irq_enabled;
->> +
->> +    unsigned int sensors_num;
->> +    long sensor_temp[HISI_MAX_SENSORS];
->> +    struct hisi_thermal_sensor sensors[HISI_MAX_SENSORS];
->> +
->> +    void __iomem *regs;
->> +};
->> +
->> +static DEFINE_SPINLOCK(thermal_lock);
->> +
->=20
->    "thermal_lock" should be defined in "hisi_thermal_data" to support=
- multi device instance.
->=20
-
-ok,good comments
-
->> +/* in millicelsius */
->> +static inline int _step_to_temp(int step)
->> +{
->> +    /*
->> +     * Every step equals (1 * 200) / 255 celsius, and finally
->> +     * need convert to millicelsius.
->> +     */
->> +    return (HISI_TEMP_BASE + (step * 200 / 255)) * 1000;
->> +}
->> +
->> +static inline int _temp_to_step(int temp)
->> +{
->> +    return ((temp / 1000 - HISI_TEMP_BASE) * 255 / 200);
->> +}
->> +
->> +static long hisi_thermal_get_sensor_temp(struct hisi_thermal_data *=
-data,
->> +                     struct hisi_thermal_sensor *sensor)
->> +{
->> +    unsigned long flags;
->> +    int val;
->> +
->> +    spin_lock_irqsave(&thermal_lock, flags);
->> +
->> +    /* disable module firstly */
->> +    writel(0x0, data->regs + TEMP0_EN);
->> +
->> +    /* select sensor id */
->> +    writel((sensor->id << 12), data->regs + TEMP0_CFG);
->> +
->> +    /* enable module */
->> +    writel(0x1, data->regs + TEMP0_EN);
->> +
->> +    mdelay(5);
->> +
->> +    val =3D readl(data->regs + TEMP0_VALUE);
->> +    val =3D _step_to_temp(val);
->> +
->> +    /* adjust for negative value */
->> +    val =3D (val < 0) ? 0 : val;
->> +
->> +    spin_unlock_irqrestore(&thermal_lock, flags);
->> +
->> +    return val;
->> +}
->> +
->> +static void hisi_thermal_bind_irq(struct hisi_thermal_data *data)
->> +{
->> +    struct hisi_thermal_sensor *sensor;
->> +    unsigned long flags;
->> +
->> +    sensor =3D &data->sensors[data->irq_bind_sensor];
->> +
->> +    spin_lock_irqsave(&thermal_lock, flags);
->> +
->> +    /* setting the hdak time */
->> +    writel(0x0, data->regs + TEMP0_CFG);
->> +
->> +    /* disable module firstly */
->> +    writel(0x0, data->regs + TEMP0_RST_MSK);
->> +    writel(0x0, data->regs + TEMP0_EN);
->> +
->> +    /* select sensor id */
->> +    writel((sensor->id << 12), data->regs + TEMP0_CFG);
->> +
->> +    /* enable for interrupt */
->> +    writel(_temp_to_step(sensor->thres_temp)
->> +            | 0x0FFFFFF00, data->regs + TEMP0_TH);
->> +
->> +    writel(_temp_to_step(HISI_TEMP_RESET), data->regs + TEMP0_RST_T=
-H);
->> +
->> +    /* enable module */
->> +    writel(0x1, data->regs + TEMP0_RST_MSK);
->> +    writel(0x1, data->regs + TEMP0_EN);
->> +
->> +    writel(0x0, data->regs + TEMP0_INT_CLR);
->> +    writel(0x1, data->regs + TEMP0_INT_EN);
->> +
->> +    mdelay(5);
->> +
->> +    spin_unlock_irqrestore(&thermal_lock, flags);
->> +
->> +}
->> +
->> +static void hisi_thermal_enable_sensor(struct hisi_thermal_data *da=
-ta)
->> +{
->> +    struct hisi_thermal_sensor *sensor;
->> +    unsigned long flags;
->> +
->> +    sensor =3D &data->sensors[data->irq_bind_sensor];
->> +
->> +    spin_lock_irqsave(&thermal_lock, flags);
->> +
->> +    /* setting the hdak time */
->> +    writel(0x0, data->regs + TEMP0_CFG);
->> +
->> +    /* disable module firstly */
->> +    writel(0x0, data->regs + TEMP0_RST_MSK);
->> +    writel(0x0, data->regs + TEMP0_EN);
->> +
->> +    /* select sensor id */
->> +    writel((sensor->id << 12), data->regs + TEMP0_CFG);
->> +
->> +    /* enable for interrupt */
->> +    writel(_temp_to_step(sensor->thres_temp)
->> +            | 0x0FFFFFF00, data->regs + TEMP0_TH);
->> +
->> +    writel(_temp_to_step(HISI_TEMP_RESET), data->regs + TEMP0_RST_T=
-H);
->> +
->> +    /* enable module */
->> +    writel(0x1, data->regs + TEMP0_RST_MSK);
->> +    writel(0x1, data->regs + TEMP0_EN);
->> +
->> +    writel(0x0, data->regs + TEMP0_INT_CLR);
->> +    writel(0x1, data->regs + TEMP0_INT_EN);
->> +
->> +    mdelay(5);
->> +
->> +    spin_unlock_irqrestore(&thermal_lock, flags);
->> +
->> +}
->> +
->> +static void hisi_thermal_disable_sensor(struct hisi_thermal_data *d=
-ata)
->> +{
->> +    unsigned long flags;
->> +
->> +    spin_lock_irqsave(&thermal_lock, flags);
->> +
->> +    /* disable sensor module */
->> +    writel(0x0, data->regs + TEMP0_INT_EN);
->> +    writel(0x0, data->regs + TEMP0_RST_MSK);
->> +    writel(0x0, data->regs + TEMP0_EN);
->> +
->> +    spin_unlock_irqrestore(&thermal_lock, flags);
->> +
->> +}
->> +
->> +static int hisi_thermal_get_temp(void *_sensor, long *temp)
->> +{
->> +    struct hisi_thermal_sensor *sensor =3D _sensor;
->> +    struct hisi_thermal_data *data =3D sensor->thermal;
->> +
->> +    int sensor_id =3D 0, i;
->> +    long max_temp =3D 0;
->> +
->> +    *temp =3D hisi_thermal_get_sensor_temp(data, sensor);
->> +
->> +    data->sensor_temp[sensor->id] =3D *temp;
->> +
->> +    for (i =3D 0; i < HISI_MAX_SENSORS; i++) {
->> +        if (data->sensor_temp[i] >=3D max_temp) {
->> +            max_temp =3D data->sensor_temp[i];
->> +            sensor_id =3D i;
->> +        }
->> +    }
->> +
->> +    data->irq_bind_sensor =3D sensor_id;
->> +
->> +    dev_dbg(&data->pdev->dev, "id=3D%d, irq=3D%d, temp=3D%ld, thres=
-=3D%d\n",
->> +        sensor->id, data->irq_enabled, *temp, sensor->thres_temp);
->> +
->> +    /*
->> +     * Bind irq to sensor for two cases:
->> +     *   Reenable alarm IRQ if temperature below threshold;
->> +     *   if irq has been enabled, always set it;
->> +     */
->> +    if (!data->irq_enabled && max_temp < sensor->thres_temp) {
->> +        data->irq_enabled =3D true;
->> +        hisi_thermal_bind_irq(data);
->> +    } else if (data->irq_enabled)
->> +        hisi_thermal_bind_irq(data);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct thermal_zone_of_device_ops hisi_of_thermal_ops =3D {
->> +    .get_temp =3D hisi_thermal_get_temp,
->> +};
->> +
->> +static irqreturn_t hisi_thermal_alarm_irq(int irq, void *dev)
->> +{
->> +    struct hisi_thermal_data *data =3D dev;
->> +    unsigned long flags;
->> +
->> +    spin_lock_irqsave(&thermal_lock, flags);
->> +
->> +    /* disable interrupt */
->> +    writel(0x0, data->regs + TEMP0_INT_EN);
->> +    writel(0x1, data->regs + TEMP0_INT_CLR);
->> +
->> +    spin_unlock_irqrestore(&thermal_lock, flags);
->> +    data->irq_enabled =3D false;
->> +
->> +    return IRQ_WAKE_THREAD;
->> +}
->> +
->> +static irqreturn_t hisi_thermal_alarm_irq_thread(int irq, void *dev=
-)
->> +{
->> +    struct hisi_thermal_data *data =3D dev;
->> +    struct hisi_thermal_sensor *sensor;
->> +    int i;
->> +
->> +    sensor =3D &data->sensors[data->irq_bind_sensor];
->> +
->> +    dev_crit(&data->pdev->dev, "THERMAL ALARM: T > %d\n",
->> +         sensor->thres_temp / 1000);
->> +
->> +    for (i =3D 0; i < data->sensors_num; i++)
->> +        thermal_zone_device_update(data->sensors[i].tzd);
->> +
->> +    return IRQ_HANDLED;
->> +}
->> +
->> +static int hisi_thermal_init_sensor(struct platform_device *pdev,
->> +                    struct device_node *np,
->> +                    struct hisi_thermal_data *data,
->> +                    int index)
->> +{
->> +    struct hisi_thermal_sensor *sensor;
->> +    int ret, i;
->> +
->> +    sensor =3D &data->sensors[index];
->> +
->> +    ret =3D of_property_read_u32(np, "hisilicon,tsensor-id",
->> +                    &sensor->id);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "failed to get id %d: %d\n", index, ret=
-);
->> +        return ret;
->> +    }
->> +
->> +    sensor->thermal =3D data;
->> +    sensor->tzd =3D thermal_zone_of_sensor_register(&pdev->dev, sen=
-sor->id,
->> +                sensor, &hisi_of_thermal_ops);
->> +    if (IS_ERR(sensor->tzd)) {
->> +        ret =3D PTR_ERR(sensor->tzd);
->> +        dev_err(&pdev->dev, "failed to register sensor id %d: %d\n"=
-,
->> +            sensor->id, ret);
->> +        return ret;
->> +    }
->> +
->> +    sensor->trip =3D of_thermal_get_trip_points(sensor->tzd);
->> +
->> +    for (i =3D 0; i < of_thermal_get_ntrips(sensor->tzd); i++) {
->> +        if (sensor->trip[i].type =3D=3D THERMAL_TRIP_PASSIVE) {
->> +            sensor->thres_temp =3D sensor->trip[i].temperature;
->> +            break;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static int hisi_thermal_get_sensor_data(struct platform_device *pde=
-v)
->> +{
->> +    struct hisi_thermal_data *data =3D platform_get_drvdata(pdev);
->> +    struct device_node *np =3D pdev->dev.of_node;
->> +    struct device_node *child_np;
->> +    int ret, i, index;
->> +
->> +    /* sensor initialization */
->> +    index =3D 0;
->> +    for_each_child_of_node(np, child_np) {
->> +
->> +        if (index >=3D HISI_MAX_SENSORS) {
->> +            dev_err(&pdev->dev, "unsupported sensor number\n");
->> +            ret =3D -EINVAL;
->> +            goto err_init_sensors;
->> +        }
->> +
->> +        ret =3D hisi_thermal_init_sensor(pdev, child_np, data, inde=
-x);
->> +        if (ret)
->> +            goto err_init_sensors;
->> +
->> +        index++;
->> +    }
->> +
->> +    data->sensors_num =3D index;
->> +    return 0;
->> +
->> +err_init_sensors:
->> +    for (i =3D 0; i < index; i++)
->> +        thermal_zone_of_sensor_unregister(&pdev->dev,
->> +                data->sensors[i].tzd);
->> +    return ret;
->> +}
->> +
->> +static const struct of_device_id of_hisi_thermal_match[] =3D {
->> +    { .compatible =3D "hisilicon,tsensor" },
->> +    { /* end */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, of_hisi_thermal_match);
->> +
->> +static void hisi_thermal_toggle_sensor(struct hisi_thermal_sensor *=
-sensor,
->> +                       bool on)
->> +{
->> +    struct thermal_zone_device *tzd =3D sensor->tzd;
->> +
->> +    tzd->ops->set_mode(tzd,
->> +        on ? THERMAL_DEVICE_ENABLED : THERMAL_DEVICE_DISABLED);
->> +}
->> +
->> +static int hisi_thermal_probe(struct platform_device *pdev)
->> +{
->> +    struct hisi_thermal_data *data;
->> +    struct resource *res;
->> +    int i;
->> +    int ret;
->> +
->> +    data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +    if (!data)
->> +        return -ENOMEM;
->> +
->> +    data->pdev =3D pdev;
->> +
->> +    res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +    data->regs =3D devm_ioremap_resource(&pdev->dev, res);
->> +    if (IS_ERR(data->regs)) {
->> +        dev_err(&pdev->dev, "failed to get io address\n");
->> +        return PTR_ERR(data->regs);
->> +    }
->> +
->> +    data->irq =3D platform_get_irq(pdev, 0);
->> +    if (data->irq < 0)
->> +        return data->irq;
->> +
->> +    ret =3D devm_request_threaded_irq(&pdev->dev, data->irq,
->> +            hisi_thermal_alarm_irq, hisi_thermal_alarm_irq_thread,
->> +            0, "hisi_thermal", data);
->> +    if (ret < 0) {
->> +        dev_err(&pdev->dev, "failed to request alarm irq: %d\n", re=
-t);
->> +        return ret;
->> +    }
->> +
->> +    platform_set_drvdata(pdev, data);
->> +
->> +    data->clk =3D devm_clk_get(&pdev->dev, "thermal_clk");
->> +    if (IS_ERR(data->clk)) {
->> +        ret =3D PTR_ERR(data->clk);
->> +        if (ret !=3D -EPROBE_DEFER)
->> +            dev_err(&pdev->dev,
->> +                "failed to get thermal clk: %d\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    /* enable clock for thermal */
->> +    ret =3D clk_prepare_enable(data->clk);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "failed to enable thermal clk: %d\n", r=
-et);
->> +        return ret;
->> +    }
->> +
->> +    ret =3D hisi_thermal_get_sensor_data(pdev);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "failed to get sensor data\n");
->> +        goto err_get_sensor_data;
->> +        return ret;
->> +    }
->> +
->> +    hisi_thermal_enable_sensor(data);
->> +    data->irq_enabled =3D true;
->> +
->> +    for (i =3D 0; i < data->sensors_num; i++)
->> +        hisi_thermal_toggle_sensor(&data->sensors[i], true);
->> +
->> +    return 0;
->> +
->> +err_get_sensor_data:
->> +    clk_disable_unprepare(data->clk);
->> +    return ret;
->> +}
->> +
->> +static int hisi_thermal_remove(struct platform_device *pdev)
->> +{
->> +    struct hisi_thermal_data *data =3D platform_get_drvdata(pdev);
->> +    int i;
->> +
->> +    for (i =3D 0; i < data->sensors_num; i++) {
->> +        struct hisi_thermal_sensor *sensor =3D &data->sensors[i];
->> +
->> +        hisi_thermal_toggle_sensor(sensor, false);
->> +        thermal_zone_of_sensor_unregister(&pdev->dev, sensor->tzd);
->> +    }
->> +
->> +    hisi_thermal_disable_sensor(data);
->> +    clk_disable_unprepare(data->clk);
->> +    return 0;
->> +}
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int hisi_thermal_suspend(struct device *dev)
->> +{
->> +    struct hisi_thermal_data *data =3D dev_get_drvdata(dev);
->> +
->> +    hisi_thermal_disable_sensor(data);
->> +    data->irq_enabled =3D false;
->> +
->> +    clk_disable_unprepare(data->clk);
->> +
->> +    return 0;
->> +}
->> +
->> +static int hisi_thermal_resume(struct device *dev)
->> +{
->> +    struct hisi_thermal_data *data =3D dev_get_drvdata(dev);
->> +
->> +    clk_prepare_enable(data->clk);
->> +
->> +    data->irq_enabled =3D true;
->> +    hisi_thermal_enable_sensor(data);
->> +
->> +    return 0;
->> +}
->> +#endif
->> +
->> +static SIMPLE_DEV_PM_OPS(hisi_thermal_pm_ops,
->> +             hisi_thermal_suspend, hisi_thermal_resume);
->> +
->> +static struct platform_driver hisi_thermal_driver =3D {
->> +    .driver =3D {
->> +        .name    =3D "hisi_thermal",
->> +        .owner  =3D THIS_MODULE,
->> +        .pm    =3D &hisi_thermal_pm_ops,
->> +        .of_match_table =3D of_hisi_thermal_match,
->> +    },
->> +    .probe        =3D hisi_thermal_probe,
->> +    .remove        =3D hisi_thermal_remove,
->> +};
->> +
->> +static int __init hisi_thermal_init(void)
->> +{
->> +    return platform_driver_register(&hisi_thermal_driver);
->> +}
->> +
->> +static void __exit hisi_thermal_exit(void)
->> +{
->> +    platform_driver_unregister(&hisi_thermal_driver);
->> +}
->> +
->> +late_initcall(hisi_thermal_init);
->> +module_exit(hisi_thermal_exit);
->> +
->> +MODULE_AUTHOR("Xinwei Kong <kong.kongxinwei@hisilicon.com>");
->> +MODULE_AUTHOR("Leo Yan <leo.yan@linaro.org>");
->> +MODULE_DESCRIPTION("Hisilicon thermal driver");
->> +MODULE_LICENSE("GPL v2");
->>
->=20
->=20
->=20
-> .
->=20
+SGksCgpPbiAyNy0wMy0xNSAwNTozMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVGh1LCBNYXIg
+MjYsIDIwMTUgYXQgNDoxMSBBTSwgUGF1bCBLb2NpYWxrb3dza2kgPGNvbnRhY3RAcGF1bGsuZnI+
+IHdyb3RlOgo+PiBMZSBqZXVkaSAyNiBtYXJzIDIwMTUgw6AgMDk6NTMgKzAxMDAsIEhhbnMgZGUg
+R29lZGUgYSDDqWNyaXQgOgo+Pj4gSGksCj4+Pgo+Pj4gT24gMjUtMDMtMTUgMjM6MzUsIFBhdWwg
+S29jaWFsa293c2tpIHdyb3RlOgo+Pj4+IExlIG1hcmRpIDI0IG1hcnMgMjAxNSDDoCAwOTowMSAr
+MDEwMCwgSGFucyBkZSBHb2VkZSBhIMOpY3JpdCA6Cj4+Pj4+IEhpLAo+Pj4+Pgo+Pj4+PiBPbiAy
+NC0wMy0xNSAwMDoxMiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Pj4+PiBPbiBNb24sIE1hciAyMywg
+MjAxNSBhdCA2OjMwIEFNLCBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPiB3cm90
+ZToKPj4+Pj4+PiBIaSwKPj4+Pj4+Pgo+Pj4+Pj4+Cj4+Pj4+Pj4gT24gMjItMDMtMTUgMjI6MDEs
+IFJvYiBIZXJyaW5nIHdyb3RlOgo+Pj4+Pgo+Pj4+PiA8c25pcD4KPj4+Pj4KPj4+Pj4+Pj4gVGhl
+cmUgaXMgYWxyZWFkeSAic2VyaWFsLW51bWJlciIgKGEgc3RyaW5nKSB3aGljaCBleGlzdHMgZm9y
+Cj4+Pj4+Pj4+IE9wZW5GaXJtd2FyZS4gQWxzbywgImNvcHlyaWdodCIgY29ycmVzcG9uZHMgdG8g
+dmVuZG9yL21hbnVmYWN0dXJlcgo+Pj4+Pj4+PiBzdHJpbmcuIEJvdGggb2YgdGhlc2UgYXJlIHN1
+cHBvcnRlZCBieSBsc2h3IGFscmVhZHkuCj4+Pj4+Pj4KPj4+Pj4+Pgo+Pj4+Pj4+IE9rLCBzbyBp
+ZiBJIHVuZGVyc3RhbmQgeW91IGNvcnJlY3RseSB0aGVuIHlvdSdyZSBzYXlpbmcgdGhhdCB3ZQo+
+Pj4+Pj4+IHNob3VsZCBzZXQgYSAic2VyaWFsLW51bWJlciIgc3RyaW5nIHByb3BlcnR5IGF0IHRo
+ZSBkdCByb290IGxldmVsCj4+Pj4+Pj4gYW5kIHRoYXQgdGhpcyBtYXkgY29udGFpbiBwcmV0dHkg
+bXVjaCBhbnl0aGluZywgZS5nLiBpbiB0aGUKPj4+Pj4+PiBzdW54aSBjYXNlIHRoZSBmdWxsIDEy
+OCBiaXQgU0lEIGluIGhleC4KPj4+Pj4+Cj4+Pj4+PiBSaWdodC4KPj4+Pj4+Cj4+Pj4+Pj4gSXMg
+dGhlIHVzZSBvZiB0aGUgInNlcmlhbC1udW1iZXIiIHN0cmluZyBwcm9wZXJ0eSBhbHJlYWR5IGRv
+Y3VtZW50ZWQKPj4+Pj4+PiBzb21ld2hlcmU/IElmIG5vdCBJJ2xsIHN1Ym1pdCBhIGtlcm5lbCBw
+YXRjaCB0byBkb2N1bWVudCBpdC4KPj4+Pj4+Cj4+Pj4+PiBOb3QgdGhhdCBJJ20gYXdhcmUgb2Yu
+IEl0IGlzIHNvbWV0aGluZyB0aGF0IHByZWRhdGVzIG91ciBkb2N1bWVudGF0aW9uCj4+Pj4+PiBy
+ZXF1aXJlbWVudHMuIEl0IGNvdWxkIGJlIGluIE9wZW5GaXJtd2FyZSBzcGVjcy4gRG9jdW1lbnRp
+bmcgaXQgaW4gdGhlCj4+Pj4+PiBEVCBiaW5kaW5ncyBkb2VzIG5vdCBodXJ0Lgo+Pj4+Pgo+Pj4+
+PiBPay4KPj4+Pj4KPj4+Pj4+PiBBbmQgZm9yIG9sZGVyIGtlcm5lbHMgd2Ugc2hvdWxkIG5vdCBz
+ZXQgYW55IHNlcmlhbCBhdGFnICh1LWJvb3QKPj4+Pj4+PiBhbHdheXMgc2V0cyBpdCwgc28gdGhp
+cyBsZWF2ZXMgaXQgYXQgMCkgYW5kIG9sZCBrZXJuZWwgdXNlcnMgYXJlCj4+Pj4+Pj4gb3V0IG9m
+IGx1Y2sgd3J0IGdldHRpbmcgdG8gdGhlIHNlcmlhbCA/Cj4+Pj4+Pgo+Pj4+Pj4gSWYgdGhlcmUg
+aXMgc3VmZmljaWVudCByZWFzb24gdG8gc3VwcG9ydCB0aGlzIG9uIG9sZCBrZXJuZWxzIHlvdSBj
+b3VsZC4KPj4+Pj4KPj4+Pj4gT25lIHByb2JsZW0gd2l0aCBzdXBwb3J0aW5nIHRoaXMgZm9yIG9s
+ZGVyIGtlcm5lbHMgaXMgdGhhdCBpZiBhIG5vbiAwCj4+Pj4+IHNlcmlhbCBnZXRzIHNob3duIGlu
+IC9wcm9jL2NwdWluZm8gd2l0aCBvbGRlciBhdGFnIGJvb3RlZCBrZXJuZWxzLCB3ZQo+Pj4+PiBz
+aG91bGQgcmVhbGx5IHNob3cgdGhlIHNhbWUgbnVtYmVyIGluIC9wcm9jL2NwdWluZm8gd2hpY2gg
+bWVhbnMgYWRkaW5nCj4+Pj4+IGNvZGUgdG8gdGhlIGtlcm5lbCB0byBnZXQgdGhlIGRldmljZXRy
+ZWUgInNlcmlhbC1udW1iZXIiIHN0cmluZyBwcm9wZXJ0eQo+Pj4+PiBhbmQgc29tZWhvdyBwdXQg
+dGhhdCBpbnRvIHRoZSA2NCBiaXRzIHdoaWNoIHdlIGhhdmUgaW4gL3Byb2MvY3B1aW5mbywKPj4+
+Pj4gYnV0IGdpdmVuIHRoYXQgdGhlICJzZXJpYWwtbnVtYmVyIiBzdHJpbmcgY291bGQgYmUgaGV4
+IG9yIGRlY2ltYWwgb3IKPj4+Pj4gd2hhdCBldmVyIGFuZCA+IDY0IGJpdHMgdGhhdCB3aWxsIGxp
+a2VseSByZXF1aXJlIGEgcGxhdGZvcm0gc3BlY2lmaWMKPj4+Pj4gc29sdXRpb24uIEFsbCBkb2Fi
+bGUsIGJ1dCB0aGUgcXVlc3Rpb24gdGhlbiBiZWNvbWVzIGlzIHRoaXMgd29ydGggdGhlCj4+Pj4+
+IGVmZm9ydCA/Cj4+Pj4KPj4+PiBBZnRlciBpbnZlc3RpZ2F0aW5nIGEgYml0IG1vcmUsIEkgZm91
+bmQgb3V0IHRoYXQgdGhlIFVTQiBzZXJpYWwgbnVtYmVyCj4+Pj4gaXMgZXhwZWN0ZWQgdG8gYmUg
+YSBzdHJpbmcgb2YgMzIgYnl0ZXMsIHNvIGEgMTI4IGJpdCBudW1lcmljIHNlcmlhbAo+Pj4+IGRv
+ZXNuJ3QgZml0IChpdCB0YWtlcyAzMiBieXRlcyBmb3IgdGhlIGhleCByZXByZXNlbnRhdGlvbiBv
+ZiAxMjggYml0cywKPj4+PiBzbyB0aGVyZSBpcyBubyByb29tIGxlZnQgZm9yIHRoZSB0ZXJtaW5h
+dGluZyBudWxsIGJ5dGUpLCBoZW5jZSBpdCBtYWtlcwo+Pj4+IHNlbnNlIHRvIGtlZXAgYSA2NCBi
+aXQgbGltaXRhdGlvbiBmb3IgdGhlIHNlcmlhbCBudW1iZXIsIGlmIHVzZXJzIGFyZQo+Pj4+IGdv
+aW5nIHRvIHJlbHkgb24gaXQgYXMgVVNCIHNlcmlhbCBzdHJpbmcuIE1vcmVvdmVyLCBpdCBzZWVt
+cyB0aGF0Cj4+Pj4gQW5kcm9pZCBkZXZpY2VzIGFyZSBtb3N0bHkgdXNlZCA2NCBiaXQgbnVtYmVy
+cyBmb3Igc2VyaWFsIG51bWJlcnMvCj4+Pj4KPj4+PiBJIHdhcyBpbml0aWFsbHkgZ29pbmcgdG8g
+c3VnZ2VzdCB0aGF0IHdlIHNldCBpdCBpbiBzdG9uZSB0aGF0IHNlcmlhbAo+Pj4+IG11c3QgYmUg
+NjQgbnVtZXJpYyBiaXRzIChhcyBpdCB3YXMgaW4gdGhlIEFUQUdzIGRheXMpIGFuZCB0aGF0Cj4+
+Pj4gYm9vdGxvYWRlcnMgd291bGQgcGFzcyBpdCB0aGF0IHdheSB0byB0aGUga2VybmVsIHRocm91
+Z2ggZGV2aWNlIHRyZWUKPj4+PiAod2l0aCB0d28gMzIgYml0cyBudW1lcmljIGludGVnZXJzKSwg
+YnV0IEhhbnMgdGFsa2VkIG1lIG91dCBvZiBpdC4KPj4+PiBJIGp1c3Qgd2FudCB0byBleHBvc2Ug
+dGhlIHNpdHVhdGlvbiAoZXNwZWNpYWxseSB0aGUgVVNCIGFuZCBBbmRyb2lkCj4+Pj4gdGhpbmcp
+IGhlcmUgdG8gZG91YmxlLWNoZWNrIHRoYXQgZXZlcnlvbmUgc3RpbGwgaXMgY29udmluY2VkIHRo
+YXQgYQo+Pj4+IHN0cmluZyBhcHByb2FjaCBpbiBkZXZpY2UgdHJlZSBpcyBiZXN0ICh3aGljaCBp
+cyBmaW5lIHdpdGggbWUpLgo+Pj4KPj4+IFRoZXJlIGFyZSBhbHJlYWR5IGV4aXN0aW5nIHVzZXJz
+IG9mIHRoZSBzZXJpYWwtbnVtYmVyIHByb3BlcnR5IGluIGRldmljZXRyZWUsCj4+PiBhbmQgdGhl
+c2UgYWxyZWFkeSB1c2UgYSBmcmVlLWZvcm1hdCBzdHJpbmcsIHNvIEFGQUlDVCB3ZSBoYXZlIG5v
+IGNob2ljZQo+Pj4gYnV0IHRvIGRvIHRoZSBzYW1lIGFzIHRoZSBleGlzdGluZyB1c2Vycy4KPj4+
+Cj4+PiBCdXQgUm9iIGlzIHRoZSBleHBlcnQgaGVyZSwgc28gbGV0cyBzZWUgd2hhdCBSb2IgaGFz
+IHRvIHNheS4KPj4+Cj4+Pj4gVGhpcyB3YXksIHVzZXJzIHRoYXQgc3RpbGwgd2FudCB0byB1c2Ug
+dGhlIHNlcmlhbCBwYXNzZWQgdGhyb3VnaCBkZXZpY2UKPj4+PiB0cmVlIGFzIGEgVVNCIHNlcmlh
+bCBudW1iZXIgd2lsbCBoYXZlIHRvIHVzZSBhIHN0cmluZyBvZiAzMiBiaXRzLAo+Pj4+IGluY2x1
+ZGluZyB0aGUgbnVsbCB0ZXJtaW5hdGluZyBieXRlICh3aGljaCBpcyB3aGF0IEknbGwgc3VnZ2Vz
+dCBmb3IKPj4+PiBzdW54aSBieSB1c2luZyBvbmx5IDY0IGJpdHMgZm9yIHRoZSBzZXJpYWwgbnVt
+YmVyKS4KPj4+Pgo+Pj4+IEFsc28sIEkgc3VnZ2VzdCB0aGF0IHdlIHNob3cgdGhhdCBzZXJpYWwt
+bnVtYmVyIHN0cmluZyBhcy1pcyBpbiBjcHVpbmZvCj4+Pj4gYXMgd2VsbAo+Pj4KPj4+IFdlIGNh
+bm5vdCBkbyB0aGF0IGJlY2F1c2Ugd2UgbXVzdCBndWFyYW50ZWUgdGhhdCB0aGUgc2VyaWFsIHNo
+b3duCj4+PiBpbiBjcHUgaW5mbyBpcyBhIDY0IGJpdHMgLyAxNiBoZXggdmFsdWVzICgwIHBhZGRl
+ZCkgbnVtYmVyLCBhbnl0aGluZwo+Pj4gZWxzZSB3b3VsZCBicmVhayB0aGUga2VybmVsIDwtPiB1
+c2Vyc3BhY2UgQVBJIGFuZCBwb3RlbnRpYWxseSBicmVhawo+Pj4gdXNlcnNwYWNlIGFwcHMuIFNv
+IHdlIG11c3QgZG8gdGhlIGRldmljZXRyZWUgLT4gc2VyaWFsbnVtYmVyIGxvdy9oaWdoCj4+PiAt
+PiAvcHJvYy9jcGluZm8gdmVyc2lvbiB0byBndWFyYW50ZWUgdGhhdCB0aGlzIGZvcm1hdCBkb2Vz
+IG5vdCBjaGFuZ2UuCj4+Pgo+Pj4gQW5kIGFzIGRpc2N1c3NlZCBiZWZvcmUgaWYgeW91IHdhbnQg
+YSBub24gMCBzZXJpYWwgaW4gY3B1aW5mbyB0aGVuCj4+PiB0aGUgZGV2aWNldHJlZSAtPiBzZXJp
+YWxudW1iZXIgbG93L2hpZ2ggc2hvdWxkIGJlIGRvbmUgaW4gc3VueGkKPj4+IHNwZWNpZmljIGtl
+cm5lbCBjb2RlLCBhcyBvbiBzdW54aSB3ZSB3aWxsIGtub3cgdGhhdCB0aGUgc3RyaW5nIGluCj4+
+PiBkZXZpY2V0cmVlIHdpbGwgYmUgYSBoZXggdmFsdWUsIGJ1dCB3ZSd2ZSBubyBzdWNoIGd1YXJh
+bnRlZSBmb3IKPj4+IG90aGVyIHBsYXRmb3Jtcywgc28gd2UgY2Fubm90IHNpbXBseSBoYXZlIGEg
+Z2VuZXJpYyBmdW5jdGlvbiB0bwo+Pj4gcG9wdWxhdGUgZXJpYWxudW1iZXIgbG93L2hpZ2ggZnJv
+bSB0aGUgZGV2aWNldHJlZSBzZXJpYWwtbnVtYmVyCj4+PiBzdHJpbmcuCj4+Pgo+Pj4gICA+IGFu
+ZCBpbnN0ZWFkIG1ha2UgYSBzdHJpbmcgb3V0IG9mIHRoZSBzZXJpYWwgQVRBRyBpbiB0aGUga2Vy
+bmVsCj4+Pj4gcHJpb3IgdG8gc2hvd2luZyBpdCBpbiBjcHVpbmZvIChhcyBvcHBvc2VkIHRvIHRy
+YW5zbGF0aW5nIHRoZSBzdHJpbmcKPj4+PiBjb21pbmcgZnJvbSBkZXZpY2UgdHJlZSB0byBhIG51
+bWVyaWMgdmFsdWUgdGhhdCBjcHVpbmZvIHdpbGwgZW5kIHVwCj4+Pj4gc2hvd2luZyBhcyBhIHN0
+cmluZyBhdCB0aGUgZW5kIG9mIHRoZSBkYXkpLiBUaHVzLCB0aGUgc2VyaWFsIG51bWJlcgo+Pj4+
+IGNvbWluZyBmcm9tIGRldmljZSB0cmVlIHdpbGwgc3RpbGwgYmUgc2hvd24gaW4gY3B1aW5mbyBh
+cyB3ZWxsIGFuZCBubwo+Pj4+IEFCSSBnZXRzIGJyb2tlbi4KPj4+Cj4+PiBZb3UncmUgZm9yZ2V0
+dGluZyB0aGUgdXNlcnNwYWNlIDwtPiBrZXJuZWwgQUJJIGhlcmUsIHRoZSBzZXJpYWwgbGluZQo+
+Pj4gaW4gL3Byb2MvY3B1aW5mbyBpcyBub3QgYSBmcmVlIGZvcm0gc3RyaW5nIGl0IGlzIGEgNjQg
+Yml0IGludCBzaG93bgo+Pj4gYXMgMCBwYWRkZWQgaGV4LCBhbmQgd2UgY2Fubm90IGNoYW5nZSB0
+aGF0IGFzIGNoYW5naW5nIHRoYXQgd291bGQgYmUKPj4+IGFuIEFCSSBicmVhay4KPj4KPj4gSU1I
+TyB0aGlzIHJlYWxseSBpcyBhbGwgYWJvdXQgaW50ZXJwcmV0YXRpb24uIElmIHlvdSBjb25zaWRl
+ciB0aGF0IHRoZQo+PiBzZXJpYWwgaXMgYWxyZWFkeSBhICpzdHJpbmcqIGFuZCBub3QgYSBoZXgt
+cmVwcmVzZW50YXRpb24gb2YgYSBudW1iZXIKPj4gKHdoaWNoIGl0IGlzIHdoZW4gdXNpbmcgQVRB
+R3MsIGJ1dCBoYXMgbm8gcmVhc29uIHRvIGJlIGluIGdlbmVyYWwpLCB0aGVuCj4+IG15IHN1Z2dl
+c3Rpb24gd2lsbCBpbnRyb2R1Y2Ugbm8gQUJJIGJyZWFrLgo+Pgo+PiBHZW5lcmFsbHkgc3BlYWtp
+bmcsIEkgZm91bmQgbm8gZG9jdW1lbnRhdGlvbiB0aGF0IGluZGljYXRlcyB0aGF0IHRoZQo+PiBz
+ZXJpYWwgaGFzIHRvIGJlIGluIHRoYXQgZm9ybWF0LiBJdCBqdXN0IGhhcHBlbnMgdG8gYmUgdGhl
+IGNhc2Ugd2hlbgo+PiB1c2luZyBBVEFHcy4KPj4KPj4gQWxzbywgSSBmb3VuZCBhbiBlbWFpbCBm
+cm9tIFJvYiBzdWdnZXN0aW5nIGhlIHdvdWxkIGJlIGZpbmUgd2l0aCB3aXJpbmcKPj4gdGhlIGR0
+cyBzZXJpYWwtbnVtYmVyIHN0cmluZyB0byBjcHVpbmZvOgo+PiBodHRwOi8vbGttbC5pdS5lZHUv
+aHlwZXJtYWlsL2xpbnV4L2tlcm5lbC8xNDEyLjAvMDI5NzUuaHRtbAo+Pgo+PiBJIHRoaW5rIGl0
+J3MgdGhlIG1vc3QgZmxleGlibGUgc29sdXRpb24gYW5kIHdlIGNhbiB0aGluayBvZiBpdCBhcyBh
+bgo+PiBleHRlbnNpb24gb2YgdGhlIGN1cnJlbnQgc2NoZW1lOiB0aGUgc2VyaWFsIHN0cmluZyB3
+aWxsIG5vIGxvbmdlciBiZQo+PiBsaW1pdGVkIHRvIGEgaGV4IHJlcHJlc2VudGF0aW9uIG9mIGEg
+bnVtYmVyIGJ1dCBjYW4gYmVjb21lIGFueSBzdHJpbmcuCj4+Cj4+IE5vdyBJIHdvdWxkIGFwcHJl
+Y2lhdGUgaXQgaWYgUm9iIGNvdWxkIHdlaWdoLWluIGFuZCBzdGF0ZSB3aGV0aGVyIGhlCj4+IGNo
+YW5nZWQgaGlzIG1pbmQgb24gdGhpcyBvciBub3QuCj4KPiBUaGUgb25seSBBQkkgaXMgb24gcGxh
+dGZvcm1zIHRoYXQgdXNlZCBBVEFHUyBhcyBhbnkgRFQgb25seSBwbGF0Zm9ybQo+IGhhcyBzbyBm
+YXIgaGFkIGEgc2VyaWFsIyBpbiBjcHVpbmZvIG9mIDE2IDAncy4gV2l0aCBhIHZhcmlhYmxlIGxl
+bmd0aAo+IHN0cmluZyB3ZSBjYW4gc3RpbGwgaGF2ZSBhIGZpeGVkIDE2IGNoYXIgaGV4IHNlcmlh
+bCBudW1iZXIgdGhhdCBpcwo+IGNvbXBhdGlibGUgd2l0aCBBVEFHUy4gSSBjYW4ndCBpbWFnaW5l
+IHRoYXQgd2UgaGF2ZSB1c2Vyc3BhY2UgdGhhdAo+IGNhcmVzIGFib3V0IHRoZSBsZW5ndGggYW5k
+IHlldCBkb2Vzbid0IGNhcmUgdGhlIHZhbHVlIGlzIGFsd2F5cyAwJ3MKPiBzaW5jZSBjb252ZXJ0
+aW5nIHRvIERULiBBcyBsb25nIGFzIHdlIGtlZXAgMTYgMCdzIGFzIHRoZSBkZWZhdWx0IEkKPiBk
+b24ndCBzZWUgYW4gaXNzdWUgd2l0aCBhbGxvd2luZyBvdGhlciBsZW5ndGhzLgoKVGhlcmUgYXJl
+IDIgcHJvYmxlbXMgd2l0aCBwbGF5aW5nIGFyb3VuZCB3aXRoIHRoZSBzZXJpYWwgbGluZSBpbgov
+cHJvYy9jcHVpbmZvOgoKMSkgTGVuZ3RoLCBjdXJyZW50bHkgaXQgaXMgYWx3YXlzIDE2IGNoYXJz
+LCBtYWtpbmcgaXQgZWl0aGVyIHNob3J0ZXIKb3IgbG9uZ2VyIG1heSBicmVhayBzb21lIHVzZXJz
+cGFjZSBwYXJzaW5nIGNvZGUgZm9yIGl0LgoKMikgQ29udGVudHMsIGN1cnJlbnRseSBpdCBpcyBh
+bHdheXMgaW4gaGV4LCBzbyB3ZSBjYW5ub3Qgc2ltcGx5CmNvcHkgYSBzdHJpbmcgZnJvbSBkZXZp
+Y2V0cmVlIGluIHRoZXJlIHdpdGhvdXQgdmVyaWZ5aW5nIHRoYXQgdGhhdApzdHJpbmcgY29udGFp
+bnMgaGV4LgoKTm93IGlmIHdlIHdlcmUgdG8gYWRkIGNvZGUgdG86CjEpIFZlcmlmeSB0aGF0IHRo
+ZSBzZXJpYWwgZnJvbSBkZXZpY2V0cmVlIGlzIGhleAoyKSBUcnVuY2F0ZSBpdCB0byAxNiBjaGFy
+cyBtYXgKClRoYXQgd291bGQgd29yaywgdGhlIGVhc2llc3Qgd2F5IHRvIGdldCB0aGVyZSBpcyB0
+byBzaW1wbHkgc3RvcmUKdGhlIHNlcmlhbCBmcm9tIGRldmljZXRyZWUgaW4gdGhlIGV4aXN0aW5n
+IHNlcmlhbCBsb3cgYW5kIGhpZ2gKMzIgYml0IGludHMuCgo+IEl0IGlzIG9ubHkgYW4gQUJJIGlm
+IHNvbWVvbmUgbm90aWNlcyBhbmQgaWYgd2UgZmluZCBhbiBBQkkgaXNzdWUgbGF0ZXIKPiB3ZSBj
+YW4gYWx3YXlzIGZpeCBpdC4KCkVybSwgbm8gaXQgaXMgYW4gQUJJIG9uY2UgaXQgaGFzIHNoaXBw
+ZWQsIGFuZCB3ZSBjYW5ub3QgYWx3YXlzIGZpeCBpdCBsYXRlcgpiZWNhdXNlIGluIHRoZSBtZWFu
+IHRpbWUgb3RoZXIgYXBwcyBtYXkgaGF2ZSBzdGFydGVkIGRlcGVuZGluZyBvbiB0aGUgbmV3CkFC
+SSBhbmQgdGhlbiB3ZSd2ZSBhIGJpZyBwcm9ibGVtLgoKVGhlcmUgYXJlIHBsZW50eSBvZiBleGFt
+cGxlcyBvZiAiaW5ub2NlbnQiIGNoYW5nZXMgdG8gZmlsZXMgaW4gL3Byb2MKYnJlYWtpbmcgc3R1
+ZmYsIHNvIHdlIHJlYWxseSByZWFsbHkgc2hvdWxkIGJlIGNhcmVmdWwgaGVyZS4KCkFsc28gSSBk
+b24ndCBzZWUgd2h5IHRoaXMgaXMgdGhhdCBpbXBvcnRhbnQgYXQgYWxsLCB3ZSBjYW4gbGltaXQK
+dGhpbmdzIHRvIG5vdCBicmVhayB0aGUgQUJJIGFuZCBhcHBzIHdobyB3YW50IHRoZSBmdWxsIHNl
+cmlhbCBpbgp0aGUgb3JpZ2luYWwgc3RyaW5nIGZvcm1hdCBjYW4gYWx3YXlzIGdldCBpdCBmcm9t
+Cgovc3lzL2Zpcm13YXJlL2RldmljZXRyZWUvYmFzZS9zZXJpYWwtbnVtYmVyCgpSZWdhcmRzLAoK
+SGFucwoKCgo+Cj4gUm9iCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KVS1Cb290IG1haWxpbmcgbGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRwOi8v
+bGlzdHMuZGVueC5kZS9tYWlsbWFuL2xpc3RpbmZvL3UtYm9vdAo=
