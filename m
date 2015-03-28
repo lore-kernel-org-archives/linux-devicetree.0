@@ -1,27 +1,119 @@
-From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Sat, 28 Mar 2015 06:17:13 +0100
-Message-ID: <55163959.8080101@gmx.de>
-References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [RESEND PATCH v3] mtd: hisilicon: add device tree node for NAND
+ controller
+Date: Sat, 28 Mar 2015 15:00:56 +0800
+Message-ID: <551651A8.3030307@hisilicon.com>
+References: <1427267091-227474-1-git-send-email-wangzhou1@hisilicon.com> <20150327173504.GY32500@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150327173504.GY32500@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 2015/3/28 1:35, Brian Norris wrote:
+> This would go through your arm-soc submaintainer; i.e., Wei Xu
+> 
+> But FWIW...
 
-On 28.03.2015 00:13, Sergei Shtylyov wrote:
+Yes, I will ping him to check the patch.
 
-> +	spinlock_t lock;		/* Register access lock */
+> 
+> On Wed, Mar 25, 2015 at 03:04:51PM +0800, Zhou Wang wrote:
+>> This patch adds dts support for NAND flash controller of Hisilicon Soc Hip04.
+>> Now it is based on v4.0-rc5
+>>
+>> Changes in v3:
+>> - Change E-mail address in signed-off-by to "wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org"
+>> Changes in v2:
+>> - Base on v3.19-rc1
+>> - Use nand-ecc-strength, nand-ecc-step-size to replace hisi,nand-ecc-bits
+>> Changes in v1:
+>> - Move partition and other board related information into board dts file:
+>>   hip04-d01.dts
+>>
+>> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/hip04-d01.dts | 27 +++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/hip04.dtsi    |  7 +++++++
+>>  2 files changed, 34 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d01.dts
+>> index 40a9e33..ba04dd5 100644
+>> --- a/arch/arm/boot/dts/hip04-d01.dts
+>> +++ b/arch/arm/boot/dts/hip04-d01.dts
+>> @@ -28,5 +28,32 @@
+>>  		uart0: uart@4007000 {
+>>  			status = "ok";
+>>  		};
+>> +
+>> +		nand: nand@4020000 {
+>> +			nand-bus-width = <8>;
+>> +			nand-ecc-mode = "hw";
+>> +			nand-ecc-strength = <16>;
+>> +			nand-ecc-step-size = <1024>;
+>> +
+>> +			partition@0 {
+>> +				label = "nand_text";
+>> +				reg = <0x00000000 0x00400000>;
+>> +			};
+>> +
+>> +			partition@00400000 {
+>> +				label = "nand_monitor";
+>> +				reg = <0x00400000 0x00400000>;
+>> +			};
+>> +
+>> +			partition@00800000 {
+>> +				label = "nand_kernel";
+>> +				reg = <0x00800000 0x00800000>;
+>> +			};
+>> +
+>> +			partition@01000000 {
+>> +				label = "nand_fs";
+>> +				reg = <0x01000000 0x1f000000>;
+>> +			};
+>> +		};
+>>  	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+>> index 2388145..ac32fce 100644
+>> --- a/arch/arm/boot/dts/hip04.dtsi
+>> +++ b/arch/arm/boot/dts/hip04.dtsi
+>> @@ -269,6 +269,13 @@
+>>  			interrupts = <0 372 4>;
+>>  		};
+>>  
+>> +		nand: nand@4020000 {
+>> +			compatible = "hisilicon,504-nfc";
+>> +			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
+>> +			interrupts = <0 379 4>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +		};
+> 
+> Seems reasonable and matches the binding we already accepted, so:
+> 
+> Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
 
-Do you really need one huge lock for all register accesses? Maybe you
-should rethink which registers can actually be accessed concurrently and
-implement some finer grained locking.
+Thanks,
+Zhou
 
-Regards,
-Lino
+>>  	};
+>>  
+>>  	etb@0,e3c42000 {
+>> -- 
+>> 1.9.1
+>>
+> 
+> .
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
