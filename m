@@ -1,121 +1,66 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 5/7] serial: earlycon: Set UPIO_MEM32BE based on
- =?iso-8859-1?Q?DT=0D?= properties
-Date: Fri, 27 Mar 2015 18:36:04 -0700
-Message-ID: <20150328013604.488A0C4091F@trevor.secretlab.ca>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
-	<1416872182-6440-6-git-send-email-cernekee@gmail.com>
-	<54F3914F.3080905@hurleysoftware.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F3914F.3080905-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [Patch 1/5] dt: unittest: early return from test skips tests
+Date: Fri, 27 Mar 2015 20:58:42 -0700
+Message-ID: <20150328035842.C5B62C40BA8@trevor.secretlab.ca>
+References: <5503C65F.4030000@gmail.com> <5503DBE4.8030006@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5503DBE4.8030006@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 01 Mar 2015 17:23:11 -0500
-, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+On Fri, 13 Mar 2015 23:57:40 -0700
+, Frank Rowand <frowand.list@gmail.com>
  wrote:
-> Hi Kevin,
+> From: Frank Rowand <frank.rowand@sonymobile.com>
 > 
-> On 11/24/2014 06:36 PM, Kevin Cernekee wrote:
-> > If an earlycon (stdout-path) node is being used, check for "big-endian"
-> > or "native-endian" properties and pass the appropriate iotype to the
-> > driver.
-> > 
-> > Note that LE sets UPIO_MEM (8-bit) but BE sets UPIO_MEM32BE (32-bit).  The
-> > big-endian property only really makes sense in the context of 32-bit
-> > registers, since 8-bit accesses never require data swapping.
-> > 
-> > At some point, the of_earlycon code may want to pass in the reg-io-width,
-> > reg-offset, and reg-shift parameters too.
-> > 
-> > Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  drivers/of/fdt.c              | 7 ++++++-
-> >  drivers/tty/serial/earlycon.c | 4 ++--
-> >  include/linux/serial_core.h   | 2 +-
-> >  3 files changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index 658656f..9d21472 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -794,6 +794,8 @@ int __init early_init_dt_scan_chosen_serial(void)
-> >  
-> >  	while (match->compatible[0]) {
-> >  		unsigned long addr;
-> > +		unsigned char iotype = UPIO_MEM;
-> > +
-> >  		if (fdt_node_check_compatible(fdt, offset, match->compatible)) {
-> >  			match++;
-> >  			continue;
-> > @@ -803,7 +805,10 @@ int __init early_init_dt_scan_chosen_serial(void)
-> >  		if (!addr)
-> >  			return -ENXIO;
-> >  
-> > -		of_setup_earlycon(addr, match->data);
-> > +		if (of_fdt_is_big_endian(fdt, offset))
-> > +			iotype = UPIO_MEM32BE;
-> > +
-> > +		of_setup_earlycon(addr, iotype, match->data);
+> Fix bugs pointed out by checkpatch.
 > 
-> I know these got ACKs already but as you point out in the commit log,
-> earlycon _will_ need reg-io-width, reg-offset and reg-shift. Since the
-> distinction between early_init_dt_scan_chosen_serial() and
-> of_setup_earlycon() is arbitrary, I'd rather see of_setup_earlycon()
-> taught to properly decode of_serial driver bindings instead of a
-> stack of parameters to of_setup_earlycon().
+> Mis-coding of two if statements caused early return from function.
 > 
-> In fact, this patch allows a mis-defined devicetree to bring up a
-> functioning earlycon because the 'big-endian' property is directly
-> associated with UPIO_MEM32BE, which will create incompatibility problems
-> when DT earlycon is fixed to decode the of_serial DT bindings.
+> Number of tests completed increased from 102 to 107.
+> Number of tests failed increased from 0 to 2.
 
-That's a good point. This hasn't been merged yet, so there isn't any
-impact on addressing this. I would propose that for consistency, the
-earlycon code should always default to 8-bit access. if big-endian
-accesses are required, then reg-io-width + big-endian must be specified.
+I was going to send this to Linus right away, but on second thought, it
+isn't actually a regression fix. I'm going to queue it up for v4.1 with
+the rest of the series instead.
 
-Something like the following would do it and would be future-proof. We
-can add support for 16 or 64bit big or little endian access if it ever
-became necessary.
-
-static int of_flat_dt_get_iotype(unsigned long node)
-{
-	int size, width = 1;
-	__be32 *prop;
-	bool bigendian = false;
-
-	if (of_get_flat_dt_prop(node, "big-endian", NULL));
-		bigendian = true;
-
-	prop = of_get_flat_dt_prop(node, "reg-io-width", &size);
-	if (prop) {
-		if (size != sizeof(u32))
-			return -EINVAL;
-		width = fdt32_to_cpu(*prop);
-	}
-
-	switch (width) {
-	case 1:
-		return UPIO_MEM; /* big-endian flag has no effect */
-	case 4:
-		return bigendian ? UPIO_MEM32BE : UPIO_MEM32;
-	default:
-		return -EINVAL;
-	}
-}
-
-...
-
-	iotype = of_fdt_get_iotype(fdt, offset);
-	if (iotype == UPIO_INVAL)
-		/*fail*/
+I've also got a bug fix for the new warnings that I'll put in at the
+same time.
 
 g.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+> ---
+>  drivers/of/unittest.c |   10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> Index: b/drivers/of/unittest.c
+> ===================================================================
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -762,12 +762,14 @@ static void __init of_selftest_platform_
+>  	irq = platform_get_irq(pdev, 0);
+>  	selftest(irq < 0 && irq != -EPROBE_DEFER, "device parsing error failed - %d\n", irq);
+>  
+> -	if (selftest(np = of_find_node_by_path("/testcase-data/platform-tests"),
+> -		     "No testcase data in device tree\n"));
+> +	np = of_find_node_by_path("/testcase-data/platform-tests");
+> +	selftest(np, "No testcase data in device tree\n");
+> +	if (!np)
+>  		return;
+>  
+> -	if (selftest(!(rc = device_register(&test_bus)),
+> -		     "testbus registration failed; rc=%i\n", rc));
+> +	rc = device_register(&test_bus);
+> +	selftest(!rc, "testbus registration failed; rc=%i\n", rc);
+> +	if (rc)
+>  		return;
+>  
+>  	for_each_child_of_node(np, child) {
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
