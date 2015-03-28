@@ -1,26 +1,78 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Sat, 28 Mar 2015 09:36:00 +0100
-Message-ID: <20150328083600.GB4255@localhost.localdomain>
-References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
- <55163959.8080101@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55163959.8080101@gmx.de>
-Sender: netdev-owner@vger.kernel.org
-To: Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [Patch] dt: OF_UNITTEST make dependency broken
+Date: Fri, 27 Mar 2015 18:43:46 -0700
+Message-ID: <20150328014346.493EEC40AC2@trevor.secretlab.ca>
+References: <550338CA.50003@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <550338CA.50003@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Michal Marek <mmarek@suse.cz>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2015 at 06:17:13AM +0100, Lino Sanfilippo wrote:
+On Fri, 13 Mar 2015 12:21:46 -0700
+, Frank Rowand <frowand.list@gmail.com>
+ wrote:
+> From: Frank Rowand <frank.rowand@sonymobile.com>
 > 
-> Do you really need one huge lock for all register accesses? Maybe you
-> should rethink which registers can actually be accessed concurrently and
-> implement some finer grained locking.
+> If CONFIG_OF_UNITTEST=y then a kernel image make will always cause .version to
+> be incremented, even if there are not source changes.  This is caused by
+> a lack of dependency tracking and checking for
+> drivers/of/unittest-data/testcases.dtb.o.
+> 
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
 
-One lock is fine, unless the registers are highly contended.
+Brilliant! Thanks for solving this.
 
-Thanks,
-Richard
+g.
+
+> 
+> ---
+> 
+> 
+>  drivers/of/Makefile                 |    5 +++--
+>  drivers/of/unittest-data/.gitignore |    2 ++
+>  drivers/of/unittest-data/Makefile   |    7 +++++++
+>  3 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> Index: b/drivers/of/Makefile
+> ===================================================================
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -6,8 +6,7 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+>  obj-$(CONFIG_OF_ADDRESS)  += address.o
+>  obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_NET)	+= of_net.o
+> -obj-$(CONFIG_OF_UNITTEST) += of_unittest.o
+> -of_unittest-objs := unittest.o unittest-data/testcases.dtb.o
+> +obj-$(CONFIG_OF_UNITTEST) += unittest.o
+>  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_PCI)	+= of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+> @@ -16,5 +15,7 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_rese
+>  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+>  obj-$(CONFIG_OF_OVERLAY) += overlay.o
+>  
+> +obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+> +
+>  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+>  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+> Index: b/drivers/of/unittest-data/Makefile
+> ===================================================================
+> --- /dev/null
+> +++ b/drivers/of/unittest-data/Makefile
+> @@ -0,0 +1,7 @@
+> +obj-y += testcases.dtb.o
+> +
+> +targets += testcases.dtb testcases.dtb.S
+> +
+> +.SECONDARY: \
+> +	$(obj)/testcases.dtb.S \
+> +	$(obj)/testcases.dtb
+> Index: b/drivers/of/unittest-data/.gitignore
+> ===================================================================
+> --- /dev/null
+> +++ b/drivers/of/unittest-data/.gitignore
+> @@ -0,0 +1,2 @@
+> +testcases.dtb
+> +testcases.dtb.S
