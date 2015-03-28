@@ -1,98 +1,42 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: Add binding document for a generic ADC keypad
-Date: Sat, 28 Mar 2015 14:03:23 +0000
-Message-ID: <5516B4AB.1090805@kernel.org>
-References: <1427503398-19682-1-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427503398-19682-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 0/5] Update the OF unittest and some small fix
+Date: Sat, 28 Mar 2015 13:23:47 +0000
+Message-ID: <20150328132347.84128C4093E@trevor.secretlab.ca>
+References: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
+	<CAL_JsqJXK31amM8xJ81wZ7O0xv_A7YOHP3GPxsyAnTNU7i1jFA@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJXK31amM8xJ81wZ7O0xv_A7YOHP3GPxsyAnTNU7i1jFA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Wang Long <long.wanglong@huawei.com>
+Cc: Gaurav Minocha <gaurav.minocha.os@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, peifeiyue@huawei.com, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 28/03/15 00:43, Andrew Bresticker wrote:
-> Add a binding document for a generic ADC keypad.  Buttons on an ADC
-> keypad are connected in a resistor ladder to an ADC.  The binding
-> describes the mapping of ADC channel and voltage ranges to buttons.
+On Tue, 24 Mar 2015 23:43:43 -0500
+, Rob Herring <robherring2@gmail.com>
+ wrote:
+> On Wed, Mar 11, 2015 at 3:36 AM, Wang Long <long.wanglong@huawei.com> wrote:
+> > This series patches do some small fixes in drivers/of/unittest.c,
+> > and update the Documenttion.
+> >
+> > At last, replace selftest with unittest in the c, dtsi
+> > and binding files.
+> >
+> > * v2 <- v1:
+> >         - According to Gaurav's advice. make the rename
+> >         file patch correctly.
+> >
+> > Wang Long (5):
+> >   of/unittest: remove the duplicate of_changeset_init
+> >   of/unittest: Fix the wrong expected value in
+> >     of_selftest_property_string
+> >   Documentation: update the of_selftest.txt
+> >   Documentation: rename of_selftest.txt to of_unittest.txt
+> >   of/unittest: replace 'selftest' with 'unittest'
 > 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> I've applied the series. Thanks.
 
-Just thinking about this, what options do we have for how such a keypad might
-be wired.  The interesting cases are the more than one key at a time ones.
+Hmmm, I neglected to update my git tree before getting on an airplane
+and merging patches. I may have pushed out conflicts to my tree. If I've
+done so, then I'll fix it up this weekend.
 
-If that happens, then we end up with a voltage that should allow us to 
-work out which combination of keys is pressed.
-
-http://en.wikipedia.org/wiki/Resistor_ladder
-
-The binding as it stands only works for single keys being pressed at a time
-(I think!)
-
-Do we want to make it flexible enough to cope with multiple keys?
-I guess we'd need to model the common resistor ladder forms and provide
-a way of specifying the different setups in the device tree.
-
-J
-> ---
->  .../devicetree/bindings/input/adc-keys.txt         | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/adc-keys.txt b/Documentation/devicetree/bindings/input/adc-keys.txt
-> new file mode 100644
-> index 0000000..c9a57de
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/adc-keys.txt
-> @@ -0,0 +1,43 @@
-> +Generic ADC keypad
-> +==================
-> +
-> +Required properties:
-> + - compatible: "adc-keys"
-> + - poll-interval: Polling interval time in ms.
-> + - io-channels: List of IIO channels used by the keypad.
-> +   See ../iio/iio-bindings.txt for details.
-> +
-> +Optional properties:
-> + - autorepeat: Enable auto-repeat.
-> +
-> +Each button on the ADC keypad is represented by a sub-node.
-> +
-> +Required sub-node properties:
-> + - label: Descriptive name for the key.
-> + - linux,code: Keycode to emit.
-> + - channel: IIO channel (index into the 'io-channels' above) to which this
-> +   button is attached.
-> + - min-voltage: Minimum voltage in uV when this key is pressed.
-> + - max-voltage: Maximum voltage in uV when this key is pressed.
-> +
-> +Optional sub-node properties:
-> + - linux,input-type: Event type this key generates.  Defaults to 1 (EV_KEY) if
-> +   not specified.
-> +
-> +Example:
-> +
-> +adc-keypad {
-> +	compatible = "adc-keys";
-> +	poll-interval = <100>;
-> +	io-channels = <&adc 0>, <&adc 1>;
-> +
-> +	vol-up-button {
-> +		label = "Volume Up";
-> +		linux,code = <KEY_VOLUMEUP>;
-> +		channel = <0>;
-> +		min-voltage = <1600000>;
-> +		max-voltage = <1640000>;
-> +	};
-> +
-> +	...
-> +};
-> 
+g.
