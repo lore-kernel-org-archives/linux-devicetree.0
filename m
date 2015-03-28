@@ -1,37 +1,136 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of_net: factor out repetitive code
- =?iso-8859-1?Q?from=0D?= of_get_mac_address()
-Date: Sat, 28 Mar 2015 13:27:48 +0000
-Message-ID: <20150328132748.2DDA7C409FF@trevor.secretlab.ca>
-References: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
-	<20150318.152933.636562640494674435.davem@davemloft.net>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20150318.152933.636562640494674435.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, sergei.shtylyov@cogentembedded.com
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
+Date: Sat, 28 Mar 2015 13:41:56 +0000
+Message-ID: <20150328134157.000A3C40AE0@trevor.secretlab.ca>
+References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
+	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425375148-4369-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2015 15:29:33 -0400 (EDT)
-, David Miller <davem@davemloft.net>
+On Tue,  3 Mar 2015 10:32:24 +0100
+, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
  wrote:
-> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Date: Wed, 18 Mar 2015 22:25:46 +0300
+> This defines a new compatible option for MFD devices "simple-mfd" that will
+> make the OF core spawn child devices for all subnodes of that MFD device.
+> It is optional but handy for things like syscon and possibly other
+> simpler MFD devices.
 > 
-> > of_get_mac_address() basically does the same  thing thrice, every  time with  a
-> > different  property  name,  so it makes sense to factor out the repetitive code
-> > into separate function. While at it, we can start using ETH_ALEN instead of the
-> > bare number and drop unnecessary parens around the property length check.
-> > 
-> > The resulting ARM object file is 100 bytes less in size than before the patch.
-> > 
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > ---
-> > The patch is against Grant Likely's 'linux.git' repo's 'devicetree/next' branch.
+> Since there was no file to put the documentation in, I took this opportunity
+> to make a small writeup on MFD devices and add the compatible definition
+> there.
 > 
-> Acked-by: David S. Miller <davem@davemloft.net>
+> Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> I make the patch to the OF core in this one, it makes much more sense since
+> it's a oneliner
+> 
+> Lee: this is a (tested!) implementation of your suggestion for simple-mfd.
+> If you can eventually ACK this from the MFD side, I think it should be
+> funneled through the ARM SoC tree.
+> 
+> Grant/Rob: if either of you can ACK the change to the OF core likewise it can
+> be taken through ARM SoC.
+> 
+> DT binings maintainers: there is some background discussion on this here:
+> http://marc.info/?l=linux-arm-kernel&m=142486676603889&w=2
+> http://marc.info/?l=devicetree&m=142166313621469&w=2
+> ---
+>  Documentation/devicetree/bindings/mfd/mfd.txt | 40 +++++++++++++++++++++++++++
+>  drivers/of/platform.c                         |  1 +
+>  2 files changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
+> new file mode 100644
+> index 000000000000..cc057438abe8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+> @@ -0,0 +1,40 @@
+> +Multi-Function Devices (MFD)
+> +
+> +These devices comprise a nexus for heterogeneous hardware blocks spawning
+> +multiple child devices.
+> +
+> +A typical MFD can be:
+> +
+> +- A mixed signal ASIC on an external bus, sometimes a PMIC (power management
+> +  integrated circuit) that is manufactured in a lower technology node (rough
+> +  silicon) that handles analog drivers for things like audio amplifiers, LED
+> +  drivers, level shifters, PHY (physical interfaces to things like USB or
+> +  ethernet), regulators etc.
+> +
+> +- A range of memory registers containing "miscellaneous system registers" also
+> +  known as a system controller "syscon" or any other memory range containing a
+> +  mix of unrelated registers.
+> +
+> +Optional properties:
+> +
+> +- compatible : "simple-mfd" - this signifies that the operating system should
+> +  spawn child devices for all the subnodes of the MFD device akin to how
+> +  "simple-bus" inidicates when to spawn children for a simple memory-mapped
+> +  bus. For more complex devices, when the nexus driver has to probe registers
+> +  to figure out what children exist etc, this should not be used. In the latter
+> +  case the child devices will be instantiated by the operating system.
+> +
+> +Example:
+> +
+> +foo@1000 {
+> +		compatible = "syscon", "simple-mfd";
+> +		reg = <0x010000 0x1000>;
+> +
+> +		led@08.0 {
+> +			compatible = "register-bit-led";
+> +			offset = <0x08>;
+> +			mask = <0x01>;
+> +			label = "myled";
+> +			default-state = "on";
+> +		};
+> +};
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index b189733a1539..969ba4e1460c 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -26,6 +26,7 @@
+>  
+>  const struct of_device_id of_default_bus_match_table[] = {
+>  	{ .compatible = "simple-bus", },
+> +	{ .compatible = "simple-mfd", },
+>  #ifdef CONFIG_ARM_AMBA
+>  	{ .compatible = "arm,amba-bus", },
+>  #endif /* CONFIG_ARM_AMBA */
 
-Applied for v4.1, thanks.
+Alright, so:
+
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+However, I think this is going to lead to a future problem. It solves
+the immediate case of getting an MFD device to be auto populated when
+the kernel doesn't need to immediately do something. However, I can
+forsee a situation where the device can be supported by simple-mfd, but
+at some point it is discovered that better features can be enabled if
+the mfd device has a proper driver.
+
+If/when we get into that situation, the above still works, but we're
+going to need to add a blacklist match table so that simple-mfd can be
+overridden by a more-specific compatible value. I don't have any
+problems with doing that, but someone needs to implement it.
 
 g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
