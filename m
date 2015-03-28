@@ -1,128 +1,95 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v3 3/3] Documentation: update the of_unittest.txt
-Date: Fri, 27 Mar 2015 21:11:55 -0700
-Message-ID: <20150328041155.BA67AC40C29@trevor.secretlab.ca>
-References: <1426562400-102415-1-git-send-email-long.wanglong@huawei.com>
-	<1426562400-102415-4-git-send-email-long.wanglong@huawei.com>
+Subject: [PATCH] of/unittest: Fix of_platform_depopulate test case
+Date: Fri, 27 Mar 2015 21:08:27 -0700
+Message-ID: <1427515707-29879-1-git-send-email-grant.likely@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426562400-102415-4-git-send-email-long.wanglong@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gaurav.minocha.os@gmail.com, robherring2@gmail.com, pantelis.antoniou@konsulko.com
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, peifeiyue@huawei.com, long.wanglong@huawei.com, ijc+devicetree@hellion.org.uk
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Frank Rowand <frank.rowand@sonymobile.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Mar 2015 03:20:00 +0000
-, Wang Long <long.wanglong@huawei.com>
- wrote:
-> Since the directory "drivers/of/testcase-data" is renamed
-> to "drivers/of/unittest-data". so we should update the path
-> in the of_selftest.txt.
-> 
-> When the kernel is built with OF_UNITTEST enabled, the output
-> dtb is testcases.dtb instead of testcase.dtb, also update it
-> (s/testcase/testcases/).
-> 
-> Signed-off-by: Wang Long <long.wanglong@huawei.com>
+The previous commit, "of/unittest: early return from test skips tests"
+exposed broken tests for the of_platform_unpopulate() function. The
+problem was the populate and depopulate calls were not symmetrical like
+they were intended to be, and unpopulate depends on the parent device to
+have it's of_node pointer pointing to the parent device node. Fix these
+bugs so that the test case works correctly.
 
-Applied, thanks.
+In the process, the test_bus used as a container for the test devices
+has been changed from a statically allocated struct device (which is
+bad) to a properly allocated device with a .release() method (which is
+good). This stops the test code from being a bad example of abusing the
+device model.
 
-g.
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Cc: Frank Rowand <frank.rowand@sonymobile.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+---
 
-> ---
->  Documentation/devicetree/of_unittest.txt | 35 ++++++++++++++++----------------
->  1 file changed, 18 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/of_unittest.txt b/Documentation/devicetree/of_unittest.txt
-> index 57a808b..d79a6bc 100644
-> --- a/Documentation/devicetree/of_unittest.txt
-> +++ b/Documentation/devicetree/of_unittest.txt
-> @@ -1,11 +1,11 @@
-> -Open Firmware Device Tree Selftest
-> +Open Firmware Device Tree Unittest
->  ----------------------------------
->  
->  Author: Gaurav Minocha <gaurav.minocha.os@gmail.com>
->  
->  1. Introduction
->  
-> -This document explains how the test data required for executing OF selftest
-> +This document explains how the test data required for executing OF unittest
->  is attached to the live tree dynamically, independent of the machine's
->  architecture.
->  
-> @@ -22,31 +22,32 @@ most of the device drivers in various use cases.
->  
->  2. Test-data
->  
-> -The Device Tree Source file (drivers/of/testcase-data/testcases.dts) contains
-> +The Device Tree Source file (drivers/of/unittest-data/testcases.dts) contains
->  the test data required for executing the unit tests automated in
-> -drivers/of/selftests.c. Currently, following Device Tree Source Include files
-> -(.dtsi) are included in testcase.dts:
-> +drivers/of/unittest.c. Currently, following Device Tree Source Include files
-> +(.dtsi) are included in testcases.dts:
->  
-> -drivers/of/testcase-data/tests-interrupts.dtsi
-> -drivers/of/testcase-data/tests-platform.dtsi
-> -drivers/of/testcase-data/tests-phandle.dtsi
-> -drivers/of/testcase-data/tests-match.dtsi
-> +drivers/of/unittest-data/tests-interrupts.dtsi
-> +drivers/of/unittest-data/tests-platform.dtsi
-> +drivers/of/unittest-data/tests-phandle.dtsi
-> +drivers/of/unittest-data/tests-match.dtsi
-> +drivers/of/unittest-data/tests-overlay.dtsi
->  
->  When the kernel is build with OF_SELFTEST enabled, then the following make rule
->  
->  $(obj)/%.dtb: $(src)/%.dts FORCE
->  	$(call if_changed_dep, dtc)
->  
-> -is used to compile the DT source file (testcase.dts) into a binary blob
-> -(testcase.dtb), also referred as flattened DT.
-> +is used to compile the DT source file (testcases.dts) into a binary blob
-> +(testcases.dtb), also referred as flattened DT.
->  
->  After that, using the following rule the binary blob above is wrapped as an
-> -assembly file (testcase.dtb.S).
-> +assembly file (testcases.dtb.S).
->  
->  $(obj)/%.dtb.S: $(obj)/%.dtb
->  	$(call cmd, dt_S_dtb)
->  
-> -The assembly file is compiled into an object file (testcase.dtb.o), and is
-> +The assembly file is compiled into an object file (testcases.dtb.o), and is
->  linked into the kernel image.
->  
->  
-> @@ -98,8 +99,8 @@ child11 -> sibling12 -> sibling13 -> sibling14 -> null
->  Figure 1: Generic structure of un-flattened device tree
->  
->  
-> -Before executing OF selftest, it is required to attach the test data to
-> -machine's device tree (if present). So, when selftest_data_add() is called,
-> +Before executing OF unittest, it is required to attach the test data to
-> +machine's device tree (if present). So, when unittest_data_add() is called,
->  at first it reads the flattened device tree data linked into the kernel image
->  via the following kernel symbols:
->  
-> @@ -186,10 +187,10 @@ update_node_properties().
->  
->  2.2. Removing the test data
->  
-> -Once the test case execution is complete, selftest_data_remove is called in
-> +Once the test case execution is complete, unittest_data_remove is called in
->  order to remove the device nodes attached initially (first the leaf nodes are
->  detached and then moving up the parent nodes are removed, and eventually the
-> -whole tree). selftest_data_remove() calls detach_node_and_children() that uses
-> +whole tree). unittest_data_remove() calls detach_node_and_children() that uses
->  of_detach_node() to detach the nodes from the live device tree.
->  
->  To detach a node, of_detach_node() either updates the child pointer of given
-> -- 
-> 1.8.3.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+(I've already got this commit in my tree queued up after the patch that
+exposes the bug, which is why I've written the description the way I
+did.)
+
+ drivers/of/unittest.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 3b155774dfee..a4f90c238e78 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -751,14 +751,14 @@ static void __init of_selftest_match_node(void)
+ 	}
+ }
+ 
+-struct device test_bus = {
+-	.init_name = "unittest-bus",
++static const struct platform_device_info test_bus_info = {
++	.name = "unittest-bus",
+ };
+ static void __init of_selftest_platform_populate(void)
+ {
+ 	int irq, rc;
+ 	struct device_node *np, *child, *grandchild;
+-	struct platform_device *pdev;
++	struct platform_device *pdev, *test_bus;
+ 	const struct of_device_id match[] = {
+ 		{ .compatible = "test-device", },
+ 		{}
+@@ -787,20 +787,22 @@ static void __init of_selftest_platform_populate(void)
+ 	if (!np)
+ 		return;
+ 
+-	rc = device_register(&test_bus);
++	test_bus = platform_device_register_full(&test_bus_info);
++	rc = PTR_ERR_OR_ZERO(test_bus);
+ 	selftest(!rc, "testbus registration failed; rc=%i\n", rc);
+ 	if (rc)
+ 		return;
++	test_bus->dev.of_node = np;
+ 
++	of_platform_populate(np, match, NULL, &test_bus->dev);
+ 	for_each_child_of_node(np, child) {
+-		of_platform_populate(child, match, NULL, &test_bus);
+ 		for_each_child_of_node(child, grandchild)
+ 			selftest(of_find_device_by_node(grandchild),
+ 				 "Could not create device for node '%s'\n",
+ 				 grandchild->name);
+ 	}
+ 
+-	of_platform_depopulate(&test_bus);
++	of_platform_depopulate(&test_bus->dev);
+ 	for_each_child_of_node(np, child) {
+ 		for_each_child_of_node(child, grandchild)
+ 			selftest(!of_find_device_by_node(grandchild),
+@@ -808,7 +810,7 @@ static void __init of_selftest_platform_populate(void)
+ 				 grandchild->name);
+ 	}
+ 
+-	device_unregister(&test_bus);
++	platform_device_unregister(test_bus);
+ 	of_node_put(np);
+ }
+ 
+-- 
+2.1.0
