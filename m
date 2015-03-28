@@ -1,36 +1,27 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Sat, 28 Mar 2015 03:35:15 +0100
-Message-ID: <201503280335.16280.arnd@arndb.de>
-References: <20150216130549.GF14545@x1> <20150325140725.GA11499@kroah.com> <871tkbxwup.fsf@free.fr>
+From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Sat, 28 Mar 2015 06:17:13 +0100
+Message-ID: <55163959.8080101@gmx.de>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <871tkbxwup.fsf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 March 2015, Robert Jarzmik wrote:
-> 
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> 
-> > On Fri, Feb 20, 2015 at 05:02:57PM +0100, Robert Jarzmik wrote:
-> >> If there is no solution, I'll fallback through arch/arm/plat-pxa, not very nice,
-> >> but it has to land somewhere, I don't want lubbock to remain broken.
-> >
-> > drivers/platform/arm ?
-> Most certainly.
-> 
-> I'll submit that to drivers/platform/arm/pxa, and maintain that pxa tree. As for
-> drivers/platform/arm, do you want also maintainers to step up, or will you take
-> the review/merge burden ?
-> 
+Hi,
 
-I'd much prefer not to add drivers/platform/arm, which would make it too easy
-to add random stuff there. What is the problem with leaving it in mach-pxa?
+On 28.03.2015 00:13, Sergei Shtylyov wrote:
 
-	Arnd
+> +	spinlock_t lock;		/* Register access lock */
+
+Do you really need one huge lock for all register accesses? Maybe you
+should rethink which registers can actually be accessed concurrently and
+implement some finer grained locking.
+
+Regards,
+Lino
