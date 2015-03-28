@@ -1,48 +1,30 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] Documentation: rename of_selftest.txt to
- of_unittest.txt
-Date: Fri, 27 Mar 2015 21:11:04 -0700
-Message-ID: <20150328041104.36084C40BEA@trevor.secretlab.ca>
-References: <1426562400-102415-1-git-send-email-long.wanglong@huawei.com>
-	<1426562400-102415-3-git-send-email-long.wanglong@huawei.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426562400-102415-3-git-send-email-long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [Patch 0/5] dt: unittest: fix breakage and warnings
+Date: Fri, 27 Mar 2015 19:55:03 -0700
+Message-ID: <20150328025503.814D4C40B5F@trevor.secretlab.ca>
+References: <5503C65F.4030000@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5503C65F.4030000@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Mar 2015 03:19:59 +0000
-, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On Fri, 13 Mar 2015 22:25:51 -0700
+, Frank Rowand <frowand.list@gmail.com>
  wrote:
-> Since the test of the devicetree's OF api use unittest as
-> its name. so we should rename of_selftest.txt to of_unittest.txt.
+> Running checkpatch on early versions of my patchset to fix the devicetree
+> make dependency issues exposed a large number of warnings, including some that
+> are actual bugs.  http://lkml.iu.edu/hypermail/linux/kernel/1503.1/03335.html
 > 
-> Signed-off-by: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> These patches fix those bugs, and another bug exposed by fixing those bugs.
+> As a result, the number of tests completed increased from 102 to 107.
+> 
+> Since I was already poking around, I fixed a few classes of checkpatch warnings.
+> 
+> There are still plenty of warnings, but the noise is greatly reduced and future
+> checkpatch warnings that are problems should stand out more clearly.
 
-Applied, thanks.
+Thanks for rooting these out. I'll apply the bug fix for v4.0, and the
+rest for v4.1
 
 g.
-
-> ---
->  Documentation/devicetree/{of_selftest.txt => of_unittest.txt} | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/{of_selftest.txt => of_unittest.txt} (100%)
-> 
-> diff --git a/Documentation/devicetree/of_selftest.txt b/Documentation/devicetree/of_unittest.txt
-> similarity index 100%
-> rename from Documentation/devicetree/of_selftest.txt
-> rename to Documentation/devicetree/of_unittest.txt
-> -- 
-> 1.8.3.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
