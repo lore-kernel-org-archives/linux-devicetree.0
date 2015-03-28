@@ -1,66 +1,202 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [Patch 1/5] dt: unittest: early return from test skips tests
-Date: Fri, 27 Mar 2015 20:58:42 -0700
-Message-ID: <20150328035842.C5B62C40BA8@trevor.secretlab.ca>
-References: <5503C65F.4030000@gmail.com> <5503DBE4.8030006@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 1/3] iio: adc: vf610: use ADC clock within specification
+Date: Sat, 28 Mar 2015 12:03:19 +0000
+Message-ID: <55169887.3040001@kernel.org>
+References: <1427201269-4902-1-git-send-email-stefan@agner.ch> <1427201269-4902-2-git-send-email-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5503DBE4.8030006@gmail.com>
+In-Reply-To: <1427201269-4902-2-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Stefan Agner <stefan@agner.ch>, shawn.guo@linaro.org, kernel@pengutronix.de
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2015 23:57:40 -0700
-, Frank Rowand <frowand.list@gmail.com>
- wrote:
-> From: Frank Rowand <frank.rowand@sonymobile.com>
+On 24/03/15 12:47, Stefan Agner wrote:
+> Depending on conversion mode used, the ADC clock (ADCK) needs
+> to be below a maximum frequency. According to Vybrid's data
+> sheet this is 20MHz for the low power conversion mode.
 > 
-> Fix bugs pointed out by checkpatch.
+> The ADC clock is depending on input clock, which is the bus
+> clock by default. Vybrid SoC are typically clocked at at 400MHz
+> or 500MHz, which leads to 66MHz or 83MHz bus clock respectively.
+> Hence, a divider of 8 is required to stay below the specified
+> maximum clock of 20MHz.
 > 
-> Mis-coding of two if statements caused early return from function.
+> Due to the different bus clock speeds, the resulting sampling
+> frequency is not static. Hence use the ADC clock and calculate
+> the actual available sampling frequency dynamically.
 > 
-> Number of tests completed increased from 102 to 107.
-> Number of tests failed increased from 0 to 2.
-
-I was going to send this to Linus right away, but on second thought, it
-isn't actually a regression fix. I'm going to queue it up for v4.1 with
-the rest of the series instead.
-
-I've also got a bug fix for the new warnings that I'll put in at the
-same time.
-
-g.
-
+> This fixes bogous values observed on some 500MHz clocked Vybrid
+> SoC. The resulting value usually showed Bit 9 being stuck at 1,
+> or 0, which lead to a value of +/-512.
 > 
-> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+> Acked-by: Fugang Duan <B38611@freescale.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+I'd perhaps have stuck the word 'fix' in the description ;)
+
+Anyhow, applied to the fixes-togreg branch of iio.git and marked for stable.
+
+I'll leave the other two for nwo to allow for device tree review and this one to
+propagate through to my upstream...
+
+Jonathan
 > ---
->  drivers/of/unittest.c |   10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  drivers/iio/adc/vf610_adc.c | 91 ++++++++++++++++++++++++++++++---------------
+>  1 file changed, 61 insertions(+), 30 deletions(-)
 > 
-> Index: b/drivers/of/unittest.c
-> ===================================================================
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -762,12 +762,14 @@ static void __init of_selftest_platform_
->  	irq = platform_get_irq(pdev, 0);
->  	selftest(irq < 0 && irq != -EPROBE_DEFER, "device parsing error failed - %d\n", irq);
+> diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
+> index 8ec353c..e63b8e7 100644
+> --- a/drivers/iio/adc/vf610_adc.c
+> +++ b/drivers/iio/adc/vf610_adc.c
+> @@ -141,9 +141,13 @@ struct vf610_adc {
+>  	struct regulator *vref;
+>  	struct vf610_adc_feature adc_feature;
 >  
-> -	if (selftest(np = of_find_node_by_path("/testcase-data/platform-tests"),
-> -		     "No testcase data in device tree\n"));
-> +	np = of_find_node_by_path("/testcase-data/platform-tests");
-> +	selftest(np, "No testcase data in device tree\n");
-> +	if (!np)
->  		return;
+> +	u32 sample_freq_avail[5];
+> +
+>  	struct completion completion;
+>  };
 >  
-> -	if (selftest(!(rc = device_register(&test_bus)),
-> -		     "testbus registration failed; rc=%i\n", rc));
-> +	rc = device_register(&test_bus);
-> +	selftest(!rc, "testbus registration failed; rc=%i\n", rc);
-> +	if (rc)
->  		return;
+> +static const u32 vf610_hw_avgs[] = { 1, 4, 8, 16, 32 };
+> +
+>  #define VF610_ADC_CHAN(_idx, _chan_type) {			\
+>  	.type = (_chan_type),					\
+>  	.indexed = 1,						\
+> @@ -180,35 +184,47 @@ static const struct iio_chan_spec vf610_adc_iio_channels[] = {
+>  	/* sentinel */
+>  };
 >  
->  	for_each_child_of_node(np, child) {
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> -/*
+> - * ADC sample frequency, unit is ADCK cycles.
+> - * ADC clk source is ipg clock, which is the same as bus clock.
+> - *
+> - * ADC conversion time = SFCAdder + AverageNum x (BCT + LSTAdder)
+> - * SFCAdder: fixed to 6 ADCK cycles
+> - * AverageNum: 1, 4, 8, 16, 32 samples for hardware average.
+> - * BCT (Base Conversion Time): fixed to 25 ADCK cycles for 12 bit mode
+> - * LSTAdder(Long Sample Time): fixed to 3 ADCK cycles
+> - *
+> - * By default, enable 12 bit resolution mode, clock source
+> - * set to ipg clock, So get below frequency group:
+> - */
+> -static const u32 vf610_sample_freq_avail[5] =
+> -{1941176, 559332, 286957, 145374, 73171};
+> +static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
+> +{
+> +	unsigned long adck_rate, ipg_rate = clk_get_rate(info->clk);
+> +	int i;
+> +
+> +	/*
+> +	 * Calculate ADC sample frequencies
+> +	 * Sample time unit is ADCK cycles. ADCK clk source is ipg clock,
+> +	 * which is the same as bus clock.
+> +	 *
+> +	 * ADC conversion time = SFCAdder + AverageNum x (BCT + LSTAdder)
+> +	 * SFCAdder: fixed to 6 ADCK cycles
+> +	 * AverageNum: 1, 4, 8, 16, 32 samples for hardware average.
+> +	 * BCT (Base Conversion Time): fixed to 25 ADCK cycles for 12 bit mode
+> +	 * LSTAdder(Long Sample Time): fixed to 3 ADCK cycles
+> +	 */
+> +	adck_rate = ipg_rate / info->adc_feature.clk_div;
+> +	for (i = 0; i < ARRAY_SIZE(vf610_hw_avgs); i++)
+> +		info->sample_freq_avail[i] =
+> +			adck_rate / (6 + vf610_hw_avgs[i] * (25 + 3));
+> +}
+>  
+>  static inline void vf610_adc_cfg_init(struct vf610_adc *info)
+>  {
+> +	struct vf610_adc_feature *adc_feature = &info->adc_feature;
+> +
+>  	/* set default Configuration for ADC controller */
+> -	info->adc_feature.clk_sel = VF610_ADCIOC_BUSCLK_SET;
+> -	info->adc_feature.vol_ref = VF610_ADCIOC_VR_VREF_SET;
+> +	adc_feature->clk_sel = VF610_ADCIOC_BUSCLK_SET;
+> +	adc_feature->vol_ref = VF610_ADCIOC_VR_VREF_SET;
+> +
+> +	adc_feature->calibration = true;
+> +	adc_feature->ovwren = true;
+> +
+> +	adc_feature->res_mode = 12;
+> +	adc_feature->sample_rate = 1;
+> +	adc_feature->lpm = true;
+>  
+> -	info->adc_feature.calibration = true;
+> -	info->adc_feature.ovwren = true;
+> +	/* Use a save ADCK which is below 20MHz on all devices */
+> +	adc_feature->clk_div = 8;
+>  
+> -	info->adc_feature.clk_div = 1;
+> -	info->adc_feature.res_mode = 12;
+> -	info->adc_feature.sample_rate = 1;
+> -	info->adc_feature.lpm = true;
+> +	vf610_adc_calculate_rates(info);
+>  }
+>  
+>  static void vf610_adc_cfg_post_set(struct vf610_adc *info)
+> @@ -290,12 +306,10 @@ static void vf610_adc_cfg_set(struct vf610_adc *info)
+>  
+>  	cfg_data = readl(info->regs + VF610_REG_ADC_CFG);
+>  
+> -	/* low power configuration */
+>  	cfg_data &= ~VF610_ADC_ADLPC_EN;
+>  	if (adc_feature->lpm)
+>  		cfg_data |= VF610_ADC_ADLPC_EN;
+>  
+> -	/* disable high speed */
+>  	cfg_data &= ~VF610_ADC_ADHSC_EN;
+>  
+>  	writel(cfg_data, info->regs + VF610_REG_ADC_CFG);
+> @@ -435,10 +449,27 @@ static irqreturn_t vf610_adc_isr(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("1941176, 559332, 286957, 145374, 73171");
+> +static ssize_t vf610_show_samp_freq_avail(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct vf610_adc *info = iio_priv(dev_to_iio_dev(dev));
+> +	size_t len = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(info->sample_freq_avail); i++)
+> +		len += scnprintf(buf + len, PAGE_SIZE - len,
+> +			"%u ", info->sample_freq_avail[i]);
+> +
+> +	/* replace trailing space by newline */
+> +	buf[len - 1] = '\n';
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(vf610_show_samp_freq_avail);
+>  
+>  static struct attribute *vf610_attributes[] = {
+> -	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
+> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+>  	NULL
+>  };
+>  
+> @@ -502,7 +533,7 @@ static int vf610_read_raw(struct iio_dev *indio_dev,
+>  		return IIO_VAL_FRACTIONAL_LOG2;
+>  
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+> -		*val = vf610_sample_freq_avail[info->adc_feature.sample_rate];
+> +		*val = info->sample_freq_avail[info->adc_feature.sample_rate];
+>  		*val2 = 0;
+>  		return IIO_VAL_INT;
+>  
+> @@ -525,9 +556,9 @@ static int vf610_write_raw(struct iio_dev *indio_dev,
+>  	switch (mask) {
+>  		case IIO_CHAN_INFO_SAMP_FREQ:
+>  			for (i = 0;
+> -				i < ARRAY_SIZE(vf610_sample_freq_avail);
+> +				i < ARRAY_SIZE(info->sample_freq_avail);
+>  				i++)
+> -				if (val == vf610_sample_freq_avail[i]) {
+> +				if (val == info->sample_freq_avail[i]) {
+>  					info->adc_feature.sample_rate = i;
+>  					vf610_adc_sample_set(info);
+>  					return 0;
+> 
