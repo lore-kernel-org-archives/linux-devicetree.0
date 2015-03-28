@@ -1,37 +1,93 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH 1/2] Documentation: devicetree: root node serial-number property documentation
-Date: Sat, 28 Mar 2015 18:39:30 +0100
-Message-ID: <1427564371-26039-1-git-send-email-contact@paulk.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 7/7] ARM: dts: add OPPs for i.MX23/i.MX28
+Date: Sat, 28 Mar 2015 18:53:12 +0100 (CET)
+Message-ID: <1470793430.944631.1427565192794.JavaMail.open-xchange@oxbaltgw00.schlund.de>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juergen Borleis <juergen@kreuzholzen.de>, viresh.kumar@linaro.org, Lucas Stach <l.stach@pengutronix.de>
+Cc: kernel@pengutronix.de, rjw@rjwysocki.net, dbaryshkov@gmail.com, pawel.moll@arm.com, galak@codeaurora.org, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, shawn.guo@linaro.org, sre@kernel.org, linux-pm@vger.kernel.org, fabio.estevam@freescale.com, dwmw2@infradead.org, mark.rutland@arm.com, sebastien.szymanski@armadeus.com, broonie@kernel.org, marex@denx.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- Documentation/devicetree/booting-without-of.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-index 7768518..8b055897 100644
---- a/Documentation/devicetree/booting-without-of.txt
-+++ b/Documentation/devicetree/booting-without-of.txt
-@@ -828,6 +828,10 @@ address which can extend beyond that limit.
-   name may clash with standard defined ones, you prefix them with your
-   vendor name and a comma.
- 
-+  Additional properties for the root node:
-+
-+    - serial-number : a string representing the board's serial number
-+
-   b) The /cpus node
- 
-   This node is the parent of all individual CPU nodes. It doesn't
--- 
-1.9.1
+> Juergen Borleis <juergen@kreuzholzen.de> hat am 24. M=C3=A4rz 2015 um=
+ 21:45
+> geschrieben:
+>
+>
+> Stefan Wahren wrote:
+> > [...]
+> > diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28=
+=2Edtsi
+> > index 98c1be6..21c1921 100644
+> > --- a/arch/arm/boot/dts/imx28.dtsi
+> > +++ b/arch/arm/boot/dts/imx28.dtsi
+> > @@ -38,12 +38,23 @@
+> > };
+> >
+> > cpus {
+> > - #address-cells =3D <0>;
+> > + #address-cells =3D <1>;
+> > #size-cells =3D <0>;
+> >
+> > - cpu {
+> > + cpu@0 {
+> > compatible =3D "arm,arm926ej-s";
+> > device_type =3D "cpu";
+> > + reg =3D <0x0>;
+> > + operating-points =3D <
+> > + /* kHz uV */
+> > + 261819 1350000
+> > + 360000 1350000
+> > + 392728 1450000
+> > + 454737 1550000
+> > + >;
+> > + clocks =3D <&clks 4>;
+> > + clock-latency =3D <61036>; /* two CLK32 periods */
+> > + cpu-supply =3D <&reg_vddd>;
+> > };
+> > };
+>
+> Maybe you should take into account not to reduce VDD below 1.55 V if =
+the SDRAM
+> controller runs above 196 MHz. The i.MX28 datasheet[1] lists these
+> restrictions. VDD powers the SDRAM controller as well. From the datas=
+heet the
+> table "Frequency versus Voltage for EMICLK" shows:
+>
+> EMICLK Fmax (MHz)
+> VDDD (V) DDR2 mDDR
+> --------------------------------
+> 1.550 205.71 205.71
+> 1.450 196.36 196.36
+> 1.350 196.36 196.36
+>
+> jbe
+>
+> [1]
+> i.MX28 Applications
+> Processors for Consumer
+> Products
+> Silicon Version 1.2
+>
+> Document Number: IMX28CEC
+> Rev. 3, 07/2012
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+the only chance that i see to meet this constraint without introducing =
+a new
+cpufreq driver is to change clock ref_cpu
+and ref_emi.
+
+Do you think this solution of a virtual clock [1] can be applied here, =
+too?
+
+Best regards
+Stefan
+
+[1] -
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/29=
+0822.html
