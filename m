@@ -1,136 +1,34 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Sat, 28 Mar 2015 13:41:56 +0000
-Message-ID: <20150328134157.000A3C40AE0@trevor.secretlab.ca>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
-	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425375148-4369-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 2/2] phy: driver for Conexant Digicolor internal USB PHY
+Date: Sat, 28 Mar 2015 16:33:02 +0100
+Message-ID: <201503281633.02801.marex@denx.de>
+References: <6284a7672647d46100281959552f9787f98bb552.1427430989.git.baruch@tkos.co.il> <4a9ceb0a240d49dd6a68d50c78f85d310d4b932f.1427430989.git.baruch@tkos.co.il>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4a9ceb0a240d49dd6a68d50c78f85d310d4b932f.1427430989.git.baruch@tkos.co.il>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Richard Zhao <richard.zhao@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  3 Mar 2015 10:32:24 +0100
-, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
- wrote:
-> This defines a new compatible option for MFD devices "simple-mfd" that will
-> make the OF core spawn child devices for all subnodes of that MFD device.
-> It is optional but handy for things like syscon and possibly other
-> simpler MFD devices.
+On Friday, March 27, 2015 at 05:36:29 AM, Baruch Siach wrote:
+> Add a driver for the USB PHY on the Conexant CX92755 SoC, from the
+> Digicolor series of SoCs. The PHY is connected to the on-chip chipidea
+> usb2 host.
 > 
-> Since there was no file to put the documentation in, I took this opportunity
-> to make a small writeup on MFD devices and add the compatible definition
-> there.
-> 
-> Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> I make the patch to the OF core in this one, it makes much more sense since
-> it's a oneliner
-> 
-> Lee: this is a (tested!) implementation of your suggestion for simple-mfd.
-> If you can eventually ACK this from the MFD side, I think it should be
-> funneled through the ARM SoC tree.
-> 
-> Grant/Rob: if either of you can ACK the change to the OF core likewise it can
-> be taken through ARM SoC.
-> 
-> DT binings maintainers: there is some background discussion on this here:
-> http://marc.info/?l=linux-arm-kernel&m=142486676603889&w=2
-> http://marc.info/?l=devicetree&m=142166313621469&w=2
-> ---
->  Documentation/devicetree/bindings/mfd/mfd.txt | 40 +++++++++++++++++++++++++++
->  drivers/of/platform.c                         |  1 +
->  2 files changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mfd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
-> new file mode 100644
-> index 000000000000..cc057438abe8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-> @@ -0,0 +1,40 @@
-> +Multi-Function Devices (MFD)
-> +
-> +These devices comprise a nexus for heterogeneous hardware blocks spawning
-> +multiple child devices.
-> +
-> +A typical MFD can be:
-> +
-> +- A mixed signal ASIC on an external bus, sometimes a PMIC (power management
-> +  integrated circuit) that is manufactured in a lower technology node (rough
-> +  silicon) that handles analog drivers for things like audio amplifiers, LED
-> +  drivers, level shifters, PHY (physical interfaces to things like USB or
-> +  ethernet), regulators etc.
-> +
-> +- A range of memory registers containing "miscellaneous system registers" also
-> +  known as a system controller "syscon" or any other memory range containing a
-> +  mix of unrelated registers.
-> +
-> +Optional properties:
-> +
-> +- compatible : "simple-mfd" - this signifies that the operating system should
-> +  spawn child devices for all the subnodes of the MFD device akin to how
-> +  "simple-bus" inidicates when to spawn children for a simple memory-mapped
-> +  bus. For more complex devices, when the nexus driver has to probe registers
-> +  to figure out what children exist etc, this should not be used. In the latter
-> +  case the child devices will be instantiated by the operating system.
-> +
-> +Example:
-> +
-> +foo@1000 {
-> +		compatible = "syscon", "simple-mfd";
-> +		reg = <0x010000 0x1000>;
-> +
-> +		led@08.0 {
-> +			compatible = "register-bit-led";
-> +			offset = <0x08>;
-> +			mask = <0x01>;
-> +			label = "myled";
-> +			default-state = "on";
-> +		};
-> +};
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b189733a1539..969ba4e1460c 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -26,6 +26,7 @@
->  
->  const struct of_device_id of_default_bus_match_table[] = {
->  	{ .compatible = "simple-bus", },
-> +	{ .compatible = "simple-mfd", },
->  #ifdef CONFIG_ARM_AMBA
->  	{ .compatible = "arm,amba-bus", },
->  #endif /* CONFIG_ARM_AMBA */
+> The hardware is somewhat similar to the phy-mxs-usb.c usb_phy, but it is
+> different enough to merit its own driver. Also, this driver uses the
+> generic phy infrastructure.
 
-Alright, so:
+Hi,
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+the register set looks very similar to MXS one indeed. How is it different 
+please ?
 
-However, I think this is going to lead to a future problem. It solves
-the immediate case of getting an MFD device to be auto populated when
-the kernel doesn't need to immediately do something. However, I can
-forsee a situation where the device can be supported by simple-mfd, but
-at some point it is discovered that better features can be enabled if
-the mfd device has a proper driver.
+The driver looks OK.
 
-If/when we get into that situation, the above still works, but we're
-going to need to add a blacklist match table so that simple-mfd can be
-overridden by a more-specific compatible value. I don't have any
-problems with doing that, but someone needs to implement it.
-
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Marek Vasut
