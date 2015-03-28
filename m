@@ -1,95 +1,297 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] of/unittest: Fix of_platform_depopulate test case
-Date: Fri, 27 Mar 2015 21:08:27 -0700
-Message-ID: <1427515707-29879-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Frank Rowand <frank.rowand@sonymobile.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pawel Moll <pawel.moll@arm.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] iio: adc: vf610: implement configurable conversion
+ modes
+Date: Sat, 28 Mar 2015 12:07:58 +0000
+Message-ID: <5516999E.7010809@kernel.org>
+References: <1427201269-4902-1-git-send-email-stefan@agner.ch> <1427201269-4902-3-git-send-email-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427201269-4902-3-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The previous commit, "of/unittest: early return from test skips tests"
-exposed broken tests for the of_platform_unpopulate() function. The
-problem was the populate and depopulate calls were not symmetrical like
-they were intended to be, and unpopulate depends on the parent device to
-have it's of_node pointer pointing to the parent device node. Fix these
-bugs so that the test case works correctly.
+On 24/03/15 12:47, Stefan Agner wrote:
+> Support configurable conversion mode through sysfs. So far, the
+> mode used was low-power, which is enabled by default now. Beside
+> that, the modes normal and high-speed are selectable as well.
+> 
+> Use the new device tree property which specifies the maximum ADC
+> conversion clock frequencies. Depending on the mode used, the
+> available resulting conversion frequency are calculated
+> dynamically.
+> 
+One trivial bit inline, otherwise looks good to me.
+I wish there was a better way of 'hinting' to drivers what power mode
+is required, but in the absense of this I guess explicit control is
+all we can do.
+> Acked-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio-vf610      |   7 +
+>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |   9 ++
+>  drivers/iio/adc/vf610_adc.c                        | 146 +++++++++++++++------
+>  3 files changed, 120 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-vf610
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-vf610 b/Documentation/ABI/testing/sysfs-bus-iio-vf610
+> new file mode 100644
+> index 0000000..85fd0ecd5
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-vf610
+> @@ -0,0 +1,7 @@
+> +What:		/sys/bus/iio/devices/iio:deviceX/conversion_mode
+> +KernelVersion:	4.1
+> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +Description:
+> +		Specifies the hardware conversion mode used. The three
+> +		available modes are "normal", "high-speed" and "low-power",
+> +		whereas the last is the default mode.
+Fussy English of the day.  where rather than whereas (whereas is only
+used if you say something like. A is normally the case, whereas here B is the case)
+I like the default that isn't 'normal' :)
 
-In the process, the test_bus used as a container for the test devices
-has been changed from a statically allocated struct device (which is
-bad) to a properly allocated device with a .release() method (which is
-good). This stops the test code from being a bad example of abusing the
-device model.
-
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Frank Rowand <frank.rowand@sonymobile.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
----
-
-(I've already got this commit in my tree queued up after the patch that
-exposes the bug, which is why I've written the description the way I
-did.)
-
- drivers/of/unittest.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 3b155774dfee..a4f90c238e78 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -751,14 +751,14 @@ static void __init of_selftest_match_node(void)
- 	}
- }
- 
--struct device test_bus = {
--	.init_name = "unittest-bus",
-+static const struct platform_device_info test_bus_info = {
-+	.name = "unittest-bus",
- };
- static void __init of_selftest_platform_populate(void)
- {
- 	int irq, rc;
- 	struct device_node *np, *child, *grandchild;
--	struct platform_device *pdev;
-+	struct platform_device *pdev, *test_bus;
- 	const struct of_device_id match[] = {
- 		{ .compatible = "test-device", },
- 		{}
-@@ -787,20 +787,22 @@ static void __init of_selftest_platform_populate(void)
- 	if (!np)
- 		return;
- 
--	rc = device_register(&test_bus);
-+	test_bus = platform_device_register_full(&test_bus_info);
-+	rc = PTR_ERR_OR_ZERO(test_bus);
- 	selftest(!rc, "testbus registration failed; rc=%i\n", rc);
- 	if (rc)
- 		return;
-+	test_bus->dev.of_node = np;
- 
-+	of_platform_populate(np, match, NULL, &test_bus->dev);
- 	for_each_child_of_node(np, child) {
--		of_platform_populate(child, match, NULL, &test_bus);
- 		for_each_child_of_node(child, grandchild)
- 			selftest(of_find_device_by_node(grandchild),
- 				 "Could not create device for node '%s'\n",
- 				 grandchild->name);
- 	}
- 
--	of_platform_depopulate(&test_bus);
-+	of_platform_depopulate(&test_bus->dev);
- 	for_each_child_of_node(np, child) {
- 		for_each_child_of_node(child, grandchild)
- 			selftest(!of_find_device_by_node(grandchild),
-@@ -808,7 +810,7 @@ static void __init of_selftest_platform_populate(void)
- 				 grandchild->name);
- 	}
- 
--	device_unregister(&test_bus);
-+	platform_device_unregister(test_bus);
- 	of_node_put(np);
- }
- 
--- 
-2.1.0
+> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> index 1a4a43d..3eb40e2 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> @@ -11,6 +11,13 @@ Required properties:
+>  - clock-names: Must contain "adc", matching entry in the clocks property.
+>  - vref-supply: The regulator supply ADC reference voltage.
+>  
+> +Recommended properties:
+> +- fsl,adck-max-frequency: Maximum frequencies according to datasheets operating
+> +  requirements. Three values are required, depending on conversion mode:
+> +  - Frequency in normal mode (ADLPC=0, ADHSC=0)
+> +  - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
+> +  - Frequency in low-power mode (ADLPC=1, ADHSC=0)
+> +
+>  Example:
+>  adc0: adc@4003b000 {
+>  	compatible = "fsl,vf610-adc";
+> @@ -18,5 +25,7 @@ adc0: adc@4003b000 {
+>  	interrupts = <0 53 0x04>;
+>  	clocks = <&clks VF610_CLK_ADC0>;
+>  	clock-names = "adc";
+> +	fsl,adck-max-frequency = <30000000>, <40000000>,
+> +				<20000000>;
+>  	vref-supply = <&reg_vcc_3v3_mcu>;
+>  };
+> diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
+> index e63b8e7..b5f94ab8 100644
+> --- a/drivers/iio/adc/vf610_adc.c
+> +++ b/drivers/iio/adc/vf610_adc.c
+> @@ -118,15 +118,21 @@ enum average_sel {
+>  	VF610_ADC_SAMPLE_32,
+>  };
+>  
+> +enum conversion_mode_sel {
+> +	VF610_ADC_CONV_NORMAL,
+> +	VF610_ADC_CONV_HIGH_SPEED,
+> +	VF610_ADC_CONV_LOW_POWER,
+> +};
+> +
+>  struct vf610_adc_feature {
+>  	enum clk_sel	clk_sel;
+>  	enum vol_ref	vol_ref;
+> +	enum conversion_mode_sel conv_mode;
+>  
+>  	int	clk_div;
+>  	int     sample_rate;
+>  	int	res_mode;
+>  
+> -	bool	lpm;
+>  	bool	calibration;
+>  	bool	ovwren;
+>  };
+> @@ -139,6 +145,8 @@ struct vf610_adc {
+>  	u32 vref_uv;
+>  	u32 value;
+>  	struct regulator *vref;
+> +
+> +	u32 max_adck_rate[3];
+>  	struct vf610_adc_feature adc_feature;
+>  
+>  	u32 sample_freq_avail[5];
+> @@ -148,46 +156,22 @@ struct vf610_adc {
+>  
+>  static const u32 vf610_hw_avgs[] = { 1, 4, 8, 16, 32 };
+>  
+> -#define VF610_ADC_CHAN(_idx, _chan_type) {			\
+> -	.type = (_chan_type),					\
+> -	.indexed = 1,						\
+> -	.channel = (_idx),					\
+> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> -	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
+> -				BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
+> -}
+> -
+> -#define VF610_ADC_TEMPERATURE_CHAN(_idx, _chan_type) {	\
+> -	.type = (_chan_type),	\
+> -	.channel = (_idx),		\
+> -	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),	\
+> -}
+> -
+> -static const struct iio_chan_spec vf610_adc_iio_channels[] = {
+> -	VF610_ADC_CHAN(0, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(1, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(2, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(3, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(4, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(5, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(6, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(7, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(8, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(9, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(10, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(11, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(12, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(13, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(14, IIO_VOLTAGE),
+> -	VF610_ADC_CHAN(15, IIO_VOLTAGE),
+> -	VF610_ADC_TEMPERATURE_CHAN(26, IIO_TEMP),
+> -	/* sentinel */
+> -};
+> -
+>  static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
+>  {
+> +	struct vf610_adc_feature *adc_feature = &info->adc_feature;
+>  	unsigned long adck_rate, ipg_rate = clk_get_rate(info->clk);
+> -	int i;
+> +	int divisor, i;
+> +
+> +	adck_rate = info->max_adck_rate[adc_feature->conv_mode];
+> +
+> +	if (adck_rate) {
+> +		/* calculate clk divider which is within specification */
+> +		divisor = ipg_rate / adck_rate;
+> +		adc_feature->clk_div = 1 << fls(divisor + 1);
+> +	} else {
+> +		/* fall-back value using a safe divisor */
+> +		adc_feature->clk_div = 8;
+> +	}
+>  
+>  	/*
+>  	 * Calculate ADC sample frequencies
+> @@ -219,10 +203,8 @@ static inline void vf610_adc_cfg_init(struct vf610_adc *info)
+>  
+>  	adc_feature->res_mode = 12;
+>  	adc_feature->sample_rate = 1;
+> -	adc_feature->lpm = true;
+>  
+> -	/* Use a save ADCK which is below 20MHz on all devices */
+> -	adc_feature->clk_div = 8;
+> +	adc_feature->conv_mode = VF610_ADC_CONV_LOW_POWER;
+>  
+>  	vf610_adc_calculate_rates(info);
+>  }
+> @@ -307,10 +289,12 @@ static void vf610_adc_cfg_set(struct vf610_adc *info)
+>  	cfg_data = readl(info->regs + VF610_REG_ADC_CFG);
+>  
+>  	cfg_data &= ~VF610_ADC_ADLPC_EN;
+> -	if (adc_feature->lpm)
+> +	if (adc_feature->conv_mode == VF610_ADC_CONV_LOW_POWER)
+>  		cfg_data |= VF610_ADC_ADLPC_EN;
+>  
+>  	cfg_data &= ~VF610_ADC_ADHSC_EN;
+> +	if (adc_feature->conv_mode == VF610_ADC_CONV_HIGH_SPEED)
+> +		cfg_data |= VF610_ADC_ADHSC_EN;
+>  
+>  	writel(cfg_data, info->regs + VF610_REG_ADC_CFG);
+>  }
+> @@ -412,6 +396,81 @@ static void vf610_adc_hw_init(struct vf610_adc *info)
+>  	vf610_adc_cfg_set(info);
+>  }
+>  
+> +static int vf610_set_conversion_mode(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     unsigned int mode)
+> +{
+> +	struct vf610_adc *info = iio_priv(indio_dev);
+> +
+> +	mutex_lock(&indio_dev->mlock);
+> +	info->adc_feature.conv_mode = mode;
+> +	vf610_adc_calculate_rates(info);
+> +	vf610_adc_hw_init(info);
+> +	mutex_unlock(&indio_dev->mlock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int vf610_get_conversion_mode(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan)
+> +{
+> +	struct vf610_adc *info = iio_priv(indio_dev);
+> +
+> +	return info->adc_feature.conv_mode;
+> +}
+> +
+> +static const char * const vf610_conv_modes[] = { "normal", "high-speed",
+> +						 "low-power" };
+> +
+> +static const struct iio_enum vf610_conversion_mode = {
+> +	.items = vf610_conv_modes,
+> +	.num_items = ARRAY_SIZE(vf610_conv_modes),
+> +	.get = vf610_get_conversion_mode,
+> +	.set = vf610_set_conversion_mode,
+> +};
+> +
+> +static const struct iio_chan_spec_ext_info vf610_ext_info[] = {
+> +	IIO_ENUM("conversion_mode", IIO_SHARED_BY_DIR, &vf610_conversion_mode),
+> +	{},
+> +};
+> +
+> +#define VF610_ADC_CHAN(_idx, _chan_type) {			\
+> +	.type = (_chan_type),					\
+> +	.indexed = 1,						\
+> +	.channel = (_idx),					\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
+> +				BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
+> +	.ext_info = vf610_ext_info,				\
+> +}
+> +
+> +#define VF610_ADC_TEMPERATURE_CHAN(_idx, _chan_type) {	\
+> +	.type = (_chan_type),	\
+> +	.channel = (_idx),		\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),	\
+> +}
+> +
+> +static const struct iio_chan_spec vf610_adc_iio_channels[] = {
+> +	VF610_ADC_CHAN(0, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(1, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(2, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(3, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(4, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(5, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(6, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(7, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(8, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(9, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(10, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(11, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(12, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(13, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(14, IIO_VOLTAGE),
+> +	VF610_ADC_CHAN(15, IIO_VOLTAGE),
+> +	VF610_ADC_TEMPERATURE_CHAN(26, IIO_TEMP),
+> +	/* sentinel */
+> +};
+> +
+>  static int vf610_adc_read_data(struct vf610_adc *info)
+>  {
+>  	int result;
+> @@ -654,6 +713,9 @@ static int vf610_adc_probe(struct platform_device *pdev)
+>  
+>  	info->vref_uv = regulator_get_voltage(info->vref);
+>  
+> +	of_property_read_u32_array(pdev->dev.of_node, "fsl,adck-max-frequency",
+> +			info->max_adck_rate, 3);
+> +
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+>  	init_completion(&info->completion);
+> 
