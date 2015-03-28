@@ -1,30 +1,128 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [Patch 0/5] dt: unittest: fix breakage and warnings
-Date: Fri, 27 Mar 2015 19:55:03 -0700
-Message-ID: <20150328025503.814D4C40B5F@trevor.secretlab.ca>
-References: <5503C65F.4030000@gmail.com>
+Subject: Re: [PATCH v3 3/3] Documentation: update the of_unittest.txt
+Date: Fri, 27 Mar 2015 21:11:55 -0700
+Message-ID: <20150328041155.BA67AC40C29@trevor.secretlab.ca>
+References: <1426562400-102415-1-git-send-email-long.wanglong@huawei.com>
+	<1426562400-102415-4-git-send-email-long.wanglong@huawei.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5503C65F.4030000@gmail.com>
+In-Reply-To: <1426562400-102415-4-git-send-email-long.wanglong@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: gaurav.minocha.os@gmail.com, robherring2@gmail.com, pantelis.antoniou@konsulko.com
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, peifeiyue@huawei.com, long.wanglong@huawei.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2015 22:25:51 -0700
-, Frank Rowand <frowand.list@gmail.com>
+On Tue, 17 Mar 2015 03:20:00 +0000
+, Wang Long <long.wanglong@huawei.com>
  wrote:
-> Running checkpatch on early versions of my patchset to fix the devicetree
-> make dependency issues exposed a large number of warnings, including some that
-> are actual bugs.  http://lkml.iu.edu/hypermail/linux/kernel/1503.1/03335.html
+> Since the directory "drivers/of/testcase-data" is renamed
+> to "drivers/of/unittest-data". so we should update the path
+> in the of_selftest.txt.
 > 
-> These patches fix those bugs, and another bug exposed by fixing those bugs.
-> As a result, the number of tests completed increased from 102 to 107.
+> When the kernel is built with OF_UNITTEST enabled, the output
+> dtb is testcases.dtb instead of testcase.dtb, also update it
+> (s/testcase/testcases/).
 > 
-> Since I was already poking around, I fixed a few classes of checkpatch warnings.
-> 
-> There are still plenty of warnings, but the noise is greatly reduced and future
-> checkpatch warnings that are problems should stand out more clearly.
+> Signed-off-by: Wang Long <long.wanglong@huawei.com>
 
-Thanks for rooting these out. I'll apply the bug fix for v4.0, and the
-rest for v4.1
+Applied, thanks.
 
 g.
+
+> ---
+>  Documentation/devicetree/of_unittest.txt | 35 ++++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/of_unittest.txt b/Documentation/devicetree/of_unittest.txt
+> index 57a808b..d79a6bc 100644
+> --- a/Documentation/devicetree/of_unittest.txt
+> +++ b/Documentation/devicetree/of_unittest.txt
+> @@ -1,11 +1,11 @@
+> -Open Firmware Device Tree Selftest
+> +Open Firmware Device Tree Unittest
+>  ----------------------------------
+>  
+>  Author: Gaurav Minocha <gaurav.minocha.os@gmail.com>
+>  
+>  1. Introduction
+>  
+> -This document explains how the test data required for executing OF selftest
+> +This document explains how the test data required for executing OF unittest
+>  is attached to the live tree dynamically, independent of the machine's
+>  architecture.
+>  
+> @@ -22,31 +22,32 @@ most of the device drivers in various use cases.
+>  
+>  2. Test-data
+>  
+> -The Device Tree Source file (drivers/of/testcase-data/testcases.dts) contains
+> +The Device Tree Source file (drivers/of/unittest-data/testcases.dts) contains
+>  the test data required for executing the unit tests automated in
+> -drivers/of/selftests.c. Currently, following Device Tree Source Include files
+> -(.dtsi) are included in testcase.dts:
+> +drivers/of/unittest.c. Currently, following Device Tree Source Include files
+> +(.dtsi) are included in testcases.dts:
+>  
+> -drivers/of/testcase-data/tests-interrupts.dtsi
+> -drivers/of/testcase-data/tests-platform.dtsi
+> -drivers/of/testcase-data/tests-phandle.dtsi
+> -drivers/of/testcase-data/tests-match.dtsi
+> +drivers/of/unittest-data/tests-interrupts.dtsi
+> +drivers/of/unittest-data/tests-platform.dtsi
+> +drivers/of/unittest-data/tests-phandle.dtsi
+> +drivers/of/unittest-data/tests-match.dtsi
+> +drivers/of/unittest-data/tests-overlay.dtsi
+>  
+>  When the kernel is build with OF_SELFTEST enabled, then the following make rule
+>  
+>  $(obj)/%.dtb: $(src)/%.dts FORCE
+>  	$(call if_changed_dep, dtc)
+>  
+> -is used to compile the DT source file (testcase.dts) into a binary blob
+> -(testcase.dtb), also referred as flattened DT.
+> +is used to compile the DT source file (testcases.dts) into a binary blob
+> +(testcases.dtb), also referred as flattened DT.
+>  
+>  After that, using the following rule the binary blob above is wrapped as an
+> -assembly file (testcase.dtb.S).
+> +assembly file (testcases.dtb.S).
+>  
+>  $(obj)/%.dtb.S: $(obj)/%.dtb
+>  	$(call cmd, dt_S_dtb)
+>  
+> -The assembly file is compiled into an object file (testcase.dtb.o), and is
+> +The assembly file is compiled into an object file (testcases.dtb.o), and is
+>  linked into the kernel image.
+>  
+>  
+> @@ -98,8 +99,8 @@ child11 -> sibling12 -> sibling13 -> sibling14 -> null
+>  Figure 1: Generic structure of un-flattened device tree
+>  
+>  
+> -Before executing OF selftest, it is required to attach the test data to
+> -machine's device tree (if present). So, when selftest_data_add() is called,
+> +Before executing OF unittest, it is required to attach the test data to
+> +machine's device tree (if present). So, when unittest_data_add() is called,
+>  at first it reads the flattened device tree data linked into the kernel image
+>  via the following kernel symbols:
+>  
+> @@ -186,10 +187,10 @@ update_node_properties().
+>  
+>  2.2. Removing the test data
+>  
+> -Once the test case execution is complete, selftest_data_remove is called in
+> +Once the test case execution is complete, unittest_data_remove is called in
+>  order to remove the device nodes attached initially (first the leaf nodes are
+>  detached and then moving up the parent nodes are removed, and eventually the
+> -whole tree). selftest_data_remove() calls detach_node_and_children() that uses
+> +whole tree). unittest_data_remove() calls detach_node_and_children() that uses
+>  of_detach_node() to detach the nodes from the live device tree.
+>  
+>  To detach a node, of_detach_node() either updates the child pointer of given
+> -- 
+> 1.8.3.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
