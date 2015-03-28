@@ -1,33 +1,88 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 1/2] of: base: add function to get highest id of an
- =?iso-8859-1?Q?alias=0D?= stem
-Date: Sat, 28 Mar 2015 13:20:49 +0000
-Message-ID: <20150328132049.EDF7CC40869@trevor.secretlab.ca>
-References: <1426177093-26820-1-git-send-email-wsa@the-dreams.de>
-	<1426177093-26820-2-git-send-email-wsa@the-dreams.de>
-	<20150318124631.GB3580@katana>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150318124631.GB3580@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bob Feretich <bob.feretich@rafresearch.com>, Jean Delvare <jdelvare@suse.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of_net: factor out repetitive code from
+ of_get_mac_address()
+Date: Sat, 28 Mar 2015 13:34:45 +0000
+Message-ID: <20150328133445.52B51C40AAB@trevor.secretlab.ca>
+References: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1776166.J84mUn2Yu8@wasted.cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2015 13:46:31 +0100
-, Wolfram Sang <wsa@the-dreams.de>
+On Wed, 18 Mar 2015 22:25:46 +0300
+, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
  wrote:
-> On Thu, Mar 12, 2015 at 05:17:58PM +0100, Wolfram Sang wrote:
-> > I2C supports adding adapters using either a dynamic or fixed id. The
-> > latter is provided by aliases in the DT case. To prevent id collisions
-> > of those two types, install this function which gives us the highest
-> > fixed id, so we can then let the dynamically created ones come after
-> > this highest number.
-> > 
-> > Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> of_get_mac_address() basically does the same  thing thrice, every  time with  a
+> different  property  name,  so it makes sense to factor out the repetitive code
+> into separate function. While at it, we can start using ETH_ALEN instead of the
+> bare number and drop unnecessary parens around the property length check.
 > 
-> Applied to for-next, thanks!
+> The resulting ARM object file is 100 bytes less in size than before the patch.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> The patch is against Grant Likely's 'linux.git' repo's 'devicetree/next' branch.
 
-Looks good to me to. Thanks for doing this. It should also be useful for
-other devices.
+Thanks for looking at this, I've merged it.
+
+Since you're already playing with this, could you also write a unittest
+of of_get_mac_addr()? (drivers/of/unittest.c & drivers/of/unittest-data)
 
 g.
+
+> 
+>  drivers/of/of_net.c |   29 +++++++++++++++++------------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+> 
+> Index: linux/drivers/of/of_net.c
+> ===================================================================
+> --- linux.orig/drivers/of/of_net.c
+> +++ linux/drivers/of/of_net.c
+> @@ -38,6 +38,15 @@ int of_get_phy_mode(struct device_node *
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_phy_mode);
+>  
+> +static const void *of_get_mac_addr(struct device_node *np, const char *name)
+> +{
+> +	struct property *pp = of_find_property(np, name, NULL);
+> +
+> +	if (pp && pp->length == ETH_ALEN && is_valid_ether_addr(pp->value))
+> +		return pp->value;
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * Search the device tree for the best MAC address to use.  'mac-address' is
+>   * checked first, because that is supposed to contain to "most recent" MAC
+> @@ -58,20 +67,16 @@ EXPORT_SYMBOL_GPL(of_get_phy_mode);
+>  */
+>  const void *of_get_mac_address(struct device_node *np)
+>  {
+> -	struct property *pp;
+> +	const void *addr;
+>  
+> -	pp = of_find_property(np, "mac-address", NULL);
+> -	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
+> -		return pp->value;
+> +	addr = of_get_mac_addr(np, "mac-address");
+> +	if (addr)
+> +		return addr;
+>  
+> -	pp = of_find_property(np, "local-mac-address", NULL);
+> -	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
+> -		return pp->value;
+> +	addr = of_get_mac_addr(np, "local-mac-address");
+> +	if (addr)
+> +		return addr;
+>  
+> -	pp = of_find_property(np, "address", NULL);
+> -	if (pp && (pp->length == 6) && is_valid_ether_addr(pp->value))
+> -		return pp->value;
+> -
+> -	return NULL;
+> +	return of_get_mac_addr(np, "address");
+>  }
+>  EXPORT_SYMBOL(of_get_mac_address);
+> 
