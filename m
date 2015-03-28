@@ -1,54 +1,36 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/5 v2] ASoC: rsnd: DPCM base sampling rate convert
- support
-Date: Fri, 27 Mar 2015 16:01:10 -0700
-Message-ID: <20150327230109.GJ1743@sirena.org.uk>
-References: <87h9t85ry1.wl%kuninori.morimoto.gx@renesas.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
+Date: Sat, 28 Mar 2015 03:35:15 +0100
+Message-ID: <201503280335.16280.arnd@arndb.de>
+References: <20150216130549.GF14545@x1> <20150325140725.GA11499@kroah.com> <871tkbxwup.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87h9t85ry1.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Das Biju <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <871tkbxwup.fsf@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 26 March 2015, Robert Jarzmik wrote:
+> 
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> 
+> > On Fri, Feb 20, 2015 at 05:02:57PM +0100, Robert Jarzmik wrote:
+> >> If there is no solution, I'll fallback through arch/arm/plat-pxa, not very nice,
+> >> but it has to land somewhere, I don't want lubbock to remain broken.
+> >
+> > drivers/platform/arm ?
+> Most certainly.
+> 
+> I'll submit that to drivers/platform/arm/pxa, and maintain that pxa tree. As for
+> drivers/platform/arm, do you want also maintainers to step up, or will you take
+> the review/merge burden ?
+> 
 
---5uO961YFyoDlzFnP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'd much prefer not to add drivers/platform/arm, which would make it too easy
+to add random stuff there. What is the problem with leaving it in mach-pxa?
 
-On Thu, Mar 26, 2015 at 04:00:44AM +0000, Kuninori Morimoto wrote:
->=20
-> Hi Mark
->=20
-> These are v2 of remains of my previous patch set.
-> Basically, these doesn't need soc-core's new feature, but it is assuming
-> DPCM base sampling rate convert has both playback/capture in same time.
-
-Applied all, thanks.
-
---5uO961YFyoDlzFnP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVFeEuAAoJECTWi3JdVIfQFogH/jXpzUdtoUTSfPSx8vMsM8yo
-EaH/V5m3zkSXjajXazF1NCdD+rpaQff6jP7G1UmvxqtDyi/60T7qUQ7ofq7EW0OZ
-ncAW/YcyKYmRUbuEWt3Ygq4ULiUjdY8wM6cpQoZYcCnoimE+jum8XRPz4jSyccp5
-o+k8U9Xdme7X1RghGY26Mmfl6pPs8U4CNdiUzSSsWafIo2Yv+9gz4nBMgfPsLXE+
-F6tjrNgpkCZARNgCALPzdKCAGsFNJuh+1jUMfzMVp8fp1mbH+7XPmOgjaX5HHdr2
-a1UKCbQvQJrqGottUEzH68Uc2RbeKGMyOJYcRBZ2qo8oem5bYD4lt9TBqJkROFU=
-=qWBk
------END PGP SIGNATURE-----
-
---5uO961YFyoDlzFnP--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
