@@ -1,65 +1,46 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
-Date: Sat, 28 Mar 2015 15:58:22 +0000
-Message-ID: <20150328155822.GA25778@io.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <1385942188-21831-1-git-send-email-jason@lakedaemon.net>
- <20150328132320.GA24391@n2100.arm.linux.org.uk>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] dtbsinstall: don't move target directory out of the way
+Date: Sat, 28 Mar 2015 15:59:14 +0000
+Message-ID: <20150328155913.GB25778@io.lakedaemon.net>
+References: <20150328132320.GA24391@n2100.arm.linux.org.uk>
+ <E1YbqvP-000283-5m@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20150328132320.GA24391-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <E1YbqvP-000283-5m@rmk-PC.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kbuild@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@wwwdotorg.org>, torvalds@linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Russell,
-
-On Sat, Mar 28, 2015 at 01:23:20PM +0000, Russell King - ARM Linux wrote:
-> Okay, I'm digging up an old version of this patch - v7 was merged but
-> I find *nowhere* where that version was posted to people involved in
-> this discussion.
-
-fwiw, I just went through my archive of patch submissions:
-
-$ ls ~/projects/linux/dtbs_install/
-v2  v3  v4  v5  v6
-$
-
-I never wrote a v7.  :-(  Regardless,
-
-> The reason is that I would've commented on v7, because of this stupid
-> thing (which is now in scripts/Makefile.dtbsinst):
+On Sat, Mar 28, 2015 at 01:37:19PM +0000, Russell King wrote:
+> No other kernel installation target moves the target directory out of
+> the way, even deleting an old version of it.  These are destructive
+> operations, ones which the kernel build system should not be making.
 > 
-> +       $(Q)if [ -d $(INSTALL_DTBS_PATH).old ]; then rm -rf $(INSTALL_DTBS_PATH).old; fi
-> +       $(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(INSTALL_DTBS_PATH).old; fi
-> +       $(Q)mkdir -p $(INSTALL_DTBS_PATH)
+> Remove this behaviour.
 > 
-> What gives any kernel installation target the right to move a directory
-> out of the way?
+> If this behaviour is required at installation time, this should be
+> done by the installation external to the kernel makefiles, just like
+> it would be done for 'make modules_install'.
 > 
-> Let's say that you do this:
-> 
-> 	make install INSTALL_PATH=$sys_root/boot
-> 	make dtbs_install INSTALL_DTBS_PATH=$sys_root/boot
-> 
-> The result is that dtbs_install thinks it has the right to rename that
-> boot directory to boot.old, create a new one, and place the DTBs in
-> there, thereby leaving you with no kernel to boot - and if you run it
-> again, it _deletes_ the original directory.
-> 
-> No *other* kernel install target has this behaviour, not even 'make
-> modules_installl'.  This is stupid and dangerous behaviour.  At the
-> very least, this behaviour should be *well* documented.
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+>  scripts/Makefile.dtbinst | 2 --
+>  1 file changed, 2 deletions(-)
 
-you are correct.  This should be fixed.
+Acked-by: Jason Cooper <jason@lakedaemon.net>
 
 thx,
 
 Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
