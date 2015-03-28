@@ -1,56 +1,26 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Sat, 28 Mar 2015 09:29:59 +0100
-Message-ID: <87fv8pwmm0.fsf@free.fr>
-References: <20150216130549.GF14545@x1> <20150325140725.GA11499@kroah.com>
-	<871tkbxwup.fsf@free.fr> <201503280335.16280.arnd@arndb.de>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Sat, 28 Mar 2015 09:36:00 +0100
+Message-ID: <20150328083600.GB4255@localhost.localdomain>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
+ <55163959.8080101@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201503280335.16280.arnd@arndb.de> (Arnd Bergmann's message of
-	"Sat, 28 Mar 2015 03:35:15 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55163959.8080101@gmx.de>
+Sender: netdev-owner@vger.kernel.org
+To: Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+On Sat, Mar 28, 2015 at 06:17:13AM +0100, Lino Sanfilippo wrote:
+> 
+> Do you really need one huge lock for all register accesses? Maybe you
+> should rethink which registers can actually be accessed concurrently and
+> implement some finer grained locking.
 
-> On Thursday 26 March 2015, Robert Jarzmik wrote:
->> 
->> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->> 
->> > On Fri, Feb 20, 2015 at 05:02:57PM +0100, Robert Jarzmik wrote:
->> >> If there is no solution, I'll fallback through arch/arm/plat-pxa, not very nice,
->> >> but it has to land somewhere, I don't want lubbock to remain broken.
->> >
->> > drivers/platform/arm ?
->> Most certainly.
->> 
->> I'll submit that to drivers/platform/arm/pxa, and maintain that pxa tree. As for
->> drivers/platform/arm, do you want also maintainers to step up, or will you take
->> the review/merge burden ?
->> 
->
-> I'd much prefer not to add drivers/platform/arm, which would make it too easy
-> to add random stuff there. What is the problem with leaving it in mach-pxa?
-Hi Arnd,
+One lock is fine, unless the registers are highly contended.
 
-It's not as much a problem as a generic question : does a driver belong to
-arch/* ?
-
-Personaly it would have been far simpler for me to have it through the pxa tree,
-but I want to be sure it's the right place. Others will follow, pxa mainstone is
-such a candidate.
-
-I was thinking so far that arch/arm/mach-* was for machine description,
-ie. wirings, interconnections, initial setup etc ... The "driver" part, ie. code
-really driving dynamics in IPs was as per my understanding in drivers/...
-
-Now I can create arch/arm/mach-pxa/lubbock_cplds.c, that won't make any
-difference to me, provided that it's the right thing to do.
-
-Cheers.
-
--- 
-Robert
+Thanks,
+Richard
