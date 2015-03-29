@@ -1,7 +1,7 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
-Date: Sun, 29 Mar 2015 21:58:30 +0100
-Message-ID: <20150329205829.GC24899@n2100.arm.linux.org.uk>
+Date: Sun, 29 Mar 2015 21:04:11 +0000
+Message-ID: <20150329210411.GA8688@io.lakedaemon.net>
 References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
  <1385942188-21831-1-git-send-email-jason@lakedaemon.net>
  <20150328132320.GA24391@n2100.arm.linux.org.uk>
@@ -14,7 +14,7 @@ Content-Disposition: inline
 In-Reply-To: <CAOesGMh4Xyyn5mDDo5_88pvZgdVJ-33UYvm8Y_9UNALfsqrytg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Sun, Mar 29, 2015 at 01:34:41PM -0700, Olof Johansson wrote:
@@ -38,26 +38,18 @@ On Sun, Mar 29, 2015 at 01:34:41PM -0700, Olof Johansson wrote:
 > linux-kbuild. The patch was directly cc:d to Jason, Michal Marek,
 > Russell and Rob Herring.
 
-I couldn't find a copy of it - grepping for "^Subject:.*dtb.*install"
-around December 2013 and before only found Jason's original patches.
+Ah, now I found it:
 
-The commit introducing it says:
+  http://lkml.iu.edu/hypermail/linux/kernel/1402.0/01294.html
 
-commit f4d4ffc03efc864645b990e1d579bbe1b8e358a4
-Author:     Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-AuthorDate: Sun Dec 1 23:56:28 2013 +0000
-Commit:     Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CommitDate: Thu Feb 20 15:53:39 2014 +0000
+My initial search missed it because it didn't have v7 in the subject.
+I should just trust the Google, and not my grep-fu.  :-)
 
-    kbuild: dtbs_install: new make target
+Thanks for the clarification.
 
-So it seems that I was looking at the wrong date range... Grant did
-send the patch on the 4th February, which I never got around to
-reading.
+thx,
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
