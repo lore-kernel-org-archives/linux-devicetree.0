@@ -1,52 +1,120 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Update the OF unittest and some small fix
-Date: Sun, 29 Mar 2015 18:24:35 +0100
-Message-ID: <CACxGe6uZAXmoztE5u2W8iqEoS2YBrdZNNjgRMsijx80xLiggvw@mail.gmail.com>
-References: <1426063014-211712-1-git-send-email-long.wanglong@huawei.com>
- <CAL_JsqJXK31amM8xJ81wZ7O0xv_A7YOHP3GPxsyAnTNU7i1jFA@mail.gmail.com> <20150328132347.84128C4093E@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] mmc: Add support for marking hpi as broken through devicetree
+Date: Sun, 29 Mar 2015 20:09:34 +0200
+Message-ID: <1427652575-12642-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150328132347.84128C4093E-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2015 at 1:23 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 24 Mar 2015 23:43:43 -0500
-> , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->  wrote:
->> On Wed, Mar 11, 2015 at 3:36 AM, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->> > This series patches do some small fixes in drivers/of/unittest.c,
->> > and update the Documenttion.
->> >
->> > At last, replace selftest with unittest in the c, dtsi
->> > and binding files.
->> >
->> > * v2 <- v1:
->> >         - According to Gaurav's advice. make the rename
->> >         file patch correctly.
->> >
->> > Wang Long (5):
->> >   of/unittest: remove the duplicate of_changeset_init
->> >   of/unittest: Fix the wrong expected value in
->> >     of_selftest_property_string
->> >   Documentation: update the of_selftest.txt
->> >   Documentation: rename of_selftest.txt to of_unittest.txt
->> >   of/unittest: replace 'selftest' with 'unittest'
->>
->> I've applied the series. Thanks.
->
-> Hmmm, I neglected to update my git tree before getting on an airplane
-> and merging patches. I may have pushed out conflicts to my tree. If I've
-> done so, then I'll fix it up this weekend.
+The eMMC on a tablet I've will stop working / communicating as soon as
+the kernel executes:
 
-I think I've got it sorted out now. I've dropped the duplicates from
-my tree and merged rob's tree into mine. The merge conflicts weren't
-as serious as I feared they world be. It's pushed out now.
+		mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+ 				EXT_CSD_HPI_MGMT, 1,
+ 				card->ext_csd.generic_cmd6_time);
 
-g.
+There seems to be no way to reliable identify eMMC-s which have a broken
+hpi implementation, but at least for eMMC's which are soldered onto a board
+we can work around this by specifying that hpi is broken in devicetree.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc-card.txt | 31 ++++++++++++++++++++++
+ drivers/mmc/core/mmc.c                             | 10 ++++++-
+ 2 files changed, 40 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-card.txt
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+new file mode 100644
+index 0000000..0cc67fb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+@@ -0,0 +1,31 @@
++mmc-card / eMMC bindings
++------------------------
++
++This documents describes the devicetree bindings for a mmc-host controller
++child node describing a mmc-card / an eMMC, see "Use of Function subnodes"
++in mmc.txt
++
++Required properties:
++-compatible : Must be "mmc-card"
++-reg        : Must be <0>
++
++Optional properties:
++-broken-hpi : Use this to indicate that the mmc-card has a broken hpi
++              implementation, and that hpi should not be used
++
++Example:
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++
++	mmmcard: mmccard@0 {
++		reg = <0>;
++		compatible = "mmc-card";
++		broken-hpi;
++	};
++};
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index 1d41e85..8d18920 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include <linux/err.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/stat.h>
+ #include <linux/pm_runtime.h>
+@@ -336,6 +337,8 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+ {
+ 	int err = 0, idx;
+ 	unsigned int part_size;
++	struct device_node *np = card->dev.of_node;
++	bool broken_hpi = false;
+ 
+ 	/* Version is coded in the CSD_STRUCTURE byte in the EXT_CSD register */
+ 	card->ext_csd.raw_ext_csd_structure = ext_csd[EXT_CSD_STRUCTURE];
+@@ -349,6 +352,9 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+ 		}
+ 	}
+ 
++	if (np && of_device_is_compatible(np, "mmc-card"))
++		broken_hpi = of_property_read_bool(np, "broken-hpi");
++
+ 	/*
+ 	 * The EXT_CSD format is meant to be forward compatible. As long
+ 	 * as CSD_STRUCTURE does not change, all values for EXT_CSD_REV
+@@ -494,7 +500,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+ 		}
+ 
+ 		/* check whether the eMMC card supports HPI */
+-		if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1) {
++		if (!broken_hpi && (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1)) {
+ 			card->ext_csd.hpi = 1;
+ 			if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x2)
+ 				card->ext_csd.hpi_cmd =	MMC_STOP_TRANSMISSION;
+@@ -1251,6 +1257,8 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+ 		card->ocr = ocr;
+ 		card->type = MMC_TYPE_MMC;
+ 		card->rca = 1;
++		/* Also gets done by mmc_add_card, but we need early access */
++		card->dev.of_node = mmc_of_find_child_device(host, 0);
+ 		memcpy(card->raw_cid, cid, sizeof(card->raw_cid));
+ 	}
+ 
+-- 
+2.3.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
