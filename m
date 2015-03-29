@@ -1,82 +1,43 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
- LED driver
-Date: Sun, 29 Mar 2015 21:28:38 +0200
-Message-ID: <20150329192838.GB24313@lunn.ch>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V6 00/25] Generic BMIPS kernel
+Date: Sun, 29 Mar 2015 20:18:49 +0000
+Message-ID: <20150329201849.GE25778@io.lakedaemon.net>
+References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
+ <5511E9A8.6090908@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
+In-Reply-To: <5511E9A8.6090908@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>, ralf@linux-mips.org, jaedon.shin@gmail.com, abrestic@chromium.org, tglx@linutronix.de, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 11:08:25PM +0100, Andrew Lunn wrote:
-> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
-> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
-> the Belkin WRT1900AC access point and the C code is derived from code
-> Belkin contributed to OpenWRT.  However it has been extensively
-> re-written, and a device tree binding added to replace platform data.
+On Tue, Mar 24, 2015 at 03:48:08PM -0700, Florian Fainelli wrote:
+> On 25/12/14 09:48, Kevin Cernekee wrote:
+> > V5->V6: Incorporate several fixes/enhancements from Jaedon Shin:
+> > 
+> >  - Fix register read/modify/write in RAC flush code.
+> > 
+> >  - Fix use of "SYS_HAS_CPU_BMIPS32_3300" Kconfig symbol.
+> > 
+> >  - Add base platform support for 7358 and 7362.
+> > 
+> > The DTS files follow Andrew Bresticker's new per-vendor directory layout.
+> > 
+> > This series applies on top of Linus' current head of tree.
+> > 
+> > Patch 01 (Fix outdated use of mips_cpu_intc_init()) is REQUIRED for 3.19
+> > to fix a build failure seen in 3.19-rc.  The other patches can
+> > be queued for 3.20 or later.
+> 
+> Jason, can you merge the irqchip patches through your tree? They still
+> apply cleanly to your irqchip/core branch as of today, except the last
+> one which has a small hunk to be fixed in drivers/irqchip/Makefile.
 
-Hi Bryan
+Shouldn't be a problem, but could you please have you or Kevin do a resend?
 
-Do you have any comments on this driver? Anything you would like me to
-do to help get it accepted?
+thx,
 
-Thanks
-	Andrew
-
-
-> 
-> Cc: Matthew.Fatheree@belkin.com
-> 
-> Since v5:
->       Hard code number of LEDs, rather than #define
->       Moved common fields from led into priv
->       Moved reg_ledout into priv, removed helper functions
->       Cache brightness to avoid race conditions
->       tlc591xx_led_set -> tlc591xx_set_brightness
->       Be paranoid with of_match_device() and client->dev.of_node
-> 
-> Since v4:
->       Fix Oops on module unload reported by Vignesh R
-> 
-> Since v3:
->       Generalized and added support for tlc59108
->       brightness == 0 and brightness == LED_FULL disable PWM and used
->         fixed OFF/ON mode
-> 
-> Since v2:
->       Remove incorrect /* Mode register ? */ comment
->       Parenthesis around the macro arguments
->       Converted many signed variables into unsigned
->       Saved an initialization
-> 
-> 
-> Since v1:
->       s/uint8_t/u8/g
->       Remove empty line
->       Removed #gpio-cells
->       Added select REGMAP_I2C
->       Sorted #includes into alphabetic order
->       Added missing MODULE_DEVICE_TABLE(of, ...)
->       Check return value of regmap_write()
->       Simplified tlc59116_set_mode()
-> 
-> Andrew Lunn (2):
->   leds: tlc59116: Document binding for the TI 16 Channel i2c LED driver
->   leds: tlc59116: Driver for the TI 16 Channel i2c LED driver
-> 
->  .../devicetree/bindings/leds/leds-tlc59116.txt     |  41 ++++
->  drivers/leds/Kconfig                               |   7 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-tlc59116.c                       | 253 +++++++++++++++++++++
->  4 files changed, 302 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc59116.txt
->  create mode 100644 drivers/leds/leds-tlc59116.c
-> 
-> -- 
-> 2.1.3
+Jason.
