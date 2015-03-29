@@ -1,90 +1,99 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: Add binding document for a generic ADC keypad
-Date: Sat, 28 Mar 2015 21:00:53 -0700
-Message-ID: <20150329040053.GD36501@dtor-ws>
-References: <1427503398-19682-1-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427503398-19682-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] phy-sun4i-usb: Add a sunxi specific function for setting squelch-detect
+Date: Sun, 29 Mar 2015 12:50:46 +0200
+Message-ID: <1427626248-6257-2-git-send-email-hdegoede@redhat.com>
+References: <1427626248-6257-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427626248-6257-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2015 at 05:43:17PM -0700, Andrew Bresticker wrote:
-> Add a binding document for a generic ADC keypad.  Buttons on an ADC
-> keypad are connected in a resistor ladder to an ADC.  The binding
-> describes the mapping of ADC channel and voltage ranges to buttons.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/input/adc-keys.txt         | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/adc-keys.txt b/Documentation/devicetree/bindings/input/adc-keys.txt
-> new file mode 100644
-> index 0000000..c9a57de
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/adc-keys.txt
-> @@ -0,0 +1,43 @@
-> +Generic ADC keypad
-> +==================
-> +
-> +Required properties:
-> + - compatible: "adc-keys"
-> + - poll-interval: Polling interval time in ms.
-> + - io-channels: List of IIO channels used by the keypad.
-> +   See ../iio/iio-bindings.txt for details.
-> +
-> +Optional properties:
-> + - autorepeat: Enable auto-repeat.
-> +
-> +Each button on the ADC keypad is represented by a sub-node.
-> +
-> +Required sub-node properties:
-> + - label: Descriptive name for the key.
-> + - linux,code: Keycode to emit.
-> + - channel: IIO channel (index into the 'io-channels' above) to which this
-> +   button is attached.
-> + - min-voltage: Minimum voltage in uV when this key is pressed.
-> + - max-voltage: Maximum voltage in uV when this key is pressed.
-> +
-> +Optional sub-node properties:
-> + - linux,input-type: Event type this key generates.  Defaults to 1 (EV_KEY) if
-> +   not specified.
+The sunxi otg phy has a bug where it wrongly detects a high speed squelch
+when reset on the root port gets de-asserted with a lo-speed device.
 
-I'd rather we have it defined explicitly in the binding, i.e. make it a
-required property?
+The workaround for this is to disable squelch detect before de-asserting
+reset, and re-enabling it after the reset de-assert is done. Add a sunxi
+specific phy function to allow the sunxi-musb glue to do this.
 
-> +
-> +Example:
-> +
-> +adc-keypad {
-> +	compatible = "adc-keys";
-> +	poll-interval = <100>;
-> +	io-channels = <&adc 0>, <&adc 1>;
-> +
-> +	vol-up-button {
-> +		label = "Volume Up";
-> +		linux,code = <KEY_VOLUMEUP>;
-> +		channel = <0>;
-> +		min-voltage = <1600000>;
-> +		max-voltage = <1640000>;
-> +	};
-> +
-> +	...
-> +};
-> -- 
-> 2.2.0.rc0.207.ga3a616c
-> 
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/phy/phy-sun4i-usb.c       |  9 +++++++++
+ include/linux/phy/phy-sun4i-usb.h | 26 ++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 include/linux/phy/phy-sun4i-usb.h
 
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index 221e8ab..01eb08d 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -33,6 +33,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_gpio.h>
+ #include <linux/phy/phy.h>
++#include <linux/phy/phy-sun4i-usb.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+@@ -75,6 +76,7 @@
+ #define PHY_OTG_FUNC_EN			0x28
+ #define PHY_VBUS_DET_EN			0x29
+ #define PHY_DISCON_TH_SEL		0x2a
++#define PHY_SQUELCH_DETECT		0x3c  
+ 
+ #define MAX_PHYS			3
+ 
+@@ -322,6 +324,13 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
+ 	return 0;
+ }
+ 
++void sun4i_usb_phy_set_squelch_detect(struct phy *_phy, bool enabled)
++{
++	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
++
++	sun4i_usb_phy_write(phy, PHY_SQUELCH_DETECT, enabled ? 0 : 2, 2);
++}
++
+ static struct phy_ops sun4i_usb_phy_ops = {
+ 	.init		= sun4i_usb_phy_init,
+ 	.exit		= sun4i_usb_phy_exit,
+diff --git a/include/linux/phy/phy-sun4i-usb.h b/include/linux/phy/phy-sun4i-usb.h
+new file mode 100644
+index 0000000..50aed92
+--- /dev/null
++++ b/include/linux/phy/phy-sun4i-usb.h
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (c) 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef PHY_SUN4I_USB_H_
++#define PHY_SUN4I_USB_H_
++
++#include "phy.h"
++
++/**
++ * sun4i_usb_phy_set_squelch_detect() - Enable/disable squelch detect
++ * @phy: reference to a sun4i usb phy
++ * @enabled: wether to enable or disable squelch detect
++ */
++void sun4i_usb_phy_set_squelch_detect(struct phy *phy, bool enabled);
++
++#endif
 -- 
-Dmitry
+2.3.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
