@@ -1,43 +1,43 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V6 00/25] Generic BMIPS kernel
-Date: Sun, 29 Mar 2015 20:18:49 +0000
-Message-ID: <20150329201849.GE25778@io.lakedaemon.net>
-References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
- <5511E9A8.6090908@gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
+Date: Sun, 29 Mar 2015 13:34:41 -0700
+Message-ID: <CAOesGMh4Xyyn5mDDo5_88pvZgdVJ-33UYvm8Y_9UNALfsqrytg@mail.gmail.com>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+	<1385942188-21831-1-git-send-email-jason@lakedaemon.net>
+	<20150328132320.GA24391@n2100.arm.linux.org.uk>
+	<20150328155822.GA25778@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5511E9A8.6090908@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Kevin Cernekee <cernekee@gmail.com>, ralf@linux-mips.org, jaedon.shin@gmail.com, abrestic@chromium.org, tglx@linutronix.de, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150328155822.GA25778-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2015 at 03:48:08PM -0700, Florian Fainelli wrote:
-> On 25/12/14 09:48, Kevin Cernekee wrote:
-> > V5->V6: Incorporate several fixes/enhancements from Jaedon Shin:
-> > 
-> >  - Fix register read/modify/write in RAC flush code.
-> > 
-> >  - Fix use of "SYS_HAS_CPU_BMIPS32_3300" Kconfig symbol.
-> > 
-> >  - Add base platform support for 7358 and 7362.
-> > 
-> > The DTS files follow Andrew Bresticker's new per-vendor directory layout.
-> > 
-> > This series applies on top of Linus' current head of tree.
-> > 
-> > Patch 01 (Fix outdated use of mips_cpu_intc_init()) is REQUIRED for 3.19
-> > to fix a build failure seen in 3.19-rc.  The other patches can
-> > be queued for 3.20 or later.
-> 
-> Jason, can you merge the irqchip patches through your tree? They still
-> apply cleanly to your irqchip/core branch as of today, except the last
-> one which has a small hunk to be fixed in drivers/irqchip/Makefile.
+On Sat, Mar 28, 2015 at 8:58 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Russell,
+>
+> On Sat, Mar 28, 2015 at 01:23:20PM +0000, Russell King - ARM Linux wrote:
+>> Okay, I'm digging up an old version of this patch - v7 was merged but
+>> I find *nowhere* where that version was posted to people involved in
+>> this discussion.
+>
+> fwiw, I just went through my archive of patch submissions:
+>
+> $ ls ~/projects/linux/dtbs_install/
+> v2  v3  v4  v5  v6
+> $
+>
+> I never wrote a v7.  :-(  Regardless,
 
-Shouldn't be a problem, but could you please have you or Kevin do a resend?
+It was posted by Grant, and posted to LKML, devicetree@ and
+linux-kbuild. The patch was directly cc:d to Jason, Michal Marek,
+Russell and Rob Herring.
 
-thx,
 
-Jason.
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
