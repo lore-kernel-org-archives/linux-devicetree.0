@@ -1,71 +1,98 @@
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: Re: [PATCH/RFC] ARM: shmobile: r8a7791: Remove MSIOF address from
- device tree
-Date: Sun, 29 Mar 2015 22:22:13 +0900
-Message-ID: <CAH1o70JyBbmQ9vDrpamtL=09nq64B9RM1asWOWRXEL0LdgrxMQ@mail.gmail.com>
-References: <1426430633-3867-1-git-send-email-ykaneko0929@gmail.com>
+From: Juergen Borleis <juergen@kreuzholzen.de>
+Subject: Re: [PATCH 7/7] ARM: dts: add OPPs for i.MX23/i.MX28
+Date: Sun, 29 Mar 2015 16:40:53 +0200
+Message-ID: <201503291640.56538.juergen@kreuzholzen.de>
+References: <1470793430.944631.1427565192794.JavaMail.open-xchange@oxbaltgw00.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1426430633-3867-1-git-send-email-ykaneko0929@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linux-sh list <linux-sh@vger.kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1470793430.944631.1427565192794.JavaMail.open-xchange@oxbaltgw00.schlund.de>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: viresh.kumar@linaro.org, Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de, rjw@rjwysocki.net, dbaryshkov@gmail.com, pawel.moll@arm.com, galak@codeaurora.org, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, shawn.guo@linaro.org, sre@kernel.org, linux-pm@vger.kernel.org, fabio.estevam@freescale.com, dwmw2@infradead.org, mark.rutland@arm.com, sebastien.szymanski@armadeus.com, broonie@kernel.org, marex@denx.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert-san,
+Hi Stefan,
 
-I'm wondering if you could find a moment to look over this patch.
+Stefan Wahren wrote:
+> > Juergen Borleis <juergen@kreuzholzen.de> hat am 24. M=C3=A4rz 2015 =
+um 21:45
+> > geschrieben:
+> >
+> > Stefan Wahren wrote:
+> > > [...]
+> > > diff --git a/arch/arm/boot/dts/imx28.dtsi
+> > > b/arch/arm/boot/dts/imx28.dtsi index 98c1be6..21c1921 100644
+> > > --- a/arch/arm/boot/dts/imx28.dtsi
+> > > +++ b/arch/arm/boot/dts/imx28.dtsi
+> > > @@ -38,12 +38,23 @@
+> > > };
+> > >
+> > > cpus {
+> > > - #address-cells =3D <0>;
+> > > + #address-cells =3D <1>;
+> > > #size-cells =3D <0>;
+> > >
+> > > - cpu {
+> > > + cpu@0 {
+> > > compatible =3D "arm,arm926ej-s";
+> > > device_type =3D "cpu";
+> > > + reg =3D <0x0>;
+> > > + operating-points =3D <
+> > > + /* kHz uV */
+> > > + 261819 1350000
+> > > + 360000 1350000
+> > > + 392728 1450000
+> > > + 454737 1550000
+> > > + >;
+> > > + clocks =3D <&clks 4>;
+> > > + clock-latency =3D <61036>; /* two CLK32 periods */
+> > > + cpu-supply =3D <&reg_vddd>;
+> > > };
+> > > };
+> >
+> > Maybe you should take into account not to reduce VDD below 1.55 V i=
+f the
+> > SDRAM controller runs above 196 MHz. The i.MX28 datasheet[1] lists =
+these
+> > restrictions. VDD powers the SDRAM controller as well. From the dat=
+asheet
+> > the table "Frequency versus Voltage for EMICLK" shows:
+> >
+> > EMICLK Fmax (MHz)
+> > VDDD (V) DDR2 mDDR
+> > --------------------------------
+> > 1.550 205.71 205.71
+> > 1.450 196.36 196.36
+> > 1.350 196.36 196.36
+> >
+> > jbe
+> >
+> > [1]
+> > i.MX28 Applications
+> > Processors for Consumer
+> > Products
+> > Silicon Version 1.2
+> >
+> > Document Number: IMX28CEC
+> > Rev. 3, 07/2012
+>
+> the only chance that i see to meet this constraint without introducin=
+g a
+> new cpufreq driver is to change clock ref_cpu
+> and ref_emi.
+>
+> Do you think this solution of a virtual clock [1] can be applied here=
+, too?
 
-Regards,
-Kaneko
+This would imply we can change the SDRAM timing at run-time on the fly.=
+ IMHO=20
+that is not possible (at least not easy). I think when the driver detec=
+ts the=20
+SDRAM controller runs above 196 MHz the clock for the CPU core can stil=
+l be=20
+changed, but VDD must be kept at 1.55 V.
 
-2015-03-15 23:43 GMT+09:00 Yoshihiro Kaneko <ykaneko0929@gmail.com>:
-> From: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
->
-> MSIOF Base Address H'E6xx can be accessed by CPU and DMAC.
-> MSIOF Base Address H'E7xx for DMAC was removed from H/W manual.
->
-> Signed-off-by: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> ---
->
-> This patch is based on devel branch of Simon Horman's renesas tree.
->
->  arch/arm/boot/dts/r8a7791.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index 4696062..3e9f824 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -1288,7 +1288,7 @@
->
->         msiof0: spi@e6e20000 {
->                 compatible = "renesas,msiof-r8a7791";
-> -               reg = <0 0xe6e20000 0 0x0064>, <0 0xe7e20000 0 0x0064>;
-> +               reg = <0 0xe6e20000 0 0x0064>;
->                 interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
->                 clocks = <&mstp0_clks R8A7791_CLK_MSIOF0>;
->                 dmas = <&dmac0 0x51>, <&dmac0 0x52>;
-> @@ -1300,7 +1300,7 @@
->
->         msiof1: spi@e6e10000 {
->                 compatible = "renesas,msiof-r8a7791";
-> -               reg = <0 0xe6e10000 0 0x0064>, <0 0xe7e10000 0 0x0064>;
-> +               reg = <0 0xe6e10000 0 0x0064>;
->                 interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
->                 clocks = <&mstp2_clks R8A7791_CLK_MSIOF1>;
->                 dmas = <&dmac0 0x55>, <&dmac0 0x56>;
-> @@ -1312,7 +1312,7 @@
->
->         msiof2: spi@e6e00000 {
->                 compatible = "renesas,msiof-r8a7791";
-> -               reg = <0 0xe6e00000 0 0x0064>, <0 0xe7e00000 0 0x0064>;
-> +               reg = <0 0xe6e00000 0 0x0064>;
->                 interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
->                 clocks = <&mstp2_clks R8A7791_CLK_MSIOF2>;
->                 dmas = <&dmac0 0x41>, <&dmac0 0x42>;
-> --
-> 1.9.1
->
+Juergen
