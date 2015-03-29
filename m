@@ -1,43 +1,50 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
-Date: Sun, 29 Mar 2015 13:34:41 -0700
-Message-ID: <CAOesGMh4Xyyn5mDDo5_88pvZgdVJ-33UYvm8Y_9UNALfsqrytg@mail.gmail.com>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
-	<1385942188-21831-1-git-send-email-jason@lakedaemon.net>
-	<20150328132320.GA24391@n2100.arm.linux.org.uk>
-	<20150328155822.GA25778@io.lakedaemon.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] pinctrl: dt: at91: new binding
+Date: Sun, 29 Mar 2015 13:55:09 -0700
+Message-ID: <CAOesGMgsyEwuF95FFe81Li8nXO0MhHF0ZHPVV91MEH-JGO43tA@mail.gmail.com>
+References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
+	<CACRpkdbNLE+VjhvSgsU4oqAc03ieCNyiLkUzbjEiu_LFof-Unw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150328155822.GA25778-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbNLE+VjhvSgsU4oqAc03ieCNyiLkUzbjEiu_LFof-Unw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Stephen Warren <swarren@wwwdotorg.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2015 at 8:58 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> Russell,
+On Tue, Mar 17, 2015 at 5:07 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Feb 26, 2015 at 10:34 AM, Jean-Christophe PLAGNIOL-VILLARD
+> <plagnioj@jcrosoft.com> wrote:
 >
-> On Sat, Mar 28, 2015 at 01:23:20PM +0000, Russell King - ARM Linux wrote:
->> Okay, I'm digging up an old version of this patch - v7 was merged but
->> I find *nowhere* where that version was posted to people involved in
->> this discussion.
+>> +For each peripheral/bank we will descibe in a u32 if a pin can be
+>> +configured in it by putting 1 to the pin bit (1 << pin)
 >
-> fwiw, I just went through my archive of patch submissions:
+> This seems to be describing driver intrinsics in the device tree, like
+> how the hardware is routed on the inside and what it can do.
 >
-> $ ls ~/projects/linux/dtbs_install/
-> v2  v3  v4  v5  v6
-> $
+> IMO that is driver territory, the driver should know these limitations
+> and protest if you try to do something illegal.
 >
-> I never wrote a v7.  :-(  Regardless,
+> Anyway as the AT91 maintainers seem to disagree I will allow some
+> more time for discussion before merging the patch.
+>
+> I can't really have one AT91 maintainer NACKing another, it doesn't
+> matter that this is a separate driver, in my book the MAINTAINERS
+> entry for AT91 as a whole overrides that so can you please find an
+> agreement on how to handle this or I will stall the patch until
+> you're in agreement.
 
-It was posted by Grant, and posted to LKML, devicetree@ and
-linux-kbuild. The patch was directly cc:d to Jason, Michal Marek,
-Russell and Rob Herring.
+Nicolas has been the de-facto maintainer of AT91 for quite a while
+now, even though more of them are listed on the maintainers entry. It
+would be inappropriate to merge something that he disagreed with on
+that platform.
+
+> ARM SoC maintainers input would be welcomed.
+
+It seems appropriate to ask the at91 folks to come back with a
+solution that everybody is OK with, and until then hold off merging
+this.
 
 
 -Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
