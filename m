@@ -1,48 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 1/5] clk: shmobile: rcar-gen2: Add CPG Clock Domain support
-Date: Mon, 30 Mar 2015 11:58:10 +0200
-Message-ID: <CAMuHMdUKjYH9U_o2q9maxCUfvijP=EpX=NUVGOnp=qOF7BHUOw@mail.gmail.com>
-References: <1426708017-28885-1-git-send-email-geert+renesas@glider.be>
-	<1426708017-28885-2-git-send-email-geert+renesas@glider.be>
-	<20150324230036.7930.50037@quantum>
-	<20150325010440.GC1767@verge.net.au>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] mmc: sdhci-st: Add macros for register offsets
+ and bitfields for mmcss glue regs
+Date: Mon, 30 Mar 2015 11:29:08 +0100
+Message-ID: <20150330102908.GA21893@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org>
+ <1424956227-18258-2-git-send-email-peter.griffin@linaro.org>
+ <54F58BED.4020900@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150325010440.GC1767@verge.net.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Michael Turquette <mturquette@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54F58BED.4020900-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 25, 2015 at 2:04 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Mar 24, 2015 at 04:00:36PM -0700, Michael Turquette wrote:
->> Quoting Geert Uytterhoeven (2015-03-18 12:46:53)
->> > Add Clock Domain support to the R-Car Gen2 Clock Pulse Generator (CPG)
->> > driver using the generic PM Domain.  This allows to power-manage the
->> > module clocks of SoC devices that are part of the CPG Clock Domain using
->> > Runtime PM, or for system suspend/resume.
->> >
->> > SoC devices that are part of the CPG Clock Domain and can be
->> > power-managed through their primary clock should be tagged in DT with a
->> > proper "power-domains" property.
->> >
->> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> Looks good to me. Which tree do you want this patch to go through?
->
-> My tree seems reasonable from my point of view.
-> Though at this point it would be targeted at v4.2.
+Hi Maxime,
 
-Definitely. Please give Laurent some time to comment.
+On Tue, 03 Mar 2015, Maxime Coquelin wrote:
 
-Gr{oetje,eeting}s,
+> >+
+> >+#define	ST_MMC_CCONFIG_REG_1		0x400
+> Maybe my mail client, but I see a tab instead of a space after #define.
 
-                        Geert
+Yes your correct, have fixed all occurances in v3
 
+regards,
+
+Peter.
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
