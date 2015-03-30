@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 3/6] ARM: DT: STi: STiH407: Update picophyreset for the usb3 controllers usb2 phy
-Date: Mon, 30 Mar 2015 16:17:09 +0100
-Message-ID: <1427728632-10846-4-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 2/6] ahci: st: Update the DT example for how to obtain the PHY.
+Date: Mon, 30 Mar 2015 16:17:08 +0100
+Message-ID: <1427728632-10846-3-git-send-email-peter.griffin@linaro.org>
 References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1427728632-10846-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,28 +10,41 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ke
 Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ths picophyreset is incorrectly defined, which stops the usb2 phy being
-taken out of reset.
+The example is wrong in that the phys property should take a
+phandle to the phy port.
+
+Also with the changing over to generic PHY type constants we also
+update that as well.
 
 Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/ata/ahci-st.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index c06a546..186412d 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -280,7 +280,7 @@
- 			#phy-cells = <0>;
- 			st,syscfg = <&syscfg_core 0x100 0xf4>;
- 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
--				 <&picophyreset STIH407_PICOPHY0_RESET>;
-+				 <&picophyreset STIH407_PICOPHY2_RESET>;
- 			reset-names = "global", "port";
- 		};
+diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
+index 0574a77..1331202 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-st.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
+@@ -11,7 +11,7 @@ Required properties:
+  - reset-names	   :   Associated names must be; "pwr-dwn" and "sw-rst"
+  - clocks	   : The phandle for the clock
+  - clock-names	   :   Associated name must be; "ahci_clk"
+- - phys		   : The phandle for the PHY device
++ - phys		   : The phandle for the PHY port
+  - phy-names	   :   Associated name must be; "ahci_phy"
  
+ Example:
+@@ -21,7 +21,7 @@ Example:
+ 		reg             = <0xfe380000 0x1000>;
+ 		interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
+ 		interrupt-names = "hostc";
+-		phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
++		phys	        = <&phy_port0 PHY_TYPE_SATA>;
+ 		phy-names       = "ahci_phy";
+ 		resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
+ 				  <&softreset STIH416_SATA0_SOFTRESET>;
 -- 
 1.9.1
 
