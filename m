@@ -1,85 +1,56 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v2 1/2] arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
-Date: Mon, 30 Mar 2015 20:16:07 +0530
-Message-ID: <1427726768-17233-2-git-send-email-stripathi@apm.com>
-References: <1427726768-17233-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1427726768-17233-1-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: chris@printf.net, anton@enomsg.org, arnd@arndb.de
-Cc: linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, mlangsdo@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 0/6] Add dwc3 usb3 DT node and various phy cleanup
+Date: Mon, 30 Mar 2015 16:17:06 +0100
+Message-ID: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the arasan sdhc nodes to reuse the of-arasan
-driver for APM X-Gene SoC.
+Hi,
 
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi | 44 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+This series primarily adds the dwc3 DT node which activates the usb3 controller on
+the stih407-b2120 and stih410-b2120 platforms.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index c5f0a47..fd1c142 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -144,6 +144,40 @@
- 				clock-output-names = "socplldiv2";
- 			};
- 
-+			ahbclk: ahbclk@1f2ac000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2ac000 0x0 0x1000
-+					0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg", "div-reg";
-+				csr-offset = <0x0>;
-+				csr-mask = <0x1>;
-+				enable-offset = <0x8>;
-+				enable-mask = <0x1>;
-+				divider-offset = <0x164>;
-+				divider-width = <0x5>;
-+				divider-shift = <0x0>;
-+				clock-output-names = "ahbclk";
-+			};
-+
-+			sdioclk: sdioclk@1f2ac000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2ac000 0x0 0x1000
-+					0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg", "div-reg";
-+				csr-offset = <0x0>;
-+				csr-mask = <0x2>;
-+				enable-offset = <0x8>;
-+				enable-mask = <0x2>;
-+				divider-offset = <0x178>;
-+				divider-width = <0x8>;
-+				divider-shift = <0x0>;
-+				clock-output-names = "sdioclk";
-+			};
-+
- 			qmlclk: qmlclk {
- 				compatible = "apm,xgene-device-clock";
- 				#clock-cells = <1>;
-@@ -282,6 +316,16 @@
- 			interrupts = <0x0 0x4c 0x4>;
- 		};
- 
-+		sdhc0: sdhc@1c000000 {
-+			device_type = "sdhc";
-+			compatible = "arasan,sdhci-8.9a";
-+			reg = <0x0 0x1c000000 0x0 0x100>;
-+			interrupts = <0x0 0x49 0x4>;
-+			dma-coherent;
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&sdioclk 0>, <&ahbclk 0>;
-+		};
-+
- 		phy1: phy@1f21a000 {
- 			compatible = "apm,xgene-phy";
- 			reg = <0x0 0x1f21a000 0x0 0x100>;
+As part of getting this working I noticed some various errors with the DT
+documentation examples for how we reference the PHYs which I've also fixed.
+
+Whilst doing this I also noticed the miphy365 (found on stih415/6 platforms) could
+now use the generic PHY constants which are used by miphy28, so I've updated this
+driver and the DT docs accoringly. Note there is no ABI breakage with this change.
+
+Also miphy28lp driver isn't included in STI section of MAINTAINERS, so rectify that.
+
+regards,
+
+Peter.
+
+Changes in v2:
+- Update commit to explicitly say no ABI breakage (Rob)
+- Rebase series on v4.0-rc6 (Pete)
+- Collect up Acks (Pete)
+
+Peter Griffin (6):
+  phy: miphy365x: Use the generic phy type constants in
+    dt-bindings/phy/phy.h
+  ahci: st: Update the DT example for how to obtain the PHY.
+  ARM: DT: STi: STiH407: Update picophyreset for the usb3 controllers
+    usb2 phy
+  ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
+  usb: dwc3: dwc3-st: Update the incorrect DT dwc3 example.
+  MAINTAINERS: Add phy-miphy28lp.c to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/ata/ahci-st.txt  |  4 ++--
+ .../devicetree/bindings/phy/phy-miphy365x.txt      |  8 +++----
+ Documentation/devicetree/bindings/usb/dwc3-st.txt  |  7 +++---
+ MAINTAINERS                                        |  1 +
+ arch/arm/boot/dts/stih407-family.dtsi              | 27 +++++++++++++++++++++-
+ arch/arm/boot/dts/stih416.dtsi                     |  4 ++--
+ drivers/phy/phy-miphy365x.c                        | 14 +++++------
+ include/dt-bindings/phy/phy-miphy365x.h            | 14 -----------
+ 8 files changed, 45 insertions(+), 34 deletions(-)
+ delete mode 100644 include/dt-bindings/phy/phy-miphy365x.h
+
 -- 
-1.8.2.1
-
+1.9.1
