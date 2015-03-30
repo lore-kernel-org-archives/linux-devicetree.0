@@ -1,45 +1,49 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] dmaengine: of_dma: Support for DMA routers
-Date: Mon, 30 Mar 2015 22:50:23 +0530
-Message-ID: <20150330172023.GH7192@intel.com>
-References: <1426080210-841-1-git-send-email-peter.ujfalusi@ti.com>
- <1426080210-841-2-git-send-email-peter.ujfalusi@ti.com>
- <20150326105018.GJ32683@intel.com>
- <5513F77A.4030005@ti.com>
- <20150326153221.GM32683@intel.com>
- <55154C39.3030602@ti.com>
+From: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH RESEND] ARM: dts: OMAP3-N900: Add microphone bias voltages
+Date: Mon, 30 Mar 2015 20:45:08 +0300
+Message-ID: <55198BA4.5010207@bitmer.com>
+References: <1425236828-28349-1-git-send-email-jarkko.nikula@bitmer.com> <55197A12.1050009@bitmer.com> <20150330164237.GJ10805@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55154C39.3030602-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150330164237.GJ10805@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2015 at 02:25:29PM +0200, Peter Ujfalusi wrote:
-> On 03/26/2015 05:32 PM, Vinod Koul wrote:
-> >> I have added the DT binding document since this series adds support for
-> >> routers for platforms booting with DT:
-> >>
-> >> Documentation/devicetree/bindings/dma/dma.txt | 28 ++++++++
-> > I meant the update to Documnetation/dmanegine/ for routers :)
+On 03/30/2015 07:42 PM, Tony Lindgren wrote:
+> * Jarkko Nikula <jarkko.nikula@bitmer.com> [150330 09:31]:
+>> On 03/01/2015 09:07 PM, Jarkko Nikula wrote:
+>>> From: Pavel Machek <pavel@ucw.cz>
+>>>
+>>> N900 audio recording needs that codec provides bias voltage for integrated
+>>> digital microphone and headset microphone depending which one is used.
+>>> Digital microphone uses 2 V bias and it comes from the codec A part. Codec
+>>> B part drives the headset microphone bias and that is set to 2.5 V.
+>>>
+>>> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>>> [Jarkko: Headset mic bias changed to 2 (2.5 V) as it was before commit
+>>> e2e8bfdf6157 ("ASoC: tlv320aic3x: Convert mic bias to a supply widget")]
+>>> Signed-off-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
+>>> ---
+>>>  arch/arm/boot/dts/omap3-n900.dts | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>> Ping?
 > 
-> I see. In what form you think we should have the documentation? Is it adequate
-> to lift and adjust the text from the DT binding document here? Should we have
-> a separate file for the router description?
-> My concern was and this is why I did not wrote anything under here is that the
-> code I add is only covers the DT boot case and I'm not planning to add legacy
-> support. The ACPI binding can be done in a similar fashion as the DT so you
-> would have a translator driver with ACPI API.
-Not the binding part but more of a guideline on how to go about solving the
-DMA router design for drivers
+> Oops sorry I have missed this one. This looks like a regression fix
+> for the v4.0-rc series? Should it be cc stable v3.16+ or something?
+> 
+Well, there has been regression but finding exactly how far should the
+fix go didn't look instantly straightforward due all DT, codec driver
+mic bias etc changes and I ended up not cc'ing stable.
+
+But well, I guess first kernel where this commit makes sense is 3.16+
+due commit f7d0f2a08567 ("ARM: dts: omap3-n900: Add sound support").
+Although it applies on top of commit 14e3e295b2b9 ("ARM: dts:
+omap3-n900: Add TLV320AIC3X support") too (3.12+) but not before that.
 
 -- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jarkko
