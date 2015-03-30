@@ -1,134 +1,97 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 04/11] DT: Add documentation for the mfd Maxim max77693
-Date: Mon, 30 Mar 2015 09:36:37 +0200
-Message-ID: <5518FD05.5060800@samsung.com>
-References: <1427464185-27950-1-git-send-email-j.anaszewski@samsung.com>
- <1427464185-27950-5-git-send-email-j.anaszewski@samsung.com>
- <20150328225503.GZ18321@valkosipuli.retiisi.org.uk>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] I2C: mediatek: Add driver for MediaTek MT8173
+ I2C controller
+Date: Mon, 30 Mar 2015 16:05:19 +0800
+Message-ID: <1427702719.26464.5.camel@mtksdaap41>
+References: <1426917922-61356-1-git-send-email-eddie.huang@mediatek.com>
+	 <1426917922-61356-4-git-send-email-eddie.huang@mediatek.com>
+	 <20150323073905.GF9742@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150328225503.GZ18321@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150323073905.GF9742-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Sascha,
 
-On 03/28/2015 11:55 PM, Sakari Ailus wrote:
-> On Fri, Mar 27, 2015 at 02:49:38PM +0100, Jacek Anaszewski wrote:
->> This patch adds device tree binding documentation for
->> the flash cell of the Maxim max77693 multifunctional device.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> ---
->>   Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
->> index 38e6440..15c546ea 100644
->> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
->> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
->> @@ -76,7 +76,53 @@ Optional properties:
->>       Valid values: 4300000, 4700000, 4800000, 4900000
->>       Default: 4300000
->>
->> +- led : the LED submodule device node
->> +
->> +There are two LED outputs available - FLED1 and FLED2. Each of them can
->> +control a separate LED or they can be connected together to double
->> +the maximum current for a single connected LED. One LED is represented
->> +by one child node.
->> +
->> +Required properties:
->> +- compatible : Must be "maxim,max77693-led".
->> +
->> +Optional properties:
->> +- maxim,trigger-type : Flash trigger type.
->> +	Possible trigger types:
->> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
->> +			the flash,
->> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
->> +			of the flash.
->> +- maxim,boost-mode :
->> +	In boost mode the device can produce up to 1.2A of total current
->> +	on both outputs. The maximum current on each output is reduced
->> +	to 625mA then. If not enabled explicitly, boost setting defaults to
->> +	LEDS_BOOST_FIXED in case both current sources are used.
->> +	Possible values:
->> +		LEDS_BOOST_OFF (0) - no boost,
->> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
->> +		LEDS_BOOST_FIXED (2) - fixed mode.
->> +- maxim,boost-mvout : Output voltage of the boost module in millivolts.
->
-> What are the possible values for this?
+On Mon, 2015-03-23 at 08:39 +0100, Sascha Hauer wrote:
+> On Sat, Mar 21, 2015 at 02:05:22PM +0800, Eddie Huang wrote:
+> > Add mediatek MT8173 I2C controller driver. Compare to I2C controller
+> > of earlier mediatek SoC, MT8173 fix write-then-read limitation, and
+> > also increase message size to 64kb.
+> > 
+> 
+> [...]
+> 
+> > +static const struct i2c_adapter_quirks mt8173_i2c_quirks = {
+> > +	.max_num_msgs = MAX_MSG_NUM_MT8173,
+> > +	.max_write_len = MAX_DMA_TRANS_SIZE_MT8173,
+> > +	.max_read_len = MAX_DMA_TRANS_SIZE_MT8173,
+> > +	.max_comb_1st_msg_len = MAX_DMA_TRANS_SIZE_MT8173,
+> > +	.max_comb_2nd_msg_len = MAX_WRRD_TRANS_SIZE_MT8173,
+> > +};
+> > +
+> >  static int mtk_i2c_probe(struct platform_device *pdev)
+> >  {
+> >  	int ret = 0;
+> > @@ -587,7 +626,8 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+> >  		return -EINVAL;
+> >  
+> >  	i2c->platform_compat = mtk_get_device_prop(pdev);
+> > -	if (i2c->have_pmic && (i2c->platform_compat & COMPAT_MT6577))
+> > +	if (i2c->have_pmic && (i2c->platform_compat &
+> > +			(COMPAT_MT6577 | COMPAT_MT8173)))
+> >  		return -EINVAL;
+> >  
+> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > @@ -613,7 +653,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+> >  	i2c->adap.dev.parent = &pdev->dev;
+> >  	i2c->adap.owner = THIS_MODULE;
+> >  	i2c->adap.algo = &mtk_i2c_algorithm;
+> > -	i2c->adap.quirks = &mt6577_i2c_quirks;
+> > +	if (i2c->platform_compat & COMPAT_MT8173)
+> > +		i2c->adap.quirks = &mt8173_i2c_quirks;
+> > +	else
+> > +		i2c->adap.quirks = &mt6577_i2c_quirks;
+> 
+> Instead of putting an integer into struct of_device_id you should
+> introduce a
+> 
+> struct mtk_i2c_data {
+> 	struct i2c_adapter_quirks quirks;
+> 	int compat;
+> 	/* Additional SoC specific data */
+> };
+> 
+> and put a pointer to this directly into the of_device_id. This way you
+> need less casting and can put newly discovered differences diretly into
+> some data struct and don't have to introduce if(socxy) ... else ...
+> everytime.
+> 
 
-maxim,boost-mvout : Output voltage of the boost module in millivolts
-	Range: 3300 - 5500
+Thanks your suggestion. I will use capability struct like 
 
-Do you think it is necessary to mention also allowed step for all the
-values?
+struct mtk_i2c_compatible {
+	unsigned char pmic_i2c;
+	unsigned char dcm;
+	unsigned char auto_restart;
+	const struct i2c_adapter_quirks *quirks;
+};
 
-> Is the datasheet publicly available btw.?
+And pass in of_device_id, then remove all if(socxy).... else ... in
+driver.
 
-I have an access only to the non-public one.
-
->> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
->> +	if chip estimates that system voltage could drop below this level due
->> +	to flash power consumption.
->> +
->> +Required properties of the LED child node:
->> +- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
->> +		device current output identifiers: 0 - FLED1, 1 - FLED2
->> +
->> +Optional properties of the LED child node:
->> +- label : see Documentation/devicetree/bindings/leds/common.txt
->> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 15625 - 250000
->> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 15625 - 1000000
->> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
->> +		Range: 62500 - 1000000
->> +
->>   Example:
->> +#include <dt-bindings/leds/common.h>
->> +
->>   	max77693@66 {
->>   		compatible = "maxim,max77693";
->>   		reg = <0x66>;
->> @@ -117,5 +163,20 @@ Example:
->>   			maxim,thermal-regulation-celsius = <75>;
->>   			maxim,battery-overcurrent-microamp = <3000000>;
->>   			maxim,charge-input-threshold-microvolt = <4300000>;
->> +
->> +		led {
->> +			compatible = "maxim,max77693-led";
->> +			maxim,trigger-type = <LEDS_TRIG_TYPE_LEVEL>;
->> +			maxim,boost-mode = <LEDS_BOOST_FIXED>;
->> +			maxim,boost-mvout = <5000>;
->> +			maxim,mvsys-min = <2400>;
->> +
->> +			camera_flash: flash-led {
->> +				label = "max77693-flash";
->> +				led-sources = <0>, <1>;
->> +				max-microamp = <500000>;
->> +				flash-max-microamp = <1250000>;
->> +				flash-timeout-us = <1000000>;
->> +			};
->>   		};
->>   	};
->
+Eddie
 
 
--- 
-Best Regards,
-Jacek Anaszewski
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
