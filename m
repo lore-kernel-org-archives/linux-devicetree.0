@@ -1,47 +1,86 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: r8a7790: add EtherAVB DT support
-Date: Tue, 31 Mar 2015 00:59:41 +0300
-Message-ID: <8163383.0UU0Q5gsLE@wasted.cogentembedded.com>
-References: <1625400.M0MxPQybIy@wasted.cogentembedded.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c LED driver
+Date: Mon, 30 Mar 2015 15:10:31 -0700
+Message-ID: <CAK5ve-KZOXUOOfmsbcOBvTeF+wa3PHGmWnigBEBOX1=cKFN_eQ@mail.gmail.com>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch> <20150329192838.GB24313@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1625400.M0MxPQybIy@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20150329192838.GB24313@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7790 part of the EtherAVB device node. 
+On Sun, Mar 29, 2015 at 12:28 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> On Tue, Mar 17, 2015 at 11:08:25PM +0100, Andrew Lunn wrote:
+>> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
+>> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
+>> the Belkin WRT1900AC access point and the C code is derived from code
+>> Belkin contributed to OpenWRT.  However it has been extensively
+>> re-written, and a device tree binding added to replace platform data.
+>
+> Hi Bryan
+>
+> Do you have any comments on this driver? Anything you would like me to
+> do to help get it accepted?
+>
 
-Based on original patch by Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>.
+Sorry for the delay. I'm reviewing several other patches as well as
+working on my internal work.
+I will review this soon.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Thanks,
+-Bryan
 
----
- arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -626,6 +626,16 @@
- 		status = "disabled";
- 	};
- 
-+	avb: ethernet@e6800000 {
-+		compatible = "renesas,ravb-r8a7790";
-+		reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-+		interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp8_clks R8A7790_CLK_ETHERAVB>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	sata0: sata@ee300000 {
- 		compatible = "renesas,sata-r8a7790";
- 		reg = <0 0xee300000 0 0x2000>;
-
+>
+>>
+>> Cc: Matthew.Fatheree@belkin.com
+>>
+>> Since v5:
+>>       Hard code number of LEDs, rather than #define
+>>       Moved common fields from led into priv
+>>       Moved reg_ledout into priv, removed helper functions
+>>       Cache brightness to avoid race conditions
+>>       tlc591xx_led_set -> tlc591xx_set_brightness
+>>       Be paranoid with of_match_device() and client->dev.of_node
+>>
+>> Since v4:
+>>       Fix Oops on module unload reported by Vignesh R
+>>
+>> Since v3:
+>>       Generalized and added support for tlc59108
+>>       brightness == 0 and brightness == LED_FULL disable PWM and used
+>>         fixed OFF/ON mode
+>>
+>> Since v2:
+>>       Remove incorrect /* Mode register ? */ comment
+>>       Parenthesis around the macro arguments
+>>       Converted many signed variables into unsigned
+>>       Saved an initialization
+>>
+>>
+>> Since v1:
+>>       s/uint8_t/u8/g
+>>       Remove empty line
+>>       Removed #gpio-cells
+>>       Added select REGMAP_I2C
+>>       Sorted #includes into alphabetic order
+>>       Added missing MODULE_DEVICE_TABLE(of, ...)
+>>       Check return value of regmap_write()
+>>       Simplified tlc59116_set_mode()
+>>
+>> Andrew Lunn (2):
+>>   leds: tlc59116: Document binding for the TI 16 Channel i2c LED driver
+>>   leds: tlc59116: Driver for the TI 16 Channel i2c LED driver
+>>
+>>  .../devicetree/bindings/leds/leds-tlc59116.txt     |  41 ++++
+>>  drivers/leds/Kconfig                               |   7 +
+>>  drivers/leds/Makefile                              |   1 +
+>>  drivers/leds/leds-tlc59116.c                       | 253 +++++++++++++++++++++
+>>  4 files changed, 302 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+>>  create mode 100644 drivers/leds/leds-tlc59116.c
+>>
+>> --
+>> 2.1.3
