@@ -1,61 +1,55 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: dts: OMAP3-N900: Add microphone bias voltages
-Date: Mon, 30 Mar 2015 10:50:52 -0700
-Message-ID: <20150330175051.GK10805@atomide.com>
-References: <1425236828-28349-1-git-send-email-jarkko.nikula@bitmer.com>
- <55197A12.1050009@bitmer.com>
- <20150330164237.GJ10805@atomide.com>
- <55198BA4.5010207@bitmer.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
+ from DT match tables
+Date: Mon, 30 Mar 2015 11:16:11 -0700
+Message-ID: <20150330181611.GC32500@ld-irv-0074>
+References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
+ <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
+ <20150206042744.GK18140@ld-irv-0074>
+ <20150210074634.GD8020@x1>
+ <20150224050452.GG18140@ld-irv-0074>
+ <20150224094110.GA20969@x1>
+ <20150313160601.GI12966@brian-ubuntu>
+ <20150316081306.GD3383@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55198BA4.5010207-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20150316081306.GD3383@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org> [150330 10:46]:
-> On 03/30/2015 07:42 PM, Tony Lindgren wrote:
-> > * Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org> [150330 09:31]:
-> >> On 03/01/2015 09:07 PM, Jarkko Nikula wrote:
-> >>> From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >>>
-> >>> N900 audio recording needs that codec provides bias voltage for integrated
-> >>> digital microphone and headset microphone depending which one is used.
-> >>> Digital microphone uses 2 V bias and it comes from the codec A part. Codec
-> >>> B part drives the headset microphone bias and that is set to 2.5 V.
-> >>>
-> >>> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >>> [Jarkko: Headset mic bias changed to 2 (2.5 V) as it was before commit
-> >>> e2e8bfdf6157 ("ASoC: tlv320aic3x: Convert mic bias to a supply widget")]
-> >>> Signed-off-by: Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
-> >>> ---
-> >>>  arch/arm/boot/dts/omap3-n900.dts | 4 ++++
-> >>>  1 file changed, 4 insertions(+)
-> >>>
-> >> Ping?
-> > 
-> > Oops sorry I have missed this one. This looks like a regression fix
-> > for the v4.0-rc series? Should it be cc stable v3.16+ or something?
-> > 
-> Well, there has been regression but finding exactly how far should the
-> fix go didn't look instantly straightforward due all DT, codec driver
-> mic bias etc changes and I ended up not cc'ing stable.
-> 
-> But well, I guess first kernel where this commit makes sense is 3.16+
-> due commit f7d0f2a08567 ("ARM: dts: omap3-n900: Add sound support").
-> Although it applies on top of commit 14e3e295b2b9 ("ARM: dts:
-> omap3-n900: Add TLV320AIC3X support") too (3.12+) but not before that.
+On Mon, Mar 16, 2015 at 08:13:06AM +0000, Lee Jones wrote:
+> So when you said "we have consistently agreed that we aren't going to
+> work around that in Linux", who has agreed this.  Would you be kind
+> enough to point me in the direction of that conversation please?
 
-OK I think debian is using v3.16 kernel and that's pretty much the
-first kernel that is usable with dts on many omap3 devices so might
-make sense for that. I can add it if you think it makes sense.
+A few pointers from recent history:
 
-Regards,
+http://lists.infradead.org/pipermail/linux-mtd/2014-September/055156.html
 
-Tony
+http://lists.infradead.org/pipermail/linux-mtd/2014-September/055559.html
+
+If the question came up in other threads, though, I'm sure the answers
+were the same.
+
+BTW, there are sound solutions to this problem in Linux, and they are
+supported where possible. Some flash support a separate set of opcodes
+that always expect a 4-byte address. If we use these opcodes, we never
+have to do any persistent mode-switching. We only found that Spansion
+consistently supports these opcodes on all their flash, though.
+
+See:
+
+commit 87c9511fba2bd069a35e1312587a29e112fc0cd6
+Author: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date:   Thu Apr 11 01:34:57 2013 -0700
+
+    mtd: m25p80: utilize dedicated 4-byte addressing commands
+
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
