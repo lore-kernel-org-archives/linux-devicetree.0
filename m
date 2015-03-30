@@ -1,513 +1,188 @@
-From: Andrey Danin <danindrey@mail.ru>
-Subject: [PATCH v2 2/4] staging/nvec: reimplement on top of tegra i2c driver
-Date: Mon, 30 Mar 2015 23:00:13 +0300
-Message-ID: <1427745615-5428-3-git-send-email-danindrey@mail.ru>
-References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Julian Andres Klode <jak@jak-linux.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Marc Dietrich <marvin24@gmx.de>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Andrey Danin <danindrey@mail.ru>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 00/10] Add simple EEPROM Framework via regmap.
+Date: Mon, 30 Mar 2015 22:54:52 +0100
+Message-ID: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1427236116-18531-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1427236116-18531-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove i2c controller related code and use tegra i2c driver in slave mode.
-Update nvec documentation.
+Thankyou all for providing inputs and comments on previous versions of this patchset.
+Here is the v4 of the patchset addressing all the issues raised as
+part of previous versions review.
 
-Signed-off-by: Andrey Danin <danindrey@mail.ru>
----
-Changes for v2:
-- remove extra new line
-- keep old functions to simplify review
-- move nvec_state enum to nvec.c
-- use nvec-slave instead of nvec in dts to keep ABI compatibility
-- rebased on top of new i2c slave framework
-- delay workaround moved to tegra-i2c
-- documentation patch is integrated in this commit
-- reverted a log message to minimize changes
+This patchset adds a new simple EEPROM framework to kernel.
 
----
- .../devicetree/bindings/nvec/nvidia,nvec.txt       |  21 +-
- drivers/staging/nvec/nvec.c                        | 258 +++++++++++++--------
- drivers/staging/nvec/nvec.h                        |  10 -
- 3 files changed, 169 insertions(+), 120 deletions(-)
+Up until now, EEPROM drivers were stored in drivers/misc, where they all had to
+duplicate pretty much the same code to register a sysfs file, allow in-kernel
+users to access the content of the devices they were driving, etc.
+    
+This was also a problem as far as other in-kernel users were involved, since
+the solutions used were pretty much different from on driver to another, there
+was a rather big abstraction leak.
+    
+This introduction of this framework aims at solving this. It also introduces DT
+representation for consumer devices to go get the data they require (MAC
+Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
+    
+Having regmap interface to this framework would give much better
+abstraction for eeproms on different buses.
 
-diff --git a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
-index 5ae601e..aba34095 100644
---- a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
-+++ b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
-@@ -1,21 +1,6 @@
- NVIDIA compliant embedded controller
- 
- Required properties:
--- compatible : should be "nvidia,nvec".
--- reg : the iomem of the i2c slave controller
--- interrupts : the interrupt line of the i2c slave controller
--- clock-frequency : the frequency of the i2c bus
--- gpios : the gpio used for ec request
--- slave-addr: the i2c address of the slave controller
--- clocks : Must contain an entry for each entry in clock-names.
--  See ../clocks/clock-bindings.txt for details.
--- clock-names : Must include the following entries:
--  Tegra20/Tegra30:
--  - div-clk
--  - fast-clk
--  Tegra114:
--  - div-clk
--- resets : Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names : Must include the following entries:
--  - i2c
-+- compatible : should be "nvidia,nvec-slave".
-+- reg: the i2c address of the slave controller
-+- request-gpios : the gpio used for ec request
-diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-index 5868ebb..f4c5527 100644
---- a/drivers/staging/nvec/nvec.c
-+++ b/drivers/staging/nvec/nvec.c
-@@ -25,8 +25,8 @@
- #include <linux/err.h>
- #include <linux/gpio.h>
- #include <linux/interrupt.h>
-+#include <linux/i2c.h>
- #include <linux/io.h>
--#include <linux/irq.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/list.h>
-@@ -39,25 +39,19 @@
- 
- #include "nvec.h"
- 
--#define I2C_CNFG			0x00
--#define I2C_CNFG_PACKET_MODE_EN		(1<<10)
--#define I2C_CNFG_NEW_MASTER_SFM		(1<<11)
--#define I2C_CNFG_DEBOUNCE_CNT_SHIFT	12
--
--#define I2C_SL_CNFG		0x20
--#define I2C_SL_NEWSL		(1<<2)
--#define I2C_SL_NACK		(1<<1)
--#define I2C_SL_RESP		(1<<0)
--#define I2C_SL_IRQ		(1<<3)
--#define END_TRANS		(1<<4)
--#define RCVD			(1<<2)
--#define RNW			(1<<1)
--
--#define I2C_SL_RCVD		0x24
--#define I2C_SL_STATUS		0x28
--#define I2C_SL_ADDR1		0x2c
--#define I2C_SL_ADDR2		0x30
--#define I2C_SL_DELAY_COUNT	0x3c
-+
-+#define I2C_SL_ST_END_TRANS			(1<<4)
-+#define I2C_SL_ST_IRQ				(1<<3)
-+#define I2C_SL_ST_RCVD				(1<<2)
-+#define I2C_SL_ST_RNW				(1<<1)
-+
-+
-+enum nvec_state {
-+	ST_NONE,
-+	ST_RX,
-+	ST_TX,
-+	ST_TRANS_START,
-+};
- 
- /**
-  * enum nvec_msg_category - Message categories for nvec_msg_alloc()
-@@ -479,7 +473,7 @@ static void nvec_tx_completed(struct nvec_chip *nvec)
- 		nvec->tx->pos = 0;
- 		nvec_gpio_set_value(nvec, 0);
- 	} else {
--		nvec->state = 0;
-+		nvec->state = ST_NONE;
- 	}
- }
- 
-@@ -497,7 +491,7 @@ static void nvec_rx_completed(struct nvec_chip *nvec)
- 			   (uint) nvec->rx->pos);
- 
- 		nvec_msg_free(nvec, nvec->rx);
--		nvec->state = 0;
-+		nvec->state = ST_NONE;
- 
- 		/* Battery quirk - Often incomplete, and likes to crash */
- 		if (nvec->rx->data[0] == NVEC_BAT)
-@@ -514,7 +508,7 @@ static void nvec_rx_completed(struct nvec_chip *nvec)
- 
- 	spin_unlock(&nvec->rx_lock);
- 
--	nvec->state = 0;
-+	nvec->state = ST_NONE;
- 
- 	if (!nvec_msg_is_event(nvec->rx))
- 		complete(&nvec->ec_transfer);
-@@ -522,6 +516,7 @@ static void nvec_rx_completed(struct nvec_chip *nvec)
- 	schedule_work(&nvec->rx_work);
- }
- 
-+#if 0
- /**
-  * nvec_invalid_flags - Send an error message about invalid flags and jump
-  * @nvec: The nvec device
-@@ -536,6 +531,7 @@ static void nvec_invalid_flags(struct nvec_chip *nvec, unsigned int status,
- 	if (reset)
- 		nvec->state = 0;
- }
-+#endif /* FIXME: remove old code */
- 
- /**
-  * nvec_tx_set - Set the message to transfer (nvec->tx)
-@@ -566,6 +562,8 @@ static void nvec_tx_set(struct nvec_chip *nvec)
- 		(uint)nvec->tx->size, nvec->tx->data[1]);
- }
- 
-+
-+#if 0
- /**
-  * nvec_interrupt - Interrupt handler
-  * @irq: The IRQ
-@@ -755,6 +753,115 @@ static void nvec_disable_i2c_slave(struct nvec_chip *nvec)
- 	clk_disable_unprepare(nvec->i2c_clk);
- }
- #endif
-+#endif /* FIXME: remove old code. */
-+
-+
-+/**
-+ * nvec_slave_cb - I2C slave callback
-+ *
-+ * This callback fills our RX buffers and empties our TX
-+ * buffers. This uses a finite state machine.
-+ */
-+static int nvec_slave_cb(struct i2c_client *client,
-+		enum i2c_slave_event event, u8 *val)
-+{
-+	struct nvec_chip *nvec = i2c_get_clientdata(client);
-+
-+	switch (event) {
-+	case I2C_SLAVE_WRITE_REQUESTED:
-+		/* Alloc new msg only if prev transaction finished */
-+		if (nvec->state == ST_NONE)
-+			nvec->rx = nvec_msg_alloc(nvec, NVEC_MSG_RX);
-+
-+		/* Should not happen in a normal world */
-+		if (unlikely(nvec->rx == NULL)) {
-+			nvec->state = ST_NONE;
-+			return -1;
-+		}
-+		nvec->rx->pos = 0;
-+
-+		if (client->addr != ((*val) >> 1)) {
-+			dev_err(&client->dev,
-+				"received address 0x%02x, expected 0x%02x\n",
-+				((*val) >> 1), client->addr);
-+			return -1;
-+		}
-+		nvec->state = ST_TRANS_START;
-+		break;
-+
-+	case I2C_SLAVE_WRITE_RECEIVED:
-+		if (nvec->state != ST_TRANS_START &&
-+		    nvec->state != ST_RX) {
-+			dev_err(&client->dev,
-+				"unexpected write: state %d\n",
-+				nvec->state);
-+			return -1;
-+		}
-+		if (nvec->rx->pos >= NVEC_MSG_SIZE) {
-+			dev_err(&client->dev,
-+				"write buffer overflow: state %d\n",
-+				nvec->state);
-+			return -1;
-+		}
-+		nvec->rx->data[nvec->rx->pos++] = *val;
-+		nvec->state = ST_RX;
-+		break;
-+
-+	case I2C_SLAVE_READ_REQUESTED:
-+		if (nvec->state != ST_RX) {
-+			dev_err(&client->dev,
-+				"unexpected read request: state %d\n",
-+				nvec->state);
-+			return -1;
-+		}
-+		nvec_msg_free(nvec, nvec->rx);
-+		nvec_tx_set(nvec);
-+		/* Should not happen in a normal world */
-+		if (!nvec->tx) {
-+			dev_err(&client->dev,
-+				"can't alloc tx msg: state %d\n",
-+				nvec->state);
-+			return -1;
-+		}
-+		nvec_gpio_set_value(nvec, 1);
-+		/* fallthrough */
-+	case I2C_SLAVE_READ_PROCESSED:
-+		if (nvec->state != ST_RX &&
-+		    nvec->state != ST_TX) {
-+			dev_err(&client->dev,
-+				"unexpected read: state %d\n",
-+				nvec->state);
-+			return -1;
-+		}
-+
-+		if (!nvec->tx || nvec->tx->pos >= nvec->tx->size) {
-+			dev_err(nvec->dev,
-+				"tx buffer underflow on %p (%u > %u)\n",
-+				nvec->tx,
-+				(uint) (nvec->tx ? nvec->tx->pos : 0),
-+				(uint) (nvec->tx ? nvec->tx->size : 0));
-+			nvec->state = ST_NONE;
-+			break;
-+		}
-+
-+		nvec->state = ST_TX;
-+		*val = nvec->tx->data[nvec->tx->pos++];
-+		break;
-+
-+	case I2C_SLAVE_STOP:
-+		if (nvec->state == ST_TX)
-+			nvec_tx_completed(nvec);
-+		else if (nvec->state == ST_RX)
-+			nvec_rx_completed(nvec);
-+		nvec->state = ST_NONE;
-+		break;
-+
-+	default:
-+		return 0;
-+	}
-+
-+	return 0;
-+}
- 
- static void nvec_power_off(void)
- {
-@@ -767,7 +874,7 @@ static void nvec_power_off(void)
- /*
-  *  Parse common device tree data
-  */
--static int nvec_i2c_parse_dt_pdata(struct nvec_chip *nvec)
-+static int nvec_i2c_parse_dt(struct nvec_chip *nvec)
- {
- 	nvec->gpio = of_get_named_gpio(nvec->dev->of_node, "request-gpios", 0);
- 
-@@ -776,68 +883,39 @@ static int nvec_i2c_parse_dt_pdata(struct nvec_chip *nvec)
- 		return -ENODEV;
- 	}
- 
--	if (of_property_read_u32(nvec->dev->of_node, "slave-addr",
--				&nvec->i2c_addr)) {
--		dev_err(nvec->dev, "no i2c address specified");
--		return -ENODEV;
--	}
--
- 	return 0;
- }
- 
--static int tegra_nvec_probe(struct platform_device *pdev)
-+static int nvec_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
--	int err, ret;
--	struct clk *i2c_clk;
-+	int ret;
- 	struct nvec_chip *nvec;
- 	struct nvec_msg *msg;
--	struct resource *res;
--	void __iomem *base;
--	char	get_firmware_version[] = { NVEC_CNTL, GET_FIRMWARE_VERSION },
-+	char    get_firmware_version[] = { NVEC_CNTL, GET_FIRMWARE_VERSION },
- 		unmute_speakers[] = { NVEC_OEM0, 0x10, 0x59, 0x95 },
- 		enable_event[7] = { NVEC_SYS, CNF_EVENT_REPORTING, true };
- 
--	if (!pdev->dev.of_node) {
--		dev_err(&pdev->dev, "must be instantiated using device tree\n");
-+
-+	if (!client->dev.of_node) {
-+		dev_err(&client->dev, "must be instantiated using device tree\n");
- 		return -ENODEV;
- 	}
- 
--	nvec = devm_kzalloc(&pdev->dev, sizeof(struct nvec_chip), GFP_KERNEL);
-+	nvec = devm_kzalloc(&client->dev, sizeof(struct nvec_chip), GFP_KERNEL);
- 	if (nvec == NULL)
- 		return -ENOMEM;
- 
--	platform_set_drvdata(pdev, nvec);
--	nvec->dev = &pdev->dev;
-+	nvec->dev = &client->dev;
-+	ret = nvec_i2c_parse_dt(nvec);
-+	if (ret < 0)
-+		return ret;
- 
--	err = nvec_i2c_parse_dt_pdata(nvec);
--	if (err < 0)
--		return err;
-+	i2c_set_clientdata(client, nvec);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
-+	ret = i2c_slave_register(client, nvec_slave_cb);
-+	if (ret < 0)
-+		return ret;
- 
--	nvec->irq = platform_get_irq(pdev, 0);
--	if (nvec->irq < 0) {
--		dev_err(&pdev->dev, "no irq resource?\n");
--		return -ENODEV;
--	}
--
--	i2c_clk = devm_clk_get(&pdev->dev, "div-clk");
--	if (IS_ERR(i2c_clk)) {
--		dev_err(nvec->dev, "failed to get controller clock\n");
--		return -ENODEV;
--	}
--
--	nvec->rst = devm_reset_control_get(&pdev->dev, "i2c");
--	if (IS_ERR(nvec->rst)) {
--		dev_err(nvec->dev, "failed to get controller reset\n");
--		return PTR_ERR(nvec->rst);
--	}
--
--	nvec->base = base;
--	nvec->i2c_clk = i2c_clk;
- 	nvec->rx = &nvec->msg_pool[0];
- 
- 	ATOMIC_INIT_NOTIFIER_HEAD(&nvec->notifier_list);
-@@ -852,23 +930,14 @@ static int tegra_nvec_probe(struct platform_device *pdev)
- 	INIT_WORK(&nvec->rx_work, nvec_dispatch);
- 	INIT_WORK(&nvec->tx_work, nvec_request_master);
- 
--	err = devm_gpio_request_one(&pdev->dev, nvec->gpio, GPIOF_OUT_INIT_HIGH,
--					"nvec gpio");
--	if (err < 0) {
-+	ret = devm_gpio_request_one(&client->dev, nvec->gpio,
-+			GPIOF_OUT_INIT_HIGH,
-+			"nvec gpio");
-+	if (ret < 0) {
- 		dev_err(nvec->dev, "couldn't request gpio\n");
- 		return -ENODEV;
- 	}
- 
--	err = devm_request_irq(&pdev->dev, nvec->irq, nvec_interrupt, 0,
--				"nvec", nvec);
--	if (err) {
--		dev_err(nvec->dev, "couldn't request irq\n");
--		return -ENODEV;
--	}
--	disable_irq(nvec->irq);
--
--	tegra_init_i2c_slave(nvec);
--
- 	/* enable event reporting */
- 	nvec_toggle_global_events(nvec, true);
- 
-@@ -907,9 +976,10 @@ static int tegra_nvec_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int tegra_nvec_remove(struct platform_device *pdev)
-+
-+static int nvec_remove(struct i2c_client *client)
- {
--	struct nvec_chip *nvec = platform_get_drvdata(pdev);
-+	struct nvec_chip *nvec = i2c_get_clientdata(client);
- 
- 	nvec_toggle_global_events(nvec, false);
- 	mfd_remove_devices(nvec->dev);
-@@ -938,8 +1008,6 @@ static int nvec_suspend(struct device *dev)
- 	msg = nvec_write_sync(nvec, ap_suspend, sizeof(ap_suspend));
- 	nvec_msg_free(nvec, msg);
- 
--	nvec_disable_i2c_slave(nvec);
--
- 	return 0;
- }
- 
-@@ -949,7 +1017,6 @@ static int nvec_resume(struct device *dev)
- 	struct nvec_chip *nvec = platform_get_drvdata(pdev);
- 
- 	dev_dbg(nvec->dev, "resuming\n");
--	tegra_init_i2c_slave(nvec);
- 	nvec_toggle_global_events(nvec, true);
- 
- 	return 0;
-@@ -960,14 +1027,21 @@ static SIMPLE_DEV_PM_OPS(nvec_pm_ops, nvec_suspend, nvec_resume);
- 
- /* Match table for of_platform binding */
- static const struct of_device_id nvidia_nvec_of_match[] = {
--	{ .compatible = "nvidia,nvec", },
-+	{ .compatible = "nvidia,nvec-slave", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, nvidia_nvec_of_match);
- 
--static struct platform_driver nvec_device_driver = {
--	.probe   = tegra_nvec_probe,
--	.remove  = tegra_nvec_remove,
-+static const struct i2c_device_id nvidia_nvec_i2c_table[] = {
-+	{ "nvec-slave", 0 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, nvidia_nvec_i2c_table);
-+
-+static struct i2c_driver i2c_nvec_device_driver = {
-+	.probe   = nvec_probe,
-+	.remove  = nvec_remove,
-+	.id_table = nvidia_nvec_i2c_table,
- 	.driver  = {
- 		.name = "nvec",
- 		.pm = &nvec_pm_ops,
-@@ -975,9 +1049,9 @@ static struct platform_driver nvec_device_driver = {
- 	}
- };
- 
--module_platform_driver(nvec_device_driver);
-+module_i2c_driver(i2c_nvec_device_driver);
- 
--MODULE_ALIAS("platform:nvec");
-+MODULE_ALIAS("i2c:nvec");
- MODULE_DESCRIPTION("NVIDIA compliant embedded controller interface");
- MODULE_AUTHOR("Marc Dietrich <marvin24@gmx.de>");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/nvec/nvec.h b/drivers/staging/nvec/nvec.h
-index e271375..ad6a556 100644
---- a/drivers/staging/nvec/nvec.h
-+++ b/drivers/staging/nvec/nvec.h
-@@ -107,11 +107,6 @@ struct nvec_msg {
-  * struct nvec_chip - A single connection to an NVIDIA Embedded controller
-  * @dev: The device
-  * @gpio: The same as for &struct nvec_platform_data
-- * @irq: The IRQ of the I2C device
-- * @i2c_addr: The address of the I2C slave
-- * @base: The base of the memory mapped region of the I2C device
-- * @i2c_clk: The clock of the I2C device
-- * @rst: The reset of the I2C device
-  * @notifier_list: Notifiers to be called on received messages, see
-  *                 nvec_register_notifier()
-  * @rx_data: Received messages that have to be processed
-@@ -137,11 +132,6 @@ struct nvec_msg {
- struct nvec_chip {
- 	struct device *dev;
- 	int gpio;
--	int irq;
--	int i2c_addr;
--	void __iomem *base;
--	struct clk *i2c_clk;
--	struct reset_control *rst;
- 	struct atomic_notifier_head notifier_list;
- 	struct list_head rx_data, tx_data;
- 	struct notifier_block nvec_status_notifier;
+patch 1-2 Introduces two regmap helper functions.
+patch 3-5 Introduces the EEPROM framework.
+Patch 6 Adds helper functions for eeproms based on mmio.
+Patch 7 migrates an existing driver to eeprom framework.
+Patch 8-9 Adds Qualcomm specific qfprom driver.
+Patch 10 adds entry in MAINTAINERS.
+
+Its also possible to migrate other eeprom drivers to this framework.
+
+Providers APIs:
+	eeprom_register/unregister();
+
+Consumers APIs:
+	eeprom_cell_get()/of_eeprom_cell_get();
+	eeprom_cell_put();
+	eeprom_cell_read()/eeprom_cell_write();
+
+Device Tree:
+
+	/* Provider */
+	qfprom: qfprom@00700000 {
+		compatible 	= "qcom,qfprom";
+		reg		= <0x00700000 0x1000>;
+		...
+
+		/* Data cells */
+		tsens_calibration: calib@404 {
+			reg = <0x404 0x10>;
+		};
+
+		serial_number: sn {
+			reg = <0x104 0x4>, <0x204 0x4>, <0x30c 0x4>;
+
+		};
+		...
+	};
+	
+	/* Consumer node */
+	tsens: tsens {
+		...
+		calibration = <&tsens_calibration>;
+		...
+	};
+
+userspace interface: binary file in /sys/class/eeprom/*/eeprom
+
+ex:
+hexdump /sys/class/eeprom/qfprom0/eeprom
+                                                                                                                                                                                                                  
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+*
+00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+...
+*
+0001000
+
+
+Changes since v3(https://lkml.org/lkml/2015/3/24/1066)
+ * simplified logic in bin_attr_eeprom_read/write spotted by Mark Brown.
+ * moved from using regmap_bulk_read/write to regmap_raw_read/write
+ spotted by Mark Brown
+ * Fixed return error codes for the dummy wrappers spotted by Sascha Hauer
+ * Fixed various error code checks in core spotted by Sascha Hauer.
+ * Simplified consumer bindings suggested by Sascha Hauer.
+ * Added eeprom-mmio helper functions.
+
+Changes since v2(https://lkml.org/lkml/2015/3/13/168)
+ * Fixed error handling in eeprom_register spotted by Mark Brown
+ * Added new regmap_get_max_register() and regmap_get_reg_stride().
+ * Fixed module build errors reported by kbuild robot.
+ * recycle the ids when eeprom provider is released.
+
+Changes since v1(https://lkml.org/lkml/2015/3/5/153)
+ * Fix various Licencing issues spotted by Paul Bolle and Mark Brown
+ * Allow eeprom core to build as module spotted by Paul Bolle.
+ * Fix various kconfig issues spotted by Paul Bolle.
+ * remove unessary atomic varible spotted by Mark Brown.
+ * Few cleanups and common up some of the code in core.
+ * Add qfprom bindings.
+
+Changes since RFC(https://lkml.org/lkml/2015/2/19/307)
+ * Fix documentation and error checks in read/write spotted by Andrew Lunn
+ * Kconfig fix suggested by Stephen Boyd.
+ * Add module owner suggested by Stephen Boyd and others.
+ * Fix unsafe handling of eeprom in unregister spotted by Russell and Mark Brown.
+ * seperate bindings patch as suggested by Rob.
+ * Add MAINTAINERS as suggested by Rob.
+ * Added support to allow reading eeprom for things like serial number which
+ * canbe scatters across.
+ * Added eeprom data using reg property suggested by Sascha and Stephen.
+ * Added non-DT support.
+ * Move kerneldoc to the src files spotted by Mark Brown.
+ * Remove local list and do eeprom lookup by using class_find_device()
+
+
+Thanks,
+srini
+
+
+Maxime Ripard (1):
+  eeprom: sunxi: Move the SID driver to the eeprom framework
+
+Srinivas Kandagatla (9):
+  regmap: Introduce regmap_get_max_register.
+  regmap: Introduce regmap_get_reg_stride.
+  eeprom: Add a simple EEPROM framework for eeprom providers
+  eeprom: Add a simple EEPROM framework for eeprom consumers
+  eeprom: Add bindings for simple eeprom framework
+  eeprom: Add simple eeprom-mmio consumer helper functions.
+  eeprom: qfprom: Add Qualcomm QFPROM support.
+  eeprom: qfprom: Add bindings for qfprom
+  eeprom: Add to MAINTAINERS for eeprom framework
+
+ Documentation/ABI/testing/sysfs-driver-sunxi-sid   |  22 -
+ .../bindings/eeprom/allwinner,sunxi-sid.txt        |  21 +
+ .../devicetree/bindings/eeprom/eeprom.txt          |  58 +++
+ .../devicetree/bindings/eeprom/qfprom.txt          |  34 ++
+ .../bindings/misc/allwinner,sunxi-sid.txt          |  17 -
+ MAINTAINERS                                        |   9 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/base/regmap/regmap.c                       |  24 +
+ drivers/eeprom/Kconfig                             |  36 ++
+ drivers/eeprom/Makefile                            |  13 +
+ drivers/eeprom/core.c                              | 504 +++++++++++++++++++++
+ drivers/eeprom/eeprom-mmio.c                       |  69 +++
+ drivers/eeprom/eeprom-mmio.h                       |  41 ++
+ drivers/eeprom/qfprom.c                            |  51 +++
+ drivers/eeprom/sunxi-sid.c                         |  64 +++
+ drivers/misc/eeprom/Kconfig                        |  13 -
+ drivers/misc/eeprom/Makefile                       |   1 -
+ drivers/misc/eeprom/sunxi_sid.c                    | 156 -------
+ include/linux/eeprom-consumer.h                    |  61 +++
+ include/linux/eeprom-provider.h                    |  43 ++
+ include/linux/regmap.h                             |  14 +
+ 22 files changed, 1045 insertions(+), 209 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
+ create mode 100644 Documentation/devicetree/bindings/eeprom/allwinner,sunxi-sid.txt
+ create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
+ create mode 100644 Documentation/devicetree/bindings/eeprom/qfprom.txt
+ delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
+ create mode 100644 drivers/eeprom/Kconfig
+ create mode 100644 drivers/eeprom/Makefile
+ create mode 100644 drivers/eeprom/core.c
+ create mode 100644 drivers/eeprom/eeprom-mmio.c
+ create mode 100644 drivers/eeprom/eeprom-mmio.h
+ create mode 100644 drivers/eeprom/qfprom.c
+ create mode 100644 drivers/eeprom/sunxi-sid.c
+ delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
+ create mode 100644 include/linux/eeprom-consumer.h
+ create mode 100644 include/linux/eeprom-provider.h
+
 -- 
 1.9.1
