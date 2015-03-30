@@ -1,42 +1,123 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
-Date: Mon, 30 Mar 2015 20:04:05 +0300
-Message-ID: <55198205.2030808@list.ru>
-References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru> <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru> <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com> <551587D1.5070408@list.ru> <5515904A.1060600@gmail.com> <55196011.7080502@list.ru> <CAGVrzcYam=zd+9DpKjhX8o+P_iksz+xOJWh0M45-GASMZbsBXA@mail.gmail.com>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
+Date: Mon, 30 Mar 2015 20:13:27 +0300
+Message-ID: <783D9BFE-44A7-402D-A0FF-F32A2F5068EE@konsulko.com>
+References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com> <20150319191834.5346CC40A35@trevor.secretlab.ca> <8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com> <CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com> <1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com> <CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcYam=zd+9DpKjhX8o+P_iksz+xOJWh0M45-GASMZbsBXA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-30.03.2015 19:06, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> So yes, it is a bug in the sense that it is not transparently handled=
-,
-> but at the same time, the PHY library has no way to know whether a
-> fixed_link_update callback is being invoked since it is not poking
-> into the fixed PHY driver.
-Maybe then it would be better to have an API in fixed_phy.c itself
-to change the state? No one will then care about the callback at all.
-=46or example, currently in my new patch, when I receive the interrupt
-about phy status change, I can't do anything: I can't change the state
-or force the phylib to do a callback right now. So, instead of changing
-the state upon interrupt, I need instead to ask HW the current state on
-every poll, which is likely not effective in some regards. By having th=
-e
-API that would be solved, as well as the detached device problem.
+Hi Geert,
 
->> @@ -304,6 +310,7 @@ struct mvneta_port {
->>         unsigned int link;
->>         unsigned int duplex;
->>         unsigned int speed;
->> +       int inband_status;
-> Since you are essentially using this variable as a boolean to indicat=
-e
-> whether in-band status should be queried or not, maybe you should nam=
-e
-> that "needs_inband_status" or "wants_inband_status", inband_status
-That's fine, will go for "use_inband_status:1" tomorrow.
+> On Mar 30, 2015, at 16:27 , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>=
+ wrote:
+>=20
+> Hi Pantelis,
+>=20
+> On Tue, Mar 24, 2015 at 6:56 PM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> On Mar 24, 2015, at 07:50 , Geert Uytterhoeven <geert-Td1EMuHUCqygBwfqmJ+zsg@public.gmane.org=
+g> wrote:
+>>> On Fri, Mar 20, 2015 at 12:39 PM, Pantelis Antoniou
+>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> On Mar 19, 2015, at 21:18 , Grant Likely <grant.likely@secretlab.=
+ca> wrote:
+>>>>> On Tue, 16 Dec 2014 14:11:31 +0200
+>>>>> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>>> wrote:
+>>>>>> A nice side-effect of the changes in DTC for supporting overlays
+>>>>>> is that it is now possible to do dependency tracking of platform
+>>>>>> devices automatically.
+>>>>>>=20
+>>>>>> This patch implements dependency aware probe order for users
+>>>>>> of of_platform_populate.
+>>>>>>=20
+>>>>>> There are no changes in the syntax of the DTS bindings, the
+>>>>>> dependency is generated automatically by the use of phandle
+>>>>>> references.
+>>>>>=20
+>>>>> Do you have measurements showing improvement? Conceptually, I don=
+'t have
+>>>>> a problem with having a small scale solution like this, but I wan=
+t proof
+>>>>> that it actively makes things better, and is worth the extra comp=
+lexity.
+>>>>> It's not an easy block of code to understand.
+>>>>=20
+>>>> I will be the first to admit that the code it=E2=80=99s a bit hard=
+ to follow, but
+>>>> that=E2=80=99s the nature of trees and recursion.
+>>>>=20
+>>>> FWIW I=E2=80=99ve been booting with this applied for a month with =
+no adverse effects,
+>>>> besides the fact that there dependency cycles which I would file a=
+s a bug.
+>>>=20
+>>> IIUC, this would fix the issue I worked around in "ARM: shmobile: r=
+8a73a4:
+>>> Move pfc node to work around probe ordering bug"?
+>>> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/comm=
+it/?h=3Dr8a73a4-ccf-and-multiplatform-for-v4.1&id=3De4ba0a9bddff3ba52ce=
+c100414d2f178440efc91
+>>=20
+>> A victim^Wtester! Yeah, it=E2=80=99s supposed to do that, but no gua=
+rantees, this is an RFC.
+>>=20
+>> I would be happy to know if it solves your problem or not, please ke=
+ep me in the loop.
+>>=20
+>>> I'll give it a try when I'm back from ELC...
+>=20
+> And so I did. I
+>  1. Moved the pfc node in arch/arm/boot/dts/r8a73a4.dtsi back between=
+ dmac
+>     and i2c5.
+>  2. Applied your patch,
+>  3. Disabled the check for "/__local_fixups__" in
+>     __of_platform_populate_scan().
+>  4. Added support for "interrupts-extended" (gmail-whitespace-damaged=
+ patch
+>     at the end of this email),
+>  5. Enabled DEBUG,
+>  6. Uncommented all your debug pr_info() calls (except the one for
+>     "interrupts", as it references non-existing variables!).
+>=20
+> But it didn't make any difference. The debug log below shows that it =
+detects
+> the dependency of pfc@e6050000 on irqc0 (interrupt-controller@e61c000=
+0)
+> irqc1 (interrupt-controller@e61c0200), but it doesn't reorder the nod=
+es,
+> so pfc is still initialized first:
+>=20
+
+Interesting. I guess this are indeed more complicated.
+
+It is good that it detects the dependency first, and registers
+the devices in the correct order.
+
+The problem is that this is not enough. The probe is initiated when the
+drivers are registered afterwards, but not in any particular order.
+
+So we need to do deferred matching for this to work reliably.
+
+Thank you so much for taking the time to send this debug log.
+It does help considerably.
+
+Regards
+
+=E2=80=94 Pantelis
+
+[snip]
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
