@@ -1,50 +1,140 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] DT: Add documentation for the mfd Maxim max77693
-Date: Mon, 30 Mar 2015 14:20:03 +0100
-Message-ID: <20150330132002.GA29200@leverpostej>
-References: <1427709149-15014-1-git-send-email-j.anaszewski@samsung.com>
- <1427709149-15014-2-git-send-email-j.anaszewski@samsung.com>
- <20150330115729.GG17971@leverpostej>
- <55194509.1070008@samsung.com>
+From: Juergen Borleis <jbe@pengutronix.de>
+Subject: [PATCH] DTS/TX25: add missing indention
+Date: Mon, 30 Mar 2015 15:21:15 +0200
+Message-ID: <201503301521.15583.jbe@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <55194509.1070008@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
+---
+ arch/arm/boot/dts/imx25-karo-tx25.dts |   84 +++++++++++++++++------------=
+----
+ 1 file changed, 43 insertions(+), 41 deletions(-)
 
-> >> +Optional properties:
-> >> +- maxim,trigger-type : Flash trigger type.
-> >> +	Possible trigger types:
-> >> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
-> >> +			the flash,
-> >> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
-> >> +			of the flash.
-> >
-> > Surely this is required? What should be assumed if this property isn't
-> > present?
-> 
-> LEDS_TRIG_TYPE_LEVEL allows for an ISP to do e.g. short flash blink
-> before the actual strobe - it is used for eliminating photographs with
-> closed eyes, or can serve for probing ambient light conditions.
-> 
-> With LEDS_TRIG_TYPE_EDGE flash strobe is triggered on rising edge
-> and lasts until programmed timeout expires.
-> 
-> This setting is tightly related to a camera sensor, which generates
-> the strobe signal. Effectively it depends on board configuration.
+diff --git a/arch/arm/boot/dts/imx25-karo-tx25.dts b/arch/arm/boot/dts/imx2=
+5-karo-tx25.dts
+index 9b31faa96377..801c29e9c37c 100644
+--- a/arch/arm/boot/dts/imx25-karo-tx25.dts
++++ b/arch/arm/boot/dts/imx25-karo-tx25.dts
+@@ -42,49 +42,51 @@
+ };
+ =
 
-My comment wasn't to do with the semantics of eitehr option but rather
-the optionality of the property.
+ &iomuxc {
+-	pinctrl_uart1: uart1grp {
+-		fsl,pins =3D <
+-			MX25_PAD_UART1_TXD__UART1_TXD 0x80000000
+-			MX25_PAD_UART1_RXD__UART1_RXD 0x80000000
+-			MX25_PAD_UART1_CTS__UART1_CTS 0x80000000
+-			MX25_PAD_UART1_RTS__UART1_RTS 0x80000000
+-		>;
+-	};
++	imx25-karo-stk5 {
++		pinctrl_uart1: uart1grp {
++			fsl,pins =3D <
++				MX25_PAD_UART1_TXD__UART1_TXD 0x80000000
++				MX25_PAD_UART1_RXD__UART1_RXD 0x80000000
++				MX25_PAD_UART1_CTS__UART1_CTS 0x80000000
++				MX25_PAD_UART1_RTS__UART1_RTS 0x80000000
++			>;
++		};
+ =
 
-Surely it's vital to know what this should be, and hence this property
-should be required rather than optional?
+-	pinctrl_fec: fecgrp {
+-		fsl,pins =3D <
+-			MX25_PAD_D11__GPIO_4_9		0x80000000 /* FEC PHY power on pin */
+-			MX25_PAD_D13__GPIO_4_7		0x80000000 /* FEC reset */
+-			MX25_PAD_FEC_MDC__FEC_MDC	0x80000000
+-			MX25_PAD_FEC_MDIO__FEC_MDIO	0x80000000
+-			MX25_PAD_FEC_TDATA0__FEC_TDATA0	0x80000000
+-			MX25_PAD_FEC_TDATA1__FEC_TDATA1	0x80000000
+-			MX25_PAD_FEC_TX_EN__FEC_TX_EN	0x80000000
+-			MX25_PAD_FEC_RDATA0__FEC_RDATA0	0x80000000
+-			MX25_PAD_FEC_RDATA1__FEC_RDATA1	0x80000000
+-			MX25_PAD_FEC_RX_DV__FEC_RX_DV	0x80000000
+-			MX25_PAD_FEC_TX_CLK__FEC_TX_CLK	0x80000000
+-		>;
+-	};
++		pinctrl_fec: fecgrp {
++			fsl,pins =3D <
++				MX25_PAD_D11__GPIO_4_9		0x80000000 /* FEC PHY power on pin */
++				MX25_PAD_D13__GPIO_4_7		0x80000000 /* FEC reset */
++				MX25_PAD_FEC_MDC__FEC_MDC	0x80000000
++				MX25_PAD_FEC_MDIO__FEC_MDIO	0x80000000
++				MX25_PAD_FEC_TDATA0__FEC_TDATA0	0x80000000
++				MX25_PAD_FEC_TDATA1__FEC_TDATA1	0x80000000
++				MX25_PAD_FEC_TX_EN__FEC_TX_EN	0x80000000
++				MX25_PAD_FEC_RDATA0__FEC_RDATA0	0x80000000
++				MX25_PAD_FEC_RDATA1__FEC_RDATA1	0x80000000
++				MX25_PAD_FEC_RX_DV__FEC_RX_DV	0x80000000
++				MX25_PAD_FEC_TX_CLK__FEC_TX_CLK	0x80000000
++			>;
++		};
+ =
 
-If it isn't required, what would the assumed default be?
+-	pinctrl_nfc: nfcgrp {
+-		fsl,pins =3D <
+-			MX25_PAD_NF_CE0__NF_CE0		0x80000000
+-			MX25_PAD_NFWE_B__NFWE_B		0x80000000
+-			MX25_PAD_NFRE_B__NFRE_B		0x80000000
+-			MX25_PAD_NFALE__NFALE		0x80000000
+-			MX25_PAD_NFCLE__NFCLE		0x80000000
+-			MX25_PAD_NFWP_B__NFWP_B		0x80000000
+-			MX25_PAD_NFRB__NFRB		0x80000000
+-			MX25_PAD_D7__D7			0x80000000
+-			MX25_PAD_D6__D6			0x80000000
+-			MX25_PAD_D5__D5			0x80000000
+-			MX25_PAD_D4__D4			0x80000000
+-			MX25_PAD_D3__D3			0x80000000
+-			MX25_PAD_D2__D2			0x80000000
+-			MX25_PAD_D1__D1			0x80000000
+-			MX25_PAD_D0__D0			0x80000000
+-		>;
++		pinctrl_nfc: nfcgrp {
++			fsl,pins =3D <
++				MX25_PAD_NF_CE0__NF_CE0		0x80000000
++				MX25_PAD_NFWE_B__NFWE_B		0x80000000
++				MX25_PAD_NFRE_B__NFRE_B		0x80000000
++				MX25_PAD_NFALE__NFALE		0x80000000
++				MX25_PAD_NFCLE__NFCLE		0x80000000
++				MX25_PAD_NFWP_B__NFWP_B		0x80000000
++				MX25_PAD_NFRB__NFRB		0x80000000
++				MX25_PAD_D7__D7			0x80000000
++				MX25_PAD_D6__D6			0x80000000
++				MX25_PAD_D5__D5			0x80000000
++				MX25_PAD_D4__D4			0x80000000
++				MX25_PAD_D3__D3			0x80000000
++				MX25_PAD_D2__D2			0x80000000
++				MX25_PAD_D1__D1			0x80000000
++				MX25_PAD_D0__D0			0x80000000
++			>;
++		};
+ 	};
+ };
+ =
 
-Mark.
+-- =
+
+1.7.10.4
+
+-- =
+
+Pengutronix e.K. =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0| Juergen Borleis =A0 =A0 =A0 =A0 =A0 =A0 |
+Industrial Linux Solutions               =A0 =A0 =A0| http://www.pengutroni=
+x.de/  |
