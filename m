@@ -1,45 +1,42 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: dts: OMAP3-N900: Add microphone bias voltages
-Date: Mon, 30 Mar 2015 09:42:38 -0700
-Message-ID: <20150330164237.GJ10805@atomide.com>
-References: <1425236828-28349-1-git-send-email-jarkko.nikula@bitmer.com>
- <55197A12.1050009@bitmer.com>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 4/6] of: add API for changing parameters of fixed link
+Date: Mon, 30 Mar 2015 20:04:05 +0300
+Message-ID: <55198205.2030808@list.ru>
+References: <55155AFC.4050800@list.ru> <55155D35.1070703@list.ru> <CAGVrzcau0mUne8uXsTs_9=e4JtQt5w5L+hwtLmKo+UfjSEwC+w@mail.gmail.com> <5515803F.3020600@list.ru> <CAGVrzcaLfQcTAx8OR=sE=7FLrp0gGvfX8_YfxK_CU+x26JHymw@mail.gmail.com> <551587D1.5070408@list.ru> <5515904A.1060600@gmail.com> <55196011.7080502@list.ru> <CAGVrzcYam=zd+9DpKjhX8o+P_iksz+xOJWh0M45-GASMZbsBXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55197A12.1050009-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcYam=zd+9DpKjhX8o+P_iksz+xOJWh0M45-GASMZbsBXA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Linux kernel <linux-kernel@vger.kernel.org>, Stas Sergeev <stsp@users.sourceforge.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-* Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org> [150330 09:31]:
-> On 03/01/2015 09:07 PM, Jarkko Nikula wrote:
-> > From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > 
-> > N900 audio recording needs that codec provides bias voltage for integrated
-> > digital microphone and headset microphone depending which one is used.
-> > Digital microphone uses 2 V bias and it comes from the codec A part. Codec
-> > B part drives the headset microphone bias and that is set to 2.5 V.
-> > 
-> > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > [Jarkko: Headset mic bias changed to 2 (2.5 V) as it was before commit
-> > e2e8bfdf6157 ("ASoC: tlv320aic3x: Convert mic bias to a supply widget")]
-> > Signed-off-by: Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/omap3-n900.dts | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> Ping?
+30.03.2015 19:06, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> So yes, it is a bug in the sense that it is not transparently handled=
+,
+> but at the same time, the PHY library has no way to know whether a
+> fixed_link_update callback is being invoked since it is not poking
+> into the fixed PHY driver.
+Maybe then it would be better to have an API in fixed_phy.c itself
+to change the state? No one will then care about the callback at all.
+=46or example, currently in my new patch, when I receive the interrupt
+about phy status change, I can't do anything: I can't change the state
+or force the phylib to do a callback right now. So, instead of changing
+the state upon interrupt, I need instead to ask HW the current state on
+every poll, which is likely not effective in some regards. By having th=
+e
+API that would be solved, as well as the detached device problem.
 
-Oops sorry I have missed this one. This looks like a regression fix
-for the v4.0-rc series? Should it be cc stable v3.16+ or something?
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> @@ -304,6 +310,7 @@ struct mvneta_port {
+>>         unsigned int link;
+>>         unsigned int duplex;
+>>         unsigned int speed;
+>> +       int inband_status;
+> Since you are essentially using this variable as a boolean to indicat=
+e
+> whether in-band status should be queried or not, maybe you should nam=
+e
+> that "needs_inband_status" or "wants_inband_status", inband_status
+That's fine, will go for "use_inband_status:1" tomorrow.
