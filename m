@@ -1,25 +1,38 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: hummingboard: enable PCF8523 RTC support
-Date: Mon, 30 Mar 2015 11:48:03 +0800
-Message-ID: <20150330034801.GL28410@dragon>
-References: <E1YSWZG-0002As-7I@rmk-PC.arm.linux.org.uk>
+Subject: Re: [PATCH 2/2] ARM: dts: hummingboard: Setup pwm lines
+Date: Mon, 30 Mar 2015 11:54:03 +0800
+Message-ID: <20150330035402.GM28410@dragon>
+References: <E1YSWZL-0002Aw-B5@rmk-PC.arm.linux.org.uk>
+ <1425379336.3146.38.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <E1YSWZG-0002As-7I-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+In-Reply-To: <1425379336.3146.38.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 02, 2015 at 08:03:54PM +0000, Russell King wrote:
-> Enable the commented out PCF8523 RTC support for Hummingboard pro
-> base boards.
+On Tue, Mar 03, 2015 at 11:42:16AM +0100, Philipp Zabel wrote:
+> > +&pwm3 {
+> > +	status = "disabled";
+> > +};
+> > +
+> > +&pwm4 {
+> > +	status = "disabled";
+> > +};
 > 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> I wanted to point out these two are superfluous since pwm3/4 are
+> disabled in the dtsi by default, but I just learned they aren't.
+> 
+> Should we add status = "disabled" to unusable (because not externally
+> connected) PWMs, and if so, shouldn't that be done in the dtsi already?
 
-Applied, thanks.
+Thanks Philipp for your patch "ARM: dts: imx6qdl: disable PWMs by
+default".  Therefore I dropped pwm3/4 and applied the patch.
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
