@@ -1,51 +1,41 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 5/6] usb: dwc3: dwc3-st: Update the incorrect DT dwc3 example.
-Date: Mon, 30 Mar 2015 16:17:11 +0100
-Message-ID: <1427728632-10846-6-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 3/6] ARM: DT: STi: STiH407: Update picophyreset for the usb3 controllers usb2 phy
+Date: Mon, 30 Mar 2015 16:17:09 +0100
+Message-ID: <1427728632-10846-4-git-send-email-peter.griffin@linaro.org>
 References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, robherring2@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427728632-10846-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is a subtle typo phys-names should be phy-names. Using the
-current example means you don't have working usb (as you fail to
-obtain the phys). Also update the example to use the generic phy
-type constants which are now used for miphy28.
+Ths picophyreset is incorrectly defined, which stops the usb2 phy being
+taken out of reset.
 
-Additionaly also remove the unnecessary new line in the example.
-
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/dwc3-st.txt | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/stih407-family.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-index f9d7025..01c71b1 100644
---- a/Documentation/devicetree/bindings/usb/dwc3-st.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-@@ -49,8 +49,7 @@ st_dwc3: dwc3@8f94000 {
- 	st,syscfg	= <&syscfg_core>;
- 	resets		= <&powerdown STIH407_USB3_POWERDOWN>,
- 			  <&softreset STIH407_MIPHY2_SOFTRESET>;
--	reset-names	= "powerdown",
--			  "softreset";
-+	reset-names	= "powerdown", "softreset";
- 	#address-cells	= <1>;
- 	#size-cells	= <1>;
- 	pinctrl-names	= "default";
-@@ -62,7 +61,7 @@ st_dwc3: dwc3@8f94000 {
- 		reg		= <0x09900000 0x100000>;
- 		interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
- 		dr_mode		= "host";
--		phys-names      = "usb2-phy", "usb3-phy";
--		phys            = <&usb2_picophy2>, <&phy_port2 MIPHY_TYPE_USB>;
-+		phy-names	= "usb2-phy", "usb3-phy";
-+		phys		= <&usb2_picophy2>, <&phy_port2 PHY_TYPE_USB3>;
- 	};
- };
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index c06a546..186412d 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -280,7 +280,7 @@
+ 			#phy-cells = <0>;
+ 			st,syscfg = <&syscfg_core 0x100 0xf4>;
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+-				 <&picophyreset STIH407_PICOPHY0_RESET>;
++				 <&picophyreset STIH407_PICOPHY2_RESET>;
+ 			reset-names = "global", "port";
+ 		};
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
