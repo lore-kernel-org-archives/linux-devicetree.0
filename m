@@ -1,50 +1,49 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v7 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Tue, 31 Mar 2015 08:56:38 +0900
-Message-ID: <5519E2B6.2030905@samsung.com>
-References: <1426637856-3730-1-git-send-email-cw00.choi@samsung.com>
- <1426637856-3730-2-git-send-email-cw00.choi@samsung.com>
- <20150330160940.GA13731@leverpostej>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/7] clk: Add basic infrastructure for Pistachio clocks
+Date: Mon, 30 Mar 2015 16:59:56 -0700
+Message-ID: <5519E37C.9010201@codeaurora.org>
+References: <1424836567-7252-1-git-send-email-abrestic@chromium.org> <1424836567-7252-3-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150330160940.GA13731@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "kgene@kernel.org" <kgene@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424836567-7252-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 02/24/15 19:56, Andrew Bresticker wrote:
+> +
+> +void pistachio_clk_force_enable(struct pistachio_clk_provider *p,
+> +				unsigned int *clk_ids, unsigned int num)
+> +{
+> +	unsigned int i;
+> +	int err;
+> +
+> +	for (i = 0; i < num; i++) {
+> +		struct clk *clk = p->clk_data.clks[clk_ids[i]];
+> +
+> +		if (IS_ERR(clk))
+> +			continue;
+> +
+> +		err = clk_prepare_enable(clk);
+> +		if (err)
+> +			pr_err("Failed to enable clock %s: %d\n",
+> +			       __clk_get_name(clk), err);
+> +	}
+> +}
+>
 
-On 03/31/2015 01:09 AM, Mark Rutland wrote:
-> Hi,
-> 
-> On Wed, Mar 18, 2015 at 12:17:28AM +0000, Chanwoo Choi wrote:
->> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
->> Octal core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
->> PSCI (Power State Coordination Interface) v0.1.
->>
->> This patch includes following dt node to support Exynos5433 SoC:
->> 1. Octa core for big.LITTLE architecture
->> - Cortex-A53 LITTLE Quad-core
->> - Cortex-A57 big Quad-core
->> - Support PSCI v0.1
-> 
-> Is CPU0 hotplug still broken, or has the FW been fixed?
+Is this to workaround some problems in the framework where clocks are
+turned off? Or is it that these clocks are already on before we boot
+Linux and we need to make sure the framework knows that?
 
-CPU0 hotplug is still not working.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> 
-> I'm very worried about adding a DT that's known broken, especially when
-> we have no idea as to if/when the FW will be fixed judging from prior
-> replies.
-
-As I replied, I can not fix the FW because I don't have any code of FW.
-I don't have any solution to fix it on Linux kernel level.
-
-So, If you agree, I can add the comment of CPU0 hotplug issue on DT file.
-
-Thanks,
-Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
