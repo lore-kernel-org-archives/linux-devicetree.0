@@ -1,54 +1,143 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v2 3/8] mmc: sdhci-st: Add delay management functions for
- top registers (eMMC).
-Date: Mon, 30 Mar 2015 11:33:26 +0100
-Message-ID: <20150330103326.GB21893@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org>
- <1424956227-18258-4-git-send-email-peter.griffin@linaro.org>
- <54F5915C.6090707@st.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC] ARM: BCM5301X: Add /device_id property including
+ device ID string
+Date: Mon, 30 Mar 2015 11:37:00 +0100
+Message-ID: <20150330103659.GD17971@leverpostej>
+References: <1427667288-23903-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54F5915C.6090707@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <maxime.coquelin@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
+In-Reply-To: <1427667288-23903-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi,
 
-On Tue, 03 Mar 2015, Maxime Coquelin wrote:
-> 
-> On 02/26/2015 02:10 PM, Peter Griffin wrote:
-> >Due to the tight timing constriants in some UHS modes, it is required to have
-> s/constriant/constraints/
+=46or DT patches, please send to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; this affec=
+ts
+more than just ARM.
 
-Will fix.
+On Sun, Mar 29, 2015 at 11:14:48PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> Device vendors often assign IDs to their devices to allow comparing
+> firmware image with device model. This is required to prevent users
+> from flashing incompatible image and soft-bricking device.
+> Add device_id property to DTs to allow user space (and optionally
+> bootloader) verifying firmware images.
 
-<snip>
-> >+
-> >+static inline void st_mmcss_set_static_delay(void __iomem *ioaddr)
-> >+{
-> >+	if (ioaddr) {
-> Maybe you could do:
->     if (!ioaddr)
->         return;
+This sounds like exactly what the "model" property is meant to be (per
+ePAPR) -- a string that specifices the manufacturer's model number of
+the device, ideally in "manufacturer,model" format.
 
-Yes good idea, I have made that change in V3.
-> 
->     writel_relaxed....
-> >+		writel_relaxed(0x0, ioaddr + ST_TOP_MMC_DLY_CTRL);
-> >+		writel_relaxed(ST_TOP_MMC_DLY_MAX,
-> >+				ioaddr + ST_TOP_MMC_TX_CLK_DLY);
-> >+	}
-> >+}
-> >+
-> >+static inline void st_mmcss_set_dll(void __iomem *ioaddr)
-> >+{
-> >+	if (ioaddr) {
-> Ditto
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Hi guys,
+>=20
+> I think my commit message explains pretty well what I'm trying to do,
+> however I'm not sure if I'm using a right place for that.
+> I also didn't document this news property, as I can't find a place
+> where root-properties are currenty described. Is there any such place=
+?
+> I couldn't find a file describing e.g. "model" property.
 
-regards,
+It's documented in ePAPR (embedded power achitecture platform
+requirements), and possibly earlier device tree and/or open firmware
+documents.
 
-Peter
+Unfortuantely ePAPR is now behind a registration page on power.org, and
+I'm not sure where most other documents live (playground.sun.com and
+other sources are dead).
+
+Mark.
+
+> ---
+>  arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts    | 1 +
+>  arch/arm/boot/dts/bcm4708-netgear-r6250.dts    | 1 +
+>  arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts | 1 +
+>  arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts    | 1 +
+>  arch/arm/boot/dts/bcm4709-netgear-r8000.dts    | 1 +
+>  5 files changed, 5 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts b/arch/arm/b=
+oot/dts/bcm4708-asus-rt-ac68u.dts
+> index 8b62836..9d2fac4 100644
+> --- a/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
+> +++ b/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
+> @@ -14,6 +14,7 @@
+>  / {
+>  	compatible =3D "asus,rt-ac68u", "brcm,bcm4708";
+>  	model =3D "Asus RT-AC68U (BCM4708)";
+> +	device_id =3D "RT-AC68U";
+> =20
+>  	chosen {
+>  		bootargs =3D "console=3DttyS0,115200";
+> diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts b/arch/arm/b=
+oot/dts/bcm4708-netgear-r6250.dts
+> index 2ed9e57..98c8d63 100644
+> --- a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+> +++ b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+> @@ -14,6 +14,7 @@
+>  / {
+>  	compatible =3D "netgear,r6250v1", "brcm,bcm4708";
+>  	model =3D "Netgear R6250 V1 (BCM4708)";
+> +	device_id =3D "U12H245T00_NETGEAR";
+> =20
+>  	chosen {
+>  		bootargs =3D "console=3DttyS0,115200";
+> diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts b/arch/ar=
+m/boot/dts/bcm4708-netgear-r6300-v2.dts
+> index 3991042..c43173a 100644
+> --- a/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
+> +++ b/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
+> @@ -14,6 +14,7 @@
+>  / {
+>  	compatible =3D "netgear,r6300v2", "brcm,bcm4708";
+>  	model =3D "Netgear R6300 V2 (BCM4708)";
+> +	device_id =3D "U12H240T00_NETGEAR";
+> =20
+>  	chosen {
+>  		bootargs =3D "console=3DttyS0,115200";
+> diff --git a/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts b/arch/arm/b=
+oot/dts/bcm47081-asus-rt-n18u.dts
+> index 0ee85ea..876e2c0 100644
+> --- a/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts
+> +++ b/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dts
+> @@ -14,6 +14,7 @@
+>  / {
+>  	compatible =3D "asus,rt-n18u", "brcm,bcm47081", "brcm,bcm4708";
+>  	model =3D "Asus RT-N18U (BCM47081)";
+> +	device_id =3D "RT-N18U";
+> =20
+>  	chosen {
+>  		bootargs =3D "console=3DttyS0,115200";
+> diff --git a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts b/arch/arm/b=
+oot/dts/bcm4709-netgear-r8000.dts
+> index ea26dd3..129df9a 100644
+> --- a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+> +++ b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+> @@ -14,6 +14,7 @@
+>  / {
+>  	compatible =3D "netgear,r8000", "brcm,bcm4709", "brcm,bcm4708";
+>  	model =3D "Netgear R8000 (BCM4709)";
+> +	device_id =3D "U12H315T00_NETGEAR";
+> =20
+>  	chosen {
+>  		bootargs =3D "console=3DttyS0,115200";
+> --=20
+> 1.8.4.5
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
