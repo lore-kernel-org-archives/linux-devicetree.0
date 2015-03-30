@@ -1,55 +1,38 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
- from DT match tables
-Date: Mon, 30 Mar 2015 11:16:11 -0700
-Message-ID: <20150330181611.GC32500@ld-irv-0074>
-References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
- <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
- <20150206042744.GK18140@ld-irv-0074>
- <20150210074634.GD8020@x1>
- <20150224050452.GG18140@ld-irv-0074>
- <20150224094110.GA20969@x1>
- <20150313160601.GI12966@brian-ubuntu>
- <20150316081306.GD3383@x1>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: USB device nodes in device tree
+Date: Mon, 30 Mar 2015 15:35:14 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1503301534050.1407-100000@iolanthe.rowland.org>
+References: <55196B2D.7000204@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150316081306.GD3383@x1>
+In-Reply-To: <55196B2D.7000204-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2015 at 08:13:06AM +0000, Lee Jones wrote:
-> So when you said "we have consistently agreed that we aren't going to
-> work around that in Linux", who has agreed this.  Would you be kind
-> enough to point me in the direction of that conversation please?
+On Mon, 30 Mar 2015, Valentin Longchamp wrote:
 
-A few pointers from recent history:
+> Hello,
+> 
+> We are currently developing a board with an USB MFD device (I2C and GPIOs are to
+> be supported). The device is soldered on the board and is the only one on the
+> bus, so the bus is not really "dynamic".
+> 
+> Since it's an USB device, it should be dynamically detected by the kernel and it
+> would not require a node in the board's DTS. However, I need to have the devices
+> which are "behind" the MFD USB device to be in the DTS (I2C bus topology, and
+> some of the GPIOs are to be used directly by some other DTS nodes as well).
+> 
+> Is there a way to add a node for USB device in a DTS ? Is there an available
+> example for this ?
 
-http://lists.infradead.org/pipermail/linux-mtd/2014-September/055156.html
+No, there is no way to do it as far as I know.  The main problem is 
+that Device Tree is static whereas USB devices are dynamic.
 
-http://lists.infradead.org/pipermail/linux-mtd/2014-September/055559.html
+Alan Stern
 
-If the question came up in other threads, though, I'm sure the answers
-were the same.
-
-BTW, there are sound solutions to this problem in Linux, and they are
-supported where possible. Some flash support a separate set of opcodes
-that always expect a 4-byte address. If we use these opcodes, we never
-have to do any persistent mode-switching. We only found that Spansion
-consistently supports these opcodes on all their flash, though.
-
-See:
-
-commit 87c9511fba2bd069a35e1312587a29e112fc0cd6
-Author: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date:   Thu Apr 11 01:34:57 2013 -0700
-
-    mtd: m25p80: utilize dedicated 4-byte addressing commands
-
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
