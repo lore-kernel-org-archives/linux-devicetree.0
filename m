@@ -1,113 +1,48 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v3] DT: Add documentation for the mfd Maxim max77693
-Date: Mon, 30 Mar 2015 11:52:28 +0200
-Message-ID: <1427709149-15014-2-git-send-email-j.anaszewski@samsung.com>
-References: <1427709149-15014-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1427709149-15014-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
-Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/5 v2] ASoC: rsrc-card: add Renesas sampling rate convert
+ sound card support
+Date: Mon, 30 Mar 2015 11:57:04 +0200
+Message-ID: <CAMuHMdVa=KZRT294AjDZ7QZy5PFU=aKh55ookWYruf6cJhbdbg@mail.gmail.com>
+References: <87h9t85ry1.wl%kuninori.morimoto.gx@renesas.com>
+	<87fv8s5rwt.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <87fv8s5rwt.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Liam Girdwood <lgirdwood@gmail.com>, Das Biju <biju.das@bp.renesas.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree binding documentation for
-the flash cell of the Maxim max77693 multifunctional device.
+On Thu, Mar 26, 2015 at 5:01 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt b/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt
+> new file mode 100644
+> index 0000000..12e287e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt
+> @@ -0,0 +1,66 @@
+> +Renesas Sampling Rate Convert Sound Card:
+> +
+> +Renesas Sampling Rate Convert Sound Card specifies audio DAI connections of SoC <-> codec.
+> +
+> +Required properties:
+> +
+> +- compatible                           : "renesas,rsrc-card,<board>"
+> +                                         Examples with soctypes are:
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/mfd/max77693.txt |   63 ++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+board types
 
-- added range to maxim,boost-mvout and maxim,mvsys-min description
+> +                                           - "renesas,rsrc-card,lager"
+> +                                           - "renesas,rsrc-card,koelsch"
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-index 38e6440..3d2103a 100644
---- a/Documentation/devicetree/bindings/mfd/max77693.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-@@ -76,7 +76,55 @@ Optional properties:
-     Valid values: 4300000, 4700000, 4800000, 4900000
-     Default: 4300000
- 
-+- led : the LED submodule device node
-+
-+There are two LED outputs available - FLED1 and FLED2. Each of them can
-+control a separate LED or they can be connected together to double
-+the maximum current for a single connected LED. One LED is represented
-+by one child node.
-+
-+Required properties:
-+- compatible : Must be "maxim,max77693-led".
-+
-+Optional properties:
-+- maxim,trigger-type : Flash trigger type.
-+	Possible trigger types:
-+		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
-+			the flash,
-+		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
-+			of the flash.
-+- maxim,boost-mode :
-+	In boost mode the device can produce up to 1.2A of total current
-+	on both outputs. The maximum current on each output is reduced
-+	to 625mA then. If not enabled explicitly, boost setting defaults to
-+	LEDS_BOOST_FIXED in case both current sources are used.
-+	Possible values:
-+		LEDS_BOOST_OFF (0) - no boost,
-+		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-+		LEDS_BOOST_FIXED (2) - fixed mode.
-+- maxim,boost-mvout : Output voltage of the boost module in millivolts.
-+		Range: 3300 - 5500
-+- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
-+	if chip estimates that system voltage could drop below this level due
-+	to flash power consumption.
-+		Range: 2400 - 3400
-+
-+Required properties of the LED child node:
-+- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
-+		device current output identifiers: 0 - FLED1, 1 - FLED2
-+
-+Optional properties of the LED child node:
-+- label : see Documentation/devicetree/bindings/leds/common.txt
-+- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+		Range: 15625 - 250000
-+- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+		Range: 15625 - 1000000
-+- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
-+		Range: 62500 - 1000000
-+
- Example:
-+#include <dt-bindings/leds/common.h>
-+
- 	max77693@66 {
- 		compatible = "maxim,max77693";
- 		reg = <0x66>;
-@@ -117,5 +165,20 @@ Example:
- 			maxim,thermal-regulation-celsius = <75>;
- 			maxim,battery-overcurrent-microamp = <3000000>;
- 			maxim,charge-input-threshold-microvolt = <4300000>;
-+
-+		led {
-+			compatible = "maxim,max77693-led";
-+			maxim,trigger-type = <LEDS_TRIG_TYPE_LEVEL>;
-+			maxim,boost-mode = <LEDS_BOOST_FIXED>;
-+			maxim,boost-mvout = <5000>;
-+			maxim,mvsys-min = <2400>;
-+
-+			camera_flash: flash-led {
-+				label = "max77693-flash";
-+				led-sources = <0>, <1>;
-+				max-microamp = <500000>;
-+				flash-max-microamp = <1250000>;
-+				flash-timeout-us = <1000000>;
-+			};
- 		};
- 	};
--- 
-1.7.9.5
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
