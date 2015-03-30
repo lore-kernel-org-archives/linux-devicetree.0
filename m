@@ -1,246 +1,220 @@
-From: NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 2/3] TTY: add support for tty_slave devices.
-Date: Tue, 31 Mar 2015 10:45:20 +1100
-Message-ID: <20150331104520.1002b7f0@notabene.brown>
-References: <20150318055437.21025.13990.stgit@notabene.brown>
-	<20150318055831.21025.85317.stgit@notabene.brown>
-	<55113D1B.1030906@suse.cz>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH/RFC 1/5] clk: shmobile: rcar-gen2: Add CPG Clock Domain support
+Date: Tue, 31 Mar 2015 02:53:09 +0300
+Message-ID: <3861934.bVCAbQmBJW@avalon>
+References: <1426708017-28885-1-git-send-email-geert+renesas@glider.be> <1426708017-28885-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/9JgButTXUC85yqUwwsq5yGX"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55113D1B.1030906@suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Slaby <jslaby@suse.cz>
-Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426708017-28885-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/9JgButTXUC85yqUwwsq5yGX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Geert,
 
-On Tue, 24 Mar 2015 11:31:55 +0100 Jiri Slaby <jslaby@suse.cz> wrote:
+Thank you for the patch.
 
-> Hi,
->=20
-> On 03/18/2015, 06:58 AM, NeilBrown wrote:
-> > --- /dev/null
-> > +++ b/drivers/tty/slave/tty_slave_core.c
-> > @@ -0,0 +1,136 @@
->=20
-> ...
->=20
-> > +static int tty_slave_match(struct device *dev, struct device_driver *d=
-rv)
-> > +{
-> > +	return of_driver_match_device(dev, drv);
-> > +}
-> > +
-> > +static void tty_slave_release(struct device *dev)
-> > +{
-> > +	kfree(dev);
->=20
-> This should free the slave where the dev is contained. This is never
-> called IMO due to missing put_device's in the code.
+On Wednesday 18 March 2015 20:46:53 Geert Uytterhoeven wrote:
+> Add Clock Domain support to the R-Car Gen2 Clock Pulse Generator (CPG)
+> driver using the generic PM Domain.  This allows to power-manage the
+> module clocks of SoC devices that are part of the CPG Clock Domain using
+> Runtime PM, or for system suspend/resume.
+> 
+> SoC devices that are part of the CPG Clock Domain and can be
+> power-managed through their primary clock should be tagged in DT with a
+> proper "power-domains" property.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Yes of course, thanks.  I've fix the 'kfree'.
+There's one thing that bothers me: the implementation is tied to the CPG 
+driver, but the code is quite generic. That feels a bit wrong, it would be 
+nice to come up with a generic implementation. On the other hand, the 
+platform-dependent part is the list of clocks to manage, specified implicitly 
+through the "pm_clk_add(dev, NULL)" call. That list needs to be specified 
+somewhere, and adding it to the CPG driver is likely the best solution we can 
+have at the moment.
 
+I'm slightly worried that adding the power-domains property to the DT node 
+will introduce backward compatibility issues if we later switch to a different 
+way to specify the clocks to manage automatically. I have no specific example 
+though.
 
->=20
-> > +}
-> > +
-> > +struct bus_type tty_slave_bus_type =3D {
-> > +	.name		=3D "tty-slave",
-> > +	.match		=3D tty_slave_match,
-> > +};
-> > +
-> > +int tty_slave_register(struct device *parent, struct device_node *node,
-> > +		       struct device *tty, struct tty_driver *drv)
-> > +{
-> > +	struct tty_slave *slave;
-> > +	int retval;
-> > +
-> > +	if (!of_get_property(node, "compatible", NULL))
-> > +		return -ENODEV;
-> > +
-> > +	slave =3D kzalloc(sizeof(*slave), GFP_KERNEL);
-> > +	if (!slave)
-> > +		return -ENOMEM;
-> > +
->=20
-> device_initialize();
+For those reasons,
 
-device_initialize is only needed if you call device_add()
-I use device_register() which calls both.
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
+> ---
+>  .../clock/renesas,rcar-gen2-cpg-clocks.txt         | 26 ++++++++-
+>  arch/arm/mach-shmobile/Kconfig                     |  1 +
+>  drivers/clk/shmobile/clk-rcar-gen2.c               | 63 +++++++++++++++++++
+>  3 files changed, 88 insertions(+), 2 deletions(-)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+> b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+> index b02944fba9de4f86..fc013f225a348929 100644
+> ---
+> a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+> +++
+> b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+> @@ -2,6 +2,8 @@
+> 
+>  The CPG generates core clocks for the R-Car Gen2 SoCs. It includes three
+> PLLs and several fixed ratio dividers.
+> +The CPG also provides a Clock Domain for SoC devices, in combination with
+> the +CPG Module Stop (MSTP) Clocks.
+> 
+>  Required Properties:
+> 
+> @@ -20,10 +22,18 @@ Required Properties:
+>    - clock-output-names: The names of the clocks. Supported clocks are
+> "main", "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z",
+> "rcan", and "adsp"
+> +  - #power-domain-cells: Must be 0
+> 
+> +SoC devices that are part of the CPG Clock Domain and can be power-managed
+> +through their primary clock should refer to the CPG device node in their
+> +"power-domains" property, as documented by the generic PM domain bindings
+> in +Documentation/devicetree/bindings/power/power_domain.txt.
+> 
+> -Example
+> --------
+> +
+> +Examples
+> +--------
+> +
+> +  - CPG device node:
+> 
+>  	cpg_clocks: cpg_clocks@e6150000 {
+>  		compatible = "renesas,r8a7790-cpg-clocks",
+> @@ -34,4 +44,16 @@ Example
+>  		clock-output-names = "main", "pll0, "pll1", "pll3",
+>  				     "lb", "qspi", "sdh", "sd0", "sd1", "z",
+>  				     "rcan", "adsp";
+> +		#power-domain-cells = <0>;
+> +	};
+> +
+> +
+> +  - CPG Clock Domain member node:
+> +
+> +	thermal@e61f0000 {
+> +		compatible = "renesas,thermal-r8a7790", "renesas,rcar-thermal";
+> +		reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
+> +		interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp5_clks R8A7790_CLK_THERMAL>;
+> +		power-domains = <&cpg_clocks>;
+>  	};
+> diff --git a/arch/arm/mach-shmobile/Kconfig b/arch/arm/mach-shmobile/Kconfig
+> index 0fb484221c90e0eb..048101a3253c52de 100644
+> --- a/arch/arm/mach-shmobile/Kconfig
+> +++ b/arch/arm/mach-shmobile/Kconfig
+> @@ -4,6 +4,7 @@ config ARCH_SHMOBILE
+> 
+>  config PM_RCAR
+>  	bool
+> +	select PM_GENERIC_DOMAINS
+> 
+>  config PM_RMOBILE
+>  	bool
+> diff --git a/drivers/clk/shmobile/clk-rcar-gen2.c
+> b/drivers/clk/shmobile/clk-rcar-gen2.c index
+> acfb6d7dbd6bc049..b54439d3722a13ad 100644
+> --- a/drivers/clk/shmobile/clk-rcar-gen2.c
+> +++ b/drivers/clk/shmobile/clk-rcar-gen2.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/math64.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/spinlock.h>
+> 
+>  struct rcar_gen2_cpg {
+> @@ -364,6 +366,65 @@ rcar_gen2_cpg_register_clock(struct device_node *np,
+> struct rcar_gen2_cpg *cpg, 4, 0, table, &cpg->lock);
+>  }
+> 
+> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
+> +static int cpg_pd_attach_dev(struct generic_pm_domain *domain,
+> +			     struct device *dev)
+> +{
+> +	int error;
+> +
+> +	error = pm_clk_create(dev);
+> +	if (error) {
+> +		dev_err(dev, "pm_clk_create failed %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	error = pm_clk_add(dev, NULL);
+> +	if (error) {
+> +		dev_err(dev, "pm_clk_add failed %d\n", error);
+> +		goto fail;
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	pm_clk_destroy(dev);
+> +	return error;
+> +}
+> +
+> +static void cpg_pd_detach_dev(struct generic_pm_domain *domain,
+> +			      struct device *dev)
+> +{
+> +	pm_clk_destroy(dev);
+> +}
+> +
+> +static void __init rcar_gen2_cpg_add_pm_domain(struct device_node *np)
+> +{
+> +	struct generic_pm_domain *pd;
+> +	u32 ncells;
+> +
+> +	if (of_property_read_u32(np, "#power-domain-cells", &ncells)) {
+> +		pr_warn("%s lacks #power-domain-cells. Clocks may fail.\n",
+> +			np->full_name);
+> +		return;
+> +	}
+> +
+> +	pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+> +	if (!pd)
+> +		return;
+> +
+> +	pd->name = np->name;
+> +
+> +	pd->flags = GENPD_FLAG_PM_CLK;
+> +	pm_genpd_init(pd, &simple_qos_governor, false);
+> +	pd->attach_dev = cpg_pd_attach_dev;
+> +	pd->detach_dev = cpg_pd_detach_dev;
+> +
+> +	of_genpd_add_provider_simple(np, pd);
+> +}
+> +#else /* !CONFIG_PM_GENERIC_DOMAINS_OF */
+> +static inline void rcar_gen2_cpg_add_pm_domain(struct device_node *np) {}
+> +#endif /* !CONFIG_PM_GENERIC_DOMAINS_OF */
+> +
+>  static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
+>  {
+>  	const struct cpg_pll_config *config;
+> @@ -415,6 +476,8 @@ static void __init rcar_gen2_cpg_clocks_init(struct
+> device_node *np) }
+> 
+>  	of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
+> +
+> +	rcar_gen2_cpg_add_pm_domain(np);
+>  }
+>  CLK_OF_DECLARE(rcar_gen2_cpg_clks, "renesas,rcar-gen2-cpg-clocks",
+>  	       rcar_gen2_cpg_clocks_init);
 
->=20
-> > +	slave->dev.bus =3D &tty_slave_bus_type;
-> > +	slave->dev.parent =3D parent;
-> > +	slave->dev.release =3D tty_slave_release;
-> > +	slave->dev.of_node =3D of_node_get(node);
-> > +	dev_set_name(&slave->dev, "%s", node->name);
-> > +	slave->tty_dev =3D tty;
-> > +	slave->tty_drv =3D drv;
-> > +	slave->ops =3D *drv->ops;
-> > +	retval =3D device_register(&slave->dev);
-> > +	if (retval) {
-> > +		of_node_put(node);
-> > +		kfree(slave);
->=20
-> Do device_put() instead of the two. And do the two in .release.
+-- 
+Regards,
 
-Done, thanks.
+Laurent Pinchart
 
->=20
-> > +	}
-> > +	return retval;
-> > +}
-> > +EXPORT_SYMBOL(tty_slave_register);
-> ...
-> > --- a/drivers/tty/tty_io.c
-> > +++ b/drivers/tty/tty_io.c
-> ...
-> > @@ -3205,6 +3208,29 @@ static void tty_device_create_release(struct dev=
-ice *dev)
-> >  	kfree(dev);
-> >  }
-> > =20
-> > +int tty_register_finalize(struct tty_driver *driver, struct device *de=
-v)
-> > +{
-> > +	int retval;
-> > +	bool cdev =3D false;
-> > +	int index =3D dev->devt - MKDEV(driver->major,
-> > +				      driver->minor_start);
-> > +	printk("REGISTER %d %d 0x%x %d\n", driver->major, driver->minor_start=
-, dev->devt, index);
-> > +	if (!(driver->flags & TTY_DRIVER_DYNAMIC_ALLOC)) {
-> > +		retval =3D tty_cdev_add(driver,
-> > +				      dev->devt,
-> > +				      index, 1);
-> > +		if (retval)
-> > +			return retval;
-> > +		cdev =3D true;
-> > +	}
-> > +	retval =3D device_register(dev);
-> > +	if (retval =3D=3D 0)
-> > +		return 0;
-> > +	if (cdev)
-> > +		cdev_del(&driver->cdevs[index]);
-> > +	return retval;
-> > +}
-> > +EXPORT_SYMBOL(tty_register_finalize);
-> >  /**
-> >   *	tty_register_device_attr - register a tty device
-> >   *	@driver: the tty driver that describes the tty device
-> > @@ -3234,7 +3260,8 @@ struct device *tty_register_device_attr(struct tt=
-y_driver *driver,
-> >  	dev_t devt =3D MKDEV(driver->major, driver->minor_start) + index;
-> >  	struct device *dev =3D NULL;
-> >  	int retval =3D -ENODEV;
-> > -	bool cdev =3D false;
-> > +	struct device_node *node;
-> > +	bool slave_registered =3D false;
-> > =20
-> >  	if (index >=3D driver->num) {
-> >  		printk(KERN_ERR "Attempt to register invalid tty line number "
-> > @@ -3247,13 +3274,6 @@ struct device *tty_register_device_attr(struct t=
-ty_driver *driver,
-> >  	else
-> >  		tty_line_name(driver, index, name);
-> > =20
-> > -	if (!(driver->flags & TTY_DRIVER_DYNAMIC_ALLOC)) {
-> > -		retval =3D tty_cdev_add(driver, devt, index, 1);
-> > -		if (retval)
-> > -			goto error;
-> > -		cdev =3D true;
-> > -	}
-> > -
-> >  	dev =3D kzalloc(sizeof(*dev), GFP_KERNEL);
-> >  	if (!dev) {
-> >  		retval =3D -ENOMEM;
-> > @@ -3268,16 +3288,24 @@ struct device *tty_register_device_attr(struct =
-tty_driver *driver,
-> >  	dev->groups =3D attr_grp;
-> >  	dev_set_drvdata(dev, drvdata);
-> > =20
-> > -	retval =3D device_register(dev);
-> > -	if (retval)
-> > -		goto error;
-> > +	if (device && device->of_node)
-> > +		for_each_available_child_of_node(device->of_node, node) {
-> > +			if (tty_slave_register(device, node, dev, driver) =3D=3D 0)
-> > +				slave_registered =3D true;
-> > +			if (slave_registered)
-> > +				break;
-> > +		}
-> > +
-> > +	if (!slave_registered) {
-> > +		retval =3D tty_register_finalize(driver, dev);
-> > +		if (retval)
-> > +			goto error;
-> > +	}
-> > =20
-> >  	return dev;
->=20
-> And what about ttys not using the tty_register_device* helpers?
-
-I guess they are on their own - they don't get any help...
-Is there a problem that I'm not seeing here?
-
-I think this only applies to code that calls device_create(tty_class, ...)
-which is pty.c, vt.c, and "/dev/tty".  These are all virtual devices so
-having a slave doesn't make much sense... does it?
-
->=20
-> What happens when the tty is unregistered?
-
-Good question.  I hadn't thought that through.
-
-When the tty is unregistered, it will drop the reference it has on ->parent
-which the tty_slave.  So we want that to be the last reference.
-So in tty_slave_finalize() I need a put_dev() on the slave.
-That must be the "put_dev" that you thought was missing earlier.
-
-However that leaves a loose end. destruct_tty_driver() calls
-tty_unregister_device() on all registered ttys for that driver.
-If one had a tty_slave which was finalized, that will drop the reference on
-the slave so it will disappear, which is all good.
-But if one has a slave for which the driver hasn't been found yet, then the=
-re
-will be no tty to unregister so the tty_slave cannot be dropped.
-
-I guess I need to either take a reference to the driver - which doesn't seem
-like a good idea - or use bus_find_device() to find any tty_slaves with that
-driver, and drop them.
-I'll see how that works out.
-
-
-Thanks a lot!
-
-NeilBrown
-
---Sig_/9JgButTXUC85yqUwwsq5yGX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIVAwUBVRngEDnsnt1WYoG5AQKkNw//frOLgbOyjyYBshyBBBlOMClyLDrQwxnD
-P2KRGjyzQeQYAiVicW8gS8fdVPlhriY+n48NyWI4Fn1CBepYKIqUCT5tQA/QK9B6
-uWYVVqQj2AMQuX+sa8sUNio8BkxW2skm5y4q/Cc1ypVzjWwxJAQX2TKK9OiFHNFr
-u56uwrCrGu2XsLRc+WnYxUh764CVdZ+U8F4gzJiVLuYRDoGLcpRNDAweHtW+OufL
-HrM2cltl4c+aZ/VgzXKZFmnSCADF11+/GNV73RXuei/XO9gVF3G49aZ2ZTYkWf/z
-gmbALfL6ncROqNgQ4lc1B1FoRNhbkB0Ml6WN0WQMImvtosvfapa1wnvGImlS3Wvx
-zzdSCjZyS+YIl7etcrCvXM5Z+8kV8awNagCw9fHnteulCKJfGjIKbmLhit9cn0vD
-6ycyO1gpPgLnF98BhHYqV2hwrLDqNhmNNxN+XVly7OaukRS3Z6tMt9gzK4yYtdOX
-TcAqu7Nb4tw4Z+mqJLIMIBRY9rqSPbFW3gUbttmdy+UMAb3v5jLqwlDgvKI4iwtr
-E6ka+ogZayH6H50r/zF3/1vLRwzEPi+DF6FJJt+q6n+CsHpCYrh4jcVljyZnNlG1
-SkYkVA9+5T+wfhIkrnTHb+VpexoM+OIrCj5+pN3ftwfG5fBqB/M1wsynjGFD7UBY
-dvre6Yp0XHU=
-=KoJW
------END PGP SIGNATURE-----
-
---Sig_/9JgButTXUC85yqUwwsq5yGX--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
