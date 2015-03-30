@@ -1,86 +1,328 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c LED driver
-Date: Mon, 30 Mar 2015 15:10:31 -0700
-Message-ID: <CAK5ve-KZOXUOOfmsbcOBvTeF+wa3PHGmWnigBEBOX1=cKFN_eQ@mail.gmail.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch> <20150329192838.GB24313@lunn.ch>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Tue, 31 Mar 2015 01:51:44 +0300
+Message-ID: <5519D380.6070200@cogentembedded.com>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <20150328082853.GA4255@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20150329192838.GB24313@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matthew.Fatheree@belkin.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150328082853.GA4255@localhost.localdomain>
+Sender: linux-sh-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2015 at 12:28 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> On Tue, Mar 17, 2015 at 11:08:25PM +0100, Andrew Lunn wrote:
->> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
->> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
->> the Belkin WRT1900AC access point and the C code is derived from code
->> Belkin contributed to OpenWRT.  However it has been extensively
->> re-written, and a device tree binding added to replace platform data.
->
-> Hi Bryan
->
-> Do you have any comments on this driver? Anything you would like me to
-> do to help get it accepted?
->
+Hello.
 
-Sorry for the delay. I'm reviewing several other patches as well as
-working on my internal work.
-I will review this soon.
+On 03/28/2015 11:28 AM, Richard Cochran wrote:
 
-Thanks,
--Bryan
+>> Ethernet AVB includes an Gigabit Ethernet controller (E-MAC) that is basically
+>> compatible with SuperH Gigabit Ethernet E-MAC). Ethernet AVB  has a dedicated
+>> direct memory access controller (AVB-DMAC) that is a new design compared to the
+>> SuperH E-DMAC. The AVB-DMAC is compliant with 3 standards formulated for IEEE
+>> 802.1BA: IEEE 802.1AS timing and synchronization protocol, IEEE 802.1Qav real-
+>> time transfer, and the IEEE 802.1Qat stream reservation protocol.
 
->
->>
->> Cc: Matthew.Fatheree@belkin.com
->>
->> Since v5:
->>       Hard code number of LEDs, rather than #define
->>       Moved common fields from led into priv
->>       Moved reg_ledout into priv, removed helper functions
->>       Cache brightness to avoid race conditions
->>       tlc591xx_led_set -> tlc591xx_set_brightness
->>       Be paranoid with of_match_device() and client->dev.of_node
->>
->> Since v4:
->>       Fix Oops on module unload reported by Vignesh R
->>
->> Since v3:
->>       Generalized and added support for tlc59108
->>       brightness == 0 and brightness == LED_FULL disable PWM and used
->>         fixed OFF/ON mode
->>
->> Since v2:
->>       Remove incorrect /* Mode register ? */ comment
->>       Parenthesis around the macro arguments
->>       Converted many signed variables into unsigned
->>       Saved an initialization
->>
->>
->> Since v1:
->>       s/uint8_t/u8/g
->>       Remove empty line
->>       Removed #gpio-cells
->>       Added select REGMAP_I2C
->>       Sorted #includes into alphabetic order
->>       Added missing MODULE_DEVICE_TABLE(of, ...)
->>       Check return value of regmap_write()
->>       Simplified tlc59116_set_mode()
->>
->> Andrew Lunn (2):
->>   leds: tlc59116: Document binding for the TI 16 Channel i2c LED driver
->>   leds: tlc59116: Driver for the TI 16 Channel i2c LED driver
->>
->>  .../devicetree/bindings/leds/leds-tlc59116.txt     |  41 ++++
->>  drivers/leds/Kconfig                               |   7 +
->>  drivers/leds/Makefile                              |   1 +
->>  drivers/leds/leds-tlc59116.c                       | 253 +++++++++++++++++++++
->>  4 files changed, 302 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc59116.txt
->>  create mode 100644 drivers/leds/leds-tlc59116.c
->>
->> --
->> 2.1.3
+> Since this is a PTP Hardware Clock driver, why not include the maintainer on CC?
+
+    Sorry for leaving you out of CC. I used the list given by 
+scripts/get_maintainer.pl and forgot for the moment that it's also a PTP 
+driver. Perhaps there is a way to enhance that script for this particular case 
+(I'm not into PERL myself)?
+
+>> The driver only supports device tree probing, so the binding document is
+>> included in this patch.
+
+>> Based on the patches by Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com> and
+>> Masaru Nagai <masaru.nagai.vx@renesas.com>.
+
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+> We also need SOB from Mitsuhiro and Masaru.
+
+    Hmm, it's the first time I encounter such requirement.
+    Not sure how you imagine that if Kimura-san was (mostly) the author of the 
+Ethernet driver proper and Nagai-san was the author of the PTP code proper 
+(they were 2 different drivers, not sure for what reason -- as the Ethernet 
+driver proper failed to compile without PTP enabled for me). Adding them to 
+CC: anyway...
+
+> ...
+
+>> Index: net-next/drivers/net/ethernet/renesas/ravb.c
+>> ===================================================================
+>> --- /dev/null
+>> +++ net-next/drivers/net/ethernet/renesas/ravb.c
+>> @@ -0,0 +1,3071 @@
+[...]
+
+>> +/* There is CPU dependent code */
+>> +static int ravb_wait_clear(struct net_device *ndev, u16 reg, u32 bits)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < 100; i++) {
+>> +		if (!(ravb_read(ndev, reg) & bits))
+>> +			break;
+>> +		mdelay(1);
+>> +	}
+>> +	if (i >= 100)
+>> +		return -ETIMEDOUT;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ravb_wait_setting(struct net_device *ndev, u16 reg, u32 bits)
+>> +{
+
+> This function is identical to the previous one.
+
+    It is not, the *break* condition is different. I'll look into merging them 
+though...
+
+>> +	int i;
+>> +
+>> +	for (i = 0; i < 100; i++) {
+>> +		if (ravb_read(ndev, reg) & bits)
+>> +			break;
+>> +		mdelay(1);
+>> +	}
+>> +	if (i >= 100)
+>> +		return -ETIMEDOUT;
+>> +
+>> +	return 0;
+>> +}
+[...]
+>> +static void ravb_get_tx_tstamp(struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +	struct ravb_tstamp_skb *ts_skb, *ts_skb1;
+>> +	struct skb_shared_hwtstamps shhwtstamps;
+>> +	struct sk_buff *skb;
+>> +	struct timespec ts;
+
+> For new drivers, please use timespec64.
+
+    OK, got it.
+
+[...]
+>> +/* Caller must hold the lock */
+>> +static void ravb_ptp_update_compare(struct ravb_private *priv, u32 ns)
+>> +{
+>> +	struct net_device *ndev = priv->ndev;
+>> +	/* When the comparison value (GPTC.PTCV) is in range of
+>> +	 * [x-1 to x+1] (x is the configured increment value in
+>> +	 * GTI.TIV), it may happen that a comparison match is
+>> +	 * not detected when the timer wraps around.
+>> +	 */
+
+> What does this funtion do, exactly?  This looks very fishy to me.
+
+    Perhaps a workaround for an errata I don't know about. Nagai-san, could 
+you maybe elaborate?
+
+>> +	u32 gti_ns_plus_1 = (priv->ptp.current_addend >> 20) + 1;
+>> +
+>> +	if (ns < gti_ns_plus_1)
+>> +		ns = gti_ns_plus_1;
+>> +	else if (ns > 0 - gti_ns_plus_1)
+>> +		ns = 0 - gti_ns_plus_1;
+>> +
+>> +	ravb_write(ndev, ns, GPTC);
+>> +	ravb_write(ndev, ravb_read(ndev, GCCR) | GCCR_LPTC, GCCR);
+>> +	if (ravb_read(ndev, CSR) & CSR_OPS_OPERATION)
+>> +		while (ravb_read(ndev, GCCR) & GCCR_LPTC)
+>> +			;
+
+> Infinite loop while holding a spin lock = not good.
+
+    Sure. I've spent over 3 weeks cleaning this stuff up, yet still it wasn't 
+enough... :-/
+
+[...]
+>> +static irqreturn_t ravb_interrupt(int irq, void *dev_id)
+>> +{
+
+>> +	if (iss & ISS_CGIS) {
+>> +		u32 gis = ravb_read(ndev, GIS);
+>> +
+>> +		gis &= ravb_read(ndev, GIC);
+>> +		if (gis & GIS_PTCF) {
+>> +			struct ptp_clock_event event;
+>> +
+>> +			event.type = PTP_CLOCK_EXTTS;
+>> +			event.index = 0;
+>> +			event.timestamp = ravb_read(ndev, GCPT);
+>> +			ptp_clock_event(priv->ptp.clock, &event);
+>> +		}
+>> +		if (gis & GIS_PTMF) {
+>> +			struct ravb_ptp_perout *perout = priv->ptp.perout;
+>> +
+>> +			if (perout->period) {
+>> +				perout->target += perout->period;
+>> +				ravb_ptp_update_compare(priv, perout->target);
+
+> Infinite loop in an interrupt handler. Brilliant.
+
+    The prize goes to Nagai-san. :-)
+
+[...]
+>> +/* Packet transmit function for Ethernet AVB */
+>> +static int ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +	struct ravb_tstamp_skb *ts_skb = NULL;
+>> +	struct ravb_tx_desc *desc;
+>> +	unsigned long flags;
+>> +	void *buffer;
+>> +	u32 entry;
+>> +	u32 tccr;
+>> +	int q;
+>> +
+>> +	/* If skb needs TX timestamp, it is handled in network control queue */
+>> +	q = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) ? RAVB_NC : RAVB_BE;
+>> +
+>> +	spin_lock_irqsave(&priv->lock, flags);
+>> +	if (priv->cur_tx[q] - priv->dirty_tx[q] >= priv->num_tx_ring[q] - 4) {
+>> +		if (!ravb_tx_free(ndev, q)) {
+>> +			netif_warn(priv, tx_queued, ndev, "TX FD exhausted.\n");
+>> +			netif_stop_queue(ndev);
+>> +			spin_unlock_irqrestore(&priv->lock, flags);
+>> +			return NETDEV_TX_BUSY;
+>> +		}
+>> +	}
+>> +	entry = priv->cur_tx[q] % priv->num_tx_ring[q];
+>> +	priv->cur_tx[q]++;
+>> +	spin_unlock_irqrestore(&priv->lock, flags);
+>> +
+>> +	if (skb_put_padto(skb, ETH_ZLEN))
+>> +		return NETDEV_TX_OK;
+>> +
+>> +	priv->tx_skb[q][entry] = skb;
+>> +	buffer = PTR_ALIGN(priv->tx_buffers[q][entry], RAVB_ALIGN);
+>> +	memcpy(buffer, skb->data, skb->len);
+>> +	desc = &priv->tx_ring[q][entry];
+>> +	desc->ds = skb->len;
+>> +	desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
+>> +				    DMA_TO_DEVICE);
+>> +	if (dma_mapping_error(&ndev->dev, desc->dptr)) {
+>> +		dev_kfree_skb_any(skb);
+>> +		priv->tx_skb[q][entry] = NULL;
+>> +		return NETDEV_TX_OK;
+>> +	}
+>> +
+>> +	/* TX timestamp required */
+>> +	if (q == RAVB_NC) {
+>> +		ts_skb = kmalloc(sizeof(*ts_skb), GFP_ATOMIC);
+>> +		if (!ts_skb) {
+>> +			netdev_err(ndev,
+>> +				   "Cannot allocate skb list element for HW timestamp\n");
+>> +			return -ENOMEM;
+>> +		}
+>> +		ts_skb->skb = skb;
+>> +		ts_skb->tag = priv->ts_skb_tag++;
+>> +		priv->ts_skb_tag %= 0x400;
+>> +		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
+>> +
+>> +		/* TAG and timestamp required flag */
+>> +		skb_tx_timestamp(skb);
+>> +		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+
+> Wrong order WRT skb_tx_timestamp() and SKBTX_IN_PROGRESS.
+
+>  From skbuff.h:
+
+> 	/* device driver is going to provide hardware time stamp */
+> 	SKBTX_IN_PROGRESS = 1 << 2,
+
+    OK, thank you!
+
+[...]
+
+>> +	}
+>> +}
+>> +
+>> +static bool ravb_ptp_is_config(struct ravb_private *priv)
+>> +{
+
+> This is a bit hacky.  Can't your driver make sure that the HW is ready?
+
+    Will look into this. Perhaps it's a remainder from when the PTP driver was 
+separate...
+
+>> +	if (ravb_read(priv->ndev, CSR) & CSR_OPS_CONFIG)
+>> +		return true;
+>> +	else
+>> +		return false;
+>> +}
+>> +
+[...]
+>> +static int ravb_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
+>> +{
+>> +	struct ravb_private *priv = container_of(ptp, struct ravb_private,
+>> +						 ptp.info);
+>> +	unsigned long flags;
+>> +	u64 now;
+>> +
+>> +	if (ravb_ptp_is_config(priv))
+>> +		return -EBUSY;
+>> +
+>> +	spin_lock_irqsave(&priv->lock, flags);
+>> +	now = ravb_ptp_cnt_read(priv);
+>> +	now += delta;
+>> +	ravb_ptp_cnt_write(priv, now);
+>> +	spin_unlock_irqrestore(&priv->lock, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ravb_ptp_gettime(struct ptp_clock_info *ptp, struct timespec *ts)
+
+> The PHC driver API will be changing to timespec64 soon.
+> (See recent patch series.)
+
+     I know. Let's talk when it changes. :-)
+
+[...]
+>> +static int ravb_ptp_perout(struct ptp_clock_info *ptp,
+>> +			   struct ptp_perout_request *req, int on)
+>> +{
+>> +	struct ravb_private *priv = container_of(ptp, struct ravb_private,
+>> +						 ptp.info);
+>> +	struct net_device *ndev = priv->ndev;
+>> +	struct ravb_ptp_perout *perout;
+>> +	unsigned long flags;
+>> +	u32 gic;
+>> +
+>> +	if (req->index)
+>> +		return -EINVAL;
+>> +
+>> +	if (on) {
+>> +		u64 start_ns;
+>> +		u64 period_ns;
+>> +
+>> +		start_ns = req->start.sec * NSEC_PER_SEC + req->start.nsec;
+>> +		period_ns = req->period.sec * NSEC_PER_SEC + req->period.nsec;
+>> +
+>> +		if (start_ns > U32_MAX) {
+>> +			netdev_warn(ndev,
+>> +				    "ptp: Start value (nsec) is over limit. Maximum size of start is only 32 bits\n");
+
+> This line is rather long.
+
+    So what? The lines containing the message strings have no limit on the 
+length AFAIK, yet it seems to me the resulting message should fit into 80 columns.
+
+[...]
+> Thanks,
+> Richard
+
+[...]
+
+>> +MODULE_AUTHOR("Mitsuhiro Kimura");
+
+    OK, should have probably added Nagai-san here...
+
+WBR, Sergei
+
