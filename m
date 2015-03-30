@@ -1,56 +1,56 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v2 5/8] mmc: sdhci-st: Add sdhci_st_set_uhs_signaling
- function.
-Date: Mon, 30 Mar 2015 11:46:39 +0100
-Message-ID: <20150330104639.GC21893@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org>
- <1424956227-18258-6-git-send-email-peter.griffin@linaro.org>
- <54F59362.40605@st.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC] ARM: BCM5301X: Add /device_id property including
+ device ID string
+Date: Mon, 30 Mar 2015 11:58:29 +0100
+Message-ID: <20150330105828.GE17971@leverpostej>
+References: <1427667288-23903-1-git-send-email-zajec5@gmail.com>
+ <20150330103659.GD17971@leverpostej>
+ <CACna6rykQq6AVSWzJh3qnHVNzPXbTD9TMGQf9D9p50pcbQkmng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54F59362.40605@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <maxime.coquelin@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
+In-Reply-To: <CACna6rykQq6AVSWzJh3qnHVNzPXbTD9TMGQf9D9p50pcbQkmng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+> > On Sun, Mar 29, 2015 at 11:14:48PM +0100, Rafa=C5=82 Mi=C5=82ecki w=
+rote:
+> >> Device vendors often assign IDs to their devices to allow comparin=
+g
+> >> firmware image with device model. This is required to prevent user=
+s
+> >> from flashing incompatible image and soft-bricking device.
+> >> Add device_id property to DTs to allow user space (and optionally
+> >> bootloader) verifying firmware images.
+> >
+> > This sounds like exactly what the "model" property is meant to be (=
+per
+> > ePAPR) -- a string that specifices the manufacturer's model number =
+of
+> > the device, ideally in "manufacturer,model" format.
+>=20
+> What if manufacturer decided to use some totally unfriendly ID for
+> their low-level (firmware upgrade) model identification? I can't
+> really see us using
+> model =3D "U12H245T00_NETGEAR"
+> which would mean nothing compared to the current friendly:
+> model =3D "Netgear R6250 V1 (BCM4708)"
 
-On Tue, 03 Mar 2015, Maxime Coquelin wrote:
-> 
-> On 02/26/2015 02:10 PM, Peter Griffin wrote:
-> >To allow UHS modes to work properly we need to provide the st specific
-> >set_uhs_signaling callback function. This function differs from the
-> >generic sdhci_set_uhs_signaling callback in that we need to configure
-> >the correct delay depending on the UHS mode, and also set the V18_EN
-> >bit.
-<snip>
-> >+	if (ret)
-> >+		dev_warn(mmc_dev(host->mmc), "Error setting dll for clock\n");
-> Maybe you could  print the uhs value to know which mode it was
-> trying to set?
+If it uniquely identifies the model, it's fit to be a model string. If
+being "friendly" means that we lose that, then the property is useless
+anyway.
 
-Yes good idea, I have made that change in v3.
-> >+
-> >+	dev_dbg(mmc_dev(host->mmc), "uhs %d, ctrl_2 %04X\n", uhs, ctrl_2);
-> >+
-> >+	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
-> >+}
-> >  static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
-> >  {
-> >@@ -283,6 +332,7 @@ static const struct sdhci_ops sdhci_st_ops = {
-> >  	.set_bus_width = sdhci_set_bus_width,
-> >  	.read_l = sdhci_st_readl,
-> >  	.reset = sdhci_reset,
-> >+	.set_uhs_signaling = sdhci_st_set_uhs_signaling,
-> >  };
-> >  static const struct sdhci_pltfm_data sdhci_st_pdata = {
-> 
-> Other than that, you can add my:
-> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+Note that both examples above deviate from the recommended format, and
+something like: "netgear,U12H245T00" would better align with the
+recommendation.
 
-Thanks, regards,
-
-Peter.
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
