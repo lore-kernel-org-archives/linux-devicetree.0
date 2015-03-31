@@ -1,70 +1,69 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Tue, 31 Mar 2015 11:11:44 +0200
-Message-ID: <CAG374jCjTVBwiNrWoo=X9hUSb-etzn8G-XSXGO_nNYhiL_9k_A@mail.gmail.com>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org>
-	<1426518695.26437.55.camel@x220>
-	<55093C12.7070004@st.com>
-	<1426674930.2649.50.camel@tiscali.nl>
+From: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3] DT: Add documentation for the mfd Maxim max77693
+Date: Tue, 31 Mar 2015 12:14:14 +0300
+Message-ID: <20150331091414.GH18321@valkosipuli.retiisi.org.uk>
+References: <1427709149-15014-1-git-send-email-j.anaszewski@samsung.com>
+ <1427709149-15014-2-git-send-email-j.anaszewski@samsung.com>
+ <20150330115729.GG17971@leverpostej>
+ <55194509.1070008@samsung.com>
+ <20150330132002.GA29200@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1426674930.2649.50.camel@tiscali.nl>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150330132002.GA29200@leverpostej>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Mark and Jacek,
 
-pci-st.c driver could be modular with modification of pcie-designware
-core driver. But as Fabrice said  it should be another patchset.
+On Mon, Mar 30, 2015 at 02:20:03PM +0100, Mark Rutland wrote:
+> Hi,
+> 
+> > >> +Optional properties:
+> > >> +- maxim,trigger-type : Flash trigger type.
+> > >> +	Possible trigger types:
+> > >> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
+> > >> +			the flash,
+> > >> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
+> > >> +			of the flash.
+> > >
+> > > Surely this is required? What should be assumed if this property isn't
+> > > present?
+> > 
+> > LEDS_TRIG_TYPE_LEVEL allows for an ISP to do e.g. short flash blink
+> > before the actual strobe - it is used for eliminating photographs with
+> > closed eyes, or can serve for probing ambient light conditions.
+> > 
+> > With LEDS_TRIG_TYPE_EDGE flash strobe is triggered on rising edge
+> > and lasts until programmed timeout expires.
+> > 
+> > This setting is tightly related to a camera sensor, which generates
+> > the strobe signal. Effectively it depends on board configuration.
+> 
+> My comment wasn't to do with the semantics of eitehr option but rather
+> the optionality of the property.
+> 
+> Surely it's vital to know what this should be, and hence this property
+> should be required rather than optional?
+> 
+> If it isn't required, what would the assumed default be?
 
-What do you prefer ?
+I wonder if there's a use case for edge triggering. In level trigger mode,
+whichever component generates the trigger signal, determines also the strobe
+time (up to the timeout). The sensor or (in the case of lack of the signal
+from the sensor) the ISP has the most information on the sensor timing.
 
-drop all the module related macros as mentioned by Paul ?
-or
-keep macros like other vendors do ?
+The existing as3654a driver only supports level triggering while the chip
+can do edge, too.
 
-Thanks
+I'd make level default and perhaps add a V4L2 control / sysfs file to change
+this if needed.
 
-Gabriel
+-- 
+Kind regards,
 
-On 18 March 2015 at 11:35, Paul Bolle <pebolle@tiscali.nl> wrote:
-> Hi Fabrice,
->
-> Fabrice Gasnier schreef op wo 18-03-2015 om 09:49 [+0100]:
->> On 03/16/2015 04:11 PM, Paul Bolle wrote:
->> >> +config PCI_ST
->> >> +  bool "ST PCIe controller"
->> > You add a bool Kconfig symbol. A week or two ago I saw some patches fly
->> > by that - I think - allowed PCIe controllers to be built modular.
->>
->> Thanks for your review.
->>
->> Are you talking about "PCI: Export symbols of PCI functions" patch, that
->> is part of a series
->> named "pci: iproc: Add Broadcom iProc PCIe support" ?
->
-> Yes, that is the series I was thinking about. (I made you search lkml,
-> and that was a bit rude. But you found the patch anyhow.)
->
->> This controller doesn't look like to be based on pcie-designware core
->> driver.
->> Other vendors that are using "pcie-designware" core driver are also make
->> it bool.
->> The current core driver doesn't support module loading/unloading as I
->> see it.
->> If this is required, I also think this should be part of another patchset.
->>
->> What do you think ?
->
-> I wouldn't know whether your driver might work as a loadable module, but
-> other people reading this surely will. But if it can't work as a module
-> you should drop all the module related macros etc. I spotted. Because
-> then they serve no purpose.
->
->
-> Paul Bolle
->
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
