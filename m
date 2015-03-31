@@ -1,69 +1,79 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH] ARM: dts: Use define for s3c-rtc clock id
-Date: Tue, 31 Mar 2015 15:55:32 +0900
-Message-ID: <064c01d06b7f$aed30cf0$0c7926d0$@kernel.org>
-References: <1427728889-29158-1-git-send-email-k.kozlowski@samsung.com>
- <551A1D27.6000301@samsung.com>
- <CABxcv=moU4xO=BNj6r4_O-VeL_OuAjCuoWiB9xsKWw9NjFTr9g@mail.gmail.com>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Subject: [PATCH v2 1/2] dt-bindings: Document the hi6220 thermal sensor bindings
+Date: Tue, 31 Mar 2015 14:59:21 +0800
+Message-ID: <1427785162-15172-2-git-send-email-kong.kongxinwei@hisilicon.com>
+References: <1427785162-15172-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CABxcv=moU4xO=BNj6r4_O-VeL_OuAjCuoWiB9xsKWw9NjFTr9g@mail.gmail.com>
-Content-language: ko
+In-Reply-To: <1427785162-15172-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Javier Martinez Canillas' <javier@dowhile0.org>, 'Chanwoo Choi' <cw00.choi@samsung.com>
-Cc: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, 'Kukjin Kim' <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Linux Kernel' <linux-kernel@vger.kernel.org>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Marek Szyprowski' <m.szyprowski@samsung.com>, 'Markus Reichl' <m.reichl@fivetechno.de>
+To: rui.zhuang@intel.com, edubezval@gmail.com
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, jorge.ramirez-ortiz@linaro.org, xweikong@hotmail.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Javier Martinez Canillas wrote:
-> 
-> On Tue, Mar 31, 2015 at 6:05 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> > Hi,
-> >
-> > On 03/31/2015 12:21 AM, Krzysztof Kozlowski wrote:
-> >> Use a define instead of raw number as a ID for "rtc_src" clock.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> >>
-> >> ---
-> >>
-> >> Patch depends on new file "dt-bindings/clock/samsung,s2mps11.h" from:
-> >> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg43136.html
-> >> ---
-> >>  arch/arm/boot/dts/exynos3250-rinato.dts | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-> >> index 3905824cac58..d2cbc95364de 100644
-> >> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
-> >> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-> >> @@ -16,6 +16,7 @@
-> >>  #include "exynos3250.dtsi"
-> >>  #include <dt-bindings/input/input.h>
-> >>  #include <dt-bindings/gpio/gpio.h>
-> >> +#include <dt-bindings/clock/samsung,s2mps11.h>
-> >>
-> >>  / {
-> >>       model = "Samsung Rinato board";
-> >> @@ -605,7 +606,7 @@
-> >>  };
-> >>
-> >>  &rtc {
-> >> -     clocks = <&cmu CLK_RTC>, <&s2mps14_osc 0>;
-> >> +     clocks = <&cmu CLK_RTC>, <&s2mps14_osc S2MPS11_CLK_AP>;
-> >>       clock-names = "rtc", "rtc_src";
-> >>       status = "okay";
-> >>  };
-> >>
-> >
-> > Looks good to me.
-> >
-> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >
-> 
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> 
-Thanks for you guys' review. Applied.
+From: kongxinwei <kong.kongxinwei@hisilicon.com>
 
-- Kukjin
+This adds documentation of device tree bindings for the
+thermal sensor controller of hi6220 SoC.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: kongxinwei <kong.kongxinwei@hisilicon.com>
+---
+ .../bindings/thermal/hisilicon-thermal.txt         | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+
+diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+new file mode 100644
+index 0000000..ceb6e2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+@@ -0,0 +1,45 @@
++* Hisilicon Thermal
++
++This driver is for hi6220 SoC which contain 4 thermal sensor.
++
++	1. sensor 0: local sensor;
++	2. sensor 1: remote sensor for ACPU cluster 1;
++	3. sensor 2: remote sensor for ACPU cluster 2;
++	4. sensor 3: remote sensor for GPU.
++
++Every sensor use one child node to represent it, so thermal sensor include
++parent node and four child node. The parent node describe common feature and
++child node describe private feature for thermal sensor;
++
++** Required properties :
++
++- compatible: "hisilicon,tsensor".
++- reg: physical base address of thermal sensor and length of memory mapped
++  region.
++- interrupt: The interrupt number to the cpu. Defines the interrupt used
++  by SOCTHERM.
++- clock-names: Input clock name, should be 'thermal_clk'.
++- clocks: phandles for clock specified in "clock-names" property.
++- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
++
++** Required properties for child nodes :
++
++- hisilicon,tsensor-id: the index of thermal sensor and use it to distinguish
++  thermal sensor. For example: <0> stands for local sensor; <1> stands for
++  acpu1 sensor;
++
++Example :
++
++	tsensor: tsensor@0,f7030700 {
++		compatible = "hisilicon,tsensor";
++		reg = <0x0 0xf7030700 0x0 0x1000>;
++		interrupts = <0 7 0x4>;
++		clocks = <&clock_sys HI6220_TSENSOR_CLK>;
++		clock-names = "thermal_clk";
++		#thermal-sensor-cells = <1>;
++
++		local_sensor {
++			hisilicon,tsensor-id = <0>;
++		}
++		.......
++	}
+-- 
+1.9.1
