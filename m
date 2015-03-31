@@ -1,53 +1,35 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ahci: st: st_configure_oob must be called after IP
- is clocked.
-Date: Tue, 31 Mar 2015 16:36:27 +0100
-Message-ID: <20150331153627.GA8200@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1427787309-1601-1-git-send-email-peter.griffin@linaro.org>
- <1427787309-1601-4-git-send-email-peter.griffin@linaro.org>
- <20150331152958.GF9974@htj.duckdns.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Tue, 31 Mar 2015 11:38:32 -0400 (EDT)
+Message-ID: <20150331.113832.2042398685489897677.davem@davemloft.net>
+References: <20150328082853.GA4255@localhost.localdomain>
+	<5519D380.6070200@cogentembedded.com>
+	<20150331064349.GB4605@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150331152958.GF9974-piEFEHQLUPpN0TnZuCh8vA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150331064349.GB4605@localhost.localdomain>
+Sender: linux-sh-owner@vger.kernel.org
+To: richardcochran@gmail.com
+Cc: sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
+From: Richard Cochran <richardcochran@gmail.com>
+Date: Tue, 31 Mar 2015 08:43:49 +0200
 
-On Tue, 31 Mar 2015, Tejun Heo wrote:
-
-> On Tue, Mar 31, 2015 at 08:35:09AM +0100, Peter Griffin wrote:
-> > Currently the ahci_st driver will hang the system on probe, as the
-> > st_configure_oob function does some register writes before the IP
-> > is clocked. This patch moves the function call to after
-> > ahci_platform_enable_resources (which enables the IP clock), and
-> > resolves the hang.
-> > 
-> > Addtionally st_ahci_configure_oob should be called in the st_ahci_resume
-> > function, so we also rectify that ensuring it is also called after
-> > the IP clock has been enabled.
-> > 
-> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+> On Tue, Mar 31, 2015 at 01:51:44AM +0300, Sergei Shtylyov wrote:
+>> On 03/28/2015 11:28 AM, Richard Cochran wrote:
+>> >We also need SOB from Mitsuhiro and Masaru.
+>> 
+>>    Hmm, it's the first time I encounter such requirement.
 > 
-> How should this patch be routed?  Should I pick this up and apply to
-> libata/for-4.1 or should it go together with the other patches?  If
-> the latter, please feel free to add my acked-by.
+> I think this is normal policy.  I have seen it more than once on lkml.
+> The reason for the author's SOB is to make sure that he or she is
+> really authorized (like from the employer) to contribute the driver.
+> 
+> [adding davem on CC]
+> 
+> Dave, is that correct?
 
-This patch (and also the DT documentation change) can go via your tree. Maxime
-will take the stih407 DT patch.
-
-regards,
-
-Peter.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I refuse to apply any patch without an appropriate signoff.
