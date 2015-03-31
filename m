@@ -1,40 +1,44 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V2 0/3] pinctrl: Support for IMG Pistachio
-Date: Tue, 31 Mar 2015 10:20:37 -0700
-Message-ID: <CAL1qeaFd0dz0wirFzCRfetprjs1vJqm6RrmuPj0sBiEg_mc6pg@mail.gmail.com>
-References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
-	<20150331140034.GE28951@linux-mips.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 3/3] ahci: st: st_configure_oob must be called after IP
+ is clocked.
+Date: Tue, 31 Mar 2015 18:33:55 +0100
+Message-ID: <20150331173355.GA15635@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1427787309-1601-1-git-send-email-peter.griffin@linaro.org>
+ <1427787309-1601-4-git-send-email-peter.griffin@linaro.org>
+ <20150331152958.GF9974@htj.duckdns.org>
+ <20150331153627.GA8200@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150331155951.GG9974@htj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150331140034.GE28951@linux-mips.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150331155951.GG9974@htj.duckdns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 7:00 AM, Ralf Baechle <ralf@linux-mips.org> wrote:
-> On Mon, Mar 30, 2015 at 04:16:53PM -0700, Andrew Bresticker wrote:
->
->> This series adds support for the system pin and GPIO controller on the IMG
->> Pistachio SoC.  Pistachio's system pin controller manages 99 pins, 90 of
->> which are MFIOs which can be muxed between multiple functions or used
->> as GPIOs.  The GPIO control for the 90 MFIOs is broken up into banks
->> of 16.  Pistachio also has a second pin controller, the RPU pin controller,
->> which will be supported by a future patchset through an extension to this
->> driver.
->>
->> Test on an IMG Pistachio BuB.  Based on mips-for-linux-next which inluces my
->> series adding Pistachio platform support [1].  A branch with this series is
->> available at [2].
->
-> Does this mean you want me to funnel this through the MIPS tree?  If so,
-> could I have an Ack from the maintainers?
+Hi Tejun,
 
-Linus mentioned in v1 that if the only dependency was a Kconfig symbol
-that he could take it through his tree.  I'm fine either way, though
-it would be slightly more convenient for it to go through the MIPS
-tree.  Linus?
+On Tue, 31 Mar 2015, Tejun Heo wrote:
 
-Thanks,
-Andrew
+> On Tue, Mar 31, 2015 at 04:36:27PM +0100, Peter Griffin wrote:
+> > This patch (and also the DT documentation change) can go via your tree. Maxime
+> > will take the stih407 DT patch.
+> 
+> Hmmm... The first patch doesn't apply to libata/for-4.1?
+
+I was just investigating this, and you don't have the patch I sent on 25th February
+entitled "ahci: st: Update the DT example for how to obtain the PHY."
+
+I also did a re-send yesterday with ack's collected here https://lkml.org/lkml/2015/3/30/404.
+
+However both times it seems I didn't add you to the email :-( which certainly explains
+why you don't have it.
+
+If I re-send that patch with you on CC can you take and apply it as well? That would
+preserve the ack's.
+
+regards,
+
+Peter.
