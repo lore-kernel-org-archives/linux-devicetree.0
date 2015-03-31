@@ -1,43 +1,62 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC 1/5] clk: shmobile: rcar-gen2: Add CPG Clock Domain
- support
-Date: Tue, 31 Mar 2015 09:16:39 +0900
-Message-ID: <20150331001636.GA16289@verge.net.au>
-References: <1426708017-28885-1-git-send-email-geert+renesas@glider.be>
- <1426708017-28885-2-git-send-email-geert+renesas@glider.be>
- <20150324230036.7930.50037@quantum>
- <20150325010440.GC1767@verge.net.au>
- <CAMuHMdUKjYH9U_o2q9maxCUfvijP=EpX=NUVGOnp=qOF7BHUOw@mail.gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 1/3] powerpc/mpc85xx: Add FMan clock nodes
+Date: Mon, 30 Mar 2015 19:15:21 -0500
+Message-ID: <1427760921.22867.213.camel@freescale.com>
+References: <1424964417-13760-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1427153449.22867.19.camel@freescale.com> <55111FCC.2000806@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUKjYH9U_o2q9maxCUfvijP=EpX=NUVGOnp=qOF7BHUOw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <55111FCC.2000806@Freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Emil Medve <Emilian.Medve@Freescale.com>
+Cc: devicetree@vger.kernel.org, afleming@gmail.com, linuxppc-dev@lists.ozlabs.org, Igal Liberman <Igal.Liberman@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2015 at 11:58:10AM +0200, Geert Uytterhoeven wrote:
-> On Wed, Mar 25, 2015 at 2:04 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Tue, Mar 24, 2015 at 04:00:36PM -0700, Michael Turquette wrote:
-> >> Quoting Geert Uytterhoeven (2015-03-18 12:46:53)
-> >> > Add Clock Domain support to the R-Car Gen2 Clock Pulse Generator (CPG)
-> >> > driver using the generic PM Domain.  This allows to power-manage the
-> >> > module clocks of SoC devices that are part of the CPG Clock Domain using
-> >> > Runtime PM, or for system suspend/resume.
-> >> >
-> >> > SoC devices that are part of the CPG Clock Domain and can be
-> >> > power-managed through their primary clock should be tagged in DT with a
-> >> > proper "power-domains" property.
-> >> >
-> >> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>
-> >> Looks good to me. Which tree do you want this patch to go through?
-> >
-> > My tree seems reasonable from my point of view.
-> > Though at this point it would be targeted at v4.2.
-> 
-> Definitely. Please give Laurent some time to comment.
-
-Sure, please post as a non-RFC once you think it is ready.
+T24gVHVlLCAyMDE1LTAzLTI0IGF0IDAzOjI2IC0wNTAwLCBFbWlsIE1lZHZlIHdyb3RlOgo+IEhl
+bGxvIFNjb3R0LAo+IAo+IAo+IE9uIDAzLzIzLzIwMTUgMDY6MzAgUE0sIFNjb3R0IFdvb2Qgd3Jv
+dGU6Cj4gPiBPbiBUaHUsIDIwMTUtMDItMjYgYXQgMDk6MjYgLTA2MDAsIEVtaWwgTWVkdmUgd3Jv
+dGU6Cj4gPj4gRnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29t
+Pgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBm
+cmVlc2NhbGUuY29tPgo+ID4+IC0tLQo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0
+c2ktcG9zdC5kdHNpICAgIHwgMTEgKysrKysrKysrKysKPiA+PiAgYXJjaC9wb3dlcnBjL2Jvb3Qv
+ZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaSB8ICA4ICsrKysrKysrCj4gPj4gIGFyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kgfCAgOCArKysrKysrKwo+ID4+ICBhcmNo
+L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpIHwgMTYgKysrKysrKysrKysr
+KysrKwo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpIHwg
+MTMgKysrKysrKysrKysrKwo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2kt
+cG9zdC5kdHNpIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+PiAgYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC90MTA0MHNpLXBvc3QuZHRzaSB8ICA4ICsrKysrKysrCj4gPj4gIGFy
+Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kgfCAxMSArKysrKysrKysr
+Kwo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpIHwgMjAg
+KysrKysrKysrKysrKysrKysrKysKPiA+PiAgOSBmaWxlcyBjaGFuZ2VkLCAxMjEgaW5zZXJ0aW9u
+cygrKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRz
+aS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCj4g
+Pj4gaW5kZXggZjhjMzI1ZS4uMzg2MjFlZiAxMDA2NDQKPiA+PiAtLS0gYS9hcmNoL3Bvd2VycGMv
+Ym9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCj4gPj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3Qv
+ZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQo+ID4+IEBAIC0zOTUsNiArMzk1LDE3IEBACj4gPj4gIAkJ
+cmVnID0gPDB4ZTAwMDAgMHhlMDA+Owo+ID4+ICAJCWZzbCxoYXMtcnN0Y3I7Cj4gPj4gIAkJZnNs
+LGxpb2RuLWJpdHMgPSA8MTI+Owo+ID4+ICsKPiA+PiArCQlmbTBjbGs6IGZtMC1jbGstbXV4IHsK
+PiA+PiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+ID4+ICsJCQljb21wYXRpYmxlID0gImZzbCxm
+bWFuLWNsay1tdXgiOwo+ID4+ICsJCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZw
+bGwwIDI+LCA8JnBsbDAgMz4sCj4gPj4gKwkJCQkgPCZwbGF0Zm9ybV9wbGwgMD4sIDwmcGxsMSAx
+PiwgPCZwbGwxIDI+Owo+ID4+ICsJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIs
+ICJwbGwwLWRpdjMiLAo+ID4+ICsJCQkJICAgICAgInBsbDAtZGl2NCIsICJwbGF0Zm9ybS1wbGwi
+LCAicGxsMS1kaXYyIiwKPiA+PiArCQkJCSAgICAgICJwbGwxLWRpdjMiOwo+ID4+ICsJCQljbG9j
+ay1vdXRwdXQtbmFtZXMgPSAiZm0wLWNsayI7Cj4gPj4gKwkJfTsKPiA+IAo+ID4gV2hlcmUncyB0
+aGUgYmluZGluZyBmb3IgZnNsLGZtYW4tY2xrLW11eD8KPiA+IAo+IAo+IElnYWwgd2lsbCBmb2xs
+b3ctdXAgd2l0aCB0aGUgYmluZGluZyBkb2N1bWVudAoKSWdhbCwgcGluZz8KCkkgbmVlZCBhIGJp
+bmRpbmcgYmVmb3JlIEkgY2FuIGFwcGx5IHRoZSBkdHMgcGF0Y2guCgotU2NvdHQKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFp
+bGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
+YWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
