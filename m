@@ -1,85 +1,53 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 2/2] ARM: dts: s3c-rtc: Use s3c6410-rtc instead of exynos3250-rtc
-Date: Tue, 31 Mar 2015 08:43:30 +0200
-Message-ID: <CABxcv=nDca+B1cpZ3d6PhLmpU-RuFgjGZiNCX5X2HivdAPnt-g@mail.gmail.com>
-References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
-	<1427728773-29065-3-git-send-email-k.kozlowski@samsung.com>
-	<5519DE76.4080803@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] Cygnus Audio Driver
+Date: Tue, 31 Mar 2015 07:43:38 +0100
+Message-ID: <20150331064338.GE2869@sirena.org.uk>
+References: <1427771784-29950-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5519DE76.4080803@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, rtc-linux@googlegroups.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1MovezAcxqLtNama"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427771784-29950-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, bryeung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, pwestin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 1:38 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> On 03/31/2015 12:19 AM, Krzysztof Kozlowski wrote:
->> Mark "samsung,exynos3250-rtc" compatible as deprecated because it
->> duplicates the "samsung,s3c6410-rtc". Use "samsung,s3c6410-rtc" on
->> Exynos3250 and Exynos4415 boards.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>  Documentation/devicetree/bindings/rtc/s3c-rtc.txt | 3 ++-
->>  arch/arm/boot/dts/exynos3250.dtsi                 | 2 +-
->>  arch/arm/boot/dts/exynos4415.dtsi                 | 2 +-
->>  3 files changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->> index ab757b84daa7..ac2fcd6ff4b8 100644
->> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->> @@ -6,7 +6,8 @@ Required properties:
->>      * "samsung,s3c2416-rtc" - for controllers compatible with s3c2416 rtc.
->>      * "samsung,s3c2443-rtc" - for controllers compatible with s3c2443 rtc.
->>      * "samsung,s3c6410-rtc" - for controllers compatible with s3c6410 rtc.
->> -    * "samsung,exynos3250-rtc" - for controllers compatible with exynos3250 rtc.
->> +    * "samsung,exynos3250-rtc" - (deprecated) for controllers compatible with
->> +                                 exynos3250 rtc (use "samsung,s3c6410-rtc").
->>  - reg: physical base address of the controller and length of memory mapped
->>    region.
->>  - interrupts: Two interrupt numbers to the cpu should be specified. First
->> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->> index e3bfb11c6ef8..8d58b550e925 100644
->> --- a/arch/arm/boot/dts/exynos3250.dtsi
->> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->> @@ -189,7 +189,7 @@
->>               };
->>
->>               rtc: rtc@10070000 {
->> -                     compatible = "samsung,exynos3250-rtc";
->> +                     compatible = "samsung,s3c6410-rtc";
->>                       reg = <0x10070000 0x100>;
->>                       interrupts = <0 73 0>, <0 74 0>;
->>                       interrupt-parent = <&pmu_system_controller>;
->> diff --git a/arch/arm/boot/dts/exynos4415.dtsi b/arch/arm/boot/dts/exynos4415.dtsi
->> index 5caea996e090..186cb8465683 100644
->> --- a/arch/arm/boot/dts/exynos4415.dtsi
->> +++ b/arch/arm/boot/dts/exynos4415.dtsi
->> @@ -177,7 +177,7 @@
->>               };
->>
->>               rtc: rtc@10070000 {
->> -                     compatible = "samsung,exynos3250-rtc";
->> +                     compatible = "samsung,s3c6410-rtc";
->>                       reg = <0x10070000 0x100>;
->>                       interrupts = <0 73 0>, <0 74 0>;
->>                       status = "disabled";
->>
->
-> Looks good to me.
->
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->
-> Thanks,
-> Chanwoo Choi
-> --
 
-Looks good to me also.
+--1MovezAcxqLtNama
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+On Mon, Mar 30, 2015 at 08:16:22PM -0700, Scott Branden wrote:
 
-Best regards,
-Javier
+> The audio PLL is embedded in the audio block and only used
+> by the audio block. The audio PLL registers are also in the middle of=20
+> the audio register map.
+
+When you say it's only used by the audio block do you mean to say that
+the audio block exposes no clock signals other than the bit and frame
+clocks?
+
+--1MovezAcxqLtNama
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVGkIaAAoJECTWi3JdVIfQGrEH/iGykGJzu81+lPktlVNEUG8q
+h79v8GTsjD2eXwqtvpPrlOMUk0WxFNSXh2C/tdK/rNkUxip62VdBh9Y5lUkXKpZn
+hvnrlsUrGz1zBYT4nj30PdrzkdboUUdoatmBe+Njgrw688llicw2d6/2QDYzEqy3
+3wr7FiS2eiu9QGPbf1/zrOC7XJ5wDOqoJ8xOJYy8x44evs4NWWyl20VFlZjjUfk1
+ZVvCkkq1X5ahmnGtNe9a8BVZqNbMJ7qAw/lUOIINsdmUHZMYPRyhZQnCjnyBrgch
+hz0qOtzB1AiO1yMU/yf0Mbn1NMC+4kiUsNMrF85LyD3TWkssaIA2UH5RS/FIJCE=
+=uHqD
+-----END PGP SIGNATURE-----
+
+--1MovezAcxqLtNama--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
