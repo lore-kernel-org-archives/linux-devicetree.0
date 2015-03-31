@@ -1,90 +1,215 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] clk: Add basic infrastructure for Pistachio clocks
-Date: Mon, 30 Mar 2015 18:21:52 -0700
-Message-ID: <5519F6B0.5040809@codeaurora.org>
-References: <1424836567-7252-1-git-send-email-abrestic@chromium.org>	<1424836567-7252-3-git-send-email-abrestic@chromium.org>	<5519E37C.9010201@codeaurora.org> <CAL1qeaGTtMWDM+p+FpDRP=L-yqQ_ai7LY8GwcBUO_C1F+V1LzQ@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [2/4] powerpc/rcpm: add RCPM driver
+Date: Mon, 30 Mar 2015 20:30:57 -0500
+Message-ID: <20150331013057.GB5667@home.buserror.net>
+References: <1427365095-26396-2-git-send-email-chenhui.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaGTtMWDM+p+FpDRP=L-yqQ_ai7LY8GwcBUO_C1F+V1LzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427365095-26396-2-git-send-email-chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: chenhui zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/30/15 17:15, Andrew Bresticker wrote:
-> On Mon, Mar 30, 2015 at 4:59 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> On 02/24/15 19:56, Andrew Bresticker wrote:
->>> +
->>> +void pistachio_clk_force_enable(struct pistachio_clk_provider *p,
->>> +                             unsigned int *clk_ids, unsigned int num)
->>> +{
->>> +     unsigned int i;
->>> +     int err;
->>> +
->>> +     for (i = 0; i < num; i++) {
->>> +             struct clk *clk = p->clk_data.clks[clk_ids[i]];
->>> +
->>> +             if (IS_ERR(clk))
->>> +                     continue;
->>> +
->>> +             err = clk_prepare_enable(clk);
->>> +             if (err)
->>> +                     pr_err("Failed to enable clock %s: %d\n",
->>> +                            __clk_get_name(clk), err);
->>> +     }
->>> +}
->>>
->> Is this to workaround some problems in the framework where clocks are
->> turned off? Or is it that these clocks are already on before we boot
->> Linux and we need to make sure the framework knows that?
-> It's the former.  These clocks are enabled at POR and may only be
-> gated as the final step to entering suspend, so they must remain on at
-> runtime.  The issue we were running into was that consumers of these
-> critical clocks or their descendants would enable/disable their clocks
-> during boot or runtime PM and cause these clocks to get disabled.
-> Bumping up the prepare/enable count of these critical clocks seemed
-> like the best way to handle this - is there a more preferred way?
-> FWIW, this is also how the Tegra and Rockchip drivers handled this
-> problem.
+On Thu, Mar 26, 2015 at 06:18:13PM +0800, chenhui zhao wrote:
+> There is a RCPM (Run Control/Power Management) in Freescale QorIQ
+> series processors. The device performs tasks associated with device
+> run control and power management.
+> 
+> The driver implements some features: mask/unmask irq, enter/exit low
+> power states, freeze time base, etc.
+> 
+> Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |  23 ++
+>  arch/powerpc/include/asm/fsl_guts.h                | 105 ++++++
+>  arch/powerpc/include/asm/fsl_pm.h                  |  49 +++
+>  arch/powerpc/platforms/85xx/Kconfig                |   1 +
+>  arch/powerpc/sysdev/Kconfig                        |   5 +
+>  arch/powerpc/sysdev/Makefile                       |   1 +
+>  arch/powerpc/sysdev/fsl_rcpm.c                     | 353 +++++++++++++++++++++
+>  7 files changed, 537 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+>  create mode 100644 arch/powerpc/include/asm/fsl_pm.h
+>  create mode 100644 arch/powerpc/sysdev/fsl_rcpm.c
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> new file mode 100644
+> index 0000000..8c21b6c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> @@ -0,0 +1,23 @@
+> +* Run Control and Power Management
+> +
+> +The RCPM performs all device-level tasks associated with device run control
+> +and power management.
+> +
+> +Required properites:
+> +  - reg : Offset and length of the register set of RCPM block.
+> +  - compatible : Specifies the compatibility list for the RCPM. The type
+> +    should be string, such as "fsl,qoriq-rcpm-1.0", "fsl,qoriq-rcpm-2.0".
+> +
+> +Example:
+> +The RCPM node for T4240:
+> +	rcpm: global-utilities@e2000 {
+> +		compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
+> +		reg = <0xe2000 0x1000>;
+> +	};
+> +
+> +The RCPM node for P4080:
+> +	rcpm: global-utilities@e2000 {
+> +		compatible = "fsl,qoriq-rcpm-1.0";
+> +		reg = <0xe2000 0x1000>;
+> +		#sleep-cells = <1>;
+> +	};
 
-Ideally clock providers just provide clocks and don't actually call
-clock consumer APIs. I don't see where these clocks are disabled in this
-series. Is it just because suspend isn't done right now so there isn't a
-place to hook the disable part? I hope that it's a 1:1 relation between
-the clocks that are turned on here and the clocks that are turned off
-during suspend.
+Where is #sleep-cells documented?  It's copy-and-paste from something
+that was never finished from many years ago.
 
-I have a slightly similar problem on my hardware. Consider the case
-where the bootloader has left on the display and audio clocks and they
-share a common parent PLL. When the kernel boots up, all it knows is
-that the display clock and audio clock share a common PLL and the rate
-they're running at. If the audio driver probes first, calls clk_enable()
-on the audio clock (almost a no-op except for the fact that we call the
-.enable op when it's already on) and then calls clk_disable() on the
-audio clock when it's done we'll also turn off the shared PLL.
-Unfortunately it's also being used by the display clock for the display
-driver that hasn't probed yet and so the display stops working and it
-may show an artifact or black screen.
+> diff --git a/arch/powerpc/include/asm/fsl_pm.h b/arch/powerpc/include/asm/fsl_pm.h
+> new file mode 100644
+> index 0000000..bbe6089
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/fsl_pm.h
+> @@ -0,0 +1,49 @@
+> +/*
+> + * Support Power Management
+> + *
+> + * Copyright 2014-2015 Freescale Semiconductor Inc.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +#ifndef __PPC_FSL_PM_H
+> +#define __PPC_FSL_PM_H
+> +#ifdef	__KERNEL__
 
-Other cases are where certain clocks should never be turned off because
-they're used by some non-linux entity (dram controller for example) and
-we don't have a place to put the clk_prepare_enable() besides in the
-clock driver itself. In these cases, it may be better to tell the
-framework that a clock should always be on. I think this case is what
-Lee Jones is working on here[1].
+Put a space after #ifdef, not a tab.
 
-Do you fall into one of these two cases? It isn't clear to me how
-suspend is special and needs to be dealt with differently. Why wouldn't
-these clocks be always on?
+> +#define E500_PM_PH10	1
+> +#define E500_PM_PH15	2
+> +#define E500_PM_PH20	3
+> +#define E500_PM_PH30	4
+> +#define E500_PM_DOZE	E500_PM_PH10
+> +#define E500_PM_NAP	E500_PM_PH15
+> +
+> +#define PLAT_PM_SLEEP	20
+> +#define PLAT_PM_LPM20	30
+> +
+> +#define FSL_PM_SLEEP		(1 << 0)
+> +#define FSL_PM_DEEP_SLEEP	(1 << 1)
+> +
+> +struct fsl_pm_ops {
+> +	/* mask pending interrupts to the RCPM from MPIC */
+> +	void (*irq_mask)(int cpu);
+> +	/* unmask pending interrupts to the RCPM from MPIC */
+> +	void (*irq_unmask)(int cpu);
+> +	/* place the CPU in the specified state */
+> +	void (*cpu_enter_state)(int cpu, int state);
+> +	/* exit the CPU from the specified state */
+> +	void (*cpu_exit_state)(int cpu, int state);
+> +	/* place the platform in the sleep state */
+> +	int (*plat_enter_sleep)(void);
+> +	/* freeze the time base */
+> +	void (*freeze_time_base)(int freeze);
+> +	/* keep the power of IP blocks during sleep/deep sleep */
+> +	void (*set_ip_power)(int enable, u32 *mask);
+> +	/* get platform supported power management modes */
+> +	unsigned int (*get_pm_modes)(void);
+> +};
 
-[1] https://lkml.org/lkml/2015/2/27/548
+Drop the comments that are basically just a restatement of the function
+name.  Where there are comments, it'd be easier to read with a blank line
+between a function and the next comment.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+s/int enable/bool enable/
+s/int freeze/bool freeze/
 
+> +#endif	/* __KERNEL__ */
+> +#endif  /* __PPC_FSL_PM_H */
+
+Please be consistent with whitespace.
+
+> +	default:
+> +		pr_err("%s: Unknown cpu PM state (%d)\n", __func__, state);
+
+WARN?
+
+> +static int rcpm_v2_plat_enter_state(int state)
+> +{
+> +	u32 *pmcsr_reg = &rcpm_v2_regs->powmgtcsr;
+> +	int ret = 0;
+> +	int result;
+> +
+> +	switch (state) {
+> +	case PLAT_PM_LPM20:
+> +		/* clear previous LPM20 status */
+> +		setbits32(pmcsr_reg, RCPM_POWMGTCSR_P_LPM20_ST);
+
+How would the bit be set when you enter here, given that you wait for it
+to clear when leaving?
+
+> +		/* enter LPM20 status */
+> +		setbits32(pmcsr_reg, RCPM_POWMGTCSR_LPM20_RQ);
+> +
+> +		/* At this point, the device is in LPM20 status. */
+> +
+> +		/* resume ... */
+> +		result = spin_event_timeout(
+> +		  !(in_be32(pmcsr_reg) & RCPM_POWMGTCSR_LPM20_ST), 10000, 10);
+> +		if (!result) {
+> +			pr_err("%s: timeout waiting for LPM20 bit to be cleared\n",
+> +			       __func__);
+> +			ret = -ETIMEDOUT;
+> +		}
+> +		break;
+
+"At this point" is a bit misleading.  I think it's clear enough if you
+just drop that comment.
+
+> +	default:
+> +		pr_err("%s: Unknown platform PM state (%d)\n",
+> +		       __func__, state);
+> +		ret = -EINVAL;
+> +	}
+
+WARN?
+
+> +static const struct of_device_id rcpm_matches[] = {
+> +	{
+> +		.compatible = "fsl,qoriq-rcpm-1.0",
+> +		.data = (void *)RCPM_V1,
+> +	},
+> +	{
+> +		.compatible = "fsl,qoriq-rcpm-2.0",
+> +		.data = (void *)RCPM_V2,
+> +	},
+
+Why not point .data directly at the ops?
+
+> +	switch ((unsigned long)match->data) {
+> +	case RCPM_V1:
+> +		rcpm_v1_regs = base;
+> +		qoriq_pm_ops = &qoriq_rcpm_v1_ops;
+> +		break;
+> +
+> +	case RCPM_V2:
+> +		rcpm_v2_regs = base;
+> +		qoriq_pm_ops = &qoriq_rcpm_v2_ops;
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+
+default: break; is unnecessary (and impossible to hit -- if you really
+want default: it should probably WARN).
+
+-Scott
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
