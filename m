@@ -1,37 +1,154 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] watchdog: digicolor: driver for Conexant Digicolor
- CX92755 SoC
-Date: Tue, 31 Mar 2015 08:09:46 -0700
-Message-ID: <551AB8BA.1040703@roeck-us.net>
-References: <9995b9d0be8cda30103be7406a781cd79f347aeb.1427782499.git.baruch@tkos.co.il> <c765076e13eb2407541c256d4c527bbacb53ddd8.1427782499.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c765076e13eb2407541c256d4c527bbacb53ddd8.1427782499.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
+Date: Tue, 31 Mar 2015 17:12:51 +0200
+Message-ID: <1427814771-30335-1-git-send-email-wsa@the-dreams.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Wolfram Sang <wsa@the-dreams.de>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/30/2015 11:14 PM, Baruch Siach wrote:
-> This commit add a driver for the watchdog functionality of the Conexant CX92755
-> SoC, from the Digicolor series of SoCs. Of 8 system timers provided by the
-> CX92755, the first one, timer A, can reset the chip when its counter reaches
-> zero. This driver uses this capability to provide userspace with a standard
-> watchdog, using the watchdog timer driver core framework. This driver also
-> implements a reboot handler for the reboot(2) system call.
->
-> The watchdog driver shares the timer registers with the CX92755 timer driver
-> (drivers/clocksource/timer-digicolor.c). The timer driver, however, uses only
-> timers other than A, so both drivers should coexist.
->
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+I wanted to disable a node via OF_DYNAMIC by setting its status to disabled.
+This code is the minimal testcase, the same happens in a more complex scenario.
+There is something wrong with freeing resources. Is my module wrong? Or is it a
+bug? Crashlog without CONFIG_I2C_CHARDEV, slightly shortened:
 
+[    5.127314] of/notify UPDATE_PROPERTY /i2c@e60b0000:status
+[    5.132814] i2c-sh_mobile e60b0000.i2c: pm_clk_notify() 2
+[    5.138504] bus: 'platform': remove device e60b0000.i2c
+[    5.143762] i2c-sh_mobile e60b0000.i2c: pm_clk_notify() 6
+[    5.149231] device: '7-0068': device_unregister
+[    5.153982] bus: 'i2c': remove device 7-0068
+[    5.158679] device: 'regulator.2': device_unregister
+[    5.165827] i2c 7-0068: uevent
+[    5.168997] i2c i2c-7: adapter [e60b0000.i2c] unregistered
+[    5.174462] device: 'i2c-7': device_unregister
+[    5.179057] bus: 'i2c': remove device i2c-7
+[    5.183570] platform e60b0000.i2c: pm_clk_notify() 7
+[    5.188595] platform e60b0000.i2c: Runtime PM disabled, clock forced off.
+[    5.195368] platform e60b0000.i2c: pm_clk_notify() 3
+[    5.200426] Unable to handle kernel NULL pointer dereference at virtual address 00000018
+[    5.208474] pgd = c0004000
+[    5.211164] [00000018] *pgd=00000000
+[    5.214745] Internal error: Oops: 5 [#1] ARM
+[    5.218995] CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.0.0-rc4-00009-gcb55587ebc4047 #90
+[    5.228148] Hardware name: Generic R8A7790 (Flattened Device Tree)
+[    5.234288] task: ee84d340 ti: ee84e000 task.ti: ee84e000
+[    5.239656] PC is at release_resource+0x20/0x68
+[    5.244171] LR is at _raw_write_lock+0x3c/0x44
+[    5.248591] pc : [<c002417c>]    lr : [<c025f0e0>]    psr: a0000113
+[    5.248591] sp : ee84fcd8  ip : ee84fcb0  fp : ee84fcec
+[    5.259989] r10: 00000000  r9 : c03de2c0  r8 : c03d5694
+[    5.265180] r7 : ee84fdf4  r6 : 0000001c  r5 : 00000000  r4 : ee8efd00
+[    5.271664] r3 : 00000000  r2 : 00000018  r1 : 00000009  r0 : c03c7cd8
+[    5.278149] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+[    5.285410] Control: 10c5347d  Table: 40004059  DAC: 00000015
+[    5.291117] Process swapper (pid: 1, stack limit = 0xee84e208)
+[    5.296911] Stack: (0xee84fcd8 to 0xee850000)
+[    5.301243] fcc0:                                                       00000000 ee8f3e00
+[    5.309375] fce0: ee84fd0c ee84fcf0 c01604fc c0024168 c03d39a0 ee8f3e00 00000000 00000005
+[    5.317507] fd00: ee84fd24 ee84fd10 c016054c c0160494 c03d39a0 ee8f3e10 ee84fd3c ee84fd28
+[    5.325639] fd20: c01aad54 c0160544 ee8f3e34 ee8f3e00 ee84fd64 ee84fd40 c01ab3f8 c01aad08
+...
+[    5.512643] Backtrace:
+[    5.515097] [<c002415c>] (release_resource) from [<c01604fc>] (platform_device_del+0x74/0x84)
+[    5.523561]  r4:ee8f3e00 r3:00000000
+[    5.527145] [<c0160488>] (platform_device_del) from [<c016054c>] (platform_device_unregister+0x14/0x20)
+[    5.536469]  r6:00000005 r5:00000000 r4:ee8f3e00 r3:c03d39a0
+[    5.542152] [<c0160538>] (platform_device_unregister) from [<c01aad54>] (of_platform_device_destroy+0x58/0xa8)
+[    5.552080]  r4:ee8f3e10 r3:c03d39a0
+[    5.555667] [<c01aacfc>] (of_platform_device_destroy) from [<c01ab3f8>] (of_platform_notify+0xcc/0xe8)
+[    5.564905]  r4:ee8f3e00 r3:ee8f3e34
+[    5.568493] [<c01ab32c>] (of_platform_notify) from [<c00389b0>] (notifier_call_chain+0x48/0x70)
+[    5.577128]  r6:00000005 r5:00000000 r4:ffffffff
+[    5.581759] [<c0038968>] (notifier_call_chain) from [<c0038c78>] (__blocking_notifier_call_chain+0x4c/0x64)
+[    5.591429]  r8:00000005 r7:ee84fdf4 r6:ffffffff r5:c03d7ba4 r4:c03d7b98 r3:ffffffff
+[    5.599192] [<c0038c2c>] (__blocking_notifier_call_chain) from [<c0038cb0>] (blocking_notifier_call_chain+0x20/0x28)
+[    5.609637]  r8:c0340d2c r7:c0340d2c r6:ee84fe88 r5:00000005 r4:ee84fdf4
+[    5.616365] [<c0038c90>] (blocking_notifier_call_chain) from [<c01ab868>] (of_reconfig_notify+0x88/0xa8)
+[    5.625788] [<c01ab7e0>] (of_reconfig_notify) from [<c01aba70>] (of_property_notify+0x44/0x4c)
+[    5.634338]  r5:ee84fe88 r4:ee940440
+[    5.637925] [<c01aba2c>] (of_property_notify) from [<c01abafc>] (__of_changeset_entry_notify+0x84/0xc4)
+[    5.647263] [<c01aba78>] (__of_changeset_entry_notify) from [<c01ac408>] (of_changeset_apply+0xa4/0xe4)
+[    5.656588]  r4:ee940440
+[    5.659126] [<c01ac364>] (of_changeset_apply) from [<c0335744>] (test_init+0x84/0xa8)
+[    5.666900]  r6:00000000 r5:c03356c0 r4:eefd18b8
+[    5.671533] [<c03356c0>] (test_init) from [<c0321dd8>] (do_one_initcall+0x108/0x1bc)
+[    5.679220]  r4:ee940440
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/of/Makefile       |  2 +-
+ drivers/of/wsa_testcase.c | 48 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/of/wsa_testcase.c
+
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index 7563f36c71db34..4ec30a5bab39d5 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -1,4 +1,4 @@
+-obj-y = base.o device.o platform.o
++obj-y = base.o device.o platform.o wsa_testcase.o
+ obj-$(CONFIG_OF_DYNAMIC) += dynamic.o
+ obj-$(CONFIG_OF_FLATTREE) += fdt.o
+ obj-$(CONFIG_OF_EARLY_FLATTREE) += fdt_address.o
+diff --git a/drivers/of/wsa_testcase.c b/drivers/of/wsa_testcase.c
+new file mode 100644
+index 00000000000000..b6bffd1acf76ad
+--- /dev/null
++++ b/drivers/of/wsa_testcase.c
+@@ -0,0 +1,48 @@
++/*
++ * Testcase for disabling nodes via OF_DYNAMIC
++ *
++ * Copyright (C) 2015 by Wolfram Sang, Sang Engineering <wsa@sang-engineering.com>
++ * Copyright (C) 2015 by Renesas Electronics Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; version 2 of the License.
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include "of_private.h"
++
++static __init int test_init(void)
++{
++
++	struct i2c_adapter *adap;
++	struct device_node *np;
++	struct of_changeset chgset;
++	struct property status_chg = { .name = "status", .length = 9, .value = "disabled" };
++	int ret;
++
++	// Use an active adapter here
++	adap = i2c_get_adapter(0);
++	if (!adap)
++		return -EPROBE_DEFER;
++
++	np = adap->dev.of_node;
++
++	i2c_put_adapter(adap);
++
++	of_changeset_init(&chgset);
++	of_changeset_update_property(&chgset, np, &status_chg);
++
++	mutex_lock(&of_mutex);
++	ret = of_changeset_apply(&chgset);
++	mutex_unlock(&of_mutex);
++
++	return ret;
++}
++late_initcall(test_init);
++
++MODULE_AUTHOR("Wolfram Sang <wsa@sang-engineering.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.4
+
