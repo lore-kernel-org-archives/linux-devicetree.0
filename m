@@ -1,125 +1,46 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] ARM: dts: mt8173: support arm64 cpuidle-dt
-Date: Tue, 31 Mar 2015 16:33:23 +0100
-Message-ID: <20150331153323.GA24851@red-moon>
-References: <1427772277-2414-1-git-send-email-howard.chen@linaro.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 3/3] ahci: st: st_configure_oob must be called after IP
+ is clocked.
+Date: Tue, 31 Mar 2015 17:33:23 +0200
+Message-ID: <551ABE43.60602@st.com>
+References: <1427787309-1601-1-git-send-email-peter.griffin@linaro.org> <1427787309-1601-4-git-send-email-peter.griffin@linaro.org> <20150331152958.GF9974@htj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1427772277-2414-1-git-send-email-howard.chen@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Howard Chen <howard.chen@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150331152958.GF9974@htj.duckdns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 04:24:37AM +0100, Howard Chen wrote:
-> add an idle-states node to describe the mt8173 cpu idle
-> add a reference to the idle-states node in each CPU node
+Hello Tejun,
 
-You are also changing the PSCI version in this patch, but
-I think it is acceptable to have multiple changes at once
-to avoid churning out dts changes.
+On 03/31/2015 05:29 PM, Tejun Heo wrote:
+> On Tue, Mar 31, 2015 at 08:35:09AM +0100, Peter Griffin wrote:
+>> Currently the ahci_st driver will hang the system on probe, as the
+>> st_configure_oob function does some register writes before the IP
+>> is clocked. This patch moves the function call to after
+>> ahci_platform_enable_resources (which enables the IP clock), and
+>> resolves the hang.
+>>
+>> Addtionally st_ahci_configure_oob should be called in the st_ahci_resume
+>> function, so we also rectify that ensuring it is also called after
+>> the IP clock has been enabled.
+>>
+>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+> How should this patch be routed?  Should I pick this up and apply to
+> libata/for-4.1 or should it go together with the other patches?  If
+> the latter, please feel free to add my acked-by.
 
-Commit log should be rewritten, lack of punctuation,
-missing capitalization, etc; in short, please rewrite it.
-
-> Signed-off-by: Howard Chen <howard.chen@linaro.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 30 ++++++++++++++++++++++++++----
->  1 file changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 8554ec3..96dff1e 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -48,6 +48,8 @@
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
->  			reg = <0x000>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
-
-You are free to use the labels you want, but you tell me why
-CPU_SLEEP_0_0 is used where eg CPU_SLEEP_0 would be sufficient
-and clearer (comment valid for all cpu nodes). Copy'n'paste ?
-
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -55,6 +57,7 @@
->  			compatible = "arm,cortex-a53";
->  			reg = <0x001>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
->  		};
->  
->  		cpu2: cpu@100 {
-> @@ -62,6 +65,7 @@
->  			compatible = "arm,cortex-a57";
->  			reg = <0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
->  		};
->  
->  		cpu3: cpu@101 {
-> @@ -69,15 +73,33 @@
->  			compatible = "arm,cortex-a57";
->  			reg = <0x101>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
->  		};
-> +
-> +		idle-states {
-> +			entry-method = "arm,psci-0.2";
-
-"arm,psci"
-
-> +
-> +			CPU_SLEEP_0_0: cpu-sleep-0-0 {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x0010000>;
-> +				entry-latency-us = <600>;
-> +				exit-latency-us = <600>;
-> +				min-residency-us = <1200>;
-> +			};
-> +
-> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x1010000>;
-> +				entry-latency-us = <800>;
-> +				exit-latency-us = <1000>;
-> +				min-residency-us = <2000>;
-> +				wakeup-latency-us = <1000>;
-> +			};
-
-You tested these latency values right ?
-
->  	};
->  
->  	psci {
-> -		compatible = "arm,psci";
-> +		compatible = "arm,psci-0.2";
-
-See my comment in the commit log, this change is independent of idle
-states changes.
+I think you can pick patches 1 & 3.
+I will apply patch 2 to STi DT branch.
 
 Thanks,
-Lorenzo
+Maxime
+>
+> Thanks.
+>
 
->  		method = "smc";
-> -		cpu_suspend   = <0x84000001>;
-> -		cpu_off	      = <0x84000002>;
-> -		cpu_on	      = <0x84000003>;
->  	};
->  
->  	uart_clk: dummy26m {
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
