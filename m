@@ -1,88 +1,48 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH RESEND] ARM: dts: OMAP3-N900: Add microphone bias voltages
-Date: Tue, 31 Mar 2015 14:32:33 +0200
-Message-ID: <20150331123233.GA15103@earth>
-References: <1425236828-28349-1-git-send-email-jarkko.nikula@bitmer.com>
- <55197A12.1050009@bitmer.com>
- <20150330164237.GJ10805@atomide.com>
- <55198BA4.5010207@bitmer.com>
- <20150330175051.GK10805@atomide.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V3 0/2] i2c: jz4780: Add Ingenic JZ4780 i2c driver
+Date: Tue, 31 Mar 2015 14:03:54 +0100
+Message-ID: <1427807036-45366-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150330175051.GK10805@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
-
-
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Mar 30, 2015 at 10:50:52AM -0700, Tony Lindgren wrote:
-> * Jarkko Nikula <jarkko.nikula@bitmer.com> [150330 10:46]:
-> > Well, there has been regression but finding exactly how far should the
-> > fix go didn't look instantly straightforward due all DT, codec driver
-> > mic bias etc changes and I ended up not cc'ing stable.
-> >=20
-> > But well, I guess first kernel where this commit makes sense is 3.16+
-> > due commit f7d0f2a08567 ("ARM: dts: omap3-n900: Add sound support").
-> > Although it applies on top of commit 14e3e295b2b9 ("ARM: dts:
-> > omap3-n900: Add TLV320AIC3X support") too (3.12+) but not before that.
->=20
-> OK I think debian is using v3.16 kernel
+Here we have two patches that add support for the i2c
+controller present in the Ingenic JZ4780.
 
-Yes. It will be used for Debian jessie (not yet released) and the
-N900 related drivers are enabled in the armmp flavour. Unfortunately
-it does not work together with thumb using userland because the
-errata 430973 workaround is not enabled.
+Driver tested on the MIPS Creator CI20.
 
-See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D768890
+V2 - > V3
+Fixes based on feedback from Wolfram Sang. Thank-you.
+Details in individual patch commit message
+Rebased to v4.0-rc6
 
-I guess it should be tried to change the workaround, so that it does
-only change the behaviour of affected platforms. Otherwise its a
-hard decision for distributions to enable the workaround.
+V1 - > V2
+Rebased to v4.0-rc3
+Minor tweaks/fixes. Details in individual patch commits.
 
-> and that's pretty much the first kernel that is usable with dts on
-> many omap3 devices so might make sense for that.
+Feedback welcome.
 
-DT support for N900's soundcard has been added in 3.16, so before
-that the audio stuff didn't work at all.
+Thank-you
+ZubairLK
 
-> I can add it if you think it makes sense.
 
-I guess backporting this makes sense because of fewer "broken" DTB
-files in the wild.
+Zubair Lutfullah Kakakhel (2):
+  dt-bindings: i2c: Add dt binding documentation for ingenic jz4780 SoC
+  i2c: jz4780: Add i2c bus controller driver for Ingenic JZ4780
 
--- Sebastian
+ .../devicetree/bindings/i2c/i2c-jz4780.txt         |  35 +
+ drivers/i2c/busses/Kconfig                         |   9 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-jz4780.c                    | 832 +++++++++++++++++++++
+ 4 files changed, 877 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
+ create mode 100644 drivers/i2c/busses/i2c-jz4780.c
 
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVGpPeAAoJENju1/PIO/qaZCAP/jFgOY3YMlHC5MAlhbQjO6m+
-XIGoO/DYWUpGgTRUfsiFdeGOBpukT7GDxV+pMHebjX9ETZD4/IpKIyP9ASLEFbkY
-Skrra4uleH5v6RNEQRLlEDodGba8kI8BV7qqR13AxuoLvENEOlYBvVOS6fTG7B44
-QSnRUJe/ROrc/zwl2+n0/pAUgV60S5+ODlKaw/NcNmfx6DwjBStrU1wjTEp38yqc
-sqG8AFF+pKkAk5ns/BHSoQY/sBXwBeecEwQlU7PZ702Lf81mUlZoyQTXOoCwFWFp
-me4dxTF3Jm23Nw2qrA5roVIyn7LzBXuyszX8g0yUZgjv6b/Xxx0SoG9a/Ip8hqdn
-AxoKTjr+qA0rCGYBea8uQsBlBWqkv/pX0WcVsQZOi6iNSjLImbSQcoRXOhm0Odp3
-FCjvzhD1ejTMcXSglUti0eP8afeg2nY8H/wxMmmJPpkBHvDVbZe3iOnaw+zghIBE
-fmDZ6mhIHI+aATTZ89S9TIr+xztrFQ1aBbos4Q39w1S8lEnZtcqp7RC+edrjQzmt
-hxm3JiyOC7eQsAMlQXaPvQeRUZ0BkKAu07pn2/byCWijnvlWmQkrBCpEk9Stysjx
-0c1mIp4vP+mJ8S3GY2FcGbvD6LGlYY3zhdmWFFFNX2oJpi2fTN7sq5DOS33J0xQS
-6jaaOQ8jK7jR3ZD1iMkX
-=iZbr
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
+-- 
+1.9.1
