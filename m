@@ -1,56 +1,43 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/7] clk: Add basic infrastructure for Pistachio clocks
-Date: Mon, 30 Mar 2015 17:15:43 -0700
-Message-ID: <CAL1qeaGTtMWDM+p+FpDRP=L-yqQ_ai7LY8GwcBUO_C1F+V1LzQ@mail.gmail.com>
-References: <1424836567-7252-1-git-send-email-abrestic@chromium.org>
-	<1424836567-7252-3-git-send-email-abrestic@chromium.org>
-	<5519E37C.9010201@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 1/5] clk: shmobile: rcar-gen2: Add CPG Clock Domain
+ support
+Date: Tue, 31 Mar 2015 09:16:39 +0900
+Message-ID: <20150331001636.GA16289@verge.net.au>
+References: <1426708017-28885-1-git-send-email-geert+renesas@glider.be>
+ <1426708017-28885-2-git-send-email-geert+renesas@glider.be>
+ <20150324230036.7930.50037@quantum>
+ <20150325010440.GC1767@verge.net.au>
+ <CAMuHMdUKjYH9U_o2q9maxCUfvijP=EpX=NUVGOnp=qOF7BHUOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5519E37C.9010201-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUKjYH9U_o2q9maxCUfvijP=EpX=NUVGOnp=qOF7BHUOw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2015 at 4:59 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 02/24/15 19:56, Andrew Bresticker wrote:
->> +
->> +void pistachio_clk_force_enable(struct pistachio_clk_provider *p,
->> +                             unsigned int *clk_ids, unsigned int num)
->> +{
->> +     unsigned int i;
->> +     int err;
->> +
->> +     for (i = 0; i < num; i++) {
->> +             struct clk *clk = p->clk_data.clks[clk_ids[i]];
->> +
->> +             if (IS_ERR(clk))
->> +                     continue;
->> +
->> +             err = clk_prepare_enable(clk);
->> +             if (err)
->> +                     pr_err("Failed to enable clock %s: %d\n",
->> +                            __clk_get_name(clk), err);
->> +     }
->> +}
->>
->
-> Is this to workaround some problems in the framework where clocks are
-> turned off? Or is it that these clocks are already on before we boot
-> Linux and we need to make sure the framework knows that?
+On Mon, Mar 30, 2015 at 11:58:10AM +0200, Geert Uytterhoeven wrote:
+> On Wed, Mar 25, 2015 at 2:04 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Tue, Mar 24, 2015 at 04:00:36PM -0700, Michael Turquette wrote:
+> >> Quoting Geert Uytterhoeven (2015-03-18 12:46:53)
+> >> > Add Clock Domain support to the R-Car Gen2 Clock Pulse Generator (CPG)
+> >> > driver using the generic PM Domain.  This allows to power-manage the
+> >> > module clocks of SoC devices that are part of the CPG Clock Domain using
+> >> > Runtime PM, or for system suspend/resume.
+> >> >
+> >> > SoC devices that are part of the CPG Clock Domain and can be
+> >> > power-managed through their primary clock should be tagged in DT with a
+> >> > proper "power-domains" property.
+> >> >
+> >> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>
+> >> Looks good to me. Which tree do you want this patch to go through?
+> >
+> > My tree seems reasonable from my point of view.
+> > Though at this point it would be targeted at v4.2.
+> 
+> Definitely. Please give Laurent some time to comment.
 
-It's the former.  These clocks are enabled at POR and may only be
-gated as the final step to entering suspend, so they must remain on at
-runtime.  The issue we were running into was that consumers of these
-critical clocks or their descendants would enable/disable their clocks
-during boot or runtime PM and cause these clocks to get disabled.
-Bumping up the prepare/enable count of these critical clocks seemed
-like the best way to handle this - is there a more preferred way?
-FWIW, this is also how the Tegra and Rockchip drivers handled this
-problem.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, please post as a non-RFC once you think it is ready.
