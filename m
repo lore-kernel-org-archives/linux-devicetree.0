@@ -1,48 +1,57 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 2/2] ARM: dts: s3c-rtc: Use s3c6410-rtc instead of
- exynos3250-rtc
-Date: Tue, 31 Mar 2015 10:12:04 +0200
-Message-ID: <20150331081204.GH3849@piout.net>
-References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
- <1427728773-29065-3-git-send-email-k.kozlowski@samsung.com>
- <5519DE76.4080803@samsung.com>
- <20150331003101.GG3849@piout.net>
- <5519EE93.70509@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5519EE93.70509@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, Kyungmin Park <kyungmin.park@samsung.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler TAB7200
+Date: Tue, 31 Mar 2015 11:18:17 +0300
+Message-ID: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31/03/2015 at 09:47:15 +0900, Chanwoo Choi wrote :
-> > Are you absolutely sure that the exynos3250 IP is the same as the
-> > s3c6410 (I don't know much about the exynos family). The concern being
-> > that if at one point you have an errata on one or ther other, you will
-> > have to break the DT ABI by undoing this change.
-> > 
-> > Note that I'm fine with it, I'm just asking.
-> 
-> I'm sure about exynos3250 RTC is same with S3C6410 RTC.
-> There was little different about that pevious S3C6410 RTC
-> don't consider to control the 'rtc_src' clk.
-> 
-> 
-> But, Javier's patch[1] add the '.needs_src_clk' to control the
-> 'rtc_src' clk. After merged this patch, there is no different part between
-> Exynos3250 RTC and S3C6410 RTC.
-> 
-> [1] 8792f7772f4f (drivers/rtc/rtc-s3c.c: add .needs_src_clk to s3c6410 RTC data)
-> 
+This patch adds nodes for the Goodix GT911 touchscreen controller found
+on the Wexler TAB7200 tablet. Controller uses one of following I2C
+addresses: 0x5d or 0x14, so just add two nodes.
 
-Yes, I saw that the software was handling both the same way, I was
-asking about the hardware side.
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+DT support for the Goodix GT911 touchscreen controller has been queued up
+by Dmitry Torokhov for merging into 4.1:
+https://git.kernel.org/cgit/linux/kernel/git/dtor/input.git/commit/?h=next&id=771d8f1b178e7e09fcc641fccd48852958dbc329
 
+IRQ flags are set by the touchscreen controller driver, so use IRQ_TYPE_NONE.
 
+ arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+index 2ad3b09..34e2bce 100644
+--- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
++++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+@@ -101,6 +101,20 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c2_pins_a>;
+ 	status = "okay";
++
++	gt911@5d {
++		compatible = "goodix,gt911";
++		reg = <0x5d>;
++		interrupt-parent = <&pio>;
++		interrupts = <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
++	};
++
++	gt911@14 {
++		compatible = "goodix,gt911";
++		reg = <0x14>;
++		interrupt-parent = <&pio>;
++		interrupts = <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
++	};
+ };
+ 
+ &lradc {
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.0.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
