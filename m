@@ -1,50 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [rtc-linux] Re: [PATCH 2/2] ARM: dts: s3c-rtc: Use s3c6410-rtc
- instead of exynos3250-rtc
-Date: Tue, 31 Mar 2015 10:56:15 +0200
-Message-ID: <CAJKOXPc7px9Aq4b6DRyKnNf=uREYzO0L41ANzKXB3n9HTzV9oQ@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [rtc-linux] Re: [PATCH 1/2] drivers/rtc/rtc-s3c.c: Integrate
+ Exynos3250 into S3C6410
+Date: Tue, 31 Mar 2015 11:00:31 +0200
+Message-ID: <CAJKOXPemefBOfOUV_azuJbiOMGurZLTGtFKBx7rW6NCgu+sjvQ@mail.gmail.com>
 References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
-	<1427728773-29065-3-git-send-email-k.kozlowski@samsung.com>
-	<5519DE76.4080803@samsung.com>
-	<20150331003101.GG3849@piout.net>
-	<5519EE93.70509@samsung.com>
-	<20150331081204.GH3849@piout.net>
+	<1427728773-29065-2-git-send-email-k.kozlowski@samsung.com>
+	<20150331002709.GF3849@piout.net>
+	<CABxcv==+h8R-tL9D5OXmYsuYfs_cLATViZ3N1veZwZBZF=fu0Q@mail.gmail.com>
+	<20150331082052.GI3849@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150331081204.GH3849@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rtc-linux@googlegroups.com
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150331082052.GI3849-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-31 10:12 GMT+02:00 Alexandre Belloni
-<alexandre.belloni@free-electrons.com>:
-> On 31/03/2015 at 09:47:15 +0900, Chanwoo Choi wrote :
->> > Are you absolutely sure that the exynos3250 IP is the same as the
->> > s3c6410 (I don't know much about the exynos family). The concern being
->> > that if at one point you have an errata on one or ther other, you will
->> > have to break the DT ABI by undoing this change.
+2015-03-31 10:20 GMT+02:00 Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi,
+>
+> On 31/03/2015 at 08:49:39 +0200, Javier Martinez Canillas wrote :
+>> Hello Alexandre,
+>>
+>> On Tue, Mar 31, 2015 at 2:27 AM, Alexandre Belloni
+>> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > nitpick: I would prefer rtc: rtc-s3c instead of drivers/rtc/rtc-s3c.c
 >> >
->> > Note that I'm fine with it, I'm just asking.
 >>
->> I'm sure about exynos3250 RTC is same with S3C6410 RTC.
->> There was little different about that pevious S3C6410 RTC
->> don't consider to control the 'rtc_src' clk.
->>
->>
->> But, Javier's patch[1] add the '.needs_src_clk' to control the
->> 'rtc_src' clk. After merged this patch, there is no different part between
->> Exynos3250 RTC and S3C6410 RTC.
->>
->> [1] 8792f7772f4f (drivers/rtc/rtc-s3c.c: add .needs_src_clk to s3c6410 RTC data)
+>> Yes but Krzysztof is following the convention used in drivers/rtc/
+>> which I think is the correct thing to do even when it's different from
+>> what is used all over the kernel.
 >>
 >
-> Yes, I saw that the software was handling both the same way, I was
-> asking about the hardware side.
+> Having a look at the git history, the first and most used prefix is
+> actually 'rtc:' at some point, this started to change to 'drivers/rtc/'.
+> We should probably start to get back to 'rtc:', like most subsystems.
 
-The hardware is exactly the same. Or maybe I should say: I could not
-find any differences.
+Yes, I used "rtc: driver_name:" before but I saw that Andrew changes
+them to full path when he picks the patch. So this time I wanted to
+reduce the overhead for him... Anyway I'll stick to one format ("rtc:
+rtc-s3c:") as you proposed.
 
 Best regards,
 Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
