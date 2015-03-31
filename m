@@ -1,38 +1,56 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 0/7] clk: Common clock support for IMG Pistachio
-Date: Mon, 30 Mar 2015 17:01:09 -0700
-Message-ID: <5519E3C5.7040806@codeaurora.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/7] clk: Add basic infrastructure for Pistachio clocks
+Date: Mon, 30 Mar 2015 17:15:43 -0700
+Message-ID: <CAL1qeaGTtMWDM+p+FpDRP=L-yqQ_ai7LY8GwcBUO_C1F+V1LzQ@mail.gmail.com>
 References: <1424836567-7252-1-git-send-email-abrestic@chromium.org>
+	<1424836567-7252-3-git-send-email-abrestic@chromium.org>
+	<5519E37C.9010201@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424836567-7252-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Mike Turquette <mturquette@linaro.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5519E37C.9010201-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/15 19:56, Andrew Bresticker wrote:
-> This series adds common clock support for the IMG Pistachio SoC.
-> Pistachio has two clock controllers (core and peripheral) and two
-> general control blocks (peripheral and top) which also contain
-> several clock gates.  Like the recently submitted pinctrl driver [1],
-> this driver is written so that it's hopefully easy to add support
-> for future IMG SoCs.
+On Mon, Mar 30, 2015 at 4:59 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 02/24/15 19:56, Andrew Bresticker wrote:
+>> +
+>> +void pistachio_clk_force_enable(struct pistachio_clk_provider *p,
+>> +                             unsigned int *clk_ids, unsigned int num)
+>> +{
+>> +     unsigned int i;
+>> +     int err;
+>> +
+>> +     for (i = 0; i < num; i++) {
+>> +             struct clk *clk = p->clk_data.clks[clk_ids[i]];
+>> +
+>> +             if (IS_ERR(clk))
+>> +                     continue;
+>> +
+>> +             err = clk_prepare_enable(clk);
+>> +             if (err)
+>> +                     pr_err("Failed to enable clock %s: %d\n",
+>> +                            __clk_get_name(clk), err);
+>> +     }
+>> +}
+>>
 >
-> Tested on an IMG Pistachio BuB.  Based on 4.0-rc1 + my series adding
-> Pistachio platform support [2], which introduces the MACH_PISTACHIO
-> Kconfig symbol.  A branch with this series and the dependent patches
-> is available at [3].  I'd like this to go through the MIPS tree with
-> Mike's or Stephen's ACK if possible.
->
->
+> Is this to workaround some problems in the framework where clocks are
+> turned off? Or is it that these clocks are already on before we boot
+> Linux and we need to make sure the framework knows that?
 
-Minor comment on patch 2, but otherwise
-
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It's the former.  These clocks are enabled at POR and may only be
+gated as the final step to entering suspend, so they must remain on at
+runtime.  The issue we were running into was that consumers of these
+critical clocks or their descendants would enable/disable their clocks
+during boot or runtime PM and cause these clocks to get disabled.
+Bumping up the prepare/enable count of these critical clocks seemed
+like the best way to handle this - is there a more preferred way?
+FWIW, this is also how the Tegra and Rockchip drivers handled this
+problem.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
