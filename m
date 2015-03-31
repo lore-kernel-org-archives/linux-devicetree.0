@@ -1,99 +1,74 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] phy: cygnus-usbphy: Add Broadcom Cygnus USB phy
- driver
-Date: Tue, 31 Mar 2015 11:46:52 +0530
-Message-ID: <551A3BD4.2040404@ti.com>
-References: <1426886727-537-1-git-send-email-arun.ramamurthy@broadcom.com> <1426886727-537-4-git-send-email-arun.ramamurthy@broadcom.com> <551336A2.1050704@ti.com> <20150325224253.GA16950@dtor-ws> <55134C3E.4060400@ti.com> <55134D73.7060507@broadcom.com>
+From: "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>
+Subject: RE: [PATCH 1/3] powerpc/mpc85xx: Add FMan clock nodes
+Date: Tue, 31 Mar 2015 06:17:19 +0000
+Message-ID: <BY2PR03MB379E54862E2122AAE20CBF4E6F40@BY2PR03MB379.namprd03.prod.outlook.com>
+References: <1424964417-13760-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1427153449.22867.19.camel@freescale.com> <55111FCC.2000806@Freescale.com>
+ <1427760921.22867.213.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55134D73.7060507-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1427760921.22867.213.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>, Emilian Medve <Emilian.Medve@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "afleming@gmail.com" <afleming@gmail.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 26 March 2015 05:36 AM, Arun Ramamurthy wrote:
->
->
-> On 15-03-25 05:01 PM, Kishon Vijay Abraham I wrote:
->>
->>
->> On Thursday 26 March 2015 04:12 AM, Dmitry Torokhov wrote:
->>> Hi Kishon,
->>>
->>> On Thu, Mar 26, 2015 at 03:58:50AM +0530, Kishon Vijay Abraham I wrote:
->>>> Hi,
->>>>
->>>> On Saturday 21 March 2015 02:55 AM, Arun Ramamurthy wrote:
->>>>> +struct bcm_phy_driver {
->>>>> +    void __iomem *usbphy_regs;
->>>>> +    void __iomem *usb2h_idm_regs;
->>>>> +    void __iomem *usb2d_idm_regs;
->>>>> +    struct bcm_phy_instance *ports[MAX_PHY_PORTS];
->>>>
->>>> er.. can't we allocate this dynamically?
->>>
->>> The chip has support for only 3 phys, so I believe allocating array of 3
->>> pointers is simplest.
->>>
->>> [...]
->>>
->>>>> +
->>>>> +static struct phy *bcm_usb_phy_xlate(struct device *dev,
->>>>> +                     struct of_phandle_args *args)
->>>>> +{
->>>>> +    struct bcm_phy_driver *phy_driver = dev_get_drvdata(dev);
->>>>> +    struct bcm_phy_instance *port = NULL;
->>>>> +    int i;
->>>>> +
->>>>> +    if (!phy_driver)
->>>>> +        return ERR_PTR(-EINVAL);
->>>>> +
->>>>> +    if (WARN_ON(args->args_count != 1))
->>>>> +        return ERR_PTR(-EINVAL);
->>>>> +
->>>>> +    if (WARN_ON(args->args[0] < 0 || args->args[0] > 1))
->>>>> +        return ERR_PTR(-EINVAL);
->>>>> +
->>>>> +    for (i = 0; i < ARRAY_SIZE(phy_driver->ports); i++) {
->>>>> +        struct bcm_phy_instance *p = phy_driver->ports[i];
->>>>> +
->>>>> +        if (p && p->generic_phy->dev.of_node == args->np) {
->>>>> +            port = p;
->>>>> +            break;
->>>>> +        }
->>>>> +    }
->>>>> +
->>>>> +    if (!port) {
->>>>> +        dev_err(dev, "Failed to locate phy %s\n", args->np->name);
->>>>> +        return ERR_PTR(-EINVAL);
->>>>> +    }
->>>>> +
->>>>> +    port->host_mode = args->args[0];
->>>>> +
->>>>> +    return port->generic_phy;
->>>>> +}
->>>>
->>>> The xlate function here shouldn't be needed at all. Use of_phy_simple_xlate
->>>> instead.
->>>
->>> of_phy_simple_xlate() will not allow specifying host vs device mode when
->>> requesting phy though...
->>
->> indeed!
->>
-> Kishon, to confirm , are the xlate function and the MAX_PHY_PORTS ok or are you
-> recommending changes? Thanks
-
-as Dmitry pointed out you'll still need your own implementation of xlate.
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBUdWVzZGF5LCBNYXJjaCAzMSwgMjAxNSAzOjE1IEFNDQo+IFRvOiBNZWR2ZSBFbWls
+aWFuLUVNTUVEVkUxDQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgYWZsZW1pbmdA
+Z21haWwuY29tOyBsaW51eHBwYy0NCj4gZGV2QGxpc3RzLm96bGFicy5vcmc7IExpYmVybWFuIEln
+YWwtQjMxOTUwDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8zXSBwb3dlcnBjL21wYzg1eHg6IEFk
+ZCBGTWFuIGNsb2NrIG5vZGVzDQo+IA0KPiBPbiBUdWUsIDIwMTUtMDMtMjQgYXQgMDM6MjYgLTA1
+MDAsIEVtaWwgTWVkdmUgd3JvdGU6DQo+ID4gSGVsbG8gU2NvdHQsDQo+ID4NCj4gPg0KPiA+IE9u
+IDAzLzIzLzIwMTUgMDY6MzAgUE0sIFNjb3R0IFdvb2Qgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIDIw
+MTUtMDItMjYgYXQgMDk6MjYgLTA2MDAsIEVtaWwgTWVkdmUgd3JvdGU6DQo+ID4gPj4gRnJvbTog
+SWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+ID4+DQo+ID4g
+Pj4gU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUu
+Y29tPg0KPiA+ID4+IC0tLQ0KPiA+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2kt
+cG9zdC5kdHNpICAgIHwgMTEgKysrKysrKysrKysNCj4gPiA+PiAgYXJjaC9wb3dlcnBjL2Jvb3Qv
+ZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaSB8ICA4ICsrKysrKysrDQo+ID4gPj4gYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaSB8ICA4ICsrKysrKysrDQo+ID4gPj4g
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaSB8IDE2ICsrKysrKysr
+KysrKysrKysNCj4gPiA+PiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5k
+dHNpIHwgMTMgKysrKysrKysrKysrKw0KPiA+ID4+IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+cDUwNDBzaS1wb3N0LmR0c2kgfCAyNg0KPiA+ID4+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+DQo+ID4gPj4gYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0MHNpLXBvc3QuZHRzaSB8ICA4
+ICsrKysrKysrDQo+ID4gPj4gYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3Qu
+ZHRzaSB8IDExICsrKysrKysrKysrDQo+ID4gPj4gYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90
+NDI0MHNpLXBvc3QuZHRzaSB8IDIwDQo+ID4gPj4gKysrKysrKysrKysrKysrKysrKysNCj4gPiA+
+PiAgOSBmaWxlcyBjaGFuZ2VkLCAxMjEgaW5zZXJ0aW9ucygrKQ0KPiA+ID4+DQo+ID4gPj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kNCj4gPiA+
+PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kNCj4gPiA+PiBpbmRl
+eCBmOGMzMjVlLi4zODYyMWVmIDEwMDY0NA0KPiA+ID4+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kNCj4gPiA+PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9k
+dHMvZnNsL2I0c2ktcG9zdC5kdHNpDQo+ID4gPj4gQEAgLTM5NSw2ICszOTUsMTcgQEANCj4gPiA+
+PiAgCQlyZWcgPSA8MHhlMDAwMCAweGUwMD47DQo+ID4gPj4gIAkJZnNsLGhhcy1yc3RjcjsNCj4g
+PiA+PiAgCQlmc2wsbGlvZG4tYml0cyA9IDwxMj47DQo+ID4gPj4gKw0KPiA+ID4+ICsJCWZtMGNs
+azogZm0wLWNsay1tdXggew0KPiA+ID4+ICsJCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+ID4gPj4g
+KwkJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tY2xrLW11eCI7DQo+ID4gPj4gKwkJCWNsb2NrcyA9
+IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sIDwmcGxsMCAzPiwNCj4gPiA+PiArCQkJ
+CSA8JnBsYXRmb3JtX3BsbCAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47DQo+ID4gPj4gKwkJCWNs
+b2NrLW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDAtZGl2MyIsDQo+ID4gPj4gKwkJ
+CQkgICAgICAicGxsMC1kaXY0IiwgInBsYXRmb3JtLXBsbCIsICJwbGwxLWRpdjIiLA0KPiA+ID4+
+ICsJCQkJICAgICAgInBsbDEtZGl2MyI7DQo+ID4gPj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9
+ICJmbTAtY2xrIjsNCj4gPiA+PiArCQl9Ow0KPiA+ID4NCj4gPiA+IFdoZXJlJ3MgdGhlIGJpbmRp
+bmcgZm9yIGZzbCxmbWFuLWNsay1tdXg/DQo+ID4gPg0KPiA+DQo+ID4gSWdhbCB3aWxsIGZvbGxv
+dy11cCB3aXRoIHRoZSBiaW5kaW5nIGRvY3VtZW50DQo+IA0KPiBJZ2FsLCBwaW5nPw0KPiANCj4g
+SSBuZWVkIGEgYmluZGluZyBiZWZvcmUgSSBjYW4gYXBwbHkgdGhlIGR0cyBwYXRjaC4NCj4gDQo+
+IC1TY290dA0KPiANCg0KSGkgU2NvdHQsDQpJJ20gd29ya2luZyBvbiBGTWFuIHBhdGNoZXMuIEkn
+bGwgc2VudCB0aGUgYmluZGluZyBBU0FQLiANCg0KVGhhbmtzLA0KSWdhbA0KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcg
+bGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
+cmcvbGlzdGluZm8vbGludXhwcGMtZGV2
