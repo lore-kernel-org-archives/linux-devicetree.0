@@ -1,86 +1,126 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/7] clk: Add basic infrastructure for Pistachio clocks
-Date: Mon, 30 Mar 2015 18:49:37 -0700
-Message-ID: <CAL1qeaHLwKKk0Pb4hGvuN2KnoKRGfJL68nA0CQvkjqmkSn5bAQ@mail.gmail.com>
-References: <1424836567-7252-1-git-send-email-abrestic@chromium.org>
-	<1424836567-7252-3-git-send-email-abrestic@chromium.org>
-	<5519E37C.9010201@codeaurora.org>
-	<CAL1qeaGTtMWDM+p+FpDRP=L-yqQ_ai7LY8GwcBUO_C1F+V1LzQ@mail.gmail.com>
-	<20150331013659.25195.31669@quantum>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH_V2 1/2] dt-bindings: binding for jz4780-{nand,bch}
+Date: Mon, 30 Mar 2015 18:59:42 -0700
+Message-ID: <20150331015942.GS32500@ld-irv-0074>
+References: <1425902299-53967-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <1425902299-53967-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150331013659.25195.31669@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425902299-53967-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Steve deRosier <derosier@gmail.com>, dehrenberg@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+On Mon, Mar 09, 2015 at 11:58:18AM +0000, Zubair Lutfullah Kakakhel wrote:
+> From: Alex Smith <alex.smith@imgtec.com>
+> 
+> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
+> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
+> drivers.
+> 
+> Signed-off-by: Alex Smith <alex@alex-smith.me.uk>
+> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> 
+> ---
+> V1 - > V2
+> Rebase to 4.0-rc3
+> ---
+>  .../bindings/mtd/ingenic,jz4780-nand.txt           | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> new file mode 100644
+> index 0000000..6f2e128
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> @@ -0,0 +1,57 @@
+> +* Ingenic JZ4780 NAND/BCH
+> +
+> +This file documents the device tree bindings for NAND flash devices on the
+> +JZ4780. NAND devices are connected to the NEMC controller (described in
+> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+> +be children of the NEMC node.
+> +
+> +Required NAND device properties:
+> +- compatible: Should be set to "ingenic,jz4780-nand".
+> +- reg: For each bank with a NAND chip attached, should specify a bank number,
+> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+> +
+> +Optional NAND device properties:
+> +- ingenic,bch-device: To make use of the hardware BCH controller, this property
+> +  must contain a phandle for the BCH controller node. The required properties
+> +  for this node are described below. If this is not specified, software BCH
+> +  will be used instead.
+> +- ingenic,ecc-size: ECC block size in bytes.
+> +- ingenic,ecc-strength: ECC strength (max number of correctable bits).
 
-On Mon, Mar 30, 2015 at 6:36 PM, Michael Turquette
-<mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Andrew Bresticker (2015-03-30 17:15:43)
->> On Mon, Mar 30, 2015 at 4:59 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> > On 02/24/15 19:56, Andrew Bresticker wrote:
->> >> +
->> >> +void pistachio_clk_force_enable(struct pistachio_clk_provider *p,
->> >> +                             unsigned int *clk_ids, unsigned int num)
->> >> +{
->> >> +     unsigned int i;
->> >> +     int err;
->> >> +
->> >> +     for (i = 0; i < num; i++) {
->> >> +             struct clk *clk = p->clk_data.clks[clk_ids[i]];
->> >> +
->> >> +             if (IS_ERR(clk))
->> >> +                     continue;
->> >> +
->> >> +             err = clk_prepare_enable(clk);
->> >> +             if (err)
->> >> +                     pr_err("Failed to enable clock %s: %d\n",
->> >> +                            __clk_get_name(clk), err);
->> >> +     }
->> >> +}
->> >>
->> >
->> > Is this to workaround some problems in the framework where clocks are
->> > turned off? Or is it that these clocks are already on before we boot
->> > Linux and we need to make sure the framework knows that?
->>
->> It's the former.  These clocks are enabled at POR and may only be
->> gated as the final step to entering suspend, so they must remain on at
->> runtime.  The issue we were running into was that consumers of these
->> critical clocks or their descendants would enable/disable their clocks
->> during boot or runtime PM and cause these clocks to get disabled.
->> Bumping up the prepare/enable count of these critical clocks seemed
->> like the best way to handle this - is there a more preferred way?
->> FWIW, this is also how the Tegra and Rockchip drivers handled this
->> problem.
->
-> Hi Andrew,
->
-> Why are your drivers allowed to disable clocks which must not be
-> disabled? (you mentioned boot and runtime pm)
+Can you use the generic nand-ecc-step-size and nand-ecc-strength
+properties instead of defining new ones?
 
-The issue is that they do not directly consume a critical clock, but
-rather a descendant of the critical clock and thus could cause the
-critical clock to be disabled.  For example, the periph_sys clock is
-one of these critical clocks and it is the parent of various
-peripheral clocks, like the watchdog, I2C, PWM, etc.  If the I2C
-driver enables and disables it's clock during probe(), and nothing
-else has caused the periph_sys clock to be enabled, the disable() call
-will cause periph_sys to become disabled since its enable count drops
-to 0.
+> +- ingenic,busy-gpio: GPIO specifier for the busy pin.
+> +- ingenic,wp-gpio: GPIO specifier for the write protect pin.
 
-Now this could be solved if there was a driver to directly consume
-these clocks and keep them enabled, but, like Stephen mentioned, there
-really isn't a proper driver for that.  So it looks like I want
-something like the always-on feature Lee is trying to introduce.
+The gipo.txt binding document recommends naming properties *-gpios, not
+*-gpio. Also, these look like they are exposing the actualy R/B and WP#
+pins as gpios, correct? If so, then I think it'd be good to give them
+generic names, not 'ingenic,' names. That way, we might consider
+supporting reusable code that handles them. And I see that sunxi-nand
+already uses a generic name for the R/B pin: rb-gpios.
 
-Thanks,
-Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So these might work:
+
+  rb-gpios
+  wp-gpios
+
+
+BTW, generic GPIO WP# handling was discussed a few months ago, though I
+didn't see any patches yet:
+
+http://lists.infradead.org/pipermail/linux-mtd/2015-January/057256.html
+
+I see that your driver is just using this to disable write-protection
+permanently, but I've seen cases where it helps to keep write-protection
+enabled whenever you're not writing to the NAND.
+
+> +
+> +Example:
+> +
+> +nemc: nemc@13410000 {
+> +	...
+> +
+> +	nand: nand@1 {
+> +		compatible = "ingenic,jz4780-nand";
+> +		reg = <1 0 0x1000000>;	/* Bank 1 */
+> +
+> +		ingenic,bch-device = <&bch>;
+> +		ingenic,ecc-size = <1024>;
+> +		ingenic,ecc-strength = <24>;
+> +
+> +		ingenic,busy-gpio = <&gpa 20 GPIO_ACTIVE_LOW>;
+> +		ingenic,wp-gpio = <&gpf 22 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+> +The BCH controller is a separate SoC component used for error correction on
+> +NAND devices. The following is a description of the device properties for a
+> +BCH controller.
+> +
+> +Required BCH properties:
+> +- compatible: Should be set to "ingenic,jz4780-bch".
+> +- reg: Should specify the BCH controller registers location and length.
+> +- clocks: Clock for the BCH controller.
+> +
+> +Example:
+> +
+> +bch: bch@134d0000 {
+> +	compatible = "ingenic,jz4780-bch";
+> +	reg = <0x134d0000 0x10000>;
+> +
+> +	clocks = <&cgu JZ4780_CLK_BCH>;
+> +};
+
+Brian
