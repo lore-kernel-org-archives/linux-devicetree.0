@@ -1,44 +1,117 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH V2 3/3] pinctrl: Add Pistachio SoC pin control driver
-Date: Tue, 31 Mar 2015 20:55:08 +0200
-Message-ID: <1427828108.2408.73.camel@x220>
-References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
-	 <1427757416-14491-4-git-send-email-abrestic@chromium.org>
-	 <1427789415.2408.45.camel@x220>
-	 <CAL1qeaG70_42p8r9ogHxMv2h-yx_TENYV_gZbX1wQMhqSaiFpg@mail.gmail.com>
-	 <1427826015.2408.63.camel@x220>
-	 <CAL1qeaHg2oLbnxCmk_TaxRMYA6vM8cfgUeLk=i7Q5b1CJfS9LQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
+ TAB7200
+Date: Tue, 31 Mar 2015 07:43:38 -0700
+Message-ID: <20150331144338.GG23664@lukather>
+References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaHg2oLbnxCmk_TaxRMYA6vM8cfgUeLk=i7Q5b1CJfS9LQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OzigliFs3e0dNr73"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427789897-4085-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
 
-On Tue, 2015-03-31 at 11:37 -0700, Andrew Bresticker wrote:
-> I have no immediate plans to make this a module, but since the changes
-> to make it buildable as a module have no overhead (at least I think
-> they don't!) I'd prefer to leave them in for consistency and to
-> eliminate any need for these changes in the future.
+--OzigliFs3e0dNr73
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The people reading the code or reviewing the patch might wonder, just
-like I did, about the mismatch between the code and the Kconfig symbol.
+Hi,
 
-Dead code - even if it's easily dealt with during the build - shouldn't
-be added without a clear benefit. And I don't think consistency or doing
-now what might be done in the future bring enough benefits.
+On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
+> This patch adds nodes for the Goodix GT911 touchscreen controller found
+> on the Wexler TAB7200 tablet. Controller uses one of following I2C
+> addresses: 0x5d or 0x14, so just add two nodes.
 
-> I'll leave it up to LinusW though.
+In which case are these different addresses encountered? Different
+revisions of the same board?
 
-Right, it's Linus decision.
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> DT support for the Goodix GT911 touchscreen controller has been queued up
+> by Dmitry Torokhov for merging into 4.1:
+> https://git.kernel.org/cgit/linux/kernel/git/dtor/input.git/commit/?h=3Dn=
+ext&id=3D771d8f1b178e7e09fcc641fccd48852958dbc329
+>=20
+> IRQ flags are set by the touchscreen controller driver, so use IRQ_TYPE_N=
+ONE.
+>=20
+>  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/bo=
+ot/dts/sun7i-a20-wexler-tab7200.dts
+> index 2ad3b09..34e2bce 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> @@ -101,6 +101,20 @@
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&i2c2_pins_a>;
+>  	status =3D "okay";
+> +
+> +	gt911@5d {
 
-Thanks,
+The node name should be the class of the device. touchscreen in this
+case.
 
+> +		compatible =3D "goodix,gt911";
+> +		reg =3D <0x5d>;
+> +		interrupt-parent =3D <&pio>;
+> +		interrupts =3D <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
 
-Paul Bolle
+Unfortunately, IRQ_TYPE_NONE is not a valid value for the GIC
+bindings.
 
+You're also not adding a pinctrl group for that pin?
+
+> +	};
+> +
+> +	gt911@14 {
+> +		compatible =3D "goodix,gt911";
+> +		reg =3D <0x14>;
+> +		interrupt-parent =3D <&pio>;
+> +		interrupts =3D <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
+> +	};
+
+And nodes should be ordered by addresses ascending order.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--OzigliFs3e0dNr73
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVGrKaAAoJEBx+YmzsjxAgqGsQAKcVm9Cv37NmxFdbmbdueoiA
+iKPGh3+oQ16gz+dYopJ37Mo79jnddKm7um/qj/wZ3h80ZytQBQMsncoRteGDDz2B
+HgigY6pSniheacyOCKZ4H2BP02y4v6NED0udQJTFH0KDhnl0v//+2fzS9vfkxjyo
+o9ThMGmZ3Rd3cOVa7G/7ZVfsD6Pj5hCxd4qNgMuAAeUr61TX04ZqnlfIFEf397SH
+KcRLCdpT1YdFFunEwz2Nsrm8I6STvfO1FOgWZw3dKJDwYA1JIGNd3HUECxwqghAv
+3aVdxlhh0LHSpKDLxUnYWWaagaVVnAWHLjW0xXOH0vJbn9gSTPlE6DaoiSwX344r
+vWZDt4+qXKIzUMYGglutNIg1e1g4PiMVw0my5//9+9BAdvl21Y8tefsN9du0ezhA
+oFABLOmQpeYiD/qVJf13xNrFyOdsb4LcjmGWZmuoNecYC6ARD/t4IGr1JHlich3m
+BpbAnGvMnFrx8bk2lAdcRUbFIXhLS+E4C/Lewoy/bR3oynuNveoUNxvUNbufX3dl
+dNIMYGoZVck5wNaeiFvryr8eyJR5hYgNjTx2L3u5gOi7vrGF83AgHdp9VppE65tb
+0+tGu2PuQRM/Pi5VNGlGnvRrXZ/sjW8+w/pXnwCYFMi2JqanwTFxc2SpwsEXbwT9
+WTBLHWA4XoiePbS7skwR
+=+vDD
+-----END PGP SIGNATURE-----
+
+--OzigliFs3e0dNr73--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
