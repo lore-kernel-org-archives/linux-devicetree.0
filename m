@@ -1,31 +1,70 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Tue, 31 Mar 2015 11:01:18 +0200
-Message-ID: <20150331090118.GA25765@localhost.localdomain>
-References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
- <20150328082853.GA4255@localhost.localdomain>
- <5519D380.6070200@cogentembedded.com>
- <20150331064349.GB4605@localhost.localdomain>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe controller
+Date: Tue, 31 Mar 2015 11:11:44 +0200
+Message-ID: <CAG374jCjTVBwiNrWoo=X9hUSb-etzn8G-XSXGO_nNYhiL_9k_A@mail.gmail.com>
+References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org>
+	<1426518695.26437.55.camel@x220>
+	<55093C12.7070004@st.com>
+	<1426674930.2649.50.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150331064349.GB4605@localhost.localdomain>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, masaru.nagai.vx@renesas.com, David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1426674930.2649.50.camel@tiscali.nl>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 08:43:49AM +0200, Richard Cochran wrote:
-> I think this is normal policy.  I have seen it more than once on lkml.
-> The reason for the author's SOB is to make sure that he or she is
-> really authorized (like from the employer) to contribute the driver.
+Hi Bjorn,
 
-Another issue is maintainership.  If one person submits work written
-by someone else, who is responsible for bug fixing?
+pci-st.c driver could be modular with modification of pcie-designware
+core driver. But as Fabrice said  it should be another patchset.
 
-We already have had one driver (ptp_pch) dumped on us, and nobody
-looks after it.
+What do you prefer ?
 
-Thanks,
-Richard
+drop all the module related macros as mentioned by Paul ?
+or
+keep macros like other vendors do ?
+
+Thanks
+
+Gabriel
+
+On 18 March 2015 at 11:35, Paul Bolle <pebolle@tiscali.nl> wrote:
+> Hi Fabrice,
+>
+> Fabrice Gasnier schreef op wo 18-03-2015 om 09:49 [+0100]:
+>> On 03/16/2015 04:11 PM, Paul Bolle wrote:
+>> >> +config PCI_ST
+>> >> +  bool "ST PCIe controller"
+>> > You add a bool Kconfig symbol. A week or two ago I saw some patches fly
+>> > by that - I think - allowed PCIe controllers to be built modular.
+>>
+>> Thanks for your review.
+>>
+>> Are you talking about "PCI: Export symbols of PCI functions" patch, that
+>> is part of a series
+>> named "pci: iproc: Add Broadcom iProc PCIe support" ?
+>
+> Yes, that is the series I was thinking about. (I made you search lkml,
+> and that was a bit rude. But you found the patch anyhow.)
+>
+>> This controller doesn't look like to be based on pcie-designware core
+>> driver.
+>> Other vendors that are using "pcie-designware" core driver are also make
+>> it bool.
+>> The current core driver doesn't support module loading/unloading as I
+>> see it.
+>> If this is required, I also think this should be part of another patchset.
+>>
+>> What do you think ?
+>
+> I wouldn't know whether your driver might work as a loadable module, but
+> other people reading this surely will. But if it can't work as a module
+> you should drop all the module related macros etc. I spotted. Because
+> then they serve no purpose.
+>
+>
+> Paul Bolle
+>
