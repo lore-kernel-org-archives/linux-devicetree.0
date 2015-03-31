@@ -1,124 +1,293 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 04/12] DT: Add documentation for the mfd Maxim max77693
-Date: Tue, 31 Mar 2015 16:34:17 +0200
-Message-ID: <551AB069.3010705@samsung.com>
-References: <1427809965-25540-1-git-send-email-j.anaszewski@samsung.com>
- <1427809965-25540-5-git-send-email-j.anaszewski@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 3/5] mmc: mediatek: Add PM support for MMC driver
+Date: Tue, 31 Mar 2015 16:46:41 +0200
+Message-ID: <CAPDyKFqA=9mgzGkeBjkMxr3jhqxnEYov_4rf=OfdQ7_rAHicyw@mail.gmail.com>
+References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
+	<1426562035-16709-4-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1427809965-25540-5-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1426562035-16709-4-git-send-email-chaotian.jing@mediatek.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, bin.zhang@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-I've just pushed PATCH v5 - it adds more precise description
-of current settings constraints.
-
-On 03/31/2015 03:52 PM, Jacek Anaszewski wrote:
-> This patch adds device tree binding documentation for
-> the flash cell of the Maxim max77693 multifunctional device.
+On 17 March 2015 at 04:13, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> Add PM support for Mediatek MMC driver
 >
-> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
 > ---
->   Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++++++++++++++++++++
->   1 file changed, 61 insertions(+)
+>  drivers/mmc/host/mtk-sd.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 93 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-> index 38e6440..deb832f 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -76,7 +76,54 @@ Optional properties:
->       Valid values: 4300000, 4700000, 4800000, 4900000
->       Default: 4300000
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 86c999b..e02f6a6 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/spinlock.h>
 >
-> +- led : the LED submodule device node
+> @@ -223,6 +224,7 @@
+>  #define MSDC_OCR_AVAIL      (MMC_VDD_28_29 | MMC_VDD_29_30 \
+>                 | MMC_VDD_30_31 | MMC_VDD_31_32 | MMC_VDD_32_33)
+>
+> +#define MTK_MMC_AUTOSUSPEND_DELAY      500
+>  #define CMD_TIMEOUT         (HZ/10 * 5)        /* 100ms x5 */
+>  #define DAT_TIMEOUT         (HZ    * 5)        /* 1000ms x5 */
+>
+> @@ -535,6 +537,38 @@ static void msdc_set_mclk(struct msdc_host *host, int ddr, u32 hz)
+>         dev_dbg(host->dev, "sclk: %d, ddr: %d\n", host->sclk, ddr);
+>  }
+>
+> +#ifdef CONFIG_PM
+
+I suggest you move this complete code snippets within the ifdefs for
+where the runtime PM callbacks is implemented.
+
+> +static int msdc_gate_clock(struct msdc_host *host)
+> +{
+> +       int ret = 0;
+> +       unsigned long flags;
 > +
-> +There are two LED outputs available - FLED1 and FLED2. Each of them can
-> +control a separate LED or they can be connected together to double
-> +the maximum current for a single connected LED. One LED is represented
-> +by one child node.
+> +       spin_lock_irqsave(&host->lock, flags);
+> +       /* disable SD/MMC/SDIO bus clock */
+> +       sdr_set_field(host->base + MSDC_CFG, MSDC_CFG_MODE, MSDC_MS);
+
+This seems like it also belongs in the ->set_ios() function, when the
+rate requested by the core is zero!? Maybe that's already dealt with?
+
+> +       /* turn off SDHC functional clock */
+> +       clk_disable(host->src_clk);
+
+Change to clk_disable_unprepare() and move it outside the spin_lock.
+
+> +       spin_unlock_irqrestore(&host->lock, flags);
+> +       return ret;
+> +}
 > +
-> +Required properties:
-> +- compatible : Must be "maxim,max77693-led".
+> +static void msdc_ungate_clock(struct msdc_host *host)
+> +{
+> +       unsigned long flags;
 > +
-> +Optional properties:
-> +- maxim,boost-mode :
-> +	In boost mode the device can produce up to 1.2A of total current
-> +	on both outputs. The maximum current on each output is reduced
-> +	to 625mA then. If not enabled explicitly, boost setting defaults to
-> +	LEDS_BOOST_FIXED in case both current sources are used.
-> +	Possible values:
-> +		LEDS_BOOST_OFF (0) - no boost,
-> +		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
-> +		LEDS_BOOST_FIXED (2) - fixed mode.
-> +- maxim,boost-mvout : Output voltage of the boost module in millivolts.
-> +	Valid values: 3300 - 5500, step by 25 (rounded down)
-> +	Default: 3300
-> +- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
-> +	if chip estimates that system voltage could drop below this level due
-> +	to flash power consumption.
-> +	Valid values: 2400 - 3400, step by 33 (rounded down)
-> +	Default: 2400
+> +       spin_lock_irqsave(&host->lock, flags);
+> +       clk_enable(host->src_clk);
+
+Change to clk_prepare_enable() and move it outside the spin_lock.
+
+> +       /* enable SD/MMC/SDIO bus clock:
+> +        * it will be automatically gated when the bus is idle
+> +        * (set MSDC_CFG_CKPDN bit to have it always on)
+> +        */
+> +       sdr_set_field(host->base + MSDC_CFG, MSDC_CFG_MODE, MSDC_SDMMC);
+> +       while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
+> +               cpu_relax();
+
+I guess you already have this piece of code in ->set_ios() in some form!?
+
+What's missing here is a kind of a save/restore mechanism of the
+clock. You need to save the value for the clock in msdc_ungate_clock()
+and restore the clock here. Else you might end up ungating the clock
+when it actually should remain gated.
+
+> +       spin_unlock_irqrestore(&host->lock, flags);
+> +}
+> +#endif
 > +
-> +Required properties of the LED child node:
-> +- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
-> +		device current output identifiers: 0 - FLED1, 1 - FLED2
+>  static inline u32 msdc_cmd_find_resp(struct msdc_host *host,
+>                 struct mmc_request *mrq, struct mmc_command *cmd)
+>  {
+> @@ -702,6 +736,9 @@ static void msdc_request_done(struct msdc_host *host, struct mmc_request *mrq)
+>         if (mrq->data)
+>                 msdc_unprepare_data(host, mrq);
+>         mmc_request_done(host->mmc, mrq);
 > +
-> +Optional properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> +	Valid values: 15625 - 250000, step by 15625 (rounded down)
-> +	Default: 250000
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> +	Valid values: 15625 - 1000000, step by 15625 (rounded down)
-> +	Default: 1000000 when boost mode is off and 625000 otherwise
-> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
-> +	Valid values: 62500 - 1000000, step by 62500 (rounded down)
-> +	Default: 1000000
+> +       pm_runtime_mark_last_busy(host->dev);
+> +       pm_runtime_put_autosuspend(host->dev);
+>  }
+>
+>  /* returns true if command is fully handled; returns false otherwise */
+> @@ -863,6 +900,8 @@ static void msdc_ops_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>         }
+>         spin_unlock_irqrestore(&host->lock, flags);
+>
+> +       pm_runtime_get_sync(host->dev);
 > +
->   Example:
-> +#include <dt-bindings/leds/common.h>
+>         if (mrq->data)
+>                 msdc_prepare_data(host, mrq);
+>
+> @@ -1003,6 +1042,8 @@ static int msdc_ops_switch_volt(struct mmc_host *mmc, struct mmc_ios *ios)
+>
+>         if (!IS_ERR(mmc->supply.vqmmc)) {
+>
+> +               pm_runtime_get_sync(host->dev);
 > +
->   	max77693@66 {
->   		compatible = "maxim,max77693";
->   		reg = <0x66>;
-> @@ -117,5 +164,19 @@ Example:
->   			maxim,thermal-regulation-celsius = <75>;
->   			maxim,battery-overcurrent-microamp = <3000000>;
->   			maxim,charge-input-threshold-microvolt = <4300000>;
+>                 if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+>                         min_uv = 3300000;
+>                         max_uv = 3300000;
+> @@ -1011,6 +1052,9 @@ static int msdc_ops_switch_volt(struct mmc_host *mmc, struct mmc_ios *ios)
+>                         max_uv = 1800000;
+>                 } else {
+>                         dev_err(host->dev, "Unsupported signal voltage!\n");
 > +
-> +		led {
-> +			compatible = "maxim,max77693-led";
-> +			maxim,boost-mode = <LEDS_BOOST_FIXED>;
-> +			maxim,boost-mvout = <5000>;
-> +			maxim,mvsys-min = <2400>;
+> +                       pm_runtime_mark_last_busy(host->dev);
+> +                       pm_runtime_put_autosuspend(host->dev);
+>                         return -EINVAL;
+
+I suggest to assign a local "ret" variable which value you can return
+at the end of this function. Thus you won't need to duplicate the
+pm_runtime*() calls.
+
+>                 }
+>
+> @@ -1022,6 +1066,8 @@ static int msdc_ops_switch_volt(struct mmc_host *mmc, struct mmc_ios *ios)
+>                 }
+>         }
+>
+> +       pm_runtime_mark_last_busy(host->dev);
+> +       pm_runtime_put_autosuspend(host->dev);
+>         return ret;
+>  }
+>
+> @@ -1186,6 +1232,8 @@ static void msdc_ops_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>         int ret;
+>         u32 ddr = 0;
+>
+> +       pm_runtime_get_sync(host->dev);
 > +
-> +			camera_flash: flash-led {
-> +				label = "max77693-flash";
-> +				led-sources = <0>, <1>;
-> +				max-microamp = <500000>;
-> +				flash-max-microamp = <1250000>;
-> +				flash-timeout-us = <1000000>;
-> +			};
->   		};
->   	};
+>         if (ios->timing == MMC_TIMING_UHS_DDR50)
+>                 ddr = 1;
+>
+> @@ -1230,6 +1278,9 @@ static void msdc_ops_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>
+>         if (host->mclk != ios->clock || host->ddr != ddr)
+>                 msdc_set_mclk(host, ddr, ios->clock);
+> +
+> +       pm_runtime_mark_last_busy(host->dev);
+> +       pm_runtime_put_autosuspend(host->dev);
+>  }
+>
+>  static struct mmc_host_ops mt_msdc_ops = {
+> @@ -1341,6 +1392,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>         platform_set_drvdata(pdev, mmc);
+>         clk_prepare(host->src_clk);
+>
+> +       pm_runtime_enable(host->dev);
+> +       pm_runtime_get_sync(host->dev);
+> +       pm_runtime_set_autosuspend_delay(host->dev, MTK_MMC_AUTOSUSPEND_DELAY);
+> +       pm_runtime_use_autosuspend(host->dev);
+
+This shall be changed to the following:
+
+pm_runtime_set_active();
+pm_runtime_set_autosuspend_delay(host->dev, MTK_MMC_AUTOSUSPEND_DELAY);
+pm_runtime_use_autosuspend(host->dev);
+pm_runtime_enable(host->dev);
+
+... and to simplify error handling, move it just prior mmc_add_host().
+
+> +
+>         ret = devm_request_irq(&pdev->dev, (unsigned int) host->irq, msdc_irq,
+>                 IRQF_TRIGGER_LOW | IRQF_ONESHOT, pdev->name, host);
+>         if (ret)
+> @@ -1348,10 +1404,15 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>
+>         ret = mmc_add_host(mmc);
+>         if (ret)
+> -               goto release;
+> +               goto end;
+>
+> +       pm_runtime_mark_last_busy(host->dev);
+> +       pm_runtime_put_autosuspend(host->dev);
+
+According to above, remove these pm_runtime_*() calls.
+
+>         return 0;
+>
+> +end:
+> +       pm_runtime_put_sync(host->dev);
+
+According to above, remove the pm_runtime_put_sync().
+
+> +       pm_runtime_disable(host->dev);
+>  release:
+>         platform_set_drvdata(pdev, NULL);
+>         msdc_deinit_hw(host);
+> @@ -1364,6 +1425,7 @@ release_mem:
+>                 dma_free_coherent(&pdev->dev,
+>                         MAX_BD_NUM * sizeof(struct mt_bdma_desc),
+>                         host->dma.bd, host->dma.bd_addr);
+> +
+>  host_free:
+>         mmc_free_host(mmc);
+>
+> @@ -1378,10 +1440,14 @@ static int msdc_drv_remove(struct platform_device *pdev)
+>         mmc = platform_get_drvdata(pdev);
+>         host = mmc_priv(mmc);
+>
+> +       pm_runtime_get_sync(host->dev);
+> +
+>         platform_set_drvdata(pdev, NULL);
+>         mmc_remove_host(host->mmc);
+>         msdc_deinit_hw(host);
+>
+> +       pm_runtime_put_sync(host->dev);
+
+Change to pm_runtime_put_noidle() and reverse the order of the call to
+pm_runtime_disable().
+
+> +       pm_runtime_disable(host->dev);
+>         dma_free_coherent(&pdev->dev,
+>                         MAX_GPD_NUM * sizeof(struct mt_gpdma_desc),
+>                         host->dma.gpd, host->dma.gpd_addr);
+> @@ -1393,6 +1459,31 @@ static int msdc_drv_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_PM
+> +static int msdc_runtime_suspend(struct device *dev)
+> +{
+> +       int ret = 0;
+> +       struct mmc_host *mmc = dev_get_drvdata(dev);
+> +       struct msdc_host *host = mmc_priv(mmc);
+> +
+> +       ret = msdc_gate_clock(host);
+> +       return ret;
+> +}
+> +
+> +static int msdc_runtime_resume(struct device *dev)
+> +{
+> +       struct mmc_host *mmc = dev_get_drvdata(dev);
+> +       struct msdc_host *host = mmc_priv(mmc);
+> +
+> +       msdc_ungate_clock(host);
+> +       return 0;
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops msdc_dev_pm_ops = {
+> +       SET_RUNTIME_PM_OPS(msdc_runtime_suspend, msdc_runtime_resume, NULL)
+> +};
+> +
+>  static const struct of_device_id msdc_of_ids[] = {
+>         {   .compatible = "mediatek,mt8135-mmc", },
+>         {}
+> @@ -1404,6 +1495,7 @@ static struct platform_driver mt_msdc_driver = {
+>         .driver = {
+>                 .name = "mtk-msdc",
+>                 .of_match_table = msdc_of_ids,
+> +               .pm = &msdc_dev_pm_ops,
+>         },
+>  };
+>
+> --
+> 1.8.1.1.dirty
 >
 
-
--- 
-Best Regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
