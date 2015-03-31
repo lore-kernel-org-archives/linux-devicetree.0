@@ -1,51 +1,31 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [rtc-linux] Re: [PATCH 1/2] drivers/rtc/rtc-s3c.c: Integrate
- Exynos3250 into S3C6410
-Date: Tue, 31 Mar 2015 11:00:31 +0200
-Message-ID: <CAJKOXPemefBOfOUV_azuJbiOMGurZLTGtFKBx7rW6NCgu+sjvQ@mail.gmail.com>
-References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
-	<1427728773-29065-2-git-send-email-k.kozlowski@samsung.com>
-	<20150331002709.GF3849@piout.net>
-	<CABxcv==+h8R-tL9D5OXmYsuYfs_cLATViZ3N1veZwZBZF=fu0Q@mail.gmail.com>
-	<20150331082052.GI3849@piout.net>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Tue, 31 Mar 2015 11:01:18 +0200
+Message-ID: <20150331090118.GA25765@localhost.localdomain>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
+ <20150328082853.GA4255@localhost.localdomain>
+ <5519D380.6070200@cogentembedded.com>
+ <20150331064349.GB4605@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150331082052.GI3849-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150331064349.GB4605@localhost.localdomain>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, masaru.nagai.vx@renesas.com, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-31 10:20 GMT+02:00 Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Hi,
->
-> On 31/03/2015 at 08:49:39 +0200, Javier Martinez Canillas wrote :
->> Hello Alexandre,
->>
->> On Tue, Mar 31, 2015 at 2:27 AM, Alexandre Belloni
->> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > nitpick: I would prefer rtc: rtc-s3c instead of drivers/rtc/rtc-s3c.c
->> >
->>
->> Yes but Krzysztof is following the convention used in drivers/rtc/
->> which I think is the correct thing to do even when it's different from
->> what is used all over the kernel.
->>
->
-> Having a look at the git history, the first and most used prefix is
-> actually 'rtc:' at some point, this started to change to 'drivers/rtc/'.
-> We should probably start to get back to 'rtc:', like most subsystems.
+On Tue, Mar 31, 2015 at 08:43:49AM +0200, Richard Cochran wrote:
+> I think this is normal policy.  I have seen it more than once on lkml.
+> The reason for the author's SOB is to make sure that he or she is
+> really authorized (like from the employer) to contribute the driver.
 
-Yes, I used "rtc: driver_name:" before but I saw that Andrew changes
-them to full path when he picks the patch. So this time I wanted to
-reduce the overhead for him... Anyway I'll stick to one format ("rtc:
-rtc-s3c:") as you proposed.
+Another issue is maintainership.  If one person submits work written
+by someone else, who is responsible for bug fixing?
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We already have had one driver (ptp_pch) dumped on us, and nobody
+looks after it.
+
+Thanks,
+Richard
