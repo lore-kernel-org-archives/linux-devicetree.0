@@ -1,36 +1,137 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 5/7] dmaengine: omap-dma: Take DMA request number from
- DT if it is available
-Date: Tue, 31 Mar 2015 17:47:25 +0300
-Message-ID: <551AB37D.1090104@ti.com>
-References: <1427459213-14611-1-git-send-email-peter.ujfalusi@ti.com> <1427459213-14611-6-git-send-email-peter.ujfalusi@ti.com> <20150327202446.GB4027@n2100.arm.linux.org.uk>
+From: Grazvydas Ignotas <notasas@gmail.com>
+Subject: Re: [PATCH] ti-soc-thermal: implement omap3 support
+Date: Tue, 31 Mar 2015 18:02:54 +0300
+Message-ID: <CANOLnOO4J3RQCJZB0ibkGc5KhvPu+Q1f-bwc8mpxKCPRgjw5PQ@mail.gmail.com>
+References: <20150103114632.GA21883@amd>
+	<20150118202447.GA29014@amd>
+	<20150331084234.GA11712@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150327202446.GB4027@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: vinod.koul@intel.com, tony@atomide.com, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150331084234.GA11712@amd>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Pali Rohar <pali.rohar@gmail.com>, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, khilman@kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, edubezval@gmail.com, rui.zhang@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2015 10:24 PM, Russell King - ARM Linux wrote:
-> On Fri, Mar 27, 2015 at 02:26:51PM +0200, Peter Ujfalusi wrote:
->> +	if (!pdev->dev.of_node || of_property_read_u32(pdev->dev.of_node,
->> +						       "dma-requests",
->> +						       &od->dma_requests)) {
->> +		dev_info(&pdev->dev,
->> +			 "Missing dma-requests property, using %u.\n",
->> +			 OMAP_SDMA_REQUESTS);
->> +		od->dma_requests =3D OMAP_SDMA_REQUESTS;
->> +	}
->=20
-> Are all OMAPs including OMAP1 being converted to DT?  If not, don't
-> introduce noisy printks for which a platform can't do anything about.
-> Think about this please - if there's no of_node, then why complain
-> about a missing OF property?
+On Tue, Mar 31, 2015 at 11:42 AM, Pavel Machek <pavel@ucw.cz> wrote:
+>
+> This adds support for OMAP3 chips to ti-soc-thermal. As requested by
+> TI people, it is marked unreliable and warning is printed.
+>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>
+> ---
+> ...
+> --- /dev/null
+> +++ b/drivers/thermal/ti-soc-thermal/omap3-thermal-data.c
+> @@ -0,0 +1,103 @@
+> +/*
+> + * OMAP3 thermal driver.
+> + *
+> + * Copyright (C) 2011-2012 Texas Instruments Inc.
+> + * Copyright (C) 2014 Pavel Machek <pavel@ucw.cz>
+> + *
+> + * This software is licensed under the terms of the GNU General Publ=
+ic
+> + * License version 2, as published by the Free Software Foundation, =
+and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * Note
+> + * http://www.ti.com/lit/er/sprz278f/sprz278f.pdf "Advisory
+> + * 3.1.1.186 MMC OCP Clock Not Gated When Thermal Sensor Is Used"
+> + *
+> + * Also TI says:
+> + * Just be careful when you try to make thermal policy like decision=
+s
+> + * based on this sensor. Placement of the sensor w.r.t the actual lo=
+gic
+> + * generating heat has to be a factor as well. If you are just looki=
+ng
+> + * for an approximation temperature (thermometerish kind), you might=
+ be
+> + * ok with this. I am not sure we'd find any TI data around this.. j=
+ust a
+> + * heads up.
+> + */
+> +
+> +#include "ti-thermal.h"
+> +#include "ti-bandgap.h"
+> +
+> +/*
+> + * OMAP34XX has one instance of thermal sensor for MPU
+> + * need to describe the individual bit fields
+> + */
+> +static struct temp_sensor_registers
+> +omap34xx_mpu_temp_sensor_registers =3D {
+> +       .temp_sensor_ctrl =3D 0,
+> +       .bgap_soc_mask =3D BIT(8),
+> +       .bgap_eocz_mask =3D BIT(7),
+> +       .bgap_dtemp_mask =3D 0x7f,
+> +
+> +       .bgap_mode_ctrl =3D 0,
+> +       .mode_ctrl_mask =3D BIT(9),
+> +};
+> +
+> +/* Thresholds and limits for OMAP34XX MPU temperature sensor */
+> +static struct temp_sensor_data omap34xx_mpu_temp_sensor_data =3D {
+> +       .min_freq =3D 32768,
+> +       .max_freq =3D 32768,
+> +       .max_temp =3D -99000,
+> +       .min_temp =3D 99000,
 
-Yes, you are perfectly right on this. Will fix it up.
+This looks mixed up. Also, perhaps use -40000 to 125000 to match the
+table below?
 
-Thanks,
-P=E9ter
+> +       .hyst_val =3D 5000,
+> +};
+> +
+> +/*
+> + * Temperature values in milli degree celsius
+> + */
+> +static const int
+> +omap34xx_adc_to_temp[128] =3D {
+> +       -40000, -40000, -40000, -40000, -40000, -39000, -38000, -3600=
+0,
+> +       -34000, -32000, -31000, -29000, -28000, -26000, -25000, -2400=
+0,
+> +       -22000, -21000, -19000, -18000, -17000, -15000, -14000, -1200=
+0,
+> +       -11000, -9000, -8000, -7000, -5000, -4000, -2000, -1000, 0000=
+,
+> +       1000, 3000, 4000, 5000, 7000, 8000, 10000, 11000, 13000, 1400=
+0,
+> +       15000, 17000, 18000, 20000, 21000, 22000, 24000, 25000, 27000=
+,
+> +       28000, 30000, 31000, 32000, 34000, 35000, 37000, 38000, 39000=
+,
+> +       41000, 42000, 44000, 45000, 47000, 48000, 49000, 51000, 52000=
+,
+> +       53000, 55000, 56000, 58000, 59000, 60000, 62000, 63000, 65000=
+,
+> +       66000, 67000, 69000, 70000, 72000, 73000, 74000, 76000, 77000=
+,
+> +       79000, 80000, 81000, 83000, 84000, 85000, 87000, 88000, 89000=
+,
+> +       91000, 92000, 94000, 95000, 96000, 98000, 99000, 100000,
+> +       102000, 103000, 105000, 106000, 107000, 109000, 110000, 11100=
+0,
+> +       113000, 114000, 116000, 117000, 118000, 120000, 121000, 12200=
+0,
+> +       124000, 124000, 125000, 125000, 125000, 125000, 125000
+> +};
+>
+
+Gra=C5=BEvydas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
