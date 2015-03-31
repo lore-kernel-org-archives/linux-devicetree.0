@@ -1,42 +1,40 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add phy-miphy28lp.c to ARCH/STI
- architecture
-Date: Tue, 31 Mar 2015 18:40:11 +0100
-Message-ID: <20150331174011.GA16741@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org>
- <1427728632-10846-7-git-send-email-peter.griffin@linaro.org>
- <551AC831.2000108@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Tue, 31 Mar 2015 20:40:34 +0300
+Message-ID: <551ADC12.5050603@cogentembedded.com>
+References: <20150328082853.GA4255@localhost.localdomain>	<5519D380.6070200@cogentembedded.com>	<20150331064349.GB4605@localhost.localdomain> <20150331.113832.2042398685489897677.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <551AC831.2000108@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, balbi@ti.com, lee.jones@linaro.org, devicetree@vger.kernel.org, robherring2@gmail.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20150331.113832.2042398685489897677.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, richardcochran@gmail.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hello.
 
-On Tue, 31 Mar 2015, Kishon Vijay Abraham I wrote:
-<snip>
+On 03/31/2015 06:38 PM, David Miller wrote:
 
-> >diff --git a/MAINTAINERS b/MAINTAINERS
-> >index 1de6afa..fa1bb4f 100644
-> >--- a/MAINTAINERS
-> >+++ b/MAINTAINERS
-> >@@ -1469,6 +1469,7 @@ F:	drivers/clocksource/arm_global_timer.c
-> >  F:	drivers/i2c/busses/i2c-st.c
-> >  F:	drivers/media/rc/st_rc.c
-> >  F:	drivers/mmc/host/sdhci-st.c
-> >+F:	drivers/phy/phy-miphy28lp.c
-> 
-> add for miphy365x.c as well?
+>>>> We also need SOB from Mitsuhiro and Masaru.
 
-Yes we should also be adding miphy365x.c as well.
+>>>     Hmm, it's the first time I encounter such requirement.
 
-Would you like me to send a seperate patch for that?
+>> I think this is normal policy.  I have seen it more than once on lkml.
+>> The reason for the author's SOB is to make sure that he or she is
+>> really authorized (like from the employer) to contribute the driver.
 
-regards,
+    We (Cogent Embedded) are authorized to do this, isn't this enough?
 
-Peter.
+>> [adding davem on CC]
+
+>> Dave, is that correct?
+
+> I refuse to apply any patch without an appropriate signoff.
+
+    But what do you mean by "appropriate signoff"? I have provided mine but 
+Richard insists there should be sign-offs from the primary driver authors -- 
+it's the first time I'm encountering such a requirement.
+
+WBR, Sergei
