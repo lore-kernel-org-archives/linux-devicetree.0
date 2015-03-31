@@ -1,73 +1,36 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3] DT: Add documentation for the mfd Maxim max77693
-Date: Tue, 31 Mar 2015 12:58:30 +0200
-Message-ID: <551A7DD6.8000609@samsung.com>
-References: <1427709149-15014-1-git-send-email-j.anaszewski@samsung.com>
- <1427709149-15014-2-git-send-email-j.anaszewski@samsung.com>
- <20150330115729.GG17971@leverpostej> <55194509.1070008@samsung.com>
- <20150330132002.GA29200@leverpostej>
- <20150331091414.GH18321@valkosipuli.retiisi.org.uk>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for tscadc
+Date: Tue, 31 Mar 2015 16:42:35 +0530
+Message-ID: <1427800357-21680-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150331091414.GH18321@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
 
-On 03/31/2015 11:14 AM, sakari.ailus@iki.fi wrote:
-> Hi Mark and Jacek,
->
-> On Mon, Mar 30, 2015 at 02:20:03PM +0100, Mark Rutland wrote:
->> Hi,
->>
->>>>> +Optional properties:
->>>>> +- maxim,trigger-type : Flash trigger type.
->>>>> +	Possible trigger types:
->>>>> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
->>>>> +			the flash,
->>>>> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
->>>>> +			of the flash.
->>>>
->>>> Surely this is required? What should be assumed if this property isn't
->>>> present?
->>>
->>> LEDS_TRIG_TYPE_LEVEL allows for an ISP to do e.g. short flash blink
->>> before the actual strobe - it is used for eliminating photographs with
->>> closed eyes, or can serve for probing ambient light conditions.
->>>
->>> With LEDS_TRIG_TYPE_EDGE flash strobe is triggered on rising edge
->>> and lasts until programmed timeout expires.
->>>
->>> This setting is tightly related to a camera sensor, which generates
->>> the strobe signal. Effectively it depends on board configuration.
->>
->> My comment wasn't to do with the semantics of eitehr option but rather
->> the optionality of the property.
->>
->> Surely it's vital to know what this should be, and hence this property
->> should be required rather than optional?
->>
->> If it isn't required, what would the assumed default be?
->
-> I wonder if there's a use case for edge triggering. In level trigger mode,
-> whichever component generates the trigger signal, determines also the strobe
-> time (up to the timeout). The sensor or (in the case of lack of the signal
-> from the sensor) the ISP has the most information on the sensor timing.
->
-> The existing as3654a driver only supports level triggering while the chip
-> can do edge, too.
->
-> I'd make level default and perhaps add a V4L2 control / sysfs file to change
-> this if needed.
+Hi,
 
-That sounds reasonable. I am going to come up with another version of
-leds-max77693.c patch anyway, so I'll address this issue too.
+This patch adds optional DT properties for tscadc to set open delay,
+sample delay and number of averages per sample for each adc channel.
+Open delay, sample delay and averaging are some of the parameters that
+affect the sampling rate and accuracy of the tscadc. Decreasing delays
+and averaging helps to achieve higher sampling rates, while increasing
+this parameters provides greater accuracy. Hence, this patch provides DT
+properties to set the initial values for delays and number of averages
+per sample. User space control via sysfs can be added later.
+
+
+Vignesh R (2):
+  iio: adc: ti_am335x_adc: refactor DT parsing into a function
+  iio: adc: ti_am335x_adc: make sample delay, open delay, averaging DT
+    parameters
+
+ .../bindings/input/touchscreen/ti-tsc-adc.txt      | 24 +++++++
+ drivers/iio/adc/ti_am335x_adc.c                    | 83 +++++++++++++++++-----
+ 2 files changed, 91 insertions(+), 16 deletions(-)
 
 -- 
-Best Regards,
-Jacek Anaszewski
+1.9.1
