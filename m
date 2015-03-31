@@ -1,91 +1,95 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: dts: s3c-rtc: Use s3c6410-rtc instead of
- exynos3250-rtc
-Date: Tue, 31 Mar 2015 09:47:15 +0900
-Message-ID: <5519EE93.70509@samsung.com>
-References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
- <1427728773-29065-3-git-send-email-k.kozlowski@samsung.com>
- <5519DE76.4080803@samsung.com> <20150331003101.GG3849@piout.net>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [1/4] powerpc/cache: add cache flush operation for various e500
+Date: Mon, 30 Mar 2015 20:10:28 -0500
+Message-ID: <20150331011028.GA5667@home.buserror.net>
+References: <1427365095-26396-1-git-send-email-chenhui.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150331003101.GG3849@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427365095-26396-1-git-send-email-chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: chenhui zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 03/31/2015 09:31 AM, Alexandre Belloni wrote:
-> Hi,
+On Thu, Mar 26, 2015 at 06:18:12PM +0800, chenhui zhao wrote:
+> Various e500 core have different cache architecture, so they
+> need different cache flush operations. Therefore, add a callback
+> function cpu_flush_caches to the struct cpu_spec. The cache flush
+> operation for the specific kind of e500 is selected at init time.
+> The callback function will flush all caches inside the current cpu.
 > 
-> On 31/03/2015 at 08:38:30 +0900, Chanwoo Choi wrote :
->>> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->>> index ab757b84daa7..ac2fcd6ff4b8 100644
->>> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->>> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->>> @@ -6,7 +6,8 @@ Required properties:
->>>      * "samsung,s3c2416-rtc" - for controllers compatible with s3c2416 rtc.
->>>      * "samsung,s3c2443-rtc" - for controllers compatible with s3c2443 rtc.
->>>      * "samsung,s3c6410-rtc" - for controllers compatible with s3c6410 rtc.
->>> -    * "samsung,exynos3250-rtc" - for controllers compatible with exynos3250 rtc.
->>> +    * "samsung,exynos3250-rtc" - (deprecated) for controllers compatible with
->>> +                                 exynos3250 rtc (use "samsung,s3c6410-rtc").
->>>  - reg: physical base address of the controller and length of memory mapped
->>>    region.
->>>  - interrupts: Two interrupt numbers to the cpu should be specified. First
->>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->>> index e3bfb11c6ef8..8d58b550e925 100644
->>> --- a/arch/arm/boot/dts/exynos3250.dtsi
->>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->>> @@ -189,7 +189,7 @@
->>>  		};
->>>  
->>>  		rtc: rtc@10070000 {
->>> -			compatible = "samsung,exynos3250-rtc";
->>> +			compatible = "samsung,s3c6410-rtc";
->>>  			reg = <0x10070000 0x100>;
->>>  			interrupts = <0 73 0>, <0 74 0>;
->>>  			interrupt-parent = <&pmu_system_controller>;
->>> diff --git a/arch/arm/boot/dts/exynos4415.dtsi b/arch/arm/boot/dts/exynos4415.dtsi
->>> index 5caea996e090..186cb8465683 100644
->>> --- a/arch/arm/boot/dts/exynos4415.dtsi
->>> +++ b/arch/arm/boot/dts/exynos4415.dtsi
->>> @@ -177,7 +177,7 @@
->>>  		};
->>>  
->>>  		rtc: rtc@10070000 {
->>> -			compatible = "samsung,exynos3250-rtc";
->>> +			compatible = "samsung,s3c6410-rtc";
->>>  			reg = <0x10070000 0x100>;
->>>  			interrupts = <0 73 0>, <0 74 0>;
->>>  			status = "disabled";
->>>
->>
->> Looks good to me.
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>
+> Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/powerpc/include/asm/cacheflush.h     |   2 -
+>  arch/powerpc/include/asm/cputable.h       |  11 +++
+>  arch/powerpc/kernel/asm-offsets.c         |   3 +
+>  arch/powerpc/kernel/cpu_setup_fsl_booke.S | 114 +++++++++++++++++++++++++++++-
+>  arch/powerpc/kernel/cputable.c            |   4 ++
+>  arch/powerpc/kernel/head_fsl_booke.S      |  74 -------------------
+>  arch/powerpc/platforms/85xx/smp.c         |   3 +-
+>  7 files changed, 133 insertions(+), 78 deletions(-)
 > 
-> Are you absolutely sure that the exynos3250 IP is the same as the
-> s3c6410 (I don't know much about the exynos family). The concern being
-> that if at one point you have an errata on one or ther other, you will
-> have to break the DT ABI by undoing this change.
-> 
-> Note that I'm fine with it, I'm just asking.
+> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+> index 30b35ff..729fde4 100644
+> --- a/arch/powerpc/include/asm/cacheflush.h
+> +++ b/arch/powerpc/include/asm/cacheflush.h
+> @@ -30,8 +30,6 @@ extern void flush_dcache_page(struct page *page);
+>  #define flush_dcache_mmap_lock(mapping)		do { } while (0)
+>  #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
+>  
+> -extern void __flush_disable_L1(void);
+> -
+>  extern void flush_icache_range(unsigned long, unsigned long);
+>  extern void flush_icache_user_range(struct vm_area_struct *vma,
+>  				    struct page *page, unsigned long addr,
+> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+> index 5cf5a6d..c776efe4 100644
+> --- a/arch/powerpc/include/asm/cputable.h
+> +++ b/arch/powerpc/include/asm/cputable.h
+> @@ -43,6 +43,13 @@ extern int machine_check_e500(struct pt_regs *regs);
+>  extern int machine_check_e200(struct pt_regs *regs);
+>  extern int machine_check_47x(struct pt_regs *regs);
+>  
+> +#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
+> +extern void __flush_caches_e500v2(void);
+> +extern void __flush_caches_e500mc(void);
+> +extern void __flush_caches_e5500(void);
+> +extern void __flush_caches_e6500(void);
+> +#endif
 
-I'm sure about exynos3250 RTC is same with S3C6410 RTC.
-There was little different about that pevious S3C6410 RTC
-don't consider to control the 'rtc_src' clk.
+Why the leading underscores?
 
+>  /* NOTE WELL: Update identify_cpu() if fields are added or removed! */
+>  struct cpu_spec {
+>  	/* CPU is matched via (PVR & pvr_mask) == pvr_value */
+> @@ -59,6 +66,10 @@ struct cpu_spec {
+>  	unsigned int	icache_bsize;
+>  	unsigned int	dcache_bsize;
+>  
+> +#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
 
-But, Javier's patch[1] add the '.needs_src_clk' to control the
-'rtc_src' clk. After merged this patch, there is no different part between
-Exynos3250 RTC and S3C6410 RTC.
+CONFIG_PPC_E500MC implies CONFIG_E500.  Why do we need this ifdef?
 
-[1] 8792f7772f4f (drivers/rtc/rtc-s3c.c: add .needs_src_clk to s3c6410 RTC data)
+> +	/* flush caches inside the current cpu */
+> +	void (*cpu_flush_caches)(void);
+> +#endif
 
-Thanks,
-Chanwoo Choi
+It seems you literally mean "in the cpu" -- If it's a threaded core, then
+by "cpu" do you mean "thread" (like we usually do) and thus no caches get
+flushed (ignore the fact that it's moot on e6500 -- this is an interface
+and needs to be clear).
+
+Also, no-oping L1 flush on e6500 is not compliant with the claim that
+you're flushing the cache.  You're relying on an unstated assumption that
+you'll invalidate that cache later instead.
+
+If you want to make this "flush whatever needs to be flushed for
+suspend/hotplug", call it that.
+
+-Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
