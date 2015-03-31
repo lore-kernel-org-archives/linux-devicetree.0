@@ -1,100 +1,86 @@
 From: Robert Baldyga <r.baldyga@samsung.com>
-Subject: Re: [PATCH 4/4] Documentation: extcon: usb-gpio: update usb-gpio
- binding description
-Date: Tue, 31 Mar 2015 14:04:55 +0200
-Message-ID: <551A8D67.4060701@samsung.com>
+Subject: Re: [PATCH 3/4] extcon: usb-gpio: make debounce value configurable in
+ devicetree
+Date: Tue, 31 Mar 2015 14:16:57 +0200
+Message-ID: <551A9039.1010705@samsung.com>
 References: <1427787963-23562-1-git-send-email-r.baldyga@samsung.com>
- <1427787963-23562-5-git-send-email-r.baldyga@samsung.com>
- <551A74F5.4050900@ti.com>
+ <1427787963-23562-4-git-send-email-r.baldyga@samsung.com>
+ <551A6926.8030101@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <551A74F5.4050900@ti.com>
+In-reply-to: <551A6926.8030101@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Roger Quadros <rogerq@ti.com>, cw00.choi@samsung.com
 Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 03/31/2015 12:20 PM, Roger Quadros wrote:
+On 03/31/2015 11:30 AM, Roger Quadros wrote:
 > On 31/03/15 10:46, Robert Baldyga wrote:
->> Add information about VBUS pin detection support, 'debounce' property
->> and some other details.
+>> This patch adds devicetree property for setting debounce value. It allows
+>> to set debounce time shorter or longer depending on the needs of given
+>> platform.
 >>
 >> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
 >> ---
->>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt | 23 ++++++++++++++++++++--
->>  1 file changed, 21 insertions(+), 2 deletions(-)
+>>  drivers/extcon/extcon-usb-gpio.c | 14 +++++++++-----
+>>  1 file changed, 9 insertions(+), 5 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> index af0b903..d3fcf8b 100644
->> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> @@ -1,16 +1,35 @@
->>  USB GPIO Extcon device
+>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+>> index 02ff40e..86e3ece 100644
+>> --- a/drivers/extcon/extcon-usb-gpio.c
+>> +++ b/drivers/extcon/extcon-usb-gpio.c
+>> @@ -130,6 +130,7 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>>  	struct device *dev = &pdev->dev;
+>>  	struct device_node *np = dev->of_node;
+>>  	struct usb_extcon_info *info;
+>> +	u32 debounce;
+>>  	int ret;
 >>  
->> -This is a virtual device used to generate USB cable states from the USB ID pin
->> -connected to a GPIO pin.
->> +This is a virtual device used to generate USB cable states from the USB
->> +ID and VBUS signals connected to a GPIO pins.
-> 
-> s/to a GPIO/to GPIO/
-> 
+>>  	if (!np)
+>> @@ -140,6 +141,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>>  		return -ENOMEM;
+>>  
+>>  	info->dev = dev;
 >> +
->> +Some devices has only one of these GPIO pins, so we support cases when
-> s/has/have/
-> 
->> +only one of them is present. Hence properties 'id-gpio' and 'vbus-gpio'
->> +are described as optional, but at least one of them has to be present
->> +in extcon-usb-gpio node.
+>> +	ret = of_property_read_u32(np, "debounce", &debounce);
+>> +	if (ret < 0)
+>> +		debounce = USB_GPIO_DEBOUNCE_MS;
 >> +
->> +In general we have three cases:
->> + 1. We have both VBUS and ID pin detection - we can detect USB, USB-HOST
->> +    and cable disconnection.
 > 
-> The interpretation of "cable disconnect" might not be always true.
-> ID may be 1 and VBUS 0 but cable might still not be disconnected.
-> e.g. if both are OTG devices.
-> That's why we have ADP to detect cable connect/disconnect status for OTG case.
-> 
-> So let's leave cable disconnection interpretation to the USB stack and
-> just deal with passing ID/VBUS status. I must admit that the extcon cable
-> state names are misleading. They should really have been named
-> USB-ID and USB-VBUS :).
-
-I thought the same.
-
-Chanwoo, what do you think about such naming convention change? USB
-cable detection in general is needed mainly for OTG, so having cable
-state names clearly related to OTG statemachine states seems to be good
-idea.
-
-> 
-> The driver doesn't do connect/disconnect detection but only infers the other
-> pin state if only one of the ID/VBUS is available.
-> 
->> + 2. We have only VBUS detection - we can detect USB and cable disconnection.
->> + 3. We have ID pin only - we can distinguish between USB and USB-HOST
->> +    but without ability to detect cable disconnection.
-> 
-> how about rewording these 3 points like so with a short header about
-> clarification of extcon USB/USB_HOST states.
-> 
-> The extcon cable states USB and USB_HOST are actually VBUS and (inverted) ID
-> pin states and do not indicate what mode the USB needs to operate in.
-> That decision is done by the USB stack.
-> 
-> 1. If VBUS and ID gpios are present we pass them as is
-> 	USB-HOST = !ID, USB = VBUS
-> 2. If only VBUS gpio is present we assume that ID pin is always High.
-> 	USB-HOST = false, USB = VBUS.
-> 3. If only ID pin is available we infer the VBUS pin states based on ID.
-> 	USB-HOST = !ID, USB = ID
+> Should we sanity check debounce value provided by device tree?
+> e.g. if it is greater than USB_GPIO_DEBOUNCE_MAX then we error out.
+> MAX could be 100 or 250ms.
 > 
 
-Thanks for comments. I will try to fix it up.
+None of extcon drivers do such thing, so I suppose it's up to devicetree
+to supply reasonable value here.
+
+>>  	info->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id");
+>>  	info->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus");
+>>  
+>> @@ -161,16 +167,14 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>>  	}
+>>  
+>>  	if (info->id_gpiod)
+>> -		ret = gpiod_set_debounce(info->id_gpiod,
+>> -			USB_GPIO_DEBOUNCE_MS * 1000);
+>> +		ret = gpiod_set_debounce(info->id_gpiod, debounce * 1000);
+>>  	if (!ret && info->vbus_gpiod) {
+>> -		ret = gpiod_set_debounce(info->vbus_gpiod,
+>> -			USB_GPIO_DEBOUNCE_MS * 1000);
+>> +		ret = gpiod_set_debounce(info->vbus_gpiod, debounce * 1000);
+>>  		if (ret < 0 && info->id_gpiod)
+>>  			gpiod_set_debounce(info->vbus_gpiod, 0);
+>>  	}
+>>  	if (ret < 0)
+>> -		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
+>> +		info->debounce_jiffies = msecs_to_jiffies(debounce);
+>>  
+>>  	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
+>>  
+>>
 
 Best regards,
 Robert Baldyga
