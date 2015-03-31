@@ -1,43 +1,80 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/2] drivers/rtc/rtc-s3c.c: Integrate Exynos3250 into
- S3C6410
-Date: Tue, 31 Mar 2015 10:20:52 +0200
-Message-ID: <20150331082052.GI3849@piout.net>
-References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
- <1427728773-29065-2-git-send-email-k.kozlowski@samsung.com>
- <20150331002709.GF3849@piout.net>
- <CABxcv==+h8R-tL9D5OXmYsuYfs_cLATViZ3N1veZwZBZF=fu0Q@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] extcon: usb-gpio: register extcon device before IRQ
+ registration
+Date: Tue, 31 Mar 2015 11:37:08 +0300
+Message-ID: <551A5CB4.2020302@ti.com>
+References: <1427787963-23562-1-git-send-email-r.baldyga@samsung.com> <1427787963-23562-2-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv==+h8R-tL9D5OXmYsuYfs_cLATViZ3N1veZwZBZF=fu0Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, rtc-linux@googlegroups.com, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427787963-23562-2-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 31/03/2015 at 08:49:39 +0200, Javier Martinez Canillas wrote :
-> Hello Alexandre,
+On 31/03/15 10:46, Robert Baldyga wrote:
+> IRQ handler touches info->edev, so if interrupt occurs before extcon
+> device initialization it can cause NULL pointer dereference. Doing extcon
+> initialization before IRQ handler registration fixes this problem.
 > 
-> On Tue, Mar 31, 2015 at 2:27 AM, Alexandre Belloni
-> <alexandre.belloni@free-electrons.com> wrote:
-> > nitpick: I would prefer rtc: rtc-s3c instead of drivers/rtc/rtc-s3c.c
-> >
+> Signed-off-by: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+
+cheers,
+-roger
+
+> ---
+>  drivers/extcon/extcon-usb-gpio.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 > 
-> Yes but Krzysztof is following the convention used in drivers/rtc/
-> which I think is the correct thing to do even when it's different from
-> what is used all over the kernel.
+> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+> index 3f0bad3..f6aa99d 100644
+> --- a/drivers/extcon/extcon-usb-gpio.c
+> +++ b/drivers/extcon/extcon-usb-gpio.c
+> @@ -119,6 +119,18 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  		return PTR_ERR(info->id_gpiod);
+>  	}
+>  
+> +	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+> +	if (IS_ERR(info->edev)) {
+> +		dev_err(dev, "failed to allocate extcon device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = devm_extcon_dev_register(dev, info->edev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register extcon device\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = gpiod_set_debounce(info->id_gpiod,
+>  				 USB_GPIO_DEBOUNCE_MS * 1000);
+>  	if (ret < 0)
+> @@ -142,18 +154,6 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+> -	if (IS_ERR(info->edev)) {
+> -		dev_err(dev, "failed to allocate extcon device\n");
+> -		return -ENOMEM;
+> -	}
+> -
+> -	ret = devm_extcon_dev_register(dev, info->edev);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to register extcon device\n");
+> -		return ret;
+> -	}
+> -
+>  	platform_set_drvdata(pdev, info);
+>  	device_init_wakeup(dev, 1);
+>  
 > 
 
-Having a look at the git history, the first and most used prefix is
-actually 'rtc:' at some point, this started to change to 'drivers/rtc/'.
-We should probably start to get back to 'rtc:', like most subsystems.
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
