@@ -1,71 +1,45 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/2] drivers/rtc/rtc-s3c.c: Integrate Exynos3250 into
- S3C6410
-Date: Tue, 31 Mar 2015 02:27:09 +0200
-Message-ID: <20150331002709.GF3849@piout.net>
-References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
- <1427728773-29065-2-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1427728773-29065-2-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, Kyungmin Park <kyungmin.park@samsung.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH V2 1/3] Input: Add event types to DT bidnings header
+Date: Mon, 30 Mar 2015 17:28:07 -0700
+Message-ID: <1427761689-5238-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-nitpick: I would prefer rtc: rtc-s3c instead of drivers/rtc/rtc-s3c.c
+Add #defines for the event types (EV_KEY, EV_SW, etc.) to the input DT
+bindings header so that they can be used in device-tree source files.
 
-On 30/03/2015 at 17:19:32 +0200, Krzysztof Kozlowski wrote :
-> There are now no differences between RTC on Exynos3250 and S3C6410.
-> Merge everything into one so duplicated code could be removed.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+New for v2.
+---
+ include/dt-bindings/input/input.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-
-> ---
->  drivers/rtc/rtc-s3c.c | 14 +-------------
->  1 file changed, 1 insertion(+), 13 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-s3c.c b/drivers/rtc/rtc-s3c.c
-> index fb0c569765c6..5e162eaad277 100644
-> --- a/drivers/rtc/rtc-s3c.c
-> +++ b/drivers/rtc/rtc-s3c.c
-> @@ -774,18 +774,6 @@ static struct s3c_rtc_data const s3c6410_rtc_data = {
->  	.disable		= s3c6410_rtc_disable,
->  };
->  
-> -static struct s3c_rtc_data const exynos3250_rtc_data = {
-> -	.max_user_freq		= 32768,
-> -	.needs_src_clk		= true,
-> -	.irq_handler		= s3c6410_rtc_irq,
-> -	.set_freq		= s3c6410_rtc_setfreq,
-> -	.enable_tick		= s3c6410_rtc_enable_tick,
-> -	.save_tick_cnt		= s3c6410_rtc_save_tick_cnt,
-> -	.restore_tick_cnt	= s3c6410_rtc_restore_tick_cnt,
-> -	.enable			= s3c24xx_rtc_enable,
-> -	.disable		= s3c6410_rtc_disable,
-> -};
-> -
->  static const struct of_device_id s3c_rtc_dt_match[] = {
->  	{
->  		.compatible = "samsung,s3c2410-rtc",
-> @@ -801,7 +789,7 @@ static const struct of_device_id s3c_rtc_dt_match[] = {
->  		.data = (void *)&s3c6410_rtc_data,
->  	}, {
->  		.compatible = "samsung,exynos3250-rtc",
-> -		.data = (void *)&exynos3250_rtc_data,
-> +		.data = (void *)&s3c6410_rtc_data,
->  	},
->  	{ /* sentinel */ },
->  };
-> -- 
-> 1.9.1
-> 
-
+diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+index 042e7b3..b9ca218 100644
+--- a/include/dt-bindings/input/input.h
++++ b/include/dt-bindings/input/input.h
+@@ -522,4 +522,18 @@
+ #define MATRIX_KEY(row, col, code)	\
+ 	((((row) & 0xFF) << 24) | (((col) & 0xFF) << 16) | ((code) & 0xFFFF))
+ 
++/* Event types */
++#define EV_SYN			0x00
++#define EV_KEY			0x01
++#define EV_REL			0x02
++#define EV_ABS			0x03
++#define EV_MSC			0x04
++#define EV_SW			0x05
++#define EV_LED			0x11
++#define EV_SND			0x12
++#define EV_REP			0x14
++#define EV_FF			0x15
++#define EV_PWR			0x16
++#define EV_FF_STATUS		0x17
++
+ #endif /* _DT_BINDINGS_INPUT_INPUT_H */
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.2.0.rc0.207.ga3a616c
