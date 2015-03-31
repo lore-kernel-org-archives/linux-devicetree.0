@@ -1,49 +1,114 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v2 1/6] phy: miphy365x: Use the generic phy type
- constants in dt-bindings/phy/phy.h
-Date: Tue, 31 Mar 2015 09:01:54 +0100
-Message-ID: <20150331080154.GA2029@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org>
- <1427728632-10846-2-git-send-email-peter.griffin@linaro.org>
- <551A2D4D.1010601@ti.com>
- <20150331074027.GH9447@x1>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH V2 3/3] pinctrl: Add Pistachio SoC pin control driver
+Date: Tue, 31 Mar 2015 10:10:15 +0200
+Message-ID: <1427789415.2408.45.camel@x220>
+References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
+	 <1427757416-14491-4-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150331074027.GH9447@x1>
+In-Reply-To: <1427757416-14491-4-git-send-email-abrestic@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, balbi@ti.com, devicetree@vger.kernel.org, robherring2@gmail.com
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+The patch adds a mismatch between the Kconfig symbol (a bool) and the
+code (which suggests that a modular build is also possible).
 
-On Tue, 31 Mar 2015, Lee Jones wrote:
-> On Tue, 31 Mar 2015, Kishon Vijay Abraham I wrote:
-> 
-> > Hi Patrice, Maxime,
-> > 
-> > On Monday 30 March 2015 08:47 PM, Peter Griffin wrote:
-> > >Now there are generic phy type constants declared in phy.h, migrate over to
-> > >using them rather than defining our own. This change has been done as one
-> > >atomic commit to be bisectable.
-> > >
-> > >Note: The values of the defines are the same, so there is no ABI breakage
-> > >with this patch.
-> > >
-> > >Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > >Acked-by: Rob Herring <robh@kernel.org>
-> > >Acked-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> > Are you okay for this patch to go via PHY tree? It modifies arch/arm/boot/dts
-> > /stih416.dtsi.
-> 
-> These files need to be changed simultaneously in order to prevent
-> breakage during bisection and the like.
+On Mon, 2015-03-30 at 16:16 -0700, Andrew Bresticker wrote:
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
 
-That is why it has been authored as one atomic commit. See commit message above.
+> +config PINCTRL_PISTACHIO
+> +	def_bool y if MACH_PISTACHIO
 
-regards,
+This adds a bool symbol.
 
-Peter
+> +	select PINMUX
+> +	select GENERIC_PINCONF
+> +	select GPIOLIB_IRQCHIP
+
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+
+> +obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+
+So pinctrl-pistachio.o will never be part of a module.
+
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-pistachio.c
+
+> +#include <linux/module.h>
+
+Chances are this include is not needed.
+
+> +static struct pinctrl_desc pistachio_pinctrl_desc = {
+> +	.name = "pistachio-pinctrl",
+> +	.pctlops = &pistachio_pinctrl_ops,
+> +	.pmxops = &pistachio_pinmux_ops,
+> +	.confops = &pistachio_pinconf_ops,
+> +	.owner = THIS_MODULE,
+
+According to include/linux/export.h THIS_MODULE is equivalent to NULL,
+so this can probably be dropped.
+
+> +};
+
+> +#define GPIO_BANK(_bank, _pin_base, _npins)				\
+> +	{								\
+> +		.gpio_chip = {						\
+> +			.label = "GPIO" #_bank,				\
+> +			.request = pistachio_gpio_request,		\
+> +			.free = pistachio_gpio_free,			\
+> +			.get_direction = pistachio_gpio_get_direction,	\
+> +			.direction_input = pistachio_gpio_direction_input, \
+> +			.direction_output = pistachio_gpio_direction_output, \
+> +			.get = pistachio_gpio_get,			\
+> +			.set = pistachio_gpio_set,			\
+> +			.base = _pin_base,				\
+> +			.ngpio = _npins,				\
+> +			.owner = THIS_MODULE,				\
+
+Ditto.
+
+> +		},							\
+> +		.irq_chip = {						\
+> +			.name = "GPIO" #_bank,				\
+> +			.irq_startup = pistachio_gpio_irq_startup,	\
+> +			.irq_ack = pistachio_gpio_irq_ack,		\
+> +			.irq_mask = pistachio_gpio_irq_mask,		\
+> +			.irq_unmask = pistachio_gpio_irq_unmask,	\
+> +			.irq_set_type = pistachio_gpio_irq_set_type,	\
+> +		},							\
+> +		.gpio_range = {						\
+> +			.name = "GPIO" #_bank,				\
+> +			.id = _bank,					\
+> +			.base = _pin_base,				\
+> +			.pin_base = _pin_base,				\
+> +			.npins = _npins,				\
+> +		},							\
+> +	}
+
+> +MODULE_DEVICE_TABLE(of, pistachio_pinctrl_of_match);
+
+According to include/linux/module.h this will be preprocessed away.
+
+> +module_platform_driver(pistachio_pinctrl_driver);
+
+This seems to be equivalent to adding a wrapper that does
+    platform_driver_register(&pistachio_pinctrl_driver);
+
+and marking that wrapper with device_initcall(). I don't think there's
+one line macro to do that.
+
+> +MODULE_AUTHOR("Andrew Bresticker <abrestic@chromium.org>");
+> +MODULE_AUTHOR("Damien Horsley <Damien.Horsley@imgtec.com>");
+> +MODULE_DESCRIPTION("Pistachio pinctrl driver");
+> +MODULE_LICENSE("GPL v2");
+
+These macros will (basically) be preprocessed away.
+
+
+Paul Bolle
