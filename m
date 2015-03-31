@@ -1,46 +1,40 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] phy: driver for Conexant Digicolor internal USB PHY
-Date: Tue, 31 Mar 2015 20:56:54 +0530
-Message-ID: <551ABCBE.3030005@ti.com>
-References: <6284a7672647d46100281959552f9787f98bb552.1427430989.git.baruch@tkos.co.il> <4a9ceb0a240d49dd6a68d50c78f85d310d4b932f.1427430989.git.baruch@tkos.co.il> <201503281633.02801.marex@denx.de> <20150331113448.GN12479@tarshish>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 3/3] ahci: st: st_configure_oob must be called after IP
+ is clocked.
+Date: Tue, 31 Mar 2015 11:29:58 -0400
+Message-ID: <20150331152958.GF9974@htj.duckdns.org>
+References: <1427787309-1601-1-git-send-email-peter.griffin@linaro.org>
+ <1427787309-1601-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150331113448.GN12479@tarshish>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1427787309-1601-4-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Mar 31, 2015 at 08:35:09AM +0100, Peter Griffin wrote:
+> Currently the ahci_st driver will hang the system on probe, as the
+> st_configure_oob function does some register writes before the IP
+> is clocked. This patch moves the function call to after
+> ahci_platform_enable_resources (which enables the IP clock), and
+> resolves the hang.
+> 
+> Addtionally st_ahci_configure_oob should be called in the st_ahci_resume
+> function, so we also rectify that ensuring it is also called after
+> the IP clock has been enabled.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-On Tuesday 31 March 2015 05:04 PM, Baruch Siach wrote:
-> Hi Marek,
->
-> On Sat, Mar 28, 2015 at 04:33:02PM +0100, Marek Vasut wrote:
->> On Friday, March 27, 2015 at 05:36:29 AM, Baruch Siach wrote:
->>> Add a driver for the USB PHY on the Conexant CX92755 SoC, from the
->>> Digicolor series of SoCs. The PHY is connected to the on-chip chipidea
->>> usb2 host.
->>>
->>> The hardware is somewhat similar to the phy-mxs-usb.c usb_phy, but it is
->>> different enough to merit its own driver. Also, this driver uses the
->>> generic phy infrastructure.
->>
->> the register set looks very similar to MXS one indeed. How is it different
->> please ?
->
-> Almost of the bits that are defined in the MXS USBPHY_CTRL register are not
-> defined in the Digicolor one. Some have different meaning, and some are
-> reserved. OTOH, the Digicolor USBPHY_CTRL register uses all bits in the 1-13
-> range. Also, the Digicolor phy does not have anatop registers.
+How should this patch be routed?  Should I pick this up and apply to
+libata/for-4.1 or should it go together with the other patches?  If
+the latter, please feel free to add my acked-by.
 
-I think we should try adding support for this in the same driver.
+Thanks.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+tejun
