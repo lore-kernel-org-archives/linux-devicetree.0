@@ -1,66 +1,29 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v2 1/6] phy: miphy365x: Use the generic phy type constants
- in dt-bindings/phy/phy.h
-Date: Tue, 31 Mar 2015 17:55:42 +0200
-Message-ID: <551AC37E.70503@st.com>
-References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org> <1427728632-10846-2-git-send-email-peter.griffin@linaro.org> <551A2D4D.1010601@ti.com> <20150331074027.GH9447@x1> <551ABD99.2000503@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 3/3] ahci: st: st_configure_oob must be called after IP
+ is clocked.
+Date: Tue, 31 Mar 2015 11:59:51 -0400
+Message-ID: <20150331155951.GG9974@htj.duckdns.org>
+References: <1427787309-1601-1-git-send-email-peter.griffin@linaro.org>
+ <1427787309-1601-4-git-send-email-peter.griffin@linaro.org>
+ <20150331152958.GF9974@htj.duckdns.org>
+ <20150331153627.GA8200@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <551ABD99.2000503@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20150331153627.GA8200@griffinp-ThinkPad-X1-Carbon-2nd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, balbi@ti.com, devicetree@vger.kernel.org, robherring2@gmail.com
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On Tue, Mar 31, 2015 at 04:36:27PM +0100, Peter Griffin wrote:
+> This patch (and also the DT documentation change) can go via your tree. Maxime
+> will take the stih407 DT patch.
 
-On 03/31/2015 05:30 PM, Kishon Vijay Abraham I wrote:
-> Maxime,
->
-> On Tuesday 31 March 2015 01:10 PM, Lee Jones wrote:
->> On Tue, 31 Mar 2015, Kishon Vijay Abraham I wrote:
->>
->>> Hi Patrice, Maxime,
->>>
->>> On Monday 30 March 2015 08:47 PM, Peter Griffin wrote:
->>>> Now there are generic phy type constants declared in phy.h, migrate 
->>>> over to
->>>> using them rather than defining our own. This change has been done 
->>>> as one
->>>> atomic commit to be bisectable.
->>>>
->>>> Note: The values of the defines are the same, so there is no ABI 
->>>> breakage
->>>> with this patch.
->>>>
->>>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->>>> Acked-by: Rob Herring <robh@kernel.org>
->>>> Acked-by: Lee Jones <lee.jones@linaro.org>
->>>
->>> Are you okay for this patch to go via PHY tree? It modifies 
->>> arch/arm/boot/dts
->>> /stih416.dtsi.
->>
->> These files need to be changed simultaneously in order to prevent
->> breakage during bisection and the like.  I think the best bet moving
->> forward is to pull this into its own branch, tag it and send Maxime a
->> pull-request to the immutable branch.  It's the best way to minimise
->> merge conflicts during the v4.1 merge window.
->
-> okay. I still need an Ack from Maxime.
+Hmmm... The first patch doesn't apply to libata/for-4.1?
 
-You have my Ack.
+Thanks.
 
-I haven't sent a pull request for STi DT files for v4.1 now, and it is 
-too late to send one.
-So creating an immutable tag is not even needed in my opinion, you can 
-just take the DT patch.
-
-Thanks,
-Maxime
-
->
-> Thanks
-> Kishon
+-- 
+tejun
