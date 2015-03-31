@@ -1,114 +1,48 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH V2 3/3] pinctrl: Add Pistachio SoC pin control driver
-Date: Tue, 31 Mar 2015 10:10:15 +0200
-Message-ID: <1427789415.2408.45.camel@x220>
-References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
-	 <1427757416-14491-4-git-send-email-abrestic@chromium.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 2/2] ARM: dts: s3c-rtc: Use s3c6410-rtc instead of
+ exynos3250-rtc
+Date: Tue, 31 Mar 2015 10:12:04 +0200
+Message-ID: <20150331081204.GH3849@piout.net>
+References: <1427728773-29065-1-git-send-email-k.kozlowski@samsung.com>
+ <1427728773-29065-3-git-send-email-k.kozlowski@samsung.com>
+ <5519DE76.4080803@samsung.com>
+ <20150331003101.GG3849@piout.net>
+ <5519EE93.70509@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427757416-14491-4-git-send-email-abrestic@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <5519EE93.70509@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds a mismatch between the Kconfig symbol (a bool) and the
-code (which suggests that a modular build is also possible).
+On 31/03/2015 at 09:47:15 +0900, Chanwoo Choi wrote :
+> > Are you absolutely sure that the exynos3250 IP is the same as the
+> > s3c6410 (I don't know much about the exynos family). The concern being
+> > that if at one point you have an errata on one or ther other, you will
+> > have to break the DT ABI by undoing this change.
+> > 
+> > Note that I'm fine with it, I'm just asking.
+> 
+> I'm sure about exynos3250 RTC is same with S3C6410 RTC.
+> There was little different about that pevious S3C6410 RTC
+> don't consider to control the 'rtc_src' clk.
+> 
+> 
+> But, Javier's patch[1] add the '.needs_src_clk' to control the
+> 'rtc_src' clk. After merged this patch, there is no different part between
+> Exynos3250 RTC and S3C6410 RTC.
+> 
+> [1] 8792f7772f4f (drivers/rtc/rtc-s3c.c: add .needs_src_clk to s3c6410 RTC data)
+> 
 
-On Mon, 2015-03-30 at 16:16 -0700, Andrew Bresticker wrote:
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-
-> +config PINCTRL_PISTACHIO
-> +	def_bool y if MACH_PISTACHIO
-
-This adds a bool symbol.
-
-> +	select PINMUX
-> +	select GENERIC_PINCONF
-> +	select GPIOLIB_IRQCHIP
-
-> --- a/drivers/pinctrl/Makefile
-> +++ b/drivers/pinctrl/Makefile
-
-> +obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
-
-So pinctrl-pistachio.o will never be part of a module.
-
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-pistachio.c
-
-> +#include <linux/module.h>
-
-Chances are this include is not needed.
-
-> +static struct pinctrl_desc pistachio_pinctrl_desc = {
-> +	.name = "pistachio-pinctrl",
-> +	.pctlops = &pistachio_pinctrl_ops,
-> +	.pmxops = &pistachio_pinmux_ops,
-> +	.confops = &pistachio_pinconf_ops,
-> +	.owner = THIS_MODULE,
-
-According to include/linux/export.h THIS_MODULE is equivalent to NULL,
-so this can probably be dropped.
-
-> +};
-
-> +#define GPIO_BANK(_bank, _pin_base, _npins)				\
-> +	{								\
-> +		.gpio_chip = {						\
-> +			.label = "GPIO" #_bank,				\
-> +			.request = pistachio_gpio_request,		\
-> +			.free = pistachio_gpio_free,			\
-> +			.get_direction = pistachio_gpio_get_direction,	\
-> +			.direction_input = pistachio_gpio_direction_input, \
-> +			.direction_output = pistachio_gpio_direction_output, \
-> +			.get = pistachio_gpio_get,			\
-> +			.set = pistachio_gpio_set,			\
-> +			.base = _pin_base,				\
-> +			.ngpio = _npins,				\
-> +			.owner = THIS_MODULE,				\
-
-Ditto.
-
-> +		},							\
-> +		.irq_chip = {						\
-> +			.name = "GPIO" #_bank,				\
-> +			.irq_startup = pistachio_gpio_irq_startup,	\
-> +			.irq_ack = pistachio_gpio_irq_ack,		\
-> +			.irq_mask = pistachio_gpio_irq_mask,		\
-> +			.irq_unmask = pistachio_gpio_irq_unmask,	\
-> +			.irq_set_type = pistachio_gpio_irq_set_type,	\
-> +		},							\
-> +		.gpio_range = {						\
-> +			.name = "GPIO" #_bank,				\
-> +			.id = _bank,					\
-> +			.base = _pin_base,				\
-> +			.pin_base = _pin_base,				\
-> +			.npins = _npins,				\
-> +		},							\
-> +	}
-
-> +MODULE_DEVICE_TABLE(of, pistachio_pinctrl_of_match);
-
-According to include/linux/module.h this will be preprocessed away.
-
-> +module_platform_driver(pistachio_pinctrl_driver);
-
-This seems to be equivalent to adding a wrapper that does
-    platform_driver_register(&pistachio_pinctrl_driver);
-
-and marking that wrapper with device_initcall(). I don't think there's
-one line macro to do that.
-
-> +MODULE_AUTHOR("Andrew Bresticker <abrestic@chromium.org>");
-> +MODULE_AUTHOR("Damien Horsley <Damien.Horsley@imgtec.com>");
-> +MODULE_DESCRIPTION("Pistachio pinctrl driver");
-> +MODULE_LICENSE("GPL v2");
-
-These macros will (basically) be preprocessed away.
+Yes, I saw that the software was handling both the same way, I was
+asking about the hardware side.
 
 
-Paul Bolle
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
