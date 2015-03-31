@@ -1,126 +1,305 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH_V2 1/2] dt-bindings: binding for jz4780-{nand,bch}
-Date: Mon, 30 Mar 2015 18:59:42 -0700
-Message-ID: <20150331015942.GS32500@ld-irv-0074>
-References: <1425902299-53967-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1425902299-53967-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
+Date: Mon, 30 Mar 2015 21:07:22 -0500
+Message-ID: <20150331020722.GC5667@home.buserror.net>
+References: <1427365095-26396-3-git-send-email-chenhui.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1425902299-53967-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+In-Reply-To: <1427365095-26396-3-git-send-email-chenhui.zhao@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Steve deRosier <derosier@gmail.com>, dehrenberg@google.com
+To: chenhui zhao <chenhui.zhao@freescale.com>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jason.Jin@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2015 at 11:58:18AM +0000, Zubair Lutfullah Kakakhel wrote:
-> From: Alex Smith <alex.smith@imgtec.com>
+On Thu, Mar 26, 2015 at 06:18:14PM +0800, chenhui zhao wrote:
+> Implemented CPU hotplug on e500mc, e5500 and e6500, and support
+> multiple threads mode and 64-bits mode.
 > 
-> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-> drivers.
+> For e6500 with two threads, if one thread is online, it can
+> enable/disable the other thread in the same core. If two threads of
+> one core are offline, the core will enter the PH20 state (a low power
+> state). When the core is up again, Thread0 is up first, and it will be
+> bound with the present booting cpu. This way, all CPUs can hotplug
+> separately.
 > 
-> Signed-off-by: Alex Smith <alex@alex-smith.me.uk>
-> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> 
+> Signed-off-by: Chenhui Zhao <chenhui.zhao@freescale.com>
 > ---
-> V1 - > V2
-> Rebase to 4.0-rc3
-> ---
->  .../bindings/mtd/ingenic,jz4780-nand.txt           | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> new file mode 100644
-> index 0000000..6f2e128
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> @@ -0,0 +1,57 @@
-> +* Ingenic JZ4780 NAND/BCH
-> +
-> +This file documents the device tree bindings for NAND flash devices on the
-> +JZ4780. NAND devices are connected to the NEMC controller (described in
-> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-> +be children of the NEMC node.
-> +
-> +Required NAND device properties:
-> +- compatible: Should be set to "ingenic,jz4780-nand".
-> +- reg: For each bank with a NAND chip attached, should specify a bank number,
-> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
-> +
-> +Optional NAND device properties:
-> +- ingenic,bch-device: To make use of the hardware BCH controller, this property
-> +  must contain a phandle for the BCH controller node. The required properties
-> +  for this node are described below. If this is not specified, software BCH
-> +  will be used instead.
-> +- ingenic,ecc-size: ECC block size in bytes.
-> +- ingenic,ecc-strength: ECC strength (max number of correctable bits).
+>  arch/powerpc/Kconfig              |   2 +-
+>  arch/powerpc/include/asm/fsl_pm.h |   4 +
+>  arch/powerpc/include/asm/smp.h    |   2 +
+>  arch/powerpc/kernel/head_64.S     |  20 +++--
+>  arch/powerpc/kernel/smp.c         |   5 ++
+>  arch/powerpc/platforms/85xx/smp.c | 182 +++++++++++++++++++++++++++++---------
+>  arch/powerpc/sysdev/fsl_rcpm.c    |  56 ++++++++++++
+>  7 files changed, 220 insertions(+), 51 deletions(-)
 
-Can you use the generic nand-ecc-step-size and nand-ecc-strength
-properties instead of defining new ones?
+Please factor out changes to generic code (including but not limited to
+cur_boot_cpu and PIR handling) into separate patches with clear
+explanations.
 
-> +- ingenic,busy-gpio: GPIO specifier for the busy pin.
-> +- ingenic,wp-gpio: GPIO specifier for the write protect pin.
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 22b0940..9846c83 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -380,7 +380,7 @@ config SWIOTLB
+>  config HOTPLUG_CPU
+>  	bool "Support for enabling/disabling CPUs"
+>  	depends on SMP && (PPC_PSERIES || \
+> -	PPC_PMAC || PPC_POWERNV || (PPC_85xx && !PPC_E500MC))
+> +	PPC_PMAC || PPC_POWERNV || FSL_SOC_BOOKE)
+>  	---help---
+>  	  Say Y here to be able to disable and re-enable individual
+>  	  CPUs at runtime on SMP machines.
+> diff --git a/arch/powerpc/include/asm/fsl_pm.h b/arch/powerpc/include/asm/fsl_pm.h
+> index bbe6089..579f495 100644
+> --- a/arch/powerpc/include/asm/fsl_pm.h
+> +++ b/arch/powerpc/include/asm/fsl_pm.h
+> @@ -34,6 +34,10 @@ struct fsl_pm_ops {
+>  	void (*cpu_enter_state)(int cpu, int state);
+>  	/* exit the CPU from the specified state */
+>  	void (*cpu_exit_state)(int cpu, int state);
+> +	/* cpu up */
+> +	void (*cpu_up)(int cpu);
 
-The gipo.txt binding document recommends naming properties *-gpios, not
-*-gpio. Also, these look like they are exposing the actualy R/B and WP#
-pins as gpios, correct? If so, then I think it'd be good to give them
-generic names, not 'ingenic,' names. That way, we might consider
-supporting reusable code that handles them. And I see that sunxi-nand
-already uses a generic name for the R/B pin: rb-gpios.
+Again, this sort of comment is useless.  Tell us what "cpu up" *does*,
+when it should be called, etc.
 
-So these might work:
+> @@ -189,16 +193,14 @@ _GLOBAL(fsl_secondary_thread_init)
+>  	isync
+>  
+>  	/*
+> -	 * Fix PIR to match the linear numbering in the device tree.
+> -	 *
+> -	 * On e6500, the reset value of PIR uses the low three bits for
+> -	 * the thread within a core, and the upper bits for the core
+> -	 * number.  There are two threads per core, so shift everything
+> -	 * but the low bit right by two bits so that the cpu numbering is
+> -	 * continuous.
 
-  rb-gpios
-  wp-gpios
+Why are you getting rid of this?  If it's to avoid doing it twice on the
+same thread, in my work-in-progress kexec patches I instead check to see
+whether BUCSR has already been set up -- if it has, I assume we've
+already been here.
 
+> +	 * The current thread has been in 64-bit mode,
+> +	 * see the value of TMRN_IMSR.
 
-BTW, generic GPIO WP# handling was discussed a few months ago, though I
-didn't see any patches yet:
+I don't see what the relevance of this comment is here.
 
-http://lists.infradead.org/pipermail/linux-mtd/2015-January/057256.html
+> +	 * compute the address of __cur_boot_cpu
+>  	 */
+> -	mfspr	r3, SPRN_PIR
+> -	rlwimi	r3, r3, 30, 2, 30
+> +	bl	10f
+> +10:	mflr	r22
+> +	addi	r22,r22,(__cur_boot_cpu - 10b)
+> +	lwz	r3,0(r22)
 
-I see that your driver is just using this to disable write-protection
-permanently, but I've seen cases where it helps to keep write-protection
-enabled whenever you're not writing to the NAND.
+Please save non-volatile registers for things that need to stick around
+for a while.
 
-> +
-> +Example:
-> +
-> +nemc: nemc@13410000 {
-> +	...
-> +
-> +	nand: nand@1 {
-> +		compatible = "ingenic,jz4780-nand";
-> +		reg = <1 0 0x1000000>;	/* Bank 1 */
-> +
-> +		ingenic,bch-device = <&bch>;
-> +		ingenic,ecc-size = <1024>;
-> +		ingenic,ecc-strength = <24>;
-> +
-> +		ingenic,busy-gpio = <&gpa 20 GPIO_ACTIVE_LOW>;
-> +		ingenic,wp-gpio = <&gpf 22 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> +
-> +The BCH controller is a separate SoC component used for error correction on
-> +NAND devices. The following is a description of the device properties for a
-> +BCH controller.
-> +
-> +Required BCH properties:
-> +- compatible: Should be set to "ingenic,jz4780-bch".
-> +- reg: Should specify the BCH controller registers location and length.
-> +- clocks: Clock for the BCH controller.
-> +
-> +Example:
-> +
-> +bch: bch@134d0000 {
-> +	compatible = "ingenic,jz4780-bch";
-> +	reg = <0x134d0000 0x10000>;
-> +
-> +	clocks = <&cgu JZ4780_CLK_BCH>;
-> +};
+>  	mtspr	SPRN_PIR, r3
 
-Brian
+If __cur_boot_cpu is meant to be the PIR of the currently booting CPU,
+it's a misleading.  It looks like it's supposed to have something to do
+with the boot cpu (not "booting").
+
+Also please don't put leading underscores on symbols just because the
+adjacent symbols have them.
+
+> -#ifdef CONFIG_HOTPLUG_CPU
+> +#ifdef CONFIG_PPC_E500MC
+> +static void qoriq_cpu_wait_die(void)
+> +{
+> +	unsigned int cpu = smp_processor_id();
+> +
+> +	hard_irq_disable();
+> +	/* mask all irqs to prevent cpu wakeup */
+> +	qoriq_pm_ops->irq_mask(cpu);
+> +	idle_task_exit();
+> +
+> +	mtspr(SPRN_TCR, 0);
+> +	mtspr(SPRN_TSR, mfspr(SPRN_TSR));
+> +
+> +	cur_cpu_spec->cpu_flush_caches();
+> +
+> +	generic_set_cpu_dead(cpu);
+> +	smp_mb();
+
+Comment memory barriers, as checkpatch says.
+
+> +	while (1)
+> +	;
+
+Indent the ;
+
+> @@ -174,17 +232,29 @@ static inline u32 read_spin_table_addr_l(void *spin_table)
+>  static void wake_hw_thread(void *info)
+>  {
+>  	void fsl_secondary_thread_init(void);
+> -	unsigned long imsr1, inia1;
+> +	unsigned long imsr, inia;
+>  	int nr = *(const int *)info;
+> -
+> -	imsr1 = MSR_KERNEL;
+> -	inia1 = *(unsigned long *)fsl_secondary_thread_init;
+> -
+> -	mttmr(TMRN_IMSR1, imsr1);
+> -	mttmr(TMRN_INIA1, inia1);
+> -	mtspr(SPRN_TENS, TEN_THREAD(1));
+> +	int hw_cpu = get_hard_smp_processor_id(nr);
+> +	int thread_idx = cpu_thread_in_core(hw_cpu);
+> +
+> +	__cur_boot_cpu = (u32)hw_cpu;
+> +	imsr = MSR_KERNEL;
+> +	inia = *(unsigned long *)fsl_secondary_thread_init;
+> +	smp_mb();
+> +	if (thread_idx == 0) {
+> +		mttmr(TMRN_IMSR0, imsr);
+> +		mttmr(TMRN_INIA0, inia);
+> +	} else {
+> +		mttmr(TMRN_IMSR1, imsr);
+> +		mttmr(TMRN_INIA1, inia);
+> +	}
+> +	isync();
+> +	mtspr(SPRN_TENS, TEN_THREAD(thread_idx));
+
+Support for waking a secondary core should be a separate patch (I have
+similar code on the way for kexec).  Likewise adding smp_mb()/isync() if
+it's really needed.  In general, this patch tries to do too much at once.
+
+>  	smp_generic_kick_cpu(nr);
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +	generic_set_cpu_up(nr);
+> +#endif
+>  }
+>  #endif
+>  
+> @@ -203,28 +273,46 @@ static int smp_85xx_kick_cpu(int nr)
+>  
+>  	pr_debug("smp_85xx_kick_cpu: kick CPU #%d\n", nr);
+>  
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +	sync_tb = 0;
+> +	smp_mb();
+> +#endif
+
+Timebase synchronization should also be separate.
+
+>  #ifdef CONFIG_PPC64
+> -	/* Threads don't use the spin table */
+> -	if (cpu_thread_in_core(nr) != 0) {
+> +	if (threads_per_core > 1) {
+>  		int primary = cpu_first_thread_sibling(nr);
+>  
+>  		if (WARN_ON_ONCE(!cpu_has_feature(CPU_FTR_SMT)))
+>  			return -ENOENT;
+>  
+> -		if (cpu_thread_in_core(nr) != 1) {
+> -			pr_err("%s: cpu %d: invalid hw thread %d\n",
+> -			       __func__, nr, cpu_thread_in_core(nr));
+> -			return -ENOENT;
+> +		/*
+> +		 * If either one of threads in the same core is online,
+> +		 * use the online one to start the other.
+> +		 */
+> +		if (cpu_online(primary) || cpu_online(primary + 1)) {
+> +			qoriq_pm_ops->cpu_up(nr);
+
+What if we don't have qoriq_pm_ops (e.g. VM guest, or some failure)? 
+
+> +			if (cpu_online(primary))
+> +				smp_call_function_single(primary,
+> +						wake_hw_thread, &nr, 1);
+> +			else
+> +				smp_call_function_single(primary + 1,
+> +						wake_hw_thread, &nr, 1);
+> +			return 0;
+>  		}
+> -
+> -		if (!cpu_online(primary)) {
+> -			pr_err("%s: cpu %d: primary %d not online\n",
+> -			       __func__, nr, primary);
+> -			return -ENOENT;
+> +		/*
+> +		 * If both threads are offline, reset core to start.
+> +		 * When core is up, Thread 0 always gets up first,
+> +		 * so bind the current logical cpu with Thread 0.
+> +		 */
+
+What if the core is not in a PM state that requires a reset?
+Where does this reset occur?
+
+> +		if (hw_cpu != cpu_first_thread_sibling(hw_cpu)) {
+> +			int hw_cpu1, hw_cpu2;
+> +
+> +			hw_cpu1 = get_hard_smp_processor_id(primary);
+> +			hw_cpu2 = get_hard_smp_processor_id(primary + 1);
+> +			set_hard_smp_processor_id(primary, hw_cpu2);
+> +			set_hard_smp_processor_id(primary + 1, hw_cpu1);
+> +			/* get new physical cpu id */
+> +			hw_cpu = get_hard_smp_processor_id(nr);
+
+Why are you swapping the hard smp ids?
+
+>  		}
+> -
+> -		smp_call_function_single(primary, wake_hw_thread, &nr, 0);
+> -		return 0;
+>  	}
+>  #endif
+>  
+> @@ -252,11 +340,7 @@ static int smp_85xx_kick_cpu(int nr)
+>  		spin_table = phys_to_virt(*cpu_rel_addr);
+>  
+>  	local_irq_save(flags);
+> -#ifdef CONFIG_PPC32
+>  #ifdef CONFIG_HOTPLUG_CPU
+> -	/* Corresponding to generic_set_cpu_dead() */
+> -	generic_set_cpu_up(nr);
+> -
+
+Why did you move this?
+
+>  	if (system_state == SYSTEM_RUNNING) {
+>  		/*
+>  		 * To keep it compatible with old boot program which uses
+> @@ -269,11 +353,16 @@ static int smp_85xx_kick_cpu(int nr)
+>  		out_be32(&spin_table->addr_l, 0);
+>  		flush_spin_table(spin_table);
+>  
+> +#ifdef CONFIG_PPC_E500MC
+> +		qoriq_pm_ops->cpu_up(nr);
+> +#endif
+
+Again, you've killed a VM guest kernel (this time, even if the guest
+doesn't see SMT).
+
+> @@ -489,13 +586,16 @@ void __init mpc85xx_smp_init(void)
+>  								__func__);
+>  			return;
+>  		}
+> -		smp_85xx_ops.give_timebase = mpc85xx_give_timebase;
+> -		smp_85xx_ops.take_timebase = mpc85xx_take_timebase;
+> -#ifdef CONFIG_HOTPLUG_CPU
+> -		ppc_md.cpu_die = smp_85xx_mach_cpu_die;
+> -#endif
+
+You're moving this from a place that only runs when guts is found...
+
+>  	}
+>  
+> +	smp_85xx_ops.cpu_die = generic_cpu_die;
+> +	ppc_md.cpu_die = smp_85xx_mach_cpu_die;
+> +#endif
+> +	smp_85xx_ops.give_timebase = mpc85xx_give_timebase;
+> +	smp_85xx_ops.take_timebase = mpc85xx_take_timebase;
+> +	smp_85xx_ops.cpu_disable = generic_cpu_disable;
+> +#endif /* CONFIG_HOTPLUG_CPU */
+
+...to a place that runs unconditionally.  Again, you're breaking VM
+guests.
+
+-Scott
