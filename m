@@ -1,142 +1,118 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/3] dt: paz00: define nvec as child of i2c bus
-Date: Tue, 31 Mar 2015 08:09:31 -0600
-Message-ID: <551AAA9B.6070607@wwwdotorg.org>
-References: <1422516022-27161-1-git-send-email-danindrey@mail.ru> <1422516022-27161-4-git-send-email-danindrey@mail.ru> <54CFEA2F.8040701@wwwdotorg.org> <551A415B.4040506@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <551A415B.4040506@mail.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Danin <danindrey@mail.ru>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Marc Dietrich <marvin24@gmx.de>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH] DT: Add documentation for the mfd Maxim max77693
+Date: Tue, 31 Mar 2015 16:29:43 +0200
+Message-ID: <1427812183-27100-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
+Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2015 12:40 AM, Andrey Danin wrote:
-> Hi,
->
-> Thanks for the review.
->
-> On 03.02.2015 0:20, Stephen Warren wrote:
->> On 01/29/2015 12:20 AM, Andrey Danin wrote:
->>> NVEC driver was reimplemented to use tegra i2c. Use common i2c bindings
->>> for NVEC node.
->>
->>> diff --git a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
->>> b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
->>
->> The changes to this file make more sense either as a standalone patch
->> 1/4, or as part of the driver changes.
->>
->>> @@ -2,20 +2,5 @@ NVIDIA compliant embedded controller
->>>
->>>   Required properties:
->>>   - compatible : should be "nvidia,nvec".
->>> -- reg : the iomem of the i2c slave controller
->>> -- interrupts : the interrupt line of the i2c slave controller
->>> -- clock-frequency : the frequency of the i2c bus
->>> -- gpios : the gpio used for ec request
->>> -- slave-addr: the i2c address of the slave controller
->>> -- clocks : Must contain an entry for each entry in clock-names.
->>> -  See ../clocks/clock-bindings.txt for details.
->>> -- clock-names : Must include the following entries:
->>> -  Tegra20/Tegra30:
->>> -  - div-clk
->>> -  - fast-clk
->>> -  Tegra114:
->>> -  - div-clk
->>> -- resets : Must contain an entry for each entry in reset-names.
->>> -  See ../reset/reset.txt for details.
->>> -- reset-names : Must include the following entries:
->>> -  - i2c
->>> +- request-gpios : the gpio used for ec request
->>> +- reg: the i2c address of the slave controller
->>
->> This change breaks ABI.
->>
->> Instead of modifying the definition of the existing compatible value, I
->> think you should introduce a new compatible value to describe the
->> external NVEC chip.
->
-> I changed compatible value to nvec-slave in v2.
->>
->>> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
->>> b/arch/arm/boot/dts/tegra20-paz00.dts
->>
->>> -    nvec@7000c500 {
->>> -        compatible = "nvidia,nvec";
->>> -        reg = <0x7000c500 0x100>;
->>> -        interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
->>> -        #address-cells = <1>;
->>> -        #size-cells = <0>;
->>> +    i2c@7000c500 {
->>> +        status = "okay";
->>>           clock-frequency = <80000>;
->>> -        request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
->>> -        slave-addr = <138>;
->>> -        clocks = <&tegra_car TEGRA20_CLK_I2C3>,
->>> -                 <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
->>> -        clock-names = "div-clk", "fast-clk";
->>> -        resets = <&tegra_car 67>;
->>> -        reset-names = "i2c";
->>> +
->>> +        nvec: nvec@45 {
->>
->> This doesn't feel correct. There's nothing here to indicate that this
->> child device is a slave that is implemented by the host SoC rather than
->> something external attached to the I2C bus.
->>
->> Perhaps you can get away with this, since the driver for nvidia,nvec
->> only calls I2C APIs suitable for internal slaves rather than external
->> slaves? Even so though, I think the distinction needs to be clearly
->> marked in the DT so that any generic code outside the NVEC driver that
->> parses the DT can determine the difference.
->>
->> I would recommend the I2C controller having #address-cells=<2> with cell
->> 0 being 0==master,1==slave, cell 1 being the I2C address. The I2C driver
->> would need to support #address-cells=<1> for backwards-compatibility.
->
-> Driver (nvec in this case) can decide what mode should it use according
-> to compatible value. Is it not enough ?
+This patch adds device tree binding documentation for
+the flash cell of the Maxim max77693 multifunctional device.
 
-No, I don't think so.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/mfd/max77693.txt |   73 ++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-The I2C binding model is that each child of an I2C controller represents 
-a device attached to the bus. which SW will communicate with using the 
-I2C controller as master and the device as a slave. If there's no 
-explicit representation of child-vs-slave in the DT, how does the I2C 
-core know whether a particular node is intended to be accessed as a 
-master or slave?
-
-In other words, without an explicit "communicate with this device" or 
-"implement this device as a slave" flag, how could DT contain:
-
-i2c-controller {
-     ...
-     master@1a {
-         compatible = "foo,device";
-         reg = <0x1a 1>;
-     };
-     slave@1a {
-         compatible = "foo,device-slave";
-         reg = <0x1a 1>;
-     };
-};
-
-where:
-
-- "foo,device" means: instantiate a driver to communicate with a device 
-of this type.
-
-- "foo,device-slave" means: instantiate a driver to act as this I2C device.
-
-Sure it's possible for the drivers for those two nodes to simply use the 
-I2C subsystem's master or slave APIs, but I suspect DT content would 
-confuse the I2C core into thinking that two I2C devices with the same 
-address had been represented in DT, and the I2C core would refuse to 
-instantiate one of them. The solution here is for the reg value to 
-encode a "master" vs. "slave" flag, so the I2C core can allow both a 
-master and a slave for each address.
-
-I'm pretty sure this is the nth time I've explained this.
+diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+index 38e6440..cd94078 100644
+--- a/Documentation/devicetree/bindings/mfd/max77693.txt
++++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+@@ -76,7 +76,66 @@ Optional properties:
+     Valid values: 4300000, 4700000, 4800000, 4900000
+     Default: 4300000
+ 
++- led : the LED submodule device node
++
++There are two LED outputs available - FLED1 and FLED2. Each of them can
++control a separate LED or they can be connected together to double
++the maximum current for a single connected LED. One LED is represented
++by one child node.
++
++Required properties:
++- compatible : Must be "maxim,max77693-led".
++
++Optional properties:
++- maxim,boost-mode :
++	In boost mode the device can produce up to 1.2A of total current
++	on both outputs. The maximum current on each output is reduced
++	to 625mA then. If not enabled explicitly, boost setting defaults to
++	LEDS_BOOST_FIXED in case both current sources are used.
++	Possible values:
++		LEDS_BOOST_OFF (0) - no boost,
++		LEDS_BOOST_ADAPTIVE (1) - adaptive mode,
++		LEDS_BOOST_FIXED (2) - fixed mode.
++- maxim,boost-mvout : Output voltage of the boost module in millivolts.
++	Valid values: 3300 - 5500, step by 25 (rounded down)
++	Default: 3300
++- maxim,mvsys-min : Low input voltage level in millivolts. Flash is not fired
++	if chip estimates that system voltage could drop below this level due
++	to flash power consumption.
++	Valid values: 2400 - 3400, step by 33 (rounded down)
++	Default: 2400
++
++Required properties of the LED child node:
++- led-sources : see Documentation/devicetree/bindings/leds/common.txt;
++		device current output identifiers: 0 - FLED1, 1 - FLED2
++
++Optional properties of the LED child node:
++- label : see Documentation/devicetree/bindings/leds/common.txt
++- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++	* configuration with FLED outputs separated:
++		Valid values: 15625 - 250000, step by 15625 (rounded down)
++		Default: 250000
++	* configuration with FLED outputs soldered together:
++		Valid values: 15625 - 500000, step by 15625 (rounded down)
++		Default: 500000
++- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++	Valid values in LEDS_BOOST_ADAPTIVE and LEDS_BOOST_FIXED modes:
++		* configuration with FLED outputs separated:
++			15625 - 625000, step by 15625 (rounded down)
++			Default: 625000
++		* configuration with FLED outputs soldered together:
++			15625 - 1250000, step by 15625 (rounded down)
++			Default: 1250000
++	Valid values in LEDS_BOOST_OFF mode (single FLED is used):
++		15625 - 1000000, step by 15625 (rounded down)
++		Default: 1000000
++- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
++	Valid values: 62500 - 1000000, step by 62500 (rounded down)
++	Default: 1000000
++
+ Example:
++#include <dt-bindings/leds/common.h>
++
+ 	max77693@66 {
+ 		compatible = "maxim,max77693";
+ 		reg = <0x66>;
+@@ -117,5 +176,19 @@ Example:
+ 			maxim,thermal-regulation-celsius = <75>;
+ 			maxim,battery-overcurrent-microamp = <3000000>;
+ 			maxim,charge-input-threshold-microvolt = <4300000>;
++
++		led {
++			compatible = "maxim,max77693-led";
++			maxim,boost-mode = <LEDS_BOOST_FIXED>;
++			maxim,boost-mvout = <5000>;
++			maxim,mvsys-min = <2400>;
++
++			camera_flash: flash-led {
++				label = "max77693-flash";
++				led-sources = <0>, <1>;
++				max-microamp = <500000>;
++				flash-max-microamp = <1250000>;
++				flash-timeout-us = <1000000>;
++			};
+ 		};
+ 	};
+-- 
+1.7.9.5
