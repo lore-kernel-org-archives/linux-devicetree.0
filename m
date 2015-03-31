@@ -1,75 +1,40 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH_V3 0/2] mtd: nand: jz4780: Add nand and bch driver
-Date: Tue, 31 Mar 2015 10:20:30 -0700
-Message-ID: <20150331172030.GE19571@brian-ubuntu>
-References: <1427821181-40843-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V2 0/3] pinctrl: Support for IMG Pistachio
+Date: Tue, 31 Mar 2015 10:20:37 -0700
+Message-ID: <CAL1qeaFd0dz0wirFzCRfetprjs1vJqm6RrmuPj0sBiEg_mc6pg@mail.gmail.com>
+References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
+	<20150331140034.GE28951@linux-mips.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1427821181-40843-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150331140034.GE28951@linux-mips.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 05:59:39PM +0100, Zubair Lutfullah Kakakhel wrote:
-> Hi,
+On Tue, Mar 31, 2015 at 7:00 AM, Ralf Baechle <ralf@linux-mips.org> wrote:
+> On Mon, Mar 30, 2015 at 04:16:53PM -0700, Andrew Bresticker wrote:
+>
+>> This series adds support for the system pin and GPIO controller on the IMG
+>> Pistachio SoC.  Pistachio's system pin controller manages 99 pins, 90 of
+>> which are MFIOs which can be muxed between multiple functions or used
+>> as GPIOs.  The GPIO control for the 90 MFIOs is broken up into banks
+>> of 16.  Pistachio also has a second pin controller, the RPU pin controller,
+>> which will be supported by a future patchset through an extension to this
+>> driver.
+>>
+>> Test on an IMG Pistachio BuB.  Based on mips-for-linux-next which inluces my
+>> series adding Pistachio platform support [1].  A branch with this series is
+>> available at [2].
+>
+> Does this mean you want me to funnel this through the MIPS tree?  If so,
+> could I have an Ack from the maintainers?
 
-Hi!
+Linus mentioned in v1 that if the only dependency was a Kconfig symbol
+that he could take it through his tree.  I'm fine either way, though
+it would be slightly more convenient for it to go through the MIPS
+tree.  Linus?
 
-Nit: can you drop the underscore in your 'PATCH_Vx' subjects? It'd make
-my filtering a bit easier. I usually expect 'PATCH v3'. Thanks!
-
-> Two patches based on 4.0-rc6 that add NAND and BCH controller
-> drivers for the Ingenic JZ4780 SoC.
-> 
-> Hope these can make it in time for 4.1.
-> 
-> Tested on the MIPS Creator CI20.
-> 
-> Core JZ4780 support is still in-flight.
-
-Sorry, I can't even compile test your patches, since I don't have the
-dependencies. So I can't accept your patches yet, and they most likely
-won't make it to 4.1. Or if you can point me to the right place, perhaps
-we can work something out between the tree(s) that will contain the
-dependencies.
-
-Note that I'm not worried about the missing MACH_JZ4780 sybmol and your
-core platform support, as much as the missing JZ4780_NEMC support.
-
-> Review and feedback welcome.
-> 
-> V2 - > V3
-> Rebase to 4.0-rc6
-> Binding changes and fixes based on feedback by Brian Norris (Thank-you)
-
-I had a few questions on the driver that you didn't answer, I believe.
-It looks like maybe you silently answered them in this v3 code?
-
-> V1 - > V2
-> Fixed module license macros
-> Rebase to 4.0-rc3
-> 
-> Thanks,
-> ZubairLK
-> 
-> Alex Smith (2):
->   dt-bindings: binding for jz4780-{nand,bch}
->   mtd: nand: jz4780: driver for NAND devices on JZ4780 SoCs
-> 
->  .../bindings/mtd/ingenic,jz4780-nand.txt           |  57 ++++
->  drivers/mtd/nand/Kconfig                           |   7 +
->  drivers/mtd/nand/Makefile                          |   1 +
->  drivers/mtd/nand/jz4780_bch.c                      | 353 +++++++++++++++++++
->  drivers/mtd/nand/jz4780_bch.h                      |  42 +++
->  drivers/mtd/nand/jz4780_nand.c                     | 376 +++++++++++++++++++++
->  6 files changed, 836 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
->  create mode 100644 drivers/mtd/nand/jz4780_bch.c
->  create mode 100644 drivers/mtd/nand/jz4780_bch.h
->  create mode 100644 drivers/mtd/nand/jz4780_nand.c
-> 
-
-Brian
+Thanks,
+Andrew
