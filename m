@@ -1,51 +1,28 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: r8a7790: add EtherAVB DT support
-Date: Tue, 31 Mar 2015 18:04:43 +0300
-Message-ID: <551AB78B.4000506@cogentembedded.com>
-References: <1625400.M0MxPQybIy@wasted.cogentembedded.com> <8163383.0UU0Q5gsLE@wasted.cogentembedded.com> <20150331002113.GB16289@verge.net.au>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] watchdog: digicolor: document device tree binding
+Date: Tue, 31 Mar 2015 08:08:31 -0700
+Message-ID: <551AB86F.9010407@roeck-us.net>
+References: <9995b9d0be8cda30103be7406a781cd79f347aeb.1427782499.git.baruch@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150331002113.GB16289@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9995b9d0be8cda30103be7406a781cd79f347aeb.1427782499.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 03/30/2015 11:14 PM, Baruch Siach wrote:
+> Add a device tree binding documentation to the watchdog hardware block on the
+> Conexant CX92755 SoC. The CX92755 is from the Digicolor SoCs series. Other SoCs
+> in that series may share the same hardware block.
+>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 
-On 03/31/2015 03:21 AM, Simon Horman wrote:
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
->> Define the generic R8A7790 part of the EtherAVB device node.
-
-> Please repost once this binding (and associated driver) has been accepted.
-
-    OK, but will you merge patch #1?
-
->> Based on original patch by Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->>   arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
->> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
->> @@ -626,6 +626,16 @@
->>   		status = "disabled";
->>   	};
->>
->> +	avb: ethernet@e6800000 {
->> +		compatible = "renesas,ravb-r8a7790";
-
-    I went the usual way here but I suspect that SoC part of the prop should 
-be "-rcar-gen2" as we now have this IP core (as well as most of the others, 
-except PFC) described in a common manual for the R-Car generation 2 SoCs.
-What do you think?
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
