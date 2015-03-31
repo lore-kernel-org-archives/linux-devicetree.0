@@ -1,87 +1,59 @@
-From: Howard Chen <howard.chen@linaro.org>
-Subject: [PATCH] ARM: dts: mt8173: support arm64 cpuidle-dt
-Date: Tue, 31 Mar 2015 11:24:37 +0800
-Message-ID: <1427772277-2414-1-git-send-email-howard.chen@linaro.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Use define for s3c-rtc clock id
+Date: Tue, 31 Mar 2015 13:05:59 +0900
+Message-ID: <551A1D27.6000301@samsung.com>
+References: <1427728889-29158-1-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1427728889-29158-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Howard Chen <howard.chen@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
-add an idle-states node to describe the mt8173 cpu idle
-add a reference to the idle-states node in each CPU node
+Hi,
 
-Signed-off-by: Howard Chen <howard.chen@linaro.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+On 03/31/2015 12:21 AM, Krzysztof Kozlowski wrote:
+> Use a define instead of raw number as a ID for "rtc_src" clock.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> ---
+> 
+> Patch depends on new file "dt-bindings/clock/samsung,s2mps11.h" from:
+> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg43136.html
+> ---
+>  arch/arm/boot/dts/exynos3250-rinato.dts | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+> index 3905824cac58..d2cbc95364de 100644
+> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
+> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+> @@ -16,6 +16,7 @@
+>  #include "exynos3250.dtsi"
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/clock/samsung,s2mps11.h>
+>  
+>  / {
+>  	model = "Samsung Rinato board";
+> @@ -605,7 +606,7 @@
+>  };
+>  
+>  &rtc {
+> -	clocks = <&cmu CLK_RTC>, <&s2mps14_osc 0>;
+> +	clocks = <&cmu CLK_RTC>, <&s2mps14_osc S2MPS11_CLK_AP>;
+>  	clock-names = "rtc", "rtc_src";
+>  	status = "okay";
+>  };
+> 
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8554ec3..96dff1e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -48,6 +48,8 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
- 			reg = <0x000>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -55,6 +57,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
- 		};
- 
- 		cpu2: cpu@100 {
-@@ -62,6 +65,7 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -69,15 +73,33 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
- 		};
-+
-+		idle-states {
-+			entry-method = "arm,psci-0.2";
-+
-+			CPU_SLEEP_0_0: cpu-sleep-0-0 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010000>;
-+				entry-latency-us = <600>;
-+				exit-latency-us = <600>;
-+				min-residency-us = <1200>;
-+			};
-+
-+			CLUSTER_SLEEP_0: cluster-sleep-0 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x1010000>;
-+				entry-latency-us = <800>;
-+				exit-latency-us = <1000>;
-+				min-residency-us = <2000>;
-+				wakeup-latency-us = <1000>;
-+			};
- 	};
- 
- 	psci {
--		compatible = "arm,psci";
-+		compatible = "arm,psci-0.2";
- 		method = "smc";
--		cpu_suspend   = <0x84000001>;
--		cpu_off	      = <0x84000002>;
--		cpu_on	      = <0x84000003>;
- 	};
- 
- 	uart_clk: dummy26m {
--- 
-1.9.1
+Looks good to me.
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+Thanks,
+Chanwoo Choi
