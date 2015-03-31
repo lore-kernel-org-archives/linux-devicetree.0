@@ -1,53 +1,66 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/2] phy: driver for Conexant Digicolor internal USB PHY
-Date: Tue, 31 Mar 2015 21:16:40 +0530
-Message-ID: <551AC160.8060202@ti.com>
-References: <6284a7672647d46100281959552f9787f98bb552.1427430989.git.baruch@tkos.co.il> <4a9ceb0a240d49dd6a68d50c78f85d310d4b932f.1427430989.git.baruch@tkos.co.il> <201503281633.02801.marex@denx.de> <20150331113448.GN12479@tarshish> <551ABCBE.3030005@ti.com> <20150331154119.GO12479@tarshish>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 1/6] phy: miphy365x: Use the generic phy type constants
+ in dt-bindings/phy/phy.h
+Date: Tue, 31 Mar 2015 17:55:42 +0200
+Message-ID: <551AC37E.70503@st.com>
+References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org> <1427728632-10846-2-git-send-email-peter.griffin@linaro.org> <551A2D4D.1010601@ti.com> <20150331074027.GH9447@x1> <551ABD99.2000503@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150331154119.GO12479@tarshish>
+In-Reply-To: <551ABD99.2000503@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Marek Vasut <marex@denx.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, balbi@ti.com, devicetree@vger.kernel.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Kishon,
 
-On Tuesday 31 March 2015 09:11 PM, Baruch Siach wrote:
-> Hi Kishon,
+On 03/31/2015 05:30 PM, Kishon Vijay Abraham I wrote:
+> Maxime,
 >
-> On Tue, Mar 31, 2015 at 08:56:54PM +0530, Kishon Vijay Abraham I wrote:
->> On Tuesday 31 March 2015 05:04 PM, Baruch Siach wrote:
->>> On Sat, Mar 28, 2015 at 04:33:02PM +0100, Marek Vasut wrote:
->>>> On Friday, March 27, 2015 at 05:36:29 AM, Baruch Siach wrote:
->>>>> Add a driver for the USB PHY on the Conexant CX92755 SoC, from the
->>>>> Digicolor series of SoCs. The PHY is connected to the on-chip chipidea
->>>>> usb2 host.
->>>>>
->>>>> The hardware is somewhat similar to the phy-mxs-usb.c usb_phy, but it is
->>>>> different enough to merit its own driver. Also, this driver uses the
->>>>> generic phy infrastructure.
->>>>
->>>> the register set looks very similar to MXS one indeed. How is it different
->>>> please ?
->>>
->>> Almost of the bits that are defined in the MXS USBPHY_CTRL register are not
->>> defined in the Digicolor one. Some have different meaning, and some are
->>> reserved. OTOH, the Digicolor USBPHY_CTRL register uses all bits in the 1-13
->>> range. Also, the Digicolor phy does not have anatop registers.
+> On Tuesday 31 March 2015 01:10 PM, Lee Jones wrote:
+>> On Tue, 31 Mar 2015, Kishon Vijay Abraham I wrote:
 >>
->> I think we should try adding support for this in the same driver.
+>>> Hi Patrice, Maxime,
+>>>
+>>> On Monday 30 March 2015 08:47 PM, Peter Griffin wrote:
+>>>> Now there are generic phy type constants declared in phy.h, migrate 
+>>>> over to
+>>>> using them rather than defining our own. This change has been done 
+>>>> as one
+>>>> atomic commit to be bisectable.
+>>>>
+>>>> Note: The values of the defines are the same, so there is no ABI 
+>>>> breakage
+>>>> with this patch.
+>>>>
+>>>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>>>
+>>> Are you okay for this patch to go via PHY tree? It modifies 
+>>> arch/arm/boot/dts
+>>> /stih416.dtsi.
+>>
+>> These files need to be changed simultaneously in order to prevent
+>> breakage during bisection and the like.  I think the best bet moving
+>> forward is to pull this into its own branch, tag it and send Maxime a
+>> pull-request to the immutable branch.  It's the best way to minimise
+>> merge conflicts during the v4.1 merge window.
 >
-> The only code that can actually be shared between the driver is the two lines
-> usb_phy .on_connect callback routine. The init sequence that takes most of the
-> digicolor driver is totally different. Using a single driver for both PHYs
-> does not make much sense, IMHO.
+> okay. I still need an Ack from Maxime.
+
+You have my Ack.
+
+I haven't sent a pull request for STi DT files for v4.1 now, and it is 
+too late to send one.
+So creating an immutable tag is not even needed in my opinion, you can 
+just take the DT patch.
+
+Thanks,
+Maxime
+
 >
-> Besides, phy-mxs-usb.c uses the deprecated usb_phy framework. So we first need
-> to port this driver to the generic phy framework.
-
-Doesn't your driver also use the usb_phy framework?
-
--Kishon
+> Thanks
+> Kishon
