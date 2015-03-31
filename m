@@ -1,62 +1,51 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/3] powerpc/mpc85xx: Add FMan clock nodes
-Date: Mon, 30 Mar 2015 19:15:21 -0500
-Message-ID: <1427760921.22867.213.camel@freescale.com>
-References: <1424964417-13760-1-git-send-email-Emilian.Medve@Freescale.com>
- <1427153449.22867.19.camel@freescale.com> <55111FCC.2000806@Freescale.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: shmobile: r8a7790: add EtherAVB DT support
+Date: Tue, 31 Mar 2015 09:21:13 +0900
+Message-ID: <20150331002113.GB16289@verge.net.au>
+References: <1625400.M0MxPQybIy@wasted.cogentembedded.com>
+ <8163383.0UU0Q5gsLE@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <55111FCC.2000806@Freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Emil Medve <Emilian.Medve@Freescale.com>
-Cc: devicetree@vger.kernel.org, afleming@gmail.com, linuxppc-dev@lists.ozlabs.org, Igal Liberman <Igal.Liberman@Freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8163383.0UU0Q5gsLE@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTAzLTI0IGF0IDAzOjI2IC0wNTAwLCBFbWlsIE1lZHZlIHdyb3RlOgo+IEhl
-bGxvIFNjb3R0LAo+IAo+IAo+IE9uIDAzLzIzLzIwMTUgMDY6MzAgUE0sIFNjb3R0IFdvb2Qgd3Jv
-dGU6Cj4gPiBPbiBUaHUsIDIwMTUtMDItMjYgYXQgMDk6MjYgLTA2MDAsIEVtaWwgTWVkdmUgd3Jv
-dGU6Cj4gPj4gRnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29t
-Pgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBm
-cmVlc2NhbGUuY29tPgo+ID4+IC0tLQo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0
-c2ktcG9zdC5kdHNpICAgIHwgMTEgKysrKysrKysrKysKPiA+PiAgYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaSB8ICA4ICsrKysrKysrCj4gPj4gIGFyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kgfCAgOCArKysrKysrKwo+ID4+ICBhcmNo
-L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpIHwgMTYgKysrKysrKysrKysr
-KysrKwo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpIHwg
-MTMgKysrKysrKysrKysrKwo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2kt
-cG9zdC5kdHNpIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+PiAgYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2ZzbC90MTA0MHNpLXBvc3QuZHRzaSB8ICA4ICsrKysrKysrCj4gPj4gIGFy
-Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kgfCAxMSArKysrKysrKysr
-Kwo+ID4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpIHwgMjAg
-KysrKysrKysrKysrKysrKysrKysKPiA+PiAgOSBmaWxlcyBjaGFuZ2VkLCAxMjEgaW5zZXJ0aW9u
-cygrKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRz
-aS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCj4g
-Pj4gaW5kZXggZjhjMzI1ZS4uMzg2MjFlZiAxMDA2NDQKPiA+PiAtLS0gYS9hcmNoL3Bvd2VycGMv
-Ym9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCj4gPj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQo+ID4+IEBAIC0zOTUsNiArMzk1LDE3IEBACj4gPj4gIAkJ
-cmVnID0gPDB4ZTAwMDAgMHhlMDA+Owo+ID4+ICAJCWZzbCxoYXMtcnN0Y3I7Cj4gPj4gIAkJZnNs
-LGxpb2RuLWJpdHMgPSA8MTI+Owo+ID4+ICsKPiA+PiArCQlmbTBjbGs6IGZtMC1jbGstbXV4IHsK
-PiA+PiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+ID4+ICsJCQljb21wYXRpYmxlID0gImZzbCxm
-bWFuLWNsay1tdXgiOwo+ID4+ICsJCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZw
-bGwwIDI+LCA8JnBsbDAgMz4sCj4gPj4gKwkJCQkgPCZwbGF0Zm9ybV9wbGwgMD4sIDwmcGxsMSAx
-PiwgPCZwbGwxIDI+Owo+ID4+ICsJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIs
-ICJwbGwwLWRpdjMiLAo+ID4+ICsJCQkJICAgICAgInBsbDAtZGl2NCIsICJwbGF0Zm9ybS1wbGwi
-LCAicGxsMS1kaXYyIiwKPiA+PiArCQkJCSAgICAgICJwbGwxLWRpdjMiOwo+ID4+ICsJCQljbG9j
-ay1vdXRwdXQtbmFtZXMgPSAiZm0wLWNsayI7Cj4gPj4gKwkJfTsKPiA+IAo+ID4gV2hlcmUncyB0
-aGUgYmluZGluZyBmb3IgZnNsLGZtYW4tY2xrLW11eD8KPiA+IAo+IAo+IElnYWwgd2lsbCBmb2xs
-b3ctdXAgd2l0aCB0aGUgYmluZGluZyBkb2N1bWVudAoKSWdhbCwgcGluZz8KCkkgbmVlZCBhIGJp
-bmRpbmcgYmVmb3JlIEkgY2FuIGFwcGx5IHRoZSBkdHMgcGF0Y2guCgotU2NvdHQKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFp
-bGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
-YWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On Tue, Mar 31, 2015 at 12:59:41AM +0300, Sergei Shtylyov wrote:
+> Define the generic R8A7790 part of the EtherAVB device node. 
+
+Please repost once this binding (and associated driver) has been accepted.
+
+> Based on original patch by Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -626,6 +626,16 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	avb: ethernet@e6800000 {
+> +		compatible = "renesas,ravb-r8a7790";
+> +		reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
+> +		interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp8_clks R8A7790_CLK_ETHERAVB>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+>  	sata0: sata@ee300000 {
+>  		compatible = "renesas,sata-r8a7790";
+>  		reg = <0 0xee300000 0 0x2000>;
+> 
