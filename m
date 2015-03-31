@@ -1,109 +1,73 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/4] Documentation: extcon: usb-gpio: update usb-gpio
- binding description
-Date: Tue, 31 Mar 2015 13:20:37 +0300
-Message-ID: <551A74F5.4050900@ti.com>
-References: <1427787963-23562-1-git-send-email-r.baldyga@samsung.com> <1427787963-23562-5-git-send-email-r.baldyga@samsung.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v3] DT: Add documentation for the mfd Maxim max77693
+Date: Tue, 31 Mar 2015 12:58:30 +0200
+Message-ID: <551A7DD6.8000609@samsung.com>
+References: <1427709149-15014-1-git-send-email-j.anaszewski@samsung.com>
+ <1427709149-15014-2-git-send-email-j.anaszewski@samsung.com>
+ <20150330115729.GG17971@leverpostej> <55194509.1070008@samsung.com>
+ <20150330132002.GA29200@leverpostej>
+ <20150331091414.GH18321@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427787963-23562-5-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150331091414.GH18321@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31/03/15 10:46, Robert Baldyga wrote:
-> Add information about VBUS pin detection support, 'debounce' property
-> and some other details.
-> 
-> Signed-off-by: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/extcon/extcon-usb-gpio.txt | 23 ++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> index af0b903..d3fcf8b 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -1,16 +1,35 @@
->  USB GPIO Extcon device
->  
-> -This is a virtual device used to generate USB cable states from the USB ID pin
-> -connected to a GPIO pin.
-> +This is a virtual device used to generate USB cable states from the USB
-> +ID and VBUS signals connected to a GPIO pins.
+Hi Sakari,
 
-s/to a GPIO/to GPIO/
-
-> +
-> +Some devices has only one of these GPIO pins, so we support cases when
-s/has/have/
-
-> +only one of them is present. Hence properties 'id-gpio' and 'vbus-gpio'
-> +are described as optional, but at least one of them has to be present
-> +in extcon-usb-gpio node.
-> +
-> +In general we have three cases:
-> + 1. We have both VBUS and ID pin detection - we can detect USB, USB-HOST
-> +    and cable disconnection.
-
-The interpretation of "cable disconnect" might not be always true.
-ID may be 1 and VBUS 0 but cable might still not be disconnected.
-e.g. if both are OTG devices.
-That's why we have ADP to detect cable connect/disconnect status for OTG case.
-
-So let's leave cable disconnection interpretation to the USB stack and
-just deal with passing ID/VBUS status. I must admit that the extcon cable
-state names are misleading. They should really have been named
-USB-ID and USB-VBUS :).
-
-The driver doesn't do connect/disconnect detection but only infers the other
-pin state if only one of the ID/VBUS is available.
-
-> + 2. We have only VBUS detection - we can detect USB and cable disconnection.
-> + 3. We have ID pin only - we can distinguish between USB and USB-HOST
-> +    but without ability to detect cable disconnection.
-
-how about rewording these 3 points like so with a short header about
-clarification of extcon USB/USB_HOST states.
-
-The extcon cable states USB and USB_HOST are actually VBUS and (inverted) ID
-pin states and do not indicate what mode the USB needs to operate in.
-That decision is done by the USB stack.
-
-1. If VBUS and ID gpios are present we pass them as is
-	USB-HOST = !ID, USB = VBUS
-2. If only VBUS gpio is present we assume that ID pin is always High.
-	USB-HOST = false, USB = VBUS.
-3. If only ID pin is available we infer the VBUS pin states based on ID.
-	USB-HOST = !ID, USB = ID
-
->  
->  Required properties:
->  - compatible: Should be "linux,extcon-usb-gpio"
-> +
-> +Optional properties
->  - id-gpio: gpio for USB ID pin. See gpio binding.
-> +- vbus-gpio: gpio for USB VBUS pin. See gpio binding.
-> +- debounce: gpio debounce time in milliseconds (u32).
-> +
->  
->  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
->  	extcon_usb1 {
->  		compatible = "linux,extcon-usb-gpio";
->  		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> +		vbus-gpio = <&gpio6 2 GPIO_ACTIVE_HIGH>;
-> +		debounce = <25>;
->  	}
->  
->  	&omap_dwc3_1 {
+On 03/31/2015 11:14 AM, sakari.ailus@iki.fi wrote:
+> Hi Mark and Jacek,
 >
- 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Mon, Mar 30, 2015 at 02:20:03PM +0100, Mark Rutland wrote:
+>> Hi,
+>>
+>>>>> +Optional properties:
+>>>>> +- maxim,trigger-type : Flash trigger type.
+>>>>> +	Possible trigger types:
+>>>>> +		LEDS_TRIG_TYPE_EDGE (0) - Rising edge of the signal triggers
+>>>>> +			the flash,
+>>>>> +		LEDS_TRIG_TYPE_LEVEL (1) - Strobe pulse length controls duration
+>>>>> +			of the flash.
+>>>>
+>>>> Surely this is required? What should be assumed if this property isn't
+>>>> present?
+>>>
+>>> LEDS_TRIG_TYPE_LEVEL allows for an ISP to do e.g. short flash blink
+>>> before the actual strobe - it is used for eliminating photographs with
+>>> closed eyes, or can serve for probing ambient light conditions.
+>>>
+>>> With LEDS_TRIG_TYPE_EDGE flash strobe is triggered on rising edge
+>>> and lasts until programmed timeout expires.
+>>>
+>>> This setting is tightly related to a camera sensor, which generates
+>>> the strobe signal. Effectively it depends on board configuration.
+>>
+>> My comment wasn't to do with the semantics of eitehr option but rather
+>> the optionality of the property.
+>>
+>> Surely it's vital to know what this should be, and hence this property
+>> should be required rather than optional?
+>>
+>> If it isn't required, what would the assumed default be?
+>
+> I wonder if there's a use case for edge triggering. In level trigger mode,
+> whichever component generates the trigger signal, determines also the strobe
+> time (up to the timeout). The sensor or (in the case of lack of the signal
+> from the sensor) the ISP has the most information on the sensor timing.
+>
+> The existing as3654a driver only supports level triggering while the chip
+> can do edge, too.
+>
+> I'd make level default and perhaps add a V4L2 control / sysfs file to change
+> this if needed.
+
+That sounds reasonable. I am going to come up with another version of
+leds-max77693.c patch anyway, so I'll address this issue too.
+
+-- 
+Best Regards,
+Jacek Anaszewski
