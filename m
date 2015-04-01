@@ -1,57 +1,76 @@
-From: Vianney le =?iso-8859-1?q?Cl=E9ment?=
-	<vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
-Date: Wed, 1 Apr 2015 15:25:36 +0200
-Message-ID: <1427894736.2449.2@mail.essensium.com>
-References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
-	<CAOMZO5DM66sUX-YojCyY5BC3Pdk4p4bkEqQ+W3tyDeNEL6nU5w@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 1/5] clk: shmobile: rcar-gen2: Add CPG Clock Domain support
+Date: Wed, 01 Apr 2015 16:45:39 +0300
+Message-ID: <2102142.mNn7Kucaps@avalon>
+References: <1426708017-28885-1-git-send-email-geert+renesas@glider.be> <3861934.bVCAbQmBJW@avalon> <CAMuHMdWuVdOgk6RAzoUtskC3pzz3xs6HmGf5RyrAa3Rs-y56uQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5DM66sUX-YojCyY5BC3Pdk4p4bkEqQ+W3tyDeNEL6nU5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWuVdOgk6RAzoUtskC3pzz3xs6HmGf5RyrAa3Rs-y56uQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2015 at 1:39 , Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 1, 2015 at 5:10 AM, Vianney le Cl=C3=A9ment de Saint-Marc=
-q
-> <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org> wrote:
->>  Add device tree for the Embest/Element 14 MarS Board [1], an i.MX6=20
->> Dual
->>  based development board.
->>=20
->>  The e-MMC chip is disabled because initialization fails (error=20
->> -110).
->>  A possible cause is described in [2].
->>=20
->>  [1] http://www.embest-tech.com/shop/star/marsboard.html
->>  [2] https://community.freescale.com/message/442168#442168
->>=20
->>  Signed-off-by: Vianney le Cl=C3=A9ment de Saint-Marcq=20
->> <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
->=20
-> Couldn't this be combined with the existing
-> arch/arm/boot/dts/imx6dl-riotboard.dts?
+Hi Geert,
 
-While both boards do indeed share a lot of the schematics, the=20
-marsboard has some differences, e.g., in pin configuration, that=20
-requires a separate dts.  We could split common parts out in a new=20
-dtsi, but I am not sure it is worth the hassle.
+On Wednesday 01 April 2015 14:13:12 Geert Uytterhoeven wrote:
+> On Tue, Mar 31, 2015 at 1:53 AM, Laurent Pinchart wrote:
+> > On Wednesday 18 March 2015 20:46:53 Geert Uytterhoeven wrote:
+> >> Add Clock Domain support to the R-Car Gen2 Clock Pulse Generator (CPG)
+> >> driver using the generic PM Domain.  This allows to power-manage the
+> >> module clocks of SoC devices that are part of the CPG Clock Domain using
+> >> Runtime PM, or for system suspend/resume.
+> >> 
+> >> SoC devices that are part of the CPG Clock Domain and can be
+> >> power-managed through their primary clock should be tagged in DT with a
+> >> proper "power-domains" property.
+> >> 
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > There's one thing that bothers me: the implementation is tied to the CPG
+> > driver, but the code is quite generic. That feels a bit wrong, it would be
+> > nice to come up with a generic implementation. On the other hand, the
+> > platform-dependent part is the list of clocks to manage, specified
+> > implicitly through the "pm_clk_add(dev, NULL)" call. That list needs to
+> > be specified somewhere, and adding it to the CPG driver is likely the
+> > best solution we can have at the moment.
+> 
+> This clock management code is identical to the one in pm-rmobile.c.
+> We may consolidate in the future, if we have more PM Domain support (e.g.
+> for R-Car Gen2 SYSC). Let's see...
+> 
+> > I'm slightly worried that adding the power-domains property to the DT node
+> > will introduce backward compatibility issues if we later switch to a
+> > different way to specify the clocks to manage automatically. I have no
+> > specific example though.
+> 
+> Specifying the clocks is indeed the hard part. I use the primary clocks, as
+> that is compatible with what we did in the past in drivers/sh/pm_runtime.c.
+> I thought about using a special clock name instead, but that may conflict
+> with an existing driver-specific DT binding for clk-names, and may cause
+> problems if you have to specify the same clock twice with different
+> clk-names.
 
+But we're free to set the rules here, as we're dealing with new code. We could 
+for instance mandate that all Renesas IP cores specify their functional clock 
+as "fck" in DT, and enforce that rule in new drivers. As we're not dealing 
+with external platform devices we should be in full control.
+
+If future IP cores require more than one clock to be automatically managed 
+we'll need to come up with a naming scheme anyway, and backward compatibility 
+will need to be taken into account, regardless of whether we use the NULL 
+clock or a named clock today.
+
+> > For those reasons,
+> > 
+> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> Thanks!
+
+-- 
 Regards,
-Vianney
 
-Vianney le Cl=C3=A9ment de Saint-Marcq
-Embedded Software Developper =C2=B7 +32 485 84 55 05
-Essensium, Mind division =C2=B7 www.mind.be
-GPG: 727B CFE9 355F 1B02 0820 EE1C 9042 3E07 A804 0316
+Laurent Pinchart
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
