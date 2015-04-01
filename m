@@ -1,51 +1,28 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v2 2/5] regulator: Introduce property to flag drms
-Date: Wed, 1 Apr 2015 15:55:43 -0700
-Message-ID: <1427928946-31291-3-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3 20/20] ARM: configs: enable Marvell Armada 39x in
+ multi_v7_defconfig
+Date: Wed, 1 Apr 2015 16:24:49 -0700
+Message-ID: <20150401232449.GA8137@localhost>
+References: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1425393675-17820-21-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425393675-17820-21-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce "regulator-allow-drms" to make it possible for board
-configuration to enable drms for regulators.
+On Tue, Mar 03, 2015 at 03:41:15PM +0100, Thomas Petazzoni wrote:
+> Following the introduction of the Marvell Armada 39x support, let's
+> enable this support by default in multi_v7_defconfig.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: <arm@kernel.org>
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- Documentation/devicetree/bindings/regulator/regulator.txt | 1 +
- drivers/regulator/of_regulator.c                          | 3 +++
- 2 files changed, 4 insertions(+)
+Thanks, applied.
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index abb26b5..a2377cb 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -10,6 +10,7 @@ Optional properties:
- - regulator-always-on: boolean, regulator should never be disabled
- - regulator-boot-on: bootloader/firmware enabled regulator
- - regulator-allow-bypass: allow the regulator to go into bypass mode
-+- regulator-allow-drms: allow dynamic regulator mode switching
- - <name>-supply: phandle to the parent supply/regulator node
- - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
-   For hardware which supports disabling ramp rate, it should be explicitly
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 24e812c..bb52532 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -70,6 +70,9 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	if (of_property_read_bool(np, "regulator-allow-bypass"))
- 		constraints->valid_ops_mask |= REGULATOR_CHANGE_BYPASS;
- 
-+	if (of_property_read_bool(np, "regulator-allow-drms"))
-+		constraints->valid_ops_mask |= REGULATOR_CHANGE_DRMS;
-+
- 	ret = of_property_read_u32(np, "regulator-ramp-delay", &pval);
- 	if (!ret) {
- 		if (pval)
--- 
-1.8.2.2
+
+-Olof
