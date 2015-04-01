@@ -1,78 +1,318 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: [PATCH v2 1/3] phy: phy-core: allow specifying supply at port level
-Date: Wed, 1 Apr 2015 13:50:55 -0700
-Message-ID: <1427921457-18235-2-git-send-email-arun.ramamurthy@broadcom.com>
-References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V3] arm64: dts: add APM Merlin Board device tree
+Date: Wed,  1 Apr 2015 13:58:02 -0700
+Message-ID: <1427921882-15405-1-git-send-email-fkan@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Torokhov <dtor@chromium.org>
+This patch adds the support for APM Merlin board. The Merlin board
+is based on the APM X-Gene Shadowcat SoC. This DTS enables PMU,
+SATA and Serial.
 
-Multi-port phy's may have per-port power supplies. Let's change phy core
-to first attempt to look up the supply at the port level, and then, if
-not found, check parent device.
-
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- drivers/phy/phy-core.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+  V3 Change:
+	- Add PCIe 
+	- Add merline to makefile in dts/apm directory
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 3791838..c7aa297 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -651,16 +651,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 		goto free_phy;
- 	}
+  V2 Change:
+        - Add dma-range definition
+
+  V1 Change:
+        - add memreserve for spintable.
+        - remove clkfreq attribute
+        - update spin location, although it is done by bootloader.
+        - remove msi reg entry
+        - add chosen for stdout path
+ arch/arm64/boot/dts/apm/Makefile           |   1 +
+ arch/arm64/boot/dts/apm/apm-merlin.dts     |  42 ++++++
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 216 +++++++++++++++++++++++++++++
+ 3 files changed, 259 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/apm/apm-merlin.dts
+ create mode 100644 arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+
+diff --git a/arch/arm64/boot/dts/apm/Makefile b/arch/arm64/boot/dts/apm/Makefile
+index a2afabb..c75f17a 100644
+--- a/arch/arm64/boot/dts/apm/Makefile
++++ b/arch/arm64/boot/dts/apm/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
++dtb-$(CONFIG_ARCH_XGENE) += apm-merlin.dtb
  
--	/* phy-supply */
--	phy->pwr = regulator_get_optional(dev, "phy");
--	if (IS_ERR(phy->pwr)) {
--		if (PTR_ERR(phy->pwr) == -EPROBE_DEFER) {
--			ret = -EPROBE_DEFER;
--			goto free_ida;
--		}
--		phy->pwr = NULL;
--	}
--
- 	device_initialize(&phy->dev);
- 	mutex_init(&phy->mutex);
- 
-@@ -674,6 +664,16 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 	if (ret)
- 		goto put_dev;
- 
-+	/* phy-supply */
-+	phy->pwr = regulator_get_optional(&phy->dev, "phy");
-+	if (IS_ERR(phy->pwr)) {
-+		ret = PTR_ERR(phy->pwr);
-+		if (ret == -EPROBE_DEFER)
-+			goto put_dev;
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/apm/apm-merlin.dts b/arch/arm64/boot/dts/apm/apm-merlin.dts
+new file mode 100644
+index 0000000..2480baf
+--- /dev/null
++++ b/arch/arm64/boot/dts/apm/apm-merlin.dts
+@@ -0,0 +1,42 @@
++/*
++ * dts file for AppliedMicro (APM) Merlin Board
++ *
++ * Copyright (C) 2015, Applied Micro Circuits Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
 +
-+		phy->pwr = NULL;
-+	}
++/dts-v1/;
 +
- 	ret = device_add(&phy->dev);
- 	if (ret)
- 		goto put_dev;
-@@ -689,9 +689,6 @@ put_dev:
- 	put_device(&phy->dev);  /* calls phy_release() which frees resources */
- 	return ERR_PTR(ret);
- 
--free_ida:
--	ida_simple_remove(&phy_ida, phy->id);
--
- free_phy:
- 	kfree(phy);
- 	return ERR_PTR(ret);
++/include/ "apm-shadowcat.dtsi"
++
++/ {
++	model = "APM X-Gene Merlin board";
++	compatible = "apm,merlin", "apm,xgene-shadowcat";
++
++	chosen { };
++
++	memory {
++		device_type = "memory";
++		reg = < 0x1 0x00000000 0x0 0x80000000 >;
++	};
++};
++
++&serial0 {
++	status = "ok";
++};
++&pcie0 {
++	status = "ok";
++};
++&sata1 {
++	status = "ok";
++};
++&sata2 {
++	status = "ok";
++};
++&sata3 {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+new file mode 100644
+index 0000000..af9bb1d
+--- /dev/null
++++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+@@ -0,0 +1,216 @@
++/*
++ * dts file for AppliedMicro (APM) X-Gene Shadowcat SOC
++ *
++ * Copyright (C) 2015, Applied Micro Circuits Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++/ {
++	compatible = "apm,xgene-shadowcat";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x100>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x101>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@200 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x200>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@201 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x201>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@300 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x300>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++		cpu@301 {
++			device_type = "cpu";
++			compatible = "apm,strega", "arm,armv8";
++			reg = <0x0 0x301>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x1 0x0000fff8>;
++		};
++	};
++
++	gic: interrupt-controller@78090000 {
++		compatible = "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		interrupt-controller;
++		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
++		ranges = <0 0 0 0x79000000 0x0 0x800000>; /* MSI Range */
++		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
++		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
++		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
++		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <1 12 0xff04>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 0 0xff04>,	/* Secure Phys IRQ */
++			     <1 13 0xff04>,	/* Non-secure Phys IRQ */
++			     <1 14 0xff04>,	/* Virt IRQ */
++			     <1 15 0xff04>;	/* Hyp IRQ */
++		clock-frequency = <50000000>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		clocks {
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			refclk: refclk {
++				compatible = "fixed-clock";
++				#clock-cells = <1>;
++				clock-frequency = <100000000>;
++				clock-output-names = "refclk";
++			};
++
++			socpll: socpll@17000120 {
++				compatible = "apm,xgene-socpll-clock";
++				#clock-cells = <1>;
++				clocks = <&refclk 0>;
++				reg = <0x0 0x17000120 0x0 0x1000>;
++				clock-output-names = "socpll";
++			};
++
++			socplldiv2: socplldiv2  {
++				compatible = "fixed-factor-clock";
++				#clock-cells = <1>;
++				clocks = <&socpll 0>;
++				clock-mult = <1>;
++				clock-div = <2>;
++				clock-output-names = "socplldiv2";
++			};
++
++			pcie0clk: pcie0clk@1f2bc000 {
++				compatible = "apm,xgene-device-clock";
++				#clock-cells = <1>;
++				clocks = <&socplldiv2 0>;
++				reg = <0x0 0x1f2bc000 0x0 0x1000>;
++				reg-names = "csr-reg";
++				clock-output-names = "pcie0clk";
++			};
++		};
++
++		serial0: serial@10600000 {
++			device_type = "serial";
++			compatible = "ns16550";
++			reg = <0 0x10600000 0x0 0x1000>;
++			reg-shift = <2>;
++			clock-frequency = <10000000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x4c 0x4>;
++		};
++
++		pcie0: pcie@1f2b0000 {
++			device_type = "pci";
++			compatible = "apm,xgene-pcie";
++			#interrupt-cells = <1>;
++			#size-cells = <2>;
++			#address-cells = <3>;
++			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
++				0xc0 0x10000000 0x0 0x00040000>; /* PCI config space */
++			reg-names = "csr", "cfg";
++			ranges = <0x01000000 0x00 0x00000000 0xC0 0x00000000 0x00 0x00010000   /* io */
++				0x02000000 0x00 0x80000000 0xC0 0x80000000 0x00 0x80000000>; /* mem */
++			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
++				0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
++
++			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0x0 0x0 0x10 0x1
++				0x0 0x0 0x0 0x2 &gic 0x0 0x0 0x0 0x11 0x1
++				0x0 0x0 0x0 0x3 &gic 0x0 0x0 0x0 0x12 0x1
++				0x0 0x0 0x0 0x4 &gic 0x0 0x0 0x0 0x13 0x1>;
++			clocks = <&pcie0clk 0>;
++			dma-coherent;
++		};
++
++		sata1: sata@1a000000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a000000 0x0 0x1000>,
++			      <0x0 0x1f200000 0x0 0x1000>,
++			      <0x0 0x1f20d000 0x0 0x1000>,
++			      <0x0 0x1f20e000 0x0 0x1000>;
++			interrupts = <0x0 0x5a 0x4>;
++			dma-coherent;
++		};
++
++		sata2: sata@1a200000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a200000 0x0 0x1000>,
++			      <0x0 0x1f210000 0x0 0x1000>,
++			      <0x0 0x1f21d000 0x0 0x1000>,
++			      <0x0 0x1f21e000 0x0 0x1000>;
++			interrupts = <0x0 0x5b 0x4>;
++			dma-coherent;
++		};
++
++		sata3: sata@1a400000 {
++			compatible = "apm,xgene-ahci";
++			reg = <0x0 0x1a400000 0x0 0x1000>,
++			      <0x0 0x1f220000 0x0 0x1000>,
++			      <0x0 0x1f22d000 0x0 0x1000>,
++			      <0x0 0x1f22e000 0x0 0x1000>;
++			interrupts = <0x0 0x5c 0x4>;
++			dma-coherent;
++		};
++	};
++};
 -- 
-2.3.4
+1.9.1
