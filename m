@@ -1,109 +1,49 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH RFC v2 02/12] drm/connector: add functionality to register connectors to a global list
-Date: Wed,  1 Apr 2015 12:09:36 +0200
-Message-ID: <1427882986-19110-3-git-send-email-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH RFC v2 09/12] drm/rockchip: enable rgb output of vops for all
+ other connectors
+Date: Wed,  1 Apr 2015 12:09:43 +0200
+Message-ID: <1427882986-19110-10-git-send-email-heiko@sntech.de>
 References: <1427882986-19110-1-git-send-email-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427882986-19110-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1427882986-19110-1-git-send-email-heiko@sntech.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie, mark.yao@rock-chips.com, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This allows standalone connectors to be registered and found again
-through their devicetree node when going through their connection graph.
-
-Setting the of_node property is of course still optional, as it is not
-necessary in most cases to lookup connectors that are part of a bigger
-component.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- drivers/gpu/drm/drm_crtc.c | 41 +++++++++++++++++++++++++++++++++++++++++
- include/drm/drm_crtc.h     |  7 +++++++
- 2 files changed, 48 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
-index b63e69d..8b49ea7 100644
---- a/drivers/gpu/drm/drm_crtc.c
-+++ b/drivers/gpu/drm/drm_crtc.c
-@@ -852,6 +852,47 @@ static void drm_connector_get_cmdline_mode(struct drm_connector *connector)
- 		      mode->interlace ?  " interlaced" : "");
- }
- 
-+static DEFINE_MUTEX(connector_lock);
-+static LIST_HEAD(connector_list);
-+
-+int drm_connector_add(struct drm_connector *connector)
-+{
-+	mutex_lock(&connector_lock);
-+	list_add_tail(&connector->list, &connector_list);
-+	mutex_unlock(&connector_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(drm_connector_add);
-+
-+void drm_connector_remove(struct drm_connector *connector)
-+{
-+	mutex_lock(&connector_lock);
-+	list_del_init(&connector->list);
-+	mutex_unlock(&connector_lock);
-+}
-+EXPORT_SYMBOL(drm_connector_remove);
-+
-+#ifdef CONFIG_OF
-+struct drm_connector *of_drm_find_connector(struct device_node *np)
-+{
-+	struct drm_connector *connector;
-+
-+	mutex_lock(&connector_lock);
-+
-+	list_for_each_entry(connector, &connector_list, list) {
-+		if (connector->of_node == np) {
-+			mutex_unlock(&connector_lock);
-+			return connector;
-+		}
-+	}
-+
-+	mutex_unlock(&connector_lock);
-+	return NULL;
-+}
-+EXPORT_SYMBOL(of_drm_find_connector);
-+#endif
-+
- /**
-  * drm_connector_init - Init a preallocated connector
-  * @dev: DRM device
-diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-index 76994ba..37b230b 100644
---- a/include/drm/drm_crtc.h
-+++ b/include/drm/drm_crtc.h
-@@ -671,6 +671,10 @@ struct drm_encoder {
-  */
- struct drm_connector {
- 	struct drm_device *dev;
-+#ifdef CONFIG_OF
-+	struct device_node *of_node;
-+#endif
-+	struct list_head list;
- 	struct device *kdev;
- 	struct device_attribute *attr;
- 	struct list_head head;
-@@ -1213,6 +1217,9 @@ static inline uint32_t drm_crtc_mask(struct drm_crtc *crtc)
- 
- extern void drm_connector_ida_init(void);
- extern void drm_connector_ida_destroy(void);
-+extern int drm_connector_add(struct drm_connector *connector);
-+extern void drm_connector_remove(struct drm_connector *connector);
-+extern struct drm_connector *of_drm_find_connector(struct device_node *np);
- extern int drm_connector_init(struct drm_device *dev,
- 			      struct drm_connector *connector,
- 			      const struct drm_connector_funcs *funcs,
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIHNvY3MgaXRzZWxmIGNvbnRhaW5zIGVuY29kZXJzIGZvciBhIGxvdCBvZiBkaWZmZXJlbnQg
+b3V0cHV0cy4gQnV0IGV2ZXJ5CnVuc3VwcG9ydGVkIGNvbm5lY3RvciB3aWxsIGJlIHJvdXRlZCB0
+aHJvdWdoIHRoZSBsdmRzLCBhcyBpdCBjb250cm9scyB0aGUKcGlucyBpbiBxdWVzdGlvbi4KVGhl
+cmVmb3JlIGVuYWJsZSB0aGUgbHZkcyBvdXRwdXQgZm9yIGFsbCBvZiB0aG9zZS4KClNpZ25lZC1v
+ZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Ci0tLQogZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuYyB8IDEwICsrKy0tLS0tLS0KIDEgZmlsZSBj
+aGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMKaW5kZXggYzAzODdmNy4uMzg0NGIxMiAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuYworKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jCkBAIC04NjIsMjAg
+Kzg2MiwxNiBAQCBzdGF0aWMgaW50IHZvcF9jcnRjX21vZGVfc2V0KHN0cnVjdCBkcm1fY3J0YyAq
+Y3J0YywKIAljbGtfZGlzYWJsZSh2b3AtPmRjbGspOwogCiAJc3dpdGNoICh2b3AtPmNvbm5lY3Rv
+cl90eXBlKSB7Ci0JY2FzZSBEUk1fTU9ERV9DT05ORUNUT1JfTFZEUzoKLQkJVk9QX0NUUkxfU0VU
+KHZvcCwgcmdiX2VuLCAxKTsKLQkJYnJlYWs7CiAJY2FzZSBEUk1fTU9ERV9DT05ORUNUT1JfZURQ
+OgogCQlWT1BfQ1RSTF9TRVQodm9wLCBlZHBfZW4sIDEpOwogCQlicmVhazsKIAljYXNlIERSTV9N
+T0RFX0NPTk5FQ1RPUl9IRE1JQToKIAkJVk9QX0NUUkxfU0VUKHZvcCwgaGRtaV9lbiwgMSk7CiAJ
+CWJyZWFrOworCWNhc2UgRFJNX01PREVfQ09OTkVDVE9SX0xWRFM6CiAJZGVmYXVsdDoKLQkJRFJN
+X0VSUk9SKCJ1bnN1cHBvcnQgY29ubmVjdG9yX3R5cGVbJWRdXG4iLAotCQkJICB2b3AtPmNvbm5l
+Y3Rvcl90eXBlKTsKLQkJcmV0ID0gLUVJTlZBTDsKLQkJZ290byBvdXQ7CisJCVZPUF9DVFJMX1NF
+VCh2b3AsIHJnYl9lbiwgMSk7CisJCWJyZWFrOwogCX07CiAJVk9QX0NUUkxfU0VUKHZvcCwgb3V0
+X21vZGUsIHZvcC0+Y29ubmVjdG9yX291dF9tb2RlKTsKIAotLSAKMi4xLjQKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
