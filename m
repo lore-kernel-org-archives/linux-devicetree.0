@@ -1,29 +1,76 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] of: Custom printk format specifier for device node
-Date: Tue, 31 Mar 2015 22:07:32 -0700
-Message-ID: <1427864852.18175.53.camel@perches.com>
-References: <1421859974-24507-1-git-send-email-pantelis.antoniou@konsulko.com>
-	 <1421861843.10574.23.camel@perches.com>
-	 <7EBFDD59-156A-42FB-AAF0-CE4A88219794@antoniou-consulting.com>
-	 <20150330190432.42192C40A67@trevor.secretlab.ca>
-	 <8421E7C5-C0D9-4C86-AA37-F6507B3BCC57@konsulko.com>
-	 <20150401045231.70614C4082F@trevor.secretlab.ca>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: [PATCH v6 0/3] ARM: mediatek: Add driver for Mediatek I2C controller
+Date: Wed, 1 Apr 2015 13:29:46 +0800
+Message-ID: <1427866189-19262-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20150401045231.70614C4082F@trevor.secretlab.ca>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robherring2@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean Delvare <jdelvare@suse.de>, David Box <david.e.box@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Doug Anderson <dianders@chromium.org>, Max Schwarz <max.schwarz@online.de>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Anders Berg <anders.berg@avagotech.com>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Lee Jones <lee.jones@linaro.org>, Simon Glass <sjg@chromium.org>, Jim Cromie <jim.cromie@gmail.com>, Wei Yan <sledge.yanwei@huawei.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Xudong Chen <xudong.chen@mediatek.com>, Liguo Zhang <liguo.zhang@mediatek.com>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-03-31 at 21:52 -0700, Grant Likely wrote:
-> Thinking about this more, I'd like to suggest a different format that
-> gives us a nice hack on the name that makes it easy to remember:
-> 	'%pOF[...]'
-> 'O' still means 'object', but it is also overloaded for Open Firmware.
-> That still leaves %pO? for other object types.  What do you think?
+This series is for Mediatek SoCs I2C controller common bus driver.
 
-I think that's fine.
+Earlier MTK SoC (for example, MT6589, MT8135) I2C HW has some limitationes.
+New generation SoC like MT8173 fix these limitations.
 
+1. Only support one i2c_msg number. One exception is WRRD (write then read)
+mode. WRRD can have two i2c_msg numbers.
+
+2. Mediatek I2C controller support WRRD(write then read) mode, in WRRD
+mode the Repeat Start will be issued between 2 messages.
+In this driver if 2 messages is first write then read, the driver will
+combine 2 messages using Write-Read mode so the RS will be issued between
+the 2 messages.
+
+3. The max transfer data length is 255 in one message. In WRRD mode, the
+max data length of second msg is 31.
+
+MT8135 and MT6589 can control I2C pins on PMIC(MT6397) by setting the i2c
+registers in MT8135 side. In this case, driver should set OFFSET_PATH_DIR
+bit first, the operation on other registers are still the same.
+For now MT6589/MT8135 support this, MT6577/MT6595/MT8127 do not support.
+For example, If want to use I2C4/5/6 pins on MT8135 just need to enable
+the pinmux, else if want to use I2C pins on PMIC(MT6397) need to add
+"mediatek,have-pmic" property in the .dts file of each platform.
+
+This driver is based on 4.0-rc1.
+
+Change in v6:
+Add mtk_i2c_compatible struct to set driver capability, and pass by
+of_device_id. Change to use completion API instead of waitqueue. Remove
+unnecessary spinlock. Fix get default speed error bug. Fix Sascha's
+review comment.
+
+Change in v5:
+Apply new i2c_adapter_quirks patch [2]. Change to use dam_map_single to map
+dma buffer. Add spinlock to fix race condition. Check of_property_read_u32
+return value. Remove I2C_FUNC_10BIT_ADDR capability due to driver not implement.
+Add MT8173 I2C driver.
+
+Change in v4:
+Modify to support i2c_adapter_quirks base on Wolfram's patch [1].
+Remove check transfer size and WRRD combine code. Instead, fill quirk
+property and let i2c_check_for_quirks to do the filter.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/314804.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/325744.html
+
+Eddie Huang (1):
+  I2C: mediatek: Add driver for MediaTek MT8173 I2C controller
+
+Xudong Chen (2):
+  dt-bindings: Add I2C bindings for mt65xx/mt81xx.
+  I2C: mediatek: Add driver for MediaTek I2C controller
+
+ .../devicetree/bindings/i2c/i2c-mt6577.txt         |  41 ++
+ drivers/i2c/busses/Kconfig                         |   9 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-mt65xx.c                    | 748 +++++++++++++++++++++
+ 4 files changed, 799 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+ create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
+
+--
+1.8.1.1.dirty
