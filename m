@@ -1,101 +1,56 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6qdl: move HDMI controller to right location in DT
-Date: Wed,  1 Apr 2015 11:26:54 +0200
-Message-ID: <1427880414-18503-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 05/15] dt-bindings: Document the STM32 reset bindings
+Date: Wed, 1 Apr 2015 11:27:32 +0200
+Message-ID: <CALszF6B5YUCtT2RPfFef_BjJhDmTbgkHO=V6C7ikUt2jRrWxBQ@mail.gmail.com>
+References: <1427819096-31109-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1427819096-31109-6-git-send-email-mcoquelin.stm32@gmail.com>
+	<1427879123.3638.1.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427879123.3638.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby@sus>
 List-Id: devicetree@vger.kernel.org
 
-Currently the HDMI controller is a child device of the AIPS bus in the
-DT which is clearly wrong. Move it to the right location.
-This introduces no functional change it just aligns the DT representation
-with reality.
+Hello Philipp,
 
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 56 +++++++++++++++++++++---------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+2015-04-01 11:05 GMT+02:00 Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
+> Am Dienstag, den 31.03.2015, 18:24 +0200 schrieb Maxime Coquelin:
+>> This adds documentation of device tree bindings for the
+>> STM32 reset controller.
+>>
+>> Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/reset/st,stm32-rcc.txt     | 107 +++++++++++++++++++++
+>>  1 file changed, 107 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+>> new file mode 100644
+>> index 0000000..e2e2f25
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+>> @@ -0,0 +1,107 @@
+>> +STMicroelectronics STM32 Peripheral Reset Controller
+>> +====================================================
+>> +
+>> +The RCC IP is both a reset and a clock controller. This documentation only
+>> +document the reset part.
+>
+> documents?
+>
+> Otherwise,
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index f74a8ded515f..0482a665125a 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -119,6 +119,34 @@
- 			status = "disabled";
- 		};
- 
-+		hdmi: hdmi@0120000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x00120000 0x9000>;
-+			interrupts = <0 115 0x04>;
-+			gpr = <&gpr>;
-+			clocks = <&clks IMX6QDL_CLK_HDMI_IAHB>,
-+				 <&clks IMX6QDL_CLK_HDMI_ISFR>;
-+			clock-names = "iahb", "isfr";
-+			status = "disabled";
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				hdmi_mux_0: endpoint {
-+					remote-endpoint = <&ipu1_di0_hdmi>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				hdmi_mux_1: endpoint {
-+					remote-endpoint = <&ipu1_di1_hdmi>;
-+				};
-+			};
-+		};
-+
- 		timer@00a00600 {
- 			compatible = "arm,cortex-a9-twd-timer";
- 			reg = <0x00a00600 0x20>;
-@@ -778,34 +806,6 @@
- 				};
- 			};
- 
--			hdmi: hdmi@0120000 {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				reg = <0x00120000 0x9000>;
--				interrupts = <0 115 0x04>;
--				gpr = <&gpr>;
--				clocks = <&clks IMX6QDL_CLK_HDMI_IAHB>,
--					 <&clks IMX6QDL_CLK_HDMI_ISFR>;
--				clock-names = "iahb", "isfr";
--				status = "disabled";
--
--				port@0 {
--					reg = <0>;
--
--					hdmi_mux_0: endpoint {
--						remote-endpoint = <&ipu1_di0_hdmi>;
--					};
--				};
--
--				port@1 {
--					reg = <1>;
--
--					hdmi_mux_1: endpoint {
--						remote-endpoint = <&ipu1_di1_hdmi>;
--					};
--				};
--			};
--
- 			dcic1: dcic@020e4000 {
- 				reg = <0x020e4000 0x4000>;
- 				interrupts = <0 124 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.1.4
+'s' added for v5, and Acked-by applied.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Maxime
+
+>
+> regards
+> Philipp
+>
