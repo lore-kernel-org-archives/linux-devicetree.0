@@ -1,46 +1,33 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v6 6/6] mfd: axp20x: Enable AXP22X regulators
-Date: Wed,  1 Apr 2015 14:03:23 +0800
-Message-ID: <1427868203-7486-7-git-send-email-wens@csie.org>
-References: <1427868203-7486-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
+Date: Wed, 1 Apr 2015 11:52:50 +0530
+Message-ID: <CAKohpokDhHo1ftcB6b4b+hO125_sqjK0NKESt79GVcWEwiq04w@mail.gmail.com>
+References: <cover.1423642246.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBMMU52UAKGQEPJJEJUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1427868203-7486-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1423642246.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>
+Cc: Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Mike Turquette <mike.turquette@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Thomas Abraham <ta.omasab@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Brown <broonie@kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that the axp20x-regulators driver supports different variants of the
-AXP family, we can enable regulator support for AXP22X without the risk
-of incorrectly configuring regulators.
+On 11 February 2015 at 13:46, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> Now that I have received an verbal Ack from Rob Herring (in a personal
+> conversation) about the bindings, I am showing how the code looks like with
+> these new bindings.
+>
+> Some part is still now done:
+> - Interface for adding new detailed OPPs from platform code instead of DT
+> - Providing cpufreq helpers for the next OPPs
+> - Providing regulator helpers for the target/min/max ranges
+>
+> Please provide feedback on how this looks like..
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mfd/axp20x.c | 2 ++
- 1 file changed, 2 insertions(+)
+@Rafael: Its been two months now since this was posted. Can we get this
+merged please? If someone finds issues later, we can go fix them ..
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 58573a5f73de..ac7c0c5b23a6 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -370,6 +370,8 @@ static struct mfd_cell axp22x_cells[] = {
- 		.name			= "axp20x-pek",
- 		.num_resources		= ARRAY_SIZE(axp22x_pek_resources),
- 		.resources		= axp22x_pek_resources,
-+	}, {
-+		.name			= "axp20x-regulator",
- 	},
- };
- 
--- 
-2.1.4
+And this *should* not break any existing stuff as this is mostly new stuff..
+
+--
+viresh
