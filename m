@@ -1,79 +1,41 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 4/4] Documentation: extcon: usb-gpio: update usb-gpio
- binding description
-Date: Wed, 1 Apr 2015 14:33:23 +0300
-Message-ID: <551BD783.9060109@ti.com>
-References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com> <1427873005-24024-5-git-send-email-r.baldyga@samsung.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
+Date: Wed, 1 Apr 2015 08:39:12 -0300
+Message-ID: <CAOMZO5DM66sUX-YojCyY5BC3Pdk4p4bkEqQ+W3tyDeNEL6nU5w@mail.gmail.com>
+References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427873005-24024-5-git-send-email-r.baldyga@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Baldyga <r.baldyga@samsung.com>, cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427875809-10444-1-git-send-email-vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Vianney_le_Cl=C3=A9ment_de_Saint=2DMarcq?= <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/15 10:23, Robert Baldyga wrote:
-> Add information about VBUS pin detection support, 'debounce' property
-> and some other details.
-> 
-> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+On Wed, Apr 1, 2015 at 5:10 AM, Vianney le Cl=C3=A9ment de Saint-Marcq
+<vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org> wrote:
+> Add device tree for the Embest/Element 14 MarS Board [1], an i.MX6 Du=
+al
+> based development board.
+>
+> The e-MMC chip is disabled because initialization fails (error -110).
+> A possible cause is described in [2].
+>
+> [1] http://www.embest-tech.com/shop/star/marsboard.html
+> [2] https://community.freescale.com/message/442168#442168
+>
+> Signed-off-by: Vianney le Cl=C3=A9ment de Saint-Marcq <vianney.leclem=
+ent-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
 
-Acked-by: Roger Quadros <rogerq@ti.com>
+Couldn't this be combined with the existing
+arch/arm/boot/dts/imx6dl-riotboard.dts?
 
-cheers,
--roger
+Regards,
 
-> ---
->  .../devicetree/bindings/extcon/extcon-usb-gpio.txt | 28 ++++++++++++++++++++--
->  1 file changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> index af0b903..7096f39 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -1,16 +1,40 @@
->  USB GPIO Extcon device
->  
-> -This is a virtual device used to generate USB cable states from the USB ID pin
-> -connected to a GPIO pin.
-> +This is a virtual device used to generate USB cable states from the USB
-> +ID and VBUS signals connected to GPIO pins.
-> +
-> +The extcon cable states USB and USB_HOST are actually VBUS and !ID
-> +pin states and do not indicate what mode the USB needs to operate in.
-> +That decision is done by the USB stack.
-> +
-> +Some devices have only one of these GPIO pins, so we support cases when
-> +only one of them is present. Hence properties 'id-gpio' and 'vbus-gpio'
-> +are described as optional, but at least one of them has to be present
-> +in extcon-usb-gpio node.
-> +
-> +In general we have three cases:
-> +1. If VBUS and ID gpios are present we pass them as is
-> +	USB-HOST = !ID, USB = VBUS
-> +2. If only VBUS gpio is present we assume that ID pin is always High.
-> +	USB-HOST = false, USB = VBUS.
-> +3. If only ID pin is available we infer the VBUS pin states based on ID.
-> +	USB-HOST = !ID, USB = ID
->  
->  Required properties:
->  - compatible: Should be "linux,extcon-usb-gpio"
-> +
-> +Optional properties
->  - id-gpio: gpio for USB ID pin. See gpio binding.
-> +- vbus-gpio: gpio for USB VBUS pin. See gpio binding.
-> +- debounce: gpio debounce time in milliseconds (u32).
-> +
->  
->  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
->  	extcon_usb1 {
->  		compatible = "linux,extcon-usb-gpio";
->  		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> +		vbus-gpio = <&gpio6 2 GPIO_ACTIVE_HIGH>;
-> +		debounce = <25>;
->  	}
->  
->  	&omap_dwc3_1 {
-> 
+=46abio Estevam
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
