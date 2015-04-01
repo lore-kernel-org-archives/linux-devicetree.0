@@ -1,52 +1,50 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/7] drm/tilcdc: Add support for external tda998x
- encoder
-Date: Wed, 1 Apr 2015 23:20:31 +0100
-Message-ID: <20150401222030.GD4027@n2100.arm.linux.org.uk>
-References: <cover.1427877412.git.jsarha@ti.com>
- <e22d703d6ee5fe02e8c34b78a63f98a4b2ea1f22.1427877412.git.jsarha@ti.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v2 0/5] Refactor Qualcomm RPM regulator to single platform_device
+Date: Wed, 1 Apr 2015 15:55:41 -0700
+Message-ID: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e22d703d6ee5fe02e8c34b78a63f98a4b2ea1f22.1427877412.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2015 at 11:49:27AM +0300, Jyri Sarha wrote:
-> Add support for an external compontised DRM encoder. The external
-> encoder can be connected to tilcdc trough device tree graph binding.
-> The binding document for tilcdc has been updated. The current
-> implementation supports only tda998x encoder.
-> 
-> To be able to filter out the unsupported video modes the tilcdc driver
-> needs to hijack the external connectors helper functions. The tilcdc
-> installes new helper functions that are otherwise identical to
-> orignals, but the mode_valid() call-back check the mode first localy,
-> before calling the original call-back. The tilcdc dirver restores the
-> original helper functions before it is unbound from the external
-> device.
+Stephen Boyd pointed out that the current design of the Qualcomm RPM and
+regulator driver consumes 12-20kB of ram just for the platform_device structs.
 
-This is where the DRM model is weak - we don't really have a way to
-say "this is the set of CRTCs which /can/ be associated with this
-connector, can any of the CRTCs accept this mode?" and eliminate
-modes which fail that check.
+This series starts with a new revision of the dt binding documentation for the
+rpm regulators, introduces the regulator-allow-drms property, remove the
+flagging of DRMS support from the qcom-rpm regulator driver, refactor the
+qcom_rpm-regulator driver to move all custom parse code to a function suitable
+for usage as of_parse_cb. The final patch defines the tables of registers and
+change the probe function to register the appropriate regulators based on pmic.
 
-This problem seems to be one which recurrs, so I wonder if it's
-something which ought to be solved properly.
+As Stephen pointed out in his PATCH/RFC/argument [1], this gives a more
+accurate representation of input supplies, as they are now named as in the
+specification.
 
-It's made slightly more difficult because we don't really know which
-connectors could be associated with which CRTCs - that information is
-stored at the encoder level (with the encoders possible_crtcs), and
-I'm not sure we have a way for generic DRM code to know which encoders
-could be associated with which connectors.
+Note that for platforms with multiple pmics (e.g. 8660 and 8974) will have
+multiple regulator subnodes to the rpm node - something that will be clearer
+with this binding than the previously suggested.
+
+[1] https://lkml.org/lkml/2015/2/26/713
+
+Changes since v1:
+- Reworked DRMS handling to not have the driver specify the support
+
+Bjorn Andersson (5):
+  mfd: devicetree: bindings: Add Qualcomm RPM regulator subnodes
+  regulator: Introduce property to flag drms
+  regulator: qcom: Don't enable DRMS in driver
+  regulator: qcom: Refactor of-parsing code
+  regulator: qcom: Rework to single platform device
+
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 217 +++++++++++++++-
+ .../devicetree/bindings/regulator/regulator.txt    |   1 +
+ drivers/regulator/of_regulator.c                   |   3 +
+ drivers/regulator/qcom_rpm-regulator.c             | 289 ++++++++++++++-------
+ 4 files changed, 401 insertions(+), 109 deletions(-)
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.2
