@@ -1,206 +1,268 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery
- bindings
-Date: Wed, 1 Apr 2015 22:16:05 +0200
-Message-ID: <20150401201605.GA11421@amd>
-References: <1426022847-30912-1-git-send-email-marek@goldelico.com>
- <1426022847-30912-4-git-send-email-marek@goldelico.com>
- <20150311152414.GX5264@atomide.com>
- <844740CD-C95B-4411-A2C8-4906F58DBEE8@goldelico.com>
- <20150311164442.GA5264@atomide.com>
- <20150331072643.GB30788@amd>
- <BC5A7447-CAD7-4CCE-8F08-8CEFBB5C6905@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BC5A7447-CAD7-4CCE-8F08-8CEFBB5C6905@goldelico.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Tony Lindgren <tony@atomide.com>, Marek Belisko <marek@goldelico.com>, Benoit Cousson <bcousson@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 2/2] phy: Add driver for Pistachio USB2.0 PHY
+Date: Wed,  1 Apr 2015 13:16:34 -0700
+Message-ID: <1427919394-3580-3-git-send-email-abrestic@chromium.org>
+References: <1427919394-3580-1-git-send-email-abrestic@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427919394-3580-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Add a driver for the USB2.0 PHY found on the IMG Pistachio SoC.
 
-> > As I explained in some other mail, those tables should not be
-> > neccessary at all. They can be computed from li-ion characteristics
-> > and internal resistance, and assumed current during charge and
-> > discharge.
->=20
-> I already explained that we do not know the charging and discharging
-> current well enough for such a calculation.
->=20
-> And I explained that the =E2=80=9Cinternal resistance=E2=80=9D is a s=
-ystem (battery + cables +
-> connectors + other circuits) parameter that is not easy to derive or =
-measure
-> and type into the .dts source code.
->=20
-> At least I have no idea how I should find it out for my boards. While=
- I can
-> easily determine the curves (and we already have them for the platfor=
-m_data
-> driver).
->=20
-> Please propose your own code doing that so that we can test if it is
-> better.
+Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ drivers/phy/Kconfig             |   7 ++
+ drivers/phy/Makefile            |   1 +
+ drivers/phy/phy-pistachio-usb.c | 206 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 214 insertions(+)
+ create mode 100644 drivers/phy/phy-pistachio-usb.c
 
-So, how does this look?
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 2962de2..717f30d 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -225,6 +225,13 @@ config PHY_EXYNOS5_USBDRD
+ 	  This driver provides PHY interface for USB 3.0 DRD controller
+ 	  present on Exynos5 SoC series.
+ 
++config PHY_PISTACHIO_USB
++	tristate "IMG Pistachio USB2.0 PHY driver"
++	depends on MACH_PISTACHIO
++	select GENERIC_PHY
++	help
++	  Enable this to support the USB2.0 PHY on the IMG Pistachio SoC.
++
+ config PHY_QCOM_APQ8064_SATA
+ 	tristate "Qualcomm APQ8064 SATA SerDes/PHY driver"
+ 	depends on ARCH_QCOM
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index f080e1b..e561708 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -38,3 +38,4 @@ obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
++obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+diff --git a/drivers/phy/phy-pistachio-usb.c b/drivers/phy/phy-pistachio-usb.c
+new file mode 100644
+index 0000000..84cb760
+--- /dev/null
++++ b/drivers/phy/phy-pistachio-usb.c
+@@ -0,0 +1,206 @@
++/*
++ * IMG Pistachio USB PHY driver
++ *
++ * Copyright (C) 2015 Google, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include <dt-bindings/phy/phy-pistachio-usb.h>
++
++#define USB_PHY_CONTROL1				0x04
++#define USB_PHY_CONTROL1_FSEL_SHIFT			2
++#define USB_PHY_CONTROL1_FSEL_MASK			0x7
++
++#define USB_PHY_STRAP_CONTROL				0x10
++#define USB_PHY_STRAP_CONTROL_REFCLK_SHIFT		4
++#define USB_PHY_STRAP_CONTROL_REFCLK_MASK		0x3
++
++#define USB_PHY_STATUS					0x14
++#define USB_PHY_STATUS_RX_PHY_CLK			BIT(9)
++#define USB_PHY_STATUS_RX_UTMI_CLK			BIT(8)
++#define USB_PHY_STATUS_VBUS_FAULT			BIT(7)
++
++struct pistachio_usb_phy {
++	struct device *dev;
++	struct regmap *cr_top;
++	struct clk *phy_clk;
++	unsigned int refclk;
++};
++
++static const unsigned long fsel_rate_map[] = {
++	9600000,
++	10000000,
++	12000000,
++	19200000,
++	20000000,
++	24000000,
++	0,
++	50000000,
++};
++
++static int pistachio_usb_phy_power_on(struct phy *phy)
++{
++	struct pistachio_usb_phy *p_phy = phy_get_drvdata(phy);
++	unsigned long timeout, rate;
++	unsigned int i;
++	int ret;
++
++	ret = clk_prepare_enable(p_phy->phy_clk);
++	if (ret < 0) {
++		dev_err(p_phy->dev, "Failed to enable PHY clock: %d\n", ret);
++		return ret;
++	}
++
++	regmap_update_bits(p_phy->cr_top, USB_PHY_STRAP_CONTROL,
++			   USB_PHY_STRAP_CONTROL_REFCLK_MASK <<
++			   USB_PHY_STRAP_CONTROL_REFCLK_SHIFT,
++			   p_phy->refclk << USB_PHY_STRAP_CONTROL_REFCLK_SHIFT);
++
++	rate = clk_get_rate(p_phy->phy_clk);
++	if (p_phy->refclk == REFCLK_XO_CRYSTAL && rate != 12000000) {
++		dev_err(p_phy->dev, "Unspported rate for XO crystal: %ld\n",
++			rate);
++		ret = -EINVAL;
++		goto disable_clk;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(fsel_rate_map); i++) {
++		if (rate == fsel_rate_map[i])
++			break;
++	}
++	if (i == ARRAY_SIZE(fsel_rate_map)) {
++		dev_err(p_phy->dev, "Unspported clock rate: %lu\n", rate);
++		ret = -EINVAL;
++		goto disable_clk;
++	}
++
++	regmap_update_bits(p_phy->cr_top, USB_PHY_CONTROL1,
++			   USB_PHY_CONTROL1_FSEL_MASK <<
++			   USB_PHY_CONTROL1_FSEL_SHIFT,
++			   i << USB_PHY_CONTROL1_FSEL_SHIFT);
++
++	timeout = jiffies + msecs_to_jiffies(200);
++	while (time_before(jiffies, timeout)) {
++		unsigned int val;
++
++		regmap_read(p_phy->cr_top, USB_PHY_STATUS, &val);
++		if (val & USB_PHY_STATUS_VBUS_FAULT) {
++			dev_err(p_phy->dev, "VBUS fault detected\n");
++			ret = -EIO;
++			goto disable_clk;
++		}
++		if ((val & USB_PHY_STATUS_RX_PHY_CLK) &&
++		    (val & USB_PHY_STATUS_RX_UTMI_CLK))
++			return 0;
++		usleep_range(1000, 1500);
++	}
++
++	dev_err(p_phy->dev, "Timed out waiting for PHY to power on\n");
++	ret = -ETIMEDOUT;
++
++disable_clk:
++	clk_disable_unprepare(p_phy->phy_clk);
++	return ret;
++}
++
++static int pistachio_usb_phy_power_off(struct phy *phy)
++{
++	struct pistachio_usb_phy *p_phy = phy_get_drvdata(phy);
++
++	clk_disable_unprepare(p_phy->phy_clk);
++
++	return 0;
++}
++
++static const struct phy_ops pistachio_usb_phy_ops = {
++	.power_on = pistachio_usb_phy_power_on,
++	.power_off = pistachio_usb_phy_power_off,
++	.owner = THIS_MODULE,
++};
++
++static int pistachio_usb_phy_probe(struct platform_device *pdev)
++{
++	struct pistachio_usb_phy *p_phy;
++	struct phy_provider *provider;
++	struct phy *phy;
++	int ret;
++
++	p_phy = devm_kzalloc(&pdev->dev, sizeof(*p_phy), GFP_KERNEL);
++	if (!p_phy)
++		return -ENOMEM;
++	p_phy->dev = &pdev->dev;
++	platform_set_drvdata(pdev, p_phy);
++
++	p_phy->cr_top = syscon_regmap_lookup_by_phandle(p_phy->dev->of_node,
++							"img,cr-top");
++	if (IS_ERR(p_phy->cr_top)) {
++		dev_err(p_phy->dev, "Failed to get CR_TOP registers: %ld\n",
++			PTR_ERR(p_phy->cr_top));
++		return PTR_ERR(p_phy->cr_top);
++	}
++
++	p_phy->phy_clk = devm_clk_get(p_phy->dev, "usb_phy");
++	if (IS_ERR(p_phy->phy_clk)) {
++		dev_err(p_phy->dev, "Failed to get usb_phy clock: %ld\n",
++			PTR_ERR(p_phy->phy_clk));
++		return PTR_ERR(p_phy->phy_clk);
++	}
++
++	ret = of_property_read_u32(p_phy->dev->of_node, "img,refclk",
++				   &p_phy->refclk);
++	if (ret < 0) {
++		dev_err(p_phy->dev, "No reference clock selector specified\n");
++		return ret;
++	}
++
++	phy = devm_phy_create(p_phy->dev, NULL, &pistachio_usb_phy_ops);
++	if (IS_ERR(phy)) {
++		dev_err(p_phy->dev, "Failed to create PHY: %ld\n",
++			PTR_ERR(phy));
++		return PTR_ERR(phy);
++	}
++	phy_set_drvdata(phy, p_phy);
++
++	provider = devm_of_phy_provider_register(p_phy->dev,
++						 of_phy_simple_xlate);
++	if (IS_ERR(provider)) {
++		dev_err(p_phy->dev, "Failed to register PHY provider: %ld\n",
++			PTR_ERR(provider));
++		return PTR_ERR(provider);
++	}
++
++	return 0;
++}
++
++static const struct of_device_id pistachio_usb_phy_of_match[] = {
++	{ .compatible = "img,pistachio-usb-phy", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, pistachio_usb_phy_of_match);
++
++static struct platform_driver pistachio_usb_phy_driver = {
++	.probe		= pistachio_usb_phy_probe,
++	.driver		= {
++		.name	= "pistachio-usb-phy",
++		.of_match_table = pistachio_usb_phy_of_match,
++	},
++};
++module_platform_driver(pistachio_usb_phy_driver);
++
++MODULE_AUTHOR("Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
++MODULE_DESCRIPTION("IMG Pistachio USB2.0 PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.2.0.rc0.207.ga3a616c
 
-It looks to me like you have cca 0.1 Ohm resistance in your system,
-and are using cca 75mA while discharging, and charge by cca 1.4A. (And
-these are all the coefficients the code should need; rest is battery
-characteristics -- common to all li-ions, and charger characteristics
--- that will be common to all cellphones. If current can be measured,
-this code should go more precise answers).
-
-pavel@amd:~/g/tui/ofone$ ./liion_maps
-Charging
-Voltage  4.2 V ; table  100 %  internal voltage 4.18 V current 0.233 A =
-computed  97 %
-Voltage  4.1 V ; table  75 %  internal voltage 4.08 V current 0.233 A c=
-omputed  87 %
-Voltage  4.0 V ; table  55 %  internal voltage 3.93 V current 0.700 A c=
-omputed  69 %
-Voltage  3.9 V ; table  25 %  internal voltage 3.76 V current 1.400 A c=
-omputed  26 %
-Voltage  3.8 V ; table  5 %  internal voltage 3.66 V current 1.400 A co=
-mputed  3 %
-Voltage  3.7 V ; table  2 %  internal voltage 3.56 V current 1.400 A co=
-mputed  2 %
-Voltage  3.6 V ; table  1 %  internal voltage 3.46 V current 1.400 A co=
-mputed  1 %
-Voltage  3.3 V ; table  0 %  internal voltage 3.16 V current 1.400 A co=
-mputed  -1 %
-Badness  395.4861761427434
-Discharging
-Voltage  4.2 V ; table  100 %  internal voltage 4.21 V current -0.075 A=
- computed  100 %
-Voltage  4.1 V ; table  95 %  internal voltage 4.11 V current -0.075 A =
-computed  91 %
-Voltage  4.0 V ; table  70 %  internal voltage 4.01 V current -0.075 A =
-computed  79 %
-Voltage  3.8 V ; table  50 %  internal voltage 3.81 V current -0.075 A =
-computed  46 %
-Voltage  3.7 V ; table  10 %  internal voltage 3.71 V current -0.075 A =
-computed  3 %
-Voltage  3.6 V ; table  5 %  internal voltage 3.61 V current -0.075 A c=
-omputed  2 %
-Voltage  3.3 V ; table  0 %  internal voltage 3.31 V current -0.075 A c=
-omputed  0 %
-Badness  171.69576218433212
-
-> > Running below 3.3V.. not really. At that point, the battery is real=
-ly
-> > _empty_, and voltage is going down really really fast.
->=20
-> It is the diffference between 2% and 0% where a fuel indication might
-> be most important=E2=80=A6
-
-> > Plus, you are damaging the battery at that point.
->=20
-> The power controller will shut down - but the driver should report
-> reasonable (but IMHO not necessarily perfect) values until the last
-> moment.
-
-It is tricky to do a good job near 0%... or anywhere else. See for
-example
-
-http://cseweb.ucsd.edu/~trosing/lectures/battery.pdf
-
-You start a call, percentage goes down, end a call, it will go
-back up. I'm pretty sure you will not be able to make a call with "5%"
-indication from your code at low battery temperature (say -10C).
-
-Anyway, see above, I think I provide reasonable values even in that ran=
-ge.
-
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
-
-#!/usr/bin/python3
-import math
-
-def percent_internal(v):
-    u =3D 0.0387-(1.4523*(3.7835-v))
-    if u < 0:
-        # Formula above does gives 19.66% for 3.756, and refuses to
-        # work below that. Assume 3.3V is empty battery, and provide
-        # linear dependency below that.
-        u =3D (v - 3.3) * ((3.756 - 3.3) * 19.66)
-        return u
-    return (0.1966+math.sqrt(u))*100
-
-charging =3D [ [4200, 100], [4100, 75], [4000, 55], [3900, 25], [3800, =
-5], [3700, 2], [3600, 1], [3300, 0] ]
-
-discharging =3D [ [4200, 100], [4100, 95], [4000, 70], [3800, 50], [370=
-0, 10], [3600, 5], [3300, 0] ]
-
-# current > 0: charging
-def percent_ohm(v, current):
-    v_int =3D v - current * 0.1
-    print(" internal voltage %1.2f V current %.3f A " % (v_int, current=
-), end=3D'')
-    return percent_internal(v_int)
-
-def percent(v, charging):
-    if charging:
-        # Charger model. Chargers will do constant current then
-        # constant voltage, so current will go down as voltage
-        # approaches 4.2V
-        i =3D 2.8
-        if v >=3D 4.:
-            i =3D i/2
-        if v >=3D 4.05:
-            i =3D i/3
-    else:
-        i =3D -0.15
-
-    # With current forced to 0, we get badness 4014 and 258
-    # 2.5A, sloped: badness 576
-    # +4A -> badness 1293
-    # +3A -> badness 890
-    # +2.5A ->         339
-    # +2.4A -> badness 389
-    # +2.3A -> badness 444   =20
-    # +2.2A -> badness 504
-    # +2A -> badness 634
-    # +1A -> badness 1450
-    # +0.5A -> badness 2865
-    # -0.2A -> badness 252
-    # -0.15A -> badness 251.37
-    # -0.1A -> badness 252
-    # -0.05A -> badness 254
-    i/=3D2
-    return percent_ohm(v, i)
-
-def compute(map, charging):
-    diff =3D 0
-    if charging:
-        print("Charging")
-    else:
-        print("Discharging")
-    for v, p in map:
-        v /=3D 1000.
-        print("Voltage ", v, "V ; table ", p, "% ", end=3D'')
-        p2 =3D percent(v, charging)
-        print("computed ", int(p2), "%")
-        diff +=3D (p-p2)*(p-p2)
-    print("Badness ", diff)
-
-               =20
-#perc =3D percent(volt)
-compute(charging, 1)
-compute(discharging, 0)
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
