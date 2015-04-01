@@ -1,71 +1,30 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] irqchip: renesas-intc-irqpin: Add optional functional
- clock to bindings
-Date: Wed, 1 Apr 2015 11:06:44 +0200
-Message-ID: <CAMuHMdUmusF1udbX_wYRcr9kVmKic1FXBUvObbcvT5xm54Vtag@mail.gmail.com>
-References: <1426696644-25636-1-git-send-email-geert+renesas@glider.be>
-	<5509BC1E.8050802@cogentembedded.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 06/15] drivers: reset: Add STM32 reset driver
+Date: Wed, 01 Apr 2015 11:05:45 +0200
+Message-ID: <1427879145.3638.2.camel@pengutronix.de>
+References: <1427819096-31109-1-git-send-email-mcoquelin.stm32@gmail.com>
+	 <1427819096-31109-7-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5509BC1E.8050802@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1427819096-31109-7-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, peter@hurleysoftware.com, andy.shevchenko@gmail.com, cw00.choi@samsung.com, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>Antti Palosaari <c>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Am Dienstag, den 31.03.2015, 18:24 +0200 schrieb Maxime Coquelin:
+> The STM32 MCUs family IPs can be reset by accessing some registers
+> from the RCC block.
+> 
+> The list of available reset lines is documented in the DT bindings.
+> 
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-On Wed, Mar 18, 2015 at 6:55 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->> ---
->> a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
->> +++
->> b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
->> +Example
->> +-------
->> +
->> +       irqpin1: irqpin@e6900004 {
->
->
->    The node name should be "interrupt-controller@e6900004".
+regards
+Philipp
 
-Will fix (also the dtsi).
-
->> +               compatible = "renesas,intc-irqpin-r8a7740",
->> +                            "renesas,intc-irqpin";
->> +               #interrupt-cells = <2>;
->> +               interrupt-controller;
->> +               reg = <0xe6900004 4>,
->> +                       <0xe6900014 4>,
->> +                       <0xe6900024 1>,
->> +                       <0xe6900044 1>,
->> +                       <0xe6900064 1>;
->> +               interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH
->> +                             0 149 IRQ_TYPE_LEVEL_HIGH>;
->
->    Hm, 8 similar interrupts?
-
-Yes, all interrupts are wired to the same parent on r8a7740.
-However, the binding docs indeed don't mention that there should be
-one entry per interrupt handled by the module. I'll fix that, too.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
