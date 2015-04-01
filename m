@@ -1,86 +1,35 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery bindings
-Date: Wed, 1 Apr 2015 11:30:37 -0500
-Message-ID: <CAL_JsqL1hMmp-cj56xDKJtdnySgLyCMJtmKVaLLtn=ALKUE8=g@mail.gmail.com>
-References: <1426022847-30912-1-git-send-email-marek@goldelico.com> <1426022847-30912-4-git-send-email-marek@goldelico.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v1] ata: ahci_xgene: Add AHCI Support for second
+ generation of APM X-Gene SoC
+Date: Wed, 1 Apr 2015 12:31:16 -0400
+Message-ID: <20150401163116.GT9974@htj.duckdns.org>
+References: <1427899682-10912-1-git-send-email-stripathi@apm.com>
+ <1427899682-10912-2-git-send-email-stripathi@apm.com>
+ <20150401161336.GS9974@htj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426022847-30912-4-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, hns@goldelico.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150401161336.GS9974@htj.duckdns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2015 at 4:27 PM, Marek Belisko <marek@goldelico.com> wrote:
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
->  .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->
-> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
-> new file mode 100644
-> index 0000000..d3dd9d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
-> @@ -0,0 +1,43 @@
-> +twl4030_madc_battery
-> +
-> +Required properties:
-> + - compatible : "ti,twl4030-madc-battery"
+On Wed, Apr 01, 2015 at 12:13:36PM -0400, Tejun Heo wrote:
+> > Signed-off-by : Suman Tripathi <stripathi@apm.com>
+> 
+> Applied to libata/for-4.1 w/ minor edit.
 
-Is this a sub-node of the twl4030 or something? Please define where
-this fits (hint: I would expect to be a sub node of a charging
-controller or battery monitor).
+Reverted due to build failure from missing asm/cputype.h.  Suman,
+you're the develper and familiar with how the prerequisite patches are
+flowing where.  When sending patches to maintainers, please let them
+know how to deal with your patches.  Having cross-tree dependencies
+are fine, there are multiple ways to deal with that but please don't
+just drop patches which will fail build and see what happens.  Please
+help us do our job.
 
-> + - capacity-uah : battery capacity in uAh
-> + - ti,volt-to-capacity-charging-map : list of voltage(mV):level(%) values
-> +       for charging calibration (see example)
-> + - ti,volt-to-capacity-discharging-map : list of voltage(mV):level(%) values
-> +       for discharging calibration (see example)
+Thanks.
 
-These seem like properties of the battery independent of the
-battery/charging controller which is the twl4030. Ideally we would
-define battery nodes generically and independent of the charge
-controllers. Then there are smart batteries to consider too.
-
-Rob
-
-> + - io-channels: Should contain IIO channel specifiers
-> +       for each element in io-channel-names.
-> +- io-channel-names: Should contain the following values:
-> + * "temp" - The ADC channel for temperature reading
-> + * "ichg" - The ADC channel for battery charging status
-> + * "vbat" - The ADC channel to measure the battery voltage
-> +
-> +Example:
-> +       madc-battery {
-> +               compatible = "ti,twl4030-madc-battery";
-> +               capacity-uah = <1200000>;
-> +               ti,volt-to-capacity-charging-map = <4200 100>,
-> +                                               <4100 75>,
-> +                                               <4000 55>,
-> +                                               <3900 25>,
-> +                                               <3800 5>,
-> +                                               <3700 2>,
-> +                                               <3600 1>,
-> +                                               <3300 0>;
-> +
-> +               ti,volt-to-capacity-discharging-map = <4200 100>
-> +                                                  <4100 95>,
-> +                                                  <4000 70>,
-> +                                                  <3800 50>,
-> +                                                  <3700 10>,
-> +                                                  <3600 5>,
-> +                                                  <3300 0>;
-> +               io-channels = <&twl_madc 1>,
-> +                             <&twl_madc 10>,
-> +                             <&twl_madc 12>;
-> +               io-channel-names = "temp",
-> +                                  "ichg",
-> +                                  "vbat";
-> +       };
-> --
-> 1.9.1
->
+-- 
+tejun
