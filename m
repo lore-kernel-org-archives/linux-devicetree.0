@@ -1,94 +1,55 @@
-From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] clk: Provide always-on clock support
-Date: Tue, 31 Mar 2015 18:42:18 -0700
-Message-ID: <20150401014218.25195.61119@quantum>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
- <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
- <CAJe_Zhf=GBb8AfnTLaGxGcZkVSm9TtdnTsmpH_MBmbMT8ViMDg@mail.gmail.com>
- <20150302083652.GE31325@x1>
- <CABb+yY07woiiG8e2kff_AsiFCHNP+TKYyNm_o6=f5WmFsLi8gQ@mail.gmail.com>
- <20150302101859.GB32347@x1>
- <CAJe_Zhc-94afeWegEeOoL3X13y35MDJvqME1x7XMy3vVVXYedg@mail.gmail.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Wed, 1 Apr 2015 10:11:17 +0800
+Message-ID: <1427854277.21285.15.camel@mtksdaap41>
+References: <1426917922-61356-1-git-send-email-eddie.huang@mediatek.com>
+	 <1426917922-61356-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150323084237.GG9742@pengutronix.de>
+	 <1427703252.26464.14.camel@mtksdaap41>
+	 <20150330172309.GB9742@pengutronix.de>
+	 <1427785715.3500.16.camel@mtksdaap41> <1427802658.32196.8.camel@mtksdaap41>
+	 <20150331175234.GK9742@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_Zhc-94afeWegEeOoL3X13y35MDJvqME1x7XMy3vVVXYedg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150331175234.GK9742-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Xudong Chen =?UTF-8?Q?=28=E9=99=88=E6=97=AD=E4=B8=9C=29?= <Xudong.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Liguo Zhang =?UTF-8?Q?=28=E5=BC=A0=E7=AB=8B=E5=9B=BD=29?= <Liguo.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Uwe Kleine-Konig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Beniamino Galvani <b.ga>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jassi Brar (2015-03-02 02:28:44)
-> On 2 March 2015 at 15:48, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Mon, 02 Mar 2015, Jassi Brar wrote:
-> >
-> >> On Mon, Mar 2, 2015 at 2:06 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> > On Sat, 28 Feb 2015, Jassi Brar wrote:
-> >> >
-> >> >> On 28 February 2015 at 02:44, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> >> > Lots of platforms contain clocks which if turned off would prove fatal.
-> >> >> > The only way to recover from these catastrophic failures is to restart
-> >> >> > the board(s).  Now, when a clock is registered with the framework it is
-> >> >> > compared against a list of provided always-on clock names which must be
-> >> >> > kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSED
-> >> >> > flag, which will prevent the common clk framework from attempting to
-> >> >> > gate it during the clk_disable_unused() procedure.
-> >> >> >
-> >> >> If a clock is critical on a certain board, it could be got+enabled
-> >> >> during early boot so there is always a user.
-> >> >
-> >> > I tried this.  There was push-back from the DT maintainers.
-> >> >
-> >> >   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/324417.html
-> >> >
-> >> Thanks, I wasn't aware of the history.
-> >>
-> >> >> To be able to do that from DT, maybe add a new, say, CLK_ALWAYS_ON
-> >> >> flag could be made to initialize the clock with one phantom user
-> >> >> already. Or just reuse the CLK_IGNORE_UNUSED?
-> >> >
-> >> > How is that different to what this set is doing?
-> >> >
-> >> The phantom user - that's there but none can see it.
-> >>
-> >> How about?
-> >>
-> >> +       of_property_for_each_string(np, "clock-always-on", prop, clkname) {
-> >> +               clk = __clk_lookup(clkname);
-> >> +               if (!clk)
-> >> +                       continue;
-> >> +
-> >> +               clk->core->enable_count = 1;
-> >> +               clk->core->prepare_count = 1;
-> >> +       }
-> >
-> > This is only fractionally different from the current implementation.
-> >
-> > I believe the current way it slightly nicer, as we don't have to fake
-> > the user count.
-> >
-> Well... the user is indeed there, isn't it? It's just not known to
-> Linux. So 'fake' isn't most applicable here.
-> Otherwise you might have to stub out some existing and future
-> functions for CLK_IGNORE_UNUSED. And how do we explain to userspace
-> which would see power drawn but no user of the clock?
+Hi Sascha,
 
-Jassi,
-
-This is broken. What if the parent of this clock has
-{enable,prepare}_count of zero? The way we propagate these refcounts up
-the tree would fall over.
-
-Regards,
-Mike
-
+On Tue, 2015-03-31 at 19:52 +0200, Sascha Hauer wrote:
+> On Tue, Mar 31, 2015 at 07:50:58PM +0800, Eddie Huang wrote:
+> > Hi Sascha,
+> > 
+> > On Tue, 2015-03-31 at 15:08 +0800, Eddie Huang wrote:
+> > > Hi Sascha,
+> > > 
+> > > > > > speed <= 400000 here to make this more obvious?
+> > > > > There are two cases, not only speed<=400000, but I2C_MASTER_WRRD. I tend
+> > > > > to keep it.
+> > > >
+> > > > Still it looks strange. You only ever write this default value to the
+> > > > register. Putting this register write under an if() seems bogus since
+> > > > the same value will be in the register the next time this code is
+> > > > executed. It looks like you should move this register write to some
+> > > > initialization function.
+> > > OK, move to mtk_i2c_init_hw function
+> > > 
+> > Sorry for my negligence. Write-then-read (I2C_MASTER_WRRD) decides
+> > according to each I2C transfer, so I still need to judge whether set
+> > I2C_CONTROL_RS and DELAY_LEN here. Other control setting can move to
+> > init function.
 > 
-> Anways, I am OK either way.
+> You need to decide whether you have to set the I2C_CONTROL_RS bit, but
+> you don't need to write the same value to the DELAY_LEN register each
+> time. It won't change under your hood.
 > 
-> Cheers!
-> Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, you are right. DELAY_LEN should only be set one time in init
+function. Thanks your correction.
+
+Eddie
