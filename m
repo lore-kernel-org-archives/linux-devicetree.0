@@ -1,82 +1,79 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] extcon: usb-gpio: make debounce value configurable
- in devicetree
-Date: Wed, 1 Apr 2015 14:32:32 +0300
-Message-ID: <551BD750.4090901@ti.com>
-References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com> <1427873005-24024-4-git-send-email-r.baldyga@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 4/4] Documentation: extcon: usb-gpio: update usb-gpio
+ binding description
+Date: Wed, 1 Apr 2015 14:33:23 +0300
+Message-ID: <551BD783.9060109@ti.com>
+References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com> <1427873005-24024-5-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427873005-24024-4-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1427873005-24024-5-git-send-email-r.baldyga@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 On 01/04/15 10:23, Robert Baldyga wrote:
-> This patch adds devicetree property for setting debounce value. It allows
-> to set debounce time shorter or longer depending on the needs of given
-> platform.
+> Add information about VBUS pin detection support, 'debounce' property
+> and some other details.
 > 
-> Signed-off-by: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
 
-Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Acked-by: Roger Quadros <rogerq@ti.com>
 
 cheers,
 -roger
 
 > ---
->  drivers/extcon/extcon-usb-gpio.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt | 28 ++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-> index c842715..439ca99 100644
-> --- a/drivers/extcon/extcon-usb-gpio.c
-> +++ b/drivers/extcon/extcon-usb-gpio.c
-> @@ -114,6 +114,7 @@ static int usb_extcon_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np = dev->of_node;
->  	struct usb_extcon_info *info;
-> +	u32 debounce;
->  	int ret;
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> index af0b903..7096f39 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> @@ -1,16 +1,40 @@
+>  USB GPIO Extcon device
 >  
->  	if (!np)
-> @@ -124,6 +125,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	info->dev = dev;
+> -This is a virtual device used to generate USB cable states from the USB ID pin
+> -connected to a GPIO pin.
+> +This is a virtual device used to generate USB cable states from the USB
+> +ID and VBUS signals connected to GPIO pins.
 > +
-> +	ret = of_property_read_u32(np, "debounce", &debounce);
-> +	if (ret < 0)
-> +		debounce = USB_GPIO_DEBOUNCE_MS;
+> +The extcon cable states USB and USB_HOST are actually VBUS and !ID
+> +pin states and do not indicate what mode the USB needs to operate in.
+> +That decision is done by the USB stack.
 > +
->  	info->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id");
->  	info->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus");
+> +Some devices have only one of these GPIO pins, so we support cases when
+> +only one of them is present. Hence properties 'id-gpio' and 'vbus-gpio'
+> +are described as optional, but at least one of them has to be present
+> +in extcon-usb-gpio node.
+> +
+> +In general we have three cases:
+> +1. If VBUS and ID gpios are present we pass them as is
+> +	USB-HOST = !ID, USB = VBUS
+> +2. If only VBUS gpio is present we assume that ID pin is always High.
+> +	USB-HOST = false, USB = VBUS.
+> +3. If only ID pin is available we infer the VBUS pin states based on ID.
+> +	USB-HOST = !ID, USB = ID
 >  
-> @@ -145,16 +151,14 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  Required properties:
+>  - compatible: Should be "linux,extcon-usb-gpio"
+> +
+> +Optional properties
+>  - id-gpio: gpio for USB ID pin. See gpio binding.
+> +- vbus-gpio: gpio for USB VBUS pin. See gpio binding.
+> +- debounce: gpio debounce time in milliseconds (u32).
+> +
+>  
+>  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
+>  	extcon_usb1 {
+>  		compatible = "linux,extcon-usb-gpio";
+>  		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+> +		vbus-gpio = <&gpio6 2 GPIO_ACTIVE_HIGH>;
+> +		debounce = <25>;
 >  	}
 >  
->  	if (info->id_gpiod)
-> -		ret = gpiod_set_debounce(info->id_gpiod,
-> -			USB_GPIO_DEBOUNCE_MS * 1000);
-> +		ret = gpiod_set_debounce(info->id_gpiod, debounce * 1000);
->  	if (!ret && info->vbus_gpiod) {
-> -		ret = gpiod_set_debounce(info->vbus_gpiod,
-> -			USB_GPIO_DEBOUNCE_MS * 1000);
-> +		ret = gpiod_set_debounce(info->vbus_gpiod, debounce * 1000);
->  		if (ret < 0 && info->id_gpiod)
->  			gpiod_set_debounce(info->vbus_gpiod, 0);
->  	}
->  	if (ret < 0)
-> -		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
-> +		info->debounce_jiffies = msecs_to_jiffies(debounce);
->  
->  	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->  
+>  	&omap_dwc3_1 {
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
