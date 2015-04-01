@@ -1,81 +1,57 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] ARM: kexec: Relax SMP validation to improve DT compatibility
-Date: Wed,  1 Apr 2015 14:30:47 +0200
-Message-ID: <1427891447-30695-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Stephen Warren <swarren@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Vianney le =?iso-8859-1?q?Cl=E9ment?=
+	<vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
+Date: Wed, 1 Apr 2015 15:25:36 +0200
+Message-ID: <1427894736.2449.2@mail.essensium.com>
+References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
+	<CAOMZO5DM66sUX-YojCyY5BC3Pdk4p4bkEqQ+W3tyDeNEL6nU5w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5DM66sUX-YojCyY5BC3Pdk4p4bkEqQ+W3tyDeNEL6nU5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When trying to kexec into a new kernel on a platform where multiple CPU
-cores are present, but no SMP bringup code is available yet, the
-kexec_load system call fails with:
+On Wed, Apr 1, 2015 at 1:39 , Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Apr 1, 2015 at 5:10 AM, Vianney le Cl=C3=A9ment de Saint-Marc=
+q
+> <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org> wrote:
+>>  Add device tree for the Embest/Element 14 MarS Board [1], an i.MX6=20
+>> Dual
+>>  based development board.
+>>=20
+>>  The e-MMC chip is disabled because initialization fails (error=20
+>> -110).
+>>  A possible cause is described in [2].
+>>=20
+>>  [1] http://www.embest-tech.com/shop/star/marsboard.html
+>>  [2] https://community.freescale.com/message/442168#442168
+>>=20
+>>  Signed-off-by: Vianney le Cl=C3=A9ment de Saint-Marcq=20
+>> <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+>=20
+> Couldn't this be combined with the existing
+> arch/arm/boot/dts/imx6dl-riotboard.dts?
 
-    kexec_load failed: Invalid argument
+While both boards do indeed share a lot of the schematics, the=20
+marsboard has some differences, e.g., in pin configuration, that=20
+requires a separate dts.  We could split common parts out in a new=20
+dtsi, but I am not sure it is worth the hassle.
 
-The SMP test added to machine_kexec_prepare() in commit 2103f6cba61a8b8b
-("ARM: 7807/1: kexec: validate CPU hotplug support") wants to prohibit
-kexec on SMP platforms where it cannot disable secondary CPUs.
-However, this test is too strict: if the secondary CPUs couldn't be
-enabled in the first place, there's no need to disable them later at
-kexec time.  Hence skip the test in the absence of SMP bringup code.
+Regards,
+Vianney
 
-This allows to add all CPU cores to the DTS from the beginning, without
-having to implement SMP bringup first, improving DT compatibility.
+Vianney le Cl=C3=A9ment de Saint-Marcq
+Embedded Software Developper =C2=B7 +32 485 84 55 05
+Essensium, Mind division =C2=B7 www.mind.be
+GPG: 727B CFE9 355F 1B02 0820 EE1C 9042 3E07 A804 0316
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Stephen Warren <swarren@nvidia.com>
----
-v2:
-  - Add Acked-by.
----
- arch/arm/include/asm/smp_plat.h | 1 +
- arch/arm/kernel/machine_kexec.c | 3 ++-
- arch/arm/kernel/smp.c           | 5 +++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
-index 0ad7d490ee6f2657..993e5224d8f7eeeb 100644
---- a/arch/arm/include/asm/smp_plat.h
-+++ b/arch/arm/include/asm/smp_plat.h
-@@ -104,6 +104,7 @@ static inline u32 mpidr_hash_size(void)
- 	return 1 << mpidr_hash.bits;
- }
- 
-+extern int platform_can_secondary_boot(void);
- extern int platform_can_cpu_hotplug(void);
- 
- #endif
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index de2b085ad7535da7..8bf3b7c098881b95 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -46,7 +46,8 @@ int machine_kexec_prepare(struct kimage *image)
- 	 * and implements CPU hotplug for the current HW. If not, we won't be
- 	 * able to kexec reliably, so fail the prepare operation.
- 	 */
--	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
-+	if (num_possible_cpus() > 1 && platform_can_secondary_boot() &&
-+	    !platform_can_cpu_hotplug())
- 		return -EINVAL;
- 
- 	/*
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 86ef244c5a24b4fa..cca5b87581855244 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -145,6 +145,11 @@ void __init smp_init_cpus(void)
- 		smp_ops.smp_init_cpus();
- }
- 
-+int platform_can_secondary_boot(void)
-+{
-+	return !!smp_ops.smp_boot_secondary;
-+}
-+
- int platform_can_cpu_hotplug(void)
- {
- #ifdef CONFIG_HOTPLUG_CPU
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
