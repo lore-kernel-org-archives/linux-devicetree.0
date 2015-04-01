@@ -1,35 +1,52 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH_V4 0/3] dma: dt: Add DMA driver for jz4780
-Date: Wed, 1 Apr 2015 08:45:06 +0530
-Message-ID: <20150401031506.GQ7192@intel.com>
-References: <1426695397-54906-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [Patch v6 2/2] dmaengine: Add ADM driver
+Date: Wed, 1 Apr 2015 09:02:30 +0530
+Message-ID: <20150401033230.GS7192@intel.com>
+References: <1426571172-9711-1-git-send-email-agross@codeaurora.org>
+ <1426571172-9711-3-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1426695397-54906-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org
+In-Reply-To: <1426571172-9711-3-git-send-email-agross@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2015 at 04:16:34PM +0000, Zubair Lutfullah Kakakhel wrote:
-> Hi,
-> 
-> Here we have three patches that add a DMA driver for the Ingenic JZ4780 SoC.
-> 
-> JZ4780 support is still in-flight.
-> 
-> These are based on 4.0-rc4.
+On Tue, Mar 17, 2015 at 12:46:12AM -0500, Andy Gross wrote:
 
-Applied, thanks
-
-Please ensure you use the right subsystem name in your patches, I have fixed
-it up now
+> +static enum dma_status adm_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+> +	struct dma_tx_state *txstate)
+> +{
+> +	struct adm_chan *achan = to_adm_chan(chan);
+> +	struct virt_dma_desc *vd;
+> +	enum dma_status ret;
+> +	unsigned long flags;
+> +	size_t residue = 0;
+> +
+> +	ret = dma_cookie_status(chan, cookie, txstate);
+> +	if (ret == DMA_COMPLETE || !txstate)
+> +		return ret;
+> +
+> +	spin_lock_irqsave(&achan->vc.lock, flags);
+> +
+> +	vd = vchan_find_desc(&achan->vc, cookie);
+> +	if (vd)
+> +		residue = container_of(vd, struct adm_async_desc, vd)->length;
+> +
+> +	spin_unlock_irqrestore(&achan->vc.lock, flags);
+> +
+> +	/*
+> +	 * residue is either the full length if it is in the issued list, or 0
+> +	 * if it is in progress.  We have no reliable way of determining
+> +	 * anything inbetween
+> +	*/
+> +	dma_set_residue(txstate, residue);
+> +
+> +	if (achan->error)
+> +		return DMA_ERROR;
+but this may not be for the current descriptor right, which is queued?
 
 -- 
 ~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
