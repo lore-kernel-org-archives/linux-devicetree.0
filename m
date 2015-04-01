@@ -1,316 +1,43 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH RFC v2 05/12] drm/components: add generic vga connector driver
-Date: Wed,  1 Apr 2015 12:09:39 +0200
-Message-ID: <1427882986-19110-6-git-send-email-heiko@sntech.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH RFC v2 04/12] drm/components: add generic vga encoder
+ driver
+Date: Wed, 1 Apr 2015 11:27:51 +0100
+Message-ID: <20150401102751.GZ24899@n2100.arm.linux.org.uk>
 References: <1427882986-19110-1-git-send-email-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427882986-19110-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+ <1427882986-19110-5-git-send-email-heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427882986-19110-5-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a driver for generic vga connectors using a system i2c-bus for ddc.
+On Wed, Apr 01, 2015 at 12:09:38PM +0200, Heiko Stuebner wrote:
+> This adds a driver for generic vga encoders like the Analog Devices adv7123
+> and similar ics. These chips do not have any special configuration options
+> except a powersafe gpio.
+> 
+> An exception is added for the rcar-du driver which also implements support
+> for the adv7123 internally but is not yet converted to the component framework.
 
-An exception is included for rcar-du which implements the vga-connector
-binding interally already and is not yet converted to the component framework.
+Why is this implemented as a master?  It's not the top level card device,
+it shouldn't be a master.  It should be a component.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- drivers/gpu/drm/components/Kconfig         |   6 +
- drivers/gpu/drm/components/Makefile        |   1 +
- drivers/gpu/drm/components/vga-connector.c | 254 +++++++++++++++++++++++++++++
- 3 files changed, 261 insertions(+)
- create mode 100644 drivers/gpu/drm/components/vga-connector.c
+I wonder if this is why you need your previous patches.  Componentised
+DRM works fine without needing to build lists of connectors and encoders.
 
-diff --git a/drivers/gpu/drm/components/Kconfig b/drivers/gpu/drm/components/Kconfig
-index 647cea6..8424143 100644
---- a/drivers/gpu/drm/components/Kconfig
-+++ b/drivers/gpu/drm/components/Kconfig
-@@ -6,4 +6,10 @@ config DRM_COMPONENTS_VGA_ENCODER
- 	help
- 	  Support for generic vga encoder chips without any special controls.
- 
-+config DRM_COMPONENTS_VGA_CONNECTOR:
-+	tristate "Generic vga connector"
-+	help
-+	  Support for simple vga connectors using a system i2c bus
-+	  for ddc.
-+
- endmenu
-diff --git a/drivers/gpu/drm/components/Makefile b/drivers/gpu/drm/components/Makefile
-index 719b1c9..2ff64da 100644
---- a/drivers/gpu/drm/components/Makefile
-+++ b/drivers/gpu/drm/components/Makefile
-@@ -1,3 +1,4 @@
- ccflags-y := -Iinclude/drm
- 
- obj-$(CONFIG_DRM_COMPONENTS_VGA_ENCODER) += vga-encoder.o
-+obj-$(CONFIG_DRM_COMPONENTS_VGA_CONNECTOR) += vga-connector.o
-diff --git a/drivers/gpu/drm/components/vga-connector.c b/drivers/gpu/drm/components/vga-connector.c
-new file mode 100644
-index 0000000..400ceb7
---- /dev/null
-+++ b/drivers/gpu/drm/components/vga-connector.c
-@@ -0,0 +1,254 @@
-+/*
-+ * Simple vga encoder driver
-+ *
-+ * Copyright (C) 2014 Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/component.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/of_graph.h>
-+#include <drm/drm_of.h>
-+#include <drm/drmP.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_edid.h>
-+
-+#define connector_to_vga_connector(x) container_of(x, struct vga_connector, connector)
-+
-+struct vga_connector {
-+	struct drm_connector connector;
-+	struct device *dev;
-+	struct i2c_adapter *ddc;
-+	struct drm_encoder *encoder;
-+};
-+
-+enum drm_connector_status vga_connector_detect(struct drm_connector *connector,
-+					    bool force)
-+{
-+	struct vga_connector *vga = connector_to_vga_connector(connector);
-+
-+	if (!vga->ddc)
-+		return connector_status_unknown;
-+
-+	if (drm_probe_ddc(vga->ddc))
-+		return connector_status_connected;
-+
-+	return connector_status_disconnected;
-+}
-+
-+void vga_connector_connector_destroy(struct drm_connector *connector)
-+{
-+	drm_connector_unregister(connector);
-+	drm_connector_cleanup(connector);
-+}
-+
-+struct drm_connector_funcs vga_connector_connector_funcs = {
-+	.dpms = drm_helper_connector_dpms,
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.detect = vga_connector_detect,
-+	.destroy = vga_connector_connector_destroy,
-+};
-+
-+/*
-+ * Connector helper functions
-+ */
-+
-+static int vga_connector_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct vga_connector *vga = connector_to_vga_connector(connector);
-+	struct edid *edid;
-+	int ret = 0;
-+
-+	if (!vga->ddc)
-+		return 0;
-+
-+	edid = drm_get_edid(connector, vga->ddc);
-+	if (edid) {
-+		drm_mode_connector_update_edid_property(connector, edid);
-+		ret = drm_add_edid_modes(connector, edid);
-+		kfree(edid);
-+	}
-+
-+	return ret;
-+}
-+
-+static int vga_connector_connector_mode_valid(struct drm_connector *connector,
-+					struct drm_display_mode *mode)
-+{
-+	return MODE_OK;
-+}
-+
-+static struct drm_encoder
-+*vga_connector_connector_best_encoder(struct drm_connector *connector)
-+{
-+	struct vga_connector *vga = connector_to_vga_connector(connector);
-+
-+	return vga->encoder;
-+}
-+
-+static struct drm_connector_helper_funcs vga_connector_connector_helper_funcs = {
-+	.get_modes = vga_connector_connector_get_modes,
-+	.best_encoder = vga_connector_connector_best_encoder,
-+	.mode_valid = vga_connector_connector_mode_valid,
-+};
-+
-+
-+static int vga_connector_bind(struct device *dev, struct device *master,
-+				 void *data)
-+{
-+	struct vga_connector *vga = dev_get_drvdata(dev);
-+	struct drm_device *drm = data;
-+	struct device_node *endpoint, *encp = NULL;
-+
-+	vga->connector.polled = DRM_CONNECTOR_POLL_CONNECT |
-+				DRM_CONNECTOR_POLL_DISCONNECT;
-+
-+	drm_connector_helper_add(&vga->connector,
-+				 &vga_connector_connector_helper_funcs);
-+	drm_connector_init(drm, &vga->connector, &vga_connector_connector_funcs,
-+			   DRM_MODE_CONNECTOR_VGA);
-+
-+	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (endpoint)
-+		encp = of_graph_get_remote_port_parent(endpoint);
-+	of_node_put(endpoint);
-+
-+	if (!encp)
-+		return -ENODEV;
-+
-+	vga->encoder = of_drm_find_encoder(encp);
-+	of_node_put(encp);
-+
-+	if (!vga->encoder)
-+		return -EPROBE_DEFER;
-+
-+	drm_mode_connector_attach_encoder(&vga->connector, vga->encoder);
-+
-+	return 0;
-+}
-+
-+static void vga_connector_unbind(struct device *dev, struct device *master,
-+				    void *data)
-+{
-+	struct vga_connector *vga = dev_get_drvdata(dev);
-+
-+	vga->connector.funcs->destroy(&vga->connector);
-+}
-+
-+static const struct component_ops vga_connector_ops = {
-+	.bind = vga_connector_bind,
-+	.unbind = vga_connector_unbind,
-+};
-+
-+static int vga_connector_probe(struct platform_device *pdev)
-+{
-+	struct device_node *ddc_node, *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct vga_connector *vga;
-+	int ret;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	vga = devm_kzalloc(dev, sizeof(*vga), GFP_KERNEL);
-+	if (!vga)
-+		return -ENOMEM;
-+
-+	vga->dev = dev;
-+	vga->connector.of_node = np;
-+
-+	dev_set_drvdata(dev, vga);
-+
-+	ddc_node = of_parse_phandle(np, "ddc-i2c-bus", 0);
-+	if (ddc_node) {
-+		vga->ddc = of_find_i2c_adapter_by_node(ddc_node);
-+		of_node_put(ddc_node);
-+		if (!vga->ddc) {
-+			dev_dbg(vga->dev, "failed to read ddc node\n");
-+			return -EPROBE_DEFER;
-+		}
-+	} else {
-+		dev_dbg(vga->dev, "no ddc property found\n");
-+	}
-+
-+	ret = drm_connector_add(&vga->connector);
-+	if (ret < 0)
-+		return ret;
-+
-+	return component_add(dev, &vga_connector_ops);
-+}
-+
-+static int vga_connector_remove(struct platform_device *pdev)
-+{
-+	struct vga_connector *vga = dev_get_drvdata(&pdev->dev);
-+
-+	component_del(&pdev->dev, &vga_connector_ops);
-+	drm_connector_remove(&vga->connector);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id vga_connector_ids[] = {
-+	{ .compatible = "vga-connector", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, vga_connector_ids);
-+
-+static struct platform_driver vga_connector_driver = {
-+	.probe  = vga_connector_probe,
-+	.remove = vga_connector_remove,
-+	.driver = {
-+		.name = "vga-connector",
-+		.of_match_table = vga_connector_ids,
-+	},
-+};
-+
-+static const struct of_device_id rcar_du_of_table[] = {
-+	{ .compatible = "renesas,du-r8a7779" },
-+	{ .compatible = "renesas,du-r8a7790" },
-+	{ .compatible = "renesas,du-r8a7791" },
-+	{ }
-+};
-+
-+static int __init vga_connector_init(void)
-+{
-+	struct device_node *np;
-+
-+	/*
-+	 * Play nice with rcar-du that is having its own implementation
-+	 * of the vga-connector binding implementation and is not yet
-+	 * converted to using components.
-+	 */
-+	np = of_find_matching_node(NULL, rcar_du_of_table);
-+	if (np) {
-+		of_node_put(np);
-+		return 0;
-+	}
-+
-+	return platform_driver_register(&vga_connector_driver);
-+}
-+
-+static void __exit vga_connector_exit(void)
-+{
-+	platform_driver_unregister(&vga_connector_driver);
-+}
-+
-+module_init(vga_connector_init);
-+module_exit(vga_connector_exit);
-+
-+MODULE_AUTHOR("Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>");
-+MODULE_DESCRIPTION("Simple vga converter");
-+MODULE_LICENSE("GPL");
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
