@@ -1,74 +1,43 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 1/3] dt-bindings: Add I2C bindings for mt65xx/mt81xx.
-Date: Wed, 1 Apr 2015 13:29:47 +0800
-Message-ID: <1427866189-19262-2-git-send-email-eddie.huang@mediatek.com>
-References: <1427866189-19262-1-git-send-email-eddie.huang@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add phy-miphy28lp.c to ARCH/STI architecture
+Date: Wed, 1 Apr 2015 11:27:57 +0530
+Message-ID: <551B88E5.1090501@ti.com>
+References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org> <1427728632-10846-7-git-send-email-peter.griffin@linaro.org> <551AC831.2000108@ti.com> <20150331174011.GA16741@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427866189-19262-1-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jim Cromie <jim.cromie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Liguo Zhang <liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150331174011.GA16741@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, balbi@ti.com, lee.jones@linaro.org, devicetree@vger.kernel.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi,
 
-Add devicetree bindings for Mediatek Soc I2C driver.
+On Tuesday 31 March 2015 11:10 PM, Peter Griffin wrote:
+> Hi Kishon,
+>
+> On Tue, 31 Mar 2015, Kishon Vijay Abraham I wrote:
+> <snip>
+>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 1de6afa..fa1bb4f 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -1469,6 +1469,7 @@ F:	drivers/clocksource/arm_global_timer.c
+>>>   F:	drivers/i2c/busses/i2c-st.c
+>>>   F:	drivers/media/rc/st_rc.c
+>>>   F:	drivers/mmc/host/sdhci-st.c
+>>> +F:	drivers/phy/phy-miphy28lp.c
+>>
+>> add for miphy365x.c as well?
+>
+> Yes we should also be adding miphy365x.c as well.
+>
+> Would you like me to send a seperate patch for that?
 
-Signed-off-by: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-mt6577.txt         | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+you can send an update to this patch. Haven't merged this one yet.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-new file mode 100644
-index 0000000..0ce6fa3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-@@ -0,0 +1,41 @@
-+* Mediatek's I2C controller
-+
-+The Mediatek's I2C controller is used to interface with I2C devices.
-+
-+Required properties:
-+  - compatible: value should be either of the following.
-+      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
-+      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
-+      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
-+      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
-+      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
-+  - reg: physical base address of the controller and dma base, length of memory
-+    mapped region.
-+  - interrupts: interrupt number to the cpu.
-+  - clock-div: the fixed value for frequency divider of clock source in i2c
-+    module. Each IC may be different.
-+  - clocks: clock name from clock manager
-+  - clock-names: Must include "main" and "dma", if enable have-pmic need include
-+    "pmic" extra.
-+
-+Optional properties:
-+  - clock-frequency: Frequency in Hz of the bus when transfer, the default value
-+    is 100000.
-+  - mediatek,have-pmic: platform can control i2c form special pmic side.
-+    Only mt6589 and mt8135 support this feature.
-+  - mediatek,use-push-pull: IO config use push-pull mode.
-+
-+Example:
-+
-+	i2c0: i2c@1100d000 {
-+			compatible = "mediatek,mt6577-i2c";
-+			reg = <0x1100d000 0x70>,
-+			      <0x11000300 0x80>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-+			clock-frequency = <400000>;
-+			mediatek,have-pmic;
-+			clock-div = <16>;
-+			clocks = <&i2c0_ck>, <&ap_dma_ck>;
-+			clock-names = "main", "dma";
-+	};
-+
--- 
-1.8.1.1.dirty
+Thanks
+Kishon
