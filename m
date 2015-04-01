@@ -1,44 +1,43 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v1] ata: ahci_xgene: Add AHCI Support for second
- generation of APM X-Gene SoC
-Date: Wed, 1 Apr 2015 17:39:56 +0100
-Message-ID: <20150401163956.GE24899@n2100.arm.linux.org.uk>
-References: <1427899682-10912-1-git-send-email-stripathi@apm.com>
- <1427899682-10912-2-git-send-email-stripathi@apm.com>
- <20150401161336.GS9974@htj.duckdns.org>
- <20150401163116.GT9974@htj.duckdns.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
+Date: Wed, 1 Apr 2015 11:43:39 -0500
+Message-ID: <CAL_JsqLCjkrb2gT-_hj-UTAs+qn2LZtEm=f_C05ovhdwkZKB-A@mail.gmail.com>
+References: <cover.1423642246.git.viresh.kumar@linaro.org> <CAKohpokDhHo1ftcB6b4b+hO125_sqjK0NKESt79GVcWEwiq04w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150401163116.GT9974-piEFEHQLUPpN0TnZuCh8vA@public.gmane.org>
+In-Reply-To: <CAKohpokDhHo1ftcB6b4b+hO125_sqjK0NKESt79GVcWEwiq04w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2015 at 12:31:16PM -0400, Tejun Heo wrote:
-> On Wed, Apr 01, 2015 at 12:13:36PM -0400, Tejun Heo wrote:
-> > > Signed-off-by : Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-> > 
-> > Applied to libata/for-4.1 w/ minor edit.
-> 
-> Reverted due to build failure from missing asm/cputype.h.
+On Wed, Apr 1, 2015 at 1:22 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 11 February 2015 at 13:46, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Now that I have received an verbal Ack from Rob Herring (in a personal
+>> conversation) about the bindings, I am showing how the code looks like with
+>> these new bindings.
 
-I'm guessing this is some kind of ARM driver, which is why
-linux-arm-kernel has been Cc'd - though I haven't seen the original
-patch.
+I have also told you multiple times I want to see others' inputs and
+acks. So yes it looks fine to me, but I am not a user of it.
 
-ARM has asm/cputype.h, and has had for a long time, so "missing
-asm/cputype.h" doesn't make sense as a reason to revert it.  Maybe
-it's trying to be built on x86 when it should be restricted to
-only ARM?
+>> Some part is still now done:
+>> - Interface for adding new detailed OPPs from platform code instead of DT
+>> - Providing cpufreq helpers for the next OPPs
+>> - Providing regulator helpers for the target/min/max ranges
+>>
+>> Please provide feedback on how this looks like..
+>
+> @Rafael: Its been two months now since this was posted. Can we get this
+> merged please? If someone finds issues later, we can go fix them ..
 
-Dunno without seeing the original patch.
+If there are users waiting for this, then get their acks first. As you
+already know, I spoke to Stephen at ELC and he still has concerns
+about it. As Qualcomm is probably the most complicated case, it needs
+to work for them (or we accept that it can't and they do everything
+their own way).
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
