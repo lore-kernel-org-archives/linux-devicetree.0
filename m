@@ -1,78 +1,42 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun5i: Enable touchscreen on Utoo P66
-Date: Wed,  1 Apr 2015 17:29:37 +0200
-Message-ID: <1427902177-26526-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ahci: st: st_configure_oob must be called after IP
+ is clocked.
+Date: Wed, 1 Apr 2015 12:07:44 -0400
+Message-ID: <20150401160744.GR9974@htj.duckdns.org>
+References: <1427787309-1601-1-git-send-email-peter.griffin@linaro.org>
+ <1427787309-1601-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB2E56CUAKGQECEPOFXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427787309-1601-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the chipone-icn8318 touchscreen found on the Utoo P66 tablet.
+On Tue, Mar 31, 2015 at 08:35:09AM +0100, Peter Griffin wrote:
+> Currently the ahci_st driver will hang the system on probe, as the
+> st_configure_oob function does some register writes before the IP
+> is clocked. This patch moves the function call to after
+> ahci_platform_enable_resources (which enables the IP clock), and
+> resolves the hang.
+> 
+> Addtionally st_ahci_configure_oob should be called in the st_ahci_resume
+> function, so we also rectify that ensuring it is also called after
+> the IP clock has been enabled.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Fix touchscreen node name
----
- arch/arm/boot/dts/sun5i-a13-utoo-p66.dts | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Applied 1, 3 to libata/for-4.1.
 
-diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-index 9108ecd..00bdf28 100644
---- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-@@ -50,6 +50,7 @@
- #include "sunxi-common-regulators.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
-@@ -93,6 +94,20 @@
- 	pinctrl-0 = <&i2c1_pins_a>;
- 	status = "okay";
- 
-+	icn8318: touchscreen@40 {
-+		compatible = "chipone,icn8318";
-+		reg = <0x40>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ts_wake_pin_p66>;
-+		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		touchscreen-inverted-x;
-+		touchscreen-swapped-x-y;
-+	};
-+
- 	pcf8563: rtc@51 {
- 		compatible = "nxp,pcf8563";
- 		reg = <0x51>;
-@@ -172,6 +187,13 @@
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
- 
-+	ts_wake_pin_p66: ts_wake_pin@0 {
-+		allwinner,pins = "PB3";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	usb0_vbus_pin_a: usb0_vbus_pin@0 {
- 		allwinner,pins = "PB4";
- 		allwinner,function = "gpio_out";
+Thanks.
+
 -- 
-2.3.4
+tejun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
