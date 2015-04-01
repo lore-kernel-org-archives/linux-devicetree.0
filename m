@@ -1,981 +1,492 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 2/2] dmaengine: usb-dmac: Add Renesas USB DMA Controller (USB-DMAC) driver
-Date: Wed, 1 Apr 2015 15:22:45 +0900
-Message-ID: <1427869365-2068-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v5 3/3] leds: Add ktd2692 flash LED driver
+Date: Wed, 01 Apr 2015 08:47:41 +0200
+Message-ID: <551B948D.5060905@samsung.com>
+References: <1427860708-32559-1-git-send-email-ingi2.kim@samsung.com>
+ <1427860708-32559-4-git-send-email-ingi2.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1427860708-32559-4-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, varkabhadram@gmail.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This DMAC is Renesas USB high-speed module DMA controller that
-supports slave transfer.
+Hi Ingi,
 
-This USB-DMAC has similar register sets with R-Car Gen2 DMAC, but
-the USB-DMAC has specific registers to control the USB transactions.
-If this code is added into the rcar-dmac driver, it will become
-unreadable. So, this driver is independent from the rcar-dmac.
+On 04/01/2015 05:58 AM, Ingi Kim wrote:
+> This patch adds a driver to support the ktd2692 flash LEDs.
+> ktd2692 can control flash current by ExpressWire interface.
+>
+> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+> ---
+>   drivers/leds/Kconfig        |   9 +
+>   drivers/leds/Makefile       |   1 +
+>   drivers/leds/leds-ktd2692.c | 405 ++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 415 insertions(+)
+>   create mode 100644 drivers/leds/leds-ktd2692.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 25b320d..c32e73e 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -498,6 +498,15 @@ config LEDS_MENF21BMC
+>   	  This driver can also be built as a module. If so the module
+>   	  will be called leds-menf21bmc.
+>
+> +config LEDS_KTD2692
+> +	tristate "KTD2692 LED flash support"
+> +	depends on LEDS_CLASS_FLASH && GPIOLIB
+> +	help
+> +	  This option enables support for KTD2692 LED flash connected
+> +	  through ExpressWire interface.
+> +
+> +	  Say Y to enable this driver.
+> +
+>   comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
+>
+>   config LEDS_BLINKM
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index cbba921..289513b 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -58,6 +58,7 @@ obj-$(CONFIG_LEDS_BLINKM)		+= leds-blinkm.o
+>   obj-$(CONFIG_LEDS_SYSCON)		+= leds-syscon.o
+>   obj-$(CONFIG_LEDS_VERSATILE)		+= leds-versatile.o
+>   obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
+> +obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
+>
+>   # LED SPI Drivers
+>   obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+> diff --git a/drivers/leds/leds-ktd2692.c b/drivers/leds/leds-ktd2692.c
+> new file mode 100644
+> index 0000000..558e2b9
+> --- /dev/null
+> +++ b/drivers/leds/leds-ktd2692.c
+> @@ -0,0 +1,405 @@
+> +/*
+> + * LED driver : leds-ktd2692.c
+> + *
+> + * Copyright (C) 2015 Samsung Electronics
+> + * Ingi Kim <ingi2.kim@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/led-class-flash.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/workqueue.h>
+> +
+> +/* Value related the flash mode */
+> +#define KTD2692_FLASH_MODE_TIMEOUT_LEVELS	8
+> +#define KTD2692_FLASH_MODE_TIMEOUT_DISABLE	0
+> +#define KTD2692_FLASH_MODE_TIMEOUT_DEFAULT_US	1049000
+> +#define KTD2692_FLASH_MODE_TIMEOUT_MAX_US	1835000
+> +#define KTD2692_FLASH_MODE_CURR_PERCENT(x)	(((x) * 16) / 100)
+> +
+> +/* Macro for getting offset of flash timeout */
+> +#define GET_TIMEOUT_OFFSET(timeout, step)	((timeout) / (step))
+> +
+> +/* Adjust a multiple of brightness */
+> +#define KTD2692_BRIGHTNESS_RANGE_255_TO_16(x)	(((x) >> 4) & 0x0F)
+> +#define KTD2692_BRIGHTNESS_RANGE_255_TO_8(x)	(((x) >> 5) & 0x0F)
+> +#define KTD2692_BRIGHTNESS_RANGE_255_TO_4(x)	(((x) >> 6) & 0x0F)
+> +
+> +/* Base register address */
+> +#define KTD2692_REG_LVP_BASE			0x00
+> +#define KTD2692_REG_FLASH_TIMEOUT_BASE		0x20
+> +#define KTD2692_REG_MIN_CURRENT_SET_BASE	0x40
+> +#define KTD2692_REG_MOVIE_CURRENT_BASE		0x60
+> +#define KTD2692_REG_FLASH_CURRENT_BASE		0x80
+> +#define KTD2692_REG_MODE_BASE			0xA0
+> +
+> +/* Set bit coding time for expresswire interface */
+> +#define KTD2692_TIME_RESET_US			700
+> +#define KTD2692_TIME_DATA_START_TIME_US		10
+> +#define KTD2692_TIME_HIGH_END_OF_DATA_US	350
+> +#define KTD2692_TIME_LOW_END_OF_DATA_US		10
+> +#define KTD2692_TIME_SHORT_BITSET_US		4
+> +#define KTD2692_TIME_LONG_BITSET_US		12
+> +
+> +/* KTD2692 default length of name */
+> +#define KTD2692_NAME_LENGTH			20
+> +
+> +/* KTD2692 default name */
+> +#define KTD2692_DEFAULT_NAME			"ktd2692"
+> +
+> +enum ktd2692_bitset {
+> +	KTD2692_LOW = 0,
+> +	KTD2692_HIGH,
+> +};
+> +
+> +/* Movie / Flash Mode Control */
+> +enum ktd2692_led_mode {
+> +	KTD2692_MODE_DISABLE = 0,	/* default */
+> +	KTD2692_MODE_MOVIE,
+> +	KTD2692_MODE_FLASH,
+> +};
+> +
+> +struct ktd2692_context {
+> +	/* Related LED Flash class device */
+> +	struct led_classdev_flash fled_cdev;
+> +
+> +	struct mutex lock;
+> +	struct regulator *regulator;
+> +	struct work_struct work_brightness_set;
+> +
+> +	int aux_gpio;
+> +	int ctrl_gpio;
+> +
+> +	enum ktd2692_led_mode mode;
+> +	enum led_brightness torch_brightness;
+> +};
+> +
+> +static struct ktd2692_context *fled_cdev_to_led(
+> +				struct led_classdev_flash *fled_cdev)
+> +{
+> +	return container_of(fled_cdev, struct ktd2692_context, fled_cdev);
+> +}
+> +
+> +static void ktd2692_expresswire_start(struct ktd2692_context *led)
+> +{
+> +	gpio_set_value(led->ctrl_gpio, KTD2692_HIGH);
+> +	udelay(KTD2692_TIME_DATA_START_TIME_US);
+> +}
+> +
+> +static void ktd2692_expresswire_reset(struct ktd2692_context *led)
+> +{
+> +	gpio_set_value(led->ctrl_gpio, KTD2692_LOW);
+> +	udelay(KTD2692_TIME_RESET_US);
+> +}
+> +
+> +static void ktd2692_expresswire_end(struct ktd2692_context *led)
+> +{
+> +	gpio_set_value(led->ctrl_gpio, KTD2692_LOW);
+> +	udelay(KTD2692_TIME_LOW_END_OF_DATA_US);
+> +	gpio_set_value(led->ctrl_gpio, KTD2692_HIGH);
+> +	udelay(KTD2692_TIME_HIGH_END_OF_DATA_US);
+> +}
+> +
+> +static void ktd2692_expresswire_set_bit(struct ktd2692_context *led, bool bit)
+> +{
+> +	/*
+> +	 * The Low Bit(0) and High Bit(1) is based on a time detection
+> +	 * algorithm between time low and time high
+> +	 * Time_(L_LB) : Low time of the Low Bit(0)
+> +	 * Time_(H_LB) : High time of the LOW Bit(0)
+> +	 * Time_(L_HB) : Low time of the High Bit(1)
+> +	 * Time_(H_HB) : High time of the High Bit(1)
+> +	 *
+> +	 * It can be simplified to:
+> +	 * Low Bit(0) : 2 * Time_(H_LB) < Time_(L_LB)
+> +	 * High Bit(1) : 2 * Time_(L_HB) < Time_(H_HB)
+> +	 * HIGH  ___           ____    _..     _________    ___
+> +	 *          |_________|    |_..  |____|         |__|
+> +	 * LOW        <L_LB>  <H_LB>     <L_HB>  <H_HB>
+> +	 *          [  Low Bit (0) ]     [  High Bit(1) ]
+> +	 */
+> +	if (bit) {
+> +		gpio_set_value(led->ctrl_gpio, KTD2692_LOW);
+> +		udelay(KTD2692_TIME_SHORT_BITSET_US);
+> +		gpio_set_value(led->ctrl_gpio, KTD2692_HIGH);
+> +		udelay(KTD2692_TIME_LONG_BITSET_US);
+> +	} else {
+> +		gpio_set_value(led->ctrl_gpio, KTD2692_LOW);
+> +		udelay(KTD2692_TIME_LONG_BITSET_US);
+> +		gpio_set_value(led->ctrl_gpio, KTD2692_HIGH);
+> +		udelay(KTD2692_TIME_SHORT_BITSET_US);
+> +	}
+> +}
+> +
+> +static void ktd2692_expresswire_write(struct ktd2692_context *led, u8 value)
+> +{
+> +	int i;
+> +
+> +	ktd2692_expresswire_start(led);
+> +	for (i = 7; i >= 0; i--)
+> +		ktd2692_expresswire_set_bit(led, value & BIT(i));
+> +	ktd2692_expresswire_end(led);
+> +}
+> +
+> +static void ktd2692_brightness_set(struct ktd2692_context *led,
+> +					enum led_brightness brightness)
+> +{
+> +	mutex_lock(&led->lock);
+> +
+> +	if (brightness == LED_OFF) {
+> +		led->mode = KTD2692_MODE_DISABLE;
+> +		gpio_set_value(led->aux_gpio, KTD2692_LOW);
+> +		goto out;
+> +	}
+> +
+> +	ktd2692_expresswire_write(led, KTD2692_REG_MOVIE_CURRENT_BASE |
+> +				KTD2692_BRIGHTNESS_RANGE_255_TO_8(brightness));
+> +	led->mode = KTD2692_MODE_MOVIE;
+> +
+> +out:
+> +	ktd2692_expresswire_write(led, led->mode | KTD2692_REG_MODE_BASE);
+> +	mutex_unlock(&led->lock);
+> +}
+> +
+> +static void ktd2692_brightness_set_work(struct work_struct *work)
+> +{
+> +	struct ktd2692_context *led =
+> +		container_of(work, struct ktd2692_context, work_brightness_set);
+> +
+> +	ktd2692_brightness_set(led, led->torch_brightness);
+> +}
+> +
+> +static void ktd2692_led_brightness_set(struct led_classdev *led_cdev,
+> +					enum led_brightness brightness)
+> +{
+> +	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
+> +	struct ktd2692_context *led = fled_cdev_to_led(fled_cdev);
+> +
+> +	led->torch_brightness = brightness;
+> +	schedule_work(&led->work_brightness_set);
+> +}
+> +
+> +static int ktd2692_led_brightness_set_sync(struct led_classdev *led_cdev,
+> +					enum led_brightness brightness)
+> +{
+> +	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
+> +	struct ktd2692_context *led = fled_cdev_to_led(fled_cdev);
+> +
+> +	ktd2692_brightness_set(led, brightness);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ktd2692_led_flash_strobe_set(struct led_classdev_flash *fled_cdev,
+> +						bool state)
+> +{
+> +	struct ktd2692_context *led = fled_cdev_to_led(fled_cdev);
+> +	struct led_flash_setting *timeout = &fled_cdev->timeout;
+> +	u32 flash_tm_reg;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	if (state == 0) {
+> +		led->mode = KTD2692_MODE_DISABLE;
+> +		gpio_set_value(led->aux_gpio, KTD2692_LOW);
+> +		goto done;
+> +	}
+> +
+> +	flash_tm_reg = GET_TIMEOUT_OFFSET(timeout->val, timeout->step);
+> +	ktd2692_expresswire_write(led, flash_tm_reg
+> +			| KTD2692_REG_FLASH_TIMEOUT_BASE);
+> +
+> +	led->mode = KTD2692_MODE_FLASH;
+> +	gpio_set_value(led->aux_gpio, KTD2692_HIGH);
+> +
+> +done:
+> +	ktd2692_expresswire_write(led, led->mode | KTD2692_REG_MODE_BASE);
+> +
+> +	fled_cdev->led_cdev.brightness = LED_OFF;
+> +	led->mode = KTD2692_MODE_DISABLE;
+> +
+> +	mutex_unlock(&led->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ktd2692_led_flash_timeout_set(struct led_classdev_flash *fled_cdev,
+> +						u32 timeout)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void ktd2692_init_flash_timeout(u32 flash_timeout_us,
+> +					struct led_flash_setting *setting)
+> +{
+> +	setting->min = KTD2692_FLASH_MODE_TIMEOUT_DISABLE;
+> +	setting->max = KTD2692_FLASH_MODE_TIMEOUT_MAX_US;
+> +	setting->step = KTD2692_FLASH_MODE_TIMEOUT_MAX_US
+> +			/ (KTD2692_FLASH_MODE_TIMEOUT_LEVELS - 1);
+> +	setting->val = flash_timeout_us;
+> +}
+> +
+> +static void ktd2692_setup(struct ktd2692_context *led)
+> +{
+> +	led->mode = KTD2692_MODE_DISABLE;
+> +	ktd2692_expresswire_reset(led);
+> +	gpio_set_value(led->aux_gpio, KTD2692_LOW);
+> +
+> +	ktd2692_expresswire_write(led, KTD2692_FLASH_MODE_CURR_PERCENT(45)
+> +					 | KTD2692_REG_FLASH_CURRENT_BASE);
+> +}
+> +
+> +static int ktd2692_parse_dt(struct ktd2692_context *led, struct device *dev,
+> +				u32 *flash_timeout_us)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	int ret;
+> +
+> +	if (!dev->of_node)
+> +		return -ENXIO;
+> +
+> +	led->ctrl_gpio = of_get_named_gpio(np, "ctrl-gpio", 0);
+> +	if (!gpio_is_valid(led->ctrl_gpio)) {
+> +		dev_err(dev, "no ctrl-gpio property found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	led->aux_gpio = of_get_named_gpio(np, "aux-gpio", 0);
+> +	if (!gpio_is_valid(led->aux_gpio)) {
+> +		dev_err(dev, "no aux-gpio property found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_gpio_request_one(dev, led->ctrl_gpio,
+> +					GPIOF_OPEN_SOURCE, "ctrl-gpio");
+> +	if (ret) {
+> +		dev_err(dev, "failed to request ctrl-gpio %d error %d\n",
+> +				led->ctrl_gpio, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_gpio_request_one(dev, led->aux_gpio,
+> +					GPIOF_OPEN_SOURCE, "aux-gpio");
+> +	if (ret) {
+> +		dev_err(dev, "failed to request aux-gpio %d error %d\n",
+> +				led->aux_gpio, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "flash-timeout-us", flash_timeout_us);
+> +	/* default setting */
+> +	if (ret)
+> +		*flash_timeout_us = KTD2692_FLASH_MODE_TIMEOUT_DEFAULT_US;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct led_flash_ops flash_ops = {
+> +	.strobe_set = ktd2692_led_flash_strobe_set,
+> +	.timeout_set = ktd2692_led_flash_timeout_set,
+> +};
+> +
+> +static int ktd2692_probe(struct platform_device *pdev)
+> +{
+> +	struct ktd2692_context *led;
+> +	struct led_classdev *led_cdev;
+> +	struct led_classdev_flash *fled_cdev;
+> +	struct led_flash_setting flash_timeout;
+> +	u32 flash_timeout_us;
+> +	int ret;
+> +
+> +	led = devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
+> +	if (!led)
+> +		return -ENOMEM;
+> +
+> +	fled_cdev = &led->fled_cdev;
+> +	led_cdev = &fled_cdev->led_cdev;
+> +
+> +	ret = ktd2692_parse_dt(led, &pdev->dev, &flash_timeout_us);
+> +	if (ret)
+> +		return ret;
+> +
+> +	led->regulator = devm_regulator_get(&pdev->dev, "vin");
+> +	if (IS_ERR(led->regulator)) {
+> +		dev_err(&pdev->dev, "regulator get failed\n");
+> +		return PTR_ERR(led->regulator);
+> +	}
+> +
+> +	ret = regulator_enable(led->regulator);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable supply: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ktd2692_init_flash_timeout(flash_timeout_us, &flash_timeout);
+> +
+> +	fled_cdev->timeout = flash_timeout;
+> +	fled_cdev->ops = &flash_ops;
+> +
+> +	led_cdev->name = KTD2692_DEFAULT_NAME;
 
-And, this USB-DMAC uses virt-dma infrastructure.
+Device Tree label should be used for the LED class device name.
+Please refer to :
+Documentation/devicetree/bindings/leds/common.txt
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- drivers/dma/sh/Kconfig    |   9 +
- drivers/dma/sh/Makefile   |   1 +
- drivers/dma/sh/usb-dmac.c | 910 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 920 insertions(+)
- create mode 100644 drivers/dma/sh/usb-dmac.c
+Also the documentation states that the LED should be represented
+by DT child node of the LED controller.
 
-diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
-index 725f6b4..0f37152 100644
---- a/drivers/dma/sh/Kconfig
-+++ b/drivers/dma/sh/Kconfig
-@@ -58,3 +58,12 @@ config RCAR_DMAC
- 	help
- 	  This driver supports the general purpose DMA controller found in the
- 	  Renesas R-Car second generation SoCs.
-+
-+config RENESAS_USB_DMAC
-+	tristate "Renesas USB-DMA Controller"
-+	depends on ARCH_SHMOBILE || COMPILE_TEST
-+	select RENESAS_DMA
-+	select DMA_VIRTUAL_CHANNELS
-+	help
-+	  This driver supports the USB-DMA controller found in the Renesas
-+	  SoCs.
-diff --git a/drivers/dma/sh/Makefile b/drivers/dma/sh/Makefile
-index 489609b..b8a5980 100644
---- a/drivers/dma/sh/Makefile
-+++ b/drivers/dma/sh/Makefile
-@@ -16,3 +16,4 @@ obj-$(CONFIG_SH_DMAE) += shdma.o
- obj-$(CONFIG_SUDMAC) += sudmac.o
- obj-$(CONFIG_RCAR_HPB_DMAE) += rcar-hpbdma.o
- obj-$(CONFIG_RCAR_DMAC) += rcar-dmac.o
-+obj-$(CONFIG_RENESAS_USB_DMAC) += usb-dmac.o
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-new file mode 100644
-index 0000000..d5dad98
---- /dev/null
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -0,0 +1,910 @@
-+/*
-+ * Renesas USB DMA Controller Driver
-+ *
-+ * Copyright (C) 2015 Renesas Electronics Corporation
-+ *
-+ * based on rcar-dmac.c
-+ * Copyright (C) 2014 Renesas Electronics Inc.
-+ * Author: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-+ *
-+ * This is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
-+#include <linux/interrupt.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#include "../dmaengine.h"
-+#include "../virt-dma.h"
-+
-+/*
-+ * struct usb_dmac_sg - Descriptor for a hardware transfer
-+ * @mem_addr: memory address
-+ * @size: transfer size in bytes
-+ */
-+struct usb_dmac_sg {
-+	dma_addr_t mem_addr;
-+	u32 size;
-+};
-+
-+/*
-+ * struct usb_dmac_desc - USB DMA Transfer Descriptor
-+ * @vd: base virtual channel DMA transaction descriptor
-+ * @direction: direction of the DMA transfer
-+ * @sg_allocated_len: length of allocated sg
-+ * @sg_len: length of sg
-+ * @sg_index: index of sg
-+ * @residue: residue after the DMAC completed a transfer
-+ * @node: node for desc_got and desc_freed
-+ * @done_cookie: cookie after the DMAC completed a transfer
-+ * @sg: information for the transfer
-+ */
-+struct usb_dmac_desc {
-+	struct virt_dma_desc vd;
-+	enum dma_transfer_direction direction;
-+	unsigned int sg_allocated_len;
-+	unsigned int sg_len;
-+	unsigned int sg_index;
-+	u32 residue;
-+	struct list_head node;
-+	dma_cookie_t done_cookie;
-+	struct usb_dmac_sg sg[0];
-+};
-+
-+#define to_usb_dmac_desc(vd)	container_of(vd, struct usb_dmac_desc, vd)
-+
-+/*
-+ * struct usb_dmac_chan - USB DMA Controller Channel
-+ * @vc: base virtual DMA channel object
-+ * @iomem: channel I/O memory base
-+ * @index: index of this channel in the controller
-+ * @irq: irq number of this channel
-+ * @desc: the current descriptor
-+ * @descs_allocated: number of descriptors allocated
-+ * @desc_got: got descriptors
-+ * @desc_freed: freed descriptors after the DMAC completed a transfer
-+ */
-+struct usb_dmac_chan {
-+	struct virt_dma_chan vc;
-+	void __iomem *iomem;
-+	unsigned int index;
-+	int irq;
-+	struct usb_dmac_desc *desc;
-+	int descs_allocated;
-+	struct list_head desc_got;
-+	struct list_head desc_freed;
-+};
-+
-+#define to_usb_dmac_chan(c) container_of(c, struct usb_dmac_chan, vc.chan)
-+
-+/*
-+ * struct usb_dmac - USB DMA Controller
-+ * @engine: base DMA engine object
-+ * @dev: the hardware device
-+ * @iomem: remapped I/O memory base
-+ * @n_channels: number of available channels
-+ * @channels: array of DMAC channels
-+ */
-+struct usb_dmac {
-+	struct dma_device engine;
-+	struct device *dev;
-+	void __iomem *iomem;
-+
-+	unsigned int n_channels;
-+	struct usb_dmac_chan *channels;
-+};
-+
-+#define to_usb_dmac(d)		container_of(d, struct usb_dmac, engine)
-+
-+/* -----------------------------------------------------------------------------
-+ * Registers
-+ */
-+
-+#define USB_DMAC_CHAN_OFFSET(i)		(0x20 + 0x20 * (i))
-+
-+#define USB_DMASWR			0x0008
-+#define USB_DMASWR_SWR			(1 << 0)
-+#define USB_DMAOR			0x0060
-+#define USB_DMAOR_AE			(1 << 2)
-+#define USB_DMAOR_DME			(1 << 0)
-+
-+#define USB_DMASAR			0x0000
-+#define USB_DMADAR			0x0004
-+#define USB_DMATCR			0x0008
-+#define USB_DMATCR_MASK			0x00ffffff
-+#define USB_DMACHCR			0x0014
-+#define USB_DMACHCR_FTE			(1 << 24)
-+#define USB_DMACHCR_NULLE		(1 << 16)
-+#define USB_DMACHCR_NULL		(1 << 12)
-+#define USB_DMACHCR_TS_8B		((0 << 7) | (0 << 6))
-+#define USB_DMACHCR_TS_16B		((0 << 7) | (1 << 6))
-+#define USB_DMACHCR_TS_32B		((1 << 7) | (0 << 6))
-+#define USB_DMACHCR_IE			(1 << 5)
-+#define USB_DMACHCR_SP			(1 << 2)
-+#define USB_DMACHCR_TE			(1 << 1)
-+#define USB_DMACHCR_DE			(1 << 0)
-+#define USB_DMATEND			0x0018
-+
-+/* Hardcode the xfer_shift to 5 (32bytes) */
-+#define USB_DMAC_XFER_SHIFT	5
-+#define USB_DMAC_XFER_SIZE	(1 << USB_DMAC_XFER_SHIFT)
-+#define USB_DMAC_CHCR_TS	USB_DMACHCR_TS_32B
-+#define USB_DMAC_SLAVE_BUSWIDTH	DMA_SLAVE_BUSWIDTH_32_BYTES
-+
-+/* for descriptors */
-+#define USB_DMAC_INITIAL_NR_DESC	16
-+#define USB_DMAC_INITIAL_NR_SG		8
-+
-+/* -----------------------------------------------------------------------------
-+ * Device access
-+ */
-+
-+static void usb_dmac_write(struct usb_dmac *dmac, u32 reg, u32 data)
-+{
-+	writel(data, dmac->iomem + reg);
-+}
-+
-+static u32 usb_dmac_read(struct usb_dmac *dmac, u32 reg)
-+{
-+	return readl(dmac->iomem + reg);
-+}
-+
-+static u32 usb_dmac_chan_read(struct usb_dmac_chan *chan, u32 reg)
-+{
-+	return readl(chan->iomem + reg);
-+}
-+
-+static void usb_dmac_chan_write(struct usb_dmac_chan *chan, u32 reg, u32 data)
-+{
-+	writel(data, chan->iomem + reg);
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Initialization and configuration
-+ */
-+
-+static bool usb_dmac_chan_is_busy(struct usb_dmac_chan *chan)
-+{
-+	u32 chcr = usb_dmac_chan_read(chan, USB_DMACHCR);
-+
-+	return (chcr & (USB_DMACHCR_DE | USB_DMACHCR_TE)) == USB_DMACHCR_DE;
-+}
-+
-+static u32 usb_dmac_calc_tend(u32 size)
-+{
-+	/*
-+	 * Please refer to the Figure "Example of Final Transaction Valid
-+	 * Data Transfer Enable (EDTEN) Setting" in the data sheet.
-+	 */
-+	return 0xffffffff << (32 - (size % USB_DMAC_XFER_SIZE ?	:
-+						USB_DMAC_XFER_SIZE));
-+}
-+
-+/* This function is already held by vc.lock */
-+static void usb_dmac_chan_start_sg(struct usb_dmac_chan *chan,
-+				   unsigned int index)
-+{
-+	struct usb_dmac_desc *desc = chan->desc;
-+	struct usb_dmac_sg *sg = desc->sg + index;
-+	dma_addr_t src_addr = 0, dst_addr = 0;
-+
-+	WARN_ON_ONCE(usb_dmac_chan_is_busy(chan));
-+
-+	if (desc->direction == DMA_DEV_TO_MEM)
-+		dst_addr = sg->mem_addr;
-+	else
-+		src_addr = sg->mem_addr;
-+
-+	dev_dbg(chan->vc.chan.device->dev,
-+		"chan%u: queue sg %p: %u@%pad -> %pad\n",
-+		chan->index, sg, sg->size, &src_addr, &dst_addr);
-+
-+	usb_dmac_chan_write(chan, USB_DMASAR, src_addr & 0xffffffff);
-+	usb_dmac_chan_write(chan, USB_DMADAR, dst_addr & 0xffffffff);
-+	usb_dmac_chan_write(chan, USB_DMATCR,
-+			    DIV_ROUND_UP(sg->size, USB_DMAC_XFER_SIZE));
-+	usb_dmac_chan_write(chan, USB_DMATEND, usb_dmac_calc_tend(sg->size));
-+
-+	usb_dmac_chan_write(chan, USB_DMACHCR, USB_DMAC_CHCR_TS |
-+			USB_DMACHCR_NULLE | USB_DMACHCR_IE | USB_DMACHCR_DE);
-+}
-+
-+/* This function is already held by vc.lock */
-+static void usb_dmac_chan_start_desc(struct usb_dmac_chan *chan)
-+{
-+	struct virt_dma_desc *vd;
-+
-+	vd = vchan_next_desc(&chan->vc);
-+	if (!vd) {
-+		chan->desc = NULL;
-+		return;
-+	}
-+
-+	/*
-+	 * Remove this request from vc->desc_issued. Otherwise, this driver
-+	 * will get the previous value from vchan_next_desc() after a transfer
-+	 * was completed.
-+	 */
-+	list_del(&vd->node);
-+
-+	chan->desc = to_usb_dmac_desc(vd);
-+	chan->desc->sg_index = 0;
-+	usb_dmac_chan_start_sg(chan, 0);
-+}
-+
-+static int usb_dmac_init(struct usb_dmac *dmac)
-+{
-+	u16 dmaor;
-+
-+	/* Clear all channels and enable the DMAC globally. */
-+	usb_dmac_write(dmac, USB_DMAOR, USB_DMAOR_DME);
-+
-+	dmaor = usb_dmac_read(dmac, USB_DMAOR);
-+	if ((dmaor & (USB_DMAOR_AE | USB_DMAOR_DME)) != USB_DMAOR_DME) {
-+		dev_warn(dmac->dev, "DMAOR initialization failed.\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Descriptors allocation and free
-+ */
-+static int usb_dmac_desc_alloc(struct usb_dmac_chan *chan, unsigned int sg_len,
-+			       gfp_t gfp)
-+{
-+	struct usb_dmac_desc *desc;
-+	unsigned long flags;
-+
-+	desc = kzalloc(sizeof(*desc) + sg_len * sizeof(desc->sg[0]), gfp);
-+	if (!desc)
-+		return -ENOMEM;
-+
-+	desc->sg_allocated_len = sg_len;
-+	INIT_LIST_HEAD(&desc->node);
-+
-+	spin_lock_irqsave(&chan->vc.lock, flags);
-+	list_add_tail(&desc->node, &chan->desc_freed);
-+	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+
-+	return 0;
-+}
-+
-+static void usb_dmac_desc_free(struct usb_dmac_chan *chan)
-+{
-+	struct usb_dmac_desc *desc;
-+	LIST_HEAD(list);
-+
-+	list_splice_init(&chan->desc_freed, &list);
-+	list_splice_init(&chan->desc_got, &list);
-+
-+	list_for_each_entry(desc, &list, node) {
-+		list_del(&desc->node);
-+		kfree(desc);
-+	}
-+	chan->descs_allocated = 0;
-+}
-+
-+static struct usb_dmac_desc *usb_dmac_desc_get(struct usb_dmac_chan *chan,
-+					       unsigned int sg_len, gfp_t gfp)
-+{
-+	struct usb_dmac_desc *desc = NULL;
-+	unsigned long flags;
-+
-+	/* Get a freed descritpor */
-+	spin_lock_irqsave(&chan->vc.lock, flags);
-+	list_for_each_entry(desc, &chan->desc_freed, node) {
-+		if (sg_len <= desc->sg_allocated_len) {
-+			list_move_tail(&desc->node, &chan->desc_got);
-+			spin_unlock_irqrestore(&chan->vc.lock, flags);
-+			return desc;
-+		}
-+	}
-+	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+
-+	/* Allocate a new descriptor */
-+	if (!usb_dmac_desc_alloc(chan, sg_len, gfp)) {
-+		/* If allocated the desc, it was added to tail of the list */
-+		spin_lock_irqsave(&chan->vc.lock, flags);
-+		desc = list_last_entry(&chan->desc_freed, struct usb_dmac_desc,
-+				       node);
-+		list_move_tail(&desc->node, &chan->desc_got);
-+		spin_unlock_irqrestore(&chan->vc.lock, flags);
-+		return desc;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void usb_dmac_desc_put(struct usb_dmac_chan *chan,
-+			      struct usb_dmac_desc *desc)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->vc.lock, flags);
-+	list_move_tail(&desc->node, &chan->desc_freed);
-+	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Stop and reset
-+ */
-+
-+static void usb_dmac_soft_reset(struct usb_dmac_chan *uchan)
-+{
-+	struct dma_chan *chan = &uchan->vc.chan;
-+	struct usb_dmac *dmac = to_usb_dmac(chan->device);
-+	int i;
-+
-+	/* Don't issue soft reset if any one of channels is busy */
-+	for (i = 0; i < dmac->n_channels; ++i) {
-+		if (usb_dmac_chan_is_busy(uchan))
-+			return;
-+	}
-+
-+	usb_dmac_write(dmac, USB_DMAOR, 0);
-+	usb_dmac_write(dmac, USB_DMASWR, USB_DMASWR_SWR);
-+	udelay(100);
-+	usb_dmac_write(dmac, USB_DMASWR, 0);
-+	usb_dmac_write(dmac, USB_DMAOR, 1);
-+}
-+
-+static void usb_dmac_chan_halt(struct usb_dmac_chan *chan)
-+{
-+	u32 chcr = usb_dmac_chan_read(chan, USB_DMACHCR);
-+
-+	chcr &= ~(USB_DMACHCR_IE | USB_DMACHCR_TE | USB_DMACHCR_DE);
-+	usb_dmac_chan_write(chan, USB_DMACHCR, chcr);
-+
-+	usb_dmac_soft_reset(chan);
-+}
-+
-+static void usb_dmac_stop(struct usb_dmac *dmac)
-+{
-+	usb_dmac_write(dmac, USB_DMAOR, 0);
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * DMA engine operations
-+ */
-+
-+static int usb_dmac_alloc_chan_resources(struct dma_chan *chan)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	int ret;
-+
-+	while (uchan->descs_allocated < USB_DMAC_INITIAL_NR_DESC) {
-+		ret = usb_dmac_desc_alloc(uchan, USB_DMAC_INITIAL_NR_SG,
-+					  GFP_KERNEL);
-+		if (ret < 0) {
-+			usb_dmac_desc_free(uchan);
-+			return ret;
-+		}
-+		uchan->descs_allocated++;
-+	}
-+
-+	return pm_runtime_get_sync(chan->device->dev);
-+}
-+
-+static void usb_dmac_free_chan_resources(struct dma_chan *chan)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	unsigned long flags;
-+
-+	/* Protect against ISR */
-+	spin_lock_irqsave(&uchan->vc.lock, flags);
-+	usb_dmac_chan_halt(uchan);
-+	spin_unlock_irqrestore(&uchan->vc.lock, flags);
-+
-+	usb_dmac_desc_free(uchan);
-+	vchan_free_chan_resources(&uchan->vc);
-+
-+	pm_runtime_put(chan->device->dev);
-+}
-+
-+static struct dma_async_tx_descriptor *
-+usb_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
-+		       unsigned int sg_len, enum dma_transfer_direction dir,
-+		       unsigned long dma_flags, void *context)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	struct usb_dmac_desc *desc;
-+	struct scatterlist *sg;
-+	int i;
-+
-+	if (!sg_len) {
-+		dev_warn(chan->device->dev,
-+			 "%s: bad parameter: len=%d\n", __func__, sg_len);
-+		return NULL;
-+	}
-+
-+	desc = usb_dmac_desc_get(uchan, sg_len, GFP_NOWAIT);
-+	if (!desc)
-+		return NULL;
-+
-+	desc->direction = dir;
-+	desc->sg_len = sg_len;
-+	for_each_sg(sgl, sg, sg_len, i) {
-+		desc->sg[i].mem_addr = sg_dma_address(sg);
-+		desc->sg[i].size = sg_dma_len(sg);
-+	}
-+
-+	return vchan_tx_prep(&uchan->vc, &desc->vd, dma_flags);
-+}
-+
-+static int usb_dmac_chan_terminate_all(struct dma_chan *chan)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	struct usb_dmac_desc *desc;
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+	LIST_HEAD(list);
-+
-+	spin_lock_irqsave(&uchan->vc.lock, flags);
-+	usb_dmac_chan_halt(uchan);
-+	vchan_get_all_descriptors(&uchan->vc, &head);
-+	if (uchan->desc)
-+		uchan->desc = NULL;
-+	list_splice_init(&uchan->desc_got, &list);
-+	list_for_each_entry(desc, &list, node)
-+		list_move_tail(&desc->node, &uchan->desc_freed);
-+	spin_unlock_irqrestore(&uchan->vc.lock, flags);
-+	vchan_dma_desc_free_list(&uchan->vc, &head);
-+
-+	return 0;
-+}
-+
-+static unsigned int usb_dmac_get_current_residue(struct usb_dmac_chan *chan,
-+						 struct usb_dmac_desc *desc,
-+						 int sg_index)
-+{
-+	struct usb_dmac_sg *sg = desc->sg + sg_index;
-+	u32 mem_addr = sg->mem_addr & 0xffffffff;
-+	unsigned int residue = sg->size;
-+
-+	/*
-+	 * We cannot use USB_DMATCR to calculate residue because USB_DMATCR
-+	 * has unsuited value to calculate.
-+	 */
-+	if (desc->direction == DMA_DEV_TO_MEM)
-+		residue -= usb_dmac_chan_read(chan, USB_DMADAR) - mem_addr;
-+	else
-+		residue -= usb_dmac_chan_read(chan, USB_DMASAR) - mem_addr;
-+
-+	return residue;
-+}
-+
-+static u32 usb_dmac_chan_get_residue_if_complete(struct usb_dmac_chan *chan,
-+						 dma_cookie_t cookie)
-+{
-+	struct usb_dmac_desc *desc;
-+	u32 residue = 0;
-+
-+	list_for_each_entry_reverse(desc, &chan->desc_freed, node) {
-+		if (desc->done_cookie == cookie) {
-+			residue = desc->residue;
-+			break;
-+		}
-+	}
-+
-+	return residue;
-+}
-+
-+static u32 usb_dmac_chan_get_residue(struct usb_dmac_chan *chan,
-+				     dma_cookie_t cookie)
-+{
-+	u32 residue = 0;
-+	struct virt_dma_desc *vd;
-+	struct usb_dmac_desc *desc = chan->desc;
-+	int i;
-+
-+	if (!desc) {
-+		vd = vchan_find_desc(&chan->vc, cookie);
-+		if (!vd)
-+			return 0;
-+		desc = to_usb_dmac_desc(vd);
-+	}
-+
-+	/* Compute the size of all usb_dmac_sg still to be transferred */
-+	for (i = desc->sg_index + 1; i < desc->sg_len; i++)
-+		residue += desc->sg[i].size;
-+
-+	/* Add the residue for the current sg */
-+	residue += usb_dmac_get_current_residue(chan, desc, desc->sg_index);
-+
-+	return residue;
-+}
-+
-+static enum dma_status usb_dmac_tx_status(struct dma_chan *chan,
-+					  dma_cookie_t cookie,
-+					  struct dma_tx_state *txstate)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	enum dma_status status;
-+	unsigned int residue = 0;
-+	unsigned long flags;
-+
-+	status = dma_cookie_status(chan, cookie, txstate);
-+	/* a client driver will get residue after DMA_COMPLETE */
-+	if (!txstate)
-+		return status;
-+
-+	spin_lock_irqsave(&uchan->vc.lock, flags);
-+	if (status == DMA_COMPLETE)
-+		residue = usb_dmac_chan_get_residue_if_complete(uchan, cookie);
-+	else
-+		residue = usb_dmac_chan_get_residue(uchan, cookie);
-+	spin_unlock_irqrestore(&uchan->vc.lock, flags);
-+
-+	dma_set_residue(txstate, residue);
-+
-+	return status;
-+}
-+
-+static void usb_dmac_issue_pending(struct dma_chan *chan)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&uchan->vc.lock, flags);
-+	if (vchan_issue_pending(&uchan->vc) && !uchan->desc)
-+		usb_dmac_chan_start_desc(uchan);
-+	spin_unlock_irqrestore(&uchan->vc.lock, flags);
-+}
-+
-+static void usb_dmac_virt_desc_free(struct virt_dma_desc *vd)
-+{
-+	struct usb_dmac_desc *desc = to_usb_dmac_desc(vd);
-+	struct usb_dmac_chan *chan = to_usb_dmac_chan(vd->tx.chan);
-+
-+	usb_dmac_desc_put(chan, desc);
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * IRQ handling
-+ */
-+
-+static void usb_dmac_isr_transfer_end(struct usb_dmac_chan *chan)
-+{
-+	struct usb_dmac_desc *desc = chan->desc;
-+
-+	BUG_ON(!desc);
-+
-+	if (++desc->sg_index < desc->sg_len) {
-+		usb_dmac_chan_start_sg(chan, desc->sg_index);
-+	} else {
-+		desc->residue = usb_dmac_get_current_residue(chan, desc,
-+							desc->sg_index - 1);
-+		desc->done_cookie = desc->vd.tx.cookie;
-+		vchan_cookie_complete(&desc->vd);
-+
-+		/* Restart the next transfer if this driver has a next desc */
-+		usb_dmac_chan_start_desc(chan);
-+	}
-+}
-+
-+static irqreturn_t usb_dmac_isr_channel(int irq, void *dev)
-+{
-+	struct usb_dmac_chan *chan = dev;
-+	irqreturn_t ret = IRQ_NONE;
-+	u32 mask = USB_DMACHCR_TE;
-+	u32 check_bits = USB_DMACHCR_TE | USB_DMACHCR_SP;
-+	u32 chcr;
-+
-+	spin_lock(&chan->vc.lock);
-+
-+	chcr = usb_dmac_chan_read(chan, USB_DMACHCR);
-+	if (chcr & check_bits)
-+		mask |= USB_DMACHCR_DE | check_bits;
-+	if (chcr & USB_DMACHCR_NULL) {
-+		/* An interruption of TE will happen after we set FTE */
-+		mask |= USB_DMACHCR_NULL;
-+		chcr |= USB_DMACHCR_FTE;
-+		ret |= IRQ_HANDLED;
-+	}
-+	usb_dmac_chan_write(chan, USB_DMACHCR, chcr & ~mask);
-+
-+	if (chcr & check_bits) {
-+		usb_dmac_isr_transfer_end(chan);
-+		ret |= IRQ_HANDLED;
-+	}
-+
-+	spin_unlock(&chan->vc.lock);
-+
-+	return ret;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * OF xlate and channel filter
-+ */
-+
-+static bool usb_dmac_chan_filter(struct dma_chan *chan, void *arg)
-+{
-+	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-+	struct of_phandle_args *dma_spec = arg;
-+
-+	if (dma_spec->np != chan->device->dev->of_node)
-+		return false;
-+
-+	/* USB-DMAC should be used with fixed usb controller's FIFO */
-+	if (uchan->index != dma_spec->args[0])
-+		return false;
-+
-+	return true;
-+}
-+
-+static struct dma_chan *usb_dmac_of_xlate(struct of_phandle_args *dma_spec,
-+					  struct of_dma *ofdma)
-+{
-+	struct usb_dmac_chan *uchan;
-+	struct dma_chan *chan;
-+	dma_cap_mask_t mask;
-+
-+	if (dma_spec->args_count != 1)
-+		return NULL;
-+
-+	/* Only slave DMA channels can be allocated via DT */
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+
-+	chan = dma_request_channel(mask, usb_dmac_chan_filter, dma_spec);
-+	if (!chan)
-+		return NULL;
-+
-+	uchan = to_usb_dmac_chan(chan);
-+
-+	return chan;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Power management
-+ */
-+
-+static int usb_dmac_runtime_suspend(struct device *dev)
-+{
-+	struct usb_dmac *dmac = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < dmac->n_channels; ++i)
-+		usb_dmac_chan_halt(&dmac->channels[i]);
-+
-+	return 0;
-+}
-+
-+static int usb_dmac_runtime_resume(struct device *dev)
-+{
-+	struct usb_dmac *dmac = dev_get_drvdata(dev);
-+
-+	return usb_dmac_init(dmac);
-+}
-+
-+static const struct dev_pm_ops usb_dmac_pm = {
-+	SET_RUNTIME_PM_OPS(usb_dmac_runtime_suspend, usb_dmac_runtime_resume,
-+			   NULL)
-+};
-+
-+/* -----------------------------------------------------------------------------
-+ * Probe and remove
-+ */
-+
-+static int usb_dmac_chan_probe(struct usb_dmac *dmac,
-+			       struct usb_dmac_chan *uchan,
-+			       unsigned int index)
-+{
-+	struct platform_device *pdev = to_platform_device(dmac->dev);
-+	char pdev_irqname[5];
-+	char *irqname;
-+	int ret;
-+
-+	uchan->index = index;
-+	uchan->iomem = dmac->iomem + USB_DMAC_CHAN_OFFSET(index);
-+
-+	/* Request the channel interrupt. */
-+	sprintf(pdev_irqname, "ch%u", index);
-+	uchan->irq = platform_get_irq_byname(pdev, pdev_irqname);
-+	if (uchan->irq < 0) {
-+		dev_err(dmac->dev, "no IRQ specified for channel %u\n", index);
-+		return -ENODEV;
-+	}
-+
-+	irqname = devm_kasprintf(dmac->dev, GFP_KERNEL, "%s:%u",
-+				 dev_name(dmac->dev), index);
-+	if (!irqname)
-+		return -ENOMEM;
-+
-+	ret = devm_request_irq(dmac->dev, uchan->irq, usb_dmac_isr_channel,
-+			       IRQF_SHARED, irqname, uchan);
-+	if (ret) {
-+		dev_err(dmac->dev, "failed to request IRQ %u (%d)\n",
-+			uchan->irq, ret);
-+		return ret;
-+	}
-+
-+	uchan->vc.desc_free = usb_dmac_virt_desc_free;
-+	vchan_init(&uchan->vc, &dmac->engine);
-+	INIT_LIST_HEAD(&uchan->desc_freed);
-+	INIT_LIST_HEAD(&uchan->desc_got);
-+
-+	return 0;
-+}
-+
-+static int usb_dmac_parse_of(struct device *dev, struct usb_dmac *dmac)
-+{
-+	struct device_node *np = dev->of_node;
-+	int ret;
-+
-+	ret = of_property_read_u32(np, "dma-channels", &dmac->n_channels);
-+	if (ret < 0) {
-+		dev_err(dev, "unable to read dma-channels property\n");
-+		return ret;
-+	}
-+
-+	if (dmac->n_channels <= 0 || dmac->n_channels >= 100) {
-+		dev_err(dev, "invalid number of channels %u\n",
-+			dmac->n_channels);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int usb_dmac_probe(struct platform_device *pdev)
-+{
-+	const enum dma_slave_buswidth widths = USB_DMAC_SLAVE_BUSWIDTH;
-+	struct dma_device *engine;
-+	struct usb_dmac *dmac;
-+	struct resource *mem;
-+	unsigned int i;
-+	int ret;
-+
-+	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
-+	if (!dmac)
-+		return -ENOMEM;
-+
-+	dmac->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, dmac);
-+
-+	ret = usb_dmac_parse_of(&pdev->dev, dmac);
-+	if (ret < 0)
-+		return ret;
-+
-+	dmac->channels = devm_kcalloc(&pdev->dev, dmac->n_channels,
-+				      sizeof(*dmac->channels), GFP_KERNEL);
-+	if (!dmac->channels)
-+		return -ENOMEM;
-+
-+	/* Request resources. */
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	dmac->iomem = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(dmac->iomem))
-+		return PTR_ERR(dmac->iomem);
-+
-+	/* Enable runtime PM and initialize the device. */
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = usb_dmac_init(dmac);
-+	pm_runtime_put(&pdev->dev);
-+
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to reset device\n");
-+		goto error;
-+	}
-+
-+	/* Initialize the channels. */
-+	INIT_LIST_HEAD(&dmac->engine.channels);
-+
-+	for (i = 0; i < dmac->n_channels; ++i) {
-+		ret = usb_dmac_chan_probe(dmac, &dmac->channels[i], i);
-+		if (ret < 0)
-+			goto error;
-+	}
-+
-+	/* Register the DMAC as a DMA provider for DT. */
-+	ret = of_dma_controller_register(pdev->dev.of_node, usb_dmac_of_xlate,
-+					 NULL);
-+	if (ret < 0)
-+		goto error;
-+
-+	/*
-+	 * Register the DMA engine device.
-+	 *
-+	 * Default transfer size of 32 bytes requires 32-byte alignment.
-+	 */
-+	engine = &dmac->engine;
-+	dma_cap_set(DMA_SLAVE, engine->cap_mask);
-+
-+	engine->dev = &pdev->dev;
-+
-+	engine->src_addr_widths = widths;
-+	engine->dst_addr_widths = widths;
-+	engine->directions = BIT(DMA_MEM_TO_DEV) | BIT(DMA_DEV_TO_MEM);
-+	engine->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-+
-+	engine->device_alloc_chan_resources = usb_dmac_alloc_chan_resources;
-+	engine->device_free_chan_resources = usb_dmac_free_chan_resources;
-+	engine->device_prep_slave_sg = usb_dmac_prep_slave_sg;
-+	engine->device_terminate_all = usb_dmac_chan_terminate_all;
-+	engine->device_tx_status = usb_dmac_tx_status;
-+	engine->device_issue_pending = usb_dmac_issue_pending;
-+
-+	ret = dma_async_device_register(engine);
-+	if (ret < 0)
-+		goto error;
-+
-+	return 0;
-+
-+error:
-+	of_dma_controller_free(pdev->dev.of_node);
-+	pm_runtime_disable(&pdev->dev);
-+	return ret;
-+}
-+
-+static void usb_dmac_chan_remove(struct usb_dmac *dmac,
-+				 struct usb_dmac_chan *uchan)
-+{
-+	usb_dmac_chan_halt(uchan);
-+	devm_free_irq(dmac->dev, uchan->irq, uchan);
-+}
-+
-+static int usb_dmac_remove(struct platform_device *pdev)
-+{
-+	struct usb_dmac *dmac = platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i = 0; i < dmac->n_channels; ++i)
-+		usb_dmac_chan_remove(dmac, &dmac->channels[i]);
-+	of_dma_controller_free(pdev->dev.of_node);
-+	dma_async_device_unregister(&dmac->engine);
-+
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static void usb_dmac_shutdown(struct platform_device *pdev)
-+{
-+	struct usb_dmac *dmac = platform_get_drvdata(pdev);
-+
-+	usb_dmac_stop(dmac);
-+}
-+
-+static const struct of_device_id usb_dmac_of_ids[] = {
-+	{ .compatible = "renesas,usb-dmac", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, usb_dmac_of_ids);
-+
-+static struct platform_driver usb_dmac_driver = {
-+	.driver		= {
-+		.pm	= &usb_dmac_pm,
-+		.name	= "usb-dmac",
-+		.of_match_table = usb_dmac_of_ids,
-+	},
-+	.probe		= usb_dmac_probe,
-+	.remove		= usb_dmac_remove,
-+	.shutdown	= usb_dmac_shutdown,
-+};
-+
-+module_platform_driver(usb_dmac_driver);
-+
-+MODULE_DESCRIPTION("Renesas USB DMA Controller Driver");
-+MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
+You can parse the label as follows:
+
+led_cdev->name = of_get_property(child, "label", NULL) ? :
+                            child->name;
+
+> +	led_cdev->brightness_set = ktd2692_led_brightness_set;
+> +	led_cdev->brightness_set_sync = ktd2692_led_brightness_set_sync;
+> +	led_cdev->flags |= LED_CORE_SUSPENDRESUME | LED_DEV_CAP_FLASH;
+> +
+> +	mutex_init(&led->lock);
+> +	INIT_WORK(&led->work_brightness_set, ktd2692_brightness_set_work);
+> +
+> +	platform_set_drvdata(pdev, led);
+> +
+> +	ret = led_classdev_flash_register(&pdev->dev, fled_cdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "can't register LED %s\n", led_cdev->name);
+> +		mutex_destroy(&led->lock);
+> +		return ret;
+> +	}
+> +
+> +	ktd2692_setup(led);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ktd2692_remove(struct platform_device *pdev)
+> +{
+> +	struct ktd2692_context *led = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	led_classdev_flash_unregister(&led->fled_cdev);
+> +	cancel_work_sync(&led->work_brightness_set);
+> +
+> +	ret = regulator_disable(led->regulator);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Failed to disable supply: %d\n", ret);
+> +
+> +	mutex_destroy(&led->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ktd2692_match[] = {
+> +	{ .compatible = "kinetic,ktd2692", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver ktd2692_driver = {
+> +	.driver = {
+> +		.name  = "leds-ktd2692",
+> +		.of_match_table = ktd2692_match,
+> +	},
+> +	.probe  = ktd2692_probe,
+> +	.remove = ktd2692_remove,
+> +};
+> +
+> +module_platform_driver(ktd2692_driver);
+> +
+> +MODULE_AUTHOR("Ingi Kim <ingi2.kim@samsung.com>");
+> +MODULE_DESCRIPTION("Kinetic KTD2692 LED driver");
+> +MODULE_LICENSE("GPL v2");
+>
+
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Jacek Anaszewski
