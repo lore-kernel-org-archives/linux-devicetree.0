@@ -1,52 +1,43 @@
 From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [Patch v6 2/2] dmaengine: Add ADM driver
-Date: Wed, 1 Apr 2015 09:02:30 +0530
-Message-ID: <20150401033230.GS7192@intel.com>
-References: <1426571172-9711-1-git-send-email-agross@codeaurora.org>
- <1426571172-9711-3-git-send-email-agross@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] dmaengine: usb-dmac: Add Renesas USB DMA
+ Controller (USB-DMAC) driver
+Date: Wed, 1 Apr 2015 09:13:08 +0530
+Message-ID: <20150401034308.GU7192@intel.com>
+References: <1426052394-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1426052394-5556-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20150318082215.GF32683@intel.com>
+ <SIXPR06MB33355F6F0532539A23ED8A9D8010@SIXPR06MB333.apcprd06.prod.outlook.com>
+ <20150319095927.GX32683@intel.com>
+ <HKNPR06MB32208DCB73732603FF61234D80D0@HKNPR06MB322.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1426571172-9711-3-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+In-Reply-To: <HKNPR06MB32208DCB73732603FF61234D80D0@HKNPR06MB322.apcprd06.prod.outlook.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "horms@verge.net.au" <horms@verge.net.au>, kuninori morimoto <kuninori.morimoto.gx@renesas.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 12:46:12AM -0500, Andy Gross wrote:
+On Mon, Mar 23, 2015 at 02:32:07AM +0000, yoshihiro shimoda wrote:
 
-> +static enum dma_status adm_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
-> +	struct dma_tx_state *txstate)
-> +{
-> +	struct adm_chan *achan = to_adm_chan(chan);
-> +	struct virt_dma_desc *vd;
-> +	enum dma_status ret;
-> +	unsigned long flags;
-> +	size_t residue = 0;
-> +
-> +	ret = dma_cookie_status(chan, cookie, txstate);
-> +	if (ret == DMA_COMPLETE || !txstate)
-> +		return ret;
-> +
-> +	spin_lock_irqsave(&achan->vc.lock, flags);
-> +
-> +	vd = vchan_find_desc(&achan->vc, cookie);
-> +	if (vd)
-> +		residue = container_of(vd, struct adm_async_desc, vd)->length;
-> +
-> +	spin_unlock_irqrestore(&achan->vc.lock, flags);
-> +
-> +	/*
-> +	 * residue is either the full length if it is in the issued list, or 0
-> +	 * if it is in progress.  We have no reliable way of determining
-> +	 * anything inbetween
-> +	*/
-> +	dma_set_residue(txstate, residue);
-> +
-> +	if (achan->error)
-> +		return DMA_ERROR;
-but this may not be for the current descriptor right, which is queued?
+> > > > > +static void usb_dmac_chan_remove(struct usb_dmac_chan *uchan)
+> > > > > +{
+> > > > > +	tasklet_kill(&uchan->task);
+> > > > that part is good, but how about disabling irq? you can still get insterrupt
+> > >
+> > > Thank you for the point! I will add calling usb_dmac_chan_halt() to disable the interrupt.
+> > On top of that you should free/disable the irq as well
+> 
+> Does this mean I should call free_irq() or something in this remove function?
+Yes, that way irq can be be invoked
+
+> Since this driver uses devm_request_irq(), I don't think the driver call such a function.
+> (After this driver was removed, free_irq() was called by devm_irq_release())
+Yes FW will call, but the issue is that isr can get triggered after you ahve
+freed up stuff. So to prevent thsi it is recomendded that driver invoked
+free_irq() explictly or disable the irq line
 
 -- 
 ~Vinod
+
