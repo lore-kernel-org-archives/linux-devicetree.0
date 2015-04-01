@@ -1,114 +1,94 @@
-From: Michael Turquette <mturquette@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 3/4] clk: Provide always-on clock support
-Date: Tue, 31 Mar 2015 18:13:02 -0700
-Message-ID: <20150401011302.25195.55588@quantum>
+From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] clk: Provide always-on clock support
+Date: Tue, 31 Mar 2015 18:42:18 -0700
+Message-ID: <20150401014218.25195.61119@quantum>
 References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
  <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
- <54F173B7.9030305@st.com> <20150302081606.GC31325@x1>
+ <CAJe_Zhf=GBb8AfnTLaGxGcZkVSm9TtdnTsmpH_MBmbMT8ViMDg@mail.gmail.com>
+ <20150302083652.GE31325@x1>
+ <CABb+yY07woiiG8e2kff_AsiFCHNP+TKYyNm_o6=f5WmFsLi8gQ@mail.gmail.com>
+ <20150302101859.GB32347@x1>
+ <CAJe_Zhc-94afeWegEeOoL3X13y35MDJvqME1x7XMy3vVVXYedg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150302081606.GC31325@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <maxime.coquelin@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org, kernel@stlinux.com, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_Zhc-94afeWegEeOoL3X13y35MDJvqME1x7XMy3vVVXYedg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lee Jones (2015-03-02 00:16:06)
-> On Sat, 28 Feb 2015, Maxime Coquelin wrote:
-> 
-> > Hi Lee,
-> > 
-> > On 02/27/2015 10:14 PM, Lee Jones wrote:
-> > >Lots of platforms contain clocks which if turned off would prove fatal.
-> > >The only way to recover from these catastrophic failures is to restart
-> > >the board(s).  Now, when a clock is registered with the framework it is
-> > >compared against a list of provided always-on clock names which must be
-> > >kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSED
-> > >flag, which will prevent the common clk framework from attempting to
-> > >gate it during the clk_disable_unused() procedure.
-> > 
-> > Please correct me if I'm wrong, but your patch does not fix the
-> > issue you had initially.
-> > Let's take an example:
-> > A clock is critical for the system, and should never be gated, so
-> > you add the CLK_IGNORE_UNUSED
-> > flag so that it is not disabled by clk_disable_unused() procedure.
-> > The same clock is also used by other IPs, for example spi 0 instance.
-> > When starting a spi transfer, clk_enable() is called on this clock,
-> > so its usecount becomes 1.
-> > Once transfer done, clk_disable() is called, usecount becomes 0 and
-> > the clock gets disabled: system freeze.
-> 
-> You're right.  I also need to extend clk_core_disable() to take notice
-> of CLK_IGNORE_UNUSED.
+Quoting Jassi Brar (2015-03-02 02:28:44)
+> On 2 March 2015 at 15:48, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Mon, 02 Mar 2015, Jassi Brar wrote:
+> >
+> >> On Mon, Mar 2, 2015 at 2:06 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >> > On Sat, 28 Feb 2015, Jassi Brar wrote:
+> >> >
+> >> >> On 28 February 2015 at 02:44, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >> >> > Lots of platforms contain clocks which if turned off would prove fatal.
+> >> >> > The only way to recover from these catastrophic failures is to restart
+> >> >> > the board(s).  Now, when a clock is registered with the framework it is
+> >> >> > compared against a list of provided always-on clock names which must be
+> >> >> > kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSED
+> >> >> > flag, which will prevent the common clk framework from attempting to
+> >> >> > gate it during the clk_disable_unused() procedure.
+> >> >> >
+> >> >> If a clock is critical on a certain board, it could be got+enabled
+> >> >> during early boot so there is always a user.
+> >> >
+> >> > I tried this.  There was push-back from the DT maintainers.
+> >> >
+> >> >   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/324417.html
+> >> >
+> >> Thanks, I wasn't aware of the history.
+> >>
+> >> >> To be able to do that from DT, maybe add a new, say, CLK_ALWAYS_ON
+> >> >> flag could be made to initialize the clock with one phantom user
+> >> >> already. Or just reuse the CLK_IGNORE_UNUSED?
+> >> >
+> >> > How is that different to what this set is doing?
+> >> >
+> >> The phantom user - that's there but none can see it.
+> >>
+> >> How about?
+> >>
+> >> +       of_property_for_each_string(np, "clock-always-on", prop, clkname) {
+> >> +               clk = __clk_lookup(clkname);
+> >> +               if (!clk)
+> >> +                       continue;
+> >> +
+> >> +               clk->core->enable_count = 1;
+> >> +               clk->core->prepare_count = 1;
+> >> +       }
+> >
+> > This is only fractionally different from the current implementation.
+> >
+> > I believe the current way it slightly nicer, as we don't have to fake
+> > the user count.
+> >
+> Well... the user is indeed there, isn't it? It's just not known to
+> Linux. So 'fake' isn't most applicable here.
+> Otherwise you might have to stub out some existing and future
+> functions for CLK_IGNORE_UNUSED. And how do we explain to userspace
+> which would see power drawn but no user of the clock?
 
-Hi Lee,
+Jassi,
 
-I'd like to combine elements of your V3 and this series (V4?). Firstly
-let's stay away from modifying the semantics around CLK_IGNORE_UNUSED.
-There was discussion around adding a new flag which I'd like to avoid if
-possible.
-
-If we're leaving clocks enabled then it would be best to reflect that
-reality with the prepare/enable refcounting in the core. The best way to
-do this is with clk_prepare_enable(my_alwon_clk). Drivers already do
-this today by hacking calls to clk_prepare_enable into their driver's
-probe function, and we can support it more explicitly in DT.
-
-Since we already have assigned-clock-rate and assigned-clock-parent in
-drivers/clk/clk-conf.c I propose that we add a third property here,
-assigned-clock-alwon. I don't really care about the name, so feel free
-to change it, so long as your suggestion is Measurably Better.
-
-This property can only be added to clock providers (not consumers),
-because if we have a clock consumer then that consumer should just call
-clk_prepare_enable. See the pseudo-code below:
-
-
-
-diff --git a/drivers/clk/clk-conf.c b/drivers/clk/clk-conf.c
-index 48a65b2..19dce89 100644
---- a/drivers/clk/clk-conf.c
-+++ b/drivers/clk/clk-conf.c
-@@ -115,6 +115,14 @@ static int __set_clk_rates(struct device_node *node, bool clk_supplier)
- 	return 0;
- }
- 
-+static int __set_clk_alwon(struct device_node *node, bool clk_supplier)
-+{
-+	if (!clk_supplier)
-+		return -EINVAL;
-+
-+	clk_prepare_enable(...);
-+}
-+
- /**
-  * of_clk_set_defaults() - parse and set assigned clocks configuration
-  * @node: device node to apply clock settings for
-@@ -138,6 +146,10 @@ int of_clk_set_defaults(struct device_node *node, bool clk_supplier)
- 	if (rc < 0)
- 		return rc;
- 
--	return __set_clk_rates(node, clk_supplier);
-+	rc = __set_clk_rates(node, clk_supplier);
-+	if (rc < 0)
-+		return rc;
-+
-+	return __set_clk_alwon(node, clk_supplier);
- }
- EXPORT_SYMBOL_GPL(of_clk_set_defaults);
-
-
-
-Amazing, I know. Is there any aspect of this approach which does not
-solve your use case?
-
-We should mark this new property (assigned-clk-alwon) as unstable since
-it can (and likely will) grow into more stuff in the future (e.g.
-Stephen Boyd mentioned a "hand-off" which tells the core to keep clocks
-enabled until the correct driver claims them).
+This is broken. What if the parent of this clock has
+{enable,prepare}_count of zero? The way we propagate these refcounts up
+the tree would fall over.
 
 Regards,
 Mike
+
+> 
+> Anways, I am OK either way.
+> 
+> Cheers!
+> Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
