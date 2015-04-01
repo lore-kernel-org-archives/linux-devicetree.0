@@ -1,484 +1,123 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
-Date: Wed, 01 Apr 2015 10:15:56 +0200
-Message-ID: <1427876156.24886.1.camel@pengutronix.de>
-References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery bindings
+Date: Wed, 1 Apr 2015 10:18:05 +0200
+Message-ID: <BC5A7447-CAD7-4CCE-8F08-8CEFBB5C6905@goldelico.com>
+References: <1426022847-30912-1-git-send-email-marek@goldelico.com> <1426022847-30912-4-git-send-email-marek@goldelico.com> <20150311152414.GX5264@atomide.com> <844740CD-C95B-4411-A2C8-4906F58DBEE8@goldelico.com> <20150311164442.GA5264@atomide.com> <20150331072643.GB30788@amd>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427875809-10444-1-git-send-email-vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vianney le =?ISO-8859-1?Q?Cl=E9ment?= de Saint-Marcq <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150331072643.GB30788@amd>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Tony Lindgren <tony@atomide.com>, Marek Belisko <marek@goldelico.com>, Benoit Cousson <bcousson@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 01.04.2015, 10:10 +0200 schrieb Vianney le Cl=C3=A9men=
-t de
-Saint-Marcq:
-> Add device tree for the Embest/Element 14 MarS Board [1], an i.MX6 Du=
-al
-> based development board.
->=20
-> The e-MMC chip is disabled because initialization fails (error -110).
-> A possible cause is described in [2].
+Hi Pavel,
 
-So if the problem is that there are only 4 connected data lines one the
-board, couldn't you simply add the property bus-width =3D <4>; to the e=
-mmc
-node?
+Am 31.03.2015 um 09:26 schrieb Pavel Machek <pavel@ucw.cz>:
+
+> Hi!
+>=20
+>>>>> +		io-channels =3D <&twl_madc 1>,
+>>>>> +	                      <&twl_madc 10>,
+>>>>> +			      <&twl_madc 12>;
+>>>>> +		io-channel-names =3D "temp",
+>>>>> +		                   "ichg",
+>>>>> +		                   "vbat";
+>>>>> +	};
+>>>>=20
+>>>> Rather than just making platform_data into device tree properties.=
+=2E
+>>>>=20
+>>>> Can't you hide the these custom properties behind the compatible f=
+lag?
+>>>>=20
+>>>> You can initialize that data in the driver based on the compatible
+>>>> flag and the match data.
+>>>>=20
+>>>> This makes sense if you can group things to similar configurations=
+=2E
+>>>=20
+>>> Maybe I have not completely understood your proposal.
+>>>=20
+>>> Do you mean to go back to have big parameter tables for each device=
+/battery
+>>> combination in the driver code and the compatible flag (e.g. compat=
+ible =3D =93board17=94)
+>>> chooses the right data set for the charging map and channels?
+>>=20
+>> If you can somehow group them, then yes. Not for every board if ther=
+e
+>> are many of them naturally.
+>>=20
+>>> I thought this is what the DT was introduced for - to have the same=
+ driver=20
+>>> code but adapt to different boards depending on hardware variations=
+=2E
+>>=20
+>> Yeah but you also need to consider the issues related to introducing
+>> new device tree properties. The device tree properties introduced
+>> should be generic where possible.
+>>=20
+>>> And batteries have very different characteristics and vary between =
+devices=85
+>>=20
+>> Right. Maybe that has been already agreed on to use capacity-uah for
+>> batteries in general? In that case I have not problem with that as
+>> it's a generic property :)
+>>=20
+>>> The charging maps are depending on the battery type connected to th=
+e twl4030
+>>> and which madc channel is which value is also a little hardware dep=
+endent
+>>> (although the twl4030 doesn=92t give much choice).
+>>=20
+>> Just to consider alternatives before introducing driver specific
+>> property for the maps.. Maybe here you could have few different type
+>> of maps and select something safe by default? Of course it could be =
+this
+>> is higly board specific, I think some devices may be able to run bel=
+ow
+>> 3.3V for example..
+>=20
+> As I explained in some other mail, those tables should not be
+> neccessary at all. They can be computed from li-ion characteristics
+> and internal resistance, and assumed current during charge and
+> discharge.
+
+I already explained that we do not know the charging and discharging
+current well enough for such a calculation.
+
+And I explained that the =93internal resistance=94 is a system (battery=
+ + cables +
+connectors + other circuits) parameter that is not easy to derive or me=
+asure
+and type into the .dts source code.
+
+At least I have no idea how I should find it out for my boards. While I=
+ can
+easily determine the curves (and we already have them for the platform_=
+data
+driver).
+
+Please propose your own code doing that so that we can test if it is
+better.
 
 >=20
-> [1] http://www.embest-tech.com/shop/star/marsboard.html
-> [2] https://community.freescale.com/message/442168#442168
->=20
-> Signed-off-by: Vianney le Cl=C3=A9ment de Saint-Marcq <vianney.leclem=
-ent-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile            |   1 +
->  arch/arm/boot/dts/imx6q-marsboard.dts | 401 ++++++++++++++++++++++++=
-++++++++++
->  2 files changed, 402 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-marsboard.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 91bd5bd..06fa33e 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -249,6 +249,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D \
->  	imx6q-gw54xx.dtb \
->  	imx6q-gw552x.dtb \
->  	imx6q-hummingboard.dtb \
-> +	imx6q-marsboard.dtb \
->  	imx6q-nitrogen6x.dtb \
->  	imx6q-phytec-pbab01.dtb \
->  	imx6q-rex-pro.dtb \
-> diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dt=
-s/imx6q-marsboard.dts
-> new file mode 100644
-> index 0000000..30265c6
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
-> @@ -0,0 +1,401 @@
-> +/*
-> + * Copyright 2015 Vianney le Cl=C3=A9ment de Saint-Marcq, Essensium =
-NV
-> + *  Based on imx6dl-riotboard.dts Copyright Iain Paton.
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx6q.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	model =3D "MarS Board i.MX6 Dual Board";
-> +	compatible =3D "embest,imx6q-marsboard", "fsl,imx6q";
-> +
-> +	memory {
-> +		reg =3D <0x10000000 0x40000000>;
-> +	};
-> +
-> +	regulators {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		reg_2p5v: regulator@0 {
-> +			compatible =3D "regulator-fixed";
-> +			reg =3D <0>;
-> +			regulator-name =3D "2P5V";
-> +			regulator-min-microvolt =3D <2500000>;
-> +			regulator-max-microvolt =3D <2500000>;
-> +		};
-> +
-> +		reg_3p3v: regulator@1 {
-> +			compatible =3D "regulator-fixed";
-> +			reg =3D <1>;
-> +			regulator-name =3D "3P3V";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +		};
-> +
-> +		reg_usb_otg_vbus: regulator@2 {
-> +			compatible =3D "regulator-fixed";
-> +			reg =3D <2>;
-> +			regulator-name =3D "usb_otg_vbus";
-> +			regulator-min-microvolt =3D <5000000>;
-> +			regulator-max-microvolt =3D <5000000>;
-> +			gpio =3D <&gpio3 22 0>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_led>;
-> +
-> +		led0: user1 {
-> +			label =3D "user1";
-> +			gpios =3D <&gpio5 2 GPIO_ACTIVE_LOW>;
-> +			default-state =3D "on";
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +
-> +		led1: user2 {
-> +			label =3D "user2";
-> +			gpios =3D <&gpio3 28 GPIO_ACTIVE_LOW>;
-> +			default-state =3D "off";
-> +		};
-> +	};
-> +};
-> +
-> +&audmux {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_audmux>;
-> +	status =3D "okay";
-> +};
-> +
-> +&ecspi1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_ecspi1>;
-> +	cs-gpios =3D <&gpio2 30 0>;
-> +	fsl,spi-num-chipselects =3D <1>;
-> +	status =3D "okay";
-> +
-> +	flash: m25p80@0 {
-> +		compatible =3D "st,sst25vf016b";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <20000000>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +
-> +		bootloader@0 {
-> +			reg =3D <0x00000000 0x00100000>;
-> +			read-only;
-> +		};
-> +
-> +		kernel@100000 {
-> +			reg =3D <0x00100000 0x00100000>;
-> +		};
-> +	};
-> +};
-> +
-> +&fec {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_enet>;
-> +	phy-mode =3D "rgmii";
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi {
-> +	ddc-i2c-bus =3D <&i2c2>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency =3D <100000>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency =3D <100000>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c2>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c3 {
-> +	clock-frequency =3D <100000>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c3>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_pwm1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_pwm2>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm3 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_pwm3>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm4 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_pwm4>;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart2>;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart3>;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart4>;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart5 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart5>;
-> +	status =3D "okay";
-> +};
-> +
-> +&usbh1 {
-> +	dr_mode =3D "host";
-> +	disable-over-current;
-> +	status =3D "okay";
-> +};
-> +
-> +&usbotg {
-> +	vbus-supply =3D <&reg_usb_otg_vbus>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_usbotg>;
-> +	disable-over-current;
-> +	dr_mode =3D "otg";
-> +	status =3D "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_usdhc2>;
-> +	cd-gpios =3D <&gpio1 4 0>;
-> +	vmmc-supply =3D <&reg_3p3v>;
-> +	status =3D "okay";
-> +};
-> +
-> +&usdhc3 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_usdhc3>;
-> +	vmmc-supply =3D <&reg_3p3v>;
-> +	non-removable;
-> +	/* Disabled because eMMC initialization fails */
-> +	/*status =3D "okay";*/
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names =3D "default";
-> +
-> +	imx6-marsboard {
-> +		pinctrl_audmux: audmuxgrp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-> +				MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-> +				MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-> +				MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_ecspi1: ecspi1grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
-> +				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
-> +				MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
-> +				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x000b1		/* CS0 */
-> +			>;
-> +		};
-> +
-> +		pinctrl_ecspi2: ecspi2grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
-> +				MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
-> +				MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
-> +				MX6QDL_PAD_EIM_LBA__GPIO2_IO27		0x000b1		/* CS0 */
-> +				MX6QDL_PAD_EIM_A17__GPIO2_IO21		0x000b1		/* IRQ */
-> +			>;
-> +		};
-> +
-> +		pinctrl_enet: enetgrp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-> +				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-> +				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
-> +				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-> +				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1		/* AR8035 CLK_25M =
---> ENET_REF_CLK (V22) */
-> +				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0		/* AR8035 pin strappin=
-g: IO voltage: pull up */
-> +				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x130b0		/* AR8035 pin strappin=
-g: PHYADDR#0: pull down */
-> +				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x130b0		/* AR8035 pin strappin=
-g: PHYADDR#1: pull down */
-> +				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0		/* AR8035 pin strappin=
-g: MODE#1: pull up */
-> +				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0		/* AR8035 pin strappin=
-g: MODE#3: pull up */
-> +				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x130b0		/* AR8035 pin str=
-apping: MODE#0: pull down */
-> +				MX6QDL_PAD_EIM_D31__GPIO3_IO31		0x130b0		/* RGMII_nRST */
-> +				MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x180b0		/* AR8035 interrupt *=
-/
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
-> +				MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c3: i2c3grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001b8b1
-> +				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_led: ledgrp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x1b0b1	/* user led0 */
-> +				MX6QDL_PAD_EIM_D28__GPIO3_IO28		0x1b0b1	/* user led1 */
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm1: pwm1grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_GPIO_9__PWM1_OUT		0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm2: pwm2grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm3: pwm3grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm4: pwm4grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_SD4_DAT2__PWM4_OUT		0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
-> +				MX6QDL_PAD_EIM_D19__UART1_CTS_B		0x1b0b1
-> +				MX6QDL_PAD_EIM_D20__UART1_RTS_B		0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_EIM_D27__UART2_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart3: uart3grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-> +				MX6QDL_PAD_EIM_EB3__UART3_RTS_B		0x1b0b1
-> +				MX6QDL_PAD_EIM_D23__UART3_CTS_B		0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart4: uart4grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart5: uart5grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_usbotg: usbotggrp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x17059
-> +				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x000b0	/* MX6QDL_PAD_EIM_D22__U=
-SB_OTG_PWR */
-> +				MX6QDL_PAD_EIM_D21__USB_OTG_OC		0x1b0b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc2: usdhc2grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-> +				MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-> +				MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-> +				MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-> +				MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-> +				MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-> +				MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x1b0b0	/* SD2 CD */
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc3: usdhc3grp {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
-> +				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
-> +				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
-> +				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
-> +				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
-> +				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
-> +				MX6QDL_PAD_SD3_RST__GPIO7_IO08		0x1b0b0	/* SD3 RST (eMMC) */
-> +			>;
-> +		};
-> +	};
-> +};
+> Running below 3.3V.. not really. At that point, the battery is really
+> _empty_, and voltage is going down really really fast.
 
---=20
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+It is the diffference between 2% and 0% where a fuel indication might
+be most important=85
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> Plus, you are damaging the battery at that point.
+
+The power controller will shut down - but the driver should report
+reasonable (but IMHO not necessarily perfect) values until the last
+moment.
+
+BR,
+Nikolaus
+
