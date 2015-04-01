@@ -1,84 +1,59 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v1] ata: ahci_xgene: Add AHCI Support for second generation of APM X-Gene SoC
-Date: Wed,  1 Apr 2015 20:18:02 +0530
-Message-ID: <1427899682-10912-2-git-send-email-stripathi@apm.com>
-References: <1427899682-10912-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1427899682-10912-1-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH 0/7] ARM: dts: qcom: Add more device coniguration nodes
+Date: Wed,  1 Apr 2015 18:05:08 +0300
+Message-ID: <1427900715-26273-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables full AHCI feature support for APM X-Gene SoC SATA host host
-controller. The following errata's are removed:
+Recent Qualcomm PMIC's devices are accessed over SPMI bus.
+Every PMIC has several "sub-function" devices inside.
 
-1. 2a0bdff6b95 ("ahci-xgene: fix the dma state machine lockup for the
-                 IDENTIFY DEVICE PIO mode command")
-2. 09c32aaa368 ("ahci_xgene: Fix the dma state machine lockup for the
-                 ATA_CMD_SMART PIO mode command")
-3. 1540035da71 ("ahci_xgene: Implement the xgene_ahci_poll_reg_val to
-                 support PMP")
-4. a3a84bc7c88 ("ahci_xgene: Implement the workaround to support PMP
-                 enumeration and discovery")
-5. 1102407bb71 ("ahci_xgene: Fix the DMA state machine lockup for the
-                 ATA_CMD_PACKET PIO mode command")
-6. 72f79f9e35b ("ahci_xgene: Removing NCQ support from the APM X-Gene SoC
-                 AHCI SATA Host Controller driver")
+First three patches are adding device nodes to PM8841, PM8941 and PMA8084 PMIC's.
+Next two are introducing PM8916 PMIC chip with its device nodes.
+Sixth add restart device node for MSM8916 chip.
+And the last one add initial GPIO definitions for APQ8016 SBC board.
 
-In addition, enable PMP support for second generation APM X-Gene SoC.
+All compatible drivers are already merged or will soon be merged,
+hopefully in the 4.1 merge window. This is why checkpatch will complain about
+"appears un-documented". checkpatch will also complain about
+"line over 80 characters", but I hope that in this case this is in favor
+in readability.
 
-Signed-off-by : Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci_xgene.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Patches are created top of Kumar's kernel tree and tags/qcom-dt-for-4.1 [1].
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 2e8bb60..0be47b0 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -28,6 +28,8 @@
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/phy/phy.h>
-+#include <asm/cputype.h>
-+
- #include "ahci.h"
+Any comments are welcome.
 
- #define DRV_NAME "xgene-ahci"
-@@ -94,6 +96,11 @@ struct xgene_ahci_context {
- 	void __iomem *csr_mux;		/* MUX CSR address of IP */
- };
+Regards,
+Ivan
 
-+static bool xgene_ahci_version1(void)
-+{
-+	return MIDR_VARIANT(read_cpuid_id()) == 0 ? true : false;
-+}
-+
- static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
- {
- 	dev_dbg(ctx->dev, "Release memory from shutdown\n");
-@@ -703,7 +710,19 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	/* Configure the host controller */
- 	xgene_ahci_hw_init(hpriv);
- skip_clk_phy:
--	hpriv->flags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_NCQ;
-+
-+	if (xgene_ahci_version1()) {
-+		/*
-+		 * Override the callbacks due to
-+		 * XGENE1 ERRATA's.
-+		 */
-+		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
-+		xgene_ahci_ops.qc_issue = xgene_ahci_qc_issue;
-+		xgene_ahci_ops.softreset = xgene_ahci_softreset;
-+		xgene_ahci_ops.pmp_softreset = xgene_ahci_pmp_softreset;
-+	} else {
-+		hpriv->flags |= AHCI_HFLAG_YES_FBS;
-+	}
+[1] https://lkml.org/lkml/2015/3/27/599
 
- 	rc = ahci_platform_init_host(pdev, hpriv, &xgene_ahci_port_info,
- 				     &ahci_platform_sht);
+Ivan T. Ivanov (7):
+  ARM: dts: qcom: Add PM8841 functions device nodes
+  ARM: dts: qcom: Add PM8941 functions device nodes
+  ARM: dts: qcom: Add PMA8084 functions device nodes
+  arm64: dts: qcom: Add SPMI PMIC Arbiter node for MSM8916
+  arm64: dts: qcom: Add 8x16 chipset SPMI PMIC's nodes
+  arm64: dts: qcom: Add MSM8916 restart device node
+  arm64: dts: qcom: Add initial set of PMIC and SoC pins for APQ8016 SBC
+    board
+
+ arch/arm/boot/dts/qcom-pm8841.dtsi                 | 14 ++++
+ arch/arm/boot/dts/qcom-pm8941.dtsi                 | 98 ++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-pma8084.dtsi                | 70 ++++++++++++++++
+ .../arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 30 +++++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 21 +++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          |  3 +
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi          |  1 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              | 25 +++++-
+ arch/arm64/boot/dts/qcom/pm8916.dtsi               | 93 ++++++++++++++++++++
+ 9 files changed, 354 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8916.dtsi
+
 --
-1.8.2.1
-
+1.9.1
