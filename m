@@ -1,33 +1,55 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
-Date: Wed, 1 Apr 2015 11:52:50 +0530
-Message-ID: <CAKohpokDhHo1ftcB6b4b+hO125_sqjK0NKESt79GVcWEwiq04w@mail.gmail.com>
-References: <cover.1423642246.git.viresh.kumar@linaro.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 0/2] dmaengine: usb-dmac: Add Renesas USB DMA Controller
+Date: Wed, 1 Apr 2015 15:22:43 +0900
+Message-ID: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1423642246.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>
-Cc: Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Mike Turquette <mike.turquette@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Thomas Abraham <ta.omasab@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Brown <broonie@kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, laurent.pinchart@ideasonboard.com, horms@verge.net.au, kuninori.morimoto.gx@renesas.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11 February 2015 at 13:46, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> Now that I have received an verbal Ack from Rob Herring (in a personal
-> conversation) about the bindings, I am showing how the code looks like with
-> these new bindings.
->
-> Some part is still now done:
-> - Interface for adding new detailed OPPs from platform code instead of DT
-> - Providing cpufreq helpers for the next OPPs
-> - Providing regulator helpers for the target/min/max ranges
->
-> Please provide feedback on how this looks like..
+This patch set is based on slave-dma.git / next branch.
+(commit id = 739e9c81155e74ca7acfa152eea4e8c055fe35b8)
 
-@Rafael: Its been two months now since this was posted. Can we get this
-merged please? If someone finds issues later, we can go fix them ..
+Changes from v3:
+ - Call devm_free_irq() in usb_dmac_chan_remove() to prevent the isr gets
+   triggered after this driver have freed up stuff.
 
-And this *should* not break any existing stuff as this is mostly new stuff..
+Changes from v2:
+ - Change descriptor management to store the residue in descriptor instead
+   of the channel.
+ - Change acceptable any sg_len.
+ - Modify usb_dmac_tx_status() to calculate the residue for flight
+   descriptors.
+ - Remove a local tasklet.
+ - Remove #ifdef CONFIG_PM.
+ Remarks: No change in patch [1/2].
 
---
-viresh
+Changes from v1:
+ - Use virt-dma infrastructure instead of local descriptor management.
+ - Change acceptable sg_len to 1.
+   (because a client driver will use dmaengine_prep_slave_single().)
+ - Remove usb_dmac_sleep_{suspend,resume} functions.
+ - Add usb_dmac_chan_halt() in usb_dmac_runtime_suspend().
+ - Use a tasklet instead of a kernel thread.
+ - Add tasklet_kill() in usb_dmac_remove().
+ - Fix MODULE_AUTHOR string.
+ Remarks: No change in patch [1/2].
+
+Yoshihiro Shimoda (2):
+  dmaengine: renesas,usb-dmac: Add device tree bindings documentation
+  dmaengine: usb-dmac: Add Renesas USB DMA Controller (USB-DMAC) driver
+
+ .../devicetree/bindings/dma/renesas,usb-dmac.txt   |  37 +
+ drivers/dma/sh/Kconfig                             |   9 +
+ drivers/dma/sh/Makefile                            |   1 +
+ drivers/dma/sh/usb-dmac.c                          | 910 +++++++++++++++++++++
+ 4 files changed, 957 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+ create mode 100644 drivers/dma/sh/usb-dmac.c
+
+-- 
+1.9.1
+
