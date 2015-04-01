@@ -1,43 +1,40 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v4 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Wed, 1 Apr 2015 10:36:58 +0200
-Message-ID: <CALszF6AKw-F1RVc5m2As7upp7ZuS7GpcJSoqixms3Dd4SNU9EQ@mail.gmail.com>
-References: <1427819096-31109-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1427819096-31109-11-git-send-email-mcoquelin.stm32@gmail.com>
-	<CAHp75VeUzKUEo7NCaXUYKBPpG7JYCykB+76Wu5tBKj750Bi+Qg@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4 5/7] drm/tilcdc: Force building of DRM_TILCDC_SLAVE_COMPAT
+Date: Wed, 1 Apr 2015 11:49:29 +0300
+Message-ID: <45674535d9bdc7629034b0c6f24b621efef6d2c4.1427877412.git.jsarha@ti.com>
+References: <cover.1427877412.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeUzKUEo7NCaXUYKBPpG7JYCykB+76Wu5tBKj750Bi+Qg@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <cover.1427877412.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
+Cc: tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk, robdclark@gmail.com, moinejf@free.fr, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andy,
+If I read Documentation/kbuild/makefiles.txt section 3.6 right, this
+patch should not be needed. However, without this patch the objects
+needed for DRM_TILCDC_SLAVE_COMPAT are not linked, if DRM_TILCDC is
+built as module.
 
-2015-03-31 18:45 GMT+02:00 Andy Shevchenko <andy.shevchenko@gmail.com>:
-> On Tue, Mar 31, 2015 at 7:24 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->> This drivers adds support to the STM32 USART controller, which is a
->> standard serial driver.
->>
->> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->
-> Few minor comments below.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ drivers/gpu/drm/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-All your comments are valid, I will send a v5 shortly fixing this.
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 2c239b9..c93ca0e 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -59,7 +59,7 @@ obj-$(CONFIG_DRM_ATMEL_HLCDC)	+= atmel-hlcdc/
+ obj-$(CONFIG_DRM_RCAR_DU) += rcar-du/
+ obj-$(CONFIG_DRM_SHMOBILE) +=shmobile/
+ obj-$(CONFIG_DRM_OMAP)	+= omapdrm/
+-obj-$(CONFIG_DRM_TILCDC)	+= tilcdc/
++obj-y			+= tilcdc/
+ obj-$(CONFIG_DRM_QXL) += qxl/
+ obj-$(CONFIG_DRM_BOCHS) += bochs/
+ obj-$(CONFIG_DRM_MSM) += msm/
+-- 
+1.9.1
 
-Thanks for the review,
-Maxime
-
->
->> ---
->>  drivers/tty/serial/Kconfig       |  17 +
->>  drivers/tty/serial/Makefile      |   1 +
->>  drivers/tty/serial/stm32-usart.c | 743 +++++++++++++++++++++++++++++++++++++++
->>  include/uapi/linux/serial_core.h |   3 +
->>  4 files changed, 764 insertions(+)
->>  create mode 100644 drivers/tty/serial/stm32-usart.c
->>
