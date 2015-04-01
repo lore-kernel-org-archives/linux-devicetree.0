@@ -1,43 +1,55 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH RFC v2 04/12] drm/components: add generic vga encoder
- driver
-Date: Wed, 1 Apr 2015 11:27:51 +0100
-Message-ID: <20150401102751.GZ24899@n2100.arm.linux.org.uk>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH RFC v2 11/12] ARM: dts: rockchip: add rk3288 lvds node
+Date: Wed,  1 Apr 2015 12:09:45 +0200
+Message-ID: <1427882986-19110-12-git-send-email-heiko@sntech.de>
 References: <1427882986-19110-1-git-send-email-heiko@sntech.de>
- <1427882986-19110-5-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427882986-19110-5-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1427882986-19110-1-git-send-email-heiko@sntech.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie, mark.yao@rock-chips.com, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2015 at 12:09:38PM +0200, Heiko Stuebner wrote:
-> This adds a driver for generic vga encoders like the Analog Devices adv7123
-> and similar ics. These chips do not have any special configuration options
-> except a powersafe gpio.
-> 
-> An exception is added for the rcar-du driver which also implements support
-> for the adv7123 internally but is not yet converted to the component framework.
-
-Why is this implemented as a master?  It's not the top level card device,
-it shouldn't be a master.  It should be a component.
-
-I wonder if this is why you need your previous patches.  Componentised
-DRM works fine without needing to build lists of connectors and encoders.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+QWRkIHRoZSBiYXNpYyBub2RlIGZvciB0aGUgbHZkcyBjb250cm9sbGVyIG9mIHJrMzI4OCBhbmQg
+aG9vayBpdCBpbnRvIHRoZQpkaXNwbGF5LXN1YnN5c3RlbSBoaXJhcmNoeS4KClNpZ25lZC1vZmYt
+Ynk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Ci0tLQogYXJjaC9hcm0vYm9vdC9k
+dHMvcmszMjg4LmR0c2kgfCA0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysKIDEgZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRz
+aQppbmRleCBlN2U5NGY4Li45NzI5MWJiIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9y
+azMyODguZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaQpAQCAtNjIxLDYg
+KzYyMSwxMSBAQAogCQkJCXJlZyA9IDwwPjsKIAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlf
+aW5fdm9wYj47CiAJCQl9OworCisJCQl2b3BiX291dF9sdmRzOiBlbmRwb2ludEAxIHsKKwkJCQly
+ZWcgPSA8MT47CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX2luX3ZvcGI+OworCQkJfTsK
+IAkJfTsKIAl9OwogCkBAIC02NTIsNiArNjU3LDExIEBACiAJCQkJcmVnID0gPDA+OwogCQkJCXJl
+bW90ZS1lbmRwb2ludCA9IDwmaGRtaV9pbl92b3BsPjsKIAkJCX07CisKKwkJCXZvcGxfb3V0X2x2
+ZHM6IGVuZHBvaW50QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
+Jmx2ZHNfaW5fdm9wbD47CisJCQl9OwogCQl9OwogCX07CiAKQEAgLTY2NCw2ICs2NzQsMzggQEAK
+IAkJc3RhdHVzID0gImRpc2FibGVkIjsKIAl9OwogCisJbHZkczogbHZkc0BmZjk2YzAwMCB7CisJ
+CWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjg4LWx2ZHMiOworCQlyZWcgPSA8MHhmZjk2YzAw
+MCAweDQwMDA+OworCQljbG9ja3MgPSA8JmNydSBQQ0xLX0xWRFNfUEhZPjsKKwkJY2xvY2stbmFt
+ZXMgPSAicGNsa19sdmRzIjsKKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJcGluY3Ry
+bC0wID0gPCZsY2RjMF9jdGw+OworCQlyb2NrY2hpcCxncmYgPSA8JmdyZj47CisJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7CisKKwkJcG9ydHMgeworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkj
+c2l6ZS1jZWxscyA9IDwwPjsKKworCQkJbHZkc19pbjogcG9ydEAwIHsKKwkJCQlyZWcgPSA8MD47
+CisKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwor
+CQkJCWx2ZHNfaW5fdm9wYjogZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZ2b3BiX291dF9sdmRzPjsKKwkJCQl9OworCQkJCWx2ZHNfaW5fdm9w
+bDogZW5kcG9pbnRAMSB7CisJCQkJCXJlZyA9IDwxPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0g
+PCZ2b3BsX291dF9sdmRzPjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OworCiAJaGRtaTogaGRt
+aUBmZjk4MDAwMCB7CiAJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjg4LWR3LWhkbWkiOwog
+CQlyZWcgPSA8MHhmZjk4MDAwMCAweDIwMDAwPjsKLS0gCjIuMS40CgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
