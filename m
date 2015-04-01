@@ -1,70 +1,78 @@
-From: Robert Baldyga <r.baldyga@samsung.com>
-Subject: [PATCH v2 4/4] Documentation: extcon: usb-gpio: update usb-gpio
- binding description
-Date: Wed, 01 Apr 2015 09:23:25 +0200
-Message-ID: <1427873005-24024-5-git-send-email-r.baldyga@samsung.com>
-References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, Robert Baldyga <r.baldyga@samsung.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] phy: miphy365x: Use the generic phy type constants
+ in dt-bindings/phy/phy.h
+Date: Wed, 1 Apr 2015 13:31:15 +0530
+Message-ID: <551BA5CB.6030903@ti.com>
+References: <1427728632-10846-1-git-send-email-peter.griffin@linaro.org> <1427728632-10846-2-git-send-email-peter.griffin@linaro.org> <551A2D4D.1010601@ti.com> <20150331074027.GH9447@x1> <551ABD99.2000503@ti.com> <551AC37E.70503@st.com> <20150401071501.GS9447@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150401071501.GS9447@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add information about VBUS pin detection support, 'debounce' property
-and some other details.
+Hi,
 
-Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
----
- .../devicetree/bindings/extcon/extcon-usb-gpio.txt | 28 ++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+On Wednesday 01 April 2015 12:45 PM, Lee Jones wrote:
+> On Tue, 31 Mar 2015, Maxime Coquelin wrote:
+>
+>> Hi Kishon,
+>> On 03/31/2015 05:30 PM, Kishon Vijay Abraham I wrote:
+>>> Maxime,
+>>>
+>>> On Tuesday 31 March 2015 01:10 PM, Lee Jones wrote:
+>>>> On Tue, 31 Mar 2015, Kishon Vijay Abraham I wrote:
+>>>>
+>>>>> Hi Patrice, Maxime,
+>>>>>
+>>>>> On Monday 30 March 2015 08:47 PM, Peter Griffin wrote:
+>>>>>> Now there are generic phy type constants declared in phy.h,
+>>>>>> migrate over to
+>>>>>> using them rather than defining our own. This change has
+>>>>>> been done as one
+>>>>>> atomic commit to be bisectable.
+>>>>>>
+>>>>>> Note: The values of the defines are the same, so there is no
+>>>>>> ABI breakage
+>>>>>> with this patch.
+>>>>>>
+>>>>>> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>
+>>>>> Are you okay for this patch to go via PHY tree? It modifies
+>>>>> arch/arm/boot/dts
+>>>>> /stih416.dtsi.
+>>>>
+>>>> These files need to be changed simultaneously in order to prevent
+>>>> breakage during bisection and the like.  I think the best bet moving
+>>>> forward is to pull this into its own branch, tag it and send Maxime a
+>>>> pull-request to the immutable branch.  It's the best way to minimise
+>>>> merge conflicts during the v4.1 merge window.
+>>>
+>>> okay. I still need an Ack from Maxime.
+>>
+>> You have my Ack.
+>>
+>> I haven't sent a pull request for STi DT files for v4.1 now, and it
+>> is too late to send one.
+>> So creating an immutable tag is not even needed in my opinion, you
+>> can just take the DT patch.
+>
+> Kishon,
+>
+> I saw that you took the MAINTAINERS patch, but not this one.  If it's
+> because you are still unsure about it, I agree with Maxime, you can
+> just take this patch without fear of conflict.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-index af0b903..7096f39 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-@@ -1,16 +1,40 @@
- USB GPIO Extcon device
- 
--This is a virtual device used to generate USB cable states from the USB ID pin
--connected to a GPIO pin.
-+This is a virtual device used to generate USB cable states from the USB
-+ID and VBUS signals connected to GPIO pins.
-+
-+The extcon cable states USB and USB_HOST are actually VBUS and !ID
-+pin states and do not indicate what mode the USB needs to operate in.
-+That decision is done by the USB stack.
-+
-+Some devices have only one of these GPIO pins, so we support cases when
-+only one of them is present. Hence properties 'id-gpio' and 'vbus-gpio'
-+are described as optional, but at least one of them has to be present
-+in extcon-usb-gpio node.
-+
-+In general we have three cases:
-+1. If VBUS and ID gpios are present we pass them as is
-+	USB-HOST = !ID, USB = VBUS
-+2. If only VBUS gpio is present we assume that ID pin is always High.
-+	USB-HOST = false, USB = VBUS.
-+3. If only ID pin is available we infer the VBUS pin states based on ID.
-+	USB-HOST = !ID, USB = ID
- 
- Required properties:
- - compatible: Should be "linux,extcon-usb-gpio"
-+
-+Optional properties
- - id-gpio: gpio for USB ID pin. See gpio binding.
-+- vbus-gpio: gpio for USB VBUS pin. See gpio binding.
-+- debounce: gpio debounce time in milliseconds (u32).
-+
- 
- Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
- 	extcon_usb1 {
- 		compatible = "linux,extcon-usb-gpio";
- 		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-+		vbus-gpio = <&gpio6 2 GPIO_ACTIVE_HIGH>;
-+		debounce = <25>;
- 	}
- 
- 	&omap_dwc3_1 {
--- 
-1.9.1
+I've took this already
+https://git.kernel.org/cgit/linux/kernel/git/kishon/linux-phy.git/commit/?h=next&id=76fa6deabab05688a1653c2f66224be4a3c08d6a
+
+-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
