@@ -1,120 +1,111 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 7/7] arm64: dts: qcom: Add initial set of PMIC and SoC pins for APQ8016 SBC board
-Date: Wed,  1 Apr 2015 18:05:15 +0300
-Message-ID: <1427900715-26273-8-git-send-email-ivan.ivanov@linaro.org>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH 3/7] ARM: dts: qcom: Add PMA8084 functions device nodes
+Date: Wed,  1 Apr 2015 18:05:11 +0300
+Message-ID: <1427900715-26273-4-git-send-email-ivan.ivanov@linaro.org>
 References: <1427900715-26273-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427900715-26273-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1427900715-26273-1-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial device configuration nodes for APQ8016 and PM8916 GPIO's.
+* GPIO block, with 22 pins
+* MPP block, with 8 pins
+* Volatage ADC (VADC), with multiple inputs
+* Thermal sensor device, which is using on chip VADC
+  channel report PMIC die temperature.
+* RTC device
 
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 ---
- .../arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 30 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 21 +++++++++++++++
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          |  2 ++
- arch/arm64/boot/dts/qcom/msm8916.dtsi              |  2 +-
- 4 files changed, 54 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+ arch/arm/boot/dts/qcom-pma8084.dtsi | 70 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-new file mode 100644
-index 0000000..535532b
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-@@ -0,0 +1,30 @@
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+
-+&pm8916_gpios {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pm8916_gpios_default>;
-+
-+	pm8916_gpios_default: default {
-+		usb_hub_reset_pm {
-+			pins = "gpio1";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+		};
-+		usb_sw_sel_pm {
-+			pins = "gpio2";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			input-disable;
-+		};
-+		usr_led_3_ctrl {
-+			pins = "gpio3";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+		};
-+		usr_led_4_ctrl {
-+			pins = "gpio4";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-new file mode 100644
-index 0000000..5f7023f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-@@ -0,0 +1,21 @@
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+&msmgpio {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&soc_gpios_default>;
-+
-+	soc_gpios_default: default {
-+		usr_led_1_ctrl_default: usr_led_1_ctrl_default {
-+			pins = "gpio21";
-+			function = "gpio";
-+			output-low;
-+		};
-+		usr_led_2_ctrl_default: usr_led_2_ctrl_default {
-+			pins = "gpio120";
-+			function = "gpio";
-+			output-low;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 58f0055f..98abece 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -13,6 +13,8 @@
+diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
+index a5a4fe6..9092c2e 100644
+--- a/arch/arm/boot/dts/qcom-pma8084.dtsi
++++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
+@@ -1,3 +1,5 @@
++#include <dt-bindings/iio/qcom,spmi-vadc.h>
++#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/spmi/spmi.h>
 
- #include "msm8916.dtsi"
- #include "pm8916.dtsi"
-+#include "apq8016-sbc-soc-pins.dtsi"
-+#include "apq8016-sbc-pmic-pins.dtsi"
+ &spmi_bus {
+@@ -7,6 +9,74 @@
+ 		reg = <0x0 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		rtc@6000 {
++			compatible = "qcom,pm8941-rtc";
++			reg = <0x6000 0x100>,
++			      <0x6100 0x100>;
++			reg-names = "rtc", "alarm";
++			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
++		};
++
++		pma8084_gpios: gpios@c000 {
++			compatible = "qcom,pma8084-gpio";
++			reg = <0xc000 0x1600>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <0 0xc0 0 0>, <0 0xc1 0 0>, <0 0xc2 0 0>, <0 0xc3 0 0>,
++				     <0 0xc4 0 0>, <0 0xc5 0 0>, <0 0xc6 0 0>, <0 0xc7 0 0>,
++				     <0 0xc8 0 0>, <0 0xc9 0 0>, <0 0xca 0 0>, <0 0xcb 0 0>,
++				     <0 0xcc 0 0>, <0 0xcd 0 0>, <0 0xce 0 0>, <0 0xcf 0 0>,
++				     <0 0xd0 0 0>, <0 0xd1 0 0>, <0 0xd2 0 0>, <0 0xd3 0 0>,
++				     <0 0xd4 0 0>, <0 0xd5 0 0>;
++		};
++
++		pma8084_mpps: mpps@a000 {
++			compatible = "qcom,pma8084-mpp";
++			reg = <0xa000 0x800>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <0 0xa0 0 0>, <0 0xa1 0 0>, <0 0xa2 0 0>, <0 0xa3 0 0>,
++				     <0 0xa4 0 0>, <0 0xa5 0 0>, <0 0xa6 0 0>, <0 0xa7 0 0>;
++		};
++
++		pma8084_temp: temp-alarm@2400 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0x2400 0x100>;
++			interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
++			#thermal-sensor-cells = <0>;
++			io-channels = <&pma8084_vadc VADC_DIE_TEMP>;
++			io-channel-names = "thermal";
++		};
++
++		pma8084_vadc: vadc@3100 {
++			compatible = "qcom,spmi-vadc";
++			reg = <0x3100 0x100>;
++			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#io-channel-cells = <1>;
++			io-channel-ranges;
++
++			die_temp {
++				reg = <VADC_DIE_TEMP>;
++			};
++			ref_625mv {
++				reg = <VADC_REF_625MV>;
++			};
++			ref_1250v {
++				reg = <VADC_REF_1250MV>;
++			};
++			ref_buf_625mv {
++				reg = <VADC_SPARE1>;
++			};
++			ref_gnd {
++				reg = <VADC_GND_REF>;
++			};
++			ref_vdd {
++				reg = <VADC_VDD_VADC>;
++			};
++		};
+ 	};
 
- / {
- 	aliases {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index c95592d..4951fcc 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -82,7 +82,7 @@
- 			reg = <0x4ab000 0x4>;
- 		};
-
--		pinctrl@1000000 {
-+		msmgpio: pinctrl@1000000 {
- 			compatible = "qcom,msm8916-pinctrl";
- 			reg = <0x1000000 0x300000>;
- 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 	usid1: pma8084@1 {
 --
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
