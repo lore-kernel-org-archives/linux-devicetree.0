@@ -1,103 +1,49 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: [PATCH v2 2/3] Phy: DT binding documentation for Broadcom Cygnus USB PHY driver
-Date: Wed, 1 Apr 2015 13:50:56 -0700
-Message-ID: <1427921457-18235-3-git-send-email-arun.ramamurthy@broadcom.com>
-References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com>
+From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/3] USB PHY driver for Broadcom's Cygnus chipset
+Date: Wed, 1 Apr 2015 13:50:54 -0700
+Message-ID: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom's Cygnus chip has a USB 2.0 host controller connected to
-three separate phys. One of the phs (port 2) is also connectd to
-a usb 2.0 device controller
+This patchset adds the USB phy driver and documentation 
+for Broadom's Cygnus chipset. The phy is configurable from device tree
+and is capable of both device and host functions. It also provides
+a clock and reset to the host controller
 
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- .../bindings/phy/brcm,cygnus-usb-phy.txt           | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+History:
+v1:
+    - Included Dmitry Torokhov's patch that addresed Kishon Vijay Abraham's 
+    comments on multiple phy model
+    - Inlucded Dmitry Torokhov's patch to use phy regulator
+    - Addressed Arnd Bergmann's comments on usage of this phy driver by
+    ehci-platform and ohci-platform driver in a separate patchset. 
+v2:
+    - Addressed Kishon's comments on documentation and function names
+    - Dmitry Addressed Kishon's comments on per port phy regulators
+
+Arun Ramamurthy (3):
+  phy: phy-core: allow specifying supply at port level
+  Phy: DT binding documentation for Broadcom Cygnus USB PHY driver
+  phy: cygnus-usbphy: Add Broadcom Cygnus USB phy driver
+
+ .../bindings/phy/brcm,cygnus-usb-phy.txt           |  69 +++
+ drivers/phy/Kconfig                                |  12 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-cygnus-usb.c                   | 484 +++++++++++++++++++++
+ drivers/phy/phy-core.c                             |  23 +-
+ 5 files changed, 576 insertions(+), 13 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-cygnus-usb.c
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-new file mode 100644
-index 0000000..d1a9a65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-@@ -0,0 +1,69 @@
-+BROADCOM CYGNUS USB PHY
-+
-+Required Properties:
-+	- compatible:  brcm,cygnus-usb-phy
-+	- reg : usbphy_regs - Base address of phy registers
-+			usb2h_idm_regs - Base address of host idm registers
-+			usb2d_idm_regs - Base address of device idm registers
-+	- phy-cells - must be 1 for each port declared. This is because the node
-+		      that uses the phy must provide one integers, 0 for device
-+		      and 1 for host
-+
-+NOTE: port 0 and port 1 are host only and port 2 can be configured for host or
-+device.
-+
-+Example of phy :
-+	usbphy0: usbphy@0x0301c000 {
-+		compatible = "brcm,cygnus-usb-phy";
-+		reg = <0x0301c000 0x2000>,
-+		      <0x18115000 0x1000>,
-+		      <0x18111000 0x1000>;
-+		status = "okay";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		usbphy0_0: usbphy0@0 {
-+			#phy-cells = <1>;
-+			reg = <0>;
-+			status = "okay";
-+			phy-supply = <&vbus_p0>;
-+		};
-+
-+		usbphy0_1: usbphy0@1 {
-+			#phy-cells = <1>;
-+			reg = <1>;
-+			status = "okay";
-+		};
-+
-+		usbphy0_2: usbphy0@2 {
-+			#phy-cells = <1>;
-+			reg = <2>;
-+			status = "okay";
-+			phy-supply = <&vbus_p2>;
-+		};
-+	};
-+
-+Example of node using the phy:
-+
-+	/* This nodes declares all three ports as host */
-+
-+	ehci0: usb@0x18048000 {
-+		compatible = "generic-ehci";
-+		reg = <0x18048000 0x100>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&usbphy0_0 1 &usbphy0_1 1 &usbphy0_2 1>;
-+		status = "okay";
-+	};
-+
-+	/*
-+	 * This node declares port 2 phy
-+	 * and configures it for device
-+	 */
-+
-+	usbd_udc_dwc1: usbd_udc_dwc@0x1804c000 {
-+		compatible = "iproc-udc";
-+		reg = <0x1804c000 0x2000>;
-+		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&usbphy0_2 0>;
-+		phy-names = "usb";
-+	};
 -- 
 2.3.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
