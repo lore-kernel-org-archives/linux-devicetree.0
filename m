@@ -1,320 +1,113 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Thu, 2 Apr 2015 15:27:25 +0300
-Message-ID: <551D35AD.9040109@ti.com>
-References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com> <1427873005-24024-3-git-send-email-r.baldyga@samsung.com> <551BD655.4090906@ti.com> <551BDB32.3040808@samsung.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/2] ARM: EXYNOS: Get current parent clock for power domain
+ on/off
+Date: Thu, 02 Apr 2015 14:29:31 +0200
+Message-ID: <551D362B.90901@collabora.co.uk>
+References: <1427961979-29477-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <551BDB32.3040808@samsung.com>
+In-Reply-To: <1427961979-29477-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Baldyga <r.baldyga@samsung.com>, cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Robert,
+Hello Krzysztof,
 
-On 01/04/15 14:49, Robert Baldyga wrote:
-> Hi Roger,
+On 04/02/2015 10:06 AM, Krzysztof Kozlowski wrote:
+> Using a fixed (by DTS) parent for clocks when turning on the power domain
+> may introduce issues in other drivers. For example when such driver
+> changes the parent during runtime and expects that he is the only place
+> of such change.
 > 
-> On 04/01/2015 01:28 PM, Roger Quadros wrote:
->> Robert,
->>
->> On 01/04/15 10:23, Robert Baldyga wrote:
->>> This patch adds VBUS pin detection support to extcon-usb-gpio driver.
->>> It allows to use this driver with boards which have both VBUS and ID
->>> pins, or only one of them.
->>>
->>> Following table of states presents relationship between this signals
->>> and detected cable type:
->>>
->>>  State              |    ID   |   VBUS
->>> ----------------------------------------
->>>  [1] USB            |    H    |    H
->>>  [2] none           |    H    |    L
->>>  [3] USB & USB-HOST |    L    |    H
->>>  [4] USB-HOST       |    L    |    L
->>>
->>> In case we have only one of these signals:
->>> - VBUS only - we want to distinguish between [1] and [2], so ID is always 1.
->>> - ID only - we want to distinguish between [1] and [4], so VBUS = ID.
->>>
->>> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
->>> ---
->>>  drivers/extcon/extcon-usb-gpio.c | 171 +++++++++++++++++++++++++++------------
->>>  1 file changed, 119 insertions(+), 52 deletions(-)
->>>
->>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->>> index f6aa99d..c842715 100644
->>> --- a/drivers/extcon/extcon-usb-gpio.c
->>> +++ b/drivers/extcon/extcon-usb-gpio.c
->>> @@ -32,7 +32,9 @@ struct usb_extcon_info {
->>>  	struct extcon_dev *edev;
->>>  
->>>  	struct gpio_desc *id_gpiod;
->>> +	struct gpio_desc *vbus_gpiod;
->>>  	int id_irq;
->>> +	int vbus_irq;
->>>  
->>>  	unsigned long debounce_jiffies;
->>>  	struct delayed_work wq_detcable;
->>> @@ -52,40 +54,49 @@ static const char *usb_extcon_cable[] = {
->>>  	NULL,
->>>  };
->>>  
->>> +/*
->>> + * "USB" = VBUS and "USB-HOST" = !ID, so we have:
->>> + *
->>> + *  State              |    ID   |   VBUS
->>> + * ----------------------------------------
->>> + *  [1] USB            |    H    |    H
->>> + *  [2] none           |    H    |    L
->>> + *  [3] USB & USB-HOST |    L    |    H
->>> + *  [4] USB-HOST       |    L    |    L
->>> + *
->>> + * In case we have only one of these signals:
->>> + * - VBUS only - we want to distinguish between [1] and [2], so ID is always 1.
->>> + * - ID only - we want to distinguish between [1] and [4], so VBUS = ID.
->>> + */
->>> +
->>>  static void usb_extcon_detect_cable(struct work_struct *work)
->>>  {
->>>  	int id;
->>> +	int vbus;
->>>  	struct usb_extcon_info *info = container_of(to_delayed_work(work),
->>>  						    struct usb_extcon_info,
->>>  						    wq_detcable);
->>>  
->>> -	/* check ID and update cable state */
->>> -	id = gpiod_get_value_cansleep(info->id_gpiod);
->>> -	if (id) {
->>> -		/*
->>> -		 * ID = 1 means USB HOST cable detached.
->>> -		 * As we don't have event for USB peripheral cable attached,
->>> -		 * we simulate USB peripheral attach here.
->>> -		 */
->>> -		extcon_set_cable_state(info->edev,
->>> -				       usb_extcon_cable[EXTCON_CABLE_USB_HOST],
->>> -				       false);
->>> -		extcon_set_cable_state(info->edev,
->>> -				       usb_extcon_cable[EXTCON_CABLE_USB],
->>> -				       true);
->>> -	} else {
->>> -		/*
->>> -		 * ID = 0 means USB HOST cable attached.
->>> -		 * As we don't have event for USB peripheral cable detached,
->>> -		 * we simulate USB peripheral detach here.
->>> -		 */
->>> +	/* check ID and VBUS and update cable state */
->>> +
->>> +	id = info->id_gpiod ?
->>> +		gpiod_get_value_cansleep(info->id_gpiod) : 1;
->>> +
->>> +	vbus = info->vbus_gpiod ?
->>> +		gpiod_get_value_cansleep(info->vbus_gpiod) : id;
->>> +
->>> +	/* at first we clean states which are no longer active */
->>> +	if (id)
->>>  		extcon_set_cable_state(info->edev,
->>> -				       usb_extcon_cable[EXTCON_CABLE_USB],
->>> -				       false);
->>> +			usb_extcon_cable[EXTCON_CABLE_USB_HOST], false);
->>> +	if (!vbus)
->>>  		extcon_set_cable_state(info->edev,
->>> -				       usb_extcon_cable[EXTCON_CABLE_USB_HOST],
->>> -				       true);
->>> -	}
->>> +			usb_extcon_cable[EXTCON_CABLE_USB], false);
->>> +
->>> +	extcon_set_cable_state(info->edev,
->>> +		usb_extcon_cable[EXTCON_CABLE_USB_HOST], !id);
->>> +	extcon_set_cable_state(info->edev,
->>> +		usb_extcon_cable[EXTCON_CABLE_USB], vbus);
->>
->> This approach has the following problems:
->> 1) If ID is 1 then extcon_set_cable_state(USB_HOST, false) gets called twice.
->> 2) If VBUS is 0 then extcon_set_cable_state(USB, false) gets called twice.
->> 3) When both ID and VBUS are available, even if either one changes state then we unnecessarily
->> update the other pins cable state as well.
->>
->> This is probably not an issue as extcon core might be ignoring duplicate set_cable_states,
->> but I think we should avoid them if we can. I wouldn't mind (3) as we unnecessarily need to
->> keep track of previous states, but (1) and (2) should be fixed.
->>
+> Do not rely entirely on DTS providing the fixed parent for such clocks.
+> Instead if "pclkN" clock name is missing, grab a current parent of clock
+> with clk_get_parent().
 > 
-> Extcon core is responsible for storing current cable state to let us do
-> not worry about that. However if we really do want to get rid of
-> redundant usb_extcon_cable() calls, we can create separate interrupt
-> handler for VBUS.
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/arm/exynos/power_domain.txt | 8 +++++---
+>  arch/arm/mach-exynos/pm_domains.c                             | 9 ++++++---
+>  2 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> index 5da38c5ed476..0fc1312f6fd5 100644
+> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> @@ -19,9 +19,11 @@ Optional Properties:
+>  	domains.
+>  - clock-names: The following clocks can be specified:
+>  	- oscclk: Oscillator clock.
+> -	- pclkN, clkN: Pairs of parent of input clock and input clock to the
+> -		devices in this power domain. Maximum of 4 pairs (N = 0 to 3)
+> -		are supported currently.
+> +	- pclkN, clkN: Input clocks (clkN) to the devices in this power domain.
+> +		Optionally with parrents (pclkN). If such parent is provided
+> +		it will be used for reparenting the given clock when domain
+> +		is turned on. Otherwise the parent before power down will be
+> +		used. Maximum of 4 pairs (N = 0 to 3) are supported currently.
+>  	- asbN: Clocks required by asynchronous bridges (ASB) present in
+>  		the power domain. These clock should be enabled during power
+>  		domain on/off operations.
+> diff --git a/arch/arm/mach-exynos/pm_domains.c b/arch/arm/mach-exynos/pm_domains.c
+> index cbe56b35aea0..c55bcf52a6ad 100644
+> --- a/arch/arm/mach-exynos/pm_domains.c
+> +++ b/arch/arm/mach-exynos/pm_domains.c
+> @@ -37,6 +37,7 @@ struct exynos_pm_domain {
+>  	struct clk *oscclk;
+>  	struct clk *clk[MAX_CLK_PER_DOMAIN];
+>  	struct clk *pclk[MAX_CLK_PER_DOMAIN];
+> +	unsigned int pclk_dynamic:MAX_CLK_PER_DOMAIN;
+>  	struct clk *asb_clk[MAX_CLK_PER_DOMAIN];
+>  };
+>  
+> @@ -62,6 +63,9 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+>  		for (i = 0; i < MAX_CLK_PER_DOMAIN; i++) {
+>  			if (IS_ERR(pd->clk[i]))
+>  				break;
+> +			/* If parent was not set in DT, save current parent */
+> +			if (pd->pclk_dynamic & (1 << i))
 
-I wouldn't bother for a separate handler. You can still fix (1) and (2) without a
-separate handler.
+Small nit: I personally think that using the BIT(i) macro for shifting bits
+is more readable but I guess is a matter of personal taste.
 
-cheers,
--roger
+> +				pd->pclk[i] = clk_get_parent(pd->clk[i]);
+>  			if (clk_set_parent(pd->clk[i], pd->oscclk))
+>  				pr_err("%s: error setting oscclk as parent to clock %d\n",
+>  						pd->name, i);
+> @@ -164,9 +168,8 @@ static __init int exynos4_pm_init_power_domain(void)
+>  			snprintf(clk_name, sizeof(clk_name), "pclk%d", i);
+>  			pd->pclk[i] = clk_get(dev, clk_name);
+>  			if (IS_ERR(pd->pclk[i])) {
+> -				clk_put(pd->clk[i]);
+> -				pd->clk[i] = ERR_PTR(-EINVAL);
+> -				break;
+> +				pd->pclk_dynamic |= (1 << i);
+> +				pd->pclk[i] = clk_get_parent(pd->clk[i]);
+>  			}
+>  		}
+>  
+> 
 
-> 
->>
->>>  }
->>>  
->>>  static irqreturn_t usb_irq_handler(int irq, void *dev_id)
->>> @@ -113,10 +124,12 @@ static int usb_extcon_probe(struct platform_device *pdev)
->>>  		return -ENOMEM;
->>>  
->>>  	info->dev = dev;
->>> -	info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
->>> -	if (IS_ERR(info->id_gpiod)) {
->>> -		dev_err(dev, "failed to get ID GPIO\n");
->>> -		return PTR_ERR(info->id_gpiod);
->>> +	info->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id");
->>> +	info->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus");
->>> +
->>> +	if (!info->id_gpiod && !info->vbus_gpiod) {
->>> +		dev_err(dev, "failed to get gpios\n");
->>> +		return -ENODEV;
->>>  	}
->>>  
->>>  	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->>> @@ -131,27 +144,51 @@ static int usb_extcon_probe(struct platform_device *pdev)
->>>  		return ret;
->>>  	}
->>>  
->>> -	ret = gpiod_set_debounce(info->id_gpiod,
->>> -				 USB_GPIO_DEBOUNCE_MS * 1000);
->>> +	if (info->id_gpiod)
->>> +		ret = gpiod_set_debounce(info->id_gpiod,
->>> +			USB_GPIO_DEBOUNCE_MS * 1000);
->>> +	if (!ret && info->vbus_gpiod) {
->>> +		ret = gpiod_set_debounce(info->vbus_gpiod,
->>> +			USB_GPIO_DEBOUNCE_MS * 1000);
->>> +		if (ret < 0 && info->id_gpiod)
->>> +			gpiod_set_debounce(info->vbus_gpiod, 0);
->>> +	}
->>>  	if (ret < 0)
->>>  		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
->>>  
->>>  	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->>>  
->>> -	info->id_irq = gpiod_to_irq(info->id_gpiod);
->>> -	if (info->id_irq < 0) {
->>> -		dev_err(dev, "failed to get ID IRQ\n");
->>> -		return info->id_irq;
->>> +	if (info->id_gpiod) {
->>> +		info->id_irq = gpiod_to_irq(info->id_gpiod);
->>> +		if (info->id_irq < 0) {
->>> +			dev_err(dev, "failed to get ID IRQ\n");
->>> +			return info->id_irq;
->>> +		}
->>> +		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->>> +				usb_irq_handler,
->>> +				IRQF_TRIGGER_RISING |
->>> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->>> +				pdev->name, info);
->>> +		if (ret < 0) {
->>> +			dev_err(dev, "failed to request handler for ID IRQ\n");
->>> +			return ret;
->>> +		}
->>>  	}
->>> -
->>> -	ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->>> -					usb_irq_handler,
->>> -					IRQF_TRIGGER_RISING |
->>> -					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->>> -					pdev->name, info);
->>> -	if (ret < 0) {
->>> -		dev_err(dev, "failed to request handler for ID IRQ\n");
->>> -		return ret;
->>> +	if (info->vbus_gpiod) {
->>> +		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
->>> +		if (info->vbus_irq < 0) {
->>> +			dev_err(dev, "failed to get VBUS IRQ\n");
->>> +			return info->vbus_irq;
->>> +		}
->>> +		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
->>> +				usb_irq_handler,
->>> +				IRQF_TRIGGER_RISING |
->>> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->>> +				pdev->name, info);
->>> +		if (ret < 0) {
->>> +			dev_err(dev, "failed to request handler for VBUS IRQ\n");
->>> +			return ret;
->>> +		}
->>>  	}
->>>  
->>>  	platform_set_drvdata(pdev, info);
->>> @@ -179,9 +216,16 @@ static int usb_extcon_suspend(struct device *dev)
->>>  	int ret = 0;
->>>  
->>>  	if (device_may_wakeup(dev)) {
->>> -		ret = enable_irq_wake(info->id_irq);
->>> -		if (ret)
->>> -			return ret;
->>> +		if (info->id_gpiod) {
->>> +			ret = enable_irq_wake(info->id_irq);
->>> +			if (ret)
->>> +				return ret;
->>> +		}
->>> +		if (info->vbus_gpiod) {
->>> +			ret = enable_irq_wake(info->vbus_irq);
->>> +			if (ret)
->>> +				goto err;
->>> +		}
->>>  	}
->>>  
->>>  	/*
->>> @@ -189,8 +233,16 @@ static int usb_extcon_suspend(struct device *dev)
->>>  	 * as GPIOs used behind I2C subsystem might not be
->>>  	 * accessible until resume completes. So disable IRQ.
->>>  	 */
->>> -	disable_irq(info->id_irq);
->>> +	if (info->id_gpiod)
->>> +		disable_irq(info->id_irq);
->>> +	if (info->vbus_gpiod)
->>> +		disable_irq(info->vbus_irq);
->>> +
->>> +	return ret;
->>>  
->>> +err:
->>> +	if (info->id_gpiod)
->>> +		disable_irq_wake(info->id_irq);
->>>  	return ret;
->>>  }
->>>  
->>> @@ -200,13 +252,28 @@ static int usb_extcon_resume(struct device *dev)
->>>  	int ret = 0;
->>>  
->>>  	if (device_may_wakeup(dev)) {
->>> -		ret = disable_irq_wake(info->id_irq);
->>> -		if (ret)
->>> -			return ret;
->>> +		if (info->id_gpiod) {
->>> +			ret = disable_irq_wake(info->id_irq);
->>> +			if (ret)
->>> +				return ret;
->>> +		}
->>> +		if (info->vbus_gpiod) {
->>> +			ret = disable_irq_wake(info->vbus_irq);
->>> +			if (ret)
->>> +				goto err;
->>> +		}
->>>  	}
->>>  
->>> -	enable_irq(info->id_irq);
->>> +	if (info->id_gpiod)
->>> +		enable_irq(info->id_irq);
->>> +	if (info->vbus_gpiod)
->>> +		enable_irq(info->vbus_irq);
->>> +
->>> +	return ret;
->>>  
->>> +err:
->>> +	if (info->id_gpiod)
->>> +		enable_irq_wake(info->id_irq);
->>>  	return ret;
->>>  }
->>>  #endif
->>>
->>
->>
-> 
+Patch looks good to me:
+
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+I tested $subject along with 2/2 on an Exynos5420 Peach Pit and I see
+that display comes up correctly on boot. Also after disabling the display:
+
+$ echo 1 > /sys/devices/platform/exynos-drm/graphics/fb0/blank
+
+the DISP1 power domain is off in /sys/kernel/debug/pm_genpd/pm_genpd_summary
+and after enabling it again with:
+
+$ echo 0 > /sys/devices/platform/exynos-drm/graphics/fb0/blank
+
+the DISP1 power domain is on again and the display is working correctly.
+
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+Best regards,
+Javier
