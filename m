@@ -1,58 +1,64 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH 0/4] clk: Provide support for always-on
- clocks
-Date: Thu, 2 Apr 2015 09:12:10 +0100
-Message-ID: <20150402081210.GB3567@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] pinctrl: dt: at91: new binding
+Date: Thu, 2 Apr 2015 10:18:52 +0200
+Message-ID: <20150402081852.GA26864@ns203013.ovh.net>
+References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
+ <CACRpkdbNLE+VjhvSgsU4oqAc03ieCNyiLkUzbjEiu_LFof-Unw@mail.gmail.com>
+ <CAOesGMgsyEwuF95FFe81Li8nXO0MhHF0ZHPVV91MEH-JGO43tA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1425071674-16995-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAOesGMgsyEwuF95FFe81Li8nXO0MhHF0ZHPVV91MEH-JGO43tA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On Fri, 27 Feb 2015, Lee Jones wrote:
-
-> Some hardware contains bunches of clocks which must never be
-> turned off.  If drivers a) fail to obtain a reference to any
-> of these or b) give up a previously obtained reference
-> during suspend, the common clk framework will attempt to
-> disable them and a platform can fail irrecoverably as a
-> result.  Usually the only way to recover from these failures
-> is to reboot.
+On 13:55 Sun 29 Mar     , Olof Johansson wrote:
+> On Tue, Mar 17, 2015 at 5:07 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Thu, Feb 26, 2015 at 10:34 AM, Jean-Christophe PLAGNIOL-VILLARD
+> > <plagnioj@jcrosoft.com> wrote:
+> >
+> >> +For each peripheral/bank we will descibe in a u32 if a pin can be
+> >> +configured in it by putting 1 to the pin bit (1 << pin)
+> >
+> > This seems to be describing driver intrinsics in the device tree, like
+> > how the hardware is routed on the inside and what it can do.
+> >
+> > IMO that is driver territory, the driver should know these limitations
+> > and protest if you try to do something illegal.
+> >
+> > Anyway as the AT91 maintainers seem to disagree I will allow some
+> > more time for discussion before merging the patch.
+> >
+> > I can't really have one AT91 maintainer NACKing another, it doesn't
+> > matter that this is a separate driver, in my book the MAINTAINERS
+> > entry for AT91 as a whole overrides that so can you please find an
+> > agreement on how to handle this or I will stall the patch until
+> > you're in agreement.
 > 
-> To avoid either of these two scenarios from catastrophically
-> disabling an otherwise perfectly healthy running system,
-> clocks can be identified as always-on using this property
-> from inside a clocksource's node.  The CLK_IGNORE_UNUSED
-> flag will be applied to each clock instance named in this
-> property, thus preventing them from being shut down by the
-> framework.
+> Nicolas has been the de-facto maintainer of AT91 for quite a while
+> now, even though more of them are listed on the maintainers entry. It
+> would be inappropriate to merge something that he disagreed with on
+> that platform.
+I'm still following it
+> 
+> > ARM SoC maintainers input would be welcomed.
+> 
+> It seems appropriate to ask the at91 folks to come back with a
+> solution that everybody is OK with, and until then hold off merging
+> this.
+when the nack is motivated not just I don't like it
 
-Great stuff.
-
-One minor comment is that assuming this works on stih407 and stih410
-to the extent that the platform can now boot without clk_ignore_unused
-kenel parameter then you should have an additional patch to remove
-clk_ignore_unused from the default bootargs in stih407-b2120.dts and
-stih410-b2120.dts files.
-
-Maxime - Is it possible for you to test this series on stih418-b2199 as
-a well? As it could most likely also be removed from stih418-b2199.dts file
-to, but neither Lee or myself have the hardware to test.
-
-Apart from that, for the series: -
- Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+J.
