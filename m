@@ -1,69 +1,36 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 0/4] clk: Provide support for always-on clocks
-Date: Thu, 2 Apr 2015 11:45:14 +0200
-Message-ID: <CAG374jDc6HsJhL4HqTgvnMU3AG9pXNYXyxr6gjZQkTODR-BHyQ@mail.gmail.com>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
-	<20150402081210.GB3567@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Markus Reichl <reichl@t-online.de>
+Subject: Re: Exynos5422 odroidxu3 pwm-fan control using thermal sensors
+Date: Thu, 02 Apr 2015 12:02:34 +0200
+Message-ID: <3119927.e7HXx7br8Y@dell2.five-lan.de>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150402081210.GB3567@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "kernel@stlinux.com" <kernel@stlinux.com>, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter, Lee,
-
-With these series as they are, we need  'clk_ignore_unused'  on
-sthi407-b2120.dts and stih418-b2199.dts.
-
-We have to modificate stih407-clock.dtsi and stih418-clock.dtsi in same way.
-
-BR
-Gabriel
-
-On 2 April 2015 at 10:12, Peter Griffin <peter.griffin@linaro.org> wrote:
-> Hi Lee,
->
-> On Fri, 27 Feb 2015, Lee Jones wrote:
->
->> Some hardware contains bunches of clocks which must never be
->> turned off.  If drivers a) fail to obtain a reference to any
->> of these or b) give up a previously obtained reference
->> during suspend, the common clk framework will attempt to
->> disable them and a platform can fail irrecoverably as a
->> result.  Usually the only way to recover from these failures
->> is to reboot.
->>
->> To avoid either of these two scenarios from catastrophically
->> disabling an otherwise perfectly healthy running system,
->> clocks can be identified as always-on using this property
->> from inside a clocksource's node.  The CLK_IGNORE_UNUSED
->> flag will be applied to each clock instance named in this
->> property, thus preventing them from being shut down by the
->> framework.
->
-> Great stuff.
->
-> One minor comment is that assuming this works on stih407 and stih410
-> to the extent that the platform can now boot without clk_ignore_unused
-> kenel parameter then you should have an additional patch to remove
-> clk_ignore_unused from the default bootargs in stih407-b2120.dts and
-> stih410-b2120.dts files.
->
-> Maxime - Is it possible for you to test this series on stih418-b2199 as
-> a well? As it could most likely also be removed from stih418-b2199.dts file
-> to, but neither Lee or myself have the hardware to test.
->
-> Apart from that, for the series: -
->  Acked-by: Peter Griffin <peter.griffin@linaro.org>
->
-> regards,
->
-> Peter.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+QW0gRnJlaXRhZywgMjcuIE3DpHJ6IDIwMTUsIDAzOjA5OjA5IHNjaHJpZWIgQW5hbmQgTW9vbjoK
+PiBUaGlzIHdvcmsgZGVwZWRzIHVwb24gd29yayBkb25lIGJ5IEx1a2FzeiBNYWpld3NraSA8bC5t
+YWpld3NraUBzYW1zdW5nLmNvbT4KPiAgYW5kIFNqb2VyZCBTaW1vbnMgPHNqb2VyZC5zaW1vbnNA
+Y29sbGFib3JhLmNvLnVrPiByZWdhcmRpbmcgdGhlIHB3bS1mYW4uCj4gCj4gLUFuYW5kIE1vb24K
+PiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1
+YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8g
+bWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6
+Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IAoKVGVzdGVkLWJ5OiBNYXJr
+dXMgUmVpY2hsIDxtLnJlaWNobEBmaXZldGVjaG5vLmRlPgoKQmVzdCBSZWdhcmRzLAotLS0KTWFy
+a3VzIFJlaWNobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
