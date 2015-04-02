@@ -1,36 +1,56 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] ti-soc-thermal: implement omap3 support
-Date: Thu, 2 Apr 2015 16:49:01 +0200
-Message-ID: <20150402144901.GC18125@amd>
-References: <20150103114632.GA21883@amd>
- <20150118202447.GA29014@amd>
- <20150331084234.GA11712@amd>
- <CANOLnOO4J3RQCJZB0ibkGc5KhvPu+Q1f-bwc8mpxKCPRgjw5PQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC v13 04/13] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Thu, 2 Apr 2015 16:50:46 +0200
+Message-ID: <20150402145046.GD18125@amd>
+References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
+ <1426175114-14876-5-git-send-email-j.anaszewski@samsung.com>
+ <20150323120743.GG24422@x1>
+ <20150323142202.GA23919@amd>
+ <20150323150213.GN24804@x1>
+ <20150323154807.GA13297@amd>
+ <20150323155937.GQ24804@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANOLnOO4J3RQCJZB0ibkGc5KhvPu+Q1f-bwc8mpxKCPRgjw5PQ@mail.gmail.com>
+In-Reply-To: <20150323155937.GQ24804@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grazvydas Ignotas <notasas@gmail.com>
-Cc: Pali Rohar <pali.rohar@gmail.com>, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, khilman@kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, edubezval@gmail.com, rui.zhang@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-> > +/* Thresholds and limits for OMAP34XX MPU temperature sensor */
-> > +static struct temp_sensor_data omap34xx_mpu_temp_sensor_data = {
-> > +       .min_freq = 32768,
-> > +       .max_freq = 32768,
-> > +       .max_temp = -99000,
-> > +       .min_temp = 99000,
+On Mon 2015-03-23 15:59:37, Lee Jones wrote:
+> On Mon, 23 Mar 2015, Pavel Machek wrote:
 > 
-> This looks mixed up. Also, perhaps use -40000 to 125000 to match the
-> table below?
+> > On Mon 2015-03-23 15:02:13, Lee Jones wrote:
+> > > On Mon, 23 Mar 2015, Pavel Machek wrote:
+> > > > On Mon 2015-03-23 12:07:43, Lee Jones wrote:
+> > > > > This patch requires a DT Ack.
+> > > > 
+> > > > No, it requires DT people to be notified -- and they were, few times
+> > > > by now.
+> > > > 
+> > > > They clearly don't care.
+> > > 
+> > > Well fortunately for the Kernel community, I do care.  And as this
+> > > patch adds 3 new DT properties, has been through many iterations
+> > > already with vast changes made over that period and there is still
+> > > some controversy looming, I'm saying that it _does_ require a DT
+> > > Ack.
+> > 
+> > Can you help get that ack, then? As a maintainer, you have better
+> > chance getting reply from DT people than patch submitter.
+> 
+> Hopefully they will see my plea a couple of replies back.
+> 
+> If that fails I'll go poke them via other means.  Failing that I'll go
+> see them in person and continually hit them with wet fish until one of
+> them relents.
 
-Yes, that looks reasonable, thanks for review. v2 in minute or so.
-
-								Pavel
-
+Can I request footage of the last steps on the youtube? (IOW ping, I
+don't think I seen any replies from DT maintainers...)
+									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
