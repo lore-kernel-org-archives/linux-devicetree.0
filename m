@@ -1,8 +1,8 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [STLinux Kernel] [PATCH 0/4] clk: Provide support for always-on
  clocks
-Date: Thu, 2 Apr 2015 11:53:00 +0100
-Message-ID: <20150402105300.GB9447@x1>
+Date: Thu, 2 Apr 2015 11:58:03 +0100
+Message-ID: <20150402105803.GD9447@x1>
 References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
  <20150402081210.GB3567@griffinp-ThinkPad-X1-Carbon-2nd>
  <CAG374jDc6HsJhL4HqTgvnMU3AG9pXNYXyxr6gjZQkTODR-BHyQ@mail.gmail.com>
@@ -17,17 +17,18 @@ To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 Cc: Peter Griffin <peter.griffin@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "kernel@stlinux.com" <kernel@stlinux.com>, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 02 Apr 2015, Gabriel Fernandez wrote:
-
-> Hi Peter, Lee,
->=20
 > With these series as they are, we need  'clk_ignore_unused'  on
 > sthi407-b2120.dts and stih418-b2199.dts.
 >=20
 > We have to modificate stih407-clock.dtsi and stih418-clock.dtsi in sa=
 me way.
 
-Absolutely.  It's on my backlog.
+Just to clarify this point for all interested parties; this patch-set
+is not the completed article.  It's purpose is to add the core
+functionality and the documentation _only_.  The STiH410 support is
+only provided in this set as an example of how the bindings are to be
+used.  Other platforms are to be enabled subsequently as part of a
+different submission.
 
 > On 2 April 2015 at 10:12, Peter Griffin <peter.griffin@linaro.org> wr=
 ote:
