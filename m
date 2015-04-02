@@ -1,34 +1,27 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: r8a7790: add EtherAVB DT support
-Date: Thu, 02 Apr 2015 14:31:19 +0300
-Message-ID: <551D2887.3020808@cogentembedded.com>
-References: <1625400.M0MxPQybIy@wasted.cogentembedded.com> <8163383.0UU0Q5gsLE@wasted.cogentembedded.com> <20150331002113.GB16289@verge.net.au> <551AB78B.4000506@cogentembedded.com> <20150402013359.GB25445@verge.net.au>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/2] ARM: dts: Use define for s3c-rtc clock id
+Date: Thu, 02 Apr 2015 14:17:11 +0200
+Message-ID: <551D3347.7020203@collabora.co.uk>
+References: <1427972588-6573-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150402013359.GB25445@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1427972588-6573-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hello Krzysztof,
 
-On 4/2/2015 4:33 AM, Simon Horman wrote:
+On 04/02/2015 01:03 PM, Krzysztof Kozlowski wrote:
+> Use a define instead of raw number as a ID for "rtc_src" clock.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
 
->> On 03/31/2015 03:21 AM, Simon Horman wrote:
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
->>>> Define the generic R8A7790 part of the EtherAVB device node.
-
->>> Please repost once this binding (and associated driver) has been accepted.
-
->>     OK, but will you merge patch #1?
-
-> I would prefer to wait until we can exercise it with a driver.
-
-    Then you'll have to wait long as the Lager board doesn't have support for 
-Ethernet AVB. We've only tested it with the daughter boards.
-
-WBR, Sergei
-
+Best regards,
+Javier
