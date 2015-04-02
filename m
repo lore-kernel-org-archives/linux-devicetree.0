@@ -1,46 +1,78 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH] ARM: tegra: Correct which USB controller has the UTMI pad registers
-Date: Thu,  2 Apr 2015 16:31:59 +0200
-Message-ID: <1427985119-15307-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 1/2] mfd: sec: Fix RTC alarm interrupt number on S2MPS11
+Date: Thu, 02 Apr 2015 16:36:15 +0200
+Message-ID: <1427985376-20420-2-git-send-email-k.kozlowski@samsung.com>
+References: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-It should be the first controller, not the second.
+The RTC on S2MPS11 is the same as S2MPS14. However interrupt numbers of
+RTC alarms 0 and 1 were inversed between these two devices. So when
+rtc-s5m driver requested S2MPS14_IRQ_RTCA0 interrupt, it matched to
+S2MPS11_IRQ_RTCA1, not RTCA0.
 
-This broke USB after 6261b06 ("regulator: Defer lookup of supply to
-regulator_get"), because it changed the order in which the controllers
-were probed.
+Fix this by using consistent RTC alarm interrupt numbers and adding a
+BUILD_BUG_ON for future generations.
 
-The fix for this issue was suggested by Mikko Perttunen.
-
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 ---
- arch/arm/boot/dts/tegra124.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/sec-irq.c           | 14 ++++++++++----
+ include/linux/mfd/samsung/irq.h |  2 +-
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index cf01c81..cb786a9 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -838,6 +838,7 @@
- 		nvidia,hssquelch-level = <2>;
- 		nvidia,hsdiscon-level = <5>;
- 		nvidia,xcvr-hsslew = <12>;
-+		nvidia,has-utmi-pad-registers;
- 		status = "disabled";
- 	};
+diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
+index ba86a918c2da..806fa8dbb22d 100644
+--- a/drivers/mfd/sec-irq.c
++++ b/drivers/mfd/sec-irq.c
+@@ -61,14 +61,14 @@ static const struct regmap_irq s2mps11_irqs[] = {
+ 		.reg_offset = 1,
+ 		.mask = S2MPS11_IRQ_RTC60S_MASK,
+ 	},
+-	[S2MPS11_IRQ_RTCA0] = {
+-		.reg_offset = 1,
+-		.mask = S2MPS11_IRQ_RTCA0_MASK,
+-	},
+ 	[S2MPS11_IRQ_RTCA1] = {
+ 		.reg_offset = 1,
+ 		.mask = S2MPS11_IRQ_RTCA1_MASK,
+ 	},
++	[S2MPS11_IRQ_RTCA0] = {
++		.reg_offset = 1,
++		.mask = S2MPS11_IRQ_RTCA0_MASK,
++	},
+ 	[S2MPS11_IRQ_SMPL] = {
+ 		.reg_offset = 1,
+ 		.mask = S2MPS11_IRQ_SMPL_MASK,
+@@ -484,6 +484,12 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
+ 		return ret;
+ 	}
  
-@@ -874,7 +875,6 @@
- 		nvidia,hssquelch-level = <2>;
- 		nvidia,hsdiscon-level = <5>;
- 		nvidia,xcvr-hsslew = <12>;
--		nvidia,has-utmi-pad-registers;
- 		status = "disabled";
- 	};
++	/*
++	 * The rtc-s5m driver requests S2MPS14_IRQ_RTCA0 also for S2MPS11
++	 * so the interrupt number must be consistent.
++	 */
++	BUILD_BUG_ON(((enum s2mps14_irq)S2MPS11_IRQ_RTCA0) != S2MPS14_IRQ_RTCA0);
++
+ 	return 0;
+ }
  
+diff --git a/include/linux/mfd/samsung/irq.h b/include/linux/mfd/samsung/irq.h
+index f35af7361b60..667aa40486dd 100644
+--- a/include/linux/mfd/samsung/irq.h
++++ b/include/linux/mfd/samsung/irq.h
+@@ -74,8 +74,8 @@ enum s2mps11_irq {
+ 	S2MPS11_IRQ_MRB,
+ 
+ 	S2MPS11_IRQ_RTC60S,
+-	S2MPS11_IRQ_RTCA0,
+ 	S2MPS11_IRQ_RTCA1,
++	S2MPS11_IRQ_RTCA0,
+ 	S2MPS11_IRQ_SMPL,
+ 	S2MPS11_IRQ_RTC1S,
+ 	S2MPS11_IRQ_WTSR,
 -- 
-2.3.4
+1.9.1
