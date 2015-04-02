@@ -1,56 +1,82 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH/RFC v13 04/13] DT: Add documentation for the mfd Maxim
- max77693
-Date: Thu, 2 Apr 2015 16:50:46 +0200
-Message-ID: <20150402145046.GD18125@amd>
-References: <1426175114-14876-1-git-send-email-j.anaszewski@samsung.com>
- <1426175114-14876-5-git-send-email-j.anaszewski@samsung.com>
- <20150323120743.GG24422@x1>
- <20150323142202.GA23919@amd>
- <20150323150213.GN24804@x1>
- <20150323154807.GA13297@amd>
- <20150323155937.GQ24804@x1>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] dt: paz00: define nvec as child of i2c bus
+Date: Thu, 02 Apr 2015 08:50:50 -0600
+Message-ID: <551D574A.7060101@wwwdotorg.org>
+References: <1422516022-27161-1-git-send-email-danindrey@mail.ru> <551AC153.7060103@mail.ru> <551C2AC0.9030304@wwwdotorg.org> <21658630.CslVI5jns9@fb07-iapwap2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150323155937.GQ24804@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <21658630.CslVI5jns9@fb07-iapwap2>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2015-03-23 15:59:37, Lee Jones wrote:
-> On Mon, 23 Mar 2015, Pavel Machek wrote:
-> 
-> > On Mon 2015-03-23 15:02:13, Lee Jones wrote:
-> > > On Mon, 23 Mar 2015, Pavel Machek wrote:
-> > > > On Mon 2015-03-23 12:07:43, Lee Jones wrote:
-> > > > > This patch requires a DT Ack.
-> > > > 
-> > > > No, it requires DT people to be notified -- and they were, few times
-> > > > by now.
-> > > > 
-> > > > They clearly don't care.
-> > > 
-> > > Well fortunately for the Kernel community, I do care.  And as this
-> > > patch adds 3 new DT properties, has been through many iterations
-> > > already with vast changes made over that period and there is still
-> > > some controversy looming, I'm saying that it _does_ require a DT
-> > > Ack.
-> > 
-> > Can you help get that ack, then? As a maintainer, you have better
-> > chance getting reply from DT people than patch submitter.
-> 
-> Hopefully they will see my plea a couple of replies back.
-> 
-> If that fails I'll go poke them via other means.  Failing that I'll go
-> see them in person and continually hit them with wet fish until one of
-> them relents.
+On 04/02/2015 03:37 AM, Marc Dietrich wrote:
+>
+> Am Mittwoch, 1. April 2015, 11:28:32 schrieb Stephen Warren:
+>> On 03/31/2015 09:46 AM, Andrey Danin wrote:
+>>> On 31.03.2015 17:09, Stephen Warren wrote:
+>>>> On 03/31/2015 12:40 AM, Andrey Danin wrote:
+>>>>> Hi,
+>>>>>
+>>>>> Thanks for the review.
+>>>>>
+>>>>> On 03.02.2015 0:20, Stephen Warren wrote:
+>
+> [ snipped old patch parts ]
+>
+>>>>>>> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
+>>>>>>> b/arch/arm/boot/dts/tegra20-paz00.dts
+>>>>>>>
+>>>>>>> -    nvec@7000c500 {
+>>>>>>> -        compatible = "nvidia,nvec";
+>>>>>>> -        reg = <0x7000c500 0x100>;
+>>>>>>> -        interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> -        #address-cells = <1>;
+>>>>>>> -        #size-cells = <0>;
+>>>>>>> +    i2c@7000c500 {
+>>>>>>> +        status = "okay";
+>>>>>>>
+>>>>>>>            clock-frequency = <80000>;
+>>>>>>>
+>>>>>>> -        request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
+>>>>>>> -        slave-addr = <138>;
+>>>>>>> -        clocks = <&tegra_car TEGRA20_CLK_I2C3>,
+>>>>>>> -                 <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
+>>>>>>> -        clock-names = "div-clk", "fast-clk";
+>>>>>>> -        resets = <&tegra_car 67>;
+>>>>>>> -        reset-names = "i2c";
+>>>>>>> +
+>>>>>>> +        nvec: nvec@45 {
+>>>>>>
+>>>>>> This doesn't feel correct. There's nothing here to indicate that this
+>>>>>> child device is a slave that is implemented by the host SoC rather than
+>>>>>> something external attached to the I2C bus.
+>>>>>>
+>>>>>> Perhaps you can get away with this, since the driver for nvidia,nvec
+>>>>>> only calls I2C APIs suitable for internal slaves rather than external
+>>>>>> slaves? Even so though, I think the distinction needs to be clearly
+>>>>>> marked in the DT so that any generic code outside the NVEC driver that
+>>>>>> parses the DT can determine the difference.
+>>>>>>
+>>>>>> I would recommend the I2C controller having #address-cells=<2> with
+>>>>>> cell
+>>>>>> 0 being 0==master,1==slave, cell 1 being the I2C address. The I2C
+>>>>>> driver
+>>>>>> would need to support #address-cells=<1> for backwards-compatibility.
+>
+> Stephen, we haven't used your suggestion because Wolfram disliked the idea in
+> e.g. http://lkml.iu.edu/hypermail/linux/kernel/1409.1/03446.html
 
-Can I request footage of the last steps on the youtube? (IOW ping, I
-don't think I seen any replies from DT maintainers...)
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+As you said in the response you linked to, the objection is invalid 
+since it won't break any DTs. The driver for a node is responsible for 
+defining the meaning of its own reg properties. It should be pretty 
+trivial to allow the Tegra I2C controller driver (or indeed any driver 
+at all) to handle either #address-cells=<1> (the current setting) or 
+#address-cells=<2> (a new value which enables adding a new flag cell) or 
+even #address-cells=<1> with some of the upper bits of the reg value 
+used as flags (which would default to 0 in all current DTs, so e.g. 
+using the MSB==1 as a slave flag), all at run-time with complete 
+backwards-compatibility.
