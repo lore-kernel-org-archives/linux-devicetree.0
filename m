@@ -1,133 +1,148 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 2/2] stmmac: Add IMG Pistachio platform glue layer
-Date: Thu,  2 Apr 2015 16:46:36 -0700
-Message-ID: <1428018396-11270-2-git-send-email-abrestic@chromium.org>
-References: <1428018396-11270-1-git-send-email-abrestic@chromium.org>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv3] media: i2c/adp1653: devicetree support for adp1653
+Date: Fri, 3 Apr 2015 02:48:23 +0300
+Message-ID: <20150402234823.GI20756@valkosipuli.retiisi.org.uk>
+References: <20150402143846.GA11687@amd>
+ <20150402161453.GH20756@valkosipuli.retiisi.org.uk>
+ <20150402203043.GB29963@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428018396-11270-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150402203043.GB29963@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-At the moment, the only additional setup required for the DWMAC
-on the IMG Pistachio SoC is to request and enable a separate gate
-clock for the register interface.
+Hi Pawel,
 
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- drivers/net/ethernet/stmicro/stmmac/Makefile       |  3 +-
- .../net/ethernet/stmicro/stmmac/dwmac-pistachio.c  | 57 ++++++++++++++++++++++
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  1 +
- .../net/ethernet/stmicro/stmmac/stmmac_platform.h  |  1 +
- 4 files changed, 61 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-pistachio.c
+On Thu, Apr 02, 2015 at 10:30:44PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > Hi Pawel,
+> > 
+> > My apologies for the very late reply.
+> > 
+> > On Thu, Apr 02, 2015 at 04:38:46PM +0200, Pavel Machek wrote:
+> > > 
+> > > 
+> > > We are moving to device tree support on OMAP3, but that currently
+> > > breaks ADP1653 driver. This adds device tree support, plus required
+> > > documentation.
+> > > 
+> > > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > > 
+> > > ---
+> > > 
+> > > I'm not sure if it is device tree or media framework, either everyone
+> > > waits for someone else, or noone really cares.
+> > 
+> > Neither. Some people are unfortuantely very busy with many other things as
+> > well. :-P
+> 
+> Well.. Being busy is ok. Nitpicking is also ok. But both at the same
+> time... is not good. 
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 73c2715..8efb622 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -6,7 +6,8 @@ stmmac-objs:= stmmac_main.o stmmac_ethtool.o stmmac_mdio.o ring_mode.o	\
- 
- obj-$(CONFIG_STMMAC_PLATFORM) += stmmac-platform.o
- stmmac-platform-objs:= stmmac_platform.o dwmac-meson.o dwmac-sunxi.o	\
--		       dwmac-sti.o dwmac-socfpga.o dwmac-rk.o
-+		       dwmac-sti.o dwmac-socfpga.o dwmac-rk.o		\
-+		       dwmac-pistachio.o
- 
- obj-$(CONFIG_STMMAC_PCI) += stmmac-pci.o
- stmmac-pci-objs:= stmmac_pci.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-pistachio.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-pistachio.c
-new file mode 100644
-index 0000000..3041c99
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-pistachio.c
-@@ -0,0 +1,57 @@
-+/*
-+ * IMG Pistachio DWMAC glue layer
-+ *
-+ * Copyright (C) 2015 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/stmmac.h>
-+
-+struct pistachio_dwmac_priv_data {
-+	struct clk *sys_clk;
-+};
-+
-+static void *pistachio_dwmac_setup(struct platform_device *pdev)
-+{
-+	struct pistachio_dwmac_priv_data *pdata;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pdata->sys_clk = devm_clk_get(&pdev->dev, "sys");
-+	if (IS_ERR(pdata->sys_clk)) {
-+		dev_err(&pdev->dev, "Failed to get sys clock: %ld\n",
-+			PTR_ERR(pdata->sys_clk));
-+		return pdata->sys_clk;
-+	}
-+
-+	return pdata;
-+}
-+
-+static int pistachio_dwmac_init(struct platform_device *pdev, void *priv)
-+{
-+	struct pistachio_dwmac_priv_data *pdata = priv;
-+
-+	return clk_prepare_enable(pdata->sys_clk);
-+}
-+
-+static void pistachio_dwmac_exit(struct platform_device *pdev, void *priv)
-+{
-+	struct pistachio_dwmac_priv_data *pdata = priv;
-+
-+	clk_disable_unprepare(pdata->sys_clk);
-+}
-+
-+const struct stmmac_of_data pistachio_dwmac_data = {
-+	.setup = pistachio_dwmac_setup,
-+	.init = pistachio_dwmac_init,
-+	.exit = pistachio_dwmac_exit,
-+	.has_gmac = true,
-+};
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index f9b42f1..d5de361 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -34,6 +34,7 @@
- static const struct of_device_id stmmac_dt_ids[] = {
- 	/* SoC specific glue layers should come before generic bindings */
- 	{ .compatible = "rockchip,rk3288-gmac", .data = &rk3288_gmac_data},
-+	{ .compatible = "img,pistachio-dwmac", .data = &pistachio_dwmac_data},
- 	{ .compatible = "amlogic,meson6-dwmac", .data = &meson6_dwmac_data},
- 	{ .compatible = "allwinner,sun7i-a20-gmac", .data = &sun7i_gmac_data},
- 	{ .compatible = "st,stih415-dwmac", .data = &stih4xx_dwmac_data},
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
-index 093eb99..101e635 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
-@@ -25,5 +25,6 @@ extern const struct stmmac_of_data stih4xx_dwmac_data;
- extern const struct stmmac_of_data stid127_dwmac_data;
- extern const struct stmmac_of_data socfpga_gmac_data;
- extern const struct stmmac_of_data rk3288_gmac_data;
-+extern const struct stmmac_of_data pistachio_dwmac_data;
- 
- #endif /* __STMMAC_PLATFORM_H__ */
+Good. Then we should be fine. :-)
+
+> 
+> > > Andrew, can you just merge it?
+> > > 
+> > > Please apply,
+> > 
+> > Please wait just a while.
+> > 
+> > I think we can merge this eventually through the linux-media tree, but
+> > please first see the comments below.
+> > 
+> 
+> > > +Required properties of the flash LED child node:
+> > > +
+> > > +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+> > > +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
+> > 
+> > The documentation says that the maximum value is used if these values are
+> > not specified. I think I'd make these optional.
+> 
+> I'd rather not: when you make a typo in dts, it would supply maximum
+> available current, potentially damaging the LED. You will not be able
+> to tell brightness difference with naked eye...
+
+Fine for me.
+
+> > >  __adp1653_set_power(struct adp1653_flash *flash, int on)
+> > >  {
+> > > -	int ret;
+> > > +	int ret = 0;
+> > > +
+> > > +	if (flash->platform_data->power) {
+> > > +		ret = flash->platform_data->power(&flash->subdev, on);
+> > 
+> > The power() callback should be dropped. It's controlling a GPIO. But that
+> > can be done later on. The alternative is a patch before this one.
+> 
+> I'd prefer to do it later; we want to keep functionality on N900
+> without DTS, too.
+
+Fine as well.
+
+> > >  	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
+> > >  	if (flash == NULL)
+> > >  		return -ENOMEM;
+> > >  
+> > >  	flash->platform_data = client->dev.platform_data;
+> > > +	if (!flash->platform_data) {
+> > 
+> > I'd check whether dev->of_node is non-NULL instead.
+> 
+> Ok.
+> 
+> > > @@ -438,10 +510,10 @@ static int adp1653_probe(struct i2c_client *client,
+> > >  		goto free_and_quit;
+> > >  
+> > >  	flash->subdev.entity.type = MEDIA_ENT_T_V4L2_SUBDEV_FLASH;
+> > > -
+> > 
+> > I rather liked the newline here. Please don't remove it. :-)
+> 
+> Ok.
+> 
+> > > @@ -464,7 +536,7 @@ static const struct i2c_device_id adp1653_id_table[] = {
+> > >  };
+> > >  MODULE_DEVICE_TABLE(i2c, adp1653_id_table);
+> > >  
+> > > -static struct dev_pm_ops adp1653_pm_ops = {
+> > > +static const struct dev_pm_ops adp1653_pm_ops = {
+> > >  	.suspend	= adp1653_suspend,
+> > >  	.resume		= adp1653_resume,
+> > >  };
+> > >  
+> > > 
+> > 
+> > A corresponding change to the N900 dts would be very nice.
+> 
+> Corresponding change to the dts will come in separate patch. Or do you
+> have n900 for testing?
+
+Yes, it should be a separate patch, I agree.
+
+I do have one but I can't say when I'd have time to test it. I'm fine with
+you having tested it though.
+
+> > I think you're missing change to adp1653_i2c_driver.driver.of_match_table.
+> 
+> It actually worked for me, which means device tree somehow does it
+> magic.
+
+By magic? :-) It probably just ends up comparing the device and the driver
+names. How about adding the of_match_table?
+
 -- 
-2.2.0.rc0.207.ga3a616c
+Regards,
 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
