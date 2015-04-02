@@ -1,51 +1,132 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] regulator: Introduce property to flag drms
-Date: Thu, 2 Apr 2015 09:54:40 +0100
-Message-ID: <20150402085440.GL6023@sirena.org.uk>
-References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1427928946-31291-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mmc: Add support for marking hpi as
+ broken through devicetree
+Date: Thu, 2 Apr 2015 11:01:28 +0200
+Message-ID: <CAPDyKFpUw+9OepiHL3wfALz98nyCWkGPAwqtGK3+YPJ+eG7dLA@mail.gmail.com>
+References: <1427901984-26469-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rVkomL2febZOZtGQ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427928946-31291-3-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDF57NG2XIHRB2EK6SUAKGQEJYPC43A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1427901984-26469-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 1 April 2015 at 17:26, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The eMMC on a tablet I've will stop working / communicating as soon as
+> the kernel executes:
+>
+>                 mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+>                                 EXT_CSD_HPI_MGMT, 1,
+>                                 card->ext_csd.generic_cmd6_time);
+>
+> There seems to be no way to reliable identify eMMC-s which have a broken
+> hpi implementation, but at least for eMMC's which are soldered onto a board
+> we can work around this by specifying that hpi is broken in devicetree.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
---rVkomL2febZOZtGQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks! Applied for next.
 
-On Wed, Apr 01, 2015 at 03:55:43PM -0700, Bjorn Andersson wrote:
-> Introduce "regulator-allow-drms" to make it possible for board
-> configuration to enable drms for regulators.
+Kind regards
+Uffe
 
-I don't think this is a good name, nobody unfamiliar with a fairly
-obscure feature in the Linux regulator API is going to know what DRMS
-means.  Something like change-load might be clearer.
-
---rVkomL2febZOZtGQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVHQPPAAoJECTWi3JdVIfQVG4H/j9t9YiThlTTcnCXA09C7Cj6
-4ouc0nxc7OTtgUmOU7PtwHx12FofEMlaEy4DdrFY3oETXGqJW0TaIGoVYyroJeHq
-W09ay6MBCDdP6snhULy5dev5Mm/yOZWOJLcNqG4WTDHGsMBTTcS26puymSPU+wkP
-RM7hSnOF9NkDP8WQ46oHiIuv/zLEnDyXFmHGCHPDEWQmAEK175HH2oq3wX7zoQtX
-4MYUGzQkt87wrsjBPhJt6feH+HPr+gr+qX16S8p6gZqqXiZkMHr4zubfCpAVzjqX
-Uu0+S4bLCIL7b4waQ1vp1gI1Rxu5EH/O+jNPyvanG0Md3u02n9At8ir1D9lQKRo=
-=scSA
------END PGP SIGNATURE-----
-
---rVkomL2febZOZtGQ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> Changes in v2:
+> -Fix of_node leakage
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc-card.txt | 31 ++++++++++++++++++++++
+>  drivers/mmc/core/mmc.c                             | 10 ++++++-
+>  2 files changed, 40 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-card.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+> new file mode 100644
+> index 0000000..a70fcd6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+> @@ -0,0 +1,31 @@
+> +mmc-card / eMMC bindings
+> +------------------------
+> +
+> +This documents describes the devicetree bindings for a mmc-host controller
+> +child node describing a mmc-card / an eMMC, see "Use of Function subnodes"
+> +in mmc.txt
+> +
+> +Required properties:
+> +-compatible : Must be "mmc-card"
+> +-reg        : Must be <0>
+> +
+> +Optional properties:
+> +-broken-hpi : Use this to indicate that the mmc-card has a broken hpi
+> +              implementation, and that hpi should not be used
+> +
+> +Example:
+> +
+> +&mmc2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc2_pins_a>;
+> +       vmmc-supply = <&reg_vcc3v3>;
+> +       bus-width = <8>;
+> +       non-removable;
+> +       status = "okay";
+> +
+> +       mmccard: mmccard@0 {
+> +               reg = <0>;
+> +               compatible = "mmc-card";
+> +               broken-hpi;
+> +       };
+> +};
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index 1d41e85..c84131e 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -11,6 +11,7 @@
+>   */
+>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+>  #include <linux/slab.h>
+>  #include <linux/stat.h>
+>  #include <linux/pm_runtime.h>
+> @@ -336,6 +337,8 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>  {
+>         int err = 0, idx;
+>         unsigned int part_size;
+> +       struct device_node *np;
+> +       bool broken_hpi = false;
+>
+>         /* Version is coded in the CSD_STRUCTURE byte in the EXT_CSD register */
+>         card->ext_csd.raw_ext_csd_structure = ext_csd[EXT_CSD_STRUCTURE];
+> @@ -349,6 +352,11 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>                 }
+>         }
+>
+> +       np = mmc_of_find_child_device(card->host, 0);
+> +       if (np && of_device_is_compatible(np, "mmc-card"))
+> +               broken_hpi = of_property_read_bool(np, "broken-hpi");
+> +       of_node_put(np);
+> +
+>         /*
+>          * The EXT_CSD format is meant to be forward compatible. As long
+>          * as CSD_STRUCTURE does not change, all values for EXT_CSD_REV
+> @@ -494,7 +502,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>                 }
+>
+>                 /* check whether the eMMC card supports HPI */
+> -               if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1) {
+> +               if (!broken_hpi && (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1)) {
+>                         card->ext_csd.hpi = 1;
+>                         if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x2)
+>                                 card->ext_csd.hpi_cmd = MMC_STOP_TRANSMISSION;
+> --
+> 2.3.4
+>
