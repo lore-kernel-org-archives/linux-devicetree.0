@@ -1,97 +1,42 @@
-From: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [git:media_tree/master] [media] media: ov2640: dt: add the device
-	tree binding document
-Date: Thu, 02 Apr 2015 23:35:26 +0200
-Message-ID: <E1YdmoT-0002KJ-Kj@www.linuxtv.org>
-Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 0/5] Refactor Qualcomm RPM regulator to single platform_device
+Date: Thu, 02 Apr 2015 15:00:37 -0700
+Message-ID: <551DBC05.2090301@codeaurora.org>
+References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <http://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
-	<mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
-List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
-List-Subscribe: <http://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
-	<mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
-Sender: linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an automatic generated email to let you know that the following patch were queued at the 
-http://git.linuxtv.org/cgit.cgi/media_tree.git tree:
+On 04/01/15 15:55, Bjorn Andersson wrote:
+> Stephen Boyd pointed out that the current design of the Qualcomm RPM and
+> regulator driver consumes 12-20kB of ram just for the platform_device structs.
+>
+> This series starts with a new revision of the dt binding documentation for the
+> rpm regulators, introduces the regulator-allow-drms property, remove the
+> flagging of DRMS support from the qcom-rpm regulator driver, refactor the
+> qcom_rpm-regulator driver to move all custom parse code to a function suitable
+> for usage as of_parse_cb. The final patch defines the tables of registers and
+> change the probe function to register the appropriate regulators based on pmic.
+>
+> As Stephen pointed out in his PATCH/RFC/argument [1], this gives a more
+> accurate representation of input supplies, as they are now named as in the
+> specification.
+>
+> Note that for platforms with multiple pmics (e.g. 8660 and 8974) will have
+> multiple regulator subnodes to the rpm node - something that will be clearer
+> with this binding than the previously suggested.
 
-Subject: [media] media: ov2640: dt: add the device tree binding document
-Author:  Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Date:    Tue Feb 10 06:31:36 2015 -0300
+What happens with debugfs when you have multiple pmics with the same
+named regulator? I thought that in this case we needed to make the names
+unique somehow or we would end up with the same directory for two
+different regulators.
 
-Add the document for ov2640 dt.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
- .../devicetree/bindings/media/i2c/ov2640.txt       |   46 ++++++++++++++++++++
- 1 files changed, 46 insertions(+), 0 deletions(-)
-
----
-
-http://git.linuxtv.org/cgit.cgi/media_tree.git/commit/?id=87838addf6143430061823c334792185b56ede47
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-new file mode 100644
-index 0000000..c429b5b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-@@ -0,0 +1,46 @@
-+* Omnivision OV2640 CMOS sensor
-+
-+The Omnivision OV2640 sensor support multiple resolutions output, such as
-+CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
-+output format.
-+
-+Required Properties:
-+- compatible: should be "ovti,ov2640"
-+- clocks: reference to the xvclk input clock.
-+- clock-names: should be "xvclk".
-+
-+Optional Properties:
-+- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
-+- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	i2c1: i2c@f0018000 {
-+		ov2640: camera@0x30 {
-+			compatible = "ovti,ov2640";
-+			reg = <0x30>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn &pinctrl_ov2640_resetb>;
-+
-+			resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
-+			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-+
-+			clocks = <&pck1>;
-+			clock-names = "xvclk";
-+
-+			assigned-clocks = <&pck1>;
-+			assigned-clock-rates = <25000000>;
-+
-+			port {
-+				ov2640_0: endpoint {
-+					remote-endpoint = <&isi_0>;
-+					bus-width = <8>;
-+				};
-+			};
-+		};
-+	};
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
