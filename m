@@ -1,70 +1,70 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] dmaengine: usb-dmac: Add Renesas USB DMA
- Controller
-Date: Thu, 2 Apr 2015 12:58:21 +0530
-Message-ID: <20150402072821.GW7192@intel.com>
-References: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7790: add EtherAVB clock
+Date: Thu, 2 Apr 2015 09:59:47 +0200
+Message-ID: <CAMuHMdVYtsEg8H+=bBD3TBRVSAwOBaM8pcmgOUyh=qpwYOuDvA@mail.gmail.com>
+References: <1625400.M0MxPQybIy@wasted.cogentembedded.com>
+	<2142150.nOzfK74FZR@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2142150.nOzfK74FZR@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2015 at 03:22:43PM +0900, Yoshihiro Shimoda wrote:
-> This patch set is based on slave-dma.git / next branch.
-> (commit id = 739e9c81155e74ca7acfa152eea4e8c055fe35b8)
-Applied, thanks
+Hi Sergei,
 
--- 
-~Vinod
-> 
-> Changes from v3:
->  - Call devm_free_irq() in usb_dmac_chan_remove() to prevent the isr gets
->    triggered after this driver have freed up stuff.
-> 
-> Changes from v2:
->  - Change descriptor management to store the residue in descriptor instead
->    of the channel.
->  - Change acceptable any sg_len.
->  - Modify usb_dmac_tx_status() to calculate the residue for flight
->    descriptors.
->  - Remove a local tasklet.
->  - Remove #ifdef CONFIG_PM.
->  Remarks: No change in patch [1/2].
-> 
-> Changes from v1:
->  - Use virt-dma infrastructure instead of local descriptor management.
->  - Change acceptable sg_len to 1.
->    (because a client driver will use dmaengine_prep_slave_single().)
->  - Remove usb_dmac_sleep_{suspend,resume} functions.
->  - Add usb_dmac_chan_halt() in usb_dmac_runtime_suspend().
->  - Use a tasklet instead of a kernel thread.
->  - Add tasklet_kill() in usb_dmac_remove().
->  - Fix MODULE_AUTHOR string.
->  Remarks: No change in patch [1/2].
-> 
-> Yoshihiro Shimoda (2):
->   dmaengine: renesas,usb-dmac: Add device tree bindings documentation
->   dmaengine: usb-dmac: Add Renesas USB DMA Controller (USB-DMAC) driver
-> 
->  .../devicetree/bindings/dma/renesas,usb-dmac.txt   |  37 +
->  drivers/dma/sh/Kconfig                             |   9 +
->  drivers/dma/sh/Makefile                            |   1 +
->  drivers/dma/sh/usb-dmac.c                          | 910 +++++++++++++++++++++
->  4 files changed, 957 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
->  create mode 100644 drivers/dma/sh/usb-dmac.c
-> 
-> -- 
-> 1.9.1
-> 
+On Mon, Mar 30, 2015 at 11:58 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -1193,16 +1193,18 @@
+>                         compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+>                         reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
+>                         clocks = <&hp_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
+> -                                <&zg_clk>, <&p_clk>, <&zs_clk>, <&zs_clk>;
+> +                                <&zg_clk>, <&p_clk>, <&hp_clk>, <&zs_clk>,
+> +                                <&zs_clk>;
 
--- 
+For consistency, please insert the new etheravb entry between vin0 and ether,
+cfr. the order in r8a7790-clock.h.
+
+>                         #clock-cells = <1>;
+>                         clock-indices = <
+>                                 R8A7790_CLK_MLB R8A7790_CLK_VIN3 R8A7790_CLK_VIN2
+> -                               R8A7790_CLK_VIN1 R8A7790_CLK_VIN0 R8A7790_CLK_ETHER
+> +                               R8A7790_CLK_VIN1 R8A7790_CLK_VIN0
+> +                               R8A7790_CLK_ETHER R8A7790_CLK_ETHERAVB
+>                                 R8A7790_CLK_SATA1 R8A7790_CLK_SATA0
+>                         >;
+>                         clock-output-names =
+>                                 "mlb", "vin3", "vin2", "vin1", "vin0", "ether",
+> -                               "sata1", "sata0";
+> +                               "etheravb", "sata1", "sata0";
+>                 };
+>                 mstp9_clks: mstp9_clks@e6150994 {
+>                         compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+> Index: renesas/include/dt-bindings/clock/r8a7790-clock.h
+> ===================================================================
+> --- renesas.orig/include/dt-bindings/clock/r8a7790-clock.h
+> +++ renesas/include/dt-bindings/clock/r8a7790-clock.h
+> @@ -105,6 +105,7 @@
+>  #define R8A7790_CLK_VIN2               9
+>  #define R8A7790_CLK_VIN1               10
+>  #define R8A7790_CLK_VIN0               11
+> +#define R8A7790_CLK_ETHERAVB           12
+>  #define R8A7790_CLK_ETHER              13
+>  #define R8A7790_CLK_SATA1              14
+>  #define R8A7790_CLK_SATA0              15
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
