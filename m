@@ -1,84 +1,43 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: EXYNOS: Get current parent clock for power
- domain on/off
-Date: Thu, 2 Apr 2015 14:44:29 +0200
-Message-ID: <CAJKOXPc1dfHAaUQd+3HDhNwQW8xYDeoYFgN6QMkmQPEnLGtG-A@mail.gmail.com>
-References: <1427961979-29477-1-git-send-email-k.kozlowski@samsung.com>
-	<551D362B.90901@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: [PATCH v3 0/4] extcon: usb-gpio: fixes and improvements
+Date: Thu, 02 Apr 2015 15:13:01 +0200
+Message-ID: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <551D362B.90901@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+To: cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, Robert Baldyga <r.baldyga@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-04-02 14:29 GMT+02:00 Javier Martinez Canillas
-<javier.martinez@collabora.co.uk>:
-> Hello Krzysztof,
->
-> On 04/02/2015 10:06 AM, Krzysztof Kozlowski wrote:
->> Using a fixed (by DTS) parent for clocks when turning on the power domain
->> may introduce issues in other drivers. For example when such driver
->> changes the parent during runtime and expects that he is the only place
->> of such change.
->>
->> Do not rely entirely on DTS providing the fixed parent for such clocks.
->> Instead if "pclkN" clock name is missing, grab a current parent of clock
->> with clk_get_parent().
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>  Documentation/devicetree/bindings/arm/exynos/power_domain.txt | 8 +++++---
->>  arch/arm/mach-exynos/pm_domains.c                             | 9 ++++++---
->>  2 files changed, 11 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
->> index 5da38c5ed476..0fc1312f6fd5 100644
->> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
->> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
->> @@ -19,9 +19,11 @@ Optional Properties:
->>       domains.
->>  - clock-names: The following clocks can be specified:
->>       - oscclk: Oscillator clock.
->> -     - pclkN, clkN: Pairs of parent of input clock and input clock to the
->> -             devices in this power domain. Maximum of 4 pairs (N = 0 to 3)
->> -             are supported currently.
->> +     - pclkN, clkN: Input clocks (clkN) to the devices in this power domain.
->> +             Optionally with parrents (pclkN). If such parent is provided
->> +             it will be used for reparenting the given clock when domain
->> +             is turned on. Otherwise the parent before power down will be
->> +             used. Maximum of 4 pairs (N = 0 to 3) are supported currently.
->>       - asbN: Clocks required by asynchronous bridges (ASB) present in
->>               the power domain. These clock should be enabled during power
->>               domain on/off operations.
->> diff --git a/arch/arm/mach-exynos/pm_domains.c b/arch/arm/mach-exynos/pm_domains.c
->> index cbe56b35aea0..c55bcf52a6ad 100644
->> --- a/arch/arm/mach-exynos/pm_domains.c
->> +++ b/arch/arm/mach-exynos/pm_domains.c
->> @@ -37,6 +37,7 @@ struct exynos_pm_domain {
->>       struct clk *oscclk;
->>       struct clk *clk[MAX_CLK_PER_DOMAIN];
->>       struct clk *pclk[MAX_CLK_PER_DOMAIN];
->> +     unsigned int pclk_dynamic:MAX_CLK_PER_DOMAIN;
->>       struct clk *asb_clk[MAX_CLK_PER_DOMAIN];
->>  };
->>
->> @@ -62,6 +63,9 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
->>               for (i = 0; i < MAX_CLK_PER_DOMAIN; i++) {
->>                       if (IS_ERR(pd->clk[i]))
->>                               break;
->> +                     /* If parent was not set in DT, save current parent */
->> +                     if (pd->pclk_dynamic & (1 << i))
->
-> Small nit: I personally think that using the BIT(i) macro for shifting bits
-> is more readable but I guess is a matter of personal taste.
+Hello,
 
-Right, it seems I always forget about BIT macro.
-I'll respin with BIT() and your review/tested tags.
+This patch set modifies extcon-usb-gpio driver fixing bugs, and adds
+new features - VBUS pin detection support and 'debounce' property in
+devicetree node. It also updates documentation with information about
+new features.
 
-Thanks for feedback and testing!
+More detailed description of changes can be found in commit messages.
 
 Best regards,
-Krzysztof
+Robert Baldyga
+
+Changelog:
+v3:
+- reduced number of redundant calls of extcon_set_cable_state() function
+
+v2: https://lkml.org/lkml/2015/4/1/84
+- addressed Roger's comments
+
+v1: https://lkml.org/lkml/2015/3/31/96
+
+Robert Baldyga (4):
+  extcon: usb-gpio: register extcon device before IRQ registration
+  extcon: usb-gpio: add support for VBUS detection
+  extcon: usb-gpio: make debounce value configurable in devicetree
+  Documentation: extcon: usb-gpio: update usb-gpio binding description
+
+ .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  28 +++-
+ drivers/extcon/extcon-usb-gpio.c                   | 181 +++++++++++++++------
+ 2 files changed, 153 insertions(+), 56 deletions(-)
+
+-- 
+1.9.1
