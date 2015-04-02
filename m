@@ -1,85 +1,80 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: sama5/dts: reduce the NFC command register
- map
-Date: Thu, 2 Apr 2015 11:24:41 +0200
-Message-ID: <551D0AD9.1090307@atmel.com>
-References: <1427955477-9176-1-git-send-email-josh.wu@atmel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
+ TAB7200
+Date: Thu, 2 Apr 2015 11:22:59 +0200
+Message-ID: <20150402092259.GK23664@lukather>
+References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
+ <20150331144338.GG23664@lukather>
+ <20150331221420.3b65d2540c7dbe1d12611e12@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7e8BFhNxqpjiNKz7"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427955477-9176-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150331221420.3b65d2540c7dbe1d12611e12-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 02/04/2015 08:17, Josh Wu a =E9crit :
-> commit 111573ccd89b ("mtd: atmel_nand: check NFC busy flag by HSMC_SR
-> instead of NFC cmd regs")
 
-As this commit is not in Linus' tree yet, we can't point to its commit =
-ID.
+--7e8BFhNxqpjiNKz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> check NFC busy by nfc SR instead of NFC cmd regs. So we don't need to
-> map NFC cmd registers to include NFCBUSY bit.
-> That means we only need map 0x08000000 instead of 0x10000000 for NFC
-> cmd regs.
+On Tue, Mar 31, 2015 at 10:14:20PM +0300, Aleksei Mamlin wrote:
+> On Tue, 31 Mar 2015 07:43:38 -0700
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 >=20
-> This patch reduce the NFC cmd regs map for sama5d3 & sama5d4.
->=20
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Hi,
+> >=20
+> > On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
+> > > This patch adds nodes for the Goodix GT911 touchscreen controller fou=
+nd
+> > > on the Wexler TAB7200 tablet. Controller uses one of following I2C
+> > > addresses: 0x5d or 0x14, so just add two nodes.
+> >=20
+> > In which case are these different addresses encountered? Different
+> > revisions of the same board?
+>
+> According to the datasheet it is a feature of the controller.=20
+> The address(0x5d or 0x14) can be configured using a reset sequence,
+> which has not yet been implemented in the driver.
 
-Otherwise:
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Which address is set up by the bootloader then?
 
-I'll modify the commit message to adapt the commit ID and send it when
-the patch is merged (probably after 4.0-rc1).
-
-Thanks, best regards,
-
-> ---
-> This patch is based on linux-next git repo.
->=20
->  arch/arm/boot/dts/sama5d3.dtsi | 2 +-
->  arch/arm/boot/dts/sama5d4.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5=
-d3.dtsi
-> index 261311b..5b2c235 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -1445,7 +1445,7 @@
->  				#address-cells =3D <1>;
->  				#size-cells =3D <1>;
->  				reg =3D <
-> -					0x70000000 0x10000000	/* NFC Command Registers */
-> +					0x70000000 0x08000000	/* NFC Command Registers */
->  					0xffffc000 0x00000070	/* NFC HSMC regs */
->  					0x00200000 0x00100000	/* NFC SRAM banks */
->  					>;
-> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5=
-d4.dtsi
-> index d986b41..87705ad 100644
-> --- a/arch/arm/boot/dts/sama5d4.dtsi
-> +++ b/arch/arm/boot/dts/sama5d4.dtsi
-> @@ -294,7 +294,7 @@
->  				#address-cells =3D <1>;
->  				#size-cells =3D <1>;
->  				reg =3D <
-> -					0x90000000 0x10000000	/* NFC Command Registers */
-> +					0x90000000 0x08000000	/* NFC Command Registers */
->  					0xfc05c000 0x00000070	/* NFC HSMC regs */
->  					0x00100000 0x00100000	/* NFC SRAM banks */
->                                           >;
->=20
-
+Maxime
 
 --=20
-Nicolas Ferre
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--7e8BFhNxqpjiNKz7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVHQpzAAoJEBx+YmzsjxAgftoP/RaxXVCk2TiPdIeL3wUruw+I
+oxn7PvZnf1mdYa8yYsoi4eNTkHANhw2tCg92PBU9cWVgv7YCqpWS6zlfGvkCSpyX
+E4M024e6crMajLnKvkGAeWGQqRdIgnbPb9LZCMB+GkSR4z5jzg+vaihy0hnRtX8d
+anFDLWzFrR90b+H2zx0A0/J1pY7y2TXpKzJlvBB0O+6tUsHYsfcxWrRcFFeufakJ
+HIKfHJnRBLwllbzEbHxGAyt+5F4CaVk7jjC3dUcId9XuknAlPP5XvRtc2bPKtvWP
+kz6yESWGLXaqp0rh7vulr8NKutpL/a9QZhkjxaStcnD5ndRDdro92Jh++gDN4Nqa
+JgFy/BoAEZEn6VESNud6L7yUX49gMR6CaAg5f+HOhL6yJwUGujAwUO143S23ly3H
+TycrGrBRuSqY0cIHXvhdokxWke+MGAQbdI9ImMekz8qfGTfftYxKGj+vO4c9ZZhn
+obRJKbKU+E3Cl652fAPSMFOxH40gyL9y6q35ZoQFxSP8XgzkrpKQnvCiS/NuAcpt
+usqo1W48kTnHEx9aBzKs/zS37Wxy/19d7oRwN7snCfRtmkWgn1Tw+BLqCSGR6iRG
+mLiU0O1izwmyMGqj28tVcmBDnnfy7jA3c+7hMjHO7jpPg7rzJ8DS96Q7tPfak5H+
+UOvTSTMV6u/lgWVZEHlE
+=wuSk
+-----END PGP SIGNATURE-----
+
+--7e8BFhNxqpjiNKz7--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
