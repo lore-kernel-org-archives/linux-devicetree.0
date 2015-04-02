@@ -1,82 +1,101 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt: paz00: define nvec as child of i2c bus
-Date: Thu, 02 Apr 2015 08:50:50 -0600
-Message-ID: <551D574A.7060101@wwwdotorg.org>
-References: <1422516022-27161-1-git-send-email-danindrey@mail.ru> <551AC153.7060103@mail.ru> <551C2AC0.9030304@wwwdotorg.org> <21658630.CslVI5jns9@fb07-iapwap2>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH_V4 2/3] dma: jz4780: add driver for the Ingenic JZ4780 DMA controller
+Date: Thu, 02 Apr 2015 16:51:44 +0200
+Message-ID: <2520994.aQ5VZIsnTb@wuerfel>
+References: <1426695397-54906-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1426695397-54906-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <21658630.CslVI5jns9@fb07-iapwap2>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Cc: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1426695397-54906-3-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2015 03:37 AM, Marc Dietrich wrote:
->
-> Am Mittwoch, 1. April 2015, 11:28:32 schrieb Stephen Warren:
->> On 03/31/2015 09:46 AM, Andrey Danin wrote:
->>> On 31.03.2015 17:09, Stephen Warren wrote:
->>>> On 03/31/2015 12:40 AM, Andrey Danin wrote:
->>>>> Hi,
->>>>>
->>>>> Thanks for the review.
->>>>>
->>>>> On 03.02.2015 0:20, Stephen Warren wrote:
->
-> [ snipped old patch parts ]
->
->>>>>>> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
->>>>>>> b/arch/arm/boot/dts/tegra20-paz00.dts
->>>>>>>
->>>>>>> -    nvec@7000c500 {
->>>>>>> -        compatible = "nvidia,nvec";
->>>>>>> -        reg = <0x7000c500 0x100>;
->>>>>>> -        interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>> -        #address-cells = <1>;
->>>>>>> -        #size-cells = <0>;
->>>>>>> +    i2c@7000c500 {
->>>>>>> +        status = "okay";
->>>>>>>
->>>>>>>            clock-frequency = <80000>;
->>>>>>>
->>>>>>> -        request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
->>>>>>> -        slave-addr = <138>;
->>>>>>> -        clocks = <&tegra_car TEGRA20_CLK_I2C3>,
->>>>>>> -                 <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
->>>>>>> -        clock-names = "div-clk", "fast-clk";
->>>>>>> -        resets = <&tegra_car 67>;
->>>>>>> -        reset-names = "i2c";
->>>>>>> +
->>>>>>> +        nvec: nvec@45 {
->>>>>>
->>>>>> This doesn't feel correct. There's nothing here to indicate that this
->>>>>> child device is a slave that is implemented by the host SoC rather than
->>>>>> something external attached to the I2C bus.
->>>>>>
->>>>>> Perhaps you can get away with this, since the driver for nvidia,nvec
->>>>>> only calls I2C APIs suitable for internal slaves rather than external
->>>>>> slaves? Even so though, I think the distinction needs to be clearly
->>>>>> marked in the DT so that any generic code outside the NVEC driver that
->>>>>> parses the DT can determine the difference.
->>>>>>
->>>>>> I would recommend the I2C controller having #address-cells=<2> with
->>>>>> cell
->>>>>> 0 being 0==master,1==slave, cell 1 being the I2C address. The I2C
->>>>>> driver
->>>>>> would need to support #address-cells=<1> for backwards-compatibility.
->
-> Stephen, we haven't used your suggestion because Wolfram disliked the idea in
-> e.g. http://lkml.iu.edu/hypermail/linux/kernel/1409.1/03446.html
+On Wednesday 18 March 2015 16:16:36 Zubair Lutfullah Kakakhel wrote:
 
-As you said in the response you linked to, the objection is invalid 
-since it won't break any DTs. The driver for a node is responsible for 
-defining the meaning of its own reg properties. It should be pretty 
-trivial to allow the Tegra I2C controller driver (or indeed any driver 
-at all) to handle either #address-cells=<1> (the current setting) or 
-#address-cells=<2> (a new value which enables adding a new flag cell) or 
-even #address-cells=<1> with some of the upper bits of the reg value 
-used as flags (which would default to 0 in all current DTs, so e.g. 
-using the MSB==1 as a slave flag), all at run-time with complete 
-backwards-compatibility.
+> +
+> +static bool jz4780_dma_filter_fn(struct dma_chan *chan, void *param)
+> +{
+> +	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
+> +	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
+> +	struct jz4780_dma_data *data = param;
+> +
+> +	if (data->channel > -1) {
+> +		if (data->channel != jzchan->id)
+> +			return false;
+> +	} else if (jzdma->chan_reserved & BIT(jzchan->id)) {
+> +		return false;
+> +	}
+> +
+> +	jzchan->transfer_type = data->transfer_type;
+> +
+> +	return true;
+> +}
+> +
+> +static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+> +	struct of_dma *ofdma)
+> +{
+> +	struct jz4780_dma_dev *jzdma = ofdma->of_dma_data;
+> +	dma_cap_mask_t mask = jzdma->dma_device.cap_mask;
+> +	struct jz4780_dma_data data;
+> +
+> +	if (dma_spec->args_count != 2)
+> +		return NULL;
+> +
+> +	data.transfer_type = dma_spec->args[0];
+> +	data.channel = dma_spec->args[1];
+> +
+> +	if (data.channel > -1) {
+> +		if (data.channel >= JZ_DMA_NR_CHANNELS) {
+> +			dev_err(jzdma->dma_device.dev,
+> +				"device requested non-existent channel %u\n",
+> +				data.channel);
+> +			return NULL;
+> +		}
+> +
+> +		/* Can only select a channel marked as reserved. */
+> +		if (!(jzdma->chan_reserved & BIT(data.channel))) {
+> +			dev_err(jzdma->dma_device.dev,
+> +				"device requested unreserved channel %u\n",
+> +				data.channel);
+> +			return NULL;
+> +		}
+> +	}
+> +
+> +	return dma_request_channel(mask, jz4780_dma_filter_fn, &data);
+> +}
+> +
+
+You should be able to avoid the use of the filter function by calling
+dma_get_slave_channel. You already know which channel you want, so no
+need to scan all channels of all controllers in the system.
+
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/jz4780-dma.h
+> @@ -0,0 +1,49 @@
+> +#ifndef __DT_BINDINGS_DMA_JZ4780_DMA_H__
+> +#define __DT_BINDINGS_DMA_JZ4780_DMA_H__
+> +
+> +/*
+> + * Request type numbers for the JZ4780 DMA controller (written to the DRTn
+> + * register for the channel).
+> + */
+> +#define JZ4780_DMA_I2S1_TX	0x4
+> +#define JZ4780_DMA_I2S1_RX	0x5
+> +#define JZ4780_DMA_I2S0_TX	0x6
+> +#define JZ4780_DMA_I2S0_RX	0x7
+> +#define JZ4780_DMA_AUTO		0x8
+> +#define JZ4780_DMA_SADC_RX	0x9
+
+This is evidently just a hardware number, so please don't introduce
+a false dependency here, and remove that header file. Putting the numbers
+into the dts file like you do for gpio or irq numbers makes it easier to
+do updates and avoids dependencies between the platform and driver files.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
