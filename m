@@ -1,292 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/5] mfd: devicetree: bindings: Add Qualcomm RPM
- regulator subnodes
-Date: Thu, 2 Apr 2015 08:18:14 +0100
-Message-ID: <20150402071814.GY9447@x1>
-References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1427928946-31291-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] dmaengine: usb-dmac: Add Renesas USB DMA
+ Controller
+Date: Thu, 2 Apr 2015 12:58:21 +0530
+Message-ID: <20150402072821.GW7192@intel.com>
+References: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1427928946-31291-2-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1427869365-2068-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DT Ack please.
+On Wed, Apr 01, 2015 at 03:22:43PM +0900, Yoshihiro Shimoda wrote:
+> This patch set is based on slave-dma.git / next branch.
+> (commit id = 739e9c81155e74ca7acfa152eea4e8c055fe35b8)
+Applied, thanks
 
-On Wed, 01 Apr 2015, Bjorn Andersson wrote:
+-- 
+~Vinod
+> 
+> Changes from v3:
+>  - Call devm_free_irq() in usb_dmac_chan_remove() to prevent the isr gets
+>    triggered after this driver have freed up stuff.
+> 
+> Changes from v2:
+>  - Change descriptor management to store the residue in descriptor instead
+>    of the channel.
+>  - Change acceptable any sg_len.
+>  - Modify usb_dmac_tx_status() to calculate the residue for flight
+>    descriptors.
+>  - Remove a local tasklet.
+>  - Remove #ifdef CONFIG_PM.
+>  Remarks: No change in patch [1/2].
+> 
+> Changes from v1:
+>  - Use virt-dma infrastructure instead of local descriptor management.
+>  - Change acceptable sg_len to 1.
+>    (because a client driver will use dmaengine_prep_slave_single().)
+>  - Remove usb_dmac_sleep_{suspend,resume} functions.
+>  - Add usb_dmac_chan_halt() in usb_dmac_runtime_suspend().
+>  - Use a tasklet instead of a kernel thread.
+>  - Add tasklet_kill() in usb_dmac_remove().
+>  - Fix MODULE_AUTHOR string.
+>  Remarks: No change in patch [1/2].
+> 
+> Yoshihiro Shimoda (2):
+>   dmaengine: renesas,usb-dmac: Add device tree bindings documentation
+>   dmaengine: usb-dmac: Add Renesas USB DMA Controller (USB-DMAC) driver
+> 
+>  .../devicetree/bindings/dma/renesas,usb-dmac.txt   |  37 +
+>  drivers/dma/sh/Kconfig                             |   9 +
+>  drivers/dma/sh/Makefile                            |   1 +
+>  drivers/dma/sh/usb-dmac.c                          | 910 +++++++++++++++++++++
+>  4 files changed, 957 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+>  create mode 100644 drivers/dma/sh/usb-dmac.c
+> 
+> -- 
+> 1.9.1
+> 
 
-> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindin=
-gs.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 217 +++++++++++=
-++++++++--
->  1 file changed, 205 insertions(+), 12 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Doc=
-umentation/devicetree/bindings/mfd/qcom-rpm.txt
-> index 85e3198..8eb1ca9 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> @@ -31,16 +31,6 @@ frequencies.
->  	Value type: <string-array>
->  	Definition: must be the three strings "ack", "err" and "wakeup", in=
- order
-> =20
-> -- #address-cells:
-> -	Usage: required
-> -	Value type: <u32>
-> -	Definition: must be 1
-> -
-> -- #size-cells:
-> -	Usage: required
-> -	Value type: <u32>
-> -	Definition: must be 0
-> -
->  - qcom,ipc:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -52,6 +42,188 @@ frequencies.
->  		    - u32 representing the ipc bit within the register
-> =20
-> =20
-> +=3D SUBNODES
-> +
-> +The RPM exposes resources to its subnodes. The below bindings specif=
-y the set
-> +of valid subnodes that can operate on these resources.
-> +
-> +=3D=3D Regulators
-> +
-> +Regulator notes are identified by their compatible:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,rpm-pm8058-regulators"
-> +		    "qcom,rpm-pm8901-regulators"
-> +		    "qcom,rpm-pm8921-regulators"
-> +
-> +- vdd_l0_l1_lvs-supply:
-> +- vdd_l2_l11_l12-supply:
-> +- vdd_l3_l4_l5-supply:
-> +- vdd_l6_l7-supply:
-> +- vdd_l8-supply:
-> +- vdd_l9-supply:
-> +- vdd_l10-supply:
-> +- vdd_l13_l16-supply:
-> +- vdd_l14_l15-supply:
-> +- vdd_l17_l18-supply:
-> +- vdd_l19_l20-supply:
-> +- vdd_l21-supply:
-> +- vdd_l22-supply:
-> +- vdd_l23_l24_l25-supply:
-> +- vdd_ncp-supply:
-> +- vdd_s0-supply:
-> +- vdd_s1-supply:
-> +- vdd_s2-supply:
-> +- vdd_s3-supply:
-> +- vdd_s4-supply:
-> +	Usage: optional (pm8058 only)
-> +	Value type: <phandle>
-> +	Definition: reference to regulator supplying the input pin, as
-> +		    described in the data sheet
-> +
-> +- lvs0_in-supply:
-> +- lvs1_in-supply:
-> +- lvs2_in-supply:
-> +- lvs3_in-supply:
-> +- mvs_in-supply:
-> +- vdd_l0-supply:
-> +- vdd_l1-supply:
-> +- vdd_l2-supply:
-> +- vdd_l3-supply:
-> +- vdd_l4-supply:
-> +- vdd_l5-supply:
-> +- vdd_l6-supply:
-> +- vdd_s0-supply:
-> +- vdd_s1-supply:
-> +- vdd_s2-supply:
-> +- vdd_s3-supply:
-> +- vdd_s4-supply:
-> +	Usage: optional (pm8901 only)
-> +	Value type: <phandle>
-> +	Definition: reference to regulator supplying the input pin, as
-> +		    described in the data sheet
-> +
-> +- vdd_l1_l2_l12_l18-supply:
-> +- vdd_l3_l15_l17-supply:
-> +- vdd_l4_l14-supply:
-> +- vdd_l5_l8_l16-supply:
-> +- vdd_l6_l7-supply:
-> +- vdd_l9_l11-supply:
-> +- vdd_l10_l22-supply:
-> +- vdd_l21_l23_l29-supply:
-> +- vdd_l24-supply:
-> +- vdd_l25-supply:
-> +- vdd_l26-supply:
-> +- vdd_l27-supply:
-> +- vdd_l28-supply:
-> +- vdd_ncp-supply:
-> +- vdd_s1-supply:
-> +- vdd_s2-supply:
-> +- vdd_s4-supply:
-> +- vdd_s5-supply:
-> +- vdd_s6-supply:
-> +- vdd_s7-supply:
-> +- vdd_s8-supply:
-> +- vin_5vs-supply:
-> +- vin_lvs1_3_6-supply:
-> +- vin_lvs2-supply:
-> +- vin_lvs4_5_7-supply:
-> +	Usage: optional (pm8921 only)
-> +	Value type: <phandle>
-> +	Definition: reference to regulator supplying the input pin, as
-> +		    described in the data sheet
-> +
-> +The regulator node houses sub-nodes for each regulator within the de=
-vice. Each
-> +sub-node is identified using the node's name, with valid values list=
-ed for each
-> +of the pmics below.
-> +
-> +pm8058:
-> +	l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l1=
-5,
-> +	l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, s0, s1, s2, s3, s=
-4,
-> +	lvs0, lvs1, ncp
-> +
-> +pm8901:
-> +	l0, l1, l2, l3, l4, l5, l6, s0, s1, s2, s3, s4, lvs0, lvs1, lvs2, l=
-vs3,
-> +	mvs
-> +
-> +pm8921:
-> +	s1, s2, s3, s4, s7, s8, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l1=
-1,
-> +	l12, l14, l15, l16, l17, l18, l21, l22, l23, l24, l25, l26, l27, l2=
-8,
-> +	l29, lvs1, lvs2, lvs3, lvs4, lvs5, lvs6, lvs7, usb-switch, hdmi-swi=
-tch,
-> +	ncp
-> +
-> +The content of each sub-node is defined by the standard binding for =
-regulators -
-> +see regulator.txt - with additional custom properties described belo=
-w:
-> +
-> +=3D=3D=3D Switch-mode Power Supply regulator custom properties
-> +
-> +- bias-pull-down:
-> +	Usage: optional
-> +	Value type: <empty>
-> +	Definition: enable pull down of the regulator when inactive
-> +
-> +- qcom,switch-mode-frequency:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Frequency (Hz) of the switch-mode power supply;
-> +		    must be one of:
-> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
-> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
-> +		    1480000, 1370000, 1280000, 1200000
-> +
-> +- qcom,force-mode:
-> +	Usage: optional (default if no other qcom,force-mode is specified)
-> +	Value type: <u32>
-> +	Defintion: indicates that the regulator should be forced to a
-> +		   particular mode, valid values are:
-> +		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
-> +		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
-> +		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
-> +		   QCOM_RPM_FORCE_MODE_AUTO - allow regulator to automatically
-> +					      select its own mode based on
-> +					      realtime current draw, only for:
-> +					      pm8921 smps and ftsmps
-> +
-> +- qcom,power-mode-hysteretic:
-> +	Usage: optional
-> +	Value type: <empty>
-> +	Definition: select that the power supply should operate in hysteret=
-ic
-> +		    mode, instead of the default pwm mode
-> +
-> +=3D=3D=3D Low-dropout regulator custom properties
-> +
-> +- bias-pull-down:
-> +	Usage: optional
-> +	Value type: <empty>
-> +	Definition: enable pull down of the regulator when inactive
-> +
-> +- qcom,force-mode:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Defintion: indicates that the regulator should not be forced to any
-> +		   particular mode, valid values are:
-> +		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
-> +		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
-> +		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
-> +		   QCOM_RPM_FORCE_MODE_BYPASS - set regulator to use bypass
-> +						mode, i.e.  to act as a switch
-> +						and not regulate, only for:
-> +						pm8921 pldo, nldo and nldo1200
-> +
-> +=3D=3D=3D Negative Charge Pump custom properties
-> +
-> +- qcom,switch-mode-frequency:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Frequency (Hz) of the swith mode power supply;
-> +		    must be one of:
-> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
-> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
-> +		    1480000, 1370000, 1280000, 1200000
-> +
->  =3D EXAMPLE
-> =20
->  	#include <dt-bindings/mfd/qcom-rpm.h>
-> @@ -64,7 +236,28 @@ frequencies.
->  		interrupts =3D <0 19 0>, <0 21 0>, <0 22 0>;
->  		interrupt-names =3D "ack", "err", "wakeup";
-> =20
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <0>;
-> +		regulators {
-> +			compatible =3D "qcom,rpm-pm8921-regulators";
-> +			vdd_l1_l2_l12_l18-supply =3D <&pm8921_s4>;
-> +
-> +			s1 {
-> +				regulator-min-microvolt =3D <1225000>;
-> +				regulator-max-microvolt =3D <1225000>;
-> +
-> +				bias-pull-down;
-> +
-> +				qcom,switch-mode-frequency =3D <3200000>;
-> +			};
-> +
-> +			pm8921_s4: s4 {
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +
-> +				qcom,switch-mode-frequency =3D <1600000>;
-> +				bias-pull-down;
-> +
-> +				qcom,force-mode =3D <QCOM_RPM_FORCE_MODE_AUTO>;
-> +			};
-> +		};
->  	};
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
