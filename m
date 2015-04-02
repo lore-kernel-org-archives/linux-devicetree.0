@@ -1,91 +1,29 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4/6] arm64: dts: exynos: Add PWM dt node and pinctrl for
- Exynos5433 SoC
-Date: Thu, 02 Apr 2015 17:34:35 +0900
-Message-ID: <1427963677-32661-5-git-send-email-cw00.choi@samsung.com>
-References: <1427963677-32661-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1427963677-32661-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene@kernel.org
-Cc: mark.rutland@arm.com, marc.zyngier@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, cw00.choi@samsung.com, jaewon02.kim@samsung.com, beomho.seo@samsung.com, jy0922.shim@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/3] dmaengine: APM X-Gene SoC DMA engine driver
+ support
+Date: Thu, 2 Apr 2015 14:05:16 +0530
+Message-ID: <20150402083516.GZ7192@intel.com>
+References: <1426686456-15536-1-git-send-email-rsahu@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1426686456-15536-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jaewon Kim <jaewon02.kim@samsung.com>
+On Wed, Mar 18, 2015 at 07:17:33PM +0530, Rameshwar Prasad Sahu wrote:
+> This patch set implements the APM X-Gene SoC DMA driver support to offload
+> the DMA operations such as memory copy(memcpy), scatter gather memory copy,
+> raid5 xor and raid6 p+q.
+Applied, now
 
-This patch adds PWM(Pulsle Width Modulation) device tree node
-to support for PWM Timer on Exynos5433 SoC.
-
-Cc: Kukjin Kim <kgene@kernel.org>
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Inki Dae <inki.dae@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 28 ++++++++++++++++++++++
- arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 12 ++++++++++
- 2 files changed, 40 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-index c56bbf8..49be038 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-@@ -581,6 +581,34 @@
- 		samsung,pin-drv = <0>;
- 	};
- 
-+	pwm0_out: pwm0-out {
-+		samsung,pins = "gpd2-4";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	pwm1_out: pwm1-out {
-+		samsung,pins = "gpd2-5";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	pwm2_out: pwm2-out {
-+		samsung,pins = "gpd2-6";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	pwm3_out: pwm3-out {
-+		samsung,pins = "gpd2-7";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
- 	spi1_bus: spi1-bus {
- 		samsung,pins = "gpd6-2", "gpd6-4", "gpd6-5";
- 		samsung,pin-function = <2>;
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 9cca236..baeec299 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -1052,6 +1052,18 @@
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
- 		};
-+
-+		pwm: pwm@14dd0000 {
-+			compatible = "samsung,exynos4210-pwm";
-+			reg = <0x14dd0000 0x100>;
-+			interrupts = <0 416 0>, <0 417 0>,
-+				     <0 418 0>, <0 419 0>, <0 420 0>;
-+			samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-+			clocks = <&cmu_peric CLK_PCLK_PWM>;
-+			clock-names = "timers";
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	timer {
+Thanks
 -- 
-1.8.5.5
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
