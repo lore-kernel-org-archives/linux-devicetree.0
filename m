@@ -1,109 +1,76 @@
-From: "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [1/4] powerpc/cache: add cache flush operation for various e500
-Date: Thu, 2 Apr 2015 10:14:11 +0000
-Message-ID: <1427969652830.68303@freescale.com>
-References: <1427365095-26396-1-git-send-email-chenhui.zhao@freescale.com>,<20150331011028.GA5667@home.buserror.net>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Use define for s3c-rtc clock id
+Date: Thu, 2 Apr 2015 12:16:58 +0200
+Message-ID: <CAJKOXPf=aia+aeud-7V1YrDA1rhG3eyJrH_tcY-aEKTbVTTUGQ@mail.gmail.com>
+References: <1427728889-29158-1-git-send-email-k.kozlowski@samsung.com>
+	<551A1D27.6000301@samsung.com>
+	<CABxcv=moU4xO=BNj6r4_O-VeL_OuAjCuoWiB9xsKWw9NjFTr9g@mail.gmail.com>
+	<064c01d06b7f$aed30cf0$0c7926d0$@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150331011028.GA5667-vONcSABrMOVpTrP2zolEsF6hYfS7NtTn@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <064c01d06b7f$aed30cf0$0c7926d0$@kernel.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+2015-03-31 8:55 GMT+02:00 Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> Javier Martinez Canillas wrote:
+>>
+>> On Tue, Mar 31, 2015 at 6:05 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > Hi,
+>> >
+>> > On 03/31/2015 12:21 AM, Krzysztof Kozlowski wrote:
+>> >> Use a define instead of raw number as a ID for "rtc_src" clock.
+>> >>
+>> >> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >>
+>> >> ---
+>> >>
+>> >> Patch depends on new file "dt-bindings/clock/samsung,s2mps11.h" from:
+>> >> http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg43136.html
+>> >> ---
+>> >>  arch/arm/boot/dts/exynos3250-rinato.dts | 3 ++-
+>> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+>> >> index 3905824cac58..d2cbc95364de 100644
+>> >> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
+>> >> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+>> >> @@ -16,6 +16,7 @@
+>> >>  #include "exynos3250.dtsi"
+>> >>  #include <dt-bindings/input/input.h>
+>> >>  #include <dt-bindings/gpio/gpio.h>
+>> >> +#include <dt-bindings/clock/samsung,s2mps11.h>
+>> >>
+>> >>  / {
+>> >>       model = "Samsung Rinato board";
+>> >> @@ -605,7 +606,7 @@
+>> >>  };
+>> >>
+>> >>  &rtc {
+>> >> -     clocks = <&cmu CLK_RTC>, <&s2mps14_osc 0>;
+>> >> +     clocks = <&cmu CLK_RTC>, <&s2mps14_osc S2MPS11_CLK_AP>;
+>> >>       clock-names = "rtc", "rtc_src";
+>> >>       status = "okay";
+>> >>  };
+>> >>
+>> >
+>> > Looks good to me.
+>> >
+>> > Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >
+>>
+>> Reviewed-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+>>
+> Thanks for you guys' review. Applied.
 
-________________________________________
-From: Wood Scott-B07421
-Sent: Tuesday, March 31, 2015 9:10
-To: Zhao Chenhui-B35336
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jin Zhengxiong-R64188
-Subject: Re: [1/4] powerpc/cache: add cache flush operation for various e500
+Thanks Kukjin! I forgot to do this also for exynos3250-monk board.
+I'll send another patch for it but you may squash them if you want.
 
-On Thu, Mar 26, 2015 at 06:18:12PM +0800, chenhui zhao wrote:
-> Various e500 core have different cache architecture, so they
-> need different cache flush operations. Therefore, add a callback
-> function cpu_flush_caches to the struct cpu_spec. The cache flush
-> operation for the specific kind of e500 is selected at init time.
-> The callback function will flush all caches inside the current cpu.
->
-> Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/powerpc/include/asm/cacheflush.h     |   2 -
->  arch/powerpc/include/asm/cputable.h       |  11 +++
->  arch/powerpc/kernel/asm-offsets.c         |   3 +
->  arch/powerpc/kernel/cpu_setup_fsl_booke.S | 114 +++++++++++++++++++++++++++++-
->  arch/powerpc/kernel/cputable.c            |   4 ++
->  arch/powerpc/kernel/head_fsl_booke.S      |  74 -------------------
->  arch/powerpc/platforms/85xx/smp.c         |   3 +-
->  7 files changed, 133 insertions(+), 78 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
-> index 30b35ff..729fde4 100644
-> --- a/arch/powerpc/include/asm/cacheflush.h
-> +++ b/arch/powerpc/include/asm/cacheflush.h
-> @@ -30,8 +30,6 @@ extern void flush_dcache_page(struct page *page);
->  #define flush_dcache_mmap_lock(mapping)              do { } while (0)
->  #define flush_dcache_mmap_unlock(mapping)    do { } while (0)
->
-> -extern void __flush_disable_L1(void);
-> -
->  extern void flush_icache_range(unsigned long, unsigned long);
->  extern void flush_icache_user_range(struct vm_area_struct *vma,
->                                   struct page *page, unsigned long addr,
-> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-> index 5cf5a6d..c776efe4 100644
-> --- a/arch/powerpc/include/asm/cputable.h
-> +++ b/arch/powerpc/include/asm/cputable.h
-> @@ -43,6 +43,13 @@ extern int machine_check_e500(struct pt_regs *regs);
->  extern int machine_check_e200(struct pt_regs *regs);
->  extern int machine_check_47x(struct pt_regs *regs);
->
-> +#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
-> +extern void __flush_caches_e500v2(void);
-> +extern void __flush_caches_e500mc(void);
-> +extern void __flush_caches_e5500(void);
-> +extern void __flush_caches_e6500(void);
-> +#endif
-
-Why the leading underscores?
-
-[chenhui] Will get rid of them.
-
->  /* NOTE WELL: Update identify_cpu() if fields are added or removed! */
->  struct cpu_spec {
->       /* CPU is matched via (PVR & pvr_mask) == pvr_value */
-> @@ -59,6 +66,10 @@ struct cpu_spec {
->       unsigned int    icache_bsize;
->       unsigned int    dcache_bsize;
->
-> +#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
-
-CONFIG_PPC_E500MC implies CONFIG_E500.  Why do we need this ifdef?
-
-[chenhui] Change to "#ifdef CONFIG_E500".
-
-> +     /* flush caches inside the current cpu */
-> +     void (*cpu_flush_caches)(void);
-> +#endif
-
-It seems you literally mean "in the cpu" -- If it's a threaded core, then
-by "cpu" do you mean "thread" (like we usually do) and thus no caches get
-flushed (ignore the fact that it's moot on e6500 -- this is an interface
-and needs to be clear).
-
-Also, no-oping L1 flush on e6500 is not compliant with the claim that
-you're flushing the cache.  You're relying on an unstated assumption that
-you'll invalidate that cache later instead.
-
-If you want to make this "flush whatever needs to be flushed for
-suspend/hotplug", call it that.
-
--Scott
-
-[chenhui] OK. Then, call "cpu_down_flush".
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
