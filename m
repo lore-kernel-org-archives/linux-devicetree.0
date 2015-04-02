@@ -1,115 +1,289 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/4] clk: Provide always-on clock support
-Date: Thu, 2 Apr 2015 08:10:27 +0100
-Message-ID: <20150402071027.GW9447@x1>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
- <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
- <CAJe_Zhf=GBb8AfnTLaGxGcZkVSm9TtdnTsmpH_MBmbMT8ViMDg@mail.gmail.com>
- <20150302083652.GE31325@x1>
- <CABb+yY07woiiG8e2kff_AsiFCHNP+TKYyNm_o6=f5WmFsLi8gQ@mail.gmail.com>
- <20150302101859.GB32347@x1>
- <CAJe_Zhc-94afeWegEeOoL3X13y35MDJvqME1x7XMy3vVVXYedg@mail.gmail.com>
- <20150401014218.25195.61119@quantum>
- <CABb+yY2SMq3=wKEdTO_XgK3BOMSWy7=EWufqS9QYhGzLM1HQkw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] mfd: devicetree: bindings: Add Qualcomm RPM
+ regulator subnodes
+Date: Thu, 2 Apr 2015 08:18:14 +0100
+Message-ID: <20150402071814.GY9447@x1>
+References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1427928946-31291-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY2SMq3=wKEdTO_XgK3BOMSWy7=EWufqS9QYhGzLM1HQkw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Michael Turquette <mturquette@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, kernel@stlinux.com, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1427928946-31291-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 02 Apr 2015, Jassi Brar wrote:
+DT Ack please.
 
-> On Wed, Apr 1, 2015 at 7:12 AM, Michael Turquette <mturquette@linaro.=
-org> wrote:
-> > Quoting Jassi Brar (2015-03-02 02:28:44)
-> >> On 2 March 2015 at 15:48, Lee Jones <lee.jones@linaro.org> wrote:
-> >> > On Mon, 02 Mar 2015, Jassi Brar wrote:
-> >> >
-> >> >> On Mon, Mar 2, 2015 at 2:06 PM, Lee Jones <lee.jones@linaro.org=
-> wrote:
-> >> >> > On Sat, 28 Feb 2015, Jassi Brar wrote:
-> >> >> >
-> >> >> >> On 28 February 2015 at 02:44, Lee Jones <lee.jones@linaro.or=
-g> wrote:
-> >> >> >> > Lots of platforms contain clocks which if turned off would=
- prove fatal.
-> >> >> >> > The only way to recover from these catastrophic failures i=
-s to restart
-> >> >> >> > the board(s).  Now, when a clock is registered with the fr=
-amework it is
-> >> >> >> > compared against a list of provided always-on clock names =
-which must be
-> >> >> >> > kept ungated.  If it matches, we enable the existing CLK_I=
-GNORE_UNUSED
-> >> >> >> > flag, which will prevent the common clk framework from att=
-empting to
-> >> >> >> > gate it during the clk_disable_unused() procedure.
-> >> >> >> >
-> >> >> >> If a clock is critical on a certain board, it could be got+e=
-nabled
-> >> >> >> during early boot so there is always a user.
-> >> >> >
-> >> >> > I tried this.  There was push-back from the DT maintainers.
-> >> >> >
-> >> >> >   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-=
-=46ebruary/324417.html
-> >> >> >
-> >> >> Thanks, I wasn't aware of the history.
-> >> >>
-> >> >> >> To be able to do that from DT, maybe add a new, say, CLK_ALW=
-AYS_ON
-> >> >> >> flag could be made to initialize the clock with one phantom =
-user
-> >> >> >> already. Or just reuse the CLK_IGNORE_UNUSED?
-> >> >> >
-> >> >> > How is that different to what this set is doing?
-> >> >> >
-> >> >> The phantom user - that's there but none can see it.
-> >> >>
-> >> >> How about?
-> >> >>
-> >> >> +       of_property_for_each_string(np, "clock-always-on", prop=
-, clkname) {
-> >> >> +               clk =3D __clk_lookup(clkname);
-> >> >> +               if (!clk)
-> >> >> +                       continue;
-> >> >> +
-> >> >> +               clk->core->enable_count =3D 1;
-> >> >> +               clk->core->prepare_count =3D 1;
-> >> >> +       }
-> >> >
-> >> > This is only fractionally different from the current implementat=
-ion.
-> >> >
-> >> > I believe the current way it slightly nicer, as we don't have to=
- fake
-> >> > the user count.
-> >> >
-> >> Well... the user is indeed there, isn't it? It's just not known to
-> >> Linux. So 'fake' isn't most applicable here.
-> >> Otherwise you might have to stub out some existing and future
-> >> functions for CLK_IGNORE_UNUSED. And how do we explain to userspac=
-e
-> >> which would see power drawn but no user of the clock?
-> >
-> > Jassi,
-> >
-> > This is broken. What if the parent of this clock has
-> > {enable,prepare}_count of zero? The way we propagate these refcount=
-s up
-> > the tree would fall over.
-> >
-> Yeah it needs to be done at higher level,
-> - clk->core->enable_count =3D 1;
-> - clk->core->prepare_count =3D 1;
-> + clk_prepare_enable(clk);
+On Wed, 01 Apr 2015, Bjorn Andersson wrote:
 
-=46YI: https://lkml.org/lkml/2015/4/1/267
+> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindin=
+gs.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 217 +++++++++++=
+++++++++--
+>  1 file changed, 205 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Doc=
+umentation/devicetree/bindings/mfd/qcom-rpm.txt
+> index 85e3198..8eb1ca9 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> @@ -31,16 +31,6 @@ frequencies.
+>  	Value type: <string-array>
+>  	Definition: must be the three strings "ack", "err" and "wakeup", in=
+ order
+> =20
+> -- #address-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 1
+> -
+> -- #size-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 0
+> -
+>  - qcom,ipc:
+>  	Usage: required
+>  	Value type: <prop-encoded-array>
+> @@ -52,6 +42,188 @@ frequencies.
+>  		    - u32 representing the ipc bit within the register
+> =20
+> =20
+> +=3D SUBNODES
+> +
+> +The RPM exposes resources to its subnodes. The below bindings specif=
+y the set
+> +of valid subnodes that can operate on these resources.
+> +
+> +=3D=3D Regulators
+> +
+> +Regulator notes are identified by their compatible:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-regulators"
+> +		    "qcom,rpm-pm8901-regulators"
+> +		    "qcom,rpm-pm8921-regulators"
+> +
+> +- vdd_l0_l1_lvs-supply:
+> +- vdd_l2_l11_l12-supply:
+> +- vdd_l3_l4_l5-supply:
+> +- vdd_l6_l7-supply:
+> +- vdd_l8-supply:
+> +- vdd_l9-supply:
+> +- vdd_l10-supply:
+> +- vdd_l13_l16-supply:
+> +- vdd_l14_l15-supply:
+> +- vdd_l17_l18-supply:
+> +- vdd_l19_l20-supply:
+> +- vdd_l21-supply:
+> +- vdd_l22-supply:
+> +- vdd_l23_l24_l25-supply:
+> +- vdd_ncp-supply:
+> +- vdd_s0-supply:
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s3-supply:
+> +- vdd_s4-supply:
+> +	Usage: optional (pm8058 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +- lvs0_in-supply:
+> +- lvs1_in-supply:
+> +- lvs2_in-supply:
+> +- lvs3_in-supply:
+> +- mvs_in-supply:
+> +- vdd_l0-supply:
+> +- vdd_l1-supply:
+> +- vdd_l2-supply:
+> +- vdd_l3-supply:
+> +- vdd_l4-supply:
+> +- vdd_l5-supply:
+> +- vdd_l6-supply:
+> +- vdd_s0-supply:
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s3-supply:
+> +- vdd_s4-supply:
+> +	Usage: optional (pm8901 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +- vdd_l1_l2_l12_l18-supply:
+> +- vdd_l3_l15_l17-supply:
+> +- vdd_l4_l14-supply:
+> +- vdd_l5_l8_l16-supply:
+> +- vdd_l6_l7-supply:
+> +- vdd_l9_l11-supply:
+> +- vdd_l10_l22-supply:
+> +- vdd_l21_l23_l29-supply:
+> +- vdd_l24-supply:
+> +- vdd_l25-supply:
+> +- vdd_l26-supply:
+> +- vdd_l27-supply:
+> +- vdd_l28-supply:
+> +- vdd_ncp-supply:
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s4-supply:
+> +- vdd_s5-supply:
+> +- vdd_s6-supply:
+> +- vdd_s7-supply:
+> +- vdd_s8-supply:
+> +- vin_5vs-supply:
+> +- vin_lvs1_3_6-supply:
+> +- vin_lvs2-supply:
+> +- vin_lvs4_5_7-supply:
+> +	Usage: optional (pm8921 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +The regulator node houses sub-nodes for each regulator within the de=
+vice. Each
+> +sub-node is identified using the node's name, with valid values list=
+ed for each
+> +of the pmics below.
+> +
+> +pm8058:
+> +	l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l1=
+5,
+> +	l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, s0, s1, s2, s3, s=
+4,
+> +	lvs0, lvs1, ncp
+> +
+> +pm8901:
+> +	l0, l1, l2, l3, l4, l5, l6, s0, s1, s2, s3, s4, lvs0, lvs1, lvs2, l=
+vs3,
+> +	mvs
+> +
+> +pm8921:
+> +	s1, s2, s3, s4, s7, s8, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l1=
+1,
+> +	l12, l14, l15, l16, l17, l18, l21, l22, l23, l24, l25, l26, l27, l2=
+8,
+> +	l29, lvs1, lvs2, lvs3, lvs4, lvs5, lvs6, lvs7, usb-switch, hdmi-swi=
+tch,
+> +	ncp
+> +
+> +The content of each sub-node is defined by the standard binding for =
+regulators -
+> +see regulator.txt - with additional custom properties described belo=
+w:
+> +
+> +=3D=3D=3D Switch-mode Power Supply regulator custom properties
+> +
+> +- bias-pull-down:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: enable pull down of the regulator when inactive
+> +
+> +- qcom,switch-mode-frequency:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Frequency (Hz) of the switch-mode power supply;
+> +		    must be one of:
+> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
+> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
+> +		    1480000, 1370000, 1280000, 1200000
+> +
+> +- qcom,force-mode:
+> +	Usage: optional (default if no other qcom,force-mode is specified)
+> +	Value type: <u32>
+> +	Defintion: indicates that the regulator should be forced to a
+> +		   particular mode, valid values are:
+> +		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+> +		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+> +		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
+> +		   QCOM_RPM_FORCE_MODE_AUTO - allow regulator to automatically
+> +					      select its own mode based on
+> +					      realtime current draw, only for:
+> +					      pm8921 smps and ftsmps
+> +
+> +- qcom,power-mode-hysteretic:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: select that the power supply should operate in hysteret=
+ic
+> +		    mode, instead of the default pwm mode
+> +
+> +=3D=3D=3D Low-dropout regulator custom properties
+> +
+> +- bias-pull-down:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: enable pull down of the regulator when inactive
+> +
+> +- qcom,force-mode:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Defintion: indicates that the regulator should not be forced to any
+> +		   particular mode, valid values are:
+> +		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+> +		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+> +		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
+> +		   QCOM_RPM_FORCE_MODE_BYPASS - set regulator to use bypass
+> +						mode, i.e.  to act as a switch
+> +						and not regulate, only for:
+> +						pm8921 pldo, nldo and nldo1200
+> +
+> +=3D=3D=3D Negative Charge Pump custom properties
+> +
+> +- qcom,switch-mode-frequency:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Frequency (Hz) of the swith mode power supply;
+> +		    must be one of:
+> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
+> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
+> +		    1480000, 1370000, 1280000, 1200000
+> +
+>  =3D EXAMPLE
+> =20
+>  	#include <dt-bindings/mfd/qcom-rpm.h>
+> @@ -64,7 +236,28 @@ frequencies.
+>  		interrupts =3D <0 19 0>, <0 21 0>, <0 22 0>;
+>  		interrupt-names =3D "ack", "err", "wakeup";
+> =20
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <0>;
+> +		regulators {
+> +			compatible =3D "qcom,rpm-pm8921-regulators";
+> +			vdd_l1_l2_l12_l18-supply =3D <&pm8921_s4>;
+> +
+> +			s1 {
+> +				regulator-min-microvolt =3D <1225000>;
+> +				regulator-max-microvolt =3D <1225000>;
+> +
+> +				bias-pull-down;
+> +
+> +				qcom,switch-mode-frequency =3D <3200000>;
+> +			};
+> +
+> +			pm8921_s4: s4 {
+> +				regulator-min-microvolt =3D <1800000>;
+> +				regulator-max-microvolt =3D <1800000>;
+> +
+> +				qcom,switch-mode-frequency =3D <1600000>;
+> +				bias-pull-down;
+> +
+> +				qcom,force-mode =3D <QCOM_RPM_FORCE_MODE_AUTO>;
+> +			};
+> +		};
+>  	};
+> =20
 
 --=20
 Lee Jones
