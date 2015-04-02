@@ -1,35 +1,110 @@
-From: Markus Reichl <m.reichl@fivetechno.de>
-Subject: Re: Exynos5422 odroidxu3 pwm-fan control using thermal sensors
-Date: Thu, 02 Apr 2015 12:06:06 +0200
-Message-ID: <6834479.9LX5eoYIRd@dell2.five-lan.de>
-References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
-Reply-To: m.reichl@fivetechno.de
+From: "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [1/4] powerpc/cache: add cache flush operation for various e500
+Date: Thu, 2 Apr 2015 10:14:11 +0000
+Message-ID: <1427969652830.68303@freescale.com>
+References: <1427365095-26396-1-git-send-email-chenhui.zhao@freescale.com>,<20150331011028.GA5667@home.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150331011028.GA5667-vONcSABrMOVpTrP2zolEsF6hYfS7NtTn@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 27. M=C3=A4rz 2015, 03:09:09 schrieb Anand Moon:
-> This work depeds upon work done by Lukasz Majewski <l.majewski@samsun=
-g.com>
->  and Sjoerd Simons <sjoerd.simons@collabora.co.uk> regarding the pwm-=
-fan.
->=20
-> -Anand Moon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
-ng-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
 
-MarkusTested-by:  Markus Reichl <m.reichl@fivetechno.de>
+________________________________________
+From: Wood Scott-B07421
+Sent: Tuesday, March 31, 2015 9:10
+To: Zhao Chenhui-B35336
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jin Zhengxiong-R64188
+Subject: Re: [1/4] powerpc/cache: add cache flush operation for various e500
 
-Best Regards,
----
-Markus Reichl
+On Thu, Mar 26, 2015 at 06:18:12PM +0800, chenhui zhao wrote:
+> Various e500 core have different cache architecture, so they
+> need different cache flush operations. Therefore, add a callback
+> function cpu_flush_caches to the struct cpu_spec. The cache flush
+> operation for the specific kind of e500 is selected at init time.
+> The callback function will flush all caches inside the current cpu.
+>
+> Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/powerpc/include/asm/cacheflush.h     |   2 -
+>  arch/powerpc/include/asm/cputable.h       |  11 +++
+>  arch/powerpc/kernel/asm-offsets.c         |   3 +
+>  arch/powerpc/kernel/cpu_setup_fsl_booke.S | 114 +++++++++++++++++++++++++++++-
+>  arch/powerpc/kernel/cputable.c            |   4 ++
+>  arch/powerpc/kernel/head_fsl_booke.S      |  74 -------------------
+>  arch/powerpc/platforms/85xx/smp.c         |   3 +-
+>  7 files changed, 133 insertions(+), 78 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+> index 30b35ff..729fde4 100644
+> --- a/arch/powerpc/include/asm/cacheflush.h
+> +++ b/arch/powerpc/include/asm/cacheflush.h
+> @@ -30,8 +30,6 @@ extern void flush_dcache_page(struct page *page);
+>  #define flush_dcache_mmap_lock(mapping)              do { } while (0)
+>  #define flush_dcache_mmap_unlock(mapping)    do { } while (0)
+>
+> -extern void __flush_disable_L1(void);
+> -
+>  extern void flush_icache_range(unsigned long, unsigned long);
+>  extern void flush_icache_user_range(struct vm_area_struct *vma,
+>                                   struct page *page, unsigned long addr,
+> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+> index 5cf5a6d..c776efe4 100644
+> --- a/arch/powerpc/include/asm/cputable.h
+> +++ b/arch/powerpc/include/asm/cputable.h
+> @@ -43,6 +43,13 @@ extern int machine_check_e500(struct pt_regs *regs);
+>  extern int machine_check_e200(struct pt_regs *regs);
+>  extern int machine_check_47x(struct pt_regs *regs);
+>
+> +#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
+> +extern void __flush_caches_e500v2(void);
+> +extern void __flush_caches_e500mc(void);
+> +extern void __flush_caches_e5500(void);
+> +extern void __flush_caches_e6500(void);
+> +#endif
+
+Why the leading underscores?
+
+[chenhui] Will get rid of them.
+
+>  /* NOTE WELL: Update identify_cpu() if fields are added or removed! */
+>  struct cpu_spec {
+>       /* CPU is matched via (PVR & pvr_mask) == pvr_value */
+> @@ -59,6 +66,10 @@ struct cpu_spec {
+>       unsigned int    icache_bsize;
+>       unsigned int    dcache_bsize;
+>
+> +#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
+
+CONFIG_PPC_E500MC implies CONFIG_E500.  Why do we need this ifdef?
+
+[chenhui] Change to "#ifdef CONFIG_E500".
+
+> +     /* flush caches inside the current cpu */
+> +     void (*cpu_flush_caches)(void);
+> +#endif
+
+It seems you literally mean "in the cpu" -- If it's a threaded core, then
+by "cpu" do you mean "thread" (like we usually do) and thus no caches get
+flushed (ignore the fact that it's moot on e6500 -- this is an interface
+and needs to be clear).
+
+Also, no-oping L1 flush on e6500 is not compliant with the claim that
+you're flushing the cache.  You're relying on an unstated assumption that
+you'll invalidate that cache later instead.
+
+If you want to make this "flush whatever needs to be flushed for
+suspend/hotplug", call it that.
+
+-Scott
+
+[chenhui] OK. Then, call "cpu_down_flush".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
