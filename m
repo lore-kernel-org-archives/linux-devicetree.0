@@ -1,96 +1,64 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] extcon: usb-gpio: register extcon device before IRQ
- registration
-Date: Thu, 02 Apr 2015 08:41:04 +0900
-Message-ID: <551C8210.3040406@samsung.com>
-References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com>
- <1427873005-24024-2-git-send-email-r.baldyga@samsung.com>
- <551BDD60.1010603@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL] Support for Fujitsu MB86S7X SoCs
+Date: Wed, 1 Apr 2015 17:50:29 -0700
+Message-ID: <20150402005029.GH8137@localhost>
+References: <CAKR0VNJdCEEoM8mqFrc-teQ-q=DopGisos16+uKt=ky2mRjF8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <551BDD60.1010603-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKR0VNJdCEEoM8mqFrc-teQ-q=DopGisos16+uKt=ky2mRjF8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaswinder Singh <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+Hi Vincent,
 
-On 04/01/2015 08:58 PM, Roger Quadros wrote:
-> Hi Chanwoo,
+On Wed, Mar 18, 2015 at 02:44:30PM +0900, Vincent Yang wrote:
+> Hi Arnd and Olof,
 > 
-> On 01/04/15 10:23, Robert Baldyga wrote:
->> IRQ handler touches info->edev, so if interrupt occurs before extcon
->> device initialization it can cause NULL pointer dereference. Doing extcon
->> initialization before IRQ handler registration fixes this problem.
->>
->> Signed-off-by: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Please consider pulling in these patches for series of Fujitsu SoC
+> based around variations of 2xCA7+2xCA15 big.LITTLE architecture.
 > 
-> Can you please pick this patch for 4.1 (or 4.1-rc) as it fixes a bug. Thanks.
+> The MHU driver is already queued in Mailbox tree.
+> 
+> Thanks,
+> 
+> The following changes since commit c517d838eb7d07bbe9507871fab3931deccff539:
+> 
+>   Linux 4.0-rc1 (2015-02-22 18:21:14 -0800)
+> 
+> are available in the git repository at:
+> 
+>   git://git.linaro.org/landing-teams/working/fujitsu/integration.git
+> s7x-arch-pull
+> 
+> for you to fetch changes up to 9cf417fee0bbea9296791fa9a15ab289307bb26a:
+> 
+>   ARM: MB86S7x: Add configs (2015-03-17 11:22:40 +0530)
 
-I already sent pull request for v4.1 and merged it.
-I'll send this patch for 4.1-rc.
+Please use signed tags when you send pull requests (and ideally, please get
+your GPG key signed by people at the next Linaro Connect or other event where
+you will get in contact with other kernel developers).
+
+I started looking at this patch set, and it's adding global include file
+contents for things that should only exist under the drivers/soc/ directory,
+i.e. internal driver defines, etc -- it shouldn't be exposed to the kernel as
+a whole.
+
+I'll find the individual patches where they were posted and comment on those
+directly.
+
+As far as applying the code -- initial platforms like these usually go in
+through different branches so applying them directly makes sense for us. Once
+you're up and rolling as a maintainer you'll get a hang of what we want to see
+grouped in the different branches and pull requests will be easier to handle.
+
 
 Thanks,
-Chanwoo Choi
 
-> 
-> cheers,
-> -roger
-> 
->> ---
->>  drivers/extcon/extcon-usb-gpio.c | 24 ++++++++++++------------
->>  1 file changed, 12 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->> index 3f0bad3..f6aa99d 100644
->> --- a/drivers/extcon/extcon-usb-gpio.c
->> +++ b/drivers/extcon/extcon-usb-gpio.c
->> @@ -119,6 +119,18 @@ static int usb_extcon_probe(struct platform_device *pdev)
->>  		return PTR_ERR(info->id_gpiod);
->>  	}
->>  
->> +	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->> +	if (IS_ERR(info->edev)) {
->> +		dev_err(dev, "failed to allocate extcon device\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	ret = devm_extcon_dev_register(dev, info->edev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "failed to register extcon device\n");
->> +		return ret;
->> +	}
->> +
->>  	ret = gpiod_set_debounce(info->id_gpiod,
->>  				 USB_GPIO_DEBOUNCE_MS * 1000);
->>  	if (ret < 0)
->> @@ -142,18 +154,6 @@ static int usb_extcon_probe(struct platform_device *pdev)
->>  		return ret;
->>  	}
->>  
->> -	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->> -	if (IS_ERR(info->edev)) {
->> -		dev_err(dev, "failed to allocate extcon device\n");
->> -		return -ENOMEM;
->> -	}
->> -
->> -	ret = devm_extcon_dev_register(dev, info->edev);
->> -	if (ret < 0) {
->> -		dev_err(dev, "failed to register extcon device\n");
->> -		return ret;
->> -	}
->> -
->>  	platform_set_drvdata(pdev, info);
->>  	device_init_wakeup(dev, 1);
->>  
->>
-> 
-> 
-
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
