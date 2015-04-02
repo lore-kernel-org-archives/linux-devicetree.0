@@ -1,31 +1,234 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH v8 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
-Date: Thu, 2 Apr 2015 15:56:37 +0530
-Message-ID: <CAFd313yTU9VO3nTO_+DFCYXMER_L7XtnJV8_S1ioepkPaVFZMw@mail.gmail.com>
-References: <1426686456-15536-1-git-send-email-rsahu@apm.com>
-	<20150402083516.GZ7192@intel.com>
+From: "chenhui.zhao@freescale.com" <chenhui.zhao@freescale.com>
+Subject: Re: [2/4] powerpc/rcpm: add RCPM driver
+Date: Thu, 2 Apr 2015 10:33:24 +0000
+Message-ID: <1427970805609.21194@freescale.com>
+References: <1427365095-26396-2-git-send-email-chenhui.zhao@freescale.com>,<20150331013057.GB5667@home.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150402083516.GZ7192@intel.com>
+In-Reply-To: <20150331013057.GB5667@home.buserror.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2015 at 2:05 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Wed, Mar 18, 2015 at 07:17:33PM +0530, Rameshwar Prasad Sahu wrote:
->> This patch set implements the APM X-Gene SoC DMA driver support to offload
->> the DMA operations such as memory copy(memcpy), scatter gather memory copy,
->> raid5 xor and raid6 p+q.
-> Applied, now
 
-Thank you very much Vinod.
 
----
-~Ram
+________________________________________
+From: Wood Scott-B07421
+Sent: Tuesday, March 31, 2015 9:30
+To: Zhao Chenhui-B35336
+Cc: linuxppc-dev@lists.ozlabs.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Jin Zhengxiong-R64188
+Subject: Re: [2/4] powerpc/rcpm: add RCPM driver
 
+On Thu, Mar 26, 2015 at 06:18:13PM +0800, chenhui zhao wrote:
+> There is a RCPM (Run Control/Power Management) in Freescale QorIQ
+> series processors. The device performs tasks associated with device
+> run control and power management.
 >
-> Thanks
-> --
-> ~Vinod
+> The driver implements some features: mask/unmask irq, enter/exit low
+> power states, freeze time base, etc.
+>
+> Signed-off-by: Chenhui Zhao <chenhui.zhao@freescale.com>
+> ---
+>  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |  23 ++
+>  arch/powerpc/include/asm/fsl_guts.h                | 105 ++++++
+>  arch/powerpc/include/asm/fsl_pm.h                  |  49 +++
+>  arch/powerpc/platforms/85xx/Kconfig                |   1 +
+>  arch/powerpc/sysdev/Kconfig                        |   5 +
+>  arch/powerpc/sysdev/Makefile                       |   1 +
+>  arch/powerpc/sysdev/fsl_rcpm.c                     | 353 +++++++++++++++++++++
+>  7 files changed, 537 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+>  create mode 100644 arch/powerpc/include/asm/fsl_pm.h
+>  create mode 100644 arch/powerpc/sysdev/fsl_rcpm.c
+>
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> new file mode 100644
+> index 0000000..8c21b6c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> @@ -0,0 +1,23 @@
+> +* Run Control and Power Management
+> +
+> +The RCPM performs all device-level tasks associated with device run control
+> +and power management.
+> +
+> +Required properites:
+> +  - reg : Offset and length of the register set of RCPM block.
+> +  - compatible : Specifies the compatibility list for the RCPM. The type
+> +    should be string, such as "fsl,qoriq-rcpm-1.0", "fsl,qoriq-rcpm-2.0".
+> +
+> +Example:
+> +The RCPM node for T4240:
+> +     rcpm: global-utilities@e2000 {
+> +             compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
+> +             reg = <0xe2000 0x1000>;
+> +     };
+> +
+> +The RCPM node for P4080:
+> +     rcpm: global-utilities@e2000 {
+> +             compatible = "fsl,qoriq-rcpm-1.0";
+> +             reg = <0xe2000 0x1000>;
+> +             #sleep-cells = <1>;
+> +     };
+
+Where is #sleep-cells documented?  It's copy-and-paste from something
+that was never finished from many years ago.
+
+[chenhui] Will get rid of them.
+
+> diff --git a/arch/powerpc/include/asm/fsl_pm.h b/arch/powerpc/include/asm/fsl_pm.h
+> new file mode 100644
+> index 0000000..bbe6089
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/fsl_pm.h
+> @@ -0,0 +1,49 @@
+> +/*
+> + * Support Power Management
+> + *
+> + * Copyright 2014-2015 Freescale Semiconductor Inc.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +#ifndef __PPC_FSL_PM_H
+> +#define __PPC_FSL_PM_H
+> +#ifdef       __KERNEL__
+
+Put a space after #ifdef, not a tab.
+
+[Chenhui] Will change it.
+
+> +#define E500_PM_PH10 1
+> +#define E500_PM_PH15 2
+> +#define E500_PM_PH20 3
+> +#define E500_PM_PH30 4
+> +#define E500_PM_DOZE E500_PM_PH10
+> +#define E500_PM_NAP  E500_PM_PH15
+> +
+> +#define PLAT_PM_SLEEP        20
+> +#define PLAT_PM_LPM20        30
+> +
+> +#define FSL_PM_SLEEP         (1 << 0)
+> +#define FSL_PM_DEEP_SLEEP    (1 << 1)
+> +
+> +struct fsl_pm_ops {
+> +     /* mask pending interrupts to the RCPM from MPIC */
+> +     void (*irq_mask)(int cpu);
+> +     /* unmask pending interrupts to the RCPM from MPIC */
+> +     void (*irq_unmask)(int cpu);
+> +     /* place the CPU in the specified state */
+> +     void (*cpu_enter_state)(int cpu, int state);
+> +     /* exit the CPU from the specified state */
+> +     void (*cpu_exit_state)(int cpu, int state);
+> +     /* place the platform in the sleep state */
+> +     int (*plat_enter_sleep)(void);
+> +     /* freeze the time base */
+> +     void (*freeze_time_base)(int freeze);
+> +     /* keep the power of IP blocks during sleep/deep sleep */
+> +     void (*set_ip_power)(int enable, u32 *mask);
+> +     /* get platform supported power management modes */
+> +     unsigned int (*get_pm_modes)(void);
+> +};
+
+Drop the comments that are basically just a restatement of the function
+name.  Where there are comments, it'd be easier to read with a blank line
+between a function and the next comment.
+
+s/int enable/bool enable/
+s/int freeze/bool freeze/
+
+[chenhui] Yes, you are right.
+
+> +#endif       /* __KERNEL__ */
+> +#endif  /* __PPC_FSL_PM_H */
+
+Please be consistent with whitespace.
+
+> +     default:
+> +             pr_err("%s: Unknown cpu PM state (%d)\n", __func__, state);
+
+WARN?
+
+> +static int rcpm_v2_plat_enter_state(int state)
+> +{
+> +     u32 *pmcsr_reg = &rcpm_v2_regs->powmgtcsr;
+> +     int ret = 0;
+> +     int result;
+> +
+> +     switch (state) {
+> +     case PLAT_PM_LPM20:
+> +             /* clear previous LPM20 status */
+> +             setbits32(pmcsr_reg, RCPM_POWMGTCSR_P_LPM20_ST);
+
+How would the bit be set when you enter here, given that you wait for it
+to clear when leaving?
+
+[chenhui] Actually, the bit is not used by software. Just follow the instruction in RM.
+
+> +             /* enter LPM20 status */
+> +             setbits32(pmcsr_reg, RCPM_POWMGTCSR_LPM20_RQ);
+> +
+> +             /* At this point, the device is in LPM20 status. */
+> +
+> +             /* resume ... */
+> +             result = spin_event_timeout(
+> +               !(in_be32(pmcsr_reg) & RCPM_POWMGTCSR_LPM20_ST), 10000, 10);
+> +             if (!result) {
+> +                     pr_err("%s: timeout waiting for LPM20 bit to be cleared\n",
+> +                            __func__);
+> +                     ret = -ETIMEDOUT;
+> +             }
+> +             break;
+
+"At this point" is a bit misleading.  I think it's clear enough if you
+just drop that comment.
+
+> +     default:
+> +             pr_err("%s: Unknown platform PM state (%d)\n",
+> +                    __func__, state);
+> +             ret = -EINVAL;
+> +     }
+
+WARN?
+
+> +static const struct of_device_id rcpm_matches[] = {
+> +     {
+> +             .compatible = "fsl,qoriq-rcpm-1.0",
+> +             .data = (void *)RCPM_V1,
+> +     },
+> +     {
+> +             .compatible = "fsl,qoriq-rcpm-2.0",
+> +             .data = (void *)RCPM_V2,
+> +     },
+
+Why not point .data directly at the ops?
+
+[chenhui] I agree.
+
+> +     switch ((unsigned long)match->data) {
+> +     case RCPM_V1:
+> +             rcpm_v1_regs = base;
+> +             qoriq_pm_ops = &qoriq_rcpm_v1_ops;
+> +             break;
+> +
+> +     case RCPM_V2:
+> +             rcpm_v2_regs = base;
+> +             qoriq_pm_ops = &qoriq_rcpm_v2_ops;
+> +             break;
+> +
+> +     default:
+> +             break;
+> +     }
+
+default: break; is unnecessary (and impossible to hit -- if you really
+want default: it should probably WARN).
+
+-Scott
+
+[chenhui] Will get rid of them.
