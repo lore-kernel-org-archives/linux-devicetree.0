@@ -1,101 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH_V4 2/3] dma: jz4780: add driver for the Ingenic JZ4780 DMA controller
-Date: Thu, 02 Apr 2015 16:51:44 +0200
-Message-ID: <2520994.aQ5VZIsnTb@wuerfel>
-References: <1426695397-54906-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1426695397-54906-3-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Correct which USB controller has the UTMI
+ pad registers
+Date: Thu, 02 Apr 2015 17:53:20 +0300
+Message-ID: <551D57E0.7050102@kapsi.fi>
+References: <1427985119-15307-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426695397-54906-3-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427985119-15307-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 March 2015 16:16:36 Zubair Lutfullah Kakakhel wrote:
+Have you checked that this patch applies correctly, considering that the 
+chunks are still ambiguous? :)
 
-> +
-> +static bool jz4780_dma_filter_fn(struct dma_chan *chan, void *param)
-> +{
-> +	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
-> +	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
-> +	struct jz4780_dma_data *data = param;
-> +
-> +	if (data->channel > -1) {
-> +		if (data->channel != jzchan->id)
-> +			return false;
-> +	} else if (jzdma->chan_reserved & BIT(jzchan->id)) {
-> +		return false;
-> +	}
-> +
-> +	jzchan->transfer_type = data->transfer_type;
-> +
-> +	return true;
-> +}
-> +
-> +static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
-> +	struct of_dma *ofdma)
-> +{
-> +	struct jz4780_dma_dev *jzdma = ofdma->of_dma_data;
-> +	dma_cap_mask_t mask = jzdma->dma_device.cap_mask;
-> +	struct jz4780_dma_data data;
-> +
-> +	if (dma_spec->args_count != 2)
-> +		return NULL;
-> +
-> +	data.transfer_type = dma_spec->args[0];
-> +	data.channel = dma_spec->args[1];
-> +
-> +	if (data.channel > -1) {
-> +		if (data.channel >= JZ_DMA_NR_CHANNELS) {
-> +			dev_err(jzdma->dma_device.dev,
-> +				"device requested non-existent channel %u\n",
-> +				data.channel);
-> +			return NULL;
-> +		}
-> +
-> +		/* Can only select a channel marked as reserved. */
-> +		if (!(jzdma->chan_reserved & BIT(data.channel))) {
-> +			dev_err(jzdma->dma_device.dev,
-> +				"device requested unreserved channel %u\n",
-> +				data.channel);
-> +			return NULL;
-> +		}
-> +	}
-> +
-> +	return dma_request_channel(mask, jz4780_dma_filter_fn, &data);
-> +}
-> +
+Mikko
 
-You should be able to avoid the use of the filter function by calling
-dma_get_slave_channel. You already know which channel you want, so no
-need to scan all channels of all controllers in the system.
-
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/jz4780-dma.h
-> @@ -0,0 +1,49 @@
-> +#ifndef __DT_BINDINGS_DMA_JZ4780_DMA_H__
-> +#define __DT_BINDINGS_DMA_JZ4780_DMA_H__
-> +
-> +/*
-> + * Request type numbers for the JZ4780 DMA controller (written to the DRTn
-> + * register for the channel).
-> + */
-> +#define JZ4780_DMA_I2S1_TX	0x4
-> +#define JZ4780_DMA_I2S1_RX	0x5
-> +#define JZ4780_DMA_I2S0_TX	0x6
-> +#define JZ4780_DMA_I2S0_RX	0x7
-> +#define JZ4780_DMA_AUTO		0x8
-> +#define JZ4780_DMA_SADC_RX	0x9
-
-This is evidently just a hardware number, so please don't introduce
-a false dependency here, and remove that header file. Putting the numbers
-into the dts file like you do for gpio or irq numbers makes it easier to
-do updates and avoids dependencies between the platform and driver files.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 04/02/2015 05:31 PM, Tomeu Vizoso wrote:
+> It should be the first controller, not the second.
+>
+> This broke USB after 6261b06 ("regulator: Defer lookup of supply to
+> regulator_get"), because it changed the order in which the controllers
+> were probed.
+>
+> The fix for this issue was suggested by Mikko Perttunen.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Cc: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/tegra124.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index cf01c81..cb786a9 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -838,6 +838,7 @@
+>   		nvidia,hssquelch-level = <2>;
+>   		nvidia,hsdiscon-level = <5>;
+>   		nvidia,xcvr-hsslew = <12>;
+> +		nvidia,has-utmi-pad-registers;
+>   		status = "disabled";
+>   	};
+>
+> @@ -874,7 +875,6 @@
+>   		nvidia,hssquelch-level = <2>;
+>   		nvidia,hsdiscon-level = <5>;
+>   		nvidia,xcvr-hsslew = <12>;
+> -		nvidia,has-utmi-pad-registers;
+>   		status = "disabled";
+>   	};
+>
+>
