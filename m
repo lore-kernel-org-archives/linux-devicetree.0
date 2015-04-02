@@ -1,65 +1,62 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: Fix pinctrl settings for S2MPS11 RTC alarm IRQ
- on Arndale Octa
-Date: Thu, 02 Apr 2015 16:36:16 +0200
-Message-ID: <1427985376-20420-3-git-send-email-k.kozlowski@samsung.com>
-References: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 01/12] DT: leds: Improve description of flash LEDs
+ related properties
+Date: Thu, 2 Apr 2015 16:41:34 +0200
+Message-ID: <20150402144134.GA18125@amd>
+References: <1427809965-25540-1-git-send-email-j.anaszewski@samsung.com>
+ <1427809965-25540-2-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1427809965-25540-2-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Arndale Octa the S2MPS11 RTC alarm interrupt was not handled at all
-because of wrong configuration of interrupt and gpx3-2.
-1. Interrupt is signaled by falling edge.
-2. This GPIO line is hard-wired on the board to PVDD_APIO_1V8 through a
-   resistor so pull-up/down must be disabled.
+On Tue 2015-03-31 15:52:37, Jacek Anaszewski wrote:
+> Description of flash LEDs related properties was not precise regarding
+> the state of corresponding settings in case a property is missing.
+> Add relevant statements.
+> Removed is also the requirement making the flash-max-microamp
+> property obligatory for flash LEDs. It was inconsistent as the property
+> is defined as optional. Devices which require the property will have
+> to assert this in their DT bindings.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index d78fcd997ce6..97346df31d41 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -87,7 +87,9 @@
- 			s2mps11,buck4-ramp-enable = <1>;
- 
- 			interrupt-parent = <&gpx3>;
--			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&s2mps11_irq>;
- 
- 			s2mps11_osc: clocks {
- 				#clock-cells = <1>;
-@@ -379,3 +381,12 @@
- 	clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
- 	clock-names = "rtc", "rtc_src";
- };
-+
-+&pinctrl_0 {
-+	s2mps11_irq: s2mps11-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-function = <0xf>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 747c538..21a25e4 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -29,13 +29,15 @@ Optional properties for child nodes:
+>       "ide-disk" - LED indicates disk activity
+>       "timer" - LED flashes at a fixed, configurable rate
+>  
+> -- max-microamp : maximum intensity in microamperes of the LED
+> -		 (torch LED for flash devices)
+> -- flash-max-microamp : maximum intensity in microamperes of the
+> -                       flash LED; it is mandatory if the LED should
+> -		       support the flash mode
+> -- flash-timeout-us : timeout in microseconds after which the flash
+> -                     LED is turned off
+> +- max-microamp : Maximum intensity in microamperes of the LED
+> +		 (torch LED for flash devices). If omitted this will default
+> +		 to the maximum current allowed by the device.
+> +- flash-max-microamp : Maximum intensity in microamperes of the flash LED.
+> +		       If omitted this will default to the maximum
+> +		       current allowed by the device.
+> +- flash-timeout-us : Timeout in microseconds after which the flash
+> +                     LED is turned off. If omitted this will default to the
+> +		     maximum timeout allowed by the device.
+
+
 -- 
-1.9.1
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
