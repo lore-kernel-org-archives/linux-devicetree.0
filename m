@@ -1,72 +1,187 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V3 5/7] serial: earlycon: Set UPIO_MEM32BE based on DT
- properties
-Date: Thu, 02 Apr 2015 11:36:40 -0400
-Message-ID: <551D6208.2060009@hurleysoftware.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com> <1416872182-6440-6-git-send-email-cernekee@gmail.com> <54F3914F.3080905@hurleysoftware.com> <20150328013604.488A0C4091F@trevor.secretlab.ca> <5516DE64.6000104@hurleysoftware.com> <CAJiQ=7AS5+HkHcjRsYKi-EHVc3F1fg3Zp=1fCor1HrKeSWU72Q@mail.gmail.com>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
+Date: Thu, 2 Apr 2015 18:40:07 +0300
+Message-ID: <070D5F6B-CDC0-44C5-9627-75D200C78B87@konsulko.com>
+References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com> <20150319191834.5346CC40A35@trevor.secretlab.ca> <8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com> <CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com> <1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com> <CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com> <20150402023803.E6A4DC4076D@trevor.secretlab.ca>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7AS5+HkHcjRsYKi-EHVc3F1fg3Zp=1fCor1HrKeSWU72Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150402023803.E6A4DC4076D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Hi Grant,
 
-On 03/28/2015 03:28 PM, Kevin Cernekee wrote:
-> On Sat, Mar 28, 2015 at 10:01 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
->>>> I know these got ACKs already but as you point out in the commit log,
->>>> earlycon _will_ need reg-io-width, reg-offset and reg-shift. Since the
->>>> distinction between early_init_dt_scan_chosen_serial() and
->>>> of_setup_earlycon() is arbitrary, I'd rather see of_setup_earlycon()
->>>> taught to properly decode of_serial driver bindings instead of a
->>>> stack of parameters to of_setup_earlycon().
->>>>
->>>> In fact, this patch allows a mis-defined devicetree to bring up a
->>>> functioning earlycon because the 'big-endian' property is directly
->>>> associated with UPIO_MEM32BE, which will create incompatibility problems
->>>> when DT earlycon is fixed to decode the of_serial DT bindings.
->>>
->>> That's a good point. This hasn't been merged yet, so there isn't any
->>> impact on addressing this. I would propose that for consistency, the
->>> earlycon code should always default to 8-bit access. if big-endian
->>> accesses are required, then reg-io-width + big-endian must be specified.
->>>
->>> Something like the following would do it and would be future-proof. We
->>> can add support for 16 or 64bit big or little endian access if it ever
->>> became necessary.
->>
->> I was planning on adding MEM32BE support to OF earlycon on top of my
->> patch series 'OF earlycon cleanup', which adds full support for the
->> of_serial driver DT properties (among other things).
-> 
-> Hi Peter,
-> 
-> This is my latest work-in-progress, incorporating the feedback from
-> you and Grant:
-> 
-> https://github.com/cernekee/linux/commits/endian
-> 
-> Not sure if this code plays nice with your recent cleanups?  If we're
-> touching the same files/functions we should probably coordinate.
+> On Apr 2, 2015, at 05:38 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+>=20
+> On Mon, 30 Mar 2015 15:27:27 +0200
+> , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> wrote:
+>> Hi Pantelis,
+>>=20
+>> On Tue, Mar 24, 2015 at 6:56 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>> On Mar 24, 2015, at 07:50 , Geert Uytterhoeven <geert@linux-m68k.o=
+rg> wrote:
+>>>> On Fri, Mar 20, 2015 at 12:39 PM, Pantelis Antoniou
+>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>>>> On Mar 19, 2015, at 21:18 , Grant Likely <grant.likely@secretlab=
+=2Eca> wrote:
+>>>>>> On Tue, 16 Dec 2014 14:11:31 +0200
+>>>>>> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>>>> wrote:
+>>>>>>> A nice side-effect of the changes in DTC for supporting overlay=
+s
+>>>>>>> is that it is now possible to do dependency tracking of platfor=
+m
+>>>>>>> devices automatically.
+>>>>>>>=20
+>>>>>>> This patch implements dependency aware probe order for users
+>>>>>>> of of_platform_populate.
+>>>>>>>=20
+>>>>>>> There are no changes in the syntax of the DTS bindings, the
+>>>>>>> dependency is generated automatically by the use of phandle
+>>>>>>> references.
+>>>>>>=20
+>>>>>> Do you have measurements showing improvement? Conceptually, I do=
+n't have
+>>>>>> a problem with having a small scale solution like this, but I wa=
+nt proof
+>>>>>> that it actively makes things better, and is worth the extra com=
+plexity.
+>>>>>> It's not an easy block of code to understand.
+>>>>>=20
+>>>>> I will be the first to admit that the code it=E2=80=99s a bit har=
+d to follow, but
+>>>>> that=E2=80=99s the nature of trees and recursion.
+>>>>>=20
+>>>>> FWIW I=E2=80=99ve been booting with this applied for a month with=
+ no adverse effects,
+>>>>> besides the fact that there dependency cycles which I would file =
+as a bug.
+>>>>=20
+>>>> IIUC, this would fix the issue I worked around in "ARM: shmobile: =
+r8a73a4:
+>>>> Move pfc node to work around probe ordering bug"?
+>>>> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/com=
+mit/?h=3Dr8a73a4-ccf-and-multiplatform-for-v4.1&id=3De4ba0a9bddff3ba52c=
+ec100414d2f178440efc91
+>>>=20
+>>> A victim^Wtester! Yeah, it=E2=80=99s supposed to do that, but no gu=
+arantees, this is an RFC.
+>>>=20
+>>> I would be happy to know if it solves your problem or not, please k=
+eep me in the loop.
+>>>=20
+>>>> I'll give it a try when I'm back from ELC...
+>>=20
+>> And so I did. I
+>>  1. Moved the pfc node in arch/arm/boot/dts/r8a73a4.dtsi back betwee=
+n dmac
+>>     and i2c5.
+>>  2. Applied your patch,
+>>  3. Disabled the check for "/__local_fixups__" in
+>>     __of_platform_populate_scan().
+>>  4. Added support for "interrupts-extended" (gmail-whitespace-damage=
+d patch
+>>     at the end of this email),
+>>  5. Enabled DEBUG,
+>>  6. Uncommented all your debug pr_info() calls (except the one for
+>>     "interrupts", as it references non-existing variables!).
+>>=20
+>> But it didn't make any difference. The debug log below shows that it=
+ detects
+>> the dependency of pfc@e6050000 on irqc0 (interrupt-controller@e61c00=
+00)
+>> irqc1 (interrupt-controller@e61c0200), but it doesn't reorder the no=
+des,
+>> so pfc is still initialized first:
+>=20
+> I talked to Pantelis about this while we were at ELC. Even if it did
+> correctly reorder the registration and solved your problem, it won't
+> help at all for most devices registered by the of_platform_populate()
+> call.
+>=20
+> The core device model is oportunistic about when drivers get bound to
+> devices. Both drivers and devices can be registered at any time. When=
+ a
+> device is registered, it kernel tries to bind it against all availabl=
+e
+> drivers, and similarly when a driver is registered the kernel tries t=
+o
+> bind it with all unbound devices.
+>=20
+> In the normal case, of_platform_populate() is called at arch_initcall
+> (level 3).  Most drivers are registered at device_initcall (level 6).
+> The only reason reordering works for you is because both the renesas =
+pfc
+> irqc drivers use postcore_initcall (level 2). Therefore, both drivers
+> get registered before of_platform_populate() which makes device
+> registration order matter. If the devices were registered before the
+> drivers, then it would be kernel link order which determines the
+> behaviour.
+>=20
+> There are two ways to fix this so that .dtb order doesn't matter. The
+> dirty hack is to change the pfc driver to use subsys_initcall (level =
+4)
+> or later so that it happens after the devices are registered. The sec=
+ond
+> solution is to make the pfc drivers able to return -EPROBE_DEFER, but
+> that also requires fixing deferred probe to start retrying devices
+> before late_initcall time. Right now there is a holdoff flag that
+> prevents any retries before late_initcall(). It was done that way
+> because the defer workqueue conflicted with some of the initcalls in =
+a
+> bad way.
+>=20
+> We could add a manual walk of the queue between each initcall level
+> without using the workqueue. That would solve the problem.
+>=20
 
-Ok, I'll look over your git tree and add whatever's required to
-earlycon.
+I=E2=80=99ve been spending some time getting things to work properly ta=
+king into
+account the essentially random way that drivers are registered.
 
-> Also, it is untested, as I do not currently have access to BE systems.
-> If I get desperate I can try it on an LE system, adding the big-endian
-> properties in DT and then hacking the 8250 driver to swap LE accesses
-> for BE accesses.
+My complete understanding is this:
 
-Ok.
+The platform devices that are part of any directly reachable from root =
+simple busses
+are registered sometime on init_machine() at arch_initcall() time.
 
-Regards,
-Peter Hurley
+The drivers are registered at device_initcall() but not all of them. So=
+me of them
+are _required_ to be initialized earlier in order for the devices to be=
+ instantiated first.
+=46or instance dma engine drivers.
+
+I am toying with marking drivers that have been matched with devices an=
+d not instantiating
+them immediately, and that might work. Perhaps an easier solution would=
+ be just to delay
+device register to be performed at the the end device_initcall() since =
+all the drivers would
+be registered and the device matched immediately.
+=20
+I don=E2=80=99t know if that will make things go kaboom on some $RANDOM=
+_ARCH though.
+
+Does anything come to mind?
+
+IMHO getting this right might make the holdoff hacks go away completely=
+=2E
+
+> g.
+
+Regards
+
+=E2=80=94 Pantelis
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
