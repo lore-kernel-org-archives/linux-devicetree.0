@@ -1,62 +1,54 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [GIT PULL] Support for Fujitsu MB86S7X SoCs
-Date: Wed, 1 Apr 2015 17:50:53 -0700
-Message-ID: <20150402005053.GI8137@localhost>
-References: <CAKR0VNJdCEEoM8mqFrc-teQ-q=DopGisos16+uKt=ky2mRjF8g@mail.gmail.com>
- <CAJe_ZheO1iNKj80798gT8RLcYoYo3xky3urw=ke4x-3wKdtZ9w@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: shmobile: r8a7790: add EtherAVB DT support
+Date: Thu, 2 Apr 2015 10:33:59 +0900
+Message-ID: <20150402013359.GB25445@verge.net.au>
+References: <1625400.M0MxPQybIy@wasted.cogentembedded.com>
+ <8163383.0UU0Q5gsLE@wasted.cogentembedded.com>
+ <20150331002113.GB16289@verge.net.au>
+ <551AB78B.4000506@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJe_ZheO1iNKj80798gT8RLcYoYo3xky3urw=ke4x-3wKdtZ9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paweee Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <551AB78B.4000506@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 08:32:01AM +0530, Jassi Brar wrote:
-> On 18 March 2015 at 11:14, Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Arnd and Olof,
-> >
-> > Please consider pulling in these patches for series of Fujitsu SoC
-> > based around variations of 2xCA7+2xCA15 big.LITTLE architecture.
-> >
-> > The MHU driver is already queued in Mailbox tree.
-> >
-> > Thanks,
-> >
-> > The following changes since commit c517d838eb7d07bbe9507871fab3931deccff539:
-> >
-> >   Linux 4.0-rc1 (2015-02-22 18:21:14 -0800)
-> >
-> > are available in the git repository at:
-> >
-> >   git://git.linaro.org/landing-teams/working/fujitsu/integration.git
-> > s7x-arch-pull
-> >
-> > for you to fetch changes up to 9cf417fee0bbea9296791fa9a15ab289307bb26a:
-> >
-> >   ARM: MB86S7x: Add configs (2015-03-17 11:22:40 +0530)
-> >
-> > ----------------------------------------------------------------
-> > Jassi Brar (6):
-> >       ARM: Add platform support for Fujitsu MB86S7X SoCs
-> >       ARM: MB86S7X: Add MCPM support
-> >       clk: Add clock driver for mb86s7x
-> >       dt: mb86s7x: add dt files for MB86S7x evbs
-> >       of: add Fujitsu vendor prefix
-> >       ARM: MB86S7x: Add configs
-> >
-> Hi Arnd, Hi Olof,
->    A polite reminder on the pull request. Or do we miss doing something?
+On Tue, Mar 31, 2015 at 06:04:43PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 03/31/2015 03:21 AM, Simon Horman wrote:
+> 
+> >>Define the generic R8A7790 part of the EtherAVB device node.
+> 
+> >Please repost once this binding (and associated driver) has been accepted.
+> 
+>    OK, but will you merge patch #1?
 
-Hi,
+I would prefer to wait until we can exercise it with a driver.
 
-No, we've just been backlogged and slow to respond.
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >>
+> >>---
+> >>  arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
+> >>  1 file changed, 10 insertions(+)
+> >>
+> >>Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+> >>===================================================================
+> >>--- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+> >>+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+> >>@@ -626,6 +626,16 @@
+> >>  		status = "disabled";
+> >>  	};
+> >>
+> >>+	avb: ethernet@e6800000 {
+> >>+		compatible = "renesas,ravb-r8a7790";
+> 
+>    I went the usual way here but I suspect that SoC part of the prop should
+> be "-rcar-gen2" as we now have this IP core (as well as most of the others,
+> except PFC) described in a common manual for the R-Car generation 2 SoCs.
+> What do you think?
 
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I like -r8a7790.
