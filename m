@@ -1,234 +1,82 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: [PATCHv4] media: i2c/adp1653: devicetree support for adp1653
-Date: Thu, 2 Apr 2015 22:34:17 +0200
-Message-ID: <20150402203417.GA6336@amd>
-References: <20150402143846.GA11687@amd>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v5 2/2] memory: pl353: Add driver for arm pl353 static
+ memory controller
+Date: Thu, 2 Apr 2015 13:58:52 -0700
+Message-ID: <20150402205852.GI32500@ld-irv-0074>
+References: <1420566557-19846-1-git-send-email-punnaia@xilinx.com>
+ <bc55f81bea314bc49b62b6fbcb662ae3@BN1BFFO11FD014.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150402143846.GA11687@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <bc55f81bea314bc49b62b6fbcb662ae3@BN1BFFO11FD014.protection.gbl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+I'm not following the review of the 'memory' portions much, but has this
+gotten much review? I was looking at the MTD portions when I noticed an
+obvious issue below:
 
+On Tue, Jan 06, 2015 at 11:19:17PM +0530, Punnaiah Choudary Kalluri wrote:
+> Add driver for arm pl353 static memory controller. This controller is
+> used in xilinx zynq soc for interfacing the nand and nor/sram memory
+> devices.
+> 
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> ---
+> Changes in v5:
+> - Added pl353_smc_get_clkrate function, made pl353_smc_set_cycles as public
+>   API
+> - Removed nand timing parameter initialization and moved it to nand driver  
+> Changes in v4:
+> - Modified driver to support multiple instances
+> - Used sleep instaed of busywait for delay
+> Changes in v3:
+> - None
+> Changes in v2:
+> - Since now the timing parameters are in nano seconds, added logic to convert
+>   them to the cycles
+> ---
+>  drivers/memory/Kconfig           |    6 +
+>  drivers/memory/Makefile          |    1 +
+>  drivers/memory/pl353-smc.c       |  525 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/memory/pl353-smc.h |   37 +++
+>  4 files changed, 569 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/memory/pl353-smc.c
+>  create mode 100644 include/linux/memory/pl353-smc.h
+> 
+> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+> index 6d91c27..9d4880f 100644
+> --- a/drivers/memory/Kconfig
+> +++ b/drivers/memory/Kconfig
+> @@ -85,4 +85,10 @@ config FSL_IFC
+>  	bool
+>  	depends on FSL_SOC
+>  
+> +config PL353_SMC
+> +	bool "ARM PL353 Static Memory Controller(SMC) driver"
 
-We are moving to device tree support on OMAP3, but that currently
-breaks ADP1653 driver. This adds device tree support, plus required
-documentation.
+Space after 'Controller'. i.e.:
 
-Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
- 
----
+	bool "ARM PL353 Static Memory Controller (SMC) driver"
 
-Fixed feedback by Sakari.
+> +	default y
 
-Please apply,
- 							Pavel
+We almost definitely don't want this to be 'default y', especially given
+that it would then be enabled on all ARM systems. Users could add it
+their configuration themselves if they want it, or you might add it to
+multi_v7_defconfig.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adp1653.txt b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
-new file mode 100644
-index 0000000..0fc28a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
-@@ -0,0 +1,37 @@
-+* Analog Devices ADP1653 flash LED driver
-+
-+Required Properties:
-+
-+  - compatible: Must contain be "adi,adp1653"
-+
-+  - reg: I2C slave address
-+
-+  - gpios: References to the GPIO that controls the power for the chip.
-+
-+There are two led outputs available - flash and indicator. One led is
-+represented by one child node, nodes need to be named "flash" and "indicator".
-+
-+Required properties of the LED child node:
-+- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Required properties of the flash LED child node:
-+
-+- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+	adp1653: led-controller@30 {
-+		compatible = "adi,adp1653";
-+		reg = <0x30>;
-+		gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-+
-+		flash {
-+			flash-timeout-us = <500000>;
-+			flash-max-microamp = <320000>;
-+			max-microamp = <50000>;
-+		};
-+		indicator {
-+			max-microamp = <17500>;
-+		};
-+	};
-diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp1653.c
-index 873fe19..6d57b16 100644
---- a/drivers/media/i2c/adp1653.c
-+++ b/drivers/media/i2c/adp1653.c
-@@ -8,6 +8,7 @@
-  * Contributors:
-  *	Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-  *	Tuukka Toivonen <tuukkat76-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *	Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-  *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License
-@@ -34,6 +35,8 @@
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/slab.h>
-+#include <linux/of_gpio.h>
-+#include <linux/gpio.h>
- #include <media/adp1653.h>
- #include <media/v4l2-device.h>
- 
-@@ -306,9 +309,17 @@ adp1653_init_device(struct adp1653_flash *flash)
- static int
- __adp1653_set_power(struct adp1653_flash *flash, int on)
- {
--	int ret;
-+	int ret = 0;
-+
-+	if (flash->platform_data->power) {
-+		ret = flash->platform_data->power(&flash->subdev, on);
-+	} else {
-+		gpio_set_value(flash->platform_data->power_gpio, on);
-+		if (on)
-+			/* Some delay is apparently required. */
-+			udelay(20);
-+	}
- 
--	ret = flash->platform_data->power(&flash->subdev, on);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -316,8 +327,13 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
- 		return 0;
- 
- 	ret = adp1653_init_device(flash);
--	if (ret < 0)
-+	if (ret >= 0)
-+		return ret;
-+
-+	if (flash->platform_data->power)
- 		flash->platform_data->power(&flash->subdev, 0);
-+	else
-+		gpio_set_value(flash->platform_data->power_gpio, 0);
- 
- 	return ret;
- }
-@@ -407,21 +423,76 @@ static int adp1653_resume(struct device *dev)
- 
- #endif /* CONFIG_PM */
- 
-+static int adp1653_of_init(struct i2c_client *client,
-+			   struct adp1653_flash *flash,
-+			   struct device_node *node)
-+{
-+	u32 val;
-+	struct adp1653_platform_data *pd;
-+	enum of_gpio_flags flags;
-+	struct device_node *child;
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	pd = devm_kzalloc(&client->dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+	flash->platform_data = pd;
-+
-+	child = of_get_child_by_name(node, "flash");
-+	if (!child)
-+		return -EINVAL;
-+	if (of_property_read_u32(child, "flash-timeout-microsec", &val))
-+		return -EINVAL;
-+
-+	pd->max_flash_timeout = val;
-+	if (of_property_read_u32(child, "flash-max-microamp", &val))
-+		return -EINVAL;
-+	pd->max_flash_intensity = val/1000;
-+
-+	if (of_property_read_u32(child, "max-microamp", &val))
-+		return -EINVAL;
-+	pd->max_torch_intensity = val/1000;
-+
-+	child = of_get_child_by_name(node, "indicator");
-+	if (!child)
-+		return -EINVAL;
-+	if (of_property_read_u32(child, "max-microamp", &val))
-+		return -EINVAL;
-+	pd->max_indicator_intensity = val;
-+
-+	if (!of_find_property(node, "gpios", NULL)) {
-+		dev_err(&client->dev, "No gpio node\n");
-+		return -EINVAL;
-+	}
-+
-+	pd->power_gpio = of_get_gpio_flags(node, 0, &flags);
-+	if (pd->power_gpio < 0) {
-+		dev_err(&client->dev, "Error getting GPIO\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+
- static int adp1653_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *devid)
- {
- 	struct adp1653_flash *flash;
- 	int ret;
- 
--	/* we couldn't work without platform data */
--	if (client->dev.platform_data == NULL)
--		return -ENODEV;
--
- 	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
- 	if (flash == NULL)
- 		return -ENOMEM;
- 
- 	flash->platform_data = client->dev.platform_data;
-+	if (client->dev.of_node) {
-+		ret = adp1653_of_init(client, flash, client->dev.of_node);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	mutex_init(&flash->power_lock);
- 
-@@ -442,6 +513,7 @@ static int adp1653_probe(struct i2c_client *client,
- 	return 0;
- 
- free_and_quit:
-+	dev_err(&client->dev, "adp1653: failed to register device\n");
- 	v4l2_ctrl_handler_free(&flash->ctrls);
- 	return ret;
- }
-@@ -464,7 +536,7 @@ static const struct i2c_device_id adp1653_id_table[] = {
- };
- MODULE_DEVICE_TABLE(i2c, adp1653_id_table);
- 
--static struct dev_pm_ops adp1653_pm_ops = {
-+static const struct dev_pm_ops adp1653_pm_ops = {
- 	.suspend	= adp1653_suspend,
- 	.resume		= adp1653_resume,
- };
+> +	depends on ARM
+> +	help
+> +	  This driver is for the ARM PL353 Static Memory Controller(SMC) module.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Same spacing issue here.
+
+>  endif
+
+[...]
+
+Brian
