@@ -1,34 +1,320 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Enable S3C RTC on Trats2, Odroid-U3 and
- Arndale Octa
-Date: Thu, 02 Apr 2015 14:18:34 +0200
-Message-ID: <551D339A.5000808@collabora.co.uk>
-References: <1427972588-6573-1-git-send-email-k.kozlowski@samsung.com> <1427972588-6573-2-git-send-email-k.kozlowski@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Thu, 2 Apr 2015 15:27:25 +0300
+Message-ID: <551D35AD.9040109@ti.com>
+References: <1427873005-24024-1-git-send-email-r.baldyga@samsung.com> <1427873005-24024-3-git-send-email-r.baldyga@samsung.com> <551BD655.4090906@ti.com> <551BDB32.3040808@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427972588-6573-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <551BDB32.3040808@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Robert,
 
-On 04/02/2015 01:03 PM, Krzysztof Kozlowski wrote:
-> Extend the S3C RTC node with rtc_src clock so it could be operational.
-> The rtc_src clock is provided by MAX77686 (Trats2 and Odroid-U3) or
-> S2MPS11 (Arndale Octa).
+On 01/04/15 14:49, Robert Baldyga wrote:
+> Hi Roger,
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> On 04/01/2015 01:28 PM, Roger Quadros wrote:
+>> Robert,
+>>
+>> On 01/04/15 10:23, Robert Baldyga wrote:
+>>> This patch adds VBUS pin detection support to extcon-usb-gpio driver.
+>>> It allows to use this driver with boards which have both VBUS and ID
+>>> pins, or only one of them.
+>>>
+>>> Following table of states presents relationship between this signals
+>>> and detected cable type:
+>>>
+>>>  State              |    ID   |   VBUS
+>>> ----------------------------------------
+>>>  [1] USB            |    H    |    H
+>>>  [2] none           |    H    |    L
+>>>  [3] USB & USB-HOST |    L    |    H
+>>>  [4] USB-HOST       |    L    |    L
+>>>
+>>> In case we have only one of these signals:
+>>> - VBUS only - we want to distinguish between [1] and [2], so ID is always 1.
+>>> - ID only - we want to distinguish between [1] and [4], so VBUS = ID.
+>>>
+>>> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+>>> ---
+>>>  drivers/extcon/extcon-usb-gpio.c | 171 +++++++++++++++++++++++++++------------
+>>>  1 file changed, 119 insertions(+), 52 deletions(-)
+>>>
+>>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+>>> index f6aa99d..c842715 100644
+>>> --- a/drivers/extcon/extcon-usb-gpio.c
+>>> +++ b/drivers/extcon/extcon-usb-gpio.c
+>>> @@ -32,7 +32,9 @@ struct usb_extcon_info {
+>>>  	struct extcon_dev *edev;
+>>>  
+>>>  	struct gpio_desc *id_gpiod;
+>>> +	struct gpio_desc *vbus_gpiod;
+>>>  	int id_irq;
+>>> +	int vbus_irq;
+>>>  
+>>>  	unsigned long debounce_jiffies;
+>>>  	struct delayed_work wq_detcable;
+>>> @@ -52,40 +54,49 @@ static const char *usb_extcon_cable[] = {
+>>>  	NULL,
+>>>  };
+>>>  
+>>> +/*
+>>> + * "USB" = VBUS and "USB-HOST" = !ID, so we have:
+>>> + *
+>>> + *  State              |    ID   |   VBUS
+>>> + * ----------------------------------------
+>>> + *  [1] USB            |    H    |    H
+>>> + *  [2] none           |    H    |    L
+>>> + *  [3] USB & USB-HOST |    L    |    H
+>>> + *  [4] USB-HOST       |    L    |    L
+>>> + *
+>>> + * In case we have only one of these signals:
+>>> + * - VBUS only - we want to distinguish between [1] and [2], so ID is always 1.
+>>> + * - ID only - we want to distinguish between [1] and [4], so VBUS = ID.
+>>> + */
+>>> +
+>>>  static void usb_extcon_detect_cable(struct work_struct *work)
+>>>  {
+>>>  	int id;
+>>> +	int vbus;
+>>>  	struct usb_extcon_info *info = container_of(to_delayed_work(work),
+>>>  						    struct usb_extcon_info,
+>>>  						    wq_detcable);
+>>>  
+>>> -	/* check ID and update cable state */
+>>> -	id = gpiod_get_value_cansleep(info->id_gpiod);
+>>> -	if (id) {
+>>> -		/*
+>>> -		 * ID = 1 means USB HOST cable detached.
+>>> -		 * As we don't have event for USB peripheral cable attached,
+>>> -		 * we simulate USB peripheral attach here.
+>>> -		 */
+>>> -		extcon_set_cable_state(info->edev,
+>>> -				       usb_extcon_cable[EXTCON_CABLE_USB_HOST],
+>>> -				       false);
+>>> -		extcon_set_cable_state(info->edev,
+>>> -				       usb_extcon_cable[EXTCON_CABLE_USB],
+>>> -				       true);
+>>> -	} else {
+>>> -		/*
+>>> -		 * ID = 0 means USB HOST cable attached.
+>>> -		 * As we don't have event for USB peripheral cable detached,
+>>> -		 * we simulate USB peripheral detach here.
+>>> -		 */
+>>> +	/* check ID and VBUS and update cable state */
+>>> +
+>>> +	id = info->id_gpiod ?
+>>> +		gpiod_get_value_cansleep(info->id_gpiod) : 1;
+>>> +
+>>> +	vbus = info->vbus_gpiod ?
+>>> +		gpiod_get_value_cansleep(info->vbus_gpiod) : id;
+>>> +
+>>> +	/* at first we clean states which are no longer active */
+>>> +	if (id)
+>>>  		extcon_set_cable_state(info->edev,
+>>> -				       usb_extcon_cable[EXTCON_CABLE_USB],
+>>> -				       false);
+>>> +			usb_extcon_cable[EXTCON_CABLE_USB_HOST], false);
+>>> +	if (!vbus)
+>>>  		extcon_set_cable_state(info->edev,
+>>> -				       usb_extcon_cable[EXTCON_CABLE_USB_HOST],
+>>> -				       true);
+>>> -	}
+>>> +			usb_extcon_cable[EXTCON_CABLE_USB], false);
+>>> +
+>>> +	extcon_set_cable_state(info->edev,
+>>> +		usb_extcon_cable[EXTCON_CABLE_USB_HOST], !id);
+>>> +	extcon_set_cable_state(info->edev,
+>>> +		usb_extcon_cable[EXTCON_CABLE_USB], vbus);
+>>
+>> This approach has the following problems:
+>> 1) If ID is 1 then extcon_set_cable_state(USB_HOST, false) gets called twice.
+>> 2) If VBUS is 0 then extcon_set_cable_state(USB, false) gets called twice.
+>> 3) When both ID and VBUS are available, even if either one changes state then we unnecessarily
+>> update the other pins cable state as well.
+>>
+>> This is probably not an issue as extcon core might be ignoring duplicate set_cable_states,
+>> but I think we should avoid them if we can. I wouldn't mind (3) as we unnecessarily need to
+>> keep track of previous states, but (1) and (2) should be fixed.
+>>
+> 
+> Extcon core is responsible for storing current cable state to let us do
+> not worry about that. However if we really do want to get rid of
+> redundant usb_extcon_cable() calls, we can create separate interrupt
+> handler for VBUS.
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+I wouldn't bother for a separate handler. You can still fix (1) and (2) without a
+separate handler.
 
-Best regards,
-Javier
+cheers,
+-roger
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>
+>>>  }
+>>>  
+>>>  static irqreturn_t usb_irq_handler(int irq, void *dev_id)
+>>> @@ -113,10 +124,12 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>>>  		return -ENOMEM;
+>>>  
+>>>  	info->dev = dev;
+>>> -	info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
+>>> -	if (IS_ERR(info->id_gpiod)) {
+>>> -		dev_err(dev, "failed to get ID GPIO\n");
+>>> -		return PTR_ERR(info->id_gpiod);
+>>> +	info->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id");
+>>> +	info->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus");
+>>> +
+>>> +	if (!info->id_gpiod && !info->vbus_gpiod) {
+>>> +		dev_err(dev, "failed to get gpios\n");
+>>> +		return -ENODEV;
+>>>  	}
+>>>  
+>>>  	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+>>> @@ -131,27 +144,51 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>>>  		return ret;
+>>>  	}
+>>>  
+>>> -	ret = gpiod_set_debounce(info->id_gpiod,
+>>> -				 USB_GPIO_DEBOUNCE_MS * 1000);
+>>> +	if (info->id_gpiod)
+>>> +		ret = gpiod_set_debounce(info->id_gpiod,
+>>> +			USB_GPIO_DEBOUNCE_MS * 1000);
+>>> +	if (!ret && info->vbus_gpiod) {
+>>> +		ret = gpiod_set_debounce(info->vbus_gpiod,
+>>> +			USB_GPIO_DEBOUNCE_MS * 1000);
+>>> +		if (ret < 0 && info->id_gpiod)
+>>> +			gpiod_set_debounce(info->vbus_gpiod, 0);
+>>> +	}
+>>>  	if (ret < 0)
+>>>  		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
+>>>  
+>>>  	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
+>>>  
+>>> -	info->id_irq = gpiod_to_irq(info->id_gpiod);
+>>> -	if (info->id_irq < 0) {
+>>> -		dev_err(dev, "failed to get ID IRQ\n");
+>>> -		return info->id_irq;
+>>> +	if (info->id_gpiod) {
+>>> +		info->id_irq = gpiod_to_irq(info->id_gpiod);
+>>> +		if (info->id_irq < 0) {
+>>> +			dev_err(dev, "failed to get ID IRQ\n");
+>>> +			return info->id_irq;
+>>> +		}
+>>> +		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
+>>> +				usb_irq_handler,
+>>> +				IRQF_TRIGGER_RISING |
+>>> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>>> +				pdev->name, info);
+>>> +		if (ret < 0) {
+>>> +			dev_err(dev, "failed to request handler for ID IRQ\n");
+>>> +			return ret;
+>>> +		}
+>>>  	}
+>>> -
+>>> -	ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
+>>> -					usb_irq_handler,
+>>> -					IRQF_TRIGGER_RISING |
+>>> -					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>>> -					pdev->name, info);
+>>> -	if (ret < 0) {
+>>> -		dev_err(dev, "failed to request handler for ID IRQ\n");
+>>> -		return ret;
+>>> +	if (info->vbus_gpiod) {
+>>> +		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
+>>> +		if (info->vbus_irq < 0) {
+>>> +			dev_err(dev, "failed to get VBUS IRQ\n");
+>>> +			return info->vbus_irq;
+>>> +		}
+>>> +		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
+>>> +				usb_irq_handler,
+>>> +				IRQF_TRIGGER_RISING |
+>>> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>>> +				pdev->name, info);
+>>> +		if (ret < 0) {
+>>> +			dev_err(dev, "failed to request handler for VBUS IRQ\n");
+>>> +			return ret;
+>>> +		}
+>>>  	}
+>>>  
+>>>  	platform_set_drvdata(pdev, info);
+>>> @@ -179,9 +216,16 @@ static int usb_extcon_suspend(struct device *dev)
+>>>  	int ret = 0;
+>>>  
+>>>  	if (device_may_wakeup(dev)) {
+>>> -		ret = enable_irq_wake(info->id_irq);
+>>> -		if (ret)
+>>> -			return ret;
+>>> +		if (info->id_gpiod) {
+>>> +			ret = enable_irq_wake(info->id_irq);
+>>> +			if (ret)
+>>> +				return ret;
+>>> +		}
+>>> +		if (info->vbus_gpiod) {
+>>> +			ret = enable_irq_wake(info->vbus_irq);
+>>> +			if (ret)
+>>> +				goto err;
+>>> +		}
+>>>  	}
+>>>  
+>>>  	/*
+>>> @@ -189,8 +233,16 @@ static int usb_extcon_suspend(struct device *dev)
+>>>  	 * as GPIOs used behind I2C subsystem might not be
+>>>  	 * accessible until resume completes. So disable IRQ.
+>>>  	 */
+>>> -	disable_irq(info->id_irq);
+>>> +	if (info->id_gpiod)
+>>> +		disable_irq(info->id_irq);
+>>> +	if (info->vbus_gpiod)
+>>> +		disable_irq(info->vbus_irq);
+>>> +
+>>> +	return ret;
+>>>  
+>>> +err:
+>>> +	if (info->id_gpiod)
+>>> +		disable_irq_wake(info->id_irq);
+>>>  	return ret;
+>>>  }
+>>>  
+>>> @@ -200,13 +252,28 @@ static int usb_extcon_resume(struct device *dev)
+>>>  	int ret = 0;
+>>>  
+>>>  	if (device_may_wakeup(dev)) {
+>>> -		ret = disable_irq_wake(info->id_irq);
+>>> -		if (ret)
+>>> -			return ret;
+>>> +		if (info->id_gpiod) {
+>>> +			ret = disable_irq_wake(info->id_irq);
+>>> +			if (ret)
+>>> +				return ret;
+>>> +		}
+>>> +		if (info->vbus_gpiod) {
+>>> +			ret = disable_irq_wake(info->vbus_irq);
+>>> +			if (ret)
+>>> +				goto err;
+>>> +		}
+>>>  	}
+>>>  
+>>> -	enable_irq(info->id_irq);
+>>> +	if (info->id_gpiod)
+>>> +		enable_irq(info->id_irq);
+>>> +	if (info->vbus_gpiod)
+>>> +		enable_irq(info->vbus_irq);
+>>> +
+>>> +	return ret;
+>>>  
+>>> +err:
+>>> +	if (info->id_gpiod)
+>>> +		enable_irq_wake(info->id_irq);
+>>>  	return ret;
+>>>  }
+>>>  #endif
+>>>
+>>
+>>
+> 
