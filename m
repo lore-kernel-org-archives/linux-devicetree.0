@@ -1,64 +1,103 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] pinctrl: dt: at91: new binding
-Date: Thu, 2 Apr 2015 10:18:52 +0200
-Message-ID: <20150402081852.GA26864@ns203013.ovh.net>
-References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
- <CACRpkdbNLE+VjhvSgsU4oqAc03ieCNyiLkUzbjEiu_LFof-Unw@mail.gmail.com>
- <CAOesGMgsyEwuF95FFe81Li8nXO0MhHF0ZHPVV91MEH-JGO43tA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
+Date: Thu, 2 Apr 2015 10:31:26 +0200
+Message-ID: <CAMuHMdWYEWoCkARLjU3WXWyh+tbe=j_ftAF+HDFT6dYAfcCo-w@mail.gmail.com>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
+	<20150304120003.GL32624@x1>
+	<20150306190812.11109.82130@quantum>
+	<20150309092804.GB3427@x1>
+	<CAMuHMdV8_uKQQgYkRPFOBgrqgw_y9A7T84ukfgWZpJmTL0eFCQ@mail.gmail.com>
+	<20150326135144.GI5951@x1>
+	<CAMuHMdVpXCFk9Z68OeVt0924dhR_9vdLYmBkWun1UGY3NJJ4wg@mail.gmail.com>
+	<20150326193818.GQ5951@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgsyEwuF95FFe81Li8nXO0MhHF0ZHPVV91MEH-JGO43tA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150326193818.GQ5951@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13:55 Sun 29 Mar     , Olof Johansson wrote:
-> On Tue, Mar 17, 2015 at 5:07 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Feb 26, 2015 at 10:34 AM, Jean-Christophe PLAGNIOL-VILLARD
-> > <plagnioj@jcrosoft.com> wrote:
-> >
-> >> +For each peripheral/bank we will descibe in a u32 if a pin can be
-> >> +configured in it by putting 1 to the pin bit (1 << pin)
-> >
-> > This seems to be describing driver intrinsics in the device tree, like
-> > how the hardware is routed on the inside and what it can do.
-> >
-> > IMO that is driver territory, the driver should know these limitations
-> > and protest if you try to do something illegal.
-> >
-> > Anyway as the AT91 maintainers seem to disagree I will allow some
-> > more time for discussion before merging the patch.
-> >
-> > I can't really have one AT91 maintainer NACKing another, it doesn't
-> > matter that this is a separate driver, in my book the MAINTAINERS
-> > entry for AT91 as a whole overrides that so can you please find an
-> > agreement on how to handle this or I will stall the patch until
-> > you're in agreement.
-> 
-> Nicolas has been the de-facto maintainer of AT91 for quite a while
-> now, even though more of them are listed on the maintainers entry. It
-> would be inappropriate to merge something that he disagreed with on
-> that platform.
-I'm still following it
-> 
-> > ARM SoC maintainers input would be welcomed.
-> 
-> It seems appropriate to ask the at91 folks to come back with a
-> solution that everybody is OK with, and until then hold off merging
-> this.
-when the nack is motivated not just I don't like it
+Hi Lee,
 
-Best Regards,
-J.
+On Thu, Mar 26, 2015 at 8:38 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Thu, 26 Mar 2015, Geert Uytterhoeven wrote:
+>> On Thu, Mar 26, 2015 at 2:51 PM, Lee Jones <lee.jones@linaro.org> wrote:
+>> > On Wed, 25 Mar 2015, Geert Uytterhoeven wrote:
+>> >> On Mon, Mar 9, 2015 at 10:28 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> >> > On Fri, 06 Mar 2015, Mike Turquette wrote:
+>> >> >> This approach looks fine to me. In practice I think it is restricted to
+>> >> >> hardware blocks that don't exist in DT yet (e.g. no driver, in the case
+>> >> >> of your interconnect) and that restriction is probably for the best.
+>> >> >
+>> >> > Agreed.
+>> >>
+>> >> I think this restriction should be documented in the DT binding more clearly,
+>> >> as adding a "clk-always-on" node prohibits you from handling the clock
+>> >> correctly in
+>> >> the future.
+>> >
+>> > Would you mind taking the time to explain what you think those
+>> > limitations are?
+>>
+>> If you add a "clk-always-on" node, the clock will always on using that DT.
+>> That will still be true later, when you get a better understanding of the
+>> hardware, and might discover you're gonna need a driver for the currently
+>> hidden core component that's driven by the clock, and may want to manage
+>> that clock.
+>
+> So I have two points here.
+>
+> First point; I think you're looking at an older version of my set.
+> The newer one can be found at [1] and no longer uses 'always-on'
+> nodes.  Instead the 'clk-always-on' property is applied to the
+> provider.  See the documentation patch [2] for more details.
+
+Thanks, I was indeed looking at an old version.
+Still, that doesn't change that the clock to not be disabled in specified
+explicitly from DT.
+
+> Second point; this binding is _not_ to be used as a hack because the
+> hardware isn't understood.  Genuine uses are for clocks that must not
+> be turned off ever, else bad things will happen.  If the hardware is
+> not understood, use 'clk-disable-unused' on the kernel cmdline
+> instead.
+
+[...]
+
+>> (The same is true for devices where the current driver isn't aware of the
+>>  clock, and shouldn't be, but you still need to enable the clock until the
+>>  driver has Runtime PM support (E.g. ARM GIC on shmobile, cfr.
+>>  https://www.marc.info/?l=linux-pm&m=142670617929493&w=3 (good, now
+>>  we have a bidirectional link between these two threads :-) Using a
+>>  "clk-always-on" property there instead of adding a reference to the clock
+>>  in the existing GIC device node would be just lying.)
+>
+> If this clock should _genuinely_ be always-on, then use my new
+> binding in the clock controller node and the Clk framework will not
+> turn it off.
+
+It's supposed to be on when the application ARM core(s) is/are running.
+Many SoCs also have smaller cores (SH, Cortex R or M), intended to
+run a real-time OS. If the RT core is in charge, it may decide to shut down
+the application ARM core(s), incl. supposedly always-on modules like
+the ARM GIC.
+
+I couldn't find a detailed block diagram of the STiH4xx SoCs, but at least
+STiH416 has an "ST proprietary multi-compartmental security IP and DRM
+processor".
+
+> [1] https://lkml.org/lkml/2015/2/27/548
+> [2] https://lkml.org/lkml/2015/2/27/551
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
