@@ -1,132 +1,85 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mmc: Add support for marking hpi as
- broken through devicetree
-Date: Thu, 2 Apr 2015 11:01:28 +0200
-Message-ID: <CAPDyKFpUw+9OepiHL3wfALz98nyCWkGPAwqtGK3+YPJ+eG7dLA@mail.gmail.com>
-References: <1427901984-26469-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: sama5/dts: reduce the NFC command register
+ map
+Date: Thu, 2 Apr 2015 11:24:41 +0200
+Message-ID: <551D0AD9.1090307@atmel.com>
+References: <1427955477-9176-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDF57NG2XIHRB2EK6SUAKGQEJYPC43A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1427901984-26469-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427955477-9176-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 April 2015 at 17:26, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> The eMMC on a tablet I've will stop working / communicating as soon as
-> the kernel executes:
->
->                 mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->                                 EXT_CSD_HPI_MGMT, 1,
->                                 card->ext_csd.generic_cmd6_time);
->
-> There seems to be no way to reliable identify eMMC-s which have a broken
-> hpi implementation, but at least for eMMC's which are soldered onto a board
-> we can work around this by specifying that hpi is broken in devicetree.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Le 02/04/2015 08:17, Josh Wu a =E9crit :
+> commit 111573ccd89b ("mtd: atmel_nand: check NFC busy flag by HSMC_SR
+> instead of NFC cmd regs")
 
-Thanks! Applied for next.
+As this commit is not in Linus' tree yet, we can't point to its commit =
+ID.
 
-Kind regards
-Uffe
+> check NFC busy by nfc SR instead of NFC cmd regs. So we don't need to
+> map NFC cmd registers to include NFCBUSY bit.
+> That means we only need map 0x08000000 instead of 0x10000000 for NFC
+> cmd regs.
+>=20
+> This patch reduce the NFC cmd regs map for sama5d3 & sama5d4.
+>=20
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Otherwise:
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+I'll modify the commit message to adapt the commit ID and send it when
+the patch is merged (probably after 4.0-rc1).
+
+Thanks, best regards,
 
 > ---
-> Changes in v2:
-> -Fix of_node leakage
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-card.txt | 31 ++++++++++++++++++++++
->  drivers/mmc/core/mmc.c                             | 10 ++++++-
->  2 files changed, 40 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-card.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> new file mode 100644
-> index 0000000..a70fcd6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> @@ -0,0 +1,31 @@
-> +mmc-card / eMMC bindings
-> +------------------------
-> +
-> +This documents describes the devicetree bindings for a mmc-host controller
-> +child node describing a mmc-card / an eMMC, see "Use of Function subnodes"
-> +in mmc.txt
-> +
-> +Required properties:
-> +-compatible : Must be "mmc-card"
-> +-reg        : Must be <0>
-> +
-> +Optional properties:
-> +-broken-hpi : Use this to indicate that the mmc-card has a broken hpi
-> +              implementation, and that hpi should not be used
-> +
-> +Example:
-> +
-> +&mmc2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc2_pins_a>;
-> +       vmmc-supply = <&reg_vcc3v3>;
-> +       bus-width = <8>;
-> +       non-removable;
-> +       status = "okay";
-> +
-> +       mmccard: mmccard@0 {
-> +               reg = <0>;
-> +               compatible = "mmc-card";
-> +               broken-hpi;
-> +       };
-> +};
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index 1d41e85..c84131e 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -11,6 +11,7 @@
->   */
->
->  #include <linux/err.h>
-> +#include <linux/of.h>
->  #include <linux/slab.h>
->  #include <linux/stat.h>
->  #include <linux/pm_runtime.h>
-> @@ -336,6 +337,8 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->  {
->         int err = 0, idx;
->         unsigned int part_size;
-> +       struct device_node *np;
-> +       bool broken_hpi = false;
->
->         /* Version is coded in the CSD_STRUCTURE byte in the EXT_CSD register */
->         card->ext_csd.raw_ext_csd_structure = ext_csd[EXT_CSD_STRUCTURE];
-> @@ -349,6 +352,11 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->                 }
->         }
->
-> +       np = mmc_of_find_child_device(card->host, 0);
-> +       if (np && of_device_is_compatible(np, "mmc-card"))
-> +               broken_hpi = of_property_read_bool(np, "broken-hpi");
-> +       of_node_put(np);
-> +
->         /*
->          * The EXT_CSD format is meant to be forward compatible. As long
->          * as CSD_STRUCTURE does not change, all values for EXT_CSD_REV
-> @@ -494,7 +502,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->                 }
->
->                 /* check whether the eMMC card supports HPI */
-> -               if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1) {
-> +               if (!broken_hpi && (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1)) {
->                         card->ext_csd.hpi = 1;
->                         if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x2)
->                                 card->ext_csd.hpi_cmd = MMC_STOP_TRANSMISSION;
-> --
-> 2.3.4
->
+> This patch is based on linux-next git repo.
+>=20
+>  arch/arm/boot/dts/sama5d3.dtsi | 2 +-
+>  arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5=
+d3.dtsi
+> index 261311b..5b2c235 100644
+> --- a/arch/arm/boot/dts/sama5d3.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+> @@ -1445,7 +1445,7 @@
+>  				#address-cells =3D <1>;
+>  				#size-cells =3D <1>;
+>  				reg =3D <
+> -					0x70000000 0x10000000	/* NFC Command Registers */
+> +					0x70000000 0x08000000	/* NFC Command Registers */
+>  					0xffffc000 0x00000070	/* NFC HSMC regs */
+>  					0x00200000 0x00100000	/* NFC SRAM banks */
+>  					>;
+> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5=
+d4.dtsi
+> index d986b41..87705ad 100644
+> --- a/arch/arm/boot/dts/sama5d4.dtsi
+> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+> @@ -294,7 +294,7 @@
+>  				#address-cells =3D <1>;
+>  				#size-cells =3D <1>;
+>  				reg =3D <
+> -					0x90000000 0x10000000	/* NFC Command Registers */
+> +					0x90000000 0x08000000	/* NFC Command Registers */
+>  					0xfc05c000 0x00000070	/* NFC HSMC regs */
+>  					0x00100000 0x00100000	/* NFC SRAM banks */
+>                                           >;
+>=20
+
+
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
