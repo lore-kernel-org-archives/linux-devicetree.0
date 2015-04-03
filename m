@@ -1,47 +1,64 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with
- complex dependencies
-Date: Fri, 3 Apr 2015 18:07:57 +0100
-Message-ID: <20150403170757.GB13898@n2100.arm.linux.org.uk>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
- <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
- <20150403125727.GT10964@mwanda>
- <CAMuHMdVhX-MrFxeW5j98NLaQQtJ+DToxkz2Z1+SRSs7YF27RDw@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 03/15] dt-bindings: Document the ARM System timer bindings
+Date: Fri, 3 Apr 2015 12:09:16 -0500
+Message-ID: <CAL_JsqJUG4gh7nqVukfFU-kkF=QBbsinF6e+Bh35WDLRbj84qg@mail.gmail.com>
+References: <1428080481-18591-1-git-send-email-mcoquelin.stm32@gmail.com> <1428080481-18591-4-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVhX-MrFxeW5j98NLaQQtJ+DToxkz2Z1+SRSs7YF27RDw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Linux PM list <linux-pm@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <damm+renesas@opensource.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1428080481-18591-4-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 03, 2015 at 03:27:40PM +0200, Geert Uytterhoeven wrote:
-> On Fri, Apr 3, 2015 at 2:57 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >> +     error = clk_register_clkdev(clk, bsc->con_id, bsc->dev_id);
-> >> +     if (error)
-> >> +             pr_err("Failed to register clock %s (%d)\n", bsc->clk, error);
-> >> +             return error;
-> >
-> > Missing curly braces.  Also it's weird that don't we need a clk_put()
-> > on the error patch as well as the success path?
-> 
-> Thanks!
-> 
-> So it worked only by accident: with the new per-user struct clk instances
-> clk_put() must not be called if clk_register_clkdev() succeeded.
+On Fri, Apr 3, 2015 at 12:01 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
+> This adds documentation of device tree bindings for the
+> ARM System timer.
+>
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-Yes, that's because the per-user struct clk messed quite a lot of things
-up - the patches were /not/ well tested before they went in.
+Acked-by: Rob Herring <robh@kernel.org>
 
-That's no excuse to work around the breakage they caused though.
-
-That said, I never did post the work I did earlier this month to fix the
-problems in clkdev which those patches caused... so, I guess it's time
-to post them and rush them in for the 4.1 merge window...  (frankly, the
-per-user struct clk patches should've been reverted.)
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+> ---
+>  .../devicetree/bindings/arm/armv7m_systick.txt     | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/armv7m_systick.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/armv7m_systick.txt b/Documentation/devicetree/bindings/arm/armv7m_systick.txt
+> new file mode 100644
+> index 0000000..7cf4a24
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/armv7m_systick.txt
+> @@ -0,0 +1,26 @@
+> +* ARMv7M System Timer
+> +
+> +ARMv7-M includes a system timer, known as SysTick. Current driver only
+> +implements the clocksource feature.
+> +
+> +Required properties:
+> +- compatible     : Should be "arm,armv7m-systick"
+> +- reg            : The address range of the timer
+> +
+> +Required clocking property, have to be one of:
+> +- clocks         : The input clock of the timer
+> +- clock-frequency : The rate in HZ in input of the ARM SysTick
+> +
+> +Examples:
+> +
+> +systick: timer@e000e010 {
+> +       compatible = "arm,armv7m-systick";
+> +       reg = <0xe000e010 0x10>;
+> +       clocks = <&clk_systick>;
+> +};
+> +
+> +systick: timer@e000e010 {
+> +       compatible = "arm,armv7m-systick";
+> +       reg = <0xe000e010 0x10>;
+> +       clock-frequency = <90000000>;
+> +};
+> --
+> 1.9.1
+>
