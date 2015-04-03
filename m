@@ -1,113 +1,55 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] staging/nvec: reimplement on top of tegra i2c
- driver
-Date: Fri, 3 Apr 2015 21:57:51 +0200
-Message-ID: <20150403195751.GD2016@katana>
-References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
- <1427745615-5428-3-git-send-email-danindrey@mail.ru>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
+Date: Fri, 3 Apr 2015 21:09:31 +0100
+Message-ID: <20150403200931.GD13898@n2100.arm.linux.org.uk>
+References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
+ <1428090292-21693-8-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1427745615-5428-3-git-send-email-danindrey-JGs/UdohzUI@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+In-Reply-To: <1428090292-21693-8-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Apr 03, 2015 at 09:44:48PM +0200, Stefan Agner wrote:
+> In order to support SoC with heterogenous CPU architectures (such
+> as Freescale Vybrid/i.MXSX) it is preferable to use the same
+> architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
+> CPU. Hence allow to select MULTIPLATFORM even without MMU.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  arch/arm/Kconfig | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 9f1f09a..636cb3f 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -230,7 +230,7 @@ config VECTORS_BASE
+>  	  in size.
+>  
+>  config ARM_PATCH_PHYS_VIRT
+> -	bool "Patch physical to virtual translations at runtime" if EMBEDDED
+> +	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
+>  	default y
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This makes no sense.  Multiplatform MMU _requires_ this feature, so why
+offer it to the user when multiplatform is enabled _and_ MMU is enabled?
 
-> +/**
-> + * nvec_slave_cb - I2C slave callback
-> + *
-> + * This callback fills our RX buffers and empties our TX
-> + * buffers. This uses a finite state machine.
-> + */
-> +static int nvec_slave_cb(struct i2c_client *client,
-> +		enum i2c_slave_event event, u8 *val)
-> +{
-> +	struct nvec_chip *nvec = i2c_get_clientdata(client);
-> +
-> +	switch (event) {
-> +	case I2C_SLAVE_WRITE_REQUESTED:
-> +		/* Alloc new msg only if prev transaction finished */
-> +		if (nvec->state == ST_NONE)
-> +			nvec->rx = nvec_msg_alloc(nvec, NVEC_MSG_RX);
-> +
-> +		/* Should not happen in a normal world */
-> +		if (unlikely(nvec->rx == NULL)) {
-> +			nvec->state = ST_NONE;
-> +			return -1;
-> +		}
-> +		nvec->rx->pos = 0;
-> +
-> +		if (client->addr != ((*val) >> 1)) {
+Patch 7817/1 in the patch system tried doing something like you're trying
+to do here - I wonder whether you've reviewed the mailing list for
+previous discussions.
 
-Uh, I2C_SLAVE_WRITE_REQUESTED should not use val.
+Given that it's Easter, I'm not going to re-state what I said last time
+this came up, but instead leave you to do some research.  For example,
+reading message id <20130819232411.GX23006@n2100.arm.linux.org.uk>...
 
-> +			dev_err(&client->dev,
-> +				"received address 0x%02x, expected 0x%02x\n",
-> +				((*val) >> 1), client->addr);
-> +			return -1;
-> +		}
-> +		nvec->state = ST_TRANS_START;
-> +		break;
-> +
-...
+Thanks.
 
-> +	case I2C_SLAVE_READ_PROCESSED:
-> +		if (nvec->state != ST_RX &&
-> +		    nvec->state != ST_TX) {
-> +			dev_err(&client->dev,
-> +				"unexpected read: state %d\n",
-> +				nvec->state);
-> +			return -1;
-> +		}
-> +
-> +		if (!nvec->tx || nvec->tx->pos >= nvec->tx->size) {
-> +			dev_err(nvec->dev,
-> +				"tx buffer underflow on %p (%u > %u)\n",
-> +				nvec->tx,
-> +				(uint) (nvec->tx ? nvec->tx->pos : 0),
-> +				(uint) (nvec->tx ? nvec->tx->size : 0));
-> +			nvec->state = ST_NONE;
-> +			break;
-> +		}
-> +
-> +		nvec->state = ST_TX;
-> +		*val = nvec->tx->data[nvec->tx->pos++];
-
-Are you sure you want to increase the pointer here? Remember that this
-byte is requested but might not be sent out if the remote master stops
-the transfer after the previous byte using NACK instead of ACK.
-
-> +		break;
-> +
-
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVHvC/AAoJEBQN5MwUoCm2NkQP/jPGcPGkHllFaw/z3D3AEGJM
-bCbPmVtWq/5+2rW6J7KnPNknpMyOSI+6Ac2L8F4A6eHxwXXmO7NG1Yi/NVzPtIUw
-NTfNhomzKa+9CnmuoMsouythSlANysEk9ZrfKi+/bOCLMU/LRhWxU8Y0EEXRQaJ6
-ctas5xVjOVfBbLVpQrOkaBQQ+4QuOaQPgnZBUufMiFYglE/Xjn+V2oCEL4MFBx+f
-xVUf+6VjmazoF06j27XXuwa23S00arh/Q7MDxyMCfJcB1cMS+yGGr0mUJuNIpcoa
-fnpYryYum/3Sleek86bSMFCpi59sEU9oOmECepZZWg9r2AZ6DJSBN1qVmQi9TpX/
-nF2leQS5NWuvb15IP2JpxsloDyRrVG5XbfatJfSHleHmpn0Ykchx3VFtRCW7OdGP
-JIh1n6rXIZahzI9CE2fhCfT593HXYx7intpiPm0tRGkbqYBguTb8tUp4vc18al6W
-eDo4NFVS/ZH3tmMUaTd88QZ3EIAO9iIqKuGwuYTkS5gs2EiKmqzqDB11kGIsbvc0
-MKIE4oxIFaNaSzB6bGH8zPJp5a1wS0Rd811fLozwG2x07V7pAy7boh6TzOEgAzQX
-qyu9pe59JZx/VmzizmASND/aryxOvRkcIBWnCQDXqJq7xhOG7h0xQsiAKdhQpODV
-2oAO/iGGJ05jPZgycpJ+
-=u+wo
------END PGP SIGNATURE-----
-
---zbGR4y+acU1DwHSi--
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
