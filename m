@@ -1,87 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/3] phy: phy-core: allow specifying supply at port
- level
-Date: Fri, 3 Apr 2015 19:11:52 +0530
-Message-ID: <551E98A0.4000106@ti.com>
-References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com> <1427921457-18235-2-git-send-email-arun.ramamurthy@broadcom.com>
+From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Fri, 3 Apr 2015 16:55:56 +0300
+Message-ID: <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
+ <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
+ <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com> <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427921457-18235-2-git-send-email-arun.ramamurthy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 2, 2015 at 9:11 PM, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Apr 1, 2015 at 9:40 PM, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
+>> Sorry, I can't take this without a DT ack.
+>
+> Hmmm.
+>
+> The policy seems to be:
+>      "For driver (not subsystem) bindings: If you are comfortable with the
+>      binding, and it hasn't received an Acked-by from the devicetree
+>      maintainers after a few weeks, go ahead and take it."
+>
+> The syscon property is only relative to the qcom hwspinlock driver,
+> (unless I'm missing something) and both Qualcomm and Sony devs are
+> OK with it.  So while an ACK from the DT side would be nice, I don't
+> think it's required.  This is exactly the type of delay that is really
+> holding up a lot of out-of-tree code.
 
+Sorry, I do prefer to make sure Mark is OK with this devicetree patch,
+especially since it wasn't clear whether Mark is entirely comfortable
+with it in his last response.
 
-On Thursday 02 April 2015 02:20 AM, Arun Ramamurthy wrote:
-> From: Dmitry Torokhov <dtor@chromium.org>
->
-> Multi-port phy's may have per-port power supplies. Let's change phy core
-> to first attempt to look up the supply at the port level, and then, if
-> not found, check parent device.
-
-This commit log is no longer valid.
-
--Kishon
-
->
-> Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-> ---
->   drivers/phy/phy-core.c | 23 ++++++++++-------------
->   1 file changed, 10 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 3791838..c7aa297 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -651,16 +651,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
->   		goto free_phy;
->   	}
->
-> -	/* phy-supply */
-> -	phy->pwr = regulator_get_optional(dev, "phy");
-> -	if (IS_ERR(phy->pwr)) {
-> -		if (PTR_ERR(phy->pwr) == -EPROBE_DEFER) {
-> -			ret = -EPROBE_DEFER;
-> -			goto free_ida;
-> -		}
-> -		phy->pwr = NULL;
-> -	}
-> -
->   	device_initialize(&phy->dev);
->   	mutex_init(&phy->mutex);
->
-> @@ -674,6 +664,16 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
->   	if (ret)
->   		goto put_dev;
->
-> +	/* phy-supply */
-> +	phy->pwr = regulator_get_optional(&phy->dev, "phy");
-> +	if (IS_ERR(phy->pwr)) {
-> +		ret = PTR_ERR(phy->pwr);
-> +		if (ret == -EPROBE_DEFER)
-> +			goto put_dev;
-> +
-> +		phy->pwr = NULL;
-> +	}
-> +
->   	ret = device_add(&phy->dev);
->   	if (ret)
->   		goto put_dev;
-> @@ -689,9 +689,6 @@ put_dev:
->   	put_device(&phy->dev);  /* calls phy_release() which frees resources */
->   	return ERR_PTR(ret);
->
-> -free_ida:
-> -	ida_simple_remove(&phy_ida, phy->id);
-> -
->   free_phy:
->   	kfree(phy);
->   	return ERR_PTR(ret);
->
+Thanks,
+Ohad.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
