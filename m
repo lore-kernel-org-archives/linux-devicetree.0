@@ -1,59 +1,69 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] spi: bcm-mspi: Make BCMA optional to support non-BCMA
- chips
-Date: Fri, 03 Apr 2015 10:52:05 -0700
-Message-ID: <551ED345.1000702@gmail.com>
-References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>	<1428002603-21892-4-git-send-email-jonathar@broadcom.com> <CAHp75VcMg-8X8DtHbQrmugzWG5VzzHXcpWNiyrTT=qmuCvA95w@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] arm64: dts: Add Qualcomm APQ8016 SBC evaluation board dts
+Date: Fri, 3 Apr 2015 11:12:17 -0700
+Message-ID: <20150403181217.GM23023@localhost>
+References: <1427151065-29867-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VcMg-8X8DtHbQrmugzWG5VzzHXcpWNiyrTT=qmuCvA95w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1427151065-29867-1-git-send-email-galak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/15 06:38, Andy Shevchenko wrote:
-> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
-> <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> The Broadcom MSPI controller is used on various chips. The driver only
->> supported BCM53xx chips with BCMA (an AMBA bus variant). The driver is
->> refactored to make BCMA optional and provides a new config for non BCMA
->> systems.
+On Mon, Mar 23, 2015 at 05:51:05PM -0500, Kumar Gala wrote:
+> Add initial device tree support for Qualcomm APQ8016 SBC Evaluation board.
+> This board is also referred to as the DragonBoard 410c.
 > 
->>  struct bcm_mspi {
->> +       #ifdef CONFIG_SPI_BCMA_MSPI
->>         struct bcma_device *core;
->> -       struct spi_master *master;
->> +       #endif
->>
->> +       void __iomem *base;
->> +       struct spi_master *master;
->>         size_t read_offset;
-> 
->> +       void (*mspi_write)(struct bcm_mspi *mspi, u16 offset, u32 value);
->> +       u32 (*mspi_read)(struct bcm_mspi *mspi, u16 offset);
->> +};
-> 
-> To avoid ugly ifdefs I think better to split driver to core part and
-> the actual driver part, at the end you will have something like
-> mspi-core.c mspi-53xx.c mspi-whatever.c. Check for example spi-dw*.c
-> 
+> Signed-off-by: Kumar Gala <galak@codeaurora.org>
 
-Actually, I am really curious whether we need the special BCMA I/O
-accessors in the first place, cannot we just access the MSPI core on
-BCM53xx chips using regular MMIO? That would probably solve the
-"problem" entirely. Rafal, did you try this before?
+Hi,
 
-As for splitting the driver into a "library" driver which is mostly
-independent from the bus and a bus-specific wrapper, I think BCMA is
-really the only special case here, which is why I suggested earlier to
-Jonathan that we might just prefer ifdefing things out instead of
-creating a separate layer just for BCMA.
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch applied but see comment below.
+
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile         |  2 +-
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dts  | 22 +++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 33 +++++++++++++++++++++++++++++++
+>  3 files changed, 56 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 360ec4c..8e94af6 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,4 +1,4 @@
+> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
+> new file mode 100644
+> index 0000000..3c563e7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
+> @@ -0,0 +1,22 @@
+> +/*
+> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+
+Your 32-bit DTS:es lack copyright headers alltogether, and this is GPLv2 only.
+Given the movement to use dual GPL/X11 on DTS contents, it might be a good idea
+to kick off that process with your legal team if you haven't already. Please
+follow up with copyright revisions as appropriate, on both 32 and 64-bit.
+
+
+-Olof
