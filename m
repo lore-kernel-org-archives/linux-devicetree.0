@@ -1,102 +1,53 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v5 14/15] ARM: configs: Add STM32 defconfig
-Date: Fri,  3 Apr 2015 19:01:20 +0200
-Message-ID: <1428080481-18591-15-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1428080481-18591-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1428080481-18591-1-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, peter@hurleysoftware.com, andy.shevchenko@gmail.com, cw00.choi@samsung.com, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.ke
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with
+ complex dependencies
+Date: Fri, 3 Apr 2015 18:04:08 +0100
+Message-ID: <20150403170407.GA13898@n2100.arm.linux.org.uk>
+References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
+ <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
+ <20150403125727.GT10964@mwanda>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150403125727.GT10964@mwanda>
+Sender: linux-sh-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-pm@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-sh@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, linux-kernel@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new config for STM32 MCUs.
-STM32F429 Discovery board boots successfully with this config applied.
+On Fri, Apr 03, 2015 at 03:57:27PM +0300, Dan Carpenter wrote:
+> On Fri, Apr 03, 2015 at 02:42:02PM +0200, Geert Uytterhoeven wrote:
+> > +int __init board_staging_register_clock(const struct board_staging_clk *bsc)
+> > +{
+> > +	struct clk *clk;
+> > +	int error;
+> > +
+> > +	pr_debug("Registering clock %s for con_id %s dev_id %s\n", bsc->clk,
+> > +		 bsc->con_id, bsc->dev_id);
+> > +	clk = clk_get(NULL, bsc->clk);
+> > +	if (IS_ERR(clk)) {
+> > +		error = PTR_ERR(clk);
+> > +		pr_err("Failed to get clock %s (%d)\n", bsc->clk, error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = clk_register_clkdev(clk, bsc->con_id, bsc->dev_id);
+> > +	if (error)
+> > +		pr_err("Failed to register clock %s (%d)\n", bsc->clk, error);
+> > +		return error;
+> 
+> Missing curly braces.  Also it's weird that don't we need a clk_put()
+> on the error patch as well as the success path?
 
-Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/configs/stm32_defconfig | 71 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 arch/arm/configs/stm32_defconfig
+What's also concerning is that this is an abuse of this.
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-new file mode 100644
-index 0000000..412a9f9
---- /dev/null
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -0,0 +1,71 @@
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_LOG_BUF_SHIFT=16
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="./rootfs.cpio"
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+# CONFIG_UID16 is not set
-+# CONFIG_BASE_FULL is not set
-+# CONFIG_FUTEX is not set
-+# CONFIG_EPOLL is not set
-+# CONFIG_SIGNALFD is not set
-+# CONFIG_EVENTFD is not set
-+# CONFIG_AIO is not set
-+CONFIG_EMBEDDED=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_SLUB_DEBUG is not set
-+# CONFIG_LBDAF is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+# CONFIG_MMU is not set
-+CONFIG_ARCH_STM32=y
-+CONFIG_SET_MEM_PARAM=y
-+CONFIG_DRAM_BASE=0x90000000
-+CONFIG_FLASH_MEM_BASE=0x08000000
-+CONFIG_FLASH_SIZE=0x00200000
-+CONFIG_PREEMPT=y
-+# CONFIG_ATAGS is not set
-+CONFIG_ZBOOT_ROM_TEXT=0x0
-+CONFIG_ZBOOT_ROM_BSS=0x0
-+CONFIG_XIP_KERNEL=y
-+CONFIG_XIP_PHYS_ADDR=0x08008000
-+CONFIG_BINFMT_FLAT=y
-+CONFIG_BINFMT_SHARED_FLAT=y
-+# CONFIG_COREDUMP is not set
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+# CONFIG_FW_LOADER is not set
-+# CONFIG_BLK_DEV is not set
-+CONFIG_EEPROM_93CX6=y
-+# CONFIG_INPUT is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_UNIX98_PTYS is not set
-+# CONFIG_LEGACY_PTYS is not set
-+CONFIG_SERIAL_NONSTANDARD=y
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_STM32=y
-+CONFIG_SERIAL_STM32_CONSOLE=y
-+# CONFIG_HW_RANDOM is not set
-+CONFIG_GPIO_SYSFS=y
-+# CONFIG_HWMON is not set
-+CONFIG_USB=y
-+CONFIG_USB_DWC2=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+# CONFIG_FILE_LOCKING is not set
-+# CONFIG_DNOTIFY is not set
-+# CONFIG_INOTIFY_USER is not set
-+CONFIG_PRINTK_TIME=y
-+CONFIG_DEBUG_INFO=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_MAGIC_SYSRQ=y
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_DEBUG_BUGVERBOSE is not set
-+# CONFIG_FTRACE is not set
-+CONFIG_CRC_ITU_T=y
-+CONFIG_CRC7=y
+clk_register_clkdev() is supposed to be used with clocks created with
+the CCF functions, it's not for creating aliases.
+
+We have clk_add_alias() which does *everything* that this function does,
+only in a less buggy way.
+
 -- 
-1.9.1
-
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
