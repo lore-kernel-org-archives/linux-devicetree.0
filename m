@@ -1,45 +1,98 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
- Qualcomm hwmutex
-Date: Fri, 3 Apr 2015 16:55:56 +0300
-Message-ID: <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
-References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
- <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
- <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com> <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 2/3] Phy: DT binding documentation for Broadcom Cygnus
+ USB PHY driver
+Date: Fri, 3 Apr 2015 19:37:12 +0530
+Message-ID: <551E9E90.3080406@ti.com>
+References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com> <1427921457-18235-3-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1427921457-18235-3-git-send-email-arun.ramamurthy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2015 at 9:11 PM, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 1, 2015 at 9:40 PM, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
->> Sorry, I can't take this without a DT ack.
->
-> Hmmm.
->
-> The policy seems to be:
->      "For driver (not subsystem) bindings: If you are comfortable with the
->      binding, and it hasn't received an Acked-by from the devicetree
->      maintainers after a few weeks, go ahead and take it."
->
-> The syscon property is only relative to the qcom hwspinlock driver,
-> (unless I'm missing something) and both Qualcomm and Sony devs are
-> OK with it.  So while an ACK from the DT side would be nice, I don't
-> think it's required.  This is exactly the type of delay that is really
-> holding up a lot of out-of-tree code.
+Hi,
 
-Sorry, I do prefer to make sure Mark is OK with this devicetree patch,
-especially since it wasn't clear whether Mark is entirely comfortable
-with it in his last response.
+On Thursday 02 April 2015 02:20 AM, Arun Ramamurthy wrote:
+> Broadcom's Cygnus chip has a USB 2.0 host controller connected to
+> three separate phys. One of the phs (port 2) is also connectd to
+> a usb 2.0 device controller
+>
+> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>   .../bindings/phy/brcm,cygnus-usb-phy.txt           | 69 ++++++++++++++++++++++
+>   1 file changed, 69 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+> new file mode 100644
+> index 0000000..d1a9a65
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+> @@ -0,0 +1,69 @@
+> +BROADCOM CYGNUS USB PHY
+> +
+> +Required Properties:
+> +	- compatible:  brcm,cygnus-usb-phy
+> +	- reg : usbphy_regs - Base address of phy registers
+> +			usb2h_idm_regs - Base address of host idm registers
+> +			usb2d_idm_regs - Base address of device idm registers
+> +	- phy-cells - must be 1 for each port declared. This is because the node
+> +		      that uses the phy must provide one integers, 0 for device
+> +		      and 1 for host
 
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Try to define standard constants in include/dt-bindings/phy/phy.h
+> +
+> +NOTE: port 0 and port 1 are host only and port 2 can be configured for host or
+> +device.
+> +
+> +Example of phy :
+> +	usbphy0: usbphy@0x0301c000 {
+> +		compatible = "brcm,cygnus-usb-phy";
+> +		reg = <0x0301c000 0x2000>,
+> +		      <0x18115000 0x1000>,
+> +		      <0x18111000 0x1000>;
+> +		status = "okay";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		usbphy0_0: usbphy0@0 {
+> +			#phy-cells = <1>;
+> +			reg = <0>;
+> +			status = "okay";
+> +			phy-supply = <&vbus_p0>;
+> +		};
+> +
+> +		usbphy0_1: usbphy0@1 {
+> +			#phy-cells = <1>;
+> +			reg = <1>;
+> +			status = "okay";
+> +		};
+> +
+> +		usbphy0_2: usbphy0@2 {
+> +			#phy-cells = <1>;
+> +			reg = <2>;
+> +			status = "okay";
+> +			phy-supply = <&vbus_p2>;
+> +		};
+> +	};
+> +
+> +Example of node using the phy:
+> +
+> +	/* This nodes declares all three ports as host */
+> +
+> +	ehci0: usb@0x18048000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0x18048000 0x100>;
+> +		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+> +		phys = <&usbphy0_0 1 &usbphy0_1 1 &usbphy0_2 1>;
+
+And use the constants here instead of numbers.
+
+Regards
+Kishon
