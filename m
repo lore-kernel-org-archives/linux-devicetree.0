@@ -1,198 +1,150 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v4 10/11] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Fri,  3 Apr 2015 21:44:51 +0200
-Message-ID: <1428090292-21693-11-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v4 09/11] ARM: vf610: enable Cortex-M4 on Vybrid SoC
+Date: Fri,  3 Apr 2015 21:44:50 +0200
+Message-ID: <1428090292-21693-10-git-send-email-stefan@agner.ch>
 References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428090292-21693-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428090292-21693-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds an initial device tree to run Linux on the Cortex-M4 on
-the Vybrid based Colibri VF61 module.
+This patch allows to build the Kernel for Vybrid (VF6xx) SoC
+when ARMv7-M CPU is selected. The resulting image runs on the
+secondary Cortex-M4 core. This core has equally access to all
+peripherals as the main Cortex-A5 core. However, there is no
+resource control mechanism, hence when both cores are used
+simultaneously, orthogonal device tree's are required.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+The boot CPU is dependent on the SoC variant, however the
+commonly available boards use variants where the Cortex-A5 is
+the primary/boot CPU. Booting the secondary Cortex-M4 CPU
+needs SoC specific register written. There is no in kernel
+support for this right now, a external userspace utility
+called "m4boot" can be used to boot the kernel:
+
+m4boot xipImage initramfs.cpio.lzo vf610m4-colibri.dtb
+
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile            |  1 +
- arch/arm/boot/dts/vf610m4-colibri.dts | 98 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610m4.dtsi        | 50 ++++++++++++++++++
- 3 files changed, 149 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
- create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
+ Documentation/devicetree/bindings/arm/fsl.txt |  3 +++
+ arch/arm/mach-imx/Kconfig                     | 36 +++++++++++++++++----------
+ arch/arm/mach-imx/Makefile.boot               |  0
+ arch/arm/mach-imx/mach-vf610.c                |  1 +
+ 4 files changed, 27 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/mach-imx/Makefile.boot
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a1c776b..3a6ff9f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -309,6 +309,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
- dtb-$(CONFIG_SOC_VF610) += \
- 	vf500-colibri-eval-v3.dtb \
- 	vf610-colibri-eval-v3.dtb \
-+	vf610m4-colibri.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += \
-diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index a5462b6..2a3ba73 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -81,12 +81,15 @@ Freescale Vybrid Platform Device Tree Bindings
+ For the Vybrid SoC familiy all variants with DDR controller are supported,
+ which is the VF5xx and VF6xx series. Out of historical reasons, in most
+ places the kernel uses vf610 to refer to the whole familiy.
++The compatible string "fsl,vf610m4" is used for the secondary Cortex-M4
++core support.
+ 
+ Required root node compatible property (one of them):
+     - compatible = "fsl,vf500";
+     - compatible = "fsl,vf510";
+     - compatible = "fsl,vf600";
+     - compatible = "fsl,vf610";
++    - compatible = "fsl,vf610m4";
+ 
+ Freescale LS1021A Platform Device Tree Bindings
+ ------------------------------------------------
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index c8dffce..b29ade8 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -1,5 +1,5 @@
+ menuconfig ARCH_MXC
+-	bool "Freescale i.MX family" if ARCH_MULTI_V4_V5 || ARCH_MULTI_V6_V7
++	bool "Freescale i.MX family" if ARCH_MULTI_V4_V5 || ARCH_MULTI_V6_V7 || ARCH_MULTI_V7M
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_CPU_SUSPEND if PM
+ 	select CLKSRC_MMIO
+@@ -557,9 +557,11 @@ config MACH_VPR200
+ 
+ endif
+ 
++comment "Device tree only"
++
+ if ARCH_MULTI_V7
+ 
+-comment "Device tree only"
++comment "Cortex-A platforms"
+ 
+ config SOC_IMX5
+ 	bool
+@@ -629,10 +631,28 @@ config SOC_IMX6SX
+ 	help
+ 	  This enables support for Freescale i.MX6 SoloX processor.
+ 
++
++config SOC_LS1021A
++	bool "Freescale LS1021A support"
++	select ARM_GIC
++	select HAVE_ARM_ARCH_TIMER
++	select PCI_DOMAINS if PCI
++	select ZONE_DMA if ARM_LPAE
++
++	help
++	  This enable support for Freescale LS1021A processor.
++
++endif
++
++comment "Cortex-A/Cortex-M asymmetric multiprocessing platforms"
++
++if ARCH_MULTI_V7 || ARCH_MULTI_V7M
++
+ config SOC_VF610
+ 	bool "Vybrid Family VF610 support"
+ 	select IRQ_DOMAIN_HIERARCHY
+-	select ARM_GIC
++	select ARM_GIC if ARCH_MULTI_V7
++	select ARM_NVIC if ARCH_MULTI_V7M
+ 	select PINCTRL_VF610
+ 	select PL310_ERRATA_769419 if CACHE_L2X0
+ 
+@@ -659,16 +679,6 @@ choice
+ 
+ endchoice
+ 
+-config SOC_LS1021A
+-	bool "Freescale LS1021A support"
+-	select ARM_GIC
+-	select HAVE_ARM_ARCH_TIMER
+-	select PCI_DOMAINS if PCI
+-	select ZONE_DMA if ARM_LPAE
+-
+-	help
+-	  This enable support for Freescale LS1021A processor.
+-
+ endif
+ 
+ source "arch/arm/mach-imx/devices/Kconfig"
+diff --git a/arch/arm/mach-imx/Makefile.boot b/arch/arm/mach-imx/Makefile.boot
 new file mode 100644
-index 0000000..acd6cb5
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-@@ -0,0 +1,98 @@
-+/*
-+ * Device tree for Colibri VF61 Cortex-M4 support
-+ *
-+ * Copyright (C) 2015 Stefan Agner
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "vf610m4.dtsi"
-+
-+/ {
-+	model = "VF610 Cortex-M4";
-+	compatible = "fsl,vf610m4";
-+
-+	chosen {
-+		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
-+	};
-+
-+	memory {
-+		reg = <0x8c000000 0x3000000>;
-+	};
-+};
-+
-+&gpio0 {
-+	status = "disabled";
-+};
-+
-+&gpio1 {
-+	status = "disabled";
-+};
-+
-+&gpio2 {
-+	status = "disabled";
-+};
-+
-+&gpio3 {
-+	status = "disabled";
-+};
-+
-+&gpio4 {
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	vf610-colibri {
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				VF610_PAD_PTD0__UART2_TX		0x21a2
-+				VF610_PAD_PTD1__UART2_RX		0x21a1
-+				VF610_PAD_PTD2__UART2_RTS		0x21a2
-+				VF610_PAD_PTD3__UART2_CTS		0x21a1
-+			>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
-new file mode 100644
-index 0000000..9ffe2eb
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4.dtsi
-@@ -0,0 +1,50 @@
-+/*
-+ * Device tree for VF6xx Cortex-M4 support
-+ *
-+ * Copyright (C) 2015 Stefan Agner
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "armv7-m.dtsi"
-+#include "vfxxx.dtsi"
-+
-+&mscm_ir {
-+	interrupt-parent = <&nvic>;
-+};
+index 0000000..e69de29
+diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
+index 2e7c75b..b20f6c1 100644
+--- a/arch/arm/mach-imx/mach-vf610.c
++++ b/arch/arm/mach-imx/mach-vf610.c
+@@ -17,6 +17,7 @@ static const char * const vf610_dt_compat[] __initconst = {
+ 	"fsl,vf510",
+ 	"fsl,vf600",
+ 	"fsl,vf610",
++	"fsl,vf610m4",
+ 	NULL,
+ };
+ 
 -- 
 2.3.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
