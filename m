@@ -1,55 +1,91 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
-Date: Fri, 3 Apr 2015 21:09:31 +0100
-Message-ID: <20150403200931.GD13898@n2100.arm.linux.org.uk>
-References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
- <1428090292-21693-8-git-send-email-stefan@agner.ch>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: [PATCHv6] media: i2c/adp1653: Documentation for devicetree support
+ for adp1653
+Date: Fri, 3 Apr 2015 22:26:24 +0200
+Message-ID: <20150403202624.GA4308@amd>
+References: <20150402143846.GA11687@amd>
+ <20150402203417.GA6336@amd>
+ <20150403083353.GA21070@amd>
+ <20150403113216.GK20756@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1428090292-21693-8-git-send-email-stefan@agner.ch>
+In-Reply-To: <20150403113216.GK20756@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Andrew Morton <akpm@osdl.org>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, galak@codeaurora.org, bcousson@baylibre.com, m.chehab@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 03, 2015 at 09:44:48PM +0200, Stefan Agner wrote:
-> In order to support SoC with heterogenous CPU architectures (such
-> as Freescale Vybrid/i.MXSX) it is preferable to use the same
-> architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
-> CPU. Hence allow to select MULTIPLATFORM even without MMU.
+
+Documentation for adp1653 binding.
+
+---
+
+> Please split this as Javier suggested. I'd think both could go through
+> the media-tree unless someone objects.
+
+Please apply.
+
+> > +  - power-gpios: Reference to the GPIO that controls the power for the chip.
 > 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  arch/arm/Kconfig | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 9f1f09a..636cb3f 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -230,7 +230,7 @@ config VECTORS_BASE
->  	  in size.
->  
->  config ARM_PATCH_PHYS_VIRT
-> -	bool "Patch physical to virtual translations at runtime" if EMBEDDED
-> +	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
->  	default y
+> You're using power-gpios in documentation only.
 
-This makes no sense.  Multiplatform MMU _requires_ this feature, so why
-offer it to the user when multiplatform is enabled _and_ MMU is enabled?
+Which is ok, because generic code adds "-gpios" itself.
 
-Patch 7817/1 in the patch system tried doing something like you're trying
-to do here - I wonder whether you've reviewed the mailing list for
-previous discussions.
+> The spec refers to this by "EN". How about "en-gpios" instead? This
+> definitely isn't about power, but about resetting the chip. It gets the
+> power through another pin.
 
-Given that it's Easter, I'm not going to re-state what I said last time
-this came up, but instead leave you to do some research.  For example,
-reading message id <20130819232411.GX23006@n2100.arm.linux.org.uk>...
+It controls power of the chip. Noone gets _power_ through gpios,
+hopefully. Yes, I can rename it. "en-gpios" is too ugly to
+live. Sebastian suggested "enable". Hope that's okay with you.
 
-Thanks.
+									Pavel
+
+new file mode 100644
+index 0000000..da9934a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+@@ -0,0 +1,37 @@
++* Analog Devices ADP1653 flash LED driver
++
++Required Properties:
++
++  - compatible: Must contain be "adi,adp1653"
++
++  - reg: I2C slave address
++
++  - power-gpios: Reference to the GPIO that controls the power for the chip.
++
++There are two LED outputs available - flash and indicator. One LED is
++represented by one child node, nodes need to be named "flash" and "indicator".
++
++Required properties of the LED child node:
++- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++
++Required properties of the flash LED child node:
++
++- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++	adp1653: led-controller@30 {
++		compatible = "adi,adp1653";
++		reg = <0x30>;
++		power-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
++
++		flash {
++			flash-timeout-us = <500000>;
++			flash-max-microamp = <320000>;
++			max-microamp = <50000>;
++		};
++		indicator {
++			max-microamp = <17500>;
++		};
++	};
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
