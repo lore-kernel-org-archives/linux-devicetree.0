@@ -1,106 +1,38 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCH 4/7] ARM: socfpga: rename socdk board file to socdk_sdmmc
-Date: Thu, 2 Apr 2015 23:39:55 -0500
-Message-ID: <1428035998-27542-5-git-send-email-dinguyen@opensource.altera.com>
-References: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
+From: <masaru.nagai.vx@renesas.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Fri, 3 Apr 2015 15:27:46 +0900
+Message-ID: <551E32E2.3020102@renesas.com>
+References: <20150331064349.GB4605@localhost.localdomain>	<20150331.113832.2042398685489897677.davem@davemloft.net>	<551ADC12.5050603@cogentembedded.com> <20150331.134842.499356389024178984.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@arm.linux.org.uk, arnd@arndb.de, olof@lixom.net, khilman@linaro.org, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
-Cc: dinh.linux@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150331.134842.499356389024178984.davem@davemloft.net>
+Sender: linux-sh-owner@vger.kernel.org
+To: davem@davemloft.net, sergei.shtylyov@cogentembedded.com
+Cc: richardcochran@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Hello Richard, David, Sergei
 
-Rename the socfpga_arria10_socdk board file to socfpga_arria10_socdk_sdmmc
-as Arria 10 devkit cannot support SDMMC and QSPI at the same time. Thus
-we will need to have 2 separate board files, one for SDMMC and one for
-QSPI. We also add a new base board dtsi file, socfpga_arria10_socdk.dtsi
-so that we use common peripherals for each flavor of the devkits.
+On 2015=E5=B9=B404=E6=9C=8801=E6=97=A5 02:48, David Miller wrote:
+> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Date: Tue, 31 Mar 2015 20:40:34 +0300
+=2E..
+> Is there a serious problem getting the original authors to signoff on
+> this driver submission?  If so, why?  This should be very
+> straightforward, and if for some reason these authors are unwilling t=
+o
+> then I have every reason to be concerned about this.
 
-Add the sdmmc node to the socfpga_arria10_socdk_sdmmc.dts board file.
+We are already agree on the work by sergei.
+So, this patch does not have problem.
 
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
----
- arch/arm/boot/dts/Makefile                         |  2 +-
- ...rria10_socdk.dts => socfpga_arria10_socdk.dtsi} |  4 +---
- arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 26 ++++++++++++++++++++++
- 3 files changed, 28 insertions(+), 4 deletions(-)
- rename arch/arm/boot/dts/{socfpga_arria10_socdk.dts => socfpga_arria10_socdk.dtsi} (94%)
- mode change 100755 => 100644
- create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts
+Sergei, please append SOB of us to this patch.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a1c776b..e50441a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -485,7 +485,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7794-alt.dtb
- dtb-$(CONFIG_ARCH_SOCFPGA) += \
- 	socfpga_arria5_socdk.dtb \
--	socfpga_arria10_socdk.dtb \
-+	socfpga_arria10_socdk_sdmmc.dtb \
- 	socfpga_cyclone5_socdk.dtb \
- 	socfpga_cyclone5_sockit.dtb \
- 	socfpga_cyclone5_socrates.dtb \
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dts b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-old mode 100755
-new mode 100644
-similarity index 94%
-rename from arch/arm/boot/dts/socfpga_arria10_socdk.dts
-rename to arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index addec61..2791f09
---- a/arch/arm/boot/dts/socfpga_arria10_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (C) 2014 Altera Corporation <www.altera.com>
-+ * Copyright (C) 2015 Altera Corporation <www.altera.com>
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -14,8 +14,6 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
--
--/dts-v1/;
- #include "socfpga_arria10.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts b/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts
-new file mode 100644
-index 0000000..dbbb751
---- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright (C) 2014-2015 Altera Corporation <www.altera.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/dts-v1/;
-+#include "socfpga_arria10_socdk.dtsi"
-+
-+&mmc {
-+	status = "okay";
-+	num-slots = <1>;
-+	broken-cd;
-+	bus-width = <4>;
-+};
--- 
-2.2.1
+Signed-off-by: Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>
+Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+
+Best Regards,
+Masaru Nagai
