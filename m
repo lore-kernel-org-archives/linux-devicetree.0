@@ -1,109 +1,56 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v4 03/11] irqchip: vf610-mscm: support NVIC parent
-Date: Fri,  3 Apr 2015 21:44:44 +0200
-Message-ID: <1428090292-21693-4-git-send-email-stefan@agner.ch>
-References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428090292-21693-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 0/4]  arm: tegra: implement NVEC driver using tegra
+ i2c.
+Date: Fri, 3 Apr 2015 21:46:35 +0200
+Message-ID: <20150403194635.GC2016@katana>
+References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Danin <danindrey@mail.ru>
+Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net, Laxman Dewangan <ldewangan@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Julian Andres Klode <jak@jak-linux.org>, Marc Dietrich <marvin24@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Support the NVIC interrupt controller as node parent of the MSCM
-interrupt router. On the dual-core variants of Vybird (VF6xx), the
-NVIC interrupt controller is used by the Cortex-M4. To support
-running Linux on this core too, MSCM needs NVIC parent support too.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
- 1 file changed, 26 insertions(+), 6 deletions(-)
+--TYecfFk8j8mZq+dy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
-index 9521057..40b7d8d 100644
---- a/drivers/irqchip/irq-vf610-mscm-ir.c
-+++ b/drivers/irqchip/irq-vf610-mscm-ir.c
-@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
- 	void __iomem *mscm_ir_base;
- 	u16 cpu_mask;
- 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
-+	bool is_nvic;
- };
- 
- static struct vf610_mscm_ir_chip_data *mscm_ir_data;
-@@ -91,6 +92,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
- {
- 	irq_hw_number_t hwirq = data->hwirq;
- 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
-+	struct irq_data *parent = data->parent_data;
- 	u16 irsprc;
- 
- 	irsprc = readw_relaxed(chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
-@@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
- 	writew_relaxed(chip_data->cpu_mask,
- 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
- 
--	irq_chip_unmask_parent(data);
-+	if (parent->chip->irq_enable)
-+		parent->chip->irq_enable(parent);
-+	else
-+		parent->chip->irq_unmask(parent);
-+
- }
- 
- static void vf610_mscm_ir_disable(struct irq_data *data)
- {
- 	irq_hw_number_t hwirq = data->hwirq;
- 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
-+	struct irq_data *parent = data->parent_data;
- 
- 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
- 
--	irq_chip_mask_parent(data);
-+	if (parent->chip->irq_disable)
-+		parent->chip->irq_disable(parent);
-+	else
-+		parent->chip->irq_mask(parent);
- }
- 
- static struct irq_chip vf610_mscm_ir_irq_chip = {
-@@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
- 					      domain->host_data);
- 
- 	gic_data.np = domain->parent->of_node;
--	gic_data.args_count = 3;
--	gic_data.args[0] = GIC_SPI;
--	gic_data.args[1] = irq_data->args[0];
--	gic_data.args[2] = irq_data->args[1];
-+
-+	if (mscm_ir_data->is_nvic) {
-+		gic_data.args_count = 1;
-+		gic_data.args[0] = irq_data->args[0];
-+	} else {
-+		gic_data.args_count = 3;
-+		gic_data.args[0] = GIC_SPI;
-+		gic_data.args[1] = irq_data->args[0];
-+		gic_data.args[2] = irq_data->args[1];
-+	}
-+
- 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
- }
- 
-@@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
- 		goto out_unmap;
- 	}
- 
-+	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
-+		mscm_ir_data->is_nvic = true;
-+
- 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
- 
- 	return 0;
--- 
-2.3.5
+On Mon, Mar 30, 2015 at 11:00:11PM +0300, Andrey Danin wrote:
+> NVEC driver contains code to manage tegra i2c controller in slave mode.
+> I2C slave support was implemented in linux kernel. The goal of this
+> patch serie is to implement I2C slave mode in tegra drived and rework
+> NVEC driver to use it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks. Looks pretty good already. If being I2C slave was the reason for
+this driver being in staging, we soon need to think of a proper place
+outside staging.
+
+
+--TYecfFk8j8mZq+dy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVHu4bAAoJEBQN5MwUoCm2RHMQAIIn0r1XaIbSrsOZ6uwTxPH+
+A2BQ/EIrTttRV8gKJW7JifNpbF4MTW7sZuw2M/Uad8SnYm22ylFpvaYH34B9uPbt
+5hwxhbYK82a9O6dTKj4mpKsR7X7sBFsLFm5bzty9EVKSOHwDgPFEn8T1ul8KGKAk
+J7Xh5HlOuLgdMDb8rmJ1dHkEvAHZIHxBrd3TxTLfz81FRL7uE4pL1MluB2RWHkrp
+rv+YFCmn92DsL3gu4brZ3DSg6vS/UuyI8adR2bgKuIDR9Y4pOkt/g6BTendvToZv
+2uqEl/e3LJGeiwEqwV8hfOh7CEO6xQv69R+V64Lx2C3sB1v2+U9J/T5re2IjNssQ
+Tw0p96yrjA18yo3fCd935aEVSZeTupJhqg9BjKFBqel5uSpFSiCD8U8U72zbhWdC
+VxZbfH9QYGtbWJs98xX0on55g/StkbtY0D0PW/6idju6ZOBC3zq6KlK0qd5clrad
++xQfxvoQIyqOi4kGoo04mSP8XpmFS62yXtkIDIeuRLhgUhTV6N99FtMp2FFmGxm7
+mQnjGxk/TeZni1AaQyvCHBhHOu/IHnd14OQq0F2Uf+3tOlUjMZke44UMjZzX4WRr
++dS+R8E7A9G2SBjEDeI/3Cp50dafhP6ISzED5E3i7FvNjOjglmUp4u+vQwzgIpOe
+6vCNUzcJNFeutNpnPHUK
+=z0tF
+-----END PGP SIGNATURE-----
+
+--TYecfFk8j8mZq+dy--
