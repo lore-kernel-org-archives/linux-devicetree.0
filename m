@@ -1,60 +1,68 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] arm64: dts: Add Qualcomm APQ8016 SBC evaluation board dts
-Date: Fri, 3 Apr 2015 12:19:03 -0700
-Message-ID: <CAOesGMj84oc1RScRnUmzPXqzaZkDa9x8FNqVKqTSx0GAzZtQfQ@mail.gmail.com>
-References: <1427151065-29867-1-git-send-email-galak@codeaurora.org>
-	<20150403181217.GM23023@localhost>
-	<20150403181401.GN23023@localhost>
-	<20150403181636.GO23023@localhost>
-	<CD6F0F6A-91BE-4843-AA65-FC617641B584@codeaurora.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH_V3 0/2] i2c: jz4780: Add Ingenic JZ4780 i2c driver
+Date: Fri, 3 Apr 2015 21:23:31 +0200
+Message-ID: <20150403192330.GA2016@katana>
+References: <1427807036-45366-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CD6F0F6A-91BE-4843-AA65-FC617641B584@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1427807036-45366-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 3, 2015 at 12:13 PM, Kumar Gala <galak@codeaurora.org> wrot=
-e:
->
-> On Apr 3, 2015, at 1:18 PM, Olof Johansson <olof@lixom.net> wrote:
->
->> On Fri, Apr 03, 2015 at 11:14:01AM -0700, Olof Johansson wrote:
->>> On Fri, Apr 03, 2015 at 11:12:17AM -0700, Olof Johansson wrote:
->>>> On Mon, Mar 23, 2015 at 05:51:05PM -0500, Kumar Gala wrote:
->>>>> Add initial device tree support for Qualcomm APQ8016 SBC Evaluati=
-on board.
->>>>> This board is also referred to as the DragonBoard 410c.
->>>>>
->>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->>>>
->>>> Hi,
->>>>
->>>> Patch applied but see comment below.
->>>
->>> You both sent us the patch and a pull request with this patch in
->>> it. Please only send patches to arm@kernel.org that you intend for =
-us
->>> to apply.
->>
->> Uh, need more coffee, please ignore. I got confused since your patch=
- didn't
->> apply cleanly due to the dts/qcom directory creation.
->>
->>
->> -Olof
->
-> Ok, but this should be part of the 'qcom-dt-for-4.1=E2=80=99 so hopef=
-ully you will end up pulling all of that in as well
 
-If you pick up a patch that you have sent us, please reply to that
-email with a redaction so we don't waste time dealing with it.
-Especially if some time has passed.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll get to your dt branch this afternoon.
+On Tue, Mar 31, 2015 at 02:03:54PM +0100, Zubair Lutfullah Kakakhel wrote:
+> Hi,
+>=20
+> Here we have two patches that add support for the i2c
+> controller present in the Ingenic JZ4780.
+>=20
+> Driver tested on the MIPS Creator CI20.
+>=20
+> V2 - > V3
+> Fixes based on feedback from Wolfram Sang. Thank-you.
+> Details in individual patch commit message
+> Rebased to v4.0-rc6
+>=20
+> V1 - > V2
+> Rebased to v4.0-rc3
+> Minor tweaks/fixes. Details in individual patch commits.
+>=20
+> Feedback welcome.
+
+Applied to for-next, thanks!
 
 
--Olof
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVHuiyAAoJEBQN5MwUoCm2RBsQALHA2MEJHHA+OSZGAhl28ssk
+/3ifA1Le6exGnb7brUc3x1j4OIrLfw63nfwiYmHtW4uWr3igpLiLLnwDUDVMGMPa
+EyBT+P2jt7YGRVphtI8P2nS/dyaq6nddS/FJw2g8L9Vgt94l7CoXOUoilL7jSXgA
+ps5GYMg6VHg1ao8qD0KZpDQtfe1+cJdmZ3LdB5pHXcb0eiDm6HUm+hhdWeMPbLCW
+Hy2RAirSusDquuL8kK6ZsZK+vxxlFb0h71KiPGOc+rxG9oF0CzqCVoBvrpA2AFVg
+y14AqscI36+TD2I8i4rr+uYxhScI78uwn4VednxMzp9xuAj5EDHQVetziRJ/bc8/
+tZfReehC3u8aw2FmN/QYeAzYo//bAtILH03cp16AaS2iigKQLRjaR5MLAHf84ZJu
+CuNYXEMlr2e0pnMVpWKEi3I+4cheytlimwIkcJuCda9m5nezxWGASJpQeKNfYjgf
+Va3s4jCaYAYeg7mmxcAhDULfs6UjID4p6TfSlx3tuhbeVzOEeSFMopCPBcu1Qxyy
+1Gaor8M81DQdyVbWVIgRfduReKd/5eHroZOyBJsO80u9h4Bqt2MqWy8u1vN374ax
+soZWLSrPKZJy1i207D00TROgPo079b//T8V/6mWPcoQ8xTMZEn2CXadX0YE1Vi9+
+IC+wAh320RDWIcLcpr5F
+=HbJF
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
