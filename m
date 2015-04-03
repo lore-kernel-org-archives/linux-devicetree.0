@@ -1,55 +1,49 @@
-From: Liu Ying <liu.y.victor@gmail.com>
-Subject: Re: [PATCH RFC v9 09/20] drm/dsi: Add a helper to get bits per pixel
- of MIPI DSI pixel format
-Date: Fri, 3 Apr 2015 11:28:18 +0800
-Message-ID: <CA+8Hj80iRz6RTtzOiYvSPmgiR4w6X+hBukXgBkZz3o6+Z4RecA@mail.gmail.com>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
-	<1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
-	<1425380860.3146.49.camel@pengutronix.de>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 0/7] ARM: socfpga: Add support for Arria10 devkit
+Date: Thu, 2 Apr 2015 23:39:51 -0500
+Message-ID: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425380860.3146.49.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Liu Ying <Ying.Liu@freescale.com>, Thierry Reding <thierry.reding@gmail.com>, stefan.wahren@i2se.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, sboyd@codeaurora.org, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-2015-03-03 19:07 GMT+08:00 Philipp Zabel <p.zabel@pengutronix.de>:
-> Hi,
->
-> Am Donnerstag, den 12.02.2015, 14:01 +0800 schrieb Liu Ying:
->> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
->> ---
->> v8->v9:
->>  * Rebase onto the imx-drm/next branch of Philipp Zabel's open git repository.
->
-> I can't test this myself for lack of hardware, but I see no further
-> issues with patches 09 - 13 except for the use of
-> imx_drm_encoder_get_mux_id. I'll either rebase my patches that remove it
-> or fix it up when applying.
->
-> Thierry, may I take these patches through imx-drm, or would you rather I
-> waited for you to pick up the drm/dsi and drm/bridge patches?
+Hi,
 
-Gentle ping.  What's your opinion on the patches Philipp mentioned?
+This patchset enables and tidy up support for the Arria10 devkit. Along with
+this patchset and the patch for enabling clocks on the Arria10, the devkit
+can boot Linux.
 
-Regards,
-Liu Ying
+Dinh Nguyen (7):
+  ARM: socfpga: add cpu1-start-addr for Arria 10
+  ARM: socfpga: disable the sdmmc, and uart nodes in the base arria10
+  ARM: socfpga: dts: enable UART1 for the debug uart
+  ARM: socfpga: rename socdk board file to socdk_sdmmc
+  ARM: socfpga: Add support for UART1 debug uart for earlyprintk
+  ARM: socfpga: remove the need to map uart_io_desc
+  Documentation: DT bindings: add doc for Altera's SoCFPGA platform
 
->
-> regards
-> Philipp
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
+ Documentation/devicetree/bindings/arm/altera.txt   | 14 ++++++++++++
+ arch/arm/Kconfig.debug                             | 25 +++++++++++++++------
+ arch/arm/boot/dts/Makefile                         |  2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi             |  4 ++++
+ ...rria10_socdk.dts => socfpga_arria10_socdk.dtsi} |  6 ++---
+ arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 26 ++++++++++++++++++++++
+ arch/arm/mach-socfpga/socfpga.c                    |  9 --------
+ 7 files changed, 65 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera.txt
+ rename arch/arm/boot/dts/{socfpga_arria10_socdk.dts => socfpga_arria10_socdk.dtsi} (92%)
+ mode change 100755 => 100644
+ create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts
 
 -- 
-Best Regards,
-Liu Ying
+2.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
