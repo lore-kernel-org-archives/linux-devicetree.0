@@ -1,66 +1,52 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCH 1/3] clk: socfpga: update clk.h so for Arria10 platform to use
-Date: Thu, 2 Apr 2015 23:40:53 -0500
-Message-ID: <1428036055-27607-2-git-send-email-dinguyen@opensource.altera.com>
-References: <1428036055-27607-1-git-send-email-dinguyen@opensource.altera.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 7/7] Documentation: DT bindings: add doc for Altera's SoCFPGA platform
+Date: Thu, 2 Apr 2015 23:39:58 -0500
+Message-ID: <1428035998-27542-8-git-send-email-dinguyen@opensource.altera.com>
+References: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428036055-27607-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org, mturquette@linaro.org
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428035998-27542-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-There are 5 possible parent clocks for the SoCFPGA Arria10. Move the define
-SYSMGR_SDMMC_CTRL_SET and streq() to clk.h so that the Arria clock driver
-can use.
+Document "altr,socfpga-cyclone5", "altr,socfpga-arria5", and
+"altr,socfpga-arria10".
 
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
- drivers/clk/socfpga/clk-gate.c | 4 ----
- drivers/clk/socfpga/clk.h      | 6 +++++-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/arm/altera.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera.txt
 
-diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-gate.c
-index dd3a78c..607ab35 100644
---- a/drivers/clk/socfpga/clk-gate.c
-+++ b/drivers/clk/socfpga/clk-gate.c
-@@ -32,14 +32,10 @@
- #define SOCFPGA_MMC_CLK			"sdmmc_clk"
- #define SOCFPGA_GPIO_DB_CLK_OFFSET	0xA8
- 
--#define streq(a, b) (strcmp((a), (b)) == 0)
--
- #define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
- 
- /* SDMMC Group for System Manager defines */
- #define SYSMGR_SDMMCGRP_CTRL_OFFSET    0x108
--#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
--	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
- 
- static u8 socfpga_clk_get_parent(struct clk_hw *hwclk)
- {
-diff --git a/drivers/clk/socfpga/clk.h b/drivers/clk/socfpga/clk.h
-index d291f60..b09a5d5 100644
---- a/drivers/clk/socfpga/clk.h
-+++ b/drivers/clk/socfpga/clk.h
-@@ -26,9 +26,13 @@
- #define CLKMGR_L4SRC		0x70
- #define CLKMGR_PERPLL_SRC	0xAC
- 
--#define SOCFPGA_MAX_PARENTS		3
-+#define SOCFPGA_MAX_PARENTS		5
- #define div_mask(width) ((1 << (width)) - 1)
- 
-+#define streq(a, b) (strcmp((a), (b)) == 0)
-+#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
-+	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+diff --git a/Documentation/devicetree/bindings/arm/altera.txt b/Documentation/devicetree/bindings/arm/altera.txt
+new file mode 100644
+index 0000000..558735a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera.txt
+@@ -0,0 +1,14 @@
++Altera's SoCFPGA platform device tree bindings
++---------------------------------------------
 +
- extern void __iomem *clk_mgr_base_addr;
- 
- void __init socfpga_pll_init(struct device_node *node);
++Boards with Cyclone 5 SoC:
++Required root node properties:
++compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++
++Boards with Arria 5 SoC:
++Required root node properties:
++compatible = "altr,socfpga-arria5", "altr,socfpga";
++
++Boards with Arria 10 SoC:
++Required root node properties:
++compatible = "altr,socfpga-arria10", "altr,socfpga";
 -- 
 2.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
