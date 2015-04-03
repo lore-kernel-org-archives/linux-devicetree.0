@@ -1,57 +1,47 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with
  complex dependencies
-Date: Fri, 3 Apr 2015 15:57:27 +0300
-Message-ID: <20150403125727.GT10964@mwanda>
+Date: Fri, 3 Apr 2015 15:27:40 +0200
+Message-ID: <CAMuHMdVhX-MrFxeW5j98NLaQQtJ+DToxkz2Z1+SRSs7YF27RDw@mail.gmail.com>
 References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
- <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
+	<1428064923-24950-6-git-send-email-geert+renesas@glider.be>
+	<20150403125727.GT10964@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-pm@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-sh@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, linux-kernel@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150403125727.GT10964@mwanda>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms+renesas@verge.net.au>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 03, 2015 at 02:42:02PM +0200, Geert Uytterhoeven wrote:
-> +int __init board_staging_register_clock(const struct board_staging_clk *bsc)
-> +{
-> +	struct clk *clk;
-> +	int error;
-> +
-> +	pr_debug("Registering clock %s for con_id %s dev_id %s\n", bsc->clk,
-> +		 bsc->con_id, bsc->dev_id);
-> +	clk = clk_get(NULL, bsc->clk);
-> +	if (IS_ERR(clk)) {
-> +		error = PTR_ERR(clk);
-> +		pr_err("Failed to get clock %s (%d)\n", bsc->clk, error);
-> +		return error;
-> +	}
-> +
-> +	error = clk_register_clkdev(clk, bsc->con_id, bsc->dev_id);
-> +	if (error)
-> +		pr_err("Failed to register clock %s (%d)\n", bsc->clk, error);
-> +		return error;
+On Fri, Apr 3, 2015 at 2:57 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>> +     error = clk_register_clkdev(clk, bsc->con_id, bsc->dev_id);
+>> +     if (error)
+>> +             pr_err("Failed to register clock %s (%d)\n", bsc->clk, error);
+>> +             return error;
+>
+> Missing curly braces.  Also it's weird that don't we need a clk_put()
+> on the error patch as well as the success path?
 
-Missing curly braces.  Also it's weird that don't we need a clk_put()
-on the error patch as well as the success path?
+Thanks!
 
-> +
-> +	clk_put(clk);
-> +	return 0;
-> +}
+So it worked only by accident: with the new per-user struct clk instances
+clk_put() must not be called if clk_register_clkdev() succeeded.
 
+Will call clk_put() only if it failed.
 
-regards,
-dan carpenter
+>> +
+>> +     clk_put(clk);
+>> +     return 0;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
