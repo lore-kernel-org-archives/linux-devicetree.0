@@ -1,41 +1,59 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Fri, 3 Apr 2015 11:34:56 -0700
-Message-ID: <CAOesGMhz6WPweQFXfPhTO6Pz5L4Z1Si6YGiCRCiFD9B5qB9tVw@mail.gmail.com>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
-	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add Qualcomm APQ8016 SBC evaluation board dts
+Date: Fri, 3 Apr 2015 14:13:02 -0500
+Message-ID: <CD6F0F6A-91BE-4843-AA65-FC617641B584@codeaurora.org>
+References: <1427151065-29867-1-git-send-email-galak@codeaurora.org> <20150403181217.GM23023@localhost> <20150403181401.GN23023@localhost> <20150403181636.GO23023@localhost>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425375148-4369-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150403181636.GO23023@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-I understand this is bikeshedding to some extent, but I'd also like to
-avoid needless variation in binding formats:
+On Apr 3, 2015, at 1:18 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
 
-On Tue, Mar 3, 2015 at 1:32 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Apr 03, 2015 at 11:14:01AM -0700, Olof Johansson wrote:
+>> On Fri, Apr 03, 2015 at 11:12:17AM -0700, Olof Johansson wrote:
+>>> On Mon, Mar 23, 2015 at 05:51:05PM -0500, Kumar Gala wrote:
+>>>> Add initial device tree support for Qualcomm APQ8016 SBC Evaluatio=
+n board.
+>>>> This board is also referred to as the DragonBoard 410c.
+>>>>=20
+>>>> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>=20
+>>> Hi,
+>>>=20
+>>> Patch applied but see comment below.
+>>=20
+>> You both sent us the patch and a pull request with this patch in
+>> it. Please only send patches to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org that you intend for u=
+s
+>> to apply.
+>=20
+> Uh, need more coffee, please ignore. I got confused since your patch =
+didn't
+> apply cleanly due to the dts/qcom directory creation.
+>=20
+>=20
+> -Olof
 
-> +
-> +foo@1000 {
-> +               compatible = "syscon", "simple-mfd";
-> +               reg = <0x010000 0x1000>;
-> +
-> +               led@08.0 {
+Ok, but this should be part of the 'qcom-dt-for-4.1=92 so hopefully you=
+ will end up pulling all of that in as well
 
-This doesn't seem to be a typo, you're using a period in the unit
-address. I've never seen that done before, usually commas are used
-instead.
+- k
 
-Was there a reason for going with period?
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
 
-
--Olof
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
