@@ -1,80 +1,109 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] i2c: tegra: implement slave mode
-Date: Fri, 3 Apr 2015 21:46:26 +0200
-Message-ID: <20150403194626.GB2016@katana>
-References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
- <1427745615-5428-2-git-send-email-danindrey@mail.ru>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427745615-5428-2-git-send-email-danindrey-JGs/UdohzUI@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v4 03/11] irqchip: vf610-mscm: support NVIC parent
+Date: Fri,  3 Apr 2015 21:44:44 +0200
+Message-ID: <1428090292-21693-4-git-send-email-stefan@agner.ch>
+References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428090292-21693-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Support the NVIC interrupt controller as node parent of the MSCM
+interrupt router. On the dual-core variants of Vybird (VF6xx), the
+NVIC interrupt controller is used by the Cortex-M4. To support
+running Linux on this core too, MSCM needs NVIC parent support too.
 
---b5gNqxB1S1yM7hjW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-> +static void tegra_i2c_slave_write(struct tegra_i2c_dev *i2c_dev, u32 val)
-> +{
-> +	i2c_writel(i2c_dev, val, I2C_SL_RCVD);
-> +
-> +	/*
-> +	 * TODO: A correct fix needs to be found for this.
-> +	 *
-> +	 * We experience less incomplete messages with this delay than without
-> +	 * it, but we don't know why. Help is appreciated.
-> +	 */
+diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
+index 9521057..40b7d8d 100644
+--- a/drivers/irqchip/irq-vf610-mscm-ir.c
++++ b/drivers/irqchip/irq-vf610-mscm-ir.c
+@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
+ 	void __iomem *mscm_ir_base;
+ 	u16 cpu_mask;
+ 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
++	bool is_nvic;
+ };
+ 
+ static struct vf610_mscm_ir_chip_data *mscm_ir_data;
+@@ -91,6 +92,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 	u16 irsprc;
+ 
+ 	irsprc = readw_relaxed(chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+@@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ 	writew_relaxed(chip_data->cpu_mask,
+ 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_unmask_parent(data);
++	if (parent->chip->irq_enable)
++		parent->chip->irq_enable(parent);
++	else
++		parent->chip->irq_unmask(parent);
++
+ }
+ 
+ static void vf610_mscm_ir_disable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 
+ 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_mask_parent(data);
++	if (parent->chip->irq_disable)
++		parent->chip->irq_disable(parent);
++	else
++		parent->chip->irq_mask(parent);
+ }
+ 
+ static struct irq_chip vf610_mscm_ir_irq_chip = {
+@@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
+ 					      domain->host_data);
+ 
+ 	gic_data.np = domain->parent->of_node;
+-	gic_data.args_count = 3;
+-	gic_data.args[0] = GIC_SPI;
+-	gic_data.args[1] = irq_data->args[0];
+-	gic_data.args[2] = irq_data->args[1];
++
++	if (mscm_ir_data->is_nvic) {
++		gic_data.args_count = 1;
++		gic_data.args[0] = irq_data->args[0];
++	} else {
++		gic_data.args_count = 3;
++		gic_data.args[0] = GIC_SPI;
++		gic_data.args[1] = irq_data->args[0];
++		gic_data.args[2] = irq_data->args[1];
++	}
++
+ 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
+ }
+ 
+@@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
+ 		goto out_unmap;
+ 	}
+ 
++	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
++		mscm_ir_data->is_nvic = true;
++
+ 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
+ 
+ 	return 0;
+-- 
+2.3.5
 
-Uh oh. So I assume this is another reason for staging?
-
-> +	if (!i2c_dev->slave || !i2c_dev->slave->slave_cb)
-> +		return -EINVAL;
-
-The core checks for slave_cb being valid.
-
-> +		i2c_slave_event(i2c_dev->slave, I2C_SLAVE_STOP, &dummy);
-
-You could use value here, too, or?
-
-> +	if (!tegra_i2c_slave_isr(irq, i2c_dev))
-> +		return IRQ_HANDLED;
-
-Minor nit: I'd prefer == 0 here, since it reads "if not slave_isr return
-handled".
-
-> +	if (slave->addr > 0x7F)
-> +		addr2 = (slave->addr >> 7) | I2C_SL_ADDR2_TEN_BIT_MODE;
-
-Nope. There are 10 bit encodings of addresses 0x000-0x07f, too. So, you
-need to check for the flag (slave->flags & I2C_CLIENT_TEN).
-
-
---b5gNqxB1S1yM7hjW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVHu4SAAoJEBQN5MwUoCm2PUEQAIxJZ/wIXpg8wHVeqEBNcFxx
-I6JTL0zOs5vNHqXef4vxjyXXzpnrPYp1wB2fqCDYsAN94d0msEven4knlxPZLT1b
-hV3hRmVwnsT0tIyhMoVPvva2MWFB5dwm6tDwy9h6MkEbqKfsjcJ5EygTEHfnX2MD
-pEeppoMYZjo/ABkKkSdPPGrDggxEXekShxMEsjXKtn6qMglEJHBB4U5oS/J48gFP
-9+XqVJRqIQw2D9azEUJzSEYZ1Z8ouVjelBlvqL6WOwqr7E3IbE+RweYkZah8o5GD
-vnKNpoNMzIY8AQ67WHJ/z+dge7oJtm5muTIdD72AEnOqo1aO7yTbljGzFqkrc5UK
-Os7YzlCQGAxiU83+xjYKpa3RleBDan0JqWiaB2StOcZuFeSe9XJqJ2i7cES8guuU
-YqXjWvcTzBc3f0zyF6qjcOpzFUWapMycmzZ8vamsmVN1UnN7ypjcKrpsPP60vy/X
-g7EW2CL2pbA+bwDgvIPj7Cb3dMs+s2E4l/bMtPVbfDGq/vRnhWsO3Sim4kk3eGbt
-+JTS8y2HYIfxOShpR5HHvDBqkcYgp2P4iHTXofKn3VG+YJjxTfKQBjUlP80XScsz
-glaojH0/PzmFEiHgmuQD2/HKu3Xu/46LKxcEEcS32cURJNW5gU6yNRHLAv4s1J7z
-q0JmaYqBo5B/F7u8Q8bk
-=tgej
------END PGP SIGNATURE-----
-
---b5gNqxB1S1yM7hjW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
