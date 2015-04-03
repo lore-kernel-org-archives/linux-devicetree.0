@@ -1,95 +1,120 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] memory: pl353: Add driver for arm pl353 static
- memory controller
-Date: Fri, 3 Apr 2015 07:40:43 +0530
-Message-ID: <CAGnW=BY4qnkhViSERJcA=SMjXhbX=HHypvbZ7KObrE8NJT6cDw@mail.gmail.com>
-References: <1420566557-19846-1-git-send-email-punnaia@xilinx.com>
-	<bc55f81bea314bc49b62b6fbcb662ae3@BN1BFFO11FD014.protection.gbl>
-	<20150402205852.GI32500@ld-irv-0074>
+From: "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
+Date: Fri, 3 Apr 2015 02:54:08 +0000
+Message-ID: <1428029650867.38904@freescale.com>
+References: <1427365095-26396-3-git-send-email-chenhui.zhao@freescale.com>
+	,<20150331020722.GC5667@home.buserror.net>
+	 <1427973405260.57477@freescale.com>,<1427990598.22867.271.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150402205852.GI32500@ld-irv-0074>
+In-Reply-To: <1427990598.22867.271.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "jussi.kivilinna-X3B1VOXEql0@public.gmane.org" <jussi.kivilinna-X3B1VOXEql0@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Khoronz
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
 
-  This driver has not been reviewed completely. I will address your comments
-and send next set of patches.
 
-Thanks,
-Punnaiah
+________________________________________
+From: Wood Scott-B07421
+Sent: Friday, April 3, 2015 0:03
+To: Zhao Chenhui-B35336
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jin Zhengxiong-R64188
+Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
 
-On Fri, Apr 3, 2015 at 2:28 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> I'm not following the review of the 'memory' portions much, but has this
-> gotten much review? I was looking at the MTD portions when I noticed an
-> obvious issue below:
+On Thu, 2015-04-02 at 06:16 -0500, Zhao Chenhui-B35336 wrote:
 >
-> On Tue, Jan 06, 2015 at 11:19:17PM +0530, Punnaiah Choudary Kalluri wrote:
->> Add driver for arm pl353 static memory controller. This controller is
->> used in xilinx zynq soc for interfacing the nand and nor/sram memory
->> devices.
->>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v5:
->> - Added pl353_smc_get_clkrate function, made pl353_smc_set_cycles as public
->>   API
->> - Removed nand timing parameter initialization and moved it to nand driver
->> Changes in v4:
->> - Modified driver to support multiple instances
->> - Used sleep instaed of busywait for delay
->> Changes in v3:
->> - None
->> Changes in v2:
->> - Since now the timing parameters are in nano seconds, added logic to convert
->>   them to the cycles
->> ---
->>  drivers/memory/Kconfig           |    6 +
->>  drivers/memory/Makefile          |    1 +
->>  drivers/memory/pl353-smc.c       |  525 ++++++++++++++++++++++++++++++++++++++
->>  include/linux/memory/pl353-smc.h |   37 +++
->>  4 files changed, 569 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/memory/pl353-smc.c
->>  create mode 100644 include/linux/memory/pl353-smc.h
->>
->> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
->> index 6d91c27..9d4880f 100644
->> --- a/drivers/memory/Kconfig
->> +++ b/drivers/memory/Kconfig
->> @@ -85,4 +85,10 @@ config FSL_IFC
->>       bool
->>       depends on FSL_SOC
->>
->> +config PL353_SMC
->> +     bool "ARM PL353 Static Memory Controller(SMC) driver"
+> ________________________________________
+> From: Wood Scott-B07421
+> Sent: Tuesday, March 31, 2015 10:07
+> To: Zhao Chenhui-B35336
+> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jin Zhengxiong-R64188
+> Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
 >
-> Space after 'Controller'. i.e.:
+> On Thu, Mar 26, 2015 at 06:18:14PM +0800, chenhui zhao wrote:
+> > @@ -189,16 +193,14 @@ _GLOBAL(fsl_secondary_thread_init)
+> >       isync
+> >
+> >       /*
+> > -      * Fix PIR to match the linear numbering in the device tree.
+> > -      *
+> > -      * On e6500, the reset value of PIR uses the low three bits for
+> > -      * the thread within a core, and the upper bits for the core
+> > -      * number.  There are two threads per core, so shift everything
+> > -      * but the low bit right by two bits so that the cpu numbering is
+> > -      * continuous.
 >
->         bool "ARM PL353 Static Memory Controller (SMC) driver"
+> Why are you getting rid of this?  If it's to avoid doing it twice on the
+> same thread, in my work-in-progress kexec patches I instead check to see
+> whether BUCSR has already been set up -- if it has, I assume we've
+> already been here.
 >
->> +     default y
+> [chenhui] I didn't delete the branch prediction related code.
+
+I didn't say you did.  I'm saying that you can check whether BUCSR has
+been set up, to determine whether PIR has already been adjusted, if your
+concern is avoiding running this twice on a thread between core resets.
+If that's not your concern, then please explain.
+
+[chenhui] If no need to change PIR in CPU hotplug, I will change the code as you mentioned.
+
+> > +             /*
+> > +              * If both threads are offline, reset core to start.
+> > +              * When core is up, Thread 0 always gets up first,
+> > +              * so bind the current logical cpu with Thread 0.
+> > +              */
 >
-> We almost definitely don't want this to be 'default y', especially given
-> that it would then be enabled on all ARM systems. Users could add it
-> their configuration themselves if they want it, or you might add it to
-> multi_v7_defconfig.
+> What if the core is not in a PM state that requires a reset?
+> Where does this reset occur?
 >
->> +     depends on ARM
->> +     help
->> +       This driver is for the ARM PL353 Static Memory Controller(SMC) module.
+> [chenhui] Reset occurs in the function mpic_reset_core().
 >
-> Same spacing issue here.
+> > +             if (hw_cpu != cpu_first_thread_sibling(hw_cpu)) {
+> > +                     int hw_cpu1, hw_cpu2;
+> > +
+> > +                     hw_cpu1 = get_hard_smp_processor_id(primary);
+> > +                     hw_cpu2 = get_hard_smp_processor_id(primary + 1);
+> > +                     set_hard_smp_processor_id(primary, hw_cpu2);
+> > +                     set_hard_smp_processor_id(primary + 1, hw_cpu1);
+> > +                     /* get new physical cpu id */
+> > +                     hw_cpu = get_hard_smp_processor_id(nr);
 >
->>  endif
+> Why are you swapping the hard smp ids?
 >
-> [...]
+> [chenhui] For example, Core1 has two threads, Thread0 and Thread1. In normal boot, Thread0 is CPU2, and Thread1 is CPU3.
+> But, if CPU2 and CPU3 are all off, user wants CPU3 up first. we need to call Thread0 as CPU3 and Thead1 as CPU2, considering
+> the limitation, after core is reset, only Thread0 is up, then Thread0 kicks up Thread1.
+
+There's no need for this.  I have booting from a thread1, and having it
+kick its thread0, working locally without messing with the hwid/cpu
+mapping.
+
+[chenhui] Great. If you have completed your patches, can we merge our code?
+
+> > @@ -252,11 +340,7 @@ static int smp_85xx_kick_cpu(int nr)
+> >               spin_table = phys_to_virt(*cpu_rel_addr);
+> >
+> >       local_irq_save(flags);
+> > -#ifdef CONFIG_PPC32
+> >  #ifdef CONFIG_HOTPLUG_CPU
+> > -     /* Corresponding to generic_set_cpu_dead() */
+> > -     generic_set_cpu_up(nr);
+> > -
 >
-> Brian
+> Why did you move this?
+>
+> [chenhui] It would be better to set this after CPU is really up.
+
+Please make it a separate patch with an explanation.
+
+-Scott
+
+[chenhui] OK.
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
