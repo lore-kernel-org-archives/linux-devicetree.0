@@ -1,121 +1,55 @@
-From: "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
-Date: Fri, 3 Apr 2015 02:54:08 +0000
-Message-ID: <1428029650867.38904@freescale.com>
-References: <1427365095-26396-3-git-send-email-chenhui.zhao@freescale.com>
-	,<20150331020722.GC5667@home.buserror.net>
-	 <1427973405260.57477@freescale.com>,<1427990598.22867.271.camel@freescale.com>
+From: Liu Ying <liu.y.victor@gmail.com>
+Subject: Re: [PATCH RFC v9 09/20] drm/dsi: Add a helper to get bits per pixel
+ of MIPI DSI pixel format
+Date: Fri, 3 Apr 2015 11:28:18 +0800
+Message-ID: <CA+8Hj80iRz6RTtzOiYvSPmgiR4w6X+hBukXgBkZz3o6+Z4RecA@mail.gmail.com>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+	<1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
+	<1425380860.3146.49.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427990598.22867.271.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425380860.3146.49.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Liu Ying <Ying.Liu@freescale.com>, Thierry Reding <thierry.reding@gmail.com>, stefan.wahren@i2se.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, sboyd@codeaurora.org, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Thierry,
 
-
-________________________________________
-From: Wood Scott-B07421
-Sent: Friday, April 3, 2015 0:03
-To: Zhao Chenhui-B35336
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jin Zhengxiong-R64188
-Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
-
-On Thu, 2015-04-02 at 06:16 -0500, Zhao Chenhui-B35336 wrote:
+2015-03-03 19:07 GMT+08:00 Philipp Zabel <p.zabel@pengutronix.de>:
+> Hi,
 >
-> ________________________________________
-> From: Wood Scott-B07421
-> Sent: Tuesday, March 31, 2015 10:07
-> To: Zhao Chenhui-B35336
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jin Zhengxiong-R64188
-> Subject: Re: [3/4] powerpc: support CPU hotplug for e500mc, e5500 and e6500
+> Am Donnerstag, den 12.02.2015, 14:01 +0800 schrieb Liu Ying:
+>> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+>> ---
+>> v8->v9:
+>>  * Rebase onto the imx-drm/next branch of Philipp Zabel's open git repository.
 >
-> On Thu, Mar 26, 2015 at 06:18:14PM +0800, chenhui zhao wrote:
-> > @@ -189,16 +193,14 @@ _GLOBAL(fsl_secondary_thread_init)
-> >       isync
-> >
-> >       /*
-> > -      * Fix PIR to match the linear numbering in the device tree.
-> > -      *
-> > -      * On e6500, the reset value of PIR uses the low three bits for
-> > -      * the thread within a core, and the upper bits for the core
-> > -      * number.  There are two threads per core, so shift everything
-> > -      * but the low bit right by two bits so that the cpu numbering is
-> > -      * continuous.
+> I can't test this myself for lack of hardware, but I see no further
+> issues with patches 09 - 13 except for the use of
+> imx_drm_encoder_get_mux_id. I'll either rebase my patches that remove it
+> or fix it up when applying.
 >
-> Why are you getting rid of this?  If it's to avoid doing it twice on the
-> same thread, in my work-in-progress kexec patches I instead check to see
-> whether BUCSR has already been set up -- if it has, I assume we've
-> already been here.
+> Thierry, may I take these patches through imx-drm, or would you rather I
+> waited for you to pick up the drm/dsi and drm/bridge patches?
+
+Gentle ping.  What's your opinion on the patches Philipp mentioned?
+
+Regards,
+Liu Ying
+
 >
-> [chenhui] I didn't delete the branch prediction related code.
-
-I didn't say you did.  I'm saying that you can check whether BUCSR has
-been set up, to determine whether PIR has already been adjusted, if your
-concern is avoiding running this twice on a thread between core resets.
-If that's not your concern, then please explain.
-
-[chenhui] If no need to change PIR in CPU hotplug, I will change the code as you mentioned.
-
-> > +             /*
-> > +              * If both threads are offline, reset core to start.
-> > +              * When core is up, Thread 0 always gets up first,
-> > +              * so bind the current logical cpu with Thread 0.
-> > +              */
+> regards
+> Philipp
 >
-> What if the core is not in a PM state that requires a reset?
-> Where does this reset occur?
->
-> [chenhui] Reset occurs in the function mpic_reset_core().
->
-> > +             if (hw_cpu != cpu_first_thread_sibling(hw_cpu)) {
-> > +                     int hw_cpu1, hw_cpu2;
-> > +
-> > +                     hw_cpu1 = get_hard_smp_processor_id(primary);
-> > +                     hw_cpu2 = get_hard_smp_processor_id(primary + 1);
-> > +                     set_hard_smp_processor_id(primary, hw_cpu2);
-> > +                     set_hard_smp_processor_id(primary + 1, hw_cpu1);
-> > +                     /* get new physical cpu id */
-> > +                     hw_cpu = get_hard_smp_processor_id(nr);
->
-> Why are you swapping the hard smp ids?
->
-> [chenhui] For example, Core1 has two threads, Thread0 and Thread1. In normal boot, Thread0 is CPU2, and Thread1 is CPU3.
-> But, if CPU2 and CPU3 are all off, user wants CPU3 up first. we need to call Thread0 as CPU3 and Thead1 as CPU2, considering
-> the limitation, after core is reset, only Thread0 is up, then Thread0 kicks up Thread1.
-
-There's no need for this.  I have booting from a thread1, and having it
-kick its thread0, working locally without messing with the hwid/cpu
-mapping.
-
-[chenhui] Great. If you have completed your patches, can we merge our code?
-
-> > @@ -252,11 +340,7 @@ static int smp_85xx_kick_cpu(int nr)
-> >               spin_table = phys_to_virt(*cpu_rel_addr);
-> >
-> >       local_irq_save(flags);
-> > -#ifdef CONFIG_PPC32
-> >  #ifdef CONFIG_HOTPLUG_CPU
-> > -     /* Corresponding to generic_set_cpu_dead() */
-> > -     generic_set_cpu_up(nr);
-> > -
->
-> Why did you move this?
->
-> [chenhui] It would be better to set this after CPU is really up.
-
-Please make it a separate patch with an explanation.
-
--Scott
-
-[chenhui] OK.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Best Regards,
+Liu Ying
