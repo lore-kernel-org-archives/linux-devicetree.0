@@ -1,110 +1,71 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v1 09/11] DT: Add documentation for exynos4-is 'flashes'
- property
-Date: Fri, 03 Apr 2015 12:53:16 +0200
-Message-ID: <551E711C.2080802@samsung.com>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-10-git-send-email-j.anaszewski@samsung.com>
- <20150325010641.GI18321@valkosipuli.retiisi.org.uk>
- <55127732.7020004@samsung.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv3] media: i2c/adp1653: devicetree support for adp1653
+Date: Fri, 3 Apr 2015 14:23:56 +0300
+Message-ID: <20150403112355.GJ20756@valkosipuli.retiisi.org.uk>
+References: <20150402143846.GA11687@amd>
+ <20150402161453.GH20756@valkosipuli.retiisi.org.uk>
+ <20150402203043.GB29963@amd>
+ <20150402234823.GI20756@valkosipuli.retiisi.org.uk>
+ <20150403082344.GA14721@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <55127732.7020004@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150403082344.GA14721@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Pavel,
 
-On 25/03/15 09:52, Jacek Anaszewski wrote:
-> On 03/25/2015 02:06 AM, Sakari Ailus wrote:
->> On Fri, Mar 20, 2015 at 04:03:29PM +0100, Jacek Anaszewski wrote:
->>> This patch adds a description of 'flashes' property
->>> to the samsung-fimc.txt.
->>>
->>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->>> ---
->>>   .../devicetree/bindings/media/samsung-fimc.txt     |    8 ++++++++
->>>   1 file changed, 8 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->>> index 922d6f8..cb0e263 100644
->>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
->>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->>> @@ -40,6 +40,13 @@ should be inactive. For the "active-a" state the camera port A must be activated
->>>   and the port B deactivated and for the state "active-b" it should be the other
->>>   way around.
->>>
->>> +Optional properties:
->>> +
->>> +- flashes - Array of phandles to the flash LEDs that can be controlled by the
->>> +	    sub-devices contained in this media device. Flash LED is
->>> +	    represented by a child node of a flash LED device
->>
->> This should be in
->> Documentation/devicetree/bindings/media/video-interfaces.txt.
->>
->> Should flash devices be associated with sensors somehow rather than ISPs?
->> That's how they commonly are arranged, however that doesn't limit placing
->> them in silly places.
->>
->> I'm not necessarily saying the flashes-property should be present in
->> sensor's DT nodes, but it'd be good to be able to make the association if
->> it's there.
-
-IMHO 'flashes' is a misleading name, these are simply high brightness LEDs
-which can work as camera flash or auxiliary light for camcording, in context of
-a camera device.
-
-The led DT nodes which the entries of above flashes property is pointing to
-have a text label, which presumably could be used to associate a LED device
-with an image sensor. That said, I think we should allow a property as above
-'flashes' be placed in aggregate camera node and also in sensor device node.
-I think it should be left to the bridge/ISP binding to choose one option or
-the other.
-
-For now I would propose to rename the "flashes" property to "samsung,leds" or
-"leds" and leave it in "camera" node.
-
-> I know of a SoC, which drives the flash from its on-chip ISP. The GPIO
-> connected to the flash controller's external strobe pin can be
-> configured so that the signal is routed to it from the ISP or from
-> CPU (for software strobe mode).
+On Fri, Apr 03, 2015 at 10:23:44AM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> I think that Sylwester could say more in this subject.
+> > Hi Pawel,
 > 
+> I'm still Pavel. v, not w.
+
+I know too many Pawels. Sorry about that. :-)
+
 > 
->>> +	    (see Documentation/devicetree/bindings/leds/common.txt).
->>> +
->>>   The 'camera' node must include at least one 'fimc' child node.
->>>
->>>
->>> @@ -166,6 +173,7 @@ Example:
->>>   		clock-output-names = "cam_a_clkout", "cam_b_clkout";
->>>   		pinctrl-names = "default";
->>>   		pinctrl-0 = <&cam_port_a_clk_active>;
->>> +		flashes = <&camera_flash>, <&system_torch>;
->>>   		status = "okay";
->>>   		#address-cells = <1>;
->>>   		#size-cells = <1>;
->>
->> There will be other kind of devices that have somewhat similar relationship.
->> They just haven't been defined yet. Lens controllers or EEPROM for instance.
->> The two are an integral part of a module, something which is not modelled in
->> DT in any way, but perhaps should be.
+> > > > Hi Pawel,
+> 
+> > > > A corresponding change to the N900 dts would be very nice.
+> > > 
+> > > Corresponding change to the dts will come in separate patch. Or do you
+> > > have n900 for testing?
+> > 
+> > Yes, it should be a separate patch, I agree.
+> > 
+> > I do have one but I can't say when I'd have time to test it. I'm fine with
+> > you having tested it though.
+> > 
+> > > > I think you're missing change to adp1653_i2c_driver.driver.of_match_table.
+> > > 
+> > > It actually worked for me, which means device tree somehow does it
+> > > magic.
+> > 
+> > By magic? :-) It probably just ends up comparing the device and the driver
+> > names. How about adding the of_match_table?
+> 
+> I guess it uses adp1653_id_table. I'd hade to add redundand
+> information, because if it would just mask the errors if the code
+> changed...
 
-Indeed, I'd say it belongs to a particular image sensor (camera module) binding
-to describe each its physical subdevices, i.e. if a pointer to lens or EEPROM
-is needed in the main module DT node.
+Indeed, that's true. This is comparing "adp1653" vs. comparing
+"adi,adp1653". I think I still prefer the latter since it's got also the
+vendor prefix included.
 
-> Do you suggest using more generic name than 'flashes'?
-
+Suppose we change this later and someone misspelled the vendor prefix ---
+their board would break.
 
 -- 
 Regards,
-Sylwester
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
