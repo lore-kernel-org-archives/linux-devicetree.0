@@ -1,60 +1,105 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v3 1/8] drm/exynos: add Exynos5433 decon driver
-Date: Fri, 03 Apr 2015 21:38:59 +0900
-Message-ID: <551E89E3.9090703@samsung.com>
-References: <1427368540-28010-1-git-send-email-human.hwang@samsung.com>
- <1427368540-28010-2-git-send-email-human.hwang@samsung.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 0/6] staging: board: armadillo800eva: Board staging for
+ sh_mobile_lcdc_fb
+Date: Fri,  3 Apr 2015 14:41:57 +0200
+Message-ID: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1427368540-28010-2-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hyungwon Hwang <human.hwang@samsung.com>
-Cc: devicetree@vger.kernel.org, sw0312.kim@samsung.com, dh09.lee@samsung.com, cw00.choi@samsung.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms+renesas@verge.net.au>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ckh5dW5nd29uLAoKQ2FuIHlvdSByZS1iYXNlIHlvdXIgcGF0Y2ggc2V0IG9uIHRvcCBvZiBleHlu
-b3MtZHJtLW5leHQtdG9kbz8KSSBtZXJnZWQgY2xlYW51cCBzZXJpZXNbMV0gYW5kIGF0b21pYyBm
-ZWF0dXJlIHN1cHBvcnRbMl0gdG8KZXh5bm9zLWRybS1uZXh0LXRvZG8gZm9yIHRoZSB0ZXN0IHNv
-IHlvdSBjYW4gcmUtYmFzZSB5b3VyIHBhdGNoIHNldCBvbgp0b3Agb2YgZXh5bm9zLWRybS1uZXh0
-LXRvZG8uIFlvdSB3b3VsZCBuZWVkIHRvIG1vZGlmeQpleHlub3M1NDMzX2RybV9kZWNvbi5jIG1v
-ZHVsZS4KClBsZWFzZSBkbyBpdCBBU0FQLgoKVGhhbmtzLApJbmtpIERhZQoKWzFdIFtQQVRDSCAt
-djQgMC84XSBkcm0vZXh5bm9zOiBjbGVhbiB1cCBwYXRjaGVzIChwcmVwYXJpbmcgZm9yIGF0b21p
-YykKWzJdIFtQQVRDSCAtdjIgMDAvMTBdIGRybS9leHlub3M6IEFkZCBhdG9taWMgbW9kZXNldHRp
-bmcgc3VwcG9ydAoKT24gMjAxNeuFhCAwM+yblCAyNuydvCAyMDoxNSwgSHl1bmd3b24gSHdhbmcg
-d3JvdGU6Cj4gRnJvbTogSm9vbnlvdW5nIFNoaW0gPGp5MDkyMi5zaGltQHNhbXN1bmcuY29tPgo+
-IAo+IERFQ09OKERpc3BsYXkgYW5kIEVuaGFuY2VtZW50IENvbnRyb2xsZXIpIGlzIG5ldyBJUCBy
-ZXBsYWNpbmcgRklNRCBpbgo+IEV4eW5vczU0MzMuIFRoaXMgcGF0Y2ggYWRkcyBFeHlub3M1NDMz
-IGRlY29uIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb29ueW91bmcgU2hpbSA8ankwOTIy
-LnNoaW1Ac2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogSHl1bmd3b24gSHdhbmcgPGh1bWFu
-Lmh3YW5nQHNhbXN1bmcuY29tPgo+IC0tLQo+IENoYW5nZXMgZm9yIHYyOgo+ICAtIGNoYW5nZSBm
-aWxlIG5hbWVzIGFuZCB2YXJpYWJsZSBuYW1lcyBvZiBkZWNvbiB0byByZXByZXNudCBleHlub3M1
-NDMzIGluc3RlYWQKPiAgb2YgZXh5bm9zIHRvIGRpc3Rpbmd1aXNoIHRoZW0gZnJvbSBleHlub3M3
-IGRlY29uCj4gCj4gQ2hhbmdlcyBmb3IgdjM6Cj4gIC0gZmFpbCBmYXN0IHdoZW4gdGhlIHByb3Bl
-ciBpbWFnZSBmb3JtYXQgaXMgbm90IHNldAo+ICAtIHJlbW92ZSB1bm5lY2Vzc2FyeSBjaGVja2lu
-ZyBjb2RlCj4gIC0gYWRkIGFuZCBtb2RpZnkgdGhlIGZ1bmN0aW9uIHRvIG1ha2UgRFBNUyB3b3Jr
-IHdlbGwKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zNTQzMy1kZWNvbi50
-eHQgfCAgNjUgKysKPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDYgKwo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL01ha2VmaWxlICAgICAg
-ICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zNTQz
-M19kcm1fZGVjb24uYyAgICAgIHwgNjY1ICsrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
-L2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHJ2LmMgICAgICAgICAgICB8ICAgMyArCj4gIGRy
-aXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuaCAgICAgICAgICAgIHwgICAxICsK
-PiAgaW5jbHVkZS92aWRlby9leHlub3M1NDMzX2RlY29uLmggICAgICAgICAgICAgICAgICAgfCAx
-NjMgKysrKysKPiAgNyBmaWxlcyBjaGFuZ2VkLCA5MDQgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5v
-czU0MzMtZGVjb24udHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUv
-dmlkZW8vZXh5bm9zNTQzM19kZWNvbi5oCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+	Hi all,
+
+This RFC patch series adds board staging support for r8a7740/armadillo.
+For now this supports only the frame buffer device for the on-board LCD.
+The goal is to complete the move to ARM multiplatform kernels for all
+shmobile platforms, and drop the existing board files
+(arch/arm/mach-shmobile/board-*).
+
+The board staging area was introduced last year to allow continuous
+upstream in-tree development and integration of platform devices. It
+helps developers integrate devices as platform devices for device
+drivers that only provide platform device bindings.  This in turn allows
+for incremental development of both hardware feature support and DT
+binding work in parallel.
+
+This series consists of 4 parts:
+  - Patch 1 re-enables compilation of the board staging area, which was
+    disabled after a compile breakage, but has been fixed in the mean
+    time,
+  - Path 2 moves initialization of staging board code to an earlier
+    moment, as currently it happens after unused PM domains are powered
+    down,
+  - Patches 3 and 4 (hopefully) fix the existing kzm9d board staging
+    code, which was presumably broken by commit 9a1091ef0017c40a
+    ("irqchip: gic: Support hierarchy irq domain."),
+  - Patches 5 and 6 add support for registering platform devices with
+    complex dependencies (clocks, pinctrl, gpios, PM domains), and add
+    armadillo board staging code for enabling a frame buffer on the
+    on-board LCD.
+
+Questions:
+  - Are there other devices from board-armadillo.c that work fine in
+    armadillo-legacy, and that we want to add?
+    I think this is the list of devices lacking DT support and/or
+    missing in DTS:
+      - renesas_usbhs (does this work? the platform device is
+	instantiated conditionally, but the condition (gpio state) is
+	never true?)
+      - sh-mobile-hdmi/sh_mobile_lcdc_fb.1 (this seems to be broken in
+	-legacy?)
+      - sdhi1 (we do have sdhi0)
+      - mmcif
+      - soc-camera-pdrv/sh_mobile_ceu
+      - ipmmu
+      - sh-dma-engine (this will probably never get DT support)
+
+  - What about support for other boards (kzm9g, bockw, marzen)?
+
+This was tested on r8a7740/armadillo.
+This was not tested on emev2/kzm9d, due to lack of hardware.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (6):
+  Revert "staging: board: disable as it breaks the build"
+  [RFC] staging: board: Initialize staging board code earlier
+  [RFC] staging: board: Add support for translating hwirq to virq numbers
+  [RFC] staging: board: kzm9d: Translate hwirq numbers to virq numbers
+  [RFC] staging: board: Add support for devices with complex dependencies
+  [RFC] staging: board: armadillo800eva: Board staging for sh_mobile_lcdc_fb
+
+ drivers/staging/board/Kconfig           |   1 -
+ drivers/staging/board/Makefile          |   3 +-
+ drivers/staging/board/armadillo800eva.c | 124 ++++++++++++++++++++++++++++
+ drivers/staging/board/board.c           | 142 ++++++++++++++++++++++++++++++++
+ drivers/staging/board/board.h           |  38 ++++++++-
+ drivers/staging/board/kzm9d.c           |  10 ++-
+ 6 files changed, 313 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/staging/board/armadillo800eva.c
+
+-- 
+1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
