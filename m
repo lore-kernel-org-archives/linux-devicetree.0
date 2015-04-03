@@ -1,47 +1,87 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] spi: bcm-mspi: Make BCMA optional to support non-BCMA chips
-Date: Fri, 3 Apr 2015 16:38:09 +0300
-Message-ID: <CAHp75VcMg-8X8DtHbQrmugzWG5VzzHXcpWNiyrTT=qmuCvA95w@mail.gmail.com>
-References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
-	<1428002603-21892-4-git-send-email-jonathar@broadcom.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/3] phy: phy-core: allow specifying supply at port
+ level
+Date: Fri, 3 Apr 2015 19:11:52 +0530
+Message-ID: <551E98A0.4000106@ti.com>
+References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com> <1427921457-18235-2-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428002603-21892-4-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1427921457-18235-2-git-send-email-arun.ramamurthy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Dmitry Torokhov <dtor@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
-<jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> The Broadcom MSPI controller is used on various chips. The driver only
-> supported BCM53xx chips with BCMA (an AMBA bus variant). The driver is
-> refactored to make BCMA optional and provides a new config for non BCMA
-> systems.
 
->  struct bcm_mspi {
-> +       #ifdef CONFIG_SPI_BCMA_MSPI
->         struct bcma_device *core;
-> -       struct spi_master *master;
-> +       #endif
+
+On Thursday 02 April 2015 02:20 AM, Arun Ramamurthy wrote:
+> From: Dmitry Torokhov <dtor@chromium.org>
 >
-> +       void __iomem *base;
-> +       struct spi_master *master;
->         size_t read_offset;
+> Multi-port phy's may have per-port power supplies. Let's change phy core
+> to first attempt to look up the supply at the port level, and then, if
+> not found, check parent device.
 
-> +       void (*mspi_write)(struct bcm_mspi *mspi, u16 offset, u32 value);
-> +       u32 (*mspi_read)(struct bcm_mspi *mspi, u16 offset);
-> +};
+This commit log is no longer valid.
 
-To avoid ugly ifdefs I think better to split driver to core part and
-the actual driver part, at the end you will have something like
-mspi-core.c mspi-53xx.c mspi-whatever.c. Check for example spi-dw*.c
+-Kishon
 
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>   drivers/phy/phy-core.c | 23 ++++++++++-------------
+>   1 file changed, 10 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index 3791838..c7aa297 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -651,16 +651,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
+>   		goto free_phy;
+>   	}
+>
+> -	/* phy-supply */
+> -	phy->pwr = regulator_get_optional(dev, "phy");
+> -	if (IS_ERR(phy->pwr)) {
+> -		if (PTR_ERR(phy->pwr) == -EPROBE_DEFER) {
+> -			ret = -EPROBE_DEFER;
+> -			goto free_ida;
+> -		}
+> -		phy->pwr = NULL;
+> -	}
+> -
+>   	device_initialize(&phy->dev);
+>   	mutex_init(&phy->mutex);
+>
+> @@ -674,6 +664,16 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
+>   	if (ret)
+>   		goto put_dev;
+>
+> +	/* phy-supply */
+> +	phy->pwr = regulator_get_optional(&phy->dev, "phy");
+> +	if (IS_ERR(phy->pwr)) {
+> +		ret = PTR_ERR(phy->pwr);
+> +		if (ret == -EPROBE_DEFER)
+> +			goto put_dev;
+> +
+> +		phy->pwr = NULL;
+> +	}
+> +
+>   	ret = device_add(&phy->dev);
+>   	if (ret)
+>   		goto put_dev;
+> @@ -689,9 +689,6 @@ put_dev:
+>   	put_device(&phy->dev);  /* calls phy_release() which frees resources */
+>   	return ERR_PTR(ret);
+>
+> -free_ida:
+> -	ida_simple_remove(&phy_ida, phy->id);
+> -
+>   free_phy:
+>   	kfree(phy);
+>   	return ERR_PTR(ret);
+>
