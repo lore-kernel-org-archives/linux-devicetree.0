@@ -1,257 +1,57 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH 3/6] gpio: add lpc18xx gpio driver
-Date: Fri,  3 Apr 2015 23:16:04 +0200
-Message-ID: <1428095767-6286-4-git-send-email-manabian@gmail.com>
-References: <1428095767-6286-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1428095767-6286-1-git-send-email-manabian@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: arnd@arndb.de, devicetree@vger.kernel.org, ariel.dalessandro@gmail.com, ezequiel@vanguardiasur.com.ar, Joachim Eastwood <manabian@gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCHv3] media: i2c/adp1653: devicetree support for adp1653
+Date: Sat, 4 Apr 2015 00:35:19 +0300
+Message-ID: <20150403213519.GN20756@valkosipuli.retiisi.org.uk>
+References: <20150402143846.GA11687@amd>
+ <20150402161453.GH20756@valkosipuli.retiisi.org.uk>
+ <20150402203043.GB29963@amd>
+ <20150402234823.GI20756@valkosipuli.retiisi.org.uk>
+ <20150403082344.GA14721@amd>
+ <20150403112355.GJ20756@valkosipuli.retiisi.org.uk>
+ <20150403202953.GA5116@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150403202953.GA5116@amd>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Andrew Morton <akpm@osdl.org>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, galak@codeaurora.org, bcousson@baylibre.com, m.chehab@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Driver for the GPIO block found on NXP LPC18xx/43xx devices.
+On Fri, Apr 03, 2015 at 10:29:53PM +0200, Pavel Machek wrote:
+> On Fri 2015-04-03 14:23:56, Sakari Ailus wrote:
+> > Hi Pavel,
+> > 
+> > On Fri, Apr 03, 2015 at 10:23:44AM +0200, Pavel Machek wrote:
+> > > Hi!
+> > > 
+> > > > Hi Pawel,
+> > > 
+> > > I'm still Pavel. v, not w.
+> > 
+> > I know too many Pawels. Sorry about that. :-)
+> > 
+> 
+> > > I guess it uses adp1653_id_table. I'd hade to add redundand
+> > > information, because if it would just mask the errors if the code
+> > > changed...
+> > 
+> > Indeed, that's true. This is comparing "adp1653" vs. comparing
+> > "adi,adp1653". I think I still prefer the latter since it's got also the
+> > vendor prefix included.
+> > 
+> > Suppose we change this later and someone misspelled the vendor prefix ---
+> > their board would break.
+> 
+> Suppose we do what you suggest. That does not fix the problem, since
+> code will still match the "adp1653" in case someone misspells it.
+> 
+> If you want to change how i2c device matching works, well, you can do
+> it, but my patch is not right place to do that.
 
-The GPIO block is divided into 8 ports which each support up
-to 32 gpios. The which gpios that are available depends on the
-specific device and it's package.
+Good point. Let's leave it as-is.
 
-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
----
- drivers/gpio/Kconfig        |   8 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-lpc18xx.c | 191 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 drivers/gpio/gpio-lpc18xx.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c1e2ca3d9a51..94f5c6ba1681 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -211,6 +211,14 @@ config GPIO_MOXART
- 	  Select this option to enable GPIO driver for
- 	  MOXA ART SoC devices.
- 
-+config GPIO_LPC18XX
-+	bool "NXP LPC18XX/43XX GPIO support"
-+	default y if ARCH_LPC18XX
-+	depends on OF_GPIO && (ARCH_LPC18XX || COMPILE_TEST)
-+	help
-+	  Select this option to enable GPIO driver for
-+	  NXP LPC18XX/43XX devices.
-+
- config GPIO_MPC5200
- 	def_bool y
- 	depends on PPC_MPC52xx
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index bdda6a94d2cd..a520ff7e28de 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_GPIO_KEMPLD)	+= gpio-kempld.o
- obj-$(CONFIG_ARCH_KS8695)	+= gpio-ks8695.o
- obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
- obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
-+obj-$(CONFIG_GPIO_LPC18XX)	+= gpio-lpc18xx.o
- obj-$(CONFIG_ARCH_LPC32XX)	+= gpio-lpc32xx.o
- obj-$(CONFIG_GPIO_LYNXPOINT)	+= gpio-lynxpoint.o
- obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
-diff --git a/drivers/gpio/gpio-lpc18xx.c b/drivers/gpio/gpio-lpc18xx.c
-new file mode 100644
-index 000000000000..3a8f93dbf1ed
---- /dev/null
-+++ b/drivers/gpio/gpio-lpc18xx.c
-@@ -0,0 +1,191 @@
-+/*
-+ * GPIO driver for NXP LPC18xx/43xx.
-+ *
-+ * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
-+
-+/* LPC18xx GPIO register offsets */
-+#define LPC18XX_REG_PWORD(n)	(0x1000 + n * sizeof(u32))
-+#define LPC18XX_REG_DIR(n)	(0x2000 + n * sizeof(u32))
-+#define LPC18XX_REG_SET(n)	(0x2200 + n * sizeof(u32))
-+#define LPC18XX_REG_CLR(n)	(0x2280 + n * sizeof(u32))
-+
-+#define LPC18XX_MAX_PORTS	8
-+#define LPC18XX_PINS_PER_PORT	32
-+
-+struct lpc18xx_gpio_chip {
-+	struct gpio_chip gpio;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+static inline struct lpc18xx_gpio_chip *to_lpc18xx_gpio(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct lpc18xx_gpio_chip, gpio);
-+}
-+
-+static int lpc18xx_gpio_request(struct gpio_chip *chip, unsigned offset)
-+{
-+	return pinctrl_request_gpio(offset);
-+}
-+
-+static void lpc18xx_gpio_free(struct gpio_chip *chip, unsigned offset)
-+{
-+	pinctrl_free_gpio(offset);
-+}
-+
-+static void lpc18xx_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	struct lpc18xx_gpio_chip *gc = to_lpc18xx_gpio(chip);
-+	u32 port, pin, reg_offset;
-+
-+	port = offset / LPC18XX_PINS_PER_PORT;
-+	pin = offset % LPC18XX_PINS_PER_PORT;
-+
-+	if (value)
-+		reg_offset = LPC18XX_REG_SET(port);
-+	else
-+		reg_offset = LPC18XX_REG_CLR(port);
-+
-+	writel(1 << pin, gc->base + reg_offset);
-+}
-+
-+static int lpc18xx_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct lpc18xx_gpio_chip *gc = to_lpc18xx_gpio(chip);
-+	u32 reg_offset = LPC18XX_REG_PWORD(offset);
-+
-+	return !!readl(gc->base + reg_offset);
-+}
-+
-+static int lpc18xx_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct lpc18xx_gpio_chip *gc = to_lpc18xx_gpio(chip);
-+	u32 port, pin, dir, reg_offset;
-+
-+	port = offset / LPC18XX_PINS_PER_PORT;
-+	pin = offset % LPC18XX_PINS_PER_PORT;
-+	reg_offset = LPC18XX_REG_DIR(port);
-+
-+	dir = readl(gc->base + reg_offset) & ~BIT(pin);
-+	writel(dir, gc->base + reg_offset);
-+
-+	return 0;
-+}
-+
-+static int lpc18xx_gpio_direction_output(struct gpio_chip *chip,
-+					unsigned offset, int value)
-+{
-+	struct lpc18xx_gpio_chip *gc = to_lpc18xx_gpio(chip);
-+	u32 port, pin, dir, reg_offset;
-+
-+	lpc18xx_gpio_set(chip, offset, value);
-+
-+	port = offset / LPC18XX_PINS_PER_PORT;
-+	pin = offset % LPC18XX_PINS_PER_PORT;
-+	reg_offset = LPC18XX_REG_DIR(port);
-+
-+	dir = readl(gc->base + reg_offset) | BIT(pin);
-+	writel(dir, gc->base + reg_offset);
-+
-+	return 0;
-+}
-+
-+static struct gpio_chip lpc18xx_chip = {
-+	.label			= "lpc18xx/43xx-gpio",
-+	.request		= lpc18xx_gpio_request,
-+	.free			= lpc18xx_gpio_free,
-+	.direction_input	= lpc18xx_gpio_direction_input,
-+	.direction_output	= lpc18xx_gpio_direction_output,
-+	.set			= lpc18xx_gpio_set,
-+	.get			= lpc18xx_gpio_get,
-+	.ngpio			= LPC18XX_MAX_PORTS * LPC18XX_PINS_PER_PORT,
-+	.owner			= THIS_MODULE,
-+};
-+
-+static int lpc18xx_gpio_probe(struct platform_device *pdev)
-+{
-+	struct lpc18xx_gpio_chip *gc;
-+	struct resource *res;
-+	int ret;
-+
-+	gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
-+	if (!gc)
-+		return -ENOMEM;
-+
-+	gc->gpio = lpc18xx_chip;
-+	platform_set_drvdata(pdev, gc);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	gc->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(gc->base))
-+		return PTR_ERR(gc->base);
-+
-+	gc->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(gc->clk)) {
-+		dev_err(&pdev->dev, "Input clock not found.\n");
-+		return PTR_ERR(gc->clk);
-+	}
-+
-+	ret = clk_prepare_enable(gc->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable clock.\n");
-+		return ret;
-+	}
-+
-+	gc->gpio.dev = &pdev->dev;
-+	gc->gpio.of_node = pdev->dev.of_node;
-+
-+	ret = gpiochip_add(&gc->gpio);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to add gpio chip\n");
-+		clk_disable_unprepare(gc->clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lpc18xx_gpio_remove(struct platform_device *pdev)
-+{
-+	struct lpc18xx_gpio_chip *gc = platform_get_drvdata(pdev);
-+
-+	gpiochip_remove(&gc->gpio);
-+	clk_disable_unprepare(gc->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lpc18xx_gpio_match[] = {
-+	{ .compatible = "nxp,lpc1850-gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpc18xx_gpio_match);
-+
-+static struct platform_driver lpc18xx_gpio_driver = {
-+	.probe	= lpc18xx_gpio_probe,
-+	.remove	= lpc18xx_gpio_remove,
-+	.driver	= {
-+		.name		= "lpc18xx-gpio",
-+		.of_match_table	= lpc18xx_gpio_match,
-+	},
-+};
-+module_platform_driver(lpc18xx_gpio_driver);
-+
-+MODULE_AUTHOR("Joachim Eastwood <manabian@gmail.com>");
-+MODULE_DESCRIPTION("GPIO driver for LPC18xx/43xx");
-+MODULE_LICENSE("GPL v2");
 -- 
-1.8.0
-
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
