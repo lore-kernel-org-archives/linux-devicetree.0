@@ -1,78 +1,42 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/4] extcon: usb-gpio: register extcon device before IRQ
- registration
-Date: Fri, 03 Apr 2015 09:09:51 +0900
-Message-ID: <551DDA4F.1030705@samsung.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
- <1427980385-21285-2-git-send-email-r.baldyga@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1427980385-21285-2-git-send-email-r.baldyga@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Baldyga <r.baldyga@samsung.com>
-Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Subject: [PATCH v2 0/6] clk: samsung: Fix bug of Exynos5433 clocks
+Date: Fri, 03 Apr 2015 09:29:05 +0900
+Message-ID: <1428020951-30428-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org
+Cc: kgene@kernel.org, inki.dae@samsung.com, chanho61.park@samsung.com, cw00.choi@samsung.com, jonghwa3.lee@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+This patchset remove the CONFIG_ARCH_EXYNOS5433 insteadf use the CONFIG_ARCH_EXYNOS
+because Arnd Bergmann gave me a comment[1] that don't add specific CONFIG_ARCH_EXYNOS5433
+for ARM-64bit SoC. And this patchset fix following bugs:
+- Fix wrong offset of PCLK_MSCL_SECURE_SMMU_JPEG in CMU_MSCL.
+- Fix wrong PMS value for 700MHz.
+- Fix wrong parent clock of 'sclk_apollo' clock.
+- Fix wrong register for ENABLE_PCLK_MIF_SECURE_MONOTONIC_CNT
+- Add CLK_SET_RATE_PARENT flags to propagate parent clock
+  when changing the clock for DVFS feature.
+[1] https://lkml.org/lkml/2015/2/26/102
 
-On 04/02/2015 10:13 PM, Robert Baldyga wrote:
-> IRQ handler touches info->edev, so if interrupt occurs before extcon
-> device initialization it can cause NULL pointer dereference. Doing extcon
-> initialization before IRQ handler registration fixes this problem.
-> 
-> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
-> Acked-by: Roger Quadros <rogerq@ti.com>
-> ---
->  drivers/extcon/extcon-usb-gpio.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-> index 3f0bad3..f6aa99d 100644
-> --- a/drivers/extcon/extcon-usb-gpio.c
-> +++ b/drivers/extcon/extcon-usb-gpio.c
-> @@ -119,6 +119,18 @@ static int usb_extcon_probe(struct platform_device *pdev)
->  		return PTR_ERR(info->id_gpiod);
->  	}
->  
-> +	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
-> +	if (IS_ERR(info->edev)) {
-> +		dev_err(dev, "failed to allocate extcon device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = devm_extcon_dev_register(dev, info->edev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register extcon device\n");
-> +		return ret;
-> +	}
-> +
->  	ret = gpiod_set_debounce(info->id_gpiod,
->  				 USB_GPIO_DEBOUNCE_MS * 1000);
->  	if (ret < 0)
-> @@ -142,18 +154,6 @@ static int usb_extcon_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
-> -	if (IS_ERR(info->edev)) {
-> -		dev_err(dev, "failed to allocate extcon device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	ret = devm_extcon_dev_register(dev, info->edev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "failed to register extcon device\n");
-> -		return ret;
-> -	}
-> -
->  	platform_set_drvdata(pdev, info);
->  	device_init_wakeup(dev, 1);
->  
-> 
+Changelog:
+Change from v1:
+(https://lkml.org/lkml/2015/3/17/855)
+- Add new patches (patch3 ~ patch6)
 
-Applied this patch for v4.1-rc.
+Chanwoo Choi (4):
+  clk: samsung: Use CONFIG_ARCH_EXYNOS instead of CONFIG_ARCH_EXYNOS5433
+  clk: samsung: exynos5433: Fix wrong parent clock of sclk_apollo clock
+  clk: samsung: exynos5433: Fix wrong PMS value of exynos5433_pll_rates
+  clk: samsung: exynos5433: Add CLK_SET_RATE_PARENT to support DVFS for big.LITTLE core
 
-Thanks,
-Chanwoo Choi
+Jonghwa Lee (2):
+  clk: samsung: exynos5433: Fix wrong offset of PCLK_MSCL_SECURE_SMMU_JPEG
+  clk: samsung: exynos5433: Fix CLK_PCLK_MONOTONIC_CNT's register correctly
+
+ drivers/clk/samsung/Makefile         |  2 +-
+ drivers/clk/samsung/clk-exynos5433.c | 34 ++++++++++++++++------------------
+ 2 files changed, 17 insertions(+), 19 deletions(-)
+
+-- 
+1.8.5.5
