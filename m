@@ -1,38 +1,171 @@
-From: <masaru.nagai.vx@renesas.com>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Fri, 3 Apr 2015 15:27:46 +0900
-Message-ID: <551E32E2.3020102@renesas.com>
-References: <20150331064349.GB4605@localhost.localdomain>	<20150331.113832.2042398685489897677.davem@davemloft.net>	<551ADC12.5050603@cogentembedded.com> <20150331.134842.499356389024178984.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150331.134842.499356389024178984.davem@davemloft.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: davem@davemloft.net, sergei.shtylyov@cogentembedded.com
-Cc: richardcochran@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v3] ARM: tegra: Correct which USB controller has the UTMI pad registers
+Date: Fri,  3 Apr 2015 09:21:11 +0200
+Message-ID: <1428045671-2333-1-git-send-email-tomeu.vizoso@collabora.com>
+References: <551D61A5.2010102@kapsi.fi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <551D61A5.2010102-/1wQRMveznE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Richard, David, Sergei
+It should be the first controller, not the second. The indexes of the
+usb resets were also wrong and have been fixed.
 
-On 2015=E5=B9=B404=E6=9C=8801=E6=97=A5 02:48, David Miller wrote:
-> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Date: Tue, 31 Mar 2015 20:40:34 +0300
-=2E..
-> Is there a serious problem getting the original authors to signoff on
-> this driver submission?  If so, why?  This should be very
-> straightforward, and if for some reason these authors are unwilling t=
-o
-> then I have every reason to be concerned about this.
+The issue was caused by the changes in 308efde ("ARM: tegra: Add resets
+& has-utmi-pad-registers flag to all USB PHYs") being misapplied by git
+due to the patch context being insufficient.
 
-We are already agree on the work by sergei.
-So, this patch does not have problem.
+This broke USB after 6261b06 ("regulator: Defer lookup of supply to
+regulator_get"), because it changed the order in which the controllers
+were probed.
 
-Sergei, please append SOB of us to this patch.
+The fix for this issue was suggested by Mikko Perttunen and Tuomas
+Tynkkynen.
 
-Signed-off-by: Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>
-Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Cc: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Hi,
 
-Best Regards,
-Masaru Nagai
+hope I have gotten it right this time, but please do check :)
+
+Thanks,
+
+Tomeu
+---
+ arch/arm/boot/dts/tegra124.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index cf01c81..13cc7ca 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -809,114 +809,114 @@
+ 		compatible = "nvidia,tegra124-ehci", "nvidia,tegra30-ehci", "usb-ehci";
+ 		reg = <0x0 0x7d000000 0x0 0x4000>;
+ 		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+ 		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA124_CLK_USBD>;
+ 		resets = <&tegra_car 22>;
+ 		reset-names = "usb";
+ 		nvidia,phy = <&phy1>;
+ 		status = "disabled";
+ 	};
+ 
+ 	phy1: usb-phy@0,7d000000 {
+ 		compatible = "nvidia,tegra124-usb-phy", "nvidia,tegra30-usb-phy";
+ 		reg = <0x0 0x7d000000 0x0 0x4000>,
+ 		      <0x0 0x7d000000 0x0 0x4000>;
+ 		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA124_CLK_USBD>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_U>,
+ 			 <&tegra_car TEGRA124_CLK_USBD>;
+ 		clock-names = "reg", "pll_u", "utmi-pads";
+-		resets = <&tegra_car 59>, <&tegra_car 22>;
++		resets = <&tegra_car 22>, <&tegra_car 22>;
+ 		reset-names = "usb", "utmi-pads";
+ 		nvidia,hssync-start-delay = <0>;
+ 		nvidia,idle-wait-delay = <17>;
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <9>;
+ 		nvidia,xcvr-lsfslew = <0>;
+ 		nvidia,xcvr-lsrslew = <3>;
+ 		nvidia,hssquelch-level = <2>;
+ 		nvidia,hsdiscon-level = <5>;
+ 		nvidia,xcvr-hsslew = <12>;
++		nvidia,has-utmi-pad-registers;
+ 		status = "disabled";
+ 	};
+ 
+ 	usb@0,7d004000 {
+ 		compatible = "nvidia,tegra124-ehci", "nvidia,tegra30-ehci", "usb-ehci";
+ 		reg = <0x0 0x7d004000 0x0 0x4000>;
+ 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+ 		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA124_CLK_USB2>;
+ 		resets = <&tegra_car 58>;
+ 		reset-names = "usb";
+ 		nvidia,phy = <&phy2>;
+ 		status = "disabled";
+ 	};
+ 
+ 	phy2: usb-phy@0,7d004000 {
+ 		compatible = "nvidia,tegra124-usb-phy", "nvidia,tegra30-usb-phy";
+ 		reg = <0x0 0x7d004000 0x0 0x4000>,
+ 		      <0x0 0x7d000000 0x0 0x4000>;
+ 		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA124_CLK_USB2>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_U>,
+ 			 <&tegra_car TEGRA124_CLK_USBD>;
+ 		clock-names = "reg", "pll_u", "utmi-pads";
+-		resets = <&tegra_car 22>, <&tegra_car 22>;
++		resets = <&tegra_car 58>, <&tegra_car 22>;
+ 		reset-names = "usb", "utmi-pads";
+ 		nvidia,hssync-start-delay = <0>;
+ 		nvidia,idle-wait-delay = <17>;
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <9>;
+ 		nvidia,xcvr-lsfslew = <0>;
+ 		nvidia,xcvr-lsrslew = <3>;
+ 		nvidia,hssquelch-level = <2>;
+ 		nvidia,hsdiscon-level = <5>;
+ 		nvidia,xcvr-hsslew = <12>;
+-		nvidia,has-utmi-pad-registers;
+ 		status = "disabled";
+ 	};
+ 
+ 	usb@0,7d008000 {
+ 		compatible = "nvidia,tegra124-ehci", "nvidia,tegra30-ehci", "usb-ehci";
+ 		reg = <0x0 0x7d008000 0x0 0x4000>;
+ 		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA124_CLK_USB3>;
+ 		resets = <&tegra_car 59>;
+ 		reset-names = "usb";
+ 		nvidia,phy = <&phy3>;
+ 		status = "disabled";
+ 	};
+ 
+ 	phy3: usb-phy@0,7d008000 {
+ 		compatible = "nvidia,tegra124-usb-phy", "nvidia,tegra30-usb-phy";
+ 		reg = <0x0 0x7d008000 0x0 0x4000>,
+ 		      <0x0 0x7d000000 0x0 0x4000>;
+ 		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA124_CLK_USB3>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_U>,
+ 			 <&tegra_car TEGRA124_CLK_USBD>;
+ 		clock-names = "reg", "pll_u", "utmi-pads";
+-		resets = <&tegra_car 58>, <&tegra_car 22>;
++		resets = <&tegra_car 59>, <&tegra_car 22>;
+ 		reset-names = "usb", "utmi-pads";
+ 		nvidia,hssync-start-delay = <0>;
+ 		nvidia,idle-wait-delay = <17>;
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <9>;
+ 		nvidia,xcvr-lsfslew = <0>;
+ 		nvidia,xcvr-lsrslew = <3>;
+ 		nvidia,hssquelch-level = <2>;
+ 		nvidia,hsdiscon-level = <5>;
+ 		nvidia,xcvr-hsslew = <12>;
+ 		status = "disabled";
+ 	};
+ 
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+-- 
+2.3.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
