@@ -1,47 +1,28 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with
- complex dependencies
-Date: Fri, 3 Apr 2015 15:27:40 +0200
-Message-ID: <CAMuHMdVhX-MrFxeW5j98NLaQQtJ+DToxkz2Z1+SRSs7YF27RDw@mail.gmail.com>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
-	<1428064923-24950-6-git-send-email-geert+renesas@glider.be>
-	<20150403125727.GT10964@mwanda>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/4] spi: bcm53xx: Refactor to make driver nonspecific to
+ 53xx SoCs
+Date: Fri, 3 Apr 2015 16:35:10 +0300
+Message-ID: <CAHp75Vf0JrB5pqNEouLzyOf5mmi05Ut_cybd37suTrLbJOFHKA@mail.gmail.com>
+References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
+	<1428002603-21892-3-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150403125727.GT10964@mwanda>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms+renesas@verge.net.au>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428002603-21892-3-git-send-email-jonathar@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Richardson <jonathar@broadcom.com>
+Cc: Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree <devicetree@vger.kernel.org>, Rafal Milecki <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 3, 2015 at 2:57 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
->> +     error = clk_register_clkdev(clk, bsc->con_id, bsc->dev_id);
->> +     if (error)
->> +             pr_err("Failed to register clock %s (%d)\n", bsc->clk, error);
->> +             return error;
+On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
+<jonathar@broadcom.com> wrote:
+> The Broadcom MSPI controller is used on various SoCs. It is being
+> renamed so that it can be extended and reused on other chips. It is
+> renamed to bcm-mspi.
 >
-> Missing curly braces.  Also it's weird that don't we need a clk_put()
-> on the error patch as well as the success path?
+What if you resend this one with -M -C applied?
 
-Thanks!
 
-So it worked only by accident: with the new per-user struct clk instances
-clk_put() must not be called if clk_register_clkdev() succeeded.
-
-Will call clk_put() only if it failed.
-
->> +
->> +     clk_put(clk);
->> +     return 0;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+With Best Regards,
+Andy Shevchenko
