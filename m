@@ -1,50 +1,54 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH 4/6] doc: dt: add documentation for lpc1850-gpio driver
-Date: Fri,  3 Apr 2015 23:16:05 +0200
-Message-ID: <1428095767-6286-5-git-send-email-manabian@gmail.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 6/6] ARM: dts: lpc4357-ea4357: add pinctrl and uart0 muxing
+Date: Fri,  3 Apr 2015 23:16:07 +0200
+Message-ID: <1428095767-6286-7-git-send-email-manabian@gmail.com>
 References: <1428095767-6286-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1428095767-6286-1-git-send-email-manabian@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: arnd@arndb.de, devicetree@vger.kernel.org, ariel.dalessandro@gmail.com, ezequiel@vanguardiasur.com.ar, Joachim Eastwood <manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428095767-6286-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel.dalessandro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/gpio/nxp,lpc1850-gpio.txt  | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
+ arch/arm/boot/dts/lpc4357-ea4357.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
-new file mode 100644
-index 000000000000..9326873c887f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
-@@ -0,0 +1,23 @@
-+NXP LPC18xx/43xx GPIO controller Device Tree Bindings
-+-----------------------------------------------------
+diff --git a/arch/arm/boot/dts/lpc4357-ea4357.dts b/arch/arm/boot/dts/lpc4357-ea4357.dts
+index 39340e355b0a..c2b85f8e6e31 100644
+--- a/arch/arm/boot/dts/lpc4357-ea4357.dts
++++ b/arch/arm/boot/dts/lpc4357-ea4357.dts
+@@ -29,6 +29,25 @@
+ 	};
+ };
+ 
++&pinctrl {
++	uart0_pins: uart0-pins {
++		uart0_rx_cfg {
++			pins = "pf_11";
++			function = "uart0";
++			bias-disable;
++			input-enable;
++		};
 +
-+Required properties:
-+- compatible		: Should be "nxp,lpc1850-gpio"
-+- reg			: Address and length of the register set for the device
-+- clocks		: Clock specifier (see clock bindings for details)
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify polarity
++		uart0_tx_cfg {
++			pins = "pf_10";
++			function = "uart0";
++			bias-disable;
++		};
++	};
++};
 +
-+Optional properties:
-+- gpio-ranges		: Mapping between GPIO and logic pin for pinctrl
-+
-+Examples:
-+gpio: gpio@400f4000 {
-+	compatible = "nxp,lpc1850-gpio";
-+	reg = <0x400f4000 0x4000>;
-+	clocks = <&ccu1 CLK_CPU_GPIO>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+}
+ &uart0 {
+ 	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
+ };
 -- 
 1.8.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
