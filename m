@@ -1,149 +1,78 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCHv3] media: i2c/adp1653: devicetree support for adp1653
-Date: Fri, 3 Apr 2015 02:48:23 +0300
-Message-ID: <20150402234823.GI20756@valkosipuli.retiisi.org.uk>
-References: <20150402143846.GA11687@amd>
- <20150402161453.GH20756@valkosipuli.retiisi.org.uk>
- <20150402203043.GB29963@amd>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 1/4] extcon: usb-gpio: register extcon device before IRQ
+ registration
+Date: Fri, 03 Apr 2015 09:09:51 +0900
+Message-ID: <551DDA4F.1030705@samsung.com>
+References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
+ <1427980385-21285-2-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150402203043.GB29963@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1427980385-21285-2-git-send-email-r.baldyga@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>
+Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Pawel,
+Hi Robert,
 
-On Thu, Apr 02, 2015 at 10:30:44PM +0200, Pavel Machek wrote:
-> Hi!
+On 04/02/2015 10:13 PM, Robert Baldyga wrote:
+> IRQ handler touches info->edev, so if interrupt occurs before extcon
+> device initialization it can cause NULL pointer dereference. Doing extcon
+> initialization before IRQ handler registration fixes this problem.
 > 
-> > Hi Pawel,
-> > 
-> > My apologies for the very late reply.
-> > 
-> > On Thu, Apr 02, 2015 at 04:38:46PM +0200, Pavel Machek wrote:
-> > > 
-> > > 
-> > > We are moving to device tree support on OMAP3, but that currently
-> > > breaks ADP1653 driver. This adds device tree support, plus required
-> > > documentation.
-> > > 
-> > > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > > 
-> > > ---
-> > > 
-> > > I'm not sure if it is device tree or media framework, either everyone
-> > > waits for someone else, or noone really cares.
-> > 
-> > Neither. Some people are unfortuantely very busy with many other things as
-> > well. :-P
+> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+> Acked-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  drivers/extcon/extcon-usb-gpio.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 > 
-> Well.. Being busy is ok. Nitpicking is also ok. But both at the same
-> time... is not good. 
-
-Good. Then we should be fine. :-)
-
+> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+> index 3f0bad3..f6aa99d 100644
+> --- a/drivers/extcon/extcon-usb-gpio.c
+> +++ b/drivers/extcon/extcon-usb-gpio.c
+> @@ -119,6 +119,18 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  		return PTR_ERR(info->id_gpiod);
+>  	}
+>  
+> +	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+> +	if (IS_ERR(info->edev)) {
+> +		dev_err(dev, "failed to allocate extcon device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = devm_extcon_dev_register(dev, info->edev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register extcon device\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = gpiod_set_debounce(info->id_gpiod,
+>  				 USB_GPIO_DEBOUNCE_MS * 1000);
+>  	if (ret < 0)
+> @@ -142,18 +154,6 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+> -	if (IS_ERR(info->edev)) {
+> -		dev_err(dev, "failed to allocate extcon device\n");
+> -		return -ENOMEM;
+> -	}
+> -
+> -	ret = devm_extcon_dev_register(dev, info->edev);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to register extcon device\n");
+> -		return ret;
+> -	}
+> -
+>  	platform_set_drvdata(pdev, info);
+>  	device_init_wakeup(dev, 1);
+>  
 > 
-> > > Andrew, can you just merge it?
-> > > 
-> > > Please apply,
-> > 
-> > Please wait just a while.
-> > 
-> > I think we can merge this eventually through the linux-media tree, but
-> > please first see the comments below.
-> > 
-> 
-> > > +Required properties of the flash LED child node:
-> > > +
-> > > +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> > > +- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
-> > 
-> > The documentation says that the maximum value is used if these values are
-> > not specified. I think I'd make these optional.
-> 
-> I'd rather not: when you make a typo in dts, it would supply maximum
-> available current, potentially damaging the LED. You will not be able
-> to tell brightness difference with naked eye...
 
-Fine for me.
+Applied this patch for v4.1-rc.
 
-> > >  __adp1653_set_power(struct adp1653_flash *flash, int on)
-> > >  {
-> > > -	int ret;
-> > > +	int ret = 0;
-> > > +
-> > > +	if (flash->platform_data->power) {
-> > > +		ret = flash->platform_data->power(&flash->subdev, on);
-> > 
-> > The power() callback should be dropped. It's controlling a GPIO. But that
-> > can be done later on. The alternative is a patch before this one.
-> 
-> I'd prefer to do it later; we want to keep functionality on N900
-> without DTS, too.
-
-Fine as well.
-
-> > >  	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
-> > >  	if (flash == NULL)
-> > >  		return -ENOMEM;
-> > >  
-> > >  	flash->platform_data = client->dev.platform_data;
-> > > +	if (!flash->platform_data) {
-> > 
-> > I'd check whether dev->of_node is non-NULL instead.
-> 
-> Ok.
-> 
-> > > @@ -438,10 +510,10 @@ static int adp1653_probe(struct i2c_client *client,
-> > >  		goto free_and_quit;
-> > >  
-> > >  	flash->subdev.entity.type = MEDIA_ENT_T_V4L2_SUBDEV_FLASH;
-> > > -
-> > 
-> > I rather liked the newline here. Please don't remove it. :-)
-> 
-> Ok.
-> 
-> > > @@ -464,7 +536,7 @@ static const struct i2c_device_id adp1653_id_table[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, adp1653_id_table);
-> > >  
-> > > -static struct dev_pm_ops adp1653_pm_ops = {
-> > > +static const struct dev_pm_ops adp1653_pm_ops = {
-> > >  	.suspend	= adp1653_suspend,
-> > >  	.resume		= adp1653_resume,
-> > >  };
-> > >  
-> > > 
-> > 
-> > A corresponding change to the N900 dts would be very nice.
-> 
-> Corresponding change to the dts will come in separate patch. Or do you
-> have n900 for testing?
-
-Yes, it should be a separate patch, I agree.
-
-I do have one but I can't say when I'd have time to test it. I'm fine with
-you having tested it though.
-
-> > I think you're missing change to adp1653_i2c_driver.driver.of_match_table.
-> 
-> It actually worked for me, which means device tree somehow does it
-> magic.
-
-By magic? :-) It probably just ends up comparing the device and the driver
-names. How about adding the of_match_table?
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Chanwoo Choi
