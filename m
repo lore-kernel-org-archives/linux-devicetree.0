@@ -1,111 +1,60 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v1 09/11] DT: Add documentation for exynos4-is 'flashes'
- property
-Date: Fri, 3 Apr 2015 15:15:23 +0300
-Message-ID: <20150403121523.GM20756@valkosipuli.retiisi.org.uk>
-References: <1426863811-12516-1-git-send-email-j.anaszewski@samsung.com>
- <1426863811-12516-10-git-send-email-j.anaszewski@samsung.com>
- <20150325010641.GI18321@valkosipuli.retiisi.org.uk>
- <55127732.7020004@samsung.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v3 1/8] drm/exynos: add Exynos5433 decon driver
+Date: Fri, 03 Apr 2015 21:38:59 +0900
+Message-ID: <551E89E3.9090703@samsung.com>
+References: <1427368540-28010-1-git-send-email-human.hwang@samsung.com>
+ <1427368540-28010-2-git-send-email-human.hwang@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55127732.7020004@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1427368540-28010-2-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyungwon Hwang <human.hwang@samsung.com>
+Cc: devicetree@vger.kernel.org, sw0312.kim@samsung.com, dh09.lee@samsung.com, cw00.choi@samsung.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On Wed, Mar 25, 2015 at 09:52:02AM +0100, Jacek Anaszewski wrote:
-> Hi Sakari,
-> 
-> On 03/25/2015 02:06 AM, Sakari Ailus wrote:
-> >Hi Jacek,
-> >
-> >On Fri, Mar 20, 2015 at 04:03:29PM +0100, Jacek Anaszewski wrote:
-> >>This patch adds a description of 'flashes' property
-> >>to the samsung-fimc.txt.
-> >>
-> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >>---
-> >>  .../devicetree/bindings/media/samsung-fimc.txt     |    8 ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> >>index 922d6f8..cb0e263 100644
-> >>--- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> >>+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> >>@@ -40,6 +40,13 @@ should be inactive. For the "active-a" state the camera port A must be activated
-> >>  and the port B deactivated and for the state "active-b" it should be the other
-> >>  way around.
-> >>
-> >>+Optional properties:
-> >>+
-> >>+- flashes - Array of phandles to the flash LEDs that can be controlled by the
-> >>+	    sub-devices contained in this media device. Flash LED is
-> >>+	    represented by a child node of a flash LED device
-> >
-> >This should be in
-> >Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >
-> >Should flash devices be associated with sensors somehow rather than ISPs?
-> >That's how they commonly are arranged, however that doesn't limit placing
-> >them in silly places.
-> >
-> >I'm not necessarily saying the flashes-property should be present in
-> >sensor's DT nodes, but it'd be good to be able to make the association if
-> >it's there.
-> 
-> I know of a SoC, which drives the flash from its on-chip ISP. The GPIO
-> connected to the flash controller's external strobe pin can be
-> configured so that the signal is routed to it from the ISP or from
-> CPU (for software strobe mode).
-> 
-> I think that Sylwester could say more in this subject.
-
-Yeah, some ISPs can also generate strobe signals. Otherwise this would be
-the job of the sensor, sadly many module vendors ignore the sensor strobe
-signal routing even when it's available. The sensor is by far in the best
-position to trigger the flash since it has the best readout timing
-information.
-
-Currently we have no way to express this, I think what's first needed is the
-data in the DT. Probably the flash driver and the driver that provides the
-strobe signal should both be aware of this. User space interface wise the
-strobe source control could be used --- we'd just need new menu entries.
-
-> 
-> 
-> >>+	    (see Documentation/devicetree/bindings/leds/common.txt).
-> >>+
-> >>  The 'camera' node must include at least one 'fimc' child node.
-> >>
-> >>
-> >>@@ -166,6 +173,7 @@ Example:
-> >>  		clock-output-names = "cam_a_clkout", "cam_b_clkout";
-> >>  		pinctrl-names = "default";
-> >>  		pinctrl-0 = <&cam_port_a_clk_active>;
-> >>+		flashes = <&camera_flash>, <&system_torch>;
-> >>  		status = "okay";
-> >>  		#address-cells = <1>;
-> >>  		#size-cells = <1>;
-> >
-> >There will be other kind of devices that have somewhat similar relationship.
-> >They just haven't been defined yet. Lens controllers or EEPROM for instance.
-> >The two are an integral part of a module, something which is not modelled in
-> >DT in any way, but perhaps should be.
-> 
-> Do you suggest using more generic name than 'flashes'?
-
-So far I don't have a better suggestion for the name of the property.
-However, it'd be good to be able to associate the flash to a sensor. I
-wonder how wrong would it be to put the flashes property to the port node...
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Ckh5dW5nd29uLAoKQ2FuIHlvdSByZS1iYXNlIHlvdXIgcGF0Y2ggc2V0IG9uIHRvcCBvZiBleHlu
+b3MtZHJtLW5leHQtdG9kbz8KSSBtZXJnZWQgY2xlYW51cCBzZXJpZXNbMV0gYW5kIGF0b21pYyBm
+ZWF0dXJlIHN1cHBvcnRbMl0gdG8KZXh5bm9zLWRybS1uZXh0LXRvZG8gZm9yIHRoZSB0ZXN0IHNv
+IHlvdSBjYW4gcmUtYmFzZSB5b3VyIHBhdGNoIHNldCBvbgp0b3Agb2YgZXh5bm9zLWRybS1uZXh0
+LXRvZG8uIFlvdSB3b3VsZCBuZWVkIHRvIG1vZGlmeQpleHlub3M1NDMzX2RybV9kZWNvbi5jIG1v
+ZHVsZS4KClBsZWFzZSBkbyBpdCBBU0FQLgoKVGhhbmtzLApJbmtpIERhZQoKWzFdIFtQQVRDSCAt
+djQgMC84XSBkcm0vZXh5bm9zOiBjbGVhbiB1cCBwYXRjaGVzIChwcmVwYXJpbmcgZm9yIGF0b21p
+YykKWzJdIFtQQVRDSCAtdjIgMDAvMTBdIGRybS9leHlub3M6IEFkZCBhdG9taWMgbW9kZXNldHRp
+bmcgc3VwcG9ydAoKT24gMjAxNeuFhCAwM+yblCAyNuydvCAyMDoxNSwgSHl1bmd3b24gSHdhbmcg
+d3JvdGU6Cj4gRnJvbTogSm9vbnlvdW5nIFNoaW0gPGp5MDkyMi5zaGltQHNhbXN1bmcuY29tPgo+
+IAo+IERFQ09OKERpc3BsYXkgYW5kIEVuaGFuY2VtZW50IENvbnRyb2xsZXIpIGlzIG5ldyBJUCBy
+ZXBsYWNpbmcgRklNRCBpbgo+IEV4eW5vczU0MzMuIFRoaXMgcGF0Y2ggYWRkcyBFeHlub3M1NDMz
+IGRlY29uIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb29ueW91bmcgU2hpbSA8ankwOTIy
+LnNoaW1Ac2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogSHl1bmd3b24gSHdhbmcgPGh1bWFu
+Lmh3YW5nQHNhbXN1bmcuY29tPgo+IC0tLQo+IENoYW5nZXMgZm9yIHYyOgo+ICAtIGNoYW5nZSBm
+aWxlIG5hbWVzIGFuZCB2YXJpYWJsZSBuYW1lcyBvZiBkZWNvbiB0byByZXByZXNudCBleHlub3M1
+NDMzIGluc3RlYWQKPiAgb2YgZXh5bm9zIHRvIGRpc3Rpbmd1aXNoIHRoZW0gZnJvbSBleHlub3M3
+IGRlY29uCj4gCj4gQ2hhbmdlcyBmb3IgdjM6Cj4gIC0gZmFpbCBmYXN0IHdoZW4gdGhlIHByb3Bl
+ciBpbWFnZSBmb3JtYXQgaXMgbm90IHNldAo+ICAtIHJlbW92ZSB1bm5lY2Vzc2FyeSBjaGVja2lu
+ZyBjb2RlCj4gIC0gYWRkIGFuZCBtb2RpZnkgdGhlIGZ1bmN0aW9uIHRvIG1ha2UgRFBNUyB3b3Jr
+IHdlbGwKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zNTQzMy1kZWNvbi50
+eHQgfCAgNjUgKysKPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9LY29uZmlnICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDYgKwo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL01ha2VmaWxlICAgICAg
+ICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zNTQz
+M19kcm1fZGVjb24uYyAgICAgIHwgNjY1ICsrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
+L2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHJ2LmMgICAgICAgICAgICB8ICAgMyArCj4gIGRy
+aXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuaCAgICAgICAgICAgIHwgICAxICsK
+PiAgaW5jbHVkZS92aWRlby9leHlub3M1NDMzX2RlY29uLmggICAgICAgICAgICAgICAgICAgfCAx
+NjMgKysrKysKPiAgNyBmaWxlcyBjaGFuZ2VkLCA5MDQgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5v
+czU0MzMtZGVjb24udHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZXh5
+bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUv
+dmlkZW8vZXh5bm9zNTQzM19kZWNvbi5oCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
