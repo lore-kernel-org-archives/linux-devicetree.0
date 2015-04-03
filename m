@@ -1,49 +1,35 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH 0/7] ARM: socfpga: Add support for Arria10 devkit
-Date: Thu, 2 Apr 2015 23:39:51 -0500
-Message-ID: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCH 1/7] ARM: socfpga: add cpu1-start-addr for Arria 10
+Date: Thu, 2 Apr 2015 23:39:52 -0500
+Message-ID: <1428035998-27542-2-git-send-email-dinguyen@opensource.altera.com>
+References: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428035998-27542-1-git-send-email-dinguyen@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@arm.linux.org.uk, arnd@arndb.de, olof@lixom.net, khilman@linaro.org, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
+Cc: dinh.linux@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Hi,
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-This patchset enables and tidy up support for the Arria10 devkit. Along with
-this patchset and the patch for enabling clocks on the Arria10, the devkit
-can boot Linux.
-
-Dinh Nguyen (7):
-  ARM: socfpga: add cpu1-start-addr for Arria 10
-  ARM: socfpga: disable the sdmmc, and uart nodes in the base arria10
-  ARM: socfpga: dts: enable UART1 for the debug uart
-  ARM: socfpga: rename socdk board file to socdk_sdmmc
-  ARM: socfpga: Add support for UART1 debug uart for earlyprintk
-  ARM: socfpga: remove the need to map uart_io_desc
-  Documentation: DT bindings: add doc for Altera's SoCFPGA platform
-
- Documentation/devicetree/bindings/arm/altera.txt   | 14 ++++++++++++
- arch/arm/Kconfig.debug                             | 25 +++++++++++++++------
- arch/arm/boot/dts/Makefile                         |  2 +-
- arch/arm/boot/dts/socfpga_arria10.dtsi             |  4 ++++
- ...rria10_socdk.dts => socfpga_arria10_socdk.dtsi} |  6 ++---
- arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 26 ++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c                    |  9 --------
- 7 files changed, 65 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/altera.txt
- rename arch/arm/boot/dts/{socfpga_arria10_socdk.dts => socfpga_arria10_socdk.dtsi} (92%)
- mode change 100755 => 100644
- create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts
-
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 8a05c47..69d616a 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -284,6 +284,7 @@
+ 		sysmgr: sysmgr@ffd06000 {
+ 			compatible = "altr,sys-mgr", "syscon";
+ 			reg = <0xffd06000 0x300>;
++			cpu1-start-addr = <0xffd06230>;
+ 		};
+ 
+ 		/* Local timer */
 -- 
 2.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
