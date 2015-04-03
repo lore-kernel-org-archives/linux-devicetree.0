@@ -1,60 +1,50 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH/RFC 0/6] staging: board: armadillo800eva: Board staging
- for sh_mobile_lcdc_fb
-Date: Fri, 3 Apr 2015 21:35:22 +0200
-Message-ID: <CAMuHMdU0tPE7Qy7YX38mvXx5KkwBmM0PNKZxa3p57M384NCr2A@mail.gmail.com>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
-	<3984477.UtBUTfcozK@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v4 01/11] genirq: generic chip: support hierarchy domain
+Date: Fri,  3 Apr 2015 21:44:42 +0200
+Message-ID: <1428090292-21693-2-git-send-email-stefan@agner.ch>
+References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3984477.UtBUTfcozK@avalon>
+In-Reply-To: <1428090292-21693-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, driverdevel <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Use the new helper function irq_domain_set_info to make sure the
+function irq_domain_set_hwirq_and_chip is being called, which is
+crucial to save irqdomain specific data to irq_data.
 
-On Fri, Apr 3, 2015 at 6:24 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> On Friday 03 April 2015 14:41:57 Geert Uytterhoeven wrote:
->> This RFC patch series adds board staging support for r8a7740/armadillo.
->> For now this supports only the frame buffer device for the on-board LCD.
->
-> I've started adding DT support to the shmob-lcdc driver, but I have no board
-> to test it on. My Armadillo is gone, and KZM9G is unusable with DT + LCDC at
-> the moment as the LCDC interrupt is connected to the legacy interrupt
-> controller only, not the GIC. Would you be able to test a patch set ? And if
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ kernel/irq/generic-chip.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Sure, I can test your patches on Armadillo.
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index 61024e8..15b370d 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -360,7 +360,7 @@ static struct lock_class_key irq_nested_lock_class;
+ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 			 irq_hw_number_t hw_irq)
+ {
+-	struct irq_data *data = irq_get_irq_data(virq);
++	struct irq_data *data = irq_domain_get_irq_data(d, virq);
+ 	struct irq_domain_chip_generic *dgc = d->gc;
+ 	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
+@@ -405,8 +405,7 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 	else
+ 		data->mask = 1 << idx;
+ 
+-	irq_set_chip_and_handler(virq, chip, ct->handler);
+-	irq_set_chip_data(virq, gc);
++	irq_domain_set_info(d, virq, hw_irq, chip, gc, ct->handler, NULL, NULL);
+ 	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
+ 	return 0;
+ }
+-- 
+2.3.5
 
-> you want to implement support for the KZM9G legacy interrupt controller in DT,
-> please go for it :-)
-
-Do we need the LCDC interrupt? ;-)
-
-Anyway, the display of my kzm9g is broken, so I never had the joy of
-seeing its marvellous graphics.
-
->>       - sh-mobile-hdmi/sh_mobile_lcdc_fb.1 (this seems to be broken in
->>       -legacy?)
->
-> HDMI is broken in legacy, we can thus drop it.
-
-In addition, clk-r8a7740 lacks support for the non-standard register layout of
-HDMICKCR.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
