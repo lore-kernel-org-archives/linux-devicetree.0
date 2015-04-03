@@ -1,98 +1,73 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 2/3] Phy: DT binding documentation for Broadcom Cygnus
- USB PHY driver
-Date: Fri, 3 Apr 2015 19:37:12 +0530
-Message-ID: <551E9E90.3080406@ti.com>
-References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com> <1427921457-18235-3-git-send-email-arun.ramamurthy@broadcom.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv4] media: i2c/adp1653: devicetree support for adp1653
+Date: Fri, 3 Apr 2015 16:22:56 +0200
+Message-ID: <20150403142256.GA13595@earth>
+References: <20150402143846.GA11687@amd>
+ <20150402203417.GA6336@amd>
+ <CABxcv=nfg_D9HvXUd4PBFJ5a1XST=PCDEZCjkTtbu_u7cc1+ug@mail.gmail.com>
+ <20150403082129.GA10671@amd>
+ <CABxcv=mVdw7QkUWSqa1=VRJD+mHCU3dP09SBxVERs1NWUBeWiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1427921457-18235-3-git-send-email-arun.ramamurthy@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <CABxcv=mVdw7QkUWSqa1=VRJD+mHCU3dP09SBxVERs1NWUBeWiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@osdl.org>, pali.rohar@gmail.com, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, sakari.ailus@iki.fi, m.chehab@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
+
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Thursday 02 April 2015 02:20 AM, Arun Ramamurthy wrote:
-> Broadcom's Cygnus chip has a USB 2.0 host controller connected to
-> three separate phys. One of the phs (port 2) is also connectd to
-> a usb 2.0 device controller
->
-> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-> ---
->   .../bindings/phy/brcm,cygnus-usb-phy.txt           | 69 ++++++++++++++++++++++
->   1 file changed, 69 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-> new file mode 100644
-> index 0000000..d1a9a65
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
-> @@ -0,0 +1,69 @@
-> +BROADCOM CYGNUS USB PHY
-> +
-> +Required Properties:
-> +	- compatible:  brcm,cygnus-usb-phy
-> +	- reg : usbphy_regs - Base address of phy registers
-> +			usb2h_idm_regs - Base address of host idm registers
-> +			usb2d_idm_regs - Base address of device idm registers
-> +	- phy-cells - must be 1 for each port declared. This is because the node
-> +		      that uses the phy must provide one integers, 0 for device
-> +		      and 1 for host
+On Fri, Apr 03, 2015 at 10:49:12AM +0200, Javier Martinez Canillas wrote:
+> >> The convention nowadays is to not use unnamed DT properties for GPIOs
+> >> but instead use a prefix that explains what those GPIOs are used for.
+> >> So something like "power-gpios" or "power-gpio" (if there is only one
+> >> GPIO) will be more suitable. Please take a look to
+> >> Documentation/gpio/board.txt for more details.
+> >
+> > Ok. Actually, reading docs below, "power-gpio" will not work, and it
+> > needs to be "power-gpios", right?
+> >
+>=20
+> No, the documentation is not updated. People used <function>-gpio so
+> at the end it was added as another supported suffix, see commit:
+> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names").
+>=20
+> But I guess it doesn't matter if -gpio or -gpios is used.
 
-Try to define standard constants in include/dt-bindings/phy/phy.h
-> +
-> +NOTE: port 0 and port 1 are host only and port 2 can be configured for host or
-> +device.
-> +
-> +Example of phy :
-> +	usbphy0: usbphy@0x0301c000 {
-> +		compatible = "brcm,cygnus-usb-phy";
-> +		reg = <0x0301c000 0x2000>,
-> +		      <0x18115000 0x1000>,
-> +		      <0x18111000 0x1000>;
-> +		status = "okay";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		usbphy0_0: usbphy0@0 {
-> +			#phy-cells = <1>;
-> +			reg = <0>;
-> +			status = "okay";
-> +			phy-supply = <&vbus_p0>;
-> +		};
-> +
-> +		usbphy0_1: usbphy0@1 {
-> +			#phy-cells = <1>;
-> +			reg = <1>;
-> +			status = "okay";
-> +		};
-> +
-> +		usbphy0_2: usbphy0@2 {
-> +			#phy-cells = <1>;
-> +			reg = <2>;
-> +			status = "okay";
-> +			phy-supply = <&vbus_p2>;
-> +		};
-> +	};
-> +
-> +Example of node using the phy:
-> +
-> +	/* This nodes declares all three ports as host */
-> +
-> +	ehci0: usb@0x18048000 {
-> +		compatible = "generic-ehci";
-> +		reg = <0x18048000 0x100>;
-> +		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +		phys = <&usbphy0_0 1 &usbphy0_1 1 &usbphy0_2 1>;
+I suggest to use enable-gpio(s), since the pin is called "enable" in
+the datasheet.
 
-And use the constants here instead of numbers.
+-- Sebastian
 
-Regards
-Kishon
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVHqI9AAoJENju1/PIO/qalVMQAIDWCNYtcN335qxzf1IYiwY7
+jWvD03JZ1uKYPHvGl9MvBBHN1KzUPV+d/hCJ7q0PMDk5bcyIl3q2lROKbCKD6aZX
+fK0VZTpu9aKcid+nUGkAvSNlwhUywjXOTAgkGZwgxmaQQIkf3YE68mIfa6Y6wRNR
+x7FvP8kgjkx6VgbdzS8EXgystaYVUeYoDVBkawj2ztRrpkOyoFravKQBdrTyLn/0
+qATNGTiRyv1jjXT0jB0aorJo5EwQ/Xl/9csTQRCqrBnQtmFQ1EP9tOzbXzK19cYU
+xqIkyYx8bO2DKHPE5HjAZnEitt/Gdzc7pbyIV8gDdgY8lU7OT0LPC/CzdK1OOA30
+gssIWChugj/NGd73wALOZHT2i2LxBBdkKIQlLX0fB5ojZJ1AAVZw8AnfyC9leaZ5
+TAYS6YtfWLBiol8eQwNu8wKNGh5AwaxYZ5TFStCpNmV0XAiGtQ5xog9Oab2Ao0fU
+j/8FDfvmaz8WTncuxq0nH7qhhqL+ytjj5N39mhHAxPS0lsfhBnfIfLOwWHGOc9xf
+C/Ob5sXdu/RqXrI4+NL0jQ+jPn8jtc2Gsv/2lrJLl0fSpnPouM+qvujGAEGSU0gM
+ldbMw68qYy3kE1qc47vS13XsUfDWndDgDOG48Tv1WdsaRY27GpjZTtYjCUJ22j8S
+xGSNSBIAu7T75d1WDeRl
+=MRdo
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
