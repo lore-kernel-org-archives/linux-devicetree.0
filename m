@@ -1,126 +1,82 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v4 00/11] ARM: vf610m4: Add Vybrid Cortex-M4 support
-Date: Fri,  3 Apr 2015 21:44:41 +0200
-Message-ID: <1428090292-21693-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v4 11/11] ARM: vf610m4: add defconfig for Linux on Vybrids Cortex-M4
+Date: Fri,  3 Apr 2015 21:44:52 +0200
+Message-ID: <1428090292-21693-12-git-send-email-stefan@agner.ch>
+References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428090292-21693-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The fourth version has one small fix in the MSCM IR driver and
-one dependency fix.
+Add defconfig for Linux on Vybrid (vf610) on the secondary Cortex-
+M4 CPU. The use of a XIP image has been tested which needs to be
+loaded (e.g. using the custom m4boot loader) to the end of the
+available RAM at address 0x8f000000. The Cortex-M4 has a code-alias
+which makes sure that the instructions get fetched through the code
+bus (alias starts at 0x00800000 => 0x80800000 in system address).
+Hence, to get optimal performance, use 0x0f000000 as XIP_PHYS_ADDR.
+This address is additionally shifted by the length of the minimal
+loader which is inserted by m4boot. Currently, this offset is 0x80.
 
-Like version 3 of the patchset, it does not contain the interrupt
-router driver anymore (MSCM IR). The driver has been merged
-inbetween:
-https://lkml.org/lkml/2015/3/8/6
+The standard DRAM base address is configured to 0x8C000000, which
+gives the Cortex-M4 48MiB of RAM.
 
-This patchset extends the NVIC driver to support irq domain
-hierarchy and the MSCM IR driver to support NVIC as a parent irq
-controller.
-
-I'm happy with the outcome of the MSCM driver, the irq domain
-hierarchy support has proven to work with GIC and NVIC as
-intendet.
-
-Since v2, this patchset also doesn't add any ARCH or SOC anymore.
-Instead, it allows to select ARCH_MULTIPLATFORM in the !MMU case
-and add ARCH_MULTI_V7M as a new CPU choice. This change is based
-on patches found in Arnd's git tree, however, it tries to allow
-MULTIPLATFORM with !MMU in a way which should not allow to make
-other selections than before (except ARCH_MULTI_V7M of course).
-This makes ARCH_MXC and SOC_VF610 available for the !MMU CPU V7M.
-With a small change, SOC_VF610 is now selectable when the CPU
-ARCH_MULTI_V7M is selected, and hence allows to build a kernel
-for the Cortex-M4 CPU too.
-
-The patchset has proven to be working on the Cortex-M4 of the
-Vybrid SoC using a Colibri VF61 module.
-
-Changes since v3:
-- Added dependency IRQ_DOMAIN_HIERARCHY for ARM_NVIC
-- Fix MSCM IR disable function check
-- Remove "ARM: imx: depend MXC debug board on 3DS machines",
-  the patch has been merged
-
-Changes since v2:
-- Update MSCM patches to merged version of MSCM interrupt router
-- Use the GPLv2/X11 dual license in the new device tree files
-- Drop SD controller in device tree (initramfs works now and is
-  probably more appropriate for most cases)
-- Disable GPIO nodes since the A5 is using them
-- Drop CONFIG_ prefixes in Kconfig changes for MXC_DEBUG_BOARD
-- Drop vector table resizing in favor of Maxime Coquelin's patch
-  (https://lkml.org/lkml/2015/2/20/399)
-- Remove !MMU dependency for ARCH_EFM32 since its part of
-  ARCH_MULTI_V7M
-- Rebased on v4.0-rc1
-
-Changes since v1:
-- Remove MSCM driver
-- Support irq domain hierarchy with NVIC irq controller
-- Extend MSCM interrupt router with NVIC as parent in the irq
-  domain hierarchy 
-- Rebased on v3.19-rc1 with MSCM driver
-- NVIC: Register only the amount of IRQ's which vectors are
-  available for
-
-Changes since RFC:
-- Unified addruart calls for MMU/!MMU
-- Add MSCM support along with routable IRQ support in NVIC
-- Rebased on Shawns for-next tree which made some changes
-  obsolete (mainly the Vybrid SoC device tree files in for-next
-  are already prepared for Cortex-M4 support)
-- Removed SRC_GPR3 hack, this is now part of a mini boot-loader:
-  https://github.com/falstaff84/vf610m4bootldr
-
-Arnd Bergmann (1):
-  ARM: efm32: move into multiplatform
-
-Stefan Agner (10):
-  genirq: generic chip: support hierarchy domain
-  irqchip: nvic: support hierarchy irq domain
-  irqchip: vf610-mscm: support NVIC parent
-  ARM: ARMv7M: define size of vector table for Vybrid
-  clocksource: add dependencies for Vybrid pit clocksource
-  ARM: unify MMU/!MMU addruart calls
-  ARM: allow MULTIPLATFORM with !MMU
-  ARM: vf610: enable Cortex-M4 on Vybrid SoC
-  ARM: dts: add support for Vybrid running on Cortex-M4
-  ARM: vf610m4: add defconfig for Linux on Vybrids Cortex-M4
-
- Documentation/devicetree/bindings/arm/fsl.txt |  3 +
- arch/arm/Kconfig                              | 54 +++++++--------
- arch/arm/boot/dts/Makefile                    |  1 +
- arch/arm/boot/dts/vf610m4-colibri.dts         | 98 +++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610m4.dtsi                | 50 ++++++++++++++
- arch/arm/configs/efm32_defconfig              |  2 +
- arch/arm/configs/vf610m4_defconfig            | 43 ++++++++++++
- arch/arm/include/debug/efm32.S                |  2 +-
- arch/arm/kernel/debug.S                       |  2 +-
- arch/arm/mach-imx/Kconfig                     | 36 ++++++----
- arch/arm/mach-imx/Makefile.boot               |  0
- arch/arm/mach-imx/mach-vf610.c                |  1 +
- arch/arm/mm/Kconfig                           |  1 +
- drivers/clocksource/Kconfig                   |  2 +
- drivers/irqchip/Kconfig                       |  1 +
- drivers/irqchip/irq-nvic.c                    | 28 +++++++-
- drivers/irqchip/irq-vf610-mscm-ir.c           | 32 +++++++--
- kernel/irq/generic-chip.c                     |  5 +-
- 18 files changed, 306 insertions(+), 55 deletions(-)
- create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
- create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/configs/vf610m4_defconfig | 43 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
  create mode 100644 arch/arm/configs/vf610m4_defconfig
- create mode 100644 arch/arm/mach-imx/Makefile.boot
 
+diff --git a/arch/arm/configs/vf610m4_defconfig b/arch/arm/configs/vf610m4_defconfig
+new file mode 100644
+index 0000000..b00015c
+--- /dev/null
++++ b/arch/arm/configs/vf610m4_defconfig
+@@ -0,0 +1,43 @@
++CONFIG_NAMESPACES=y
++CONFIG_BLK_DEV_INITRD=y
++# CONFIG_RD_BZIP2 is not set
++# CONFIG_RD_LZMA is not set
++# CONFIG_RD_XZ is not set
++# CONFIG_RD_LZ4 is not set
++CONFIG_KALLSYMS_ALL=y
++CONFIG_EMBEDDED=y
++# CONFIG_MMU is not set
++CONFIG_ARCH_MULTI_V7M=y
++CONFIG_ARCH_MXC=y
++CONFIG_SOC_VF610=y
++CONFIG_VF_USE_PIT_TIMER=y
++CONFIG_SET_MEM_PARAM=y
++CONFIG_DRAM_BASE=0x8c000000
++CONFIG_FLASH_MEM_BASE=0x8f000000
++CONFIG_FLASH_SIZE=0x01000000
++CONFIG_CMDLINE="console=/dev/ttyLP2"
++CONFIG_XIP_KERNEL=y
++CONFIG_XIP_PHYS_ADDR=0x0f000080
++CONFIG_BINFMT_FLAT=y
++CONFIG_BINFMT_ZFLAT=y
++CONFIG_BINFMT_SHARED_FLAT=y
++# CONFIG_SUSPEND is not set
++# CONFIG_UEVENT_HELPER is not set
++# CONFIG_STANDALONE is not set
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++# CONFIG_FIRMWARE_IN_KERNEL is not set
++# CONFIG_ALLOW_DEV_COREDUMP is not set
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_COUNT=4
++# CONFIG_INPUT_MOUSEDEV is not set
++# CONFIG_KEYBOARD_ATKBD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_SERIO is not set
++CONFIG_SERIAL_FSL_LPUART=y
++CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
++# CONFIG_HW_RANDOM is not set
++CONFIG_MFD_SYSCON=y
++# CONFIG_HID is not set
++# CONFIG_USB_SUPPORT is not set
++# CONFIG_MISC_FILESYSTEMS is not set
++# CONFIG_FTRACE is not set
 -- 
 2.3.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
