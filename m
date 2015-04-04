@@ -1,190 +1,141 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with complex dependencies
-Date: Sat, 04 Apr 2015 15:46:52 +0300
-Message-ID: <34835209.cQQp4PEGGk@avalon>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be> <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun7i: Add dts file for the
+ Orangepi SBC
+Date: Sat, 4 Apr 2015 14:47:54 +0200
+Message-ID: <20150404124754.GJ14618@lukather>
+References: <1428137994-18343-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms+renesas@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, devel@driverdev.osuosl.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gBdJBemW82xJqIAr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7N376UAKGQEM62WYZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1428137994-18343-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+--gBdJBemW82xJqIAr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thank you for the patch.
+Hi Hans,
 
-On Friday 03 April 2015 14:42:02 Geert Uytterhoeven wrote:
-> Add support for easy registering of one ore more platform devices that
-> may:
->   - need clocks that are described in DT,
->   - need pin control configuration,
->   - rely on a configured GPIO,
->   - be part of a PM Domain.
+On Sat, Apr 04, 2015 at 10:59:53AM +0200, Hans de Goede wrote:
+> The Orangepi is a development board using the Allwinner A20 SoC, with 1G RAM,
+> microsd slot, HDMI, 1Gbit ethernet, USB wifi, Micro USB (otg), sata, 4 USB A
+> ports, ir receiver and a headphones jack.
 > 
-> All these dependencies are optional.
+> Also see:
+> http://linux-sunxi.org/Xunlong_Orange_Pi
+> http://www.orangepi.org/
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/staging/board/board.c | 76 ++++++++++++++++++++++++++++++++++++++++
->  drivers/staging/board/board.h | 31 ++++++++++++++++++
->  2 files changed, 107 insertions(+)
+>  arch/arm/boot/dts/Makefile               |   1 +
+>  arch/arm/boot/dts/sun7i-a20-orangepi.dts | 229 +++++++++++++++++++++++++++++++
+>  2 files changed, 230 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-orangepi.dts
 > 
-> diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
-> index b84ac2837a20bf06..da2469e2d4262fac 100644
-> --- a/drivers/staging/board/board.c
-> +++ b/drivers/staging/board/board.c
-> @@ -9,6 +9,9 @@
-> 
->  #define pr_fmt(fmt)	"board_staging: "  fmt
-> 
-> +#include <linux/clk.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/gpio.h>
->  #include <linux/init.h>
->  #include <linux/irq.h>
->  #include <linux/device.h>
-> @@ -16,6 +19,9 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> +#include <linux/pinctrl/machine.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> 
->  #include "board.h"
-> 
-> @@ -104,3 +110,73 @@ void __init board_staging_fixup_irq_resources(struct
-> resource *res, res[i].start = virq;
->  		}
->  }
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 2426f0a..d9b609d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -551,6 +551,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>  	sun7i-a20-olinuxino-lime.dtb \
+>  	sun7i-a20-olinuxino-lime2.dtb \
+>  	sun7i-a20-olinuxino-micro.dtb \
+> +	sun7i-a20-orangepi.dtb \
+>  	sun7i-a20-pcduino3.dtb \
+>  	sun7i-a20-pcduino3-nano.dtb \
+>  	sun7i-a20-wexler-tab7200.dtb
+> diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi.dts b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+> new file mode 100644
+> index 0000000..2ef79b7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+> @@ -0,0 +1,229 @@
+> +/*
+> + * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this file; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
-> +int __init board_staging_register_clock(const struct board_staging_clk
-> *bsc) +{
-> +	struct clk *clk;
-> +	int error;
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
 > +
-> +	pr_debug("Registering clock %s for con_id %s dev_id %s\n", bsc->clk,
-> +		 bsc->con_id, bsc->dev_id);
-> +	clk = clk_get(NULL, bsc->clk);
-> +	if (IS_ERR(clk)) {
-> +		error = PTR_ERR(clk);
-> +		pr_err("Failed to get clock %s (%d)\n", bsc->clk, error);
-> +		return error;
-> +	}
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
 > +
-> +	error = clk_register_clkdev(clk, bsc->con_id, bsc->dev_id);
-> +	if (error)
-> +		pr_err("Failed to register clock %s (%d)\n", bsc->clk, error);
-> +		return error;
+> +/ {
+> +	model = "Orange Pi";
+> +	compatible = "xunlong,orangepi", "allwinner,sun7i-a20";
 > +
-> +	clk_put(clk);
-> +	return 0;
-> +}
-> +
-> +int __init board_staging_register_device(const struct board_staging_dev
-> *dev) +{
-> +	struct platform_device *pdev = dev->pdev;
-> +	unsigned int i;
-> +	int error;
-> +
-> +	pr_debug("Trying to register device %s\n", pdev->name);
-> +	if (board_staging_dt_node_available(pdev->resource,
-> +					    pdev->num_resources)) {
-> +		pr_warn("Skipping %s, already in DT\n", pdev->name);
-> +		return -EEXIST;
-> +	}
-> +
-> +	board_staging_fixup_irq_resources(pdev->resource, pdev->num_resources);
-> +
-> +	for (i = 0; i < dev->nclocks; i++)
-> +		board_staging_register_clock(&dev->clocks[i]);
-> +
-> +	if (dev->npinmaps)
-> +		pinctrl_register_mappings(dev->pinmaps, dev->npinmaps);
-> +
-> +	for (i = 0; i < dev->ngpios; i++)
-> +		gpio_request_one(dev->gpios[i].gpio, dev->gpios[i].flags,
-> +				 pdev->name);
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
 
-Aren't GPIO numbers dynamic too in DT-based systems ? Beside, shouldn't it be 
-the responsibility of the drievr to request the GPIOs it needs ?
+This should have a matching /chosen/stdout-path property.
 
-> +	error = platform_device_register(pdev);
-> +	if (error) {
-> +		pr_err("Failed to register device %s (%d)\n", pdev->name,
-> +		       error);
-> +		return error;
-> +	}
-> +
-> +	if (dev->domain)
-> +		__pm_genpd_name_add_device(dev->domain, &pdev->dev, NULL);
-> +
-> +	return error;
-> +}
-> +
-> +void __init board_staging_register_devices(const struct board_staging_dev
-> *devs, +					   unsigned int ndevs)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ndevs; i++)
-> +		board_staging_register_device(&devs[i]);
-> +}
-> diff --git a/drivers/staging/board/board.h b/drivers/staging/board/board.h
-> index 4cedc3c46e287eb7..7aaa0f7d6fafb9e5 100644
-> --- a/drivers/staging/board/board.h
-> +++ b/drivers/staging/board/board.h
-> @@ -4,12 +4,43 @@
->  #include <linux/init.h>
->  #include <linux/of.h>
-> 
-> +struct board_staging_clk {
-> +	const char *clk;
-> +	const char *con_id;
-> +	const char *dev_id;
-> +};
-> +
-> +struct board_staging_gpio {
-> +	unsigned int gpio;
-> +	unsigned long flags;	/* See GPIOF_* */
-> +};
-> +
-> +struct board_staging_dev {
-> +	/* Platform Device */
-> +	struct platform_device *pdev;
-> +	/* Clocks (optional) */
-> +	const struct board_staging_clk *clocks;
-> +	unsigned int nclocks;
-> +	/* Pin Control Maps (optional) */
-> +	const struct pinctrl_map *pinmaps;
-> +	unsigned int npinmaps;
-> +	/* GPIOs (optional) */
-> +	const struct board_staging_gpio *gpios;
-> +	unsigned int ngpios;
-> +	/* PM Domain (optional) */
-> +	const char *domain;
-> +};
-> +
->  struct resource;
-> 
->  bool board_staging_dt_node_available(const struct resource *resource,
->  				     unsigned int num_resources);
->  int board_staging_setup_hwirq_xlate(const char *irqc_match, unsigned int
-> base); void board_staging_fixup_irq_resources(struct resource *res,
-> unsigned int nres); +int board_staging_register_clock(const struct
-> board_staging_clk *bsc); +int board_staging_register_device(const struct
-> board_staging_dev *dev); +void board_staging_register_devices(const struct
-> board_staging_dev *devs, +				    unsigned int ndevs);
-> 
->  #define board_staging(str, fn)			\
->  static int __init runtime_board_check(void)	\
+The rest of the patch is fine, I can apply it and add the property, if
+that's ok for you.
+
+Maxime
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--gBdJBemW82xJqIAr--
