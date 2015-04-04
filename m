@@ -1,48 +1,70 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun7i: Add dts file for the
- Orangepi SBC
-Date: Sat, 4 Apr 2015 15:39:47 +0200
-Message-ID: <20150404133947.GN14618@lukather>
-References: <1428137994-18343-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DH4/xewco2zMcht6"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBN6T76UAKGQEHR3VWMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428137994-18343-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Subject: [PATCH repost] ARM: shmobile: r8a7790: Remove MSIOF address from device tree
+Date: Sun,  5 Apr 2015 01:54:31 +0900
+Message-ID: <1428166471-2897-1-git-send-email-ykaneko0929@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---DH4/xewco2zMcht6
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+From: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
 
-On Sat, Apr 04, 2015 at 10:59:53AM +0200, Hans de Goede wrote:
-> The Orangepi is a development board using the Allwinner A20 SoC, with 1G RAM,
-> microsd slot, HDMI, 1Gbit ethernet, USB wifi, Micro USB (otg), sata, 4 USB A
-> ports, ir receiver and a headphones jack.
-> 
-> Also see:
-> http://linux-sunxi.org/Xunlong_Orange_Pi
-> http://www.orangepi.org/
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+MSIOF Base Address H'E6xx can be accessed by CPU and DMAC.
+MSIOF Base Address H'E7xx for DMAC was removed from H/W manual.
 
-Merged these two patches. Thanks!
+Signed-off-by: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+---
 
-Maxime
+This patch is based on devel branch of Simon Horman's renesas tree.
 
+v1 repost [Yoshihiro Kaneko]
+* Dropped RFC designation
+
+ arch/arm/boot/dts/r8a7790.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 4bb2f4c..f3b8430 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1273,7 +1273,7 @@
+ 
+ 	msiof0: spi@e6e20000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6e20000 0 0x0064>, <0 0xe7e20000 0 0x0064>;
++		reg = <0 0xe6e20000 0 0x0064>;
+ 		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp0_clks R8A7790_CLK_MSIOF0>;
+ 		dmas = <&dmac0 0x51>, <&dmac0 0x52>;
+@@ -1285,7 +1285,7 @@
+ 
+ 	msiof1: spi@e6e10000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6e10000 0 0x0064>, <0 0xe7e10000 0 0x0064>;
++		reg = <0 0xe6e10000 0 0x0064>;
+ 		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7790_CLK_MSIOF1>;
+ 		dmas = <&dmac0 0x55>, <&dmac0 0x56>;
+@@ -1297,7 +1297,7 @@
+ 
+ 	msiof2: spi@e6e00000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6e00000 0 0x0064>, <0 0xe7e00000 0 0x0064>;
++		reg = <0 0xe6e00000 0 0x0064>;
+ 		interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7790_CLK_MSIOF2>;
+ 		dmas = <&dmac0 0x41>, <&dmac0 0x42>;
+@@ -1309,7 +1309,7 @@
+ 
+ 	msiof3: spi@e6c90000 {
+ 		compatible = "renesas,msiof-r8a7790";
+-		reg = <0 0xe6c90000 0 0x0064>, <0 0xe7c90000 0 0x0064>;
++		reg = <0 0xe6c90000 0 0x0064>;
+ 		interrupts = <0 159 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7790_CLK_MSIOF3>;
+ 		dmas = <&dmac0 0x45>, <&dmac0 0x46>;
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---DH4/xewco2zMcht6--
+1.9.1
+
