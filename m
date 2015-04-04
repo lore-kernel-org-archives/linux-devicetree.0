@@ -1,42 +1,59 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCHv6] media: i2c/adp1653: Documentation for devicetree
- support for adp1653
-Date: Sat, 4 Apr 2015 19:11:16 +0200
-Message-ID: <20150404171116.GA15025@Nokia-N900>
-References: <20150402143846.GA11687@amd>
- <20150402203417.GA6336@amd>
- <20150403083353.GA21070@amd>
- <20150403113216.GK20756@valkosipuli.retiisi.org.uk>
- <20150403202624.GA4308@amd>
- <20150403213655.GO20756@valkosipuli.retiisi.org.uk>
- <20150404074337.GA31064@amd>
- <20150404102435.GR20756@valkosipuli.retiisi.org.uk>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: USB device nodes in device tree
+Date: Sat, 04 Apr 2015 12:08:36 -0700
+Message-ID: <552036B4.9050405@gmail.com>
+References: <Pine.LNX.4.44L0.1503301534050.1407-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150404102435.GR20756-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1503301534050.1407-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Le 30/03/2015 12:35, Alan Stern a =C3=A9crit :
+> On Mon, 30 Mar 2015, Valentin Longchamp wrote:
+>=20
+>> Hello,
+>>
+>> We are currently developing a board with an USB MFD device (I2C and =
+GPIOs are to
+>> be supported). The device is soldered on the board and is the only o=
+ne on the
+>> bus, so the bus is not really "dynamic".
+>>
+>> Since it's an USB device, it should be dynamically detected by the k=
+ernel and it
+>> would not require a node in the board's DTS. However, I need to have=
+ the devices
+>> which are "behind" the MFD USB device to be in the DTS (I2C bus topo=
+logy, and
+>> some of the GPIOs are to be used directly by some other DTS nodes as=
+ well).
+>>
+>> Is there a way to add a node for USB device in a DTS ? Is there an a=
+vailable
+>> example for this ?
+>=20
+> No, there is no way to do it as far as I know.  The main problem is=20
+> that Device Tree is static whereas USB devices are dynamic.
 
-> enable-gpios: Specifier of the GPIO connected to EN pin
-> 
-> I can make the changes if you're ok with that, otherwise please send v7. Then
-> I'll apply that to my tree.
+The PCI(e) bus has the same problem, yet you can specify a PCI device
+child node, and have a compatible string which will match the vendor
+id/device id tuple, device class etc... such that you can use Device
+Tree to add additional information not necessarily available in other
+ways such as MAC addresses and similar.
 
-I'm ok with that.
+Once the PCI bus is scanned, pci_device present in Device Tree get a
+device_node pointer assigned.
 
-Thanks,
-						Pavel
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+I don't think there is anything doing this yet for USB devices, but
+maybe that's something that should be there?
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
