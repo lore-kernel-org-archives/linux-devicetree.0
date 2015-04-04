@@ -1,59 +1,69 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: USB device nodes in device tree
-Date: Sat, 04 Apr 2015 12:08:36 -0700
-Message-ID: <552036B4.9050405@gmail.com>
-References: <Pine.LNX.4.44L0.1503301534050.1407-100000@iolanthe.rowland.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v18 01/11] ARM: qcom: Add Subsystem Power Manager (SPM)
+ driver
+Date: Sat, 4 Apr 2015 13:09:24 -0600
+Message-ID: <20150404190924.GB24500@linaro.org>
+References: <1427315136-44321-1-git-send-email-lina.iyer@linaro.org>
+ <1427315136-44321-2-git-send-email-lina.iyer@linaro.org>
+ <7hlhi8280c.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1503301534050.1407-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7hlhi8280c.fsf@deeprootsystems.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: daniel.lezcano@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Le 30/03/2015 12:35, Alan Stern a =C3=A9crit :
-> On Mon, 30 Mar 2015, Valentin Longchamp wrote:
->=20
->> Hello,
+On Fri, Apr 03 2015 at 15:54 -0600, Kevin Hilman wrote:
+>Lina Iyer <lina.iyer@linaro.org> writes:
+>
+>> SPM is a hardware block that controls the peripheral logic surrounding
+>> the application cores (cpu/l$). When the core executes WFI instruction,
+>> the SPM takes over the putting the core in low power state as
+>> configured. The wake up for the SPM is an interrupt at the GIC, which
+>> then completes the rest of low power mode sequence and brings the core
+>> out of low power mode.
 >>
->> We are currently developing a board with an USB MFD device (I2C and =
-GPIOs are to
->> be supported). The device is soldered on the board and is the only o=
-ne on the
->> bus, so the bus is not really "dynamic".
+>> The SPM has a set of control registers that configure the SPMs
+>> individually based on the type of the core and the runtime conditions.
+>> SPM is a finite state machine block to which a sequence is provided and
+>> it interprets the bytes and executes them in sequence. Each low power
+>> mode that the core can enter into is provided to the SPM as a sequence.
 >>
->> Since it's an USB device, it should be dynamically detected by the k=
-ernel and it
->> would not require a node in the board's DTS. However, I need to have=
- the devices
->> which are "behind" the MFD USB device to be in the DTS (I2C bus topo=
-logy, and
->> some of the GPIOs are to be used directly by some other DTS nodes as=
- well).
+>> Configure the SPM to set the core (cpu or L2) into its low power mode,
+>> the index of the first command in the sequence is set in the SPM_CTL
+>> register. When the core executes ARM wfi instruction, it triggers the
+>> SPM state machine to start executing from that index. The SPM state
+>> machine waits until the interrupt occurs and starts executing the rest
+>> of the sequence until it hits the end of the sequence. The end of the
+>> sequence jumps the core out of its low power mode.
 >>
->> Is there a way to add a node for USB device in a DTS ? Is there an a=
-vailable
->> example for this ?
->=20
-> No, there is no way to do it as far as I know.  The main problem is=20
-> that Device Tree is static whereas USB devices are dynamic.
+>> Add support for an idle driver to set up the SPM to place the core in
+>> Standby or Standalone power collapse mode when the core is idle.
+>>
+>> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+>> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora.org>
+>> Original tree available at -
+>> git://codeaurora.org/quic/la/kernel/msm-3.10.git
+>>
+>> Cc: Stephen Boyd <sboyd@codeaurora.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Kevin Hilman <khilman@linaro.org>
+>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>
+>Acked-by: Kevin Hilman <khilman@linaro.org>
+>
+>and also tested on qcom-apq8064-ifc6410 and
+>qcom-msm8974-sony-xperia-honami and saw the various states being entered
+>on all CPUs.
 
-The PCI(e) bus has the same problem, yet you can specify a PCI device
-child node, and have a compatible string which will match the vendor
-id/device id tuple, device class etc... such that you can use Device
-Tree to add additional information not necessarily available in other
-ways such as MAC addresses and similar.
+Thanks Kevin.
 
-Once the PCI bus is scanned, pci_device present in Device Tree get a
-device_node pointer assigned.
 
-I don't think there is anything doing this yet for USB devices, but
-maybe that's something that should be there?
---
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>Tested-by: Kevin Hilman <khilman@linaro.org>
+>
+>Kevin
