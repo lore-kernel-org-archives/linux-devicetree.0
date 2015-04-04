@@ -1,104 +1,80 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
-Date: Sat, 04 Apr 2015 01:56:20 +0200
-Message-ID: <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
-References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
- <1428090292-21693-8-git-send-email-stefan@agner.ch>
- <20150403200931.GD13898@n2100.arm.linux.org.uk>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv6] media: i2c/adp1653: Documentation for devicetree
+ support for adp1653
+Date: Sat, 4 Apr 2015 09:43:37 +0200
+Message-ID: <20150404074337.GA31064@amd>
+References: <20150402143846.GA11687@amd>
+ <20150402203417.GA6336@amd>
+ <20150403083353.GA21070@amd>
+ <20150403113216.GK20756@valkosipuli.retiisi.org.uk>
+ <20150403202624.GA4308@amd>
+ <20150403213655.GO20756@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150403200931.GD13898@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150403213655.GO20756@valkosipuli.retiisi.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Andrew Morton <akpm@osdl.org>, pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, galak@codeaurora.org, bcousson@baylibre.com, m.chehab@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-04-03 22:09, Russell King - ARM Linux wrote:
-> On Fri, Apr 03, 2015 at 09:44:48PM +0200, Stefan Agner wrote:
->> In order to support SoC with heterogenous CPU architectures (such
->> as Freescale Vybrid/i.MXSX) it is preferable to use the same
->> architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
->> CPU. Hence allow to select MULTIPLATFORM even without MMU.
->>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>  arch/arm/Kconfig | 21 ++++++++++-----------
->>  1 file changed, 10 insertions(+), 11 deletions(-)
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 9f1f09a..636cb3f 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -230,7 +230,7 @@ config VECTORS_BASE
->>  	  in size.
->>
->>  config ARM_PATCH_PHYS_VIRT
->> -	bool "Patch physical to virtual translations at runtime" if EMBEDDED
->> +	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
->>  	default y
-> 
-> This makes no sense.  Multiplatform MMU _requires_ this feature, so why
-> offer it to the user when multiplatform is enabled _and_ MMU is enabled?
 
-I see, this is plain wrong. Will replace that with a select ... if MMU
-in multiplatform.
+Documentation for adp1653 binding.
 
-> Patch 7817/1 in the patch system tried doing something like you're trying
-> to do here - I wonder whether you've reviewed the mailing list for
-> previous discussions.
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-I did some research at RFC/v1 time and mainly looked into Arnd's git
-trees. Most patches just open up !MMU for multiplatform. What I'm trying
-to do here is to enable !MMU with multiplatform while keeping the impact
-as little as possible, e.g. by making all other platforms in
-multiplatform dependent on MMU.
+---
 
-See also
-https://www.marc.info/?l=linux-kernel&m=141997848124399&w=2
+Please apply.
 
-> Given that it's Easter, I'm not going to re-state what I said last time
-> this came up, but instead leave you to do some research.  For example,
-> reading message id <20130819232411.GX23006@n2100.arm.linux.org.uk>...
+Sorry, wrong version of patch was sent last time.
+									Pavel
 
-Also looked at some other messages about this topic, but I guess quotes
-from the message above will do to discuss this further:
-> Now, here's the question: can multiplatform ever work properly on nommu?
-> 
-> We get multiplatform working on MMU by using the MMU to provide a more
-> consistent view of the system.  On noMMU, we don't have that.  So if
-> your kernel is built to run assuming that it will be located in ram at
-> location X on platform Y, that isn't going to work if platform Z doesn't
-> have RAM there.
+diff --git a/Documentation/devicetree/bindings/media/i2c/adp1653.txt b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+new file mode 100644
+index 0000000..4607ce3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+@@ -0,0 +1,37 @@
++* Analog Devices ADP1653 flash LED driver
++
++Required Properties:
++
++  - compatible: Must contain be "adi,adp1653"
++
++  - reg: I2C slave address
++
++  - enable-gpios: Reference to the GPIO that controls the power for the chip.
++
++There are two LED outputs available - flash and indicator. One LED is
++represented by one child node, nodes need to be named "flash" and "indicator".
++
++Required properties of the LED child node:
++- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++
++Required properties of the flash LED child node:
++
++- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++	adp1653: led-controller@30 {
++		compatible = "adi,adp1653";
++		reg = <0x30>;
++		enable-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
++
++		flash {
++			flash-timeout-us = <500000>;
++			flash-max-microamp = <320000>;
++			max-microamp = <50000>;
++		};
++		indicator {
++			max-microamp = <17500>;
++		};
++	};
 
-The platforms I primarily have in mind (heterogeneous multi-processing
-SoC's with MMU/!MMU processors) would actually allow such a
-multiplatform kernel: i.MX6 SoloX as well as Vybrid have the main memory
-in the same location, hence one could build a multiplatform !MMU kernel
-for this two devices. Of course, this is possible more by chance. I also
-did not tried it yet. I don't have a i.MX6 SoloX device.
-
-> My feeling is that the motivation behind this patch is to avoid an
-> amount of yuckyness associated with trying to enable Versatile Express
-> support outside of the multiplatform container - it's not really about
-> being able to build a single zImage which works on all noMMU platforms.
-> So, I don't think this is the right solution to this problem.
-
-I must admit that this was the main motivation for me too. My first
-approach was to create a set of completely independent config symbols:
-http://marc.info/?l=linux-arm-kernel&m=141756604900611&w=2
-
-However, I'm sure this could be done better and with less config
-symbols.
-
-So, if you think it would be worth enabling multiplatform for these
-devices (Vybrid/i.MX6 SoloX), I would prepare a patchset which does it
-while not converting EFM32 to multiplatform (as patch 08/11 currently
-does).
-
-If you think it's also not worth for those devices, I will try to enable
-ARCH_MXC/SOC_VF610 with !MMU and !MULTIPLATFORM...
-
---
-Stefan
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
