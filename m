@@ -1,14 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: sun7i: Add dts file for the
- Orangepi mini SBC
-Date: Sat,  4 Apr 2015 10:59:54 +0200
-Message-ID: <1428137994-18343-2-git-send-email-hdegoede@redhat.com>
-References: <1428137994-18343-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 1/2] ARM: dts: sun7i: Add dts file for the
+ Orangepi SBC
+Date: Sat,  4 Apr 2015 10:59:53 +0200
+Message-ID: <1428137994-18343-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEWQ72UAKGQEZ5V5CFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1428137994-18343-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBEOQ72UAKGQE5D5H7FI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -20,40 +18,39 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Orangepi mini is a development board using the Allwinner A20 SoC,
-with 1G RAM, 2 microsd slots (use the top side one for booting), HDMI,
-1Gbit ethernet, USB wifi, Micro USB (otg), sata, 4 USB A ports,
-ir receiver and a headphones jack.
+The Orangepi is a development board using the Allwinner A20 SoC, with 1G RAM,
+microsd slot, HDMI, 1Gbit ethernet, USB wifi, Micro USB (otg), sata, 4 USB A
+ports, ir receiver and a headphones jack.
 
 Also see:
-http://linux-sunxi.org/Xunlong_Orange_Pi_Mini
+http://linux-sunxi.org/Xunlong_Orange_Pi
 http://www.orangepi.org/
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts | 251 ++++++++++++++++++++++++++
- 2 files changed, 252 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/sun7i-a20-orangepi.dts | 229 +++++++++++++++++++++++++++++++
+ 2 files changed, 230 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-orangepi.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d9b609d..13de5d6 100644
+index 2426f0a..d9b609d 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -552,6 +552,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+@@ -551,6 +551,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-olinuxino-lime.dtb \
  	sun7i-a20-olinuxino-lime2.dtb \
  	sun7i-a20-olinuxino-micro.dtb \
- 	sun7i-a20-orangepi.dtb \
-+	sun7i-a20-orangepi-mini.dtb \
++	sun7i-a20-orangepi.dtb \
  	sun7i-a20-pcduino3.dtb \
  	sun7i-a20-pcduino3-nano.dtb \
  	sun7i-a20-wexler-tab7200.dtb
-diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi.dts b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
 new file mode 100644
-index 0000000..f6a6bf6
+index 0000000..2ef79b7
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-@@ -0,0 +1,251 @@
++++ b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+@@ -0,0 +1,229 @@
 +/*
 + * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 + *
@@ -112,8 +109,8 @@ index 0000000..f6a6bf6
 +#include <dt-bindings/pinctrl/sun4i-a10.h>
 +
 +/ {
-+	model = "Orange Pi Mini";
-+	compatible = "xunlong,orangepi-mini", "allwinner,sun7i-a20";
++	model = "Orange Pi";
++	compatible = "xunlong,orangepi", "allwinner,sun7i-a20";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -127,11 +124,6 @@ index 0000000..f6a6bf6
 +		green {
 +			label = "orangepi:green:usr";
 +			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>; /* PH24 */
-+		};
-+
-+		blue {
-+			label = "orangepi:blue:usr";
-+			gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>; /* PH25 */
 +		};
 +	};
 +
@@ -203,26 +195,9 @@ index 0000000..f6a6bf6
 +	status = "okay";
 +};
 +
-+&mmc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins_a>, <&mmc3_cd_pin_orangepi>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
 +&pio {
 +	mmc0_cd_pin_orangepi: mmc0_cd_pin@0 {
 +		allwinner,pins = "PH10";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	mmc3_cd_pin_orangepi: mmc3_cd_pin@0 {
-+		allwinner,pins = "PH11";
 +		allwinner,function = "gpio_in";
 +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
@@ -243,7 +218,7 @@ index 0000000..f6a6bf6
 +	};
 +
 +	led_pins_orangepi: led_pins@0 {
-+		allwinner,pins = "PH24", "PH25";
++		allwinner,pins = "PH24";
 +		allwinner,function = "gpio_out";
 +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
