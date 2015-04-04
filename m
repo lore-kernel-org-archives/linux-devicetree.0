@@ -1,284 +1,199 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: sun7i: Add dts file for the
- Orangepi SBC
-Date: Sat,  4 Apr 2015 10:59:53 +0200
-Message-ID: <1428137994-18343-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEOQ72UAKGQE5D5H7FI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v4 3/6] Documentation: DT: Document twl4030-madc-battery bindings
+Date: Sat, 4 Apr 2015 11:46:10 +0200
+Message-ID: <920D9B36-7369-4E3F-83F3-DB27D52503CC@goldelico.com>
+References: <1426022847-30912-1-git-send-email-marek@goldelico.com> <1426022847-30912-4-git-send-email-marek@goldelico.com> <20150311152414.GX5264@atomide.com> <844740CD-C95B-4411-A2C8-4906F58DBEE8@goldelico.com> <20150311164442.GA5264@atomide.com> <20150331072643.GB30788@amd> <BC5A7447-CAD7-4CCE-8F08-8CEFBB5C6905@goldelico.com> <20150401201605.GA11421@amd> <D659872E-E276-4E00-BAFC-1E461EDA1FA7@goldelico.com> <20150404081655.GD31064@amd>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150404081655.GD31064@amd>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Tony Lindgren <tony@atomide.com>, Marek Belisko <marek@goldelico.com>, Benoit Cousson <bcousson@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Orangepi is a development board using the Allwinner A20 SoC, with 1G RAM,
-microsd slot, HDMI, 1Gbit ethernet, USB wifi, Micro USB (otg), sata, 4 USB A
-ports, ir receiver and a headphones jack.
+Hi Pavel,
 
-Also see:
-http://linux-sunxi.org/Xunlong_Orange_Pi
-http://www.orangepi.org/
+Am 04.04.2015 um 10:16 schrieb Pavel Machek <pavel@ucw.cz>:
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/sun7i-a20-orangepi.dts | 229 +++++++++++++++++++++++++++++++
- 2 files changed, 230 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-orangepi.dts
+> Hi!
+>=20
+>>>> Please propose your own code doing that so that we can test if it =
+is
+>>>> better.
+>>>=20
+>>> So, how does this look?
+>>>=20
+>>> It looks to me like you have cca 0.1 Ohm resistance in your system,
+>>=20
+>> This is completely unknown.
+>>=20
+>>> and are using cca 75mA while discharging, and charge by cca 1.4A.
+>>=20
+>> Where do you get these figures from?
+>=20
+> Least squares fitting of my coefficients to your tables.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 2426f0a..d9b609d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -551,6 +551,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
-+	sun7i-a20-orangepi.dtb \
- 	sun7i-a20-pcduino3.dtb \
- 	sun7i-a20-pcduino3-nano.dtb \
- 	sun7i-a20-wexler-tab7200.dtb
-diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi.dts b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
-new file mode 100644
-index 0000000..2ef79b7
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
-@@ -0,0 +1,229 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Orange Pi";
-+	compatible = "xunlong,orangepi", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_orangepi>;
-+
-+		green {
-+			label = "orangepi:green:usr";
-+			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>; /* PH24 */
-+		};
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_orangepi>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
-+	};
-+};
-+
-+&ahci {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&reg_gmac_3v3>;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp209.dtsi"
-+
-+&ir0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_pins_a>;
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_orangepi>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&pio {
-+	mmc0_cd_pin_orangepi: mmc0_cd_pin@0 {
-+		allwinner,pins = "PH10";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	usb2_vbus_pin_bananapro: usb2_vbus_pin@0 {
-+		allwinner,pins = "PH22";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	gmac_power_pin_orangepi: gmac_power_pin@0 {
-+		allwinner,pins = "PH23";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	led_pins_orangepi: led_pins@0 {
-+		allwinner,pins = "PH24";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	usb1_vbus_pin_bananapro: usb1_vbus_pin@0 {
-+		allwinner,pins = "PH26";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-pll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb1_vbus {
-+	pinctrl-0 = <&usb1_vbus_pin_bananapro>;
-+	gpio = <&pio 7 26 GPIO_ACTIVE_HIGH>; /* PH26 */
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	pinctrl-0 = <&usb2_vbus_pin_bananapro>;
-+	gpio = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-2.3.4
+Ah, I see.
+
+>=20
+>> A GTA04 board discharges usually between 50 and 400 mA (depending on=
+ activities)
+>> and if you turn on WiFi, it will be up to 600 mA. If you use 3G it c=
+an draw even more
+>> during operation.
+>=20
+> How big battery do you have?
+
+1200 mAh
+
+> According to least squares fitting,
+> assuming maximum charge of .46A, you were taking about 25mA when
+> doing the discharge test.
+
+No, that can=92t fit well. But I do not remember who has done this cali=
+bration in which situation
+because it was done many months ago for the platform data version. We h=
+ave just reformatted
+the table for the DT.
+
+>=20
+>> Total current going in is 500-800 mA (depending on USB negotiations)=
+ and this is
+>> split into system operation and charging current. So 1.4A charging c=
+urrent is not
+>> possible. Rather 200-500 mA.
+>>=20
+>> So it might be that the battery is discharged although the system is=
+ connected
+>> to a charger.
+>=20
+> Yah, and your battery meter will be wrong in such case, as will be
+> mine, because they are based on same information.
+
+Well, it is not =93mine=94, it is the platform_data based driver alread=
+y in kernel.org
+since ca. 3.12.
+
+We have just updated it to DT to get rid of platform_data in this area =
+as well=85
+
+Yes, I see your argument that hiding the tables (two characteristic cur=
+ves)
+into an analytic approximation can be superior.=20
+
+The problem I see is just that your formula needs some parameters which
+are difficult to derive or estimate. And must be adjusted to the specif=
+ic
+battery and system setup in a non-trivial way.
+
+At least we must supply a tool (in the kernel/scripts directory?) where=
+ someone
+can can estimate the parameters of the formula from the characteristic =
+curves.
+
+Maybe a tool that automatically runs several charge/discharge cycles at
+different system load. And measures time vs. voltage. And assumes a lin=
+ear
+capacity decrease between the end points. (i.e. if it needs 10 hours to=
+ charge
+from completely empty to full, we can assume 50% after 5,0 hours).
+
+So my goal is to measure all characteristics of the battery - and no ne=
+ed to
+study a (potentially non-existing) data sheet.
+
+If you can provide that for all parameters of your algorithm I am fine =
+with it.
+
+> The thing is, mine
+> can be improved without adding more tables.=20
+
+How can you improve your algorithm without tweaking or adding new param=
+eters?
+
+>=20
+>>> It is tricky to do a good job near 0%... or anywhere else. See for
+>>> example
+>>>=20
+>>> http://cseweb.ucsd.edu/~trosing/lectures/battery.pdf
+>>>=20
+>>> You start a call, percentage goes down, end a call, it will go
+>>> back up. I'm pretty sure you will not be able to make a call with "=
+5%"
+>>> indication from your code at low battery temperature (say -10C).
+>>=20
+>> The whole system is heating up a little, so that you never have -10C=
+ for the
+>> battery.
+>=20
+> Umm. When not calling, your phone should not heat itself up.
+
+Yes, in suspend it needs <20 mA which does not heat or course.
+But steady operation at 20-400 mA does significantly rise OMAP
+temperature beyond environment temperature.
+
+> And you
+> definitely can power it down, leave it in outer pocket, then power it
+> up. It is actually something people do when they want to preserve bat=
+tery...
+>=20
+>> I think you are trying to solve situations that don=92t exist in pra=
+ctice.
+>>=20
+>> And AFAIK, the GTA04 board is the only user of this driver in case t=
+he battery
+>> has no built-in fuel gauge. So why improve it beyond what the GTA04
+>> users need?
+>=20
+> Because then other users can share the same code, and because you
+
+But you have ugly parameters in dts that nobody can easily see in the s=
+chematics
+and that are full of assumptions.
+
+=46rom a perspective of uncertainty analysis, estimation of the interna=
+l parameters
+needs a higher precision than the calibration points.
+
+> avoid big ugly tables in dts.
+
+Well, the biggest tables I have seen in dts are keyboard matrix codes=85
+
+>=20
+>> I repeat myself: this driver is not built for highest precision beca=
+use there are
+>> better methods (fuel gauge chip). These might not be available so th=
+is fall-back
+>> driver has been built.
+>>=20
+>> It is definitively better than no driver and worse than the optimum.
+>=20
+> And my email suggested solution better than your driver, so why not
+> just use it?
+
+I am not yet convinced that it is better.
+
+It just moves the (unavoidable) limitations (measuring multiple calibra=
+tion points)
+just to a different area (measuring the hidden and not precisely known =
+parameter
+of the system).
+
+>=20
+>=20
+>>> #perc =3D percent(volt)
+>>> compute(charging, 1)
+>>> compute(discharging, 0)
+>>=20
+>> Please explain what you calculate here. Especially what =93Badness=94=
+ is?
+>=20
+> Badness is error in least squares method.
+
+Ok, I see. Thanks for clarification.
+
+BR,
+NIkolaus
+
