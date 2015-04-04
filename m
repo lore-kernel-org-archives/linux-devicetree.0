@@ -1,103 +1,45 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: Add binding for Broadcom MSPI driver.
-Date: Sat, 04 Apr 2015 12:17:57 -0700
-Message-ID: <552038E5.6050609@gmail.com>
-References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com> <1428002603-21892-2-git-send-email-jonathar@broadcom.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv6] media: i2c/adp1653: Documentation for devicetree
+ support for adp1653
+Date: Sat, 4 Apr 2015 23:03:07 +0300
+Message-ID: <20150404200307.GS20756@valkosipuli.retiisi.org.uk>
+References: <20150402143846.GA11687@amd>
+ <20150402203417.GA6336@amd>
+ <20150403083353.GA21070@amd>
+ <20150403113216.GK20756@valkosipuli.retiisi.org.uk>
+ <20150403202624.GA4308@amd>
+ <20150403213655.GO20756@valkosipuli.retiisi.org.uk>
+ <20150404074337.GA31064@amd>
+ <20150404102435.GR20756@valkosipuli.retiisi.org.uk>
+ <20150404171116.GA15025@Nokia-N900>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428002603-21892-2-git-send-email-jonathar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Richardson <jonathar@broadcom.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>
-Cc: Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, Rafal Milecki <zajec5@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Kevin Cernekee <cernekee@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150404171116.GA15025@Nokia-N900>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, sre-GFxCN5SEZAc@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 02/04/2015 12:23, Jonathan Richardson a =C3=A9crit :
->=20
-> Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
-> ---
->  .../devicetree/bindings/spi/brcm,mspi-spi.txt      |   38 ++++++++++=
-++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/brcm,mspi-s=
-pi.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt =
-b/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
-> new file mode 100644
-> index 0000000..16164e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
-> @@ -0,0 +1,38 @@
-> +Broadcom MSPI controller
-> +
-> +Required properties:
-> +- compatible: Must be either "brcm,mspi" or "brcm,bcma-mspi". Use
-> +  "brcm,bcma-mspi" for controllers on a bcma bus and "brcm,mspi" oth=
-erwise.
+On Sat, Apr 04, 2015 at 07:11:16PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > enable-gpios: Specifier of the GPIO connected to EN pin
+> > 
+> > I can make the changes if you're ok with that, otherwise please send v7. Then
+> > I'll apply that to my tree.
+> 
+> I'm ok with that.
 
-We need a more specific compatible property here since there are at
-least 3 known SoCs families within Broadcom (Cygnus, BCM53xx, BCM7xxx)
-that use this controller, also older versions of the core did not have =
-a
-revision register, yet they had an internal version numbering that we
-might want to reflect here. This does not need to be fixed immediately
-though, we can add compatible strings as we start adding support for
-older cores.
+Thanks. The patch is applied here:
 
-> +
-> +- reg:  Physical base address and length of the controller's registe=
-rs.
-> +
-> +- interrupts: The interrupt id for the controller.
+	git://linuxtv.org/sailus/media_tree.git, branch adp1653
 
-I think this should be two cells, on BCM7xxx chips there is a MSPI_DONE
-and a MSPI_ERROR interrupt bit, we typically only use the first one, bu=
-t
-since we are describing the hardware here, we need to be exhaustive.
-
-> +
-> +- #address-cells: should be 1.
-> +
-> +- #size-cells: should be 0.
-> +
-> +Optional properties:
-> +- clocks: The MSPI reference clock. If not provided then it is assum=
-ed a clock
-> +  is enabled by default and no control of clock-frequency (see below=
-) is
-> +  possible.
-> +
-> +- clock-names: The name of the reference clock.
-> +
-> +- clock-frequency: Desired frequency of the clock. This will set the=
- serial
-> +  clock baud rate (SPBR) based on the reference clock frequency. The=
- frequency
-> +  of the SPBR is mspi_clk / (2 * SPBR) where SPBR is a value between=
- 1-255
-> +  determined by the desired 'clock-frequency'. If not provided then =
-the default
-> +  baud rate of the controller is used.
-
-See my reply to the patch 4, that does not seem to match the
-"clock-frequency" vs. clock phandles practices in DT.
-
-> +
-> +Example:
-> +
-> +mspi@18047000 {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +	compatible =3D "brcm,mspi";
-> +	reg =3D <0x18047000 0x1000>;
-> +	clocks =3D <&axi41_clk>;
-> +	clock-names =3D "mspi_clk";
-> +	clock-frequency =3D <12500000>;
-
-Since "interrupts" is a mandatory property you might want the example t=
-o
-show it for consistency.
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
-=46lorian
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
