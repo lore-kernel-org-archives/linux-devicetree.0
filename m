@@ -1,103 +1,71 @@
-From: Stefan Agner <stefan@agner.ch>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
-Date: Mon, 06 Apr 2015 00:19:43 +0200
-Message-ID: <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
+Date: Sun, 5 Apr 2015 23:44:55 +0100
+Message-ID: <20150405224455.GB12732@n2100.arm.linux.org.uk>
 References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
  <1428090292-21693-8-git-send-email-stefan@agner.ch>
  <20150403200931.GD13898@n2100.arm.linux.org.uk>
  <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
  <20150405161014.GG13898@n2100.arm.linux.org.uk>
+ <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150405161014.GG13898@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <24394c50bcd8000c21aca0360fd20b6f-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-04-05 18:10, Russell King - ARM Linux wrote:
-> On Sat, Apr 04, 2015 at 01:56:20AM +0200, Stefan Agner wrote:
->> On 2015-04-03 22:09, Russell King - ARM Linux wrote:
->> > On Fri, Apr 03, 2015 at 09:44:48PM +0200, Stefan Agner wrote:
->> >> In order to support SoC with heterogenous CPU architectures (such
->> >> as Freescale Vybrid/i.MXSX) it is preferable to use the same
->> >> architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
->> >> CPU. Hence allow to select MULTIPLATFORM even without MMU.
->> >>
->> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> >> ---
->> >>  arch/arm/Kconfig | 21 ++++++++++-----------
->> >>  1 file changed, 10 insertions(+), 11 deletions(-)
->> >>
->> >> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> >> index 9f1f09a..636cb3f 100644
->> >> --- a/arch/arm/Kconfig
->> >> +++ b/arch/arm/Kconfig
->> >> @@ -230,7 +230,7 @@ config VECTORS_BASE
->> >>  	  in size.
->> >>
->> >>  config ARM_PATCH_PHYS_VIRT
->> >> -	bool "Patch physical to virtual translations at runtime" if EMBEDDED
->> >> +	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
->> >>  	default y
->> >
->> > This makes no sense.  Multiplatform MMU _requires_ this feature, so why
->> > offer it to the user when multiplatform is enabled _and_ MMU is enabled?
->>
->> I see, this is plain wrong. Will replace that with a select ... if MMU
->> in multiplatform.
+On Mon, Apr 06, 2015 at 12:19:43AM +0200, Stefan Agner wrote:
+> On 2015-04-05 18:10, Russell King - ARM Linux wrote:
+> > config ARM_SINGLE_ARMV7M
+> > 	bool "ARM architecture v7M compliant (Cortex-M0/M3/M4) SoC"
+> > 	depends on !MMU
+> > 	select ARM_NVIC
+> > 	... etc ...
 > 
-> I think what I'd like to see is, in the top level choice:
+> I guess that would be ARCH_SINGLE_ARMV7M?
+
+No, I meant ARM_SINGLE_xxx
+
+> > which then allows a /multiplatform/ v7M kernel to be built, allowing the
+> > selection of EFM32, SOC_VF610, and any other v7M compliant SoC.
 > 
-> config ARM_SINGLE_ARMV7M
-> 	bool "ARM architecture v7M compliant (Cortex-M0/M3/M4) SoC"
-> 	depends on !MMU
-> 	select ARM_NVIC
-> 	... etc ...
+> In my view, that wouldn't end up being much different than what that
+> patchset is doing:
 
-I guess that would be ARCH_SINGLE_ARMV7M?
+It's different.  It's different because we are _not_ enabling multiplatform.
+Multiplatform brings with it all the MMU-full stuff that we don't want on
+!MMU.
 
-> 
-> which then allows a /multiplatform/ v7M kernel to be built, allowing the
-> selection of EFM32, SOC_VF610, and any other v7M compliant SoC.
+You're thinking far too specifically about V7M here.  We have other !MMU
+CPUs, such as ARM946 and ARM940 which are older generation mmuless CPUs.
 
-In my view, that wouldn't end up being much different than what that
-patchset is doing:
-With the introduction of ARCH_MULTI_V7M, we add something like a top
-level v7M compliant selection. Due to the !MMU dependencies of all other
-CPU families the family selection is minimal (when selecting !MMU):
+The problem with the ARCH_MULTI_V7M approach is that they're V4T and V5
+CPUs, and we _really_ don't want to enable ARCH_MULTI_V4T and
+ARCH_MULTI_V5.  If we did that, we'll allow _every_ V4T and V5
+multiplatform to be selected, whether they're compatible with nommu
+or not - and whether they're compatible with each other or not.
 
-    *** CPU Core family selection *** 
-[*] ARMv7-M based platforms (Cortex-M)
+So, that kind of solution _doesn't_ scale to what we _once_ already
+allowed.
 
-And since ARCH_MULTI_V7M is not part of ARCH_MULTI_V6_V7 or anything,
-the whole SoC selection contains only sensible SoC's without further
-changes (also within the i.MX family, currently only "Vybrid Family
-VF610 support" is selectable):
+> As far as I can tell, this is already the case with that patchset.
 
-[ ] MMU-based Paged Memory Management Support                       
-    ARM system type (Allow multiple platforms to be selected)  ---> 
-    Multiple platform selection  --->                               
-[*] Energy Micro efm32                                              
-[*] Freescale i.MX family  --->    
-    *** Processor Type ***
-...
+What I'm trying to do here is to fix the cockup that the multiplatform
+conversion has created with previous generation noMMU and restore it
+back to where it should be without excluding the newer stuff from it.
 
-> So, it's very similar to multiplatform in the sense that several SoCs
-> can be built together, but we preserve the need not to build
-> incompatible stuff together.
+What you're interested in is just the newer stuff.  You're approaching
+the problem from a different angle and thinking that your solution is
+the best.  I'm saying it has deficiencies.
 
-As far as I can tell, this is already the case with that patchset.
-
-The differences boil down to on which level we split the v7M CPU
-selection apart: On ARCH_* level or ARCH_MULTI_* level. Given that we
-allow a multiplatform _v7M kernel, the latter sounds more natural to
-me...
-
-Are there arguments to split v7M CPU selection apart on ARCH_* level
-which I don't see?
-
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
