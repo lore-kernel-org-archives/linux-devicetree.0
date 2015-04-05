@@ -1,49 +1,103 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with complex dependencies
-Date: Sun, 05 Apr 2015 23:06:20 +0300
-Message-ID: <2722685.XFRaAHH9GQ@avalon>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be> <34835209.cQQp4PEGGk@avalon> <CAMuHMdWsc=2QvKfpYmN=M6As_KWENW2nhSqa8ajkZrQFe+dCPw@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
+Date: Mon, 06 Apr 2015 00:19:43 +0200
+Message-ID: <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
+References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
+ <1428090292-21693-8-git-send-email-stefan@agner.ch>
+ <20150403200931.GD13898@n2100.arm.linux.org.uk>
+ <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
+ <20150405161014.GG13898@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWsc=2QvKfpYmN=M6As_KWENW2nhSqa8ajkZrQFe+dCPw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms+renesas@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, driverdevel <devel@driverdev.osuosl.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150405161014.GG13898@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Sunday 05 April 2015 11:00:56 Geert Uytterhoeven wrote:
-> On Sat, Apr 4, 2015 at 2:46 PM, Laurent Pinchart wrote:
-> >> +     for (i = 0; i < dev->ngpios; i++)
-> >> +             gpio_request_one(dev->gpios[i].gpio, dev->gpios[i].flags,
-> >> +                              pdev->name);
-> > 
-> > Aren't GPIO numbers dynamic too in DT-based systems ? Beside, shouldn't it
-> > be
->
-> Apparently not, as the old legacy number still works, and it doesn't work
-> without.
-
-I think we're just lucky there that the SoC main GPIO controller gets 
-registered first and starts counting GPIOs with a zero offset.
- 
-> > the responsibility of the drievr to request the GPIOs it needs ?
+On 2015-04-05 18:10, Russell King - ARM Linux wrote:
+> On Sat, Apr 04, 2015 at 01:56:20AM +0200, Stefan Agner wrote:
+>> On 2015-04-03 22:09, Russell King - ARM Linux wrote:
+>> > On Fri, Apr 03, 2015 at 09:44:48PM +0200, Stefan Agner wrote:
+>> >> In order to support SoC with heterogenous CPU architectures (such
+>> >> as Freescale Vybrid/i.MXSX) it is preferable to use the same
+>> >> architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
+>> >> CPU. Hence allow to select MULTIPLATFORM even without MMU.
+>> >>
+>> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> >> ---
+>> >>  arch/arm/Kconfig | 21 ++++++++++-----------
+>> >>  1 file changed, 10 insertions(+), 11 deletions(-)
+>> >>
+>> >> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> >> index 9f1f09a..636cb3f 100644
+>> >> --- a/arch/arm/Kconfig
+>> >> +++ b/arch/arm/Kconfig
+>> >> @@ -230,7 +230,7 @@ config VECTORS_BASE
+>> >>  	  in size.
+>> >>
+>> >>  config ARM_PATCH_PHYS_VIRT
+>> >> -	bool "Patch physical to virtual translations at runtime" if EMBEDDED
+>> >> +	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
+>> >>  	default y
+>> >
+>> > This makes no sense.  Multiplatform MMU _requires_ this feature, so why
+>> > offer it to the user when multiplatform is enabled _and_ MMU is enabled?
+>>
+>> I see, this is plain wrong. Will replace that with a select ... if MMU
+>> in multiplatform.
 > 
-> As far as I understand it, on Armadillo this is used more for platform
-> configuration than for device configuration, as it affects multiple devices
-> (the comment says DBGMD/LCDC0/FSIA MUX).
+> I think what I'd like to see is, in the top level choice:
 > 
-> I guess I could use a "gpio-hog" subnode in DT instead, but then we're
-> already implementing the conversion to DT ;-)
+> config ARM_SINGLE_ARMV7M
+> 	bool "ARM architecture v7M compliant (Cortex-M0/M3/M4) SoC"
+> 	depends on !MMU
+> 	select ARM_NVIC
+> 	... etc ...
 
-But that's the goal :-) I'd rather move GPIO and pinctrl to DT directly as we 
-already have the infrastructure to do so.
+I guess that would be ARCH_SINGLE_ARMV7M?
 
--- 
-Regards,
+> 
+> which then allows a /multiplatform/ v7M kernel to be built, allowing the
+> selection of EFM32, SOC_VF610, and any other v7M compliant SoC.
 
-Laurent Pinchart
+In my view, that wouldn't end up being much different than what that
+patchset is doing:
+With the introduction of ARCH_MULTI_V7M, we add something like a top
+level v7M compliant selection. Due to the !MMU dependencies of all other
+CPU families the family selection is minimal (when selecting !MMU):
 
+    *** CPU Core family selection *** 
+[*] ARMv7-M based platforms (Cortex-M)
+
+And since ARCH_MULTI_V7M is not part of ARCH_MULTI_V6_V7 or anything,
+the whole SoC selection contains only sensible SoC's without further
+changes (also within the i.MX family, currently only "Vybrid Family
+VF610 support" is selectable):
+
+[ ] MMU-based Paged Memory Management Support                       
+    ARM system type (Allow multiple platforms to be selected)  ---> 
+    Multiple platform selection  --->                               
+[*] Energy Micro efm32                                              
+[*] Freescale i.MX family  --->    
+    *** Processor Type ***
+...
+
+> So, it's very similar to multiplatform in the sense that several SoCs
+> can be built together, but we preserve the need not to build
+> incompatible stuff together.
+
+As far as I can tell, this is already the case with that patchset.
+
+The differences boil down to on which level we split the v7M CPU
+selection apart: On ARCH_* level or ARCH_MULTI_* level. Given that we
+allow a multiplatform _v7M kernel, the latter sounds more natural to
+me...
+
+Are there arguments to split v7M CPU selection apart on ARCH_* level
+which I don't see?
+
+--
+Stefan
