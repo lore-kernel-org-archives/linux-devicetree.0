@@ -1,58 +1,46 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 5/6] staging: board: Add support for devices with
- complex dependencies
-Date: Sun, 5 Apr 2015 11:00:56 +0200
-Message-ID: <CAMuHMdWsc=2QvKfpYmN=M6As_KWENW2nhSqa8ajkZrQFe+dCPw@mail.gmail.com>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
- <1428064923-24950-6-git-send-email-geert+renesas@glider.be>
- <34835209.cQQp4PEGGk@avalon>
+Subject: [PATCH 0/3] of: Increase compile coverage
+Date: Sun,  5 Apr 2015 16:59:22 +0200
+Message-ID: <1428245965-19618-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <34835209.cQQp4PEGGk@avalon>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-sh list <linux-sh@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux PM list <linux-pm@vger.kernel.org>, Magnus Damm <damm+renesas@opensource.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+	Hi,
 
-On Sat, Apr 4, 2015 at 2:46 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->> +     for (i = 0; i < dev->ngpios; i++)
->> +             gpio_request_one(dev->gpios[i].gpio, dev->gpios[i].flags,
->> +                              pdev->name);
->
-> Aren't GPIO numbers dynamic too in DT-based systems ? Beside, shouldn't it be
+Currently the OF configuration symbol is explicitly selected on
+architectures that support device trees and/or Open Firmware.
+However, there's no technical reason to limit the device tree
+infrastructure to these architectures.
 
-Apparently not, as the old legacy number still works, and it doesn't work
-without.
+Hence this series allows to enable OF when compile testing, to increase
+compile coverage. It also fixes the fallout I encountered when IRQ
+domain support is not enabled.
 
-> the responsibility of the drievr to request the GPIOs it needs ?
+Geert Uytterhoeven (3):
+  of: Allow OF to be enabled if COMPILE_TEST to increase coverage
+  of: OF_IRQ should depend on IRQ_DOMAIN
+  of: Add dummy of_irq_to_resource_table() for IRQ_OF=n
 
-As far as I understand it, on Armadillo this is used more for platform
-configuration than for device configuration, as it affects multiple devices
-(the comment says DBGMD/LCDC0/FSIA MUX).
+ drivers/of/Kconfig     | 8 ++++++--
+ include/linux/of_irq.h | 9 +++++++--
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-I guess I could use a "gpio-hog" subnode in DT instead, but then we're already
-implementing the conversion to DT ;-)
+-- 
+1.9.1
 
 Gr{oetje,eeting}s,
 
-                        Geert
+						Geert
 
 --
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+							    -- Linus Torvalds
