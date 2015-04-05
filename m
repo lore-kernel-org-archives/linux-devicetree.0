@@ -1,84 +1,107 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: USB device nodes in device tree
-Date: Sun, 05 Apr 2015 01:48:13 +0200
-Message-ID: <2088925.D3DrPCc17B@wuerfel>
-References: <Pine.LNX.4.44L0.1503301534050.1407-100000@iolanthe.rowland.org> <552036B4.9050405@gmail.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] libfdt: Add fdt_path_offset_namelen()
+Date: Sat, 04 Apr 2015 23:50:01 -0400
+Message-ID: <5520B0E9.1090902@hurleysoftware.com>
+References: <1425654758-2575-1-git-send-email-peter@hurleysoftware.com> <20150310001711.GB30335@voom.fritz.box> <54FEF600.50402@hurleysoftware.com> <20150313054350.GA11132@voom.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552036B4.9050405-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150313054350.GA11132-1s0os16eZneny3qCrzbmXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 04 April 2015 12:08:36 Florian Fainelli wrote:
-> Le 30/03/2015 12:35, Alan Stern a =E9crit :
-> > On Mon, 30 Mar 2015, Valentin Longchamp wrote:
-> >=20
-> >> Hello,
-> >>
-> >> We are currently developing a board with an USB MFD device (I2C an=
-d GPIOs are to
-> >> be supported). The device is soldered on the board and is the only=
- one on the
-> >> bus, so the bus is not really "dynamic".
-> >>
-> >> Since it's an USB device, it should be dynamically detected by the=
- kernel and it
-> >> would not require a node in the board's DTS. However, I need to ha=
-ve the devices
-> >> which are "behind" the MFD USB device to be in the DTS (I2C bus to=
-pology, and
-> >> some of the GPIOs are to be used directly by some other DTS nodes =
-as well).
-> >>
-> >> Is there a way to add a node for USB device in a DTS ? Is there an=
- available
-> >> example for this ?
-> >=20
-> > No, there is no way to do it as far as I know.  The main problem is=
-=20
-> > that Device Tree is static whereas USB devices are dynamic.
->=20
-> The PCI(e) bus has the same problem, yet you can specify a PCI device
-> child node, and have a compatible string which will match the vendor
-> id/device id tuple, device class etc... such that you can use Device
-> Tree to add additional information not necessarily available in other
-> ways such as MAC addresses and similar.
->=20
-> Once the PCI bus is scanned, pci_device present in Device Tree get a
-> device_node pointer assigned.
->=20
-> I don't think there is anything doing this yet for USB devices, but
-> maybe that's something that should be there?
->=20
+On 03/13/2015 01:43 AM, David Gibson wrote:
+> On Tue, Mar 10, 2015 at 09:47:44AM -0400, Peter Hurley wrote:
+>> Hi David,
+>>
+>> On 03/09/2015 08:17 PM, David Gibson wrote:
+>>> On Fri, Mar 06, 2015 at 10:12:38AM -0500, Peter Hurley wrote:
+>>>> Properties may contain path names which are not NUL-terminated.
+>>>> For example, the 'stdout-path' property allows the form 'path:options',
+>>>> where the ':' character terminates the path specifier.
+>>>>
+>>>> Allow these path names to be used in-place for path descending;
+>>>> add fdt_path_offset_namelen(), which limits the path name to 'namelen'
+>>>> characters.
+>>>>
+>>>> Reimplement fdt_path_offset() as a trivial wrapper.
+>>>>
+>>>> Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+>>>
+>>> I think this function is a good idea, however I would like to see a
+>>> testcase for it.
+>>
+>> Sure, I can do that.
+>>
+>> I assume you mean a path name with non-NUL termination because
+>> the fdt_path_offset() tests are already exercising the
+>> fdt_path_offset_name() implementation.
+> 
+> Yes, I mean the non-\0-terminated case.  Or more specifically still,
+> making sure that if you call fdt_path_offset_namelen() on a portion of
+> a longer path, it correctly gives you the offset for only the partial
+> path.
+> 
+> That said, there may be some other edge cases that could do with
+> testing too, if you have time.  In particular I'm thinking of paths
+> where there are repeated '/' character, and paths ending with one or
+> more '/' characters.
+> 
+>> Is there a readme somewhere regarding the test matrix (ie.,
+>> which dts files go with which tests)?
+> 
+> I'm afraid not, apart from the test runner script itself.  I'm not
+> sure quite what information you're after here.
 
-It's come up a number of times. Basically we should support this, and I
-believe it's relatively straightforward to do, someone just has to=20
-implement it, but setting the of_node pointer for a USB device that
-gets added and if that has a matching node.
+Ok, now that I have the test working, I see why you didn't understand
+what I was after.
 
-There is a binding for USB that we never implemented in Linux. It
-used to be at http://playground.sun.com/1275/bindings/usb/usb-1_0.ps
-and I can send a copy to anyone that needs one. Most of the contents
-are irrelevant unless you want to implement a full Open Firmware
-rather than a flattened device tree.=20
+The purpose of fdt_path_offset_namelen() is to perform path-descending
+from in-place property values; for example, finding the node offset from
+the /chosen/stdout-path property of the form
 
-The important parts are:
+/ {
+	chosen {
+		stdout-path = "/ocp/serial@44e04d00:115200";
+	};
+}
 
-#address-cells: needs to be 1
-#size-cells: needs to be 0
+I wrote the test to get string properties containing paths from the
+fdt; for example, assuming the fdt contains
 
-reg: 'The "reg" property for a device node shall consist of the number =
-of the USB hub port or the USB host
-controller port to which this USB device is attached. As specified in [=
-2] section 11.11.2.1, port numbers range
-from 1 to 255.'
+	path1 = "/subnode@1/subsubnode:";
+	path2 = "/subnode@2/subsubnode@0:";
+	path3 = "/subnode@1////subsubnode///:";
+	path4 = "/subnode@2///subsubnode///:/subnode@1";
 
-	Arnd
+the test did:
+
+	const char *path1;
+
+	path1 = fdt_getprop(fdt, 0, "path1", &len);
+	...
+
+
+I had looked at the run_test.sh scripts and known that there were
+multiple dtb files produced for the test_tree1 tests so I was asking
+for a handy readme to tell me which dts(i) files to add the string
+properties to.
+
+When I got the test running for dtbs produced from test_tree1.body.dtsi,
+I discovered there were some cross-referenced tests from other
+sources, like sw_tree1.c; thus the changes to test_tree1.body.dtsi
+cause other tests to fail.
+
+So I've given up on testing fdt_path_offset_namelen() that way,
+and instead, am just using static const paths defined in the test
+itself, which I will submit shortly.
+
+Regards,
+Peter Hurley
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
