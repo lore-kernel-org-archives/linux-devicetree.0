@@ -1,84 +1,180 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] spi: bcm-mspi: Make BCMA optional to support non-BCMA chips
-Date: Mon, 6 Apr 2015 12:36:11 +0200
-Message-ID: <CACna6ry9qxzY9xaaqR8K6XgSEun31c=d1XrWH_vk7Fq7fJTxoA@mail.gmail.com>
-References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
-	<1428002603-21892-4-git-send-email-jonathar@broadcom.com>
-	<CAHp75VcMg-8X8DtHbQrmugzWG5VzzHXcpWNiyrTT=qmuCvA95w@mail.gmail.com>
-	<551ED345.1000702@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH/RFC 3/6] staging: board: Add support for translating hwirq
+ to virq numbers
+Date: Mon, 06 Apr 2015 11:45:44 +0100
+Message-ID: <7a82f5d435aaaf8d121233769a77943c@www.loen.fr>
+References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
+ <1428064923-24950-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <551ED345.1000702-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1428064923-24950-4-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-sh@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 3 April 2015 at 19:52, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
-:
-> On 03/04/15 06:38, Andy Shevchenko wrote:
->> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
->> <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> The Broadcom MSPI controller is used on various chips. The driver o=
-nly
->>> supported BCM53xx chips with BCMA (an AMBA bus variant). The driver=
- is
->>> refactored to make BCMA optional and provides a new config for non =
-BCMA
->>> systems.
->>
->>>  struct bcm_mspi {
->>> +       #ifdef CONFIG_SPI_BCMA_MSPI
->>>         struct bcma_device *core;
->>> -       struct spi_master *master;
->>> +       #endif
->>>
->>> +       void __iomem *base;
->>> +       struct spi_master *master;
->>>         size_t read_offset;
->>
->>> +       void (*mspi_write)(struct bcm_mspi *mspi, u16 offset, u32 v=
-alue);
->>> +       u32 (*mspi_read)(struct bcm_mspi *mspi, u16 offset);
->>> +};
->>
->> To avoid ugly ifdefs I think better to split driver to core part and
->> the actual driver part, at the end you will have something like
->> mspi-core.c mspi-53xx.c mspi-whatever.c. Check for example spi-dw*.c
+On 2015-04-03 13:42, Geert Uytterhoeven wrote:
+> As of commit 9a1091ef0017c40a ("irqchip: gic: Support hierarchy irq
+> domain."), GIC IRQ numbers are virtual, breaking hardcoded hardware 
+> IRQ
+> numbers in platform device resources.
 >
-> Actually, I am really curious whether we need the special BCMA I/O
-> accessors in the first place, cannot we just access the MSPI core on
-> BCM53xx chips using regular MMIO? That would probably solve the
-> "problem" entirely. Rafal, did you try this before?
+> Add support for translating hardware IRQ numbers to virtual IRQ 
+> numbers,
+> and fixing up platform device resources with hardcoded IRQ numbers.
+>
+> Add a copyright header, including the original author.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/staging/board/board.c | 66
+> +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/staging/board/board.h |  5 ++++
+>  2 files changed, 71 insertions(+)
+>
+> diff --git a/drivers/staging/board/board.c 
+> b/drivers/staging/board/board.c
+> index d5a6abc845191c93..b84ac2837a20bf06 100644
+> --- a/drivers/staging/board/board.c
+> +++ b/drivers/staging/board/board.c
+> @@ -1,10 +1,27 @@
+> +/*
+> + * Copyright (C) 2014 Magnus Damm
+> + * Copyright (C) 2015 Glider bvba
+> + *
+> + * This file is subject to the terms and conditions of the GNU
+> General Public
+> + * License.  See the file "COPYING" in the main directory of this 
+> archive
+> + * for more details.
+> + */
+> +
+> +#define pr_fmt(fmt)	"board_staging: "  fmt
+> +
+>  #include <linux/init.h>
+> +#include <linux/irq.h>
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+>  #include "board.h"
+>
+> +static struct device_node *irqc_node __initdata;
+> +static unsigned int irqc_base __initdata;
+> +
+>  static bool find_by_address(u64 base_address)
+>  {
+>  	struct device_node *dn = of_find_all_nodes(NULL);
+> @@ -38,3 +55,52 @@ bool __init board_staging_dt_node_available(const
+> struct resource *resource,
+>
+>  	return false; /* Nothing found */
+>  }
+> +
+> +int __init board_staging_setup_hwirq_xlate(const char *irqc_match,
+> +					   unsigned int base)
+> +{
+> +	irqc_node = of_find_compatible_node(NULL, NULL, irqc_match);
+> +
+> +	WARN_ON(!irqc_node);
+> +	if (!irqc_node)
+> +		return -ENOENT;
+> +
+> +	irqc_base = base;
+> +	return 0;
+> +}
 
-It's a matter of choice between:
-1) Using one design for all bcma users
-2) Using one design for all bcm-mspi users
-I believe no matter which one you choose, you'll break another one.
+And what happens when you have multiple (cascaded) interrupt 
+controllers, each wanting to register with this translation service? You 
+should at least check that nobody has been here before.
 
-If you take a look at drivers/bcma/host_soc.c, you'll see we've there
-core->io_addr. I guess you could use it as the base in bcm-mspi. That
-of course will make you a bit less compatible with other bcma drivers
-(skipping bcma R/W layer).
+> +static unsigned int __init xlate_hwirq(unsigned int hwirq)
+> +{
+> +	struct of_phandle_args irq_data;
+> +	unsigned int irq;
+> +
+> +	if (!irqc_node)
+> +		return hwirq;
+> +
+> +	irq_data.np = irqc_node;
+> +	irq_data.args_count = 3;
+> +	irq_data.args[0] = 0;
+> +	irq_data.args[1] = hwirq - irqc_base;
+> +	irq_data.args[2] = IRQ_TYPE_LEVEL_HIGH;
 
+And what happens for edge interrupts? Or LEVEL_LOW? This is very much 
+GIC specific (3 args...). How does it work with non-GIC interrupt 
+controllers?
 
-> As for splitting the driver into a "library" driver which is mostly
-> independent from the bus and a bus-specific wrapper, I think BCMA is
-> really the only special case here, which is why I suggested earlier t=
-o
-> Jonathan that we might just prefer ifdefing things out instead of
-> creating a separate layer just for BCMA.
+> +
+> +	irq = irq_create_of_mapping(&irq_data);
+> +	if (WARN_ON(!irq))
+> +		irq = hwirq;
+> +
+> +	return irq;
+> +}
+> +
+> +void __init board_staging_fixup_irq_resources(struct resource *res,
+> +					      unsigned int nres)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < nres; i++)
+> +		if (res[i].flags == IORESOURCE_IRQ) {
+> +			unsigned int hwirq = res[i].start;
+> +			unsigned int virq = xlate_hwirq(hwirq);
+> +
+> +			pr_debug("hwirq %u -> virq %u\n", hwirq, virq);
+> +			res[i].start = virq;
+> +		}
+> +}
+> diff --git a/drivers/staging/board/board.h 
+> b/drivers/staging/board/board.h
+> index e9c914985d4acb36..4cedc3c46e287eb7 100644
+> --- a/drivers/staging/board/board.h
+> +++ b/drivers/staging/board/board.h
+> @@ -1,10 +1,15 @@
+>  #ifndef __BOARD_H__
+>  #define __BOARD_H__
+> +
+>  #include <linux/init.h>
+>  #include <linux/of.h>
+>
+> +struct resource;
+> +
+>  bool board_staging_dt_node_available(const struct resource 
+> *resource,
+>  				     unsigned int num_resources);
+> +int board_staging_setup_hwirq_xlate(const char *irqc_match, unsigned
+> int base);
+> +void board_staging_fixup_irq_resources(struct resource *res,
+> unsigned int nres);
+>
+>  #define board_staging(str, fn)			\
+>  static int __init runtime_board_check(void)	\
 
-I think you may be right, this #if for bcma shouldn't be that bad and
-it shouldn't grow in the future.
-Still, I'd like to get this patch split nicely to review independent ch=
-anges.
+It won't surprise you that I don't really like this approach. It is 
+controller-specific, restrictive, and allows platform code to continue 
+doing something that is essentially wrong. Should this code ever move 
+out of staging, it should depend on CONFIG_BROKEN, because this is 
+essentially what it is - support code for broken systems. I'd also 
+welcome moving parts of the OMAP4/5 code to such CONFIG_BROKEN 
+dependency.
 
---=20
-Rafa=C5=82
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+         M.
+-- 
+Fast, cheap, reliable. Pick two.
