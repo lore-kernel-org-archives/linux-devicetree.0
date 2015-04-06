@@ -1,75 +1,37 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
-Date: Mon, 6 Apr 2015 11:13:09 +0100
-Message-ID: <20150406101309.GE12732@n2100.arm.linux.org.uk>
-References: <20150403200931.GD13898@n2100.arm.linux.org.uk>
- <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
- <20150405161014.GG13898@n2100.arm.linux.org.uk>
- <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
- <20150405224455.GB12732@n2100.arm.linux.org.uk>
- <58bb3fd4f9e9b3acc7f8b83bd6664177@agner.ch>
- <20150406081523.GC12732@n2100.arm.linux.org.uk>
- <8737db3eea65563054df98c932870590@agner.ch>
- <20150406085443.GD12732@n2100.arm.linux.org.uk>
- <f2b85e294afb55fdca85a16e6ad6c13c@agner.ch>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] spi: bcm53xx: Refactor to make driver nonspecific to
+ 53xx SoCs
+Date: Mon, 6 Apr 2015 12:18:44 +0200
+Message-ID: <CACna6ryc+2-3+G7WT0XerNkFgop44EP9zMvrVT+mMtCVjGPLuA@mail.gmail.com>
+References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
+	<1428002603-21892-3-git-send-email-jonathar@broadcom.com>
+	<CAHp75Vf0JrB5pqNEouLzyOf5mmi05Ut_cybd37suTrLbJOFHKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f2b85e294afb55fdca85a16e6ad6c13c@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Vf0JrB5pqNEouLzyOf5mmi05Ut_cybd37suTrLbJOFHKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 06, 2015 at 11:33:53AM +0200, Stefan Agner wrote:
-> On 2015-04-06 10:54, Russell King - ARM Linux wrote:
-> > On Mon, Apr 06, 2015 at 10:38:10AM +0200, Stefan Agner wrote:
-> >> We already prevent a kernel image which mixes V4/V4T/V5 and V6/V7. And
-> >> so we would do with V7M too. Just because it's in multiplatform doesn't
-> >> mean we need to mix things up.
-> > 
-> > I don't think you're getting what I'm saying at all... :(
-> 
-> It's not that I don't get it. I'm just arguing against it.
-> 
-> IMHO, it's wrong to create a parallel universe for v7M multiplatform...
-> 
-> Multiplatform as I understand it is mainly about selecting multiple SoC
-> _platforms_ but not necessarily multiple CPU platforms. It happens to
-> work well for V6/V7, but does not for others, and preventing
-> multiselection for incompatible CPU platforms is the way to prevent
-> creating such images.
+On 3 April 2015 at 15:35, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
+rote:
+> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
+> <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> The Broadcom MSPI controller is used on various SoCs. It is being
+>> renamed so that it can be extended and reused on other chips. It is
+>> renamed to bcm-mspi.
+>>
+> What if you resend this one with -M -C applied?
 
-Let's be clear: I'm _not_ arguing against being able to select multiple
-SoC platforms at all.  I'm merely arguing about how it should be done.
+Definitely, right now I can't really review this patch (and I want to).
 
-What I'm saying, is that MULTIPLATFORM itself does _not_ work for all
-noMMU platforms.  Yes, it _may_ work for V7M, but it doesn't work for
-previous generation stuff - and that's confusing.
-
-Let's look at what needs to happen to make V7M work the way you're
-suggesting:
-* Add "depends on !MMU" to all the existing ARCH_MULTI_* symbols.
-* Append "if MMU" to the selection of ARM_PATCH_PHYS_VIRT and
-  AUTO_ZRELADDR in multiplatform.
-
-We then have the problem for the older generation noMMU stuff.  Should
-we stuff into the multiplatform architecture options for selecting the
-older generation noMMU _platforms_ into the "CPU Core family selection"
-menu?  That's clearly wrong because they're not "CPU Cores".
-
-So, we have to find somewhere else to put the older generation stuff,
-and by doing so, that causes confusion, because we now have to select
-multiplatform for one group of noMMU implementations, and _not_
-select it for another group of noMMU implementations.
-
-Imagine yourself writing up a document describing how to configure the
-kernel for all noMMU platforms which will be read by many people with
-varying degrees of English comprehension across the world, and how you
-would describe to them, such that they clearly understood, how to
-choose the right options.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
