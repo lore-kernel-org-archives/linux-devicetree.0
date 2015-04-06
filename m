@@ -1,56 +1,52 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v4 6/6] power: twl4030_madc_battery: Add missing
- MODULE_ALIAS
-Date: Mon, 6 Apr 2015 19:45:15 +0200
-Message-ID: <20150406174515.GF18145@earth>
-References: <1426022847-30912-1-git-send-email-marek@goldelico.com>
- <1426022847-30912-7-git-send-email-marek@goldelico.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 0/5] Refactor Qualcomm RPM regulator to single
+ platform_device
+Date: Mon, 6 Apr 2015 18:46:43 +0100
+Message-ID: <20150406174643.GZ6023@sirena.org.uk>
+References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <551DBC05.2090301@codeaurora.org>
+ <20150402222630.GV6023@sirena.org.uk>
+ <551DC94C.3060001@codeaurora.org>
+ <20150406165154.GP6023@sirena.org.uk>
+ <CAJAp7Oi5NE2H67dUA1jK6U4itZxcMLojpK3qO-6Q8kDv3Vbbfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ChQOR20MqfxkMJg9"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rbDVY1A5evmOIoPD"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1426022847-30912-7-git-send-email-marek@goldelico.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, hns@goldelico.com
+In-Reply-To: <CAJAp7Oi5NE2H67dUA1jK6U4itZxcMLojpK3qO-6Q8kDv3Vbbfg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ChQOR20MqfxkMJg9
+--rbDVY1A5evmOIoPD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
+On Mon, Apr 06, 2015 at 10:11:02AM -0700, Bjorn Andersson wrote:
 
-On Tue, Mar 10, 2015 at 10:27:27PM +0100, Marek Belisko wrote:
-> Without MODULE_ALIAS twl4030_madc_battery won't get loaded
-> automatically.
+> The RPM will instantiate one regulator device per pmic and parent will
+> hence differ between the various regulator instances.
+> So with Guenter's patch this does indeed work.
 
-Thanks, pulled.
+Ah, excellent!  That's easy then...
 
--- Sebastian
-
---ChQOR20MqfxkMJg9
+--rbDVY1A5evmOIoPD
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBCgAGBQJVIsYrAAoJENju1/PIO/qa86cQAIIVO1XGLAFAM+RgIXlRYMpU
-ue/SBF4/eW7M3MqLHnAhmZ+BklwE3d5ZXTxZwBjj0RHve6peKE0zLQ7f+Stp6m0E
-baJs/fuaiGf0K9d+qTe4XFJdiRCPm1iEH0yR1pbsnoDbGutbdSgj/kyU4fRgBjzP
-/14syUpQNIk1/wMYuvRl/j3LhlemVoMpWxHWgjfPnGfzM29gq5Bq73mkgMgqL6Hb
-AQTgUvWNcgF9Svc2JtMTl4DkgK2D3vd863277Zk4w9psY7beJ4+qAejUkNvYkwOG
-3PtcT0Xqutv0GCYsd3m2tro8X2ivI9bU4lxT3cQXjIi8Pu60VWGTyIoPOcmDkQOe
-P+HtpxKoxUFYrna0VE4wsoc81JhzRGp/a8kjaVjEziwDNFd/NRSNk7rh7CTFfq7L
-y9ApNf0ASfCQETrZFvZNbslP0Ag1ZeMn/FC5X+bwUm2BDyPnaJJP6fsVmC3iTG7y
-EVsgL6PjQnahsifArQpfWY1ZKquYHwdu6RbPvsLrMxqJPr/FXJGmXfRmJ52l9+qc
-LmgWd4VYD3z59p5Omb66seJNx8I64gl1chzDf3iyAo60tABxtEpKiq+30thGMyTL
-7cwe6yTY5ZUDVqWK/KFLcbD9ESebF1Hl3R0FwmCjVhEOJurnEsW7KudMleW510Pe
-U8lqgxPhbDUiu3WgV0C3
-=9D7f
+iQEcBAEBCAAGBQJVIsaCAAoJECTWi3JdVIfQzKwH/jcsSl4yg3HhUgAzZEV5avs7
+dOrAzpgjkrTJM/fHMDUn+IITBeTqvrv1OKjNjc8cRoOwcAiVn7HwieNXS8v7j5/T
+8fVq0XyKX0INS3EXUUbZ00g42waSQ7fIQi6SEZh1MQw8LBJc8teIatYjsQaFH6eI
+58GVZHKq+4igFPHNBP1wsJNh5ww6ZmvbA7IGwkDbO1L2NSi594eCZUsgb507vdpO
+hcrRCDtBJTkAgayyiKMfp/VneGblEYTMi11HeYpoLww4KmKMyf5UN9OscK4fvmne
+KXSQyLctMPPyn553cn7Z6EOdOPwX8+ncjsu4lmL/IgU5/MsU9BubJXpNPzf7yxY=
+=fbg1
 -----END PGP SIGNATURE-----
 
---ChQOR20MqfxkMJg9--
+--rbDVY1A5evmOIoPD--
