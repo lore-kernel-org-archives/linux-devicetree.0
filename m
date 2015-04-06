@@ -1,96 +1,53 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 05/10] eeprom: Add bindings for simple eeprom framework
-Date: Mon, 6 Apr 2015 09:11:05 -0500
-Message-ID: <CAL_Jsq++9pyJMLXssgyz2WRU4e7ikT_6FwzWMo1fKS82FJvEyg@mail.gmail.com>
-References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1427752679-17261-1-git-send-email-srinivas.kandagatla@linaro.org> <20150406133208.GH30984@beef>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] of: OF_IRQ should depend on IRQ_DOMAIN
+Date: Mon, 06 Apr 2015 16:40:59 +0200
+Message-ID: <4981781.UvXHorNsu5@wuerfel>
+References: <1428245965-19618-1-git-send-email-geert@linux-m68k.org> <1428245965-19618-3-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150406133208.GH30984@beef>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428245965-19618-3-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2015 at 8:32 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> On Mon, Mar 30, 2015 at 10:57:59PM +0100, Srinivas Kandagatla wrote:
->> This patch adds bindings for simple eeprom framework which allows eeprom
->> consumers to talk to eeprom providers to get access to eeprom cell data.
->>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> [Maxime Ripard: intial version of eeprom framework]
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/eeprom/eeprom.txt          | 58 ++++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
->>
->> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
->> new file mode 100644
->> index 0000000..fb71d46
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
->> @@ -0,0 +1,58 @@
->> += EEPROM Data Device Tree Bindings =
->> +
->> +This binding is intended to represent the location of hardware
->> +configuration data stored in EEPROMs.
->> +
->> +On a significant proportion of boards, the manufacturer has stored
->> +some data on an EEPROM-like device, for the OS to be able to retrieve
->> +these information and act upon it. Obviously, the OS has to know
->> +about where to retrieve these data from, and where they are stored on
->> +the storage device.
->
-> Since this binding (and the kernel framework supporting it) describes
-> non-volatile memory devices other than EEPROMs (e.g. EFuses) it should
-> be named more generically like "nvmem".
->
->> +
->> +This document is here to document this.
->> +
->> += Data providers =
->> +Contains bindings specific to provider drivers and data cells as children
->> +to this node.
->> +
->> += Data cells =
->> +These are the child nodes of the provider which contain data cell
->> +information like offset and size in eeprom provider.
->> +
->> +Required properties:
->> +reg: specifies the offset in byte within that storage device, and the length
->> +     in bytes of the data we care about.
->> +     There could be more then one offset-length pairs in this property.
->> +
->> +Optional properties:
->> +As required by specific data parsers/interpreters.
->
-> The generic binding could really use a "read-only" property here as this
-> is a common hardware attribute for many nvmem devices. A serial EEPROM
-> commonly has a write protect pin which may be hard-wired such that the
-> hardware description should reflect that. An EFuse is typically blown with
-> the required information at manufacturing time (for an end product case)
-> and would be marked with the "read-only" flag.
->
-> Having this optional flag in the generic binding would allow the
-> framework to hint to consumers about the inability to write to the
-> provided region.
+On Sunday 05 April 2015 16:59:24 Geert Uytterhoeven wrote:
+> If CONFIG_IRQ_DOMAIN=3Dn:
+>=20
+> drivers/of/irq.c: In function =E2=80=98of_irq_get=E2=80=99:
+> drivers/of/irq.c:406: error: implicit declaration of function =E2=80=98=
+irq_find_host=E2=80=99
+> drivers/of/irq.c:406: warning: assignment makes pointer from integer =
+without a cast
+> make[2]: *** [drivers/of/irq.o] Error 1
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+>  drivers/of/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 4c98f14694458794..92adecd3ecb28fc7 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -50,7 +50,7 @@ config OF_ADDRESS_PCI
+> =20
+>  config OF_IRQ
+>         def_bool y
+> -       depends on !SPARC
+> +       depends on !SPARC && IRQ_DOMAIN
+> =20
+>  config OF_NET
+>         depends on NETDEVICES
+>=20
 
-This could get fairly complex if you wanted to describe grouping of WP
-regions which could have different layout than the fields here. This
-may be better left as a device property listing addr & size pairs.
-However, there is the notion of s/w "read-only" which means the OS
-should not allow write access. The MTD partition binding supports this
-with the "read-only" property.
+Sparc does not set IRQ_DOMAIN, so we can probably simplify this to=20
 
-> The framework sysfs attributes provide a userspace EEPROM consumer where
-> it would be useful information to know that a data provider region is
-> read only rather than having the exported writeable attribute simply
-> fail a write cycle. This would allow the consumer to be aware that a
-> failed write (if even attempted) is expected if the data provider
-> advertised itself as read-only.
+config OF_IRQ
+	def_bool IRQ_DOMAIN
 
-You could distinguish with RW versus RO file attributes.
+unless you want to keep the sparc antidependency explicit.
 
-Rob
+	Arnd
