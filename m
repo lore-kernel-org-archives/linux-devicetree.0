@@ -1,75 +1,77 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: add core audio driver for Broadcom Cygnus SOC.
-Date: Mon, 6 Apr 2015 17:19:39 +0100
-Message-ID: <20150406161939.GJ6023@sirena.org.uk>
-References: <1427771784-29950-1-git-send-email-sbranden@broadcom.com>
- <1427771784-29950-3-git-send-email-sbranden@broadcom.com>
- <20150331064209.GD2869@sirena.org.uk>
- <551D8EB6.1050004@broadcom.com>
+From: Tim Bird <tbird20d@gmail.com>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Mon, 6 Apr 2015 09:22:28 -0700
+Message-ID: <CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
+	<CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
+	<CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
+	<CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
+	<CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6xTM0kUsJcaNctaW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <551D8EB6.1050004-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, bryeung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, pwestin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Apr 3, 2015 at 6:55 AM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+> On Thu, Apr 2, 2015 at 9:11 PM, Tim Bird <tbird20d@gmail.com> wrote:
+>> On Wed, Apr 1, 2015 at 9:40 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+>>> Sorry, I can't take this without a DT ack.
+>>
+>> Hmmm.
+>>
+>> The policy seems to be:
+>>      "For driver (not subsystem) bindings: If you are comfortable with the
+>>      binding, and it hasn't received an Acked-by from the devicetree
+>>      maintainers after a few weeks, go ahead and take it."
+>>
+>> The syscon property is only relative to the qcom hwspinlock driver,
+>> (unless I'm missing something) and both Qualcomm and Sony devs are
+>> OK with it.  So while an ACK from the DT side would be nice, I don't
+>> think it's required.  This is exactly the type of delay that is really
+>> holding up a lot of out-of-tree code.
+>
+> Sorry, I do prefer to make sure Mark is OK with this devicetree patch,
+> especially since it wasn't clear whether Mark is entirely comfortable
+> with it in his last response.
 
---6xTM0kUsJcaNctaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Just to be clear - do you personally have any objections to the patch?
+Are we now stuck in limbo until such time as the device tree maintainers
+get around to us?
 
-On Thu, Apr 02, 2015 at 11:47:18AM -0700, Lori Hikichi wrote:
-> On 15-03-30 11:42 PM, Mark Brown wrote:
+I'm worried about this status because my understanding is that the
+DT maintainers are hugely backlogged and let a lot of stuff drop on the
+floor.  In particular, see slide 21 of the following presentation:
+http://www.elinux.org/images/0/0a/The_Device_Tree_as_a_Stable_ABI-_A_Fairy_Tale%3F.pdf
+That graph shows that the DT maintainers are falling way behind in
+their reviews and ACKs.
 
-> >>+config SND_SOC_CYGNUS
-> >>+	tristate "SoC platform audio for Broadcom Cygnus chips"
-> >>+	depends on ARCH_BCM_CYGNUS || COMPILE_TEST
-> >>+	default ARCH_BCM_CYGNUS
+The policy of not waiting for an ACK from device tree maintainers
+was specifically created to help the situation we are now in, and yet
+you seem to be unwilling to follow it.  This is extremely frustrating.
 
-> Okay.
+One idea we discussed at a recent meeting on mainlining was to submit
+SoC-blocking items to drivers/staging.  Then, stuff is at least in the tree
+and can be tested by others pending some approval.  Do you have any
+opinion on that?
 
-You don't need to reply to every single comment, the general assumption
-will be that if there's no other followup all review comments will be
-addressed.  It's better to just reply to things where there's something
-more detailed to say, if you explicitly reply to everything then that
-makes it easier for actual replies to be missed since there's a lot of
-there's a lot of the mail that's just going to be skipped through.
+Is there any way to move ahead?  Or are we doomed to just sit around
+and wait indefinitely? For the record, after what amount of time without
+a DT ACK would you consider accepting this (if ever)?
 
-> >>+static void ringbuf_inc(void __iomem *audio_io, bool is_playback,
-> >>+			const struct ringbuf_regs *p_rbuf)
+Another idea I'm considering is to write our own hwspinlock layer
+and become the maintainer of that, so we're not blocked by you.
+At this point, the value of using your hwspinlock framework
+is vastly outweighed by the negative effect is has on our mainlining
+effort.
 
-> >So it looks like we're getting an interrupt per period and we have to
-> >manually advance to the next one?
+Regards,
 
-> Yes.
-
-OK, so that seems fragile - what happens if we're slightly late
-processing an interrupt or miss one entirely?  Most hardware has some
-way to read back the current position which tends to be more reliable,
-is that not an option here?
-
---6xTM0kUsJcaNctaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVIrIaAAoJECTWi3JdVIfQiAYH+wVe4O1UcpvFO9F0GnMCsFnF
-wJAziQ23f2t2CPa70+UbIMHo5a+EBrAYVWu+GbMPTkFeDwEiWC6baE2nVH9YK7Se
-O8zHqXBRdDvqiRgdRd/VJ3o8K/8uCtHV7Lj7Bi0g8A+vEpl8kBNOyGgvMHH4LDmS
-QwnkFF+2LmItLyP0IzcnpaQEWhqNx7EvEF3hfz+vLVF8t1Fc/m1/rGyxGWQ0oAwY
-BxnypCyvZJMRroMQMt85BSsr4n37J0Q8GKh9dnXAmYzbmmCDdZo8Mw2l2TDxVO5D
-PZkRw2f0OecdU1OqSO+F/jNJl8lU1PapcaARfb1NNADqLCyRlEz42Phior7P5Lc=
-=Ayjf
------END PGP SIGNATURE-----
-
---6xTM0kUsJcaNctaW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ -- Tim Bird
+Senior Software Engineer, Sony Mobile
+Architecture Group Chair, CE Workgroup, Linux Foundation
