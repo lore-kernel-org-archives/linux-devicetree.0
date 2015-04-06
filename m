@@ -1,54 +1,56 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
-Date: Mon, 06 Apr 2015 11:33:53 +0200
-Message-ID: <f2b85e294afb55fdca85a16e6ad6c13c@agner.ch>
-References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
- <1428090292-21693-8-git-send-email-stefan@agner.ch>
- <20150403200931.GD13898@n2100.arm.linux.org.uk>
- <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
- <20150405161014.GG13898@n2100.arm.linux.org.uk>
- <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
- <20150405224455.GB12732@n2100.arm.linux.org.uk>
- <58bb3fd4f9e9b3acc7f8b83bd6664177@agner.ch>
- <20150406081523.GC12732@n2100.arm.linux.org.uk>
- <8737db3eea65563054df98c932870590@agner.ch>
- <20150406085443.GD12732@n2100.arm.linux.org.uk>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v3 1/2] pinctrl: Add driver for Alphascale asm9260
+ pinctrl
+Date: Mon, 06 Apr 2015 11:41:05 +0200
+Message-ID: <1428313265.634.112.camel@x220>
+References: <1427476243.2334.12.camel@x220>
+		 <1428215185-14190-1-git-send-email-linux@rempel-privat.de>
+		 <1428215185-14190-2-git-send-email-linux@rempel-privat.de>
+	 <1428306169.634.51.camel@x220> <55224604.8070009@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150406085443.GD12732@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <55224604.8070009@rempel-privat.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-04-06 10:54, Russell King - ARM Linux wrote:
-> On Mon, Apr 06, 2015 at 10:38:10AM +0200, Stefan Agner wrote:
->> We already prevent a kernel image which mixes V4/V4T/V5 and V6/V7. And
->> so we would do with V7M too. Just because it's in multiplatform doesn't
->> mean we need to mix things up.
-> 
-> I don't think you're getting what I'm saying at all... :(
+On Mon, 2015-04-06 at 10:38 +0200, Oleksij Rempel wrote:
+> If you won't to say: "You have a mismatch between header and
+> MODULE_LICENSE, please make sure it will match."
+> You saying some thing like this: "I was right last time. Make module
+> License like I saying."
 
-It's not that I don't get it. I'm just arguing against it.
+No, that's not what I wrote.
 
-IMHO, it's wrong to create a parallel universe for v7M multiplatform...
+> I'm confuse, what is your actual point? Do you trying to prove some thing?
 
-Multiplatform as I understand it is mainly about selecting multiple SoC
-_platforms_ but not necessarily multiple CPU platforms. It happens to
-work well for V6/V7, but does not for others, and preventing
-multiselection for incompatible CPU platforms is the way to prevent
-creating such images.
+My point is that there's a mismatch between the license described in the
+comment at the top of this file and the ident used in the
+MODULE_LICENSE() macro. In my comments on v2 I wrote:
+    By the way, you probably want to use "GPL v2" as the license ident
+    [...].
 
-> Please read the first bit of my replies again, where I say that we do
-> _not_ want to remove the !MMU dependency from multiplatform.  This is
-> something I feel _very_ strongly about, and something which I've written
-> about many times on this list.
+In this v3 I noticed the same mismatch (which was not surprising because
+you already stated that "GPL" actually did match what's stated at the
+comment in the top of this file). Therefor I wrote:
+    So only "GPL v2" matches what's found in the comment at top of this
+    file.
 
-Ok, I don't have such a strong feel for multiplatform, it just feels a
-bit better to me. I need a top level ARCH which is able to live with
-!MMU. Will try the ARCH_SINGLE_ARMV7M approach then.
+There now seem to be a few options:
+- change either the comment at the top of this file or the license ident
+used in MODULE_LICENSE() to make them actually match;
+- show that I misread the comment at top of this file;
+- or show that my reading of module.h is incorrect.
 
---
-Stefan
+(Another option would be a patch that somehow merges the "GPL" and "GPL
+v2" license idents. That patch would put an end to discussions like the
+one we're having here. I'm _not_ volunteering to submit it.)
+
+Thanks,
+
+
+Paul Bolle
+
