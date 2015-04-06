@@ -1,54 +1,71 @@
 From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v2 0/5] Refactor Qualcomm RPM regulator to single platform_device
-Date: Mon, 6 Apr 2015 09:40:32 -0700
-Message-ID: <CAJAp7Oijn8B8tyYNbCkHgFyZkO58vskYbZs+-H+4rXpG_CD=8g@mail.gmail.com>
-References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<551DBC05.2090301@codeaurora.org>
-	<20150402222630.GV6023@sirena.org.uk>
-	<551DC94C.3060001@codeaurora.org>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Mon, 6 Apr 2015 09:48:23 -0700
+Message-ID: <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
+	<CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
+	<CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
+	<CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
+	<CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
+	<CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
+	<CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <551DC94C.3060001@codeaurora.org>
+In-Reply-To: <CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Tim Bird <tbird20d@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2015 at 3:57 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 04/02/15 15:26, Mark Brown wrote:
->> On Thu, Apr 02, 2015 at 03:00:37PM -0700, Stephen Boyd wrote:
+On Mon, Apr 6, 2015 at 9:31 AM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+> On Mon, Apr 6, 2015 at 7:22 PM, Tim Bird <tbird20d@gmail.com> wrote:
+>> On Fri, Apr 3, 2015 at 6:55 AM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+>>> On Thu, Apr 2, 2015 at 9:11 PM, Tim Bird <tbird20d@gmail.com> wrote:
+>>>> On Wed, Apr 1, 2015 at 9:40 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+>>>>> Sorry, I can't take this without a DT ack.
+>>>>
+>>>> Hmmm.
+>>>>
+>>>> The policy seems to be:
+>>>>      "For driver (not subsystem) bindings: If you are comfortable with the
+>>>>      binding, and it hasn't received an Acked-by from the devicetree
+>>>>      maintainers after a few weeks, go ahead and take it."
+>>>>
+>>>> The syscon property is only relative to the qcom hwspinlock driver,
+>>>> (unless I'm missing something) and both Qualcomm and Sony devs are
+>>>> OK with it.  So while an ACK from the DT side would be nice, I don't
+>>>> think it's required.  This is exactly the type of delay that is really
+>>>> holding up a lot of out-of-tree code.
+>>>
+>>> Sorry, I do prefer to make sure Mark is OK with this devicetree patch,
+>>> especially since it wasn't clear whether Mark is entirely comfortable
+>>> with it in his last response.
 >>
->>> What happens with debugfs when you have multiple pmics with the same
->>> named regulator? I thought that in this case we needed to make the names
->>> unique somehow or we would end up with the same directory for two
->>> different regulators.
->> Guenther sent a patch fixing that a while back.
+>> Just to be clear - do you personally have any objections to the patch?
 >
-> This one?
+> No, but this patch is for a folder I don't maintain so I prefer
+> someone who does to take a look.
 >
-> commit a9eaa8130707d4013fb109b80323489c0d0111ac
-> Author:     Guenter Roeck <linux@roeck-us.net>
-> AuthorDate: Fri Oct 17 08:17:03 2014 -0700
-> Commit:     Mark Brown <broonie@kernel.org>
-> CommitDate: Fri Mar 27 16:14:18 2015 -0700
+> Mark did take a look, and said he's confused by this patch (see this thread).
 >
->     regulator: Ensure unique regulator debugfs directory names
->
-> Ok. Seems to be only in next. I'm not sure it will work though because
-> in this case the parent device is the same for both regulators on
-> different PMICs that the RPM is controlling. I could be wrong though
-> because I haven't tested it.
->
+> Do you want me to ignore him and just send it to Linus anyway?
 
-You're right Stephen; for the platforms with multiple pmics this will
-spit out a bunch of warnings and Guenter's fix does not change that
-fact.
+Ohad, Tim,
 
-Either we make the regulator names more specific (like pm8058_l1) or
-we build desc.name out of pdev->dev.of_node->name and the regulator
-name. I like the latter, so unless someone object I'll respin it that
-way.
+For this patch to be useful to us we also need Suman's DT patch, so we
+should try to get them both in asap.
+
+Based on the long discussion we had on one of the previous iterations
+of Suman's DT binding, with the DT maintainers I believe that it would
+be fine to move along and sent Suman's patches to Linus - without an
+explicit Ack from the DT guys (or did I just miss one?).
+
+Regarding this patch I agree with Ohad that it would be good if we
+verify that Mark's question is answered before moving on. So I will
+reach out to him to see if he has any remaining concerns.
 
 Regards,
 Bjorn
