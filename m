@@ -1,92 +1,63 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: Re: [PATCH 3/4] spi: bcm-mspi: Make BCMA optional to support non-BCMA
- chips
-Date: Mon, 6 Apr 2015 12:09:26 -0700
-Message-ID: <5522D9E6.3080008@broadcom.com>
-References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com> <1428002603-21892-4-git-send-email-jonathar@broadcom.com> <CAHp75VcMg-8X8DtHbQrmugzWG5VzzHXcpWNiyrTT=qmuCvA95w@mail.gmail.com> <551ED345.1000702@gmail.com> <CACna6ry9qxzY9xaaqR8K6XgSEun31c=d1XrWH_vk7Fq7fJTxoA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACna6ry9qxzY9xaaqR8K6XgSEun31c=d1XrWH_vk7Fq7fJTxoA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree <devicetree@vger.kernel.org>
+From: Krzysztof Kozlowski <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/11] ARM: dts: Refactor Exynos4 boards for phandle notation
+Date: Mon,  6 Apr 2015 22:28:11 +0200
+Message-ID: <1428352102-12855-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15-04-06 03:36 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> On 3 April 2015 at 19:52, Florian Fainelli <f.fainelli@gmail.com> wro=
-te:
->> On 03/04/15 06:38, Andy Shevchenko wrote:
->>> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
->>> <jonathar@broadcom.com> wrote:
->>>> The Broadcom MSPI controller is used on various chips. The driver =
-only
->>>> supported BCM53xx chips with BCMA (an AMBA bus variant). The drive=
-r is
->>>> refactored to make BCMA optional and provides a new config for non=
- BCMA
->>>> systems.
->>>
->>>>  struct bcm_mspi {
->>>> +       #ifdef CONFIG_SPI_BCMA_MSPI
->>>>         struct bcma_device *core;
->>>> -       struct spi_master *master;
->>>> +       #endif
->>>>
->>>> +       void __iomem *base;
->>>> +       struct spi_master *master;
->>>>         size_t read_offset;
->>>
->>>> +       void (*mspi_write)(struct bcm_mspi *mspi, u16 offset, u32 =
-value);
->>>> +       u32 (*mspi_read)(struct bcm_mspi *mspi, u16 offset);
->>>> +};
->>>
->>> To avoid ugly ifdefs I think better to split driver to core part an=
-d
->>> the actual driver part, at the end you will have something like
->>> mspi-core.c mspi-53xx.c mspi-whatever.c. Check for example spi-dw*.=
-c
->>
->> Actually, I am really curious whether we need the special BCMA I/O
->> accessors in the first place, cannot we just access the MSPI core on
->> BCM53xx chips using regular MMIO? That would probably solve the
->> "problem" entirely. Rafal, did you try this before?
->=20
-> It's a matter of choice between:
-> 1) Using one design for all bcma users
-> 2) Using one design for all bcm-mspi users
-> I believe no matter which one you choose, you'll break another one.
->=20
-> If you take a look at drivers/bcma/host_soc.c, you'll see we've there
-> core->io_addr. I guess you could use it as the base in bcm-mspi. That
-> of course will make you a bit less compatible with other bcma drivers
-> (skipping bcma R/W layer).
+Hi,
 
-That would require compiling in BCMA for a driver/chip that doesn't use
-BCMA but then I could do DT parsing in init only anyway. I don't think
-that's really an option so I'm going to leave as is unless there is
-further opinion on it.
 
->=20
->=20
->> As for splitting the driver into a "library" driver which is mostly
->> independent from the bus and a bus-specific wrapper, I think BCMA is
->> really the only special case here, which is why I suggested earlier =
-to
->> Jonathan that we might just prefer ifdefing things out instead of
->> creating a separate layer just for BCMA.
->=20
-> I think you may be right, this #if for bcma shouldn't be that bad and
-> it shouldn't grow in the future.
-> Still, I'd like to get this patch split nicely to review independent =
-changes.
->=20
+The phandle notation reduces possible mistakes when overriding nodes
+by child board files and reduces duplication of addresses.
 
-Making BCMA optional was made possible by using DT. I'm not sure I coul=
-d
-split it into two commits. I would have to add a hard coded SPI device
-for non-BMCA as well. I thought the driver was a bit odd in that this
-was hard coded. Normally this should be in a separate driver. How would
-you use it if you wanted to use m25p80 for example?
+The patchset refactors Exynos4 boards to use the phandle way.
+
+Tested by comparison of decompiled DTB for each commit.
+
+The same refactoring for Exynos5 is on the way.
+
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (11):
+  ARM: dts: Add labels to nodes used in Exynos4 based DTS
+  ARM: dts: Use phandle notation for overriding nodes in Exynos4210
+  ARM: dts: Use phandle notation for overriding nodes in Exynos4210
+    Origen
+  ARM: dts: Use phandle notation for overriding nodes in SMDKv310
+  ARM: dts: Use phandle notation for overriding nodes in Trats
+  ARM: dts: Use phandle notation for overriding nodes in Exynos4212
+  ARM: dts: Use phandle notation for overriding nodes in Exynos4x12
+  ARM: dts: Use phandle notation for overriding nodes in Exynos4412
+  ARM: dts: Use phandle notation for overriding nodes in Odroid
+  ARM: dts: Use phandle notation for overriding nodes in SMDK4412
+  ARM: dts: Use phandle notation for overriding nodes in Trats2
+
+ arch/arm/boot/dts/exynos4.dtsi                  |   22 +-
+ arch/arm/boot/dts/exynos4210-origen.dts         |  418 +++----
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi       |    6 +-
+ arch/arm/boot/dts/exynos4210-smdkv310.dts       |  280 ++---
+ arch/arm/boot/dts/exynos4210-trats.dts          |  592 +++++-----
+ arch/arm/boot/dts/exynos4210.dtsi               |   49 +-
+ arch/arm/boot/dts/exynos4212.dtsi               |   12 +-
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  728 ++++++-------
+ arch/arm/boot/dts/exynos4412-odroidx.dts        |   16 +-
+ arch/arm/boot/dts/exynos4412-smdk4412.dts       |  210 ++--
+ arch/arm/boot/dts/exynos4412-trats2.dts         | 1331 ++++++++++++-----------
+ arch/arm/boot/dts/exynos4412.dtsi               |   20 +-
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi       |    8 +-
+ arch/arm/boot/dts/exynos4x12.dtsi               |  212 ++--
+ 14 files changed, 1952 insertions(+), 1952 deletions(-)
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
