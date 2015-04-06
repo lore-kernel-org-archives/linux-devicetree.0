@@ -1,30 +1,51 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH repost] ARM: shmobile: r8a7790: Remove MSIOF address from
- device tree
-Date: Mon, 6 Apr 2015 09:24:16 +0900
-Message-ID: <20150406002411.GC1841@verge.net.au>
-References: <1428166471-2897-1-git-send-email-ykaneko0929@gmail.com>
- <CAMuHMdW40S4rU-wkrJDHDw_ThFdChEa+HEyXYHJ3AAH1TwUiVw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] Revert "staging: board: disable as it breaks the
+ build"
+Date: Mon, 6 Apr 2015 09:40:32 +0900
+Message-ID: <20150406004031.GD1841@verge.net.au>
+References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
+ <1428064923-24950-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW40S4rU-wkrJDHDw_ThFdChEa+HEyXYHJ3AAH1TwUiVw@mail.gmail.com>
+In-Reply-To: <1428064923-24950-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Yoshihiro Kaneko <ykaneko0929@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, devel@driverdev.osuosl.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 05, 2015 at 10:46:33AM +0200, Geert Uytterhoeven wrote:
-> On Sat, Apr 4, 2015 at 6:54 PM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
-> > From: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
-> >
-> > MSIOF Base Address H'E6xx can be accessed by CPU and DMAC.
-> > MSIOF Base Address H'E7xx for DMAC was removed from H/W manual.
-> >
-> > Signed-off-by: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
-> > Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+On Fri, Apr 03, 2015 at 02:41:58PM +0200, Geert Uytterhoeven wrote:
+> This reverts commit d13778d537a0ed6115d2a79a942af999cfb8eec6.
 > 
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Commit 13c11072536f2613 ("staging:board: remove unnecessary function")
+> fixed the build of drivers/staging/board/board.c.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks, I have queued this up for v4.2.
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+>  drivers/staging/board/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/staging/board/Kconfig b/drivers/staging/board/Kconfig
+> index 0a89ad16371f7ded..b8ee81840666ad35 100644
+> --- a/drivers/staging/board/Kconfig
+> +++ b/drivers/staging/board/Kconfig
+> @@ -1,7 +1,6 @@
+>  config STAGING_BOARD
+>  	bool "Staging Board Support"
+>  	depends on OF_ADDRESS
+> -	depends on BROKEN
+>  	help
+>  	  Select to enable per-board staging support code.
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
