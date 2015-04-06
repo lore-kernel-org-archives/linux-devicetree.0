@@ -1,62 +1,75 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] Cygnus Audio Driver
-Date: Mon, 6 Apr 2015 10:58:03 +0100
-Message-ID: <20150406095803.GD6023@sirena.org.uk>
-References: <1427771784-29950-1-git-send-email-sbranden@broadcom.com>
- <20150331064338.GE2869@sirena.org.uk>
- <551EEAF8.7050108@broadcom.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
+Date: Mon, 6 Apr 2015 11:13:09 +0100
+Message-ID: <20150406101309.GE12732@n2100.arm.linux.org.uk>
+References: <20150403200931.GD13898@n2100.arm.linux.org.uk>
+ <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
+ <20150405161014.GG13898@n2100.arm.linux.org.uk>
+ <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
+ <20150405224455.GB12732@n2100.arm.linux.org.uk>
+ <58bb3fd4f9e9b3acc7f8b83bd6664177@agner.ch>
+ <20150406081523.GC12732@n2100.arm.linux.org.uk>
+ <8737db3eea65563054df98c932870590@agner.ch>
+ <20150406085443.GD12732@n2100.arm.linux.org.uk>
+ <f2b85e294afb55fdca85a16e6ad6c13c@agner.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+Xnt6BZa+I2KmHWw"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <551EEAF8.7050108-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, bryeung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, pwestin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <f2b85e294afb55fdca85a16e6ad6c13c@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 06, 2015 at 11:33:53AM +0200, Stefan Agner wrote:
+> On 2015-04-06 10:54, Russell King - ARM Linux wrote:
+> > On Mon, Apr 06, 2015 at 10:38:10AM +0200, Stefan Agner wrote:
+> >> We already prevent a kernel image which mixes V4/V4T/V5 and V6/V7. And
+> >> so we would do with V7M too. Just because it's in multiplatform doesn't
+> >> mean we need to mix things up.
+> > 
+> > I don't think you're getting what I'm saying at all... :(
+> 
+> It's not that I don't get it. I'm just arguing against it.
+> 
+> IMHO, it's wrong to create a parallel universe for v7M multiplatform...
+> 
+> Multiplatform as I understand it is mainly about selecting multiple SoC
+> _platforms_ but not necessarily multiple CPU platforms. It happens to
+> work well for V6/V7, but does not for others, and preventing
+> multiselection for incompatible CPU platforms is the way to prevent
+> creating such images.
 
---+Xnt6BZa+I2KmHWw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Let's be clear: I'm _not_ arguing against being able to select multiple
+SoC platforms at all.  I'm merely arguing about how it should be done.
 
-On Fri, Apr 03, 2015 at 12:33:12PM -0700, Scott Branden wrote:
-> On 15-03-30 11:43 PM, Mark Brown wrote:
-> >On Mon, Mar 30, 2015 at 08:16:22PM -0700, Scott Branden wrote:
+What I'm saying, is that MULTIPLATFORM itself does _not_ work for all
+noMMU platforms.  Yes, it _may_ work for V7M, but it doesn't work for
+previous generation stuff - and that's confusing.
 
-> >>The audio PLL is embedded in the audio block and only used
-> >>by the audio block. The audio PLL registers are also in the middle of
-> >>the audio register map.
+Let's look at what needs to happen to make V7M work the way you're
+suggesting:
+* Add "depends on !MMU" to all the existing ARCH_MULTI_* symbols.
+* Append "if MMU" to the selection of ARM_PATCH_PHYS_VIRT and
+  AUTO_ZRELADDR in multiplatform.
 
-> >When you say it's only used by the audio block do you mean to say that
-> >the audio block exposes no clock signals other than the bit and frame
-> >clocks?
+We then have the problem for the older generation noMMU stuff.  Should
+we stuff into the multiplatform architecture options for selecting the
+older generation noMMU _platforms_ into the "CPU Core family selection"
+menu?  That's clearly wrong because they're not "CPU Cores".
 
-> The audio block exposes the MCLK in addition to the bit and frame clock.
+So, we have to find somewhere else to put the older generation stuff,
+and by doing so, that causes confusion, because we now have to select
+multiplatform for one group of noMMU implementations, and _not_
+select it for another group of noMMU implementations.
 
-OK, then it's going to need to be a clock provider at some point - the
-clock will be going into external devices which are going to need to be
-able to interact with the clock (for example, to get the rate).
+Imagine yourself writing up a document describing how to configure the
+kernel for all noMMU platforms which will be read by many people with
+varying degrees of English comprehension across the world, and how you
+would describe to them, such that they clearly understood, how to
+choose the right options.
 
---+Xnt6BZa+I2KmHWw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVIliqAAoJECTWi3JdVIfQdjoH/1joz01UIrzgobn+St3bC0rY
-o1pA7Ul7sENnJI66FoHZwHn8NzwJQpI1EEQBlMlZbAnXUtKvSprrirFex0hWYg/N
-is8kTIsoj5Wfr7JingLCQ72WB3T7JV4dGqttFcVYY3HmH5MtW0Zr3lqk46aW9bby
-lpEqiF6Wx73ouwiz36GV1OFdCH1BgYQXxAKfd+S18mLHbEfN7uGirp2Itf5Oehpn
-1Yyiwko+7vLI3ypDrMINRr+Xsnbz8hDFbzHRfJ3zFSOP5hwUpqvzGH0gbrHBNZKB
-YVa4RX84OL6FORizMvY5Y3aWRJ+wOtPDkcnndRh8rEFYaqAiAdCDo/42uKO9wUs=
-=/stg
------END PGP SIGNATURE-----
-
---+Xnt6BZa+I2KmHWw--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
