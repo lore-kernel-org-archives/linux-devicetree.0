@@ -1,101 +1,30 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 07/11] ARM: allow MULTIPLATFORM with !MMU
-Date: Mon, 06 Apr 2015 01:50:17 +0200
-Message-ID: <58bb3fd4f9e9b3acc7f8b83bd6664177@agner.ch>
-References: <1428090292-21693-1-git-send-email-stefan@agner.ch>
- <1428090292-21693-8-git-send-email-stefan@agner.ch>
- <20150403200931.GD13898@n2100.arm.linux.org.uk>
- <1f84d767d3bb8a8c470a26064cba454e@agner.ch>
- <20150405161014.GG13898@n2100.arm.linux.org.uk>
- <24394c50bcd8000c21aca0360fd20b6f@agner.ch>
- <20150405224455.GB12732@n2100.arm.linux.org.uk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: shmobile: r8a7791: Remove MSIOF address from
+ device tree
+Date: Mon, 6 Apr 2015 09:23:54 +0900
+Message-ID: <20150406002353.GB1841@verge.net.au>
+References: <1428166512-2936-1-git-send-email-ykaneko0929@gmail.com>
+ <CAMuHMdVH19ZncC0dMbO8-rCzN6MkOVWfiSKLDAnsqW6_Z_pw1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150405224455.GB12732@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVH19ZncC0dMbO8-rCzN6MkOVWfiSKLDAnsqW6_Z_pw1Q@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Kaneko <ykaneko0929@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-04-06 00:44, Russell King - ARM Linux wrote:
-> On Mon, Apr 06, 2015 at 12:19:43AM +0200, Stefan Agner wrote:
->> On 2015-04-05 18:10, Russell King - ARM Linux wrote:
->> > config ARM_SINGLE_ARMV7M
->> > 	bool "ARM architecture v7M compliant (Cortex-M0/M3/M4) SoC"
->> > 	depends on !MMU
->> > 	select ARM_NVIC
->> > 	... etc ...
->>
->> I guess that would be ARCH_SINGLE_ARMV7M?
+On Sun, Apr 05, 2015 at 10:47:01AM +0200, Geert Uytterhoeven wrote:
+> On Sat, Apr 4, 2015 at 6:55 PM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
+> > From: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
+> >
+> > MSIOF Base Address H'E6xx can be accessed by CPU and DMAC.
+> > MSIOF Base Address H'E7xx for DMAC was removed from H/W manual.
+> >
+> > Signed-off-by: Ryo Kataoka <ryo.kataoka.wt@renesas.com>
+> > Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 > 
-> No, I meant ARM_SINGLE_xxx
-> 
->> > which then allows a /multiplatform/ v7M kernel to be built, allowing the
->> > selection of EFM32, SOC_VF610, and any other v7M compliant SoC.
->>
->> In my view, that wouldn't end up being much different than what that
->> patchset is doing:
-> 
-> It's different.  It's different because we are _not_ enabling multiplatform.
-> Multiplatform brings with it all the MMU-full stuff that we don't want on
-> !MMU.
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-You mean config symbols? There are 2-3 config symbols we don't want with
-ARCH_MULTI_V7M and we have to exclude. But there would be also a
-duplication of some already given by multiplatform when creating a new
-top level config symbol...
- 
-> You're thinking far too specifically about V7M here.  We have other !MMU
-> CPUs, such as ARM946 and ARM940 which are older generation mmuless CPUs.
-> 
-> The problem with the ARCH_MULTI_V7M approach is that they're V4T and V5
-> CPUs, and we _really_ don't want to enable ARCH_MULTI_V4T and
-> ARCH_MULTI_V5.  If we did that, we'll allow _every_ V4T and V5
-> multiplatform to be selected, whether they're compatible with nommu
-> or not - and whether they're compatible with each other or not.
-
-Just from a selection view, ARM946 and ARM940 would still _not_ be
-selectable because this change makes ARCH_MULTI_V4T/V5 being dependent
-on MMU.
-
-> 
-> So, that kind of solution _doesn't_ scale to what we _once_ already
-> allowed.
-> 
->> As far as I can tell, this is already the case with that patchset.
-> 
-> What I'm trying to do here is to fix the cockup that the multiplatform
-> conversion has created with previous generation noMMU and restore it
-> back to where it should be without excluding the newer stuff from it.
-
-Would be a partial revert (remove ARCH_MULTI_* from CPU_ARM940T and
-CPU_ARM946E) of dc680b989d51 ("ARM: fix multiplatform allmodcompile") be
-the right thing to do then? Given that ARCH_MULTI_V4T/V5 is MMU
-dependent, those CPU's will not be selected even when building the
-integrator multiplatform image... However, due to the selection
-limitations outlined above, this would only be cosmetic anyway.
- 
-> What you're interested in is just the newer stuff.  You're approaching
-> the problem from a different angle and thinking that your solution is
-> the best.  I'm saying it has deficiencies.
-
-When keeping the old CPU's out of multiplatform game properly, what
-would speak against ARCH_MULTI_V7M? I still think if we allow a
-multiplatform v7M image, it is cleaner to align that to the MMU
-multiplatform stuff.
-
-Maybe I don't really get the grasp of ARM_SINGLE_ARMV7M. In my
-understanding it would be a new top level config symbol which kind of
-merges ARCH_MULTIPLATFORM and ARCH_MULTI_V7M.
-
-It is not my goal to enable !MMU on MULTIARCH per se. It's just that
-when enabling V7M with ARCH_MULTIPLATFORM, it makes it easier to enable
-the Cortex-M4 for the HMP platforms on those multiplatform only SoC's.
-When creating a new config symbol on a high level, this advantage is
-gone... I then could also create a top level ARCH_MXCV7M, which selects
-multiplatform only ARCH_MXC.
-
---
-Stefan
+Thanks, I have queued this up for v4.2.
