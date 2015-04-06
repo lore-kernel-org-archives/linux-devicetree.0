@@ -1,93 +1,67 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH v3 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
-Date: Mon, 06 Apr 2015 11:45:42 +0200
-Message-ID: <552255C6.1050503@rempel-privat.de>
-References: <1427476243.2334.12.camel@x220>		 <1428215185-14190-1-git-send-email-linux@rempel-privat.de>		 <1428215185-14190-2-git-send-email-linux@rempel-privat.de>	 <1428306169.634.51.camel@x220> <55224604.8070009@rempel-privat.de> <1428313265.634.112.camel@x220>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] spi: bcm-mspi: Add support to set serial baud clock
+ rate
+Date: Mon, 6 Apr 2015 10:46:36 +0100
+Message-ID: <20150406094636.GC6023@sirena.org.uk>
+References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
+ <1428002603-21892-5-git-send-email-jonathar@broadcom.com>
+ <552037BB.7050803@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="7iKO4FDaHCl65tTCj7CKrohnKDIUUVa6g"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1428313265.634.112.camel@x220>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+	protocol="application/pgp-signature"; boundary="dOtxUVmLoGkyu1PA"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <552037BB.7050803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---7iKO4FDaHCl65tTCj7CKrohnKDIUUVa6g
-Content-Type: text/plain; charset=utf-8
+
+--dOtxUVmLoGkyu1PA
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Am 06.04.2015 um 11:41 schrieb Paul Bolle:
-> On Mon, 2015-04-06 at 10:38 +0200, Oleksij Rempel wrote:
->> If you won't to say: "You have a mismatch between header and
->> MODULE_LICENSE, please make sure it will match."
->> You saying some thing like this: "I was right last time. Make module
->> License like I saying."
->=20
-> No, that's not what I wrote.
->
->> I'm confuse, what is your actual point? Do you trying to prove some th=
-ing?
->=20
-> My point is that there's a mismatch between the license described in th=
-e
-> comment at the top of this file and the ident used in the
-> MODULE_LICENSE() macro. In my comments on v2 I wrote:
->     By the way, you probably want to use "GPL v2" as the license ident
->     [...].
->=20
-> In this v3 I noticed the same mismatch (which was not surprising becaus=
-e
-> you already stated that "GPL" actually did match what's stated at the
-> comment in the top of this file). Therefor I wrote:
->     So only "GPL v2" matches what's found in the comment at top of this=
+On Sat, Apr 04, 2015 at 12:12:59PM -0700, Florian Fainelli wrote:
+> Le 02/04/2015 12:23, Jonathan Richardson a =E9crit :
 
->     file.
->=20
-> There now seem to be a few options:
-> - change either the comment at the top of this file or the license iden=
-t
-> used in MODULE_LICENSE() to make them actually match;
-> - show that I misread the comment at top of this file;
-> - or show that my reading of module.h is incorrect.
+> > +		/* Calculate SPBR if clock-frequency provided. */
+> > +		if (of_property_read_u32(dev->of_node, "clock-frequency",
+> > +			&desired_rate) >=3D 0) {
+> > +			u32 spbr =3D clk_get_rate(data->clk) / (2 * desired_rate);
 
-Ok, thank you for your review.
+> Usually, specifying a "clock-frequency" property is done when there is
+> no clock provider available, yet we take this code path only if we could
+> find a "mspi_clk" which sounds a litle weird.
 
-i send new version of patch with fixing header license to "v2 and later".=
+> Once there is a proper "mspi_clk" clock, I would make it mandatory for
+> the clock provider to be able to provide the rate as well?
 
+As far as I can tell it's already mandatory if the property is present -
+it's taking the clock presented to the block and then using an internal
+divider to bring that down to the desired rate.
 
+We are missing error handling though.
 
-> (Another option would be a patch that somehow merges the "GPL" and "GPL=
-
-> v2" license idents. That patch would put an end to discussions like the=
-
-> one we're having here. I'm _not_ volunteering to submit it.)
->=20
-> Thanks,
->=20
->=20
-> Paul Bolle
->=20
-
-
---=20
-Regards,
-Oleksij
-
-
---7iKO4FDaHCl65tTCj7CKrohnKDIUUVa6g
+--dOtxUVmLoGkyu1PA
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v2
 
-iF4EAREIAAYFAlUiVdMACgkQHwImuRkmbWmF8wEAj9P71BI8l+82yIW8OF70we+M
-s4kbsxjGqy94Wdc6m/gA/0rtCtIG1kW6J7fUzlZJ3u+uj69+q6rRtaVn50gjCnjG
-=2Hi3
+iQEcBAEBCAAGBQJVIlX7AAoJECTWi3JdVIfQThUH/R+N431/FW64SW9FYGRYdUBW
+mmPexicfM/zDQkl+zrw54yNUtWwUE/h4GcqVle1uU7J4dARbvBI0AeEXMjZfA6Fa
+4fI8YnDE67YHkvl6bqmnSyHcw4V4b9zUuMtxOmOLDi0A4zILsVodbPkJbo5SYu6B
+xKVmgFAhRw/MdxdxxiYt0CLQ8GIu6O635IX6Cfcf0IBNc8uICFf4MdrWi2HG4xOF
+RrAke52eHmiK9skR67VAH9Vm2sh8iyKJeE++ewbWo+7fYot1gpmF2HPkpcPtW1cQ
+EoY3ShjogBbxfpKfuH6yyfX/w5rYPT9Y6sjdbWaUjfOZ/VgPhD6a/ioNVaDaUK8=
+=gcDB
 -----END PGP SIGNATURE-----
 
---7iKO4FDaHCl65tTCj7CKrohnKDIUUVa6g--
+--dOtxUVmLoGkyu1PA--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
