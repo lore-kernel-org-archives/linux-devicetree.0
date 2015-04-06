@@ -1,49 +1,51 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v2 0/5] Refactor Qualcomm RPM regulator to single platform_device
-Date: Mon, 6 Apr 2015 10:11:02 -0700
-Message-ID: <CAJAp7Oi5NE2H67dUA1jK6U4itZxcMLojpK3qO-6Q8kDv3Vbbfg@mail.gmail.com>
-References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<551DBC05.2090301@codeaurora.org>
-	<20150402222630.GV6023@sirena.org.uk>
-	<551DC94C.3060001@codeaurora.org>
-	<20150406165154.GP6023@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] spi: fsl-dspi: Fix clock rate scale values
+Date: Mon, 6 Apr 2015 18:11:28 +0100
+Message-ID: <20150406171128.GR6023@sirena.org.uk>
+References: <1428093571-20407-1-git-send-email-aaron.brice@datasoft.com>
+ <1428093571-20407-2-git-send-email-aaron.brice@datasoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150406165154.GP6023@sirena.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5mQWZobUy98rde9G"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1428093571-20407-2-git-send-email-aaron.brice-vSOi0k5x9wFWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaron Brice <aaron.brice-vSOi0k5x9wFWk0Htik3J/w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2015 at 9:51 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Apr 02, 2015 at 03:57:16PM -0700, Stephen Boyd wrote:
->> On 04/02/15 15:26, Mark Brown wrote:
->
->> > Guenther sent a patch fixing that a while back.
->
->> This one?
->
-> Yes.
->
->>     regulator: Ensure unique regulator debugfs directory names
->
->> Ok. Seems to be only in next. I'm not sure it will work though because
->> in this case the parent device is the same for both regulators on
->> different PMICs that the RPM is controlling. I could be wrong though
->> because I haven't tested it.
->
-> I'd say that if the driver is doing this then the driver is buggy - the
-> user should be able to distinguish between two regulators appearing for
-> the same device.  Either the RPM should create dummy devices for the two
-> PMICs or something should insert the PMIC name into the regulator name
-> somewhere along the line (perhaps in the static data).
 
-Sorry, I spoke before I had coffee...
+--5mQWZobUy98rde9G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The RPM will instantiate one regulator device per pmic and parent will
-hence differ between the various regulator instances.
-So with Guenter's patch this does indeed work.
+On Fri, Apr 03, 2015 at 01:39:29PM -0700, Aaron Brice wrote:
+> Previous algorithm had an outer loop with the values {2,3,5,7} and an
+> inner loop with {2,4,6,8,16,32,...,32768}, and would pick the first
+> value over the required scaling value (where the total scale was the two
+> numbers multiplied).
 
-Regards,
-Bjorn
+Applied, thanks.
+
+--5mQWZobUy98rde9G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVIr5AAAoJECTWi3JdVIfQ5mUH/j08PS6yKEzpB4gsTPgcnyfZ
+9AnYaY+r19ZEoxK9aul8lRjsMhzLPrNdtyd5NwFD1P9nbgFf5pbAYEeqwRilOUdS
+VsGbVtWrconvk6qJn6W6pQeL3mQa1uLPuXqJ2VetBj3R+3lRuNfQTXR8MYIGdwOU
+WBIDWbR/w9DLp3ZgGT7KySkq/yKUAcave5Vkbn3lAWTSuE3NI9fBaFR+HQpjLqBI
+smHvZb38oRN483cQFOGEtTza8OrY2KoYMB1ACs8d9+l/gJDF9aNoJmyvLy2Pkfku
+XAnMPjXtQnQZ3BxBMBT7AmNFG/hQrAv59TS2pLxRj0jNK9mtYHT6FOL0i8gtnz8=
+=R/zY
+-----END PGP SIGNATURE-----
+
+--5mQWZobUy98rde9G--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
