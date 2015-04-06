@@ -1,36 +1,92 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
- Qualcomm hwmutex
-Date: Mon, 6 Apr 2015 22:04:23 +0300
-Message-ID: <CAK=WgbauoPf52v3P7NLPsXaRUmGWo_K6ZcV4w3UO6xs7MUrJsw@mail.gmail.com>
-References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
- <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
- <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
- <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
- <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
- <CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
- <CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com> <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: Re: [PATCH 3/4] spi: bcm-mspi: Make BCMA optional to support non-BCMA
+ chips
+Date: Mon, 6 Apr 2015 12:09:26 -0700
+Message-ID: <5522D9E6.3080008@broadcom.com>
+References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com> <1428002603-21892-4-git-send-email-jonathar@broadcom.com> <CAHp75VcMg-8X8DtHbQrmugzWG5VzzHXcpWNiyrTT=qmuCvA95w@mail.gmail.com> <551ED345.1000702@gmail.com> <CACna6ry9qxzY9xaaqR8K6XgSEun31c=d1XrWH_vk7Fq7fJTxoA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Tim Bird <tbird20d@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACna6ry9qxzY9xaaqR8K6XgSEun31c=d1XrWH_vk7Fq7fJTxoA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2015 at 7:48 PM, Bjorn Andersson <bjorn@kryo.se> wrote:
-> Based on the long discussion we had on one of the previous iterations
-> of Suman's DT binding, with the DT maintainers I believe that it would
-> be fine to move along and sent Suman's patches to Linus - without an
-> explicit Ack from the DT guys (or did I just miss one?).
+On 15-04-06 03:36 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> On 3 April 2015 at 19:52, Florian Fainelli <f.fainelli@gmail.com> wro=
+te:
+>> On 03/04/15 06:38, Andy Shevchenko wrote:
+>>> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
+>>> <jonathar@broadcom.com> wrote:
+>>>> The Broadcom MSPI controller is used on various chips. The driver =
+only
+>>>> supported BCM53xx chips with BCMA (an AMBA bus variant). The drive=
+r is
+>>>> refactored to make BCMA optional and provides a new config for non=
+ BCMA
+>>>> systems.
+>>>
+>>>>  struct bcm_mspi {
+>>>> +       #ifdef CONFIG_SPI_BCMA_MSPI
+>>>>         struct bcma_device *core;
+>>>> -       struct spi_master *master;
+>>>> +       #endif
+>>>>
+>>>> +       void __iomem *base;
+>>>> +       struct spi_master *master;
+>>>>         size_t read_offset;
+>>>
+>>>> +       void (*mspi_write)(struct bcm_mspi *mspi, u16 offset, u32 =
+value);
+>>>> +       u32 (*mspi_read)(struct bcm_mspi *mspi, u16 offset);
+>>>> +};
+>>>
+>>> To avoid ugly ifdefs I think better to split driver to core part an=
+d
+>>> the actual driver part, at the end you will have something like
+>>> mspi-core.c mspi-53xx.c mspi-whatever.c. Check for example spi-dw*.=
+c
+>>
+>> Actually, I am really curious whether we need the special BCMA I/O
+>> accessors in the first place, cannot we just access the MSPI core on
+>> BCM53xx chips using regular MMIO? That would probably solve the
+>> "problem" entirely. Rafal, did you try this before?
+>=20
+> It's a matter of choice between:
+> 1) Using one design for all bcma users
+> 2) Using one design for all bcm-mspi users
+> I believe no matter which one you choose, you'll break another one.
+>=20
+> If you take a look at drivers/bcma/host_soc.c, you'll see we've there
+> core->io_addr. I guess you could use it as the base in bcm-mspi. That
+> of course will make you a bit less compatible with other bcma drivers
+> (skipping bcma R/W layer).
 
-Thanks Bjorn.
+That would require compiling in BCMA for a driver/chip that doesn't use
+BCMA but then I could do DT parsing in init only anyway. I don't think
+that's really an option so I'm going to leave as is unless there is
+further opinion on it.
 
-Mark, are you OK with the latest iteration from Suman? it would be
-nice to get your +1 just to make sure we don't merge stuff you're
-uncomfortable with.
+>=20
+>=20
+>> As for splitting the driver into a "library" driver which is mostly
+>> independent from the bus and a bus-specific wrapper, I think BCMA is
+>> really the only special case here, which is why I suggested earlier =
+to
+>> Jonathan that we might just prefer ifdefing things out instead of
+>> creating a separate layer just for BCMA.
+>=20
+> I think you may be right, this #if for bcma shouldn't be that bad and
+> it shouldn't grow in the future.
+> Still, I'd like to get this patch split nicely to review independent =
+changes.
+>=20
 
-Thanks!
-Ohad.
+Making BCMA optional was made possible by using DT. I'm not sure I coul=
+d
+split it into two commits. I would have to add a hard coded SPI device
+for non-BMCA as well. I thought the driver was a bit odd in that this
+was hard coded. Normally this should be in a separate driver. How would
+you use it if you wanted to use m25p80 for example?
