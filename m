@@ -1,57 +1,49 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv3 0/2] Add support for generic register mapped poweroff.
-Date: Mon, 6 Apr 2015 18:51:53 +0200
-Message-ID: <20150406165152.GC18145@earth>
-References: <1426120639-4248-1-git-send-email-moritz.fischer@ettus.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v2 0/5] Refactor Qualcomm RPM regulator to single platform_device
+Date: Mon, 6 Apr 2015 10:11:02 -0700
+Message-ID: <CAJAp7Oi5NE2H67dUA1jK6U4itZxcMLojpK3qO-6Q8kDv3Vbbfg@mail.gmail.com>
+References: <1427928946-31291-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<551DBC05.2090301@codeaurora.org>
+	<20150402222630.GV6023@sirena.org.uk>
+	<551DC94C.3060001@codeaurora.org>
+	<20150406165154.GP6023@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Qbvjkv9qwOGw/5Fx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426120639-4248-1-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150406165154.GP6023@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 6, 2015 at 9:51 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Apr 02, 2015 at 03:57:16PM -0700, Stephen Boyd wrote:
+>> On 04/02/15 15:26, Mark Brown wrote:
+>
+>> > Guenther sent a patch fixing that a while back.
+>
+>> This one?
+>
+> Yes.
+>
+>>     regulator: Ensure unique regulator debugfs directory names
+>
+>> Ok. Seems to be only in next. I'm not sure it will work though because
+>> in this case the parent device is the same for both regulators on
+>> different PMICs that the RPM is controlling. I could be wrong though
+>> because I haven't tested it.
+>
+> I'd say that if the driver is doing this then the driver is buggy - the
+> user should be able to distinguish between two regulators appearing for
+> the same device.  Either the RPM should create dummy devices for the two
+> PMICs or something should insert the PMIC name into the regulator name
+> somewhere along the line (perhaps in the static data).
 
---Qbvjkv9qwOGw/5Fx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, I spoke before I had coffee...
 
-Hi,
+The RPM will instantiate one regulator device per pmic and parent will
+hence differ between the various regulator instances.
+So with Guenter's patch this does indeed work.
 
-On Wed, Mar 11, 2015 at 05:37:17PM -0700, Moritz Fischer wrote:
-> This patchset adds support for generic register mapped poweroff
-> via SYCON.
-
-Thanks, pulled:
-
-http://git.infradead.org/battery-2.6.git/commit/8a577608ba4a3cab1d74025cea382e40544ab9cd
-http://git.infradead.org/battery-2.6.git/commit/0db739fa06f95a040313c4479e1940caeb48e92f
-
--- Sebastian
-
---Qbvjkv9qwOGw/5Fx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVIrmoAAoJENju1/PIO/qaEssP/iMbEzpWD3SvcTuk4v11Eoci
-HhrpSr44WS+Xyqb4vUtbTWscfrY9OVcr2xXyxAv3E8PskwQvebNWcYFTQRdO8YTz
-ly8lktTASPLAe2adf+utEgZesHSoTTtnZbKUoKSgZBSWrHxVT1AA94anestsno3U
-gF9KLDTbdqB2nraDW3TiJkIhQjfPVZ+TGmywBnDTvH+5xcU4FzewZ82liop5t2VG
-ERfzDwBeEARXYw+CmiamifcglchWODtXMJppuHynv2XTqSHIuNo0MRXbABm3l7QU
-bfZ924kTl7XzOn+gmU2i39k4m9yr8lAlaHL1ypisWSie1bEvUF3+sXjuAUgr40u9
-zLV+VTrdoccJwLl1keVXWYLXbtkNj1fHqE3uV4d2O/Tpgc+0FVoSeVw1/MRfTINf
-N0yE5vRSBZ+8y8zkXvAcp5b3xv/8wYvO/13YLcsm/n3qEF4HFxRMuc6wPjUcCv9B
-yNEQTSpFzpW083xJ6FTSJNqKybCpGDMd5ntHu4ehVLF2QH7iRw6r8sFTEgNT/aly
-knPziZ4gEurbMPx0+DvaS9rolELv4dxDR3vN+Z3JENUThq50usJlV/H1fvz+O47L
-3b7oVR28VKibUpDqTcIbofo4c2ApW2UI337wb+ztQBtRfD3NnwI7rCbC8fLeWS4W
-Es5/PeDKUm5H15nlFjmP
-=zYYa
------END PGP SIGNATURE-----
-
---Qbvjkv9qwOGw/5Fx--
+Regards,
+Bjorn
