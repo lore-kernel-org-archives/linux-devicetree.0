@@ -1,180 +1,236 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH/RFC 3/6] staging: board: Add support for translating hwirq
- to virq numbers
-Date: Mon, 06 Apr 2015 11:45:44 +0100
-Message-ID: <7a82f5d435aaaf8d121233769a77943c@www.loen.fr>
-References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
- <1428064923-24950-4-git-send-email-geert+renesas@glider.be>
+From: <grygorii.strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 3/3] i2c: davinci: use ICPFUNC to toggle I2C as gpio for bus recovery
+Date: Mon,  6 Apr 2015 15:38:41 +0300
+Message-ID: <1428323921-25832-4-git-send-email-grygorii.strashko@linaro.org>
+References: <1428323921-25832-1-git-send-email-grygorii.strashko@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1428064923-24950-4-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-sh@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428323921-25832-1-git-send-email-grygorii.strashko-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Mike Looijmans <info-KQxf8TFvCoAi8rCdYzckzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-04-03 13:42, Geert Uytterhoeven wrote:
-> As of commit 9a1091ef0017c40a ("irqchip: gic: Support hierarchy irq
-> domain."), GIC IRQ numbers are virtual, breaking hardcoded hardware 
-> IRQ
-> numbers in platform device resources.
->
-> Add support for translating hardware IRQ numbers to virtual IRQ 
-> numbers,
-> and fixing up platform device resources with hardcoded IRQ numbers.
->
-> Add a copyright header, including the original author.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/staging/board/board.c | 66
-> +++++++++++++++++++++++++++++++++++++++++++
->  drivers/staging/board/board.h |  5 ++++
->  2 files changed, 71 insertions(+)
->
-> diff --git a/drivers/staging/board/board.c 
-> b/drivers/staging/board/board.c
-> index d5a6abc845191c93..b84ac2837a20bf06 100644
-> --- a/drivers/staging/board/board.c
-> +++ b/drivers/staging/board/board.c
-> @@ -1,10 +1,27 @@
-> +/*
-> + * Copyright (C) 2014 Magnus Damm
-> + * Copyright (C) 2015 Glider bvba
-> + *
-> + * This file is subject to the terms and conditions of the GNU
-> General Public
-> + * License.  See the file "COPYING" in the main directory of this 
-> archive
-> + * for more details.
-> + */
-> +
-> +#define pr_fmt(fmt)	"board_staging: "  fmt
-> +
->  #include <linux/init.h>
-> +#include <linux/irq.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +
->  #include "board.h"
->
-> +static struct device_node *irqc_node __initdata;
-> +static unsigned int irqc_base __initdata;
-> +
->  static bool find_by_address(u64 base_address)
->  {
->  	struct device_node *dn = of_find_all_nodes(NULL);
-> @@ -38,3 +55,52 @@ bool __init board_staging_dt_node_available(const
-> struct resource *resource,
->
->  	return false; /* Nothing found */
->  }
-> +
-> +int __init board_staging_setup_hwirq_xlate(const char *irqc_match,
-> +					   unsigned int base)
-> +{
-> +	irqc_node = of_find_compatible_node(NULL, NULL, irqc_match);
-> +
-> +	WARN_ON(!irqc_node);
-> +	if (!irqc_node)
-> +		return -ENOENT;
-> +
-> +	irqc_base = base;
-> +	return 0;
-> +}
+=46rom: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
-And what happens when you have multiple (cascaded) interrupt 
-controllers, each wanting to register with this translation service? You 
-should at least check that nobody has been here before.
+Having a board where the I2C bus locks up occasionally made it clear
+that the bus recovery in the i2c-davinci driver will only work on
+some boards, because on regular boards, this will only toggle GPIO
+lines that aren't muxed to the actual pins.
 
-> +static unsigned int __init xlate_hwirq(unsigned int hwirq)
-> +{
-> +	struct of_phandle_args irq_data;
-> +	unsigned int irq;
-> +
-> +	if (!irqc_node)
-> +		return hwirq;
-> +
-> +	irq_data.np = irqc_node;
-> +	irq_data.args_count = 3;
-> +	irq_data.args[0] = 0;
-> +	irq_data.args[1] = hwirq - irqc_base;
-> +	irq_data.args[2] = IRQ_TYPE_LEVEL_HIGH;
+The I2C controller on SoCs like da850 (and da830), Keystone 2 has the
+built-in capability to bit-bang its lines by using the ICPFUNC register=
+s
+of the i2c controller.
+Implement the suggested procedure by toggling SCL and checking SDA usin=
+g
+the ICPFUNC registers of the I2C controller when present. Allow platfor=
+ms
+to indicate the presence of the ICPFUNC registers with a has_pfunc plat=
+form
+data flag and add optional DT property "ti,has-pfunc" to indicate
+the same in DT.
 
-And what happens for edge interrupts? Or LEVEL_LOW? This is very much 
-GIC specific (3 args...). How does it work with non-GIC interrupt 
-controllers?
+CC: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+CC: Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+CC: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+CC: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+CC: Mike Looijmans <info-KQxf8TFvCoAi8rCdYzckzA@public.gmane.org>
+CC: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Tested-by: Michael Lawnick <michael.lawnick-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Ben Gardiner <bengardiner-ScDXFp4xN3PN+rMO2ozGnw@public.gmane.org>
+Signed-off-by: Mike Looijmans <milo-software-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+[grygorii.strashko-l0cyMroinI0@public.gmane.org: combined patches from Ben Gardiner and
+Mike Looijmans and reimplemented ICPFUNC bus recovery using I2C
+bus recovery infrastructure]
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/i2c/i2c-davinci.txt        |   3 +
+ drivers/i2c/busses/i2c-davinci.c                   | 102 +++++++++++++=
++++++++-
+ include/linux/platform_data/i2c-davinci.h          |   1 +
+ 3 files changed, 105 insertions(+), 1 deletion(-)
 
-> +
-> +	irq = irq_create_of_mapping(&irq_data);
-> +	if (WARN_ON(!irq))
-> +		irq = hwirq;
-> +
-> +	return irq;
-> +}
-> +
-> +void __init board_staging_fixup_irq_resources(struct resource *res,
-> +					      unsigned int nres)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < nres; i++)
-> +		if (res[i].flags == IORESOURCE_IRQ) {
-> +			unsigned int hwirq = res[i].start;
-> +			unsigned int virq = xlate_hwirq(hwirq);
-> +
-> +			pr_debug("hwirq %u -> virq %u\n", hwirq, virq);
-> +			res[i].start = virq;
-> +		}
-> +}
-> diff --git a/drivers/staging/board/board.h 
-> b/drivers/staging/board/board.h
-> index e9c914985d4acb36..4cedc3c46e287eb7 100644
-> --- a/drivers/staging/board/board.h
-> +++ b/drivers/staging/board/board.h
-> @@ -1,10 +1,15 @@
->  #ifndef __BOARD_H__
->  #define __BOARD_H__
-> +
->  #include <linux/init.h>
->  #include <linux/of.h>
->
-> +struct resource;
-> +
->  bool board_staging_dt_node_available(const struct resource 
-> *resource,
->  				     unsigned int num_resources);
-> +int board_staging_setup_hwirq_xlate(const char *irqc_match, unsigned
-> int base);
-> +void board_staging_fixup_irq_resources(struct resource *res,
-> unsigned int nres);
->
->  #define board_staging(str, fn)			\
->  static int __init runtime_board_check(void)	\
-
-It won't surprise you that I don't really like this approach. It is 
-controller-specific, restrictive, and allows platform code to continue 
-doing something that is essentially wrong. Should this code ever move 
-out of staging, it should depend on CONFIG_BROKEN, because this is 
-essentially what it is - support code for broken systems. I'd also 
-welcome moving parts of the OMAP4/5 code to such CONFIG_BROKEN 
-dependency.
-
-Thanks,
-
-         M.
--- 
-Fast, cheap, reliable. Pick two.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Do=
+cumentation/devicetree/bindings/i2c/i2c-davinci.txt
+index 2dc935b..a4e1cbc 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+@@ -10,6 +10,9 @@ Required properties:
+ Recommended properties :
+ - interrupts : standard interrupt property.
+ - clock-frequency : desired I2C bus clock frequency in Hz.
++- ti,has-pfunc: boolean; if defined, it indicates that SoC supports PF=
+UNC
++	registers. PFUNC registers allow to switch I2C pins to function as
++	GPIOs, so they can by toggled manually.
+=20
+ Example (enbw_cmc board):
+ 	i2c@1c22000 {
+diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-=
+davinci.c
+index 54819fb..4788a32 100644
+--- a/drivers/i2c/busses/i2c-davinci.c
++++ b/drivers/i2c/busses/i2c-davinci.c
+@@ -60,6 +60,12 @@
+ #define DAVINCI_I2C_IVR_REG	0x28
+ #define DAVINCI_I2C_EMDR_REG	0x2c
+ #define DAVINCI_I2C_PSC_REG	0x30
++#define DAVINCI_I2C_FUNC_REG	0x48
++#define DAVINCI_I2C_DIR_REG	0x4c
++#define DAVINCI_I2C_DIN_REG	0x50
++#define DAVINCI_I2C_DOUT_REG	0x54
++#define DAVINCI_I2C_DSET_REG	0x58
++#define DAVINCI_I2C_DCLR_REG	0x5c
+=20
+ #define DAVINCI_I2C_IVR_AAS	0x07
+ #define DAVINCI_I2C_IVR_SCD	0x06
+@@ -93,6 +99,29 @@
+ #define DAVINCI_I2C_IMR_NACK	BIT(1)
+ #define DAVINCI_I2C_IMR_AL	BIT(0)
+=20
++/* set SDA and SCL as GPIO */
++#define DAVINCI_I2C_FUNC_PFUNC0	BIT(0)
++
++/* set SCL as output when used as GPIO*/
++#define DAVINCI_I2C_DIR_PDIR0	BIT(0)
++/* set SDA as output when used as GPIO*/
++#define DAVINCI_I2C_DIR_PDIR1	BIT(1)
++
++/* read SCL GPIO level */
++#define DAVINCI_I2C_DIN_PDIN0 BIT(0)
++/* read SDA GPIO level */
++#define DAVINCI_I2C_DIN_PDIN1 BIT(1)
++
++/*set the SCL GPIO high */
++#define DAVINCI_I2C_DSET_PDSET0	BIT(0)
++/*set the SDA GPIO high */
++#define DAVINCI_I2C_DSET_PDSET1	BIT(1)
++
++/* set the SCL GPIO low */
++#define DAVINCI_I2C_DCLR_PDCLR0	BIT(0)
++/* set the SDA GPIO low */
++#define DAVINCI_I2C_DCLR_PDCLR1	BIT(1)
++
+ struct davinci_i2c_dev {
+ 	struct device           *dev;
+ 	void __iomem		*base;
+@@ -253,6 +282,71 @@ static struct i2c_bus_recovery_info davinci_i2c_gp=
+io_recovery_info =3D {
+ 	.unprepare_recovery =3D davinci_i2c_unprepare_recovery,
+ };
+=20
++static void davinci_i2c_set_scl(struct i2c_adapter *adap, int val)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++
++	if (val)
++		davinci_i2c_write_reg(dev, DAVINCI_I2C_DSET_REG,
++				      DAVINCI_I2C_DSET_PDSET0);
++	else
++		davinci_i2c_write_reg(dev, DAVINCI_I2C_DCLR_REG,
++				      DAVINCI_I2C_DCLR_PDCLR0);
++}
++
++static int davinci_i2c_get_scl(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++	int val;
++
++	/* read the state of SCL */
++	val =3D davinci_i2c_read_reg(dev, DAVINCI_I2C_DIN_REG);
++	return val & DAVINCI_I2C_DIN_PDIN0;
++}
++
++static int davinci_i2c_get_sda(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++	int val;
++
++	/* read the state of SDA */
++	val =3D davinci_i2c_read_reg(dev, DAVINCI_I2C_DIN_REG);
++	return val & DAVINCI_I2C_DIN_PDIN1;
++}
++
++static void davinci_i2c_scl_prepare_recovery(struct i2c_adapter *adap)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++
++	davinci_i2c_prepare_recovery(adap);
++
++	/* SCL output, SDA input */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_DIR_REG, DAVINCI_I2C_DIR_PDIR0=
+);
++
++	/* change to GPIO mode */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_FUNC_REG,
++			      DAVINCI_I2C_FUNC_PFUNC0);
++}
++
++static void davinci_i2c_scl_unprepare_recovery(struct i2c_adapter *ada=
+p)
++{
++	struct davinci_i2c_dev *dev =3D i2c_get_adapdata(adap);
++
++	/* change back to I2C mode */
++	davinci_i2c_write_reg(dev, DAVINCI_I2C_FUNC_REG, 0);
++
++	davinci_i2c_unprepare_recovery(adap);
++}
++
++static struct i2c_bus_recovery_info davinci_i2c_scl_recovery_info =3D =
+{
++	.recover_bus =3D i2c_generic_scl_recovery,
++	.set_scl =3D davinci_i2c_set_scl,
++	.get_scl =3D davinci_i2c_get_scl,
++	.get_sda =3D davinci_i2c_get_sda,
++	.prepare_recovery =3D davinci_i2c_scl_prepare_recovery,
++	.unprepare_recovery =3D davinci_i2c_scl_unprepare_recovery,
++};
++
+ /*
+  * Waiting for bus not busy
+  */
+@@ -660,6 +754,10 @@ static int davinci_i2c_probe(struct platform_devic=
+e *pdev)
+ 		if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+ 			&prop))
+ 			dev->pdata->bus_freq =3D prop / 1000;
++
++		dev->pdata->has_pfunc =3D
++			of_property_read_bool(pdev->dev.of_node,
++					      "ti,has-pfunc");
+ 	} else if (!dev->pdata) {
+ 		dev->pdata =3D &davinci_i2c_platform_data_default;
+ 	}
+@@ -701,7 +799,9 @@ static int davinci_i2c_probe(struct platform_device=
+ *pdev)
+ 	adap->timeout =3D DAVINCI_I2C_TIMEOUT;
+ 	adap->dev.of_node =3D pdev->dev.of_node;
+=20
+-	if (dev->pdata->scl_pin) {
++	if (dev->pdata->has_pfunc)
++		adap->bus_recovery_info =3D &davinci_i2c_scl_recovery_info;
++	else if (dev->pdata->scl_pin) {
+ 		adap->bus_recovery_info =3D &davinci_i2c_gpio_recovery_info;
+ 		adap->bus_recovery_info->scl_gpio =3D dev->pdata->scl_pin;
+ 		adap->bus_recovery_info->sda_gpio =3D dev->pdata->sda_pin;
+diff --git a/include/linux/platform_data/i2c-davinci.h b/include/linux/=
+platform_data/i2c-davinci.h
+index 2312d19..89fd347 100644
+--- a/include/linux/platform_data/i2c-davinci.h
++++ b/include/linux/platform_data/i2c-davinci.h
+@@ -18,6 +18,7 @@ struct davinci_i2c_platform_data {
+ 	unsigned int	bus_delay;	/* post-transaction delay (usec) */
+ 	unsigned int    sda_pin;        /* GPIO pin ID to use for SDA */
+ 	unsigned int    scl_pin;        /* GPIO pin ID to use for SCL */
++	bool		has_pfunc;	/*chip has a ICPFUNC register */
+ };
+=20
+ /* for board setup code */
+--=20
+1.9.1
