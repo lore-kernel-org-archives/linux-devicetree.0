@@ -1,140 +1,117 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] dmaengine: xgene-dma: Fix sparse wannings incorrect type in assignment (different base types)
-Date: Tue,  7 Apr 2015 14:39:01 +0530
-Message-ID: <1428397741-1837-1-git-send-email-rsahu@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] clk: dt: Introduce binding for always-on clock
+ support
+Date: Tue, 7 Apr 2015 10:42:23 +0100
+Message-ID: <20150407094223.GI3461@x1>
+References: <1427891304-20160-1-git-send-email-lee.jones@linaro.org>
+ <1427891304-20160-5-git-send-email-lee.jones@linaro.org>
+ <CAMuHMdXbWTuQAP9hg1qVCgaodkD3Wjin9UX=7uT=F0yodqEm+g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXbWTuQAP9hg1qVCgaodkD3Wjin9UX=7uT=F0yodqEm+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes compilation sparse warnings like incorrect type in assignment
-(different base types), cast to restricted __le64, symbol
-'__UNIQUE_ID_author__COUNTER__' has multiple initializers etc.
-This patch is based on slave-dma / for-linus branch.
-(commit: 9f2fd0dfa594d857fbdaeda523ff7a46f16567f5 [26/28]
-	dmaengine: Add support for APM X-Gene SoC DMA engine driver)
+On Thu, 02 Apr 2015, Geert Uytterhoeven wrote:
 
-Reported-by: kbuild test robot <fengguang.wu@intel.com>
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/dma/xgene-dma.c | 43 +++++++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 22 deletions(-)
+> On Wed, Apr 1, 2015 at 2:28 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
+e:
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/clock/clock-bindings.txt   | 31 ++++++++++=
+++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings=
+=2Etxt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > index 06fc6d5..94cdda2 100644
+> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > @@ -44,6 +44,37 @@ For example:
+> >    clocks by index. The names should reflect the clock output signa=
+l
+> >    names for the device.
+> >
+> > +clock-always-on:    Some hardware contains bunches of clocks which=
+ must never be
+> > +                   turned off.  If drivers a) fail to obtain a ref=
+erence to any
+> > +                   of these or b) give up a previously obtained re=
+ference
+> > +                   during suspend, the common clk framework will a=
+ttempt to
+> > +                   disable them and a platform can fail irrecovera=
+bly as a
+> > +                   result.  Usually the only way to recover from t=
+hese failures
+> > +                   is to reboot.
+> > +
+> > +                   To avoid either of these two scenarios from cat=
+astrophically
+> > +                   disabling an otherwise perfectly healthy runnin=
+g system,
+> > +                   clocks can be identified as always-on using thi=
+s property
+> > +                   from inside a clocksource's node.
+> > +
+> > +                   This property is not to be abused.  It is only =
+to be used to
+> > +                   protect platforms from being crippled by gated =
+clocks, not
+> > +                   as a convenience function to avoid using the fr=
+amework
+> > +                   correctly inside device drivers.
+>=20
+> Please document what are the expected value(s) for this property.
+> I assume these are clock indices into the array of hardware clocks?
+>=20
+> Do they take into account sparse hardware clocks, cfr. the "clock-ind=
+ices"
+> property below (I didn't check)?
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index aa61935..a89287f 100755
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -238,10 +238,10 @@
- 	dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
+They must match a valid indices.  If the clock-indices property is
+present, the value identified as always-on must match one of the
+clocks listed.
 
- struct xgene_dma_desc_hw {
--	u64 m0;
--	u64 m1;
--	u64 m2;
--	u64 m3;
-+	__le64 m0;
-+	__le64 m1;
-+	__le64 m2;
-+	__le64 m3;
- };
+I'll mention that.
 
- enum xgene_dma_ring_cfgsize {
-@@ -388,12 +388,12 @@ static bool is_pq_enabled(struct xgene_dma *pdma)
- 	return !(val & XGENE_DMA_PQ_DISABLE_MASK);
- }
+> > +For example:
+> > +
+> > +    oscillator {
+> > +        #clock-cells =3D <1>;
+> > +        clock-output-names =3D "ckil", "ckih";
+> > +        clock-always-on =3D <0>, <1>;
+> > +    };
+> > +
+> > +- this node defines a device with two clock outputs, just as in th=
+e
+> > +  example above.  The only difference being that 'ckil' and 'ckih'
+> > +  are now identified as an always-on clocks, so the framework will
+> > +  know to never attempt to gate them.
+> > +
+> >  clock-indices:    If the identifying number for the clocks in the =
+node
+> >                    is not linear from zero, then this allows the ma=
+pping of
+> >                    identifiers into the clock-output-names array.
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
 
--static void xgene_dma_cpu_to_le64(u64 *desc, int count)
-+static void xgene_dma_cpu_to_le64(struct xgene_dma_desc_hw *desc)
- {
--	int i;
--
--	for (i = 0; i < count; i++)
--		desc[i] = cpu_to_le64(desc[i]);
-+	desc->m0 = cpu_to_le64(((u64 *)desc)[0]);
-+	desc->m1 = cpu_to_le64(((u64 *)desc)[1]);
-+	desc->m2 = cpu_to_le64(((u64 *)desc)[2]);
-+	desc->m3 = cpu_to_le64(((u64 *)desc)[3]);
- }
-
- static u16 xgene_dma_encode_len(u32 len)
-@@ -499,9 +499,9 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
-
- skip_additional_src:
- 	/* Hardware stores descriptor in little endian format */
--	xgene_dma_cpu_to_le64(desc1, 4);
-+	xgene_dma_cpu_to_le64(desc1);
- 	if (desc2)
--		xgene_dma_cpu_to_le64(desc2, 4);
-+		xgene_dma_cpu_to_le64(desc2);
- }
-
- static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
-@@ -540,8 +540,8 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
- 	}
-
- 	/* Hardware stores descriptor in little endian format */
--	xgene_dma_cpu_to_le64(desc1, 4);
--	xgene_dma_cpu_to_le64(desc2, 4);
-+	xgene_dma_cpu_to_le64(desc1);
-+	xgene_dma_cpu_to_le64(desc2);
-
- 	/* Update meta data */
- 	*nbytes = len;
-@@ -1895,9 +1895,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
-
- 	pdma->csr_dma = devm_ioremap(&pdev->dev, res->start,
- 				     resource_size(res));
--	if (IS_ERR(pdma->csr_dma)) {
-+	if (!pdma->csr_dma) {
- 		dev_err(&pdev->dev, "Failed to ioremap csr region");
--		return PTR_ERR(pdma->csr_dma);
-+		return -ENOMEM;
- 	}
-
- 	/* Get DMA ring csr region */
-@@ -1909,9 +1909,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
-
- 	pdma->csr_ring =  devm_ioremap(&pdev->dev, res->start,
- 				       resource_size(res));
--	if (IS_ERR(pdma->csr_ring)) {
-+	if (!pdma->csr_ring) {
- 		dev_err(&pdev->dev, "Failed to ioremap ring csr region");
--		return PTR_ERR(pdma->csr_ring);
-+		return -ENOMEM;
- 	}
-
- 	/* Get DMA ring cmd csr region */
-@@ -1923,9 +1923,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
-
- 	pdma->csr_ring_cmd = devm_ioremap(&pdev->dev, res->start,
- 					  resource_size(res));
--	if (IS_ERR(pdma->csr_ring_cmd)) {
-+	if (!pdma->csr_ring_cmd) {
- 		dev_err(&pdev->dev, "Failed to ioremap ring cmd csr region");
--		return PTR_ERR(pdma->csr_ring_cmd);
-+		return -ENOMEM;
- 	}
-
- 	/* Get efuse csr region */
-@@ -1937,9 +1937,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
-
- 	pdma->csr_efuse = devm_ioremap(&pdev->dev, res->start,
- 				       resource_size(res));
--	if (IS_ERR(pdma->csr_efuse)) {
-+	if (!pdma->csr_efuse) {
- 		dev_err(&pdev->dev, "Failed to ioremap efuse csr region");
--		return PTR_ERR(pdma->csr_efuse);
-+		return -ENOMEM;
- 	}
-
- 	/* Get DMA error interrupt */
-@@ -2085,6 +2085,5 @@ module_platform_driver(xgene_dma_driver);
-
- MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
- MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
--MODULE_AUTHOR("Loc Ho <lho@apm.com>");
- MODULE_LICENSE("GPL");
- MODULE_VERSION("1.0");
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-1.8.2.1
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
