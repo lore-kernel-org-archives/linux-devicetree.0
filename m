@@ -1,61 +1,90 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH v6 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Tue, 07 Apr 2015 13:05:39 -0400
-Message-ID: <55240E63.3040502@hurleysoftware.com>
-References: <1428424234-28572-1-git-send-email-mcoquelin.stm32@gmail.com> <1428424234-28572-11-git-send-email-mcoquelin.stm32@gmail.com> <55240B2C.3020102@suse.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: Question about shared interrupts in devicetree
+Date: Tue, 7 Apr 2015 19:06:38 +0200 (CEST)
+Message-ID: <2146749411.2111.1428426398346.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+References: <2039290448.1160624.1428183613109.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+	<20150407112928.GA3812@leverpostej>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <55240B2C.3020102@suse.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, u.kleine-koenig@pengutronix.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, andy.shevchenko@gmail.com, cw00.choi@samsung.com, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, joe@perches.com
-Cc: Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kerne
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <kernelnewbies-bounces@kernelnewbies.org>
+In-Reply-To: <20150407112928.GA3812@leverpostej>
+List-Unsubscribe: <http://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+	<mailto:kernelnewbies-request@kernelnewbies.org?subject=unsubscribe>
+List-Archive: <http://lists.kernelnewbies.org/pipermail/kernelnewbies>
+List-Post: <mailto:kernelnewbies@kernelnewbies.org>
+List-Help: <mailto:kernelnewbies-request@kernelnewbies.org?subject=help>
+List-Subscribe: <http://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+	<mailto:kernelnewbies-request@kernelnewbies.org?subject=subscribe>
+Sender: kernelnewbies-bounces@kernelnewbies.org
+Errors-To: kernelnewbies-bounces@kernelnewbies.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: fabio.estevam@freescale.com, devicetree <devicetree@vger.kernel.org>, marex@denx.de, kernelnewbies <kernelnewbies@kernelnewbies.org>, kernel@pengutronix.de, maxime.ripard@free-electrons.com, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-On 04/07/2015 12:51 PM, Andreas F=C3=A4rber wrote:
-> Am 07.04.2015 um 18:30 schrieb Maxime Coquelin:
->> This drivers adds support to the STM32 USART controller, which is a
->> standard serial driver.
->>
->> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> ---
->>  drivers/tty/serial/Kconfig       |  17 +
->>  drivers/tty/serial/Makefile      |   1 +
->>  drivers/tty/serial/stm32-usart.c | 735 ++++++++++++++++++++++++++++=
-+++++++++++
->>  include/uapi/linux/serial_core.h |   3 +
->>  4 files changed, 756 insertions(+)
->>  create mode 100644 drivers/tty/serial/stm32-usart.c
-> [...]
->> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/s=
-tm32-usart.c
->> new file mode 100644
->> index 0000000..4adc430
->> --- /dev/null
->> +++ b/drivers/tty/serial/stm32-usart.c
-> [...]
->> +#define DRIVER_NAME "stm32-usart"
->> +#define STM32_SERIAL_NAME "ttyS"
->=20
-> I'm surprised no one has complained about ttyS yet. Doesn't that need=
- to
-> be unique, such as ttySTM (efm32 uses ttyefm), to avoid clashes betwe=
-en
-> serial drivers? ttyS was exclusive to the 8250 driver, I thought.
-
-As long as this platform doesn't support 8250 h/w, I don't care; and
-by the time this platform is ready for multiconfig, I'll have ttyS
-coexistence fixed.
-
-Regards,
-Peter Hurley
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWFyaywKClthZGQgc29tZSBwb3NzaWJsZSBpbnRlcmVzdGVkIGRldmVsb3BlciBpbiBDQ10K
+Cj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4gaGF0IGFtIDcuIEFwcmlsIDIw
+MTUgdW0gMTM6MjkgZ2VzY2hyaWViZW46Cj4KPgo+IE9uIFNhdCwgQXByIDA0LCAyMDE1IGF0IDEw
+OjQwOjEzUE0gKzAxMDAsIFN0ZWZhbiBXYWhyZW4gd3JvdGU6Cj4gPiBIaSwKPgo+IEhpLAo+Cj4g
+PiBpJ20gY3VycmVudGx5IHdvcmtpbmcgb24gZHJpdmVycyAocmVndWxhdG9yIGFuZCBwb3dlciBz
+d2l0Y2gpIGZvciBhIHBvd2VyCj4gPiBzdWJzeXN0ZW0gb2YgYSBBUk05IHByb2Nlc3NvciAoRnJl
+ZXNjYWxlIGkuTVgyOCkuIFRoZXJlIGFyZSBpbnRlcnJ1cHRzIGZvcgo+ID4gdGhlCj4gPiBwb3dl
+ciBzdWJzeXN0ZW0gd2hpY2ggc2hhcmUgdGhlIHNhbWUgaW50ZXJydXB0IGxpbmUuIFRoaXMgaW50
+ZXJydXB0IGxpbmUgaXMKPiA+IG5lZWRlZCBieSBib3RoIGRyaXZlcnMgKHJlZ3VsYXRvciBhbmQg
+cG93ZXIgc3dpdGNoKS4KPiA+Cj4gPiBOb3cgdGhlIHF1ZXN0aW9uIHdoYXQgaXMgdGhlIHJpZ2h0
+IHdheSAodG0pIHRvIHNwZWNpZnkgdGhlIGludGVycnVwdCBpbiB0aGUKPiA+IGRldmljZXRyZWUg
+YW5kIGZldGNoIHRoZSBpcnEgbnVtYmVyIGR1cmluZyBkcml2ZXIgcHJvYmU/Cj4KPiBJZiB0aGUg
+aW50ZXJydXB0cyBhcmUgZ2VuZXJhdGVkIGJ5IHRoZSBzdWJzeXN0ZW0gYXMgYSB3aG9sZSwgdGhl
+biBBCj4gd291bGQgYmUgbW9yZSBjb3JyZWN0LiBJZiB5b3UgY2FuIHJlYWQgc29tZSBzaGFyZWQg
+cmVnaXN0ZXIgdG8gZGV0ZXJtaW5lCj4gdGhlIHBhcnRpY3VsYXIgc3ViLWJsb2NrIHdoaWNoIGdl
+bmVyYXRlZCB0aGUgaW50ZXJydXB0LCBBIHdvdWxkCj4gY2VydGFpbmx5IGJlIHRoZSByaWdodCB3
+YXkgb2YgZGVzY3JpYmluZyB0aGUgSFcuCj4KPiBJZiB0aGUgc3Vic3lzdGVtIGlzIGp1c3QgYSBs
+b2dpY2FsIGdyb3VwaW5nLCBhbmQgdGhlIHR3byB1bml0cyBnZW5lcmF0ZQo+IHNlcGFyYXRlIGlu
+dGVycnVwdHMgd2hpY2ggc2ltcGx5IGdldCBtdXhlZCB0b2dldGhlciAod2l0aCBub3RoaW5nCj4g
+c3BlY2lhbCBkb25lIGF0IHRoZSBzdWJzeXN0ZW0gbGV2ZWwpLCB0aGVuIEIgd291bGQgc2VlbSBt
+b3JlIGNvcnJlY3QsIGFzCj4gdGhlIHR3byB1bml0cyBhcmUgZWZmZWN0aXZlbHkgaW5kZXBlbmRl
+bnQuCj4KPiBJdCByZWFsbHkgZGVwZW5kcyBvbiB3YXkgdGhlIEhXIGlzIG9yZ2FuaXNlZCwgYW5k
+IGhvdyB0aGUgSFcgX2NvdWxkXyBiZQo+IG9yZ2FuaXNlZCBpZiByZXVzZWQsIHNvIHRoaXMgaXMg
+YSBncmV5IGFyZWEgZ2VuZXJhbGx5Lgo+Cj4gSXQgbG9va3MgbGlrZSBpdCB3b3VsZCBiZSBwb3Nz
+aWJsZSB0byBzdXBwb3J0IGJvdGggc3R5bGVzIGlmIHdlIG5lZWQgdG8KPiAoYnkgY2hlY2tpbmcg
+dGhlIG5vZGUgZmlyc3QsIHRoZW4gaXRzIHBhcmVudCksIGlmIHdlIGdvIGZvciBvbmUgb3B0aW9u
+Cj4gYW5kIGxhdGVyIGRpc2NvdmVyIHdlIG5lZWQgdGhlIG90aGVyLgoKdGhhbmtzIGZvciB0aGUg
+Z29vZCBleHBsYW5hdGlvbi4gQWZ0ZXIgbG9va2luZyBpbnRvIHRoZSByZWZlcmVuY2UgbWFudWFs
+IFsxXSBvZgp0aGUgaS5NWDI4IGkgc3RpbGwgY2FuJ3QgZGVjaWRlIGlmIHRoZSBzdWJzeXN0ZW0g
+Z2VuZXJhdGUgdGhlIGludGVycnVwdHMgYXMgYQp3aG9sZSBvcgphcyBhIGxvZ2ljYWwgZ3JvdXAu
+IEkgb25seSBmb3VuZCB0aGlzIHBhcmEgaW4gY2hhcHRlciAxMS4xMToKCiAgICBUaGUgVkREQV9C
+T19JUlEsIFZERERfQk9fSVJRLCBWRERJT19CT19JUlEsIGFuZCBCQVRUX0JPX0lSUSBlYWNoCiAg
+ICBoYXZlIHRoZWlyIG93biBpbnRlcnJ1cHQgbGluZSBiYWNrIHRvIHRoZSBpbnRlcnJ1cHQgY29s
+bGVjdG9yLiAKICAgIEhvd2V2ZXIsIHRoZSByZW1haW5pbmcgZml2ZSBpbnRlcnJ1cHRz4oCUVkRE
+NVZfR1RfVkRESU9fSVJRLCBEQ19PS19JUlEsCiAgICBWQlVTVkFMSURfSVJRLCBMSU5SRUdfT0tf
+SVJRIGFuZCBQU1dJVENIX0lSUeKAlGFsbCBzaGFyZSBhIHNpbmdsZQogICAgaW50ZXJydXB0IGxp
+bmUuIEluIHRoaXMgY2FzZSwgc29mdHdhcmUgbXVzdCByZWFkIHRoZSBpbnRlcnJ1cHQgc3RhdHVz
+CiAgICBiaXRzIHRvIGRpc2NvdmVyIHdoaWNoIGV2ZW50IGNhdXNlZCB0aGUgaW50ZXJydXB0LgoK
+SW4gbXkgY2FzZSBEQ19PS19JUlEgYW5kIFBTV0lUQ0hfSVJRIGFyZSByZWxldmFudC4KCk1heWJl
+IHNvbWVvbmUgZWxzZSBoYXMgYSBpZGVhPwoKVGhhbmtzIFN0ZWZhbgoKWzFdIC0gaHR0cDovL2Nh
+Y2hlLmZyZWVzY2FsZS5jb20vZmlsZXMvZHNwL2RvYy9yZWZfbWFudWFsL01DSU1YMjhSTS5wZGYK
+CkRvY3VtZW50IE51bWJlcjogTUNJTVgyOFJNClJldiAyLCAwOC8yMDEzCgo+Cj4gVGhhbmtzLAo+
+IE1hcmsuCj4KPiA+Cj4gPiBPcHRpb24gQSAoZGVmaW5lIGludGVycnVwdCBpbiBwYXJlbnQgbm9k
+ZSk6Cj4gPgo+ID4gcG93ZXI6IHBvd2VyQDgwMDQ0MDAwIHsKPiA+IGNvbXBhdGlibGUgPSAiZnNs
+LGlteDI4LXBvd2VyIiwgInN5c2NvbiI7Cj4gPiByZWcgPSA8MHg4MDA0NDAwMCAweDIwMDA+Owo+
+ID4gaW50ZXJydXB0cyA9IDw2PjsKPiA+Cj4gPiByZWdfdmRkZDogcmVndWxhdG9yQDEgewo+ID4g
+Y29tcGF0aWJsZSA9ICJmc2wsaW14MjgtdmRkZCI7Cj4gPiB9Owo+ID4KPiA+IHBzd2l0Y2g6IHBz
+d2l0Y2hANSB7Cj4gPiBjb21wYXRpYmxlID0gImZzbCxteHMtcHN3aXRjaCI7Cj4gPiBsaW51eCxj
+b2RlID0gPDExNj47Cj4gPiB9Owo+ID4gfQo+ID4KPiA+IGludCBpcnEgPSBpcnFfb2ZfcGFyc2Vf
+YW5kX21hcChwYXJlbnQsIDApOwo+ID4KPiA+IE9wdGlvbiBCIChkZWZpbmUgaW50ZXJydXB0IGZv
+ciBlYWNoIGNoaWxkIG5vZGUpOgo+ID4KPiA+IHBvd2VyOiBwb3dlckA4MDA0NDAwMCB7Cj4gPiBj
+b21wYXRpYmxlID0gImZzbCxpbXgyOC1wb3dlciIsICJzeXNjb24iOwo+ID4gcmVnID0gPDB4ODAw
+NDQwMDAgMHgyMDAwPjsKPiA+Cj4gPiByZWdfdmRkZDogcmVndWxhdG9yQDEgewo+ID4gY29tcGF0
+aWJsZSA9ICJmc2wsaW14MjgtdmRkZCI7Cj4gPiBpbnRlcnJ1cHRzID0gPDY+Owo+ID4gfTsKPiA+
+Cj4gPiBwc3dpdGNoOiBwc3dpdGNoQDUgewo+ID4gY29tcGF0aWJsZSA9ICJmc2wsbXhzLXBzd2l0
+Y2giOwo+ID4gbGludXgsY29kZSA9IDwxMTY+Owo+ID4gaW50ZXJydXB0cyA9IDw2PjsKPiA+IH07
+Cj4gPiB9Cj4gPgo+ID4gaW50IGlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7Cj4gPgo+
+ID4gQmVzdCByZWdhcmRzCj4gPiBTdGVmYW4KPiA+IC0tCj4gPiBUbyB1bnN1YnNjcmliZSBmcm9t
+IHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPiA+
+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gPiBN
+b3JlIG1ham9yZG9tbyBpbmZvIGF0IGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWlu
+Zm8uaHRtbAo+ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCktlcm5lbG5ld2JpZXMgbWFpbGluZyBsaXN0Cktlcm5lbG5ld2JpZXNAa2VybmVsbmV3Ymll
+cy5vcmcKaHR0cDovL2xpc3RzLmtlcm5lbG5ld2JpZXMub3JnL21haWxtYW4vbGlzdGluZm8va2Vy
+bmVsbmV3Ymllcwo=
