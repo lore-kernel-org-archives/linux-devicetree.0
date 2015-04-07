@@ -1,114 +1,66 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v4 4/8] drm/exynos: dsi: rename pll_clk to sclk_clk
-Date: Tue, 07 Apr 2015 22:03:38 +0900
-Message-ID: <5523D5AA.4050704@samsung.com>
-References: <1428407858-25523-1-git-send-email-human.hwang@samsung.com>
- <1428407858-25523-5-git-send-email-human.hwang@samsung.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: irqchip heirarchy DT "break" series awareness?
+Date: Tue, 7 Apr 2015 13:06:38 +0000
+Message-ID: <20150407130638.GE7873@io.lakedaemon.net>
+References: <20150406144647.GC7873@io.lakedaemon.net>
+ <20150407115922.5d4c6233@free-electrons.com>
+ <5523AFAF.6040000@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1428407858-25523-5-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hyungwon Hwang <human.hwang@samsung.com>
-Cc: devicetree@vger.kernel.org, sw0312.kim@samsung.com, dh09.lee@samsung.com, cw00.choi@samsung.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5523AFAF.6040000-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNeuFhCAwNOyblCAwN+ydvCAyMDo1NywgSHl1bmd3b24gSHdhbmcgd3JvdGU6Cj4gVGhp
-cyBwYXRjaCByZW5hbWVzIHBsbF9jbGsgdG8gc2Nsa19jbGsuIFRoZSBjbG9jayByZWZlcmVuY2Vk
-IGJ5IHBsbF9jbGsKPiBpcyBhY3R1YWxseSBub3QgdGhlIHBsbCBpbnB1dCBjbG9jayBmb3IgZHNp
-LiBUaGUgcGxsIGlucHV0IGNsb2NrIGNvbWVzCj4gZnJvbSB0aGUgYm9hcmQncyBvc2NpbGxhdG9y
-IGRpcmVjdGx5Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2Fu
-Z0BzYW1zdW5nLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIGZvciB2MzoKPiAtIE5ld2x5IGFkZGVkCj4g
-Cj4gQ2hhbmdlcyBmb3IgdjQ6Cj4gLSBOb25lCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zp
-ZGVvL2V4eW5vc19kc2ltLnR4dCAgICAgIHwgIDYgKystLS0KPiAgZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHJtX2RzaS5jICAgICAgICAgICAgfCAzMSArKysrKysrKy0tLS0tLS0tLS0t
-LS0tCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRpb25zKC0p
-Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRl
-by9leHlub3NfZHNpbS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
-ZW8vZXh5bm9zX2RzaW0udHh0Cj4gaW5kZXggODAyYWE3ZS4uMzk5NDBjYSAxMDA2NDQKPiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zX2RzaW0udHh0
-Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vc19k
-c2ltLnR4dAo+IEBAIC0xMCwxMyArMTAsMTMgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICAt
-IGludGVycnVwdHM6IHNob3VsZCBjb250YWluIERTSSBpbnRlcnJ1cHQKPiAgICAtIGNsb2Nrczog
-bGlzdCBvZiBjbG9jayBzcGVjaWZpZXJzLCBtdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2gg
-cmVxdWlyZWQKPiAgICAgIGVudHJ5IGluIGNsb2NrLW5hbWVzCj4gLSAgLSBjbG9jay1uYW1lczog
-c2hvdWxkIGluY2x1ZGUgImJ1c19jbGsiYW5kICJwbGxfY2xrIiBlbnRyaWVzCj4gKyAgLSBjbG9j
-ay1uYW1lczogc2hvdWxkIGluY2x1ZGUgImJ1c19jbGsiYW5kICJzY2xrX21pcGkiIGVudHJpZXMK
-PiAgICAtIHBoeXM6IGxpc3Qgb2YgcGh5IHNwZWNpZmllcnMsIG11c3QgY29udGFpbiBhbiBlbnRy
-eSBmb3IgZWFjaCByZXF1aXJlZAo+ICAgICAgZW50cnkgaW4gcGh5LW5hbWVzCj4gICAgLSBwaHkt
-bmFtZXM6IHNob3VsZCBpbmNsdWRlICJkc2ltIiBlbnRyeQo+ICAgIC0gdmRkY29yZS1zdXBwbHk6
-IE1JUEkgRFNJTSBDb3JlIHZvbHRhZ2Ugc3VwcGx5IChlLmcuIDEuMVYpCj4gICAgLSB2ZGRpby1z
-dXBwbHk6IE1JUEkgRFNJTSBJL08gYW5kIFBMTCB2b2x0YWdlIHN1cHBseSAoZS5nLiAxLjhWKQo+
-IC0gIC0gc2Ftc3VuZyxwbGwtY2xvY2stZnJlcXVlbmN5OiBzcGVjaWZpZXMgZnJlcXVlbmN5IG9m
-IHRoZSAicGxsX2NsayIgY2xvY2sKPiArICAtIHNhbXN1bmcscGxsLWNsb2NrLWZyZXF1ZW5jeTog
-c3BlY2lmaWVzIGZyZXF1ZW5jeSBvZiB0aGUgb3NjaWxsYXRvciBjbG9jawo+ICAgIC0gI2FkZHJl
-c3MtY2VsbHMsICNzaXplLWNlbGxzOiBzaG91bGQgYmUgc2V0IHJlc3BlY3RpdmVseSB0byA8MT4g
-YW5kIDwwPgo+ICAgICAgYWNjb3JkaW5nIHRvIERTSSBob3N0IGJpbmRpbmdzIChzZWUgTUlQSSBE
-U0kgYmluZGluZ3MgWzFdKQo+IAo+IEBAIC00OCw3ICs0OCw3IEBAIEV4YW1wbGU6Cj4gIAkJcmVn
-ID0gPDB4MTFDODAwMDAgMHgxMDAwMD47Cj4gIAkJaW50ZXJydXB0cyA9IDwwIDc5IDA+Owo+ICAJ
-CWNsb2NrcyA9IDwmY2xvY2sgMjg2PiwgPCZjbG9jayAxNDM+Owo+IC0JCWNsb2NrLW5hbWVzID0g
-ImJ1c19jbGsiLCAicGxsX2NsayI7Cj4gKwkJY2xvY2stbmFtZXMgPSAiYnVzX2NsayIsICJzY2xr
-X21pcGkiOwo+ICAJCXBoeXMgPSA8Jm1pcGlfcGh5IDE+Owo+ICAJCXBoeS1uYW1lcyA9ICJkc2lt
-IjsKPiAgCQl2ZGRjb3JlLXN1cHBseSA9IDwmdnVzYl9yZWc+Owo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcm1fZHNpLmMKPiBpbmRleCAwNWZlOTNkLi40YWYxOGIyZiAxMDA2NDQKPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiArKysgYi9kcml2
-ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiBAQCAtMjc3LDcgKzI3Nyw3IEBA
-IHN0cnVjdCBleHlub3NfZHNpIHsKPiAKPiAgCXZvaWQgX19pb21lbSAqcmVnX2Jhc2U7Cj4gIAlz
-dHJ1Y3QgcGh5ICpwaHk7Cj4gLQlzdHJ1Y3QgY2xrICpwbGxfY2xrOwo+ICsJc3RydWN0IGNsayAq
-c2Nsa19jbGs7Cj4gIAlzdHJ1Y3QgY2xrICpidXNfY2xrOwo+ICAJc3RydWN0IHJlZ3VsYXRvcl9i
-dWxrX2RhdGEgc3VwcGxpZXNbMl07Cj4gIAlpbnQgaXJxOwo+IEBAIC00MzEsMTYgKzQzMSw3IEBA
-IHN0YXRpYyB1bnNpZ25lZCBsb25nIGV4eW5vc19kc2lfc2V0X3BsbChzdHJ1Y3QgZXh5bm9zX2Rz
-aSAqZHNpLAo+ICAJdTE2IG07Cj4gIAl1MzIgcmVnOwo+IAo+IC0JY2xrX3NldF9yYXRlKGRzaS0+
-cGxsX2NsaywgZHNpLT5wbGxfY2xrX3JhdGUpOwo+IC0KPiAtCWZpbiA9IGNsa19nZXRfcmF0ZShk
-c2ktPnBsbF9jbGspOwo+IC0JaWYgKCFmaW4pIHsKPiAtCQlkZXZfZXJyKGRzaS0+ZGV2LCAiZmFp
-bGVkIHRvIGdldCBQTEwgY2xvY2sgZnJlcXVlbmN5XG4iKTsKPiAtCQlyZXR1cm4gMDsKPiAtCX0K
-PiAtCj4gLQlkZXZfZGJnKGRzaS0+ZGV2LCAiUExMIGlucHV0IGZyZXF1ZW5jeTogJWx1XG4iLCBm
-aW4pOwo+IC0KPiArCWZpbiA9IGRzaS0+cGxsX2Nsa19yYXRlOwo+ICAJZm91dCA9IGV4eW5vc19k
-c2lfcGxsX2ZpbmRfcG1zKGRzaSwgZmluLCBmcmVxLCAmcCwgJm0sICZzKTsKPiAgCWlmICghZm91
-dCkgewo+ICAJCWRldl9lcnIoZHNpLT5kZXYsCj4gQEAgLTEzMDgsMTAgKzEyOTksMTAgQEAgc3Rh
-dGljIGludCBleHlub3NfZHNpX3Bvd2Vyb24oc3RydWN0IGV4eW5vc19kc2kgKmRzaSkKPiAgCQln
-b3RvIGVycl9idXNfY2xrOwo+ICAJfQo+IAo+IC0JcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRz
-aS0+cGxsX2Nsayk7Cj4gKwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5zY2xrX2Nsayk7
-Cj4gIAlpZiAocmV0IDwgMCkgewo+ICAJCWRldl9lcnIoZHNpLT5kZXYsICJjYW5ub3QgZW5hYmxl
-IHBsbCBjbG9jayAlZFxuIiwgcmV0KTsKPiAtCQlnb3RvIGVycl9wbGxfY2xrOwo+ICsJCWdvdG8g
-ZXJyX3NjbGtfY2xrOwo+ICAJfQo+IAo+ICAJcmV0ID0gcGh5X3Bvd2VyX29uKGRzaS0+cGh5KTsK
-PiBAQCAtMTMyMyw4ICsxMzE0LDggQEAgc3RhdGljIGludCBleHlub3NfZHNpX3Bvd2Vyb24oc3Ry
-dWN0IGV4eW5vc19kc2kgKmRzaSkKPiAgCXJldHVybiAwOwo+IAo+ICBlcnJfcGh5Ogo+IC0JY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGxsX2Nsayk7Cj4gLWVycl9wbGxfY2xrOgo+ICsJY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+c2Nsa19jbGspOwo+ICtlcnJfc2Nsa19jbGs6Cj4gIAlj
-bGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5idXNfY2xrKTsKPiAgZXJyX2J1c19jbGs6Cj4gIAly
-ZWd1bGF0b3JfYnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoZHNpLT5zdXBwbGllcyksIGRzaS0+c3Vw
-cGxpZXMpOwo+IEBAIC0xMzUwLDcgKzEzNDEsNyBAQCBzdGF0aWMgdm9pZCBleHlub3NfZHNpX3Bv
-d2Vyb2ZmKHN0cnVjdCBleHlub3NfZHNpICpkc2kpCj4gCj4gIAlwaHlfcG93ZXJfb2ZmKGRzaS0+
-cGh5KTsKPiAKPiAtCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbF9jbGspOwo+ICsJY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+c2Nsa19jbGspOwo+ICAJY2xrX2Rpc2FibGVfdW5wcmVw
-YXJlKGRzaS0+YnVzX2Nsayk7Cj4gCj4gIAlyZXQgPSByZWd1bGF0b3JfYnVsa19kaXNhYmxlKEFS
-UkFZX1NJWkUoZHNpLT5zdXBwbGllcyksIGRzaS0+c3VwcGxpZXMpOwo+IEBAIC0xNzIwLDEwICsx
-NzExLDEwIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQo+ICAJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICAJfQo+IAo+IC0JZHNpLT5w
-bGxfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgInBsbF9jbGsiKTsKPiAtCWlmIChJU19FUlIoZHNp
-LT5wbGxfY2xrKSkgewo+IC0JCWRldl9pbmZvKGRldiwgImZhaWxlZCB0byBnZXQgZHNpIHBsbCBp
-bnB1dCBjbG9ja1xuIik7Cj4gLQkJcmV0ID0gUFRSX0VSUihkc2ktPnBsbF9jbGspOwo+ICsJZHNp
-LT5zY2xrX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJzY2xrX21pcGkiKTsKCllvdSBjaGFuZ2Vk
-IG9ubHkgY2xvY2sgbmFtZSBvZiBkcml2ZXIgc28gd2l0aCB0aGlzIHBhdGNoLCBkc2kgZHJpdmVy
-CndvdWxkbid0IHdvcmsgYmVjYXVzZSBkZXZpY2UgdHJlZSBzdGlsbCBoYXMgJ3BsbF9jbGsnIGFz
-IGNsb2NrIG5hbWUuIEFuZAp5b3Ugc2hvdWxkIGFsc28gY29uc2lkZXIgYmFja3dhcmQgY29tcGF0
-aWJpbGl0eSBiZWNhdXNlIGV4aXN0aW5nIGR0YiBoYXMKJ3BsbF9jbGsnIHdoaWNoIGNhbm5vdCBi
-ZSBjaGFuZ2VkLiBUaGUgY2hhbmdlIG9mIGNsb2NrIG5hbWUsIHBsbF9jbGsKLT5zY2xrX21pcGks
-IHNlZW1zIHJlYXNvbmFibGUgdG8gbWUuCgpUaGFua3MsCklua2kgRGFlCgo+ICsJaWYgKElTX0VS
-Uihkc2ktPnNjbGtfY2xrKSkgewo+ICsJCWRldl9pbmZvKGRldiwgImZhaWxlZCB0byBnZXQgZHNp
-IHNjbGsgY2xvY2tcbiIpOwo+ICsJCXJldCA9IFBUUl9FUlIoZHNpLT5zY2xrX2Nsayk7Cj4gIAkJ
-Z290byBlcnJfZGVsX2NvbXBvbmVudDsKPiAgCX0KPiAKPiAtLQo+IDEuOS4xCj4gCj4gCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Apr 07, 2015 at 11:21:35AM +0100, Marc Zyngier wrote:
+> Hi Thomas,
+> 
+> On 07/04/15 10:59, Thomas Petazzoni wrote:
+> 
+> > But the point of the slides stand: even for a piece of hardware as
+> > well-documented as the GIC, as widely used as the GIC, with as many
+> > bright and smart engineers looking into it, the community has not been
+> > able to put out a DT binding that can be kept stable. How can we expect
+> > such a DT binding stability to occur for undocumented hardware, or
+> > SoC-specific hardware blocks that are definitely a lot less used than
+> > the GIC ?
+> 
+> The problem at hand is not so much the GIC itself, but the fact that
+> only the GIC was described in DT. The GIC binding is unchanged, but some
+> additional hardware is now described.
+
+Well, if that were the case we wouldn't have a break in DT
+compatibility.  I suppose what we're going for here is "removed GIC
+binding properties (arm,routable-irqs) that didn't describe hardware".
+Similar for crossbar and the others that were inappropriately relying on
+gic_arch_extn implementation to model the (incorrect) hardware
+description.
+
+> If the relationship between the GIC and the shadow interrupt controllers
+> had been described, we would have avoided breaking the compatibility. I
+> guess it was too tempting to reuse pre-DT mechanisms and to forget about
+> this entirely.
+
+I'm not sure tempting is the right word.  Everyone has known since this
+project began that we were striving to describe the hardware.  I suspect
+the reason we got to where we are is that people *assumed* the code was
+describing the hardware, and so wrote bindings reflecting their
+understanding.  iow, we don't have enough hardware engineers reviewing
+bindings :-P
+
+Be that as it may, I'm not trying to rehash the decision.  It's clearly
+the correct thing to do.  Otherwise, I wouldn't have pulled it in.  What
+I am trying to do here is make sure a) we have full awareness by
+everybody not directly involved, and b) make sure I have my ducks in a
+row if ThomasG/Linus raises questions regarding the pull request.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
