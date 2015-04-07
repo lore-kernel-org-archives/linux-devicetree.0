@@ -1,57 +1,39 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V2 2/2] stmmac: Add IMG Pistachio platform glue layer
-Date: Tue, 7 Apr 2015 13:40:17 -0700
-Message-ID: <CAL1qeaE__xSh-xFS43oLoVYzsc=hJXiYikw=OOt59-wOCTkYWQ@mail.gmail.com>
-References: <1428356558-18367-1-git-send-email-abrestic@chromium.org>
-	<1428356558-18367-2-git-send-email-abrestic@chromium.org>
-	<2916148.ZqFzHAuDtr@wuerfel>
-	<CAL1qeaFwt-VB6rUywHZ47gOx4fhd6LZLfvwqkydOtqWLkYbO8A@mail.gmail.com>
-	<72BC0C8BD7BB6F45988A99382E5FBAE544490C96@hhmail02.hh.imgtec.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 4/4] ARM: dts: Specify VMMC and VQMMC on rk3288-evb
+Date: Tue, 07 Apr 2015 23:37:30 +0200
+Message-ID: <1457117.iiJ36z7dmV@diego>
+References: <1426112117-18220-1-git-send-email-dianders@chromium.org> <1426112117-18220-4-git-send-email-dianders@chromium.org> <10565603.LCTpLmy44N@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <72BC0C8BD7BB6F45988A99382E5FBAE544490C96@hhmail02.hh.imgtec.org>
+In-Reply-To: <10565603.LCTpLmy44N@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Hartley <James.Hartley@imgtec.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Govindraj Raja <Govindraj.Raja@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Mark Brown <broonie@kernel.org>, Alexandru Stan <amstan@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, Addy Ke <addy.ke@rock-chips.com>, javier.martinez@collabora.co.uk, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2015 at 10:16 AM, James Hartley <James.Hartley@imgtec.com> wrote:
->
->
->> -----Original Message-----
->> From: abrestic@google.com [mailto:abrestic@google.com] On Behalf Of
->> Andrew Bresticker
->> Sent: 06 April 2015 23:28
->> To: Arnd Bergmann; James Hartley
->> Cc: David S. Miller; Giuseppe Cavallaro; devicetree@vger.kernel.org;
->> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Govindraj Raja
->> Subject: Re: [PATCH V2 2/2] stmmac: Add IMG Pistachio platform glue layer
->>
->> On Mon, Apr 6, 2015 at 3:10 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Monday 06 April 2015 14:42:38 Andrew Bresticker wrote:
->> >> At the moment, the only additional setup required for the DWMAC on
->> >> the IMG Pistachio SoC is to request and enable a separate gate clock
->> >> for the register interface.
->> >>
->> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> >> Signed-off-by: Govindraj Raja <govindraj.raja@imgtec.com>
->> >> Cc: James Hartley <james.hartley@imgtec.com>
->> >
->> > Why do you need a special glue driver for that?
->> >
->> > Since you don't do anything special, I'd say it should be possible to
->> > handle this with just the default driver.
->>
->> Right, at the moment we only need to request and enable a second clock,
->> which could be added to the core driver.  If we don't expect to have to
->> extend this driver to deal with other configurations (which IIRC there were
->> some concerns about when I wrote this), then I'm fine with folding this change
->> into the core driver - James?
->
-> Weren't the concerns about USB not Ethernet?  I don't remember anything that
-> would stop us extending the driver for eth.
+Am Donnerstag, 12. M=E4rz 2015, 00:30:14 schrieb Heiko Stuebner:
+> Am Mittwoch, 11. M=E4rz 2015, 15:15:17 schrieb Doug Anderson:
+> > Specifying these rails should eventually let us do UHS.
+> >=20
+> > Signed-off-by: Doug Anderson <dianders@chromium.org>
+>=20
+> This one looks good to me and I'll take it into my dts branch.
+>=20
+> But due to the deferal issue fixed in patch1, I'll wait a bit for pat=
+ch1
+> hopefully getting applied, so that we have a "clean" behaviour when
+> everything reaches linux-next.
 
-OK, let's try this then: https://patchwork.kernel.org/patch/6174881/
+looks like patch1 made it into the mmc tree [0], which was the prequisi=
+te for=20
+this one. Therefore applied to my dts branch.
 
--Andrew
+
+Heiko
+
+
+[0]=20
+https://git.linaro.org/people/ulf.hansson/mmc.git/commit/b793f658b194ed=
+fe5e1d86aaeace01a7b03c68f9
