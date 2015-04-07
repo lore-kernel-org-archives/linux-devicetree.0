@@ -1,82 +1,142 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v4 2/8] of: add helper for getting endpoint node of specific
- identifiers
-Date: Tue, 07 Apr 2015 20:57:32 +0900
-Message-ID: <1428407858-25523-3-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 4/8] drm/exynos: dsi: rename pll_clk to sclk_clk
+Date: Tue, 07 Apr 2015 20:57:34 +0900
+Message-ID: <1428407858-25523-5-git-send-email-human.hwang@samsung.com>
 References: <1428407858-25523-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1428407858-25523-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, inki.dae@samsung.com, daniel@fooishbar.org
-Cc: dh09.lee@samsung.com, sw0312.kim@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, cw00.choi@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1428407858-25523-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org
+Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-V2hlbiB0aGVyZSBhcmUgbXVsdGlwbGUgcG9ydHMgb3IgbXVsdGlwbGUgZW5kcG9pbnRzIGluIGEg
-cG9ydCwgdGhleSBoYXZlIHRvIGJlCmRpc3Rpbmd1aXNoZWQgYnkgdGhlIHZhbHVlIG9mIHJlZyBw
-cm9wZXJ0eS4gSXQgaXMgY29tbW9uLiBUaGUgZHJpdmVycyBjYW4gZ2V0CnRoZSBzcGVjaWZpYyBl
-bmRwb2ludCBpbiB0aGUgc3BlY2lmaWMgcG9ydCB2aWEgdGhpcyBmdW5jdGlvbi4gTm93IHRoZSBk
-cml2ZXJzCmhhdmUgdG8gaW1wbGVtZW50IHRoaXMgY29kZSBpbiB0aGVtc2VsdmVzIG9yIGhhdmUg
-dG8gZm9yY2UgdGhlIG9yZGVyIG9mIGR0IG5vZGVzCnRvIGdldCB0aGUgcmlnaHQgbm9kZS4KClNp
-Z25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KQWNr
-ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ci0tLQpDaGFuZ2VzIGZvciB2
-MjoKLSBOb25lCgpDaGFuZ2VzIGZvciB2MzoKLSBOb25lCgpDaGFuZ2VzIGZvciB2NDoKLSBOb25l
-CiBkcml2ZXJzL29mL2Jhc2UuYyAgICAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysKIGluY2x1ZGUvbGludXgvb2ZfZ3JhcGguaCB8ICA4ICsrKysrKysrCiAyIGZpbGVz
-IGNoYW5nZWQsIDQxIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2Jhc2Uu
-YyBiL2RyaXZlcnMvb2YvYmFzZS5jCmluZGV4IDhmMTY1YjEuLjM3YmM4ZTAgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvb2YvYmFzZS5jCisrKyBiL2RyaXZlcnMvb2YvYmFzZS5jCkBAIC0yMTU4LDYgKzIx
-NTgsMzkgQEAgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludChj
-b25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwKIEVYUE9SVF9TWU1CT0wob2ZfZ3JhcGhf
-Z2V0X25leHRfZW5kcG9pbnQpOwoKIC8qKgorICogb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3Jl
-Z3MoKSAtIGdldCBlbmRwb2ludCBub2RlIG9mIHNwZWNpZmljIGlkZW50aWZpZXJzCisgKiBAcGFy
-ZW50OiBwb2ludGVyIHRvIHRoZSBwYXJlbnQgZGV2aWNlIG5vZGUKKyAqIEBwb3J0X3JlZzogaWRl
-bnRpZmllciAodmFsdWUgb2YgcmVnIHByb3BlcnR5KSBvZiB0aGUgcGFyZW50IHBvcnQgbm9kZQor
-ICogQHJlZzogaWRlbnRpZmllciAodmFsdWUgb2YgcmVnIHByb3BlcnR5KSBvZiB0aGUgZW5kcG9p
-bnQgbm9kZQorICoKKyAqIFJldHVybjogQW4gJ2VuZHBvaW50JyBub2RlIHBvaW50ZXIgd2hpY2gg
-aXMgaWRlbnRpZmllZCBieSByZWcgYW5kIGF0IHRoZSBzYW1lCisgKiBpcyB0aGUgY2hpbGQgb2Yg
-YSBwb3J0IG5vZGUgaWRlbnRpZmllZCBieSBwb3J0X3JlZy4gcmVnIGFuZCBwb3J0X3JlZyBhcmUK
-KyAqIGlnbm9yZWQgd2hlbiB0aGV5IGFyZSAtMS4KKyAqLworc3RydWN0IGRldmljZV9ub2RlICpv
-Zl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncygKKwljb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUg
-KnBhcmVudCwgaW50IHBvcnRfcmVnLCBpbnQgcmVnKQoreworCXN0cnVjdCBvZl9lbmRwb2ludCBl
-bmRwb2ludDsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsICpwcmV2X25vZGUgPSBOVUxMOwor
-CisJd2hpbGUgKDEpIHsKKwkJbm9kZSA9IG9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KHBhcmVu
-dCwgcHJldl9ub2RlKTsKKwkJb2Zfbm9kZV9wdXQocHJldl9ub2RlKTsKKwkJaWYgKCFub2RlKQor
-CQkJYnJlYWs7CisKKwkJb2ZfZ3JhcGhfcGFyc2VfZW5kcG9pbnQobm9kZSwgJmVuZHBvaW50KTsK
-KwkJaWYgKCgocG9ydF9yZWcgPT0gLTEpIHx8IChlbmRwb2ludC5wb3J0ID09IHBvcnRfcmVnKSkg
-JiYKKwkJCSgocmVnID09IC0xKSB8fCAoZW5kcG9pbnQuaWQgPT0gcmVnKSkpCisJCQlyZXR1cm4g
-bm9kZTsKKworCQlwcmV2X25vZGUgPSBub2RlOworCX0KKworCXJldHVybiBOVUxMOworfQorCisv
-KioKICAqIG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoKSAtIGdldCByZW1vdGUgcG9y
-dCdzIHBhcmVudCBub2RlCiAgKiBAbm9kZTogcG9pbnRlciB0byBhIGxvY2FsIGVuZHBvaW50IGRl
-dmljZV9ub2RlCiAgKgpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oIGIvaW5j
-bHVkZS9saW51eC9vZl9ncmFwaC5oCmluZGV4IGJlZmVmNDIuLmU4NTllYjcgMTAwNjQ0Ci0tLSBh
-L2luY2x1ZGUvbGludXgvb2ZfZ3JhcGguaAorKysgYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgK
-QEAgLTMxLDYgKzMxLDggQEAgaW50IG9mX2dyYXBoX3BhcnNlX2VuZHBvaW50KGNvbnN0IHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbm9kZSwKIAkJCQlzdHJ1Y3Qgb2ZfZW5kcG9pbnQgKmVuZHBvaW50KTsK
-IHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQoY29uc3Qgc3Ry
-dWN0IGRldmljZV9ub2RlICpwYXJlbnQsCiAJCQkJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqcHJldmlv
-dXMpOworc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncygK
-KwkJY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQsIGludCBwb3J0X3JlZywgaW50IHJl
-Zyk7CiBzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQo
-CiAJCQkJCWNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSk7CiBzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5v
-ZGUpOwpAQCAtNDksNiArNTEsMTIgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KAogCXJldHVybiBOVUxMOwogfQoKK3N0cnVjdCBk
-ZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoCisJCWNvbnN0IHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBpbnQgcG9ydF9yZWcsIGludCByZWcpCit7CisJcmV0dXJu
-IE5VTEw7Cit9CisKIHN0YXRpYyBpbmxpbmUgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9n
-ZXRfcmVtb3RlX3BvcnRfcGFyZW50KAogCQkJCQljb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5v
-ZGUpCiB7Ci0tCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+This patch renames pll_clk to sclk_clk. The clock referenced by pll_clk
+is actually not the pll input clock for dsi. The pll input clock comes
+from the board's oscillator directly.
+
+Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+Changes for v3:
+- Newly added
+
+Changes for v4:
+- None
+ .../devicetree/bindings/video/exynos_dsim.txt      |  6 ++---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 31 ++++++++--------------
+ 2 files changed, 14 insertions(+), 23 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+index 802aa7e..39940ca 100644
+--- a/Documentation/devicetree/bindings/video/exynos_dsim.txt
++++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+@@ -10,13 +10,13 @@ Required properties:
+   - interrupts: should contain DSI interrupt
+   - clocks: list of clock specifiers, must contain an entry for each required
+     entry in clock-names
+-  - clock-names: should include "bus_clk"and "pll_clk" entries
++  - clock-names: should include "bus_clk"and "sclk_mipi" entries
+   - phys: list of phy specifiers, must contain an entry for each required
+     entry in phy-names
+   - phy-names: should include "dsim" entry
+   - vddcore-supply: MIPI DSIM Core voltage supply (e.g. 1.1V)
+   - vddio-supply: MIPI DSIM I/O and PLL voltage supply (e.g. 1.8V)
+-  - samsung,pll-clock-frequency: specifies frequency of the "pll_clk" clock
++  - samsung,pll-clock-frequency: specifies frequency of the oscillator clock
+   - #address-cells, #size-cells: should be set respectively to <1> and <0>
+     according to DSI host bindings (see MIPI DSI bindings [1])
+
+@@ -48,7 +48,7 @@ Example:
+ 		reg = <0x11C80000 0x10000>;
+ 		interrupts = <0 79 0>;
+ 		clocks = <&clock 286>, <&clock 143>;
+-		clock-names = "bus_clk", "pll_clk";
++		clock-names = "bus_clk", "sclk_mipi";
+ 		phys = <&mipi_phy 1>;
+ 		phy-names = "dsim";
+ 		vddcore-supply = <&vusb_reg>;
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 05fe93d..4af18b2f 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -277,7 +277,7 @@ struct exynos_dsi {
+
+ 	void __iomem *reg_base;
+ 	struct phy *phy;
+-	struct clk *pll_clk;
++	struct clk *sclk_clk;
+ 	struct clk *bus_clk;
+ 	struct regulator_bulk_data supplies[2];
+ 	int irq;
+@@ -431,16 +431,7 @@ static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
+ 	u16 m;
+ 	u32 reg;
+
+-	clk_set_rate(dsi->pll_clk, dsi->pll_clk_rate);
+-
+-	fin = clk_get_rate(dsi->pll_clk);
+-	if (!fin) {
+-		dev_err(dsi->dev, "failed to get PLL clock frequency\n");
+-		return 0;
+-	}
+-
+-	dev_dbg(dsi->dev, "PLL input frequency: %lu\n", fin);
+-
++	fin = dsi->pll_clk_rate;
+ 	fout = exynos_dsi_pll_find_pms(dsi, fin, freq, &p, &m, &s);
+ 	if (!fout) {
+ 		dev_err(dsi->dev,
+@@ -1308,10 +1299,10 @@ static int exynos_dsi_poweron(struct exynos_dsi *dsi)
+ 		goto err_bus_clk;
+ 	}
+
+-	ret = clk_prepare_enable(dsi->pll_clk);
++	ret = clk_prepare_enable(dsi->sclk_clk);
+ 	if (ret < 0) {
+ 		dev_err(dsi->dev, "cannot enable pll clock %d\n", ret);
+-		goto err_pll_clk;
++		goto err_sclk_clk;
+ 	}
+
+ 	ret = phy_power_on(dsi->phy);
+@@ -1323,8 +1314,8 @@ static int exynos_dsi_poweron(struct exynos_dsi *dsi)
+ 	return 0;
+
+ err_phy:
+-	clk_disable_unprepare(dsi->pll_clk);
+-err_pll_clk:
++	clk_disable_unprepare(dsi->sclk_clk);
++err_sclk_clk:
+ 	clk_disable_unprepare(dsi->bus_clk);
+ err_bus_clk:
+ 	regulator_bulk_disable(ARRAY_SIZE(dsi->supplies), dsi->supplies);
+@@ -1350,7 +1341,7 @@ static void exynos_dsi_poweroff(struct exynos_dsi *dsi)
+
+ 	phy_power_off(dsi->phy);
+
+-	clk_disable_unprepare(dsi->pll_clk);
++	clk_disable_unprepare(dsi->sclk_clk);
+ 	clk_disable_unprepare(dsi->bus_clk);
+
+ 	ret = regulator_bulk_disable(ARRAY_SIZE(dsi->supplies), dsi->supplies);
+@@ -1720,10 +1711,10 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 		return -EPROBE_DEFER;
+ 	}
+
+-	dsi->pll_clk = devm_clk_get(dev, "pll_clk");
+-	if (IS_ERR(dsi->pll_clk)) {
+-		dev_info(dev, "failed to get dsi pll input clock\n");
+-		ret = PTR_ERR(dsi->pll_clk);
++	dsi->sclk_clk = devm_clk_get(dev, "sclk_mipi");
++	if (IS_ERR(dsi->sclk_clk)) {
++		dev_info(dev, "failed to get dsi sclk clock\n");
++		ret = PTR_ERR(dsi->sclk_clk);
+ 		goto err_del_component;
+ 	}
+
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
