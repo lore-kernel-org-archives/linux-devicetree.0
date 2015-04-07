@@ -1,263 +1,73 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH V3 1/2] pinctrl: Add Pistachio SoC pin control binding document
-Date: Tue,  7 Apr 2015 12:44:21 -0700
-Message-ID: <1428435862-14354-2-git-send-email-abrestic@chromium.org>
-References: <1428435862-14354-1-git-send-email-abrestic@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428435862-14354-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Matt Porter <mporter@konsulko.com>
+Subject: Re: [PATCH v4 05/10] eeprom: Add bindings for simple eeprom framework
+Date: Tue, 7 Apr 2015 15:46:36 -0400
+Message-ID: <20150407194636.GB6662@beef>
+References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1427752679-17261-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150406133208.GH30984@beef>
+ <CAL_Jsq++9pyJMLXssgyz2WRU4e7ikT_6FwzWMo1fKS82FJvEyg@mail.gmail.com>
+ <20150406150442.GA26319@beef>
+ <55241575.7040809@linaro.org>
+ <20150407174624.GO6023@sirena.org.uk>
+ <55241BF2.4050609@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55241BF2.4050609@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a device-tree binding document for the pin controller present
-on the IMG Pistachio SoC.
+On Tue, Apr 07, 2015 at 07:03:30PM +0100, Srinivas Kandagatla wrote:
+> 
+> 
+> On 07/04/15 18:46, Mark Brown wrote:
+> >On Tue, Apr 07, 2015 at 06:35:49PM +0100, Srinivas Kandagatla wrote:
+> >>On 06/04/15 16:04, Matt Porter wrote:
+> >>>On Mon, Apr 06, 2015 at 09:11:05AM -0500, Rob Herring wrote:
+> >
+> >>>>>The generic binding could really use a "read-only" property here as this
+> >>>>>is a common hardware attribute for many nvmem devices. A serial EEPROM
+> >
+> >>Correct me If am wrong.
+> >
+> >>Regarding write protection/read-only, regmap already has provisions to
+> >>support this feature. regmap would bail out with errors if any attempt to
+> >>write to non-writable regions. It all depends on the data providers how they
+> >>setup the regmap and the bindings for those are specific individual data
+> >>providers I think.
+> >
+> >There is the ability to flag read/write permissions in regmap but I
+> >think there's some suggestion that this should be exposed to userspace
+> >so that it's easier for it to handle things rather than just writing
+> >then coping with any errors.
+> 
+> Yes, That's possible if the data provider use the "read-only" generic
+> binding like MTD partitions which the eeprom framwork could use to set the
+> binary file mode appropriately.
 
-Signed-off-by: Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
-No changes from v2.
-Changes from v1:
- - Change compatible string to "img,pistachio-system-pinctrl".
- - Specify GPIO sub-node names rather than forcing the nodes to be in order.
----
- .../bindings/pinctrl/img,pistachio-pinctrl.txt     | 217 +++++++++++++++++++++
- 1 file changed, 217 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
+Right, that's what Rob suggested as to how it should be exposed to
+userspace. I think Mark is suggesting that it can also be done by
+returning appropriately fine-grained error codes from a writeable
+attribute.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
-new file mode 100644
-index 0000000..08a4a32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
-@@ -0,0 +1,217 @@
-+Imagination Technologies Pistachio SoC pin controllers
-+======================================================
-+
-+The pin controllers on Pistachio are a combined GPIO controller, (GPIO)
-+interrupt controller, and pinmux + pinconf device. The system ("east") pin
-+controller on Pistachio has 99 pins, 90 of which are MFIOs which can be
-+configured as GPIOs. The 90 GPIOs are divided into 6 banks of up to 16 GPIOs
-+each. The GPIO banks are represented as sub-nodes of the pad controller node.
-+
-+Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
-+../interrupt-controller/interrupts.txt for generic information regarding
-+pin controller, GPIO, and interrupt bindings.
-+
-+Required properties for pin controller node:
-+--------------------------------------------
-+ - compatible: "img,pistachio-system-pinctrl".
-+ - reg: Address range of the pinctrl registers.
-+
-+Required properties for GPIO bank sub-nodes:
-+--------------------------------------------
-+ - interrupts: Interrupt line for the GPIO bank.
-+ - gpio-controller: Indicates the device is a GPIO controller.
-+ - #gpio-cells: Must be two. The first cell is the GPIO pin number and the
-+   second cell indicates the polarity. See <dt-bindings/gpio/gpio.h> for
-+   a list of possible values.
-+ - interrupt-controller: Indicates the device is an interrupt controller.
-+ - #interrupt-cells: Must be two. The first cell is the GPIO pin number and
-+   the second cell encodes the interrupt flags. See
-+   <dt-bindings/interrupt-controller/irq.h> for a list of valid flags.
-+
-+Note that the N GPIO bank sub-nodes *must* be named gpio0, gpio1, ... gpioN-1.
-+
-+Required properties for pin configuration sub-nodes:
-+----------------------------------------------------
-+ - pins: List of pins to which the configuration applies. See below for a
-+   list of possible pins.
-+
-+Optional properties for pin configuration sub-nodes:
-+----------------------------------------------------
-+ - function: Mux function for the specified pins. This is not applicable for
-+   non-MFIO pins. See below for a list of valid functions for each pin.
-+ - bias-high-impedance: Enable high-impedance mode.
-+ - bias-pull-up: Enable weak pull-up.
-+ - bias-pull-down: Enable weak pull-down.
-+ - bias-bus-hold: Enable bus-keeper mode.
-+ - drive-strength: Drive strength in mA. Supported values: 2, 4, 8, 12.
-+ - input-schmitt-enable: Enable Schmitt trigger.
-+ - input-schmitt-disable: Disable Schmitt trigger.
-+ - slew-rate: Slew rate control. 0 for slow, 1 for fast.
-+
-+Pin		Functions
-+---		---------
-+mfio0		spim1
-+mfio1		spim1, spim0, uart1
-+mfio2		spim1, spim0, uart1
-+mfio3		spim1
-+mfio4		spim1
-+mfio5		spim1
-+mfio6		spim1
-+mfio7		spim1
-+mfio8		spim0
-+mfio9		spim0
-+mfio10		spim0
-+mfio11		spis
-+mfio12		spis
-+mfio13		spis
-+mfio14		spis
-+mfio15		sdhost, mips_trace_clk, mips_trace_data
-+mfio16		sdhost, mips_trace_dint, mips_trace_data
-+mfio17		sdhost, mips_trace_trigout, mips_trace_data
-+mfio18		sdhost, mips_trace_trigin, mips_trace_data
-+mfio19		sdhost, mips_trace_dm, mips_trace_data
-+mfio20		sdhost, mips_trace_probe_n, mips_trace_data
-+mfio21		sdhost, mips_trace_data
-+mfio22		sdhost, mips_trace_data
-+mfio23		sdhost
-+mfio24		sdhost
-+mfio25		sdhost
-+mfio26		sdhost
-+mfio27		sdhost
-+mfio28		i2c0, spim0
-+mfio29		i2c0, spim0
-+mfio30		i2c1, spim0
-+mfio31		i2c1, spim1
-+mfio32		i2c2
-+mfio33		i2c2
-+mfio34		i2c3
-+mfio35		i2c3
-+mfio36		i2s_out, audio_clk_in
-+mfio37		i2s_out, debug_raw_cca_ind
-+mfio38		i2s_out, debug_ed_sec20_cca_ind
-+mfio39		i2s_out, debug_ed_sec40_cca_ind
-+mfio40		i2s_out, debug_agc_done_0
-+mfio41		i2s_out, debug_agc_done_1
-+mfio42		i2s_out, debug_ed_cca_ind
-+mfio43		i2s_out, debug_s2l_done
-+mfio44		i2s_out
-+mfio45		i2s_dac_clk, audio_sync
-+mfio46		audio_trigger
-+mfio47		i2s_in
-+mfio48		i2s_in
-+mfio49		i2s_in
-+mfio50		i2s_in
-+mfio51		i2s_in
-+mfio52		i2s_in
-+mfio53		i2s_in
-+mfio54		i2s_in, spdif_in
-+mfio55		uart0, spim0, spim1
-+mfio56		uart0, spim0, spim1
-+mfio57		uart0, spim0, spim1
-+mfio58		uart0, spim1
-+mfio59		uart1
-+mfio60		uart1
-+mfio61		spdif_out
-+mfio62		spdif_in
-+mfio63		eth, mips_trace_clk, mips_trace_data
-+mfio64		eth, mips_trace_dint, mips_trace_data
-+mfio65		eth, mips_trace_trigout, mips_trace_data
-+mfio66		eth, mips_trace_trigin, mips_trace_data
-+mfio67		eth, mips_trace_dm, mips_trace_data
-+mfio68		eth, mips_trace_probe_n, mips_trace_data
-+mfio69		eth, mips_trace_data
-+mfio70		eth, mips_trace_data
-+mfio71		eth
-+mfio72		ir
-+mfio73		pwmpdm, mips_trace_clk, sram_debug
-+mfio74		pwmpdm, mips_trace_dint, sram_debug
-+mfio75		pwmpdm, mips_trace_trigout, rom_debug
-+mfio76		pwmpdm, mips_trace_trigin, rom_debug
-+mfio77		mdc_debug, mips_trace_dm, rpu_debug
-+mfio78		mdc_debug, mips_trace_probe_n, rpu_debug
-+mfio79		ddr_debug, mips_trace_data, mips_debug
-+mfio80		ddr_debug, mips_trace_data, mips_debug
-+mfio81		dreq0, mips_trace_data, eth_debug
-+mfio82		dreq1, mips_trace_data, eth_debug
-+mfio83		mips_pll_lock, mips_trace_data, usb_debug
-+mfio84		sys_pll_lock, mips_trace_data, usb_debug
-+mfio85		wifi_pll_lock, mips_trace_data, sdhost_debug
-+mfio86		bt_pll_lock, mips_trace_data, sdhost_debug
-+mfio87		rpu_v_pll_lock, dreq2, socif_debug
-+mfio88		rpu_l_pll_lock, dreq3, socif_debug
-+mfio89		audio_pll_lock, dreq4, dreq5
-+tck
-+trstn
-+tdi
-+tms
-+tdo
-+jtag_comply
-+safe_mode
-+por_disable
-+resetn
-+
-+Example:
-+--------
-+pinctrl@18101C00 {
-+	compatible = "img,pistachio-system-pinctrl";
-+	reg = <0x18101C00 0x400>;
-+
-+	gpio0: gpio0 {
-+		interrupts = <GIC_SHARED 71 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	...
-+
-+	gpio5: gpio5 {
-+		interrupts = <GIC_SHARED 76 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	...
-+
-+	uart0_xfer: uart0-xfer {
-+		uart0-rxd {
-+			pins = "mfio55";
-+			function = "uart0";
-+		};
-+		uart0-txd {
-+			pins = "mfio56";
-+			function = "uart0";
-+		};
-+	};
-+
-+	uart0_rts_cts: uart0-rts-cts {
-+		uart0-rts {
-+			  pins = "mfio57";
-+			  function = "uart0";
-+		};
-+		uart0-cts {
-+			  pins = "mfio58";
-+			  function = "uart0";
-+		};
-+	};
-+};
-+
-+uart@... {
-+	...
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer>, <&uart0_rts_cts>;
-+	...
-+};
-+
-+usb_vbus: fixed-regulator {
-+	...
-+	gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-+	...
-+};
--- 
-2.2.0.rc0.207.ga3a616c
+Just to clarify here, I brought this up because if we only allow
+the writes to fail, there's not necessarily not enough information
+available to know if they failed due to a real error (perhaps write
+cycles for the underlying nvmem device have been exhausted) or is
+it simply that the underlying device has been hardware write protected
+(such as as the write protect pin hardwired that way or it's an OTP
+device). The client, whether userspace or otherwise is going to need
+to know this information to make informed policy decisions.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
+
+> "read-only" property seems to be more generic for all types of data
+> providers.
+> 
+> I will give it a try and document this in the bindings too in next version.
+> 
+> --srini
+> >
