@@ -1,55 +1,69 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: irqchip heirarchy DT "break" series awareness?
-Date: Tue, 7 Apr 2015 14:37:04 +0100
-Message-ID: <20150407133703.GF4394@leverpostej>
-References: <20150406144647.GC7873@io.lakedaemon.net>
- <20150407115922.5d4c6233@free-electrons.com>
- <5523AFAF.6040000@arm.com>
- <20150407130638.GE7873@io.lakedaemon.net>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
+Date: Tue, 7 Apr 2015 15:34:40 +0200
+Message-ID: <CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
+References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20150407130638.GE7873@io.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>, "arm@kernel.org" <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > If the relationship between the GIC and the shadow interrupt controllers
-> > had been described, we would have avoided breaking the compatibility. I
-> > guess it was too tempting to reuse pre-DT mechanisms and to forget about
-> > this entirely.
-> 
-> I'm not sure tempting is the right word.  Everyone has known since this
-> project began that we were striving to describe the hardware.  I suspect
-> the reason we got to where we are is that people *assumed* the code was
-> describing the hardware, and so wrote bindings reflecting their
-> understanding.  iow, we don't have enough hardware engineers reviewing
-> bindings :-P
+Hi Shimoda-san,
 
-FWIW when routable-irqs was introduced I negatively reviewed it, stating
-that it was backwards, and that the crossbar driver should request the
-appropriate domain dynamically [1]. We _knew_ it was wrong at the time,
-but people decided to ignore that review because it was easier to do
-things in a broken way.
+On Tue, Apr 7, 2015 at 9:53 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds DMA properties to the HSUSB node.
 
-A more general issue is that people hack in the minimal amount of DT
-parsing code to an existing driver and rely on platform data and code to
-do the heavy lifting, rather than doing a clean break with DT (which
-would highlight deficiencies in the bndings). You end up with the worst
-of both worlds, because you depend on both an incomplete DT and
-implementation-specific platform data/code.
+Thank you for your patch!
 
-Mark.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/r8a7791.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+> index db3772e..5f20ad4 100644
+> --- a/arch/arm/boot/dts/r8a7791.dtsi
+> +++ b/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -722,6 +722,9 @@
+>                 renesas,buswait = <4>;
+>                 phys = <&usb0 1>;
+>                 phy-names = "usb";
+> +               dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
+> +                      <&usb_dmac1 0>, <&usb_dmac1 1>;
+> +               dma-names = "rx0", "tx1", "rx2", "tx3";
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/211530.html
+The numbering looks a bit strange, given the code looks up both tx and rx
+DMA channels for each channel index. Is it correct?
+
+The binding documentation (which lacks on example) states:
+
+  - dma-names : Must contain a list of DMA names:
+   - tx0 ... tx<n>
+   - rx0 ... rx<n>
+    - This <n> means DnFIFO in USBHS module.
+
+As there are 4 DnFIFOs, I'd expect tx0..tx3 and rx0..rx3.
+
+Can you please clarify?
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
