@@ -1,112 +1,83 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v5 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Tue, 7 Apr 2015 18:05:47 +0200
-Message-ID: <CALszF6AzxKhQYVyDki-pT2hWT0a2gtJaPp2HED7SB+yJSG5rOg@mail.gmail.com>
-References: <1428080481-18591-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1428080481-18591-11-git-send-email-mcoquelin.stm32@gmail.com>
-	<CAHp75VfRpwH3gw=EX816Bd8QnGSVzPg8+OWppqEKp2H_vCzRXw@mail.gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH] ARM: dts: imx: imx6q uart2 pin mux correction
+Date: Tue, 07 Apr 2015 19:16:47 +0300
+Message-ID: <552402EF.9050004@mleia.com>
+References: <CAPvN=VTSMxtjs6QQ=VFPCDgJ3LJ2xfC+Ryh-rXU4-xnqk+i67w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfRpwH3gw=EX816Bd8QnGSVzPg8+OWppqEKp2H_vCzRXw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPvN=VTSMxtjs6QQ=VFPCDgJ3LJ2xfC+Ryh-rXU4-xnqk+i67w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Smigielski <robert.smigielski@timesys.com>
+Cc: devicetree@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2015-04-04 0:04 GMT+02:00 Andy Shevchenko <andy.shevchenko@gmail.com>:
-> On Fri, Apr 3, 2015 at 8:01 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->> This drivers adds support to the STM32 USART controller, which is a
->> standard serial driver.
->>
->
-> Few minor comments.
->
->> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> ---
->>  drivers/tty/serial/Kconfig       |  17 +
->>  drivers/tty/serial/Makefile      |   1 +
->>  drivers/tty/serial/stm32-usart.c | 736 +++++++++++++++++++++++++++++++++++++++
->>  include/uapi/linux/serial_core.h |   3 +
->>  4 files changed, 757 insertions(+)
->>  create mode 100644 drivers/tty/serial/stm32-usart.c
->>
+Hi Robert,
 
->> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
->> new file mode 100644
->> index 0000000..61e0e19
->> --- /dev/null
->> +++ b/drivers/tty/serial/stm32-usart.c
->> @@ -0,0 +1,736 @@
-...
->> +
->> +static unsigned int stm32_get_mctrl(struct uart_port *port)
->> +{
->> +       /* This routine is used to get signals of: DCD, DSR, RI, and CTS */
->> +       return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
->> +}
->> +
->> +/* Transmit stop */
->> +static void stm32_stop_tx(struct uart_port *port)
->> +{
->> +       stm32_clr_bits(port, USART_CR1, USART_CR1_TXEIE);
->> +}
->> +
->> +
->
-> Unneeded empty line.
-Right, will be removed.
+On 10.03.2015 15:45, Robert Smigielski wrote:
+> This patch contains a correction to the file imx6q-pinfunc.h for the
+> definition of the UART2 GPIO pin mux setting.
+> 
+> Issue found when testing UART2 configured as the console in Linux
+> GPIO_7 is a transmit pin not a transmit and receive pin
+> GPIO_8 is a receive pin not a transmit and receive pin
+> 
+> Verified the correction with Freescale in posting to the Freescale
+> forum https://community.freescale.com/thread/343349
+> 
+> commit c383bbb4d17037435305858f488db7ae17dc1c85
+> Author: robert.smigielski <robert.smigielski@timesys.com>
+> Date:   Fri Mar 6 11:53:20 2015 -0500
+> 
+>     UART2 Tx and Rx values corrected based on IMX6Q datasheet
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-pinfunc.h
+> b/arch/arm/boot/dts/imx6q-pinfunc.h
+> index c68c21d..4d4cc49 100644
+> --- a/arch/arm/boot/dts/imx6q-pinfunc.h
+> +++ b/arch/arm/boot/dts/imx6q-pinfunc.h
+> @@ -696,8 +696,7 @@
+>  #define MX6QDL_PAD_GPIO_7__ECSPI5_RDY               0x240 0x610 0x000 0x1 0x0
+>  #define MX6QDL_PAD_GPIO_7__EPIT1_OUT                0x240 0x610 0x000 0x2 0x0
+>  #define MX6QDL_PAD_GPIO_7__FLEXCAN1_TX              0x240 0x610 0x000 0x3 0x0
+> -#define MX6QDL_PAD_GPIO_7__UART2_TX_DATA            0x240 0x610 0x000 0x4 0x0
+> -#define MX6QDL_PAD_GPIO_7__UART2_RX_DATA            0x240 0x610 0x928 0x4 0x2
+> +#define MX6QDL_PAD_GPIO_7__UART2_TX_DATA            0x240 0x610 0x928 0x4 0x2
 
->
-...
->> +
->> +static int stm32_startup(struct uart_port *port)
->> +{
->> +       const char *name = to_platform_device(port->dev)->name;
->> +       u32 val;
->> +
->> +       if (request_irq(port->irq, stm32_interrupt, IRQF_NO_SUSPEND,
->> +                               name, port)) {
->
-> I think you have to propogate returned value, thus
-> ret = request_irq();
-> if (ret < 0)
->  return ret;
-Exact, I will fix this.
+the introduction of non-zero input register for UART TX pin is valid
+only for UART2 in DTE mode, so in my opinion only removal of
+MX6QDL_PAD_GPIO_7__UART2_RX_DATA and MX6QDL_PAD_GPIO_8__UART2_TX_DATA is
+needed here. Otherwise you get a conflict within
+IOMUXC_UART2_UART_RX_DATA_SELECT_INPUT between invalid in DCE
+UART2_TX_DATA and valid in DCE UART2_RX_DATA configuration.
 
->
-...
->> +
->> +static const char *stm32_type(struct uart_port *port)
->> +{
->> +       return (port->type == PORT_STM32) ? DRIVER_NAME : NULL;
->> +}
->> +
->> +static void stm32_release_port(struct uart_port *port)
->> +{
->> +}
->
-> Doesn't core handle NULL-functions? If it does, remove such from the driver.
-No it does not.
+FWIW even currently defined MX6QDL_PAD_GPIO_7__UART2_RX_DATA and
+MX6QDL_PAD_GPIO_8__UART2_TX_DATA are correct in DTE mode, but I think it
+is better to preserve the proper pin function names, so no objections if
+these two definitions are removed for sake of clarity.
 
->
->> +
->> +static int stm32_request_port(struct uart_port *port)
->> +{
->> +       return 0;
->> +}
->
-> Ditto.
-Ditto.
+>  #define MX6QDL_PAD_GPIO_7__GPIO1_IO07               0x240 0x610 0x000 0x5 0x0
+>  #define MX6QDL_PAD_GPIO_7__SPDIF_LOCK               0x240 0x610 0x000 0x6 0x0
+>  #define MX6QDL_PAD_GPIO_7__USB_OTG_HOST_MODE        0x240 0x610 0x000 0x7 0x0
+> @@ -706,7 +705,6 @@
+>  #define MX6QDL_PAD_GPIO_8__EPIT2_OUT                0x244 0x614 0x000 0x2 0x0
+>  #define MX6QDL_PAD_GPIO_8__FLEXCAN1_RX              0x244 0x614 0x7e4 0x3 0x1
+>  #define MX6QDL_PAD_GPIO_8__UART2_RX_DATA            0x244 0x614 0x928 0x4 0x3
+> -#define MX6QDL_PAD_GPIO_8__UART2_TX_DATA            0x244 0x614 0x000 0x4 0x0
+>  #define MX6QDL_PAD_GPIO_8__GPIO1_IO08               0x244 0x614 0x000 0x5 0x0
+>  #define MX6QDL_PAD_GPIO_8__SPDIF_SR_CLK             0x244 0x614 0x000 0x6 0x0
+>  #define MX6QDL_PAD_GPIO_8__USB_OTG_PWR_CTL_WAKE     0x244 0x614 0x000 0x7 0x0
+> 
 
-Thanks for the review,
-Maxime
-
->
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+--
+With best wishes,
+Vladimir
