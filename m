@@ -1,48 +1,69 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] spi: bcm53xx: Refactor to make driver nonspecific to
- 53xx SoCs
-Date: Tue, 7 Apr 2015 11:03:09 +0300
-Message-ID: <CAHp75Vf3Fyw-ZgcgsCki6_TvqMh9A3+dmeRLq42pcTj7YAieQQ@mail.gmail.com>
-References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
-	<1428002603-21892-3-git-send-email-jonathar@broadcom.com>
-	<CAHp75Vf0JrB5pqNEouLzyOf5mmi05Ut_cybd37suTrLbJOFHKA@mail.gmail.com>
-	<5522D0BA.2050805@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5522D0BA.2050805-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Howard Chen <howard.chen@linaro.org>
+Subject: [PATCH v2] ARM: dts: mt8173: support arm64 cpuidle-dt
+Date: Tue,  7 Apr 2015 16:05:05 +0800
+Message-ID: <1428393905-32166-1-git-send-email-howard.chen@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Howard Chen <howard.chen@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2015 at 9:30 PM, Jonathan Richardson
-<jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On 15-04-03 06:35 AM, Andy Shevchenko wrote:
->> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
->> <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> The Broadcom MSPI controller is used on various SoCs. It is being
->>> renamed so that it can be extended and reused on other chips. It is
->>> renamed to bcm-mspi.
->>>
->> What if you resend this one with -M -C applied?
->>
->>
->
-> I'm not seeing any difference in the patches unfortunately. I'll keep
-> playing with it and re-send if I can find a way to improve it.
->
-> The changes are just renaming variables, structures, functions, file
-> name to get rid of 53xx and replace with mspi. The config is renamed
-> from SPI_BCM53XX to SPI_BCMA_MSPI.
->
+This patch adds an idle-states node to describe the mt8173 idle states and
+also adds references to the idle-states node in all CPU nodes.
 
-Better to split: a) moving, b) renaming something inside.
+Signed-off-by: Howard Chen <howard.chen@linaro.org>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 8554ec3..0d31a34 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -48,6 +48,8 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x000>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -55,6 +57,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x001>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+ 		cpu2: cpu@100 {
+@@ -62,6 +65,7 @@
+ 			compatible = "arm,cortex-a57";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+ 		cpu3: cpu@101 {
+@@ -69,6 +73,19 @@
+ 			compatible = "arm,cortex-a57";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
++		};
++
++		idle-states {
++			entry-method = "arm,psci";
++
++			CPU_SLEEP_0: cpu-sleep-0 {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <639>;
++				exit-latency-us = <328>;
++				min-residency-us = <1088>;
++			};
+ 		};
+ 	};
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
