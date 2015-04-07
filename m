@@ -1,271 +1,57 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH V2 2/3] phy: Add driver for Pistachio USB2.0 PHY
-Date: Tue,  7 Apr 2015 15:04:17 -0700
-Message-ID: <1428444258-25852-3-git-send-email-abrestic@chromium.org>
-References: <1428444258-25852-1-git-send-email-abrestic@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428444258-25852-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Tue, 7 Apr 2015 17:40:04 -0500
+Message-ID: <1428446404.22867.479.camel@freescale.com>
+References: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the USB2.0 PHY found on the IMG Pistachio SoC.
-
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes from v1:
- - Fixed a couple of typos
----
- drivers/phy/Kconfig             |   7 ++
- drivers/phy/Makefile            |   1 +
- drivers/phy/phy-pistachio-usb.c | 206 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 214 insertions(+)
- create mode 100644 drivers/phy/phy-pistachio-usb.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 2962de2..717f30d 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -225,6 +225,13 @@ config PHY_EXYNOS5_USBDRD
- 	  This driver provides PHY interface for USB 3.0 DRD controller
- 	  present on Exynos5 SoC series.
- 
-+config PHY_PISTACHIO_USB
-+	tristate "IMG Pistachio USB2.0 PHY driver"
-+	depends on MACH_PISTACHIO
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the USB2.0 PHY on the IMG Pistachio SoC.
-+
- config PHY_QCOM_APQ8064_SATA
- 	tristate "Qualcomm APQ8064 SATA SerDes/PHY driver"
- 	depends on ARCH_QCOM
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index f080e1b..e561708 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -38,3 +38,4 @@ obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-+obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-diff --git a/drivers/phy/phy-pistachio-usb.c b/drivers/phy/phy-pistachio-usb.c
-new file mode 100644
-index 0000000..c6db35e
---- /dev/null
-+++ b/drivers/phy/phy-pistachio-usb.c
-@@ -0,0 +1,206 @@
-+/*
-+ * IMG Pistachio USB PHY driver
-+ *
-+ * Copyright (C) 2015 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/phy/phy-pistachio-usb.h>
-+
-+#define USB_PHY_CONTROL1				0x04
-+#define USB_PHY_CONTROL1_FSEL_SHIFT			2
-+#define USB_PHY_CONTROL1_FSEL_MASK			0x7
-+
-+#define USB_PHY_STRAP_CONTROL				0x10
-+#define USB_PHY_STRAP_CONTROL_REFCLK_SHIFT		4
-+#define USB_PHY_STRAP_CONTROL_REFCLK_MASK		0x3
-+
-+#define USB_PHY_STATUS					0x14
-+#define USB_PHY_STATUS_RX_PHY_CLK			BIT(9)
-+#define USB_PHY_STATUS_RX_UTMI_CLK			BIT(8)
-+#define USB_PHY_STATUS_VBUS_FAULT			BIT(7)
-+
-+struct pistachio_usb_phy {
-+	struct device *dev;
-+	struct regmap *cr_top;
-+	struct clk *phy_clk;
-+	unsigned int refclk;
-+};
-+
-+static const unsigned long fsel_rate_map[] = {
-+	9600000,
-+	10000000,
-+	12000000,
-+	19200000,
-+	20000000,
-+	24000000,
-+	0,
-+	50000000,
-+};
-+
-+static int pistachio_usb_phy_power_on(struct phy *phy)
-+{
-+	struct pistachio_usb_phy *p_phy = phy_get_drvdata(phy);
-+	unsigned long timeout, rate;
-+	unsigned int i;
-+	int ret;
-+
-+	ret = clk_prepare_enable(p_phy->phy_clk);
-+	if (ret < 0) {
-+		dev_err(p_phy->dev, "Failed to enable PHY clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	regmap_update_bits(p_phy->cr_top, USB_PHY_STRAP_CONTROL,
-+			   USB_PHY_STRAP_CONTROL_REFCLK_MASK <<
-+			   USB_PHY_STRAP_CONTROL_REFCLK_SHIFT,
-+			   p_phy->refclk << USB_PHY_STRAP_CONTROL_REFCLK_SHIFT);
-+
-+	rate = clk_get_rate(p_phy->phy_clk);
-+	if (p_phy->refclk == REFCLK_XO_CRYSTAL && rate != 12000000) {
-+		dev_err(p_phy->dev, "Unsupported rate for XO crystal: %ld\n",
-+			rate);
-+		ret = -EINVAL;
-+		goto disable_clk;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(fsel_rate_map); i++) {
-+		if (rate == fsel_rate_map[i])
-+			break;
-+	}
-+	if (i == ARRAY_SIZE(fsel_rate_map)) {
-+		dev_err(p_phy->dev, "Unsupported clock rate: %lu\n", rate);
-+		ret = -EINVAL;
-+		goto disable_clk;
-+	}
-+
-+	regmap_update_bits(p_phy->cr_top, USB_PHY_CONTROL1,
-+			   USB_PHY_CONTROL1_FSEL_MASK <<
-+			   USB_PHY_CONTROL1_FSEL_SHIFT,
-+			   i << USB_PHY_CONTROL1_FSEL_SHIFT);
-+
-+	timeout = jiffies + msecs_to_jiffies(200);
-+	while (time_before(jiffies, timeout)) {
-+		unsigned int val;
-+
-+		regmap_read(p_phy->cr_top, USB_PHY_STATUS, &val);
-+		if (val & USB_PHY_STATUS_VBUS_FAULT) {
-+			dev_err(p_phy->dev, "VBUS fault detected\n");
-+			ret = -EIO;
-+			goto disable_clk;
-+		}
-+		if ((val & USB_PHY_STATUS_RX_PHY_CLK) &&
-+		    (val & USB_PHY_STATUS_RX_UTMI_CLK))
-+			return 0;
-+		usleep_range(1000, 1500);
-+	}
-+
-+	dev_err(p_phy->dev, "Timed out waiting for PHY to power on\n");
-+	ret = -ETIMEDOUT;
-+
-+disable_clk:
-+	clk_disable_unprepare(p_phy->phy_clk);
-+	return ret;
-+}
-+
-+static int pistachio_usb_phy_power_off(struct phy *phy)
-+{
-+	struct pistachio_usb_phy *p_phy = phy_get_drvdata(phy);
-+
-+	clk_disable_unprepare(p_phy->phy_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops pistachio_usb_phy_ops = {
-+	.power_on = pistachio_usb_phy_power_on,
-+	.power_off = pistachio_usb_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int pistachio_usb_phy_probe(struct platform_device *pdev)
-+{
-+	struct pistachio_usb_phy *p_phy;
-+	struct phy_provider *provider;
-+	struct phy *phy;
-+	int ret;
-+
-+	p_phy = devm_kzalloc(&pdev->dev, sizeof(*p_phy), GFP_KERNEL);
-+	if (!p_phy)
-+		return -ENOMEM;
-+	p_phy->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, p_phy);
-+
-+	p_phy->cr_top = syscon_regmap_lookup_by_phandle(p_phy->dev->of_node,
-+							"img,cr-top");
-+	if (IS_ERR(p_phy->cr_top)) {
-+		dev_err(p_phy->dev, "Failed to get CR_TOP registers: %ld\n",
-+			PTR_ERR(p_phy->cr_top));
-+		return PTR_ERR(p_phy->cr_top);
-+	}
-+
-+	p_phy->phy_clk = devm_clk_get(p_phy->dev, "usb_phy");
-+	if (IS_ERR(p_phy->phy_clk)) {
-+		dev_err(p_phy->dev, "Failed to get usb_phy clock: %ld\n",
-+			PTR_ERR(p_phy->phy_clk));
-+		return PTR_ERR(p_phy->phy_clk);
-+	}
-+
-+	ret = of_property_read_u32(p_phy->dev->of_node, "img,refclk",
-+				   &p_phy->refclk);
-+	if (ret < 0) {
-+		dev_err(p_phy->dev, "No reference clock selector specified\n");
-+		return ret;
-+	}
-+
-+	phy = devm_phy_create(p_phy->dev, NULL, &pistachio_usb_phy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(p_phy->dev, "Failed to create PHY: %ld\n",
-+			PTR_ERR(phy));
-+		return PTR_ERR(phy);
-+	}
-+	phy_set_drvdata(phy, p_phy);
-+
-+	provider = devm_of_phy_provider_register(p_phy->dev,
-+						 of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(p_phy->dev, "Failed to register PHY provider: %ld\n",
-+			PTR_ERR(provider));
-+		return PTR_ERR(provider);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pistachio_usb_phy_of_match[] = {
-+	{ .compatible = "img,pistachio-usb-phy", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, pistachio_usb_phy_of_match);
-+
-+static struct platform_driver pistachio_usb_phy_driver = {
-+	.probe		= pistachio_usb_phy_probe,
-+	.driver		= {
-+		.name	= "pistachio-usb-phy",
-+		.of_match_table = pistachio_usb_phy_of_match,
-+	},
-+};
-+module_platform_driver(pistachio_usb_phy_driver);
-+
-+MODULE_AUTHOR("Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
-+MODULE_DESCRIPTION("IMG Pistachio USB2.0 PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.2.0.rc0.207.ga3a616c
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAyMDE1LTA0LTA3IGF0IDA3OjA4ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+
+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dCAg
+ICAgIHwgICA1OSArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTkgaW5z
+ZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dAo+IGluZGV4IGRmNGEyNTkuLmE3ZTg0Y2UgMTAw
+NjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fvcmlx
+LWNsb2NrLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
+ay9xb3JpcS1jbG9jay50eHQKPiBAQCAtNjUsNiArNjUsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+ICAJCUl0IHRha2VzIHBhcmVudCdzIGNsb2NrLWZyZXF1ZW5jeSBhcyBpdHMgY2xvY2suCj4g
+IAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xv
+Y2sgKHYxLjApCj4gIAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTIuMCIgZm9yIHRoZSBwbGF0
+Zm9ybSBQTEwgY2xvY2sgKHYyLjApCj4gKwkqICJmc2wsZm1hbi1jbGstbXV4IiBmb3IgdGhlIEZy
+YW1lIE1hbmFnZXIgY2xvY2suCgpJcyB0aGVyZSBhbnkgdmVyc2lvbmluZyByZXF1aXJlZCBvbiB0
+aGlzPwoKPiAgLSAjY2xvY2stY2VsbHM6IEZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmcuIFRoZSBu
+dW1iZXIgb2YgY2VsbHMgaW4gYQo+ICAJY2xvY2stc3BlY2lmaWVyLiBTaG91bGQgYmUgPDA+IGZv
+ciAiZnNsLHFvcmlxLXN5c2Nsay1bMSwyXS4wIgo+ICAJY2xvY2tzLCBvciA8MT4gZm9yICJmc2ws
+cW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLgo+IEBAIC03Myw2ICs3NCw1MiBAQCBSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+ICAJKiAwIC0gZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kKPiAg
+CSogMSAtIGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVlbmN5IGRpdmlkZWQgYnkgMgo+ICAJKiAyIC0g
+ZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kgZGl2aWRlZCBieSA0Cj4gKwlGb3IgImZzbCxmbWFu
+LWNsay1tdXgiIGNsb2NrcywgdGhlIHNpbmdsZSBjbG9jay1zcGVjaWZpZXIgY2VsbCBtYXkKPiAr
+CXRha2UgdmFsdWVzIGFjY29yZGluZyB0aGUgUmVzZXQgQ29uZmlndXJhdGlvbiBXb3JkIG9mIHRo
+ZSBzcGVjaWZpYwo+ICsJZGV2aWNlOgoKZnNsLGZtYW4tY2xrLW11eCBub2RlcyBoYXZlICNjbG9j
+ay1jZWxscyBvZiB6ZXJvLCBzbyBJIGRvbid0IHVuZGVyc3RhbmQKdGhpcyBzZWN0aW9uLgoKSWYg
+dGhpcyBpcyBtZWFudCB0byByZWZlciB0byB0aGUgY2xvY2sgc3BlY2lmaWVyIHRoYXQgZnNsLGZt
+YW4tY2xrLW11eApub2RlcyB1c2UgaW4gdGhlaXIgaW5wdXQgY2xvY2tzLCB0aGF0IGlzIGRldGVy
+bWluZWQgYnkgdGhlIGNsb2NrCnByb3ZpZGVyIGFuZCBub3QgdGhlIGNsb2NrIGNvbnN1bWVyLiAg
+CgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
+Cmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
