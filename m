@@ -1,35 +1,39 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: shmobile: r8a7791: add USB-DMAC device nodes
-Date: Tue, 7 Apr 2015 15:25:03 +0200
-Message-ID: <CAMuHMdULsLM8OzziVeqMtpy3xm1H_vJ7ihbntyx4_qXXeCT7kQ@mail.gmail.com>
-References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1428393231-5272-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/6] Revert "staging: board: disable as it breaks the build"
+Date: Tue, 7 Apr 2015 15:16:54 +0200
+Message-ID: <CAMuHMdX1uHq23h_qsq2csTSYbAhN9ZDdMviDi=KtbLuWucYWXA@mail.gmail.com>
+References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
+	<1428064923-24950-2-git-send-email-geert+renesas@glider.be>
+	<20150406004031.GD1841@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428393231-5272-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150406004031.GD1841@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, driverdevel <devel@driverdev.osuosl.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2015 at 9:53 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+On Mon, Apr 6, 2015 at 2:40 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Fri, Apr 03, 2015 at 02:41:58PM +0200, Geert Uytterhoeven wrote:
+>> This reverts commit d13778d537a0ed6115d2a79a942af999cfb8eec6.
+>>
+>> Commit 13c11072536f2613 ("staging:board: remove unnecessary function")
+>> fixed the build of drivers/staging/board/board.c.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Acked-by? Reviewed-by? Tested-by? Rejected-by?
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
