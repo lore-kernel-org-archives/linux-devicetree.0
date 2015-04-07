@@ -1,67 +1,41 @@
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: [PATCH v3 0/2] 96boards: add thermal senor support to hikey board
-Date: Tue, 7 Apr 2015 18:40:50 +0800
-Message-ID: <1428403252-8208-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Shengzhou Liu <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] of: fix of_property_read_string
+Date: Tue, 7 Apr 2015 18:11:02 +0800
+Message-ID: <1428401462-5907-1-git-send-email-Shengzhou.Liu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhuang@intel.com, edubezval@gmail.com, mporter@konsulko.com, jorge.ramirez-ortiz@linaro.org, haojian.zhuang@linaro.org, linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Shengzhou Liu <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: kongxinwei <kong.kongxinwei@hisilicon.com>
+In of_property_read_string function, strnlen(prop->value, prop->length)
+is always less or equal to prop->length, and we should allow the '=='
+condition, so let's remove the original unreasonable condition.
 
-Thank you all for giving this v2 patches stages some comments. Here is v3
-patches and address all the issues raised as part of v2 review.
+Signed-off-by: Shengzhou Liu <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/of/base.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-The Linaro connect introduce 96boards series in Hong Kong,The HiKey board
-is the first board to be certified 96Boards Consumer Edition compatible.
-This board is based on the HiSilicon SoC. you can get more information
-from https://www.96boards.org.
-
-The hisilicon SoC contains thermal module, this thermal module has 4 sensors,
-
-	- sensor 0: local sensor;
-	- sensor 1: remote sensor for ACPU cluster 1;
-	- sensor 2: remote sensor for ACPU cluster 2;
-	- sensor 3: remote sensor for GPU;
-
-It can obtain this device temperature by operating this hardware. The new
-sensor driver satisfies thermal framework and to realize the ACPU ,GPU and
-so on to cool function.
-
-Changes v0->v1;
-* Delete this hi6220 dtsi.
-* Fix documentation and error checks.
-* Modify this driver which makes use of kernel to decide how to dynamically
-  bind the interrupt to hottest sensor.
-* Delete "sensor-thres-temp" property and read thermal_zone trips points
-  replace of it.
-* Delete "sensor-reset-temp" property and define the fixed value replace
-  of it.
-
-Changes v1->v2;
-* change patch's position between binding document and driver file
-* clean up some regiser for enabling thermal sensor
-* use mutex lock to replace the spin lock
-
-Changes v2->v3;
-* delete sensor id property in binding document 
-* fix sensor driver to satisfy sensor register after deleting sensor id
-  property
-
-kongxinwei (2):
-  dt-bindings: Document the hi6220 thermal sensor bindings
-  thermal: hisilicon: add new hisilicon thermal sensor driver
-
- .../bindings/thermal/hisilicon-thermal.txt         |  23 ++
- drivers/thermal/Kconfig                            |   8 +
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/hisi_thermal.c                     | 438 +++++++++++++++++++++
- 4 files changed, 470 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
- create mode 100644 drivers/thermal/hisi_thermal.c
-
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index adb8764..742ff97 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1335,8 +1335,6 @@ int of_property_read_string(struct device_node *np, const char *propname,
+ 		return -EINVAL;
+ 	if (!prop->value)
+ 		return -ENODATA;
+-	if (strnlen(prop->value, prop->length) >= prop->length)
+-		return -EILSEQ;
+ 	*out_string = prop->value;
+ 	return 0;
+ }
 -- 
-1.9.1
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
