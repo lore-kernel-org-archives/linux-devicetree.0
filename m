@@ -1,140 +1,652 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v4 6/8] drm/exynos: dsi: add support for Exynos5433
-Date: Tue, 07 Apr 2015 20:57:36 +0900
-Message-ID: <1428407858-25523-7-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 3/8] drm/exynos: mic: add MIC driver
+Date: Tue, 07 Apr 2015 20:57:33 +0900
+Message-ID: <1428407858-25523-4-git-send-email-human.hwang@samsung.com>
 References: <1428407858-25523-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1428407858-25523-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, inki.dae@samsung.com, daniel@fooishbar.org
-Cc: dh09.lee@samsung.com, sw0312.kim@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, cw00.choi@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1428407858-25523-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org
+Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIEV4eW5vczU0MzMgbWlwaSBkc2kuCgpTaWduZWQt
-b2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ftc3VuZy5jb20+Ci0tLQpDaGFu
-Z2VzIGZvciB2MjoKLSBjaGFuZ2UgdGhlIGF1dGhvciBvZiAiZHJtL2V4eW5vczogZHNpOiBhZGQg
-c3VwcG9ydCBmb3IgRXh5bm9zNTQzMyBTb0MiIHRvCkh5dW5nd29uIEh3YW5nIGJ5IHRoZSBwcmV2
-aW91cyBhdXRob3IncyB3aWxsCgpDaGFuZ2VzIGZvciB2MzoKLSBTZXBhcmF0ZWQgZnJvbSB0aGUg
-cGF0Y2ggImRybS9leHlub3M6IGRzaTogYWRkIHN1cHBvcnQgZm9yIEV4eW5vczU0MzMgU29DIgpp
-biB2ZXJzaW9uIDIuCi0gdXNlIGRlZmluZXMgZm9yIG1vcmUgcmVhZGFibGUgY29kZQotIGZpeCB0
-eXBvcwoKQ2hhbmdlcyBmb3IgdjQ6Ci0gTm9uZQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
-ZW8vZXh5bm9zX2RzaW0udHh0ICAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL0tj
-b25maWcgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
-L2V4eW5vc19kcm1fZHNpLmMgICAgICAgICAgICB8IDY5ICsrKysrKysrKysrKysrKysrKysrKy0K
-IDMgZmlsZXMgY2hhbmdlZCwgNjggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zX2Rz
-aW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vc19k
-c2ltLnR4dAppbmRleCAzOTk0MGNhLi44YjEyYmZlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zX2RzaW0udHh0CisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3NfZHNpbS50eHQKQEAgLTYsNiAr
-Niw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAJCSJzYW1zdW5nLGV4eW5vczQyMTAtbWlwaS1k
-c2kiIC8qIGZvciBFeHlub3M0IFNvQ3MgKi8KIAkJInNhbXN1bmcsZXh5bm9zNDQxNS1taXBpLWRz
-aSIgLyogZm9yIEV4eW5vczQ0MTUgU29DICovCiAJCSJzYW1zdW5nLGV4eW5vczU0MTAtbWlwaS1k
-c2kiIC8qIGZvciBFeHlub3M1NDEwLzU0MjAvNTQ0MCBTb0NzICovCisJCSJzYW1zdW5nLGV4eW5v
-czU0MzMtbWlwaS1kc2kiIC8qIGZvciBFeHlub3M1NDMzIFNvQ3MgKi8KICAgLSByZWc6IHBoeXNp
-Y2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlcnMgc2V0IGZvciB0aGUg
-ZGV2aWNlCiAgIC0gaW50ZXJydXB0czogc2hvdWxkIGNvbnRhaW4gRFNJIGludGVycnVwdAogICAt
-IGNsb2NrczogbGlzdCBvZiBjbG9jayBzcGVjaWZpZXJzLCBtdXN0IGNvbnRhaW4gYW4gZW50cnkg
-Zm9yIGVhY2ggcmVxdWlyZWQKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvS2Nv
-bmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvS2NvbmZpZwppbmRleCAzZjY0OWFiLi40ZTQx
-ODJiIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25maWcKKysrIGIvZHJp
-dmVycy9ncHUvZHJtL2V4eW5vcy9LY29uZmlnCkBAIC00Nyw3ICs0Nyw3IEBAIGNvbmZpZyBEUk1f
-RVhZTk9TX0RQSQoKIGNvbmZpZyBEUk1fRVhZTk9TX0RTSQogCWJvb2wgIkVYWU5PUyBEUk0gTUlQ
-SS1EU0kgZHJpdmVyIHN1cHBvcnQiCi0JZGVwZW5kcyBvbiAoRFJNX0VYWU5PU19GSU1EIHx8IERS
-TV9FWFlOT1M3X0RFQ09OKQorCWRlcGVuZHMgb24gKERSTV9FWFlOT1NfRklNRCB8fCBEUk1fRVhZ
-Tk9TNTQzM19ERUNPTiB8fCBEUk1fRVhZTk9TN19ERUNPTikKIAlzZWxlY3QgRFJNX01JUElfRFNJ
-CiAJc2VsZWN0IERSTV9QQU5FTAogCWRlZmF1bHQgbgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
-b3NfZHJtX2RzaS5jCmluZGV4IDJkOWEyNDkuLmQxZWNkMGYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcm1fZHNpLmMKQEAgLTEzMSw2ICsxMzEsNyBAQAogI2RlZmluZSBEU0lNX0lO
-VF9QTExfU1RBQkxFCQkoMSA8PCAzMSkKICNkZWZpbmUgRFNJTV9JTlRfU1dfUlNUX1JFTEVBU0UJ
-CSgxIDw8IDMwKQogI2RlZmluZSBEU0lNX0lOVF9TRlJfRklGT19FTVBUWQkJKDEgPDwgMjkpCisj
-ZGVmaW5lIERTSU1fSU5UX1NGUl9IRFJfRklGT19FTVBUWQkoMSA8PCAyOCkKICNkZWZpbmUgRFNJ
-TV9JTlRfQlRBCQkJKDEgPDwgMjUpCiAjZGVmaW5lIERTSU1fSU5UX0ZSQU1FX0RPTkUJCSgxIDw8
-IDI0KQogI2RlZmluZSBEU0lNX0lOVF9SWF9USU1FT1VUCQkoMSA8PCAyMSkKQEAgLTE3OSw2ICsx
-ODAsOCBAQAoKIC8qIERTSU1fUEhZQ1RSTCAqLwogI2RlZmluZSBEU0lNX1BIWUNUUkxfVUxQU19F
-WElUKHgpCSgoKHgpICYgMHgxZmYpIDw8IDApCisjZGVmaW5lIERTSU1fUEhZQ1RSTF9CX0RQSFlD
-VExfVlJFR19MUAkoMSA8PCAzMCkKKyNkZWZpbmUgRFNJTV9QSFlDVFJMX0JfRFBIWUNUTF9TTEVX
-X1VQCSgxIDw8IDE0KQoKIC8qIERTSU1fUEhZVElNSU5HICovCiAjZGVmaW5lIERTSU1fUEhZVElN
-SU5HX0xQWCh4KQkJKCh4KSA8PCA4KQpAQCAtMjA2LDcgKzIwOSw5IEBACiAjZGVmaW5lIERTSV9X
-UklURShkc2ksIHJlZywgdmFsKQl3cml0ZWwoKHZhbCksIFJFRygoZHNpKSwgKHJlZykpKQogI2Rl
-ZmluZSBEU0lfUkVBRChkc2ksIHJlZykJCXJlYWRsKFJFRygoZHNpKSwgKHJlZykpKQoKLXN0YXRp
-YyBjaGFyICpjbGtfbmFtZXNbMl0gPSB7ICJidXNfY2xrIiwgInNjbGtfbWlwaSIgfTsKK3N0YXRp
-YyBjaGFyICpjbGtfbmFtZXNbNV0gPSB7ICJidXNfY2xrIiwgInNjbGtfbWlwaSIsCisJInBoeWNs
-a19taXBpZHBoeTBfYml0Y2xrZGl2OCIsICJwaHljbGtfbWlwaWRwaHkwX3J4Y2xrZXNjMCIsCisJ
-InNjbGtfcmdiX3ZjbGtfdG9fZHNpbTAiIH07CgogZW51bSBleHlub3NfZHNpX3RyYW5zZmVyX3R5
-cGUgewogCUVYWU5PU19EU0lfVFgsCkBAIC0zMzUsNiArMzQwLDMwIEBAIHN0YXRpYyB1bnNpZ25l
-ZCBpbnQgcmVnc1tdID0gewogCVtEU0lNX1BIWVRJTUlORzJfUkVHXSA9ICAweDZjLAogfTsKCitz
-dGF0aWMgdW5zaWduZWQgaW50IGV4eW5vczU0MzNfcmVnc1tdID0geworCVtEU0lNX1NUQVRVU19S
-RUddID0gMHgwNCwKKwlbRFNJTV9TV1JTVF9SRUddID0gMHgwQywKKwlbRFNJTV9DTEtDVFJMX1JF
-R10gPSAweDEwLAorCVtEU0lNX1RJTUVPVVRfUkVHXSA9IDB4MTQsCisJW0RTSU1fQ09ORklHX1JF
-R10gPSAweDE4LAorCVtEU0lNX0VTQ01PREVfUkVHXSA9IDB4MUMsCisJW0RTSU1fTURSRVNPTF9S
-RUddID0gMHgyMCwKKwlbRFNJTV9NVlBPUkNIX1JFR10gPSAweDI0LAorCVtEU0lNX01IUE9SQ0hf
-UkVHXSA9IDB4MjgsCisJW0RTSU1fTVNZTkNfUkVHXSA9IDB4MkMsCisJW0RTSU1fSU5UU1JDX1JF
-R10gPSAweDM0LAorCVtEU0lNX0lOVE1TS19SRUddID0gMHgzOCwKKwlbRFNJTV9QS1RIRFJfUkVH
-XSA9IDB4M0MsCisJW0RTSU1fUEFZTE9BRF9SRUddID0gMHg0MCwKKwlbRFNJTV9SWEZJRk9fUkVH
-XSA9IDB4NDQsCisJW0RTSU1fRklGT0NUUkxfUkVHXSA9IDB4NEMsCisJW0RTSU1fUExMQ1RSTF9S
-RUddID0gMHg5NCwKKwlbRFNJTV9QSFlDVFJMX1JFR10gPSAweEE0LAorCVtEU0lNX1BIWVRJTUlO
-R19SRUddID0gMHhCNCwKKwlbRFNJTV9QSFlUSU1JTkcxX1JFR10gPSAweEI4LAorCVtEU0lNX1BI
-WVRJTUlORzJfUkVHXSA9IDB4QkMsCit9OworCiBlbnVtIHZhbHVlcyB7CiAJUkVTRVRfVFlQRSwK
-IAlQTExfVElNRVIsCkBAIC0zNzEsNiArNDAwLDI0IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgdmFs
-dWVzW10gPSB7CiAJW1BIWVRJTUlOR19IU19UUkFJTF0gPSBEU0lNX1BIWVRJTUlORzJfSFNfVFJB
-SUwoMHgwYiksCiB9OwoKK3N0YXRpYyB1bnNpZ25lZCBpbnQgZXh5bm9zNTQzM192YWx1ZXNbXSA9
-IHsKKwlbUkVTRVRfVFlQRV0gPSBEU0lNX0ZVTkNSU1QsCisJW1BMTF9USU1FUl0gPSAyMjIwMCwK
-KwlbU1RPUF9TVEFURV9DTlRdID0gMHhhLAorCVtQSFlDVFJMX1VMUFNfRVhJVF0gPSBEU0lNX1BI
-WUNUUkxfVUxQU19FWElUKDB4MTkwKSwKKwlbUEhZQ1RSTF9WUkVHX0xQXSA9IERTSU1fUEhZQ1RS
-TF9CX0RQSFlDVExfVlJFR19MUCwKKwlbUEhZQ1RSTF9TTEVXX1VQXSA9IERTSU1fUEhZQ1RSTF9C
-X0RQSFlDVExfU0xFV19VUCwKKwlbUEhZVElNSU5HX0xQWF0gPSBEU0lNX1BIWVRJTUlOR19MUFgo
-MHgwNyksCisJW1BIWVRJTUlOR19IU19FWElUXSA9IERTSU1fUEhZVElNSU5HX0hTX0VYSVQoMHgw
-YyksCisJW1BIWVRJTUlOR19DTEtfUFJFUEFSRV0gPSBEU0lNX1BIWVRJTUlORzFfQ0xLX1BSRVBB
-UkUoMHgwOSksCisJW1BIWVRJTUlOR19DTEtfWkVST10gPSBEU0lNX1BIWVRJTUlORzFfQ0xLX1pF
-Uk8oMHgyZCksCisJW1BIWVRJTUlOR19DTEtfUE9TVF0gPSBEU0lNX1BIWVRJTUlORzFfQ0xLX1BP
-U1QoMHgwZSksCisJW1BIWVRJTUlOR19DTEtfVFJBSUxdID0gRFNJTV9QSFlUSU1JTkcxX0NMS19U
-UkFJTCgweDA5KSwKKwlbUEhZVElNSU5HX0hTX1BSRVBBUkVdID0gRFNJTV9QSFlUSU1JTkcyX0hT
-X1BSRVBBUkUoMHgwYiksCisJW1BIWVRJTUlOR19IU19aRVJPXSA9IERTSU1fUEhZVElNSU5HMl9I
-U19aRVJPKDB4MTApLAorCVtQSFlUSU1JTkdfSFNfVFJBSUxdID0gRFNJTV9QSFlUSU1JTkcyX0hT
-X1RSQUlMKDB4MGMpLAorfTsKKwogc3RhdGljIHN0cnVjdCBleHlub3NfZHNpX2RyaXZlcl9kYXRh
-IGV4eW5vczNfZHNpX2RyaXZlcl9kYXRhID0gewogCS5yZWdzID0gcmVncywKIAkucGxsdG1yX3Jl
-ZyA9IDB4NTAsCkBAIC00MTYsNiArNDYzLDE3IEBAIHN0YXRpYyBzdHJ1Y3QgZXh5bm9zX2RzaV9k
-cml2ZXJfZGF0YSBleHlub3M1X2RzaV9kcml2ZXJfZGF0YSA9IHsKIAkudmFsdWVzID0gdmFsdWVz
-LAogfTsKCitzdGF0aWMgc3RydWN0IGV4eW5vc19kc2lfZHJpdmVyX2RhdGEgZXh5bm9zNTQzM19k
-c2lfZHJpdmVyX2RhdGEgPSB7CisJLnJlZ3MgPSBleHlub3M1NDMzX3JlZ3MsCisJLnBsbHRtcl9y
-ZWcgPSAweGEwLAorCS5oYXNfY2xrbGFuZV9zdG9wID0gMSwKKwkubnVtX2Nsa3MgPSA1LAorCS5t
-YXhfZnJlcSA9IDE1MDAsCisJLndhaXRfZm9yX3Jlc2V0ID0gMCwKKwkubnVtX2JpdHNfcmVzb2wg
-PSAxMiwKKwkudmFsdWVzID0gZXh5bm9zNTQzM192YWx1ZXMsCit9OworCiBzdGF0aWMgc3RydWN0
-IG9mX2RldmljZV9pZCBleHlub3NfZHNpX29mX21hdGNoW10gPSB7CiAJeyAuY29tcGF0aWJsZSA9
-ICJzYW1zdW5nLGV4eW5vczMyNTAtbWlwaS1kc2kiLAogCSAgLmRhdGEgPSAmZXh5bm9zM19kc2lf
-ZHJpdmVyX2RhdGEgfSwKQEAgLTQyNSw2ICs0ODMsOCBAQCBzdGF0aWMgc3RydWN0IG9mX2Rldmlj
-ZV9pZCBleHlub3NfZHNpX29mX21hdGNoW10gPSB7CiAJICAuZGF0YSA9ICZleHlub3M0NDE1X2Rz
-aV9kcml2ZXJfZGF0YSB9LAogCXsgLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1NDEwLW1p
-cGktZHNpIiwKIAkgIC5kYXRhID0gJmV4eW5vczVfZHNpX2RyaXZlcl9kYXRhIH0sCisJeyAuY29t
-cGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczU0MzMtbWlwaS1kc2kiLAorCSAgLmRhdGEgPSAmZXh5
-bm9zNTQzM19kc2lfZHJpdmVyX2RhdGEgfSwKIAl7IH0KIH07CgpAQCAtMTE4MiwxMyArMTI0Miwx
-NiBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZXh5bm9zX2RzaV9pcnEoaW50IGlycSwgdm9pZCAqZGV2
-X2lkKQogCURTSV9XUklURShkc2ksIERTSU1fSU5UU1JDX1JFRywgc3RhdHVzKTsKCiAJaWYgKHN0
-YXR1cyAmIERTSU1fSU5UX1NXX1JTVF9SRUxFQVNFKSB7Ci0JCXUzMiBtYXNrID0gfihEU0lNX0lO
-VF9SWF9ET05FIHwgRFNJTV9JTlRfU0ZSX0ZJRk9fRU1QVFkpOworCQl1MzIgbWFzayA9IH4oRFNJ
-TV9JTlRfUlhfRE9ORSB8IERTSU1fSU5UX1NGUl9GSUZPX0VNUFRZIHwKKwkJCURTSU1fSU5UX1NG
-Ul9IRFJfRklGT19FTVBUWSB8IERTSU1fSU5UX0ZSQU1FX0RPTkUgfAorCQkJRFNJTV9JTlRfUlhf
-RUNDX0VSUiB8IERTSU1fSU5UX1NXX1JTVF9SRUxFQVNFKTsKIAkJRFNJX1dSSVRFKGRzaSwgRFNJ
-TV9JTlRNU0tfUkVHLCBtYXNrKTsKIAkJY29tcGxldGUoJmRzaS0+Y29tcGxldGVkKTsKIAkJcmV0
-dXJuIElSUV9IQU5ETEVEOwogCX0KCi0JaWYgKCEoc3RhdHVzICYgKERTSU1fSU5UX1JYX0RPTkUg
-fCBEU0lNX0lOVF9TRlJfRklGT19FTVBUWSkpKQorCWlmICghKHN0YXR1cyAmIChEU0lNX0lOVF9S
-WF9ET05FIHwgRFNJTV9JTlRfU0ZSX0ZJRk9fRU1QVFkgfAorCQkJRFNJTV9JTlRfRlJBTUVfRE9O
-RSB8IERTSU1fSU5UX1BMTF9TVEFCTEUpKSkKIAkJcmV0dXJuIElSUV9IQU5ETEVEOwoKIAlpZiAo
-ZXh5bm9zX2RzaV90cmFuc2Zlcl9maW5pc2goZHNpKSkKLS0KMS45LjEKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+MIC(Mobile image compressor) is newly added IP in Exynos5433. MIC
+resides between decon and mipi dsim, and compresses frame data by 50%.
+With dsi, not display port, to send frame data to the panel, the
+bandwidth is not enough. That is why this compressor is introduced.
+
+Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+Changes for v2:
+- make mic driver to be registered by exynos drm driver instead as a module
+driver
+- change the description of mic driver in documentation
+- add module author at the top of the source file removing MODULE_OWNER,
+MODULE_DESCRIPTION, MODULE_LICENSE
+
+Changes for v3:
+- move if statement out of function, so that the function is not called
+unnecessarily
+- Make it use syscon framework for controlling system register
+
+Changes for v4:
+- None
+ .../devicetree/bindings/video/exynos-mic.txt       |  51 +++
+ drivers/gpu/drm/exynos/Kconfig                     |   6 +
+ drivers/gpu/drm/exynos/Makefile                    |   1 +
+ drivers/gpu/drm/exynos/exynos_drm_drv.c            |   3 +
+ drivers/gpu/drm/exynos/exynos_drm_drv.h            |   1 +
+ drivers/gpu/drm/exynos/exynos_drm_mic.c            | 490 +++++++++++++++++++++
+ 6 files changed, 552 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/exynos-mic.txt
+ create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mic.c
+
+diff --git a/Documentation/devicetree/bindings/video/exynos-mic.txt b/Documentation/devicetree/bindings/video/exynos-mic.txt
+new file mode 100644
+index 0000000..0fba2ee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/exynos-mic.txt
+@@ -0,0 +1,51 @@
++Device-Tree bindings for Samsung Exynos SoC mobile image compressor (MIC)
++
++MIC (mobile image compressor) resides between decon and mipi dsi. Mipi dsi is
++not capable to transfer high resoltuion frame data as decon can send. MIC
++solves this problem by compressing the frame data by 1/2 before it is
++transferred through mipi dsi. The compressed frame data must be uncompressed in
++the panel PCB.
++
++Required properties:
++- compatible: value should be "samsung,exynos5433-mic".
++- reg: physical base address and length of the MIC registers set and system
++       register of mic.
++- clocks: must include clock specifiers corresponding to entries in the
++	  clock-names property.
++- clock-names: list of clock names sorted in the same order as the clocks
++	       property. Must contain "pclk_mic0", "sclk_rgb_vclk_to_mic0".
++- samsung,disp-syscon: the reference node for syscon for DISP block.
++- ports: contains a port which is connected to decon node and dsi node.
++	 address-cells and size-cells must 1 and 0, respectively.
++- port: contains an endpoint node which is connected to the endpoint in the
++	decon node or dsi node. The reg value must be 0 and 1 respectively.
++
++Example:
++SoC specific DT entry:
++mic: mic@13930000 {
++	compatible = "samsung,exynos5433-mic";
++	reg = <0x13930000 0x48>;
++	clocks = <&cmu_disp CLK_PCLK_MIC0>,
++	       <&cmu_disp CLK_SCLK_RGB_VCLK_TO_MIC0>;
++	clock-names = "pclk_mic0", "sclk_rgb_vclk_to_mic0";
++	samsung,disp-syscon = <&syscon_disp>;
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			mic_to_decon: endpoint {
++				remote-endpoint = <&decon_to_mic>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			mic_to_dsi: endpoint {
++				remote-endpoint = <&dsi_to_mic>;
++			};
++		};
++	};
++};
+diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
+index dd6ae21..3f649ab 100644
+--- a/drivers/gpu/drm/exynos/Kconfig
++++ b/drivers/gpu/drm/exynos/Kconfig
+@@ -103,3 +103,9 @@ config DRM_EXYNOS_GSC
+ 	depends on DRM_EXYNOS_IPP && ARCH_EXYNOS5 && !ARCH_MULTIPLATFORM
+ 	help
+ 	  Choose this option if you want to use Exynos GSC for DRM.
++
++config DRM_EXYNOS_MIC
++	bool "Exynos DRM MIC"
++	depends on (DRM_EXYNOS && DRM_EXYNOS5433_DECON)
++	help
++	  Choose this option if you want to use Exynos MIC for DRM.
+diff --git a/drivers/gpu/drm/exynos/Makefile b/drivers/gpu/drm/exynos/Makefile
+index fbd084d..7de0b10 100644
+--- a/drivers/gpu/drm/exynos/Makefile
++++ b/drivers/gpu/drm/exynos/Makefile
+@@ -22,5 +22,6 @@ exynosdrm-$(CONFIG_DRM_EXYNOS_IPP)	+= exynos_drm_ipp.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_FIMC)	+= exynos_drm_fimc.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_ROTATOR)	+= exynos_drm_rotator.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_GSC)	+= exynos_drm_gsc.o
++exynosdrm-$(CONFIG_DRM_EXYNOS_MIC)     += exynos_drm_mic.o
+
+ obj-$(CONFIG_DRM_EXYNOS)		+= exynosdrm.o
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+index 78ef497..105fc1a 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+@@ -535,6 +535,9 @@ static struct platform_driver *const exynos_drm_kms_drivers[] = {
+ #ifdef CONFIG_DRM_EXYNOS7_DECON
+ 	&decon_driver,
+ #endif
++#ifdef CONFIG_DRM_EXYNOS_MIC
++	&mic_driver,
++#endif
+ #ifdef CONFIG_DRM_EXYNOS_DP
+ 	&dp_driver,
+ #endif
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.h b/drivers/gpu/drm/exynos/exynos_drm_drv.h
+index 405f098..cb1568c 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.h
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.h
+@@ -351,4 +351,5 @@ extern struct platform_driver fimc_driver;
+ extern struct platform_driver rotator_driver;
+ extern struct platform_driver gsc_driver;
+ extern struct platform_driver ipp_driver;
++extern struct platform_driver mic_driver;
+ #endif
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_mic.c b/drivers/gpu/drm/exynos/exynos_drm_mic.c
+new file mode 100644
+index 0000000..8994eab
+--- /dev/null
++++ b/drivers/gpu/drm/exynos/exynos_drm_mic.c
+@@ -0,0 +1,490 @@
++/*
++ * Copyright (C) 2015 Samsung Electronics Co.Ltd
++ * Authors:
++ *	Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundationr
++ */
++
++#include <linux/platform_device.h>
++#include <video/of_videomode.h>
++#include <linux/of_address.h>
++#include <video/videomode.h>
++#include <linux/module.h>
++#include <linux/delay.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_graph.h>
++#include <linux/clk.h>
++#include <drm/drmP.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++
++/* Sysreg registers for MIC */
++#define DSD_CFG_MUX	0x1004
++#define MIC0_RGB_MUX	(1 << 0)
++#define MIC0_I80_MUX	(1 << 1)
++#define MIC0_ON_MUX	(1 << 5)
++
++/* MIC registers */
++#define MIC_OP				0x0
++#define MIC_IP_VER			0x0004
++#define MIC_V_TIMING_0			0x0008
++#define MIC_V_TIMING_1			0x000C
++#define MIC_IMG_SIZE			0x0010
++#define MIC_INPUT_TIMING_0		0x0014
++#define MIC_INPUT_TIMING_1		0x0018
++#define MIC_2D_OUTPUT_TIMING_0		0x001C
++#define MIC_2D_OUTPUT_TIMING_1		0x0020
++#define MIC_2D_OUTPUT_TIMING_2		0x0024
++#define MIC_3D_OUTPUT_TIMING_0		0x0028
++#define MIC_3D_OUTPUT_TIMING_1		0x002C
++#define MIC_3D_OUTPUT_TIMING_2		0x0030
++#define MIC_CORE_PARA_0			0x0034
++#define MIC_CORE_PARA_1			0x0038
++#define MIC_CTC_CTRL			0x0040
++#define MIC_RD_DATA			0x0044
++
++#define MIC_UPD_REG			(1 << 31)
++#define MIC_ON_REG			(1 << 30)
++#define MIC_TD_ON_REG			(1 << 29)
++#define MIC_BS_CHG_OUT			(1 << 16)
++#define MIC_VIDEO_TYPE(x)		(((x) & 0xf) << 12)
++#define MIC_PSR_EN			(1 << 5)
++#define MIC_SW_RST			(1 << 4)
++#define MIC_ALL_RST			(1 << 3)
++#define MIC_CORE_VER_CONTROL		(1 << 2)
++#define MIC_MODE_SEL_COMMAND_MODE	(1 << 1)
++#define MIC_MODE_SEL_MASK		(1 << 1)
++#define MIC_CORE_EN			(1 << 0)
++
++#define MIC_V_PULSE_WIDTH(x)		(((x) & 0x3fff) << 16)
++#define MIC_V_PERIOD_LINE(x)		((x) & 0x3fff)
++
++#define MIC_VBP_SIZE(x)			(((x) & 0x3fff) << 16)
++#define MIC_VFP_SIZE(x)			((x) & 0x3fff)
++
++#define MIC_IMG_V_SIZE(x)		(((x) & 0x3fff) << 16)
++#define MIC_IMG_H_SIZE(x)		((x) & 0x3fff)
++
++#define MIC_H_PULSE_WIDTH_IN(x)		(((x) & 0x3fff) << 16)
++#define MIC_H_PERIOD_PIXEL_IN(x)	((x) & 0x3fff)
++
++#define MIC_HBP_SIZE_IN(x)		(((x) & 0x3fff) << 16)
++#define MIC_HFP_SIZE_IN(x)		((x) & 0x3fff)
++
++#define MIC_H_PULSE_WIDTH_2D(x)		(((x) & 0x3fff) << 16)
++#define MIC_H_PERIOD_PIXEL_2D(x)	((x) & 0x3fff)
++
++#define MIC_HBP_SIZE_2D(x)		(((x) & 0x3fff) << 16)
++#define MIC_HFP_SIZE_2D(x)		((x) & 0x3fff)
++
++#define MIC_BS_SIZE_2D(x)	((x) & 0x3fff)
++
++enum {
++	ENDPOINT_DECON_NODE,
++	ENDPOINT_DSI_NODE,
++	NUM_ENDPOINTS
++};
++
++static char *clk_names[] = { "pclk_mic0", "sclk_rgb_vclk_to_mic0" };
++#define NUM_CLKS		ARRAY_SIZE(clk_names)
++static DEFINE_MUTEX(mic_mutex);
++
++struct exynos_mic {
++	struct device *dev;
++	void __iomem *reg;
++	struct regmap *sysreg;
++	struct clk *clks[NUM_CLKS];
++
++	bool i80_mode;
++	struct videomode vm;
++	struct drm_encoder *encoder;
++	struct drm_bridge bridge;
++
++	bool enabled;
++};
++
++static void mic_set_path(struct exynos_mic *mic, bool enable)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(mic->sysreg, DSD_CFG_MUX, &val);
++	if (ret) {
++		DRM_ERROR("mic: Failed to read system register\n");
++		return;
++	}
++
++	if (enable) {
++		if (mic->i80_mode)
++			val |= MIC0_I80_MUX;
++		else
++			val |= MIC0_RGB_MUX;
++
++		val |=  MIC0_ON_MUX;
++	} else
++		val &= ~(MIC0_RGB_MUX | MIC0_I80_MUX | MIC0_ON_MUX);
++
++	regmap_write(mic->sysreg, DSD_CFG_MUX, val);
++	if (ret)
++		DRM_ERROR("mic: Failed to read system register\n");
++}
++
++static int mic_sw_reset(struct exynos_mic *mic)
++{
++	unsigned int retry = 100;
++	int ret;
++
++	writel(MIC_SW_RST, mic->reg + MIC_OP);
++
++	while (retry-- > 0) {
++		ret = readl(mic->reg + MIC_OP);
++		if (!(ret & MIC_SW_RST))
++			return 0;
++
++		udelay(10);
++	}
++
++	return -ETIMEDOUT;
++}
++
++static void mic_set_porch_timing(struct exynos_mic *mic)
++{
++	struct videomode vm = mic->vm;
++	u32 reg;
++
++	reg = MIC_V_PULSE_WIDTH(vm.vsync_len) +
++		MIC_V_PERIOD_LINE(vm.vsync_len + vm.vactive +
++				vm.vback_porch + vm.vfront_porch);
++	writel(reg, mic->reg + MIC_V_TIMING_0);
++
++	reg = MIC_VBP_SIZE(vm.vback_porch) +
++		MIC_VFP_SIZE(vm.vfront_porch);
++	writel(reg, mic->reg + MIC_V_TIMING_1);
++
++	reg = MIC_V_PULSE_WIDTH(vm.hsync_len) +
++		MIC_V_PERIOD_LINE(vm.hsync_len + vm.hactive +
++				vm.hback_porch + vm.hfront_porch);
++	writel(reg, mic->reg + MIC_INPUT_TIMING_0);
++
++	reg = MIC_VBP_SIZE(vm.hback_porch) +
++		MIC_VFP_SIZE(vm.hfront_porch);
++	writel(reg, mic->reg + MIC_INPUT_TIMING_1);
++}
++
++static void mic_set_img_size(struct exynos_mic *mic)
++{
++	struct videomode *vm = &mic->vm;
++	u32 reg;
++
++	reg = MIC_IMG_H_SIZE(vm->hactive) +
++		MIC_IMG_V_SIZE(vm->vactive);
++
++	writel(reg, mic->reg + MIC_IMG_SIZE);
++}
++
++static void mic_set_output_timing(struct exynos_mic *mic)
++{
++	struct videomode vm = mic->vm;
++	u32 reg, bs_size_2d;
++
++	DRM_DEBUG("w: %u, h: %u\n", vm.hactive, vm.vactive);
++	bs_size_2d = ((vm.hactive >> 2) << 1) + (vm.vactive % 4);
++	reg = MIC_BS_SIZE_2D(bs_size_2d);
++	writel(reg, mic->reg + MIC_2D_OUTPUT_TIMING_2);
++
++	if (!mic->i80_mode) {
++		reg = MIC_H_PULSE_WIDTH_2D(vm.hsync_len) +
++			MIC_H_PERIOD_PIXEL_2D(vm.hsync_len + bs_size_2d +
++					vm.hback_porch + vm.hfront_porch);
++		writel(reg, mic->reg + MIC_2D_OUTPUT_TIMING_0);
++
++		reg = MIC_HBP_SIZE_2D(vm.hback_porch) +
++			MIC_H_PERIOD_PIXEL_2D(vm.hfront_porch);
++		writel(reg, mic->reg + MIC_2D_OUTPUT_TIMING_1);
++	}
++}
++
++static void mic_set_reg_on(struct exynos_mic *mic, bool enable)
++{
++	u32 reg = readl(mic->reg + MIC_OP);
++
++	if (enable) {
++		reg &= ~(MIC_MODE_SEL_MASK | MIC_CORE_VER_CONTROL | MIC_PSR_EN);
++		reg |= (MIC_CORE_EN | MIC_BS_CHG_OUT | MIC_ON_REG);
++
++		reg  &= ~MIC_MODE_SEL_COMMAND_MODE;
++		if (mic->i80_mode)
++			reg |= MIC_MODE_SEL_COMMAND_MODE;
++	} else {
++		reg &= ~MIC_CORE_EN;
++	}
++
++	reg |= MIC_UPD_REG;
++	writel(reg, mic->reg + MIC_OP);
++}
++
++static struct device_node *get_remote_node(struct device_node *from, int reg)
++{
++	struct device_node *endpoint = NULL, *remote_node = NULL;
++
++	endpoint = of_graph_get_endpoint_by_regs(from, reg, -1);
++	if (!endpoint) {
++		DRM_ERROR("mic: Failed to find remote port from %s",
++				from->full_name);
++		goto exit;
++	}
++
++	remote_node = of_graph_get_remote_port_parent(endpoint);
++	if (!remote_node) {
++		DRM_ERROR("mic: Failed to find remote port parent from %s",
++							from->full_name);
++		goto exit;
++	}
++
++exit:
++	of_node_put(endpoint);
++	return remote_node;
++}
++
++static int parse_dt(struct exynos_mic *mic)
++{
++	int ret = 0, i, j;
++	struct device_node *remote_node;
++	struct device_node *nodes[3];
++
++	/*
++	 * The order of endpoints does matter.
++	 * The first node must be for decon and the second one must be for dsi.
++	 */
++	for (i = 0, j = 0; i < NUM_ENDPOINTS; i++) {
++		remote_node = get_remote_node(mic->dev->of_node, i);
++		if (!remote_node) {
++			ret = -EPIPE;
++			goto exit;
++		}
++		nodes[j++] = remote_node;
++
++		switch (i) {
++		case ENDPOINT_DECON_NODE:
++			/* decon node */
++			if (of_get_child_by_name(remote_node,
++						"i80-if-timings"))
++				mic->i80_mode = 1;
++
++			break;
++		case ENDPOINT_DSI_NODE:
++			/* panel node */
++			remote_node = get_remote_node(remote_node, 1);
++			if (!remote_node) {
++				ret = -EPIPE;
++				goto exit;
++			}
++			nodes[j++] = remote_node;
++
++			ret = of_get_videomode(remote_node,
++							&mic->vm, 0);
++			if (ret) {
++				DRM_ERROR("mic: failed to get videomode");
++				goto exit;
++			}
++
++			break;
++		default:
++			DRM_ERROR("mic: Unknown endpoint from MIC");
++			break;
++		}
++	}
++
++exit:
++	while (--j > -1)
++		of_node_put(nodes[j]);
++
++	return ret;
++}
++
++void mic_disable(struct drm_bridge *bridge) { }
++
++void mic_post_disable(struct drm_bridge *bridge)
++{
++	struct exynos_mic *mic = bridge->driver_private;
++	int i;
++
++	mutex_lock(&mic_mutex);
++	if (!mic->enabled)
++		goto already_disabled;
++
++	mic_set_path(mic, 0);
++
++	for (i = NUM_CLKS - 1; i > -1; i--)
++		clk_disable_unprepare(mic->clks[i]);
++
++	mic->enabled = 0;
++
++already_disabled:
++	mutex_unlock(&mic_mutex);
++}
++
++void mic_pre_enable(struct drm_bridge *bridge)
++{
++	struct exynos_mic *mic = bridge->driver_private;
++	int ret, i;
++
++	mutex_lock(&mic_mutex);
++	if (mic->enabled)
++		goto already_enabled;
++
++	for (i = 0; i < NUM_CLKS; i++) {
++		ret = clk_prepare_enable(mic->clks[i]);
++		if (ret < 0) {
++			DRM_ERROR("Failed to enable clock (%s)\n",
++							clk_names[i]);
++			goto turn_off_clks;
++		}
++	}
++
++	mic_set_path(mic, 1);
++
++	ret = mic_sw_reset(mic);
++	if (ret) {
++		DRM_ERROR("Failed to reset\n");
++		goto turn_off_clks;
++	}
++
++	if (!mic->i80_mode)
++		mic_set_porch_timing(mic);
++	mic_set_img_size(mic);
++	mic_set_output_timing(mic);
++	mic_set_reg_on(mic, 1);
++	mic->enabled = 1;
++	mutex_unlock(&mic_mutex);
++
++	return;
++
++turn_off_clks:
++	while (--i > -1)
++		clk_disable_unprepare(mic->clks[i]);
++already_enabled:
++	mutex_unlock(&mic_mutex);
++}
++
++void mic_enable(struct drm_bridge *bridge) { }
++
++void mic_destroy(struct drm_bridge *bridge)
++{
++	struct exynos_mic *mic = bridge->driver_private;
++	int i;
++
++	mutex_lock(&mic_mutex);
++	if (!mic->enabled)
++		goto already_disabled;
++
++	for (i = NUM_CLKS - 1; i > -1; i--)
++		clk_disable_unprepare(mic->clks[i]);
++
++already_disabled:
++	mutex_unlock(&mic_mutex);
++}
++
++struct drm_bridge_funcs mic_bridge_funcs = {
++	.disable = mic_disable,
++	.post_disable = mic_post_disable,
++	.pre_enable = mic_pre_enable,
++	.enable = mic_enable,
++};
++
++int exynos_mic_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct exynos_mic *mic;
++	struct resource res;
++	int ret, i;
++
++	mic = devm_kzalloc(dev, sizeof(*mic), GFP_KERNEL);
++	if (!mic) {
++		DRM_ERROR("mic: Failed to allocate memory for MIC object\n");
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	mic->dev = dev;
++
++	ret = parse_dt(mic);
++	if (ret)
++		goto err;
++
++	ret = of_address_to_resource(dev->of_node, 0, &res);
++	if (ret) {
++		DRM_ERROR("mic: Failed to get mem region for MIC\n");
++		goto err;
++	}
++	mic->reg = devm_ioremap(dev, res.start, resource_size(&res));
++	if (!mic->reg) {
++		DRM_ERROR("mic: Failed to remap for MIC\n");
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	mic->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
++							"samsung,disp-syscon");
++	if (IS_ERR(mic->sysreg)) {
++		DRM_ERROR("mic: Failed to get system register.\n");
++		goto err;
++	}
++
++	mic->bridge.funcs = &mic_bridge_funcs;
++	mic->bridge.of_node = dev->of_node;
++	mic->bridge.driver_private = mic;
++	ret = drm_bridge_add(&mic->bridge);
++	if (ret) {
++		DRM_ERROR("mic: Failed to add MIC to the global bridge list\n");
++		goto err;
++	}
++
++	for (i = 0; i < NUM_CLKS; i++) {
++		mic->clks[i] = of_clk_get_by_name(dev->of_node, clk_names[i]);
++		if (IS_ERR(mic->clks[i])) {
++			DRM_ERROR("mic: Failed to get clock (%s)\n",
++								clk_names[i]);
++			ret = PTR_ERR(mic->clks[i]);
++			goto err;
++		}
++	}
++
++	DRM_DEBUG_KMS("MIC has been probed\n");
++
++err:
++	return ret;
++}
++
++static int exynos_mic_remove(struct platform_device *pdev)
++{
++	struct exynos_mic *mic = platform_get_drvdata(pdev);
++	int i;
++
++	drm_bridge_remove(&mic->bridge);
++
++	for (i = NUM_CLKS - 1; i > -1; i--)
++		clk_put(mic->clks[i]);
++
++	return 0;
++}
++
++static const struct of_device_id exynos_mic_of_match[] = {
++	{ .compatible = "samsung,exynos5433-mic" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, exynos_mic_of_match);
++
++struct platform_driver mic_driver = {
++	.probe		= exynos_mic_probe,
++	.remove		= exynos_mic_remove,
++	.driver		= {
++		.name	= "exynos-mic",
++		.owner	= THIS_MODULE,
++		.of_match_table = exynos_mic_of_match,
++	},
++};
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
