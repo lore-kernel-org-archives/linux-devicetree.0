@@ -1,69 +1,84 @@
-From: Howard Chen <howard.chen@linaro.org>
-Subject: [PATCH v2] ARM: dts: mt8173: support arm64 cpuidle-dt
-Date: Tue,  7 Apr 2015 16:05:05 +0800
-Message-ID: <1428393905-32166-1-git-send-email-howard.chen@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Howard Chen <howard.chen@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Tue, 7 Apr 2015 07:08:40 +0300
+Message-ID: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds an idle-states node to describe the mt8173 idle states and
-also adds references to the idle-states node in all CPU nodes.
-
-Signed-off-by: Howard Chen <howard.chen@linaro.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8554ec3..0d31a34 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -48,6 +48,8 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
- 			reg = <0x000>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -55,6 +57,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
- 		cpu2: cpu@100 {
-@@ -62,6 +65,7 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -69,6 +73,19 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
-+		};
-+
-+		idle-states {
-+			entry-method = "arm,psci";
-+
-+			CPU_SLEEP_0: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010000>;
-+				entry-latency-us = <639>;
-+				exit-latency-us = <328>;
-+				min-residency-us = <1088>;
-+			};
- 		};
- 	};
- 
--- 
-1.9.1
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKU2lnbmVk
+LW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgotLS0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dCAgICAgIHwgICA1
+OSArKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDU5IGluc2VydGlvbnMoKykK
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9y
+aXEtY2xvY2sudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fv
+cmlxLWNsb2NrLnR4dAppbmRleCBkZjRhMjU5Li5hN2U4NGNlIDEwMDY0NAotLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0CisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQKQEAg
+LTY1LDYgKzY1LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIAkJSXQgdGFrZXMgcGFyZW50J3Mg
+Y2xvY2stZnJlcXVlbmN5IGFzIGl0cyBjbG9jay4KIAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxs
+LTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xvY2sgKHYxLjApCiAJKiAiZnNsLHFvcmlxLXBs
+YXRmb3JtLXBsbC0yLjAiIGZvciB0aGUgcGxhdGZvcm0gUExMIGNsb2NrICh2Mi4wKQorCSogImZz
+bCxmbWFuLWNsay1tdXgiIGZvciB0aGUgRnJhbWUgTWFuYWdlciBjbG9jay4KIC0gI2Nsb2NrLWNl
+bGxzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLiBUaGUgbnVtYmVyIG9mIGNlbGxzIGluIGEK
+IAljbG9jay1zcGVjaWZpZXIuIFNob3VsZCBiZSA8MD4gZm9yICJmc2wscW9yaXEtc3lzY2xrLVsx
+LDJdLjAiCiAJY2xvY2tzLCBvciA8MT4gZm9yICJmc2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIg
+Y2xvY2tzLgpAQCAtNzMsNiArNzQsNTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIAkqIDAgLSBl
+cXVhbCB0byB0aGUgUExMIGZyZXF1ZW5jeQogCSogMSAtIGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVl
+bmN5IGRpdmlkZWQgYnkgMgogCSogMiAtIGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVlbmN5IGRpdmlk
+ZWQgYnkgNAorCUZvciAiZnNsLGZtYW4tY2xrLW11eCIgY2xvY2tzLCB0aGUgc2luZ2xlIGNsb2Nr
+LXNwZWNpZmllciBjZWxsIG1heQorCXRha2UgdmFsdWVzIGFjY29yZGluZyB0aGUgUmVzZXQgQ29u
+ZmlndXJhdGlvbiBXb3JkIG9mIHRoZSBzcGVjaWZpYworCWRldmljZToKKwkJKiBQMjA0MSwgUDMw
+NDE6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwgZGl2aWRlZCBieSAyCisJCQkqIDEg
+LSBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkgMgorCQkqIFA0MDgwIChCb3RoIEZNYW5zKToKKwkJ
+CSogMCAtIGVxdWFsIHRvIHBsYXRmb3JtIFBMTCBkaXZpZGVkIGJ5IDIKKwkJCSogMSAtIGVxdWFs
+IHRvIFBMTDMgZGl2aWRlZCBieSAyCisJCSogUDUwMjA6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0
+Zm9ybSBQTEwgZGl2aWRlZCBieSAyCisJCQkqIDEgLSBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkg
+MgorCQkJKiAyIC0gZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDQKKwkJKiBQNTA0MCAoQm90aCBG
+TWFucyk6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwgZGl2aWRlZCBieSAyCisJCQkq
+IDEgLSBlcXVhbCB0byBQTEwzIGRpdmlkZWQgYnkgMgorCQkJKiAyIC0gZXF1YWwgdG8gUExMMyBk
+aXZpZGVkIGJ5IDQKKwkJKiBUMTAyNDoKKwkJCSogMCAtIGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBi
+eSAyCisJCSogVDEwNDA6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwKKwkJKiBUMjA4
+MCwgQjQ4NjAsIEI0NDIwOgorCQkJKiAwIC0gZXF1YWwgdG8gUExMMQorCQkJKiAxIC0gZXF1YWwg
+dG8gUExMMSBkaXZpZGVkIGJ5IDIKKwkJCSogMiAtIGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBieSAz
+CisJCQkqIDMgLSBlcXVhbCB0byBQTEwxIGRpdmlkZWQgYnkgNAorCQkJKiA0IC0gZXF1YWwgdG8g
+cGxhdGZvcm0gUExMCisJCQkqIDUgLSBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkgMgorCQkJKiA2
+IC0gZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDMKKwkJKiBUNDI0MDoKKwkJCSogRk0xOgorCQkJ
+KiAwIGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBieSAyCisJCQkqIDEgZXF1YWwgdG8gUExMMSBkaXZp
+ZGVkIGJ5IDMKKwkJCSogMiBlcXVhbCB0byBQTEwxIGRpdmlkZWQgYnkgNAorCQkJKiAzIGVxdWFs
+IHRvIHBsYXRmb3JtIFBMTAorCQkJKiA0IGVxdWFsIHRvIFBMTDIgZGl2aWRlZCBieSAyCisJCQkq
+IEZNMjoKKwkJCSogMCBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkgMgorCQkJKiAxIGVxdWFsIHRv
+IFBMTDIgZGl2aWRlZCBieSAzCisJCQkqIDIgZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDQKKwkJ
+CSogMyBlcXVhbCB0byBwbGF0Zm9ybSBQTEwKKwkJCSogNCBlcXVhbCB0byBQTEwxIGRpdmlkZWQg
+YnkgMgorCQkJKiA1IGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBieSAzCisJCUluIFBhcnQgb2YgRk1h
+biBWMyBkZXZpY2VzIChCNCwgVDIsIFQ0KSB0aGUgc2luZ2xlCisJCWNsb2NrLXNwZWNpZmllciBj
+ZWxsIG1heSBiZSBkZXRlcm1pbmVkIGJ5IHRoZSBDTEtDR3hIV0FDU1IKKwkJcmVnaXN0ZXIgaW4g
+YWRkdGlvbiB0byBSQ1cuCiAKIFJlY29tbWVuZGVkIHByb3BlcnRpZXM6CiAtIGNsb2NrczogU2hv
+dWxkIGJlIHRoZSBwaGFuZGxlIG9mIGlucHV0IHBhcmVudCBjbG9jawpAQCAtMTM5LDYgKzE4Niwx
+OCBAQCBFeGFtcGxlIGZvciBjbG9jayBibG9jayBhbmQgY2xvY2sgcHJvdmlkZXI6CiAJCQljbG9j
+a3MgPSA8JnN5c2Nsaz47CiAJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxhdGZvcm0tcGxsIiwg
+InBsYXRmb3JtLXBsbC1kaXYyIjsKIAkJfTsKKworCQlmbTBjbGs6IGZtMC1jbGstbXV4IHsKKwkJ
+CSNjbG9jay1jZWxscyA9IDwwPjsKKwkJCXJlZyA9IDwweDEwIDQ+CisJCQljb21wYXRpYmxlID0g
+ImZzbCxmbWFuLWNsay1tdXgiOworCQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwm
+cGxsMCAyPiwgPCZwbGwwIDM+LAorCQkJCSA8JnBsYXRmb3JtX3BsbCAwPiwgPCZwbGwxIDE+LCA8
+JnBsbDEgMj47CisJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRp
+djMiLAorCQkJCSAgICAgICJwbGwwLWRpdjQiLCAicGxhdGZvcm0tcGxsIiwgInBsbDEtZGl2MiIs
+CisJCQkJICAgICAgInBsbDEtZGl2MyI7CisJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAiZm0wLWNs
+ayI7CisJCX07CiAJfTsKIH07CiAKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhw
+cGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZv
+L2xpbnV4cHBjLWRldg==
