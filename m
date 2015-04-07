@@ -1,50 +1,50 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] coresight: adding basic support for Spreadtrum SC9836
-Date: Tue, 7 Apr 2015 06:17:05 -0600
-Message-ID: <CANLsYkwSaJrTva-Gy7sr0-BU8Tz7Pq6Zwi1FCodBoY-G5xjNJw@mail.gmail.com>
-References: <1427287931-9363-1-git-send-email-zhang.chunyan@linaro.org>
-	<20150403195142.GR23023@localhost>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
+Date: Tue, 7 Apr 2015 14:19:33 +0200
+Message-ID: <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
+References: <20150407121247.GA29497@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150403195142.GR23023@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Kaixu Xia <kaixu.xia-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhizhou <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150407121247.GA29497@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 April 2015 at 13:51, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Wed, Mar 25, 2015 at 08:52:11PM +0800, Chunyan Zhang wrote:
->> Support only for ETF, FUNNEL, STM are included currently.
->> Support for ETM, TPIU and the replicator linked to it are not included in
->> this version patch.
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> Change for v2:
->>  - Corrected the TMC whose space is wrongly used as ETB in v1.
->>  - Removed "coresight-default-sink" from the DT.
->> ---
->
-> Appled but with subject:
->
-> arm64: dts: sprd: adding coresight entries to Spreadtrum SC9836
->
->
+Hi Pavel,
 
-Olof,
-
-I did not take this patch in my coresight tree yet as introduction of
-the coresight STM driver and bindings in mainline has been delayed.
-That patch should likely be reverted on your side and I'll take care
-of it when we have a solution on the STM driver.
-
-Thanks,
-Mathieu
-
+On Tue, Apr 7, 2015 at 2:12 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> I have an socfpga board, which uses has simple framebuffer implemented
+> in the FPGA. On 3.15, framebuffer is fast:
 >
-> -Olof
+> root@wagabuibui:~# time cat /dev/fb0 > /dev/null
+> real               0m 0.00s
+> user               0m 0.00s
+> sys                0m 0.00s
+>
+> on 3.18, this takes 220msec. Similar slowdown exists for
+> writes. Simple framebuffer did not change at all between 3.15 and
+> 3.18; resource flags of the framebuffer are still same (0x200).
+>
+> If I enable caching on 3.18, it speeds up a bit, to 70msec or
+> so... Which means problem is not only in caching.
+>
+> Any ideas?
+
+My first guess was  commit 67dc0d4758e5 ("vt_buffer: drop console buffer
+copying optimisations"), but this was introduced only in v4.0-rc1.
+
+Just in case you encounter another performance regression after upgrading
+to a more modern kernel ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
