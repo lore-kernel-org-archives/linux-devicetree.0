@@ -1,82 +1,111 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock support
-Date: Tue, 7 Apr 2015 15:32:02 -0500
-Message-ID: <CAL_JsqJW7O=p3dUCw6A+J_x=PtHa6=GuS87hZORBermkDWDKLA@mail.gmail.com>
-References: <1428432239-4114-1-git-send-email-lee.jones@linaro.org> <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH] stmmac: Add an optional register interface clock
+Date: Tue,  7 Apr 2015 13:38:45 -0700
+Message-ID: <1428439125-26023-1-git-send-email-abrestic@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, kernel@stlinux.com, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Giuseppe Cavallaro <peppe.cavallaro@st.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2015 at 1:43 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+The DWMAC block on certain SoCs (such as IMG Pistachio) have a second
+clock which must be enabled in order to access the peripheral's
+register interface, so add support for requesting and enabling an
+optional "pclk".
 
-Please use get_maintainers.pl in the future.
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+Cc: James Hartley <james.hartley@imgtec.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt  |  7 ++++---
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 15 +++++++++++++++
+ 3 files changed, 20 insertions(+), 3 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> ---
->  .../devicetree/bindings/clock/clock-bindings.txt   | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> index 06fc6d5..daf3323 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -44,6 +44,44 @@ For example:
->    clocks by index. The names should reflect the clock output signal
->    names for the device.
->
-> +clock-always-on:    Some hardware contains bunches of clocks which must never be
-> +                   turned off.  If drivers a) fail to obtain a reference to any
-> +                   of these or b) give up a previously obtained reference
-> +                   during suspend, the common clk framework will attempt to
-> +                   disable them and a platform can fail irrecoverably as a
-> +                   result.  Usually the only way to recover from these failures
-> +                   is to reboot.
-> +
-> +                   To avoid either of these two scenarios from catastrophically
-> +                   disabling an otherwise perfectly healthy running system,
-> +                   clocks can be identified as always-on using this property
-> +                   from inside a clocksource's node.
-> +
-> +                   This property is not to be abused.  It is only to be used to
-> +                   protect platforms from being crippled by gated clocks, not
-> +                   as a convenience function to avoid using the framework
-> +                   correctly inside device drivers.
-> +
-> +                   Expected values are hardware clock indices.  If the
-> +                   clock-indices property (see below) is used, then supplied
-> +                   values must correspond to one of the listed identifiers.
-> +                   Using the clock-indices example below, hardware clock <2>
-> +                   is missing, therefore it is considered invalid to then
-> +                   list clock <2> as an always-on clock.
-> +
-> +For example:
-> +
-> +    oscillator {
-> +        #clock-cells = <1>;
-> +        clock-output-names = "ckil", "ckih";
-> +        clock-always-on = <0>, <1>;
-> +    };
-> +
-> +- this node defines a device with two clock outputs, just as in the
-> +  example above.  The only difference being that 'ckil' and 'ckih'
-> +  are now identified as an always-on clocks, so the framework will
-> +  know to never attempt to gate them.
-> +
->  clock-indices:    If the identifying number for the clocks in the node
->                    is not linear from zero, then this allows the mapping of
->                    identifiers into the clock-output-names array.
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index 8ca65ce..29aca85 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -35,10 +35,11 @@ Optional properties:
+ - reset-names: Should contain the reset signal name "stmmaceth", if a
+ 	reset phandle is given
+ - max-frame-size: See ethernet.txt file in the same directory
+-- clocks: If present, the first clock should be the GMAC main clock,
+-  further clocks may be specified in derived bindings.
++- clocks: If present, the first clock should be the GMAC main clock and
++  the second clock should be peripheral's register interface clock. Further
++  clocks may be specified in derived bindings.
+ - clock-names: One name for each entry in the clocks property, the
+-  first one should be "stmmaceth".
++  first one should be "stmmaceth" and the second one should be "pclk".
+ - clk_ptp_ref: this is the PTP reference clock; in case of the PTP is
+   available this clock is used for programming the Timestamp Addend Register.
+   If not passed then the system clock will be used and this is fine on some
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index c0a3919..2ac9552 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -97,6 +97,7 @@ struct stmmac_priv {
+ 	int wolopts;
+ 	int wol_irq;
+ 	struct clk *stmmac_clk;
++	struct clk *pclk;
+ 	struct reset_control *stmmac_rst;
+ 	int clk_csr;
+ 	struct timer_list eee_ctrl_timer;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 5336594..06103ca 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2849,6 +2849,16 @@ struct stmmac_priv *stmmac_dvr_probe(struct device *device,
+ 	}
+ 	clk_prepare_enable(priv->stmmac_clk);
+ 
++	priv->pclk = devm_clk_get(priv->device, "pclk");
++	if (IS_ERR(priv->pclk)) {
++		if (PTR_ERR(priv->pclk) == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto error_pclk_get;
++		}
++		priv->pclk = NULL;
++	}
++	clk_prepare_enable(priv->pclk);
++
+ 	priv->stmmac_rst = devm_reset_control_get(priv->device,
+ 						  STMMAC_RESOURCE_NAME);
+ 	if (IS_ERR(priv->stmmac_rst)) {
+@@ -2934,6 +2944,8 @@ error_mdio_register:
+ error_netdev_register:
+ 	netif_napi_del(&priv->napi);
+ error_hw_init:
++	clk_disable_unprepare(priv->pclk);
++error_pclk_get:
+ 	clk_disable_unprepare(priv->stmmac_clk);
+ error_clk_get:
+ 	free_netdev(ndev);
+@@ -2965,6 +2977,7 @@ int stmmac_dvr_remove(struct net_device *ndev)
+ 	unregister_netdev(ndev);
+ 	if (priv->stmmac_rst)
+ 		reset_control_assert(priv->stmmac_rst);
++	clk_disable_unprepare(priv->pclk);
+ 	clk_disable_unprepare(priv->stmmac_clk);
+ 	free_netdev(ndev);
+ 
+@@ -3011,6 +3024,7 @@ int stmmac_suspend(struct net_device *ndev)
+ 		stmmac_set_mac(priv->ioaddr, false);
+ 		pinctrl_pm_select_sleep_state(priv->device);
+ 		/* Disable clock in case of PWM is off */
++		clk_disable(priv->pclk);
+ 		clk_disable(priv->stmmac_clk);
+ 	}
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+@@ -3051,6 +3065,7 @@ int stmmac_resume(struct net_device *ndev)
+ 		pinctrl_pm_select_default_state(priv->device);
+ 		/* enable the clk prevously disabled */
+ 		clk_enable(priv->stmmac_clk);
++		clk_enable(priv->pclk);
+ 		/* reset the phy so that it's ready */
+ 		if (priv->mii)
+ 			stmmac_mdio_reset(priv->mii);
+-- 
+2.2.0.rc0.207.ga3a616c
