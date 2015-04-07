@@ -1,58 +1,95 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Tue, 7 Apr 2015 08:16:18 +0100
-Message-ID: <20150407071618.GE3461@x1>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
- <1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
- <CAOesGMhz6WPweQFXfPhTO6Pz5L4Z1Si6YGiCRCiFD9B5qB9tVw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] mfd: sec: Fix RTC alarm interrupt number on S2MPS11
+Date: Tue, 7 Apr 2015 08:37:28 +0100
+Message-ID: <20150407073728.GH3461@x1>
+References: <1427985376-20420-1-git-send-email-k.kozlowski@samsung.com>
+ <1427985376-20420-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMhz6WPweQFXfPhTO6Pz5L4Z1Si6YGiCRCiFD9B5qB9tVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1427985376-20420-2-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 03 Apr 2015, Olof Johansson wrote:
+On Thu, 02 Apr 2015, Krzysztof Kozlowski wrote:
 
-> Hi,
+> The RTC on S2MPS11 is the same as S2MPS14. However interrupt numbers =
+of
+> RTC alarms 0 and 1 were inversed between these two devices. So when
+> rtc-s5m driver requested S2MPS14_IRQ_RTCA0 interrupt, it matched to
+> S2MPS11_IRQ_RTCA1, not RTCA0.
 >=20
-> I understand this is bikeshedding to some extent, but I'd also like t=
-o
-> avoid needless variation in binding formats:
+> Fix this by using consistent RTC alarm interrupt numbers and adding a
+> BUILD_BUG_ON for future generations.
 >=20
-> On Tue, Mar 3, 2015 at 1:32 AM, Linus Walleij <linus.walleij@linaro.o=
-rg> wrote:
->=20
-> > +
-> > +foo@1000 {
-> > +               compatible =3D "syscon", "simple-mfd";
-> > +               reg =3D <0x010000 0x1000>;
-> > +
-> > +               led@08.0 {
->=20
-> This doesn't seem to be a typo, you're using a period in the unit
-> address. I've never seen that done before, usually commas are used
-> instead.
->=20
-> Was there a reason for going with period?
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  drivers/mfd/sec-irq.c           | 14 ++++++++++----
+>  include/linux/mfd/samsung/irq.h |  2 +-
+>  2 files changed, 11 insertions(+), 5 deletions(-)
 
-LEDs have always done it [1].  I guess Bryan would be the best person
-to answer the 'why'.
+Applied, thanks.
 
-git grep "led.*@[0-9]*[.,][0-9]*" -- Documentation/devicetree/ arch/arm=
-/boot/dts/
+> diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
+> index ba86a918c2da..806fa8dbb22d 100644
+> --- a/drivers/mfd/sec-irq.c
+> +++ b/drivers/mfd/sec-irq.c
+> @@ -61,14 +61,14 @@ static const struct regmap_irq s2mps11_irqs[] =3D=
+ {
+>  		.reg_offset =3D 1,
+>  		.mask =3D S2MPS11_IRQ_RTC60S_MASK,
+>  	},
+> -	[S2MPS11_IRQ_RTCA0] =3D {
+> -		.reg_offset =3D 1,
+> -		.mask =3D S2MPS11_IRQ_RTCA0_MASK,
+> -	},
+>  	[S2MPS11_IRQ_RTCA1] =3D {
+>  		.reg_offset =3D 1,
+>  		.mask =3D S2MPS11_IRQ_RTCA1_MASK,
+>  	},
+> +	[S2MPS11_IRQ_RTCA0] =3D {
+> +		.reg_offset =3D 1,
+> +		.mask =3D S2MPS11_IRQ_RTCA0_MASK,
+> +	},
+>  	[S2MPS11_IRQ_SMPL] =3D {
+>  		.reg_offset =3D 1,
+>  		.mask =3D S2MPS11_IRQ_SMPL_MASK,
+> @@ -484,6 +484,12 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
+>  		return ret;
+>  	}
+> =20
+> +	/*
+> +	 * The rtc-s5m driver requests S2MPS14_IRQ_RTCA0 also for S2MPS11
+> +	 * so the interrupt number must be consistent.
+> +	 */
+> +	BUILD_BUG_ON(((enum s2mps14_irq)S2MPS11_IRQ_RTCA0) !=3D S2MPS14_IRQ=
+_RTCA0);
+> +
+>  	return 0;
+>  }
+> =20
+> diff --git a/include/linux/mfd/samsung/irq.h b/include/linux/mfd/sams=
+ung/irq.h
+> index f35af7361b60..667aa40486dd 100644
+> --- a/include/linux/mfd/samsung/irq.h
+> +++ b/include/linux/mfd/samsung/irq.h
+> @@ -74,8 +74,8 @@ enum s2mps11_irq {
+>  	S2MPS11_IRQ_MRB,
+> =20
+>  	S2MPS11_IRQ_RTC60S,
+> -	S2MPS11_IRQ_RTCA0,
+>  	S2MPS11_IRQ_RTCA1,
+> +	S2MPS11_IRQ_RTCA0,
+>  	S2MPS11_IRQ_SMPL,
+>  	S2MPS11_IRQ_RTC1S,
+>  	S2MPS11_IRQ_WTSR,
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
