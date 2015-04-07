@@ -1,183 +1,82 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 04/10] eeprom: Add a simple EEPROM framework for eeprom
- consumers
-Date: Tue, 07 Apr 2015 21:09:38 +0100
-Message-ID: <55243982.7020907@linaro.org>
-References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org> <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org> <20150407184533.GA10278@codeaurora.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock support
+Date: Tue, 7 Apr 2015 15:32:02 -0500
+Message-ID: <CAL_JsqJW7O=p3dUCw6A+J_x=PtHa6=GuS87hZORBermkDWDKLA@mail.gmail.com>
+References: <1428432239-4114-1-git-send-email-lee.jones@linaro.org> <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150407184533.GA10278@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, kernel@stlinux.com, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Stephen for review,
+On Tue, Apr 7, 2015 at 1:43 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-On 07/04/15 19:45, Stephen Boyd wrote:
-> On 03/30, Srinivas Kandagatla wrote:
->> @@ -130,6 +138,37 @@ static struct class eeprom_class = {
->>   	.dev_release	= eeprom_release,
->>   };
->>
->> +static int of_eeprom_match(struct device *dev, const void *eeprom_np)
->> +{
->> +	return dev->of_node == eeprom_np;
->> +}
->> +
->> +static struct eeprom_device *of_eeprom_find(struct device_node *eeprom_np)
->> +{
->> +	struct device *d;
->> +
->> +	if (!eeprom_np)
->> +		return NULL;
->> +
->> +	d = class_find_device(&eeprom_class, NULL, eeprom_np, of_eeprom_match);
->> +
->> +	return d ? to_eeprom(d) : NULL;
->> +}
->> +
->> +static int eeprom_match(struct device *dev, const void *data)
->> +{
->> +	return !strcmp(dev_name(dev), (const char *)data);
+Please use get_maintainers.pl in the future.
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  .../devicetree/bindings/clock/clock-bindings.txt   | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 >
-> Is this cast necessary?
-May be an over do here, I will fix it.
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> index 06fc6d5..daf3323 100644
+> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -44,6 +44,44 @@ For example:
+>    clocks by index. The names should reflect the clock output signal
+>    names for the device.
 >
->> +}
->> +
->> +static struct eeprom_device *eeprom_find(const char *name)
->> +{
->> +	struct device *d;
->> +
->> +	d = class_find_device(&eeprom_class, NULL, (void *)name, eeprom_match);
+> +clock-always-on:    Some hardware contains bunches of clocks which must never be
+> +                   turned off.  If drivers a) fail to obtain a reference to any
+> +                   of these or b) give up a previously obtained reference
+> +                   during suspend, the common clk framework will attempt to
+> +                   disable them and a platform can fail irrecoverably as a
+> +                   result.  Usually the only way to recover from these failures
+> +                   is to reboot.
+> +
+> +                   To avoid either of these two scenarios from catastrophically
+> +                   disabling an otherwise perfectly healthy running system,
+> +                   clocks can be identified as always-on using this property
+> +                   from inside a clocksource's node.
+> +
+> +                   This property is not to be abused.  It is only to be used to
+> +                   protect platforms from being crippled by gated clocks, not
+> +                   as a convenience function to avoid using the framework
+> +                   correctly inside device drivers.
+> +
+> +                   Expected values are hardware clock indices.  If the
+> +                   clock-indices property (see below) is used, then supplied
+> +                   values must correspond to one of the listed identifiers.
+> +                   Using the clock-indices example below, hardware clock <2>
+> +                   is missing, therefore it is considered invalid to then
+> +                   list clock <2> as an always-on clock.
+> +
+> +For example:
+> +
+> +    oscillator {
+> +        #clock-cells = <1>;
+> +        clock-output-names = "ckil", "ckih";
+> +        clock-always-on = <0>, <1>;
+> +    };
+> +
+> +- this node defines a device with two clock outputs, just as in the
+> +  example above.  The only difference being that 'ckil' and 'ckih'
+> +  are now identified as an always-on clocks, so the framework will
+> +  know to never attempt to gate them.
+> +
+>  clock-indices:    If the identifying number for the clocks in the node
+>                    is not linear from zero, then this allows the mapping of
+>                    identifiers into the clock-output-names array.
+> --
+> 1.9.1
 >
-> Is this cast necessary?
-
-I Will fix it in next version.
 >
->> +
->> +	return d ? to_eeprom(d) : NULL;
->> +}
->> +
->>   /**
->>    * eeprom_register(): Register a eeprom device for given eeprom.
->>    * Also creates an binary entry in /sys/class/eeprom/name-id/eeprom
->> +
->> +/**
->> + * eeprom_cell_get(): Get eeprom cell of device form a given eeprom name
->
-> s/form/from/
-
-Will fix this in next version.
->
->> + * and blocks.
->> + *
->> + * @ename: eeprom device name that needs to be looked-up.
->> + * @blocks: eeprom blocks containing offset and length information.
->> + * @nblocks: number of eeprom blocks.
->> + *
->> + * The return value will be an ERR_PTR() on error or a valid pointer
->> + * to a struct eeprom_cell.  The eeprom_cell will be freed by the
->> + * eeprom_cell_put().
->> + */
->> +struct eeprom_cell *eeprom_cell_get(const char *ename,
->> +				    struct eeprom_block *blocks, int nblocks)
->> +{
->> +	return __eeprom_cell_get(NULL, ename, blocks, nblocks);
->> +}
->> +EXPORT_SYMBOL_GPL(eeprom_cell_get);
->> +
->> +/**
->> + * of_eeprom_cell_get(): Get eeprom cell of device form a given index
->
-> s/form/from/
->
-Ok,
->> + *
->> + * @dev node: Device tree node that uses the eeprom cell
->> +
->> +#ifndef _LINUX_EEPROM_CONSUMER_H
->> +#define _LINUX_EEPROM_CONSUMER_H
->> +
->> +struct eeprom_cell;
->> +
->> +struct eeprom_block {
->> +	loff_t offset;
->> +	size_t count;
->> +};
->> +#if IS_ENABLED(CONFIG_EEPROM)
->> +struct eeprom_cell *eeprom_cell_get(const char *ename,
->> +				    struct eeprom_block *blocks, int nblocks);
->> +void eeprom_cell_put(struct eeprom_cell *cell);
->> +char *eeprom_cell_read(struct eeprom_cell *cell, ssize_t *len);
->> +int eeprom_cell_write(struct eeprom_cell *cell, const char *buf, ssize_t len);
-> [...]
->> +
->> +#if IS_ENABLED(CONFIG_EEPROM) && IS_ENABLED(CONFIG_OF)
->> +struct eeprom_cell *of_eeprom_cell_get(struct device_node *dev,
->> +				       const char *property);
->> +#else
->> +static inline struct eeprom_cell *of_eeprom_cell_get(struct device_node *np,
->> +						     const char *property)
->> +{
->> +	return ERR_PTR(-ENOSYS);
->> +}
->> +#endif
->> +#endif  /* ifndef _LINUX_EEPROM_CONSUMER_H */
->
-> Do you have an overview of how to use these APIs? Maybe some
-> Documentation/ is in order? I'm mostly interested in how the
-> blocks array is supposed to work and how this hooks up to drivers
-> that are using DT.
-
-Only doc ATM is function level kernel doc in c file.
-May be I can explain you for now and I will try to add some 
-documentation with some usage examples in next version.
-
-eeprom block array is just another way intended to get hold of eeprom 
-content for non-DT providers/consumers, but DT consumers/providers can 
-also use it. As of today SOC/mach level code could use it as well.
-
-In eeprom_cell_get() case the lookup of provider is done based on 
-provider name, this provider name is generally supplied by all the 
-providers (both DT/non DT).
-
-for example in qfprom case,
-provider is registered from DT with eeprom config containing a unique name:
-static struct eeprom_config econfig = {
-	.name = "qfprom",
-	.id = 0,
-};
-
-In the consumer case, the tsens driver could do some like in non DT way:
-
-	struct eeprom_block blocks[4] ={
-		{
-		.offset = 0x404,
-		.count = 0x4,
-		},
-		{
-		.offset = 0x408,
-		.count = 0x4,
-		},
-		{
-		.offset = 0x40c,
-		.count = 0x4,
-		},
-		{
-		.offset = 0x410,
-		.count = 0x4,
-		},
-	};
-	calib_cell = eeprom_cell_get("qfprom0", blocks, 4);
-
-
-Or in DT way
-calib_cell  = of_eeprom_cell_get(np, "calib");
-
-
---srini
->
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
