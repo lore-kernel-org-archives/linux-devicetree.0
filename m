@@ -1,50 +1,80 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
-Date: Tue, 7 Apr 2015 14:19:33 +0200
-Message-ID: <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
-References: <20150407121247.GA29497@amd>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: irqchip heirarchy DT "break" series awareness?
+Date: Tue, 7 Apr 2015 12:40:16 +0000
+Message-ID: <20150407124016.GD7873@io.lakedaemon.net>
+References: <20150406144647.GC7873@io.lakedaemon.net>
+ <20150407115922.5d4c6233@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150407121247.GA29497@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150407115922.5d4c6233-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Hey Thomas,
 
-On Tue, Apr 7, 2015 at 2:12 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> I have an socfpga board, which uses has simple framebuffer implemented
-> in the FPGA. On 3.15, framebuffer is fast:
->
-> root@wagabuibui:~# time cat /dev/fb0 > /dev/null
-> real               0m 0.00s
-> user               0m 0.00s
-> sys                0m 0.00s
->
-> on 3.18, this takes 220msec. Similar slowdown exists for
-> writes. Simple framebuffer did not change at all between 3.15 and
-> 3.18; resource flags of the framebuffer are still same (0x200).
->
-> If I enable caching on 3.18, it speeds up a bit, to 70msec or
-> so... Which means problem is not only in caching.
->
-> Any ideas?
+On Tue, Apr 07, 2015 at 11:59:22AM +0200, Thomas Petazzoni wrote:
+> Jason,
+> 
+> On Mon, 6 Apr 2015 14:46:47 +0000, Jason Cooper wrote:
+> 
+> > This causes two problems:
+> > 
+> >  1) Upgrade kernel, but not DTB.
+> > 
+> > 	System will boot, and print a big fat warning that
+> > 	suspend/resume will not work until the DTB is upgraded.
+> > 
+> >  2) Upgrade DTB, but not kernel.
+> > 
+> > 	System will fail to boot.
+> 
+> (2) has never been something that has ever planned of being guaranteed,
+> as far as I know. Only (1) is the supposed consequence of DT ABI
+> stability, but definitely not (2), so I'm unsure why you even mention
+> (2).
 
-My first guess was  commit 67dc0d4758e5 ("vt_buffer: drop console buffer
-copying optimisations"), but this was introduced only in v4.0-rc1.
+Because my goal here was to give *every* possible chance for an
+objection.  Hence, "dt" and "break" in the subject line, sent to the
+devicetree ML.  Also, Marc mentioned the possibility in at least the
+cover letter of each of his series.  I don't want anything hidden.
 
-Just in case you encounter another performance regression after upgrading
-to a more modern kernel ;-)
+But you are absolutely correct.  (2) was never guaranteed, and it's also
+highly improbable as well.  See below.
 
-Gr{oetje,eeting}s,
+> > In light of Thomas Petazonni's well-researched talk at ELC:
+> > 
+> >   "The Device Tree as a stable ABI: a fairy tale?"
+> >   http://events.linuxfoundation.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf
+> > 
+> > I'm confident that #2 won't be an issue.  Distro's and OEMs seem to have
+> > worked around the instability by keeping the dtb tied to the kernel
+> > version.
+> 
+> I'm glad you raised my slides as an argument in a DT ABI stability
+> discussion :-)
+> 
+> However, my slides are definitely not about #2 (which as said earlier,
+> was never planned to be something we should worry about), but really
+> about #1.
 
-                        Geert
+I was referring to the slide where you mention that distros and vendors
+have tied the dtbs to the kernel versions (Slide 23/27, "Usefulness").
+I should have been more specific when taking something out of context.
+:-P
 
+My point, not well made, was that everyone has decided to slave the
+upgrade of the dtb to the upgrade of the kernel.  There is no 'apt-get
+armv7-dtbs' that has no dependency structure on a kernel package.  So we
+agree, (2) was never guaranteed, and isn't probable either.
+
+thx,
+
+Jason.
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
