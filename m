@@ -1,63 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 05/10] eeprom: Add bindings for simple eeprom framework
-Date: Tue, 7 Apr 2015 18:46:24 +0100
-Message-ID: <20150407174624.GO6023@sirena.org.uk>
-References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1427752679-17261-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150406133208.GH30984@beef>
- <CAL_Jsq++9pyJMLXssgyz2WRU4e7ikT_6FwzWMo1fKS82FJvEyg@mail.gmail.com>
- <20150406150442.GA26319@beef>
- <55241575.7040809@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kU+YCB/tRrGD+zr2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55241575.7040809@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Matt Porter <mporter@konsulko.com>, Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] arm: dts: rk3288: Enable Cortex-A12 HW PMU events
+Date: Tue,  7 Apr 2015 10:52:39 -0700
+Message-ID: <1428429159-24102-1-git-send-email-sonnyrao@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds the dts node for the PMU with the correct PMUIRQ interrupts
+for each core.
 
---kU+YCB/tRrGD+zr2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Tue, Apr 07, 2015 at 06:35:49PM +0100, Srinivas Kandagatla wrote:
-> On 06/04/15 16:04, Matt Porter wrote:
-> >On Mon, Apr 06, 2015 at 09:11:05AM -0500, Rob Herring wrote:
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 165968d..8253abb 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -44,6 +44,14 @@
+ 		spi2 = &spi2;
+ 	};
+ 
++	arm-pmu {
++		compatible = "arm,cortex-a12-pmu";
++		interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-- 
+2.2.0.rc0.207.ga3a616c
 
-> >>>The generic binding could really use a "read-only" property here as this
-> >>>is a common hardware attribute for many nvmem devices. A serial EEPROM
-
-> Correct me If am wrong.
-
-> Regarding write protection/read-only, regmap already has provisions to
-> support this feature. regmap would bail out with errors if any attempt to
-> write to non-writable regions. It all depends on the data providers how they
-> setup the regmap and the bindings for those are specific individual data
-> providers I think.
-
-There is the ability to flag read/write permissions in regmap but I
-think there's some suggestion that this should be exposed to userspace
-so that it's easier for it to handle things rather than just writing
-then coping with any errors.
-
---kU+YCB/tRrGD+zr2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVJBfvAAoJECTWi3JdVIfQJYsH/Ah8snDt+b0J7XauOp9qrx7N
-iiOJ87rZzRMlPGP/fVh7NEU2WqogDQ9kiNB9tporY/+ZTxjFp3BtRxHavuMC7/+9
-f0DrJxTp9KxBCH3wYQgHf8Tjapfjf0kzQsZIGQs6iP4x5zdXTkrVTE5ukXGFHXWm
-xLbIFbz30+2TCXlzhckmPId7MHQsJYC+A2F1cfjyizDtu5HlXQC3Tmi/2/DnqZ+Z
-kwqzieafjYNCbjIgtuZSAXCejI3C+cG3o95Dhf2y27HObxamwP7KbeFf5vzUZsj/
-T2WRGnhyzahCQ5zTudbx+JajK98WBy+9fh6JigCZ5JPv3jrMLX4xRs1GuQGjmIM=
-=Rwf7
------END PGP SIGNATURE-----
-
---kU+YCB/tRrGD+zr2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
