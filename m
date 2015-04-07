@@ -1,54 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: fix of_property_read_string
-Date: Tue, 7 Apr 2015 10:31:24 -0500
-Message-ID: <CAL_JsqLpD8UXoHZ-KF74LaN5HEvu3bpu6aeO9_SOHYrut0nV_Q@mail.gmail.com>
-References: <1428401462-5907-1-git-send-email-Shengzhou.Liu@freescale.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v5 09/15] dt-bindings: Document the STM32 USART bindings
+Date: Tue, 7 Apr 2015 17:49:54 +0200
+Message-ID: <CALszF6BnFz3D=6AT0+o2umy6wtVJg1BGX4rLWmHjrbt=4-ZknQ@mail.gmail.com>
+References: <1428080481-18591-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1428080481-18591-10-git-send-email-mcoquelin.stm32@gmail.com>
+	<CAL_JsqKioFc65Gng0FbOOBCspwxr1-bdy1kShKRM24XyALPmOw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428401462-5907-1-git-send-email-Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shengzhou Liu <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKioFc65Gng0FbOOBCspwxr1-bdy1kShKRM24XyALPmOw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linu>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2015 at 5:11 AM, Shengzhou Liu
-<Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> In of_property_read_string function, strnlen(prop->value, prop->length)
-> is always less or equal to prop->length, and we should allow the '=='
-> condition, so let's remove the original unreasonable condition.
-
-I believe we don't want to allow equal because prop->length should
-include the \0 termination while strnlen will not.
-
-Rob
-
-> Signed-off-by: Shengzhou Liu <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/of/base.c | 2 --
->  1 file changed, 2 deletions(-)
+2015-04-03 19:14 GMT+02:00 Rob Herring <robherring2@gmail.com>:
+> On Fri, Apr 3, 2015 at 12:01 PM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
+>> This adds documentation of device tree bindings for the
+>> STM32 USART
+>>
+>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> ---
+>>  .../devicetree/bindings/serial/st,stm32-usart.txt  | 32 ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>> new file mode 100644
+>> index 0000000..090a3a4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>> @@ -0,0 +1,32 @@
+>> +* STMicroelectronics STM32 USART
+>> +
+>> +Required properties:
+>> +- compatible: Can be either "st,stm32-usart" or "st,stm32-uart" depending on
+>> +whether the device supports synchronous mode.
+>> +- reg: The address and length of the peripheral registers space
+>> +- interrupts: The interrupt line of the USART instance
+>> +- clocks: The input clock of the USART instance
+>> +
+>> +Optional properties:
+>> +- pinctrl: The reference on the pins configuration
+>> +- st,hw-flow-ctrl: bool flag to enable hardware flow control.
 >
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index adb8764..742ff97 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1335,8 +1335,6 @@ int of_property_read_string(struct device_node *np, const char *propname,
->                 return -EINVAL;
->         if (!prop->value)
->                 return -ENODATA;
-> -       if (strnlen(prop->value, prop->length) >= prop->length)
-> -               return -EILSEQ;
->         *out_string = prop->value;
->         return 0;
->  }
-> --
-> 2.1.0.27.g96db324
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> We already have "auto-flow-control" for 8250. Does that work for you?
+
+Yes it works, just that I didn't know about it.
+
+I will change to "auto-flow-control" in next version.
+
+Thanks,
+Maxime
