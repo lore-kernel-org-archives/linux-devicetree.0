@@ -1,192 +1,297 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 4/5] phy: add Broadcom SATA3 PHY driver for Broadcom STB
- SoCs
-Date: Tue, 7 Apr 2015 11:37:43 +0530
-Message-ID: <5523742F.2060105@ti.com>
-References: <1426728222-8197-1-git-send-email-computersforpeace@gmail.com> <1426728222-8197-4-git-send-email-computersforpeace@gmail.com> <55132FD0.2000103@ti.com> <20150328002844.GA32500@ld-irv-0074> <551A3844.6060806@ti.com> <20150402022822.GE32500@ld-irv-0074>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/5] mfd: devicetree: bindings: Add Qualcomm RPM
+ regulator subnodes
+Date: Tue, 7 Apr 2015 07:39:09 +0100
+Message-ID: <20150407063909.GB3461@x1>
+References: <1428363240-2027-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1428363240-2027-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150402022822.GE32500@ld-irv-0074>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1428363240-2027-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 06 Apr 2015, Bjorn Andersson wrote:
 
+> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindin=
+gs.
+>=20
+> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>=20
+> Changes since v2:
+> - s/notes/nodes from Stephen
+>=20
+>  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 217 +++++++++++=
+++++++++--
+>  1 file changed, 205 insertions(+), 12 deletions(-)
 
-On Thursday 02 April 2015 07:58 AM, Brian Norris wrote:
-> On Tue, Mar 31, 2015 at 11:31:40AM +0530, Kishon Vijay Abraham I wrote:
->> On Saturday 28 March 2015 05:58 AM, Brian Norris wrote:
->>> On Thu, Mar 26, 2015 at 03:29:44AM +0530, Kishon Vijay Abraham I wrote:
->>>> On Thursday 19 March 2015 06:53 AM, Brian Norris wrote:
->>>>> +static struct phy *brcm_sata_phy_xlate(struct device *dev,
->>>>> +				       struct of_phandle_args *args)
->>>>> +{
->>>>> +	struct brcm_sata_phy *priv = dev_get_drvdata(dev);
->>>>> +	int i = args->args[0];
->>>>> +
->>>>> +	if (i >= MAX_PORTS || !priv->phys[i].phy) {
->>>>> +		dev_err(dev, "invalid phy: %d\n", i);
->>>>> +		return ERR_PTR(-ENODEV);
->>>>> +	}
->>>>> +
->>>>> +	return priv->phys[i].phy;
->>>>> +}
->>>>
->>>> this xlate is not required at all if the controller device tree node has
->>>> phandle to the phy node (sub node) instead of the phy provider device tree
->>>> node.
->>>
->>> That doesn't match any convention I see in existing SATA phy bindings,
->>> nor do I see how the existing of_phy_simple_xlate() would support this,
->>> unless I instantiate a device for each port's PHY. If I adjust the
->>> device tree as you suggest, and use of_phy_simple_xlate() instead of
->>> this, of_phy_get() can't find the PHY provider, because the provider is
->>> registered to the parent, not the subnode.
->>
->> The phy core should still be able to get the PHY provider.
->> See this in of_phy_provider_lookup
->>                  for_each_child_of_node(phy_provider->dev->of_node, child)
->>                          if (child == node)
->>                                  return phy_provider;
->
-> That just searches for children of the node. It doesn't walk parent
-> nodes.
+Applied, thanks.
 
-okay.. in your phy_create pass the np of the PHYs (sub-node pointer to phy 
-provider).
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Doc=
+umentation/devicetree/bindings/mfd/qcom-rpm.txt
+> index 85e3198..f7c22c5 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> @@ -31,16 +31,6 @@ frequencies.
+>  	Value type: <string-array>
+>  	Definition: must be the three strings "ack", "err" and "wakeup", in=
+ order
+> =20
+> -- #address-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 1
+> -
+> -- #size-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 0
+> -
+>  - qcom,ipc:
+>  	Usage: required
+>  	Value type: <prop-encoded-array>
+> @@ -52,6 +42,188 @@ frequencies.
+>  		    - u32 representing the ipc bit within the register
+> =20
+> =20
+> +=3D SUBNODES
+> +
+> +The RPM exposes resources to its subnodes. The below bindings specif=
+y the set
+> +of valid subnodes that can operate on these resources.
+> +
+> +=3D=3D Regulators
+> +
+> +Regulator nodes are identified by their compatible:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-regulators"
+> +		    "qcom,rpm-pm8901-regulators"
+> +		    "qcom,rpm-pm8921-regulators"
+> +
+> +- vdd_l0_l1_lvs-supply:
+> +- vdd_l2_l11_l12-supply:
+> +- vdd_l3_l4_l5-supply:
+> +- vdd_l6_l7-supply:
+> +- vdd_l8-supply:
+> +- vdd_l9-supply:
+> +- vdd_l10-supply:
+> +- vdd_l13_l16-supply:
+> +- vdd_l14_l15-supply:
+> +- vdd_l17_l18-supply:
+> +- vdd_l19_l20-supply:
+> +- vdd_l21-supply:
+> +- vdd_l22-supply:
+> +- vdd_l23_l24_l25-supply:
+> +- vdd_ncp-supply:
+> +- vdd_s0-supply:
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s3-supply:
+> +- vdd_s4-supply:
+> +	Usage: optional (pm8058 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +- lvs0_in-supply:
+> +- lvs1_in-supply:
+> +- lvs2_in-supply:
+> +- lvs3_in-supply:
+> +- mvs_in-supply:
+> +- vdd_l0-supply:
+> +- vdd_l1-supply:
+> +- vdd_l2-supply:
+> +- vdd_l3-supply:
+> +- vdd_l4-supply:
+> +- vdd_l5-supply:
+> +- vdd_l6-supply:
+> +- vdd_s0-supply:
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s3-supply:
+> +- vdd_s4-supply:
+> +	Usage: optional (pm8901 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +- vdd_l1_l2_l12_l18-supply:
+> +- vdd_l3_l15_l17-supply:
+> +- vdd_l4_l14-supply:
+> +- vdd_l5_l8_l16-supply:
+> +- vdd_l6_l7-supply:
+> +- vdd_l9_l11-supply:
+> +- vdd_l10_l22-supply:
+> +- vdd_l21_l23_l29-supply:
+> +- vdd_l24-supply:
+> +- vdd_l25-supply:
+> +- vdd_l26-supply:
+> +- vdd_l27-supply:
+> +- vdd_l28-supply:
+> +- vdd_ncp-supply:
+> +- vdd_s1-supply:
+> +- vdd_s2-supply:
+> +- vdd_s4-supply:
+> +- vdd_s5-supply:
+> +- vdd_s6-supply:
+> +- vdd_s7-supply:
+> +- vdd_s8-supply:
+> +- vin_5vs-supply:
+> +- vin_lvs1_3_6-supply:
+> +- vin_lvs2-supply:
+> +- vin_lvs4_5_7-supply:
+> +	Usage: optional (pm8921 only)
+> +	Value type: <phandle>
+> +	Definition: reference to regulator supplying the input pin, as
+> +		    described in the data sheet
+> +
+> +The regulator node houses sub-nodes for each regulator within the de=
+vice. Each
+> +sub-node is identified using the node's name, with valid values list=
+ed for each
+> +of the pmics below.
+> +
+> +pm8058:
+> +	l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l1=
+5,
+> +	l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, s0, s1, s2, s3, s=
+4,
+> +	lvs0, lvs1, ncp
+> +
+> +pm8901:
+> +	l0, l1, l2, l3, l4, l5, l6, s0, s1, s2, s3, s4, lvs0, lvs1, lvs2, l=
+vs3,
+> +	mvs
+> +
+> +pm8921:
+> +	s1, s2, s3, s4, s7, s8, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l1=
+1,
+> +	l12, l14, l15, l16, l17, l18, l21, l22, l23, l24, l25, l26, l27, l2=
+8,
+> +	l29, lvs1, lvs2, lvs3, lvs4, lvs5, lvs6, lvs7, usb-switch, hdmi-swi=
+tch,
+> +	ncp
+> +
+> +The content of each sub-node is defined by the standard binding for =
+regulators -
+> +see regulator.txt - with additional custom properties described belo=
+w:
+> +
+> +=3D=3D=3D Switch-mode Power Supply regulator custom properties
+> +
+> +- bias-pull-down:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: enable pull down of the regulator when inactive
+> +
+> +- qcom,switch-mode-frequency:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Frequency (Hz) of the switch-mode power supply;
+> +		    must be one of:
+> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
+> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
+> +		    1480000, 1370000, 1280000, 1200000
+> +
+> +- qcom,force-mode:
+> +	Usage: optional (default if no other qcom,force-mode is specified)
+> +	Value type: <u32>
+> +	Defintion: indicates that the regulator should be forced to a
+> +		   particular mode, valid values are:
+> +		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+> +		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+> +		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
+> +		   QCOM_RPM_FORCE_MODE_AUTO - allow regulator to automatically
+> +					      select its own mode based on
+> +					      realtime current draw, only for:
+> +					      pm8921 smps and ftsmps
+> +
+> +- qcom,power-mode-hysteretic:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: select that the power supply should operate in hysteret=
+ic
+> +		    mode, instead of the default pwm mode
+> +
+> +=3D=3D=3D Low-dropout regulator custom properties
+> +
+> +- bias-pull-down:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: enable pull down of the regulator when inactive
+> +
+> +- qcom,force-mode:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Defintion: indicates that the regulator should not be forced to any
+> +		   particular mode, valid values are:
+> +		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+> +		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+> +		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
+> +		   QCOM_RPM_FORCE_MODE_BYPASS - set regulator to use bypass
+> +						mode, i.e.  to act as a switch
+> +						and not regulate, only for:
+> +						pm8921 pldo, nldo and nldo1200
+> +
+> +=3D=3D=3D Negative Charge Pump custom properties
+> +
+> +- qcom,switch-mode-frequency:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Frequency (Hz) of the swith mode power supply;
+> +		    must be one of:
+> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
+> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
+> +		    1480000, 1370000, 1280000, 1200000
+> +
+>  =3D EXAMPLE
+> =20
+>  	#include <dt-bindings/mfd/qcom-rpm.h>
+> @@ -64,7 +236,28 @@ frequencies.
+>  		interrupts =3D <0 19 0>, <0 21 0>, <0 22 0>;
+>  		interrupt-names =3D "ack", "err", "wakeup";
+> =20
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <0>;
+> +		regulators {
+> +			compatible =3D "qcom,rpm-pm8921-regulators";
+> +			vdd_l1_l2_l12_l18-supply =3D <&pm8921_s4>;
+> +
+> +			s1 {
+> +				regulator-min-microvolt =3D <1225000>;
+> +				regulator-max-microvolt =3D <1225000>;
+> +
+> +				bias-pull-down;
+> +
+> +				qcom,switch-mode-frequency =3D <3200000>;
+> +			};
+> +
+> +			pm8921_s4: s4 {
+> +				regulator-min-microvolt =3D <1800000>;
+> +				regulator-max-microvolt =3D <1800000>;
+> +
+> +				qcom,switch-mode-frequency =3D <1600000>;
+> +				bias-pull-down;
+> +
+> +				qcom,force-mode =3D <QCOM_RPM_FORCE_MODE_AUTO>;
+> +			};
+> +		};
+>  	};
+> =20
 
->
->> Can you post your device tree node here?
->
-> You mean patch 5?
->
-> https://lkml.org/lkml/2015/3/18/937
->
->>>
->>> Can you elaborate on your suggestion?
-
-Change the dt node to something like below..
-
-+
-+		sata@f045a000 {
-+			<snip>
-+
-+			sata0: sata-port@0 {
-+				reg = <0>;
-+				phys = <&sata_phy0>;
-+			};
-+
-+			sata1: sata-port@1 {
-+				reg = <1>;
-+				phys = <&sata_phy1>;
-+			};
-+		};
-+
-+		sata_phy: sata-phy@f0458100 {
-+			compatible = "brcm,bcm7445-sata-phy", "brcm,phy-sata3";
-+			reg = <0x458100 0x1e00>, <0x45804c 0x10>;
-+			reg-names = "phy", "port-ctrl";
-+			#address-cells = <0x1>;
-+			#size-cells = <0x0>;
-+
-+			sata_phy0: sata-phy@0 {
-+				reg = <0>;
-+				#phy-cells = <0>;
-+			};
-+
-+			sata_phy1: sata-phy@1 {
-+				#phy-cells = <0>;
-+			};
-+		};
-  	};
->>>
->>>>> +
->>>>> +static const struct of_device_id brcmstb_sata_phy_of_match[] = {
->>>>> +	{ .compatible	= "brcm,bcm7445-sata-phy" },
->>>>> +	{},
->>>>> +};
->>>>> +MODULE_DEVICE_TABLE(of, brcmstb_sata_phy_of_match);
->>>>> +
->>>>> +static int brcmstb_sata_phy_probe(struct platform_device *pdev)
->>>>> +{
->>>>> +	struct device *dev = &pdev->dev;
->>>>> +	struct device_node *dn = dev->of_node, *child;
->>>>> +	struct brcm_sata_phy *priv;
->>>>> +	struct resource *res;
->>>>> +	struct phy_provider *provider;
->>>>> +	int count = 0;
->>>>> +
->>>>> +	if (of_get_child_count(dn) == 0)
->>>>> +		return -ENODEV;
->>>>> +
->>>>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>>>> +	if (!priv)
->>>>> +		return -ENOMEM;
->>>>> +	dev_set_drvdata(dev, priv);
->>>>> +	priv->dev = dev;
->>>>> +
->>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "port-ctrl");
->>>>> +	if (!res) {
->>>>> +		dev_err(dev, "couldn't get port-ctrl resource\n");
->>>>> +		return -EINVAL;
->>>>> +	}
->>>>> +	/*
->>>>> +	 * Don't request region, since it may be within a region owned by the
->>>>> +	 * SATA driver
->>>>
->>>> It should be in the SATA driver then. Why is it here?
->>>
->>> Did you read the discussion branching here?
->>>
->>> http://article.gmane.org/gmane.linux.drivers.devicetree/114637
->>>
->>> I've seen the exact opposite suggestion already (move it to the PHY
->>> driver), and I'm not sure either suggestion is correct. The same
->>> register block has registers for both the PHY and the SATA controller.
->>
->> IMHO the register space shouldn't be defined based on the programming sequence
->> but by where the register is actually present in the IP. From that thread it
->> doesn't look like it is present in the PHY IP.
->
-> If you say so. But it has plenty of PHY controls packed into those
-> registers, so are you just recommending handling those bits from the
-> SATA driver?
-
-Yes. Let's program only the PHY IP in this driver.
->
-> ...
->
->>>> lets not make the boot noisy. Make it dev_vdbg if it is required.
->>>
->>> I think it's important to have at least some of the three informational
->>> prints that you're suggesting turn into dbg. It's pretty important to
->>> see that we're powering on one or more PHY ports, for both
->>> power/correctness concerns (trying to power on a port that is
->>> OTP-disabled, for instance) and debugging concerns (the suggestions you
->>> made about the device tree yielded a dead SATA, and it was obvious,
->>> because the "powering on" prints were missing).
->>
->> All these are debugging info. Hence it's better to keep in dev_vdbg or dev_dbg.
->>>
->>> I'd kinda like to see the previous power on/off prints above stay as
->>> dev_info(), though the "registered" print might be superfluous, as the
->>> registration info should show up in sysfs.
->>>
->>> Related: I don't see any API for monitoring the PHY status from user
->>> space. e.g., there's nothing useful in /sys/class/phy/*/.
->>
->> Do you really need to monitor the PHY status? We should be careful about
->> exposing anything to the user space since it will become an ABI and we can
->> never modify it.
->
-> Not really, but the debugging info (which you want me to remove by
-> default, and which is unretrievable after system boot) is the next
-
-I didn't ask you to remove it. I just asked you to keep in dev_dbg. If you are 
-interested in the debugging info, all you need to do is change the debug log level.
-
-Cheers
-Kishon
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
