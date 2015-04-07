@@ -1,45 +1,70 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2 1/2] ARM: EXYNOS: Get current parent clock for power
- domain on/off
-Date: Tue, 07 Apr 2015 11:48:47 +0200
-Message-ID: <5523A7FF.2030700@collabora.co.uk>
-References: <1428053635-10855-1-git-send-email-k.kozlowski@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: irqchip heirarchy DT "break" series awareness?
+Date: Tue, 7 Apr 2015 11:59:22 +0200
+Message-ID: <20150407115922.5d4c6233@free-electrons.com>
+References: <20150406144647.GC7873@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428053635-10855-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150406144647.GC7873-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Jason,
 
-On 04/03/2015 11:33 AM, Krzysztof Kozlowski wrote:
-> Using a fixed (by DTS) parent for clocks when turning on the power domain
-> may introduce issues in other drivers. For example when such driver
-> changes the parent during runtime and expects that he is the only place
-> of such change.
-> 
-> Do not rely on DTS providing the fixed parent for such clocks. Instead
-> before switching domain off, grab a current parent of a clock with
-> clk_get_parent().
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Drop "pclk" bindings entirely as suggested by Andrzej Hajda.
->    This was significant change so I did not add Javier's
->    reviewed/tested tags.
+On Mon, 6 Apr 2015 14:46:47 +0000, Jason Cooper wrote:
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> This causes two problems:
+> 
+>  1) Upgrade kernel, but not DTB.
+> 
+> 	System will boot, and print a big fat warning that
+> 	suspend/resume will not work until the DTB is upgraded.
+> 
+>  2) Upgrade DTB, but not kernel.
+> 
+> 	System will fail to boot.
 
-on an Exynos5420 Peach Pit Chromebook:
+(2) has never been something that has ever planned of being guaranteed,
+as far as I know. Only (1) is the supposed consequence of DT ABI
+stability, but definitely not (2), so I'm unsure why you even mention
+(2).
 
-Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> In light of Thomas Petazonni's well-researched talk at ELC:
+> 
+>   "The Device Tree as a stable ABI: a fairy tale?"
+>   http://events.linuxfoundation.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf
+> 
+> I'm confident that #2 won't be an issue.  Distro's and OEMs seem to have
+> worked around the instability by keeping the dtb tied to the kernel
+> version.
+
+I'm glad you raised my slides as an argument in a DT ABI stability
+discussion :-)
+
+However, my slides are definitely not about #2 (which as said earlier,
+was never planned to be something we should worry about), but really
+about #1.
+
+But the point of the slides stand: even for a piece of hardware as
+well-documented as the GIC, as widely used as the GIC, with as many
+bright and smart engineers looking into it, the community has not been
+able to put out a DT binding that can be kept stable. How can we expect
+such a DT binding stability to occur for undocumented hardware, or
+SoC-specific hardware blocks that are definitely a lot less used than
+the GIC ?
 
 Best regards,
-Javier
+
+Thomas Petazzoni
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
