@@ -1,49 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2 0/3] pinctrl: Support for IMG Pistachio
-Date: Tue, 7 Apr 2015 15:24:24 +0200
-Message-ID: <CACRpkdZTTfrE9D7hWzfyq_4tWCFWiZM+96v=dCnEOHLf_BvWRQ@mail.gmail.com>
-References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
-	<20150331140034.GE28951@linux-mips.org>
-	<CAL1qeaFd0dz0wirFzCRfetprjs1vJqm6RrmuPj0sBiEg_mc6pg@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: shmobile: r8a7791: add USB-DMAC device nodes
+Date: Tue, 7 Apr 2015 15:25:03 +0200
+Message-ID: <CAMuHMdULsLM8OzziVeqMtpy3xm1H_vJ7ihbntyx4_qXXeCT7kQ@mail.gmail.com>
+References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1428393231-5272-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaFd0dz0wirFzCRfetprjs1vJqm6RrmuPj0sBiEg_mc6pg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428393231-5272-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 7:20 PM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
-> On Tue, Mar 31, 2015 at 7:00 AM, Ralf Baechle <ralf@linux-mips.org> wrote:
->> On Mon, Mar 30, 2015 at 04:16:53PM -0700, Andrew Bresticker wrote:
->>
->>> This series adds support for the system pin and GPIO controller on the IMG
->>> Pistachio SoC.  Pistachio's system pin controller manages 99 pins, 90 of
->>> which are MFIOs which can be muxed between multiple functions or used
->>> as GPIOs.  The GPIO control for the 90 MFIOs is broken up into banks
->>> of 16.  Pistachio also has a second pin controller, the RPU pin controller,
->>> which will be supported by a future patchset through an extension to this
->>> driver.
->>>
->>> Test on an IMG Pistachio BuB.  Based on mips-for-linux-next which inluces my
->>> series adding Pistachio platform support [1].  A branch with this series is
->>> available at [2].
->>
->> Does this mean you want me to funnel this through the MIPS tree?  If so,
->> could I have an Ack from the maintainers?
->
-> Linus mentioned in v1 that if the only dependency was a Kconfig symbol
-> that he could take it through his tree.  I'm fine either way, though
-> it would be slightly more convenient for it to go through the MIPS
-> tree.  Linus?
+On Tue, Apr 7, 2015 at 9:53 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-I took 1/3 into pinctrl since it touched my core documentation and
-actually even had to be slightly rebased.
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-I will look at 2/3 and 3/3 and provide ACK if I think they are
-all right.
+Gr{oetje,eeting}s,
 
-Yours,
-Linus Walleij
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
