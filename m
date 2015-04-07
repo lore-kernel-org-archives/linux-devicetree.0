@@ -1,40 +1,140 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Tue, 7 Apr 2015 11:03:31 +0200
-Message-ID: <CACRpkdYC_xG90bqnsog_C67WfBi1bcwki1DeN_jozmu5RTW89w@mail.gmail.com>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
-	<1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
-	<20150328134157.000A3C40AE0@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150328134157.000A3C40AE0-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH] dmaengine: xgene-dma: Fix sparse wannings incorrect type in assignment (different base types)
+Date: Tue,  7 Apr 2015 14:39:01 +0530
+Message-ID: <1428397741-1837-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2015 at 2:41 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+This patch fixes compilation sparse warnings like incorrect type in assignment
+(different base types), cast to restricted __le64, symbol
+'__UNIQUE_ID_author__COUNTER__' has multiple initializers etc.
+This patch is based on slave-dma / for-linus branch.
+(commit: 9f2fd0dfa594d857fbdaeda523ff7a46f16567f5 [26/28]
+	dmaengine: Add support for APM X-Gene SoC DMA engine driver)
 
-> However, I think this is going to lead to a future problem. It solves
-> the immediate case of getting an MFD device to be auto populated when
-> the kernel doesn't need to immediately do something. However, I can
-> forsee a situation where the device can be supported by simple-mfd, but
-> at some point it is discovered that better features can be enabled if
-> the mfd device has a proper driver.
+Reported-by: kbuild test robot <fengguang.wu@intel.com>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
+ drivers/dma/xgene-dma.c | 43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-For the general case where access to the MFD needs some mediation
-or marshalling yes, I think this is theoretically possible.
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index aa61935..a89287f 100755
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -238,10 +238,10 @@
+ 	dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
 
-For the most common MMIO case where the MFD devide is a syscon,
-it is not so likely. Or rather extremelt unlikely.
+ struct xgene_dma_desc_hw {
+-	u64 m0;
+-	u64 m1;
+-	u64 m2;
+-	u64 m3;
++	__le64 m0;
++	__le64 m1;
++	__le64 m2;
++	__le64 m3;
+ };
 
-We could restrict the use cases to strictly syscon/MMIO MFD devices
-but it would just be a documentation fix.
+ enum xgene_dma_ring_cfgsize {
+@@ -388,12 +388,12 @@ static bool is_pq_enabled(struct xgene_dma *pdma)
+ 	return !(val & XGENE_DMA_PQ_DISABLE_MASK);
+ }
 
-Yours,
-Linus Walleij
+-static void xgene_dma_cpu_to_le64(u64 *desc, int count)
++static void xgene_dma_cpu_to_le64(struct xgene_dma_desc_hw *desc)
+ {
+-	int i;
+-
+-	for (i = 0; i < count; i++)
+-		desc[i] = cpu_to_le64(desc[i]);
++	desc->m0 = cpu_to_le64(((u64 *)desc)[0]);
++	desc->m1 = cpu_to_le64(((u64 *)desc)[1]);
++	desc->m2 = cpu_to_le64(((u64 *)desc)[2]);
++	desc->m3 = cpu_to_le64(((u64 *)desc)[3]);
+ }
+
+ static u16 xgene_dma_encode_len(u32 len)
+@@ -499,9 +499,9 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
+
+ skip_additional_src:
+ 	/* Hardware stores descriptor in little endian format */
+-	xgene_dma_cpu_to_le64(desc1, 4);
++	xgene_dma_cpu_to_le64(desc1);
+ 	if (desc2)
+-		xgene_dma_cpu_to_le64(desc2, 4);
++		xgene_dma_cpu_to_le64(desc2);
+ }
+
+ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+@@ -540,8 +540,8 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+ 	}
+
+ 	/* Hardware stores descriptor in little endian format */
+-	xgene_dma_cpu_to_le64(desc1, 4);
+-	xgene_dma_cpu_to_le64(desc2, 4);
++	xgene_dma_cpu_to_le64(desc1);
++	xgene_dma_cpu_to_le64(desc2);
+
+ 	/* Update meta data */
+ 	*nbytes = len;
+@@ -1895,9 +1895,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_dma = devm_ioremap(&pdev->dev, res->start,
+ 				     resource_size(res));
+-	if (IS_ERR(pdma->csr_dma)) {
++	if (!pdma->csr_dma) {
+ 		dev_err(&pdev->dev, "Failed to ioremap csr region");
+-		return PTR_ERR(pdma->csr_dma);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get DMA ring csr region */
+@@ -1909,9 +1909,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_ring =  devm_ioremap(&pdev->dev, res->start,
+ 				       resource_size(res));
+-	if (IS_ERR(pdma->csr_ring)) {
++	if (!pdma->csr_ring) {
+ 		dev_err(&pdev->dev, "Failed to ioremap ring csr region");
+-		return PTR_ERR(pdma->csr_ring);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get DMA ring cmd csr region */
+@@ -1923,9 +1923,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_ring_cmd = devm_ioremap(&pdev->dev, res->start,
+ 					  resource_size(res));
+-	if (IS_ERR(pdma->csr_ring_cmd)) {
++	if (!pdma->csr_ring_cmd) {
+ 		dev_err(&pdev->dev, "Failed to ioremap ring cmd csr region");
+-		return PTR_ERR(pdma->csr_ring_cmd);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get efuse csr region */
+@@ -1937,9 +1937,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_efuse = devm_ioremap(&pdev->dev, res->start,
+ 				       resource_size(res));
+-	if (IS_ERR(pdma->csr_efuse)) {
++	if (!pdma->csr_efuse) {
+ 		dev_err(&pdev->dev, "Failed to ioremap efuse csr region");
+-		return PTR_ERR(pdma->csr_efuse);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get DMA error interrupt */
+@@ -2085,6 +2085,5 @@ module_platform_driver(xgene_dma_driver);
+
+ MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
+ MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
+-MODULE_AUTHOR("Loc Ho <lho@apm.com>");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION("1.0");
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
