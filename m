@@ -1,39 +1,48 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v5 10/15] serial: stm32-usart: Add STM32 USART Driver
-Date: Tue, 7 Apr 2015 09:56:42 +0200
-Message-ID: <CALszF6CFBm5jJUF95K=6_gRHijSk3Addpw13_q3Li-i8fqP6tA@mail.gmail.com>
-References: <1428080481-18591-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1428080481-18591-11-git-send-email-mcoquelin.stm32@gmail.com>
-	<1428083006.13180.35.camel@perches.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] spi: bcm53xx: Refactor to make driver nonspecific to
+ 53xx SoCs
+Date: Tue, 7 Apr 2015 11:03:09 +0300
+Message-ID: <CAHp75Vf3Fyw-ZgcgsCki6_TvqMh9A3+dmeRLq42pcTj7YAieQQ@mail.gmail.com>
+References: <1428002603-21892-1-git-send-email-jonathar@broadcom.com>
+	<1428002603-21892-3-git-send-email-jonathar@broadcom.com>
+	<CAHp75Vf0JrB5pqNEouLzyOf5mmi05Ut_cybd37suTrLbJOFHKA@mail.gmail.com>
+	<5522D0BA.2050805@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1428083006.13180.35.camel@perches.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>, Peter Meerwald <pmeerw@pmeerw.net>, Paul Bolle <pebolle@tiscali.nl>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linu>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5522D0BA.2050805-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-04-03 19:43 GMT+02:00 Joe Perches <joe@perches.com>:
-> On Fri, 2015-04-03 at 19:01 +0200, Maxime Coquelin wrote:
->> This drivers adds support to the STM32 USART controller, which is a
->> standard serial driver.
+On Mon, Apr 6, 2015 at 9:30 PM, Jonathan Richardson
+<jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On 15-04-03 06:35 AM, Andy Shevchenko wrote:
+>> On Thu, Apr 2, 2015 at 10:23 PM, Jonathan Richardson
+>> <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>> The Broadcom MSPI controller is used on various SoCs. It is being
+>>> renamed so that it can be extended and reused on other chips. It is
+>>> renamed to bcm-mspi.
+>>>
+>> What if you resend this one with -M -C applied?
+>>
+>>
 >
-> trivia:
+> I'm not seeing any difference in the patches unfortunately. I'll keep
+> playing with it and re-send if I can find a way to improve it.
 >
->> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-> []
->> +static struct uart_ops stm32_uart_ops = {
+> The changes are just renaming variables, structures, functions, file
+> name to get rid of 53xx and replace with mspi. The config is renamed
+> from SPI_BCM53XX to SPI_BCMA_MSPI.
 >
-> could be const
 
-i would even say, should be const.
+Better to split: a) moving, b) renaming something inside.
 
->
-> and it could be updated in a separate patch later too.
->
-
-Nope, I will send another version anyway, so it will be part of the v6.
-
-Thanks for the review,
-Maxime
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
