@@ -1,106 +1,50 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 2/5] mmc: mediatek: Add Mediatek MMC driver
-Date: Tue, 7 Apr 2015 16:01:46 +0200
-Message-ID: <CABuKBe+MFHJO8GXRg5KYs2t+j6U4Ynv_hCeW0YQCrS_eZ-fuLA@mail.gmail.com>
-References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
-	<1426562035-16709-3-git-send-email-chaotian.jing@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2 3/3] pinctrl: Add Pistachio SoC pin control driver
+Date: Tue, 7 Apr 2015 16:13:16 +0200
+Message-ID: <CACRpkdYfN_AV47G8cni=gApcwf8nx_fUrreGZp7ASRsU5PM1bA@mail.gmail.com>
+References: <1427757416-14491-1-git-send-email-abrestic@chromium.org>
+	<1427757416-14491-4-git-send-email-abrestic@chromium.org>
+	<1427789415.2408.45.camel@x220>
+	<CAL1qeaG70_42p8r9ogHxMv2h-yx_TENYV_gZbX1wQMhqSaiFpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1426562035-16709-3-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc@vger.kernel.org, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, bin.zhang@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaG70_42p8r9ogHxMv2h-yx_TENYV_gZbX1wQMhqSaiFpg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Paul Bolle <pebolle@tiscali.nl>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>, Kevin Cernekee <cernekee@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-17 4:13 GMT+01:00 Chaotian Jing <chaotian.jing@mediatek.com>:
-> Add Mediatek MMC driver code
+On Tue, Mar 31, 2015 at 6:56 PM, Andrew Bresticker
+<abrestic@chromium.org> wrote:
+> Hi Paul,
 >
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  drivers/mmc/host/Kconfig  |    8 +
->  drivers/mmc/host/Makefile |    1 +
->  drivers/mmc/host/mtk-sd.c | 1412 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1421 insertions(+)
->  create mode 100644 drivers/mmc/host/mtk-sd.c
+> On Tue, Mar 31, 2015 at 1:10 AM, Paul Bolle <pebolle@tiscali.nl> wrote:
+>> The patch adds a mismatch between the Kconfig symbol (a bool) and the
+>> code (which suggests that a modular build is also possible).
 >
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 61ac63a..8b64377 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -768,3 +768,11 @@ config MMC_TOSHIBA_PCI
->         tristate "Toshiba Type A SD/MMC Card Interface Driver"
->         depends on PCI
->         help
-> +
-> +config MMC_MTK
-> +       tristate "MediaTek SD/MMC Card Interface support"
-> +       help
-> +         This selects the MediaTek(R) Secure digital and Multimedia card Interface.
-> +         If you have a machine with a integrated SD/MMC card reader, say Y or M here.
-> +         This is needed if support for any SD/SDIO/MMC devices is required.
-> +         If unsure, say N.
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index 6a7cfe0..161b3e4 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_MMC_SDHCI_F_SDH30)       += sdhci_f_sdh30.o
->  obj-$(CONFIG_MMC_SDHCI_SPEAR)  += sdhci-spear.o
->  obj-$(CONFIG_MMC_WBSD)         += wbsd.o
->  obj-$(CONFIG_MMC_AU1X)         += au1xmmc.o
-> +obj-$(CONFIG_MMC_MTK)           += mtk-sd.o
->  obj-$(CONFIG_MMC_OMAP)         += omap.o
->  obj-$(CONFIG_MMC_OMAP_HS)      += omap_hsmmc.o
->  obj-$(CONFIG_MMC_ATMELMCI)     += atmel-mci.o
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> new file mode 100644
-> index 0000000..86c999b
-> --- /dev/null
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -0,0 +1,1412 @@
-> +/*
-> + * Copyright (c) 2014-2015 MediaTek Inc.
-> + * Author: Chaotian.Jing <chaotian.jing@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/ioport.h>
-> +#include <linux/irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <linux/mmc/card.h>
-> +#include <linux/mmc/core.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/mmc.h>
-> +#include <linux/mmc/sd.h>
-> +#include <linux/mmc/sdio.h>
-> +
-> +#define MAX_GPD_NUM         (1 + 1)    /* one null gpd */
-> +#define MAX_BD_NUM          1024
-> +#define MAX_BD_PER_GPD      MAX_BD_NUM
+> Nearly all of the pinctrl drivers (with the exception of qcom and
+> intel) are like this.  They use a bool Kconfig symbol but they are
+> written so that they could be built as a module in the future.
 
-This looks strange.
-Why don't you define MAX_GPD_NUM as two?
-Why do you define MAX_BD_PER_GPD when it is the same as MAX_BD_NUM?
+There are many aspects to this and I have no strong opinion,
+it doesn't really disturb me either way as both are familiar
+ways of writing drivers be it modular or not.
 
-Cheers,
-Matthias
+I think it's more disturbing that bool drivers have .remove()
+functions, and as pointed out elsewhere this is because the
+module can still be bound/unbound from sysfs even if compiled
+into the kernel and then that code path will actually be executed.
 
--- 
-motzblog.wordpress.com
+And as I remarked again, elsewhere, that can be overcome
+by adding the .suppress_bind_attrs = true to struct device_driver
+inside the platform driver.
+
+So if going through all the hazzle to remove anything compiled-out
+for non-modules, also take the step above removing .remove()
+calls and setting .suppress_bind_attrs.
+
+I will maybe do so sometime myself for any bool drivers...
+
+Yours,
+Linus Walleij
