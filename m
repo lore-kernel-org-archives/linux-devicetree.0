@@ -1,151 +1,226 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock
- support
-Date: Wed, 8 Apr 2015 11:38:32 +0100
-Message-ID: <20150408103832.GG5162@x1>
-References: <1428432239-4114-1-git-send-email-lee.jones@linaro.org>
- <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
- <20150407191746.GA26727@lukather>
- <20150408081450.GB5162@x1>
- <20150408094349.GC26727@lukather>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIIHYyIDIvNV0gbW1jOiBtZWRpYXRlazogQWRkIE1lZGlhdA==?=
+	=?UTF-8?B?ZWsgTU1DIGRyaXZlcg==?=
+Date: Wed, 8 Apr 2015 12:38:56 +0200
+Message-ID: <CAPDyKFrM94E8xXN_q0OqciOHC8WBC+fTOroSnnm+HDTOmWg6Gw@mail.gmail.com>
+References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
+	<1426562035-16709-3-git-send-email-chaotian.jing@mediatek.com>
+	<CAPDyKFoUg1snXeOwCiKPF_daxAAfcWE0nUbRAj23Z=k9z5FCyA@mail.gmail.com>
+	<B077351396223C4F8FE8C4C13672A9CA609795F3@mtkmbs33n1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150408094349.GC26727@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <B077351396223C4F8FE8C4C13672A9CA609795F3@mtkmbs33n1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?Q2hhb3RpYW4gSmluZyAo5LqV5pyd5aSpKQ==?= <Chaotian.Jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?SmFtZXNKSiBMaWFvICjlu5blu7rmmbop?= <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, HONGZHOU Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@me>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 08 Apr 2015, Maxime Ripard wrote:
+[...]
 
-> On Wed, Apr 08, 2015 at 09:14:50AM +0100, Lee Jones wrote:
-> > > > +
-> > > > +		    This property is not to be abused.  It is only to be use=
-d to
-> > > > +		    protect platforms from being crippled by gated clocks, n=
-ot
-> > > > +		    as a convenience function to avoid using the framework
-> > > > +		    correctly inside device drivers.
-> > >=20
-> > > Disregarding what's stated here, I'm pretty sure that this will
-> > > actually happen. Where do you place the cursor?
-> >=20
-> > That's up to Mike.
->=20
-> Except that Mike won't review any of the DT changes, so he won't be
-> able to refrain users from using it. Let alone out-of-tree DTs using =
-a
-> mainline kernel.
+>> > +
+>> > +struct mt_bdma_desc {
+>> > +       u32 first_u32;
+>> > +#define BDMA_DESC_EOL          (1 << 0)
+>> > +#define BDMA_DESC_CHECKSUM     (0xff << 8) /* bit8 ~ bit15 */
+>> > +#define BDMA_DESC_BLKPAD       (1 << 17)
+>> > +#define BDMA_DESC_DWPAD                (1 << 18)
+>> > +       u32 next;
+>> > +       u32 ptr;
+>> > +       u32 second_u32;
+>> > +#define BDMA_DESC_BUFLEN       (0xffff) /* bit0 ~ bit15 */
+>> > +};
+>> > +
+>> > +struct msdc_dma {
+>> > +       struct scatterlist *sg; /* I/O scatter list */
+>> > +       struct mt_gpdma_desc *gpd;              /* pointer to gpd
+>> array */
+>> > +       struct mt_bdma_desc *bd;                /* pointer to bd
+>> array */
+>> > +       dma_addr_t gpd_addr;    /* the physical address of gpd array */
+>> > +       dma_addr_t bd_addr;     /* the physical address of bd array */
+>> > +};
+>>
+>> This looks weird from DMA perspective. Can you elaborate on why you
+>> can't use the dmaengine API?
+>>
+> The gpd and bd structure are determined by the MSDC hw, and, the DMA controller is a part of the MSDC hw, different with the chain dma implemented by the kernel.
 
-Ideally Mike should be Cc'ed on patches using clock bindings, but if
-he isn't the DT guys are smart enough to either make the right
-decisions themselves (Rob has Acked these bindings already, so will be
-on the lookout for misuse, I'm sure), or ask for Mike's help.
+Hmm. I haven't reviewed the DMA related parts in detail. I will do
+that when you have sent the next version.
 
-> > > Should we create a new driver for our RAM controller, or do we wa=
-nt to
-> > > use clock-always-on?
-> >=20
-> > I would say that if all the driver did was to enable clocks, then y=
-ou
-> > should use this instead.  This binding was designed specifically fo=
-r
-> > that purpose.
-> >=20
-> > However, if the aforementioned driver clock can be safely gated, th=
-en
-> > it should not be an always-on clock.
->=20
-> Yeah, of course, I understand the original intent of it, but that
-> argument, which might very well be true at one point in time, might
-> not be true anymore two or three releases later.
+>> > +
+>> > +struct msdc_host {
+>> > +       struct device *dev;
+>> > +       struct mmc_host *mmc;   /* mmc structure */
+>> > +       int cmd_rsp;
+>> > +
+>> > +       spinlock_t lock;
+>> > +       struct mmc_request *mrq;
+>> > +       struct mmc_command *cmd;
+>> > +       struct mmc_data *data;
+>> > +       int error;
+>> > +
+>> > +       void __iomem *base;             /* host base address */
+>> > +
+>> > +       struct msdc_dma dma;    /* dma channel */
+>> > +
+>> > +       u32 timeout_ns;         /* data timeout ns */
+>> > +       u32 timeout_clks;       /* data timeout clks */
+>> > +
+>> > +       struct pinctrl *pinctrl;
+>> > +       struct pinctrl_state *pins_default;
+>> > +       struct pinctrl_state *pins_uhs;
+>> > +       struct delayed_work req_timeout;
+>> > +       int irq;                /* host interrupt */
+>> > +
+>> > +       struct clk *src_clk;    /* msdc source clock */
+>> > +       u32 mclk;               /* mmc subsystem clock */
+>> > +       u32 hclk;               /* host clock speed */
+>> > +       u32 sclk;               /* SD/MS clock speed */
+>> > +       bool ddr;
+>> > +};
+>> > +
+>> > +static void sdr_set_bits(void __iomem *reg, u32 bs)
+>> > +{
+>> > +       u32 val = readl(reg);
+>> > +
+>> > +       val |= bs;
+>> > +       writel(val, reg);
+>> > +}
+>> > +
+>> > +static void sdr_clr_bits(void __iomem *reg, u32 bs)
+>> > +{
+>> > +       u32 val = readl(reg);
+>> > +
+>> > +       val &= ~(u32)bs;
+>> > +       writel(val, reg);
+>> > +}
+>> > +
+>> > +static void sdr_set_field(void __iomem *reg, u32 field, u32 val)
+>> > +{
+>> > +       unsigned int tv = readl(reg);
+>> > +
+>> > +       tv &= ~field;
+>> > +       tv |= ((val) << (ffs((unsigned int)field) - 1));
+>> > +       writel(tv, reg);
+>> > +}
+>>
+>> A common thought for all the three above functions:
+>>
+>> Have you considered using a cache variable for those registers that
+>> often gets updated? In that way you would have to read the register
+>> value every time when you want to write to it. It should improve
+>> performance a bit.
+>>
+> These register can be modified by the MSDC hw, cannot cache it.
 
-Why?  The H/W isn't going to change in two or three releases.  The
-clocks designated as 'always-on' will have to be on forever, or
-synonymously, 'always'.
+Is that true for all registers?
 
-> And that driver might actually rely on the fact that the clock is shu=
-t
-> down, which won't be the case.
+Anyway, let's leave this as is.
 
-I think you are missing the point of this binding.  The driver can
-never rely on that in this use-case.  If the clock is off, there is no
-device driver, period.=20
+>> > +
+>> > +static void sdr_get_field(void __iomem *reg, u32 field, u32 *val)
+>> > +{
+>> > +       unsigned int tv = readl(reg);
+>> > +
+>> > +       *val = ((tv & field) >> (ffs((unsigned int)field) - 1));
+>> > +}
+>> > +
+>> > +static void msdc_reset_hw(struct msdc_host *host)
+>> > +{
+>> > +       u32 val;
+>> > +
+>> > +       sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_RST);
+>> > +       while (readl(host->base + MSDC_CFG) & MSDC_CFG_RST)
+>> > +               cpu_relax();
+>> > +
+>> > +       sdr_set_bits(host->base + MSDC_FIFOCS, MSDC_FIFOCS_CLR);
+>> > +       while (readl(host->base + MSDC_FIFOCS) & MSDC_FIFOCS_CLR)
+>> > +               cpu_relax();
+>> > +
+>> > +       val = readl(host->base + MSDC_INT);
+>> > +       writel(val, host->base + MSDC_INT);
+>> > +}
+>> > +
+>> > +static void msdc_cmd_next(struct msdc_host *host,
+>> > +               struct mmc_request *mrq, struct mmc_command *cmd);
+>>
+>> Please investigate whether you can move around the code to prevent
+>> this static declaration of the function.
+>>
+> It is hard to do it, because the first cmd may be CMD23, and do the next is send the mrq->cmd, so, there is a loop here, at least on method need do static declaration,
 
-> Introducing a DT interface solely by refering to the current state of
-> a driver is a bit odd.
+Okay.
 
-I'm not sure I get your point.  This binding has nothing to do with
-drivers.
+[...]
 
-> > > Do we really want to enforce this if we ever gain a driver that w=
-ould
-> > > actually be able to manage its clock (like do we want the CPU clo=
-ck to
-> > > never *ever* be gated just because we don't have a cpuidle/hotplu=
-g
-> > > driver yet?)
-> >=20
-> > As I've just mentioned, if a clock 'can' be turned off, this bindin=
-g
-> > should never be used. Situations where using always-on as a stop-ga=
-p
-> > due to a lack of current functionality is what the paragraph above =
-is
-> > trying to mitigate.
->=20
-> But it's not really what this property is about. What this property
-> describes is that these clocks should never be gated. Any point in
-> time during the life of the system AND with in any kernel version.
+>> > +/* clock control primitives */
+>> > +static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
+>> > +{
+>> > +       u32 timeout, clk_ns;
+>> > +       u32 mode = 0;
+>> > +
+>> > +       host->timeout_ns = ns;
+>> > +       host->timeout_clks = clks;
+>> > +       if (host->sclk == 0) {
+>> > +               timeout = 0;
+>> > +       } else {
+>> > +               clk_ns  = 1000000000UL / host->sclk;
+>> > +               timeout = (ns + clk_ns - 1) / clk_ns + clks;
+>> > +               /* in 1048576 sclk cycle unit */
+>> > +               timeout = (timeout + (1 << 20) - 1) >> 20;
+>> > +               sdr_get_field(host->base + MSDC_CFG,
+>> MSDC_CFG_CKMOD, &mode);
+>> > +               /*DDR mode will double the clk cycles for data timeout */
+>>
+>> How do you know you will be using DDR at this point? Don't you need to
+>> check for that?
+>>
+> The MSDC_CFG_CKMODE can show current mode(DDR or SDR).
 
-You got it, that's correct -- these clocks should never be gated.
+Ah, thanks. Got it.
 
-So why would that ever change?  If that is likely (or even possible)
-to change in the future then this binding should not be used.
+[...]
 
-To reiterate; this binding should be used on ungatable clocks only.
-Non-negotiable, non-changeable either by the introduction of new
-functionality/support or kernel version.
+>> > +static void msdc_request_done(struct msdc_host *host, struct
+>> mmc_request *mrq)
+>> > +{
+>> > +       unsigned long flags;
+>> > +
+>> > +       spin_lock_irqsave(&host->lock, flags);
+>> > +       cancel_delayed_work(&host->req_timeout);
+>>
+>> This looks racy.
+>>
+>> Don't you need a cancel_delayed_work_sync() from somewhere, to be sure
+>> that work isn't preemted after the "host->mrq" has been reset here? Or
+>> maybe there is another way!? Of course that can't be done with the
+>> spin_locks held, but I asume you get my point.
+> Yes, I get your point, actually, we set a 5s timeout for each request, and, if the work already pending(means that some error happens), we do not wait it,
+> And the work will set the event to timeout and return,
+> So, maybe a good solution is that need check the return value of the cancel_delayed_work(), if it is pending, directly return, and do not set the host->mrq to 0 to avoid the race condition,
 
-> > > Have you seen the numerous NAK on such approach Mike did?
-> >=20
-> > I haven't, but the folks reviewing previous versions have.  Do you
-> > have something specific in mind that you'd like to bring to my
-> > attention?
->=20
-> Unfortunately, I haven't been able to dig out such mails. But it's wh=
-y
-> we ended up with clock protection code in various clock drivers
-> including:
->=20
-> AT91: http://lxr.free-electrons.com/source/drivers/clk/at91/clk-slow.=
-c#L484
-> iMX28: http://lxr.free-electrons.com/source/drivers/clk/mxs/clk-imx28=
-=2Ec#L154
-> Rockchip: http://lxr.free-electrons.com/source/drivers/clk/rockchip/c=
-lk.c#L320
-> sunXi: http://lxr.free-electrons.com/source/drivers/clk/sunxi/clk-sun=
-xi.c#L1183
-> Zynq: http://lxr.free-electrons.com/source/drivers/clk/zynq/clkc.c#L5=
-04
->=20
-> Which is much more flexible, since you won't have to modify the DT to
-> change which clocks are to be left enabled, as well as way easier to
-> debug if you ever have to remove that property from the DT.
+That should work.
 
-You're right, you don't have the change the DT in these cases.  You
-have to write new C code, which is _less_ flexible.
+[...]
 
-So all these platforms are adding their own hand-rolled version of
-this binding, adding more duplication and cruft to the kernel.
-Instead they can use this 'always-on' and we can consolidate and strip
-it all out.
+>>
+>> "ocr_avail" should be fetched from the vmmc regulator, when you invoke
+>> mmc_regulator_get_supply() above.
+> Yes, I also want to remove it, but, Not all devices use regulator, our SDIO device which connected on MSDC3, it's power is controlled by gpio.
+> This because the regulator of the PMU is not enough.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+So could you perhaps use a "gpio regulator" for this GPIO pin? There
+is already support to easily describe such in DT.
+
+Or it is a "reset GPIO" you are talking about?
+
+[...]
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
