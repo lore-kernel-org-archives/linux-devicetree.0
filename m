@@ -1,44 +1,70 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: Add support for PM8916 GPIO's and MPP's
-Date: Tue, 7 Apr 2015 19:00:12 -0700
-Message-ID: <CAJAp7OgC_-AStTQphR9jyRO5JdHaw1Cg3NWmT9sX70BCNMYCHA@mail.gmail.com>
-References: <1427794638-32732-1-git-send-email-ivan.ivanov@linaro.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
+Date: Wed, 8 Apr 2015 02:20:07 +0000
+Message-ID: <HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
+References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427794638-32732-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 2:37 AM, Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Add compatible string definitions and supported pin functions.
->
-> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-[..]
-> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-[..]
->
-> +#define PM8916_GPIO1_BAT_ALRM_OUT      PMIC_GPIO_FUNC_FUNC1
-> +#define PM8916_GPIO1_KEYP_DRV          PMIC_GPIO_FUNC_FUNC2
-> +#define PM8916_GPIO2_DIV_CLK           PMIC_GPIO_FUNC_FUNC1
-> +#define PM8916_GPIO2_SLEEP_CLK         PMIC_GPIO_FUNC_FUNC2
-> +#define PM8916_GPIO3_KEYP_DRV          PMIC_GPIO_FUNC_FUNC1
-> +#define PM8916_GPIO4_KEYP_DRV          PMIC_GPIO_FUNC_FUNC2
-> +
-
-The documentation I have for the PM8916 is vague, but lists slightly
-different functions. Andy, could you help out with verifying the
-functions of the gpios on this pmic?
-
-For the rest of the patch:
-Acked-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgR2VlcnQtc2FuLA0KDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gVHVlLCBBcHIgNywg
+MjAxNSBhdCA5OjUzIEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEu
+dWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBETUEgcHJvcGVydGll
+cyB0byB0aGUgSFNVU0Igbm9kZS4NCj4gDQo+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaCENCg0K
+VGhhbmsgeW91IGZvciB5b3VyIHJldmlldyENCg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGly
+byBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4g
+PiAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpIHwgMyArKysNCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL3I4YTc3OTEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEuZHRzaQ0KPiA+
+IGluZGV4IGRiMzc3MmUuLjVmMjBhZDQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvcjhhNzc5MS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNp
+DQo+ID4gQEAgLTcyMiw2ICs3MjIsOSBAQA0KPiA+ICAgICAgICAgICAgICAgICByZW5lc2FzLGJ1
+c3dhaXQgPSA8ND47DQo+ID4gICAgICAgICAgICAgICAgIHBoeXMgPSA8JnVzYjAgMT47DQo+ID4g
+ICAgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJ1c2IiOw0KPiA+ICsgICAgICAgICAgICAgICBk
+bWFzID0gPCZ1c2JfZG1hYzAgMD4sIDwmdXNiX2RtYWMwIDE+LA0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgPCZ1c2JfZG1hYzEgMD4sIDwmdXNiX2RtYWMxIDE+Ow0KPiA+ICsgICAgICAgICAg
+ICAgICBkbWEtbmFtZXMgPSAicngwIiwgInR4MSIsICJyeDIiLCAidHgzIjsNCj4gDQo+IFRoZSBu
+dW1iZXJpbmcgbG9va3MgYSBiaXQgc3RyYW5nZSwgZ2l2ZW4gdGhlIGNvZGUgbG9va3MgdXAgYm90
+aCB0eCBhbmQgcngNCj4gRE1BIGNoYW5uZWxzIGZvciBlYWNoIGNoYW5uZWwgaW5kZXguIElzIGl0
+IGNvcnJlY3Q/DQo+IA0KPiBUaGUgYmluZGluZyBkb2N1bWVudGF0aW9uICh3aGljaCBsYWNrcyBv
+biBleGFtcGxlKSBzdGF0ZXM6DQo+IA0KPiAgIC0gZG1hLW5hbWVzIDogTXVzdCBjb250YWluIGEg
+bGlzdCBvZiBETUEgbmFtZXM6DQo+ICAgIC0gdHgwIC4uLiB0eDxuPg0KPiAgICAtIHJ4MCAuLi4g
+cng8bj4NCj4gICAgIC0gVGhpcyA8bj4gbWVhbnMgRG5GSUZPIGluIFVTQkhTIG1vZHVsZS4NCj4g
+DQo+IEFzIHRoZXJlIGFyZSA0IERuRklGT3MsIEknZCBleHBlY3QgdHgwLi50eDMgYW5kIHJ4MC4u
+cngzLg0KPiANCj4gQ2FuIHlvdSBwbGVhc2UgY2xhcmlmeT8NCg0KSSB3cm90ZSBzb21lIGluZm9y
+bWF0aW9uIGJlbG93Lg0KQnV0LCBzaW5jZSBpdCBpcyBjb21wbGV4IGhhcmR3YXJlLCBJIGRvbid0
+IGtub3cgSSBjYW4gZXhwbGFpbiB0aGlzIGFzIHdlbGwuLi4NCg0KQXQgZmlyc3QsIFItQ2FyIEdl
+bjIgaGFzIDIgVVNCLURNQUNzIGFuZCA0IGNoYW5uZWxzOg0KIFVTQi1ETUFDIDA6IGNoMA0KIFVT
+Qi1ETUFDIDA6IGNoMQ0KIFVTQi1ETUFDIDE6IGNoMA0KIFVTQi1ETUFDIDE6IGNoMQ0KUmVtYXJr
+czogSSBkb24ndCBrbm93IHdoeSBidXQgcGVyZm9ybWFuY2Ugb2YgVVNCLURNQUMgMCBpcyBnb29k
+IHRoYW4gVVNCLURNQUMgMS4NCiAgICAgICAgICAoUGxlYXNlIHJlZmVyIHRvIHRoZSBUYWJsZSA2
+NC4xIG9mIHRoZSBkYXRhc2hlZXQuKQ0KDQpTbywgSSB3cm90ZSBkbWFzIHBhcmFtZXRlciBpbiBo
+c3VzYiBhcyB0aGUgZm9sbG93aW5nOg0KDQo+ID4gKyAgICAgICAgICAgICAgIGRtYXMgPSA8JnVz
+Yl9kbWFjMCAwPiwgPCZ1c2JfZG1hYzAgMT4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICA8
+JnVzYl9kbWFjMSAwPiwgPCZ1c2JfZG1hYzEgMT47DQoNCg0KQW5kLCBSLUNhciBHZW4yIGhhcyA0
+IERuRklGT3MgaW4gSFNVU0IuIHRvIGF2b2lkIGNvbXBsZXggaGFuZGxpbmcgZm9yIERuRklGT3Ms
+DQp0aGUgcmVuZXNhc191c2JocyBkcml2ZXIgdXNlcyBlYWNoIERuRklGTyBhcyBUWCBvciBSWCBk
+aXJlY3Rpb24gKG5vdCBiaS1kaXJlY3Rpb24pLg0KU28sIEkgd3JvdGUgZG1hLW5hbWVzIHBhcmFt
+ZXRlciBhcyB0aGUgZm9sbG93aW5nOg0KDQo+ID4gKyAgICAgICAgICAgICAgIGRtYS1uYW1lcyA9
+ICJyeDAiLCAidHgxIiwgInJ4MiIsICJ0eDMiOw0KDQotIEQwRklGTyBhcyBSWCAoQWxzbyBpdCBp
+cyBjb25uZWN0ZWQgdG8gVVNCLURNQUMgMDogY2gwKQ0KLSBEMUZJRk8gYXMgVFggKEFsc28gaXQg
+aXMgY29ubmVjdGVkIHRvIFVTQi1ETUFDIDA6IGNoMSkNCi0gRDJGSUZPIGFzIFJYIChBbHNvIGl0
+IGlzIGNvbm5lY3RlZCB0byBVU0ItRE1BQyAxOiBjaDApDQotIEQzRklGTyBhcyBUWCAoQWxzbyBp
+dCBpcyBjb25uZWN0ZWQgdG8gVVNCLURNQUMgMTogY2gxKQ0KDQpCZXN0IHJlZ2FyZHMsDQpZb3No
+aWhpcm8gU2hpbW9kYQ0KDQo+IFRoYW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiAN
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRl
+cmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGlu
+dXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
+YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
+ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
+ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
+bGRzDQo=
