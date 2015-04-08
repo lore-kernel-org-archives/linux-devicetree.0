@@ -1,500 +1,120 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: [PATCH 2/2] axs_nand - add driver for NAND controller used on Synopsys AXS dev boards
-Date: Wed,  8 Apr 2015 11:57:58 +0300
-Message-ID: <1428483478-22771-2-git-send-email-abrodkin@synopsys.com>
-References: <1428483478-22771-1-git-send-email-abrodkin@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428483478-22771-1-git-send-email-abrodkin@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet.Gupta1@synopsys.com
-Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, David Woodhouse <dwmw2@infradead.org>, Francois Bedard <Francois.Bedard@synopsys.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 01/12] DT: leds: Improve description of flash LEDs
+ related properties
+Date: Wed, 8 Apr 2015 12:11:29 +0300
+Message-ID: <20150408091129.GT20756@valkosipuli.retiisi.org.uk>
+References: <1427809965-25540-1-git-send-email-j.anaszewski@samsung.com>
+ <1427809965-25540-2-git-send-email-j.anaszewski@samsung.com>
+ <20150403120910.GL20756@valkosipuli.retiisi.org.uk>
+ <5524ECDC.1070609@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5524ECDC.1070609@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Reviewed-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Francois Bedard <fbedard@synopsys.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/mtd/axs-nand.txt |  17 +
- drivers/mtd/nand/Kconfig                           |   6 +
- drivers/mtd/nand/Makefile                          |   1 +
- drivers/mtd/nand/axs_nand.c                        | 412 +++++++++++++++++++++
- 4 files changed, 436 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/axs-nand.txt
- create mode 100644 drivers/mtd/nand/axs_nand.c
+Hi Jacek,
 
-diff --git a/Documentation/devicetree/bindings/mtd/axs-nand.txt b/Documentation/devicetree/bindings/mtd/axs-nand.txt
-new file mode 100644
-index 0000000..c522b7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/axs-nand.txt
-@@ -0,0 +1,17 @@
-+* Synopsys AXS NAND controller
-+
-+Required properties:
-+  - compatible: must be "snps,axs-nand"
-+  - reg: physical base address and size of the registers map
-+
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. See partition.txt for more detail.
-+
-+Examples:
-+
-+flash@0x16000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "snps,axs-nand";
-+	reg = < 0x16000 0x200 >;
-+};
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index dd10646..5ee715a 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -516,4 +516,10 @@ config MTD_NAND_XWAY
- 	  Enables support for NAND Flash chips on Lantiq XWAY SoCs. NAND is attached
- 	  to the External Bus Unit (EBU).
- 
-+config MTD_NAND_AXS
-+	tristate "Support for NAND on Synopsys AXS development board"
-+	help
-+	  Enables support for NAND Flash chips on Synopsys AXS development
-+	  boards.
-+
- endif # MTD_NAND
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index 9c847e4..5672dc4 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -50,5 +50,6 @@ obj-$(CONFIG_MTD_NAND_JZ4740)		+= jz4740_nand.o
- obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+= gpmi-nand/
- obj-$(CONFIG_MTD_NAND_XWAY)		+= xway_nand.o
- obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+= bcm47xxnflash/
-+obj-$(CONFIG_MTD_NAND_AXS)		+= axs_nand.o
- 
- nand-objs := nand_base.o nand_bbt.o nand_timings.o
-diff --git a/drivers/mtd/nand/axs_nand.c b/drivers/mtd/nand/axs_nand.c
-new file mode 100644
-index 0000000..eb530ce
---- /dev/null
-+++ b/drivers/mtd/nand/axs_nand.c
-@@ -0,0 +1,412 @@
-+/*
-+ * Copyright (C) 2014 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * Driver for NAND controller on Synopsys AXS development board.
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License v2. See the file COPYING in the main directory of this archive for
-+ * more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/nand.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/io.h>
-+
-+/*
-+ * There's an issue with DMA'd data if data buffer is cached.
-+ * So to make NAND storage available for now we'll map data buffer in
-+ * uncached memory.
-+ *
-+ * As soon as issue with cached buffer is resolved following define to be
-+ * removed as well as sources it enables.
-+ */
-+#define DATA_BUFFER_UNCACHED
-+
-+#define BUS_WIDTH	8		/* AXI data bus width in bytes	*/
-+
-+/* DMA buffer descriptor masks */
-+#define BD_STAT_OWN			(1 << 31)
-+#define BD_STAT_BD_FIRST		(1 << 3)
-+#define BD_STAT_BD_LAST			(1 << 2)
-+#define BD_SIZES_BUFFER1_MASK		0xfff
-+
-+#define BD_STAT_BD_COMPLETE	(BD_STAT_BD_FIRST | BD_STAT_BD_LAST)
-+
-+/* Controller command types */
-+#define B_CT_ADDRESS	(0x0 << 16)	/* Address operation		*/
-+#define B_CT_COMMAND	(0x1 << 16)	/* Command operation		*/
-+#define B_CT_WRITE	(0x2 << 16)	/* Write operation		*/
-+#define B_CT_READ	(0x3 << 16)	/* Read operation		*/
-+
-+/* Controller command options */
-+#define B_WFR		(1 << 19)	/* 1b - Wait for ready		*/
-+#define B_LC		(1 << 18)	/* 1b - Last cycle		*/
-+#define B_IWC		(1 << 13)	/* 1b - Interrupt when complete	*/
-+
-+enum {
-+	NAND_ISR_DATAREQUIRED = 0,
-+	NAND_ISR_TXUNDERFLOW,
-+	NAND_ISR_TXOVERFLOW,
-+	NAND_ISR_DATAAVAILABLE,
-+	NAND_ISR_RXUNDERFLOW,
-+	NAND_ISR_RXOVERFLOW,
-+	NAND_ISR_TXDMACOMPLETE,
-+	NAND_ISR_RXDMACOMPLETE,
-+	NAND_ISR_DESCRIPTORUNAVAILABLE,
-+	NAND_ISR_CMDDONE,
-+	NAND_ISR_CMDAVAILABLE,
-+	NAND_ISR_CMDERROR,
-+	NAND_ISR_DATATRANSFEROVER,
-+	NAND_ISR_NONE
-+};
-+
-+enum {
-+	AC_FIFO = 0,		/* Address and command fifo */
-+	IDMAC_BDADDR = 0x18,	/* IDMAC descriptor list base address */
-+	INT_STATUS = 0x118,	/* Interrupt status register */
-+	INT_CLR_STATUS = 0x120	/* Interrupt clear status register */
-+};
-+
-+struct asx_nand_bd {
-+	__le32 status;		/* DES0 */
-+	__le32 sizes;		/* DES1 */
-+	dma_addr_t buffer_ptr0;	/* DES2 */
-+	dma_addr_t buffer_ptr1;	/* DES3 */
-+};
-+
-+struct axs_nand_host {
-+	struct nand_chip	nand_chip;
-+	struct mtd_info		mtd;
-+	void __iomem		*io_base;
-+	struct device		*dev;
-+	struct asx_nand_bd	*bd;	/* Buffer descriptor */
-+	dma_addr_t		bd_dma;	/* DMA handle for buffer descriptor */
-+	uint8_t		*db;	/* Data buffer */
-+	dma_addr_t		db_dma;	/* DMA handle for data buffer */
-+};
-+
-+/**
-+ * reg_set - Sets register with provided value.
-+ * @host:	Pointer to private data structure.
-+ * @reg:	Register offset from base address.
-+ * @value:	Value to set in register.
-+ */
-+static inline void reg_set(struct axs_nand_host *host, int reg, int value)
-+{
-+	iowrite32(value, host->io_base + reg);
-+}
-+
-+/**
-+ * reg_get - Gets value of specified register.
-+ * @host:	Pointer to private data structure.
-+ * @reg:	Register offset from base address.
-+ *
-+ * returns:	Value of requested register.
-+ */
-+static inline unsigned int reg_get(struct axs_nand_host *host, int reg)
-+{
-+	return ioread32(host->io_base + reg);
-+}
-+
-+/* Maximum number of milliseconds we wait for flag to appear */
-+#define AXS_FLAG_WAIT_DELAY	1000
-+
-+/**
-+ * axs_flag_wait_and_reset - Waits until requested flag in INT_STATUS register
-+ *              is set by HW and resets it by writing "1" in INT_CLR_STATUS.
-+ * @host:	Pointer to private data structure.
-+ * @flag:	Bit/flag offset in INT_STATUS register
-+ */
-+static void axs_flag_wait_and_reset(struct axs_nand_host *host, int flag)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < AXS_FLAG_WAIT_DELAY * 100; i++) {
-+		unsigned int status = reg_get(host, INT_STATUS);
-+
-+		if (status & (1 << flag)) {
-+			reg_set(host, INT_CLR_STATUS, 1 << flag);
-+			return;
-+		}
-+
-+		udelay(10);
-+	}
-+
-+	/*
-+	 * Since we cannot report this problem any further than
-+	 * axs_nand_{write|read}_buf() letting user know there's a problem.
-+	 */
-+	dev_err(host->dev, "Waited too long (%d s.) for flag/bit %d\n",
-+		AXS_FLAG_WAIT_DELAY, flag);
-+}
-+
-+/**
-+ * axs_nand_write_buf - write buffer to chip
-+ * @mtd:	MTD device structure
-+ * @buf:	Data buffer
-+ * @len:	Number of bytes to write
-+ */
-+static void axs_nand_write_buf(struct mtd_info *mtd,
-+		const uint8_t *buf, int len)
-+{
-+	struct nand_chip *this = mtd->priv;
-+	struct axs_nand_host *host = this->priv;
-+
-+	memcpy(host->db, buf, len);
-+#ifndef DATA_BUFFER_UNCACHED
-+	dma_sync_single_for_device(host->dev, host->db_dma, len, DMA_TO_DEVICE);
-+#endif
-+
-+	/* Setup buffer descriptor */
-+	host->bd->status = BD_STAT_OWN | BD_STAT_BD_COMPLETE;
-+	host->bd->sizes = cpu_to_le32(ALIGN(len, BUS_WIDTH) &
-+				      BD_SIZES_BUFFER1_MASK);
-+	host->bd->buffer_ptr0 = cpu_to_le32(host->db_dma);
-+	host->bd->buffer_ptr1 = 0;
-+
-+	/* Issue "write" command */
-+	reg_set(host, AC_FIFO, B_CT_WRITE | B_WFR | B_IWC | B_LC | (len - 1));
-+
-+	/* Wait for NAND command and DMA to complete */
-+	axs_flag_wait_and_reset(host, NAND_ISR_CMDDONE);
-+	axs_flag_wait_and_reset(host, NAND_ISR_TXDMACOMPLETE);
-+}
-+
-+/**
-+ * axs_nand_read_buf -  read chip data into buffer
-+ * @mtd:	MTD device structure
-+ * @buf:	Buffer to store data
-+ * @len:	Number of bytes to read
-+ */
-+static void axs_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
-+{
-+	struct nand_chip *this = mtd->priv;
-+	struct axs_nand_host *host = this->priv;
-+
-+	/* Setup buffer descriptor */
-+	host->bd->status = BD_STAT_OWN | BD_STAT_BD_COMPLETE;
-+	host->bd->sizes = cpu_to_le32(ALIGN(len, BUS_WIDTH) &
-+				      BD_SIZES_BUFFER1_MASK);
-+	host->bd->buffer_ptr0 = cpu_to_le32(host->db_dma);
-+	host->bd->buffer_ptr1 = 0;
-+
-+	/* Issue "read" command */
-+	reg_set(host, AC_FIFO, B_CT_READ | B_WFR | B_IWC | B_LC | (len - 1));
-+
-+	/* Wait for NAND command and DMA to complete */
-+	axs_flag_wait_and_reset(host, NAND_ISR_CMDDONE);
-+	axs_flag_wait_and_reset(host, NAND_ISR_RXDMACOMPLETE);
-+
-+#ifndef DATA_BUFFER_UNCACHED
-+	dma_sync_single_for_cpu(host->dev, host->db_dma, len, DMA_FROM_DEVICE);
-+#endif
-+	memcpy(buf, host->db, len);
-+}
-+
-+/**
-+ * axs_nand_read_byte - read one byte from the chip
-+ * @mtd:	MTD device structure
-+ *
-+ * returns:	read data byte
-+ */
-+static uint8_t axs_nand_read_byte(struct mtd_info *mtd)
-+{
-+	uint8_t buffer;
-+
-+	axs_nand_read_buf(mtd, (uint8_t *)&buffer, sizeof(buffer));
-+	return buffer;
-+}
-+
-+/**
-+ * axs_nand_read_word - read one word from the chip
-+ * @mtd:	MTD device structure
-+ *
-+ * returns:	read data word
-+ */
-+static uint16_t axs_nand_read_word(struct mtd_info *mtd)
-+{
-+	uint16_t buffer;
-+
-+	axs_nand_read_buf(mtd, (uint8_t *)&buffer, sizeof(buffer));
-+	return buffer;
-+}
-+
-+/**
-+ * axs_nand_cmd_ctrl - hardware specific access to control-lines
-+ * @mtd:	MTD device structure
-+ * @cmd:	NAND command
-+ * @ctrl:	NAND control options
-+ */
-+static void axs_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
-+		unsigned int ctrl)
-+{
-+	struct nand_chip *nand_chip = mtd->priv;
-+	struct axs_nand_host *host = nand_chip->priv;
-+
-+	if (cmd == NAND_CMD_NONE)
-+		return;
-+
-+	cmd = cmd & 0xff;
-+
-+	switch (ctrl & (NAND_ALE | NAND_CLE)) {
-+	/* Address */
-+	case NAND_ALE:
-+		cmd |= B_CT_ADDRESS;
-+		break;
-+
-+	/* Command */
-+	case NAND_CLE:
-+		cmd |= B_CT_COMMAND | B_WFR;
-+
-+		break;
-+
-+	default:
-+		dev_err(host->dev, "Unknown ctrl %#x\n", ctrl);
-+		return;
-+	}
-+
-+	reg_set(host, AC_FIFO, cmd | B_LC);
-+	axs_flag_wait_and_reset(host, NAND_ISR_CMDDONE);
-+}
-+
-+static int axs_nand_probe(struct platform_device *pdev)
-+{
-+	struct mtd_part_parser_data ppdata;
-+	struct nand_chip *nand_chip;
-+	struct axs_nand_host *host;
-+	struct resource *res_regs;
-+	struct mtd_info *mtd;
-+	int err;
-+
-+	host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
-+	if (!host) {
-+		dev_err(&pdev->dev, "Failed to allocate device structure.\n");
-+		return -ENOMEM;
-+	}
-+
-+	res_regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	host->io_base = devm_ioremap_resource(&pdev->dev, res_regs);
-+	if (IS_ERR(host->io_base))
-+		return PTR_ERR(host->io_base);
-+
-+	dev_dbg(&pdev->dev, "Control registers: %pr\n", res_regs);
-+
-+	host->bd = dmam_alloc_coherent(&pdev->dev, sizeof(*host->bd),
-+				       &host->bd_dma, GFP_KERNEL);
-+	if (!host->bd) {
-+		dev_err(&pdev->dev, "Failed to allocate buffer descriptor\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Temporary allocate data buffer for reading NAND parameters */
-+	host->db = 
-+#ifdef DATA_BUFFER_UNCACHED
-+		   dmam_alloc_coherent
-+#else
-+		   dmam_alloc_noncoherent
-+#endif
-+				      (&pdev->dev, PAGE_SIZE, &host->db_dma,
-+				       GFP_KERNEL);
-+	if (!host->db) {
-+		dev_err(&pdev->dev, "Failed to allocate data buffer\n");
-+		return -ENOMEM;
-+	}
-+	dev_dbg(&pdev->dev, "Data buffer mapped @ %p, DMA @ %pad\n", host->db,
-+		host->db_dma);
-+
-+	mtd = &host->mtd;
-+	nand_chip = &host->nand_chip;
-+	host->dev = &pdev->dev;
-+
-+	nand_chip->priv = host;
-+	mtd->priv = nand_chip;
-+	mtd->name = dev_name(&pdev->dev);
-+	mtd->owner = THIS_MODULE;
-+	mtd->dev.parent = &pdev->dev;
-+	ppdata.of_node = pdev->dev.of_node;
-+
-+	nand_chip->cmd_ctrl = axs_nand_cmd_ctrl;
-+	nand_chip->read_byte = axs_nand_read_byte;
-+	nand_chip->read_word = axs_nand_read_word;
-+	nand_chip->write_buf = axs_nand_write_buf;
-+	nand_chip->read_buf = axs_nand_read_buf;
-+	nand_chip->ecc.mode = NAND_ECC_SOFT;
-+
-+	dev_set_drvdata(&pdev->dev, host);
-+
-+	reg_set(host, IDMAC_BDADDR, host->bd_dma);
-+
-+	err = nand_scan(mtd, 1);
-+	if (err)
-+		return err;
-+
-+	/* Free temporary allocted data buffer and ... */
-+#ifdef DATA_BUFFER_UNCACHED
-+	dmam_free_coherent
-+#else
-+	dmam_free_noncoherent
-+#endif
-+			   (&pdev->dev, PAGE_SIZE, host->db, host->db_dma);
-+
-+	/* ... allocate data buffer according to read NAND parameters */
-+	host->db = 
-+#ifdef DATA_BUFFER_UNCACHED
-+	dmam_alloc_coherent
-+#else
-+	dmam_alloc_noncoherent
-+#endif
-+			    (&pdev->dev, mtd->writesize + mtd->oobsize,
-+			     &host->db_dma, GFP_KERNEL);
-+	if (!host->db) {
-+		dev_err(&pdev->dev, "Failed to allocate data buffer\n");
-+		return -ENOMEM;
-+	}
-+
-+	err = mtd_device_parse_register(mtd, NULL, &ppdata, NULL, 0);
-+	if (err) {
-+		nand_release(mtd);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int axs_nand_remove(struct platform_device *ofdev)
-+{
-+	struct axs_nand_host *host = dev_get_drvdata(&ofdev->dev);
-+	struct mtd_info *mtd = &host->mtd;
-+
-+	nand_release(mtd);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id axs_nand_dt_ids[] = {
-+	{ .compatible = "snps,axs-nand", },
-+	{ /* Sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, axs_nand_match);
-+
-+static struct platform_driver axs_nand_driver = {
-+	.probe		= axs_nand_probe,
-+	.remove		= axs_nand_remove,
-+	.driver = {
-+		.name = "asx-nand",
-+		.owner = THIS_MODULE,
-+		.of_match_table = axs_nand_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(axs_nand_driver);
-+
-+MODULE_AUTHOR("Alexey Brodkin <abrodkin@synopsys.com>");
-+MODULE_DESCRIPTION("NAND driver for Synopsys AXS development board");
-+MODULE_LICENSE("GPL");
+On Wed, Apr 08, 2015 at 10:54:52AM +0200, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> On 04/03/2015 02:09 PM, Sakari Ailus wrote:
+> >Hi Jacek,
+> >
+> >On Tue, Mar 31, 2015 at 03:52:37PM +0200, Jacek Anaszewski wrote:
+> >>Description of flash LEDs related properties was not precise regarding
+> >>the state of corresponding settings in case a property is missing.
+> >>Add relevant statements.
+> >>Removed is also the requirement making the flash-max-microamp
+> >>property obligatory for flash LEDs. It was inconsistent as the property
+> >>is defined as optional. Devices which require the property will have
+> >>to assert this in their DT bindings.
+> >>
+> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >>Cc: Bryan Wu <cooloney@gmail.com>
+> >>Cc: Richard Purdie <rpurdie@rpsys.net>
+> >>Cc: Pavel Machek <pavel@ucw.cz>
+> >>Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >>Cc: devicetree@vger.kernel.org
+> >>---
+> >>  Documentation/devicetree/bindings/leds/common.txt |   16 +++++++++-------
+> >>  1 file changed, 9 insertions(+), 7 deletions(-)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> >>index 747c538..21a25e4 100644
+> >>--- a/Documentation/devicetree/bindings/leds/common.txt
+> >>+++ b/Documentation/devicetree/bindings/leds/common.txt
+> >>@@ -29,13 +29,15 @@ Optional properties for child nodes:
+> >>       "ide-disk" - LED indicates disk activity
+> >>       "timer" - LED flashes at a fixed, configurable rate
+> >>
+> >>-- max-microamp : maximum intensity in microamperes of the LED
+> >>-		 (torch LED for flash devices)
+> >>-- flash-max-microamp : maximum intensity in microamperes of the
+> >>-                       flash LED; it is mandatory if the LED should
+> >>-		       support the flash mode
+> >>-- flash-timeout-us : timeout in microseconds after which the flash
+> >>-                     LED is turned off
+> >>+- max-microamp : Maximum intensity in microamperes of the LED
+> >>+		 (torch LED for flash devices). If omitted this will default
+> >>+		 to the maximum current allowed by the device.
+> >>+- flash-max-microamp : Maximum intensity in microamperes of the flash LED.
+> >>+		       If omitted this will default to the maximum
+> >>+		       current allowed by the device.
+> >>+- flash-timeout-us : Timeout in microseconds after which the flash
+> >>+                     LED is turned off. If omitted this will default to the
+> >>+		     maximum timeout allowed by the device.
+> >>
+> >>
+> >>  Examples:
+> >
+> >Pavel pointed out that the brightness between maximum current and the
+> >maximum *allowed* another current might not be noticeable, leading a
+> >potential spelling error to cause the LED being run at too high current.
+> 
+> I think that a board designed so that it can be damaged because of
+> software bugs should be considered not eligible for commercial use.
+> Any self-esteeming manufacturer will not connect a LED to the output
+> that can produce the current greater than the LED's absolute maximum
+> current.
+
+The maximum current *is* used to prevent potential hardware damage. This is
+how mobile phones typically are, probably also the one you're using. :-) I
+don't believe there's really a difference between vendors in this respect.
+
+We still lack a proper way to model the temperature of the flash LED, so
+what we have now is a bit incomplete, but at least it prevents causing
+damage unintentionally.
+
+> The DT properties could be useful for devices like aat1290 device I was
+> writing a driver for, which has the maximum current and timeout values
+> depending on corresponding capacitor and resistor values respectively.
+> Such devices should make the properties required in their bindings.
+> 
+> >The three drivers I've looked also require these properties, which I think
+> >is in the line with the above.
+> >
+> >How about either dropping the patch, or changing maximum to minimum and
+> >will to should? The drivers could also behave this way instead of requiring
+> >the properties, but I don't think there's anything wrong with requiring the
+> >properties either.
+> 
+> As I mentioned in the previous message in this subject, the max-microamp
+> property refers also to non-flash LEDs. Since existing LED class devices
+> does not require them, then it should be left optional and default to
+> max. It would however be inconsistent with flash LEDs related
+> properties.
+
+I do agree with Pavel here, these should be mandatory (at least for new
+drivers) OR default to minimum.
+
 -- 
-2.1.0
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
