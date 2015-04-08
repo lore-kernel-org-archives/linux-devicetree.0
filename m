@@ -1,66 +1,40 @@
-From: "Sricharan" <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: RE: [PATCH V2 2/6] i2c: qup: Add V2 tags support
-Date: Wed, 8 Apr 2015 11:00:49 +0530
-Message-ID: <000201d071bd$30b1f130$9215d390$@codeaurora.org>
-References: <1428345067-21878-1-git-send-email-sricharan@codeaurora.org> <1428345067-21878-3-git-send-email-sricharan@codeaurora.org> <20150407050640.GB9225@qualcomm.com>
+From: "Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_property_read_string
+Date: Wed, 8 Apr 2015 06:29:18 +0000
+Message-ID: <BLUPR03MB391F3BA6A3691F36D73D5EDF8FC0@BLUPR03MB391.namprd03.prod.outlook.com>
+References: <1428401462-5907-1-git-send-email-Shengzhou.Liu@freescale.com>
+ <CAL_JsqLpD8UXoHZ-KF74LaN5HEvu3bpu6aeO9_SOHYrut0nV_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150407050640.GB9225-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Content-Language: en-us
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Andy Gross' <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLpD8UXoHZ-KF74LaN5HEvu3bpu6aeO9_SOHYrut0nV_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-
-> bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org] On Behalf Of Andy Gross
-> Sent: Tuesday, April 07, 2015 10:37 AM
-> To: Sricharan R
-> Cc: srichara-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
-> dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH V2 2/6] i2c: qup: Add V2 tags support
-> 
-> On Tue, Apr 07, 2015 at 12:01:03AM +0530, Sricharan R wrote:
-> 
-> <snip>
-> 
-> > +static u32 qup_i2c_send_data(struct qup_i2c_dev *qup, int tlen, u8
-*tbuf,
-> > +			     int dlen, u8 *dbuf)
-> > +{
-> > +	u32 val = 0, idx = 0, pos = 0, i = 0, t;
-> > +	int  len = tlen + dlen;
-> > +	u8 *buf = tbuf;
-> > +
-> > +	while (len > 0) {
-> > +		if (qup_i2c_wait_ready(qup, QUP_OUT_FULL, 0, 4)) {
-> 
-> Instead of 0 and 4 can we use some #defines?  This applies for all of the
-> i2c_wait_ready calls
-> 
-> <snip>
-> 
- Ok, will change this with some macro.
-
-Regards,
- Sricharan
-
-> 
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> Forum, a Linux Foundation Collaborative Project
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+PiBPbiBUdWUsIEFwciA3LCAyMDE1IGF0IDU6MTEgQU0sIFNoZW5nemhvdSBMaXUNCj4gPFNoZW5n
+emhvdS5MaXVAZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+ID4gSW4gb2ZfcHJvcGVydHlfcmVhZF9z
+dHJpbmcgZnVuY3Rpb24sIHN0cm5sZW4ocHJvcC0+dmFsdWUsDQo+ID4gcHJvcC0+bGVuZ3RoKSBp
+cyBhbHdheXMgbGVzcyBvciBlcXVhbCB0byBwcm9wLT5sZW5ndGgsIGFuZCB3ZSBzaG91bGQNCj4g
+YWxsb3cgdGhlICc9PScNCj4gPiBjb25kaXRpb24sIHNvIGxldCdzIHJlbW92ZSB0aGUgb3JpZ2lu
+YWwgdW5yZWFzb25hYmxlIGNvbmRpdGlvbi4NCj4gDQo+IEkgYmVsaWV2ZSB3ZSBkb24ndCB3YW50
+IHRvIGFsbG93IGVxdWFsIGJlY2F1c2UgcHJvcC0+bGVuZ3RoIHNob3VsZA0KPiBpbmNsdWRlIHRo
+ZSBcMCB0ZXJtaW5hdGlvbiB3aGlsZSBzdHJubGVuIHdpbGwgbm90Lg0KPiANCj4gUm9iDQoNClll
+cywgSSB0aG91Z2h0IHNvLCBpZGVhbGx5IHByb3AtPmxlbmd0aCBzaG91bGQgYmUgYXNzaWduZWQg
+d2l0aCBzdHJsZW4odmFsdWUpKzEsIA0KYnV0IHVuZm9ydHVuYXRlbHkgaW4gdS1ib290IGFuZCBr
+ZXJuZWwgdGhlcmUgYXJlIHRvbyBtYW55IGNhbGxlcnMgdGhhdCBoYXZlIHByb3AtPmxlbmd0aCBh
+c3NpZ25lZCANCndpdGggc3RybGVuKHZhbHVlKSBpbnN0ZWFkIG9mIHN0cmxlbih2YWx1ZSkrMSwg
+aW4gcHJhY3RpY2UsIHdlIGNhbiBhbGxvdyBlcXVhbC4gDQoNCkZvciBleGFtcGxlLCBpbiBvZl9w
+cm9wZXJ0eV9yZWFkX3N0cmluZ19oZWxwZXIgZnVuY3Rpb24sIGZvbGxvd2luZyB0d28gbGluZXMg
+aGFkIGJlZW4gcmVtb3ZlZCBieSBjb21taXQgNmZhYTI5MDk4NzFkODkzNy4NCi0gICAgICAgaWYg
+KHN0cm5sZW4ocHJvcC0+dmFsdWUsIHByb3AtPmxlbmd0aCkgPj0gcHJvcC0+bGVuZ3RoKQ0KLSAg
+ICAgICAgICAgICAgIHJldHVybiAtRUlMU0VROw0KDQpTbyBhbGxvd2luZyBlcXVhbCBzaG91bGQg
+YmUgYWNjZXB0YWJsZSwgYmVjYXVzZSBpbiB0aGlzIGZ1bmN0aW9uLCB0aGUgZXF1YWwgY2FuJ3Qg
+cHJldmVudCBzdGFjayBvdmVyZmxvdyBpc3N1ZS4gDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
