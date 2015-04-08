@@ -1,49 +1,92 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Refactor Qualcomm RPM regulator to single
- platform_device
-Date: Wed, 8 Apr 2015 12:23:39 +0100
-Message-ID: <20150408112339.GW6023@sirena.org.uk>
-References: <1428363240-2027-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [v2] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Wed, 8 Apr 2015 10:43:51 +0300
+Message-ID: <1428479031-26597-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BMIgvY26efrdtlVp"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428363240-2027-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-
---BMIgvY26efrdtlVp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Apr 06, 2015 at 04:33:55PM -0700, Bjorn Andersson wrote:
-> Stephen Boyd pointed out that the current design of the Qualcomm RPM and
-> regulator driver consumes 12-20kB of ram just for the platform_device structs.
-
-Applied the regulator patches, thanks.
-
---BMIgvY26efrdtlVp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVJQ+6AAoJECTWi3JdVIfQmuMH/0ZmIwxkpxadkl/Aa8/WCIsm
-vqWAM4iUhhiz4XwtApzRweNtfoAgElDqSdtSfDPrhdYw7yy6cU5vkuBgBdkMyjKZ
-D+FYsDq5q9oH3IYbmMie+9xYrOrXpbYqKEQQ6shhQjm/uPlOAJ1ptGlcj7jlsyAQ
-JjlbSOyRXWfIlK5NPnagQ9ABaERyXH9XcXt//WITENOkDCebvcoQXOkJHCJRfV9/
-E01WpgkIN0w8/LuqIjl6aD60xYz3U1uSbbCwMShDHCA83epcig1NWCaG148CKlRv
-89GMkW0B2FuxNbWti2/bZTI9qMHWr5elrVZ+bjyeeKmOdwpddTKOYNEzSg5r0Zw=
-=+JsU
------END PGP SIGNATURE-----
-
---BMIgvY26efrdtlVp--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKdjI6IEFk
+ZHJlc3NlZCBmZWVkYmFjayBmcm9tIFNjb3R0OgoJLSBNb3ZlZCB0aGUgImZtYW4tY2xrLW11eCIg
+Y2xvY2sgcHJvdmlkZXIgZGV0YWlscwoJICB1bmRlciAiY2xvY2tzIiBwcm9wZXJ0eS4KClNpZ25l
+ZC1vZmYtYnk6IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KLS0t
+CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQgICAgICB8ICAg
+NjMgKysrKysrKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCA2MSBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0CmluZGV4IGRmNGEyNTkuLjRkNjNhYzYgMTAw
+NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1j
+bG9jay50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fv
+cmlxLWNsb2NrLnR4dApAQCAtNjUsOSArNjUsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIAkJ
+SXQgdGFrZXMgcGFyZW50J3MgY2xvY2stZnJlcXVlbmN5IGFzIGl0cyBjbG9jay4KIAkqICJmc2ws
+cW9yaXEtcGxhdGZvcm0tcGxsLTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xvY2sgKHYxLjAp
+CiAJKiAiZnNsLHFvcmlxLXBsYXRmb3JtLXBsbC0yLjAiIGZvciB0aGUgcGxhdGZvcm0gUExMIGNs
+b2NrICh2Mi4wKQorCSogImZzbCxmbWFuLWNsay1tdXgiIGZvciB0aGUgRnJhbWUgTWFuYWdlciBj
+bG9jay4KIC0gI2Nsb2NrLWNlbGxzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLiBUaGUgbnVt
+YmVyIG9mIGNlbGxzIGluIGEKLQljbG9jay1zcGVjaWZpZXIuIFNob3VsZCBiZSA8MD4gZm9yICJm
+c2wscW9yaXEtc3lzY2xrLVsxLDJdLjAiCi0JY2xvY2tzLCBvciA8MT4gZm9yICJmc2wscW9yaXEt
+Y29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLgorCWNsb2NrLXNwZWNpZmllci4gU2hvdWxkIGJlIDww
+PiBmb3IgImZzbCxxb3JpcS1zeXNjbGstWzEsMl0uMCIgYW5kCisJImZzbCxmbWFuLWNsay1tdXgi
+IGNsb2NrcyBvciA8MT4gZm9yICJmc2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIuCiAJRm9yICJm
+c2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLCB0aGUgc2luZ2xlCiAJY2xvY2stc3Bl
+Y2lmaWVyIGNlbGwgbWF5IHRha2UgdGhlIGZvbGxvd2luZyB2YWx1ZXM6CiAJKiAwIC0gZXF1YWwg
+dG8gdGhlIFBMTCBmcmVxdWVuY3kKQEAgLTc2LDYgKzc3LDUyIEBAIFJlcXVpcmVkIHByb3BlcnRp
+ZXM6CiAKIFJlY29tbWVuZGVkIHByb3BlcnRpZXM6CiAtIGNsb2NrczogU2hvdWxkIGJlIHRoZSBw
+aGFuZGxlIG9mIGlucHV0IHBhcmVudCBjbG9jaworCUZvciAiZnNsLGZtYW4tY2xrLW11eCIgY2xv
+Y2sgdGhlcmUgYXJlIHNldmVyYWwgb3B0aW9ucyBmb3IgcGFyZW50CisJY2xvY2sgKGNsb2NrIHBy
+b3ZpZGVyKSwgdGhlIHBhcmVudCBpcyBkZXRlcm1pbmVkIGFjY29yZGluZyB0byB0aGUKKwlSZXNl
+dCBDb25maWd1cmF0aW9uIFdvcmQgb2YgdGhlIHNwZWNpZmljIGRldmljZToKKwkJKiBQMjA0MSwg
+UDMwNDE6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwgZGl2aWRlZCBieSAyCisJCQkq
+IDEgLSBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkgMgorCQkqIFA0MDgwIChCb3RoIEZNYW5zKToK
+KwkJCSogMCAtIGVxdWFsIHRvIHBsYXRmb3JtIFBMTCBkaXZpZGVkIGJ5IDIKKwkJCSogMSAtIGVx
+dWFsIHRvIFBMTDMgZGl2aWRlZCBieSAyCisJCSogUDUwMjA6CisJCQkqIDAgLSBlcXVhbCB0byBw
+bGF0Zm9ybSBQTEwgZGl2aWRlZCBieSAyCisJCQkqIDEgLSBlcXVhbCB0byBQTEwyIGRpdmlkZWQg
+YnkgMgorCQkJKiAyIC0gZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDQKKwkJKiBQNTA0MCAoQm90
+aCBGTWFucyk6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwgZGl2aWRlZCBieSAyCisJ
+CQkqIDEgLSBlcXVhbCB0byBQTEwzIGRpdmlkZWQgYnkgMgorCQkJKiAyIC0gZXF1YWwgdG8gUExM
+MyBkaXZpZGVkIGJ5IDQKKwkJKiBUMTAyNDoKKwkJCSogMCAtIGVxdWFsIHRvIFBMTDEgZGl2aWRl
+ZCBieSAyCisJCSogVDEwNDA6CisJCQkqIDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwKKwkJKiBU
+MjA4MCwgQjQ4NjAsIEI0NDIwOgorCQkJKiAwIC0gZXF1YWwgdG8gUExMMQorCQkJKiAxIC0gZXF1
+YWwgdG8gUExMMSBkaXZpZGVkIGJ5IDIKKwkJCSogMiAtIGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBi
+eSAzCisJCQkqIDMgLSBlcXVhbCB0byBQTEwxIGRpdmlkZWQgYnkgNAorCQkJKiA0IC0gZXF1YWwg
+dG8gcGxhdGZvcm0gUExMCisJCQkqIDUgLSBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkgMgorCQkJ
+KiA2IC0gZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDMKKwkJKiBUNDI0MDoKKwkJCSogRk0xOgor
+CQkJKiAwIGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBieSAyCisJCQkqIDEgZXF1YWwgdG8gUExMMSBk
+aXZpZGVkIGJ5IDMKKwkJCSogMiBlcXVhbCB0byBQTEwxIGRpdmlkZWQgYnkgNAorCQkJKiAzIGVx
+dWFsIHRvIHBsYXRmb3JtIFBMTAorCQkJKiA0IGVxdWFsIHRvIFBMTDIgZGl2aWRlZCBieSAyCisJ
+CQkqIEZNMjoKKwkJCSogMCBlcXVhbCB0byBQTEwyIGRpdmlkZWQgYnkgMgorCQkJKiAxIGVxdWFs
+IHRvIFBMTDIgZGl2aWRlZCBieSAzCisJCQkqIDIgZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDQK
+KwkJCSogMyBlcXVhbCB0byBwbGF0Zm9ybSBQTEwKKwkJCSogNCBlcXVhbCB0byBQTEwxIGRpdmlk
+ZWQgYnkgMgorCQkJKiA1IGVxdWFsIHRvIFBMTDEgZGl2aWRlZCBieSAzCisJSW4gUGFydCBvZiBG
+TWFuIFYzIGRldmljZXMgKEI0LCBUMiwgVDQpIHRoZSBzaW5nbGUKKwljbG9jay1zcGVjaWZpZXIg
+Y2VsbCBtYXkgYmUgZGV0ZXJtaW5lZCBieSB0aGUgQ0xLQ0d4SFdBQ1NSCisJcmVnaXN0ZXIgaW4g
+YWRkdGlvbiB0byBSQ1cuCiAtIGNsb2NrLW5hbWVzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5n
+LCBpbmRpY2F0ZXMgdGhlIGNsb2NrIG5hbWUKIC0gY2xvY2stb3V0cHV0LW5hbWVzOiBGcm9tIGNv
+bW1vbiBjbG9jayBiaW5kaW5nLCBpbmRpY2F0ZXMgdGhlIG5hbWVzIG9mCiAJb3V0cHV0IGNsb2Nr
+cwpAQCAtMTM5LDYgKzE4NiwxOCBAQCBFeGFtcGxlIGZvciBjbG9jayBibG9jayBhbmQgY2xvY2sg
+cHJvdmlkZXI6CiAJCQljbG9ja3MgPSA8JnN5c2Nsaz47CiAJCQljbG9jay1vdXRwdXQtbmFtZXMg
+PSAicGxhdGZvcm0tcGxsIiwgInBsYXRmb3JtLXBsbC1kaXYyIjsKIAkJfTsKKworCQlmbTBjbGs6
+IGZtMC1jbGstbXV4IHsKKwkJCSNjbG9jay1jZWxscyA9IDwwPjsKKwkJCXJlZyA9IDwweDEwIDQ+
+CisJCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWNsay1tdXgiOworCQkJY2xvY2tzID0gPCZwbGww
+IDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAyPiwgPCZwbGwwIDM+LAorCQkJCSA8JnBsYXRmb3JtX3Bs
+bCAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBs
+bDAtZGl2MiIsICJwbGwwLWRpdjMiLAorCQkJCSAgICAgICJwbGwwLWRpdjQiLCAicGxhdGZvcm0t
+cGxsIiwgInBsbDEtZGl2MiIsCisJCQkJICAgICAgInBsbDEtZGl2MyI7CisJCQljbG9jay1vdXRw
+dXQtbmFtZXMgPSAiZm0wLWNsayI7CisJCX07CiAJfTsKIH07CiAKLS0gCjEuNy45LjUKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
+YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
