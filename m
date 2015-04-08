@@ -1,52 +1,66 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: fix of_property_read_string
-Date: Wed, 8 Apr 2015 09:25:56 -0500
-Message-ID: <CAL_JsqL1+oXxV=4pNieCD=+8qb9-9GKREg366Mj8wu3sPRDzBg@mail.gmail.com>
-References: <1428401462-5907-1-git-send-email-Shengzhou.Liu@freescale.com>
- <CAL_JsqLpD8UXoHZ-KF74LaN5HEvu3bpu6aeO9_SOHYrut0nV_Q@mail.gmail.com> <BLUPR03MB391F3BA6A3691F36D73D5EDF8FC0@BLUPR03MB391.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BLUPR03MB391F3BA6A3691F36D73D5EDF8FC0-GeMU99GfrrvhK2sv/vn9KOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH v5] DT: leds: Improve description of flash LEDs related
+ properties
+Date: Wed, 08 Apr 2015 16:31:27 +0200
+Message-ID: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@linux.intel.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 8, 2015 at 1:29 AM, Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-<Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> On Tue, Apr 7, 2015 at 5:11 AM, Shengzhou Liu
->> <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> > In of_property_read_string function, strnlen(prop->value,
->> > prop->length) is always less or equal to prop->length, and we should
->> allow the '=='
->> > condition, so let's remove the original unreasonable condition.
->>
->> I believe we don't want to allow equal because prop->length should
->> include the \0 termination while strnlen will not.
->>
->> Rob
->
-> Yes, I thought so, ideally prop->length should be assigned with strlen(value)+1,
-> but unfortunately in u-boot and kernel there are too many callers that have prop->length assigned
-> with strlen(value) instead of strlen(value)+1, in practice, we can allow equal.
+Properties defining maximum values for LED currents and timeout should
+be mandatory to avoid the risk of hardware damage. This patch fixes
+the issue.
 
-No one should touch prop->length and it comes from the DTB directly.
-It doesn't come from strlen.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/leds/common.txt |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-> For example, in of_property_read_string_helper function, following two lines had been removed by commit 6faa2909871d8937.
-
-I don't have that commit in my tree.
-
-> -       if (strnlen(prop->value, prop->length) >= prop->length)
-> -               return -EILSEQ;
->
-> So allowing equal should be acceptable, because in this function, the equal can't prevent stack overflow issue.
-
-What stack overflow issue?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 747c538..e478ac6 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -10,6 +10,17 @@ can influence the way of the LED device initialization, the LED components
+ have to be tightly coupled with the LED device binding. They are represented
+ by child nodes of the parent LED device binding.
+ 
++Required properties for child nodes:
++- led-max-microamp : Maximum LED supply current in microamperes
++                     (torch LED for flash devices). Controllers that have no
++                     configurable current can omit this property.
++- flash-max-microamp : Maximum flash LED supply current in microamperes.
++- flash-timeout-us : Timeout in microseconds after which the flash
++                     LED is turned off.
++
++Above properties determine a LED driver IC settings required for safe
++operation. They should be also used as the initial settings for the IC.
++
+ Optional properties for child nodes:
+ - led-sources : List of device current outputs the LED is connected to. The
+ 		outputs are identified by the numbers that must be defined
+@@ -29,14 +40,6 @@ Optional properties for child nodes:
+      "ide-disk" - LED indicates disk activity
+      "timer" - LED flashes at a fixed, configurable rate
+ 
+-- max-microamp : maximum intensity in microamperes of the LED
+-		 (torch LED for flash devices)
+-- flash-max-microamp : maximum intensity in microamperes of the
+-                       flash LED; it is mandatory if the LED should
+-		       support the flash mode
+-- flash-timeout-us : timeout in microseconds after which the flash
+-                     LED is turned off
+-
+ 
+ Examples:
+ 
+-- 
+1.7.9.5
