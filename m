@@ -1,141 +1,43 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 6/6] hwmon: pwm-fan: Update the duty cycle inorder to
- control the pwm-fan
-Date: Wed, 8 Apr 2015 23:19:43 +0530
-Message-ID: <CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
-References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
-	<1427387955-5129-7-git-send-email-linux.amoon@gmail.com>
-	<20150408104415.07e1c821@amdc2363>
-	<20150408153214.GA15942@roeck-us.net>
-	<CANAwSgSD52sDpP7NH2hhiZX-=LZF6Qo-X3enqsqM+5XAMfyP=Q@mail.gmail.com>
-	<20150408165351.GA22846@roeck-us.net>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V3 5/7] serial: earlycon: Set UPIO_MEM32BE based on DT
+ properties
+Date: Wed, 08 Apr 2015 13:56:33 -0400
+Message-ID: <55256BD1.4040604@hurleysoftware.com>
+References: <1416872182-6440-1-git-send-email-cernekee@gmail.com> <1416872182-6440-6-git-send-email-cernekee@gmail.com> <54F3914F.3080905@hurleysoftware.com> <20150328013604.488A0C4091F@trevor.secretlab.ca> <5516DE64.6000104@hurleysoftware.com> <CAJiQ=7AS5+HkHcjRsYKi-EHVc3F1fg3Zp=1fCor1HrKeSWU72Q@mail.gmail.com> <551D6208.2060009@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20150408165351.GA22846@roeck-us.net>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <551D6208.2060009-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+Hi Kevin,
 
-Sorry my blunder mistake. Sorry for the noise.
-
-I just tested with spiking this patch and my observation and testing
-were wrong we can skip this patch.
-
-I will send an v2 patch series removing the patch 5 and patch 6.
-
-With correct dts changes.
-
-Thanks for pointing my mistake.
-
--Anand Moon
-
-On 8 April 2015 at 22:23, Guenter Roeck <linux@roeck-us.net> wrote:
-> On Wed, Apr 08, 2015 at 09:32:05PM +0530, Anand Moon wrote:
->> Hi Guenter,
+On 04/02/2015 11:36 AM, Peter Hurley wrote:
+> On 03/28/2015 03:28 PM, Kevin Cernekee wrote:
+>> Hi Peter,
 >>
->> Initially the board bootup the cooling level state is 0.
->> So update the duty cycle and this power off the fan.
->> As their is no state change the fan will not spin.
+>> This is my latest work-in-progress, incorporating the feedback from
+>> you and Grant:
 >>
->> Once the temperature sensor is reached to alert temperature it changes state.
->> With the state change the fan cools the CPU and then stop's
+>> https://github.com/cernekee/linux/commits/endian
 >>
->> I have observed this state change with tmon utility in linux/tools/thermal/tmon/
->>
-> Sorry, I am missing something. I still don't see what problem you are fixing
-> with this patch. What behavior is wrong with the current code, and how does your
-> patch fix it ?
->
-> Guenter
->
->> -Anand Moon
->>
->> On 8 April 2015 at 21:02, Guenter Roeck <linux@roeck-us.net> wrote:
->> > On Wed, Apr 08, 2015 at 10:44:15AM +0200, Lukasz Majewski wrote:
->> >> Hi Anand,
->> >>
->> >> > Below changes depend on following patch.
->> >> > https://patchwork.kernel.org/patch/5944061/
->> >> >
->> >> > Update the pwm_config with duty then update the pwm_disable
->> >> > to poweroff the cpu fan.
->> >> >
->> >
->> > Unfortunately, the patch does not include an explanation why it is needed.
->> >
->> > The original code presumably did not update the duty cycle because
->> > pwm was about to be disabled anyway. That kind of made sense to me.
->> > Updating the duty cycle to 0 just to disable the pwm channel right
->> > afterwards does not immediately make sense.
->> >
->> > Given that, I would expect to see a rationale here. Why is this patch needed ?
->> > Does it fix a bug ? If yes, pelase describe the bug. If not, what is the
->> > purpose of this patch ?
->> >
->> > Maybe that is all explained in patch 0/6, which I was not copied on. Even
->> > if so, the reationale will be needed in the changelog to explain to future
->> > developers why this change was made.
->> >
->> > Thanks,
->> > Guenter
->> >
->> >> > Tested on OdroidXU3 board.
->> >> >
->> >> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->> >> > ---
->> >> >  drivers/hwmon/pwm-fan.c | 10 ++++------
->> >> >  1 file changed, 4 insertions(+), 6 deletions(-)
->> >> >
->> >> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->> >> > index 7c83dc4..f25c841 100644
->> >> > --- a/drivers/hwmon/pwm-fan.c
->> >> > +++ b/drivers/hwmon/pwm-fan.c
->> >> > @@ -44,26 +44,24 @@ static int  __set_pwm(struct pwm_fan_ctx *ctx,
->> >> > unsigned long pwm) int ret = 0;
->> >> >
->> >> >     mutex_lock(&ctx->lock);
->> >> > +
->> >
->> > [ please refrain from unnecessary whitespace changes ]
->> >
->> >> >     if (ctx->pwm_value == pwm)
->> >> >             goto exit_set_pwm_err;
->> >> >
->> >> > -   if (pwm == 0) {
->> >> > -           pwm_disable(ctx->pwm);
->> >> > -           goto exit_set_pwm;
->> >> > -   }
->> >> > -
->> >> >     duty = DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MAX_PWM);
->> >> >     ret = pwm_config(ctx->pwm, duty, ctx->pwm->period);
->> >> >     if (ret)
->> >> >             goto exit_set_pwm_err;
->> >> >
->> >> > +   if (pwm == 0)
->> >> > +           pwm_disable(ctx->pwm);
->> >> > +
->> >> >     if (ctx->pwm_value == 0) {
->> >> >             ret = pwm_enable(ctx->pwm);
->> >> >             if (ret)
->> >> >                     goto exit_set_pwm_err;
->> >> >     }
->> >> >
->> >> > -exit_set_pwm:
->> >> >     ctx->pwm_value = pwm;
->> >> >  exit_set_pwm_err:
->> >> >     mutex_unlock(&ctx->lock);
->> >>
->> >> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
->> >>
->> >> BTW: I've added Guenter to CC.
->> >>
->> >> --
->> >> Best regards,
->> >>
->> >> Lukasz Majewski
->> >>
->> >> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+>> Not sure if this code plays nice with your recent cleanups?  If we're
+>> touching the same files/functions we should probably coordinate.
+> 
+> Ok, I'll look over your git tree and add whatever's required to
+> earlycon.
+
+Could you submit the first 5 patches from your 'endian' branch, so
+that big-endian support can be added to earlycon?
+
+Regards,
+Peter Hurley
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
