@@ -1,66 +1,54 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v5] DT: leds: Improve description of flash LEDs related
- properties
-Date: Wed, 08 Apr 2015 16:31:27 +0200
-Message-ID: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@linux.intel.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
+Date: Wed, 8 Apr 2015 16:43:43 +0200
+Message-ID: <CAMuHMdVsDx7g8jyU_nQZgG85o0huykb2EmBj4jskcuOuXXxiDA@mail.gmail.com>
+References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<20150319191834.5346CC40A35@trevor.secretlab.ca>
+	<8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com>
+	<CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com>
+	<1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com>
+	<CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com>
+	<20150402023803.E6A4DC4076D@trevor.secretlab.ca>
+	<CAMuHMdWVTsog2_9iyUEBWm-7xonvNibTTbOY5YxvpAhffUXdcg@mail.gmail.com>
+	<2B8BD326-8A21-45F3-8276-DF3B303B11D8@konsulko.com>
+	<CAL_JsqKWp5RWr_T-+gD7hTiJiJMxq68pOR4zORL7SD2H_=JMfg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKWp5RWr_T-+gD7hTiJiJMxq68pOR4zORL7SD2H_=JMfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Properties defining maximum values for LED currents and timeout should
-be mandatory to avoid the risk of hardware damage. This patch fixes
-the issue.
+On Wed, Apr 8, 2015 at 4:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Then we have dma controllers needing to be registered at subsys_initcall() for obvious reasons.
+>
+> These should be fixable with deferred probe. That requires fixing all
+> the client drivers where as fixing the dependencies would not need
+> driver changes.
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/leds/common.txt |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+DMA is tricky in that there are three cases, not two:
+  1. DMA engine is available,
+  2. DMA engine is not yet available (e.g. DMA engine driver is modular),
+  3. DMA engine will never be available (DMA engine or DMA engine driver
+     not available).
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 747c538..e478ac6 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -10,6 +10,17 @@ can influence the way of the LED device initialization, the LED components
- have to be tightly coupled with the LED device binding. They are represented
- by child nodes of the parent LED device binding.
- 
-+Required properties for child nodes:
-+- led-max-microamp : Maximum LED supply current in microamperes
-+                     (torch LED for flash devices). Controllers that have no
-+                     configurable current can omit this property.
-+- flash-max-microamp : Maximum flash LED supply current in microamperes.
-+- flash-timeout-us : Timeout in microseconds after which the flash
-+                     LED is turned off.
-+
-+Above properties determine a LED driver IC settings required for safe
-+operation. They should be also used as the initial settings for the IC.
-+
- Optional properties for child nodes:
- - led-sources : List of device current outputs the LED is connected to. The
- 		outputs are identified by the numbers that must be defined
-@@ -29,14 +40,6 @@ Optional properties for child nodes:
-      "ide-disk" - LED indicates disk activity
-      "timer" - LED flashes at a fixed, configurable rate
- 
--- max-microamp : maximum intensity in microamperes of the LED
--		 (torch LED for flash devices)
--- flash-max-microamp : maximum intensity in microamperes of the
--                       flash LED; it is mandatory if the LED should
--		       support the flash mode
--- flash-timeout-us : timeout in microseconds after which the flash
--                     LED is turned off
--
- 
- Examples:
- 
--- 
-1.7.9.5
+Case 2 is the tricky one: probably you don't want the client driver to
+fail hard,
+but want to fall back to PIO, and try to setup DMA again later.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
