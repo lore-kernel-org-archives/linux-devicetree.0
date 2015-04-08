@@ -1,148 +1,46 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] spi: bcm-mspi: Add support to set serial baud
- clock rate
-Date: Wed, 8 Apr 2015 21:32:09 +0200
-Message-ID: <CAOiHx=n2VccuO-Z2K2MviAL+n61nGfmHbU=pEd6seLEJ=-hG1g@mail.gmail.com>
-References: <1428516275-12819-1-git-send-email-jonathar@broadcom.com> <1428516275-12819-6-git-send-email-jonathar@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428516275-12819-6-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v2 4/5] ARM: tegra: add Tegra20 NAND flash controller node
+Date: Wed,  8 Apr 2015 21:46:09 +0200
+Message-ID: <1428522370-18035-5-git-send-email-dev@lynxeye.de>
+References: <1428522370-18035-1-git-send-email-dev@lynxeye.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428522370-18035-1-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add basic controller description to be extended
+by individual boards.
 
-On Wed, Apr 8, 2015 at 8:04 PM, Jonathan Richardson
-<jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> The driver wasn't setting the SPBR (serial clock baud rate) which caused
-> it to run at the slowest speed possible. The driver now calculates the
-> SPBR based on the reference clock frequency resulting in much faster
-> SPI transfers.
->
-> Signed-off-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/spi/spi-bcm-mspi.c |   50 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->
-> diff --git a/drivers/spi/spi-bcm-mspi.c b/drivers/spi/spi-bcm-mspi.c
-> index 32bb1f0..9320de9 100644
-> --- a/drivers/spi/spi-bcm-mspi.c
-> +++ b/drivers/spi/spi-bcm-mspi.c
-> @@ -18,10 +18,15 @@
->  #include <linux/bcma/bcma.h>
->  #include <linux/spi/spi.h>
->  #include <linux/of.h>
-> +#include <linux/clk.h>
->
->  #include "spi-bcm-mspi.h"
->
->  #define BCM_MSPI_MAX_SPI_BAUD   13500000       /* 216 MHz? */
-> +#define SPBR_MIN                8U
-> +#define SPBR_MAX                255U
-> +#define MSPI_SPCR0_LSB_OFFSET   0x200
-> +#define MSPI_SPCR0_LSB_SHIFT    0
->
->  /* The longest observed required wait was 19 ms */
->  #define BCM_MSPI_SPE_TIMEOUT_MS 80
-> @@ -33,7 +38,9 @@ struct bcm_mspi {
->
->         void __iomem *base;
->         struct spi_master *master;
-> +       struct clk *clk;
->         size_t read_offset;
-> +       u32    spbr;
->
->         void (*mspi_write)(struct bcm_mspi *mspi, u16 offset, u32 value);
->         u32 (*mspi_read)(struct bcm_mspi *mspi, u16 offset);
-> @@ -45,6 +52,15 @@ static inline unsigned int bcm_mspi_calc_timeout(size_t len)
->         return (len * 9000 / BCM_MSPI_MAX_SPI_BAUD * 110 / 100) + 1;
->  }
->
-> +static void bcm_mspi_hw_init(struct bcm_mspi *mspi)
-> +{
-> +       /* Set SPBR (serial clock baud rate). */
-> +       if (mspi->spbr) {
-> +               mspi->mspi_write(mspi, MSPI_SPCR0_LSB_OFFSET,
-> +                       mspi->spbr << MSPI_SPCR0_LSB_SHIFT);
-> +       }
-> +}
-> +
->  static int bcm_mspi_wait(struct bcm_mspi *mspi, unsigned int timeout_ms)
->  {
->         unsigned long deadline;
-> @@ -222,6 +238,7 @@ static struct bcm_mspi *bcm_mspi_init(struct device *dev)
->  {
->         struct bcm_mspi *data;
->         struct spi_master *master;
-> +       u32 desired_rate;
->
->         master = spi_alloc_master(dev, sizeof(*data));
->         if (!master) {
-> @@ -236,6 +253,33 @@ static struct bcm_mspi *bcm_mspi_init(struct device *dev)
->         master->dev.of_node = dev->of_node;
->         master->transfer_one = bcm_mspi_transfer_one;
->
-> +       /*
-> +        * Enable clock if provided. The frequency can be changed by setting
-> +        * SPBR (serial clock baud rate) based on the desired 'clock-frequency'.
-> +        *
-> +        * Baud rate is calculated as: mspi_clk / (2 * SPBR) where SPBR is a
-> +        * value between 1-255. If not set then it is left at the h/w default.
-> +        */
-> +       data->clk = devm_clk_get(dev, "mspi_clk");
-> +       if (!IS_ERR(data->clk)) {
-> +               int ret = clk_prepare_enable(data->clk);
+Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra20.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-You need to disable_unprepare the clock on removal, I don't see you doing that.
-
-> +
-> +               if (ret < 0) {
-> +                       dev_err(dev, "failed to enable clock: %d\n", ret);
-> +                       return 0;
-> +               }
-> +
-> +               /* Calculate SPBR if clock-frequency provided. */
-> +               if (of_property_read_u32(dev->of_node, "clock-frequency",
-> +                       &desired_rate) >= 0) {
-> +                       u32 spbr = clk_get_rate(data->clk) / (2 * desired_rate);
-> +
-> +                       if (spbr > 0)
-> +                               data->spbr = clamp_val(spbr, SPBR_MIN,
-> +                                       SPBR_MAX);
-> +               }
-> +       }
-> +
->         return data;
->  }
->
-> @@ -287,6 +331,9 @@ static int bcm_mspi_probe(struct platform_device *pdev)
->         data->mspi_write = bcm_mspi_write;
->         platform_set_drvdata(pdev, data);
->
-> +       /* Initialize SPI controller. */
-> +       bcm_mspi_hw_init(data);
-> +
->         err = devm_spi_register_master(dev, data->master);
->         if (err)
->                 goto out;
-> @@ -362,6 +409,9 @@ static int bcm_mspi_bcma_probe(struct bcma_device *core)
->
->         bcma_set_drvdata(core, data);
->
-> +       /* Initialize SPI controller. */
-> +       bcm_mspi_hw_init(data);
-> +
->         err = devm_spi_register_master(&core->dev, data->master);
->         if (err) {
->                 spi_master_put(data->master);
-> --
-
-Regards
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index e5527f7..d3c9a38 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -360,6 +360,19 @@
+ 		status = "disabled";
+ 	};
+ 
++	nand: nand@70008000 {
++		compatible = "nvidia,tegra20-nand";
++		reg = <0x70008000 0x100>;
++		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
++		clock-names = "nand";
++		resets = <&tegra_car 13>;
++		reset-names = "nand";
++		status = "disabled";
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++
+ 	pwm: pwm@7000a000 {
+ 		compatible = "nvidia,tegra20-pwm";
+ 		reg = <0x7000a000 0x100>;
+-- 
+2.1.0
