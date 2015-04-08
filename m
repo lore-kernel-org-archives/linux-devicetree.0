@@ -1,57 +1,42 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Tue, 7 Apr 2015 17:40:04 -0500
-Message-ID: <1428446404.22867.479.camel@freescale.com>
-References: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Igal.Liberman" <igal.liberman@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH] of/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
+Date: Tue,  7 Apr 2015 17:24:40 -0700
+Message-ID: <1428452680-24861-1-git-send-email-yinghai@kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTA0LTA3IGF0IDA3OjA4ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
-IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+
-Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dCAg
-ICAgIHwgICA1OSArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTkgaW5z
-ZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dAo+IGluZGV4IGRmNGEyNTkuLmE3ZTg0Y2UgMTAw
-NjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fvcmlx
-LWNsb2NrLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
-ay9xb3JpcS1jbG9jay50eHQKPiBAQCAtNjUsNiArNjUsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
-Ogo+ICAJCUl0IHRha2VzIHBhcmVudCdzIGNsb2NrLWZyZXF1ZW5jeSBhcyBpdHMgY2xvY2suCj4g
-IAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xv
-Y2sgKHYxLjApCj4gIAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTIuMCIgZm9yIHRoZSBwbGF0
-Zm9ybSBQTEwgY2xvY2sgKHYyLjApCj4gKwkqICJmc2wsZm1hbi1jbGstbXV4IiBmb3IgdGhlIEZy
-YW1lIE1hbmFnZXIgY2xvY2suCgpJcyB0aGVyZSBhbnkgdmVyc2lvbmluZyByZXF1aXJlZCBvbiB0
-aGlzPwoKPiAgLSAjY2xvY2stY2VsbHM6IEZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmcuIFRoZSBu
-dW1iZXIgb2YgY2VsbHMgaW4gYQo+ICAJY2xvY2stc3BlY2lmaWVyLiBTaG91bGQgYmUgPDA+IGZv
-ciAiZnNsLHFvcmlxLXN5c2Nsay1bMSwyXS4wIgo+ICAJY2xvY2tzLCBvciA8MT4gZm9yICJmc2ws
-cW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLgo+IEBAIC03Myw2ICs3NCw1MiBAQCBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+ICAJKiAwIC0gZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kKPiAg
-CSogMSAtIGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVlbmN5IGRpdmlkZWQgYnkgMgo+ICAJKiAyIC0g
-ZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kgZGl2aWRlZCBieSA0Cj4gKwlGb3IgImZzbCxmbWFu
-LWNsay1tdXgiIGNsb2NrcywgdGhlIHNpbmdsZSBjbG9jay1zcGVjaWZpZXIgY2VsbCBtYXkKPiAr
-CXRha2UgdmFsdWVzIGFjY29yZGluZyB0aGUgUmVzZXQgQ29uZmlndXJhdGlvbiBXb3JkIG9mIHRo
-ZSBzcGVjaWZpYwo+ICsJZGV2aWNlOgoKZnNsLGZtYW4tY2xrLW11eCBub2RlcyBoYXZlICNjbG9j
-ay1jZWxscyBvZiB6ZXJvLCBzbyBJIGRvbid0IHVuZGVyc3RhbmQKdGhpcyBzZWN0aW9uLgoKSWYg
-dGhpcyBpcyBtZWFudCB0byByZWZlciB0byB0aGUgY2xvY2sgc3BlY2lmaWVyIHRoYXQgZnNsLGZt
-YW4tY2xrLW11eApub2RlcyB1c2UgaW4gdGhlaXIgaW5wdXQgY2xvY2tzLCB0aGF0IGlzIGRldGVy
-bWluZWQgYnkgdGhlIGNsb2NrCnByb3ZpZGVyIGFuZCBub3QgdGhlIGNsb2NrIGNvbnN1bWVyLiAg
-CgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
-Cmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+For device resource PREF bit setting under bridge 64-bit pref resource,
+we need to make sure only set PREF for 64bit resource, so set IORESOUCE_MEM_64
+for 64bit resource during of device resource flags parsing.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org 
+
+---
+ drivers/of/address.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+Index: linux-2.6/drivers/of/address.c
+===================================================================
+--- linux-2.6.orig/drivers/of/address.c
++++ linux-2.6/drivers/of/address.c
+@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags
+ 		flags |= IORESOURCE_IO;
+ 		break;
+ 	case 0x02: /* 32 bits */
+-	case 0x03: /* 64 bits */
+ 		flags |= IORESOURCE_MEM;
+ 		break;
++	case 0x03: /* 64 bits */
++		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
++		break;
+ 	}
+ 	if (w & 0x40000000)
+ 		flags |= IORESOURCE_PREFETCH;
