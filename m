@@ -1,42 +1,39 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH] of/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Tue,  7 Apr 2015 17:24:40 -0700
-Message-ID: <1428452680-24861-1-git-send-email-yinghai@kernel.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/6] Revert "staging: board: disable as it breaks the
+ build"
+Date: Wed, 8 Apr 2015 09:44:05 +0900
+Message-ID: <20150408004400.GA3456@verge.net.au>
+References: <1428064923-24950-1-git-send-email-geert+renesas@glider.be>
+ <1428064923-24950-2-git-send-email-geert+renesas@glider.be>
+ <20150406004031.GD1841@verge.net.au>
+ <CAMuHMdX1uHq23h_qsq2csTSYbAhN9ZDdMviDi=KtbLuWucYWXA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX1uHq23h_qsq2csTSYbAhN9ZDdMviDi=KtbLuWucYWXA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, driverdevel <devel@driverdev.osuosl.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource, so set IORESOUCE_MEM_64
-for 64bit resource during of device resource flags parsing.
+On Tue, Apr 07, 2015 at 03:16:54PM +0200, Geert Uytterhoeven wrote:
+> On Mon, Apr 6, 2015 at 2:40 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Fri, Apr 03, 2015 at 02:41:58PM +0200, Geert Uytterhoeven wrote:
+> >> This reverts commit d13778d537a0ed6115d2a79a942af999cfb8eec6.
+> >>
+> >> Commit 13c11072536f2613 ("staging:board: remove unnecessary function")
+> >> fixed the build of drivers/staging/board/board.c.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Acked-by? Reviewed-by? Tested-by? Rejected-by?
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org 
+To be honest I was flipping between Signed-off-by and Acked-by.
+But it seems you don't think either of those would be appropriate.
+So how about:
 
----
- drivers/of/address.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Index: linux-2.6/drivers/of/address.c
-===================================================================
---- linux-2.6.orig/drivers/of/address.c
-+++ linux-2.6/drivers/of/address.c
-@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
