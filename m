@@ -1,100 +1,135 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
-Date: Wed, 8 Apr 2015 09:43:22 +0200
-Message-ID: <CAMuHMdUvkt4LrSkJhCT1k-YF-FUS4f2QByTJeCsVGqmjSXYB-A@mail.gmail.com>
-References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
-	<HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun5i: Enable touchscreen on Utoo P66
+Date: Wed, 8 Apr 2015 09:12:28 +0200
+Message-ID: <20150408071228.GB26727@lukather>
+References: <1427902177-26526-1-git-send-email-hdegoede@redhat.com>
+ <20150404124458.GI14618@lukather>
+ <551FE565.6050800@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LyciRD1jyfeSSjG0"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <551FE565.6050800-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
 
-On Wed, Apr 8, 2015 at 4:20 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
->> On Tue, Apr 7, 2015 at 9:53 AM, Yoshihiro Shimoda
->> <yoshihiro.shimoda.uh@renesas.com> wrote:
->> > diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
->> > index db3772e..5f20ad4 100644
->> > --- a/arch/arm/boot/dts/r8a7791.dtsi
->> > +++ b/arch/arm/boot/dts/r8a7791.dtsi
->> > @@ -722,6 +722,9 @@
->> >                 renesas,buswait = <4>;
->> >                 phys = <&usb0 1>;
->> >                 phy-names = "usb";
->> > +               dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
->> > +                      <&usb_dmac1 0>, <&usb_dmac1 1>;
->> > +               dma-names = "rx0", "tx1", "rx2", "tx3";
->>
->> The numbering looks a bit strange, given the code looks up both tx and rx
->> DMA channels for each channel index. Is it correct?
->>
->> The binding documentation (which lacks on example) states:
->>
->>   - dma-names : Must contain a list of DMA names:
->>    - tx0 ... tx<n>
->>    - rx0 ... rx<n>
->>     - This <n> means DnFIFO in USBHS module.
->>
->> As there are 4 DnFIFOs, I'd expect tx0..tx3 and rx0..rx3.
->>
->> Can you please clarify?
->
-> I wrote some information below.
-> But, since it is complex hardware, I don't know I can explain this as well...
->
-> At first, R-Car Gen2 has 2 USB-DMACs and 4 channels:
->  USB-DMAC 0: ch0
->  USB-DMAC 0: ch1
->  USB-DMAC 1: ch0
->  USB-DMAC 1: ch1
-> Remarks: I don't know why but performance of USB-DMAC 0 is good than USB-DMAC 1.
->           (Please refer to the Table 64.1 of the datasheet.)
->
-> So, I wrote dmas parameter in hsusb as the following:
->
->> > +               dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
->> > +                      <&usb_dmac1 0>, <&usb_dmac1 1>;
->
-> And, R-Car Gen2 has 4 DnFIFOs in HSUSB. to avoid complex handling for DnFIFOs,
-> the renesas_usbhs driver uses each DnFIFO as TX or RX direction (not bi-direction).
-> So, I wrote dma-names parameter as the following:
->
->> > +               dma-names = "rx0", "tx1", "rx2", "tx3";
->
-> - D0FIFO as RX (Also it is connected to USB-DMAC 0: ch0)
-> - D1FIFO as TX (Also it is connected to USB-DMAC 0: ch1)
-> - D2FIFO as RX (Also it is connected to USB-DMAC 1: ch0)
-> - D3FIFO as TX (Also it is connected to USB-DMAC 1: ch1)
+--LyciRD1jyfeSSjG0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the explanation!
+On Sat, Apr 04, 2015 at 03:21:41PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 04-04-15 14:44, Maxime Ripard wrote:
+> >Hi Hans,
+> >
+> >On Wed, Apr 01, 2015 at 05:29:37PM +0200, Hans de Goede wrote:
+> >>Add a node for the chipone-icn8318 touchscreen found on the Utoo P66 ta=
+blet.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >>Changes in v2:
+> >>-Fix touchscreen node name
+> >>---
+> >>  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts | 22 ++++++++++++++++++++++
+> >>  1 file changed, 22 insertions(+)
+> >>
+> >>diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/d=
+ts/sun5i-a13-utoo-p66.dts
+> >>index 9108ecd..00bdf28 100644
+> >>--- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+> >>+++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+> >>@@ -50,6 +50,7 @@
+> >>  #include "sunxi-common-regulators.dtsi"
+> >>  #include <dt-bindings/gpio/gpio.h>
+> >>  #include <dt-bindings/input/input.h>
+> >>+#include <dt-bindings/interrupt-controller/irq.h>
+> >>  #include <dt-bindings/pinctrl/sun4i-a10.h>
+> >>
+> >>  / {
+> >>@@ -93,6 +94,20 @@
+> >>  	pinctrl-0 =3D <&i2c1_pins_a>;
+> >>  	status =3D "okay";
+> >>
+> >>+	icn8318: touchscreen@40 {
+> >>+		compatible =3D "chipone,icn8318";
+> >>+		reg =3D <0x40>;
+> >>+		interrupt-parent =3D <&pio>;
+> >>+		interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+> >
+> >I don't think you sent a reply to this comment, but this should really
+> >be in a pinctrl node so that no one else can request the pin and
+> >change its muxing and it shows up in debugfs.
+>=20
+> I did reply to that comment on v1 of this patch:
+>=20
+> """
+> That is not necessary when specifying a gpio interrupt through the
+> irq chip (rather then through a gpios property), the mux is automatically
+> set to irq by the kernel when requesting the irq.
+>=20
+> Also note that we must use the interrupts notation here as this is specif=
+ied
+> by the i2c client bindings. None of the other boards using i2c + oob irq
+> pins specifies a pinmux for the irq pin either.
+> """
 
-Hence the "strange" numbering is a limitation of the driver, not of the
-hardware?
+I never received that mail, I guess we can blame Google Groups for
+that.
 
-In that case I think the DT should describe the hardware, not the driver
-limitation. As the FIFOs are bidirectional, there's just a one-to-one mapping
-of 4 DnFIFOs to 4 (2 channels x 2 DMACs) DMA channels.
-Which DnFIFO/channel is used for TX and which is used for RX is to be chosen
-by the driver, and can be fixed (e.g. use even channels for RX, odd for
-TX, like the current situation).
+> I've just double checked and I cannot (quickly) find any existing
+> devicetree files using interrupts =3D <foo> combined with pinctrl for
+> i2c clients.
+>=20
+> If you look in e.g. arch/arm/boot/dts/exynos4210-trats.dts and
+> arch/arm/boot/dts/exynos4412-trats2.dts you will see the same
+> pattern of using interrupts =3D <foo> pointing to a gpio without using
+> pinctrl
+>=20
+> And we already to the same for sdio oob interrupts in
+> sun7i-a20-cubietruck.dts and
+> arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts, so I vote for being
+> consistent here and not using pinctrl for the irq pin here either.
 
-What do you (and other people) think?
+That might turn out to be an issue, but ok.
 
-Gr{oetje,eeting}s,
+Maxime
 
-                        Geert
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
+--LyciRD1jyfeSSjG0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVJNTbAAoJEBx+YmzsjxAgZ0sP/0xX8hf+mKtWr4y/oPlGRYF0
+KkF4RR8CZ5n0VN67xRLMIWayZoNbWTDk9RZ/8r3d3uFbkvx/fDun3tgdnhhFvvc8
+7pW7jTU1tMEATUz3MOO/Vo7vzSSehrvRqGrR6DNKpjNxzasFeZCNJ2yx/+joWf6A
+aLR/FGBBNtTUJMuPkZop4olX4nCV1IHxxG8RmI64DeWguW55aZ/MSYEv/j6cPx1h
+Iv60huf0CM3JaqsZiI6iJ3Kfuj0b2EZ/9owmNxgjU8i3hgT5muEB08aNbPqe2NJE
+kEc6YZRrp2GMjYiNNKo31l34hLqaR8XKsR74gJ5b/feV24SrBK0HGYYQooEL9xA6
+M7AajIZbkFasu4XJY3vSQUNWDEBk1K5OdeNDDPUuYyxUj5nB/DKI5IYeE1XRf2hs
+bhY30hUoUBECn6zlWVXNqZspHej0tsVnJje0xCayUg+ONRX8ZMJzxkw/rjG6SIH0
+24K73uoPS4Uthb1+7DSmPngiU5ccxnXzGPXw2n1X9LDH9krB5TdP6FBtCINujLOK
+Rzvcy3UtYMlukRp4NHU4L/nZJ63+BzElUkqSCDalEcrgDTK1UJS5ne/RjaO+qjU8
+AnPvRzG1Yeo0ye4i4WVBzjciIm7HCIIZubRMdyebhnjukJZq9EFAeqsqkcmdD2ag
+iCTrxbx61vQ3WuMhyDES
+=U+z0
+-----END PGP SIGNATURE-----
+
+--LyciRD1jyfeSSjG0--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
