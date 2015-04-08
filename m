@@ -1,100 +1,89 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 4/4] clk: dt: Introduce binding for always-on clock
- support
-Date: Wed, 8 Apr 2015 09:14:50 +0100
-Message-ID: <20150408081450.GB5162@x1>
-References: <1428432239-4114-1-git-send-email-lee.jones@linaro.org>
- <1428432239-4114-5-git-send-email-lee.jones@linaro.org>
- <20150407191746.GA26727@lukather>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
+Date: Wed, 8 Apr 2015 08:22:01 +0000
+Message-ID: <HKNPR06MB3224A777FF63989453C3844D8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
+References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
+	<HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <CAMuHMdUvkt4LrSkJhCT1k-YF-FUS4f2QByTJeCsVGqmjSXYB-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150407191746.GA26727@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUvkt4LrSkJhCT1k-YF-FUS4f2QByTJeCsVGqmjSXYB-A@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 07 Apr 2015, Maxime Ripard wrote:
-> On Tue, Apr 07, 2015 at 07:43:59PM +0100, Lee Jones wrote:
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  .../devicetree/bindings/clock/clock-bindings.txt   | 38 ++++++++++=
-++++++++++++
-> >  1 file changed, 38 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings=
-=2Etxt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > index 06fc6d5..daf3323 100644
-> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > @@ -44,6 +44,44 @@ For example:
-> >    clocks by index. The names should reflect the clock output signa=
-l
-> >    names for the device.
-> > =20
-> > +clock-always-on:    Some hardware contains bunches of clocks which=
- must never be
-> > +		    turned off.  If drivers a) fail to obtain a reference to any
-> > +		    of these or b) give up a previously obtained reference
-> > +		    during suspend, the common clk framework will attempt to
-> > +		    disable them and a platform can fail irrecoverably as a
-> > +		    result.  Usually the only way to recover from these failures
-> > +		    is to reboot.
-> > +
-> > +		    To avoid either of these two scenarios from catastrophically
-> > +		    disabling an otherwise perfectly healthy running system,
-> > +		    clocks can be identified as always-on using this property
-> > +		    from inside a clocksource's node.
->=20
-> Isn't "clocksource" here way too similar to, I don't know, the
-> clocksource framework? Wouln't clock provider be better?
-
-Yes, I think you're right.  Stephen also mentioned it.
-
-> > +
-> > +		    This property is not to be abused.  It is only to be used to
-> > +		    protect platforms from being crippled by gated clocks, not
-> > +		    as a convenience function to avoid using the framework
-> > +		    correctly inside device drivers.
->=20
-> Disregarding what's stated here, I'm pretty sure that this will
-> actually happen. Where do you place the cursor?
-
-That's up to Mike.
-
-> Should we create a new driver for our RAM controller, or do we want t=
-o
-> use clock-always-on?
-
-I would say that if all the driver did was to enable clocks, then you
-should use this instead.  This binding was designed specifically for
-that purpose.
-
-However, if the aforementioned driver clock can be safely gated, then
-it should not be an always-on clock.
-
-> Do we really want to enforce this if we ever gain a driver that would
-> actually be able to manage its clock (like do we want the CPU clock t=
-o
-> never *ever* be gated just because we don't have a cpuidle/hotplug
-> driver yet?)
-
-As I've just mentioned, if a clock 'can' be turned off, this binding
-should never be used.  Situations where using always-on as a stop-gap
-due to a lack of current functionality is what the paragraph above is
-trying to mitigate.
-
-> Have you seen the numerous NAK on such approach Mike did?
-
-I haven't, but the folks reviewing previous versions have.  Do you
-have something specific in mind that you'd like to bring to my
-attention?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+SGkgR2VlcnQtc2FuLA0KDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gV2VkLCBBcHIgOCwg
+MjAxNSBhdCA0OjIwIEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEu
+dWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiBPbiBUdWUsIEFwciA3LCAyMDE1IGF0IDk6NTMg
+QU0sIFlvc2hpaGlybyBTaGltb2RhDQo+ID4+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2Fz
+LmNvbT4gd3JvdGU6DQo+ID4+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3
+OTEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEuZHRzaQ0KPiA+PiA+IGluZGV4IGRi
+Mzc3MmUuLjVmMjBhZDQgMTAwNjQ0DQo+ID4+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhh
+Nzc5MS5kdHNpDQo+ID4+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpDQo+
+ID4+ID4gQEAgLTcyMiw2ICs3MjIsOSBAQA0KPiA+PiA+ICAgICAgICAgICAgICAgICByZW5lc2Fz
+LGJ1c3dhaXQgPSA8ND47DQo+ID4+ID4gICAgICAgICAgICAgICAgIHBoeXMgPSA8JnVzYjAgMT47
+DQo+ID4+ID4gICAgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJ1c2IiOw0KPiA+PiA+ICsgICAg
+ICAgICAgICAgICBkbWFzID0gPCZ1c2JfZG1hYzAgMD4sIDwmdXNiX2RtYWMwIDE+LA0KPiA+PiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgPCZ1c2JfZG1hYzEgMD4sIDwmdXNiX2RtYWMxIDE+Ow0K
+PiA+PiA+ICsgICAgICAgICAgICAgICBkbWEtbmFtZXMgPSAicngwIiwgInR4MSIsICJyeDIiLCAi
+dHgzIjsNCj4gPj4NCj4gPj4gVGhlIG51bWJlcmluZyBsb29rcyBhIGJpdCBzdHJhbmdlLCBnaXZl
+biB0aGUgY29kZSBsb29rcyB1cCBib3RoIHR4IGFuZCByeA0KPiA+PiBETUEgY2hhbm5lbHMgZm9y
+IGVhY2ggY2hhbm5lbCBpbmRleC4gSXMgaXQgY29ycmVjdD8NCj4gPj4NCj4gPj4gVGhlIGJpbmRp
+bmcgZG9jdW1lbnRhdGlvbiAod2hpY2ggbGFja3Mgb24gZXhhbXBsZSkgc3RhdGVzOg0KPiA+Pg0K
+PiA+PiAgIC0gZG1hLW5hbWVzIDogTXVzdCBjb250YWluIGEgbGlzdCBvZiBETUEgbmFtZXM6DQo+
+ID4+ICAgIC0gdHgwIC4uLiB0eDxuPg0KPiA+PiAgICAtIHJ4MCAuLi4gcng8bj4NCj4gPj4gICAg
+IC0gVGhpcyA8bj4gbWVhbnMgRG5GSUZPIGluIFVTQkhTIG1vZHVsZS4NCj4gPj4NCj4gPj4gQXMg
+dGhlcmUgYXJlIDQgRG5GSUZPcywgSSdkIGV4cGVjdCB0eDAuLnR4MyBhbmQgcngwLi5yeDMuDQo+
+ID4+DQo+ID4+IENhbiB5b3UgcGxlYXNlIGNsYXJpZnk/DQo+ID4NCj4gPiBJIHdyb3RlIHNvbWUg
+aW5mb3JtYXRpb24gYmVsb3cuDQo+ID4gQnV0LCBzaW5jZSBpdCBpcyBjb21wbGV4IGhhcmR3YXJl
+LCBJIGRvbid0IGtub3cgSSBjYW4gZXhwbGFpbiB0aGlzIGFzIHdlbGwuLi4NCj4gPg0KPiA+IEF0
+IGZpcnN0LCBSLUNhciBHZW4yIGhhcyAyIFVTQi1ETUFDcyBhbmQgNCBjaGFubmVsczoNCj4gPiAg
+VVNCLURNQUMgMDogY2gwDQo+ID4gIFVTQi1ETUFDIDA6IGNoMQ0KPiA+ICBVU0ItRE1BQyAxOiBj
+aDANCj4gPiAgVVNCLURNQUMgMTogY2gxDQo+ID4gUmVtYXJrczogSSBkb24ndCBrbm93IHdoeSBi
+dXQgcGVyZm9ybWFuY2Ugb2YgVVNCLURNQUMgMCBpcyBnb29kIHRoYW4gVVNCLURNQUMgMS4NCj4g
+PiAgICAgICAgICAgKFBsZWFzZSByZWZlciB0byB0aGUgVGFibGUgNjQuMSBvZiB0aGUgZGF0YXNo
+ZWV0LikNCj4gPg0KPiA+IFNvLCBJIHdyb3RlIGRtYXMgcGFyYW1ldGVyIGluIGhzdXNiIGFzIHRo
+ZSBmb2xsb3dpbmc6DQo+ID4NCj4gPj4gPiArICAgICAgICAgICAgICAgZG1hcyA9IDwmdXNiX2Rt
+YWMwIDA+LCA8JnVzYl9kbWFjMCAxPiwNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgIDwm
+dXNiX2RtYWMxIDA+LCA8JnVzYl9kbWFjMSAxPjsNCj4gPg0KPiA+IEFuZCwgUi1DYXIgR2VuMiBo
+YXMgNCBEbkZJRk9zIGluIEhTVVNCLiB0byBhdm9pZCBjb21wbGV4IGhhbmRsaW5nIGZvciBEbkZJ
+Rk9zLA0KPiA+IHRoZSByZW5lc2FzX3VzYmhzIGRyaXZlciB1c2VzIGVhY2ggRG5GSUZPIGFzIFRY
+IG9yIFJYIGRpcmVjdGlvbiAobm90IGJpLWRpcmVjdGlvbikuDQo+ID4gU28sIEkgd3JvdGUgZG1h
+LW5hbWVzIHBhcmFtZXRlciBhcyB0aGUgZm9sbG93aW5nOg0KPiA+DQo+ID4+ID4gKyAgICAgICAg
+ICAgICAgIGRtYS1uYW1lcyA9ICJyeDAiLCAidHgxIiwgInJ4MiIsICJ0eDMiOw0KPiA+DQo+ID4g
+LSBEMEZJRk8gYXMgUlggKEFsc28gaXQgaXMgY29ubmVjdGVkIHRvIFVTQi1ETUFDIDA6IGNoMCkN
+Cj4gPiAtIEQxRklGTyBhcyBUWCAoQWxzbyBpdCBpcyBjb25uZWN0ZWQgdG8gVVNCLURNQUMgMDog
+Y2gxKQ0KPiA+IC0gRDJGSUZPIGFzIFJYIChBbHNvIGl0IGlzIGNvbm5lY3RlZCB0byBVU0ItRE1B
+QyAxOiBjaDApDQo+ID4gLSBEM0ZJRk8gYXMgVFggKEFsc28gaXQgaXMgY29ubmVjdGVkIHRvIFVT
+Qi1ETUFDIDE6IGNoMSkNCj4gDQo+IFRoYW5rcyBmb3IgdGhlIGV4cGxhbmF0aW9uIQ0KPiANCj4g
+SGVuY2UgdGhlICJzdHJhbmdlIiBudW1iZXJpbmcgaXMgYSBsaW1pdGF0aW9uIG9mIHRoZSBkcml2
+ZXIsIG5vdCBvZiB0aGUNCj4gaGFyZHdhcmU/DQoNClRoYW5rIHlvdSBmb3IgdGhlIHBvaW50ISBU
+aGF0J3MgY29ycmVjdC4NCg0KPiBJbiB0aGF0IGNhc2UgSSB0aGluayB0aGUgRFQgc2hvdWxkIGRl
+c2NyaWJlIHRoZSBoYXJkd2FyZSwgbm90IHRoZSBkcml2ZXINCj4gbGltaXRhdGlvbi4gQXMgdGhl
+IEZJRk9zIGFyZSBiaWRpcmVjdGlvbmFsLCB0aGVyZSdzIGp1c3QgYSBvbmUtdG8tb25lIG1hcHBp
+bmcNCj4gb2YgNCBEbkZJRk9zIHRvIDQgKDIgY2hhbm5lbHMgeCAyIERNQUNzKSBETUEgY2hhbm5l
+bHMuDQoNCkkgdW5kZXJzdG9vZCBpdC4NCihTb21ldGltZXMgSSBmb3JnZXQgdGhhdCB0aGUgRFQg
+c2hvdWxkIGRlc2NyaWJlIHRoZSBoYXJkd2FyZS4uLikNCg0KPiBXaGljaCBEbkZJRk8vY2hhbm5l
+bCBpcyB1c2VkIGZvciBUWCBhbmQgd2hpY2ggaXMgdXNlZCBmb3IgUlggaXMgdG8gYmUgY2hvc2Vu
+DQo+IGJ5IHRoZSBkcml2ZXIsIGFuZCBjYW4gYmUgZml4ZWQgKGUuZy4gdXNlIGV2ZW4gY2hhbm5l
+bHMgZm9yIFJYLCBvZGQgZm9yDQo+IFRYLCBsaWtlIHRoZSBjdXJyZW50IHNpdHVhdGlvbikuDQo+
+IA0KPiBXaGF0IGRvIHlvdSAoYW5kIG90aGVyIHBlb3BsZSkgdGhpbms/DQoNClRoYW5rIHlvdSBm
+b3IgdGhlIHN1Z2dlc3Rpb24hDQpJIHdpbGwgbW9kaWZ5IHRoZSByZW5lc2FzX3VzYmhzIGRyaXZl
+ci4NCkFsc28gSSB3b3VsZCBsaWtlIHRvIHJldmlzZSB0aGUgYmluZGluZyBkb2N1bWVudGF0aW9u
+IGFzIHRoZSBmb2xsb3dpbmc6DQoNCi0gZG1hLW5hbWVzIDogbmFtZWQgImNoJXUiLCB3aGVyZSAl
+dSBpcyB0aGUgY2hhbm5lbCBudW1iZXIgcmFuZ2luZyBmcm9tIHplcm8NCiAgICAgICAgICAgICAg
+dG8gdGhlIG51bWJlciBvZiBjaGFubmVscyAoRG5GSUZPcykgbWludXMgb25lLg0KDQpCZXN0IHJl
+Z2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhv
+ZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgt
+bTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwg
+cGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0
+byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0
+aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRz
+DQo=
