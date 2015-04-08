@@ -1,120 +1,202 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 01/12] DT: leds: Improve description of flash LEDs
- related properties
-Date: Wed, 8 Apr 2015 12:11:29 +0300
-Message-ID: <20150408091129.GT20756@valkosipuli.retiisi.org.uk>
-References: <1427809965-25540-1-git-send-email-j.anaszewski@samsung.com>
- <1427809965-25540-2-git-send-email-j.anaszewski@samsung.com>
- <20150403120910.GL20756@valkosipuli.retiisi.org.uk>
- <5524ECDC.1070609@samsung.com>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] ARM:dts exynos5422 Update the thermal sensor for tmu_cpu0
+Date: Wed, 8 Apr 2015 14:42:38 +0530
+Message-ID: <CANAwSgTSsGF1p7ehvMHpBX5MbtickOKXe3oZw26EuB9BMxY4Hg@mail.gmail.com>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+	<1427387955-5129-4-git-send-email-linux.amoon@gmail.com>
+	<20150408100240.7f597dae@amdc2363>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5524ECDC.1070609@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150408100240.7f597dae@amdc2363>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hi Lukasz,
 
-On Wed, Apr 08, 2015 at 10:54:52AM +0200, Jacek Anaszewski wrote:
-> Hi Sakari,
-> 
-> On 04/03/2015 02:09 PM, Sakari Ailus wrote:
-> >Hi Jacek,
-> >
-> >On Tue, Mar 31, 2015 at 03:52:37PM +0200, Jacek Anaszewski wrote:
-> >>Description of flash LEDs related properties was not precise regarding
-> >>the state of corresponding settings in case a property is missing.
-> >>Add relevant statements.
-> >>Removed is also the requirement making the flash-max-microamp
-> >>property obligatory for flash LEDs. It was inconsistent as the property
-> >>is defined as optional. Devices which require the property will have
-> >>to assert this in their DT bindings.
-> >>
-> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>Cc: Bryan Wu <cooloney@gmail.com>
-> >>Cc: Richard Purdie <rpurdie@rpsys.net>
-> >>Cc: Pavel Machek <pavel@ucw.cz>
-> >>Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >>Cc: devicetree@vger.kernel.org
-> >>---
-> >>  Documentation/devicetree/bindings/leds/common.txt |   16 +++++++++-------
-> >>  1 file changed, 9 insertions(+), 7 deletions(-)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> >>index 747c538..21a25e4 100644
-> >>--- a/Documentation/devicetree/bindings/leds/common.txt
-> >>+++ b/Documentation/devicetree/bindings/leds/common.txt
-> >>@@ -29,13 +29,15 @@ Optional properties for child nodes:
-> >>       "ide-disk" - LED indicates disk activity
-> >>       "timer" - LED flashes at a fixed, configurable rate
-> >>
-> >>-- max-microamp : maximum intensity in microamperes of the LED
-> >>-		 (torch LED for flash devices)
-> >>-- flash-max-microamp : maximum intensity in microamperes of the
-> >>-                       flash LED; it is mandatory if the LED should
-> >>-		       support the flash mode
-> >>-- flash-timeout-us : timeout in microseconds after which the flash
-> >>-                     LED is turned off
-> >>+- max-microamp : Maximum intensity in microamperes of the LED
-> >>+		 (torch LED for flash devices). If omitted this will default
-> >>+		 to the maximum current allowed by the device.
-> >>+- flash-max-microamp : Maximum intensity in microamperes of the flash LED.
-> >>+		       If omitted this will default to the maximum
-> >>+		       current allowed by the device.
-> >>+- flash-timeout-us : Timeout in microseconds after which the flash
-> >>+                     LED is turned off. If omitted this will default to the
-> >>+		     maximum timeout allowed by the device.
-> >>
-> >>
-> >>  Examples:
-> >
-> >Pavel pointed out that the brightness between maximum current and the
-> >maximum *allowed* another current might not be noticeable, leading a
-> >potential spelling error to cause the LED being run at too high current.
-> 
-> I think that a board designed so that it can be damaged because of
-> software bugs should be considered not eligible for commercial use.
-> Any self-esteeming manufacturer will not connect a LED to the output
-> that can produce the current greater than the LED's absolute maximum
-> current.
+On Odroidxu3 board critical temp is 85.0 C. Below is the sensors output=
+=2E
 
-The maximum current *is* used to prevent potential hardware damage. This is
-how mobile phones typically are, probably also the one you're using. :-) I
-don't believe there's really a difference between vendors in this respect.
+therm_zone0-virtual-0
+Adapter: Virtual device
+temp1: +39.0=E2=96=92=E1=81=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+temp2: +38.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+temp3: +40.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+temp4: +49.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+temp5: +29.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
 
-We still lack a proper way to model the temperature of the flash LED, so
-what we have now is a bit incomplete, but at least it prevents causing
-damage unintentionally.
+I have observed cpu shutdown as we do test pm-qa thermal testing.
 
-> The DT properties could be useful for devices like aat1290 device I was
-> writing a driver for, which has the maximum current and timeout values
-> depending on corresponding capacitor and resistor values respectively.
-> Such devices should make the properties required in their bindings.
-> 
-> >The three drivers I've looked also require these properties, which I think
-> >is in the line with the above.
-> >
-> >How about either dropping the patch, or changing maximum to minimum and
-> >will to should? The drivers could also behave this way instead of requiring
-> >the properties, but I don't think there's anything wrong with requiring the
-> >properties either.
-> 
-> As I mentioned in the previous message in this subject, the max-microamp
-> property refers also to non-flash LEDs. Since existing LED class devices
-> does not require them, then it should be left optional and default to
-> max. It would however be inconsistent with flash LEDs related
-> properties.
+So I propose the temperature values to be 50000, 65000 ,80000 and
+85000 Critical temperature.
 
-I do agree with Pavel here, these should be mandatory (at least for new
-drivers) OR default to minimum.
+Please share your thoughts.
 
--- 
-Regards,
+-Anand Moon
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+On 8 April 2015 at 13:32, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrot=
+e:
+> Hi Anand,
+>
+>> Move the registration of thermal sensors for tmu_cpu0 from
+>> exynos5420.dtsi to exynos5-cpu-thermal.dtsi, to avoid duplicate
+>> registration of the sensors.
+>>
+>> Tested on OdroidXU3 board.
+>>
+>> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/exynos5-cpu-thermal.dtsi | 58
+>> ++++++++++++++++++++++++++++++
+>> arch/arm/boot/dts/exynos5420.dtsi          |  4 ---
+>> arch/arm/boot/dts/exynos5422-odroidxu3.dts |  1 + 3 files changed, 5=
+9
+>> insertions(+), 4 deletions(-) create mode 100644
+>> arch/arm/boot/dts/exynos5-cpu-thermal.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5-cpu-thermal.dtsi
+>> b/arch/arm/boot/dts/exynos5-cpu-thermal.dtsi new file mode 100644
+>> index 0000000..8fede70
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/exynos5-cpu-thermal.dtsi
+>> @@ -0,0 +1,58 @@
+>> +/*
+>> + * Device tree sources for Exynos5 thermal zone
+>> + *
+>> + * Copyright (c) 2014 Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+>                         ^^^^^^^^^^^^^^^^ Could you update this
+>                         line :-). I'm just reviewer here :-)
+>
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> modify
+>> + * it under the terms of the GNU General Public License version 2 a=
+s
+>> + * published by the Free Software Foundation.
+>> + *
+>> + */
+>> +
+>> +#include <dt-bindings/thermal/thermal.h>
+>> +
+>> +/ {
+>> +     thermal-zones {
+>> +             cpu0_thermal: cpu0-thermal {
+>> +                     thermal-sensors =3D <&tmu_cpu0>;
+>> +                     polling-delay-passive =3D <0>;
+>> +                     polling-delay =3D <0>;
+>> +                     trips {
+>> +                             cpu_alert0: cpu-alert-0 {
+>> +                                     temperature =3D <48000>; /* ms
+>> */
+>> +                                     hysteresis =3D <3000>; /* ms *=
+/
+>                                                             ^^^^^^^^^
+>                                                         We already ha=
+ve
+>                                                         "millicelsius=
+"
+>                                                         instead od ms
+>> +                                     type =3D "active";
+>> +                             };
+>> +                             cpu_alert1: cpu-alert-1 {
+>> +                                     temperature =3D <53000>; /* ms
+>> */
+>> +                                     hysteresis =3D <3000>; /* ms *=
+/
+>> +                                     type =3D "active";
+>> +                             };
+>> +                             cpu_alert2: cpu-alert-2 {
+>> +                                     temperature =3D <59000>; /* ms
+>> */
+>> +                                     hysteresis =3D <3000>; /* ms *=
+/
+>> +                                     type =3D "active";
+>> +                             };
+>> +                             cpu_crit0: cpu-crit-0 {
+>> +                                     temperature =3D <75000>; /* ms
+>> */
+>> +                                     hysteresis =3D <0>; /* ms */
+>> +                                     type =3D "critical";
+>
+>                 Is there any special reasons why we need special valu=
+es
+>                 for cpu0_thermal sensor at XU3? Is something wrong wi=
+th
+>                 default values defined at exynos4-cpu-thermal.dtsi?
+>
+>                 If this is Odroid XU3 specific, then IMHO it should b=
+e
+>                 added to exynos5422-odroidxu3.dts
+>
+>> +                             };
+>> +                     };
+>> +                     cooling-maps {
+>> +                             map0 {
+>> +                                  trip =3D <&cpu_alert0>;
+>> +                                  cooling-device =3D <&fan0 0 1>;
+>> +                             };
+>> +                             map1 {
+>> +                                  trip =3D <&cpu_alert1>;
+>> +                                  cooling-device =3D <&fan0 1 2>;
+>> +                             };
+>> +                             map2 {
+>> +                                  trip =3D <&cpu_alert2>;
+>> +                                  cooling-device =3D <&fan0 2 3>;
+>> +                             };
+>> +                     };
+>> +             };
+>> +     };
+>> +};
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+>> b/arch/arm/boot/dts/exynos5420.dtsi index 6b49f3c..eb0f16c 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -827,10 +827,6 @@
+>>       };
+>>
+>>       thermal-zones {
+>> -             cpu0_thermal: cpu0-thermal {
+>> -                     thermal-sensors =3D <&tmu_cpu0>;
+>> -                     #include "exynos5420-trip-points.dtsi"
+>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ [1]
+>
+>> -             };
+>>               cpu1_thermal: cpu1-thermal {
+>>                      thermal-sensors =3D <&tmu_cpu1>;
+>>                      #include "exynos5420-trip-points.dtsi"
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> b/arch/arm/boot/dts/exynos5422-odroidxu3.dts index eaec006..c8b3e3e
+>> 100644 --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> @@ -12,6 +12,7 @@
+>>
+>>  /dts-v1/;
+>>  #include "exynos5800.dtsi"
+>> +#include "exynos5-cpu-thermal.dtsi"
+>
+> I would prefer to stick to convention proposed at [1]. It keeps
+> the locality of the include with respective thermal zone.
+>
+>>
+>>  / {
+>>       model =3D "Hardkernel Odroid XU3";
+>
+> DTS changes should be added to Samsung tree by Samsung maintainer - M=
+r.
+> Kukjin Kim.
+>
+> --
+> Best regards,
+>
+> Lukasz Majewski
+>
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
