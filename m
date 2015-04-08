@@ -1,61 +1,40 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] spi: bcm-mspi: Make BCMA optional to support
- non-BCMA chips
-Date: Wed, 8 Apr 2015 21:03:06 +0100
-Message-ID: <20150408200306.GM6023@sirena.org.uk>
-References: <1428516275-12819-1-git-send-email-jonathar@broadcom.com>
- <1428516275-12819-5-git-send-email-jonathar@broadcom.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [v2] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Wed, 8 Apr 2015 16:11:56 -0500
+Message-ID: <1428527516.22867.509.camel@freescale.com>
+References: <1428479031-26597-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yfgt5/gpfXq9ryTU"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428516275-12819-5-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1428479031-26597-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
---yfgt5/gpfXq9ryTU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 08, 2015 at 11:04:34AM -0700, Jonathan Richardson wrote:
-
->   - A new config for non-BCMA chips has been added.
->   - Common code between the BCMA and non BCMA version are shared.
->   - Function pointers to set read/write functions to abstract bcma
->     and non-bcma versions are provided.
->   - DT is now mandatory. Hard coded SPI devices are removed and must be
->     set in DT.
->   - Remove function was unnecessary and removed.
-
-This looks like it should be a patch series in itself - for example, the
-move to using function pointers as a read/write operation looks like
-something that could easily be pulled out, as could the removal of
-unused functions.  Having things split out makes life a lot easier for
-review since it makes it much easier to check if the change is doing the
-things it's supposed to be doing.
-
---yfgt5/gpfXq9ryTU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVJYl5AAoJECTWi3JdVIfQdfcH/0hJB2TpIJARWa1y8Yny0t6O
-gPvmpMQZxAKi0gMzP9R+9A0RaIJ3KmAlDXu/wC5saOfYPQQQDC1wOWqtDL4WWJRQ
-8q/yJSGpaknD1Y2OVpxLfEZhsYxU6JSl427czMVKOas9ES6AIzbFLfPLWNRU6cLS
-+LM7UtX9jzPMJRokh2p3b5R+pMSFtc9A++icBACtIiT7ZErhNW4vos66xpo3JarK
-H75pHl+vPQcGE7BPrv7bnZIGubCc8nPBXiP9wPlotr607M2q09d8NVFoUl6YDNIO
-6wSyoiGIpRif2MoMcNLTl2QAA2bVtBnOIIaUMk72ebH4NbZYC/NybRmQ8UUGxNo=
-=hrkq
------END PGP SIGNATURE-----
-
---yfgt5/gpfXq9ryTU--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyMDE1LTA0LTA4IGF0IDEwOjQzICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
+IEBAIC03Niw2ICs3Nyw1MiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAKPiAgUmVjb21tZW5k
+ZWQgcHJvcGVydGllczoKPiAgLSBjbG9ja3M6IFNob3VsZCBiZSB0aGUgcGhhbmRsZSBvZiBpbnB1
+dCBwYXJlbnQgY2xvY2sKPiArCUZvciAiZnNsLGZtYW4tY2xrLW11eCIgY2xvY2sgdGhlcmUgYXJl
+IHNldmVyYWwgb3B0aW9ucyBmb3IgcGFyZW50Cj4gKwljbG9jayAoY2xvY2sgcHJvdmlkZXIpLCB0
+aGUgcGFyZW50IGlzIGRldGVybWluZWQgYWNjb3JkaW5nIHRvIHRoZQo+ICsJUmVzZXQgQ29uZmln
+dXJhdGlvbiBXb3JkIG9mIHRoZSBzcGVjaWZpYyBkZXZpY2U6Cj4gKwkJKiBQMjA0MSwgUDMwNDE6
+Cj4gKwkJCSogMCAtIGVxdWFsIHRvIHBsYXRmb3JtIFBMTCBkaXZpZGVkIGJ5IDIKPiArCQkJKiAx
+IC0gZXF1YWwgdG8gUExMMiBkaXZpZGVkIGJ5IDIKPiArCQkqIFA0MDgwIChCb3RoIEZNYW5zKToK
+PiArCQkJKiAwIC0gZXF1YWwgdG8gcGxhdGZvcm0gUExMIGRpdmlkZWQgYnkgMgo+ICsJCQkqIDEg
+LSBlcXVhbCB0byBQTEwzIGRpdmlkZWQgYnkgMgouLi4KCgpBZ2FpbiwgdGhlIGNsb2NrIHNwZWNp
+ZmllciBmb3JtYXQgaXMgZGV0ZXJtaW5lZCBieSB0aGUgY2xvY2sgcHJvdmlkZXIsCm5vdCB0aGUg
+Y2xvY2sgY29uc3VtZXIuCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBw
+Yy1kZXY=
