@@ -1,70 +1,29 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v3] ASoC: max98090: add shutdown callback for max98090
-Date: Wed,  8 Apr 2015 19:05:56 +0800
-Message-ID: <1428491156-31803-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sonny Rao <sonnyrao@chromium.org>, Cheng-Yi Chiang <cychiang@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>, zhengxing <zhengxing@rock-chips.com>, "jay.xu" <xjq@rock-chips.com>
-Cc: devicetree@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, Dylan Reid <dgreid@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Tushar Behera <tushar.b@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [GIT PULL] simple-mfd cleanup
+Date: Wed, 8 Apr 2015 13:19:00 +0200
+Message-ID: <CACRpkdaP3hnj30E0pN0c9q3XeMW1hqOv_yqT+smLMEjCv=102A@mail.gmail.com>
+References: <CACRpkdYd3eHZK6vcJQDtuPQXa2GoGA3sEPb8yu8r21CmWpfvNA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYd3eHZK6vcJQDtuPQXa2GoGA3sEPb8yu8r21CmWpfvNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bjorn Andersson <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To fix pop noise when shutdown,the pop noise during shutdown
-is the pmic cutoff power of codec without any notice.
+On Wed, Mar 25, 2015 at 8:50 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: jay.xu <xjq@rock-chips.com>
-Signed-off-by: zhengxing <zhengxing@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cleanups from Antoine Tenart and Alexandre Belloni depend on this.
+>
+> Please pull this in.
 
----
+Ping on this. The OF patch is ACKed by Grant:
+http://marc.info/?l=devicetree&m=142755431728537&w=2
 
-Changes in v3:
-- modify the shutdown function before remove(..)
-- fix the `Serien-cc`
-
-Changes in v2:
-- remove the dev_info(..)
-- fix the comment style
-- add the max98090_i2c_shutdown() in remove() fuction
-
- sound/soc/codecs/max98090.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index b112b1c..3e33ef2 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -2605,8 +2605,24 @@ err_enable:
- 	return ret;
- }
- 
-+static void max98090_i2c_shutdown(struct i2c_client *i2c)
-+{
-+	struct max98090_priv *max98090 = dev_get_drvdata(&i2c->dev);
-+
-+	/*
-+	 * Enable volume smoothing, disable zero cross.  This will cause
-+	 * a quick 40ms ramp to mute on shutdown.
-+	 */
-+	regmap_write(max98090->regmap,
-+		M98090_REG_LEVEL_CONTROL, M98090_VSENN_MASK);
-+	regmap_write(max98090->regmap,
-+		M98090_REG_DEVICE_SHUTDOWN, 0x00);
-+	msleep(40);
-+}
-+
- static int max98090_i2c_remove(struct i2c_client *client)
- {
-+	max98090_i2c_shutdown(client);
- 	snd_soc_unregister_codec(&client->dev);
- 	return 0;
- }
-@@ -2696,6 +2712,7 @@ static struct i2c_driver max98090_i2c_driver = {
- 		.acpi_match_table = ACPI_PTR(max98090_acpi_match),
- 	},
- 	.probe  = max98090_i2c_probe,
-+	.shutdown = max98090_i2c_shutdown,
- 	.remove = max98090_i2c_remove,
- 	.id_table = max98090_i2c_id,
- };
--- 
-1.9.1
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
