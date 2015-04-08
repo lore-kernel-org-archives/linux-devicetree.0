@@ -1,43 +1,59 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V3 5/7] serial: earlycon: Set UPIO_MEM32BE based on DT
- properties
-Date: Wed, 08 Apr 2015 13:56:33 -0400
-Message-ID: <55256BD1.4040604@hurleysoftware.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com> <1416872182-6440-6-git-send-email-cernekee@gmail.com> <54F3914F.3080905@hurleysoftware.com> <20150328013604.488A0C4091F@trevor.secretlab.ca> <5516DE64.6000104@hurleysoftware.com> <CAJiQ=7AS5+HkHcjRsYKi-EHVc3F1fg3Zp=1fCor1HrKeSWU72Q@mail.gmail.com> <551D6208.2060009@hurleysoftware.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/5] Add MSPI support for Cygnus
+Date: Wed, 8 Apr 2015 11:04:30 -0700
+Message-ID: <1428516275-12819-1-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <551D6208.2060009-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+This patchset adds support for the MSPI controller on Cygnus. The existing MSPI
+driver in the kernel was written for BCMA which is a Broadcom AMBA bus variant
+used on certain chips such as the 53xx.
 
-On 04/02/2015 11:36 AM, Peter Hurley wrote:
-> On 03/28/2015 03:28 PM, Kevin Cernekee wrote:
->> Hi Peter,
->>
->> This is my latest work-in-progress, incorporating the feedback from
->> you and Grant:
->>
->> https://github.com/cernekee/linux/commits/endian
->>
->> Not sure if this code plays nice with your recent cleanups?  If we're
->> touching the same files/functions we should probably coordinate.
-> 
-> Ok, I'll look over your git tree and add whatever's required to
-> earlycon.
+This patch makes BCMA support optional. The current config is being renamed to
+make it chip nonspecific supporting BCMA, and a new config is added to support
+non-BCMA chips. DT support is now mandatory to allow removal of a hardcoded SPI
+device.
 
-Could you submit the first 5 patches from your 'endian' branch, so
-that big-endian support can be added to earlycon?
+Support is also added to set the baud rate. The controller currently runs at the
+slowest speed possible.
 
-Regards,
-Peter Hurley
+Changes from v1:
+ - Split previous patch 2 into two patches to make it easier to review. One
+   commit for the file rename, and one for the actual changes to rename
+   variables, functions, etc.
+ - Checked return value of clk_get_rate().
+ - ifdef indentation fix.
+
+Jonathan Richardson (5):
+  ARM: dts: Add binding for Broadcom MSPI driver.
+  spi: bcm53xx: Refactor driver to make nonspecific to 53xx SoCs
+  spi: bcm-mspi: Refactor to make driver nonspecific to 53xx SoCs
+  spi: bcm-mspi: Make BCMA optional to support non-BCMA chips
+  spi: bcm-mspi: Add support to set serial baud clock rate
+
+ .../devicetree/bindings/spi/brcm,mspi-spi.txt      |   36 ++
+ drivers/spi/Kconfig                                |   12 +-
+ drivers/spi/Makefile                               |    3 +-
+ drivers/spi/spi-bcm-mspi.c                         |  457 ++++++++++++++++++++
+ drivers/spi/spi-bcm-mspi.h                         |   84 ++++
+ drivers/spi/spi-bcm53xx.c                          |  299 -------------
+ drivers/spi/spi-bcm53xx.h                          |   72 ---
+ 7 files changed, 587 insertions(+), 376 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/brcm,mspi-spi.txt
+ create mode 100644 drivers/spi/spi-bcm-mspi.c
+ create mode 100644 drivers/spi/spi-bcm-mspi.h
+ delete mode 100644 drivers/spi/spi-bcm53xx.c
+ delete mode 100644 drivers/spi/spi-bcm53xx.h
+
+-- 
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
