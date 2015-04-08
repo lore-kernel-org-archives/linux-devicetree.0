@@ -1,109 +1,227 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 05/10] eeprom: Add bindings for simple eeprom framework
-Date: Wed, 08 Apr 2015 10:24:26 +0100
-Message-ID: <5524F3CA.2060400@linaro.org>
-References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org> <1427752679-17261-1-git-send-email-srinivas.kandagatla@linaro.org> <20150406133208.GH30984@beef> <CAL_Jsq++9pyJMLXssgyz2WRU4e7ikT_6FwzWMo1fKS82FJvEyg@mail.gmail.com> <20150406150442.GA26319@beef> <55241575.7040809@linaro.org> <20150407174624.GO6023@sirena.org.uk> <55241BF2.4050609@linaro.org> <20150407194636.GB6662@beef>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 3/6] ARM:dts exynos5422 Update the thermal sensor for
+ tmu_cpu0
+Date: Wed, 08 Apr 2015 11:30:03 +0200
+Message-ID: <20150408113003.78ec5f86@amdc2363>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+ <1427387955-5129-4-git-send-email-linux.amoon@gmail.com>
+ <20150408100240.7f597dae@amdc2363>
+ <CANAwSgTSsGF1p7ehvMHpBX5MbtickOKXe3oZw26EuB9BMxY4Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150407194636.GB6662@beef>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-reply-to: <CANAwSgTSsGF1p7ehvMHpBX5MbtickOKXe3oZw26EuB9BMxY4Hg@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Anand,
+
+> Hi Lukasz,
+>=20
+> On Odroidxu3 board critical temp is 85.0 C. Below is the sensors
+> output.
+
+Do you have XU3 with a fan?
+
+>=20
+> therm_zone0-virtual-0
+> Adapter: Virtual device
+> temp1: +39.0=E2=96=92=E1=81=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+> temp2: +38.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+> temp3: +40.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+> temp4: +49.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+> temp5: +29.0=E2=96=92=C2=B0C (crit =3D +85.0=E2=96=92=C2=B0C)
+>=20
+> I have observed cpu shutdown as we do test pm-qa thermal testing.
+>=20
+> So I propose the temperature values to be 50000, 65000 ,80000 and
+> 85000 Critical temperature.
+>=20
+
+This seems strange - since other Samsung's SoC have higher work
+temperatures (both exynos5 and exynos4).
+
+I will try to check those thresholds on my XU3. Have anybody else
+experienced overheating at XU3?
+
+Sjoerd? Kukjin?
+
+> Please share your thoughts.
+>=20
+> -Anand Moon
+>=20
+> On 8 April 2015 at 13:32, Lukasz Majewski <l.majewski@samsung.com>
+> wrote:
+> > Hi Anand,
+> >
+> >> Move the registration of thermal sensors for tmu_cpu0 from
+> >> exynos5420.dtsi to exynos5-cpu-thermal.dtsi, to avoid duplicate
+> >> registration of the sensors.
+> >>
+> >> Tested on OdroidXU3 board.
+> >>
+> >> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> >> ---
+> >>  arch/arm/boot/dts/exynos5-cpu-thermal.dtsi | 58
+> >> ++++++++++++++++++++++++++++++
+> >> arch/arm/boot/dts/exynos5420.dtsi          |  4 ---
+> >> arch/arm/boot/dts/exynos5422-odroidxu3.dts |  1 + 3 files changed,
+> >> 59 insertions(+), 4 deletions(-) create mode 100644
+> >> arch/arm/boot/dts/exynos5-cpu-thermal.dtsi
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos5-cpu-thermal.dtsi
+> >> b/arch/arm/boot/dts/exynos5-cpu-thermal.dtsi new file mode 100644
+> >> index 0000000..8fede70
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/exynos5-cpu-thermal.dtsi
+> >> @@ -0,0 +1,58 @@
+> >> +/*
+> >> + * Device tree sources for Exynos5 thermal zone
+> >> + *
+> >> + * Copyright (c) 2014 Lukasz Majewski <l.majewski@samsung.com>
+> >
+> >                         ^^^^^^^^^^^^^^^^ Could you update this
+> >                         line :-). I'm just reviewer here :-)
+> >
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or
+> >> modify
+> >> + * it under the terms of the GNU General Public License version 2
+> >> as
+> >> + * published by the Free Software Foundation.
+> >> + *
+> >> + */
+> >> +
+> >> +#include <dt-bindings/thermal/thermal.h>
+> >> +
+> >> +/ {
+> >> +     thermal-zones {
+> >> +             cpu0_thermal: cpu0-thermal {
+> >> +                     thermal-sensors =3D <&tmu_cpu0>;
+> >> +                     polling-delay-passive =3D <0>;
+> >> +                     polling-delay =3D <0>;
+> >> +                     trips {
+> >> +                             cpu_alert0: cpu-alert-0 {
+> >> +                                     temperature =3D <48000>; /* =
+ms
+> >> */
+> >> +                                     hysteresis =3D <3000>; /* ms=
+ */
+> >                                                             ^^^^^^^=
+^^
+> >                                                         We already
+> > have "millicelsius"
+> >                                                         instead od
+> > ms
+> >> +                                     type =3D "active";
+> >> +                             };
+> >> +                             cpu_alert1: cpu-alert-1 {
+> >> +                                     temperature =3D <53000>; /* =
+ms
+> >> */
+> >> +                                     hysteresis =3D <3000>; /* ms=
+ */
+> >> +                                     type =3D "active";
+> >> +                             };
+> >> +                             cpu_alert2: cpu-alert-2 {
+> >> +                                     temperature =3D <59000>; /* =
+ms
+> >> */
+> >> +                                     hysteresis =3D <3000>; /* ms=
+ */
+> >> +                                     type =3D "active";
+> >> +                             };
+> >> +                             cpu_crit0: cpu-crit-0 {
+> >> +                                     temperature =3D <75000>; /* =
+ms
+> >> */
+> >> +                                     hysteresis =3D <0>; /* ms */
+> >> +                                     type =3D "critical";
+> >
+> >                 Is there any special reasons why we need special
+> > values for cpu0_thermal sensor at XU3? Is something wrong with
+> >                 default values defined at exynos4-cpu-thermal.dtsi?
+> >
+> >                 If this is Odroid XU3 specific, then IMHO it should
+> > be added to exynos5422-odroidxu3.dts
+> >
+> >> +                             };
+> >> +                     };
+> >> +                     cooling-maps {
+> >> +                             map0 {
+> >> +                                  trip =3D <&cpu_alert0>;
+> >> +                                  cooling-device =3D <&fan0 0 1>;
+> >> +                             };
+> >> +                             map1 {
+> >> +                                  trip =3D <&cpu_alert1>;
+> >> +                                  cooling-device =3D <&fan0 1 2>;
+> >> +                             };
+> >> +                             map2 {
+> >> +                                  trip =3D <&cpu_alert2>;
+> >> +                                  cooling-device =3D <&fan0 2 3>;
+> >> +                             };
+> >> +                     };
+> >> +             };
+> >> +     };
+> >> +};
+> >> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+> >> b/arch/arm/boot/dts/exynos5420.dtsi index 6b49f3c..eb0f16c 100644
+> >> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> >> @@ -827,10 +827,6 @@
+> >>       };
+> >>
+> >>       thermal-zones {
+> >> -             cpu0_thermal: cpu0-thermal {
+> >> -                     thermal-sensors =3D <&tmu_cpu0>;
+> >> -                     #include "exynos5420-trip-points.dtsi"
+> >                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ [1]
+> >
+> >> -             };
+> >>               cpu1_thermal: cpu1-thermal {
+> >>                      thermal-sensors =3D <&tmu_cpu1>;
+> >>                      #include "exynos5420-trip-points.dtsi"
+> >> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+> >> b/arch/arm/boot/dts/exynos5422-odroidxu3.dts index eaec006..c8b3e3=
+e
+> >> 100644 --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+> >> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+> >> @@ -12,6 +12,7 @@
+> >>
+> >>  /dts-v1/;
+> >>  #include "exynos5800.dtsi"
+> >> +#include "exynos5-cpu-thermal.dtsi"
+> >
+> > I would prefer to stick to convention proposed at [1]. It keeps
+> > the locality of the include with respective thermal zone.
+> >
+> >>
+> >>  / {
+> >>       model =3D "Hardkernel Odroid XU3";
+> >
+> > DTS changes should be added to Samsung tree by Samsung maintainer -
+> > Mr. Kukjin Kim.
+> >
+> > --
+> > Best regards,
+> >
+> > Lukasz Majewski
+> >
+> > Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 
-On 07/04/15 20:46, Matt Porter wrote:
-> On Tue, Apr 07, 2015 at 07:03:30PM +0100, Srinivas Kandagatla wrote:
->>
->>
->> On 07/04/15 18:46, Mark Brown wrote:
->>> On Tue, Apr 07, 2015 at 06:35:49PM +0100, Srinivas Kandagatla wrote:
->>>> On 06/04/15 16:04, Matt Porter wrote:
->>>>> On Mon, Apr 06, 2015 at 09:11:05AM -0500, Rob Herring wrote:
->>>
->>>>>>> The generic binding could really use a "read-only" property here as this
->>>>>>> is a common hardware attribute for many nvmem devices. A serial EEPROM
->>>
->>>> Correct me If am wrong.
->>>
->>>> Regarding write protection/read-only, regmap already has provisions to
->>>> support this feature. regmap would bail out with errors if any attempt to
->>>> write to non-writable regions. It all depends on the data providers how they
->>>> setup the regmap and the bindings for those are specific individual data
->>>> providers I think.
->>>
->>> There is the ability to flag read/write permissions in regmap but I
->>> think there's some suggestion that this should be exposed to userspace
->>> so that it's easier for it to handle things rather than just writing
->>> then coping with any errors.
->>
->> Yes, That's possible if the data provider use the "read-only" generic
->> binding like MTD partitions which the eeprom framwork could use to set the
->> binary file mode appropriately.
->
-> Right, that's what Rob suggested as to how it should be exposed to
-> userspace. I think Mark is suggesting that it can also be done by
-> returning appropriately fine-grained error codes from a writeable
-> attribute.
->
 
+--=20
+Best regards,
 
-We are taking about two things here.
+Lukasz Majewski
 
-1: "Setting the correct mode for the user space binary file."
-	This is only possible if the entire eeprom/nvmem has write protection. 
-We could get that info from 2 places. One having a new DT property 
-bindings like "read-only" as Rob suggested.
-	or
-	Second, scan the regmap for writeable attributes and the correct file 
-mode. For this option AFAIK, with existing regmap code we can only do 
-this by scanning the entire range, which is bad I guess.
-
-2: "Returning appropriate error codes to user space."
-	This is already addressed in the existing code, regmap would return an 
-(-EIO) I/O error Or error codes from providers in cases where an write 
-attempt to non writable register/or something wrong is made and the 
-*same error* code is passed back to user too. All the error codes from 
-regmap/provider layer are always passed back to the user space. These 
-error code, I supposed are fine grained originating from the low layer.
-
-
-I think with "read-only" property and returning same error codes from 
-regmap/provider layer to user-space would address the points raised by Matt.
-
-
-> Just to clarify here, I brought this up because if we only allow
-> the writes to fail, there's not necessarily not enough information
-> available to know if they failed due to a real error (perhaps write
-> cycles for the underlying nvmem device have been exhausted) or is
-> it simply that the underlying device has been hardware write protected
-> (such as as the write protect pin hardwired that way or it's an OTP
-> device). The client, whether userspace or otherwise is going to need
-> to know this information to make informed policy decisions.
->
-
-
-Thanks for the inputs.
-
-
-The exiting regmap writeable_register api will only return true or 
-false. But if the provider implements its own read/writes functions, the 
-error-codes from these apis would be passed back to user anyway, so the 
-user can make informed policy decisions. This logic already present in 
-with the exiting eeprom/regmap code.
-
-
-
---srini
-> -Matt
->
->> "read-only" property seems to be more generic for all types of data
->> providers.
->>
->> I will give it a try and document this in the bindings too in next version.
->>
->> --srini
->>>
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
