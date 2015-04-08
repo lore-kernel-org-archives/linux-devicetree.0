@@ -1,31 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: Add support for PM8916 GPIO's and MPP's
-Date: Wed, 8 Apr 2015 17:01:16 +0200
-Message-ID: <CACRpkdYubsWtDXT0ZYviz_758LnbxiWKSg-rANWJcj2WHcCuZg@mail.gmail.com>
-References: <1427794638-32732-1-git-send-email-ivan.ivanov@linaro.org>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V1 0/2]  Add OnKey support for DA9063
+Date: Wed, 8 Apr 2015 15:53:24 +0100
+Message-ID: <cover.1428504804.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1427794638-32732-1-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 11:37 AM, Ivan T. Ivanov <ivan.ivanov@linaro.or=
-g> wrote:
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-> Add compatible string definitions and supported pin functions.
->
-> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+This patch set adds OnKey driver support for the Dialog
+Semiconductor DA9063 PMIC.
 
-Patch applied with Bj=C3=B6rn's ACK.
+[PATCH V1 1/2]: kernel driver onkey support
+[PATCH V1 2/2]: device tree bindings document
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you,
+Steve Twiss, Dialog Semiconductor Ltd.
+
+S Twiss (2):
+  input: misc: da9063: OnKey driver
+  devicetree: Add bindings for DA9063 OnKey
+
+ Documentation/devicetree/bindings/mfd/da9063.txt |  22 ++-
+ MAINTAINERS                                      |   2 +-
+ drivers/input/misc/Kconfig                       |  10 +
+ drivers/input/misc/Makefile                      |   1 +
+ drivers/input/misc/da9063-onkey.c                | 227 +++++++++++++++++++++++
+ drivers/mfd/da9063-core.c                        |  55 ++++++
+ include/linux/mfd/da9063/pdata.h                 |   1 +
+ 7 files changed, 315 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/input/misc/da9063-onkey.c
+
+-- 
+end-of-patch for PATCH V1
