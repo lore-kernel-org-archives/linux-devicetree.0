@@ -1,64 +1,108 @@
-From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Wed, 8 Apr 2015 08:54:41 +0000
-Message-ID: <DM2PR03MB383BB3A8993435B4F7D2EFDE6FC0@DM2PR03MB383.namprd03.prod.outlook.com>
-References: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
- <1428446404.22867.479.camel@freescale.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v4 01/12] DT: leds: Improve description of flash LEDs
+ related properties
+Date: Wed, 08 Apr 2015 10:54:52 +0200
+Message-ID: <5524ECDC.1070609@samsung.com>
+References: <1427809965-25540-1-git-send-email-j.anaszewski@samsung.com>
+ <1427809965-25540-2-git-send-email-j.anaszewski@samsung.com>
+ <20150403120910.GL20756@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428446404.22867.479.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150403120910.GL20756@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQNCg0KUmVnYXJkcywNCklnYWwgTGliZXJtYW4uDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogV2VkbmVzZGF5
-LCBBcHJpbCAwOCwgMjAxNSAxOjQwIEFNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBD
-YzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGR0L2JpbmRpbmdzOiBxb3JpcS1jbG9jazogQWRk
-IGJpbmRpbmcgZm9yIEZNYW4gY2xvY2sNCj4gbXV4DQo+IA0KPiBPbiBUdWUsIDIwMTUtMDQtMDcg
-YXQgMDc6MDggKzAzMDAsIElnYWwuTGliZXJtYW4gd3JvdGU6DQo+ID4gRnJvbTogSWdhbCBMaWJl
-cm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+IC0tLQ0K
-PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQgICAgICB8
-ICAgNTkNCj4gKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDU5IGlu
-c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0DQo+ID4gaW5kZXggZGY0YTI1
-OS4uYTdlODRjZSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dA0KPiA+IEBAIC02NSw2ICs2NSw3
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gIAkJSXQgdGFrZXMgcGFyZW50J3MgY2xvY2st
-ZnJlcXVlbmN5IGFzIGl0cyBjbG9jay4NCj4gPiAgCSogImZzbCxxb3JpcS1wbGF0Zm9ybS1wbGwt
-MS4wIiBmb3IgdGhlIHBsYXRmb3JtIFBMTCBjbG9jayAodjEuMCkNCj4gPiAgCSogImZzbCxxb3Jp
-cS1wbGF0Zm9ybS1wbGwtMi4wIiBmb3IgdGhlIHBsYXRmb3JtIFBMTCBjbG9jayAodjIuMCkNCj4g
-PiArCSogImZzbCxmbWFuLWNsay1tdXgiIGZvciB0aGUgRnJhbWUgTWFuYWdlciBjbG9jay4NCj4g
-DQo+IElzIHRoZXJlIGFueSB2ZXJzaW9uaW5nIHJlcXVpcmVkIG9uIHRoaXM/DQo+IA0KDQpJIGRv
-bid0IHRoaW5rIHdlIG5lZWQgdmVyc2lvbmluZyBoZXJlLg0KDQo+ID4gIC0gI2Nsb2NrLWNlbGxz
-OiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLiBUaGUgbnVtYmVyIG9mIGNlbGxzIGluIGENCj4g
-PiAgCWNsb2NrLXNwZWNpZmllci4gU2hvdWxkIGJlIDwwPiBmb3IgImZzbCxxb3JpcS1zeXNjbGst
-WzEsMl0uMCINCj4gPiAgCWNsb2Nrcywgb3IgPDE+IGZvciAiZnNsLHFvcmlxLWNvcmUtcGxsLVsx
-LDJdLjAiIGNsb2Nrcy4NCj4gPiBAQCAtNzMsNiArNzQsNTIgQEAgUmVxdWlyZWQgcHJvcGVydGll
-czoNCj4gPiAgCSogMCAtIGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVlbmN5DQo+ID4gIAkqIDEgLSBl
-cXVhbCB0byB0aGUgUExMIGZyZXF1ZW5jeSBkaXZpZGVkIGJ5IDINCj4gPiAgCSogMiAtIGVxdWFs
-IHRvIHRoZSBQTEwgZnJlcXVlbmN5IGRpdmlkZWQgYnkgNA0KPiA+ICsJRm9yICJmc2wsZm1hbi1j
-bGstbXV4IiBjbG9ja3MsIHRoZSBzaW5nbGUgY2xvY2stc3BlY2lmaWVyIGNlbGwgbWF5DQo+ID4g
-Kwl0YWtlIHZhbHVlcyBhY2NvcmRpbmcgdGhlIFJlc2V0IENvbmZpZ3VyYXRpb24gV29yZCBvZiB0
-aGUgc3BlY2lmaWMNCj4gPiArCWRldmljZToNCj4gDQo+IGZzbCxmbWFuLWNsay1tdXggbm9kZXMg
-aGF2ZSAjY2xvY2stY2VsbHMgb2YgemVybywgc28gSSBkb24ndCB1bmRlcnN0YW5kIHRoaXMNCj4g
-c2VjdGlvbi4NCj4gDQo+IElmIHRoaXMgaXMgbWVhbnQgdG8gcmVmZXIgdG8gdGhlIGNsb2NrIHNw
-ZWNpZmllciB0aGF0IGZzbCxmbWFuLWNsay1tdXggbm9kZXMgdXNlDQo+IGluIHRoZWlyIGlucHV0
-IGNsb2NrcywgdGhhdCBpcyBkZXRlcm1pbmVkIGJ5IHRoZSBjbG9jayBwcm92aWRlciBhbmQgbm90
-IHRoZQ0KPiBjbG9jayBjb25zdW1lci4NCj4gDQoNClRoaXMgc2VjdGlvbiByZWZlcnMgdG8gdGhl
-IGNsb2NrIHByb3ZpZGVyLg0KSSBuZWVkIHRvIG1vdmUgdGhlIHRleHQgYmVsbG93IHRvIG1vcmUg
-YXBwcm9wcmlhdGUgcGxhY2UsIG5vdCB1bmRlciAjY2xvY2stY2VsbHMuIA0KQW55IGNvbW1lbnRz
-IG9uIHRoZSBjb250ZW50IGl0c2VsZj8gDQoNCj4gLVNjb3R0DQo+IA0KDQpUaGFua3MsIElnYWwN
-Cg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Sakari,
+
+On 04/03/2015 02:09 PM, Sakari Ailus wrote:
+> Hi Jacek,
+>
+> On Tue, Mar 31, 2015 at 03:52:37PM +0200, Jacek Anaszewski wrote:
+>> Description of flash LEDs related properties was not precise regarding
+>> the state of corresponding settings in case a property is missing.
+>> Add relevant statements.
+>> Removed is also the requirement making the flash-max-microamp
+>> property obligatory for flash LEDs. It was inconsistent as the property
+>> is defined as optional. Devices which require the property will have
+>> to assert this in their DT bindings.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>   Documentation/devicetree/bindings/leds/common.txt |   16 +++++++++-------
+>>   1 file changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index 747c538..21a25e4 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -29,13 +29,15 @@ Optional properties for child nodes:
+>>        "ide-disk" - LED indicates disk activity
+>>        "timer" - LED flashes at a fixed, configurable rate
+>>
+>> -- max-microamp : maximum intensity in microamperes of the LED
+>> -		 (torch LED for flash devices)
+>> -- flash-max-microamp : maximum intensity in microamperes of the
+>> -                       flash LED; it is mandatory if the LED should
+>> -		       support the flash mode
+>> -- flash-timeout-us : timeout in microseconds after which the flash
+>> -                     LED is turned off
+>> +- max-microamp : Maximum intensity in microamperes of the LED
+>> +		 (torch LED for flash devices). If omitted this will default
+>> +		 to the maximum current allowed by the device.
+>> +- flash-max-microamp : Maximum intensity in microamperes of the flash LED.
+>> +		       If omitted this will default to the maximum
+>> +		       current allowed by the device.
+>> +- flash-timeout-us : Timeout in microseconds after which the flash
+>> +                     LED is turned off. If omitted this will default to the
+>> +		     maximum timeout allowed by the device.
+>>
+>>
+>>   Examples:
+>
+> Pavel pointed out that the brightness between maximum current and the
+> maximum *allowed* another current might not be noticeable, leading a
+> potential spelling error to cause the LED being run at too high current.
+
+I think that a board designed so that it can be damaged because of
+software bugs should be considered not eligible for commercial use.
+Any self-esteeming manufacturer will not connect a LED to the output
+that can produce the current greater than the LED's absolute maximum
+current.
+
+The DT properties could be useful for devices like aat1290 device I was
+writing a driver for, which has the maximum current and timeout values
+depending on corresponding capacitor and resistor values respectively.
+Such devices should make the properties required in their bindings.
+
+> The three drivers I've looked also require these properties, which I think
+> is in the line with the above.
+>
+> How about either dropping the patch, or changing maximum to minimum and
+> will to should? The drivers could also behave this way instead of requiring
+> the properties, but I don't think there's anything wrong with requiring the
+> properties either.
+
+As I mentioned in the previous message in this subject, the max-microamp
+property refers also to non-flash LEDs. Since existing LED class devices
+does not require them, then it should be left optional and default to
+max. It would however be inconsistent with flash LEDs related
+properties.
+
+
+> I think this is worth considering now as we can't change this later without
+> breaking something.
+>
+
+-- 
+Best Regards,
+Jacek Anaszewski
