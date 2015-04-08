@@ -1,55 +1,36 @@
-From: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Questions about simplefb and hand-over
-Date: Wed, 8 Apr 2015 10:32:27 +0200
-Message-ID: <CANq1E4RhACj4dWnYQ_9=f-OSJfcoX2rQnPihb1VCtaxAoQ6Diw@mail.gmail.com>
-References: <CAJKbBDCCU5zBAFLf_KH-nYLzJYbAU9S9z6Jfe8F3w5SY+-ZCuQ@mail.gmail.com>
-	<551E5715.90600@redhat.com>
-	<CAJKbBDD_DQS2DkwMa04ijdOCE4+g-bvw=TWcZDwYJgXfB2xH1Q@mail.gmail.com>
-	<5524D92B.4040408@redhat.com>
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: Re: [PATCH 5/6] pwm: samsung: Fix output race on disabling
+Date: Wed, 08 Apr 2015 10:42:07 +0200
+Message-ID: <1428482527.4333.50.camel@collabora.co.uk>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+	 <1427387955-5129-6-git-send-email-linux.amoon@gmail.com>
+	 <20150408102811.219b964f@amdc2363>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5524D92B.4040408-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150408102811.219b964f@amdc2363>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Anand Moon <linux.amoon@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On Wed, Apr 8, 2015 at 9:30 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 08-04-15 09:24, Johannes Pointner wrote:
->>
->> Hello,
->>
->> thank you for your reply.
->> I will take a look at the x86 code and at the function you mentioned.
->>
->> Do you know where the simpledrm is hosted, because I would like to
->> take look at it too.
->
->
-> David Herrmann (in the Cc) is the best person to answer that, I
-> think he needs to rebase on it on the latest upstream kernel.
->
-> David ?
 
-http://cgit.freedesktop.org/~dvdhrm/linux/log/?h=simpledrm
+On Wed, 2015-04-08 at 10:28 +0200, Lukasz Majewski wrote:
+> Hi Anand,
+> 
+> > From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> > When disabling the samsung PWM the output state remains at the level
+> > it was in the end of a pwm cycle. In other words, calling pwm_disable
+> > when at 100% duty will keep the output active, while at all other
+> > setting the output will go/stay inactive. On top of that the samsung
+> > PWM settings are double-buffered, which means the new settings only
+> > get applied at the start of a new PWM cycle.
 
-I should _definitely_ revive that. My TODO list does get shorter, so
-lets see whether I can find some spare time for it.
+This patch is already in the linux-pwm for-next tree so should probably
+be dropped form this patchset to prevent conflicts.
 
-Please note that you can use remove_conflicting_framebuffers() with
-simplefb just fine. No reason to wait for simpledrm (except that it's
-way cooler!). Once I push the patches, I will convert
-remove_conflicting_framebuffers() to work just fine, and simpledrm
-will take-over all simplefb devices seamlessly.
-
-Thanks
-David
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Collabora Ltd.
