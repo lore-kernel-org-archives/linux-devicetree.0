@@ -1,70 +1,53 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
-Date: Wed, 8 Apr 2015 02:20:07 +0000
-Message-ID: <HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
+From: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Cygnus Audio Driver
+Date: Tue, 7 Apr 2015 19:28:40 -0700
+Message-ID: <55249258.1020907@broadcom.com>
+References: <1427771784-29950-1-git-send-email-sbranden@broadcom.com> <20150331064338.GE2869@sirena.org.uk> <551EEAF8.7050108@broadcom.com> <20150406095803.GD6023@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150406095803.GD6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, bryeung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, pwestin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gVHVlLCBBcHIgNywg
-MjAxNSBhdCA5OjUzIEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEu
-dWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBETUEgcHJvcGVydGll
-cyB0byB0aGUgSFNVU0Igbm9kZS4NCj4gDQo+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaCENCg0K
-VGhhbmsgeW91IGZvciB5b3VyIHJldmlldyENCg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGly
-byBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4g
-PiAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpIHwgMyArKysNCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3I4YTc3OTEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEuZHRzaQ0KPiA+
-IGluZGV4IGRiMzc3MmUuLjVmMjBhZDQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvcjhhNzc5MS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNp
-DQo+ID4gQEAgLTcyMiw2ICs3MjIsOSBAQA0KPiA+ICAgICAgICAgICAgICAgICByZW5lc2FzLGJ1
-c3dhaXQgPSA8ND47DQo+ID4gICAgICAgICAgICAgICAgIHBoeXMgPSA8JnVzYjAgMT47DQo+ID4g
-ICAgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJ1c2IiOw0KPiA+ICsgICAgICAgICAgICAgICBk
-bWFzID0gPCZ1c2JfZG1hYzAgMD4sIDwmdXNiX2RtYWMwIDE+LA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgPCZ1c2JfZG1hYzEgMD4sIDwmdXNiX2RtYWMxIDE+Ow0KPiA+ICsgICAgICAgICAg
-ICAgICBkbWEtbmFtZXMgPSAicngwIiwgInR4MSIsICJyeDIiLCAidHgzIjsNCj4gDQo+IFRoZSBu
-dW1iZXJpbmcgbG9va3MgYSBiaXQgc3RyYW5nZSwgZ2l2ZW4gdGhlIGNvZGUgbG9va3MgdXAgYm90
-aCB0eCBhbmQgcngNCj4gRE1BIGNoYW5uZWxzIGZvciBlYWNoIGNoYW5uZWwgaW5kZXguIElzIGl0
-IGNvcnJlY3Q/DQo+IA0KPiBUaGUgYmluZGluZyBkb2N1bWVudGF0aW9uICh3aGljaCBsYWNrcyBv
-biBleGFtcGxlKSBzdGF0ZXM6DQo+IA0KPiAgIC0gZG1hLW5hbWVzIDogTXVzdCBjb250YWluIGEg
-bGlzdCBvZiBETUEgbmFtZXM6DQo+ICAgIC0gdHgwIC4uLiB0eDxuPg0KPiAgICAtIHJ4MCAuLi4g
-cng8bj4NCj4gICAgIC0gVGhpcyA8bj4gbWVhbnMgRG5GSUZPIGluIFVTQkhTIG1vZHVsZS4NCj4g
-DQo+IEFzIHRoZXJlIGFyZSA0IERuRklGT3MsIEknZCBleHBlY3QgdHgwLi50eDMgYW5kIHJ4MC4u
-cngzLg0KPiANCj4gQ2FuIHlvdSBwbGVhc2UgY2xhcmlmeT8NCg0KSSB3cm90ZSBzb21lIGluZm9y
-bWF0aW9uIGJlbG93Lg0KQnV0LCBzaW5jZSBpdCBpcyBjb21wbGV4IGhhcmR3YXJlLCBJIGRvbid0
-IGtub3cgSSBjYW4gZXhwbGFpbiB0aGlzIGFzIHdlbGwuLi4NCg0KQXQgZmlyc3QsIFItQ2FyIEdl
-bjIgaGFzIDIgVVNCLURNQUNzIGFuZCA0IGNoYW5uZWxzOg0KIFVTQi1ETUFDIDA6IGNoMA0KIFVT
-Qi1ETUFDIDA6IGNoMQ0KIFVTQi1ETUFDIDE6IGNoMA0KIFVTQi1ETUFDIDE6IGNoMQ0KUmVtYXJr
-czogSSBkb24ndCBrbm93IHdoeSBidXQgcGVyZm9ybWFuY2Ugb2YgVVNCLURNQUMgMCBpcyBnb29k
-IHRoYW4gVVNCLURNQUMgMS4NCiAgICAgICAgICAoUGxlYXNlIHJlZmVyIHRvIHRoZSBUYWJsZSA2
-NC4xIG9mIHRoZSBkYXRhc2hlZXQuKQ0KDQpTbywgSSB3cm90ZSBkbWFzIHBhcmFtZXRlciBpbiBo
-c3VzYiBhcyB0aGUgZm9sbG93aW5nOg0KDQo+ID4gKyAgICAgICAgICAgICAgIGRtYXMgPSA8JnVz
-Yl9kbWFjMCAwPiwgPCZ1c2JfZG1hYzAgMT4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICA8
-JnVzYl9kbWFjMSAwPiwgPCZ1c2JfZG1hYzEgMT47DQoNCg0KQW5kLCBSLUNhciBHZW4yIGhhcyA0
-IERuRklGT3MgaW4gSFNVU0IuIHRvIGF2b2lkIGNvbXBsZXggaGFuZGxpbmcgZm9yIERuRklGT3Ms
-DQp0aGUgcmVuZXNhc191c2JocyBkcml2ZXIgdXNlcyBlYWNoIERuRklGTyBhcyBUWCBvciBSWCBk
-aXJlY3Rpb24gKG5vdCBiaS1kaXJlY3Rpb24pLg0KU28sIEkgd3JvdGUgZG1hLW5hbWVzIHBhcmFt
-ZXRlciBhcyB0aGUgZm9sbG93aW5nOg0KDQo+ID4gKyAgICAgICAgICAgICAgIGRtYS1uYW1lcyA9
-ICJyeDAiLCAidHgxIiwgInJ4MiIsICJ0eDMiOw0KDQotIEQwRklGTyBhcyBSWCAoQWxzbyBpdCBp
-cyBjb25uZWN0ZWQgdG8gVVNCLURNQUMgMDogY2gwKQ0KLSBEMUZJRk8gYXMgVFggKEFsc28gaXQg
-aXMgY29ubmVjdGVkIHRvIFVTQi1ETUFDIDA6IGNoMSkNCi0gRDJGSUZPIGFzIFJYIChBbHNvIGl0
-IGlzIGNvbm5lY3RlZCB0byBVU0ItRE1BQyAxOiBjaDApDQotIEQzRklGTyBhcyBUWCAoQWxzbyBp
-dCBpcyBjb25uZWN0ZWQgdG8gVVNCLURNQUMgMTogY2gxKQ0KDQpCZXN0IHJlZ2FyZHMsDQpZb3No
-aWhpcm8gU2hpbW9kYQ0KDQo+IFRoYW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiAN
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRl
-cmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGlu
-dXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
-YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
-ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
-ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
-bGRzDQo=
+
+
+On 15-04-06 02:58 AM, Mark Brown wrote:
+> On Fri, Apr 03, 2015 at 12:33:12PM -0700, Scott Branden wrote:
+>> On 15-03-30 11:43 PM, Mark Brown wrote:
+>>> On Mon, Mar 30, 2015 at 08:16:22PM -0700, Scott Branden wrote:
+>
+>>>> The audio PLL is embedded in the audio block and only used
+>>>> by the audio block. The audio PLL registers are also in the middle of
+>>>> the audio register map.
+>
+>>> When you say it's only used by the audio block do you mean to say that
+>>> the audio block exposes no clock signals other than the bit and frame
+>>> clocks?
+>
+>> The audio block exposes the MCLK in addition to the bit and frame clock.
+>
+> OK, then it's going to need to be a clock provider at some point - the
+> clock will be going into external devices which are going to need to be
+> able to interact with the clock (for example, to get the rate).
+>
+Currently, the ASoC machine driver is responsible for requesting a 
+certain frequency of MCLK be generated from our driver and then also 
+sending the frequency information along to the external device (codec).
+This is done via the snd_soc_dai_set_sysclk.  That is the only clock 
+interaction we have needed for the core part of the driver.  For 
+enhanced features, we also have the need to make minor adjustments 
+(tweaks) to the PLL.  The tweaks are used to make the PLLs output 
+frequency match as closely as possible to a true reference frequency. 
+As such, we would like to provide the finest adjustment resolution as 
+possible. The clocking framework only seems to allow for a 1 Hz 
+adjustment. This limitation and the fact that no other device seems to 
+need to interact directly will the PLL are why we have not put it in the 
+clocking framework.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
