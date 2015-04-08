@@ -1,91 +1,70 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: mt8173: support arm64 cpuidle-dt
-Date: Wed, 8 Apr 2015 11:54:43 +0100
-Message-ID: <20150408105443.GA23642@red-moon>
-References: <1428393905-32166-1-git-send-email-howard.chen@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428393905-32166-1-git-send-email-howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v3] ASoC: max98090: add shutdown callback for max98090
+Date: Wed,  8 Apr 2015 19:05:56 +0800
+Message-ID: <1428491156-31803-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sonny Rao <sonnyrao@chromium.org>, Cheng-Yi Chiang <cychiang@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>, zhengxing <zhengxing@rock-chips.com>, "jay.xu" <xjq@rock-chips.com>
+Cc: devicetree@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, Dylan Reid <dgreid@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Tushar Behera <tushar.b@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2015 at 09:05:05AM +0100, Howard Chen wrote:
-> This patch adds an idle-states node to describe the mt8173 idle states and
-> also adds references to the idle-states node in all CPU nodes.
-> 
-> Signed-off-by: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To fix pop noise when shutdown,the pop noise during shutdown
+is the pmic cutoff power of codec without any notice.
 
-Is copying me in too much effort to ask ?
+Signed-off-by: jay.xu <xjq@rock-chips.com>
+Signed-off-by: zhengxing <zhengxing@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 8554ec3..0d31a34 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -48,6 +48,8 @@
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
->  			reg = <0x000>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
+---
 
-Cluster idle state vanished between v1 and v2.
+Changes in v3:
+- modify the shutdown function before remove(..)
+- fix the `Serien-cc`
 
-?
+Changes in v2:
+- remove the dev_info(..)
+- fix the comment style
+- add the max98090_i2c_shutdown() in remove() fuction
 
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -55,6 +57,7 @@
->  			compatible = "arm,cortex-a53";
->  			reg = <0x001>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  		};
->  
->  		cpu2: cpu@100 {
-> @@ -62,6 +65,7 @@
->  			compatible = "arm,cortex-a57";
->  			reg = <0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  		};
->  
->  		cpu3: cpu@101 {
-> @@ -69,6 +73,19 @@
->  			compatible = "arm,cortex-a57";
->  			reg = <0x101>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
-> +		};
-> +
-> +		idle-states {
-> +			entry-method = "arm,psci";
-> +
-> +			CPU_SLEEP_0: cpu-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x0010000>;
-> +				entry-latency-us = <639>;
-> +				exit-latency-us = <328>;
-> +				min-residency-us = <1088>;
-> +			};
->  		};
->  	};
+ sound/soc/codecs/max98090.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Is the arch timer still running when you enter this state ?
-
-Apart from these remarks the patch seems fine, I wonder whether we should
-merge these changes into the kernel instead of keeping these changes in
-firmware for specific kernel configurations.
-
-Lorenzo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index b112b1c..3e33ef2 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -2605,8 +2605,24 @@ err_enable:
+ 	return ret;
+ }
+ 
++static void max98090_i2c_shutdown(struct i2c_client *i2c)
++{
++	struct max98090_priv *max98090 = dev_get_drvdata(&i2c->dev);
++
++	/*
++	 * Enable volume smoothing, disable zero cross.  This will cause
++	 * a quick 40ms ramp to mute on shutdown.
++	 */
++	regmap_write(max98090->regmap,
++		M98090_REG_LEVEL_CONTROL, M98090_VSENN_MASK);
++	regmap_write(max98090->regmap,
++		M98090_REG_DEVICE_SHUTDOWN, 0x00);
++	msleep(40);
++}
++
+ static int max98090_i2c_remove(struct i2c_client *client)
+ {
++	max98090_i2c_shutdown(client);
+ 	snd_soc_unregister_codec(&client->dev);
+ 	return 0;
+ }
+@@ -2696,6 +2712,7 @@ static struct i2c_driver max98090_i2c_driver = {
+ 		.acpi_match_table = ACPI_PTR(max98090_acpi_match),
+ 	},
+ 	.probe  = max98090_i2c_probe,
++	.shutdown = max98090_i2c_shutdown,
+ 	.remove = max98090_i2c_remove,
+ 	.id_table = max98090_i2c_id,
+ };
+-- 
+1.9.1
