@@ -1,56 +1,43 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Tue, 7 Apr 2015 20:30:58 -0500
-Message-ID: <CAL_JsqLx4dB9CG0t0pCV89VxECXVTZyyiGfq=awNJSgfD50Raw@mail.gmail.com>
-References: <1428452680-24861-1-git-send-email-yinghai@kernel.org>
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: Add support for PM8916 GPIO's and MPP's
+Date: Tue, 7 Apr 2015 19:00:12 -0700
+Message-ID: <CAJAp7OgC_-AStTQphR9jyRO5JdHaw1Cg3NWmT9sX70BCNMYCHA@mail.gmail.com>
+References: <1427794638-32732-1-git-send-email-ivan.ivanov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428452680-24861-1-git-send-email-yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1427794638-32732-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2015 at 7:24 PM, Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> For device resource PREF bit setting under bridge 64-bit pref resource,
-> we need to make sure only set PREF for 64bit resource, so set IORESOUCE_MEM_64
-> for 64bit resource during of device resource flags parsing.
+On Tue, Mar 31, 2015 at 2:37 AM, Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Add compatible string definitions and supported pin functions.
 >
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-> Signed-off-by: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Bjorn, are you collecting these or should I apply?
-
-Rob
-
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/of/address.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+[..]
+> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+[..]
 >
-> Index: linux-2.6/drivers/of/address.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/of/address.c
-> +++ linux-2.6/drivers/of/address.c
-> @@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags
->                 flags |= IORESOURCE_IO;
->                 break;
->         case 0x02: /* 32 bits */
-> -       case 0x03: /* 64 bits */
->                 flags |= IORESOURCE_MEM;
->                 break;
-> +       case 0x03: /* 64 bits */
-> +               flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-> +               break;
->         }
->         if (w & 0x40000000)
->                 flags |= IORESOURCE_PREFETCH;
+> +#define PM8916_GPIO1_BAT_ALRM_OUT      PMIC_GPIO_FUNC_FUNC1
+> +#define PM8916_GPIO1_KEYP_DRV          PMIC_GPIO_FUNC_FUNC2
+> +#define PM8916_GPIO2_DIV_CLK           PMIC_GPIO_FUNC_FUNC1
+> +#define PM8916_GPIO2_SLEEP_CLK         PMIC_GPIO_FUNC_FUNC2
+> +#define PM8916_GPIO3_KEYP_DRV          PMIC_GPIO_FUNC_FUNC1
+> +#define PM8916_GPIO4_KEYP_DRV          PMIC_GPIO_FUNC_FUNC2
+> +
+
+The documentation I have for the PM8916 is vague, but lists slightly
+different functions. Andy, could you help out with verifying the
+functions of the gpios on this pmic?
+
+For the rest of the patch:
+Acked-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
