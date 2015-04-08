@@ -1,54 +1,76 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
-Date: Wed, 8 Apr 2015 16:43:43 +0200
-Message-ID: <CAMuHMdVsDx7g8jyU_nQZgG85o0huykb2EmBj4jskcuOuXXxiDA@mail.gmail.com>
-References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<20150319191834.5346CC40A35@trevor.secretlab.ca>
-	<8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com>
-	<CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com>
-	<1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com>
-	<CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com>
-	<20150402023803.E6A4DC4076D@trevor.secretlab.ca>
-	<CAMuHMdWVTsog2_9iyUEBWm-7xonvNibTTbOY5YxvpAhffUXdcg@mail.gmail.com>
-	<2B8BD326-8A21-45F3-8276-DF3B303B11D8@konsulko.com>
-	<CAL_JsqKWp5RWr_T-+gD7hTiJiJMxq68pOR4zORL7SD2H_=JMfg@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 01/12] DT: leds: Improve description of flash LEDs
+ related properties
+Date: Wed, 08 Apr 2015 16:45:28 +0200
+Message-ID: <55253F08.3040409@samsung.com>
+References: <1427809965-25540-1-git-send-email-j.anaszewski@samsung.com>
+ <1427809965-25540-2-git-send-email-j.anaszewski@samsung.com>
+ <5524FCEF.7060901@samsung.com> <552517DD.2040905@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKWp5RWr_T-+gD7hTiJiJMxq68pOR4zORL7SD2H_=JMfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <552517DD.2040905@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: pavel@ucw.cz, sakari.ailus@iki.fi, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 8, 2015 at 4:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Then we have dma controllers needing to be registered at subsys_initcall() for obvious reasons.
+Hi Jacek,
+
+On 08/04/15 13:58, Jacek Anaszewski wrote:
+>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>> >> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>> >> @@ -29,13 +29,15 @@ Optional properties for child nodes:
+>>> >>        "ide-disk" - LED indicates disk activity
+>>> >>        "timer" - LED flashes at a fixed, configurable rate
+>>> >>
+>>> >> -- max-microamp : maximum intensity in microamperes of the LED
+>>> >> -		 (torch LED for flash devices)
+>>> >> -- flash-max-microamp : maximum intensity in microamperes of the
+>>> >> -                       flash LED; it is mandatory if the LED should
+>>> >> -		       support the flash mode
+>>> >> -- flash-timeout-us : timeout in microseconds after which the flash
+>>> >> -                     LED is turned off
+>>> >> +- max-microamp : Maximum intensity in microamperes of the LED
+>>> >> +		 (torch LED for flash devices). If omitted this will default
+>>> >> +		 to the maximum current allowed by the device.
+>>> >> +- flash-max-microamp : Maximum intensity in microamperes of the flash LED.
+>>> >> +		       If omitted this will default to the maximum
+>>> >> +		       current allowed by the device.
+>>> >> +- flash-timeout-us : Timeout in microseconds after which the flash
+>>> >> +                     LED is turned off. If omitted this will default to the
+>>> >> +		     maximum timeout allowed by the device.
+>> >
+>> > Sorry about late comments on that, but since we can still change these
+>> > properties and it seems we're going to do that, I'd like throw in my
+>> > few preferences on the colour of this bike...
+>> >
+>> > IMO "max-microamp" is a poor property name, how about:
+>> >
+>> > s/max-microamp/led-max-current-ua,
+>> > s/flash-max-microamp/flash-max-current-ua,
+>> >
+>> > so we have more consistent set of properties like:
+>> >
+>> > led-max-current-ua
+>> > flash-max-current-ua
+>> > flash-timeout-us
 >
-> These should be fixable with deferred probe. That requires fixing all
-> the client drivers where as fixing the dependencies would not need
-> driver changes.
+> The "-microamp' suffix is consistent with regulator bindings.
+> Please refer to [1].
 
-DMA is tricky in that there are three cases, not two:
-  1. DMA engine is available,
-  2. DMA engine is not yet available (e.g. DMA engine driver is modular),
-  3. DMA engine will never be available (DMA engine or DMA engine driver
-     not available).
+OK, in a perfect world we would have clean and consistent notation of
+units. If it's acked let's leave it, I didn't know it was, sorry about
+that.
 
-Case 2 is the tricky one: probably you don't want the client driver to
-fail hard,
-but want to fall back to PIO, and try to setup DMA again later.
+When I read yesterday Documentation/devicetree/bindings/leds/common.txt
+the set of new properties looked rather sloppy, especially "max-microamp"
+looked incomplete to me, as if the subject was missing.
 
-Gr{oetje,eeting}s,
+Anyway, I'll just get used to it, let's complete this whole Flash/LED
+integration story.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks,
+Sylwester
