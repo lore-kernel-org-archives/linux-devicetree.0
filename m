@@ -1,38 +1,100 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Questions about simplefb and hand-over
-Date: Wed, 08 Apr 2015 09:30:51 +0200
-Message-ID: <5524D92B.4040408@redhat.com>
-References: <CAJKbBDCCU5zBAFLf_KH-nYLzJYbAU9S9z6Jfe8F3w5SY+-ZCuQ@mail.gmail.com>	<551E5715.90600@redhat.com> <CAJKbBDD_DQS2DkwMa04ijdOCE4+g-bvw=TWcZDwYJgXfB2xH1Q@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
+Date: Wed, 8 Apr 2015 09:43:22 +0200
+Message-ID: <CAMuHMdUvkt4LrSkJhCT1k-YF-FUS4f2QByTJeCsVGqmjSXYB-A@mail.gmail.com>
+References: <1428393231-5272-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1428393231-5272-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<CAMuHMdXu46NK37gcweCz_XTABUJw6kN0fnyxmmGeL9cGRWdJdg@mail.gmail.com>
+	<HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKbBDD_DQS2DkwMa04ijdOCE4+g-bvw=TWcZDwYJgXfB2xH1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <HKNPR06MB32242AD4C51E1F939E780ACD8FC0@HKNPR06MB322.apcprd06.prod.outlook.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Shimoda-san,
 
-On 08-04-15 09:24, Johannes Pointner wrote:
-> Hello,
+On Wed, Apr 8, 2015 at 4:20 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>> On Tue, Apr 7, 2015 at 9:53 AM, Yoshihiro Shimoda
+>> <yoshihiro.shimoda.uh@renesas.com> wrote:
+>> > diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+>> > index db3772e..5f20ad4 100644
+>> > --- a/arch/arm/boot/dts/r8a7791.dtsi
+>> > +++ b/arch/arm/boot/dts/r8a7791.dtsi
+>> > @@ -722,6 +722,9 @@
+>> >                 renesas,buswait = <4>;
+>> >                 phys = <&usb0 1>;
+>> >                 phy-names = "usb";
+>> > +               dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
+>> > +                      <&usb_dmac1 0>, <&usb_dmac1 1>;
+>> > +               dma-names = "rx0", "tx1", "rx2", "tx3";
+>>
+>> The numbering looks a bit strange, given the code looks up both tx and rx
+>> DMA channels for each channel index. Is it correct?
+>>
+>> The binding documentation (which lacks on example) states:
+>>
+>>   - dma-names : Must contain a list of DMA names:
+>>    - tx0 ... tx<n>
+>>    - rx0 ... rx<n>
+>>     - This <n> means DnFIFO in USBHS module.
+>>
+>> As there are 4 DnFIFOs, I'd expect tx0..tx3 and rx0..rx3.
+>>
+>> Can you please clarify?
 >
-> thank you for your reply.
-> I will take a look at the x86 code and at the function you mentioned.
+> I wrote some information below.
+> But, since it is complex hardware, I don't know I can explain this as well...
 >
-> Do you know where the simpledrm is hosted, because I would like to
-> take look at it too.
+> At first, R-Car Gen2 has 2 USB-DMACs and 4 channels:
+>  USB-DMAC 0: ch0
+>  USB-DMAC 0: ch1
+>  USB-DMAC 1: ch0
+>  USB-DMAC 1: ch1
+> Remarks: I don't know why but performance of USB-DMAC 0 is good than USB-DMAC 1.
+>           (Please refer to the Table 64.1 of the datasheet.)
+>
+> So, I wrote dmas parameter in hsusb as the following:
+>
+>> > +               dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
+>> > +                      <&usb_dmac1 0>, <&usb_dmac1 1>;
+>
+> And, R-Car Gen2 has 4 DnFIFOs in HSUSB. to avoid complex handling for DnFIFOs,
+> the renesas_usbhs driver uses each DnFIFO as TX or RX direction (not bi-direction).
+> So, I wrote dma-names parameter as the following:
+>
+>> > +               dma-names = "rx0", "tx1", "rx2", "tx3";
+>
+> - D0FIFO as RX (Also it is connected to USB-DMAC 0: ch0)
+> - D1FIFO as TX (Also it is connected to USB-DMAC 0: ch1)
+> - D2FIFO as RX (Also it is connected to USB-DMAC 1: ch0)
+> - D3FIFO as TX (Also it is connected to USB-DMAC 1: ch1)
 
-David Herrmann (in the Cc) is the best person to answer that, I
-think he needs to rebase on it on the latest upstream kernel.
+Thanks for the explanation!
 
-David ?
+Hence the "strange" numbering is a limitation of the driver, not of the
+hardware?
 
-Regards,
+In that case I think the DT should describe the hardware, not the driver
+limitation. As the FIFOs are bidirectional, there's just a one-to-one mapping
+of 4 DnFIFOs to 4 (2 channels x 2 DMACs) DMA channels.
+Which DnFIFO/channel is used for TX and which is used for RX is to be chosen
+by the driver, and can be fixed (e.g. use even channels for RX, odd for
+TX, like the current situation).
 
-Hans
+What do you (and other people) think?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
