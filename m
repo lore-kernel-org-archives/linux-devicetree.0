@@ -1,53 +1,90 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of/flattree: print memory scan node results in CPU endian
-Date: Wed, 08 Apr 2015 14:19:09 -0700
-Message-ID: <55259B4D.2020304@gmail.com>
-References: <1428475450-12072-1-git-send-email-f.fainelli@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Add i2c support
+Date: Thu, 9 Apr 2015 00:12:55 +0200 (CEST)
+Message-ID: <1158701263.68321.1428531175931.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+References: <1428515100-1496-1-git-send-email-harald@ccbib.org>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428475450-12072-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428515100-1496-1-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio.Estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/7/2015 11:44 PM, Florian Fainelli wrote:
-> Commit 51975db0b7333 ("of/flattree: merge early_init_dt_scan_memory()
-> common code") consolidated some code from PowerPC (typically
-> big-endian), and ended-up adding a pr_debug() printing reg properties in
-> big-endian (DT native) format, not CPU endian. Unsurprisingly, when
-> these messages are turned on a little-endian systems, this is confusing,
-> so do the conversion while printing the values.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Hi Harald,
+
+[ add devicetree mailinglist ]
+
+> Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org> hat am 8. April 2015 um 19:45 geschrieben:
+>
+>
+> The imx23-olinuxino board has an i2c interface exposed on UEXT connector.
+
+AFAIK the iMX233-OLinuXino-MICRO don't have a UEXT connector. Maybe we reached
+the point 
+to make dts files for every Olinuxino board. In that case we could also handle
+the USB Host / Peripherial issue.
+
+> This patch provides the necessary devicetree code.
+> Tested with MOD-LCD1x9 from Olimex.
+>
+> This patch is based on work by Fadil Berisha with his permission. However
+> all bugs are mine.
+>
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
 > ---
->  drivers/of/fdt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 3a896c9aeb74..0d8f0e4bd107 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -880,7 +880,8 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->  	endp = reg + (l / sizeof(__be32));
->  
->  	pr_debug("memory scan node %s, reg size %d, data: %x %x %x %x,\n",
-> -	    uname, l, reg[0], reg[1], reg[2], reg[3]);
-> +	    uname, l, be32_to_cpu(reg[0]), be32_to_cpu(reg[1]),
-> +	    be32_to_cpu(reg[2]), be32_to_cpu(reg[3]));
+> arch/arm/boot/dts/imx23-olinuxino.dts | 6 +++++
+> arch/arm/boot/dts/imx23.dtsi | 40 ++++++++++++++++++++++++++++++++-
+> 2 files changed, 45 insertions(+), 1 deletion(-)
+>
+> [...]
+> --- a/arch/arm/boot/dts/imx23.dtsi
+> +++ b/arch/arm/boot/dts/imx23.dtsi
+> @@ -308,6 +308,39 @@
+> fsl,voltage = <MXS_VOLTAGE_HIGH>;
+> fsl,pull-up = <MXS_PULL_ENABLE>;
+> };
+> +
+> + i2c_pins_a: i2c@0 {
+> + reg = <0>;
+> + fsl,pinmux-ids = <
+> + MX23_PAD_I2C_SCL__I2C_SCL
+> + MX23_PAD_I2C_SDA__I2C_SDA
+> + >;
+> + fsl,drive-strength = <MXS_DRIVE_8mA>;
+> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
+> + fsl,pull-up = <MXS_PULL_ENABLE>;
+> + };
+> +
+> + i2c_pins_b: i2c@1 {
+> + reg = <1>;
+> + fsl,pinmux-ids = <
+> + MX23_PAD_LCD_ENABLE__I2C_SCL
+> + MX23_PAD_LCD_HSYNC__I2C_SDA
+> + >;
+> + fsl,drive-strength = <MXS_DRIVE_8mA>;
+> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
+> + fsl,pull-up = <MXS_PULL_ENABLE>;
+> + };
+> +
+> + i2c_pins_c: i2c@2 {
+> + reg = <2>;
+> + fsl,pinmux-ids = <
+> + MX23_PAD_SSP1_DATA1__I2C_SCL
+> + MX23_PAD_SSP1_DATA2__I2C_SDA
+> + >;
+> + fsl,drive-strength = <MXS_DRIVE_8mA>;
+> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
+> + fsl,pull-up = <MXS_PULL_ENABLE>;
+> + };
 
-The pr_debug() assumes that the length of reg[] is >= 4 elements, which might not be true.
-Since the following while loop checks the length of reg[] and then uses pr_debug() to
-print each (base, size) tuple with the correct endian, maybe it would be better to
-just remove reg[0] through reg[3] from the above pr_debug() instead of fixing the
-endian issue.
+Please add only i2c_pins_b because this pin muxing is the only used one.
 
->  
->  	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->  		u64 base, size;
-> 
-
--Frank
+Thanks Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
