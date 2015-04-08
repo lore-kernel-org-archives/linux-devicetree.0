@@ -1,77 +1,30 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/2] Cygnus Audio Driver
-Date: Wed, 8 Apr 2015 19:54:20 +0100
-Message-ID: <20150408185420.GH6023@sirena.org.uk>
-References: <1427771784-29950-1-git-send-email-sbranden@broadcom.com>
- <20150331064338.GE2869@sirena.org.uk>
- <551EEAF8.7050108@broadcom.com>
- <20150406095803.GD6023@sirena.org.uk>
- <55249258.1020907@broadcom.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] stmmac: Add an optional register interface clock
+Date: Wed, 08 Apr 2015 14:58:38 -0400 (EDT)
+Message-ID: <20150408.145838.1115385506972524636.davem@davemloft.net>
+References: <1428439125-26023-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="spjIDaiUctnsA4Sg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55249258.1020907@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lori Hikichi <lhikichi@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, abrestic@google.com, bryeung@google.com, olofj@google.com, pwestin@google.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428439125-26023-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Date: Tue,  7 Apr 2015 13:38:45 -0700
 
---spjIDaiUctnsA4Sg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> The DWMAC block on certain SoCs (such as IMG Pistachio) have a second
+> clock which must be enabled in order to access the peripheral's
+> register interface, so add support for requesting and enabling an
+> optional "pclk".
+> 
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-On Tue, Apr 07, 2015 at 07:28:40PM -0700, Lori Hikichi wrote:
-> On 15-04-06 02:58 AM, Mark Brown wrote:
-
-> >OK, then it's going to need to be a clock provider at some point - the
-> >clock will be going into external devices which are going to need to be
-> >able to interact with the clock (for example, to get the rate).
-
-> Currently, the ASoC machine driver is responsible for requesting a certain
-> frequency of MCLK be generated from our driver and then also sending the
-> frequency information along to the external device (codec).
-> This is done via the snd_soc_dai_set_sysclk.  That is the only clock
-> interaction we have needed for the core part of the driver.  For enhanced
-
-I have some passing familiarity with ASoC...  if you look at newer
-drivers, especially those for DT systems, you'll see that we're
-transitioning CODEC drivers to use the clock API for their clocks since
-this makes integrating with both generic ASoC things like simple card
-and non-ASoC clocks.
-
-> features, we also have the need to make minor adjustments (tweaks) to the
-> PLL.  The tweaks are used to make the PLLs output frequency match as closely
-> as possible to a true reference frequency. As such, we would like to provide
-> the finest adjustment resolution as possible. The clocking framework only
-> seems to allow for a 1 Hz adjustment. This limitation and the fact that no
-> other device seems to need to interact directly will the PLL are why we have
-> not put it in the clocking framework.
-
-That's going to be an issue no matter where you put the control - the
-ASoC specific clocking APIs don't have any control here either.  I don't
-know if we want to add the functionality for doing very fine grained
-adjustments into the clock API or not (the use cases seem limited though
-I'm sure they exist), though I do think we should have that discussion
-if only to confirm, but that's a separate thing to how we expose any
-userspace control - the clock API is a kernel internal thing.
-
---spjIDaiUctnsA4Sg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVJXlbAAoJECTWi3JdVIfQ5DEH/RgTLRb845J//cT/S581kgSu
-HxgncKuduAle5OzTGTr4EbWHdgD8nFUWWJIvV50ZgPScIq8eWeh7ll10HvIjIS7u
-HrdinKXttA70PbcZTIThzmj26vADLMPXhp78dJgKVQz7/x5ras7XHNQcGakVcFOY
-9aOpjIkMIbH44yP056LIudPz2WhVHMNZFgbFVx+G9oeUM03M4HKJQT3jaQ1hlxVz
-7z6655+JFMnSjKznI1wOlZsXBx+vmNZCteB4kdZKUwbwnm7GwVYk4X1kI5DdDm1x
-hrTwd4HEs/oqM9hUu2sLqSEgymjixeo5iig4kWtHuANikUvp7HUaEixdvoFTrPo=
-=op1M
------END PGP SIGNATURE-----
-
---spjIDaiUctnsA4Sg--
+Looks good, applied to net-next, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
