@@ -1,38 +1,32 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/4] edac: Add APM X-Gene SoC EDAC driver
-Date: Thu, 9 Apr 2015 19:48:47 +0200
-Message-ID: <20150409174847.GI25434@pd.tnic>
-References: <1426573821-1937-1-git-send-email-lho@apm.com>
- <CAPw-ZTkOOh=1GgDBQ4a9KoWVA9B7GPXddwNx=VBjVTo44wYdug@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Thu, 09 Apr 2015 13:57:33 -0400 (EDT)
+Message-ID: <20150409.135733.759772959057279248.davem@davemloft.net>
+References: <5519D380.6070200@cogentembedded.com>
+	<20150331064349.GB4605@localhost.localdomain>
+	<873849cuox.fsf@nemi.mork.no>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTkOOh=1GgDBQ4a9KoWVA9B7GPXddwNx=VBjVTo44wYdug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <873849cuox.fsf@nemi.mork.no>
+Sender: linux-sh-owner@vger.kernel.org
+To: bjorn@mork.no
+Cc: richardcochran@gmail.com, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2015 at 10:39:17AM -0700, Loc Ho wrote:
-> Hi Doug,
-> 
-> Any comment with v6 of the APM EDAC driver?
+=46rom: Bj=F8rn Mork <bjorn@mork.no>
+Date: Thu, 09 Apr 2015 15:11:58 +0200
 
-So this thing is being delayed only due to the device tree stuff AFAICT.
+> Richard Cochran <richardcochran@gmail.com> writes:
+>=20
+>> The reason for the author's SOB is to make sure that he or she is
+>> really authorized (like from the employer) to contribute the driver.
+>=20
+> I believe it is wise to stick to the definition of "Developer's
+> Certificate of Origin 1.1" from SubmittingPatches.
 
-Can someone of the DT people on To: please have a look already so that I
-can queue this?
+I believe that, if the original author is not willing to sign off on
+code they wrote which is on it's way upstream, it's a good reason to
+be concerned.
 
-Thanks.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
