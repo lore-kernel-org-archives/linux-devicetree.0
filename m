@@ -1,112 +1,38 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: [RFC PATCH 3/5] arm64: introduce CPU_OF_TABLES for cpu ops selection
-Date: Thu,  9 Apr 2015 12:37:09 -0500
-Message-ID: <1428601031-5366-4-git-send-email-galak@codeaurora.org>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Abhimanyu Kapur <abhimany@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, Kumar Gala <galak@codeaurora.org>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Thu, 9 Apr 2015 19:48:47 +0200
+Message-ID: <20150409174847.GI25434@pd.tnic>
+References: <1426573821-1937-1-git-send-email-lho@apm.com>
+ <CAPw-ZTkOOh=1GgDBQ4a9KoWVA9B7GPXddwNx=VBjVTo44wYdug@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTkOOh=1GgDBQ4a9KoWVA9B7GPXddwNx=VBjVTo44wYdug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Abhimanyu Kapur <abhimany@codeaurora.org>
+On Thu, Mar 26, 2015 at 10:39:17AM -0700, Loc Ho wrote:
+> Hi Doug,
+> 
+> Any comment with v6 of the APM EDAC driver?
 
-Add support to arm64 to provide a dt-based method to allow soc-vendors to
-supply cpu_ops. Also move psci and smp_spin_table ops to use CPU_OF_TABLES.
+So this thing is being delayed only due to the device tree stuff AFAICT.
 
-Signed-off-by: Abhimanyu Kapur <abhimany@codeaurora.org>
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
----
- arch/arm64/include/asm/cpu_ops.h   |  5 +++++
- arch/arm64/kernel/cpu_ops.c        | 27 +++++++++------------------
- arch/arm64/kernel/psci.c           |  1 +
- arch/arm64/kernel/smp_spin_table.c |  3 ++-
- 4 files changed, 17 insertions(+), 19 deletions(-)
+Can someone of the DT people on To: please have a look already so that I
+can queue this?
 
-diff --git a/arch/arm64/include/asm/cpu_ops.h b/arch/arm64/include/asm/cpu_ops.h
-index da301ee..a7efab8 100644
---- a/arch/arm64/include/asm/cpu_ops.h
-+++ b/arch/arm64/include/asm/cpu_ops.h
-@@ -67,4 +67,9 @@ extern const struct cpu_operations *cpu_ops[NR_CPUS];
- int __init cpu_read_ops(struct device_node *dn, int cpu);
- void __init cpu_read_bootcpu_ops(void);
- 
-+#define CPU_METHOD_OF_DECLARE(name, __ops)				\
-+	static const struct cpu_operations *__cpu_method_table_##name	\
-+	__used __section(__cpu_method_of_table)				\
-+	= __ops;
-+
- #endif /* ifndef __ASM_CPU_OPS_H */
-diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
-index cce9524..ad33f98 100644
---- a/arch/arm64/kernel/cpu_ops.c
-+++ b/arch/arm64/kernel/cpu_ops.c
-@@ -22,29 +22,20 @@
- #include <linux/of.h>
- #include <linux/string.h>
- 
--extern const struct cpu_operations smp_spin_table_ops;
--extern const struct cpu_operations cpu_psci_ops;
--
- const struct cpu_operations *cpu_ops[NR_CPUS];
- 
--static const struct cpu_operations *supported_cpu_ops[] __initconst = {
--#ifdef CONFIG_SMP
--	&smp_spin_table_ops,
--#endif
--	&cpu_psci_ops,
--	NULL,
--};
-+extern struct cpu_operations __cpu_method_of_table[];
-+static const struct cpu_operations *__cpu_method_of_table_sentinel
-+	__used __section(__cpu_method_of_table_end);
- 
--static const struct cpu_operations * __init cpu_get_ops(const char *name)
-+const struct cpu_operations * __init cpu_get_ops(const char *name)
- {
--	const struct cpu_operations **ops = supported_cpu_ops;
--
--	while (*ops) {
--		if (!strcmp(name, (*ops)->name))
--			return *ops;
-+	const struct cpu_operations **start = (void *)__cpu_method_of_table;
- 
--		ops++;
--	}
-+	for (; *start; start++) {
-+		if (!strcmp((*start)->name, name))
-+			return *start;
-+	};
- 
- 	return NULL;
- }
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 9b8a70a..2f255c7 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -523,3 +523,4 @@ const struct cpu_operations cpu_psci_ops = {
- #endif
- };
- 
-+CPU_METHOD_OF_DECLARE(psci, &cpu_psci_ops);
-diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
-index 14944e5..b41a8b4 100644
---- a/arch/arm64/kernel/smp_spin_table.c
-+++ b/arch/arm64/kernel/smp_spin_table.c
-@@ -119,9 +119,10 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
- 	return 0;
- }
- 
--const struct cpu_operations smp_spin_table_ops = {
-+static const struct cpu_operations smp_spin_table_ops = {
- 	.name		= "spin-table",
- 	.cpu_init	= smp_spin_table_cpu_init,
- 	.cpu_prepare	= smp_spin_table_cpu_prepare,
- 	.cpu_boot	= smp_spin_table_cpu_boot,
- };
-+CPU_METHOD_OF_DECLARE(spin_table, &smp_spin_table_ops);
+Thanks.
+
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
