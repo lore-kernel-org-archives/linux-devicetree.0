@@ -1,84 +1,117 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Thu, 9 Apr 2015 12:59:39 +0300
-Message-ID: <55264D8B.7010301@ti.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com> <1427980385-21285-3-git-send-email-r.baldyga@samsung.com> <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com> <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs related
+ properties
+Date: Thu, 09 Apr 2015 12:03:25 +0200
+Message-ID: <55264E6D.40801@samsung.com>
+References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
+ <552545FF.2030208@samsung.com> <552628E4.50003@samsung.com>
+ <55263247.5070009@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55264534.4020006-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <55263247.5070009@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 09/04/15 10:03, Sakari Ailus wrote:
+> Jacek Anaszewski wrote:
+>> On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
+>>> On 08/04/15 16:31, Jacek Anaszewski wrote:
+>>>> Properties defining maximum values for LED currents and timeout should
+>>>> be mandatory to avoid the risk of hardware damage. This patch fixes
+>>>> the issue.
 
-On 09/04/15 12:24, Robert Baldyga wrote:
-> Hi Chanwoo,
-> 
-> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->> Hi Robert,
->>
->> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>> Hi Chanwoo,
+>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>>> @@ -10,6 +10,17 @@ can influence the way of the LED device
+>>>> initialization, the LED components
+>>>>   have to be tightly coupled with the LED device binding. They are
+>>>> represented
+>>>>   by child nodes of the parent LED device binding.
+>>>>
+>>>> +Required properties for child nodes:
 >>>
->>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>> Hi Robert,
->>>>
+>>> These properties are mandatory only for LEDs with Flash/Torch
+>>> capabilities, aren't they?
 >>
->> [snip]
->>
->>>> But, I have one question about case[3]
->>>>
->>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>
->>>
->>> It's because state of single USB cable connection cannot be completely
->>> described using single extcon cable. USB cable state has two bits (VBUS
->>> and ID), so we need to use two cables for single cable connection. We
->>> use following convention:
->>> cable "USB" = VBUS
->>> cable "USB-HOST" = !ID.
->>
->> I think that extcon provider driver have to update the only one cable state
->> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->> at the same time through one h/w port.
-
-At least for the kernel users [1] we are treating USB-HOST as !ID and USB as VBUS.
-So it is not an issue for these kernel users if both USB and USB-HOST are attached.
-This is a valid USB state.
-If we don't do so then extcon with 3 cable states is not sufficient to capture the
-entire USB scenario. (we need 4 states for 2 pins).
-
-[1]
-- drivers/usb/phy/phy-omap-otg.c
-- drivers/usb/dwc3/dwc3-omap.c
-
-
->>
->> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>
+>> flash-max-microamp and flash-timeout-us properties description mention
+>> that they refer to flash LEDs. Perhaps this should be made indeed more
+>> explicit.
 > 
-> It can. USB OTG allows for that. Moreover device can be host even if
-> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
-> detected cable type is USB host). Devices would need to have complete
-> information about USB cable connection, because OTG state machine needs
-> that. As I wrote, current USB cable names are misleading. It would be
-> better to have "USB-VBUS" and "USB-ID".
+> Sounds good to me, after all these shouldn't be defined for devices they
+> don't make sense for. Alternatively, you could add another section for
+> "required properties for flash LEDs".
 
-We need to first understand how user space is using "USB" and "USB-HOST" events
-and does it cause an issue if both USB and USB-HOST become attached.
+Sounds good to me.
 
-What is the "ABI" explanation for "USB" and "USB-HOST" cable states?
+>>> Requiring those properties for all led nodes would make all
+>>> current dtses not compliant with the DT binding specification AFAICT.
+> 
+> Some drivers also define these explicitly as optional, the behaviour for
+> those obviously can't be changed.  This should apply to new drivers
+> only, and I think documenting the matter in this file would be the best
+> way to do that.
 
-cheers,
--roger
+Unfortunately this file is not a proper place for information regarding
+Linux drivers.
+I can't see any drivers in -next using those DT properties. Could you
+point to any examples?
+Perhaps we should stay with the below properties specified as optional
+in general and add a note they can be mandatory for some LEDs (controllers)?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> I was also worrying about making led-max-microamp required, but others
+>> didn't share my objections. I think that we have to reexamine this.
+>>
+>> Please refer to the discussion under [PATCH v4]. The role of this
+>> led-max-microamp property would be preventing hardware damage.
+>>
+>>
+>>> How about:
+>>>
+>>> "Required properties for child nodes for LEDs with Flash/Torch
+>>> capabilities:" ?
+>>>
+>>>> +- led-max-microamp : Maximum LED supply current in microamperes
+>>>> +                     (torch LED for flash devices). Controllers that
+> 
+> Do you think we can just rename max-microamp as led-max-microamp? It's
+> been there since v3.19. Or is it because no driver has been using it?
+
+I'd say it could be renamed if there is no users in mainline. But the DT
+maintainers could disagree here (adding Rob, Mark at Cc).
+
+>>>> have no
+>>>> +                     configurable current can omit this property.
+>>>> +- flash-max-microamp : Maximum flash LED supply current in
+>>>> microamperes.
+>>>> +- flash-timeout-us : Timeout in microseconds after which the flash
+>>>> +                     LED is turned off.
+>>>> +
+>>>
+>>>> +Above properties determine a LED driver IC settings required for safe
+>>>> +operation. They should be also used as the initial settings for the IC.
+>>>
+>>> Shouldn't "Controllers that have no configurable current can omit this
+>>> property" refer to both led-max-microamp and flash-max-microamp?
+>>>
+>>> I would drop the "Above...for the IC." paragraph and instead add
+>>> something like:
+>>>
+>>> "For controllers that have no configurable current the led-max-microamp,
+>>> flash-max-microamp properties respectively can be omitted. For
+>>> controllers that
+>>> have no configurable timeout the flash-timeout-us property can be
+>>> omitted."
+>>
+>> Are we going to avoid mentioning about their role in preventing
+>> hardware damage (former "for safe operation" sequence)?
+> 
+> That'd make it understandable why the properties are mandatory. Sounds
+> good to me.
+
+-- 
+Regards,
+Sylwester
