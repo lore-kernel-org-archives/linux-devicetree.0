@@ -1,42 +1,79 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 5/5] ARM: dts: Enable thermal_zone for exynos5422.
-Date: Fri, 10 Apr 2015 01:14:19 +0930
-Message-ID: <1428594259-3915-6-git-send-email-linux.amoon@gmail.com>
-References: <1428594259-3915-1-git-send-email-linux.amoon@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428594259-3915-1-git-send-email-linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Stephan Mueller <smueller@chronox.de>
+Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
+Date: Thu, 09 Apr 2015 17:52:42 +0200
+Message-ID: <13353890.ylqfTNBYXC@tauon>
+References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <info@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
 List-Id: devicetree@vger.kernel.org
 
-Include exynos5-cpu-thermal.dtsi to enable thermal_zone support.
+Am Donnerstag, 9. April 2015, 16:58:41 schrieb Boris Brezillon:
 
-Changes since v1 : Seperate the include previous patch.
+Hi Boris,
 
-Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
-Reviewed-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/exynos5422-odroidxu3.dts | 1 +
- 1 file changed, 1 insertion(+)
+>Hello,
+>
+>This is an attempt to replace the mv_cesa driver by a new one to address
+>some limitations of the existing driver.
+>From a performance and CPU load point of view the most important
+>limitation is the lack of DMA support, thus preventing us from chaining
+>crypto operations.
+>
+>I know we usually try to adapt existing drivers instead of replacing them
+>by new ones, but after trying to refactor the mv_cesa driver I realized it
+>would take longer than writing an new one from scratch.
+>
+>Here are the main features brought by this new driver:
+>- support for armada SoCs (up to 38x) while keeping support for older ones
+>  (Orion and Kirkwood)
+>- DMA mode to offload the CPU in case of intensive crypto usage
+>- new algorithms: SHA256, DES and 3DES
+>
+>I'd like to thank Arnaud, who has carefully reviewed several iterations of
+>this driver, helped me improved my implementation, provided support for
+>several crypto algorithms, provided support for armada-370 and tested
+>the driver on different platforms, hence the SoB and dual MODULE_AUTHOR
+>in the driver code.
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-index 6e7ee53..16a5f10 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-@@ -12,6 +12,7 @@
- 
- /dts-v1/;
- #include "exynos5800.dtsi"
-+#include "exynos5-cpu-thermal.dtsi"
- 
- / {
- 	model = "Hardkernel Odroid XU3";
--- 
-1.9.1
+Your patch 1/2 did not make it to the crypto list. To big? It is on the lkml 
+list though.
+>
+>Best Regards,
+>
+>Boris
+>
+>Boris Brezillon (2):
+>  crypto: add new driver for Marvell CESA
+>  crypto: marvell/CESA: update DT bindings documentation
+>
+> .../devicetree/bindings/crypto/mv_cesa.txt         |   50 +-
+> drivers/crypto/Kconfig                             |    2 +
+> drivers/crypto/Makefile                            |    2 +-
+> drivers/crypto/marvell/Makefile                    |    1 +
+> drivers/crypto/marvell/cesa.c                      |  539 ++++++++
+> drivers/crypto/marvell/cesa.h                      |  802 ++++++++++++
+> drivers/crypto/marvell/cipher.c                    |  761 +++++++++++
+> drivers/crypto/marvell/hash.c                      | 1349
+>++++++++++++++++++++ drivers/crypto/marvell/tdma.c                      | 
+>223 ++++
+> drivers/crypto/mv_cesa.c                           | 1193 -----------------
+> drivers/crypto/mv_cesa.h                           |  150 ---
+> 11 files changed, 3716 insertions(+), 1356 deletions(-)
+> create mode 100644 drivers/crypto/marvell/Makefile
+> create mode 100644 drivers/crypto/marvell/cesa.c
+> create mode 100644 drivers/crypto/marvell/cesa.h
+> create mode 100644 drivers/crypto/marvell/cipher.c
+> create mode 100644 drivers/crypto/marvell/hash.c
+> create mode 100644 drivers/crypto/marvell/tdma.c
+> delete mode 100644 drivers/crypto/mv_cesa.c
+> delete mode 100644 drivers/crypto/mv_cesa.h
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Ciao
+Stephan
