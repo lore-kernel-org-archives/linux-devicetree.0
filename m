@@ -1,67 +1,53 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [v2] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Thu, 9 Apr 2015 12:02:56 -0500
-Message-ID: <1428598976.22867.535.camel@freescale.com>
-References: <1428479031-26597-1-git-send-email-igal.liberman@freescale.com>
-	 <1428527516.22867.509.camel@freescale.com>
-	 <DM2PR03MB383D9FD2888970950261FB2E6FB0@DM2PR03MB383.namprd03.prod.outlook.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] powerpc/dts: Add some SoC specific
+ "fsl,*-device-config" compatibles
+Date: Thu, 9 Apr 2015 12:02:02 -0500
+Message-ID: <1428598922.22867.534.camel@freescale.com>
+References: <1428560482-30938-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR03MB383D9FD2888970950261FB2E6FB0-ufbTtyGzTTRJonC5hhDUuuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1428560482-30938-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-04-09 at 02:18 -0500, Liberman Igal-B31950 wrote:
-> 
-> 
-> Regards,
-> Igal Liberman.
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Thursday, April 09, 2015 12:12 AM
-> > To: Liberman Igal-B31950
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Subject: Re: [v2] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-> > 
-> > On Wed, 2015-04-08 at 10:43 +0300, Igal.Liberman wrote:
-> > > @@ -76,6 +77,52 @@ Required properties:
-> > >
-> > >  Recommended properties:
-> > >  - clocks: Should be the phandle of input parent clock
-> > > +	For "fsl,fman-clk-mux" clock there are several options for parent
-> > > +	clock (clock provider), the parent is determined according to the
-> > > +	Reset Configuration Word of the specific device:
-> > > +		* P2041, P3041:
-> > > +			* 0 - equal to platform PLL divided by 2
-> > > +			* 1 - equal to PLL2 divided by 2
-> > > +		* P4080 (Both FMans):
-> > > +			* 0 - equal to platform PLL divided by 2
-> > > +			* 1 - equal to PLL3 divided by 2
-> > ...
-> > 
-> > 
-> > Again, the clock specifier format is determined by the clock provider, not the
-> > clock consumer.
-> > 
-> 
-> Scott,
-> The "clocks" property contains all possible clock providers, right?
-> In the text above I'm trying to explain how the FMan clock provider is determined and what are the options for each SoC.
-> Do you think that we shouldn't have this explanation? Can you please elaborate?
-
-I'm saying that the clock specifiers must be the same regardless of the
-node that is consuming the clock.  You can't define certain values as
-only being "for fsl,fman-clk-mux".
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAyMDE1LTA0LTA5IGF0IDA5OjIxICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBU
+aGlzIHBhdGNoIGlzIHJlcXVpcmVkIGZvcjogaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9w
+YXRjaC80NTk1ODQvCgpJZiBpdCdzIHJlcXVpcmVkIGZvciB0aGF0IHBhdGNoLCB3aHkgYXJlbid0
+IHRoZXkgcGFydCBvZiBhIHBhdGNoc2V0CnJhdGhlciB0aGFuIGluZGVwZW5kZW50bHkgcG9zdGVk
+PyAgSSBkb24ndCBzZWUgYW55IG1lbnRpb24gb2YgYQpkZXBlbmRlbmN5IGluIHRoYXQgcGF0Y2gs
+IHNvIGhvdyB3b3VsZCBJIGhhdmUga25vd24gbm90IHRvIGFwcGx5IGl0PwoKPiBTaWduZWQtb2Zm
+LWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+Cj4gLS0tCj4g
+IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kgfCAgICAzICsrLQo+
+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2ktcG9zdC5kdHNpIHwgICAgMyArKy0K
+PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaSAgICB8ICAgIDMgKyst
+Cj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgfCAgICAzICsr
+LQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpIHwgICAgMyAr
+Ky0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaSB8ICAgIDMg
+KystCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgfCAgICAz
+ICsrLQo+ICA3IGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0p
+Cj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0
+LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0NDIwc2ktcG9zdC5kdHNpCj4gaW5k
+ZXggMWVhODYwMi4uOWIxNGYyNCAxMDA2NDQKPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL2I0NDIwc2ktcG9zdC5kdHNpCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9i
+NDQyMHNpLXBvc3QuZHRzaQo+IEBAIC03Nyw3ICs3Nyw4IEBACj4gIAl9Owo+ICAKPiAgCWd1dHM6
+IGdsb2JhbC11dGlsaXRpZXNAZTAwMDAgewo+IC0JCWNvbXBhdGlibGUgPSAiZnNsLGI0NDIwLWRl
+dmljZS1jb25maWciLCAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4wIjsKPiArCQljb21wYXRp
+YmxlID0gImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIiwgImZzbCxiNC1kZXZpY2UtY29uZmlnIiwK
+PiArCQkJICAgICAgImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTIuMCI7CgpXaHk/CgotU2NvdHQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
+Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
