@@ -1,215 +1,156 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH 1/2] usb: phy: msm: Use extcon framework for VBUS and ID detection
-Date: Thu,  9 Apr 2015 11:34:22 +0300
-Message-ID: <1428568462-20193-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/2] usb: phy: msm: Manual PHY and LINK controller VBUS change notification
+Date: Thu,  9 Apr 2015 11:34:33 +0300
+Message-ID: <1428568473-2145-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vamsi Krishna <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On recent Qualcomm platforms VBUS and ID lines are not routed to
-USB PHY LINK controller. Use extcon framework to receive connect
-and disconnect ID and VBUS notification.
+VBUS is not routed to USB PHY on recent Qualcomm platforms. USB controller
+must see VBUS in order to pull-up DP when setting RS bit. Henc configure
+USB PHY and LINK registers sense VBUS and enable manual pullup on D+ line.
 
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+Cc: Vamsi Krishna <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |  7 ++
- drivers/usb/phy/Kconfig                            |  1 +
- drivers/usb/phy/phy-msm-usb.c                      | 84 ++++++++++++++++++++++
- include/linux/usb/msm_hsusb.h                      | 17 +++++
- 4 files changed, 109 insertions(+)
+ .../devicetree/bindings/usb/msm-hsusb.txt          |  4 ++++
+ drivers/usb/phy/phy-msm-usb.c                      | 26 ++++++++++++++++++++++
+ include/linux/usb/msm_hsusb.h                      |  5 +++++
+ include/linux/usb/msm_hsusb_hw.h                   |  9 ++++++++
+ 4 files changed, 44 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index 2826f2a..f26bcfa 100644
+index f26bcfa..bd8d9e7 100644
 --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
 +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -69,6 +69,13 @@ Optional properties:
+@@ -69,6 +69,10 @@ Optional properties:
                  (no, min, max) where each value represents either a voltage
                  in microvolts or a value corresponding to voltage corner.
 
-+- extcon:       phandles to external connector devices. First phandle
-+                should point to external connector, which provide "USB"
-+                cable events, the second should point to external connector
-+                device, which provide "USB-HOST" cable events. If one of
-+                the external connector devices is not required empty <0>
-+                phandle should be specified.
++- qcom,manual-pullup: If present, vbus is not routed to USB controller/phy
++                and controller driver therefore enables pull-up explicitly
++                before starting controller using usbcmd run/stop bit.
 +
- Example HSUSB OTG controller device node:
-
-     usb@f9a55000 {
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 52d3d58..ca584ef 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -141,6 +141,7 @@ config USB_MSM_OTG
- 	tristate "Qualcomm on-chip USB OTG controller support"
- 	depends on (USB || USB_GADGET) && (ARCH_MSM || ARCH_QCOM || COMPILE_TEST)
- 	depends on RESET_CONTROLLER
-+	depends on EXTCON
- 	select USB_PHY
- 	help
- 	  Enable this to support the USB OTG transceiver on Qualcomm chips. It
+ - extcon:       phandles to external connector devices. First phandle
+                 should point to external connector, which provide "USB"
+                 cable events, the second should point to external connector
 diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 000fd89..d47c3eb 100644
+index d47c3eb..4a928f7 100644
 --- a/drivers/usb/phy/phy-msm-usb.c
 +++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -1445,9 +1445,42 @@ static const struct of_device_id msm_otg_dt_match[] = {
- };
- MODULE_DEVICE_TABLE(of, msm_otg_dt_match);
-
-+static int msm_otg_vbus_notifier(struct notifier_block *nb, unsigned long event,
-+				void *ptr)
-+{
-+	struct msm_usb_cable *vbus = container_of(nb, struct msm_usb_cable, nb);
-+	struct msm_otg *motg = container_of(vbus, struct msm_otg, vbus);
-+
-+	if (event)
-+		set_bit(B_SESS_VLD, &motg->inputs);
-+	else
-+		clear_bit(B_SESS_VLD, &motg->inputs);
-+
-+	schedule_work(&motg->sm_work);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int msm_otg_id_notifier(struct notifier_block *nb, unsigned long event,
-+				void *ptr)
-+{
-+	struct msm_usb_cable *id = container_of(nb, struct msm_usb_cable, nb);
-+	struct msm_otg *motg = container_of(id, struct msm_otg, id);
-+
-+	if (event)
-+		clear_bit(ID, &motg->inputs);
-+	else
-+		set_bit(ID, &motg->inputs);
-+
-+	schedule_work(&motg->sm_work);
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+@@ -245,8 +245,14 @@ static void ulpi_init(struct msm_otg *motg)
+ static int msm_phy_notify_disconnect(struct usb_phy *phy,
+ 				   enum usb_device_speed speed)
  {
- 	struct msm_otg_platform_data *pdata;
-+	struct extcon_dev *ext_id, *ext_vbus;
- 	const struct of_device_id *id;
- 	struct device_node *node = pdev->dev.of_node;
- 	struct property *prop;
-@@ -1496,6 +1529,52 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
++	struct msm_otg *motg = container_of(phy, struct msm_otg, phy);
+ 	int val;
+
++	if (motg->manual_pullup) {
++		val = ULPI_MISC_A_VBUSVLDEXT | ULPI_MISC_A_VBUSVLDEXTSEL;
++		usb_phy_io_write(phy, val, ULPI_CLR(ULPI_MISC_A));
++	}
++
+ 	/*
+ 	 * Put the transceiver in non-driving mode. Otherwise host
+ 	 * may not detect soft-disconnection.
+@@ -431,6 +437,24 @@ static int msm_phy_init(struct usb_phy *phy)
+ 		ulpi_write(phy, ulpi_val, ULPI_USB_INT_EN_FALL);
+ 	}
+
++	if (motg->manual_pullup) {
++		val = ULPI_MISC_A_VBUSVLDEXTSEL | ULPI_MISC_A_VBUSVLDEXT;
++		ulpi_write(phy, val, ULPI_SET(ULPI_MISC_A));
++
++		val = readl(USB_GENCONFIG_2);
++		val |= GENCONFIG_2_SESS_VLD_CTRL_EN;
++		writel(val, USB_GENCONFIG_2);
++
++		val = readl(USB_USBCMD);
++		val |= USBCMD_SESS_VLD_CTRL;
++		writel(val, USB_USBCMD);
++
++		val = ulpi_read(phy, ULPI_FUNC_CTRL);
++		val &= ~ULPI_FUNC_CTRL_OPMODE_MASK;
++		val |= ULPI_FUNC_CTRL_OPMODE_NORMAL;
++		ulpi_write(phy, val, ULPI_FUNC_CTRL);
++	}
++
+ 	if (motg->phy_number)
+ 		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
+
+@@ -1529,6 +1553,8 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
  		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
  	}
 
-+	ext_id = ERR_PTR(-ENODEV);
-+	ext_vbus = ERR_PTR(-ENODEV);
-+	if (of_property_read_bool(node, "extcon")) {
++	motg->manual_pullup = of_property_read_bool(node, "qcom,manual-pullup");
 +
-+		/* Each one of them is not mandatory */
-+		ext_vbus = extcon_get_edev_by_phandle(&pdev->dev, 0);
-+		if (IS_ERR(ext_vbus) && PTR_ERR(ext_vbus) != -ENODEV)
-+			return PTR_ERR(ext_vbus);
-+
-+		ext_id = extcon_get_edev_by_phandle(&pdev->dev, 1);
-+		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
-+			return PTR_ERR(ext_id);
-+	}
-+
-+	if (!IS_ERR(ext_vbus)) {
-+		motg->vbus.nb.notifier_call = msm_otg_vbus_notifier;
-+		ret = extcon_register_interest(&motg->vbus.conn, ext_vbus->name,
-+					       "USB", &motg->vbus.nb);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "register VBUS notifier failed\n");
-+			return ret;
-+		}
-+
-+		ret = extcon_get_cable_state(ext_vbus, "USB");
-+		if (ret)
-+			set_bit(B_SESS_VLD, &motg->inputs);
-+		else
-+			clear_bit(B_SESS_VLD, &motg->inputs);
-+	}
-+
-+	if (!IS_ERR(ext_id)) {
-+		motg->id.nb.notifier_call = msm_otg_id_notifier;
-+		ret = extcon_register_interest(&motg->id.conn, ext_id->name,
-+					       "USB-HOST", &motg->id.nb);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "register ID notifier failed\n");
-+			return ret;
-+		}
-+
-+		ret = extcon_get_cable_state(ext_id, "USB-HOST");
-+		if (ret)
-+			clear_bit(ID, &motg->inputs);
-+		else
-+			set_bit(ID, &motg->inputs);
-+	}
-+
- 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
- 	if (!prop || !len)
- 		return 0;
-@@ -1719,6 +1798,11 @@ static int msm_otg_remove(struct platform_device *pdev)
- 	if (phy->otg->host || phy->otg->gadget)
- 		return -EBUSY;
-
-+	if (motg->id.conn.edev)
-+		extcon_unregister_interest(&motg->id.conn);
-+	if (motg->vbus.conn.edev)
-+		extcon_unregister_interest(&motg->vbus.conn);
-+
- 	msm_otg_debugfs_cleanup();
- 	cancel_delayed_work_sync(&motg->chg_work);
- 	cancel_work_sync(&motg->sm_work);
+ 	ext_id = ERR_PTR(-ENODEV);
+ 	ext_vbus = ERR_PTR(-ENODEV);
+ 	if (of_property_read_bool(node, "extcon")) {
 diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index b0a3924..9a38e77 100644
+index 9a38e77..a5edc8d 100644
 --- a/include/linux/usb/msm_hsusb.h
 +++ b/include/linux/usb/msm_hsusb.h
-@@ -18,6 +18,7 @@
- #ifndef __ASM_ARCH_MSM_HSUSB_H
- #define __ASM_ARCH_MSM_HSUSB_H
-
-+#include <linux/extcon.h>
- #include <linux/types.h>
- #include <linux/usb/otg.h>
- #include <linux/clk.h>
-@@ -122,6 +123,17 @@ struct msm_otg_platform_data {
- };
-
- /**
-+ * struct msm_usb_cable - structure for exteternal connector cable
-+ *			  state tracking
-+ * @nb: hold event notification callback
-+ * @conn: used for notification registration
-+ */
-+struct msm_usb_cable {
-+	struct notifier_block		nb;
-+	struct extcon_specific_cable_nb conn;
-+};
-+
-+/**
-  * struct msm_otg: OTG driver data. Shared by HCD and DCD.
-  * @otg: USB OTG Transceiver structure.
-  * @pdata: otg device platform data.
-@@ -141,6 +153,8 @@ struct msm_otg_platform_data {
+@@ -153,6 +153,9 @@ struct msm_usb_cable {
   * @chg_type: The type of charger attached.
   * @dcd_retires: The retry count used to track Data contact
   *               detection process.
-+ * @vbus: VBUS signal state trakining, using extcon framework
-+ * @id: ID signal state trakining, using extcon framework
++ * @manual_pullup: true if VBUS is not routed to USB controller/phy
++ *	and controller driver therefore enables pull-up explicitly before
++ *	starting controller using usbcmd run/stop bit.
+  * @vbus: VBUS signal state trakining, using extcon framework
+  * @id: ID signal state trakining, using extcon framework
   */
- struct msm_otg {
- 	struct usb_phy phy;
-@@ -170,6 +184,9 @@ struct msm_otg {
- 	struct reset_control *phy_rst;
+@@ -185,6 +188,8 @@ struct msm_otg {
  	struct reset_control *link_rst;
  	int vdd_levels[3];
-+
-+	struct msm_usb_cable vbus;
-+	struct msm_usb_cable id;
- };
 
- #endif
++	bool manual_pullup;
++
+ 	struct msm_usb_cable vbus;
+ 	struct msm_usb_cable id;
+ };
+diff --git a/include/linux/usb/msm_hsusb_hw.h b/include/linux/usb/msm_hsusb_hw.h
+index a29f603..e159b39 100644
+--- a/include/linux/usb/msm_hsusb_hw.h
++++ b/include/linux/usb/msm_hsusb_hw.h
+@@ -21,6 +21,8 @@
+
+ #define USB_AHBBURST         (MSM_USB_BASE + 0x0090)
+ #define USB_AHBMODE          (MSM_USB_BASE + 0x0098)
++#define USB_GENCONFIG_2      (MSM_USB_BASE + 0x00a0)
++
+ #define USB_CAPLENGTH        (MSM_USB_BASE + 0x0100) /* 8 bit */
+
+ #define USB_USBCMD           (MSM_USB_BASE + 0x0140)
+@@ -30,6 +32,9 @@
+ #define USB_PHY_CTRL         (MSM_USB_BASE + 0x0240)
+ #define USB_PHY_CTRL2        (MSM_USB_BASE + 0x0278)
+
++#define GENCONFIG_2_SESS_VLD_CTRL_EN	BIT(7)
++#define USBCMD_SESS_VLD_CTRL		BIT(25)
++
+ #define USBCMD_RESET   2
+ #define USB_USBINTR          (MSM_USB_BASE + 0x0148)
+
+@@ -50,6 +55,10 @@
+ #define ULPI_PWR_CLK_MNG_REG	0x88
+ #define OTG_COMP_DISABLE	BIT(0)
+
++#define ULPI_MISC_A			0x96
++#define ULPI_MISC_A_VBUSVLDEXTSEL	BIT(1)
++#define ULPI_MISC_A_VBUSVLDEXT		BIT(0)
++
+ #define ASYNC_INTR_CTRL         (1 << 29) /* Enable async interrupt */
+ #define ULPI_STP_CTRL           (1 << 30) /* Block communication with PHY */
+ #define PHY_RETEN               (1 << 1) /* PHY retention enable/disable */
 --
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
