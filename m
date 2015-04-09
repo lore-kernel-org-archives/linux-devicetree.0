@@ -1,53 +1,86 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/6] regulator: axp20x: prepare support for multiple
- AXP chip families
-Date: Thu, 9 Apr 2015 20:55:02 +0100
-Message-ID: <20150409195502.GC6023@sirena.org.uk>
-References: <1427868203-7486-1-git-send-email-wens@csie.org>
- <1427868203-7486-4-git-send-email-wens@csie.org>
- <CAGb2v66zbATMHY5SgZLs3RCoRETroSh5nC3h4TXRLm5UAbythw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="u0RMtJEJpREwTiMy"
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v5 02/11] irqchip: nvic: support hierarchy irq domain
+Date: Thu,  9 Apr 2015 22:04:06 +0200
+Message-ID: <1428609855-27657-3-git-send-email-stefan@agner.ch>
+References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66zbATMHY5SgZLs3RCoRETroSh5nC3h4TXRLm5UAbythw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1428609855-27657-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add support for hierarchy irq domains. This is required to stack
+the MSCM interrupt router and the NVIC controller found in Vybrid
+SoC.
 
---u0RMtJEJpREwTiMy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ drivers/irqchip/Kconfig    |  1 +
+ drivers/irqchip/irq-nvic.c | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
-On Thu, Apr 09, 2015 at 10:23:41AM -0700, Chen-Yu Tsai wrote:
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index cc79d2a..ab8de26 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -30,6 +30,7 @@ config ARM_GIC_V3_ITS
+ config ARM_NVIC
+ 	bool
+ 	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
+ 	select GENERIC_IRQ_CHIP
+ 
+ config ARM_VIC
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index 4ff0805..5fac910 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -49,6 +49,31 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+ 	handle_IRQ(irq, regs);
+ }
+ 
++static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				unsigned int nr_irqs, void *arg)
++{
++	int i, ret;
++	irq_hw_number_t hwirq;
++	unsigned int type = IRQ_TYPE_NONE;
++	struct of_phandle_args *irq_data = arg;
++
++	ret = irq_domain_xlate_onecell(domain, irq_data->np, irq_data->args,
++				   irq_data->args_count, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < nr_irqs; i++)
++		irq_map_generic_chip(domain, virq + i, hwirq + i);
++
++	return 0;
++}
++
++static const struct irq_domain_ops nvic_irq_domain_ops = {
++	.xlate = irq_domain_xlate_onecell,
++	.alloc = nvic_irq_domain_alloc,
++	.free = irq_domain_free_irqs_top,
++};
++
+ static int __init nvic_of_init(struct device_node *node,
+ 			       struct device_node *parent)
+ {
+@@ -70,7 +95,8 @@ static int __init nvic_of_init(struct device_node *node,
+ 		irqs = NVIC_MAX_IRQ;
+ 
+ 	nvic_irq_domain =
+-		irq_domain_add_linear(node, irqs, &irq_generic_chip_ops, NULL);
++		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
++
+ 	if (!nvic_irq_domain) {
+ 		pr_warn("Failed to allocate irq domain\n");
+ 		return -ENOMEM;
+-- 
+2.3.5
 
-> Are you OK with Lee taking the 2 regulator patches through his tree?
-> I realize I'm asking this way too late for this merge window.
-
-Someone would need to resend them to me as I've deleted them and it
-appears that this is a part of a series - are you sure there are no
-dependencies?
-
---u0RMtJEJpREwTiMy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVJtkWAAoJECTWi3JdVIfQkLwH/00Azo2U5VqouLD+xP6ayARk
-gE3VVR9SvJEId9j5MRVUM1yYlJsJque8F6kWuT1ZVJDGaUslAw+dGvRRZ/vhi3yQ
-Yyhau9xjy8EMi98LNzXm6SzpZoF1lYj92675DoeqzOKfYh1Dv+qORu64fx3Qkl1C
-NBbqNX8RtzFmTe5UdhOEoRvRI2fZl9naoJSxPhWUHWgTKM17EPK8ZASxh9F1bhHs
-v9eze0+nQOnOh+qyP+QDBzMTCiwlMRDBq6QQUxmWk1AcJsbIpAzH0x8uoSyV9lnc
-7YDd+kSMb3vCWgc8c8ZXttXX4oOmnOpykq+UVHLgVf5ZdMbf0DNGwycqzNFa3BM=
-=TES5
------END PGP SIGNATURE-----
-
---u0RMtJEJpREwTiMy--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
