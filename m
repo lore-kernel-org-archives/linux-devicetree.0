@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v5 06/11] ARM: unify MMU/!MMU addruart calls
-Date: Thu,  9 Apr 2015 22:04:10 +0200
-Message-ID: <1428609855-27657-7-git-send-email-stefan@agner.ch>
+Subject: [PATCH v5 05/11] clocksource: add dependencies for Vybrid pit clocksource
+Date: Thu,  9 Apr 2015 22:04:09 +0200
+Message-ID: <1428609855-27657-6-git-send-email-stefan@agner.ch>
 References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1428609855-27657-1-git-send-email-stefan@agner.ch>
@@ -10,42 +10,27 @@ To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.klein
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Remove the needless differences between MMU/!MMU addruart calls.
-This allows to use the same addruart macro on SoC level. Useful
-for SoC consisting of multiple CPUs with and without MMU such as
-Freescale Vybrid.
+Add the minimal dependencies required to use the Vybrid PIT
+clocksource driver. Those are not part of the SoC dependencies.
 
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/include/debug/efm32.S | 2 +-
- arch/arm/kernel/debug.S        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/clocksource/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/include/debug/efm32.S b/arch/arm/include/debug/efm32.S
-index 2265a19..660fa1e 100644
---- a/arch/arm/include/debug/efm32.S
-+++ b/arch/arm/include/debug/efm32.S
-@@ -16,7 +16,7 @@
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 1c2506f..350e742 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -164,6 +164,8 @@ config FSL_FTM_TIMER
  
- #define	UARTn_TXDATA		0x0034
+ config VF_PIT_TIMER
+ 	bool
++	select CLKSRC_MMIO
++	select CLKSRC_OF
+ 	help
+ 	  Support for Period Interrupt Timer on Freescale Vybrid Family SoCs.
  
--		.macro	addruart, rx, tmp
-+		.macro	addruart, rx, tmp, tmp2
- 		ldr	\rx, =(CONFIG_DEBUG_UART_PHYS)
- 
- 		/*
-diff --git a/arch/arm/kernel/debug.S b/arch/arm/kernel/debug.S
-index 78c91b5..ea9646c 100644
---- a/arch/arm/kernel/debug.S
-+++ b/arch/arm/kernel/debug.S
-@@ -35,7 +35,7 @@
- 
- #else /* !CONFIG_MMU */
- 		.macro	addruart_current, rx, tmp1, tmp2
--		addruart	\rx, \tmp1
-+		addruart	\rx, \tmp1, \tmp2
- 		.endm
- 
- #endif /* CONFIG_MMU */
 -- 
 2.3.5
