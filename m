@@ -1,81 +1,39 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v5 11/11] ARM: vf610m4: add defconfig for Linux on Vybrids Cortex-M4
-Date: Thu,  9 Apr 2015 22:04:15 +0200
-Message-ID: <1428609855-27657-12-git-send-email-stefan@agner.ch>
-References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH V4 0/5] Add big-endian MMIO support to serial8250
+Date: Thu,  9 Apr 2015 13:05:13 -0700
+Message-ID: <1428609918-10290-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428609855-27657-1-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+To: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org
+Cc: arnd@arndb.de, peter@hurleysoftware.com, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add defconfig for Linux on Vybrid (vf610) on the secondary Cortex-
-M4 CPU. The use of a XIP image has been tested which needs to be
-loaded (e.g. using the custom m4boot loader) to the end of the
-available RAM at address 0x8f000000. The Cortex-M4 has a code-alias
-which makes sure that the instructions get fetched through the code
-bus (alias starts at 0x00800000 => 0x80800000 in system address).
-Hence, to get optimal performance, use 0x0f000000 as XIP_PHYS_ADDR.
-This address is additionally shifted by the length of the minimal
-loader which is inserted by m4boot. Currently, this offset is 0x80.
+V3->V4:
 
-The standard DRAM base address is configured to 0x8C000000, which
-gives the Cortex-M4 48MiB of RAM.
+Rebase on Linus' head of tree
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/configs/vf610m4_defconfig | 42 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 arch/arm/configs/vf610m4_defconfig
+Tweak documentation per Grant's request
 
-diff --git a/arch/arm/configs/vf610m4_defconfig b/arch/arm/configs/vf610m4_defconfig
-new file mode 100644
-index 0000000..aeb2482
---- /dev/null
-+++ b/arch/arm/configs/vf610m4_defconfig
-@@ -0,0 +1,42 @@
-+CONFIG_NAMESPACES=y
-+CONFIG_BLK_DEV_INITRD=y
-+# CONFIG_RD_BZIP2 is not set
-+# CONFIG_RD_LZMA is not set
-+# CONFIG_RD_XZ is not set
-+# CONFIG_RD_LZ4 is not set
-+CONFIG_KALLSYMS_ALL=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_MMU is not set
-+CONFIG_ARM_SINGLE_ARMV7M=y
-+CONFIG_ARCH_MXC=y
-+CONFIG_SOC_VF610=y
-+CONFIG_SET_MEM_PARAM=y
-+CONFIG_DRAM_BASE=0x8c000000
-+CONFIG_FLASH_MEM_BASE=0x8f000000
-+CONFIG_FLASH_SIZE=0x01000000
-+CONFIG_CMDLINE="console=/dev/ttyLP2"
-+CONFIG_XIP_KERNEL=y
-+CONFIG_XIP_PHYS_ADDR=0x0f000080
-+CONFIG_BINFMT_FLAT=y
-+CONFIG_BINFMT_ZFLAT=y
-+CONFIG_BINFMT_SHARED_FLAT=y
-+# CONFIG_SUSPEND is not set
-+# CONFIG_UEVENT_HELPER is not set
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FIRMWARE_IN_KERNEL is not set
-+# CONFIG_ALLOW_DEV_COREDUMP is not set
-+CONFIG_BLK_DEV_RAM=y
-+CONFIG_BLK_DEV_RAM_COUNT=4
-+# CONFIG_INPUT_MOUSEDEV is not set
-+# CONFIG_KEYBOARD_ATKBD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+CONFIG_SERIAL_FSL_LPUART=y
-+CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
-+# CONFIG_HW_RANDOM is not set
-+CONFIG_MFD_SYSCON=y
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_MISC_FILESYSTEMS is not set
-+# CONFIG_FTRACE is not set
+Drop the of_earlycon patches in favor of Peter's series
+
+
+Kevin Cernekee (5):
+  of: Add helper function to check MMIO register endianness
+  of/fdt: Add endianness helper function for early init code
+  of: Document {little,big,native}-endian bindings
+  serial: 8250: Add support for big-endian MMIO accesses
+  serial: of_serial: Support big-endian register accesses
+
+ .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
+ drivers/of/base.c                                  | 23 +++++++++
+ drivers/of/fdt.c                                   | 19 +++++++
+ drivers/tty/serial/8250/8250_core.c                | 20 ++++++++
+ drivers/tty/serial/8250/8250_early.c               |  5 ++
+ drivers/tty/serial/of_serial.c                     |  3 +-
+ include/linux/of.h                                 |  6 +++
+ include/linux/of_fdt.h                             |  2 +
+ 8 files changed, 137 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/common-properties.txt
+
 -- 
-2.3.5
+2.2.2
