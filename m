@@ -1,41 +1,87 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] usb: renesas_usbhs: Revise the binding document about the dma-names
-Date: Thu, 9 Apr 2015 09:22:26 +0200
-Message-ID: <CAMuHMdUV6fTfx_U6aTh5aSsuXEz5_jr0udSTJ=dQZOUxabXNNg@mail.gmail.com>
-References: <1428489744-4872-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs related
+ properties
+Date: Thu, 09 Apr 2015 09:23:16 +0200
+Message-ID: <552628E4.50003@samsung.com>
+References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
+ <552545FF.2030208@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428489744-4872-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <552545FF.2030208@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 8, 2015 at 12:42 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> Since the DT should describe the hardware (not the driver limitation),
-> This patch revises the binding document about the dma-names to change
-> simple numbering as "ch%d" instead of "tx<n>" and "rx<n>".
+On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
+> On 08/04/15 16:31, Jacek Anaszewski wrote:
+>> Properties defining maximum values for LED currents and timeout should
+>> be mandatory to avoid the risk of hardware damage. This patch fixes
+>> the issue.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 >
-> Also this patch fixes the actual code of renesas_usbhs driver to handle
-> the new dma-names.
+>> ---
+>>   Documentation/devicetree/bindings/leds/common.txt |   19 +++++++++++--------
+>>   1 file changed, 11 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index 747c538..e478ac6 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -10,6 +10,17 @@ can influence the way of the LED device initialization, the LED components
+>>   have to be tightly coupled with the LED device binding. They are represented
+>>   by child nodes of the parent LED device binding.
+>>
+>> +Required properties for child nodes:
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> These properties are mandatory only for LEDs with Flash/Torch capabilities,
+> aren't they?
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+flash-max-microamp and flash-timeout-us properties description mention
+that they refer to flash LEDs. Perhaps this should be made indeed more
+explicit.
 
-Gr{oetje,eeting}s,
+ > Requiring those properties for all led nodes would make all
+> current dtses not compliant with the DT binding specification AFAICT.
 
-                        Geert
+I was also worrying about making led-max-microamp required, but others
+didn't share my objections. I think that we have to reexamine this.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Please refer to the discussion under [PATCH v4]. The role of this
+led-max-microamp property would be preventing hardware damage.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> How about:
+>
+> "Required properties for child nodes for LEDs with Flash/Torch capabilities:" ?
+>
+>> +- led-max-microamp : Maximum LED supply current in microamperes
+>> +                     (torch LED for flash devices). Controllers that have no
+>> +                     configurable current can omit this property.
+>> +- flash-max-microamp : Maximum flash LED supply current in microamperes.
+>> +- flash-timeout-us : Timeout in microseconds after which the flash
+>> +                     LED is turned off.
+>> +
+>
+>> +Above properties determine a LED driver IC settings required for safe
+>> +operation. They should be also used as the initial settings for the IC.
+>
+> Shouldn't "Controllers that have no configurable current can omit this
+> property" refer to both led-max-microamp and flash-max-microamp?
+ >
+> I would drop the "Above...for the IC." paragraph and instead add something like:
+>
+> "For controllers that have no configurable current the led-max-microamp,
+> flash-max-microamp properties respectively can be omitted. For controllers that
+> have no configurable timeout the flash-timeout-us property can be omitted."
+
+Are we going to avoid mentioning about their role in preventing
+hardware damage (former "for safe operation" sequence)?
+
+-- 
+Best Regards,
+Jacek Anaszewski
