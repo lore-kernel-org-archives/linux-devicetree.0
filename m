@@ -1,117 +1,41 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs related
- properties
-Date: Thu, 09 Apr 2015 12:03:25 +0200
-Message-ID: <55264E6D.40801@samsung.com>
-References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
- <552545FF.2030208@samsung.com> <552628E4.50003@samsung.com>
- <55263247.5070009@linux.intel.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V1 1/2] input: misc: da9063: OnKey driver
+Date: Thu, 9 Apr 2015 10:12:07 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2139E2@SW-EX-MBX02.diasemi.com>
+References: <cover.1428504804.git.stwiss.opensource@diasemi.com>
+	 <0219212ab4e2b01256f2dac92d9a0d848c44197a.1428504804.git.stwiss.opensource@diasemi.com>
+ <1428569273.14000.17.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <55263247.5070009@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428569273.14000.17.camel@x220>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/15 10:03, Sakari Ailus wrote:
-> Jacek Anaszewski wrote:
->> On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
->>> On 08/04/15 16:31, Jacek Anaszewski wrote:
->>>> Properties defining maximum values for LED currents and timeout should
->>>> be mandatory to avoid the risk of hardware damage. This patch fixes
->>>> the issue.
-
->>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>> @@ -10,6 +10,17 @@ can influence the way of the LED device
->>>> initialization, the LED components
->>>>   have to be tightly coupled with the LED device binding. They are
->>>> represented
->>>>   by child nodes of the parent LED device binding.
->>>>
->>>> +Required properties for child nodes:
->>>
->>> These properties are mandatory only for LEDs with Flash/Torch
->>> capabilities, aren't they?
->>
->> flash-max-microamp and flash-timeout-us properties description mention
->> that they refer to flash LEDs. Perhaps this should be made indeed more
->> explicit.
-> 
-> Sounds good to me, after all these shouldn't be defined for devices they
-> don't make sense for. Alternatively, you could add another section for
-> "required properties for flash LEDs".
-
-Sounds good to me.
-
->>> Requiring those properties for all led nodes would make all
->>> current dtses not compliant with the DT binding specification AFAICT.
-> 
-> Some drivers also define these explicitly as optional, the behaviour for
-> those obviously can't be changed.  This should apply to new drivers
-> only, and I think documenting the matter in this file would be the best
-> way to do that.
-
-Unfortunately this file is not a proper place for information regarding
-Linux drivers.
-I can't see any drivers in -next using those DT properties. Could you
-point to any examples?
-Perhaps we should stay with the below properties specified as optional
-in general and add a note they can be mandatory for some LEDs (controllers)?
-
->> I was also worrying about making led-max-microamp required, but others
->> didn't share my objections. I think that we have to reexamine this.
->>
->> Please refer to the discussion under [PATCH v4]. The role of this
->> led-max-microamp property would be preventing hardware damage.
->>
->>
->>> How about:
->>>
->>> "Required properties for child nodes for LEDs with Flash/Torch
->>> capabilities:" ?
->>>
->>>> +- led-max-microamp : Maximum LED supply current in microamperes
->>>> +                     (torch LED for flash devices). Controllers that
-> 
-> Do you think we can just rename max-microamp as led-max-microamp? It's
-> been there since v3.19. Or is it because no driver has been using it?
-
-I'd say it could be renamed if there is no users in mainline. But the DT
-maintainers could disagree here (adding Rob, Mark at Cc).
-
->>>> have no
->>>> +                     configurable current can omit this property.
->>>> +- flash-max-microamp : Maximum flash LED supply current in
->>>> microamperes.
->>>> +- flash-timeout-us : Timeout in microseconds after which the flash
->>>> +                     LED is turned off.
->>>> +
->>>
->>>> +Above properties determine a LED driver IC settings required for safe
->>>> +operation. They should be also used as the initial settings for the IC.
->>>
->>> Shouldn't "Controllers that have no configurable current can omit this
->>> property" refer to both led-max-microamp and flash-max-microamp?
->>>
->>> I would drop the "Above...for the IC." paragraph and instead add
->>> something like:
->>>
->>> "For controllers that have no configurable current the led-max-microamp,
->>> flash-max-microamp properties respectively can be omitted. For
->>> controllers that
->>> have no configurable timeout the flash-timeout-us property can be
->>> omitted."
->>
->> Are we going to avoid mentioning about their role in preventing
->> hardware damage (former "for safe operation" sequence)?
-> 
-> That'd make it understandable why the properties are mandatory. Sounds
-> good to me.
-
--- 
-Regards,
-Sylwester
+T24gMDkgQXByaWwgMjAxNSAwOTo0OCBQYXVsIEJvbGxlIHdyb3RlOg0KDQo+ID4gVGhpcyBwYXRj
+aCBpcyBkZXBlbmRlbnQgb24gUEFUQ0ggVjEgMi8yDQo+ICAgICBUaGlzIHBhdGNoIGlzIGRlcGVu
+ZGVudCBvbiBQQVRDSCBWMSAxLzINCj4gV2hpY2ggbWFrZXMgaXQgYWxsIHJhdGhlciBjb25mdXNp
+bmcuDQoNCkl0IGlzIGEgYml0IGNpcmN1bGFyLCBJJ2xsIHRha2UgdGhhdCBvdXQgZm9yIHRoZSBu
+ZXh0IHBhdGNoDQoNCj4gPiArKysgYi9kcml2ZXJzL2lucHV0L21pc2MvZGE5MDYzLW9ua2V5LmMN
+Cj4gPiBAQCAtMCwwICsxLDIyNyBAQA0KPiA+ICsvKiBkYTkwNjMtb25rZXkuYyAtIE9ua2V5IGRl
+dmljZSBkcml2ZXIgZm9yIERBOTA2Mw0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTMgIERpYWxv
+ZyBTZW1pY29uZHVjdG9yIEx0ZC4NCj4gPiArICoNCj4gPiArICogVGhpcyBsaWJyYXJ5IGlzIGZy
+ZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KPiA+ICsgKiBtb2Rp
+ZnkgaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgTGlicmFyeSBHZW5lcmFsIFB1YmxpYw0K
+PiA+ICsgKiBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0
+aW9uOyBlaXRoZXINCj4gPiArICogdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBvciAoYXQgeW91
+ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIGxpYnJh
+cnkgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwNCj4g
+PiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQg
+d2FycmFudHkgb2YNCj4gPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFS
+VElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiBHTlUNCj4gPiArICogTGlicmFyeSBHZW5lcmFs
+IFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQo+ID4gKyAqLw0KPiANCj4gVGhpcyBz
+dGF0ZXMgdGhlIGxpY2Vuc2UgaXMgR1BMIHYyIG9yIGxhdGVyLg0KPiANCj4gPiArTU9EVUxFX0xJ
+Q0VOU0UoIkdQTCB2MiIpOw0KPiANCj4gQW5kIChhY2NvcmRpbmcgdG8gaW5jbHVkZS9saW51eC9t
+b2R1bGUuaCkgdGhpcyBzdGF0ZXMgdGhlIGxpY2Vuc2UgaXMNCj4gKGp1c3QpIEdQTCB2Mi4NCg0K
+QWgsIEknbGwgZml4IHRoYXQgZm9yIHRoZSBmdXR1cmUuDQoNClRoYW5rcyBmb3IgdGhlIGNvbW1l
+bnRzLA0KUmVnYXJkcywNClN0ZXZlDQo=
