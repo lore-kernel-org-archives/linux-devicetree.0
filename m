@@ -1,32 +1,109 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 3/5] arm64: introduce CPU_OF_TABLES for cpu ops selection
-Date: Thu, 09 Apr 2015 23:17:06 +0200
-Message-ID: <3133453.Cys8lc6CAy@wuerfel>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org> <1428601031-5366-4-git-send-email-galak@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 01/10] ARM: dts: apq8064: add RPM regulators support
+Date: Thu, 09 Apr 2015 22:18:27 +0100
+Message-ID: <5526ECA3.9060605@linaro.org>
+References: <1428567674-10672-1-git-send-email-srinivas.kandagatla@linaro.org> <1428567761-10765-1-git-send-email-srinivas.kandagatla@linaro.org> <20150409201616.GJ19186@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428601031-5366-4-git-send-email-galak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arm@kernel.org, Abhimanyu Kapur <abhimany@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150409201616.GJ19186@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "inux-kernel@vger.kernel.org" <inux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 April 2015 12:37:09 Kumar Gala wrote:
-> @@ -67,4 +67,9 @@ extern const struct cpu_operations *cpu_ops[NR_CPUS];
->  int __init cpu_read_ops(struct device_node *dn, int cpu);
->  void __init cpu_read_bootcpu_ops(void);
->  
-> +#define CPU_METHOD_OF_DECLARE(name, __ops)                             \
-> +       static const struct cpu_operations *__cpu_method_table_##name   \
-> +       __used __section(__cpu_method_of_table)                         \
-> +       = __ops;
-> +
->  #endif /* ifndef __ASM_CPU_OPS_H */
-> 
+Thanks Bjorn for comments
 
-I'd rather not add this, to avoid giving the appearance that platforms
-can just add another one here.
+On 09/04/15 21:16, Bjorn Andersson wrote:
+> On Thu 09 Apr 01:22 PDT 2015, Srinivas Kandagatla wrote:
+>
+>> This patch adds rpm node to apq8064 dt as rpm would be used by other
+>> devices for regulator support. Also adds all the regulators in the rpm.
+>>
+>> Most content of this patch was originally posted by Stephen Boyd on the
+>> list.
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   arch/arm/boot/dts/qcom-apq8064.dtsi | 272 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 272 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> index 6c15112..d9166eb 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> @@ -3,6 +3,7 @@
+>>   #include "skeleton.dtsi"
+>>   #include <dt-bindings/clock/qcom,gcc-msm8960.h>
+>>   #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
+>> +#include <dt-bindings/mfd/qcom-rpm.h>
+>>   #include <dt-bindings/soc/qcom,gsbi.h>
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>
+>> @@ -276,6 +277,277 @@
+>>   			#reset-cells = <1>;
+>>   		};
+>>
+>> +		l2cc: clock-controller@2011000 {
+>> +			compatible	= "syscon";
+>> +			reg		= <0x2011000 0x1000>;
+>> +		};
+>> +
+>> +		rpm@108000 {
+>> +			compatible	= "qcom,rpm-apq8064";
+>> +			reg		= <0x108000 0x1000>;
+>> +			qcom,ipc	= <&l2cc 0x8 2>;
+>> +
+>> +			interrupts	= <GIC_SPI 19 IRQ_TYPE_NONE>,
+>> +					  <GIC_SPI 21 IRQ_TYPE_NONE>,
+>> +					  <GIC_SPI 22 IRQ_TYPE_NONE>;
+>
+> All three interrupts should be IRQ_TYPE_EDGE_RISING, currently the
+> driver overrides this with IRQF_TRIGGER_RISING but it should just obey
+> the dt.
 
-	Arnd
+Yes, I will change the type to IRQF_TRIGGER_RISING in next version.
+>
+>> +			interrupt-names	= "ack", "err", "wakeup";
+>> +
+>> +			regulators {
+>> +				compatible = "qcom,rpm-pm8921-regulators";
+>> +				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
+>> +				vin_lvs1_3_6-supply = <&pm8921_s4>;
+>> +				vin_lvs2-supply = <&pm8921_s4>;
+>> +				vin_lvs4_5_7-supply = <&pm8921_s4>;
+>> +				vdd_ncp-supply = <&pm8921_l6>;
+>> +				vdd_l24-supply = <&pm8921_s1>;
+>> +				vdd_l25-supply = <&pm8921_s1>;
+>> +				vdd_l27-supply = <&pm8921_s7>;
+>> +				vdd_l28-supply = <&pm8921_s7>;
+>
+> These are actually possible to change when designing a device, but
+> it's not unlikely that everyone have these values so they are reasonable
+> to have here.
+Ok.
+>
+> But for several of the regulators we're running our 8064 devices with
+> different configuration, especially voltage, so I don't think they
+> should be specified here.
+>
+Yep it makes sense, I will move the voltage ranges to the board specific 
+dts files.
+> Having the phandles listed here are sane though, so that we can address
+> them from the platform files.
+	>
+>> +
+>> +				/* Buck SMPS */
+>> +				pm8921_s1: s1 {
+>> +					regulator-always-on;
+>> +					regulator-min-microvolt = <1225000>;
+>> +					regulator-max-microvolt = <1225000>;
+>> +					qcom,switch-mode-frequency = <3200000>;
+>> +					bias-pull-down;
+>> +				};
+>> +
+> [..]
+>
+> Regards,
+> Bjorn
+>
