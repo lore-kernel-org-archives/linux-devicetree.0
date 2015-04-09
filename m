@@ -1,90 +1,64 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
-Date: Thu, 9 Apr 2015 14:34:26 +0300
-Message-ID: <552663C2.70308@ti.com>
-References: <20150407121247.GA29497@amd> <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com> <20150409110634.GA27407@amd> <552660C7.4020805@ti.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH V1 1/2] input: misc: da9063: OnKey driver
+Date: Thu, 09 Apr 2015 14:01:42 +0200
+Message-ID: <1428580902.14000.48.camel@x220>
+References: <cover.1428504804.git.stwiss.opensource@diasemi.com>
+	 <0219212ab4e2b01256f2dac92d9a0d848c44197a.1428504804.git.stwiss.opensource@diasemi.com>
+	 <1428569273.14000.17.camel@x220>
+	 <6ED8E3B22081A4459DAC7699F3695FB7014B2139E2@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="eAAmwhGjGNb7ALdNwIiRwXPspkKkgXqVi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <552660C7.4020805@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, shc_work@mail.ru, linux@arm.linux.org.uk, hsweeten@visionengravers.com, Archit Taneja <architt@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B2139E2@SW-EX-MBX02.diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---eAAmwhGjGNb7ALdNwIiRwXPspkKkgXqVi
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2015-04-09 at 10:12 +0000, Opensource [Steve Twiss] wrote:
+> On 09 April 2015 09:48 Paul Bolle wrote:
+> 
+> > > This patch is dependent on PATCH V1 2/2
+> >     This patch is dependent on PATCH V1 1/2
+> > Which makes it all rather confusing.
+> 
+> It is a bit circular, I'll take that out for the next patch
+> 
+> > > +++ b/drivers/input/misc/da9063-onkey.c
+> > > @@ -0,0 +1,227 @@
+> > > +/* da9063-onkey.c - Onkey device driver for DA9063
+> > > + * Copyright (C) 2013  Dialog Semiconductor Ltd.
+> > > + *
+> > > + * This library is free software; you can redistribute it and/or
+> > > + * modify it under the terms of the GNU Library General Public
+> > > + * License as published by the Free Software Foundation; either
+> > > + * version 2 of the License, or (at your option) any later version.
+> > > + *
+> > > + * This library is distributed in the hope that it will be useful,
+> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > GNU
+> > > + * Library General Public License for more details.
+> > > + */
+> > 
+> > This states the license is GPL v2 or later.
+> > 
+> > > +MODULE_LICENSE("GPL v2");
+> > 
+> > And (according to include/linux/module.h) this states the license is
+> > (just) GPL v2.
+> 
+> Ah, I'll fix that for the future.
 
-On 09/04/15 14:21, Tomi Valkeinen wrote:
-> On 09/04/15 14:06, Pavel Machek wrote:
->> On Tue 2015-04-07 14:19:33, Geert Uytterhoeven wrote:
->>> Hi Pavel,
->>>
->>> On Tue, Apr 7, 2015 at 2:12 PM, Pavel Machek <pavel@ucw.cz> wrote:
->>>> I have an socfpga board, which uses has simple framebuffer implement=
-ed
->>>> in the FPGA. On 3.15, framebuffer is fast:
->>>>
->>>> root@wagabuibui:~# time cat /dev/fb0 > /dev/null
->>>> real               0m 0.00s
->>>> user               0m 0.00s
->>>> sys                0m 0.00s
->>>>
->>>> on 3.18, this takes 220msec. Similar slowdown exists for
->>>> writes. Simple framebuffer did not change at all between 3.15 and
->>>> 3.18; resource flags of the framebuffer are still same (0x200).
->>>>
->>>> If I enable caching on 3.18, it speeds up a bit, to 70msec or
->>>> so... Which means problem is not only in caching.
->>>>
->>>> Any ideas?
->>>
->>> My first guess was  commit 67dc0d4758e5 ("vt_buffer: drop console buf=
-fer
->>> copying optimisations"), but this was introduced only in v4.0-rc1.
->>>
->>> Just in case you encounter another performance regression after upgra=
-ding
->>> to a more modern kernel ;-)
->>
->> :-). I did a git bisect, and it pointed to this. And reverting it
->> indeed fixes the problem in 3.18. Problem is still there in 4.0.
+My reading comprehension is declining. Because I only now noticed that
+the comment at the top of this file states the license is LGPL v2 or
+later (note the L).
 
-The difference is probably caused by memcpy() vs memcpy_fromio(). The
-comment above memcpy_fromio() says "This needs to be optimized". I think
-generally speaking memcpy_fromio() is correct for a framebuffer.
-
-That said, if the fb is in RAM, and is only written by the CPU, I think
-a normal memcpy() for fb_memcpy_fromfb() should be fine...
-
- Tomi
+Grepping the tree for "Library General" gave over 100 hits, a few of
+them even in drivers/, so I suppose LPGL v2 is fine for the kernel. It
+_feels_ a bit odd to use it for a driver, but that might just be me.
 
 
+Paul Bolle
 
---eAAmwhGjGNb7ALdNwIiRwXPspkKkgXqVi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJVJmPCAAoJEPo9qoy8lh71cr4P/RvMdtMg8UoGHbVt+ET2G7et
-6GaM7p13VmC/7SYYC7Een3B8fs2KG9SVL024IDyzIcclNUX3PscTnzYoZl0zfjr9
-mM8ttOHxBv8J/flL/Pt4DoGlRh9lyEsxZoPucss3cZOOPT0m+C1qktKw5b6K9HbL
-TIh9HK2WzWyoFT7ge0CvpCtFmrJF/vwLa5qVZEgDU9JqZBpz/BwK2xVY3IvGAWUh
-T0C4orIr6NWEQU0ebx0fW3ue/7IM7/mE5sQ5vYZGDIXnAtM/Z9/c/Bbv0xqdAz2L
-lXjPpSg7LHSVgT1ldU3lbxBEqc8Mh6FeOzW8GIhFE5K24fqT12etG0vtob57Gf0r
-TwC64HeRZwEI4wvqBeXjsc9SUbfER006tluubQLKXoBMixU4hVd3KUbtbssgu63K
-eBl46/fd7ArGzgFkilZkz/hnv20dVcEFs5soiDAplm2CtV2G5jKfqE+jRaGLM1TU
-Shlwl4sP8HQd07VHUkfbZhHWVChfeV4ziSWE2Soe0Fek/DNCaGLHhfeOL8b6O6Su
-axOKoOEbaL2tkmwvPsJZ185dMz1qIUTq9AGJGU4oNYFQT7UKBHR/RFKYmiVihC5s
-C1ikcW715DOobF5Gisf4pB9m9yTwhX9umfHfDtz3l1ypnhmFDCjorTMktquJ8Q/m
-YMTpaDKKw9ycIR68k5wJ
-=reCY
------END PGP SIGNATURE-----
-
---eAAmwhGjGNb7ALdNwIiRwXPspkKkgXqVi--
