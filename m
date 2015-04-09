@@ -1,107 +1,53 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RFC v9 09/20] drm/dsi: Add a helper to get bits per pixel
- of MIPI DSI pixel format
-Date: Thu, 9 Apr 2015 09:10:58 +0200
-Message-ID: <20150409071057.GA12103@ulmo>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
+From: "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>
+Subject: RE: [v2] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Thu, 9 Apr 2015 07:18:23 +0000
+Message-ID: <DM2PR03MB383D9FD2888970950261FB2E6FB0@DM2PR03MB383.namprd03.prod.outlook.com>
+References: <1428479031-26597-1-git-send-email-igal.liberman@freescale.com>
+ <1428527516.22867.509.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1371832210=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1428527516.22867.509.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1371832210==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 12, 2015 at 02:01:32PM +0800, Liu Ying wrote:
-> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
-> ---
-> v8->v9:
->  * Rebase onto the imx-drm/next branch of Philipp Zabel's open git reposi=
-tory.
->=20
-> v7->v8:
->  * None.
->=20
-> v6->v7:
->  * None.
->=20
-> v5->v6:
->  * Address the over 80 characters in one line warning reported by the
->    checkpatch.pl script.
->=20
-> v4->v5:
->  * None.
->=20
-> v3->v4:
->  * None.
->=20
-> v2->v3:
->  * None.
->=20
-> v1->v2:
->  * Thierry Reding suggested that the mipi_dsi_pixel_format_to_bpp() funct=
-ion
->    could be placed at the common DRM MIPI DSI driver.
->    This patch is newly added.
->=20
->  include/drm/drm_mipi_dsi.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVJiX/AAoJEN0jrNd/PrOh0NUQAKkgFAQC2UksNInWLwWfL1Ve
-Gx94bnm6OBEgGVMxooPqcDKjdGoZoXnPinEYCnk/0bhGjbfof76JOXN/Us2R3xiZ
-Jeyqhu6u9WrmlO37Bua0+XA0ocHswCikHpRQTHPvaCgkMyQRehIT991J1WUqEQ/1
-r6fWmQMdpUsqBJMwt0I3PNDMqQEkklAm1AJUlGHiYM6apTSs8Mk1jUqGMSDcSC6+
-flR7pQ1EISdzyveUegPPAMpy6kKB/S2abgvl49zqPT4KSrWdNEgF33dcryUcnyL1
-OLfvCag0cacVZQMxzF9h2/uVXdhJADFkQxL5hX6OCH/I54tBbnp01xHw7lQEd0s/
-8PcXZa/PPcClMZK+e2BOmqh4ahSWi/L7Tyh7wo9xbYfm+QeXRGABEWl46+H0XnPu
-PjxIyJk5j6abNDoCkVhUQEzCOQAuFQaLtllB6BH6cpJRZmrjapE4RNB8ezwoCNk1
-mymcikVURNNdmJti5PyizQT9iHxpdbGGLUd3zqxOylzWS7dvfRaf6MQFSQRMCAjC
-hqywyVbrKPhKkUh0tKr2SIedI9X4q+d/UVNy2oKYEAH/lMrYtkLuXqFu1KJrMBXJ
-LCockarg61+Cy4Vg8YUsRorueVqwS47gJeD4eudQnIKvp0wdY78mChZpWgoomDNb
-/A7sGQpMoKq0QGAnbpz4
-=sJLG
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
-
---===============1371832210==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1371832210==--
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAw
+OSwgMjAxNSAxMjoxMiBBTQ0KPiBUbzogTGliZXJtYW4gSWdhbC1CMzE5NTANCj4gQ2M6IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiBT
+dWJqZWN0OiBSZTogW3YyXSBkdC9iaW5kaW5nczogcW9yaXEtY2xvY2s6IEFkZCBiaW5kaW5nIGZv
+ciBGTWFuIGNsb2NrIG11eA0KPiANCj4gT24gV2VkLCAyMDE1LTA0LTA4IGF0IDEwOjQzICswMzAw
+LCBJZ2FsLkxpYmVybWFuIHdyb3RlOg0KPiA+IEBAIC03Niw2ICs3Nyw1MiBAQCBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOg0KPiA+DQo+ID4gIFJlY29tbWVuZGVkIHByb3BlcnRpZXM6DQo+ID4gIC0gY2xv
+Y2tzOiBTaG91bGQgYmUgdGhlIHBoYW5kbGUgb2YgaW5wdXQgcGFyZW50IGNsb2NrDQo+ID4gKwlG
+b3IgImZzbCxmbWFuLWNsay1tdXgiIGNsb2NrIHRoZXJlIGFyZSBzZXZlcmFsIG9wdGlvbnMgZm9y
+IHBhcmVudA0KPiA+ICsJY2xvY2sgKGNsb2NrIHByb3ZpZGVyKSwgdGhlIHBhcmVudCBpcyBkZXRl
+cm1pbmVkIGFjY29yZGluZyB0byB0aGUNCj4gPiArCVJlc2V0IENvbmZpZ3VyYXRpb24gV29yZCBv
+ZiB0aGUgc3BlY2lmaWMgZGV2aWNlOg0KPiA+ICsJCSogUDIwNDEsIFAzMDQxOg0KPiA+ICsJCQkq
+IDAgLSBlcXVhbCB0byBwbGF0Zm9ybSBQTEwgZGl2aWRlZCBieSAyDQo+ID4gKwkJCSogMSAtIGVx
+dWFsIHRvIFBMTDIgZGl2aWRlZCBieSAyDQo+ID4gKwkJKiBQNDA4MCAoQm90aCBGTWFucyk6DQo+
+ID4gKwkJCSogMCAtIGVxdWFsIHRvIHBsYXRmb3JtIFBMTCBkaXZpZGVkIGJ5IDINCj4gPiArCQkJ
+KiAxIC0gZXF1YWwgdG8gUExMMyBkaXZpZGVkIGJ5IDINCj4gLi4uDQo+IA0KPiANCj4gQWdhaW4s
+IHRoZSBjbG9jayBzcGVjaWZpZXIgZm9ybWF0IGlzIGRldGVybWluZWQgYnkgdGhlIGNsb2NrIHBy
+b3ZpZGVyLCBub3QgdGhlDQo+IGNsb2NrIGNvbnN1bWVyLg0KPiANCg0KU2NvdHQsDQpUaGUgImNs
+b2NrcyIgcHJvcGVydHkgY29udGFpbnMgYWxsIHBvc3NpYmxlIGNsb2NrIHByb3ZpZGVycywgcmln
+aHQ/DQpJbiB0aGUgdGV4dCBhYm92ZSBJJ20gdHJ5aW5nIHRvIGV4cGxhaW4gaG93IHRoZSBGTWFu
+IGNsb2NrIHByb3ZpZGVyIGlzIGRldGVybWluZWQgYW5kIHdoYXQgYXJlIHRoZSBvcHRpb25zIGZv
+ciBlYWNoIFNvQy4NCkRvIHlvdSB0aGluayB0aGF0IHdlIHNob3VsZG4ndCBoYXZlIHRoaXMgZXhw
+bGFuYXRpb24/IENhbiB5b3UgcGxlYXNlIGVsYWJvcmF0ZT8NCg0KSWdhbC4NCg0KPiAtU2NvdHQN
+Cj4gDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
+bnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
