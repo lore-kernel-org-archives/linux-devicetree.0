@@ -1,188 +1,173 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: adc: ti_am335x_adc: make sample delay, open
- delay, averaging DT parameters
-Date: Thu, 09 Apr 2015 15:19:40 +0100
-Message-ID: <55268A7C.1050307@kernel.org>
-References: <1427800357-21680-1-git-send-email-vigneshr@ti.com> <1427800357-21680-3-git-send-email-vigneshr@ti.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs related
+ properties
+Date: Thu, 09 Apr 2015 16:39:35 +0200
+Message-ID: <55268F27.70409@samsung.com>
+References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
+ <552545FF.2030208@samsung.com> <552628E4.50003@samsung.com>
+ <55263247.5070009@linux.intel.com> <55264E6D.40801@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427800357-21680-3-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <55264E6D.40801@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/03/15 12:12, Vignesh R wrote:
-> Add optional DT properties to set open delay, sample delay and number
-> of averages per sample for each adc step. Open delay, sample delay
-> and averaging are some of the parameters that affect the sampling rate
-> and accuracy of the sample. Making these parameters configurable via
-> DT will help in balancing speed vs accuracy.
-> 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-All looks fine to me, but I would ideally like a devicetree
-ack on this one.
+Hi Sylwester, Sakari,
 
-Jonathan
-> ---
->  .../bindings/input/touchscreen/ti-tsc-adc.txt      | 24 ++++++++++
->  drivers/iio/adc/ti_am335x_adc.c                    | 54 +++++++++++++++++++---
->  2 files changed, 72 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> index 6c4fb34823d3..8aafbe87f0eb 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> @@ -42,6 +42,27 @@ Optional properties:
->  			 hardware knob for adjusting the amount of "settling
->  			 time".
->  
-> +- child "adc"
-> +	ti,chan-step-opendelay: List of open delays for each channel of
-> +				ADC in the order of ti,adc-channels. The
-> +				value corresponds to the number of ADC
-> +				clock cycles to wait after applying the
-> +				step configuration registers and before
-> +				sending the start of ADC conversion.
-> +				Maximum value is 0x3FFFF.
-> +       ti,chan-step-sampledelay: List of sample delays for each channel
-> +				  of ADC in the order of ti,adc-channels.
-> +				  The value corresponds to the number of
-> +				  ADC clock cycles to sample (to hold
-> +				  start of conversion high).
-> +				  Maximum value is 0xFF.
-> +       ti,chan-step-avg: Number of averages to be performed for each
-> +			  channel of ADC. If average is 16 then input
-> +			  is sampled 16 times and averaged to get more
-> +			  accurate value. This increases the time taken
-> +			  by ADC to generate a sample. Valid range is 0
-> +			  average to 16 averages. Maximum value is 16.
-> +
->  Example:
->  	tscadc: tscadc@44e0d000 {
->  		compatible = "ti,am3359-tscadc";
-> @@ -55,5 +76,8 @@ Example:
->  
->  		adc {
->  			ti,adc-channels = <4 5 6 7>;
-> +			ti,chan-step-opendelay = <0x098 0x3ffff 0x098 0x0>;
-> +			ti,chan-step-sampledelay = <0xff 0x0 0xf 0x0>;
-> +			ti,chan-step-avg = <16 2 4 8>;
->  		};
->  	}
-> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
-> index 2f818405ffbe..5ee597b4a1af 100644
-> --- a/drivers/iio/adc/ti_am335x_adc.c
-> +++ b/drivers/iio/adc/ti_am335x_adc.c
-> @@ -37,6 +37,7 @@ struct tiadc_device {
->  	u8 channel_step[8];
->  	int buffer_en_ch_steps;
->  	u16 data[8];
-> +	u32 open_delay[8], sample_delay[8], step_avg[8];
->  };
->  
->  static unsigned int tiadc_readl(struct tiadc_device *adc, unsigned int reg)
-> @@ -85,6 +86,7 @@ static u32 get_adc_step_bit(struct tiadc_device *adc_dev, int chan)
->  static void tiadc_step_config(struct iio_dev *indio_dev)
->  {
->  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
-> +	struct device *dev = adc_dev->mfd_tscadc->dev;
->  	unsigned int stepconfig;
->  	int i, steps = 0;
->  
-> @@ -98,20 +100,47 @@ static void tiadc_step_config(struct iio_dev *indio_dev)
->  	 * needs to be given to ADC to digitalize data.
->  	 */
->  
-> -	if (iio_buffer_enabled(indio_dev))
-> -		stepconfig = STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1
-> -					| STEPCONFIG_MODE_SWCNT;
-> -	else
-> -		stepconfig = STEPCONFIG_AVG_16 | STEPCONFIG_FIFO1;
->  
->  	for (i = 0; i < adc_dev->channels; i++) {
->  		int chan;
->  
->  		chan = adc_dev->channel_line[i];
-> +
-> +		if (adc_dev->step_avg[i] > STEPCONFIG_AVG_16) {
-> +			dev_warn(dev, "chan %d step_avg truncating to %d\n",
-> +				 chan, STEPCONFIG_AVG_16);
-> +			adc_dev->step_avg[i] = STEPCONFIG_AVG_16;
-> +		}
-> +
-> +		if (adc_dev->step_avg[i])
-> +			stepconfig =
-> +			STEPCONFIG_AVG(ffs(adc_dev->step_avg[i]) - 1) |
-> +			STEPCONFIG_FIFO1;
-> +		else
-> +			stepconfig = STEPCONFIG_FIFO1;
-> +
-> +		if (iio_buffer_enabled(indio_dev))
-> +			stepconfig |= STEPCONFIG_MODE_SWCNT;
-> +
->  		tiadc_writel(adc_dev, REG_STEPCONFIG(steps),
->  				stepconfig | STEPCONFIG_INP(chan));
-> +
-> +		if (adc_dev->open_delay[i] > STEPDELAY_OPEN_MASK)alue corresponds to the number of ADC
-> +				clock cycles to wait after applying the
-> +				step configuration registers and before
-> +				sending the start of ADC conversion.
-> +				Maximum value is 0x3FFFF.
-> +       ti,chan-step-sampledelay: List of sample delays for each channel
-> +				  of ADC in the order of ti,adc-channels.
-> +				  The value corresponds to the number of
-> +				  ADC clock cycles to sample (to hold
-> +				  start of conversion high).
-> +				  Maximum value is 0xFF.
-> +       ti,chan-step-avg: Number of averages to be performed for each
-> +			  channel of ADC. If average is 16 then input
-> +			  is sampled 16 times and averaged to get more
-> +			  accurate value. This increases the time taken
-> +			  by ADC to generate a sample. Valid range is 0
-> +			  average to 16 averages. Maximum value is 16. {
-> +			dev_warn(dev, "chan %d open delay truncating to 0x3FFFF\n",
-> +				 chan);
-> +			adc_dev->open_delay[i] = STEPDELAY_OPEN_MASK;
-> +		}
-> +
-> +		if (adc_dev->sample_delay[i] > 0xFF) {
-> +			dev_warn(dev, "chan %d sample delay truncating to 0xFF\n",
-> +				 chan);
-> +			adc_dev->sample_delay[i] = 0xFF;
-> +		}
-> +
->  		tiadc_writel(adc_dev, REG_STEPDELAY(steps),
-> -				STEPCONFIG_OPENDLY);
-> +				STEPDELAY_OPEN(adc_dev->open_delay[i]) |
-> +				STEPDELAY_SAMPLE(adc_dev->sample_delay[i]));
-> +
->  		adc_dev->channel_step[i] = steps;
->  		steps++;
->  	}
-> @@ -407,9 +436,22 @@ static int tiadc_parse_dt(struct platform_device *pdev,
->  
->  	of_property_for_each_u32(node, "ti,adc-channels", prop, cur, val) {
->  		adc_dev->channel_line[channels] = val;
-> +
-> +		/* Set Default values for optional DT parameters */
-> +		adc_dev->open_delay[channels] = STEPCONFIG_OPENDLY;
-> +		adc_dev->sample_delay[channels] = STEPCONFIG_SAMPLEDLY;
-> +		adc_dev->step_avg[channels] = 16;
-> +
->  		channels++;
->  	}
->  
-> +	of_property_read_u32_array(node, "ti,chan-step-avg",
-> +				   adc_dev->step_avg, channels);
-> +	of_property_read_u32_array(node, "ti,chan-step-opendelay",
-> +				   adc_dev->open_delay, channels);
-> +	of_property_read_u32_array(node, "ti,chan-step-sampledelay",
-> +				   adc_dev->sample_delay, channels);
-> +
->  	adc_dev->channels = channels;
->  	return 0;
->  }
-> 
+On 04/09/2015 12:03 PM, Sylwester Nawrocki wrote:
+> On 09/04/15 10:03, Sakari Ailus wrote:
+>> Jacek Anaszewski wrote:
+>>> On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
+>>>> On 08/04/15 16:31, Jacek Anaszewski wrote:
+>>>>> Properties defining maximum values for LED currents and timeout should
+>>>>> be mandatory to avoid the risk of hardware damage. This patch fixes
+>>>>> the issue.
+>
+>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>>>> @@ -10,6 +10,17 @@ can influence the way of the LED device
+>>>>> initialization, the LED components
+>>>>>    have to be tightly coupled with the LED device binding. They are
+>>>>> represented
+>>>>>    by child nodes of the parent LED device binding.
+>>>>>
+>>>>> +Required properties for child nodes:
+>>>>
+>>>> These properties are mandatory only for LEDs with Flash/Torch
+>>>> capabilities, aren't they?
+>>>
+>>> flash-max-microamp and flash-timeout-us properties description mention
+>>> that they refer to flash LEDs. Perhaps this should be made indeed more
+>>> explicit.
+>>
+>> Sounds good to me, after all these shouldn't be defined for devices they
+>> don't make sense for. Alternatively, you could add another section for
+>> "required properties for flash LEDs".
+>
+> Sounds good to me.
+>
+>>>> Requiring those properties for all led nodes would make all
+>>>> current dtses not compliant with the DT binding specification AFAICT.
+>>
+>> Some drivers also define these explicitly as optional, the behaviour for
+>> those obviously can't be changed.  This should apply to new drivers
+>> only, and I think documenting the matter in this file would be the best
+>> way to do that.
+>
+> Unfortunately this file is not a proper place for information regarding
+> Linux drivers.
+> I can't see any drivers in -next using those DT properties. Could you
+> point to any examples?
+> Perhaps we should stay with the below properties specified as optional
+> in general and add a note they can be mandatory for some LEDs (controllers)?
+
+I've analyzed existing led bindings. Four bindings define brightness
+related properties:
+
+leds-lp55xx.txt
+Each child has own specific current settings
+- led-cur: Current setting at each led channel (mA x10, 0 if led is not 
+connected)
+- max-cur: Maximun current at each led channel.
+
+leds-netxbig.txt
+Required sub-node properties:
+- bright-max: Maximum brightness value
+
+leds-pwm
+LED sub-node properties:
+- max-brightness : Maximum brightness possible for the LED
+
+leds-pm8941-wled.txt
+Optional properties:
+- qcom,current-limit: mA; per-string current limit; value from 0 to 25
+         default: 20mA
+
+
+We can summarize this as follows:
+- only four devices define max brightness
+- one of them defines also default current setting
+- some of them define current in mA, some in brightness levels
+
+It has to be stressed that LED subsystem operates on brightness levels,
+not microamperes. max-microamp property was expressed in microamperes,
+because it was initially designed only for flash LEDs.
+
+I think that if we want to add generic property for limiting maximum
+brightness for non-flash LEDs, then it should be called brightness-max
+and expressed in brightness levels. It should apply only to non-flash
+devices. We could have also brightness-default.
+
+For flash devices we would have torch-max-microamp and
+flash-max-microamp properties. We could also have their counterparts:
+torch-default-microamp, flash-default-microamp.
+
+Should we also need
+
+- flash-timeout-max-us
+- flash-timeout-default-us ?
+
+max-brightness and default-brightness would be expressed in brightness
+levels and would be optional. Flash related properties would be
+required.
+
+
+>>> I was also worrying about making led-max-microamp required, but others
+>>> didn't share my objections. I think that we have to reexamine this.
+>>>
+>>> Please refer to the discussion under [PATCH v4]. The role of this
+>>> led-max-microamp property would be preventing hardware damage.
+>>>
+>>>
+>>>> How about:
+>>>>
+>>>> "Required properties for child nodes for LEDs with Flash/Torch
+>>>> capabilities:" ?
+>>>>
+>>>>> +- led-max-microamp : Maximum LED supply current in microamperes
+>>>>> +                     (torch LED for flash devices). Controllers that
+>>
+>> Do you think we can just rename max-microamp as led-max-microamp? It's
+>> been there since v3.19. Or is it because no driver has been using it?
+>
+> I'd say it could be renamed if there is no users in mainline. But the DT
+> maintainers could disagree here (adding Rob, Mark at Cc).
+>
+>>>>> have no
+>>>>> +                     configurable current can omit this property.
+>>>>> +- flash-max-microamp : Maximum flash LED supply current in
+>>>>> microamperes.
+>>>>> +- flash-timeout-us : Timeout in microseconds after which the flash
+>>>>> +                     LED is turned off.
+>>>>> +
+>>>>
+>>>>> +Above properties determine a LED driver IC settings required for safe
+>>>>> +operation. They should be also used as the initial settings for the IC.
+>>>>
+>>>> Shouldn't "Controllers that have no configurable current can omit this
+>>>> property" refer to both led-max-microamp and flash-max-microamp?
+>>>>
+>>>> I would drop the "Above...for the IC." paragraph and instead add
+>>>> something like:
+>>>>
+>>>> "For controllers that have no configurable current the led-max-microamp,
+>>>> flash-max-microamp properties respectively can be omitted. For
+>>>> controllers that
+>>>> have no configurable timeout the flash-timeout-us property can be
+>>>> omitted."
+>>>
+>>> Are we going to avoid mentioning about their role in preventing
+>>> hardware damage (former "for safe operation" sequence)?
+>>
+>> That'd make it understandable why the properties are mandatory. Sounds
+>> good to me.
+>
+
+
+-- 
+Best Regards,
+Jacek Anaszewski
