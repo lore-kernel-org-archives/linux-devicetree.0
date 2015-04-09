@@ -1,94 +1,126 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Add i2c support
-Date: Thu, 09 Apr 2015 11:20:10 +0200
-Message-ID: <5526444A.3060805@i2se.com>
-References: <1428515100-1496-1-git-send-email-harald@ccbib.org> <1158701263.68321.1428531175931.JavaMail.open-xchange@oxbaltgw03.schlund.de> <3f0efa88b69ea2e8eb22909b6fbe6f91@imap.cosmopool.net>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V1 2/2] devicetree: Add bindings for DA9063 OnKey
+Date: Thu, 9 Apr 2015 10:21:38 +0100
+Message-ID: <20150409092138.GA3467@x1>
+References: <cover.1428504804.git.stwiss.opensource@diasemi.com>
+ <addbebc419ed2d693d398e07131c119cd1d4160b.1428504804.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3f0efa88b69ea2e8eb22909b6fbe6f91-VlVdRp1qTtWC18heOpxMWqxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio.Estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <addbebc419ed2d693d398e07131c119cd1d4160b.1428504804.git.stwiss.opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Harald,
+On Wed, 08 Apr 2015, Steve Twiss wrote:
 
->>> This patch provides the necessary devicetree code.
->>> Tested with MOD-LCD1x9 from Olimex.
->>>
->>> This patch is based on work by Fadil Berisha with his permission.
-> However
->>> all bugs are mine.
->>>
->>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
->>> ---
->>> arch/arm/boot/dts/imx23-olinuxino.dts | 6 +++++
->>> arch/arm/boot/dts/imx23.dtsi | 40 ++++++++++++++++++++++++++++++++-
->>> 2 files changed, 45 insertions(+), 1 deletion(-)
->>>
->>> [...]
->>> --- a/arch/arm/boot/dts/imx23.dtsi
->>> +++ b/arch/arm/boot/dts/imx23.dtsi
->>> @@ -308,6 +308,39 @@
->>> fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>> fsl,pull-up = <MXS_PULL_ENABLE>;
->>> };
->>> +
->>> + i2c_pins_a: i2c@0 {
->>> + reg = <0>;
->>> + fsl,pinmux-ids = <
->>> + MX23_PAD_I2C_SCL__I2C_SCL
->>> + MX23_PAD_I2C_SDA__I2C_SDA
->>> + >;
->>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
->>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>> + fsl,pull-up = <MXS_PULL_ENABLE>;
->>> + };
->>> +
->>> + i2c_pins_b: i2c@1 {
->>> + reg = <1>;
->>> + fsl,pinmux-ids = <
->>> + MX23_PAD_LCD_ENABLE__I2C_SCL
->>> + MX23_PAD_LCD_HSYNC__I2C_SDA
->>> + >;
->>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
->>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>> + fsl,pull-up = <MXS_PULL_ENABLE>;
->>> + };
->>> +
->>> + i2c_pins_c: i2c@2 {
->>> + reg = <2>;
->>> + fsl,pinmux-ids = <
->>> + MX23_PAD_SSP1_DATA1__I2C_SCL
->>> + MX23_PAD_SSP1_DATA2__I2C_SDA
->>> + >;
->>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
->>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>> + fsl,pull-up = <MXS_PULL_ENABLE>;
->>> + };
->> Please add only i2c_pins_b because this pin muxing is the only used one.
-> I disagree: Having all possible i2c pin groups documented in devicetree is
-> a good thing. Also imx23.dtsi is more general then olinuxino - somebody
-> might produce a imx23 based board where one of the other pin groups makes
-> more sense to use. Well, even on olinuxino somebody might use i2c_pins_a
-> if they don't need an UART, but use an LCD.
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Sure. But this 2 additional muxes have nothing to do with adding i2c
-support to olinuxino and should be a separate patch. In case of a revert
-of this patch the other i.MX23 boards are also affected. So i think it
-should be a separate patch.
+What format is this?  Why aren't you using `git send-email`?
 
-Btw i read that Shawn only want used muxes [1].
+> Add device tree bindings for the DA9063 OnKey driver
+>=20
+> This patch is dependent on PATCH V1 1/2=20
 
-[1] -
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-August/115779.html
+How can there be dependencies between a binding document and a driver
+patch?
 
-> Thanks,
-> Harald
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+>=20
+> ---
+> This patch applies against linux-next and v4.0-rc6=20
+>=20
+>=20
+>  Documentation/devicetree/bindings/mfd/da9063.txt | 22 ++++++++++++++=
+++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Docum=
+entation/devicetree/bindings/mfd/da9063.txt
+> index 42c6fa6..3449b75 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9063.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9063.txt
+> @@ -2,9 +2,10 @@
+> =20
+>  DA9093 consists of a large and varied group of sub-devices (I2C Only=
+):
+> =20
+> -Device                   Supply Names    Description
+> -------                   ------------    -----------
+> +Device			 Supply Names	 Description
+> +------			 ------------	 -----------
+>  da9063-regulator        :               : LDOs & BUCKs
+> +da9063-onkey            :               : On Key
+>  da9063-rtc              :               : Real-Time Clock
+>  da9063-watchdog         :               : Watchdog
+> =20
+> @@ -51,6 +52,18 @@ Sub-nodes:
+>    the DA9063. There are currently no entries in this binding, howeve=
+r
+>    compatible =3D "dlg,da9063-rtc" should be added if a node is creat=
+ed.
+> =20
+> +- onkey : This node defines the OnKey settings for controlling the k=
+ey
+> +  functionality of the device. The node should contain the compatibl=
+e keyword
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+s/keyword/property/
+
+> +  with the value "dlg,da9063-onkey".
+> +
+> +  The platform data needs to match the OTP content of high address r=
+egister
+
+It's wrong to mention platform data here.  Just tell us what the
+property is for.
+
+> +  DA9063_REG_CONFIG_I and the device tree entry "dlg,disable-key-pow=
+er" can
+
+I feel like you're burying the dlg,disable-key-power documentation in
+side a long winded paragraph.  It's better to start the line with it,
+like:
+
+Optional Properties:
+
+dlg,disable-key-power:  Disable power-down using a long key-press.  If
+			absent <blah> ...=20
+
+> +  be used to control this. If the onkey node contains "dlg,disable-k=
+ey-power"
+> +  then the power down using a long key-press is disabled. If this en=
+try is
+> +  missing then by default the key-press triggered power down is enab=
+led.
+> +  By toggling this key-power keyword the OnKey driver will support K=
+EY_POWER
+> +  and KEY_SLEEP key presses.
+> +
+>  - watchdog : This node defines settings for the Watchdog timer assoc=
+iated
+>    with the DA9063. There are currently no entries in this binding, h=
+owever
+>    compatible =3D "dlg,da9063-watchdog" should be added if a node is =
+created.
+> @@ -73,6 +86,11 @@ Example:
+>  			compatible =3D "dlg,da9063-watchdog";
+>  		};
+> =20
+> +		onkey {
+> +			compatible =3D "dlg,da9063-onkey";
+> +			dlg,disable-key-power;
+> +		};
+> +
+>  		regulators {
+>  			DA9063_BCORE1: bcore1 {
+>  				regulator-name =3D "BCORE1";
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
