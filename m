@@ -1,167 +1,101 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v5 09/11] ARM: vf610: enable Cortex-M4 configuration on Vybrid SoC
-Date: Thu,  9 Apr 2015 22:04:13 +0200
-Message-ID: <1428609855-27657-10-git-send-email-stefan@agner.ch>
-References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428609855-27657-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH 01/10] ARM: dts: apq8064: add RPM regulators support
+Date: Thu, 9 Apr 2015 13:16:16 -0700
+Message-ID: <20150409201616.GJ19186@sonymobile.com>
+References: <1428567674-10672-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1428567761-10765-1-git-send-email-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1428567761-10765-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "inux-kernel@vger.kernel.org" <inux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to build the Kernel for Vybrid (VF6xx) SoC
-when ARMv7-M CPU is selected. The resulting image runs on the
-secondary Cortex-M4 core. This core has equally access to all
-peripherals as the main Cortex-A5 core. However, there is no
-resource control mechanism, hence when both cores are used
-simultaneously, orthogonal device tree's are required.
+On Thu 09 Apr 01:22 PDT 2015, Srinivas Kandagatla wrote:
 
-The boot CPU is dependent on the SoC variant. The available
-boards use mostly variants where the Cortex-A5 is the primary
-and hence the boot CPU. Booting the secondary Cortex-M4 CPU
-needs SoC specific registers written. There is no in kernel
-support for this right now, a external userspace utility
-called "m4boot" can be used to boot the kernel:
+> This patch adds rpm node to apq8064 dt as rpm would be used by other
+> devices for regulator support. Also adds all the regulators in the rpm.
+> 
+> Most content of this patch was originally posted by Stephen Boyd on the
+> list.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064.dtsi | 272 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 272 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 6c15112..d9166eb 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -3,6 +3,7 @@
+>  #include "skeleton.dtsi"
+>  #include <dt-bindings/clock/qcom,gcc-msm8960.h>
+>  #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
+> +#include <dt-bindings/mfd/qcom-rpm.h>
+>  #include <dt-bindings/soc/qcom,gsbi.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+> @@ -276,6 +277,277 @@
+>  			#reset-cells = <1>;
+>  		};
+>  
+> +		l2cc: clock-controller@2011000 {
+> +			compatible	= "syscon";
+> +			reg		= <0x2011000 0x1000>;
+> +		};
+> +
+> +		rpm@108000 {
+> +			compatible	= "qcom,rpm-apq8064";
+> +			reg		= <0x108000 0x1000>;
+> +			qcom,ipc	= <&l2cc 0x8 2>;
+> +
+> +			interrupts	= <GIC_SPI 19 IRQ_TYPE_NONE>,
+> +					  <GIC_SPI 21 IRQ_TYPE_NONE>,
+> +					  <GIC_SPI 22 IRQ_TYPE_NONE>;
 
-m4boot xipImage initramfs.cpio.lzo vf610m4-colibri.dtb
+All three interrupts should be IRQ_TYPE_EDGE_RISING, currently the
+driver overrides this with IRQF_TRIGGER_RISING but it should just obey
+the dt.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- Documentation/devicetree/bindings/arm/fsl.txt |  3 +++
- arch/arm/Kconfig.debug                        |  2 +-
- arch/arm/mach-imx/Kconfig                     | 38 ++++++++++++++++-----------
- arch/arm/mach-imx/Makefile.boot               |  0
- arch/arm/mach-imx/mach-vf610.c                |  1 +
- 5 files changed, 28 insertions(+), 16 deletions(-)
- create mode 100644 arch/arm/mach-imx/Makefile.boot
+> +			interrupt-names	= "ack", "err", "wakeup";
+> +
+> +			regulators {
+> +				compatible = "qcom,rpm-pm8921-regulators";
+> +				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
+> +				vin_lvs1_3_6-supply = <&pm8921_s4>;
+> +				vin_lvs2-supply = <&pm8921_s4>;
+> +				vin_lvs4_5_7-supply = <&pm8921_s4>;
+> +				vdd_ncp-supply = <&pm8921_l6>;
+> +				vdd_l24-supply = <&pm8921_s1>;
+> +				vdd_l25-supply = <&pm8921_s1>;
+> +				vdd_l27-supply = <&pm8921_s7>;
+> +				vdd_l28-supply = <&pm8921_s7>;
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index a5462b6..2a3ba73 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -81,12 +81,15 @@ Freescale Vybrid Platform Device Tree Bindings
- For the Vybrid SoC familiy all variants with DDR controller are supported,
- which is the VF5xx and VF6xx series. Out of historical reasons, in most
- places the kernel uses vf610 to refer to the whole familiy.
-+The compatible string "fsl,vf610m4" is used for the secondary Cortex-M4
-+core support.
- 
- Required root node compatible property (one of them):
-     - compatible = "fsl,vf500";
-     - compatible = "fsl,vf510";
-     - compatible = "fsl,vf600";
-     - compatible = "fsl,vf610";
-+    - compatible = "fsl,vf610m4";
- 
- Freescale LS1021A Platform Device Tree Bindings
- ------------------------------------------------
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 970de75..2e55557 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1573,7 +1573,7 @@ config DEBUG_UNCOMPRESS
- config UNCOMPRESS_INCLUDE
- 	string
- 	default "debug/uncompress.h" if ARCH_MULTIPLATFORM || ARCH_MSM || \
--					PLAT_SAMSUNG || ARCH_EFM32
-+					PLAT_SAMSUNG || ARCH_EFM32 || SOC_VF610
- 	default "mach/uncompress.h"
- 
- config EARLY_PRINTK
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index c8dffce..aa8ad4a 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -1,5 +1,5 @@
- menuconfig ARCH_MXC
--	bool "Freescale i.MX family" if ARCH_MULTI_V4_V5 || ARCH_MULTI_V6_V7
-+	bool "Freescale i.MX family" if ARCH_MULTI_V4_V5 || ARCH_MULTI_V6_V7 || ARM_SINGLE_ARMV7M
- 	select ARCH_REQUIRE_GPIOLIB
- 	select ARM_CPU_SUSPEND if PM
- 	select CLKSRC_MMIO
-@@ -557,9 +557,11 @@ config MACH_VPR200
- 
- endif
- 
-+comment "Device tree only"
-+
- if ARCH_MULTI_V7
- 
--comment "Device tree only"
-+comment "Cortex-A platforms"
- 
- config SOC_IMX5
- 	bool
-@@ -629,10 +631,26 @@ config SOC_IMX6SX
- 	help
- 	  This enables support for Freescale i.MX6 SoloX processor.
- 
-+
-+config SOC_LS1021A
-+	bool "Freescale LS1021A support"
-+	select ARM_GIC
-+	select HAVE_ARM_ARCH_TIMER
-+	select PCI_DOMAINS if PCI
-+	select ZONE_DMA if ARM_LPAE
-+
-+	help
-+	  This enable support for Freescale LS1021A processor.
-+
-+endif
-+
-+comment "Cortex-A/Cortex-M asymmetric multiprocessing platforms"
-+
-+if ARCH_MULTI_V7 || ARM_SINGLE_ARMV7M
-+
- config SOC_VF610
- 	bool "Vybrid Family VF610 support"
--	select IRQ_DOMAIN_HIERARCHY
--	select ARM_GIC
-+	select ARM_GIC if ARCH_MULTI_V7
- 	select PINCTRL_VF610
- 	select PL310_ERRATA_769419 if CACHE_L2X0
- 
-@@ -645,7 +663,7 @@ choice
- 	default VF_USE_ARM_GLOBAL_TIMER
- 
- 	config VF_USE_ARM_GLOBAL_TIMER
--		bool "Use ARM Global Timer"
-+		bool "Use ARM Global Timer" if ARCH_MULTI_V7
- 		select ARM_GLOBAL_TIMER
- 		select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
- 		help
-@@ -659,16 +677,6 @@ choice
- 
- endchoice
- 
--config SOC_LS1021A
--	bool "Freescale LS1021A support"
--	select ARM_GIC
--	select HAVE_ARM_ARCH_TIMER
--	select PCI_DOMAINS if PCI
--	select ZONE_DMA if ARM_LPAE
--
--	help
--	  This enable support for Freescale LS1021A processor.
--
- endif
- 
- source "arch/arm/mach-imx/devices/Kconfig"
-diff --git a/arch/arm/mach-imx/Makefile.boot b/arch/arm/mach-imx/Makefile.boot
-new file mode 100644
-index 0000000..e69de29
-diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
-index 2e7c75b..b20f6c1 100644
---- a/arch/arm/mach-imx/mach-vf610.c
-+++ b/arch/arm/mach-imx/mach-vf610.c
-@@ -17,6 +17,7 @@ static const char * const vf610_dt_compat[] __initconst = {
- 	"fsl,vf510",
- 	"fsl,vf600",
- 	"fsl,vf610",
-+	"fsl,vf610m4",
- 	NULL,
- };
- 
--- 
-2.3.5
+These are actually possible to change when designing a device, but
+it's not unlikely that everyone have these values so they are reasonable
+to have here.
+
+But for several of the regulators we're running our 8064 devices with
+different configuration, especially voltage, so I don't think they
+should be specified here.
+
+Having the phandles listed here are sane though, so that we can address
+them from the platform files.
+
+> +
+> +				/* Buck SMPS */
+> +				pm8921_s1: s1 {
+> +					regulator-always-on;
+> +					regulator-min-microvolt = <1225000>;
+> +					regulator-max-microvolt = <1225000>;
+> +					qcom,switch-mode-frequency = <3200000>;
+> +					bias-pull-down;
+> +				};
+> +
+[..]
+
+Regards,
+Bjorn
