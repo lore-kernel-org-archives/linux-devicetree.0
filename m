@@ -1,113 +1,157 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] usb: renesas_usbhs: Revise the binding document about the
- dma-names
-Date: Thu, 9 Apr 2015 00:17:44 +0000
-Message-ID: <HKNPR06MB322EC49F217406EBDD006DFD8FB0@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1428489744-4872-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20150408131403.GC5977@leverpostej>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Thu, 09 Apr 2015 11:12:34 +0900
+Message-ID: <5525E012.5050207@samsung.com>
+References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
+ <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150408131403.GC5977@leverpostej>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "balbi@ti.com" <balbi@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1427980385-21285-3-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Robert,
 
+On 04/02/2015 10:13 PM, Robert Baldyga wrote:
+> This patch adds VBUS pin detection support to extcon-usb-gpio driver.
+> It allows to use this driver with boards which have both VBUS and ID
+> pins, or only one of them.
 > 
-> On Wed, Apr 08, 2015 at 11:42:24AM +0100, Yoshihiro Shimoda wrote:
-> > Since the DT should describe the hardware (not the driver limitation),
-> > This patch revises the binding document about the dma-names to change
-> > simple numbering as "ch%d" instead of "tx<n>" and "rx<n>".
+> Following table of states presents relationship between this signals
+> and detected cable type:
 > 
-> The naming given in this patch looks more sensible to me.
-
-Thank you for your comment!
-
-> > Also this patch fixes the actual code of renesas_usbhs driver to handle
-> > the new dma-names.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >  This patch is based on Felipe's usb.bit / testing/next branch.
-> >  (commit id = bbc78c07a51f6fd29c227b1220a9016e585358ba)
+>  State              |    ID   |   VBUS
+> ----------------------------------------
+>  [1] USB            |    H    |    H
+>  [2] none           |    H    |    L
+>  [3] USB & USB-HOST |    L    |    H
+>  [4] USB-HOST       |    L    |    L
 > 
-> I take it the existing driver and binding haven't hit mainline, and
-> therefore there are no users yet?
-
-That's correct. At the moment, nobody uses the dma-names in the node of
-renesas_usbhs yet.
-
-Best regards,
-Yoshihiro Shimoda
-
-> Mark.
+> In case we have only one of these signals:
+> - VBUS only - we want to distinguish between [1] and [2], so ID is always 1.
+> - ID only - we want to distinguish between [1] and [4], so VBUS = ID.
 > 
-> >
-> >  Geert is pointed out about this issue:
-> >  https://www.mail-archive.com/devicetree@vger.kernel.org/msg68401.html
-> >
-> >  .../devicetree/bindings/usb/renesas_usbhs.txt      |  6 ++----
-> >  drivers/usb/renesas_usbhs/fifo.c                   | 24 ++++++++++++++--------
-> >  2 files changed, 17 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> > index dc2a18f..ddbe304 100644
-> > --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> > +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> > @@ -15,10 +15,8 @@ Optional properties:
-> >    - phys: phandle + phy specifier pair
-> >    - phy-names: must be "usb"
-> >    - dmas: Must contain a list of references to DMA specifiers.
-> > -  - dma-names : Must contain a list of DMA names:
-> > -   - tx0 ... tx<n>
-> > -   - rx0 ... rx<n>
-> > -    - This <n> means DnFIFO in USBHS module.
-> > +  - dma-names : named "ch%d", where %d is the channel number ranging from zero
-> > +                to the number of channels (DnFIFOs) minus one.
-> >
-> >  Example:
-> >  	usbhs: usb@e6590000 {
-> > diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-> > index 8597cf9..bc23b4a 100644
-> > --- a/drivers/usb/renesas_usbhs/fifo.c
-> > +++ b/drivers/usb/renesas_usbhs/fifo.c
-> > @@ -1227,15 +1227,21 @@ static void usbhsf_dma_init_dt(struct device *dev, struct usbhs_fifo *fifo,
-> >  {
-> >  	char name[16];
-> >
-> > -	snprintf(name, sizeof(name), "tx%d", channel);
-> > -	fifo->tx_chan = dma_request_slave_channel_reason(dev, name);
-> > -	if (IS_ERR(fifo->tx_chan))
-> > -		fifo->tx_chan = NULL;
-> > -
-> > -	snprintf(name, sizeof(name), "rx%d", channel);
-> > -	fifo->rx_chan = dma_request_slave_channel_reason(dev, name);
-> > -	if (IS_ERR(fifo->rx_chan))
-> > -		fifo->rx_chan = NULL;
-> > +	/*
-> > +	 * To avoid complex handing for DnFIFOs, the driver uses each
-> > +	 * DnFIFO as TX or RX direction (not bi-direction).
-> > +	 * So, the driver uses odd channels for TX, even channels for RX.
-> > +	 */
-> > +	snprintf(name, sizeof(name), "ch%d", channel);
-> > +	if (channel & 1) {
-> > +		fifo->tx_chan = dma_request_slave_channel_reason(dev, name);
-> > +		if (IS_ERR(fifo->tx_chan))
-> > +			fifo->tx_chan = NULL;
-> > +	} else {
-> > +		fifo->rx_chan = dma_request_slave_channel_reason(dev, name);
-> > +		if (IS_ERR(fifo->rx_chan))
-> > +			fifo->rx_chan = NULL;
-> > +	}
-> >  }
-> >
-> >  static void usbhsf_dma_init(struct usbhs_priv *priv, struct usbhs_fifo *fifo,
-> > --
-> > 1.9.1
-> >
+> Signed-off-by: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/extcon/extcon-usb-gpio.c | 169 +++++++++++++++++++++++++++------------
+>  1 file changed, 119 insertions(+), 50 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+> index f6aa99d..baf7add 100644
+> --- a/drivers/extcon/extcon-usb-gpio.c
+> +++ b/drivers/extcon/extcon-usb-gpio.c
+> @@ -32,7 +32,9 @@ struct usb_extcon_info {
+>  	struct extcon_dev *edev;
+>  
+>  	struct gpio_desc *id_gpiod;
+> +	struct gpio_desc *vbus_gpiod;
+>  	int id_irq;
+> +	int vbus_irq;
+>  
+>  	unsigned long debounce_jiffies;
+>  	struct delayed_work wq_detcable;
+> @@ -52,40 +54,51 @@ static const char *usb_extcon_cable[] = {
+>  	NULL,
+>  };
+>  
+> +/*
+> + * "USB" = VBUS and "USB-HOST" = !ID, so we have:
+> + *
+> + *  State              |    ID   |   VBUS
+> + * ----------------------------------------
+> + *  [1] USB            |    H    |    H
+> + *  [2] none           |    H    |    L
+> + *  [3] USB & USB-HOST |    L    |    H
+> + *  [4] USB-HOST       |    L    |    L
+> + *
+> + * In case we have only one of these signals:
+> + * - VBUS only - we want to distinguish between [1] and [2], so ID is always 1.
+> + * - ID only - we want to distinguish between [1] and [4], so VBUS = ID.
+> + */
+> +
+>  static void usb_extcon_detect_cable(struct work_struct *work)
+>  {
+>  	int id;
+> +	int vbus;
+>  	struct usb_extcon_info *info = container_of(to_delayed_work(work),
+>  						    struct usb_extcon_info,
+>  						    wq_detcable);
+>  
+> -	/* check ID and update cable state */
+> -	id = gpiod_get_value_cansleep(info->id_gpiod);
+> -	if (id) {
+> -		/*
+> -		 * ID = 1 means USB HOST cable detached.
+> -		 * As we don't have event for USB peripheral cable attached,
+> -		 * we simulate USB peripheral attach here.
+> -		 */
+> +	/* check ID and VBUS and update cable state */
+> +
+> +	id = info->id_gpiod ?
+> +		gpiod_get_value_cansleep(info->id_gpiod) : 1;
+> +
+> +	vbus = info->vbus_gpiod ?
+> +		gpiod_get_value_cansleep(info->vbus_gpiod) : id;
+> +
+> +	/* at first we clean states which are no longer active */
+> +	if (id)
+>  		extcon_set_cable_state(info->edev,
+> -				       usb_extcon_cable[EXTCON_CABLE_USB_HOST],
+> -				       false);
+> +			usb_extcon_cable[EXTCON_CABLE_USB_HOST], false);
+> +	if (!vbus)
+>  		extcon_set_cable_state(info->edev,
+> -				       usb_extcon_cable[EXTCON_CABLE_USB],
+> -				       true);
+> -	} else {
+> -		/*
+> -		 * ID = 0 means USB HOST cable attached.
+> -		 * As we don't have event for USB peripheral cable detached,
+> -		 * we simulate USB peripheral detach here.
+> -		 */
+> +			usb_extcon_cable[EXTCON_CABLE_USB], false);
+> +
+> +	if (!id)
+>  		extcon_set_cable_state(info->edev,
+> -				       usb_extcon_cable[EXTCON_CABLE_USB],
+> -				       false);
+> +				usb_extcon_cable[EXTCON_CABLE_USB_HOST], true);
+> +	if (vbus)
+>  		extcon_set_cable_state(info->edev,
+> -				       usb_extcon_cable[EXTCON_CABLE_USB_HOST],
+> -				       true);
+> -	}
+> +			usb_extcon_cable[EXTCON_CABLE_USB], true);
+>  }
+
+Looks good to me of this patch.
+
+But, I have one question about case[3]
+
+If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+
+
+> + * "USB" = VBUS and "USB-HOST" = !ID, so we have:
+> + *
+> + *  State              |    ID   |   VBUS
+> + * ----------------------------------------
+> + *  [1] USB            |    H    |    H
+> + *  [2] none           |    H    |    L
+> + *  [3] USB & USB-HOST |    L    |    H
+> + *  [4] USB-HOST       |    L    |    L
+> + *
+
+[snip]
+
+Thanks,
+Chanwoo Choi
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
