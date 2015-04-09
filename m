@@ -1,45 +1,41 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [PATCH] dt/bindings: fsl/guts: Added global-utilities compatibles
-Date: Thu, 9 Apr 2015 09:19:52 +0300
-Message-ID: <1428560392-30903-1-git-send-email-igal.liberman@freescale.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V1 2/2] devicetree: Add bindings for DA9063 OnKey
+Date: Thu, 9 Apr 2015 10:31:34 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2139F9@SW-EX-MBX02.diasemi.com>
+References: <cover.1428504804.git.stwiss.opensource@diasemi.com>
+ <addbebc419ed2d693d398e07131c119cd1d4160b.1428504804.git.stwiss.opensource@diasemi.com>
+ <20150409092138.GA3467@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150409092138.GA3467@x1>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKU2lnbmVk
-LW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgotLS0K
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1dHMudHh0ICAgICAgIHwgICAx
-NCArKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykKCmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZ3V0
-cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZ3V0
-cy50eHQKaW5kZXggN2YxNTBiNS4uZTRmMGFjMiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1dHMudHh0CisrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ndXRzLnR4dApAQCAtOSw2ICs5LDIw
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAKICAtIGNvbXBhdGlibGUgOiBTaG91bGQgZGVmaW5l
-IHRoZSBjb21wYXRpYmxlIGRldmljZSB0eXBlIGZvcgogICAgZ2xvYmFsLXV0aWxpdGllcy4KKyAg
-IFBvc3NpYmxlIGNvbXBhdGlibGVzOgorCSJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiCisJ
-ImZzbCxwMjA0MS1kZXZpY2UtY29uZmlnIgorCSJmc2wscDMwNDEtZGV2aWNlLWNvbmZpZyIKKwki
-ZnNsLHA0MDgwLWRldmljZS1jb25maWciCisJImZzbCxwNTAyMC1kZXZpY2UtY29uZmlnIgorCSJm
-c2wscDUwNDAtZGV2aWNlLWNvbmZpZyIKKwkiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4wIgor
-CSJmc2wsYjQ4NjAtZGV2aWNlLWNvbmZpZyIKKwkiZnNsLGI0NDIwLWRldmljZS1jb25maWciCisJ
-ImZzbCxiNC1kZXZpY2UtY29uZmlnIgorCSJmc2wsdDEwNDAtZGV2aWNlLWNvbmZpZyIKKwkiZnNs
-LHQyMDgwLWRldmljZS1jb25maWciCisJImZzbCx0NDI0MC1kZXZpY2UtY29uZmlnIgogIC0gcmVn
-IDogT2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgdGhlIGRldmljZS4K
-IAogUmVjb21tZW5kZWQgcHJvcGVydGllczoKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QK
-TGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
-c3RpbmZvL2xpbnV4cHBjLWRldg==
+T24gMDkgQXByaWwgMjAxNSAxMDoyMiBMZWUgSm9uZXMgd3JvdGUNCg0KPiA+IEZyb206IFN0ZXZl
+IFR3aXNzIDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gV2hhdCBmb3JtYXQgaXMg
+dGhpcz8gIFdoeSBhcmVuJ3QgeW91IHVzaW5nIGBnaXQgc2VuZC1lbWFpbGA/DQoNCkkgYW0gdXNp
+bmcgYSBnaXQgZm9ybWF0LXBhdGNoIHRvIGdlbmVyYXRlIHRoZSBwYXRjaGVzIGJ1dCBvdXIgaW4t
+aG91c2UgSVQNCmRlcGFydG1lbnQgY29tcGxpY2F0aW9ucyBkaXNhbGxvdyB0aGUgdXNlIG9mIGdp
+dCBzZW5kLWVtYWlsLg0KDQo+ID4gVGhpcyBwYXRjaCBpcyBkZXBlbmRlbnQgb24gUEFUQ0ggVjEg
+MS8yDQo+IEhvdyBjYW4gdGhlcmUgYmUgZGVwZW5kZW5jaWVzIGJldHdlZW4gYSBiaW5kaW5nIGRv
+Y3VtZW50IGFuZCBhIGRyaXZlcg0KPiBwYXRjaD8NCg0KSSdsbCByZW1vdmUgdGhvc2UgY2lyY3Vs
+YXIgZGVwZW5kZW5jaWVzIGZvciB0aGUgbmV4dCBwYXRjaA0KDQo+ID4gKy0gb25rZXkgOiBUaGlz
+IG5vZGUgZGVmaW5lcyB0aGUgT25LZXkgc2V0dGluZ3MgZm9yIGNvbnRyb2xsaW5nIHRoZSBrZXkN
+Cj4gPiArICBmdW5jdGlvbmFsaXR5IG9mIHRoZSBkZXZpY2UuIFRoZSBub2RlIHNob3VsZCBjb250
+YWluIHRoZSBjb21wYXRpYmxlDQo+IGtleXdvcmQNCj4gDQo+IHMva2V5d29yZC9wcm9wZXJ0eS8N
+Cg0KLi4uIHdpbGwgZG8gdGhhdCBzZWFyY2ggYW5kIHJlcGxhY2UNCg0KPiA+ICsgIERBOTA2M19S
+RUdfQ09ORklHX0kgYW5kIHRoZSBkZXZpY2UgdHJlZSBlbnRyeSAiZGxnLGRpc2FibGUta2V5LQ0K
+PiBwb3dlciIgY2FuDQo+IA0KPiBJIGZlZWwgbGlrZSB5b3UncmUgYnVyeWluZyB0aGUgZGxnLGRp
+c2FibGUta2V5LXBvd2VyIGRvY3VtZW50YXRpb24gaW4NCj4gc2lkZSBhIGxvbmcgd2luZGVkIHBh
+cmFncmFwaC4gIEl0J3MgYmV0dGVyIHRvIHN0YXJ0IHRoZSBsaW5lIHdpdGggaXQsDQo+IGxpa2U6
+DQo+IA0KPiBPcHRpb25hbCBQcm9wZXJ0aWVzOg0KPiANCj4gZGxnLGRpc2FibGUta2V5LXBvd2Vy
+OiAgRGlzYWJsZSBwb3dlci1kb3duIHVzaW5nIGEgbG9uZyBrZXktcHJlc3MuICBJZg0KPiAJCQlh
+YnNlbnQgPGJsYWg+IC4uLg0KPiANCg0Kb2theSwgSSdsbCBtYWtlIHRoYXQgY2hhbmdlLg0KDQpU
+aGFua3MgZm9yIHRoZSBjb21tZW50cywNCkknbGwgc2VuZCBQQVRDSCBWMiBhZnRlciBJIG1ha2Ug
+dGhlIGNoYW5nZXMgcmVxdWVzdGVkIGJ5IHlvdXJzZWxmIGFuZCBQYXVsIEJvbGxlDQooc2VlIGh0
+dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzQvOS8xNTApLg0KDQpSZWdhcmRzLA0KU3RldmUNCg==
