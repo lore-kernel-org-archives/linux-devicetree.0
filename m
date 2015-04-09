@@ -1,140 +1,65 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs
- related properties
-Date: Fri, 10 Apr 2015 02:25:08 +0300
-Message-ID: <55270A54.1000409@linux.intel.com>
-References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com> <552545FF.2030208@samsung.com> <552628E4.50003@samsung.com> <55263247.5070009@linux.intel.com> <55264E6D.40801@samsung.com> <55268F27.70409@samsung.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Thu, 9 Apr 2015 18:54:13 -0500
+Message-ID: <1428623653.22867.562.camel@freescale.com>
+References: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
+	 <1428446404.22867.479.camel@freescale.com>
+	 <DM2PR03MB383BB3A8993435B4F7D2EFDE6FC0@DM2PR03MB383.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <55268F27.70409@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DM2PR03MB383BB3A8993435B4F7D2EFDE6FC0-ufbTtyGzTTRJonC5hhDUuuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+On Wed, 2015-04-08 at 03:54 -0500, Liberman Igal-B31950 wrote:
+> Hi Scott
+> 
+> Regards,
+> Igal Liberman.
+> 
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Wednesday, April 08, 2015 1:40 AM
+> > To: Liberman Igal-B31950
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Subject: Re: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock
+> > mux
+> > 
+> > On Tue, 2015-04-07 at 07:08 +0300, Igal.Liberman wrote:
+> > > From: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > >
+> > > Signed-off-by: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/clock/qoriq-clock.txt      |   59
+> > ++++++++++++++++++++
+> > >  1 file changed, 59 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > index df4a259..a7e84ce 100644
+> > > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > @@ -65,6 +65,7 @@ Required properties:
+> > >  		It takes parent's clock-frequency as its clock.
+> > >  	* "fsl,qoriq-platform-pll-1.0" for the platform PLL clock (v1.0)
+> > >  	* "fsl,qoriq-platform-pll-2.0" for the platform PLL clock (v2.0)
+> > > +	* "fsl,fman-clk-mux" for the Frame Manager clock.
+> > 
+> > Is there any versioning required on this?
+> > 
+> 
+> I don't think we need versioning here.
 
-Jacek Anaszewski wrote:
-> Hi Sylwester, Sakari,
->
-> On 04/09/2015 12:03 PM, Sylwester Nawrocki wrote:
->> On 09/04/15 10:03, Sakari Ailus wrote:
->>> Jacek Anaszewski wrote:
->>>> On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
->>>>> On 08/04/15 16:31, Jacek Anaszewski wrote:
->>>>>> Properties defining maximum values for LED currents and timeout
->>>>>> should
->>>>>> be mandatory to avoid the risk of hardware damage. This patch fixes
->>>>>> the issue.
->>
->>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>>>> @@ -10,6 +10,17 @@ can influence the way of the LED device
->>>>>> initialization, the LED components
->>>>>>    have to be tightly coupled with the LED device binding. They are
->>>>>> represented
->>>>>>    by child nodes of the parent LED device binding.
->>>>>>
->>>>>> +Required properties for child nodes:
->>>>>
->>>>> These properties are mandatory only for LEDs with Flash/Torch
->>>>> capabilities, aren't they?
->>>>
->>>> flash-max-microamp and flash-timeout-us properties description mention
->>>> that they refer to flash LEDs. Perhaps this should be made indeed more
->>>> explicit.
->>>
->>> Sounds good to me, after all these shouldn't be defined for devices they
->>> don't make sense for. Alternatively, you could add another section for
->>> "required properties for flash LEDs".
->>
->> Sounds good to me.
->>
->>>>> Requiring those properties for all led nodes would make all
->>>>> current dtses not compliant with the DT binding specification AFAICT.
->>>
->>> Some drivers also define these explicitly as optional, the behaviour for
->>> those obviously can't be changed.  This should apply to new drivers
->>> only, and I think documenting the matter in this file would be the best
->>> way to do that.
->>
->> Unfortunately this file is not a proper place for information regarding
->> Linux drivers.
->> I can't see any drivers in -next using those DT properties. Could you
->> point to any examples?
->> Perhaps we should stay with the below properties specified as optional
->> in general and add a note they can be mandatory for some LEDs
->> (controllers)?
->
-> I've analyzed existing led bindings. Four bindings define brightness
-> related properties:
->
-> leds-lp55xx.txt
-> Each child has own specific current settings
-> - led-cur: Current setting at each led channel (mA x10, 0 if led is not
-> connected)
-> - max-cur: Maximun current at each led channel.
->
-> leds-netxbig.txt
-> Required sub-node properties:
-> - bright-max: Maximum brightness value
->
-> leds-pwm
-> LED sub-node properties:
-> - max-brightness : Maximum brightness possible for the LED
->
-> leds-pm8941-wled.txt
-> Optional properties:
-> - qcom,current-limit: mA; per-string current limit; value from 0 to 25
->          default: 20mA
->
->
-> We can summarize this as follows:
-> - only four devices define max brightness
-> - one of them defines also default current setting
-> - some of them define current in mA, some in brightness levels
->
-> It has to be stressed that LED subsystem operates on brightness levels,
-> not microamperes. max-microamp property was expressed in microamperes,
-> because it was initially designed only for flash LEDs.
+Even though we needed it on the other nodes?
 
-The DT should describe the hardware, not reflect particular choices made 
-in the interfaces the Linux kernel offers to the user space.
+-Scott
 
-I don't think we can change existing bindings, but new bindings should 
-respect what has been discussed in this thread and others previously. 
-The driver should be responsible for converting the current to 
-brightness levels if the hardware deals with current.
 
->
-> I think that if we want to add generic property for limiting maximum
-> brightness for non-flash LEDs, then it should be called brightness-max
-> and expressed in brightness levels. It should apply only to non-flash
-> devices. We could have also brightness-default.
-
-I personally don't know of any device for which brightness level would 
-make sense from hardware point of view.
-
-> For flash devices we would have torch-max-microamp and
-> flash-max-microamp properties. We could also have their counterparts:
-> torch-default-microamp, flash-default-microamp.
->
-> Should we also need
->
-> - flash-timeout-max-us
-
-We have "flash-timeout-us". The documentation isn't very clear on this; 
-it should be the maximum obviously.
-
-> - flash-timeout-default-us ?
-
-The default is hardly a property of the hardware. Drivers could default 
-to maximum but this could be driver dependent.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
