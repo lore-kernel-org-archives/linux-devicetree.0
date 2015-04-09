@@ -1,63 +1,60 @@
-From: Koro Chen <koro.chen@mediatek.com>
-Subject: ASoC: Mediatek: Add support for MT8173 SOC
-Date: Fri, 10 Apr 2015 15:10:55 +0800
-Message-ID: <1428649857-19415-1-git-send-email-koro.chen@mediatek.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> (by way of Boris Brezillon
+	<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>)
+Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
+Date: Thu, 9 Apr 2015 17:37:27 +0200
+Message-ID: <20150409153727.GF1459@lunn.ch>
+References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20150409151846.GE1459@lunn.ch>
+ <20150409172826.18916274@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de
-Cc: devicetree@vger.kernel.org, koro.chen@mediatek.com, srv_heupstream@mediatek.com, s.hauer@pengutronix.de, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, galak@codeaurora.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150409172826.18916274@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds basic support for the Mediatek AFE unit for MT8173 SoC.
-This patch is based on Linux 4.0-rc1, Sascha's clk patch [1], 
-and his SCPSYS power patch [2].
+On Thu, Apr 09, 2015 at 05:28:26PM +0200, Boris Brezillon wrote:
+> Hi Andrew,
+> 
+> On Thu, 9 Apr 2015 17:18:46 +0200
+> Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> 
+> > On Thu, Apr 09, 2015 at 04:58:41PM +0200, Boris Brezillon wrote:
+> > > Hello,
+> > > 
+> > > This is an attempt to replace the mv_cesa driver by a new one to address
+> > > some limitations of the existing driver.
+> > > >From a performance and CPU load point of view the most important
+> > > limitation is the lack of DMA support, thus preventing us from chaining
+> > > crypto operations.
+> > > 
+> > > I know we usually try to adapt existing drivers instead of replacing them
+> > > by new ones, but after trying to refactor the mv_cesa driver I realized it
+> > > would take longer than writing an new one from scratch.
+> > 
+> > Hi Boris
+> > 
+> > What is the situation with backwards compatibility? I see you have
+> > kept the old compatibility string, and added lots of new ones, and
+> > deprecated some properties. Will an old DT blob still work?
+> 
+> Yep, I tried on an Orion platform, and Arnaud tried on a Kirkwood one
+> without any changes to the existing DT and it works.
 
-The AFE unit comprises several memory interfaces that communicate with CPU,
-a multi input multi output digital audio interconnect, and several external
-interfaces (e.g. I2S). 
+Great. It would be nice to state this in the ChangeLog or cover note.
 
-The AFE unit is a DMA master, so no external DMA engine is needed.
+> Anyway, IMHO even those DT should be updated to use the new bindings
+> (sram nodes, new compatible if available, addition of clock-names
+> properties, ...).
 
-Each external interface is presented as a DAI to ASoC. A memory interface 
-must be connected via the interconnect to an external interface. 
-The connection pathes are configured through the device tree.
+Agreed. Maybe you can extend the patchset to modify the relevant .dtsi
+files?
 
-[1] http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000079.html
-[2] http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000132.html
-
-Koro Chen (2):
-  ASoC: mediatek: Add binding support for AFE driver
-  ASoC: mediatek: Add AFE platform driver
-
- .../devicetree/bindings/sound/mtk-afe-pcm.txt      |  105 ++
- include/dt-bindings/sound/mtk-afe.h                |   36 +
- sound/soc/Kconfig                                  |    1 +
- sound/soc/Makefile                                 |    1 +
- sound/soc/mediatek/Kconfig                         |    8 +
- sound/soc/mediatek/Makefile                        |    2 +
- sound/soc/mediatek/mtk-afe-common.h                |  105 ++
- sound/soc/mediatek/mtk-afe-connection.c            |  416 ++++++
- sound/soc/mediatek/mtk-afe-connection.h            |   30 +
- sound/soc/mediatek/mtk-afe-pcm.c                   | 1497 ++++++++++++++++++++
- 10 files changed, 2201 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mtk-afe-pcm.txt
- create mode 100644 include/dt-bindings/sound/mtk-afe.h
- create mode 100644 sound/soc/mediatek/Kconfig
- create mode 100644 sound/soc/mediatek/Makefile
- create mode 100644 sound/soc/mediatek/mtk-afe-common.h
- create mode 100644 sound/soc/mediatek/mtk-afe-connection.c
- create mode 100644 sound/soc/mediatek/mtk-afe-connection.h
- create mode 100644 sound/soc/mediatek/mtk-afe-pcm.c
-
+Thanks
+	Andrew
 --
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
