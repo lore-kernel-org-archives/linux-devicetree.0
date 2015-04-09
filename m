@@ -1,10 +1,10 @@
 From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH] usb: chipidea: Use extcon framework for VBUS and ID detection
-Date: Thu,  9 Apr 2015 11:33:38 +0300
-Message-ID: <1428568418-22508-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Peter Chen <Peter.Chen@freescale.com>
+Subject: [PATCH 1/2] usb: phy: msm: Use extcon framework for VBUS and ID detection
+Date: Thu,  9 Apr 2015 11:34:22 +0300
+Message-ID: <1428568462-20193-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
@@ -14,25 +14,20 @@ and disconnect ID and VBUS notification.
 
 Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 ---
+ .../devicetree/bindings/usb/msm-hsusb.txt          |  7 ++
+ drivers/usb/phy/Kconfig                            |  1 +
+ drivers/usb/phy/phy-msm-usb.c                      | 84 ++++++++++++++++++++++
+ include/linux/usb/msm_hsusb.h                      | 17 +++++
+ 4 files changed, 109 insertions(+)
 
-Suggestions for better solution are welcome!
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index 2826f2a..f26bcfa 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -69,6 +69,13 @@ Optional properties:
+                 (no, min, max) where each value represents either a voltage
+                 in microvolts or a value corresponding to voltage corner.
 
- .../devicetree/bindings/usb/ci-hdrc-qcom.txt       |  9 +++
- drivers/usb/chipidea/Kconfig                       |  1 +
- drivers/usb/chipidea/ci.h                          | 18 +++++
- drivers/usb/chipidea/core.c                        | 77 ++++++++++++++++++++++
- drivers/usb/chipidea/otg.c                         | 19 +++++-
- 5 files changed, 123 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-index f2899b5..788da49 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-@@ -7,6 +7,14 @@ Required properties:
- - usb-phy:      phandle for the PHY device
- - dr_mode:      Should be "peripheral"
-
-+Optional properties:
 +- extcon:       phandles to external connector devices. First phandle
 +                should point to external connector, which provide "USB"
 +                cable events, the second should point to external connector
@@ -40,218 +35,181 @@ index f2899b5..788da49 100644
 +                the external connector devices is not required empty <0>
 +                phandle should be specified.
 +
- Examples:
- 	gadget@f9a55000 {
- 		compatible = "qcom,ci-hdrc";
-@@ -14,4 +22,5 @@ Examples:
- 		dr_mode = "peripheral";
- 		interrupts = <0 134 0>;
- 		usb-phy = <&usbphy0>;
-+		extcon = <&usb_vbus>, <&usb_id>;
- 	};
-diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
-index 77b47d8..a67b67f 100644
---- a/drivers/usb/chipidea/Kconfig
-+++ b/drivers/usb/chipidea/Kconfig
-@@ -1,6 +1,7 @@
- config USB_CHIPIDEA
- 	tristate "ChipIdea Highspeed Dual Role Controller"
- 	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
+ Example HSUSB OTG controller device node:
+
+     usb@f9a55000 {
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 52d3d58..ca584ef 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -141,6 +141,7 @@ config USB_MSM_OTG
+ 	tristate "Qualcomm on-chip USB OTG controller support"
+ 	depends on (USB || USB_GADGET) && (ARCH_MSM || ARCH_QCOM || COMPILE_TEST)
+ 	depends on RESET_CONTROLLER
 +	depends on EXTCON
+ 	select USB_PHY
  	help
- 	  Say Y here if your system has a dual role high speed USB
- 	  controller based on ChipIdea silicon IP. Currently, only the
-diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-index 65913d4..04e7aee 100644
---- a/drivers/usb/chipidea/ci.h
-+++ b/drivers/usb/chipidea/ci.h
-@@ -13,6 +13,7 @@
- #ifndef __DRIVERS_USB_CHIPIDEA_CI_H
- #define __DRIVERS_USB_CHIPIDEA_CI_H
-
-+#include <linux/extcon.h>
- #include <linux/list.h>
- #include <linux/irqreturn.h>
- #include <linux/usb.h>
-@@ -132,6 +133,18 @@ struct hw_bank {
+ 	  Enable this to support the USB OTG transceiver on Qualcomm chips. It
+diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+index 000fd89..d47c3eb 100644
+--- a/drivers/usb/phy/phy-msm-usb.c
++++ b/drivers/usb/phy/phy-msm-usb.c
+@@ -1445,9 +1445,42 @@ static const struct of_device_id msm_otg_dt_match[] = {
  };
+ MODULE_DEVICE_TABLE(of, msm_otg_dt_match);
 
- /**
-+ * struct ci_hdrc - structure for exteternal connector cable state tracking
-+ * @state: current state of the line
-+ * @nb: hold event notification callback
-+ * @conn: used for notification registration
-+ */
-+struct ci_cable {
-+	bool				state;
-+	struct notifier_block		nb;
-+	struct extcon_specific_cable_nb conn;
-+};
-+
-+/**
-  * struct ci_hdrc - chipidea device representation
-  * @dev: pointer to parent device
-  * @lock: access synchronization
-@@ -169,6 +182,8 @@ struct hw_bank {
-  * @b_sess_valid_event: indicates there is a vbus event, and handled
-  * at ci_otg_work
-  * @imx28_write_fix: Freescale imx28 needs swp instruction for writing
-+ * @vbus: VBUS signal state trakining, using extcon framework
-+ * @id: ID signal state trakining, using extcon framework
-  */
- struct ci_hdrc {
- 	struct device			*dev;
-@@ -211,6 +226,9 @@ struct ci_hdrc {
- 	bool				id_event;
- 	bool				b_sess_valid_event;
- 	bool				imx28_write_fix;
-+
-+	struct ci_cable			vbus;
-+	struct ci_cable			id;
- };
-
- static inline struct ci_role_driver *ci_role(struct ci_hdrc *ci)
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index a57dc88..0f805bd 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -47,6 +47,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-+#include <linux/extcon.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/module.h>
-@@ -646,9 +647,36 @@ static void ci_get_otg_capable(struct ci_hdrc *ci)
- 		dev_dbg(ci->dev, "It is OTG capable controller\n");
- }
-
-+static int ci_vbus_notifier(struct notifier_block *nb, unsigned long event,
-+			 void *ptr)
++static int msm_otg_vbus_notifier(struct notifier_block *nb, unsigned long event,
++				void *ptr)
 +{
-+	struct ci_cable *vbus = container_of(nb, struct ci_cable, nb);
++	struct msm_usb_cable *vbus = container_of(nb, struct msm_usb_cable, nb);
++	struct msm_otg *motg = container_of(vbus, struct msm_otg, vbus);
 +
 +	if (event)
-+		vbus->state = true;
++		set_bit(B_SESS_VLD, &motg->inputs);
 +	else
-+		vbus->state = false;
++		clear_bit(B_SESS_VLD, &motg->inputs);
++
++	schedule_work(&motg->sm_work);
 +
 +	return NOTIFY_DONE;
 +}
 +
-+static int ci_host_notifier(struct notifier_block *nb, unsigned long event,
-+		       void *ptr)
++static int msm_otg_id_notifier(struct notifier_block *nb, unsigned long event,
++				void *ptr)
 +{
-+	struct ci_cable *id = container_of(nb, struct ci_cable, nb);
++	struct msm_usb_cable *id = container_of(nb, struct msm_usb_cable, nb);
++	struct msm_otg *motg = container_of(id, struct msm_otg, id);
 +
 +	if (event)
-+		id->state = false;
++		clear_bit(ID, &motg->inputs);
 +	else
-+		id->state = true;
++		set_bit(ID, &motg->inputs);
++
++	schedule_work(&motg->sm_work);
 +
 +	return NOTIFY_DONE;
 +}
 +
- static int ci_hdrc_probe(struct platform_device *pdev)
+ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
  {
- 	struct device	*dev = &pdev->dev;
-+	struct extcon_dev *ext_vbus, *ext_id;
- 	struct ci_hdrc	*ci;
- 	struct resource	*res;
- 	void __iomem	*base;
-@@ -702,6 +730,51 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 			ci->usb_phy = NULL;
+ 	struct msm_otg_platform_data *pdata;
++	struct extcon_dev *ext_id, *ext_vbus;
+ 	const struct of_device_id *id;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct property *prop;
+@@ -1496,6 +1529,52 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
  	}
 
 +	ext_id = ERR_PTR(-ENODEV);
 +	ext_vbus = ERR_PTR(-ENODEV);
-+	if (of_property_read_bool(dev->parent->of_node, "extcon")) {
++	if (of_property_read_bool(node, "extcon")) {
++
 +		/* Each one of them is not mandatory */
-+		ext_vbus = extcon_get_edev_by_phandle(dev->parent, 0);
++		ext_vbus = extcon_get_edev_by_phandle(&pdev->dev, 0);
 +		if (IS_ERR(ext_vbus) && PTR_ERR(ext_vbus) != -ENODEV)
 +			return PTR_ERR(ext_vbus);
 +
-+		ext_id = extcon_get_edev_by_phandle(dev->parent, 1);
++		ext_id = extcon_get_edev_by_phandle(&pdev->dev, 1);
 +		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
 +			return PTR_ERR(ext_id);
 +	}
 +
 +	if (!IS_ERR(ext_vbus)) {
-+		ci->vbus.nb.notifier_call = ci_vbus_notifier;
-+		ret = extcon_register_interest(&ci->vbus.conn, ext_vbus->name,
-+					       "USB", &ci->vbus.nb);
++		motg->vbus.nb.notifier_call = msm_otg_vbus_notifier;
++		ret = extcon_register_interest(&motg->vbus.conn, ext_vbus->name,
++					       "USB", &motg->vbus.nb);
 +		if (ret < 0) {
-+			dev_err(&pdev->dev, "register VBUS failed\n");
++			dev_err(&pdev->dev, "register VBUS notifier failed\n");
 +			return ret;
 +		}
 +
 +		ret = extcon_get_cable_state(ext_vbus, "USB");
 +		if (ret)
-+			ci->vbus.state = true;
++			set_bit(B_SESS_VLD, &motg->inputs);
 +		else
-+			ci->vbus.state = false;
++			clear_bit(B_SESS_VLD, &motg->inputs);
 +	}
 +
 +	if (!IS_ERR(ext_id)) {
-+		ci->id.nb.notifier_call = ci_host_notifier;
-+		ret = extcon_register_interest(&ci->id.conn, ext_id->name,
-+					       "USB-HOST", &ci->id.nb);
++		motg->id.nb.notifier_call = msm_otg_id_notifier;
++		ret = extcon_register_interest(&motg->id.conn, ext_id->name,
++					       "USB-HOST", &motg->id.nb);
 +		if (ret < 0) {
-+			dev_err(&pdev->dev, "register ID failed\n");
++			dev_err(&pdev->dev, "register ID notifier failed\n");
 +			return ret;
 +		}
 +
 +		ret = extcon_get_cable_state(ext_id, "USB-HOST");
 +		if (ret)
-+			ci->id.state = false;
++			clear_bit(ID, &motg->inputs);
 +		else
-+			ci->id.state = true;
++			set_bit(ID, &motg->inputs);
 +	}
 +
- 	ret = ci_usb_phy_init(ci);
- 	if (ret) {
- 		dev_err(dev, "unable to init phy: %d\n", ret);
-@@ -807,6 +880,10 @@ static int ci_hdrc_remove(struct platform_device *pdev)
- {
- 	struct ci_hdrc *ci = platform_get_drvdata(pdev);
+ 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
+ 	if (!prop || !len)
+ 		return 0;
+@@ -1719,6 +1798,11 @@ static int msm_otg_remove(struct platform_device *pdev)
+ 	if (phy->otg->host || phy->otg->gadget)
+ 		return -EBUSY;
 
-+	if (ci->id.conn.edev)
-+		extcon_unregister_interest(&ci->id.conn);
-+	if (ci->vbus.conn.edev)
-+		extcon_unregister_interest(&ci->vbus.conn);
- 	dbg_remove_files(ci);
- 	ci_role_destroy(ci);
- 	ci_hdrc_enter_lpm(ci, true);
-diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
-index a048b08..2e97c0d 100644
---- a/drivers/usb/chipidea/otg.c
-+++ b/drivers/usb/chipidea/otg.c
-@@ -30,7 +30,24 @@
-  */
- u32 hw_read_otgsc(struct ci_hdrc *ci, u32 mask)
- {
--	return hw_read(ci, OP_OTGSC, mask);
-+	u32 val = hw_read(ci, OP_OTGSC, mask);
++	if (motg->id.conn.edev)
++		extcon_unregister_interest(&motg->id.conn);
++	if (motg->vbus.conn.edev)
++		extcon_unregister_interest(&motg->vbus.conn);
 +
-+	if ((mask & OTGSC_BSV) && ci->vbus.conn.edev) {
-+		if (ci->vbus.state)
-+			val |= OTGSC_BSV;
-+		else
-+			val &= ~OTGSC_BSV;
-+	}
-+
-+	if ((mask & OTGSC_ID) && ci->id.conn.edev) {
-+		if (ci->id.state)
-+			val |= OTGSC_ID;
-+		else
-+			val &= ~OTGSC_ID;
-+	}
-+
-+	val &= mask;
-+	return val;
- }
+ 	msm_otg_debugfs_cleanup();
+ 	cancel_delayed_work_sync(&motg->chg_work);
+ 	cancel_work_sync(&motg->sm_work);
+diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
+index b0a3924..9a38e77 100644
+--- a/include/linux/usb/msm_hsusb.h
++++ b/include/linux/usb/msm_hsusb.h
+@@ -18,6 +18,7 @@
+ #ifndef __ASM_ARCH_MSM_HSUSB_H
+ #define __ASM_ARCH_MSM_HSUSB_H
+
++#include <linux/extcon.h>
+ #include <linux/types.h>
+ #include <linux/usb/otg.h>
+ #include <linux/clk.h>
+@@ -122,6 +123,17 @@ struct msm_otg_platform_data {
+ };
 
  /**
++ * struct msm_usb_cable - structure for exteternal connector cable
++ *			  state tracking
++ * @nb: hold event notification callback
++ * @conn: used for notification registration
++ */
++struct msm_usb_cable {
++	struct notifier_block		nb;
++	struct extcon_specific_cable_nb conn;
++};
++
++/**
+  * struct msm_otg: OTG driver data. Shared by HCD and DCD.
+  * @otg: USB OTG Transceiver structure.
+  * @pdata: otg device platform data.
+@@ -141,6 +153,8 @@ struct msm_otg_platform_data {
+  * @chg_type: The type of charger attached.
+  * @dcd_retires: The retry count used to track Data contact
+  *               detection process.
++ * @vbus: VBUS signal state trakining, using extcon framework
++ * @id: ID signal state trakining, using extcon framework
+  */
+ struct msm_otg {
+ 	struct usb_phy phy;
+@@ -170,6 +184,9 @@ struct msm_otg {
+ 	struct reset_control *phy_rst;
+ 	struct reset_control *link_rst;
+ 	int vdd_levels[3];
++
++	struct msm_usb_cable vbus;
++	struct msm_usb_cable id;
+ };
+
+ #endif
 --
 1.9.1
