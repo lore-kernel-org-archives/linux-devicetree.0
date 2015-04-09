@@ -1,85 +1,75 @@
-From: Philippe De Muyter <phdm-vQo90/bmh3WzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add abracon,abx80x
-Date: Thu, 9 Apr 2015 15:25:23 +0200
-Message-ID: <20150409132523.GA4421__15866.8049531572$1428586867$gmane$org@frolo.macqel>
-References: <1427856743-26625-1-git-send-email-alexandre.belloni@free-electrons.com> <1427856743-26625-2-git-send-email-alexandre.belloni@free-electrons.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] iio: mlx90614: Add devicetree bindings documentation
+Date: Thu, 09 Apr 2015 15:05:24 +0100
+Message-ID: <55268724.1040102@kernel.org>
+References: <1427704502-22347-1-git-send-email-vianney.leclement@essensium.com> <1427704502-22347-3-git-send-email-vianney.leclement@essensium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1427856743-26625-2-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427704502-22347-3-git-send-email-vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?Vmlhbm5leSBsZSBDbMOpbWVudCBkZSBTYWludC1NYXJjcQ==?= <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "Arnout Vandecappelle (Essensium/Mind)" <arnout-agwphqFHkxc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On 30/03/15 09:34, Vianney le Cl=C3=A9ment de Saint-Marcq wrote:
+> Also introduce "melexis" as a vendor prefix for device tree bindings.
+>=20
+> Signed-off-by: Vianney le Cl=C3=A9ment de Saint-Marcq <vianney.leclem=
+ent-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
+> Cc: Arnout Vandecappelle (Essensium/Mind) <arnout-agwphqFHkxc@public.gmane.org>
+Nothing even remotely controversial in here so applied to the togreg br=
+anch of iio.git
+initially pushed out as testing.  Thanks,
 
-when I look into Documentation/devicetree/bindings/rtc, it seems that
-all rtc but a few (mainly old ones) have the "-rtc" suffix in the
-"compatible" property.
-
-Would it not be better to keep it here also, like what I had written ?
-
-Best regards
-
-Philippe
-
-
-On Wed, Apr 01, 2015 at 04:52:22AM +0200, Alexandre Belloni wrote:
-> Document the bindings for abracon,abx80x and related compatibles.
-> 
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Jonathan
+>=20
 > ---
->  .../devicetree/bindings/rtc/abracon,abx80x.txt     | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+>=20
+> v3: new patch split out from v2 patch 6 (power management)
+> ---
+>  .../devicetree/bindings/iio/temperature/mlx90614.txt      | 15 +++++=
+++++++++++
+>  Documentation/devicetree/bindings/vendor-prefixes.txt     |  1 +
+>  2 files changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature=
+/mlx90614.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx906=
+14.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90614.txt
 > new file mode 100644
-> index 000000000000..6f0d3b2cdd89
+> index 0000000..4c959f3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> @@ -0,0 +1,32 @@
-> +Abracon ABX80X I2C ultra low power RTC/Alarm chip
+> +++ b/Documentation/devicetree/bindings/iio/temperature/mlx90614.txt
+> @@ -0,0 +1,15 @@
+> +* Melexis MLX90614 contactless IR temperature sensor
 > +
-> +The Abracon ABX80X family consist of the ab0801, ab0803, ab0804, ab0805, ab1801,
-> +ab1803, ab1804 and ab1805. The ab0805 is the superset of ab080x and the ab1805
-> +is the superset of ab180x.
+> +http://melexis.com/Infrared-Thermometer-Sensors/Infrared-Thermometer=
+-Sensors/MLX90614-615.aspx
 > +
 > +Required properties:
 > +
-> + - "compatible": should one of:
-> +        "abracon,abx80x"
-> +        "abracon,ab0801"
-> +        "abracon,ab0803"
-> +        "abracon,ab0804"
-> +        "abracon,ab0805"
-> +        "abracon,ab1801"
-> +        "abracon,ab1803"
-> +        "abracon,ab1804"
-> +        "abracon,ab1805"
-> +	Using "abracon,abx80x" will enable chip autodetection.
-> + - "reg": I2C bus address of the device
+> +  - compatible: should be "melexis,mlx90614"
+> +  - reg: the I2C address of the sensor
 > +
-> +Optional properties:
+> +Example:
 > +
-> +The abx804 and abx805 have a trickle charger that is able to charge the
-> +connected battery or supercap. Both the following properties have to be defined
-> +and valid to enable charging:
-> +
-> + - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
-> + - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
-> +                          resistor, the other values are in ohm.
-> +
-> +
-> -- 
-> 2.1.0
-
--- 
-Philippe De Muyter +32 2 6101532 Macq SA rue de l'Aeronef 2 B-1140 Bruxelles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +mlx90614@5a {
+> +	compatible =3D "melexis,mlx90614";
+> +	reg =3D <0x5a>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index fae26d0..c8db30c 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -110,6 +110,7 @@ lltc	Linear Technology Corporation
+>  marvell	Marvell Technology Group Ltd.
+>  maxim	Maxim Integrated Products
+>  mediatek	MediaTek Inc.
+> +melexis	Melexis N.V.
+>  merrii	Merrii Technology Co., Ltd.
+>  micrel	Micrel Inc.
+>  microchip	Microchip Technology Inc.
+>=20
