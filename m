@@ -1,63 +1,52 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v18 01/11] ARM: qcom: Add Subsystem Power Manager (SPM)
- driver
-Date: Thu, 9 Apr 2015 09:58:41 -0700
-Message-ID: <20150409165841.GA30503@codeaurora.org>
-References: <1427315136-44321-1-git-send-email-lina.iyer@linaro.org>
- <1427315136-44321-2-git-send-email-lina.iyer@linaro.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] dt/bindings: fsl/guts: Added global-utilities compatibles
+Date: Thu, 9 Apr 2015 12:00:25 -0500
+Message-ID: <1428598825.22867.532.camel@freescale.com>
+References: <1428560392-30903-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1427315136-44321-2-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1428560392-30903-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/25, Lina Iyer wrote:
-> SPM is a hardware block that controls the peripheral logic surrounding
-> the application cores (cpu/l$). When the core executes WFI instruction,
-> the SPM takes over the putting the core in low power state as
-> configured. The wake up for the SPM is an interrupt at the GIC, which
-> then completes the rest of low power mode sequence and brings the core
-> out of low power mode.
-> 
-> The SPM has a set of control registers that configure the SPMs
-> individually based on the type of the core and the runtime conditions.
-> SPM is a finite state machine block to which a sequence is provided and
-> it interprets the bytes and executes them in sequence. Each low power
-> mode that the core can enter into is provided to the SPM as a sequence.
-> 
-> Configure the SPM to set the core (cpu or L2) into its low power mode,
-> the index of the first command in the sequence is set in the SPM_CTL
-> register. When the core executes ARM wfi instruction, it triggers the
-> SPM state machine to start executing from that index. The SPM state
-> machine waits until the interrupt occurs and starts executing the rest
-> of the sequence until it hits the end of the sequence. The end of the
-> sequence jumps the core out of its low power mode.
-> 
-> Add support for an idle driver to set up the SPM to place the core in
-> Standby or Standalone power collapse mode when the core is idle.
-> 
-> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora.org>
-> Original tree available at -
-> git://codeaurora.org/quic/la/kernel/msm-3.10.git
-> 
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Kevin Hilman <khilman@linaro.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
-
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-
-I suppose you're going to wait for 4.2 on this? It seems to
-depend on dlezcano's patches in the cpuidle tree and some scm
-patches that have gone through arm-soc.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gVGh1LCAyMDE1LTA0LTA5IGF0IDA5OjE5ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+
+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1dHMudHh0ICAg
+ICAgIHwgICAxNCArKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9u
+cygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cG93ZXJwYy9mc2wvZ3V0cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cG93ZXJwYy9mc2wvZ3V0cy50eHQKPiBpbmRleCA3ZjE1MGI1Li5lNGYwYWMyIDEwMDY0NAo+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ndXRzLnR4
+dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9n
+dXRzLnR4dAo+IEBAIC05LDYgKzksMjAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgCj4gICAt
+IGNvbXBhdGlibGUgOiBTaG91bGQgZGVmaW5lIHRoZSBjb21wYXRpYmxlIGRldmljZSB0eXBlIGZv
+cgo+ICAgICBnbG9iYWwtdXRpbGl0aWVzLgo+ICsgICBQb3NzaWJsZSBjb21wYXRpYmxlczoKPiAr
+CSJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiCj4gKwkiZnNsLHAyMDQxLWRldmljZS1jb25m
+aWciCj4gKwkiZnNsLHAzMDQxLWRldmljZS1jb25maWciCj4gKwkiZnNsLHA0MDgwLWRldmljZS1j
+b25maWciCj4gKwkiZnNsLHA1MDIwLWRldmljZS1jb25maWciCj4gKwkiZnNsLHA1MDQwLWRldmlj
+ZS1jb25maWciCj4gKwkiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4wIgo+ICsJImZzbCxiNDg2
+MC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCxi
+NC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCx0MTA0MC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCx0
+MjA4MC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCx0NDI0MC1kZXZpY2UtY29uZmlnIgoKVGhlcmUn
+cyBubyBuZWVkIHRvIGxpc3QgZXZlcnkgY2hpcCBoZXJlLiAgSnVzdCBsaXN0IHRoZSBvbmVzIHRo
+YXQgYXJlbid0CmNoaXBzLCBwbHVzICJmc2wsPGNoaXA+LWRldmljZS1jb25maWciLgoKQXMgZm9y
+IGZzbCxiNC1kZXZpY2UtY29uZmlnLCBkb2VzIHRoYXQgZXhpc3QgaW4gYW55IGZpbmFsIGR0YiAo
+YXMKb3Bwb3NlZCB0byBiNHNpLXBvc3QuZHRzaSk/ICBUaGUgYjQ0MjAgYW5kIGI0ODYwIGR0c2kg
+ZmlsZXMgYm90aApvdmVyd3JpdGUgdGhhdCBjb21wYXRpYmxlLgoKLVNjb3R0CgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxp
+bmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
+cy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
