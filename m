@@ -1,80 +1,176 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Thu, 9 Apr 2015 17:57:35 +0200
-Message-ID: <20150409175735.342d0111@bbrezillon>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-	<55269C05.2060401@gmail.com>
+From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] mmc: host: Add some quirks to be read from fdt in sdhci-pltm.c
+Date: Thu, 9 Apr 2015 21:41:18 +0530
+Message-ID: <CAOHikRCD6MfqMmBzQR3XLUj8WSL1H+jH2KZrBXSQSRpTXuz1_g@mail.gmail.com>
+References: <1427726768-17233-1-git-send-email-stripathi@apm.com>
+	<1427726768-17233-3-git-send-email-stripathi@apm.com>
+	<CAPDyKFoc0V5BdKCO8v92Y1qHzEPgwxRdYR3cCj8nCyU-s25NuQ@mail.gmail.com>
+	<CAOHikRArf+Fqv0JbQ1jM19zWGj-fBDcPie6apgkydgBLOm=x0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55269C05.2060401@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <info@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOHikRArf+Fqv0JbQ1jM19zWGj-fBDcPie6apgkydgBLOm=x0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On 30 March 2015 at 16:46, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds some quirks support to be read from fdt.
+>
+> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  drivers/mmc/host/sdhci-pltfm.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+> index bef250e..9f6a4b9 100644
+> --- a/drivers/mmc/host/sdhci-pltfm.c
+> +++ b/drivers/mmc/host/sdhci-pltfm.c
+> @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device *pdev)
+>
+>                 if (of_get_property(np, "broken-cd", NULL))
+>                         host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
+> +
+> +               if (of_get_property(np, "delay-after-power", NULL))
+> +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
+> +
+> +               if (of_get_property(np, "no-hispd", NULL))
+> +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+> +
+> +               if (of_get_property(np, "broken-adma", NULL))
+> +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
+> +
+> +               if (of_get_property(np, "broken-dma", NULL))
+> +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
+> +
+> +               if (of_get_property(np, "no-cmd23", NULL))
+> +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
 
-On Thu, 09 Apr 2015 17:34:29 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+Can't at least some of these be distinguished from what sdhci variant
+that is being used? Instead of having them in DT...
 
-> 
-> if you include a bunch of performance measurements, I guess it will help
-> you to get an agreement of replacing the driver instead of reworking it.
+We are using arasan controller in our SOC. So reusing a the existing
+sdhci-of-arasan driver. Due to H/W issues we require this quirks. So
+for us only option left to pass the info is DTS or ACPI table.
 
-Yep, I made some measurements using tcrypt a while ago, I'll provide
-them in the next round.
+Kind regards
+Uffe
 
-> 
-> > Here are the main features brought by this new driver:
-> > - support for armada SoCs (up to 38x) while keeping support for older ones
-> >    (Orion and Kirkwood)
-> 
-> Unfortunately, the list above is missing Dove SoCs which also have a
-> CESA engine with TDMA support. I checked the registers _very_ quickly
-> but it seems that they are compatible with Kirkwood's CESA.
+On Thu, Apr 9, 2015 at 9:40 PM, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+> On 30 March 2015 at 16:46, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> This patch adds some quirks support to be read from fdt.
+>>
+>> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  drivers/mmc/host/sdhci-pltfm.c | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-pltfm.c
+>> b/drivers/mmc/host/sdhci-pltfm.c
+>> index bef250e..9f6a4b9 100644
+>> --- a/drivers/mmc/host/sdhci-pltfm.c
+>> +++ b/drivers/mmc/host/sdhci-pltfm.c
+>> @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device
+>> *pdev)
+>>
+>>                 if (of_get_property(np, "broken-cd", NULL))
+>>                         host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
+>> +
+>> +               if (of_get_property(np, "delay-after-power", NULL))
+>> +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
+>> +
+>> +               if (of_get_property(np, "no-hispd", NULL))
+>> +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+>> +
+>> +               if (of_get_property(np, "broken-adma", NULL))
+>> +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
+>> +
+>> +               if (of_get_property(np, "broken-dma", NULL))
+>> +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
+>> +
+>> +               if (of_get_property(np, "no-cmd23", NULL))
+>> +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+>
+> Can't at least some of these be distinguished from what sdhci variant
+> that is being used? Instead of having them in DT...
+>
+> We are using arasan controller in our SOC. So reusing a the existing
+> sdhci-of-arasan driver. Due to H/W issues we require this quirks. So for us
+> only option left to pass the info is DTS or ACPI table.
+>
+> Kind regards
+> Uffe
+>
+> On Wed, Apr 8, 2015 at 3:10 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> On 30 March 2015 at 16:46, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> > This patch adds some quirks support to be read from fdt.
+>> >
+>> > Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+>> > ---
+>> >  drivers/mmc/host/sdhci-pltfm.c | 15 +++++++++++++++
+>> >  1 file changed, 15 insertions(+)
+>> >
+>> > diff --git a/drivers/mmc/host/sdhci-pltfm.c
+>> > b/drivers/mmc/host/sdhci-pltfm.c
+>> > index bef250e..9f6a4b9 100644
+>> > --- a/drivers/mmc/host/sdhci-pltfm.c
+>> > +++ b/drivers/mmc/host/sdhci-pltfm.c
+>> > @@ -85,6 +85,21 @@ void sdhci_get_of_property(struct platform_device
+>> > *pdev)
+>> >
+>> >                 if (of_get_property(np, "broken-cd", NULL))
+>> >                         host->quirks |=
+>> > SDHCI_QUIRK_BROKEN_CARD_DETECTION;
+>> > +
+>> > +               if (of_get_property(np, "delay-after-power", NULL))
+>> > +                       host->quirks |= SDHCI_QUIRK_DELAY_AFTER_POWER;
+>> > +
+>> > +               if (of_get_property(np, "no-hispd", NULL))
+>> > +                       host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+>> > +
+>> > +               if (of_get_property(np, "broken-adma", NULL))
+>> > +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
+>> > +
+>> > +               if (of_get_property(np, "broken-dma", NULL))
+>> > +                       host->quirks |= SDHCI_QUIRK_BROKEN_DMA;
+>> > +
+>> > +               if (of_get_property(np, "no-cmd23", NULL))
+>> > +                       host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+>>
+>> Can't at least some of these be distinguished from what sdhci variant
+>> that is being used? Instead of having them in DT...
+>>
+>> Kind regards
+>> Uffe
+>>
+>> >
+>> >                 if (of_get_property(np, "no-1-8-v", NULL))
+>> >                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+>> > --
+>> > 1.8.2.1
+>> >
+>> > --
+>> > To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+>> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+>
+> --
+> Thanks,
+> with regards,
+> Suman Tripathi
 
-I checked it too: it should work, but I don't have any board to test
-it :-/.
 
-> 
-> > - DMA mode to offload the CPU in case of intensive crypto usage
-> > - new algorithms: SHA256, DES and 3DES
-> >
-> [...]
-> > Boris Brezillon (2):
-> >    crypto: add new driver for Marvell CESA
-> >    crypto: marvell/CESA: update DT bindings documentation
-> 
-> IMHO, the patch set should be split up in:
-> - new core driver
-> - add support for TDMA on platforms that support it
-> - new cipher algorithms
-> - removal of old mv_cesa
-
-I agree for the 2 steps operation:
-- add new driver code without compiling it
-- remove old code, update Kconfig (add new dependencies) and Makefile
-  entries (compile the code in marvell/ instead of mv_cesa.c)
-
-Is there a good reason for separating the core, TDMA and algorithms
-support in different patches (keep Arnaud's authorship ?) ?
-Anyway, this should be feasible, but I thought the policy was to
-minimize the number of patches when submitting new drivers.
-
-> 
-> I'd love to test on Dove, but time still is very limited. I guess the
-> patches will receive another round anyway, maybe I find some until the
-> final version.
-
-No problem (thanks for the offer).
-
-Best Regards,
-
-Boris
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks,
+with regards,
+Suman Tripathi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
