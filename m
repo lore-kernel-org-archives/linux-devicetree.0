@@ -1,78 +1,82 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/5] PCI: st: Provide support for the sti PCIe
- controller
-Date: Thu, 9 Apr 2015 07:43:30 -0500
-Message-ID: <20150409124330.GG30967@google.com>
-References: <1426515635-9466-1-git-send-email-gabriel.fernandez@linaro.org>
- <1426515635-9466-4-git-send-email-gabriel.fernandez@linaro.org>
- <1426518695.26437.55.camel@x220>
- <55093C12.7070004@st.com>
- <1426674930.2649.50.camel@tiscali.nl>
- <CAG374jCjTVBwiNrWoo=X9hUSb-etzn8G-XSXGO_nNYhiL_9k_A@mail.gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCHv7] media: i2c/adp1653: fix includes
+Date: Thu, 9 Apr 2015 14:43:59 +0200
+Message-ID: <CABxcv=mB=LqO2paGfYq1jCbky=kudT-mS8cJ-pPwdqZYQLeO4A@mail.gmail.com>
+References: <20150403202624.GA4308@amd>
+	<20150403213655.GO20756@valkosipuli.retiisi.org.uk>
+	<20150404074337.GA31064@amd>
+	<20150404102435.GR20756@valkosipuli.retiisi.org.uk>
+	<20150404171116.GA15025@Nokia-N900>
+	<20150404200307.GS20756@valkosipuli.retiisi.org.uk>
+	<20150409074238.GA22603@amd>
+	<20150409091017.GA4526@earth>
+	<20150409112943.GA31173@amd>
+	<20150409121913.GB18713@earth>
+	<20150409123155.GB9563@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAG374jCjTVBwiNrWoo=X9hUSb-etzn8G-XSXGO_nNYhiL_9k_A@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150409123155.GB9563@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Andrew Morton <akpm@osdl.org>, pali.rohar@gmail.com, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, Patrik Bachan <patrikbachan@gmail.com>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, m.chehab@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mchehab@osg.samsung.com, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 11:11:44AM +0200, Gabriel Fernandez wrote:
-> Hi Bjorn,
-> 
-> pci-st.c driver could be modular with modification of pcie-designware
-> core driver. But as Fabrice said  it should be another patchset.
-> 
-> What do you prefer ?
-> 
-> drop all the module related macros as mentioned by Paul ?
-> or
-> keep macros like other vendors do ?
+Hello Pavel,
 
-I don't think this is a big deal either way.  You made it consistent with
-the style of the existing PCI host drivers, which is exactly what you
-should do.
+On Thu, Apr 9, 2015 at 2:31 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> Fix includes according to Sebastian.
+>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>
+> ---
+>
+> On Thu 2015-04-09 14:19:14, Sebastian Reichel wrote:
+>> On Thu, Apr 09, 2015 at 01:29:43PM +0200, Pavel Machek wrote:
+>> > On Thu 2015-04-09 11:10:17, Sebastian Reichel wrote:
+>> > > On Thu, Apr 09, 2015 at 09:42:38AM +0200, Pavel Machek wrote:
+>> > > > [...]
+>> > > > +#include <linux/of_gpio.h>
+>> > > > +#include <linux/gpio.h>
+>> > > > [...]
+>> > >
+>> > > This should probably be
+>> > >
+>> > > #include <linux/of.h>
+>> > > #include <linux/gpio/consumer.h>
+>> >
+>> > And I thought people would only bikesched paint on the
+>> > Documentation. Sakari, feel free to change that, but
+>>
+>> > a) I don't see why Sebastian's version is better
+>>
+>> You neither use <linux/of_gpio.h> nor <linux/gpio.h>.
+>>
+>> Well "include/linux/gpio.h" describes the old gpio API. The new
+>> gpiod gpiod API is described in "include/linux/gpio/consumer.h" and
+>> you use it, so the include should be included ;)
+>>
+>> You don't use anything from "include/linux/of_gpio.h", but it
+>> includes "include/linux/of.h", which you are using. So you should
+>> include <linux/of.h> instead ;)
+>
+> diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp1653.c
+> index d703636..7107ac2 100644
+> --- a/drivers/media/i2c/adp1653.c
+> +++ b/drivers/media/i2c/adp1653.c
+> @@ -35,8 +35,8 @@
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/slab.h>
+> -#include <linux/of_gpio.h>
+> -#include <linux/gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <media/adp1653.h>
+>  #include <media/v4l2-device.h>
+>
 
-If somebody wants to do the work of making them all modular, or leaving
-them non-modular and removing all the MODULE_*() annotations, that can be
-done later.
+Please re-spin your previous patch and submit it properly.
 
-> On 18 March 2015 at 11:35, Paul Bolle <pebolle@tiscali.nl> wrote:
-> > Hi Fabrice,
-> >
-> > Fabrice Gasnier schreef op wo 18-03-2015 om 09:49 [+0100]:
-> >> On 03/16/2015 04:11 PM, Paul Bolle wrote:
-> >> >> +config PCI_ST
-> >> >> +  bool "ST PCIe controller"
-> >> > You add a bool Kconfig symbol. A week or two ago I saw some patches fly
-> >> > by that - I think - allowed PCIe controllers to be built modular.
-> >>
-> >> Thanks for your review.
-> >>
-> >> Are you talking about "PCI: Export symbols of PCI functions" patch, that
-> >> is part of a series
-> >> named "pci: iproc: Add Broadcom iProc PCIe support" ?
-> >
-> > Yes, that is the series I was thinking about. (I made you search lkml,
-> > and that was a bit rude. But you found the patch anyhow.)
-> >
-> >> This controller doesn't look like to be based on pcie-designware core
-> >> driver.
-> >> Other vendors that are using "pcie-designware" core driver are also make
-> >> it bool.
-> >> The current core driver doesn't support module loading/unloading as I
-> >> see it.
-> >> If this is required, I also think this should be part of another patchset.
-> >>
-> >> What do you think ?
-> >
-> > I wouldn't know whether your driver might work as a loadable module, but
-> > other people reading this surely will. But if it can't work as a module
-> > you should drop all the module related macros etc. I spotted. Because
-> > then they serve no purpose.
-> >
-> >
-> > Paul Bolle
-> >
+Best regards,
+Javier
