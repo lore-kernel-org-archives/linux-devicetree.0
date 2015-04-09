@@ -1,96 +1,83 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] RFC: let gpiod_get_optional et all return NULL when
- GPIOLIB is not enabled
-Date: Thu, 9 Apr 2015 11:20:55 +0900
-Message-ID: <CAAVeFu+0bWSAUSaDGTUmPyj9JxEJn4yxF_hzab4CHp8YV1MuoA@mail.gmail.com>
-References: <1423731809-4800-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CACRpkdb6KcZx3WfTqUKemhQ0_OsqxBGQb_P5cXXZvgc3riakdA@mail.gmail.com>
- <20150306085957.GC10717@pengutronix.de> <CACRpkdYq70V8SG4XOPBCGWs__J4ehknZSucpO5OdXpMDj8GPKA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYq70V8SG4XOPBCGWs__J4ehknZSucpO5OdXpMDj8GPKA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Alexandre Courbot <acourbot@nvidia.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+From: Dan Streetman <ddstreet-EkmVulN54Sk@public.gmane.org>
+Subject: [PATCH] devicetree: add ibm-nx-powernv details
+Date: Wed,  8 Apr 2015 23:05:56 -0400
+Message-ID: <1428548756-16485-1-git-send-email-ddstreet@ieee.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Streetman <ddstreet-EkmVulN54Sk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2015 at 5:59 PM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> Hello,
->
-> On Fri, Mar 06, 2015 at 09:26:26AM +0100, Linus Walleij wrote:
->> On Thu, Feb 12, 2015 at 10:03 AM, Uwe Kleine-K=C3=B6nig
->> <u.kleine-koenig@pengutronix.de> wrote:
->>
->> > I wonder if gpiod_get_optional et all should be changed to return =
-NULL
->> > instead.
->>
->> This is actually the norm in most subsystems returning cookie
->> pointers, clk, regulator, pinctrl... a NULL pointer is a functional
->> noop. But normally then NULL is returned from all stubs, not
->> just optional.
->>
->> Alexandre, what do you say?
->>
->> > The obvious downside is that if the device tree specifies a
->> > reset-gpio and the kernel just fails to use it because there is so=
-me
->> > code missing, this should better be an error. (The adau1977 code h=
-as
->> > this problem already know, but when changing devm_gpiod_get_option=
-al all
->> > callers are affected.)
->>
->> Device Tree-specific problems is not something we design
->> subsystems for, we try to just accomodate them. I'm not
->> sure I fully understand what you mean here.
-> Consider you have a device that has:
->
->         enable-gpio =3D <&gpio3 12 0>;
->
-> and you do in your driver:
->
->         enablegpio =3D devm_gpiod_get_optional(... "enable" ...);
->
-> . If GPIOLIB is off, enablegpio gets assigned NULL and the driver
-> continues happily without enabling the device which most likely is a
-> bug.
->
-> So IMHO the logic in devm_gpiod_get_optional for the GPIOLIB=3Dn case
-> should be:
->
->         if (device_has_gpio())
->                 return ERR_PTR(-ENOSYS);
->         else
->                 return NULL;
->
-> . device_has_gpio should use similar logic like gpiod_get_index to ch=
-eck
-> if there is a gpio. If this is considered to be too complicated for a
-> disabled subsystem, returning -ENOSYS unconditionally is better than
-> NULL.
+Add a devicetree description for property nodes for the NX Coprocessor
+in an IBM PowerPC processor.
 
-I should have replied one month ago, but if gpiolib is disabled, how
-can we use gpiolib-like logic to check the existence of a GPIO?
+Signed-off-by: Dan Streetman <ddstreet-EkmVulN54Sk@public.gmane.org>
+---
 
-Having GPIO disabled means there is no GPIO support, including the
-ability to look for GPIOs. -ENOSYS is a well-documented error-code
-which meaning also applies to the gpio_*_optional functions (we don't
-have support for the operation you requested). If a driver or
-architecture really, really needs GPIO support they can require or
-depend on CONFIG_GPIOLIB, and the problem goes away. If they can work
-with and without gpiolib, then they should check for -ENOSYS when they
-request GPIOs and behave accordingly.
+Is this the right location/naming for this file?
+And did I get the content format right?
 
-Moving the interpretation of what the absence of gpiolib means down to
-the GPIO functions themselves is actually what might lead consumers to
-not know the result of their request. For this reason I would say that
--ENOSYS is appropriate here.
+Should this file be called "ibm-nx-opal.txt" instead of "ibm-nx-powernv.txt",
+since it's the Opal firmware that provides the nodes (although they are
+used by the PowerNV platform kernel)?
+
+The 842 properties are used by the PowerNV 842 driver patch set I
+sent out yesterday, and which I'll send a v2 of soon.
+
+.../devicetree/bindings/crypto/ibm-nx-powernv.txt  | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/ibm-nx-powernv.txt
+
+diff --git a/Documentation/devicetree/bindings/crypto/ibm-nx-powernv.txt b/Documentation/devicetree/bindings/crypto/ibm-nx-powernv.txt
+new file mode 100644
+index 0000000..e031636
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/ibm-nx-powernv.txt
+@@ -0,0 +1,40 @@
++Device-tree bindings for PowerNV platform IBM Nest (NX) Coprocessor
++-------------------------------------------------------------------
++
++Required properties:
++
++- compatible: must contain "ibm,power-nx"; may also contain the processor
++              version, e.g. "ibm,power8-nx"
++
++Optional properties:
++
++- ibm,842-coprocessor-type: CT of this NX 842 coprocessor
++- ibm,842-coprocessor-instance: CI of this NX 842 coprocessor
++
++If present, the NX-842 Coprocessor Type (CT) and Coprocessor Instance (CI)
++can be used in an ICSWX instruction to communicate with the NX-842
++coprocessor, to perform hardware compression/decompression.
++
++Additionally, there must be an "ibm,chip-id" node at some point in the
++direct devicetree hierarchy leading to the nx node; typically the nx
++node's parent is an xscom node, which contains the "ibm,chip-id" property.
++
++Example:
++
++nx@2010000 {
++	compatible = "ibm,power-nx", "ibm,power8-nx";
++	ibm,842-coprocessor-type = <0x3>;
++	ibm,842-coprocessor-instance = <0x1>;
++	name = "nx";
++	reg = <0x2010000 0x4000>;
++	linux,phandle = <0x85>;
++	phandle = <0x85>;
++};
++
++with a parent of:
++
++xscom@3fc0000000000 {
++	ibm,chip-id = <0x0>;
++	nx@2010000;
++	...
++};
+-- 
+2.1.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
