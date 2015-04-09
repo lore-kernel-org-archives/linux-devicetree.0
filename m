@@ -1,66 +1,31 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v7 4/9] ARM: STi: DT: STiH407: Add Device Tree node for the LPC
-Date: Thu,  9 Apr 2015 15:47:29 +0100
-Message-ID: <1428590854-14095-5-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v7 3/9] ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
+Date: Thu,  9 Apr 2015 15:47:28 +0100
+Message-ID: <1428590854-14095-4-git-send-email-lee.jones@linaro.org>
 References: <1428590854-14095-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428590854-14095-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428590854-14095-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, a.zummo@towertech.it, david.paris@st.com
 List-Id: devicetree@vger.kernel.org
 
-On current ST platforms the LPC controls a number of functions.  This
-patch enables support for the LPC Watchdog and LPC RTC devices on LPC1
-and LPC2 respectively.
-
-Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index c06a546..2b2315d 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -7,6 +7,7 @@
-  * publishhed by the Free Software Foundation.
-  */
- #include "stih407-pinctrl.dtsi"
-+#include <dt-bindings/mfd/st-lpc.h>
- #include <dt-bindings/reset-controller/stih407-resets.h>
- / {
- 	#address-cells = <1>;
-@@ -336,5 +337,24 @@
- 				resets = <&softreset STIH407_MIPHY2_SOFTRESET>;
- 			};
- 		};
-+
-+		/* Watchdog and Real-Time Clock */
-+		lpc@8787000 {
-+			compatible = "st,stih407-lpc";
-+			reg = <0x8787000 0x1000>;
-+			interrupts = <GIC_SPI 129 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clk_s_d3_flexgen CLK_LPC_0>;
-+			timeout-sec = <120>;
-+			st,syscfg = <&syscfg_core>;
-+			st,lpc-mode = <ST_LPC_MODE_WDT>;
-+		};
-+
-+		lpc@8788000 {
-+			compatible = "st,stih407-lpc";
-+			reg = <0x8788000 0x1000>;
-+			interrupts = <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clk_s_d3_flexgen CLK_LPC_1>;
-+			st,lpc-mode = <ST_LPC_MODE_RTC>;
-+		};
- 	};
- };
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 138e68a..136b8da 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -490,6 +490,7 @@ CONFIG_RTC_DRV_MAX8907=y
+ CONFIG_RTC_DRV_MAX77686=y
+ CONFIG_RTC_DRV_RS5C372=m
+ CONFIG_RTC_DRV_PALMAS=y
++CONFIG_RTC_DRV_ST_LPC=y
+ CONFIG_RTC_DRV_TWL4030=y
+ CONFIG_RTC_DRV_TPS6586X=y
+ CONFIG_RTC_DRV_TPS65910=y
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
