@@ -1,111 +1,63 @@
-From: <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Add i2c support
-Date: Thu, 09 Apr 2015 15:03:40 +0200
-Message-ID: <d8d27c22eb78aed693a977b88ebcc327@imap.cosmopool.net>
-References: <1428515100-1496-1-git-send-email-harald@ccbib.org> <1158701263.68321.1428531175931.JavaMail.open-xchange@oxbaltgw03.schlund.de> <3f0efa88b69ea2e8eb22909b6fbe6f91@imap.cosmopool.net> <5526444A.3060805@i2se.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v6 10/15] serial: stm32-usart: Add STM32 USART Driver
+Date: Thu, 9 Apr 2015 16:04:39 +0300
+Message-ID: <552678E7.4040107@mentor.com>
+References: <1428424234-28572-1-git-send-email-mcoquelin.stm32@gmail.com> <1428424234-28572-11-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5526444A.3060805-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio.Estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1428424234-28572-11-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, stefan@agner.ch, pmeerw@pmeerw.net, pebolle@tiscali.nl, peter@hurleysoftware.com, andy.shevchenko@gmail.com, cw00.choi@samsung.com, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, joe@perches.com
+Cc: Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.orglinux-a
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan!
+Hi Maxime,
 
-On Thu, 09 Apr 2015 11:20:10 +0200, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-wrote:
-> Hi Harald,
+On 07.04.2015 19:30, Maxime Coquelin wrote:
+> This drivers adds support to the STM32 USART controller, which is a
+> standard serial driver.
 > 
->>>> This patch provides the necessary devicetree code.
->>>> Tested with MOD-LCD1x9 from Olimex.
->>>>
->>>> This patch is based on work by Fadil Berisha with his permission.
->> However
->>>> all bugs are mine.
->>>>
->>>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
->>>> ---
->>>> arch/arm/boot/dts/imx23-olinuxino.dts | 6 +++++
->>>> arch/arm/boot/dts/imx23.dtsi | 40 ++++++++++++++++++++++++++++++++-
->>>> 2 files changed, 45 insertions(+), 1 deletion(-)
->>>>
->>>> [...]
->>>> --- a/arch/arm/boot/dts/imx23.dtsi
->>>> +++ b/arch/arm/boot/dts/imx23.dtsi
->>>> @@ -308,6 +308,39 @@
->>>> fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>>> fsl,pull-up = <MXS_PULL_ENABLE>;
->>>> };
->>>> +
->>>> + i2c_pins_a: i2c@0 {
->>>> + reg = <0>;
->>>> + fsl,pinmux-ids = <
->>>> + MX23_PAD_I2C_SCL__I2C_SCL
->>>> + MX23_PAD_I2C_SDA__I2C_SDA
->>>> + >;
->>>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
->>>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>>> + fsl,pull-up = <MXS_PULL_ENABLE>;
->>>> + };
->>>> +
->>>> + i2c_pins_b: i2c@1 {
->>>> + reg = <1>;
->>>> + fsl,pinmux-ids = <
->>>> + MX23_PAD_LCD_ENABLE__I2C_SCL
->>>> + MX23_PAD_LCD_HSYNC__I2C_SDA
->>>> + >;
->>>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
->>>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>>> + fsl,pull-up = <MXS_PULL_ENABLE>;
->>>> + };
->>>> +
->>>> + i2c_pins_c: i2c@2 {
->>>> + reg = <2>;
->>>> + fsl,pinmux-ids = <
->>>> + MX23_PAD_SSP1_DATA1__I2C_SCL
->>>> + MX23_PAD_SSP1_DATA2__I2C_SDA
->>>> + >;
->>>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
->>>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
->>>> + fsl,pull-up = <MXS_PULL_ENABLE>;
->>>> + };
->>> Please add only i2c_pins_b because this pin muxing is the only used
-one.
->> I disagree: Having all possible i2c pin groups documented in devicetree
->> is
->> a good thing. Also imx23.dtsi is more general then olinuxino - somebody
->> might produce a imx23 based board where one of the other pin groups
-makes
->> more sense to use. Well, even on olinuxino somebody might use
-i2c_pins_a
->> if they don't need an UART, but use an LCD.
-> 
-> Sure. But this 2 additional muxes have nothing to do with adding i2c
-> support to olinuxino and should be a separate patch. In case of a revert
-> of this patch the other i.MX23 boards are also affected. So i think it
-> should be a separate patch.
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> ---
+>  drivers/tty/serial/Kconfig       |  17 +
+>  drivers/tty/serial/Makefile      |   1 +
+>  drivers/tty/serial/stm32-usart.c | 735 +++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/serial_core.h |   3 +
+>  4 files changed, 756 insertions(+)
+>  create mode 100644 drivers/tty/serial/stm32-usart.c
 
-If it is prefered, I will split the changes to imx23.dtsi and
-imx23-olinuxino.dts into two patches.
+[snip]
 
-> Btw i read that Shawn only want used muxes [1].
-> 
-> [1] -
->
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-August/115779.html
+> +static void stm32_console_write(struct console *co, const char *s, unsigned cnt)
+> +{
+> +	struct uart_port *port = &stm32_ports[co->index].port;
+> +	unsigned long flags;
+> +	u32 old_cr1, new_cr1;
+> +	int locked = 1;
+> +
+> +	if (oops_in_progress) {
+> +		locked = spin_trylock_irqsave(&port->lock, flags);
+> +	} else {
+> +		locked = 1;
 
-If that is an issue, then I'll just test all three pin groups on my
-olinuxino
-board. After all it would be really awkward to have only one pin group and
-that
-one is labeled "i2c_pins_b" ...
+locked = 1 is done from the declaration.
 
-Thanks,
-Harald
+Also do you want to add "if (port->sysrq) locked = 0;" check?
+
+> +		spin_lock_irqsave(&port->lock, flags);
+> +	}
+> +
+
+[snip]
+
+Everything else is fine from point of view.
+
+Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
