@@ -1,69 +1,309 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v18 01/11] ARM: qcom: Add Subsystem Power Manager (SPM)
- driver
-Date: Thu, 9 Apr 2015 11:04:49 -0600
-Message-ID: <20150409170449.GC943@linaro.org>
-References: <1427315136-44321-1-git-send-email-lina.iyer@linaro.org>
- <1427315136-44321-2-git-send-email-lina.iyer@linaro.org>
- <20150409165841.GA30503@codeaurora.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] regulator: axp20x: prepare support
+ for multiple AXP chip families
+Date: Thu, 9 Apr 2015 10:23:41 -0700
+Message-ID: <CAGb2v66zbATMHY5SgZLs3RCoRETroSh5nC3h4TXRLm5UAbythw@mail.gmail.com>
+References: <1427868203-7486-1-git-send-email-wens@csie.org> <1427868203-7486-4-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150409165841.GA30503@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, agross@codeaurora.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNXLTKUQKGQEZYVMGFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1427868203-7486-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 09 2015 at 10:58 -0600, Stephen Boyd wrote:
->On 03/25, Lina Iyer wrote:
->> SPM is a hardware block that controls the peripheral logic surrounding
->> the application cores (cpu/l$). When the core executes WFI instruction,
->> the SPM takes over the putting the core in low power state as
->> configured. The wake up for the SPM is an interrupt at the GIC, which
->> then completes the rest of low power mode sequence and brings the core
->> out of low power mode.
->>
->> The SPM has a set of control registers that configure the SPMs
->> individually based on the type of the core and the runtime conditions.
->> SPM is a finite state machine block to which a sequence is provided and
->> it interprets the bytes and executes them in sequence. Each low power
->> mode that the core can enter into is provided to the SPM as a sequence.
->>
->> Configure the SPM to set the core (cpu or L2) into its low power mode,
->> the index of the first command in the sequence is set in the SPM_CTL
->> register. When the core executes ARM wfi instruction, it triggers the
->> SPM state machine to start executing from that index. The SPM state
->> machine waits until the interrupt occurs and starts executing the rest
->> of the sequence until it hits the end of the sequence. The end of the
->> sequence jumps the core out of its low power mode.
->>
->> Add support for an idle driver to set up the SPM to place the core in
->> Standby or Standalone power collapse mode when the core is idle.
->>
->> Based on work by: Mahesh Sivasubramanian <msivasub@codeaurora.org>,
->> Ai Li <ali@codeaurora.org>, Praveen Chidambaram <pchidamb@codeaurora.org>
->> Original tree available at -
->> git://codeaurora.org/quic/la/kernel/msm-3.10.git
->>
->> Cc: Stephen Boyd <sboyd@codeaurora.org>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Kevin Hilman <khilman@linaro.org>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->> ---
->
->Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
->
-Thank you.
+Hi Mark,
 
->I suppose you're going to wait for 4.2 on this? It seems to
->depend on dlezcano's patches in the cpuidle tree and some scm
->patches that have gone through arm-soc.
+On Tue, Mar 31, 2015 at 11:03 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >
-Just this morning, I sent out a mail to Kumar, Olof and Arnd. Lets see
-if this can be pulled in before 4.2.
->-- 
->Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->a Linux Foundation Collaborative Project
+> Rework the AXP20X_ macros and probe function to support the several chip
+> families, so that each family can define it's own set of regulators.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> [wens-jdAy2FN1RRM@public.gmane.org: Support different DC-DC work frequency ranges]
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Are you OK with Lee taking the 2 regulator patches through his tree?
+I realize I'm asking this way too late for this merge window.
+
+Regards,
+ChenYu
+
+> ---
+>  drivers/regulator/axp20x-regulator.c | 143 +++++++++++++++++++++++------------
+>  1 file changed, 94 insertions(+), 49 deletions(-)
+>
+> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+> index e4331f5e5d7d..50ae0b5f2c0c 100644
+> --- a/drivers/regulator/axp20x-regulator.c
+> +++ b/drivers/regulator/axp20x-regulator.c
+> @@ -32,15 +32,15 @@
+>
+>  #define AXP20X_FREQ_DCDC_MASK          0x0f
+>
+> -#define AXP20X_DESC_IO(_id, _match, _supply, _min, _max, _step, _vreg, _vmask, \
+> -                      _ereg, _emask, _enable_val, _disable_val)                \
+> -       [AXP20X_##_id] = {                                                      \
+> +#define AXP_DESC_IO(_family, _id, _match, _supply, _min, _max, _step, _vreg,   \
+> +                   _vmask, _ereg, _emask, _enable_val, _disable_val)           \
+> +       [_family##_##_id] = {                                                   \
+>                 .name           = #_id,                                         \
+>                 .supply_name    = (_supply),                                    \
+>                 .of_match       = of_match_ptr(_match),                         \
+>                 .regulators_node = of_match_ptr("regulators"),                  \
+>                 .type           = REGULATOR_VOLTAGE,                            \
+> -               .id             = AXP20X_##_id,                                 \
+> +               .id             = _family##_##_id,                              \
+>                 .n_voltages     = (((_max) - (_min)) / (_step) + 1),            \
+>                 .owner          = THIS_MODULE,                                  \
+>                 .min_uV         = (_min) * 1000,                                \
+> @@ -54,15 +54,15 @@
+>                 .ops            = &axp20x_ops,                                  \
+>         }
+>
+> -#define AXP20X_DESC(_id, _match, _supply, _min, _max, _step, _vreg, _vmask,    \
+> -                   _ereg, _emask)                                              \
+> -       [AXP20X_##_id] = {                                                      \
+> +#define AXP_DESC(_family, _id, _match, _supply, _min, _max, _step, _vreg,      \
+> +                _vmask, _ereg, _emask)                                         \
+> +       [_family##_##_id] = {                                                   \
+>                 .name           = #_id,                                         \
+>                 .supply_name    = (_supply),                                    \
+>                 .of_match       = of_match_ptr(_match),                         \
+>                 .regulators_node = of_match_ptr("regulators"),                  \
+>                 .type           = REGULATOR_VOLTAGE,                            \
+> -               .id             = AXP20X_##_id,                                 \
+> +               .id             = _family##_##_id,                              \
+>                 .n_voltages     = (((_max) - (_min)) / (_step) + 1),            \
+>                 .owner          = THIS_MODULE,                                  \
+>                 .min_uV         = (_min) * 1000,                                \
+> @@ -74,29 +74,29 @@
+>                 .ops            = &axp20x_ops,                                  \
+>         }
+>
+> -#define AXP20X_DESC_FIXED(_id, _match, _supply, _volt)                         \
+> -       [AXP20X_##_id] = {                                                      \
+> +#define AXP_DESC_FIXED(_family, _id, _match, _supply, _volt)                   \
+> +       [_family##_##_id] = {                                                   \
+>                 .name           = #_id,                                         \
+>                 .supply_name    = (_supply),                                    \
+>                 .of_match       = of_match_ptr(_match),                         \
+>                 .regulators_node = of_match_ptr("regulators"),                  \
+>                 .type           = REGULATOR_VOLTAGE,                            \
+> -               .id             = AXP20X_##_id,                                 \
+> +               .id             = _family##_##_id,                              \
+>                 .n_voltages     = 1,                                            \
+>                 .owner          = THIS_MODULE,                                  \
+>                 .min_uV         = (_volt) * 1000,                               \
+>                 .ops            = &axp20x_ops_fixed                             \
+>         }
+>
+> -#define AXP20X_DESC_TABLE(_id, _match, _supply, _table, _vreg, _vmask, _ereg,  \
+> -                         _emask)                                               \
+> -       [AXP20X_##_id] = {                                                      \
+> +#define AXP_DESC_TABLE(_family, _id, _match, _supply, _table, _vreg, _vmask,   \
+> +                      _ereg, _emask)                                           \
+> +       [_family##_##_id] = {                                                   \
+>                 .name           = #_id,                                         \
+>                 .supply_name    = (_supply),                                    \
+>                 .of_match       = of_match_ptr(_match),                         \
+>                 .regulators_node = of_match_ptr("regulators"),                  \
+>                 .type           = REGULATOR_VOLTAGE,                            \
+> -               .id             = AXP20X_##_id,                                 \
+> +               .id             = _family##_##_id,                              \
+>                 .n_voltages     = ARRAY_SIZE(_table),                           \
+>                 .owner          = THIS_MODULE,                                  \
+>                 .vsel_reg       = (_vreg),                                      \
+> @@ -136,37 +136,57 @@ static struct regulator_ops axp20x_ops = {
+>  };
+>
+>  static const struct regulator_desc axp20x_regulators[] = {
+> -       AXP20X_DESC(DCDC2, "dcdc2", "vin2", 700, 2275, 25, AXP20X_DCDC2_V_OUT,
+> -                   0x3f, AXP20X_PWR_OUT_CTRL, 0x10),
+> -       AXP20X_DESC(DCDC3, "dcdc3", "vin3", 700, 3500, 25, AXP20X_DCDC3_V_OUT,
+> -                   0x7f, AXP20X_PWR_OUT_CTRL, 0x02),
+> -       AXP20X_DESC_FIXED(LDO1, "ldo1", "acin", 1300),
+> -       AXP20X_DESC(LDO2, "ldo2", "ldo24in", 1800, 3300, 100,
+> -                   AXP20X_LDO24_V_OUT, 0xf0, AXP20X_PWR_OUT_CTRL, 0x04),
+> -       AXP20X_DESC(LDO3, "ldo3", "ldo3in", 700, 3500, 25, AXP20X_LDO3_V_OUT,
+> -                   0x7f, AXP20X_PWR_OUT_CTRL, 0x40),
+> -       AXP20X_DESC_TABLE(LDO4, "ldo4", "ldo24in", axp20x_ldo4_data,
+> -                         AXP20X_LDO24_V_OUT, 0x0f, AXP20X_PWR_OUT_CTRL, 0x08),
+> -       AXP20X_DESC_IO(LDO5, "ldo5", "ldo5in", 1800, 3300, 100,
+> -                      AXP20X_LDO5_V_OUT, 0xf0, AXP20X_GPIO0_CTRL, 0x07,
+> -                      AXP20X_IO_ENABLED, AXP20X_IO_DISABLED),
+> +       AXP_DESC(AXP20X, DCDC2, "dcdc2", "vin2", 700, 2275, 25,
+> +                AXP20X_DCDC2_V_OUT, 0x3f, AXP20X_PWR_OUT_CTRL, 0x10),
+> +       AXP_DESC(AXP20X, DCDC3, "dcdc3", "vin3", 700, 3500, 25,
+> +                AXP20X_DCDC3_V_OUT, 0x7f, AXP20X_PWR_OUT_CTRL, 0x02),
+> +       AXP_DESC_FIXED(AXP20X, LDO1, "ldo1", "acin", 1300),
+> +       AXP_DESC(AXP20X, LDO2, "ldo2", "ldo24in", 1800, 3300, 100,
+> +                AXP20X_LDO24_V_OUT, 0xf0, AXP20X_PWR_OUT_CTRL, 0x04),
+> +       AXP_DESC(AXP20X, LDO3, "ldo3", "ldo3in", 700, 3500, 25,
+> +                AXP20X_LDO3_V_OUT, 0x7f, AXP20X_PWR_OUT_CTRL, 0x40),
+> +       AXP_DESC_TABLE(AXP20X, LDO4, "ldo4", "ldo24in", axp20x_ldo4_data,
+> +                      AXP20X_LDO24_V_OUT, 0x0f, AXP20X_PWR_OUT_CTRL, 0x08),
+> +       AXP_DESC_IO(AXP20X, LDO5, "ldo5", "ldo5in", 1800, 3300, 100,
+> +                   AXP20X_LDO5_V_OUT, 0xf0, AXP20X_GPIO0_CTRL, 0x07,
+> +                   AXP20X_IO_ENABLED, AXP20X_IO_DISABLED),
+>  };
+>
+>  static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+>  {
+>         struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+> +       u32 min, max, def, step;
+> +
+> +       switch (axp20x->variant) {
+> +       case AXP202_ID:
+> +       case AXP209_ID:
+> +               min = 750;
+> +               max = 1875;
+> +               def = 1500;
+> +               step = 75;
+> +               break;
+> +       default:
+> +               dev_err(&pdev->dev,
+> +                       "Setting DCDC frequency for unsupported AXP variant\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (dcdcfreq == 0)
+> +               dcdcfreq = def;
+>
+> -       if (dcdcfreq < 750) {
+> -               dcdcfreq = 750;
+> -               dev_warn(&pdev->dev, "DCDC frequency too low. Set to 750kHz\n");
+> +       if (dcdcfreq < min) {
+> +               dcdcfreq = min;
+> +               dev_warn(&pdev->dev, "DCDC frequency too low. Set to %ukHz\n",
+> +                        min);
+>         }
+>
+> -       if (dcdcfreq > 1875) {
+> -               dcdcfreq = 1875;
+> -               dev_warn(&pdev->dev, "DCDC frequency too high. Set to 1875kHz\n");
+> +       if (dcdcfreq > max) {
+> +               dcdcfreq = max;
+> +               dev_warn(&pdev->dev, "DCDC frequency too high. Set to %ukHz\n",
+> +                        max);
+>         }
+>
+> -       dcdcfreq = (dcdcfreq - 750) / 75;
+> +       dcdcfreq = (dcdcfreq - min) / step;
+>
+>         return regmap_update_bits(axp20x->regmap, AXP20X_DCDC_FREQ,
+>                                   AXP20X_FREQ_DCDC_MASK, dcdcfreq);
+> @@ -176,7 +196,7 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
+>  {
+>         struct device_node *np, *regulators;
+>         int ret;
+> -       u32 dcdcfreq;
+> +       u32 dcdcfreq = 0;
+>
+>         np = of_node_get(pdev->dev.parent->of_node);
+>         if (!np)
+> @@ -186,7 +206,6 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
+>         if (!regulators) {
+>                 dev_warn(&pdev->dev, "regulators node not found\n");
+>         } else {
+> -               dcdcfreq = 1500;
+>                 of_property_read_u32(regulators, "x-powers,dcdc-freq", &dcdcfreq);
+>                 ret = axp20x_set_dcdc_freq(pdev, dcdcfreq);
+>                 if (ret < 0) {
+> @@ -202,15 +221,27 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
+>
+>  static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 workmode)
+>  {
+> -       unsigned int mask = AXP20X_WORKMODE_DCDC2_MASK;
+> +       struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
+> +       unsigned int mask;
+>
+> -       if ((id != AXP20X_DCDC2) && (id != AXP20X_DCDC3))
+> -               return -EINVAL;
+> +       switch (axp20x->variant) {
+> +       case AXP202_ID:
+> +       case AXP209_ID:
+> +               if ((id != AXP20X_DCDC2) && (id != AXP20X_DCDC3))
+> +                       return -EINVAL;
+> +
+> +               mask = AXP20X_WORKMODE_DCDC2_MASK;
+> +               if (id == AXP20X_DCDC3)
+> +                       mask = AXP20X_WORKMODE_DCDC3_MASK;
+>
+> -       if (id == AXP20X_DCDC3)
+> -               mask = AXP20X_WORKMODE_DCDC3_MASK;
+> +               workmode <<= ffs(mask) - 1;
+> +               break;
+>
+> -       workmode <<= ffs(mask) - 1;
+> +       default:
+> +               /* should not happen */
+> +               WARN_ON(1);
+> +               return -EINVAL;
+> +       }
+>
+>         return regmap_update_bits(rdev->regmap, AXP20X_DCDC_MODE, mask, workmode);
+>  }
+> @@ -219,22 +250,36 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>  {
+>         struct regulator_dev *rdev;
+>         struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+> +       const struct regulator_desc *regulators;
+>         struct regulator_config config = {
+>                 .dev = pdev->dev.parent,
+>                 .regmap = axp20x->regmap,
+> +               .driver_data = axp20x,
+>         };
+> -       int ret, i;
+> +       int ret, i, nregulators;
+>         u32 workmode;
+>
+> +       switch (axp20x->variant) {
+> +       case AXP202_ID:
+> +       case AXP209_ID:
+> +               regulators = axp20x_regulators;
+> +               nregulators = AXP20X_REG_ID_MAX;
+> +               break;
+> +       default:
+> +               dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+> +                       axp20x->variant);
+> +               return -EINVAL;
+> +       }
+> +
+>         /* This only sets the dcdc freq. Ignore any errors */
+>         axp20x_regulator_parse_dt(pdev);
+>
+> -       for (i = 0; i < AXP20X_REG_ID_MAX; i++) {
+> -               rdev = devm_regulator_register(&pdev->dev, &axp20x_regulators[i],
+> +       for (i = 0; i < nregulators; i++) {
+> +               rdev = devm_regulator_register(&pdev->dev, &regulators[i],
+>                                                &config);
+>                 if (IS_ERR(rdev)) {
+>                         dev_err(&pdev->dev, "Failed to register %s\n",
+> -                               axp20x_regulators[i].name);
+> +                               regulators[i].name);
+>
+>                         return PTR_ERR(rdev);
+>                 }
+> @@ -245,7 +290,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                 if (!ret) {
+>                         if (axp20x_set_dcdc_workmode(rdev, i, workmode))
+>                                 dev_err(&pdev->dev, "Failed to set workmode on %s\n",
+> -                                       axp20x_regulators[i].name);
+> +                                       rdev->desc->name);
+>                 }
+>         }
+>
+> --
+> 2.1.4
+>
