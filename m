@@ -1,173 +1,123 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs related
- properties
-Date: Thu, 09 Apr 2015 16:39:35 +0200
-Message-ID: <55268F27.70409@samsung.com>
-References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
- <552545FF.2030208@samsung.com> <552628E4.50003@samsung.com>
- <55263247.5070009@linux.intel.com> <55264E6D.40801@samsung.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 04/10] eeprom: Add a simple EEPROM framework for
+ eeprom consumers
+Date: Thu, 9 Apr 2015 07:45:22 -0700
+Message-ID: <20150409144522.GB9663@codeaurora.org>
+References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150407184533.GA10278@codeaurora.org>
+ <55243982.7020907@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <55264E6D.40801@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55243982.7020907@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester, Sakari,
+On 04/07, Srinivas Kandagatla wrote:
+> On 07/04/15 19:45, Stephen Boyd wrote:
+> >On 03/30, Srinivas Kandagatla wrote:
+> >
+> >Do you have an overview of how to use these APIs? Maybe some
+> >Documentation/ is in order? I'm mostly interested in how the
+> >blocks array is supposed to work and how this hooks up to drivers
+> >that are using DT.
+> 
+> Only doc ATM is function level kernel doc in c file.
+> May be I can explain you for now and I will try to add some
+> documentation with some usage examples in next version.
 
-On 04/09/2015 12:03 PM, Sylwester Nawrocki wrote:
-> On 09/04/15 10:03, Sakari Ailus wrote:
->> Jacek Anaszewski wrote:
->>> On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
->>>> On 08/04/15 16:31, Jacek Anaszewski wrote:
->>>>> Properties defining maximum values for LED currents and timeout should
->>>>> be mandatory to avoid the risk of hardware damage. This patch fixes
->>>>> the issue.
->
->>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>>> @@ -10,6 +10,17 @@ can influence the way of the LED device
->>>>> initialization, the LED components
->>>>>    have to be tightly coupled with the LED device binding. They are
->>>>> represented
->>>>>    by child nodes of the parent LED device binding.
->>>>>
->>>>> +Required properties for child nodes:
->>>>
->>>> These properties are mandatory only for LEDs with Flash/Torch
->>>> capabilities, aren't they?
->>>
->>> flash-max-microamp and flash-timeout-us properties description mention
->>> that they refer to flash LEDs. Perhaps this should be made indeed more
->>> explicit.
->>
->> Sounds good to me, after all these shouldn't be defined for devices they
->> don't make sense for. Alternatively, you could add another section for
->> "required properties for flash LEDs".
->
-> Sounds good to me.
->
->>>> Requiring those properties for all led nodes would make all
->>>> current dtses not compliant with the DT binding specification AFAICT.
->>
->> Some drivers also define these explicitly as optional, the behaviour for
->> those obviously can't be changed.  This should apply to new drivers
->> only, and I think documenting the matter in this file would be the best
->> way to do that.
->
-> Unfortunately this file is not a proper place for information regarding
-> Linux drivers.
-> I can't see any drivers in -next using those DT properties. Could you
-> point to any examples?
-> Perhaps we should stay with the below properties specified as optional
-> in general and add a note they can be mandatory for some LEDs (controllers)?
+Thanks.
 
-I've analyzed existing led bindings. Four bindings define brightness
-related properties:
+> 
+> eeprom block array is just another way intended to get hold of
+> eeprom content for non-DT providers/consumers, but DT
+> consumers/providers can also use it. As of today SOC/mach level code
+> could use it as well.
+> 
+> In eeprom_cell_get() case the lookup of provider is done based on
+> provider name, this provider name is generally supplied by all the
+> providers (both DT/non DT).
+> 
+> for example in qfprom case,
+> provider is registered from DT with eeprom config containing a unique name:
+> static struct eeprom_config econfig = {
+> 	.name = "qfprom",
+> 	.id = 0,
+> };
+> 
+> In the consumer case, the tsens driver could do some like in non DT way:
+> 
+> 	struct eeprom_block blocks[4] ={
+> 		{
+> 		.offset = 0x404,
+> 		.count = 0x4,
+> 		},
+> 		{
+> 		.offset = 0x408,
+> 		.count = 0x4,
+> 		},
+> 		{
+> 		.offset = 0x40c,
+> 		.count = 0x4,
+> 		},
+> 		{
+> 		.offset = 0x410,
+> 		.count = 0x4,
+> 		},
+> 	};
+> 	calib_cell = eeprom_cell_get("qfprom0", blocks, 4);
+> 
+> 
+> Or in DT way
+> calib_cell  = of_eeprom_cell_get(np, "calib");
+> 
 
-leds-lp55xx.txt
-Each child has own specific current settings
-- led-cur: Current setting at each led channel (mA x10, 0 if led is not 
-connected)
-- max-cur: Maximun current at each led channel.
+Ok. I guess I was hoping for a more device centric approach like
+we have for clks/regulators/etc. That way a driver doesn't need
+to know it's using DT or not to figure out which API to call.
+Also the global namespace is sort of worrying (qfprom0 part). How
+do we know it's qfprom0? What if it's qfprom1 sometimes?
 
-leds-netxbig.txt
-Required sub-node properties:
-- bright-max: Maximum brightness value
+Also, how are we supposed to encode certain bits inside the
+stream of bytes (blocks)? In some situations (e.g. the qcom CPR
+stuff) we have quite a few fuse bits we need to read that are
+packed into different bytes and may cross byte boundaries (i.e.
+bits 6 to 10 of a 32-bit word). The current API looks to be byte
+focused when I have bit based/non-byte aligned data.
 
-leds-pwm
-LED sub-node properties:
-- max-brightness : Maximum brightness possible for the LED
+My current feeling is that I don't want to use any of the block
+stuff at all. I just want a simple byte-based API that allows me
+to read a number of contiguous bytes from the fuses. Then I'll
+need to shift that data down by a few bits and mask it with the
+width of the data I want to read to extract the data needed.
 
-leds-pm8941-wled.txt
-Optional properties:
-- qcom,current-limit: mA; per-string current limit; value from 0 to 25
-         default: 20mA
+The only thing after that where I have a problem is figuring out
+which eeprom is present in the consumer driver. I think I may
+need to open-code it and look at the phandle for the eeprom and
+do a compatible check to figure out which bits I want to read.
 
+The DT would be like this (note I left eeprom-cells/eeproms here
+because that allows us to generically find eeproms used by a
+device and find eeprom providers):
 
-We can summarize this as follows:
-- only four devices define max brightness
-- one of them defines also default current setting
-- some of them define current in mA, some in brightness levels
-
-It has to be stressed that LED subsystem operates on brightness levels,
-not microamperes. max-microamp property was expressed in microamperes,
-because it was initially designed only for flash LEDs.
-
-I think that if we want to add generic property for limiting maximum
-brightness for non-flash LEDs, then it should be called brightness-max
-and expressed in brightness levels. It should apply only to non-flash
-devices. We could have also brightness-default.
-
-For flash devices we would have torch-max-microamp and
-flash-max-microamp properties. We could also have their counterparts:
-torch-default-microamp, flash-default-microamp.
-
-Should we also need
-
-- flash-timeout-max-us
-- flash-timeout-default-us ?
-
-max-brightness and default-brightness would be expressed in brightness
-levels and would be optional. Flash related properties would be
-required.
-
-
->>> I was also worrying about making led-max-microamp required, but others
->>> didn't share my objections. I think that we have to reexamine this.
->>>
->>> Please refer to the discussion under [PATCH v4]. The role of this
->>> led-max-microamp property would be preventing hardware damage.
->>>
->>>
->>>> How about:
->>>>
->>>> "Required properties for child nodes for LEDs with Flash/Torch
->>>> capabilities:" ?
->>>>
->>>>> +- led-max-microamp : Maximum LED supply current in microamperes
->>>>> +                     (torch LED for flash devices). Controllers that
->>
->> Do you think we can just rename max-microamp as led-max-microamp? It's
->> been there since v3.19. Or is it because no driver has been using it?
->
-> I'd say it could be renamed if there is no users in mainline. But the DT
-> maintainers could disagree here (adding Rob, Mark at Cc).
->
->>>>> have no
->>>>> +                     configurable current can omit this property.
->>>>> +- flash-max-microamp : Maximum flash LED supply current in
->>>>> microamperes.
->>>>> +- flash-timeout-us : Timeout in microseconds after which the flash
->>>>> +                     LED is turned off.
->>>>> +
->>>>
->>>>> +Above properties determine a LED driver IC settings required for safe
->>>>> +operation. They should be also used as the initial settings for the IC.
->>>>
->>>> Shouldn't "Controllers that have no configurable current can omit this
->>>> property" refer to both led-max-microamp and flash-max-microamp?
->>>>
->>>> I would drop the "Above...for the IC." paragraph and instead add
->>>> something like:
->>>>
->>>> "For controllers that have no configurable current the led-max-microamp,
->>>> flash-max-microamp properties respectively can be omitted. For
->>>> controllers that
->>>> have no configurable timeout the flash-timeout-us property can be
->>>> omitted."
->>>
->>> Are we going to avoid mentioning about their role in preventing
->>> hardware damage (former "for safe operation" sequence)?
->>
->> That'd make it understandable why the properties are mandatory. Sounds
->> good to me.
->
-
+	qfprom: eeprom@58000 {
+		compatible = "qcom,qfprom-msm8916";
+		reg = <0x58000 0x7000>;
+		#eeprom-cells = <0>;
+	};
+	
+	cpr@b018000 {
+		compatible = "qcom,cpr";
+		reg = <0xb018000 0x1000>;
+		interrupts = <0 15 1>, <0 16 1>, <0 17 1>;
+		eeproms = <&qfprom>;
+		...
+	};
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
