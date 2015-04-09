@@ -1,70 +1,42 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH 08/10] ARM: dts: qcom: Add DT alias for serial port
-Date: Thu, 9 Apr 2015 13:25:01 -0700
-Message-ID: <20150409202501.GK19186@sonymobile.com>
-References: <1428567674-10672-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1428567823-11062-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] regulator: axp20x: prepare support
+ for multiple AXP chip families
+Date: Thu, 9 Apr 2015 13:30:25 -0700
+Message-ID: <CAGb2v66B-__CRcoyoiebNUs-=UBWxP4kQBGVpO4R_FMUSh7MKw@mail.gmail.com>
+References: <1427868203-7486-1-git-send-email-wens@csie.org>
+ <1427868203-7486-4-git-send-email-wens@csie.org> <CAGb2v66zbATMHY5SgZLs3RCoRETroSh5nC3h4TXRLm5UAbythw@mail.gmail.com>
+ <20150409195502.GC6023@sirena.org.uk>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1428567823-11062-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "inux-kernel@vger.kernel.org" <inux-kernel@vger.kernel.org>, Pramod Gurav <pramod.gurav@smartplayin.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7OCTOUQKGQEW4BS54A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150409195502.GC6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 09 Apr 01:23 PDT 2015, Srinivas Kandagatla wrote:
+On Thu, Apr 9, 2015 at 12:55 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Apr 09, 2015 at 10:23:41AM -0700, Chen-Yu Tsai wrote:
+>
+>> Are you OK with Lee taking the 2 regulator patches through his tree?
+>> I realize I'm asking this way too late for this merge window.
+>
+> Someone would need to resend them to me as I've deleted them and it
+> appears that this is a part of a series - are you sure there are no
+> dependencies?
 
-> From: Pramod Gurav <pramod.gurav@smartplayin.com>
-> 
-> Define an alias for serial port present on ifc6410 which is used as
-> console.
-> 
-> Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 4 ++++
->  arch/arm/boot/dts/qcom-apq8064.dtsi        | 3 +--
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> index d39a5bb..b76a92b 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -5,6 +5,10 @@
->  	model = "Qualcomm APQ8064/IFC6410";
->  	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
->  
-> +	aliases {
-> +		serial0 = &serial0;
-> +	};
-> +
->  	soc {
->  		pinctrl@800000 {
->  			i2c1_pins: i2c1 {
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 70e417f..f4b8c3a 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -252,10 +252,9 @@
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> -
->  			syscon-tcsr = <&tcsr>;
->  
-> -			serial@16640000 {
-> +			serial0: serial@16640000 {
+The 2 patches only touch drivers/regulator/axp20x-regulator.c.
+Unless someone else is doing cleanup on them (AFAIK no one has),
+there should be no problem.
 
-On my 8064 devices gsbi7 uart is used for felica, gsbi5 is the debug
-uart. So I don't think it's right to call this serial0 here.
+In any case, I will resend them after 4.1-rc1 if they aren't merged
+by then.
 
->  				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
->  				reg = <0x16640000 0x1000>,
->  				      <0x16600000 0x1000>;
-> -- 
-> 1.9.1
-> 
-
-Regards,
-Bjorn
+ChenYu
