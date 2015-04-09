@@ -1,89 +1,115 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V4 3/5] of: Document {little,big,native}-endian bindings
-Date: Thu,  9 Apr 2015 13:05:16 -0700
-Message-ID: <1428609918-10290-4-git-send-email-cernekee@gmail.com>
-References: <1428609918-10290-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428609918-10290-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org
-Cc: arnd@arndb.de, peter@hurleysoftware.com, f.fainelli@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v5 03/11] irqchip: vf610-mscm: support NVIC parent
+Date: Thu,  9 Apr 2015 22:04:07 +0200
+Message-ID: <1428609855-27657-4-git-send-email-stefan@agner.ch>
+References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1428609855-27657-1-git-send-email-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com, mcoquelin.stm32@gmail.com
+Cc: devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-These apply to newly converted drivers, like serial8250/libahci/...
-The examples were adapted from the regmap bindings document.
+Support the NVIC interrupt controller as node parent of the MSCM
+interrupt router. On the dual-core variants of Vybird (VF6xx), the
+NVIC interrupt controller is used by the Cortex-M4. To support
+running Linux on this core too, MSCM needs NVIC parent support too.
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/common-properties.txt
+ drivers/irqchip/irq-vf610-mscm-ir.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
-new file mode 100644
-index 000000000000..3193979b1d05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/common-properties.txt
-@@ -0,0 +1,60 @@
-+Common properties
+diff --git a/drivers/irqchip/irq-vf610-mscm-ir.c b/drivers/irqchip/irq-vf610-mscm-ir.c
+index 9521057..40b7d8d 100644
+--- a/drivers/irqchip/irq-vf610-mscm-ir.c
++++ b/drivers/irqchip/irq-vf610-mscm-ir.c
+@@ -47,6 +47,7 @@ struct vf610_mscm_ir_chip_data {
+ 	void __iomem *mscm_ir_base;
+ 	u16 cpu_mask;
+ 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
++	bool is_nvic;
+ };
+ 
+ static struct vf610_mscm_ir_chip_data *mscm_ir_data;
+@@ -91,6 +92,7 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 	u16 irsprc;
+ 
+ 	irsprc = readw_relaxed(chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+@@ -101,17 +103,25 @@ static void vf610_mscm_ir_enable(struct irq_data *data)
+ 	writew_relaxed(chip_data->cpu_mask,
+ 		       chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_unmask_parent(data);
++	if (parent->chip->irq_enable)
++		parent->chip->irq_enable(parent);
++	else
++		parent->chip->irq_unmask(parent);
 +
-+The ePAPR specification does not define any properties related to hardware
-+byteswapping, but endianness issues show up frequently in porting Linux to
-+different machine types.  This document attempts to provide a consistent
-+way of handling byteswapping across drivers.
+ }
+ 
+ static void vf610_mscm_ir_disable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_ir_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 
+ 	writew_relaxed(0x0, chip_data->mscm_ir_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_mask_parent(data);
++	if (parent->chip->irq_disable)
++		parent->chip->irq_disable(parent);
++	else
++		parent->chip->irq_mask(parent);
+ }
+ 
+ static struct irq_chip vf610_mscm_ir_irq_chip = {
+@@ -143,10 +153,17 @@ static int vf610_mscm_ir_domain_alloc(struct irq_domain *domain, unsigned int vi
+ 					      domain->host_data);
+ 
+ 	gic_data.np = domain->parent->of_node;
+-	gic_data.args_count = 3;
+-	gic_data.args[0] = GIC_SPI;
+-	gic_data.args[1] = irq_data->args[0];
+-	gic_data.args[2] = irq_data->args[1];
 +
-+Optional properties:
-+ - big-endian: Boolean; force big endian register accesses
-+   unconditionally (e.g. ioread32be/iowrite32be).  Use this if you
-+   know the peripheral always needs to be accessed in BE mode.
-+ - little-endian: Boolean; force little endian register accesses
-+   unconditionally (e.g. readl/writel).  Use this if you know the
-+   peripheral always needs to be accessed in LE mode.
-+ - native-endian: Boolean; always use register accesses matched to the
-+   endianness of the kernel binary (e.g. LE vmlinux -> readl/writel,
-+   BE vmlinux -> ioread32be/iowrite32be).  In this case no byteswaps
-+   will ever be performed.  Use this if the hardware "self-adjusts"
-+   register endianness based on the CPU's configured endianness.
++	if (mscm_ir_data->is_nvic) {
++		gic_data.args_count = 1;
++		gic_data.args[0] = irq_data->args[0];
++	} else {
++		gic_data.args_count = 3;
++		gic_data.args[0] = GIC_SPI;
++		gic_data.args[1] = irq_data->args[0];
++		gic_data.args[2] = irq_data->args[1];
++	}
 +
-+If a binding supports these properties, then the binding should also
-+specify the default behavior if none of these properties are present.
-+In such cases, little-endian is the preferred default, but it is not
-+a requirement.  The of_device_is_big_endian() and of_fdt_is_big_endian()
-+helper functions do assume that little-endian is the default, because
-+most existing (PCI-based) drivers implicitly default to LE by using
-+readl/writel for MMIO accesses.
+ 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
+ }
+ 
+@@ -199,6 +216,9 @@ static int __init vf610_mscm_ir_of_init(struct device_node *node,
+ 		goto out_unmap;
+ 	}
+ 
++	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
++		mscm_ir_data->is_nvic = true;
 +
-+Examples:
-+Scenario 1 : CPU in LE mode & device in LE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+	      native-endian;
-+};
-+
-+Scenario 2 : CPU in LE mode & device in BE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+	      big-endian;
-+};
-+
-+Scenario 3 : CPU in BE mode & device in BE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+	      native-endian;
-+};
-+
-+Scenario 4 : CPU in BE mode & device in LE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+	      little-endian;
-+};
+ 	cpu_pm_register_notifier(&mscm_ir_notifier_block);
+ 
+ 	return 0;
 -- 
-2.2.2
+2.3.5
