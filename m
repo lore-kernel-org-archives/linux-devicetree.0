@@ -1,64 +1,111 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCHv7] media: i2c/adp1653: fix includes
-Date: Thu, 9 Apr 2015 14:59:27 +0200
-Message-ID: <20150409125927.GC12339@atrey.karlin.mff.cuni.cz>
-References: <20150404074337.GA31064@amd>
- <20150404102435.GR20756@valkosipuli.retiisi.org.uk>
- <20150404171116.GA15025@Nokia-N900>
- <20150404200307.GS20756@valkosipuli.retiisi.org.uk>
- <20150409074238.GA22603@amd>
- <20150409091017.GA4526@earth>
- <20150409112943.GA31173@amd>
- <20150409121913.GB18713@earth>
- <20150409123155.GB9563@amd>
- <CABxcv=mB=LqO2paGfYq1jCbky=kudT-mS8cJ-pPwdqZYQLeO4A@mail.gmail.com>
+From: <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Add i2c support
+Date: Thu, 09 Apr 2015 15:03:40 +0200
+Message-ID: <d8d27c22eb78aed693a977b88ebcc327@imap.cosmopool.net>
+References: <1428515100-1496-1-git-send-email-harald@ccbib.org> <1158701263.68321.1428531175931.JavaMail.open-xchange@oxbaltgw03.schlund.de> <3f0efa88b69ea2e8eb22909b6fbe6f91@imap.cosmopool.net> <5526444A.3060805@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv=mB=LqO2paGfYq1jCbky=kudT-mS8cJ-pPwdqZYQLeO4A@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Andrew Morton <akpm@osdl.org>, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, Patrik Bachan <patrikbachan@gmail.com>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, m.chehab@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mchehab@osg.samsung.com, hverkuil@xs4all.nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5526444A.3060805-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio.Estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 April 2015 14:43:59 Javier Martinez Canillas wrote:
-> Hello Pavel,
->=20
-> >
-> > diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp165=
-3.c
-> > index d703636..7107ac2 100644
-> > --- a/drivers/media/i2c/adp1653.c
-> > +++ b/drivers/media/i2c/adp1653.c
-> > @@ -35,8 +35,8 @@
-> >  #include <linux/module.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/slab.h>
-> > -#include <linux/of_gpio.h>
-> > -#include <linux/gpio.h>
-> > +#include <linux/of.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <media/adp1653.h>
-> >  #include <media/v4l2-device.h>
-> >
->=20
-> Please re-spin your previous patch and submit it properly.
->=20
-> Best regards,
-> Javier
+Hi Stefan!
 
-Hi all! What about stopping this meaningless discussion about resending
-full patch series when everybody know how to fix is quickly in editor
-(e.g with sed under 5s) and not wasting another 10 minutes to generate
-new unified diff sent via SMTP protocol?
+On Thu, 09 Apr 2015 11:20:10 +0200, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+wrote:
+> Hi Harald,
+> 
+>>>> This patch provides the necessary devicetree code.
+>>>> Tested with MOD-LCD1x9 from Olimex.
+>>>>
+>>>> This patch is based on work by Fadil Berisha with his permission.
+>> However
+>>>> all bugs are mine.
+>>>>
+>>>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+>>>> ---
+>>>> arch/arm/boot/dts/imx23-olinuxino.dts | 6 +++++
+>>>> arch/arm/boot/dts/imx23.dtsi | 40 ++++++++++++++++++++++++++++++++-
+>>>> 2 files changed, 45 insertions(+), 1 deletion(-)
+>>>>
+>>>> [...]
+>>>> --- a/arch/arm/boot/dts/imx23.dtsi
+>>>> +++ b/arch/arm/boot/dts/imx23.dtsi
+>>>> @@ -308,6 +308,39 @@
+>>>> fsl,voltage = <MXS_VOLTAGE_HIGH>;
+>>>> fsl,pull-up = <MXS_PULL_ENABLE>;
+>>>> };
+>>>> +
+>>>> + i2c_pins_a: i2c@0 {
+>>>> + reg = <0>;
+>>>> + fsl,pinmux-ids = <
+>>>> + MX23_PAD_I2C_SCL__I2C_SCL
+>>>> + MX23_PAD_I2C_SDA__I2C_SDA
+>>>> + >;
+>>>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
+>>>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
+>>>> + fsl,pull-up = <MXS_PULL_ENABLE>;
+>>>> + };
+>>>> +
+>>>> + i2c_pins_b: i2c@1 {
+>>>> + reg = <1>;
+>>>> + fsl,pinmux-ids = <
+>>>> + MX23_PAD_LCD_ENABLE__I2C_SCL
+>>>> + MX23_PAD_LCD_HSYNC__I2C_SDA
+>>>> + >;
+>>>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
+>>>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
+>>>> + fsl,pull-up = <MXS_PULL_ENABLE>;
+>>>> + };
+>>>> +
+>>>> + i2c_pins_c: i2c@2 {
+>>>> + reg = <2>;
+>>>> + fsl,pinmux-ids = <
+>>>> + MX23_PAD_SSP1_DATA1__I2C_SCL
+>>>> + MX23_PAD_SSP1_DATA2__I2C_SDA
+>>>> + >;
+>>>> + fsl,drive-strength = <MXS_DRIVE_8mA>;
+>>>> + fsl,voltage = <MXS_VOLTAGE_HIGH>;
+>>>> + fsl,pull-up = <MXS_PULL_ENABLE>;
+>>>> + };
+>>> Please add only i2c_pins_b because this pin muxing is the only used
+one.
+>> I disagree: Having all possible i2c pin groups documented in devicetree
+>> is
+>> a good thing. Also imx23.dtsi is more general then olinuxino - somebody
+>> might produce a imx23 based board where one of the other pin groups
+makes
+>> more sense to use. Well, even on olinuxino somebody might use
+i2c_pins_a
+>> if they don't need an UART, but use an LCD.
+> 
+> Sure. But this 2 additional muxes have nothing to do with adding i2c
+> support to olinuxino and should be a separate patch. In case of a revert
+> of this patch the other i.MX23 boards are also affected. So i think it
+> should be a separate patch.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+If it is prefered, I will split the changes to imx23.dtsi and
+imx23-olinuxino.dts into two patches.
+
+> Btw i read that Shawn only want used muxes [1].
+> 
+> [1] -
+>
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-August/115779.html
+
+If that is an issue, then I'll just test all three pin groups on my
+olinuxino
+board. After all it would be really awkward to have only one pin group and
+that
+one is labeled "i2c_pins_b" ...
+
+Thanks,
+Harald
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
