@@ -1,87 +1,85 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v5] DT: leds: Improve description of flash LEDs related
- properties
-Date: Thu, 09 Apr 2015 09:23:16 +0200
-Message-ID: <552628E4.50003@samsung.com>
-References: <1428503487-4912-1-git-send-email-j.anaszewski@samsung.com>
- <552545FF.2030208@samsung.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: Question about shared interrupts in devicetree
+Date: Thu, 09 Apr 2015 09:24:37 +0200
+Message-ID: <55262935.9080005@i2se.com>
+References: <2039290448.1160624.1428183613109.JavaMail.open-xchange@oxbaltgw03.schlund.de>	<20150407112928.GA3812@leverpostej>	<2146749411.2111.1428426398346.JavaMail.open-xchange@oxbaltgw03.schlund.de> <CAMuHMdUaQTotvzRiGczyVxfeu34UNLMmwU=aVGTP6rDSHUK45Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <552545FF.2030208@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUaQTotvzRiGczyVxfeu34UNLMmwU=aVGTP6rDSHUK45Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernelnewbies <kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2015 05:15 PM, Sylwester Nawrocki wrote:
-> On 08/04/15 16:31, Jacek Anaszewski wrote:
->> Properties defining maximum values for LED currents and timeout should
->> be mandatory to avoid the risk of hardware damage. This patch fixes
->> the issue.
+Hi Geert,
+
+Am 08.04.2015 um 21:20 schrieb Geert Uytterhoeven:
+> On Tue, Apr 7, 2015 at 7:06 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org=
+> wrote:
+>> [...]
 >>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->
->> ---
->>   Documentation/devicetree/bindings/leds/common.txt |   19 +++++++++++--------
->>   1 file changed, 11 insertions(+), 8 deletions(-)
+>> thanks for the good explanation. After looking into the reference ma=
+nual [1] of
+>> the i.MX28 i still can't decide if the subsystem generate the interr=
+upts as a
+>> whole or
+>> as a logical group. I only found this para in chapter 11.11:
 >>
->> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
->> index 747c538..e478ac6 100644
->> --- a/Documentation/devicetree/bindings/leds/common.txt
->> +++ b/Documentation/devicetree/bindings/leds/common.txt
->> @@ -10,6 +10,17 @@ can influence the way of the LED device initialization, the LED components
->>   have to be tightly coupled with the LED device binding. They are represented
->>   by child nodes of the parent LED device binding.
+>>     The VDDA_BO_IRQ, VDDD_BO_IRQ, VDDIO_BO_IRQ, and BATT_BO_IRQ each
+>>     have their own interrupt line back to the interrupt collector.
+>>     However, the remaining five interrupts=E2=80=94VDD5V_GT_VDDIO_IR=
+Q, DC_OK_IRQ,
+>>     VBUSVALID_IRQ, LINREG_OK_IRQ and PSWITCH_IRQ=E2=80=94all share a=
+ single
+>>     interrupt line. In this case, software must read the interrupt s=
+tatus
+>>     bits to discover which event caused the interrupt.
 >>
->> +Required properties for child nodes:
+>> In my case DC_OK_IRQ and PSWITCH_IRQ are relevant.
+>>
+>> Maybe someone else has a idea?
+> Perhaps you can implement an interrupt-controller to handle the multi=
+plexing
+> of the 5 remaining interrupts?
+
+Could you please explain the benefit / reason of this approach?
+
 >
-> These properties are mandatory only for LEDs with Flash/Torch capabilities,
-> aren't they?
+> Can they be disabled/enabled individually?
 
-flash-max-microamp and flash-timeout-us properties description mention
-that they refer to flash LEDs. Perhaps this should be made indeed more
-explicit.
+Yes. What are the consequences?
 
- > Requiring those properties for all led nodes would make all
-> current dtses not compliant with the DT binding specification AFAICT.
+Thanks Stefan
 
-I was also worrying about making led-max-microamp required, but others
-didn't share my objections. I think that we have to reexamine this.
-
-Please refer to the discussion under [PATCH v4]. The role of this
-led-max-microamp property would be preventing hardware damage.
-
-
-> How about:
 >
-> "Required properties for child nodes for LEDs with Flash/Torch capabilities:" ?
+>> Thanks Stefan
+>>
+>> [1] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.=
+pdf
+>>
+>> Document Number: MCIMX28RM
+>> Rev 2, 08/2013
+>>
+>>
+> Gr{oetje,eeting}s,
 >
->> +- led-max-microamp : Maximum LED supply current in microamperes
->> +                     (torch LED for flash devices). Controllers that have no
->> +                     configurable current can omit this property.
->> +- flash-max-microamp : Maximum flash LED supply current in microamperes.
->> +- flash-timeout-us : Timeout in microseconds after which the flash
->> +                     LED is turned off.
->> +
+>                         Geert
 >
->> +Above properties determine a LED driver IC settings required for safe
->> +operation. They should be also used as the initial settings for the IC.
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
+x-m68k.org
 >
-> Shouldn't "Controllers that have no configurable current can omit this
-> property" refer to both led-max-microamp and flash-max-microamp?
- >
-> I would drop the "Above...for the IC." paragraph and instead add something like:
->
-> "For controllers that have no configurable current the led-max-microamp,
-> flash-max-microamp properties respectively can be omitted. For controllers that
-> have no configurable timeout the flash-timeout-us property can be omitted."
+> In personal conversations with technical people, I call myself a hack=
+er. But
+> when I'm talking to journalists I just say "programmer" or something =
+like that.
+>                                 -- Linus Torvalds
 
-Are we going to avoid mentioning about their role in preventing
-hardware damage (former "for safe operation" sequence)?
 
--- 
-Best Regards,
-Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
