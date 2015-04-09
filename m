@@ -1,156 +1,107 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] usb: phy: msm: Manual PHY and LINK controller VBUS change notification
-Date: Thu,  9 Apr 2015 11:34:33 +0300
-Message-ID: <1428568473-2145-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vamsi Krishna <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RFC v9 11/20] drm/bridge: Add Synopsys DesignWare MIPI
+ DSI host controller driver
+Date: Thu, 9 Apr 2015 10:43:54 +0200
+Message-ID: <20150409084353.GD12103@ulmo>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-12-git-send-email-Ying.Liu@freescale.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0002573395=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1423720903-24806-12-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VBUS is not routed to USB PHY on recent Qualcomm platforms. USB controller
-must see VBUS in order to pull-up DP when setting RS bit. Henc configure
-USB PHY and LINK registers sense VBUS and enable manual pullup on D+ line.
 
-Cc: Vamsi Krishna <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/usb/msm-hsusb.txt          |  4 ++++
- drivers/usb/phy/phy-msm-usb.c                      | 26 ++++++++++++++++++++++
- include/linux/usb/msm_hsusb.h                      |  5 +++++
- include/linux/usb/msm_hsusb_hw.h                   |  9 ++++++++
- 4 files changed, 44 insertions(+)
+--===============0002573395==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index f26bcfa..bd8d9e7 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -69,6 +69,10 @@ Optional properties:
-                 (no, min, max) where each value represents either a voltage
-                 in microvolts or a value corresponding to voltage corner.
 
-+- qcom,manual-pullup: If present, vbus is not routed to USB controller/phy
-+                and controller driver therefore enables pull-up explicitly
-+                before starting controller using usbcmd run/stop bit.
-+
- - extcon:       phandles to external connector devices. First phandle
-                 should point to external connector, which provide "USB"
-                 cable events, the second should point to external connector
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index d47c3eb..4a928f7 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -245,8 +245,14 @@ static void ulpi_init(struct msm_otg *motg)
- static int msm_phy_notify_disconnect(struct usb_phy *phy,
- 				   enum usb_device_speed speed)
- {
-+	struct msm_otg *motg = container_of(phy, struct msm_otg, phy);
- 	int val;
+--Hf61M2y+wYpnELGG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-+	if (motg->manual_pullup) {
-+		val = ULPI_MISC_A_VBUSVLDEXT | ULPI_MISC_A_VBUSVLDEXTSEL;
-+		usb_phy_io_write(phy, val, ULPI_CLR(ULPI_MISC_A));
-+	}
-+
- 	/*
- 	 * Put the transceiver in non-driving mode. Otherwise host
- 	 * may not detect soft-disconnection.
-@@ -431,6 +437,24 @@ static int msm_phy_init(struct usb_phy *phy)
- 		ulpi_write(phy, ulpi_val, ULPI_USB_INT_EN_FALL);
- 	}
+On Thu, Feb 12, 2015 at 02:01:34PM +0800, Liu Ying wrote:
+[...]
+> diff --git a/drivers/gpu/drm/bridge/dw_mipi_dsi.c b/drivers/gpu/drm/bridge/dw_mipi_dsi.c
+[...]
+> +struct dw_mipi_dsi {
+> +	struct mipi_dsi_host dsi_host;
+> +	struct drm_connector connector;
+> +	struct drm_encoder *encoder;
+> +	struct drm_bridge *bridge;
+> +	struct drm_panel *panel;
+> +	struct device *dev;
+> +
+> +	void __iomem *base;
+> +
+> +	struct clk *pllref_clk;
+> +	struct clk *cfg_clk;
+> +	struct clk *pclk;
+> +
+> +	unsigned int lane_mbps; /* per lane */
+> +	u32 channel;
+> +	u32 lanes;
+> +	u32 format;
+> +	struct drm_display_mode *mode;
+> +
+> +	const struct dw_mipi_dsi_plat_data *pdata;
+> +
+> +	bool enabled;
+> +};
 
-+	if (motg->manual_pullup) {
-+		val = ULPI_MISC_A_VBUSVLDEXTSEL | ULPI_MISC_A_VBUSVLDEXT;
-+		ulpi_write(phy, val, ULPI_SET(ULPI_MISC_A));
-+
-+		val = readl(USB_GENCONFIG_2);
-+		val |= GENCONFIG_2_SESS_VLD_CTRL_EN;
-+		writel(val, USB_GENCONFIG_2);
-+
-+		val = readl(USB_USBCMD);
-+		val |= USBCMD_SESS_VLD_CTRL;
-+		writel(val, USB_USBCMD);
-+
-+		val = ulpi_read(phy, ULPI_FUNC_CTRL);
-+		val &= ~ULPI_FUNC_CTRL_OPMODE_MASK;
-+		val |= ULPI_FUNC_CTRL_OPMODE_NORMAL;
-+		ulpi_write(phy, val, ULPI_FUNC_CTRL);
-+	}
-+
- 	if (motg->phy_number)
- 		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
+While reviewing this I kept thinking whether this is really the right
+architectural design. This driver is a MIPI DSI host, a connector and
+a bridge, all in one. But it seems to me like it should really be an
+encoder/connector and a MIPI DSI host. Why the need for a bridge? The
+bridge abstraction targets blocks outside of the SoC, but it is my
+understanding that these DesignWare IP blocks are designed into SoCs.
 
-@@ -1529,6 +1553,8 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
- 	}
+Thierry
 
-+	motg->manual_pullup = of_property_read_bool(node, "qcom,manual-pullup");
-+
- 	ext_id = ERR_PTR(-ENODEV);
- 	ext_vbus = ERR_PTR(-ENODEV);
- 	if (of_property_read_bool(node, "extcon")) {
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 9a38e77..a5edc8d 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -153,6 +153,9 @@ struct msm_usb_cable {
-  * @chg_type: The type of charger attached.
-  * @dcd_retires: The retry count used to track Data contact
-  *               detection process.
-+ * @manual_pullup: true if VBUS is not routed to USB controller/phy
-+ *	and controller driver therefore enables pull-up explicitly before
-+ *	starting controller using usbcmd run/stop bit.
-  * @vbus: VBUS signal state trakining, using extcon framework
-  * @id: ID signal state trakining, using extcon framework
-  */
-@@ -185,6 +188,8 @@ struct msm_otg {
- 	struct reset_control *link_rst;
- 	int vdd_levels[3];
+--Hf61M2y+wYpnELGG
+Content-Type: application/pgp-signature
 
-+	bool manual_pullup;
-+
- 	struct msm_usb_cable vbus;
- 	struct msm_usb_cable id;
- };
-diff --git a/include/linux/usb/msm_hsusb_hw.h b/include/linux/usb/msm_hsusb_hw.h
-index a29f603..e159b39 100644
---- a/include/linux/usb/msm_hsusb_hw.h
-+++ b/include/linux/usb/msm_hsusb_hw.h
-@@ -21,6 +21,8 @@
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
- #define USB_AHBBURST         (MSM_USB_BASE + 0x0090)
- #define USB_AHBMODE          (MSM_USB_BASE + 0x0098)
-+#define USB_GENCONFIG_2      (MSM_USB_BASE + 0x00a0)
-+
- #define USB_CAPLENGTH        (MSM_USB_BASE + 0x0100) /* 8 bit */
+iQIcBAABCAAGBQJVJjvGAAoJEN0jrNd/PrOhXu8P/3FQzro+kD5l1BNexrccOlIu
+2T+Fj0ezDjbaaJiVP+v/dZ4xzPmM3EFczq5xsL7gC1r0ehfm9yHJz1qFAh85Fp/0
+7MGFdUl22/CiBbseAwm4/wlijIu1XxBxO7++ayZSxAWs1ZDz7hBvsH7OxVmlyYsk
+KHV6raVPGkqWmgWqzAt9mHtCL/zi5e0uyyxC6THWn0WzYfYkvWubflmeCUqDZ4ia
+XI9kJ850vlilcobtOeL0mqPeYKUvySZ8Rd141xc6HY/xpWZu7gZ2UY4xxwE+LQTB
+65DQvLdyD7dKQjFuFjsCJ1sBUsFFvF9Q5MNbIZKf+dHeIMXiGODW71Sn5HQUOt0J
+dJbjAMvgfyr6MFFA0wkfWCdB58MjbWs8HPTzQOSczDGnZTPQfli68ACF5F5FKxfn
+Df9blYjrAvDQXZ+Uffk+auYYmjj0wfhVu+rkuv2icrH+iuj3zHRgP2d/TzH4wgfq
+3d/14ApYVTcgNn+/OzN3ouAtZ9AQ6VR0SmwsP/YYMsZCYBRMtPyzmgqnBOezinox
+I/HwzXOd83aFhi8e7iTMMnybYPaYukMsbu0srKuyiA1vK5vG/buCZfnVKAl8KhJn
+KrVk10ffMCu7AWP4Y9KHxaTWeZ73J9ZWE87cojXlyMM2KcsKNcmFagGehLjxbCub
+RLqTtgBB/X6Tl6Z013xu
+=zGwb
+-----END PGP SIGNATURE-----
 
- #define USB_USBCMD           (MSM_USB_BASE + 0x0140)
-@@ -30,6 +32,9 @@
- #define USB_PHY_CTRL         (MSM_USB_BASE + 0x0240)
- #define USB_PHY_CTRL2        (MSM_USB_BASE + 0x0278)
+--Hf61M2y+wYpnELGG--
 
-+#define GENCONFIG_2_SESS_VLD_CTRL_EN	BIT(7)
-+#define USBCMD_SESS_VLD_CTRL		BIT(25)
-+
- #define USBCMD_RESET   2
- #define USB_USBINTR          (MSM_USB_BASE + 0x0148)
+--===============0002573395==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-@@ -50,6 +55,10 @@
- #define ULPI_PWR_CLK_MNG_REG	0x88
- #define OTG_COMP_DISABLE	BIT(0)
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
 
-+#define ULPI_MISC_A			0x96
-+#define ULPI_MISC_A_VBUSVLDEXTSEL	BIT(1)
-+#define ULPI_MISC_A_VBUSVLDEXT		BIT(0)
-+
- #define ASYNC_INTR_CTRL         (1 << 29) /* Enable async interrupt */
- #define ULPI_STP_CTRL           (1 << 30) /* Block communication with PHY */
- #define PHY_RETEN               (1 << 1) /* PHY retention enable/disable */
---
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============0002573395==--
