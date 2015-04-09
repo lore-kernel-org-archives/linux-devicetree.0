@@ -1,98 +1,143 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: am57xx-beagle-x15: Switch UART mux pins
-Date: Thu, 9 Apr 2015 17:56:01 -0500
-Message-ID: <20150409225600.GA17542@kahuna>
-References: <1428618797-17190-1-git-send-email-nm@ti.com>
- <1428618797-17190-2-git-send-email-nm@ti.com>
+From: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Thu, 9 Apr 2015 15:58:17 -0700
+Message-ID: <20150409225817.GI53918@linux.vnet.ibm.com>
+References: <20150408165920.25007.6869.stgit@buzz>
+ <55255F84.6060608@yandex-team.ru>
+ <20150408230740.GB53918@linux.vnet.ibm.com>
+ <CALYGNiP_Ru0PpWoXOYPbviiNuY+9JHDqzL0jDNJeZAtmYZGFUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <owner-linux-mm@kvack.org>
 Content-Disposition: inline
-In-Reply-To: <1428618797-17190-2-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <CALYGNiP_Ru0PpWoXOYPbviiNuY+9JHDqzL0jDNJeZAtmYZGFUg@mail.gmail.com>
+Sender: owner-linux-mm@kvack.org
+To: Konstantin Khlebnikov <koct9i@gmail.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 17:33-20150409, Nishanth Menon wrote:
-> BeagleBoard-X15 pre-production change includes switching over to UART
-> pins that now allow for UART download capability. All original boards
-> should either have been returned for modifications or already modified
-> for the required change and maintaining compatibility for older boards
-> are no longer needed.
+On 09.04.2015 [07:27:28 +0300], Konstantin Khlebnikov wrote:
+> On Thu, Apr 9, 2015 at 2:07 AM, Nishanth Aravamudan
+> <nacc@linux.vnet.ibm.com> wrote:
+> > On 08.04.2015 [20:04:04 +0300], Konstantin Khlebnikov wrote:
+> >> On 08.04.2015 19:59, Konstantin Khlebnikov wrote:
+> >> >Node 0 might be offline as well as any other numa node,
+> >> >in this case kernel cannot handle memory allocation and crashes.
+> >
+> > Isn't the bug that numa_node_id() returned an offline node? That
+> > shouldn't happen.
 > 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->  arch/arm/boot/dts/am57xx-beagle-x15.dts |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Offline node 0 came from static-inline copy of that function from of.h
+> I've patched weak function for keeping consistency.
+
+Got it, that's not necessarily clear in the original commit message.
+
+> > #ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
+> > ...
+> > #ifndef numa_node_id
+> > /* Returns the number of the current Node. */
+> > static inline int numa_node_id(void)
+> > {
+> >         return raw_cpu_read(numa_node);
+> > }
+> > #endif
+> > ...
+> > #else   /* !CONFIG_USE_PERCPU_NUMA_NODE_ID */
+> >
+> > /* Returns the number of the current Node. */
+> > #ifndef numa_node_id
+> > static inline int numa_node_id(void)
+> > {
+> >         return cpu_to_node(raw_smp_processor_id());
+> > }
+> > #endif
+> > ...
+> >
+> > So that's either the per-cpu numa_node value, right? Or the result of
+> > cpu_to_node on the current processor.
+> >
+> >> Example:
+> >>
+> >> [    0.027133] ------------[ cut here ]------------
+> >> [    0.027938] kernel BUG at include/linux/gfp.h:322!
+> >
+> > This is
+> >
+> > VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES || !node_online(nid));
+> >
+> > in
+> >
+> > alloc_pages_exact_node().
+> >
+> > And based on the trace below, that's
+> >
+> > __slab_alloc -> alloc
+> >
+> > alloc_pages_exact_node
+> >         <- alloc_slab_page
+> >                 <- allocate_slab
+> >                         <- new_slab
+> >                                 <- new_slab_objects
+> >                                         < __slab_alloc?
+> >
+> > which is just passing the node value down, right? Which I think was
+> > from:
+> >
+> >         domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+> >                               GFP_KERNEL, of_node_to_nid(of_node));
+> >
+> > ?
+> >
+> >
+> > What platform is this on, looks to be x86? qemu emulation of a
+> > pathological topology? What was the topology?
 > 
-> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> index 15f198e4864d..cea3be3a051c 100644
-> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> @@ -130,8 +130,8 @@
->  
->  	uart3_pins_default: uart3_pins_default {
->  		pinctrl-single,pins = <
-> -			0x248 (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_rxd.rxd */
-> -			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd.txd */
-> +			0x3f8 (PIN_INPUT_SLEW | MUX_MODE2) /* uart2_ctsn.uart3_rxd */
-> +			0x3fc (PIN_INPUT_SLEW | MUX_MODE1) /* uart2_rtsn.uart3_txd */
->  		>;
->  	};
->  
-> -- 
-> 1.7.9.5
+> qemu x86_64, 2 cpu, 2 numa nodes, all memory in second.
+
+Ok, this worked before? That is, this is a regression?
+
+>  I've slightly patched it to allow that setup (in qemu hardcoded 1Mb
+> of memory connected to node 0) And i've found unrelated bug --
+> if numa node has less that 4Mb ram then kernel crashes even
+> earlier because numa code ignores that node
+> but buddy allocator still tries to use that pages.
+
+So this isn't an actually supported topology by qemu?
+
+> > Note that there is a ton of code that seems to assume node 0 is online.
+> > I started working on removing this assumption myself and it just led
+> > down a rathole (on power, we always have node 0 online, even if it is
+> > memoryless and cpuless, as a result).
+> >
+> > I am guessing this is just happening early in boot before the per-cpu
+> > areas are setup? That's why (I think) x86 has the early_cpu_to_node()
+> > function...
+> >
+> > Or do you not have CONFIG_OF set? So isn't the only change necessary to
+> > the include file, and it should just return first_online_node rather
+> > than 0?
+> >
+> > Ah and there's more of those node 0 assumptions :)
 > 
+> That was x86 where is no CONFIG_OF at all.
+>
+> I don't know what's wrong with that machine but ACPI reports that
+> cpus and memory from node 0 as connected to node 1 and everything
+> seems worked fine until lates upgrade -- seems like buggy static-inline
+> of_node_to_nid was intoduced in 3.13 but x86 ioapic uses it during
+> early allocations only in since 3.17. Machine owner teells that 3.15
+> worked fine.
 
-Drat!.. I missed the daisychain merge that took place :( updated V2 patch
-below. Do let me know if you'd like me to repost this.
+So, this was a qemu emulation of this actual physical machine without a
+node 0?
 
----8<---
->From 055f2837f8eebd680e954088908c43dbe16b15d7 Mon Sep 17 00:00:00 2001
-From: Nishanth Menon <nm@ti.com>
-Date: Wed, 8 Apr 2015 17:40:59 -0500
-Subject: [PATCH V2 1/2] ARM: dts: am57xx-beagle-x15: Switch UART mux pins
+As I mentioned, there are lots of node 0 assumptions through the kernel.
+You might run into more issues at runtime.
 
-BeagleBoard-X15 pre-production change includes switching over to UART
-pins that now allow for UART download capability. All original boards
-should either have been returned for modifications or already modified
-for the required change and maintaining compatibility for older boards
-are no longer needed.
+-Nish
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- arch/arm/boot/dts/am57xx-beagle-x15.dts |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 15f198e4864d..01661e9013fe 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -130,8 +130,8 @@
- 
- 	uart3_pins_default: uart3_pins_default {
- 		pinctrl-single,pins = <
--			0x248 (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_rxd.rxd */
--			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd.txd */
-+			0x3f8 (PIN_INPUT_SLEW | MUX_MODE2) /* uart2_ctsn.uart3_rxd */
-+			0x3fc (PIN_INPUT_SLEW | MUX_MODE1) /* uart2_rtsn.uart3_txd */
- 		>;
- 	};
- 
-@@ -478,7 +478,7 @@
- &uart3 {
- 	status = "okay";
- 	interrupts-extended = <&crossbar_mpu GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
--			      <&dra7_pmx_core 0x248>;
-+			      <&dra7_pmx_core 0x3f8>;
- 
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart3_pins_default>;
--- 
-1.7.9.5
-
-
--- 
-Regards,
-Nishanth Menon
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
