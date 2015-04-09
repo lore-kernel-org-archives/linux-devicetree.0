@@ -1,66 +1,141 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/flattree: print memory scan node results in CPU endian
-Date: Wed, 08 Apr 2015 20:17:23 -0700
-Message-ID: <5525EF43.1040309@gmail.com>
-References: <1428475450-12072-1-git-send-email-f.fainelli@gmail.com> <55259B4D.2020304@gmail.com>
+From: Konstantin Khlebnikov <koct9i@gmail.com>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Thu, 9 Apr 2015 07:27:28 +0300
+Message-ID: <CALYGNiP_Ru0PpWoXOYPbviiNuY+9JHDqzL0jDNJeZAtmYZGFUg@mail.gmail.com>
+References: <20150408165920.25007.6869.stgit@buzz>
+	<55255F84.6060608@yandex-team.ru>
+	<20150408230740.GB53918@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55259B4D.2020304-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20150408230740.GB53918@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Le 08/04/2015 14:19, Frank Rowand a =C3=A9crit :
-> On 4/7/2015 11:44 PM, Florian Fainelli wrote:
->> Commit 51975db0b7333 ("of/flattree: merge early_init_dt_scan_memory(=
-)
->> common code") consolidated some code from PowerPC (typically
->> big-endian), and ended-up adding a pr_debug() printing reg propertie=
-s in
->> big-endian (DT native) format, not CPU endian. Unsurprisingly, when
->> these messages are turned on a little-endian systems, this is confus=
-ing,
->> so do the conversion while printing the values.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/of/fdt.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 3a896c9aeb74..0d8f0e4bd107 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -880,7 +880,8 @@ int __init early_init_dt_scan_memory(unsigned lo=
-ng node, const char *uname,
->>  	endp =3D reg + (l / sizeof(__be32));
->> =20
->>  	pr_debug("memory scan node %s, reg size %d, data: %x %x %x %x,\n",
->> -	    uname, l, reg[0], reg[1], reg[2], reg[3]);
->> +	    uname, l, be32_to_cpu(reg[0]), be32_to_cpu(reg[1]),
->> +	    be32_to_cpu(reg[2]), be32_to_cpu(reg[3]));
->=20
-> The pr_debug() assumes that the length of reg[] is >=3D 4 elements, w=
-hich might not be true.
-> Since the following while loop checks the length of reg[] and then us=
-es pr_debug() to
-> print each (base, size) tuple with the correct endian, maybe it would=
- be better to
-> just remove reg[0] through reg[3] from the above pr_debug() instead o=
-f fixing the
-> endian issue.
+On Thu, Apr 9, 2015 at 2:07 AM, Nishanth Aravamudan
+<nacc@linux.vnet.ibm.com> wrote:
+> On 08.04.2015 [20:04:04 +0300], Konstantin Khlebnikov wrote:
+>> On 08.04.2015 19:59, Konstantin Khlebnikov wrote:
+>> >Node 0 might be offline as well as any other numa node,
+>> >in this case kernel cannot handle memory allocation and crashes.
+>
+> Isn't the bug that numa_node_id() returned an offline node? That
+> shouldn't happen.
 
-Right, that works too, will follow-up with a patch removing the
-reg[0..3] prints.
+Offline node 0 came from static-inline copy of that function from of.h
+I've patched weak function for keeping consistency.
 
-Thanks!
+>
+> #ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
+> ...
+> #ifndef numa_node_id
+> /* Returns the number of the current Node. */
+> static inline int numa_node_id(void)
+> {
+>         return raw_cpu_read(numa_node);
+> }
+> #endif
+> ...
+> #else   /* !CONFIG_USE_PERCPU_NUMA_NODE_ID */
+>
+> /* Returns the number of the current Node. */
+> #ifndef numa_node_id
+> static inline int numa_node_id(void)
+> {
+>         return cpu_to_node(raw_smp_processor_id());
+> }
+> #endif
+> ...
+>
+> So that's either the per-cpu numa_node value, right? Or the result of
+> cpu_to_node on the current processor.
+>
+>> Example:
+>>
+>> [    0.027133] ------------[ cut here ]------------
+>> [    0.027938] kernel BUG at include/linux/gfp.h:322!
+>
+> This is
+>
+> VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES || !node_online(nid));
+>
+> in
+>
+> alloc_pages_exact_node().
+>
+> And based on the trace below, that's
+>
+> __slab_alloc -> alloc
+>
+> alloc_pages_exact_node
+>         <- alloc_slab_page
+>                 <- allocate_slab
+>                         <- new_slab
+>                                 <- new_slab_objects
+>                                         < __slab_alloc?
+>
+> which is just passing the node value down, right? Which I think was
+> from:
+>
+>         domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>                               GFP_KERNEL, of_node_to_nid(of_node));
+>
+> ?
+>
+>
+> What platform is this on, looks to be x86? qemu emulation of a
+> pathological topology? What was the topology?
+
+qemu x86_64, 2 cpu, 2 numa nodes, all memory in second.
+ I've slightly patched it to allow that setup (in qemu hardcoded 1Mb
+of memory connected to node 0) And i've found unrelated bug --
+if numa node has less that 4Mb ram then kernel crashes even
+earlier because numa code ignores that node
+but buddy allocator still tries to use that pages.
+
+>
+> Note that there is a ton of code that seems to assume node 0 is online.
+> I started working on removing this assumption myself and it just led
+> down a rathole (on power, we always have node 0 online, even if it is
+> memoryless and cpuless, as a result).
+>
+> I am guessing this is just happening early in boot before the per-cpu
+> areas are setup? That's why (I think) x86 has the early_cpu_to_node()
+> function...
+>
+> Or do you not have CONFIG_OF set? So isn't the only change necessary to
+> the include file, and it should just return first_online_node rather
+> than 0?
+>
+> Ah and there's more of those node 0 assumptions :)
+
+That was x86 where is no CONFIG_OF at all.
+
+I don't know what's wrong with that machine but ACPI reports that
+cpus and memory from node 0 as connected to node 1 and everything
+seems worked fine until lates upgrade -- seems like buggy static-inline
+of_node_to_nid was intoduced in 3.13 but x86 ioapic uses it during
+early allocations only in since 3.17. Machine owner teells that 3.15
+worked fine.
+
+>
+> #define first_online_node       0
+> #define first_memory_node       0
+>
+> if MAX_NUMODES == 1...
+>
+> -Nish
+>
+> --
+> To unsubscribe, send a message with 'unsubscribe linux-mm' in
+> the body to majordomo@kvack.org.  For more info on Linux MM,
+> see: http://www.linux-mm.org/ .
+> Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+
 --
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
