@@ -1,52 +1,61 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] dt/bindings: fsl/guts: Added global-utilities compatibles
-Date: Thu, 9 Apr 2015 12:00:25 -0500
-Message-ID: <1428598825.22867.532.camel@freescale.com>
-References: <1428560392-30903-1-git-send-email-igal.liberman@freescale.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: Question about shared interrupts in devicetree
+Date: Thu, 9 Apr 2015 19:02:44 +0200 (CEST)
+Message-ID: <619385522.136300.1428598965058.JavaMail.open-xchange@oxbaltgw02.schlund.de>
+References: <2039290448.1160624.1428183613109.JavaMail.open-xchange@oxbaltgw03.schlund.de> <20150407112928.GA3812@leverpostej> <2146749411.2111.1428426398346.JavaMail.open-xchange@oxbaltgw03.schlund.de> <CAMuHMdUaQTotvzRiGczyVxfeu34UNLMmwU=aVGTP6rDSHUK45Q@mail.gmail.com> <55262935.9080005@i2se.com> <CAMuHMdXpByUO4S_Qdhvbm8PF8hfGTtqr7aA9mmRE5Dk6LrZkJw@mail.gmail.com>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1428560392-30903-1-git-send-email-igal.liberman@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Igal.Liberman" <igal.liberman@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXpByUO4S_Qdhvbm8PF8hfGTtqr7aA9mmRE5Dk6LrZkJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernelnewbies <kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?=22Marek_Va=C5=A1ut=22?= <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE1LTA0LTA5IGF0IDA5OjE5ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
-IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+
-Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1dHMudHh0ICAg
-ICAgIHwgICAxNCArKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9u
-cygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cG93ZXJwYy9mc2wvZ3V0cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cG93ZXJwYy9mc2wvZ3V0cy50eHQKPiBpbmRleCA3ZjE1MGI1Li5lNGYwYWMyIDEwMDY0NAo+IC0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ndXRzLnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9n
-dXRzLnR4dAo+IEBAIC05LDYgKzksMjAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgCj4gICAt
-IGNvbXBhdGlibGUgOiBTaG91bGQgZGVmaW5lIHRoZSBjb21wYXRpYmxlIGRldmljZSB0eXBlIGZv
-cgo+ICAgICBnbG9iYWwtdXRpbGl0aWVzLgo+ICsgICBQb3NzaWJsZSBjb21wYXRpYmxlczoKPiAr
-CSJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiCj4gKwkiZnNsLHAyMDQxLWRldmljZS1jb25m
-aWciCj4gKwkiZnNsLHAzMDQxLWRldmljZS1jb25maWciCj4gKwkiZnNsLHA0MDgwLWRldmljZS1j
-b25maWciCj4gKwkiZnNsLHA1MDIwLWRldmljZS1jb25maWciCj4gKwkiZnNsLHA1MDQwLWRldmlj
-ZS1jb25maWciCj4gKwkiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4wIgo+ICsJImZzbCxiNDg2
-MC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCxi
-NC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCx0MTA0MC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCx0
-MjA4MC1kZXZpY2UtY29uZmlnIgo+ICsJImZzbCx0NDI0MC1kZXZpY2UtY29uZmlnIgoKVGhlcmUn
-cyBubyBuZWVkIHRvIGxpc3QgZXZlcnkgY2hpcCBoZXJlLiAgSnVzdCBsaXN0IHRoZSBvbmVzIHRo
-YXQgYXJlbid0CmNoaXBzLCBwbHVzICJmc2wsPGNoaXA+LWRldmljZS1jb25maWciLgoKQXMgZm9y
-IGZzbCxiNC1kZXZpY2UtY29uZmlnLCBkb2VzIHRoYXQgZXhpc3QgaW4gYW55IGZpbmFsIGR0YiAo
-YXMKb3Bwb3NlZCB0byBiNHNpLXBvc3QuZHRzaSk/ICBUaGUgYjQ0MjAgYW5kIGI0ODYwIGR0c2kg
-ZmlsZXMgYm90aApvdmVyd3JpdGUgdGhhdCBjb21wYXRpYmxlLgoKLVNjb3R0CgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxp
-bmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
-cy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+Hi Geert,
+
+> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> hat am 9. April 2015 um 09:37
+> geschrieben:
+>
+> [...]
+> 
+> >
+> > Could you please explain the benefit / reason of this approach?
+>
+> Since you have different logical modules in the subsystem, this allows to
+> model
+> the subsystem as separate modules and a separate interrupt controller, and
+> have separate drivers for all modules.
+>
+> Look at da9063 for an example (there are more according to "git grep irq_chip
+> -- drivers/mfd", but not all of them may have DT bindings).
+>
+
+thanks for the hint, but this makes my patch series not really smaller. I
+invested a lot of time (started in September 2014) and i want to submit at least
+1 of the 3 drivers soon as possible.
+
+I think the best approch would be to submit my series with option B as a
+proposal. In the discussion about the patch it would be easier to decide if a
+interrupt controller is really necessary.
+
+> Gr{oetje,eeting}s,
+>
+> Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 --
+> geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like
+> that.
+> -- Linus Torvalds
+
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
