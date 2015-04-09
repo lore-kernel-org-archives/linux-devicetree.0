@@ -1,48 +1,62 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 8/8] ARM: DTS: dra7x: Integrate sDMA crossbar
-Date: Thu, 9 Apr 2015 12:12:07 -0700
-Message-ID: <20150409191206.GU18048@atomide.com>
-References: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
- <1428572154-3548-9-git-send-email-peter.ujfalusi@ti.com>
- <20150409151846.GR18048@atomide.com>
- <5526C9E5.4070601@ti.com>
- <20150409190126.GT18048@atomide.com>
- <5526CD6A.8010300@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
+Date: Thu, 09 Apr 2015 21:51:27 +0200
+Message-ID: <2137270.OOdtDiT2H4@wuerfel>
+References: <20150407121247.GA29497@amd> <552660C7.4020805@ti.com> <552663C2.70308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5526CD6A.8010300-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <552663C2.70308-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shc_work-JGs/UdohzUI@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150409 12:07]:
-> On 04/09/2015 10:01 PM, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150409 11:55]:
-> >> On 04/09/2015 06:18 PM, Tony Lindgren wrote:
-> >>> * Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150409 02:37]:
-> >>>> The sDMA requests are routed through the DMA crossbar and without the
-> >>>> crossbar only peripherals using DMA request 0-127 can be used.
+On Thursday 09 April 2015 14:34:26 Tomi Valkeinen wrote:
+> On 09/04/15 14:21, Tomi Valkeinen wrote:
+> > On 09/04/15 14:06, Pavel Machek wrote:
+> >> On Tue 2015-04-07 14:19:33, Geert Uytterhoeven wrote:
+> >>> Hi Pavel,
 > >>>
-> >>> I assume this can be merged separately from the driver
-> >>> changes?
+> >>> On Tue, Apr 7, 2015 at 2:12 PM, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+> >>>> I have an socfpga board, which uses has simple framebuffer implemented
+> >>>> in the FPGA. On 3.15, framebuffer is fast:
+> >>>>
+> >>>> root@wagabuibui:~# time cat /dev/fb0 > /dev/null
+> >>>> real               0m 0.00s
+> >>>> user               0m 0.00s
+> >>>> sys                0m 0.00s
+> >>>>
+> >>>> on 3.18, this takes 220msec. Similar slowdown exists for
+> >>>> writes. Simple framebuffer did not change at all between 3.15 and
+> >>>> 3.18; resource flags of the framebuffer are still same (0x200).
+> >>>>
+> >>>> If I enable caching on 3.18, it speeds up a bit, to 70msec or
+> >>>> so... Which means problem is not only in caching.
+> >>>>
+> >>>> Any ideas?
+> >>>
+> >>> My first guess was  commit 67dc0d4758e5 ("vt_buffer: drop console buffer
+> >>> copying optimisations"), but this was introduced only in v4.0-rc1.
+> >>>
+> >>> Just in case you encounter another performance regression after upgrading
+> >>> to a more modern kernel 
 > >>
-> >> Unfortunately not. We need to have the drivers in place for the DTS changes to
-> >> work.
-> > 
-> > Right but just merging the driver changes presumably won't
-> > break things?
+> >> :-). I did a git bisect, and it pointed to this. And reverting it
+> >> indeed fixes the problem in 3.18. Problem is still there in 4.0.
 > 
-> No, they will not break anything. We just do not have control over the DMA
-> crossbar (in a same way as we don't have control right now).
+> The difference is probably caused by memcpy() vs memcpy_fromio(). The
+> comment above memcpy_fromio() says "This needs to be optimized". I think
+> generally speaking memcpy_fromio() is correct for a framebuffer.
+> 
+> That said, if the fb is in RAM, and is only written by the CPU, I think
+> a normal memcpy() for fb_memcpy_fromfb() should be fine...
 
-OK good to hear.
+Could memcpy() cause alignment traps here if the fb pointer is unaligned
+and uncached?
 
-Thanks,
-
-Tony
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
