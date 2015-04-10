@@ -1,162 +1,121 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND] ARM: dts: Support audio on
- Exynos5422-odroidxu3 using simple-audio-card
-Date: Fri, 10 Apr 2015 14:48:13 +0530
-Message-ID: <CANAwSgS98n0kX8oBUk5Ehk1fwU4DA_DNuAqztp3LrOBcmrtAZw@mail.gmail.com>
-References: <1428651178-18186-1-git-send-email-ideal.song@samsung.com>
-	<552791A4.40203@fivetechno.de>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Fri, 10 Apr 2015 18:18:08 +0900
+Message-ID: <55279550.1060609@samsung.com>
+References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
+ <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
+ <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
+ <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
+ <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
+ <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552791A4.40203-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
-Cc: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <55278DD3.3020409@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>
+Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Inha,
+On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+>>>> Hi Robert,
+>>>>
+>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+>>>>> Hi Chanwoo,
+>>>>>
+>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>>>>>> Hi Robert,
+>>>>>>
+>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>>>>>> Hi Chanwoo,
+>>>>>>>
+>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>>>>>> Hi Robert,
+>>>>>>>>
+>>>>>>
+>>>>>> [snip]
+>>>>>>
+>>>>>>>> But, I have one question about case[3]
+>>>>>>>>
+>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>>>>>
+>>>>>>>
+>>>>>>> It's because state of single USB cable connection cannot be completely
+>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>>>>>> and ID), so we need to use two cables for single cable connection. We
+>>>>>>> use following convention:
+>>>>>>> cable "USB" = VBUS
+>>>>>>> cable "USB-HOST" = !ID.
+>>>>>>
+>>>>>> I think that extcon provider driver have to update the only one cable state
+>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>>>>>> at the same time through one h/w port.
+>>>>>>
+>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+>>>>>>
+>>>>>
+>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+>>>>> detected cable type is USB host). Devices would need to have complete
+>>>>> information about USB cable connection, because OTG state machine needs
+>>>>
+>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+>>>>
+>>>
+>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+>>> machine. It needs to know exact VBUS and ID states, which cannot be
+>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+>>> name together with "USB" to pass additional information about USB cable
+>>> connection.
+>>
+>> I think this method is not proper to support this case.
+>> It may cause the confusion about other case using USB/USB-HOST cable state
+>> except of you commented case.
+> 
+> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+> with old names. It seems to be simpler solution than adding new
+> mechanism notifying about VBUS and ID states changes.
 
-Tested-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
--Anand Moon
+As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+name continuoulsy.
 
-On 10 April 2015 at 14:32, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org> wrote:
-> Hi Inha,
->
-> I have tested this on XU3 (Headphone output).
->
-> Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
->
-> Best Regards
+I think that extcon core provide the helper API to get the value of VBUS.
+But I need to consider it.
+
+> 
+>>
+>>>
+>>>> I don't agree. 
+>>>>
+>>>>> that. As I wrote, current USB cable names are misleading. It would be
+>>>>> better to have "USB-VBUS" and "USB-ID".
+>>>>
+>>>> It is strange cable name. I prefer to use only 'USB' cable name.
+>>>> But, we could support the other method to get the state of whether USB-VBUS or USB-ID
+>>>> by using helper API or others.
+>>>>
+>>>
+>>> Ok, so do you have any idea how to do it? Do we want to supply
+>>> additional API for notifying about VBUS and ID changes?
+>>
+>> No, we need to consider more standard solution to support this case.
+>>
+> 
+> Thanks,
+> Robert Baldyga
+> 
 > --
-> Markus Reichl
->
-> Am 10.04.2015 um 09:32 schrieb Inha Song:
->> Add MAX98090 audio codec, I2S interface and the sound nodes to support
->> audio on Exynos5422 SoC Based Odroid-XU3 board. Now we can support audio
->> in Odroid-XU3 board using simple-audio-card DT binding.
->>
->> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/exynos5420.dtsi          |  9 +++++
->>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 59 ++++++++++++++++++++++++++++++
->>  2 files changed, 68 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index ac6f860..73886d6 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -415,6 +415,9 @@
->>                       <&clock_audss EXYNOS_I2S_BUS>,
->>                       <&clock_audss EXYNOS_SCLK_I2S>;
->>               clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
->> +             #clock-cells = <1>;
->> +             clock-output-names = "i2s_cdclk0";
->> +             #sound-dai-cells = <1>;
->>               samsung,idma-addr = <0x03000000>;
->>               pinctrl-names = "default";
->>               pinctrl-0 = <&i2s0_bus>;
->> @@ -429,6 +432,9 @@
->>               dma-names = "tx", "rx";
->>               clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
->>               clock-names = "iis", "i2s_opclk0";
->> +             #clock-cells = <1>;
->> +             clock-output-names = "i2s_cdclk1";
->> +             #sound-dai-cells = <1>;
->>               pinctrl-names = "default";
->>               pinctrl-0 = <&i2s1_bus>;
->>               status = "disabled";
->> @@ -442,6 +448,9 @@
->>               dma-names = "tx", "rx";
->>               clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
->>               clock-names = "iis", "i2s_opclk0";
->> +             #clock-cells = <1>;
->> +             clock-output-names = "i2s_cdclk2";
->> +             #sound-dai-cells = <1>;
->>               pinctrl-names = "default";
->>               pinctrl-0 = <&i2s2_bus>;
->>               status = "disabled";
->> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->> index edc25cf..c038f0d 100644
->> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
->> @@ -11,6 +11,7 @@
->>  */
->>
->>  /dts-v1/;
->> +#include <dt-bindings/sound/samsung-i2s.h>
->>  #include "exynos5800.dtsi"
->>
->>  / {
->> @@ -285,6 +286,64 @@
->>       rtc@101E0000 {
->>               status = "okay";
->>       };
->> +
->> +     sound: sound {
->> +             compatible = "simple-audio-card";
->> +
->> +             simple-audio-card,name = "Odroid-XU3";
->> +             simple-audio-card,widgets =
->> +                     "Headphone", "Headphone Jack",
->> +                     "Speakers", "Speakers";
->> +             simple-audio-card,routing =
->> +                     "Headphone Jack", "HPL",
->> +                     "Headphone Jack", "HPR",
->> +                     "Headphone Jack", "MICBIAS",
->> +                     "IN1", "Headphone Jack",
->> +                     "Speakers", "SPKL",
->> +                     "Speakers", "SPKR";
->> +
->> +             simple-audio-card,format = "i2s";
->> +             simple-audio-card,bitclock-master = <&link0_codec>;
->> +             simple-audio-card,frame-master = <&link0_codec>;
->> +
->> +             simple-audio-card,cpu {
->> +                     sound-dai = <&i2s0 0>;
->> +                     system-clock-frequency = <19200000>;
->> +             };
->> +
->> +             link0_codec: simple-audio-card,codec {
->> +                     sound-dai = <&max98090>;
->> +                     clocks = <&i2s0 CLK_I2S_CDCLK>;
->> +             };
->> +     };
->> +};
->> +
->> +&clock_audss {
->> +     assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
->> +                     <&clock_audss EXYNOS_MOUT_I2S>,
->> +                     <&clock_audss EXYNOS_DOUT_AUD_BUS>;
->> +     assigned-clock-parents = <&clock CLK_FIN_PLL>,
->> +                     <&clock_audss EXYNOS_MOUT_AUDSS>;
->> +     assigned-clock-rates = <0>,
->> +                     <0>,
->> +                     <19200000>;
->> +};
->> +
->> +&hsi2c_5 {
->> +     status = "okay";
->> +     max98090: max98090@10 {
->> +             compatible = "maxim,max98090";
->> +             reg = <0x10>;
->> +             interrupt-parent = <&gpx3>;
->> +             interrupts = <2 0>;
->> +             clocks = <&i2s0 CLK_I2S_CDCLK>;
->> +             clock-names = "mclk";
->> +             #sound-dai-cells = <0>;
->> +     };
->> +};
->> +
->> +&i2s0 {
->> +     status = "okay";
->>  };
->>
->>  &hdmi {
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
