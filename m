@@ -1,169 +1,150 @@
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
-Date: Fri, 10 Apr 2015 14:37:19 +0300
-Message-ID: <5527B5EF.8090401@yandex-team.ru>
-References: <20150408165920.25007.6869.stgit@buzz> <55255F84.6060608@yandex-team.ru> <20150408230740.GB53918@linux.vnet.ibm.com> <CALYGNiP_Ru0PpWoXOYPbviiNuY+9JHDqzL0jDNJeZAtmYZGFUg@mail.gmail.com> <20150409225817.GI53918@linux.vnet.ibm.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v4 04/10] eeprom: Add a simple EEPROM framework for
+ eeprom consumers
+Date: Fri, 10 Apr 2015 13:45:50 +0200
+Message-ID: <20150410114550.GR26727@lukather>
+References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150407184533.GA10278@codeaurora.org>
+ <55243982.7020907@linaro.org>
+ <20150409144522.GB9663@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <20150409225817.GI53918@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>, Konstantin Khlebnikov <koct9i@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="foM9DbudB2CcldhH"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150409144522.GB9663@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On 10.04.2015 01:58, Tanisha Aravamudan wrote:
-> On 09.04.2015 [07:27:28 +0300], Konstantin Khlebnikov wrote:
->> On Thu, Apr 9, 2015 at 2:07 AM, Nishanth Aravamudan
->> <nacc@linux.vnet.ibm.com> wrote:
->>> On 08.04.2015 [20:04:04 +0300], Konstantin Khlebnikov wrote:
->>>> On 08.04.2015 19:59, Konstantin Khlebnikov wrote:
->>>>> Node 0 might be offline as well as any other numa node,
->>>>> in this case kernel cannot handle memory allocation and crashes.
->>>
->>> Isn't the bug that numa_node_id() returned an offline node? That
->>> shouldn't happen.
->>
->> Offline node 0 came from static-inline copy of that function from of.h
->> I've patched weak function for keeping consistency.
->
-> Got it, that's not necessarily clear in the original commit message.
 
-Sorry.
+--foM9DbudB2CcldhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->>> #ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
->>> ...
->>> #ifndef numa_node_id
->>> /* Returns the number of the current Node. */
->>> static inline int numa_node_id(void)
->>> {
->>>          return raw_cpu_read(numa_node);
->>> }
->>> #endif
->>> ...
->>> #else   /* !CONFIG_USE_PERCPU_NUMA_NODE_ID */
->>>
->>> /* Returns the number of the current Node. */
->>> #ifndef numa_node_id
->>> static inline int numa_node_id(void)
->>> {
->>>          return cpu_to_node(raw_smp_processor_id());
->>> }
->>> #endif
->>> ...
->>>
->>> So that's either the per-cpu numa_node value, right? Or the result of
->>> cpu_to_node on the current processor.
->>>
->>>> Example:
->>>>
->>>> [    0.027133] ------------[ cut here ]------------
->>>> [    0.027938] kernel BUG at include/linux/gfp.h:322!
->>>
->>> This is
->>>
->>> VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES || !node_online(nid));
->>>
->>> in
->>>
->>> alloc_pages_exact_node().
->>>
->>> And based on the trace below, that's
->>>
->>> __slab_alloc -> alloc
->>>
->>> alloc_pages_exact_node
->>>          <- alloc_slab_page
->>>                  <- allocate_slab
->>>                          <- new_slab
->>>                                  <- new_slab_objects
->>>                                          < __slab_alloc?
->>>
->>> which is just passing the node value down, right? Which I think was
->>> from:
->>>
->>>          domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
->>>                                GFP_KERNEL, of_node_to_nid(of_node));
->>>
->>> ?
->>>
->>>
->>> What platform is this on, looks to be x86? qemu emulation of a
->>> pathological topology? What was the topology?
->>
->> qemu x86_64, 2 cpu, 2 numa nodes, all memory in second.
->
-> Ok, this worked before? That is, this is a regression?
+Hi Stephen,
 
-Seems like that worked before 3.17 where
-bug was exposed by commit 44767bfaaed782d6d635ecbb13f3980041e6f33e
-(x86, irq: Enhance mp_register_ioapic() to support irqdomain)
-this is first usage of  *irq_domain_add*() in x86.
+On Thu, Apr 09, 2015 at 07:45:22AM -0700, Stephen Boyd wrote:
+> > eeprom block array is just another way intended to get hold of
+> > eeprom content for non-DT providers/consumers, but DT
+> > consumers/providers can also use it. As of today SOC/mach level code
+> > could use it as well.
+> >=20
+> > In eeprom_cell_get() case the lookup of provider is done based on
+> > provider name, this provider name is generally supplied by all the
+> > providers (both DT/non DT).
+> >=20
+> > for example in qfprom case,
+> > provider is registered from DT with eeprom config containing a unique n=
+ame:
+> > static struct eeprom_config econfig =3D {
+> > 	.name =3D "qfprom",
+> > 	.id =3D 0,
+> > };
+> >=20
+> > In the consumer case, the tsens driver could do some like in non DT way:
+> >=20
+> > 	struct eeprom_block blocks[4] =3D{
+> > 		{
+> > 		.offset =3D 0x404,
+> > 		.count =3D 0x4,
+> > 		},
+> > 		{
+> > 		.offset =3D 0x408,
+> > 		.count =3D 0x4,
+> > 		},
+> > 		{
+> > 		.offset =3D 0x40c,
+> > 		.count =3D 0x4,
+> > 		},
+> > 		{
+> > 		.offset =3D 0x410,
+> > 		.count =3D 0x4,
+> > 		},
+> > 	};
+> > 	calib_cell =3D eeprom_cell_get("qfprom0", blocks, 4);
+> >=20
+> >=20
+> > Or in DT way
+> > calib_cell  =3D of_eeprom_cell_get(np, "calib");
+> >=20
+>=20
+> Ok. I guess I was hoping for a more device centric approach like
+> we have for clks/regulators/etc. That way a driver doesn't need
+> to know it's using DT or not to figure out which API to call.
+> Also the global namespace is sort of worrying (qfprom0 part). How
+> do we know it's qfprom0? What if it's qfprom1 sometimes?
 
->
->>   I've slightly patched it to allow that setup (in qemu hardcoded 1Mb
->> of memory connected to node 0) And i've found unrelated bug --
->> if numa node has less that 4Mb ram then kernel crashes even
->> earlier because numa code ignores that node
->> but buddy allocator still tries to use that pages.
->
-> So this isn't an actually supported topology by qemu?
+Through platform_data?
 
-Qemu easily created memoryless numa nodes but node 0 have hardcoded 1Mb 
-of ram. This seems like legacy prop for DOS era software.
+Or maybe that could be done using a function that would attach a cell
+to a struct device?
 
->
->>> Note that there is a ton of code that seems to assume node 0 is online.
->>> I started working on removing this assumption myself and it just led
->>> down a rathole (on power, we always have node 0 online, even if it is
->>> memoryless and cpuless, as a result).
->>>
->>> I am guessing this is just happening early in boot before the per-cpu
->>> areas are setup? That's why (I think) x86 has the early_cpu_to_node()
->>> function...
->>>
->>> Or do you not have CONFIG_OF set? So isn't the only change necessary to
->>> the include file, and it should just return first_online_node rather
->>> than 0?
->>>
->>> Ah and there's more of those node 0 assumptions :)
->>
->> That was x86 where is no CONFIG_OF at all.
->>
->> I don't know what's wrong with that machine but ACPI reports that
->> cpus and memory from node 0 as connected to node 1 and everything
->> seems worked fine until lates upgrade -- seems like buggy static-inline
->> of_node_to_nid was intoduced in 3.13 but x86 ioapic uses it during
->> early allocations only in since 3.17. Machine owner teells that 3.15
->> worked fine.
->
-> So, this was a qemu emulation of this actual physical machine without a
-> node 0?
+I'm not sure that would cover all cases though.
 
-Yep. Also I have crash from real machine but that stacktrace is messy
-because CONFIG_DEBUG_VM wasn't enabled and kernel crashed inside
-buddy allocator when tried to touch unallocated numa node structure.
+> Also, how are we supposed to encode certain bits inside the
+> stream of bytes (blocks)? In some situations (e.g. the qcom CPR
+> stuff) we have quite a few fuse bits we need to read that are
+> packed into different bytes and may cross byte boundaries (i.e.
+> bits 6 to 10 of a 32-bit word). The current API looks to be byte
+> focused when I have bit based/non-byte aligned data.
+>=20
+> My current feeling is that I don't want to use any of the block
+> stuff at all. I just want a simple byte-based API that allows me
+> to read a number of contiguous bytes from the fuses. Then I'll
+> need to shift that data down by a few bits and mask it with the
+> width of the data I want to read to extract the data needed.
 
->
-> As I mentioned, there are lots of node 0 assumptions through the kernel.
-> You might run into more issues at runtime.
+Except that this is highly dependent on the usage you're making of
+this API.
 
-I think it's possible to trigger kernel crash for any memoryless numa
-node (not just for 0) if some device (like ioapic in my case) points to
-it in its acpi tables. In runtime numa affinity configured by user
-usually validated by the kernel, while numbers from firmware might be 
-used without proper validation.
+It could be fine to expect that if your writing machine code, that for
+one given SoC will always be true.
 
-Anyway seems like at least one x86 machines works fine without memory in 
-node 0.
+If you're writing driver code, that will just have to lookup one value
+=66rom an EEPROM, the exact offset, size and device being completely
+board dependant, it's not really practical.
 
--- 
-Konstantin
+> The only thing after that where I have a problem is figuring out
+> which eeprom is present in the consumer driver.
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Is that really necessary? I mean, the point of having an abstraction
+layer is precisely to *not* care about the provider when you are the
+consumer.
+
+If we can't, then the abstraction layer is not good enough and we
+should improve it, but we shouldn't need to hack around it.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--foM9DbudB2CcldhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVJ7fuAAoJEBx+YmzsjxAgaiQP/3i9NmguuibkO56JVHuDSIKn
+eIfYWZ+iRQGUgrHLnrW4vrCkd8ymZn/I6feoOAlIl72oQtw5WrqJWDI38EU/51IB
+sbVDa2EavUgrxOJDvq0ULKWbPcd8GRfqRZl4Jbr9NbOgjslpyROsHVI7a2uqLfJs
+hJjf9t6RkLijwkC29caQXZeeNcZHpdt2hx1szx+fyUwaGkHoDz8pHuISwiCWsSSD
+kJJyfYN3Y234jFxwd9930Br2QXIXN2APhgBuAkxzHAKMpaV8C+E1sEa7weVTBeBZ
+twHybsyvCWpKlr7F58ScL0eV7bu3LSok1MnUpkjsG1RX61RqmnK8zhE1lS8z4gW+
+eMcs0UzQ4AOjlTOoZKs5HqXOwszmAA/L1o5BXH9ik7Ol0ZeQj+WXpi3yAyoFjgOz
+7XYxKAewvPV2DP/QlnrOoeM4zrXT95qyH80MIiLTdz7h+geGohLZcxjlAnY//hr3
+PeuGArWxEQ+U8dIF2RDpRxd0+QCHbQNPxLgsf223pgxbVGXPw+d/sNrbGxyA6ydl
+Dy5947+Bxv9ICQYzDMajIoWuuuQaukpCJWXDrbThbAm/ZoaJsXbGSjO6oWfOTcEv
+l16eqlY0L29S7h3uWIekN3Xa2VYvT2EbdsB8vkAwVoOccabnzC40E+1SUejxLXb5
+RQWwM7OgFLeHOx6qAXYq
+=xdxJ
+-----END PGP SIGNATURE-----
+
+--foM9DbudB2CcldhH--
