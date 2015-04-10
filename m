@@ -1,104 +1,59 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/12] ARM: dts: apq8064: Add MDP support
-Date: Fri, 10 Apr 2015 21:30:29 +0100
-Message-ID: <552832E5.1010208@linaro.org>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669271-11032-1-git-send-email-srinivas.kandagatla@linaro.org> <552802B6.2040804@codeaurora.org> <552826F6.5040105@linaro.org> <552830C9.4030601@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552830C9.4030601-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 00/11] ARM: dts: apq8064 dt patches
+Date: Fri, 10 Apr 2015 21:41:31 +0100
+Message-ID: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Thanks all for reviewing v2 patches.
 
+Hi Kumar, 
 
-On 10/04/15 21:21, Stephen Boyd wrote:
-> On 04/10/15 12:39, Srinivas Kandagatla wrote:
->>
->>
->> On 10/04/15 18:04, Stephen Boyd wrote:
->>> On 04/10/15 05:34, Srinivas Kandagatla wrote:
->>>> @@ -250,6 +265,18 @@
->>>>                };
->>>>            };
->>>>
->>>> +        ext_3p3v: regulator-fixed@1 {
->>>> +            compatible = "regulator-fixed";
->>>> +            regulator-min-microvolt = <3300000>;
->>>> +            regulator-max-microvolt = <3300000>;
->>>> +            regulator-name = "ext_3p3v";
->>>> +            regulator-type = "voltage";
->>>> +            startup-delay-us = <0>;
->>>> +            gpio = <&tlmm_pinmux 77 GPIO_ACTIVE_HIGH>;
->>>> +            enable-active-high;
->>>> +            regulator-boot-on;
->>>> +        };
->>>
->>> This shouldn't be inside the SoC node because it doesn't have a reg
->>> property. It should be in a 'regulators' node that's in the root of the
->>> tree:
->>
->> Is this new DT requirement/style? I have not noticed such a dt style
->> in the past. I might have missed it. Any advantage of doing this way?
->
-> It's a style. I'm not sure if it's new, but I feel like I've seen
-> mention of it before more than a year ago (see
-> arch/arm/boot/dts/tegra30-beaver.dts for an example). The advantage of
-> doing it this way is we can see all the gpio/fixed regulators in one
-> place and they're physically placed on a separate bus from the SoC bus.
-> Typically nodes have reg properties too, so making up fake reg
-> properties for the regulator nodes when they're on the SoC bus would be
-> wrong and confusing. If they're under some regulators container node we
-> can number them from 0 to N and use that for the reg property.
->
-Thanks for explaining.
->>>
->>>> +
->>>> +        hdmi: qcom,hdmi-tx@4a00000 {
->>>> +            compatible = "qcom,hdmi-tx-8960";
->>>> +            reg-names = "core_physical";
->>>> +            reg = <0x04a00000 0x1000>;
->>>> +            interrupts = <GIC_SPI 79 IRQ_TYPE_NONE>;
->>>> +            clock-names =
->>>> +                "core_clk",
->>>> +                "master_iface_clk",
->>>> +                "slave_iface_clk";
->>>> +            clocks =
->>>> +                <&mmcc HDMI_APP_CLK>,
->>>> +                <&mmcc HDMI_M_AHB_CLK>,
->>>> +                <&mmcc HDMI_S_AHB_CLK>;
->>>> +            qcom,hdmi-tx-ddc-clk = <&tlmm_pinmux 70
->>>> +                        GPIO_ACTIVE_HIGH>;
->>>> +            qcom,hdmi-tx-ddc-data = <&tlmm_pinmux 71
->>>> +                        GPIO_ACTIVE_HIGH>;
->>>> +            qcom,hdmi-tx-hpd = <&tlmm_pinmux 72
->>>> +                        GPIO_ACTIVE_HIGH>;
->>>
->>> This should be done via the *-gpios method. i.e. hdmi-tx-ddc-clk-gpios,
->>> hdmi-tx-ddc-data-gpios, etc.
->>>
->> Thanks for the inputs,
->>
->> That's true, These are existing bindings, so I can't change it as part
->> of this patch, However I will make another patch to fix this in both
->> drivers and DT for good reasons. Just noticed that bindings are not
->> consistent with the examples and the driver, which I guess is another
->> issue.
->
-> Yes, the driver/binding should be fixed and then this patch can be
-> corrected and applied. There are no implementations of the DT for this
-> device upstream in the dts directory so there's no breakage or backwards
-> incompatibility problem by fixing the driver/binding.
->
-Yep, In that case, I should pull this patch out of this series just to 
-avoid any delays and create a new patchset for fixing bindings + driver 
-+ DT.
+Now that the rpm redesign dependency is resolved, If its not too late could you
+queue these dt patches for v4.1-rc1 or v4.1-rc2.
 
+I tested these patches on APQ8064 based IFC6410 and CMQS600 board with SATA/USB.
+I also rebased these patches on top of your qcom/dt branch.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+srini
+
+Changes since v2
+ * Some cosmetic fixes spotted by Stephen Boyd.
+ * Rename sata_phy to phy suggested by Stephen Boyd
+ * Dropped MDP patch to track it in different patchset.
+
+Changes since v1
+ * Made regulators board specific, as suggested by Bjorn.
+ * Used correct IRQF flags for rpm, spotted by Bjorn.
+ * Fixed serial lable to be more appropriate, spotted by Bjorn.
+
+Nicolas Dechesne (2):
+  ARM: dts: apq8064: Add usb host support to CM QS-600
+  ARM: dts: apq8064: Add USB OTG support for CM QS-600
+
+Pramod Gurav (1):
+  ARM: dts: apq8064-ifc6410: Add DT alias for serial port
+
+Srinivas Kandagatla (8):
+  ARM: dts: apq8064: add RPM regulators support
+  ARM: dts: apq8064-ifc6410: Add basic regulators
+  ARM: dts: apq8064: Add usb host support.
+  ARM: dts: apq8064: Add USB OTG support
+  ARM: dts: apq8064: Add SATA controller support.
+  ARM: dts: apq8064-cm-qs600: Add basic regulators.
+  ARM: dts: apq8064: Move i2c1 pinctrl to apq8064.dtsi
+  ARM: dts: apq8064: add i2c3 node for panel.
+
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 100 ++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  | 136 +++++++++++++++++++--
+ arch/arm/boot/dts/qcom-apq8064.dtsi         | 175 +++++++++++++++++++++++++++-
+ 3 files changed, 402 insertions(+), 9 deletions(-)
+
+-- 
+1.9.1
