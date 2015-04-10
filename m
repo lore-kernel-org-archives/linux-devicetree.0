@@ -1,89 +1,98 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 05/11] ARM: dts: apq8064: Add SATA controller support.
-Date: Fri, 10 Apr 2015 21:43:56 +0100
-Message-ID: <1428698636-12114-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 06/11] ARM: dts: apq8064-cm-qs600: Add basic regulators.
+Date: Fri, 10 Apr 2015 21:44:05 +0100
+Message-ID: <1428698645-12156-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds AHCI based SATA controller support to APQ8064.
-Tested on IFC6410 board.
+This patch adds basic regulator support for USB and HDMI.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  9 ++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi        | 35 ++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 61 +++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 122bf34..3d96cb8 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -116,6 +116,15 @@
+diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+index 5d75666..142885d 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+@@ -14,6 +14,67 @@
  			};
  		};
  
-+		sata_phy0: phy@1b400000 {
-+			status = "okay";
++		rpm@108000 {
++			regulators {
++				vin_lvs1_3_6-supply = <&pm8921_s4>;
++				vin_lvs2-supply = <&pm8921_s1>;
++				vin_lvs4_5_7-supply = <&pm8921_s4>;
++
++				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
++				vdd_l24-supply = <&pm8921_s1>;
++				vdd_l25-supply = <&pm8921_s1>;
++				vdd_l26-supply = <&pm8921_s7>;
++				vdd_l27-supply = <&pm8921_s7>;
++				vdd_l28-supply = <&pm8921_s7>;
++
++
++				/* Buck SMPS */
++				pm8921_s1: s1 {
++					regulator-always-on;
++					regulator-min-microvolt = <1225000>;
++					regulator-max-microvolt = <1225000>;
++					qcom,switch-mode-frequency = <3200000>;
++					bias-pull-down;
++				};
++
++				pm8921_s3: s3 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1400000>;
++					qcom,switch-mode-frequency = <4800000>;
++				};
++
++				pm8921_s4: s4 {
++					regulator-min-microvolt	= <1800000>;
++					regulator-max-microvolt	= <1800000>;
++					qcom,switch-mode-frequency = <3200000>;
++				};
++
++				pm8921_s7: s7 {
++					regulator-min-microvolt = <1300000>;
++					regulator-max-microvolt = <1300000>;
++					qcom,switch-mode-frequency = <3200000>;
++				};
++
++				pm8921_l3: l3 {
++					regulator-min-microvolt = <3050000>;
++					regulator-max-microvolt = <3300000>;
++					bias-pull-down;
++				};
++
++				pm8921_l4: l4 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1800000>;
++					bias-pull-down;
++				};
++
++				pm8921_l23: l23 {
++					regulator-min-microvolt = <1700000>;
++					regulator-max-microvolt = <1900000>;
++					bias-pull-down;
++				};
++			};
 +		};
 +
-+		sata0: sata@29000000 {
-+			status		= "okay";
-+			target-supply	= <&pm8921_s4>;
-+		};
-+
- 		/* OTG */
- 		usb1_phy: phy@12500000 {
- 			status		= "okay";
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 5aac9a5..1f900c7 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -379,6 +379,41 @@
- 			usb-phy		= <&usb4_phy>;
- 		};
- 
-+		sata_phy0: phy@1b400000 {
-+			compatible	= "qcom,apq8064-sata-phy";
-+			status		= "disabled";
-+			reg		= <0x1b400000 0x200>;
-+			reg-names	= "phy_mem";
-+			clocks		= <&gcc SATA_PHY_CFG_CLK>;
-+			clock-names	= "cfg";
-+			#phy-cells	= <0>;
-+		};
-+
-+		sata0: sata@29000000 {
-+			compatible		= "generic-ahci";
-+			status			= "disabled";
-+			reg			= <0x29000000 0x180>;
-+			interrupts		= <GIC_SPI 209 IRQ_TYPE_NONE>;
-+
-+			clocks			= <&gcc SFAB_SATA_S_H_CLK>,
-+						<&gcc SATA_H_CLK>,
-+						<&gcc SATA_A_CLK>,
-+						<&gcc SATA_RXOOB_CLK>,
-+						<&gcc SATA_PMALIVE_CLK>;
-+			clock-names		= "slave_iface",
-+						"iface",
-+						"bus",
-+						"rxoob",
-+						"core_pmalive";
-+
-+			assigned-clocks		= <&gcc SATA_RXOOB_CLK>,
-+						<&gcc SATA_PMALIVE_CLK>;
-+			assigned-clock-rates	= <100000000>, <100000000>;
-+
-+			phys			= <&sata_phy0>;
-+			phy-names		= "sata-phy";
-+		};
-+
- 		/* Temporary fixed regulator */
- 		vsdcc_fixed: vsdcc-regulator {
- 			compatible = "regulator-fixed";
+ 		gsbi@12440000 {
+ 			status = "okay";
+ 			qcom,mode = <GSBI_PROT_I2C>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
