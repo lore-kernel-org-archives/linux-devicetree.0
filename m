@@ -1,967 +1,265 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] power_supply: Add TI BQ24257 charger driver
-Date: Fri, 10 Apr 2015 16:18:17 +0300
-Message-ID: <1428671897-12232-1-git-send-email-laurentiu.palcu@intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: Re: [PATCH 6/6] hwmon: pwm-fan: Update the duty cycle inorder to
+ control the pwm-fan
+Date: Fri, 10 Apr 2015 15:30:01 +0200
+Message-ID: <1428672601.22057.25.camel@collabora.co.uk>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+		<1427387955-5129-7-git-send-email-linux.amoon@gmail.com>
+		<20150408104415.07e1c821@amdc2363>	<20150408153214.GA15942@roeck-us.net>
+		<CANAwSgSD52sDpP7NH2hhiZX-=LZF6Qo-X3enqsqM+5XAMfyP=Q@mail.gmail.com>
+		<20150408165351.GA22846@roeck-us.net>
+		<CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
+		<CANAwSgRSxj9frUHRXh3JwD+bpnFrj8WkpDMKHZn-OPmuCEgP7w@mail.gmail.com>
+		<1428667201.22057.20.camel@collabora.co.uk>
+	 <CANAwSgQHi2-i8xHn+X+KTGg8HFpe6SPgkuSvuApJP3342N8+zQ@mail.gmail.com>
+	 <5527CB78.4040002@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5527CB78.4040002@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Anand Moon <linux.amoon@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Markus Reichl <m.reichl@fivetechno.de>linux-pwm <linux-pwm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Based on the datasheet found here:
-http://www.ti.com/lit/ds/symlink/bq24257.pdf
+On Fri, 2015-04-10 at 06:09 -0700, Guenter Roeck wrote:
+> On 04/10/2015 05:59 AM, Anand Moon wrote:
+> > Hi Sjoerd,
+> >
+> > I don't much advance knowledge on internal signaling of pwm-samsung=
+ module.
+> >
+> > So do I need to send this patch again ?
+> >
+>=20
+>  From the context, it seems that the fix in hwmon would only paint
+> over a problem in the actual pwm driver, correct ?
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
-The driver was tested using an EVM [1], not with a final product.
+Yes/no/maybe :). Imho this is something to clarify in the pwm API
+documentation. As currently all it says is:=20
+  "pwm_disable - stop a PWM output toggling",=20
 
-[1] http://www.ti.com/tool/bq24257evm-150
+Which is what the exynos driver does.=20
 
-laurentiu
+Thierry, could you clearify what the intention is here? I'm happy to
+prepare a pwm driver patch if needed to solve this?
 
- .../devicetree/bindings/power/bq24257.txt          |  21 +
- drivers/power/Kconfig                              |   7 +
- drivers/power/Makefile                             |   1 +
- drivers/power/bq24257_charger.c                    | 868 +++++++++++++++++++++
- 4 files changed, 897 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/bq24257.txt
- create mode 100644 drivers/power/bq24257_charger.c
-
-diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
-new file mode 100644
-index 0000000..5c9d394
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/bq24257.txt
-@@ -0,0 +1,21 @@
-+Binding for TI bq24257 Li-Ion Charger
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+ * "ti,bq24257"
-+- reg:			   integer, i2c address of the device.
-+- ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
-+- ti,charge-current:	   integer, maximum charging current in uA.
-+- ti,termination-current:  integer, charge will be terminated when current in
-+			   constant-voltage phase drops below this value (in uA).
-+
-+Example:
-+
-+bq24257 {
-+	compatible = "ti,bq24257";
-+	reg = <0x6a>;
-+
-+	ti,battery-regulation-voltage = <4200000>;
-+	ti,charge-current = <1000000>;
-+	ti,termination-current = <50000>;
-+};
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 4091fb0..20352a7 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -388,6 +388,13 @@ config CHARGER_BQ24190
- 	help
- 	  Say Y to enable support for the TI BQ24190 battery charger.
- 
-+config CHARGER_BQ24257
-+	tristate "TI BQ24257 battery charger driver"
-+	depends on I2C && GPIOLIB
-+	depends on REGMAP_I2C
-+	help
-+	  Say Y to enable support for the TI BQ24257 battery charger.
-+
- config CHARGER_BQ24735
- 	tristate "TI BQ24735 battery charger support"
- 	depends on I2C && GPIOLIB
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index b7b0181..19a1f41 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_CHARGER_MAX8997)	+= max8997_charger.o
- obj-$(CONFIG_CHARGER_MAX8998)	+= max8998_charger.o
- obj-$(CONFIG_CHARGER_BQ2415X)	+= bq2415x_charger.o
- obj-$(CONFIG_CHARGER_BQ24190)	+= bq24190_charger.o
-+obj-$(CONFIG_CHARGER_BQ24257)	+= bq24257_charger.o
- obj-$(CONFIG_CHARGER_BQ24735)	+= bq24735-charger.o
- obj-$(CONFIG_POWER_AVS)		+= avs/
- obj-$(CONFIG_CHARGER_SMB347)	+= smb347-charger.o
-diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-new file mode 100644
-index 0000000..58b9af1
---- /dev/null
-+++ b/drivers/power/bq24257_charger.c
-@@ -0,0 +1,868 @@
-+/*
-+ * TI BQ24257 charger driver
-+ *
-+ * Copyright (C) 2015 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/power_supply.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+
-+#include <linux/acpi.h>
-+#include <linux/of.h>
-+
-+#define BQ24257_REG_1			0x00
-+#define BQ24257_REG_2			0x01
-+#define BQ24257_REG_3			0x02
-+#define BQ24257_REG_4			0x03
-+#define BQ24257_REG_5			0x04
-+#define BQ24257_REG_6			0x05
-+#define BQ24257_REG_7			0x06
-+
-+#define BQ24257_MANUFACTURER		"Texas Instruments"
-+#define BQ24257_STAT_IRQ		"stat"
-+#define BQ24257_PG_GPIO			"pg"
-+
-+#define BQ24257_ILIM_SET_DELAY		1000	/* msec */
-+
-+enum bq24257_fields {
-+	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
-+	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
-+	F_VBAT, F_USB_DET,					    /* REG 3 */
-+	F_ICHG, F_ITERM,					    /* REG 4 */
-+	F_LOOP_STATUS, F_LOW_CHG, F_DPDM_EN, F_CE_STATUS, F_VINDPM, /* REG 5 */
-+	F_X2_TMR_EN, F_TMR, F_SYSOFF, F_TS_STAT,		    /* REG 6 */
-+	F_VOVP, F_CLR_VDP, F_FORCE_BATDET, F_FORCE_PTM,		    /* REG 7 */
-+
-+	F_MAX_FIELDS
-+};
-+
-+/* initial field values, converted from uV/uA */
-+struct bq24257_init_data {
-+	u8 ichg;	/* charge current      */
-+	u8 vbat;	/* regulation voltage  */
-+	u8 iterm;	/* termination current */
-+};
-+
-+struct bq24257_state {
-+	u8 status;
-+	u8 fault;
-+	bool power_good;
-+};
-+
-+struct bq24257_device {
-+	struct i2c_client *client;
-+	struct device *dev;
-+	struct power_supply *charger;
-+	struct power_supply_desc charger_desc;
-+
-+	struct regmap *rmap;
-+	struct regmap_field *rmap_fields[F_MAX_FIELDS];
-+
-+	struct gpio_desc *pg;
-+
-+	struct delayed_work iilimit_setup_work;
-+
-+	struct bq24257_init_data init_data;
-+	struct bq24257_state state;
-+
-+	struct mutex lock; /* protect state data */
-+};
-+
-+static bool bq24257_is_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	return true;
-+}
-+
-+static bool bq24257_is_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case BQ24257_REG_2:
-+	case BQ24257_REG_4:
-+		return false;
-+
-+	default:
-+		return true;
-+	}
-+}
-+
-+static const struct regmap_config bq24257_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = BQ24257_REG_7,
-+	.cache_type = REGCACHE_RBTREE,
-+
-+	.writeable_reg = bq24257_is_writeable_reg,
-+	.volatile_reg = bq24257_is_volatile_reg,
-+};
-+
-+static const struct reg_field bq24257_reg_fields[] = {
-+	/* REG 1 */
-+	[F_WD_FAULT]		= REG_FIELD(BQ24257_REG_1, 7, 7),
-+	[F_WD_EN]		= REG_FIELD(BQ24257_REG_1, 6, 6),
-+	[F_STAT]		= REG_FIELD(BQ24257_REG_1, 4, 5),
-+	[F_FAULT]		= REG_FIELD(BQ24257_REG_1, 0, 3),
-+	/* REG 2 */
-+	[F_RESET]		= REG_FIELD(BQ24257_REG_2, 7, 7),
-+	[F_IILIMIT]		= REG_FIELD(BQ24257_REG_2, 4, 6),
-+	[F_EN_STAT]		= REG_FIELD(BQ24257_REG_2, 3, 3),
-+	[F_EN_TERM]		= REG_FIELD(BQ24257_REG_2, 2, 2),
-+	[F_CE]			= REG_FIELD(BQ24257_REG_2, 1, 1),
-+	[F_HZ_MODE]		= REG_FIELD(BQ24257_REG_2, 0, 0),
-+	/* REG 3 */
-+	[F_VBAT]		= REG_FIELD(BQ24257_REG_3, 2, 7),
-+	[F_USB_DET]		= REG_FIELD(BQ24257_REG_3, 0, 1),
-+	/* REG 4 */
-+	[F_ICHG]		= REG_FIELD(BQ24257_REG_4, 3, 7),
-+	[F_ITERM]		= REG_FIELD(BQ24257_REG_4, 0, 2),
-+	/* REG 5 */
-+	[F_LOOP_STATUS]		= REG_FIELD(BQ24257_REG_5, 6, 7),
-+	[F_LOW_CHG]		= REG_FIELD(BQ24257_REG_5, 5, 5),
-+	[F_DPDM_EN]		= REG_FIELD(BQ24257_REG_5, 4, 4),
-+	[F_CE_STATUS]		= REG_FIELD(BQ24257_REG_5, 3, 3),
-+	[F_VINDPM]		= REG_FIELD(BQ24257_REG_5, 0, 2),
-+	/* REG 6 */
-+	[F_X2_TMR_EN]		= REG_FIELD(BQ24257_REG_6, 7, 7),
-+	[F_TMR]			= REG_FIELD(BQ24257_REG_6, 5, 6),
-+	[F_SYSOFF]		= REG_FIELD(BQ24257_REG_6, 4, 4),
-+	[F_TS_STAT]		= REG_FIELD(BQ24257_REG_6, 0, 2),
-+	/* REG 7 */
-+	[F_VOVP]		= REG_FIELD(BQ24257_REG_7, 5, 7),
-+	[F_CLR_VDP]		= REG_FIELD(BQ24257_REG_7, 4, 4),
-+	[F_FORCE_BATDET]	= REG_FIELD(BQ24257_REG_7, 3, 3),
-+	[F_FORCE_PTM]		= REG_FIELD(BQ24257_REG_7, 2, 2)
-+};
-+
-+static const u32 bq24257_vbat_map[] = {
-+	3500000, 3520000, 3540000, 3560000, 3580000, 3600000, 3620000, 3640000,
-+	3660000, 3680000, 3700000, 3720000, 3740000, 3760000, 3780000, 3800000,
-+	3820000, 3840000, 3860000, 3880000, 3900000, 3920000, 3940000, 3960000,
-+	3980000, 4000000, 4020000, 4040000, 4060000, 4080000, 4100000, 4120000,
-+	4140000, 4160000, 4180000, 4200000, 4220000, 4240000, 4260000, 4280000,
-+	4300000, 4320000, 4340000, 4360000, 4380000, 4400000, 4420000, 4440000
-+};
-+
-+#define BQ24257_VBAT_MAP_SIZE		ARRAY_SIZE(bq24257_vbat_map)
-+
-+static const u32 bq24257_ichg_map[] = {
-+	500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000, 900000,
-+	950000, 1000000, 1050000, 1100000, 1150000, 1200000, 1250000, 1300000,
-+	1350000, 1400000, 1450000, 1500000, 1550000, 1600000, 1650000, 1700000,
-+	1750000, 1800000, 1850000, 1900000, 1950000, 2000000
-+};
-+
-+#define BQ24257_ICHG_MAP_SIZE		ARRAY_SIZE(bq24257_ichg_map)
-+
-+static const u32 bq24257_iterm_map[] = {
-+	50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000
-+};
-+
-+#define BQ24257_ITERM_MAP_SIZE		ARRAY_SIZE(bq24257_iterm_map)
-+
-+static int bq24257_field_read(struct bq24257_device *bq,
-+			      enum bq24257_fields field_id)
-+{
-+	int ret;
-+	int val;
-+
-+	ret = regmap_field_read(bq->rmap_fields[field_id], &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return val;
-+}
-+
-+static int bq24257_field_write(struct bq24257_device *bq,
-+			       enum bq24257_fields field_id, u8 val)
-+{
-+	return regmap_field_write(bq->rmap_fields[field_id], val);
-+}
-+
-+static u8 bq24257_find_idx(u32 value, const u32 *map, u8 map_size)
-+{
-+	u8 idx;
-+
-+	for (idx = 1; idx < map_size; idx++)
-+		if (value < map[idx])
-+			break;
-+
-+	return idx - 1;
-+}
-+
-+enum bq24257_status {
-+	STATUS_READY,
-+	STATUS_CHARGE_IN_PROGRESS,
-+	STATUS_CHARGE_DONE,
-+	STATUS_FAULT,
-+};
-+
-+enum bq24257_fault {
-+	FAULT_NORMAL,
-+	FAULT_INPUT_OVP,
-+	FAULT_INPUT_UVLO,
-+	FAULT_SLEEP,
-+	FAULT_BAT_TS,
-+	FAULT_BAT_OVP,
-+	FAULT_TS,
-+	FAULT_TIMER,
-+	FAULT_NO_BAT,
-+	FAULT_ISET,
-+	FAULT_INPUT_LDO_LOW,
-+};
-+
-+static int bq24257_power_supply_get_property(struct power_supply *psy,
-+					     enum power_supply_property psp,
-+					     union power_supply_propval *val)
-+{
-+	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-+	struct bq24257_state state;
-+
-+	mutex_lock(&bq->lock);
-+	state = bq->state;
-+	mutex_unlock(&bq->lock);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		if (!state.power_good)
-+			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-+		else if (state.status == STATUS_READY)
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		else if (state.status == STATUS_CHARGE_IN_PROGRESS)
-+			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+		else if (state.status == STATUS_CHARGE_DONE)
-+			val->intval = POWER_SUPPLY_STATUS_FULL;
-+		else
-+			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_MANUFACTURER:
-+		val->strval = BQ24257_MANUFACTURER;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = state.power_good;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		switch (state.fault) {
-+		case FAULT_NORMAL:
-+			val->intval = POWER_SUPPLY_HEALTH_GOOD;
-+			break;
-+
-+		case FAULT_INPUT_OVP:
-+		case FAULT_BAT_OVP:
-+			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+			break;
-+
-+		case FAULT_TS:
-+		case FAULT_BAT_TS:
-+			val->intval = POWER_SUPPLY_HEALTH_OVERHEAT;
-+			break;
-+
-+		case FAULT_TIMER:
-+			val->intval = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
-+			break;
-+
-+		default:
-+			val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			break;
-+		}
-+
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		val->intval = bq24257_ichg_map[bq->init_data.ichg];
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX:
-+		val->intval = bq24257_ichg_map[BQ24257_ICHG_MAP_SIZE - 1];
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
-+		val->intval = bq24257_vbat_map[bq->init_data.vbat];
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
-+		val->intval = bq24257_vbat_map[BQ24257_VBAT_MAP_SIZE - 1];
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT:
-+		val->intval = bq24257_iterm_map[bq->init_data.iterm];
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bq24257_get_chip_state(struct bq24257_device *bq,
-+				  struct bq24257_state *state)
-+{
-+	int ret;
-+
-+	ret = bq24257_field_read(bq, F_STAT);
-+	if (ret < 0)
-+		return ret;
-+
-+	state->status = ret;
-+
-+	ret = bq24257_field_read(bq, F_FAULT);
-+	if (ret < 0)
-+		return ret;
-+
-+	state->fault = ret;
-+
-+	state->power_good = !gpiod_get_value_cansleep(bq->pg);
-+
-+	return 0;
-+}
-+
-+static bool bq24257_state_changed(struct bq24257_device *bq,
-+				  struct bq24257_state *new_state)
-+{
-+	int ret;
-+
-+	mutex_lock(&bq->lock);
-+	ret = (bq->state.status != new_state->status ||
-+	       bq->state.fault != new_state->fault ||
-+	       bq->state.power_good != new_state->power_good);
-+	mutex_unlock(&bq->lock);
-+
-+	return ret;
-+}
-+
-+enum bq24257_loop_status {
-+	LOOP_STATUS_NONE,
-+	LOOP_STATUS_IN_DPM,
-+	LOOP_STATUS_IN_CURRENT_LIMIT,
-+	LOOP_STATUS_THERMAL,
-+};
-+
-+enum bq24257_in_ilimit {
-+	IILIMIT_100,
-+	IILIMIT_150,
-+	IILIMIT_500,
-+	IILIMIT_900,
-+	IILIMIT_1500,
-+	IILIMIT_2000,
-+	IILIMIT_EXT,
-+	IILIMIT_NONE,
-+};
-+
-+enum bq24257_port_type {
-+	PORT_TYPE_DCP,		/* Dedicated Charging Port */
-+	PORT_TYPE_CDP,		/* Charging Downstream Port */
-+	PORT_TYPE_SDP,		/* Standard Downstream Port */
-+	PORT_TYPE_NON_STANDARD,
-+};
-+
-+enum bq24257_safety_timer {
-+	SAFETY_TIMER_45,
-+	SAFETY_TIMER_360,
-+	SAFETY_TIMER_540,
-+	SAFETY_TIMER_NONE,
-+};
-+
-+static int bq24257_iilimit_autoset(struct bq24257_device *bq)
-+{
-+	int loop_status;
-+	int iilimit;
-+	int port_type;
-+	int ret;
-+	const u8 new_iilimit[] = {
-+		[PORT_TYPE_DCP] = IILIMIT_2000,
-+		[PORT_TYPE_CDP] = IILIMIT_2000,
-+		[PORT_TYPE_SDP] = IILIMIT_500,
-+		[PORT_TYPE_NON_STANDARD] = IILIMIT_500
-+	};
-+
-+	ret = bq24257_field_read(bq, F_LOOP_STATUS);
-+	if (ret < 0)
-+		goto error;
-+
-+	loop_status = ret;
-+
-+	ret = bq24257_field_read(bq, F_IILIMIT);
-+	if (ret < 0)
-+		goto error;
-+
-+	iilimit = ret;
-+
-+	/*
-+	 * All USB ports should be able to handle 500mA. If not, DPM will lower
-+	 * the charging current to accommodate the power source. No need to set
-+	 * a lower IILIMIT value.
-+	 */
-+	if (loop_status == LOOP_STATUS_IN_DPM && iilimit == IILIMIT_500)
-+		return 0;
-+
-+	ret = bq24257_field_read(bq, F_USB_DET);
-+	if (ret < 0)
-+		goto error;
-+
-+	port_type = ret;
-+
-+	ret = bq24257_field_write(bq, F_IILIMIT, new_iilimit[port_type]);
-+	if (ret < 0)
-+		goto error;
-+
-+	ret = bq24257_field_write(bq, F_TMR, SAFETY_TIMER_360);
-+	if (ret < 0)
-+		goto error;
-+
-+	ret = bq24257_field_write(bq, F_CLR_VDP, 1);
-+	if (ret < 0)
-+		goto error;
-+
-+	dev_dbg(bq->dev, "port/loop = %d/%d -> iilimit = %d\n",
-+		port_type, loop_status, new_iilimit[port_type]);
-+
-+	return 0;
-+
-+error:
-+	dev_err(bq->dev, "%s: Error communicating with the chip.\n", __func__);
-+	return ret;
-+}
-+
-+static void bq24257_iilimit_setup_work(struct work_struct *work)
-+{
-+	struct bq24257_device *bq = container_of(work, struct bq24257_device,
-+						 iilimit_setup_work.work);
-+
-+	bq24257_iilimit_autoset(bq);
-+}
-+
-+static void bq24257_handle_state_change(struct bq24257_device *bq,
-+					struct bq24257_state *new_state)
-+{
-+	int ret;
-+	struct bq24257_state old_state;
-+	bool reset_iilimit = false;
-+	bool config_iilimit = false;
-+
-+	mutex_lock(&bq->lock);
-+	old_state = bq->state;
-+	mutex_unlock(&bq->lock);
-+
-+	if (!new_state->power_good) {			     /* power removed */
-+		cancel_delayed_work_sync(&bq->iilimit_setup_work);
-+
-+		/* activate D+/D- port detection algorithm */
-+		ret = bq24257_field_write(bq, F_DPDM_EN, 1);
-+		if (ret < 0)
-+			goto error;
-+
-+		reset_iilimit = true;
-+	} else if (!old_state.power_good) {		    /* power inserted */
-+		config_iilimit = true;
-+	} else if (new_state->fault == FAULT_NO_BAT) {	   /* battery removed */
-+		cancel_delayed_work_sync(&bq->iilimit_setup_work);
-+
-+		reset_iilimit = true;
-+	} else if (old_state.fault == FAULT_NO_BAT) {    /* battery connected */
-+		config_iilimit = true;
-+	} else if (new_state->fault == FAULT_TIMER) { /* safety timer expired */
-+		dev_err(bq->dev, "Safety timer expired! Battery dead?\n");
-+	}
-+
-+	if (reset_iilimit) {
-+		ret = bq24257_field_write(bq, F_IILIMIT, IILIMIT_500);
-+		if (ret < 0)
-+			goto error;
-+	} else if (config_iilimit) {
-+		schedule_delayed_work(&bq->iilimit_setup_work,
-+				      msecs_to_jiffies(BQ24257_ILIM_SET_DELAY));
-+	}
-+
-+	return;
-+
-+error:
-+	dev_err(bq->dev, "%s: Error communicating with the chip.\n", __func__);
-+}
-+
-+static irqreturn_t bq24257_irq_handler_thread(int irq, void *private)
-+{
-+	int ret;
-+	struct bq24257_device *bq = private;
-+	struct bq24257_state state;
-+
-+	ret = bq24257_get_chip_state(bq, &state);
-+	if (ret < 0)
-+		return IRQ_HANDLED;
-+
-+	if (!bq24257_state_changed(bq, &state))
-+		return IRQ_HANDLED;
-+
-+	dev_dbg(bq->dev, "irq(state changed): status/fault/pg = %d/%d/%d\n",
-+		state.status, state.fault, state.power_good);
-+
-+	bq24257_handle_state_change(bq, &state);
-+
-+	mutex_lock(&bq->lock);
-+	bq->state = state;
-+	mutex_unlock(&bq->lock);
-+
-+	power_supply_changed(bq->charger);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int bq24257_hw_init(struct bq24257_device *bq)
-+{
-+	int ret;
-+	int i;
-+	struct bq24257_state state;
-+
-+	const struct {
-+		int field;
-+		u32 value;
-+	} init_data[] = {
-+		{F_ICHG, bq->init_data.ichg},
-+		{F_VBAT, bq->init_data.vbat},
-+		{F_ITERM, bq->init_data.iterm}
-+	};
-+
-+	/*
-+	 * Disable the watchdog timer to prevent the IC from going back to
-+	 * default settings after 50 seconds of I2C inactivity.
-+	 */
-+	ret = bq24257_field_write(bq, F_WD_EN, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* configure the charge currents and voltages */
-+	for (i = 0; i < ARRAY_SIZE(init_data); i++) {
-+		ret = bq24257_field_write(bq, init_data[i].field,
-+					  init_data[i].value);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	ret = bq24257_get_chip_state(bq, &state);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_lock(&bq->lock);
-+	bq->state = state;
-+	mutex_unlock(&bq->lock);
-+
-+	if (!state.power_good)
-+		/* activate D+/D- detection algorithm */
-+		ret = bq24257_field_write(bq, F_DPDM_EN, 1);
-+	else if (state.fault != FAULT_NO_BAT)
-+		ret = bq24257_iilimit_autoset(bq);
-+
-+	return ret;
-+}
-+
-+static enum power_supply_property bq24257_power_supply_props[] = {
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
-+	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-+};
-+
-+static char *bq24257_charger_supplied_to[] = {
-+	"main-battery",
-+};
-+
-+static int bq24257_power_supply_init(struct bq24257_device *bq)
-+{
-+	struct power_supply_config psy_cfg = { .drv_data = bq, };
-+	struct power_supply_desc *psy_desc = &bq->charger_desc;
-+
-+	psy_desc->name = "bq24257-charger";
-+	psy_desc->type = POWER_SUPPLY_TYPE_USB;
-+	psy_desc->properties = bq24257_power_supply_props;
-+	psy_desc->num_properties = ARRAY_SIZE(bq24257_power_supply_props);
-+	psy_desc->get_property = bq24257_power_supply_get_property;
-+
-+	psy_cfg.supplied_to = bq24257_charger_supplied_to;
-+	psy_cfg.num_supplicants = ARRAY_SIZE(bq24257_charger_supplied_to);
-+
-+	bq->charger = power_supply_register(bq->dev, psy_desc, &psy_cfg);
-+	if (IS_ERR(bq->charger))
-+		return PTR_ERR(bq->charger);
-+
-+	return 0;
-+}
-+
-+static int bq24257_irq_probe(struct bq24257_device *bq)
-+{
-+	int ret;
-+	struct gpio_desc *stat_irq;
-+
-+	stat_irq = devm_gpiod_get_index(bq->dev, BQ24257_STAT_IRQ, 0);
-+	if (IS_ERR(stat_irq)) {
-+		dev_err(bq->dev, "could not probe stat_irq pin\n");
-+		return PTR_ERR(stat_irq);
-+	}
-+
-+	ret = gpiod_direction_input(stat_irq);
-+	if (ret < 0)
-+		return ret;
-+
-+	return gpiod_to_irq(stat_irq);
-+}
-+
-+static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
-+{
-+	bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0);
-+	if (IS_ERR(bq->pg)) {
-+		dev_err(bq->dev, "could not probe PG pin\n");
-+		return PTR_ERR(bq->pg);
-+	}
-+
-+	return gpiod_direction_input(bq->pg);
-+}
-+
-+static int bq24257_fw_probe(struct bq24257_device *bq)
-+{
-+	int ret;
-+	u32 property;
-+
-+	ret = device_property_read_u32(bq->dev, "ti,charge-current", &property);
-+	if (ret < 0)
-+		return ret;
-+
-+	bq->init_data.ichg = bq24257_find_idx(property, bq24257_ichg_map,
-+					      BQ24257_ICHG_MAP_SIZE);
-+
-+	ret = device_property_read_u32(bq->dev, "ti,battery-regulation-voltage",
-+				       &property);
-+	if (ret < 0)
-+		return ret;
-+
-+	bq->init_data.vbat = bq24257_find_idx(property, bq24257_vbat_map,
-+					      BQ24257_VBAT_MAP_SIZE);
-+
-+	ret = device_property_read_u32(bq->dev, "ti,termination-current",
-+				       &property);
-+	if (ret < 0)
-+		return ret;
-+
-+	bq->init_data.iterm = bq24257_find_idx(property, bq24257_iterm_map,
-+					       BQ24257_ITERM_MAP_SIZE);
-+
-+	return 0;
-+}
-+
-+static int bq24257_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-+	struct device *dev = &client->dev;
-+	struct bq24257_device *bq;
-+	int ret;
-+	int i;
-+
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
-+		dev_err(dev, "No support for SMBUS_BYTE_DATA\n");
-+		return -ENODEV;
-+	}
-+
-+	bq = devm_kzalloc(dev, sizeof(*bq), GFP_KERNEL);
-+	if (!bq)
-+		return -ENOMEM;
-+
-+	bq->client = client;
-+	bq->dev = dev;
-+
-+	mutex_init(&bq->lock);
-+
-+	bq->rmap = devm_regmap_init_i2c(client, &bq24257_regmap_config);
-+	if (IS_ERR(bq->rmap)) {
-+		dev_err(dev, "failed to allocate register map\n");
-+		return PTR_ERR(bq->rmap);
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(bq24257_reg_fields); i++) {
-+		const struct reg_field *reg_fields = bq24257_reg_fields;
-+
-+		bq->rmap_fields[i] = devm_regmap_field_alloc(dev, bq->rmap,
-+							     reg_fields[i]);
-+		if (IS_ERR(bq->rmap_fields[i])) {
-+			dev_err(dev, "cannot allocate regmap field\n");
-+			return PTR_ERR(bq->rmap_fields[i]);
-+		}
-+	}
-+
-+	i2c_set_clientdata(client, bq);
-+
-+	INIT_DELAYED_WORK(&bq->iilimit_setup_work, bq24257_iilimit_setup_work);
-+
-+	if (!dev->platform_data) {
-+		ret = bq24257_fw_probe(bq);
-+		if (ret < 0) {
-+			dev_err(dev, "Cannot read device properties.\n");
-+			return ret;
-+		}
-+	} else {
-+		return -ENODEV;
-+	}
-+
-+	/* we can only check Power Good status by probing the PG pin */
-+	ret = bq24257_pg_gpio_probe(bq);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* reset all registers to defaults */
-+	ret = bq24257_field_write(bq, F_RESET, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Put the RESET bit back to 0, in cache. For some reason the HW always
-+	 * returns 1 on this bit, so this is the only way to avoid resetting the
-+	 * chip every time we update another field in this register.
-+	 */
-+	ret = bq24257_field_write(bq, F_RESET, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = bq24257_hw_init(bq);
-+	if (ret < 0) {
-+		dev_err(dev, "Cannot initialize the chip.\n");
-+		return ret;
-+	}
-+
-+	if (client->irq <= 0)
-+		client->irq = bq24257_irq_probe(bq);
-+
-+	if (client->irq < 0) {
-+		dev_err(dev, "no irq resource found\n");
-+		return client->irq;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, client->irq, NULL,
-+					bq24257_irq_handler_thread,
-+					IRQF_TRIGGER_FALLING |
-+					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					BQ24257_STAT_IRQ, bq);
-+	if (ret)
-+		return ret;
-+
-+	ret = bq24257_power_supply_init(bq);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to register power supply\n");
-+
-+	return ret;
-+}
-+
-+static int bq24257_remove(struct i2c_client *client)
-+{
-+	struct bq24257_device *bq = i2c_get_clientdata(client);
-+
-+	cancel_delayed_work_sync(&bq->iilimit_setup_work);
-+
-+	power_supply_unregister(bq->charger);
-+
-+	bq24257_field_write(bq, F_RESET, 1); /* reset to defaults */
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int bq24257_suspend(struct device *dev)
-+{
-+	struct bq24257_device *bq = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	cancel_delayed_work_sync(&bq->iilimit_setup_work);
-+
-+	/* reset all registers to default (and activate standalone mode) */
-+	ret = bq24257_field_write(bq, F_RESET, 1);
-+	if (ret < 0)
-+		dev_err(bq->dev, "Cannot reset chip to standalone mode.\n");
-+
-+	return ret;
-+}
-+
-+static int bq24257_resume(struct device *dev)
-+{
-+	int ret;
-+	struct bq24257_device *bq = dev_get_drvdata(dev);
-+
-+	ret = regcache_drop_region(bq->rmap, BQ24257_REG_1, BQ24257_REG_7);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = bq24257_field_write(bq, F_RESET, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = bq24257_hw_init(bq);
-+	if (ret < 0) {
-+		dev_err(bq->dev, "Cannot init chip after resume.\n");
-+		return ret;
-+	}
-+
-+	/* signal userspace, maybe state changed while suspended */
-+	power_supply_changed(bq->charger);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops bq24257_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(bq24257_suspend, bq24257_resume)
-+};
-+
-+static const struct i2c_device_id bq24257_i2c_ids[] = {
-+	{ "bq24257", 0 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, bq24257_i2c_ids);
-+
-+static const struct of_device_id bq24257_of_match[] = {
-+	{ .compatible = "ti,bq24257", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, bq24257_of_match);
-+
-+static const struct acpi_device_id bq24257_acpi_match[] = {
-+	{"BQ242570", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, bq24257_acpi_match);
-+
-+static struct i2c_driver bq24257_driver = {
-+	.driver = {
-+		.name = "bq24257-charger",
-+		.of_match_table = of_match_ptr(bq24257_of_match),
-+		.acpi_match_table = ACPI_PTR(bq24257_acpi_match),
-+		.pm = &bq24257_pm,
-+	},
-+	.probe = bq24257_probe,
-+	.remove = bq24257_remove,
-+	.id_table = bq24257_i2c_ids,
-+};
-+module_i2c_driver(bq24257_driver);
-+
-+MODULE_AUTHOR("Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("bq24257 charger driver");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If you resubmit the patch I would expect you to explain this in the
+> commit log.
+>=20
+> Guenter
+>=20
+> > -Anand Moon
+> >
+> >
+> > On 10 April 2015 at 17:30, Sjoerd Simons <sjoerd.simons@collabora.c=
+o.uk> wrote:
+> >> Hey Anand,
+> >>
+> >> On Fri, 2015-04-10 at 16:58 +0530, Anand Moon wrote:
+> >>> Hi Guenter/Lukasz,
+> >>>
+> >>> Earlier I send v2 version of the patch spiking this one.
+> >>>
+> >>> Markus Riechl came back to me with below mail.
+> >>> So This patch confirms fixes the bug.
+> >>>
+> >>> I will send v3 version of the patch. Earlier I was in delima abou=
+t the bug.
+> >>>
+> >>> -Anand Moon
+> >>> -------------------------------------------
+> >>> Hi Anand,
+> >>>
+> >>> I tested your patch.
+> >>>
+> >>> After booting the fan is spinning despite only 44=C2=B0C.
+> >>>
+> >>> /sys/class/thermal/cooling_device0/curstate is 0.
+> >>> /sys/class/hwmon/hwmon4/pwm1 is 0
+> >>>
+> >>> when I echo 1 > cur_state and then echo 0 > cur_state again,
+> >>> the fan switches to off and behaves as expected.
+> >>>
+> >>> It looks like there is a bug in initializing the pwm output
+> >>> immediately after booting.
+> >>
+> >> The problem here will be that at boot the PWM runs at full duty. W=
+ith
+> >> the current exynos PWM drive if you disable the PWM it will stop p=
+ulsing
+> >> but remain high if it was at 100% duty. My patch on which you depe=
+nd
+> >> upon fixed a race  where disabling the pwm right after changing th=
+e duty
+> >> cycle (e.g. to 0%) also kept the signal high.
+> >>
+> >>  From looking at other PWM users at the time it seemed that most i=
+f not
+> >> all always first set to duty to 0% and then disable the pwm. Which
+> >> should work fine on exynos now. However iirc Thierry recently clar=
+ified
+> >> that the expected result of pwm_disable is not just that the modul=
+ation
+> >> stops but also that the output signal goes low, although that's no=
+t very
+> >> explicit in the current pwm documentation.. The exynos PWM driver =
+will
+> >> need another fix tweak to make that true.
+> >>
+> >>
+> >>
+> >>> Best Regards,
+> >>
+> >>
+> >>
+> >>> --
+> >>> Markus Reichl
+> >>>
+> >>> On 8 April 2015 at 23:19, Anand Moon <linux.amoon@gmail.com> wrot=
+e:
+> >>>> Hi Guenter,
+> >>>>
+> >>>> Sorry my blunder mistake. Sorry for the noise.
+> >>>>
+> >>>> I just tested with spiking this patch and my observation and tes=
+ting
+> >>>> were wrong we can skip this patch.
+> >>>>
+> >>>> I will send an v2 patch series removing the patch 5 and patch 6.
+> >>>>
+> >>>> With correct dts changes.
+> >>>>
+> >>>> Thanks for pointing my mistake.
+> >>>>
+> >>>> -Anand Moon
+> >>>>
+> >>>> On 8 April 2015 at 22:23, Guenter Roeck <linux@roeck-us.net> wro=
+te:
+> >>>>> On Wed, Apr 08, 2015 at 09:32:05PM +0530, Anand Moon wrote:
+> >>>>>> Hi Guenter,
+> >>>>>>
+> >>>>>> Initially the board bootup the cooling level state is 0.
+> >>>>>> So update the duty cycle and this power off the fan.
+> >>>>>> As their is no state change the fan will not spin.
+> >>>>>>
+> >>>>>> Once the temperature sensor is reached to alert temperature it=
+ changes state.
+> >>>>>> With the state change the fan cools the CPU and then stop's
+> >>>>>>
+> >>>>>> I have observed this state change with tmon utility in linux/t=
+ools/thermal/tmon/
+> >>>>>>
+> >>>>> Sorry, I am missing something. I still don't see what problem y=
+ou are fixing
+> >>>>> with this patch. What behavior is wrong with the current code, =
+and how does your
+> >>>>> patch fix it ?
+> >>>>>
+> >>>>> Guenter
+> >>>>>
+> >>>>>> -Anand Moon
+> >>>>>>
+> >>>>>> On 8 April 2015 at 21:02, Guenter Roeck <linux@roeck-us.net> w=
+rote:
+> >>>>>>> On Wed, Apr 08, 2015 at 10:44:15AM +0200, Lukasz Majewski wro=
+te:
+> >>>>>>>> Hi Anand,
+> >>>>>>>>
+> >>>>>>>>> Below changes depend on following patch.
+> >>>>>>>>> https://patchwork.kernel.org/patch/5944061/
+> >>>>>>>>>
+> >>>>>>>>> Update the pwm_config with duty then update the pwm_disable
+> >>>>>>>>> to poweroff the cpu fan.
+> >>>>>>>>>
+> >>>>>>>
+> >>>>>>> Unfortunately, the patch does not include an explanation why =
+it is needed.
+> >>>>>>>
+> >>>>>>> The original code presumably did not update the duty cycle be=
+cause
+> >>>>>>> pwm was about to be disabled anyway. That kind of made sense =
+to me.
+> >>>>>>> Updating the duty cycle to 0 just to disable the pwm channel =
+right
+> >>>>>>> afterwards does not immediately make sense.
+> >>>>>>>
+> >>>>>>> Given that, I would expect to see a rationale here. Why is th=
+is patch needed ?
+> >>>>>>> Does it fix a bug ? If yes, pelase describe the bug. If not, =
+what is the
+> >>>>>>> purpose of this patch ?
+> >>>>>>>
+> >>>>>>> Maybe that is all explained in patch 0/6, which I was not cop=
+ied on. Even
+> >>>>>>> if so, the reationale will be needed in the changelog to expl=
+ain to future
+> >>>>>>> developers why this change was made.
+> >>>>>>>
+> >>>>>>> Thanks,
+> >>>>>>> Guenter
+> >>>>>>>
+> >>>>>>>>> Tested on OdroidXU3 board.
+> >>>>>>>>>
+> >>>>>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> >>>>>>>>> ---
+> >>>>>>>>>   drivers/hwmon/pwm-fan.c | 10 ++++------
+> >>>>>>>>>   1 file changed, 4 insertions(+), 6 deletions(-)
+> >>>>>>>>>
+> >>>>>>>>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fa=
+n.c
+> >>>>>>>>> index 7c83dc4..f25c841 100644
+> >>>>>>>>> --- a/drivers/hwmon/pwm-fan.c
+> >>>>>>>>> +++ b/drivers/hwmon/pwm-fan.c
+> >>>>>>>>> @@ -44,26 +44,24 @@ static int  __set_pwm(struct pwm_fan_ct=
+x *ctx,
+> >>>>>>>>> unsigned long pwm) int ret =3D 0;
+> >>>>>>>>>
+> >>>>>>>>>      mutex_lock(&ctx->lock);
+> >>>>>>>>> +
+> >>>>>>>
+> >>>>>>> [ please refrain from unnecessary whitespace changes ]
+> >>>>>>>
+> >>>>>>>>>      if (ctx->pwm_value =3D=3D pwm)
+> >>>>>>>>>              goto exit_set_pwm_err;
+> >>>>>>>>>
+> >>>>>>>>> -   if (pwm =3D=3D 0) {
+> >>>>>>>>> -           pwm_disable(ctx->pwm);
+> >>>>>>>>> -           goto exit_set_pwm;
+> >>>>>>>>> -   }
+> >>>>>>>>> -
+> >>>>>>>>>      duty =3D DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MA=
+X_PWM);
+> >>>>>>>>>      ret =3D pwm_config(ctx->pwm, duty, ctx->pwm->period);
+> >>>>>>>>>      if (ret)
+> >>>>>>>>>              goto exit_set_pwm_err;
+> >>>>>>>>>
+> >>>>>>>>> +   if (pwm =3D=3D 0)
+> >>>>>>>>> +           pwm_disable(ctx->pwm);
+> >>>>>>>>> +
+> >>>>>>>>>      if (ctx->pwm_value =3D=3D 0) {
+> >>>>>>>>>              ret =3D pwm_enable(ctx->pwm);
+> >>>>>>>>>              if (ret)
+> >>>>>>>>>                      goto exit_set_pwm_err;
+> >>>>>>>>>      }
+> >>>>>>>>>
+> >>>>>>>>> -exit_set_pwm:
+> >>>>>>>>>      ctx->pwm_value =3D pwm;
+> >>>>>>>>>   exit_set_pwm_err:
+> >>>>>>>>>      mutex_unlock(&ctx->lock);
+> >>>>>>>>
+> >>>>>>>> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+> >>>>>>>>
+> >>>>>>>> BTW: I've added Guenter to CC.
+> >>>>>>>>
+> >>>>>>>> --
+> >>>>>>>> Best regards,
+> >>>>>>>>
+> >>>>>>>> Lukasz Majewski
+> >>>>>>>>
+> >>>>>>>> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+> >>
+> >>
+> >
+>=20
