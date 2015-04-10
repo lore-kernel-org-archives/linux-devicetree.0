@@ -1,105 +1,58 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
-Date: Fri, 10 Apr 2015 17:10:53 +0100
-Message-ID: <20150410161052.GF6854@e104818-lin.cambridge.arm.com>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
- <493B15F8-0EBE-4633-9604-671EF403F36E@codeaurora.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] i2c: xlp9xx: device tree bindings
+Date: Fri, 10 Apr 2015 19:02:52 +0200
+Message-ID: <20150410170252.GB2408@katana>
+References: <1426679430-26134-1-git-send-email-jchandra@broadcom.com>
+ <1426679430-26134-4-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <493B15F8-0EBE-4633-9604-671EF403F36E-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1426679430-26134-4-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 10:24:46AM -0500, Kumar Gala wrote:
-> On Apr 10, 2015, at 5:05 AM, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org=
-> wrote:
-> > On Thu, Apr 09, 2015 at 12:37:06PM -0500, Kumar Gala wrote:
-> >> This patch set adds support for SMP boot on the MSM8x16 family of =
-Qualcomm SoCs.
-> >>=20
-> >> To support SMP on the MSM8x16 SoCs we need to add ARMv8/64-bit SCM=
- interfaces to
-> >> setup the boot/release addresses for the secondary CPUs.  In addit=
-ion we need
-> >> a uniquie set of cpu ops.  I'm aware the desired methods for booti=
-ng secondary
-> >> CPUs is either via spintable or PSCI.  However, these SoCs are shi=
-pping with a
-> >> firmware that does not support those methods.
-> >=20
-> > And the reason is? Some guesses:
-> >=20
-> > a) QC doesn't think boot interface (and cpuidle) standardisation is
-> >   worth the effort (to put it nicely)
-> > b) The hardware was available before we even mentioned PSCI
-> > c) PSCI is not suitable for the QC's SCM interface
-> > d) Any combination of the above
-> >=20
-> > I strongly suspect it's point (a). Should we expect future QC hardw=
-are
-> > to do the same?
-> >=20
-> > You could argue the reason was (b), though we've been discussing PS=
-CI
-> > for at least two years and, according to QC press releases, MSM8916
-> > started sampling in 2014.
-> >=20
-> > The only valid reason is (c) and if that's the case, I would expect=
- a
-> > proposal for a new firmware interface protocol (it could be PSCI-ba=
-sed),
-> > well documented, that can be shared with others that may encounter =
-the
-> > same shortcomings.
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Mar 18, 2015 at 05:20:30PM +0530, Jayachandran C wrote:
+> From: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >=20
-> Does it matter?  I=E2=80=99ve always felt the kernel was a place of i=
-nclusion.
-> Qualcomm choose for whatever reason to not use PSCI or spin table.
-> You don=E2=80=99t like it, I might not like it, but it is what it is.
+> Add document Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
+> for Netlogic XLP9XX/5XX i2c controller. The compatible string is
+> "netlogic,xlp980-i2c".
 
-Yes, it matters, but only if Qualcomm wants the SoC support in mainline=
-=2E
-Just because Qualcomm Inc does not want to invest in implementing a
-standard firmware interface is not a good enough reason to merge the
-kernel code.
+This one is missing the SoB line. Please use checkpatch before sending
+patches. Can you send your SoB as a reply to this mail? No need to
+resend the series.
 
-What if Qualcomm decides that it doesn't like DT, nor ACPI but comes up
-with yet another way to describe hardware because that's what the
-firmware provides? Should the kernel community take it? You could argue
-that this is a significant change but it's about the principle. And eac=
-h
-SoC with its own non-standard boot protocol for no good reason is
-significant.
 
-It's not Qualcomm Inc maintaining the kernel code but individuals like
-you and me who may or may not be sponsored by Qualcomm. And being
-sponsored by a company to do kernel maintenance work does not mean that
-said company decides what gets merged (on my side, ARM Ltd management i=
-s
-aware of this, though it's not always easy for the parties involved).
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-We haven't really asked for anything difficult like hardware changes,
-such decisions are left with Qualcomm. We asked for a standard secure
-firmware interface, either an existing one or, if not suitable (with
-good arguments), to come up with a proposal for an alternative
-_standard_ interface. I don't even have the certitude that the firmware
-interface used in these patches would be consistent across Qualcomm
-SoCs, let alone being properly documented.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-So please come up with proper technical arguments rather than the kerne=
-l
-should take whatever SoC vendors dreamt of.
+iQIcBAEBAgAGBQJVKAI8AAoJEBQN5MwUoCm2owoQAI8aaVklWR6eu2Ty6Wk3sGxs
+A67zcRboc58OS3zJNonAOyrUr1GwiESJJbqcn95Z8WZmhEIKxWBCs6fUiYSir51z
+hm6I3z0y587SF8LS8rPIPV5Md5eaFOfR/i/4H+E3vOKjNpiRX8zgCt/VJqCXUV/K
+x9fcAX6k5Orf92s4Guox9uuUZdJS9BLM271h+4bqtZukm1HoXLdckF/5pT3HOQUE
+jc2nS1Z0/qAZag3Tp3g5SpOJwyRzxWGpNauhB66LKB/OAX0/G3kheTfrhwU7EN06
+4eCvT4vQWNJ7jkuFwXellMCkhRwnohSkeaSSyIoBOsT5QNud/mx37GDkRcp2EsA1
+EcwbEEd/jpdSMsJ+wCI/XjCdLzz3LbAQnUPfKpvbZcdkddJP2EkkU5hIjkG0vkhz
+j7yxzLbiwxtQQX43rZYRrf/6iQkjm7cxwvtSuOTpOUFgfIsCxQmF9SEByK8SYYUh
+uM6m2tRL+CoBDA9paITB6IpELDLf9OTSNBBwNTjQ2BdAbTs1EXFNX9Q63C8lfkXx
+sIEtwhc4OPAgb1Uf3kH65ISvT+asdVPhHGA7VbiTqOFDWotLBK8+Mx0wcccyjB90
+wECxsG2BPZcEC5qibCc12b7H4dMNP4XlIag02PA/i1/MFEZakPquepQVjSP9E9vO
+T+J+sPtep1XzvsEFocXA
+=MQrR
+-----END PGP SIGNATURE-----
 
---=20
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--3uo+9/B/ebqu+fSQ--
