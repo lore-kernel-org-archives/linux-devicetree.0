@@ -1,74 +1,79 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: Re: [PATCH v6 0/3] Add ktd2692 Flash LED driver using LED Flash class
-Date: Fri, 10 Apr 2015 16:17:03 +0900
-Message-ID: <552778EF.8000709@samsung.com>
-References: <1428648359-23289-1-git-send-email-ingi2.kim@samsung.com>
- <552774CC.4040201@gmail.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Fri, 10 Apr 2015 16:17:36 +0900
+Message-ID: <55277910.2070000@samsung.com>
+References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
+ <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
+ <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
+ <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <552774CC.4040201@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, j.anaszewski@samsung.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <55264534.4020006-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Varka,
+Hi Robert,
 
-On 2015=EB=85=84 04=EC=9B=94 10=EC=9D=BC 15:59, Varka Bhadram wrote:
-> On 04/10/2015 12:15 PM, Ingi Kim wrote:
->=20
->> This patch adds ktd2692 Flash LED driver with LED Flash class
+On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+> Hi Chanwoo,
+> 
+> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>> Hi Robert,
 >>
->> Change in v6:
->> 	- Change goto label to if-else
->> 	- Change DT binding style for LED device binding
+>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>> Hi Chanwoo,
+>>>
+>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>> Hi Robert,
+>>>>
 >>
->> Change in v5:
->> 	- Clean up the code
->> 	- Fix help message of Kconfig
->> 	- Fix issue related with regulator and mutex usage
->> 	- Remove tab spaces in bindings
+>> [snip]
 >>
->> Change in v4:
->> 	- Clean up the code
->> 	- Modify binding documentation of ktd2692
+>>>> But, I have one question about case[3]
+>>>>
+>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>
+>>>
+>>> It's because state of single USB cable connection cannot be completely
+>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>> and ID), so we need to use two cables for single cable connection. We
+>>> use following convention:
+>>> cable "USB" = VBUS
+>>> cable "USB-HOST" = !ID.
 >>
->> Change in v3:
->> 	- Clean up the code
->> 	- Add aux gpio pin to control Flash LED
+>> I think that extcon provider driver have to update the only one cable state
+>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>> at the same time through one h/w port.
 >>
->> Change in v2:
->> 	- Introduction of LED Flash class as Jacek's comment
->> 	- Supplement of binding documentation
->> 	- Rename gpio control pin and remove unused pin
->> 	- Add regulator for the Flash LED
+>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
 >>
->> Ingi Kim (3):
->>   of: Add vendor prefix for Kinetic technologies
->>   leds: ktd2692: add device tree bindings for ktd2692
->>   leds: Add ktd2692 flash LED driver
->>
->>  .../devicetree/bindings/leds/leds-ktd2692.txt      |  40 ++
->>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->>  drivers/leds/Kconfig                               |   9 +
->>  drivers/leds/Makefile                              |   1 +
->>  drivers/leds/leds-ktd2692.c                        | 408 ++++++++++=
-+++++++++++
->>  5 files changed, 459 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2=
-692.txt
->>  create mode 100644 drivers/leds/leds-ktd2692.c
->>
-> Run checkpatch.pl with --strict option on this series..
->=20
-> ./scripts/checkpatch.pl --strict 000*
->=20
-> Reported "CHECK: Alignment should match open parenthesis"..
->=20
+> 
+> It can. USB OTG allows for that. Moreover device can be host even if
+> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+> detected cable type is USB host). Devices would need to have complete
+> information about USB cable connection, because OTG state machine needs
 
-I used checkpatch.pl script but I wasn't aware of this option.
-It reveals my mistakes more :)
+As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+at the same time. The case3 in your patch update two cable state about one h/w port.
 
-Thanks
+I don't agree. 
+
+> that. As I wrote, current USB cable names are misleading. It would be
+> better to have "USB-VBUS" and "USB-ID".
+
+It is strange cable name. I prefer to use only 'USB' cable name.
+But, we could support the other method to get the state of whether USB-VBUS or USB-ID
+by using helper API or others.
+
+Thanks,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
