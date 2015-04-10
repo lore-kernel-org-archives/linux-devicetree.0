@@ -1,44 +1,93 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [net-next PATCH 3/3] net: macb: Add change_mtu callback with
- jumbo support
-Date: Fri, 10 Apr 2015 15:05:28 +0530
-Message-ID: <CAFcVECLONoSV8riBHpkhJXrx39wtDLP2X7zx=C6jdXGuqw_vAg@mail.gmail.com>
-References: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
-	<9376b508-694b-4582-8f2c-4e85e2bab2b5@BY2FFO11FD054.protection.gbl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9376b508-694b-4582-8f2c-4e85e2bab2b5@BY2FFO11FD054.protection.gbl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>
-Cc: nicolas.ferre@atmel.com, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, netdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "michals@xilinx.com" <michals@xilinx.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/9] Add sd/emmc support for stih407 family silicon
+Date: Fri, 10 Apr 2015 10:40:22 +0100
+Message-ID: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 2:47 PM, Harini Katakam
-<harini.katakam@xilinx.com> wrote:
-> Add macb_change_mtu callback; if jumbo frame support is present allow
-> mtu size changes upto (jumbo max length allowed - headers).
->
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> ---
->  drivers/net/ethernet/cadence/macb.c |   26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-> index 85de91d..33f3283 100644
-> --- a/drivers/net/ethernet/cadence/macb.c
-> +++ b/drivers/net/ethernet/cadence/macb.c
-> @@ -54,6 +54,10 @@
->  #define MACB_MAX_TX_LEN                ((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1))
->  #define GEM_MAX_TX_LEN         ((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1))
->
-> +#define GEM_MTU_MIN_SIZE       68
-> +
-> +#define GEM_ZYNQMP_JUMBO_MAX   10240
+Hi,
 
-I'm sorry - this definition is in the wrong patch. I'll correct it and
-send a v2.
+This series adds sd/emmc support to the sdhci-st.c driver for stih407
+family silicon. The changes mainly involve configuring some extra glue
+registers in the flashSS which configure the Arasan controller.
 
-Regards,
-Harini
+This series also adds support for UHS modes for eMMC. To allow
+UHS HS200/SD104 modes to function correctly, due to the
+tight timing constriants, support for delay management is also added.
+Two types of delay management are supported, static delay management and
+dynamic delay management, this delay management is only available
+on eMMC pads on stih410 and later silicon.
+
+This series has been tested with stih410-b2120 revd on eMMC and sd, at
+various clock speeds. As part of this testing a bug was also found in the
+upstream flexgen clock set_rate implementation (now fixed upstream).
+
+    max-frequency = 200Mhz
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 270 MB in  3.02 seconds =  89.54 MB/sec
+    
+    max-frequency = 100Mhz
+    root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 210 MB in  3.00 seconds =  70.00 MB/sec
+    
+    max-frequency = 50Mhz
+    root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 118 MB in  3.00 seconds =  39.28 MB/sec
+
+It has also been tested on stih416-b2020 to ensure we have caused no
+regressions. Finally the dt documentation has been updated to reflect
+the changes in the driver code. Intrestingly it seems we are the first
+upstream platform to be using some of the uhs bindings such as
+sd-uhs-sdr104.
+
+Changes since v4:
+ - Fixup typo (Pete)
+
+Changes since v3:
+ - Rebased on Ulf's mmc next branch (rc5 based) (Ulf)
+
+Changes since v2:
+ - Some whitespace fixups (Max)
+ - if (!ioaddr) suggestion (Max)
+ - Add stih418-b2199 suport (Max)
+ - Stih410 to STiH410 fixes (Max)
+ - rebased on v4.0-rc6 (Pete)
+
+Changes since v1:
+ - Partition the changes into smaller patches to aid review process (Ulf)
+
+Peter Griffin (9):
+  mmc: sdhci-st: Add macros for register offsets and bitfields for mmcss
+    glue regs
+  mmc: sdhci-st: Add support for de-asserting reset signal and top regs
+    resource
+  mmc: sdhci-st: Add delay management functions for top registers
+    (eMMC).
+  mmc: sdhci-st: Add st_mmcss_cconfig function to configure mmcss glue
+    registers.
+  mmc: sdhci-st: Add sdhci_st_set_uhs_signaling function.
+  mmc: sdhci-st: Update the quirks for this controller.
+  mmc: sdhci-st: Update ST SDHCI binding documentation.
+  ARM: STi: DT: STiH407: Add dt nodes for sdhci and emmc.
+  ARM: STi: DT: STiH418: Add dt nodes for sdhci and emmc.
+
+ Documentation/devicetree/bindings/mmc/sdhci-st.txt | 100 +++++-
+ arch/arm/boot/dts/stih407-family.dtsi              |  30 ++
+ arch/arm/boot/dts/stih410-b2120.dts                |  10 +
+ arch/arm/boot/dts/stih418-b2199.dts                |  12 +
+ arch/arm/boot/dts/stihxxx-b2120.dtsi               |   8 +
+ drivers/mmc/host/sdhci-st.c                        | 354 ++++++++++++++++++++-
+ 6 files changed, 500 insertions(+), 14 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
