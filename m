@@ -1,116 +1,61 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 06/12] ARM: dts: apq8064: Add MDP support
-Date: Fri, 10 Apr 2015 13:21:29 -0700
-Message-ID: <552830C9.4030601@codeaurora.org>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669271-11032-1-git-send-email-srinivas.kandagatla@linaro.org> <552802B6.2040804@codeaurora.org> <552826F6.5040105@linaro.org>
+From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: add DT nodes for ov2659 sensor
+Date: Fri, 10 Apr 2015 21:22:23 +0100
+Message-ID: <CA+V-a8u-Y7M9ynJDD05=XeMjZMsb_0Utd-TuwJzEuRziPksvGQ@mail.gmail.com>
+References: <1426203501-32115-1-git-send-email-prabhakar.csengg@gmail.com>
+ <20150316221740.GQ12397@atomide.com> <CA+V-a8uWqjze32ukOGonQAACByPmW6WDbpFrA9EFipnNJeD58A@mail.gmail.com>
+ <20150317022344.GB31346@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <552826F6.5040105@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150317022344.GB31346-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/15 12:39, Srinivas Kandagatla wrote:
+Hi Tony,
+
+On Tue, Mar 17, 2015 at 2:23 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150316 18:20]:
+>> Hi Tony,
+>>
+>> On Mon, Mar 16, 2015 at 10:17 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > * Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150312 16:38]:
+>> >> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>
+>> >> this patch does the following:
+>> >> 1: adds DT node for fixed oscillator.
+>> >> 2: adds DT node entries for ov2659 sensor
+>> >> 3: adds remote-endpoint entry for VPFE.
+>> >>
+>> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >
+>> > Applying into omap-for-v4.1/dt thanks.
+>> >
+>> I would like to get this one in via media tree to avoid dependency
+>> as I am still waiting for Acks from DT maintainers for the sensor
+>> driver.
 >
+> OK dropping it.
 >
-> On 10/04/15 18:04, Stephen Boyd wrote:
->> On 04/10/15 05:34, Srinivas Kandagatla wrote:
->>> @@ -250,6 +265,18 @@
->>>               };
->>>           };
->>>
->>> +        ext_3p3v: regulator-fixed@1 {
->>> +            compatible = "regulator-fixed";
->>> +            regulator-min-microvolt = <3300000>;
->>> +            regulator-max-microvolt = <3300000>;
->>> +            regulator-name = "ext_3p3v";
->>> +            regulator-type = "voltage";
->>> +            startup-delay-us = <0>;
->>> +            gpio = <&tlmm_pinmux 77 GPIO_ACTIVE_HIGH>;
->>> +            enable-active-high;
->>> +            regulator-boot-on;
->>> +        };
->>
->> This shouldn't be inside the SoC node because it doesn't have a reg
->> property. It should be in a 'regulators' node that's in the root of the
->> tree:
+>> If I can get your Ack on this I'll queue it up along with sensor
+>> driver via media tree.
 >
-> Is this new DT requirement/style? I have not noticed such a dt style
-> in the past. I might have missed it. Any advantage of doing this way?
-
-It's a style. I'm not sure if it's new, but I feel like I've seen
-mention of it before more than a year ago (see
-arch/arm/boot/dts/tegra30-beaver.dts for an example). The advantage of
-doing it this way is we can see all the gpio/fixed regulators in one
-place and they're physically placed on a separate bus from the SoC bus.
-Typically nodes have reg properties too, so making up fake reg
-properties for the regulator nodes when they're on the SoC bus would be
-wrong and confusing. If they're under some regulators container node we
-can number them from 0 to N and use that for the reg property.
-
->>
->>     regulators {
->>         compatible = "simple-bus";
->>
->>         ext_3p3v: fixedregulator@0 {
->>             compatible = "regulator-fixed";
->>             ...
->>         };
->>     };
->>
-> I will move this to the suggested style in next version.
-
-Thanks.
-
->>
->>> +
->>>           qcom,ssbi@500000 {
->>>               compatible = "qcom,ssbi";
->>>               reg = <0x00500000 0x1000>;
->>> @@ -522,5 +549,82 @@
->>>               compatible = "qcom,tcsr-apq8064", "syscon";
->>>               reg = <0x1a400000 0x100>;
->>>           };
->>> +
->>> +        hdmi: qcom,hdmi-tx@4a00000 {
->>> +            compatible = "qcom,hdmi-tx-8960";
->>> +            reg-names = "core_physical";
->>> +            reg = <0x04a00000 0x1000>;
->>> +            interrupts = <GIC_SPI 79 IRQ_TYPE_NONE>;
->>> +            clock-names =
->>> +                "core_clk",
->>> +                "master_iface_clk",
->>> +                "slave_iface_clk";
->>> +            clocks =
->>> +                <&mmcc HDMI_APP_CLK>,
->>> +                <&mmcc HDMI_M_AHB_CLK>,
->>> +                <&mmcc HDMI_S_AHB_CLK>;
->>> +            qcom,hdmi-tx-ddc-clk = <&tlmm_pinmux 70
->>> +                        GPIO_ACTIVE_HIGH>;
->>> +            qcom,hdmi-tx-ddc-data = <&tlmm_pinmux 71
->>> +                        GPIO_ACTIVE_HIGH>;
->>> +            qcom,hdmi-tx-hpd = <&tlmm_pinmux 72
->>> +                        GPIO_ACTIVE_HIGH>;
->>
->> This should be done via the *-gpios method. i.e. hdmi-tx-ddc-clk-gpios,
->> hdmi-tx-ddc-data-gpios, etc.
->>
-> Thanks for the inputs,
+> Sorry the chances are too big for pointless merge conflicts with
+> these files with constant patching going on.
 >
-> That's true, These are existing bindings, so I can't change it as part
-> of this patch, However I will make another patch to fix this in both
-> drivers and DT for good reasons. Just noticed that bindings are not
-> consistent with the examples and the driver, which I guess is another
-> issue.
+> Please just resend this patch alone again to me later on once the
+> driver changes are merged into Linux next and on their way to the
+> mainline kernel.
+>
+the sensor driver is now present in linux-next and the same patch
+applies cleanly, can you pick up the same or do you want me to
+resend the patch ?
 
-Yes, the driver/binding should be fixed and then this patch can be
-corrected and applied. There are no implementations of the DT for this
-device upstream in the dts directory so there's no breakage or backwards
-incompatibility problem by fixing the driver/binding.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cheers,
+--Prabhakar Lad
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
