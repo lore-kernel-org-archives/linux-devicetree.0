@@ -1,129 +1,34 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 1/9] mmc: sdhci-st: Add macros for register offsets and bitfields for mmcss glue regs
-Date: Fri, 10 Apr 2015 09:58:23 +0100
-Message-ID: <1428656311-2605-2-git-send-email-peter.griffin@linaro.org>
-References: <1428656311-2605-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428656311-2605-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v3 5/5] MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+Date: Fri, 10 Apr 2015 11:12:48 +0200
+Message-ID: <1428657168-12495-6-git-send-email-gabriel.fernandez@linaro.org>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The stih407 family SoC's have additional glue registers in the flashSS which
-are used to configure the Arasan controller.
+This patch adds the pci-st.c pci driver found on STMicroelectronics
+SoC's into the STI arch section of the maintainers file.
 
-This patch adds macros for the register offsets and bitfields which will be
-used by subsequent patches to support stih407 family SoC's.
-
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- drivers/mmc/host/sdhci-st.c | 91 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
-index 594a4ef..a80de93 100644
---- a/drivers/mmc/host/sdhci-st.c
-+++ b/drivers/mmc/host/sdhci-st.c
-@@ -26,6 +26,97 @@
- 
- #include "sdhci-pltfm.h"
- 
-+/* MMCSS glue logic to setup the HC on some ST SoCs (e.g. STiH407 family) */
-+
-+#define ST_MMC_CCONFIG_REG_1		0x400
-+#define ST_MMC_CCONFIG_TIMEOUT_CLK_UNIT	BIT(24)
-+#define ST_MMC_CCONFIG_TIMEOUT_CLK_FREQ	BIT(12)
-+#define ST_MMC_CCONFIG_TUNING_COUNT_DEFAULT	BIT(8)
-+#define ST_MMC_CCONFIG_ASYNC_WAKEUP	BIT(0)
-+#define ST_MMC_CCONFIG_1_DEFAULT	\
-+				((ST_MMC_CCONFIG_TIMEOUT_CLK_UNIT) | \
-+				 (ST_MMC_CCONFIG_TIMEOUT_CLK_FREQ) | \
-+				 (ST_MMC_CCONFIG_TUNING_COUNT_DEFAULT))
-+
-+#define ST_MMC_CCONFIG_REG_2		0x404
-+#define ST_MMC_CCONFIG_HIGH_SPEED	BIT(28)
-+#define ST_MMC_CCONFIG_ADMA2		BIT(24)
-+#define ST_MMC_CCONFIG_8BIT		BIT(20)
-+#define ST_MMC_CCONFIG_MAX_BLK_LEN	16
-+#define  MAX_BLK_LEN_1024		1
-+#define  MAX_BLK_LEN_2048		2
-+#define BASE_CLK_FREQ_200		0xc8
-+#define BASE_CLK_FREQ_100		0x64
-+#define BASE_CLK_FREQ_50		0x32
-+#define ST_MMC_CCONFIG_2_DEFAULT \
-+	(ST_MMC_CCONFIG_HIGH_SPEED | ST_MMC_CCONFIG_ADMA2 | \
-+	 ST_MMC_CCONFIG_8BIT | \
-+	 (MAX_BLK_LEN_1024 << ST_MMC_CCONFIG_MAX_BLK_LEN))
-+
-+#define ST_MMC_CCONFIG_REG_3			0x408
-+#define ST_MMC_CCONFIG_EMMC_SLOT_TYPE		BIT(28)
-+#define ST_MMC_CCONFIG_64BIT			BIT(24)
-+#define ST_MMC_CCONFIG_ASYNCH_INTR_SUPPORT	BIT(20)
-+#define ST_MMC_CCONFIG_1P8_VOLT			BIT(16)
-+#define ST_MMC_CCONFIG_3P0_VOLT			BIT(12)
-+#define ST_MMC_CCONFIG_3P3_VOLT			BIT(8)
-+#define ST_MMC_CCONFIG_SUSP_RES_SUPPORT		BIT(4)
-+#define ST_MMC_CCONFIG_SDMA			BIT(0)
-+#define ST_MMC_CCONFIG_3_DEFAULT	\
-+			 (ST_MMC_CCONFIG_ASYNCH_INTR_SUPPORT	| \
-+			  ST_MMC_CCONFIG_3P3_VOLT		| \
-+			  ST_MMC_CCONFIG_SUSP_RES_SUPPORT	| \
-+			  ST_MMC_CCONFIG_SDMA)
-+
-+#define ST_MMC_CCONFIG_REG_4	0x40c
-+#define ST_MMC_CCONFIG_D_DRIVER	BIT(20)
-+#define ST_MMC_CCONFIG_C_DRIVER	BIT(16)
-+#define ST_MMC_CCONFIG_A_DRIVER	BIT(12)
-+#define ST_MMC_CCONFIG_DDR50	BIT(8)
-+#define ST_MMC_CCONFIG_SDR104	BIT(4)
-+#define ST_MMC_CCONFIG_SDR50	BIT(0)
-+#define ST_MMC_CCONFIG_4_DEFAULT	0
-+
-+#define ST_MMC_CCONFIG_REG_5		0x410
-+#define ST_MMC_CCONFIG_TUNING_FOR_SDR50	BIT(8)
-+#define RETUNING_TIMER_CNT_MAX		0xf
-+#define ST_MMC_CCONFIG_5_DEFAULT	0
-+
-+/* I/O configuration for Arasan IP */
-+#define ST_MMC_GP_OUTPUT	0x450
-+#define ST_MMC_GP_OUTPUT_CD	BIT(12)
-+
-+#define ST_MMC_STATUS_R		0x460
-+
-+#define ST_TOP_MMC_DLY_FIX_OFF(x)	(x - 0x8)
-+
-+/* TOP config registers to manage static and dynamic delay */
-+#define ST_TOP_MMC_TX_CLK_DLY			ST_TOP_MMC_DLY_FIX_OFF(0x8)
-+#define ST_TOP_MMC_RX_CLK_DLY			ST_TOP_MMC_DLY_FIX_OFF(0xc)
-+/* MMC delay control register */
-+#define ST_TOP_MMC_DLY_CTRL			ST_TOP_MMC_DLY_FIX_OFF(0x18)
-+#define ST_TOP_MMC_DLY_CTRL_DLL_BYPASS_CMD	BIT(0)
-+#define ST_TOP_MMC_DLY_CTRL_DLL_BYPASS_PH_SEL	BIT(1)
-+#define ST_TOP_MMC_DLY_CTRL_TX_DLL_ENABLE	BIT(8)
-+#define ST_TOP_MMC_DLY_CTRL_RX_DLL_ENABLE	BIT(9)
-+#define ST_TOP_MMC_DLY_CTRL_ATUNE_NOT_CFG_DLY	BIT(10)
-+#define ST_TOP_MMC_START_DLL_LOCK		BIT(11)
-+
-+/* register to provide the phase-shift value for DLL */
-+#define ST_TOP_MMC_TX_DLL_STEP_DLY		ST_TOP_MMC_DLY_FIX_OFF(0x1c)
-+#define ST_TOP_MMC_RX_DLL_STEP_DLY		ST_TOP_MMC_DLY_FIX_OFF(0x20)
-+#define ST_TOP_MMC_RX_CMD_STEP_DLY		ST_TOP_MMC_DLY_FIX_OFF(0x24)
-+
-+/* phase shift delay on the tx clk 2.188ns */
-+#define ST_TOP_MMC_TX_DLL_STEP_DLY_VALID	0x6
-+
-+#define ST_TOP_MMC_DLY_MAX			0xf
-+
-+#define ST_TOP_MMC_DYN_DLY_CONF	\
-+		(ST_TOP_MMC_DLY_CTRL_TX_DLL_ENABLE | \
-+		 ST_TOP_MMC_DLY_CTRL_ATUNE_NOT_CFG_DLY | \
-+		 ST_TOP_MMC_START_DLL_LOCK)
-+
- static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
- {
- 	u32 ret;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index efbcb50..4639d2d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1468,6 +1468,7 @@ F:	drivers/clocksource/arm_global_timer.c
+ F:	drivers/i2c/busses/i2c-st.c
+ F:	drivers/media/rc/st_rc.c
+ F:	drivers/mmc/host/sdhci-st.c
++F:	drivers/pci/host/pci-st.c
+ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
 -- 
 1.9.1
