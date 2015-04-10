@@ -1,46 +1,48 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH RESEND v6 6/6] mfd: axp20x: Enable AXP22X regulators
-Date: Fri, 10 Apr 2015 12:09:06 +0800
-Message-ID: <1428638946-24890-7-git-send-email-wens@csie.org>
-References: <1428638946-24890-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: [PATCH v5 11/12] drm/exynos: dsi: do not set TE GPIO direction by
+ input
+Date: Fri, 10 Apr 2015 14:55:29 +0900
+Message-ID: <1428645330-1043-12-git-send-email-human.hwang@samsung.com>
+References: <1428645330-1043-1-git-send-email-human.hwang@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6EZTWUQKGQEUCEGKIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1428638946-24890-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1428645330-1043-1-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, inki.dae@samsung.com, daniel@fooishbar.org
+Cc: dh09.lee@samsung.com, sw0312.kim@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Now that the axp20x-regulators driver supports different variants of the
-AXP family, we can enable regulator support for AXP22X without the risk
-of incorrectly configuring regulators.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mfd/axp20x.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index cfbb7d7aead6..6df91556faf3 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -370,6 +370,8 @@ static struct mfd_cell axp22x_cells[] = {
- 		.name			= "axp20x-pek",
- 		.num_resources		= ARRAY_SIZE(axp22x_pek_resources),
- 		.resources		= axp22x_pek_resources,
-+	}, {
-+		.name			= "axp20x-regulator",
- 	},
- };
- 
--- 
-2.1.4
+T24gc29tZSBib2FyZCwgVEUgR1BJTyBzaG91bGQgYmUgY29uZmlndXJlZCBwcm9wZXJseSB0aG91
+Z2hvdXQgcGluY3RybCBkcml2ZXIKYXMgYW4gd2FrZXVwIGludGVycnVwdC4gU28gdGhpcyBncGlv
+IHNob3VsZCBiZSBjb25maWd1cmFibGUgaW4gdGhlIGJvYXJkJ3MgRFQsCm5vdCBiZWluZyByZXF1
+ZXN0ZWQgYXMgYSBpbnB1dCBwaW4uCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVt
+YW4uaHdhbmdAc2Ftc3VuZy5jb20+Ci0tLQpDaGFuZ2VzIGZvciB2MjoKLSBOb25lCgpDaGFuZ2Vz
+IGZvciB2MzoKLSBOb25lCgpDaGFuZ2VzIGZvciB2NDoKLSBOb25lCgpDaGFuZ2VzIGZvciB2NToK
+LSBOb25lCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMgfCA0ICsrLS0K
+IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9n
+cHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCmluZGV4IGQ1YTNiYWYuLjVhZWU0YjEgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYworKysgYi9k
+cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKQEAgLTEzMjEsMTUgKzEzMjEs
+MTUgQEAgc3RhdGljIGludCBleHlub3NfZHNpX3JlZ2lzdGVyX3RlX2lycShzdHJ1Y3QgZXh5bm9z
+X2RzaSAqZHNpKQogCQlnb3RvIG91dDsKIAl9CgotCXJldCA9IGdwaW9fcmVxdWVzdF9vbmUoZHNp
+LT50ZV9ncGlvLCBHUElPRl9JTiwgInRlX2dwaW8iKTsKKwlyZXQgPSBncGlvX3JlcXVlc3QoZHNp
+LT50ZV9ncGlvLCAidGVfZ3BpbyIpOwogCWlmIChyZXQpIHsKIAkJZGV2X2Vycihkc2ktPmRldiwg
+ImdwaW8gcmVxdWVzdCBmYWlsZWQgd2l0aCAlZFxuIiwgcmV0KTsKIAkJZ290byBvdXQ7CiAJfQoK
+IAl0ZV9ncGlvX2lycSA9IGdwaW9fdG9faXJxKGRzaS0+dGVfZ3Bpbyk7Ci0KIAlpcnFfc2V0X3N0
+YXR1c19mbGFncyh0ZV9ncGlvX2lycSwgSVJRX05PQVVUT0VOKTsKKwogCXJldCA9IHJlcXVlc3Rf
+dGhyZWFkZWRfaXJxKHRlX2dwaW9faXJxLCBleHlub3NfZHNpX3RlX2lycV9oYW5kbGVyLCBOVUxM
+LAogCQkJCQlJUlFGX1RSSUdHRVJfUklTSU5HLCAiVEUiLCBkc2kpOwogCWlmIChyZXQpIHsKLS0K
+MS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
