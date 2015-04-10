@@ -1,146 +1,103 @@
-From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 10/12] drm/exynos: dsi: add support for MIC driver as a
- bridge
-Date: Fri, 10 Apr 2015 14:55:28 +0900
-Message-ID: <1428645330-1043-11-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: [PATCH v5 04/12] drm/exynos: dsi: rename pll_clk to sclk_clk
+Date: Fri, 10 Apr 2015 14:55:22 +0900
+Message-ID: <1428645330-1043-5-git-send-email-human.hwang@samsung.com>
 References: <1428645330-1043-1-git-send-email-human.hwang@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1428645330-1043-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org
-Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1428645330-1043-1-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, inki.dae@samsung.com, daniel@fooishbar.org
+Cc: dh09.lee@samsung.com, sw0312.kim@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-MIC must be initilized by MIPI DSI when it is being bound.
-
-Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-Changes for v2:
-- None
-
-Changes for v3:
-- None
-
-Changes for v4:
-- None
-
-Changes for v5:
-- None
- .../devicetree/bindings/video/exynos_dsim.txt      | 23 ++++++++++++++++++---
- drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 24 ++++++++++++++++++++++
- 2 files changed, 44 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
-index 11ccac9..0be0362 100644
---- a/Documentation/devicetree/bindings/video/exynos_dsim.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
-@@ -32,10 +32,19 @@ Video interfaces:
-   Device node can contain video interface port nodes according to [2].
-   The following are properties specific to those nodes:
-
--  port node:
--    - reg: (required) can be 0 for input RGB/I80 port or 1 for DSI port;
-+  port node inbound:
-+    - reg: (required) must be 0.
-+  port node outbound:
-+    - reg: (required) must be 1.
-
--  endpoint node of DSI port (reg = 1):
-+  endpoint node connected from mic node (reg = 0):
-+    - remote-endpoint: specifies the endpoint in mic node. This node is required
-+		       for Exynos5433 mipi dsi. So mic can access to panel node
-+		       thoughout this dsi node.
-+  endpoint node connected to panel node (reg = 1):
-+    - remote-endpoint: specifies the endpoint in panel node. This node is
-+		       required in all kinds of exynos mipi dsi to represent
-+		       the connection between mipi dsi and panel.
-     - samsung,burst-clock-frequency: specifies DSI frequency in high-speed burst
-       mode
-     - samsung,esc-clock-frequency: specifies DSI frequency in escape mode
-@@ -74,7 +83,15 @@ Example:
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-
-+			port@0 {
-+				reg = <0>;
-+				decon_to_mic: endpoint {
-+					remote-endpoint = <&mic_to_decon>;
-+				};
-+			};
-+
- 			port@1 {
-+				reg = <1>;
- 				dsi_ep: endpoint {
- 					reg = <0>;
- 					samsung,burst-clock-frequency = <500000000>;
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index ddcb77e..d5a3baf 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -20,6 +20,7 @@
- #include <linux/irq.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
-+#include <linux/of_graph.h>
- #include <linux/phy/phy.h>
- #include <linux/regulator/consumer.h>
- #include <linux/component.h>
-@@ -286,6 +287,7 @@ struct exynos_dsi {
- 	struct list_head transfer_list;
-
- 	struct exynos_dsi_driver_data *driver_data;
-+	struct device_node *bridge_node;
- };
-
- #define host_to_dsi(host) container_of(host, struct exynos_dsi, dsi_host)
-@@ -1776,7 +1778,22 @@ static int exynos_dsi_parse_dt(struct exynos_dsi *dsi)
-
- 	ret = exynos_dsi_of_read_u32(ep, "samsung,esc-clock-frequency",
- 				     &dsi->esc_clk_rate);
-+	if (ret < 0)
-+		goto end;
-+
-+	of_node_put(ep);
-+
-+	ep = of_graph_get_next_endpoint(node, NULL);
-+	if (!ep) {
-+		ret = -ENXIO;
-+		goto end;
-+	}
-
-+	dsi->bridge_node = of_graph_get_remote_port_parent(ep);
-+	if (!dsi->bridge_node) {
-+		ret = -ENXIO;
-+		goto end;
-+	}
- end:
- 	of_node_put(ep);
-
-@@ -1789,6 +1806,7 @@ static int exynos_dsi_bind(struct device *dev, struct device *master,
- 	struct exynos_drm_display *display = dev_get_drvdata(dev);
- 	struct exynos_dsi *dsi = display_to_dsi(display);
- 	struct drm_device *drm_dev = data;
-+	struct drm_bridge *bridge;
- 	int ret;
-
- 	ret = exynos_drm_create_enc_conn(drm_dev, display);
-@@ -1798,6 +1816,12 @@ static int exynos_dsi_bind(struct device *dev, struct device *master,
- 		return ret;
- 	}
-
-+	bridge = of_drm_find_bridge(dsi->bridge_node);
-+	if (bridge) {
-+		display->encoder->bridge = bridge;
-+		drm_bridge_attach(drm_dev, bridge);
-+	}
-+
- 	return mipi_dsi_host_register(&dsi->dsi_host);
- }
-
---
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCByZW5hbWVzIHBsbF9jbGsgdG8gc2Nsa19jbGsuIFRoZSBjbG9jayByZWZlcmVu
+Y2VkIGJ5IHBsbF9jbGsKaXMgYWN0dWFsbHkgbm90IHRoZSBwbGwgaW5wdXQgY2xvY2sgZm9yIGRz
+aS4gVGhlIHBsbCBpbnB1dCBjbG9jayBjb21lcwpmcm9tIHRoZSBib2FyZCdzIG9zY2lsbGF0b3Ig
+ZGlyZWN0bHkuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ft
+c3VuZy5jb20+Ci0tLQpDaGFuZ2VzIGZvciB2MzoKLSBOZXdseSBhZGRlZAoKQ2hhbmdlcyBmb3Ig
+djQ6Ci0gTm9uZQoKQ2hhbmdlcyBmb3IgdjU6Ci0gTm9uZQogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmlkZW8vZXh5bm9zX2RzaW0udHh0ICAgICAgfCAgNyArKy0tLQogZHJpdmVycy9ncHUvZHJt
+L2V4eW5vcy9leHlub3NfZHJtX2RzaS5jICAgICAgICAgICAgfCAzMSArKysrKysrKy0tLS0tLS0t
+LS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDIzIGRlbGV0aW9ucygt
+KQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9l
+eHlub3NfZHNpbS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8v
+ZXh5bm9zX2RzaW0udHh0CmluZGV4IDgwMmFhN2UuLjQ0NjU5ZGQgMTAwNjQ0Ci0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3NfZHNpbS50eHQKKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vc19kc2ltLnR4dApA
+QCAtMTAsMTMgKzEwLDE0IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAgIC0gaW50ZXJydXB0czog
+c2hvdWxkIGNvbnRhaW4gRFNJIGludGVycnVwdAogICAtIGNsb2NrczogbGlzdCBvZiBjbG9jayBz
+cGVjaWZpZXJzLCBtdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggcmVxdWlyZWQKICAgICBl
+bnRyeSBpbiBjbG9jay1uYW1lcwotICAtIGNsb2NrLW5hbWVzOiBzaG91bGQgaW5jbHVkZSAiYnVz
+X2NsayJhbmQgInBsbF9jbGsiIGVudHJpZXMKKyAgLSBjbG9jay1uYW1lczogc2hvdWxkIGluY2x1
+ZGUgImJ1c19jbGsiYW5kICJzY2xrX21pcGkiIGVudHJpZXMKKwkJIHRoZSB1c2Ugb2YgInBsbF9j
+bGsiIGlzIGRlcHJlY2F0ZWQKICAgLSBwaHlzOiBsaXN0IG9mIHBoeSBzcGVjaWZpZXJzLCBtdXN0
+IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggcmVxdWlyZWQKICAgICBlbnRyeSBpbiBwaHktbmFt
+ZXMKICAgLSBwaHktbmFtZXM6IHNob3VsZCBpbmNsdWRlICJkc2ltIiBlbnRyeQogICAtIHZkZGNv
+cmUtc3VwcGx5OiBNSVBJIERTSU0gQ29yZSB2b2x0YWdlIHN1cHBseSAoZS5nLiAxLjFWKQogICAt
+IHZkZGlvLXN1cHBseTogTUlQSSBEU0lNIEkvTyBhbmQgUExMIHZvbHRhZ2Ugc3VwcGx5IChlLmcu
+IDEuOFYpCi0gIC0gc2Ftc3VuZyxwbGwtY2xvY2stZnJlcXVlbmN5OiBzcGVjaWZpZXMgZnJlcXVl
+bmN5IG9mIHRoZSAicGxsX2NsayIgY2xvY2sKKyAgLSBzYW1zdW5nLHBsbC1jbG9jay1mcmVxdWVu
+Y3k6IHNwZWNpZmllcyBmcmVxdWVuY3kgb2YgdGhlIG9zY2lsbGF0b3IgY2xvY2sKICAgLSAjYWRk
+cmVzcy1jZWxscywgI3NpemUtY2VsbHM6IHNob3VsZCBiZSBzZXQgcmVzcGVjdGl2ZWx5IHRvIDwx
+PiBhbmQgPDA+CiAgICAgYWNjb3JkaW5nIHRvIERTSSBob3N0IGJpbmRpbmdzIChzZWUgTUlQSSBE
+U0kgYmluZGluZ3MgWzFdKQogCkBAIC00OCw3ICs0OSw3IEBAIEV4YW1wbGU6CiAJCXJlZyA9IDww
+eDExQzgwMDAwIDB4MTAwMDA+OwogCQlpbnRlcnJ1cHRzID0gPDAgNzkgMD47CiAJCWNsb2NrcyA9
+IDwmY2xvY2sgMjg2PiwgPCZjbG9jayAxNDM+OwotCQljbG9jay1uYW1lcyA9ICJidXNfY2xrIiwg
+InBsbF9jbGsiOworCQljbG9jay1uYW1lcyA9ICJidXNfY2xrIiwgInNjbGtfbWlwaSI7CiAJCXBo
+eXMgPSA8Jm1pcGlfcGh5IDE+OwogCQlwaHktbmFtZXMgPSAiZHNpbSI7CiAJCXZkZGNvcmUtc3Vw
+cGx5ID0gPCZ2dXNiX3JlZz47CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4
+eW5vc19kcm1fZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMK
+aW5kZXggMDQ5MjcxNS4uMTc4YmU0NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
+cy9leHlub3NfZHJtX2RzaS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2Ry
+bV9kc2kuYwpAQCAtMjc3LDcgKzI3Nyw3IEBAIHN0cnVjdCBleHlub3NfZHNpIHsKIAogCXZvaWQg
+X19pb21lbSAqcmVnX2Jhc2U7CiAJc3RydWN0IHBoeSAqcGh5OwotCXN0cnVjdCBjbGsgKnBsbF9j
+bGs7CisJc3RydWN0IGNsayAqc2Nsa19jbGs7CiAJc3RydWN0IGNsayAqYnVzX2NsazsKIAlzdHJ1
+Y3QgcmVndWxhdG9yX2J1bGtfZGF0YSBzdXBwbGllc1syXTsKIAlpbnQgaXJxOwpAQCAtNDMxLDE2
+ICs0MzEsNyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBleHlub3NfZHNpX3NldF9wbGwoc3RydWN0
+IGV4eW5vc19kc2kgKmRzaSwKIAl1MTYgbTsKIAl1MzIgcmVnOwogCi0JY2xrX3NldF9yYXRlKGRz
+aS0+cGxsX2NsaywgZHNpLT5wbGxfY2xrX3JhdGUpOwotCi0JZmluID0gY2xrX2dldF9yYXRlKGRz
+aS0+cGxsX2Nsayk7Ci0JaWYgKCFmaW4pIHsKLQkJZGV2X2Vycihkc2ktPmRldiwgImZhaWxlZCB0
+byBnZXQgUExMIGNsb2NrIGZyZXF1ZW5jeVxuIik7Ci0JCXJldHVybiAwOwotCX0KLQotCWRldl9k
+YmcoZHNpLT5kZXYsICJQTEwgaW5wdXQgZnJlcXVlbmN5OiAlbHVcbiIsIGZpbik7Ci0KKwlmaW4g
+PSBkc2ktPnBsbF9jbGtfcmF0ZTsKIAlmb3V0ID0gZXh5bm9zX2RzaV9wbGxfZmluZF9wbXMoZHNp
+LCBmaW4sIGZyZXEsICZwLCAmbSwgJnMpOwogCWlmICghZm91dCkgewogCQlkZXZfZXJyKGRzaS0+
+ZGV2LApAQCAtMTMwOCwxMCArMTI5OSwxMCBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lfcG93ZXJv
+bihzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQogCQlnb3RvIGVycl9idXNfY2xrOwogCX0KIAotCXJl
+dCA9IGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBsbF9jbGspOworCXJldCA9IGNsa19wcmVwYXJl
+X2VuYWJsZShkc2ktPnNjbGtfY2xrKTsKIAlpZiAocmV0IDwgMCkgewogCQlkZXZfZXJyKGRzaS0+
+ZGV2LCAiY2Fubm90IGVuYWJsZSBwbGwgY2xvY2sgJWRcbiIsIHJldCk7Ci0JCWdvdG8gZXJyX3Bs
+bF9jbGs7CisJCWdvdG8gZXJyX3NjbGtfY2xrOwogCX0KIAogCXJldCA9IHBoeV9wb3dlcl9vbihk
+c2ktPnBoeSk7CkBAIC0xMzIzLDggKzEzMTQsOCBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lfcG93
+ZXJvbihzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQogCXJldHVybiAwOwogCiBlcnJfcGh5OgotCWNs
+a19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbF9jbGspOwotZXJyX3BsbF9jbGs6CisJY2xrX2Rp
+c2FibGVfdW5wcmVwYXJlKGRzaS0+c2Nsa19jbGspOworZXJyX3NjbGtfY2xrOgogCWNsa19kaXNh
+YmxlX3VucHJlcGFyZShkc2ktPmJ1c19jbGspOwogZXJyX2J1c19jbGs6CiAJcmVndWxhdG9yX2J1
+bGtfZGlzYWJsZShBUlJBWV9TSVpFKGRzaS0+c3VwcGxpZXMpLCBkc2ktPnN1cHBsaWVzKTsKQEAg
+LTEzNTAsNyArMTM0MSw3IEBAIHN0YXRpYyB2b2lkIGV4eW5vc19kc2lfcG93ZXJvZmYoc3RydWN0
+IGV4eW5vc19kc2kgKmRzaSkKIAogCXBoeV9wb3dlcl9vZmYoZHNpLT5waHkpOwogCi0JY2xrX2Rp
+c2FibGVfdW5wcmVwYXJlKGRzaS0+cGxsX2Nsayk7CisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRz
+aS0+c2Nsa19jbGspOwogCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPmJ1c19jbGspOwogCiAJ
+cmV0ID0gcmVndWxhdG9yX2J1bGtfZGlzYWJsZShBUlJBWV9TSVpFKGRzaS0+c3VwcGxpZXMpLCBk
+c2ktPnN1cHBsaWVzKTsKQEAgLTE3MTMsMTAgKzE3MDQsMTAgQEAgc3RhdGljIGludCBleHlub3Nf
+ZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJCXJldHVybiAtRVBST0JF
+X0RFRkVSOwogCX0KIAotCWRzaS0+cGxsX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJwbGxfY2xr
+Iik7Ci0JaWYgKElTX0VSUihkc2ktPnBsbF9jbGspKSB7Ci0JCWRldl9pbmZvKGRldiwgImZhaWxl
+ZCB0byBnZXQgZHNpIHBsbCBpbnB1dCBjbG9ja1xuIik7Ci0JCXJldCA9IFBUUl9FUlIoZHNpLT5w
+bGxfY2xrKTsKKwlkc2ktPnNjbGtfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgInNjbGtfbWlwaSIp
+OworCWlmIChJU19FUlIoZHNpLT5zY2xrX2NsaykpIHsKKwkJZGV2X2luZm8oZGV2LCAiZmFpbGVk
+IHRvIGdldCBkc2kgc2NsayBjbG9ja1xuIik7CisJCXJldCA9IFBUUl9FUlIoZHNpLT5zY2xrX2Ns
+ayk7CiAJCWdvdG8gZXJyX2RlbF9jb21wb25lbnQ7CiAJfQogCi0tIAoxLjkuMQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
