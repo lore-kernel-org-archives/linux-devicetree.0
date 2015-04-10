@@ -1,62 +1,59 @@
-From: Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
-Date: Fri, 10 Apr 2015 06:23:29 +0000
-Message-ID: <BLUPR03MB14924B9EBBD1C5635B0487DE1FA0@BLUPR03MB149.namprd03.prod.outlook.com>
-References: <1427782669-20368-1-git-send-email-hongtao.jia@freescale.com>
- <1428638140.22867.583.camel@freescale.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 2/2] axs_nand - add driver for NAND controller used on
+ Synopsys AXS dev boards
+Date: Fri, 10 Apr 2015 06:36:56 +0000
+Message-ID: <1428647815.5325.3.camel@synopsys.com>
+References: <1428483478-22771-1-git-send-email-abrodkin@synopsys.com>
+	 <1428483478-22771-2-git-send-email-abrodkin@synopsys.com>
+	 <1428614903.17822.4.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428638140.22867.583.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428614903.17822.4.camel@x220>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-ID: <886ECAF10F280144842AAB7FDAC5B16E@internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "pebolle@tiscali.nl" <pebolle@tiscali.nl>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "Francois.Bedard@synopsys.com" <Francois.Bedard@synopsys.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
-MjENCj4gU2VudDogRnJpZGF5LCBBcHJpbCAxMCwgMjAxNSAxMTo1NiBBTQ0KPiBUbzogSmlhIEhv
-bmd0YW8tQjM4OTUxDQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgcnVpLnpoYW5nQGlu
-dGVsLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBRb3JJUS9UTVU6IGFkZCBUTVUgbm9kZSB0
-byBkZXZpY2UgdHJlZSBmb3IgUW9ySVENCj4gVDEwNHgNCj4gDQo+IE9uIFR1ZSwgMjAxNS0wMy0z
-MSBhdCAxNDoxNyArMDgwMCwgSmlhIEhvbmd0YW8gd3JvdGU6DQo+ID4gVGhpcyBpcyBUaGVybWFs
-IE1vbml0b3JpbmcgVW5pdCBmb3IgUW9ySVEgcGxhdGZvcm0uDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBKaWEgSG9uZ3RhbyA8aG9uZ3Rhby5qaWFAZnJlZXNjYWxlLmNvbT4NCj4gPiAtLS0NCj4g
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4dCAgfCA1
-OA0KPiArKysrKysrKysrKysrKysNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3Jp
-cS10bXUtdDEwNHhzaS5kdHNpICAgfCA4Mg0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4g
-IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kgICAgICAgIHwgIDEg
-Kw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE0MSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFs
-L3FvcmlxLXRoZXJtYWwudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Bvd2VycGMv
-Ym9vdC9kdHMvZnNsL3FvcmlxLXRtdS10MTA0eHNpLmR0c2kNCj4gPg0KPiA+IGRpZmYgLS1naXQN
-Cj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRo
-ZXJtYWwudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1h
-bC9xb3JpcS10aGVybWFsLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXgg
-MDAwMDAwMC4uZGZjMTdmYQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4dA0KPiA+IEBA
-IC0wLDAgKzEsNTggQEANCj4gPiArKiBUaGVybWFsIE1vbml0b3JpbmcgVW5pdCAoVE1VKSBvbiBG
-cmVlc2NhbGUgUW9ySVEgU29Dcw0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
-PiArLSBjb21wYXRpYmxlIDogImZzbCxxb3JpcS10bXUiLg0KPiANCj4gY29tcGF0aWJsZTogTXVz
-dCBpbmNsdWRlICJmc2wscW9yaXEtdG11Ii4gVGhlIHZlcnNpb24gb2YgdGhlIGRldmljZSBpcw0K
-PiAJICAgIGRldGVybWluZWQgYnkgdGhlIFRNVSBJUCBCbG9jayBSZXZpc2lvbiBSZWdpc3RlciAo
-SVBCUlIwKQ0KPiAJICAgIGF0IG9mZnNldCAweDBCRjguDQo+IA0KPiAJICAgIFRhYmxlIG9mIGNv
-cnJlc3BvbmRlbmNlcyBiZXR3ZWVuIElQQlJSMCB2YWx1ZXMgYW5kIGV4YW1wbGUNCj4gCSAgICBj
-aGlwczoNCj4gCQlWYWx1ZSAgICAgICAgICAgRGV2aWNlDQo+IAkJLS0tLS0tLS0tLS0gICAgIC0t
-LS0tLS0NCj4gCQkweDAxOTAwMTAyICAgICAgVDEwNDANCg0KSSB3aWxsIHVwZGF0ZSBpdCBpbiBu
-ZXh0IHZlcnNpb24uDQoNCj4gDQo+ID4gKy0gcmVnIDogYWRkcmVzcyByYW5nZSBvZiBUTVUgcmVn
-aXN0ZXJzLg0KPiA+ICstIGludGVycnVwdHMgOiBzaG91bGQgY29udGFpbiB0aGUgaW50ZXJydXB0
-IGZvciBUTVUuDQo+IA0KPiBzL3Nob3VsZCBjb250YWluL2NvbnRhaW5zLw0KDQpUaGFua3MgZm9y
-IHRoZSBjb3JyZWN0aW9uLg0KDQo+IA0KPiA+ICstIGNhbGlicmF0aW9uIDogY2FsaWJyYXRpb24g
-dGFibGUgZm9yIFRNVS4NCj4gDQo+IFdoYXQgaXMgdGhlIGZvcm1hdCBvZiB0aGUgY2FsaWJyYXRp
-b24gdGFibGUsIGFuZCB3aGVyZSBkb2VzIG9uZSBnZXQgdGhlDQo+IGRhdGE/DQoNClRoZXJlIGFy
-ZSBmb3VyIGNhbGlicmF0aW9uIGNvbmZpZyByYW5nZSwgZm9yIGVhY2ggcmFuZ2Ugd2UgZ290IGEg
-Y291cGxlIG9mDQpwYWlycyBmb3JtYXR0ZWQgbGlrZSA8VFRDRkdSLCBUU0NGR1I+IGF0IG9mZnNl
-dCBvZiA8MHgwMDgwLCAweDAwODQ+Lg0KDQotSG9uZ3Rhbw0KDQo+IA0KPiAtU2NvdHQNCj4gDQoN
-Cg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Paul,
+
+On Thu, 2015-04-09 at 23:28 +-0200, Paul Bolle wrote:
++AD4- What happened to 1/2? Whatever that was, I spotted a license mismatch in
++AD4- this 2/2.
++AD4- 
++AD4- On Wed, 2015-04-08 at 11:57 +-0300, Alexey Brodkin wrote:
++AD4- +AD4- --- /dev/null
++AD4- +AD4- +-+-+- b/drivers/mtd/nand/axs+AF8-nand.c
++AD4- +AD4- +AEAAQA- -0,0 +-1,412 +AEAAQA-
++AD4- +AD4- +-/+ACo-
++AD4- +AD4- +- +ACo- Copyright (C) 2014 Synopsys, Inc. (www.synopsys.com)
++AD4- +AD4- +- +ACo-
++AD4- +AD4- +- +ACo- Driver for NAND controller on Synopsys AXS development board.
++AD4- +AD4- +- +ACo-
++AD4- +AD4- +- +ACo- This file is subject to the terms and conditions of the GNU General Public
++AD4- +AD4- +- +ACo- License v2. See the file COPYING in the main directory of this archive for
++AD4- +AD4- +- +ACo- more details.
++AD4- +AD4- +- +ACo-/
++AD4- 
++AD4- This states the license of this file is GPL v2.
++AD4- 
++AD4- +AD4- +-MODULE+AF8-LICENSE(+ACI-GPL+ACI-)+ADs-
++AD4- 
++AD4- According to include/linux/module.h this states the license is GPL v2 or
++AD4- later.
+
+I'm really sorry for this noise.
+
+I meant to send a WIP patch for internal review and due to hard-coded
+CCs in the patch +ACI-get send-email+ACI- automatically added all of you in the
+CC field.
+
+I'll try to be more careful next time.
+
+And anyway I'm planning to submit this patch (probably with some more
+fixes) for normal review sometime soon.
+
+-Alexey
