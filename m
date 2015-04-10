@@ -1,48 +1,39 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 5/5] arm64: qcom: add cpu operations
-Date: Fri, 10 Apr 2015 11:08:33 +0100
-Message-ID: <20150410100832.GB6854@e104818-lin.cambridge.arm.com>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <1428601031-5366-6-git-send-email-galak@codeaurora.org>
- <2294107.GTDFpLFyzQ@wuerfel>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V2 0/2]  Add OnKey support for DA9063
+Date: Fri, 10 Apr 2015 10:54:19 +0100
+Message-ID: <cover.1428659659.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2294107.GTDFpLFyzQ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 09, 2015 at 11:19:02PM +0200, Arnd Bergmann wrote:
-> On Thursday 09 April 2015 12:37:11 Kumar Gala wrote:
-> > From: Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > 
-> > Add qcom cpu operations for arm-v8 cpus. Implement secondary cpu boot ops
-> > As a part of this change update device tree documentation for:
-> > 
-> > 1. Arm cortex-a ACC device which provides percpu reg
-> > 2. Armv8 cortex-a compatible string in arm/cpus.txt
-> > 
-> > Signed-off-by: Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt    |   2 +
-> >  Documentation/devicetree/bindings/arm/msm/acc.txt |  19 ++
-> >  drivers/soc/qcom/Makefile                         |   1 +
-> >  drivers/soc/qcom/cpu_ops.c                        | 343 ++++++++++++++++++++++
-> >  4 files changed, 365 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/msm/acc.txt
-> 
-> I don't want this in drivers/soc. Please find a way to integrate it into the
-> arch/arm64 code.
+From: S Twiss <stwiss.opensource@diasemi.com>
 
-And rename it to something like qc-special-cpu-ops-dont-copy-this.c
+This patch set adds OnKey driver support for the Dialog
+Semiconductor DA9063 PMIC.
+
+[PATCH V2 1/2]: kernel driver onkey support
+[PATCH V2 2/2]: device tree bindings document
+
+Thank you,
+Steve Twiss, Dialog Semiconductor Ltd.
+
+S Twiss (2):
+  input: misc: da9063: OnKey driver
+  devicetree: Add bindings for DA9063 OnKey
+
+ Documentation/devicetree/bindings/mfd/da9063.txt |  22 ++-
+ MAINTAINERS                                      |   2 +-
+ drivers/input/misc/Kconfig                       |  10 +
+ drivers/input/misc/Makefile                      |   1 +
+ drivers/input/misc/da9063-onkey.c                | 228 +++++++++++++++++++++++
+ drivers/mfd/da9063-core.c                        |  55 ++++++
+ include/linux/mfd/da9063/pdata.h                 |   1 +
+ 7 files changed, 316 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/input/misc/da9063-onkey.c
 
 -- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+end-of-patch for PATCH V2
