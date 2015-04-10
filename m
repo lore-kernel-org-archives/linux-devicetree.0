@@ -1,96 +1,121 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] crypto: add new driver for Marvell CESA
-Date: Fri, 10 Apr 2015 12:38:59 +0200
-Message-ID: <1428662339.17822.18.camel@x220>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-	 <1428591523-1780-2-git-send-email-boris.brezillon@free-electrons.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
+Subject: [net-next PATCH 2/3] net: macb: Add support for jumbo frames
+Date: Fri, 10 Apr 2015 14:47:20 +0530
+Message-ID: <6680752c-a0a0-4199-af32-ba225812603c@BL2FFO11FD007.protection.gbl>
+References: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428591523-1780-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <info-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-(This patch needed a trivial context change in drivers/crypto/Makefile
-to get it applied on top of next-20150409.)
+Check for "cdns,zynqmp-gem" compatible string and enable jumbo frame support
+in NWCFG register, update descriptor length masks and registers accordingly.
+Jumbo max length register should be set according to support in SoC; it is
+set to 10240 for Zynq Ultrascale ZynqMPSoC.
 
-On Thu, 2015-04-09 at 16:58 +0200, Boris Brezillon wrote:
-> --- a/drivers/crypto/Kconfig
-> +++ b/drivers/crypto/Kconfig
-> @@ -164,8 +164,10 @@ config CRYPTO_DEV_MV_CESA
->  	depends on PLAT_ORION
->  	select CRYPTO_ALGAPI
->  	select CRYPTO_AES
-> +	select CRYPTO_DES
->  	select CRYPTO_BLKCIPHER2
->  	select CRYPTO_HASH
-> +	select SRAM
->  	help
->  	  This driver allows you to utilize the Cryptographic Engines and
->  	  Security Accelerator (CESA) which can be found on the Marvell Orion
+Signed-off-by: Harini Katakam <harinik@xilinx.com>
+Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+ drivers/net/ethernet/cadence/macb.c |   19 ++++++++++++++++---
+ drivers/net/ethernet/cadence/macb.h |    8 ++++++++
+ 2 files changed, 24 insertions(+), 3 deletions(-)
 
-> --- a/drivers/crypto/Makefile
-> +++ b/drivers/crypto/Makefile
-
-> -obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += mv_cesa.o
-> +obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += marvell/
-
-> --- /dev/null
-> +++ b/drivers/crypto/marvell/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += cesa.o cipher.o hash.o tdma.o
-
-For a modular build (which is all I tried) this doesn't do what you
-probably want, as this will generate four modules. Assuming you want to
-keep the mv_cesa name for the module, you could try something like:
-    obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += mv_cesa.o
-    mv_cesa-objs := cesa.o cipher.o hash.o tdma.o
-
-Does that do what you want?
-
-> --- /dev/null
-> +++ b/drivers/crypto/marvell/cesa.c
-
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published
-> + * by the Free Software Foundation.
-
-This states the license is GPL v2.
-
-> +static struct platform_driver marvell_cesa = {
-> +	.probe		= mv_cesa_probe,
-> +	.remove		= mv_cesa_remove,
-> +	.driver		= {
-> +		.owner	= THIS_MODULE,
-> +		.name	= "mv_crypto",
-> +		.of_match_table = mv_cesa_of_match_table,
-> +	},
-> +};
-> +MODULE_ALIAS("platform:mv_crypto");
-
-(It's nicer to make that macro be a part of the block of the other
-MODULE_ macros.)
-
-> +module_platform_driver(marvell_cesa);
-
-(And it's nicer to have this directly follow the definition of
-marvell_cesa.)
-
-> +MODULE_AUTHOR("Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_AUTHOR("Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>");
-> +MODULE_DESCRIPTION("Support for Marvell's cryptographic engine");
-> +MODULE_LICENSE("GPL");
-
-And this states the license is GPL v2 or later. So either the comment at
-the top of this file or this macro need to be changed.
-
-
-Paul Bolle
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 448a323..85de91d 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -779,7 +779,7 @@ static int gem_rx(struct macb *bp, int budget)
+ 		}
+ 		/* now everything is ready for receiving packet */
+ 		bp->rx_skbuff[entry] = NULL;
+-		len = MACB_BFEXT(RX_FRMLEN, ctrl);
++		len = ctrl & bp->rx_frm_len_mask;
+ 
+ 		netdev_vdbg(bp->dev, "gem_rx %u (len %u)\n", entry, len);
+ 
+@@ -825,7 +825,7 @@ static int macb_rx_frame(struct macb *bp, unsigned int first_frag,
+ 	struct macb_dma_desc *desc;
+ 
+ 	desc = macb_rx_desc(bp, last_frag);
+-	len = MACB_BFEXT(RX_FRMLEN, desc->ctrl);
++	len = desc->ctrl & bp->rx_frm_len_mask;
+ 
+ 	netdev_vdbg(bp->dev, "macb_rx_frame frags %u - %u (len %u)\n",
+ 		macb_rx_ring_wrap(first_frag),
+@@ -1630,7 +1630,10 @@ static void macb_init_hw(struct macb *bp)
+ 	config |= MACB_BF(RBOF, NET_IP_ALIGN);	/* Make eth data aligned */
+ 	config |= MACB_BIT(PAE);		/* PAuse Enable */
+ 	config |= MACB_BIT(DRFCS);		/* Discard Rx FCS */
+-	config |= MACB_BIT(BIG);		/* Receive oversized frames */
++	if (bp->isjumbo)
++		config |= MACB_BIT(JFRAME);	/* Enable jumbo frames */
++	else
++		config |= MACB_BIT(BIG);	/* Receive oversized frames */
+ 	if (bp->dev->flags & IFF_PROMISC)
+ 		config |= MACB_BIT(CAF);	/* Copy All Frames */
+ 	else if (macb_is_gem(bp) && bp->dev->features & NETIF_F_RXCSUM)
+@@ -1639,8 +1642,13 @@ static void macb_init_hw(struct macb *bp)
+ 		config |= MACB_BIT(NBC);	/* No BroadCast */
+ 	config |= macb_dbw(bp);
+ 	macb_writel(bp, NCFGR, config);
++	if (bp->isjumbo && bp->jumbo_max_len)
++		gem_writel(bp, JML, bp->jumbo_max_len);
+ 	bp->speed = SPEED_10;
+ 	bp->duplex = DUPLEX_HALF;
++	bp->rx_frm_len_mask = MACB_RX_FRMLEN_MASK;
++	if (bp->isjumbo)
++		bp->rx_frm_len_mask = MACB_RX_JFRMLEN_MASK;
+ 
+ 	macb_configure_dma(bp);
+ 
+@@ -2759,6 +2767,11 @@ static int macb_probe(struct platform_device *pdev)
+ 	bp->pclk = pclk;
+ 	bp->hclk = hclk;
+ 	bp->tx_clk = tx_clk;
++	if (of_device_is_compatible(pdev->dev.of_node, "cdns,zynqmp-gem")) {
++		bp->isjumbo = 1;
++		bp->jumbo_max_len = GEM_ZYNQMP_JUMBO_MAX;
++	}
++
+ 	spin_lock_init(&bp->lock);
+ 
+ 	/* setup capabilities */
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index eb7d76f..e25f77e 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -71,6 +71,7 @@
+ #define GEM_NCFGR		0x0004 /* Network Config */
+ #define GEM_USRIO		0x000c /* User IO */
+ #define GEM_DMACFG		0x0010 /* DMA Configuration */
++#define GEM_JML			0x0048 /* Jumbo Max Length */
+ #define GEM_HRB			0x0080 /* Hash Bottom */
+ #define GEM_HRT			0x0084 /* Hash Top */
+ #define GEM_SA1B		0x0088 /* Specific1 Bottom */
+@@ -514,6 +515,9 @@ struct macb_dma_desc {
+ #define MACB_RX_BROADCAST_OFFSET		31
+ #define MACB_RX_BROADCAST_SIZE			1
+ 
++#define MACB_RX_FRMLEN_MASK			0xFFF
++#define MACB_RX_JFRMLEN_MASK			0x3FFF
++
+ /* RX checksum offload disabled: bit 24 clear in NCFGR */
+ #define GEM_RX_TYPEID_MATCH_OFFSET		22
+ #define GEM_RX_TYPEID_MATCH_SIZE		2
+@@ -826,6 +830,10 @@ struct macb {
+ 	unsigned int		max_tx_length;
+ 
+ 	u64			ethtool_stats[GEM_STATS_LEN];
++
++	unsigned int		rx_frm_len_mask;
++	unsigned int		jumbo_max_len;
++	bool			isjumbo;
+ };
+ 
+ static inline bool macb_is_gem(struct macb *bp)
+-- 
+1.7.9.5
