@@ -1,71 +1,63 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
-Date: Fri, 10 Apr 2015 12:35:52 +0530
-Message-ID: <55277650.8070607@codeaurora.org>
-References: <20150407121247.GA29497@amd> <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com> <20150409110634.GA27407@amd> <552660C7.4020805@ti.com> <552663C2.70308@ti.com>
+From: Koro Chen <koro.chen@mediatek.com>
+Subject: ASoC: Mediatek: Add support for MT8173 SOC
+Date: Fri, 10 Apr 2015 15:10:55 +0800
+Message-ID: <1428649857-19415-1-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <552663C2.70308@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, shc_work@mail.ru, linux@arm.linux.org.uk, hsweeten@visionengravers.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de
+Cc: devicetree@vger.kernel.org, koro.chen@mediatek.com, srv_heupstream@mediatek.com, s.hauer@pengutronix.de, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, galak@codeaurora.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This adds basic support for the Mediatek AFE unit for MT8173 SoC.
+This patch is based on Linux 4.0-rc1, Sascha's clk patch [1], 
+and his SCPSYS power patch [2].
 
+The AFE unit comprises several memory interfaces that communicate with CPU,
+a multi input multi output digital audio interconnect, and several external
+interfaces (e.g. I2S). 
 
-On 04/09/2015 05:04 PM, Tomi Valkeinen wrote:
-> On 09/04/15 14:21, Tomi Valkeinen wrote:
->> On 09/04/15 14:06, Pavel Machek wrote:
->>> On Tue 2015-04-07 14:19:33, Geert Uytterhoeven wrote:
->>>> Hi Pavel,
->>>>
->>>> On Tue, Apr 7, 2015 at 2:12 PM, Pavel Machek <pavel@ucw.cz> wrote:
->>>>> I have an socfpga board, which uses has simple framebuffer implemented
->>>>> in the FPGA. On 3.15, framebuffer is fast:
->>>>>
->>>>> root@wagabuibui:~# time cat /dev/fb0 > /dev/null
->>>>> real               0m 0.00s
->>>>> user               0m 0.00s
->>>>> sys                0m 0.00s
->>>>>
->>>>> on 3.18, this takes 220msec. Similar slowdown exists for
->>>>> writes. Simple framebuffer did not change at all between 3.15 and
->>>>> 3.18; resource flags of the framebuffer are still same (0x200).
->>>>>
->>>>> If I enable caching on 3.18, it speeds up a bit, to 70msec or
->>>>> so... Which means problem is not only in caching.
->>>>>
->>>>> Any ideas?
->>>>
->>>> My first guess was  commit 67dc0d4758e5 ("vt_buffer: drop console buffer
->>>> copying optimisations"), but this was introduced only in v4.0-rc1.
->>>>
->>>> Just in case you encounter another performance regression after upgrading
->>>> to a more modern kernel ;-)
->>>
->>> :-). I did a git bisect, and it pointed to this. And reverting it
->>> indeed fixes the problem in 3.18. Problem is still there in 4.0.
->
-> The difference is probably caused by memcpy() vs memcpy_fromio(). The
-> comment above memcpy_fromio() says "This needs to be optimized". I think
-> generally speaking memcpy_fromio() is correct for a framebuffer.
->
-> That said, if the fb is in RAM, and is only written by the CPU, I think
-> a normal memcpy() for fb_memcpy_fromfb() should be fine...
+The AFE unit is a DMA master, so no external DMA engine is needed.
 
-I didn't test for performance regressions when I posted this patch.
+Each external interface is presented as a DAI to ASoC. A memory interface 
+must be connected via the interconnect to an external interface. 
+The connection pathes are configured through the device tree.
 
-A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is 
-used all the time, even when the source and destination addresses are 
-aligned for larger reads to be possible. Other archs seem to use readl() 
-or readq() when they can. Maybe that makes memcpy_fromio slower than the 
-implementation of memcpy on arm?
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000079.html
+[2] http://lists.infradead.org/pipermail/linux-mediatek/2015-March/000132.html
 
-Thanks,
-Archit
+Koro Chen (2):
+  ASoC: mediatek: Add binding support for AFE driver
+  ASoC: mediatek: Add AFE platform driver
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ .../devicetree/bindings/sound/mtk-afe-pcm.txt      |  105 ++
+ include/dt-bindings/sound/mtk-afe.h                |   36 +
+ sound/soc/Kconfig                                  |    1 +
+ sound/soc/Makefile                                 |    1 +
+ sound/soc/mediatek/Kconfig                         |    8 +
+ sound/soc/mediatek/Makefile                        |    2 +
+ sound/soc/mediatek/mtk-afe-common.h                |  105 ++
+ sound/soc/mediatek/mtk-afe-connection.c            |  416 ++++++
+ sound/soc/mediatek/mtk-afe-connection.h            |   30 +
+ sound/soc/mediatek/mtk-afe-pcm.c                   | 1497 ++++++++++++++++++++
+ 10 files changed, 2201 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mtk-afe-pcm.txt
+ create mode 100644 include/dt-bindings/sound/mtk-afe.h
+ create mode 100644 sound/soc/mediatek/Kconfig
+ create mode 100644 sound/soc/mediatek/Makefile
+ create mode 100644 sound/soc/mediatek/mtk-afe-common.h
+ create mode 100644 sound/soc/mediatek/mtk-afe-connection.c
+ create mode 100644 sound/soc/mediatek/mtk-afe-connection.h
+ create mode 100644 sound/soc/mediatek/mtk-afe-pcm.c
+
+--
