@@ -1,114 +1,190 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/2] crypto: add new driver for Marvell CESA
-Date: Fri, 10 Apr 2015 13:17:08 +0200
-Message-ID: <20150410131708.258b0a99@bbrezillon>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1428591523-1780-2-git-send-email-boris.brezillon@free-electrons.com>
-	<1428662339.17822.18.camel@x220>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH 6/6] hwmon: pwm-fan: Update the duty cycle inorder to
+ control the pwm-fan
+Date: Fri, 10 Apr 2015 16:58:40 +0530
+Message-ID: <CANAwSgRSxj9frUHRXh3JwD+bpnFrj8WkpDMKHZn-OPmuCEgP7w@mail.gmail.com>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+	<1427387955-5129-7-git-send-email-linux.amoon@gmail.com>
+	<20150408104415.07e1c821@amdc2363>
+	<20150408153214.GA15942@roeck-us.net>
+	<CANAwSgSD52sDpP7NH2hhiZX-=LZF6Qo-X3enqsqM+5XAMfyP=Q@mail.gmail.com>
+	<20150408165351.GA22846@roeck-us.net>
+	<CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428662339.17822.18.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <info@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Guenter/Lukasz,
 
-On Fri, 10 Apr 2015 12:38:59 +0200
-Paul Bolle <pebolle@tiscali.nl> wrote:
+Earlier I send v2 version of the patch spiking this one.
 
-> (This patch needed a trivial context change in drivers/crypto/Makefile
-> to get it applied on top of next-20150409.)
+Markus Riechl came back to me with below mail.
+So This patch confirms fixes the bug.
 
-I'll rebase my work on linux-next.
+I will send v3 version of the patch. Earlier I was in delima about the =
+bug.
 
-> 
-> On Thu, 2015-04-09 at 16:58 +0200, Boris Brezillon wrote:
-> > --- a/drivers/crypto/Kconfig
-> > +++ b/drivers/crypto/Kconfig
-> > @@ -164,8 +164,10 @@ config CRYPTO_DEV_MV_CESA
-> >  	depends on PLAT_ORION
-> >  	select CRYPTO_ALGAPI
-> >  	select CRYPTO_AES
-> > +	select CRYPTO_DES
-> >  	select CRYPTO_BLKCIPHER2
-> >  	select CRYPTO_HASH
-> > +	select SRAM
-> >  	help
-> >  	  This driver allows you to utilize the Cryptographic Engines and
-> >  	  Security Accelerator (CESA) which can be found on the Marvell Orion
-> 
-> > --- a/drivers/crypto/Makefile
-> > +++ b/drivers/crypto/Makefile
-> 
-> > -obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += mv_cesa.o
-> > +obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += marvell/
-> 
-> > --- /dev/null
-> > +++ b/drivers/crypto/marvell/Makefile
-> > @@ -0,0 +1 @@
-> > +obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += cesa.o cipher.o hash.o tdma.o
-> 
-> For a modular build (which is all I tried) this doesn't do what you
-> probably want, as this will generate four modules. Assuming you want to
-> keep the mv_cesa name for the module, you could try something like:
->     obj-$(CONFIG_CRYPTO_DEV_MV_CESA) += mv_cesa.o
->     mv_cesa-objs := cesa.o cipher.o hash.o tdma.o
-> 
-> Does that do what you want?
+-Anand Moon
+-------------------------------------------
+Hi Anand,
 
-Yes, I'll fix that in v2.
+I tested your patch.
 
-> 
-> > --- /dev/null
-> > +++ b/drivers/crypto/marvell/cesa.c
-> 
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms of the GNU General Public License version 2 as published
-> > + * by the Free Software Foundation.
-> 
-> This states the license is GPL v2.
-> 
-> > +static struct platform_driver marvell_cesa = {
-> > +	.probe		= mv_cesa_probe,
-> > +	.remove		= mv_cesa_remove,
-> > +	.driver		= {
-> > +		.owner	= THIS_MODULE,
-> > +		.name	= "mv_crypto",
-> > +		.of_match_table = mv_cesa_of_match_table,
-> > +	},
-> > +};
-> > +MODULE_ALIAS("platform:mv_crypto");
-> 
-> (It's nicer to make that macro be a part of the block of the other
-> MODULE_ macros.)
-> 
-> > +module_platform_driver(marvell_cesa);
-> 
-> (And it's nicer to have this directly follow the definition of
-> marvell_cesa.)
+After booting the fan is spinning despite only 44=B0C.
 
-Absolutely.
+/sys/class/thermal/cooling_device0/curstate is 0.
+/sys/class/hwmon/hwmon4/pwm1 is 0
 
-> 
-> > +MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com>");
-> > +MODULE_AUTHOR("Arnaud Ebalard <arno@natisbad.org>");
-> > +MODULE_DESCRIPTION("Support for Marvell's cryptographic engine");
-> > +MODULE_LICENSE("GPL");
-> 
-> And this states the license is GPL v2 or later. So either the comment at
-> the top of this file or this macro need to be changed.
+when I echo 1 > cur_state and then echo 0 > cur_state again,
+the fan switches to off and behaves as expected.
 
-I'll change the MODULE_LICENSE definition.
+It looks like there is a bug in initializing the pwm output
+immediately after booting.
 
-Thanks,
+Best Regards,
 
-Boris
+--
+Markus Reichl
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+On 8 April 2015 at 23:19, Anand Moon <linux.amoon@gmail.com> wrote:
+> Hi Guenter,
+>
+> Sorry my blunder mistake. Sorry for the noise.
+>
+> I just tested with spiking this patch and my observation and testing
+> were wrong we can skip this patch.
+>
+> I will send an v2 patch series removing the patch 5 and patch 6.
+>
+> With correct dts changes.
+>
+> Thanks for pointing my mistake.
+>
+> -Anand Moon
+>
+> On 8 April 2015 at 22:23, Guenter Roeck <linux@roeck-us.net> wrote:
+>> On Wed, Apr 08, 2015 at 09:32:05PM +0530, Anand Moon wrote:
+>>> Hi Guenter,
+>>>
+>>> Initially the board bootup the cooling level state is 0.
+>>> So update the duty cycle and this power off the fan.
+>>> As their is no state change the fan will not spin.
+>>>
+>>> Once the temperature sensor is reached to alert temperature it chan=
+ges state.
+>>> With the state change the fan cools the CPU and then stop's
+>>>
+>>> I have observed this state change with tmon utility in linux/tools/=
+thermal/tmon/
+>>>
+>> Sorry, I am missing something. I still don't see what problem you ar=
+e fixing
+>> with this patch. What behavior is wrong with the current code, and h=
+ow does your
+>> patch fix it ?
+>>
+>> Guenter
+>>
+>>> -Anand Moon
+>>>
+>>> On 8 April 2015 at 21:02, Guenter Roeck <linux@roeck-us.net> wrote:
+>>> > On Wed, Apr 08, 2015 at 10:44:15AM +0200, Lukasz Majewski wrote:
+>>> >> Hi Anand,
+>>> >>
+>>> >> > Below changes depend on following patch.
+>>> >> > https://patchwork.kernel.org/patch/5944061/
+>>> >> >
+>>> >> > Update the pwm_config with duty then update the pwm_disable
+>>> >> > to poweroff the cpu fan.
+>>> >> >
+>>> >
+>>> > Unfortunately, the patch does not include an explanation why it i=
+s needed.
+>>> >
+>>> > The original code presumably did not update the duty cycle becaus=
+e
+>>> > pwm was about to be disabled anyway. That kind of made sense to m=
+e.
+>>> > Updating the duty cycle to 0 just to disable the pwm channel righ=
+t
+>>> > afterwards does not immediately make sense.
+>>> >
+>>> > Given that, I would expect to see a rationale here. Why is this p=
+atch needed ?
+>>> > Does it fix a bug ? If yes, pelase describe the bug. If not, what=
+ is the
+>>> > purpose of this patch ?
+>>> >
+>>> > Maybe that is all explained in patch 0/6, which I was not copied =
+on. Even
+>>> > if so, the reationale will be needed in the changelog to explain =
+to future
+>>> > developers why this change was made.
+>>> >
+>>> > Thanks,
+>>> > Guenter
+>>> >
+>>> >> > Tested on OdroidXU3 board.
+>>> >> >
+>>> >> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>> >> > ---
+>>> >> >  drivers/hwmon/pwm-fan.c | 10 ++++------
+>>> >> >  1 file changed, 4 insertions(+), 6 deletions(-)
+>>> >> >
+>>> >> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+>>> >> > index 7c83dc4..f25c841 100644
+>>> >> > --- a/drivers/hwmon/pwm-fan.c
+>>> >> > +++ b/drivers/hwmon/pwm-fan.c
+>>> >> > @@ -44,26 +44,24 @@ static int  __set_pwm(struct pwm_fan_ctx *=
+ctx,
+>>> >> > unsigned long pwm) int ret =3D 0;
+>>> >> >
+>>> >> >     mutex_lock(&ctx->lock);
+>>> >> > +
+>>> >
+>>> > [ please refrain from unnecessary whitespace changes ]
+>>> >
+>>> >> >     if (ctx->pwm_value =3D=3D pwm)
+>>> >> >             goto exit_set_pwm_err;
+>>> >> >
+>>> >> > -   if (pwm =3D=3D 0) {
+>>> >> > -           pwm_disable(ctx->pwm);
+>>> >> > -           goto exit_set_pwm;
+>>> >> > -   }
+>>> >> > -
+>>> >> >     duty =3D DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MAX_PW=
+M);
+>>> >> >     ret =3D pwm_config(ctx->pwm, duty, ctx->pwm->period);
+>>> >> >     if (ret)
+>>> >> >             goto exit_set_pwm_err;
+>>> >> >
+>>> >> > +   if (pwm =3D=3D 0)
+>>> >> > +           pwm_disable(ctx->pwm);
+>>> >> > +
+>>> >> >     if (ctx->pwm_value =3D=3D 0) {
+>>> >> >             ret =3D pwm_enable(ctx->pwm);
+>>> >> >             if (ret)
+>>> >> >                     goto exit_set_pwm_err;
+>>> >> >     }
+>>> >> >
+>>> >> > -exit_set_pwm:
+>>> >> >     ctx->pwm_value =3D pwm;
+>>> >> >  exit_set_pwm_err:
+>>> >> >     mutex_unlock(&ctx->lock);
+>>> >>
+>>> >> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+>>> >>
+>>> >> BTW: I've added Guenter to CC.
+>>> >>
+>>> >> --
+>>> >> Best regards,
+>>> >>
+>>> >> Lukasz Majewski
+>>> >>
+>>> >> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
