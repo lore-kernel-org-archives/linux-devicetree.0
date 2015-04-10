@@ -1,76 +1,89 @@
-From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: [net-next PATCH 3/3] net: macb: Add change_mtu callback with jumbo support
-Date: Fri, 10 Apr 2015 14:47:21 +0530
-Message-ID: <9376b508-694b-4582-8f2c-4e85e2bab2b5@BY2FFO11FD054.protection.gbl>
-References: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC] ARM: BCM5301X: Add /device_id property including
+ device ID string
+Date: Fri, 10 Apr 2015 12:55:02 +0200
+Message-ID: <CACna6rzmACyJ6=EJCCi2eCp1A8cCLJiusm7=pyHQM0QL+82Zng@mail.gmail.com>
+References: <1427667288-23903-1-git-send-email-zajec5@gmail.com>
+	<CACna6rykQq6AVSWzJh3qnHVNzPXbTD9TMGQf9D9p50pcbQkmng@mail.gmail.com>
+	<20150330105828.GE17971@leverpostej>
+	<24438163.XzJnLCdvP5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <24438163.XzJnLCdvP5@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add macb_change_mtu callback; if jumbo frame support is present allow
-mtu size changes upto (jumbo max length allowed - headers).
+On 10 April 2015 at 12:50, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 30 March 2015 11:58:29 Mark Rutland wrote:
+>> > > On Sun, Mar 29, 2015 at 11:14:48PM +0100, Rafa=C5=82 Mi=C5=82eck=
+i wrote:
+>> > >> Device vendors often assign IDs to their devices to allow compa=
+ring
+>> > >> firmware image with device model. This is required to prevent u=
+sers
+>> > >> from flashing incompatible image and soft-bricking device.
+>> > >> Add device_id property to DTs to allow user space (and optional=
+ly
+>> > >> bootloader) verifying firmware images.
+>> > >
+>> > > This sounds like exactly what the "model" property is meant to b=
+e (per
+>> > > ePAPR) -- a string that specifices the manufacturer's model numb=
+er of
+>> > > the device, ideally in "manufacturer,model" format.
+>> >
+>> > What if manufacturer decided to use some totally unfriendly ID for
+>> > their low-level (firmware upgrade) model identification? I can't
+>> > really see us using
+>> > model  "U12H245T00_NETGEAR"
+>> > which would mean nothing compared to the current friendly:
+>> > model  "Netgear R6250 V1 (BCM4708)"
+>>
+>> If it uniquely identifies the model, it's fit to be a model string. =
+If
+>> being "friendly" means that we lose that, then the property is usele=
+ss
+>> anyway.
+>>
+>> Note that both examples above deviate from the recommended format, a=
+nd
+>> something like: "netgear,U12H245T00" would better align with the
+>> recommendation.
+>
+> Sorry for jumping in late here, but this still sounds like more fitti=
+ng
+> for the "compatible" property than "model". For compatible, you can
+> already have multiple strings, and they come with a vendor prefix.
+>
+> Any of these would seem reasonable to me:
+>
+> a)
+>         compatible =3D "asus,rt-ac68u", "openwrt,RT-AC68U", "brcm,bcm=
+4708";
+>         model =3D "Asus RT-AC68U (BCM4708)";
+>
+> b)
+>         compatible =3D "asus,rt-ac68u", "brcm,RT-AC68U", "brcm,bcm470=
+8";
+>         model =3D "Asus RT-AC68U (BCM4708)";
+>
+> c)
+>         compatible =3D "asus,rt-ac68u", "asus,RT-AC68U", "brcm,bcm470=
+8";
+>         model =3D "Asus RT-AC68U (BCM4708)";
+>
+> depending on which party maintains the list of these identifiers.
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
-Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
----
- drivers/net/ethernet/cadence/macb.c |   26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Thanks, I think it looks like the best alternative to my initial idea.
 
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 85de91d..33f3283 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -54,6 +54,10 @@
- #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1))
- #define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1))
- 
-+#define GEM_MTU_MIN_SIZE	68
-+
-+#define GEM_ZYNQMP_JUMBO_MAX	10240
-+
- /*
-  * Graceful stop timeouts in us. We should allow up to
-  * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
-@@ -1852,6 +1856,26 @@ static int macb_close(struct net_device *dev)
- 	return 0;
- }
- 
-+static int macb_change_mtu(struct net_device *dev, int new_mtu)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+	u32 max_mtu;
-+
-+	if (netif_running(dev))
-+		return -EBUSY;
-+
-+	max_mtu = ETH_DATA_LEN;
-+	if (bp->isjumbo)
-+		max_mtu = gem_readl(bp, JML) - ETH_HLEN - ETH_FCS_LEN;
-+
-+	if ((new_mtu > max_mtu) || (new_mtu < GEM_MTU_MIN_SIZE))
-+		return -EINVAL;
-+
-+	dev->mtu = new_mtu;
-+
-+	return 0;
-+}
-+
- static void gem_update_stats(struct macb *bp)
- {
- 	int i;
-@@ -2128,7 +2152,7 @@ static const struct net_device_ops macb_netdev_ops = {
- 	.ndo_get_stats		= macb_get_stats,
- 	.ndo_do_ioctl		= macb_ioctl,
- 	.ndo_validate_addr	= eth_validate_addr,
--	.ndo_change_mtu		= eth_change_mtu,
-+	.ndo_change_mtu		= macb_change_mtu,
- 	.ndo_set_mac_address	= eth_mac_addr,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller	= macb_poll_controller,
--- 
-1.7.9.5
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
