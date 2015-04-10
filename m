@@ -1,102 +1,177 @@
-From: Robert Baldyga <r.baldyga@samsung.com>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Fri, 10 Apr 2015 11:42:27 +0200
-Message-ID: <55279B03.7060202@samsung.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
- <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
- <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
- <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
- <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
- <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com>
- <55279550.1060609@samsung.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v5 2/9] mmc: sdhci-st: Add support for de-asserting reset
+ signal and top regs resource
+Date: Fri, 10 Apr 2015 10:40:24 +0100
+Message-ID: <1428658831-14308-3-git-send-email-peter.griffin@linaro.org>
+References: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <55279550.1060609@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, ulf.hansson@linaro.org, peppe.cavallaro@st.com
+Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 11:18 AM, Chanwoo Choi wrote:
-> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
->> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
->>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
->>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
->>>>> Hi Robert,
->>>>>
->>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
->>>>>> Hi Chanwoo,
->>>>>>
->>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->>>>>>> Hi Robert,
->>>>>>>
->>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>>>>>>> Hi Chanwoo,
->>>>>>>>
->>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>>>>>>> Hi Robert,
->>>>>>>>>
->>>>>>>
->>>>>>> [snip]
->>>>>>>
->>>>>>>>> But, I have one question about case[3]
->>>>>>>>>
->>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>>>>>>
->>>>>>>>
->>>>>>>> It's because state of single USB cable connection cannot be completely
->>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
->>>>>>>> and ID), so we need to use two cables for single cable connection. We
->>>>>>>> use following convention:
->>>>>>>> cable "USB" = VBUS
->>>>>>>> cable "USB-HOST" = !ID.
->>>>>>>
->>>>>>> I think that extcon provider driver have to update the only one cable state
->>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->>>>>>> at the same time through one h/w port.
->>>>>>>
->>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>>>>>>
->>>>>>
->>>>>> It can. USB OTG allows for that. Moreover device can be host even if
->>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
->>>>>> detected cable type is USB host). Devices would need to have complete
->>>>>> information about USB cable connection, because OTG state machine needs
->>>>>
->>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
->>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
->>>>>
->>>>
->>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
->>>> machine. It needs to know exact VBUS and ID states, which cannot be
->>>> concluded basing on cable type only. That's why I have used "USB-HOST"
->>>> name together with "USB" to pass additional information about USB cable
->>>> connection.
->>>
->>> I think this method is not proper to support this case.
->>> It may cause the confusion about other case using USB/USB-HOST cable state
->>> except of you commented case.
->>
->> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
->> with old names. It seems to be simpler solution than adding new
->> mechanism notifying about VBUS and ID states changes.
-> 
-> 
-> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
-> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
-> name continuoulsy.
-> 
-> I think that extcon core provide the helper API to get the value of VBUS.
-> But I need to consider it.
+STiH407 family SoC's can have a reset signal for the controller which needs to
+be managed. Also the eMMC controller has some additional 'top' memory mapped
+registers which are used to manage the dynamic and static delay required for
+UHS modes. This patch adds support for creating the mapping, which will be used
+by subsequent patches.
 
-We need more than API for getting VBUS value - we need to be notified
-about its changes, because if we don't distinguish between USB-HOST with
-VBUS on, and USB-HOST with VBUS off, then we will not receive
-notification from extcon at VBUS state change.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+---
+ drivers/mmc/host/sdhci-st.c | 60 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 57 insertions(+), 3 deletions(-)
 
-Thanks,
-Robert Baldyga
+diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
+index a80de93..74213b0 100644
+--- a/drivers/mmc/host/sdhci-st.c
++++ b/drivers/mmc/host/sdhci-st.c
+@@ -23,9 +23,14 @@
+ #include <linux/module.h>
+ #include <linux/err.h>
+ #include <linux/mmc/host.h>
+-
++#include <linux/reset.h>
+ #include "sdhci-pltfm.h"
+ 
++struct st_mmc_platform_data {
++	struct  reset_control *rstc;
++	void __iomem *top_ioaddr;
++};
++
+ /* MMCSS glue logic to setup the HC on some ST SoCs (e.g. STiH407 family) */
+ 
+ #define ST_MMC_CCONFIG_REG_1		0x400
+@@ -151,10 +156,16 @@ static const struct sdhci_pltfm_data sdhci_st_pdata = {
+ static int sdhci_st_probe(struct platform_device *pdev)
+ {
+ 	struct sdhci_host *host;
++	struct st_mmc_platform_data *pdata;
+ 	struct sdhci_pltfm_host *pltfm_host;
+ 	struct clk *clk;
+ 	int ret = 0;
+ 	u16 host_version;
++	struct resource *res;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
+ 
+ 	clk =  devm_clk_get(&pdev->dev, "mmc");
+ 	if (IS_ERR(clk)) {
+@@ -162,10 +173,17 @@ static int sdhci_st_probe(struct platform_device *pdev)
+ 		return PTR_ERR(clk);
+ 	}
+ 
++	pdata->rstc = devm_reset_control_get(&pdev->dev, NULL);
++	if (IS_ERR(pdata->rstc))
++		pdata->rstc = NULL;
++	else
++		reset_control_deassert(pdata->rstc);
++
+ 	host = sdhci_pltfm_init(pdev, &sdhci_st_pdata, 0);
+ 	if (IS_ERR(host)) {
+ 		dev_err(&pdev->dev, "Failed sdhci_pltfm_init\n");
+-		return PTR_ERR(host);
++		ret = PTR_ERR(host);
++		goto err_pltfm_init;
+ 	}
+ 
+ 	ret = mmc_of_parse(host->mmc);
+@@ -176,7 +194,17 @@ static int sdhci_st_probe(struct platform_device *pdev)
+ 
+ 	clk_prepare_enable(clk);
+ 
++	/* Configure the FlashSS Top registers for setting eMMC TX/RX delay */
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "top-mmc-delay");
++	pdata->top_ioaddr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(pdata->top_ioaddr)) {
++		dev_warn(&pdev->dev, "FlashSS Top Dly registers not available");
++		pdata->top_ioaddr = NULL;
++	}
++
+ 	pltfm_host = sdhci_priv(host);
++	pltfm_host->priv = pdata;
+ 	pltfm_host->clk = clk;
+ 
+ 	ret = sdhci_add_host(host);
+@@ -200,6 +228,24 @@ err_out:
+ 	clk_disable_unprepare(clk);
+ err_of:
+ 	sdhci_pltfm_free(pdev);
++err_pltfm_init:
++	if (pdata->rstc)
++		reset_control_assert(pdata->rstc);
++
++	return ret;
++}
++
++static int sdhci_st_remove(struct platform_device *pdev)
++{
++	struct sdhci_host *host = platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct st_mmc_platform_data *pdata = pltfm_host->priv;
++	int ret;
++
++	ret = sdhci_pltfm_unregister(pdev);
++
++	if (pdata->rstc)
++		reset_control_assert(pdata->rstc);
+ 
+ 	return ret;
+ }
+@@ -209,11 +255,15 @@ static int sdhci_st_suspend(struct device *dev)
+ {
+ 	struct sdhci_host *host = dev_get_drvdata(dev);
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct st_mmc_platform_data *pdata = pltfm_host->priv;
+ 	int ret = sdhci_suspend_host(host);
+ 
+ 	if (ret)
+ 		goto out;
+ 
++	if (pdata->rstc)
++		reset_control_assert(pdata->rstc);
++
+ 	clk_disable_unprepare(pltfm_host->clk);
+ out:
+ 	return ret;
+@@ -223,9 +273,13 @@ static int sdhci_st_resume(struct device *dev)
+ {
+ 	struct sdhci_host *host = dev_get_drvdata(dev);
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct st_mmc_platform_data *pdata = pltfm_host->priv;
+ 
+ 	clk_prepare_enable(pltfm_host->clk);
+ 
++	if (pdata->rstc)
++		reset_control_deassert(pdata->rstc);
++
+ 	return sdhci_resume_host(host);
+ }
+ #endif
+@@ -241,7 +295,7 @@ MODULE_DEVICE_TABLE(of, st_sdhci_match);
+ 
+ static struct platform_driver sdhci_st_driver = {
+ 	.probe = sdhci_st_probe,
+-	.remove = sdhci_pltfm_unregister,
++	.remove = sdhci_st_remove,
+ 	.driver = {
+ 		   .name = "sdhci-st",
+ 		   .pm = &sdhci_st_pmops,
+-- 
+1.9.1
