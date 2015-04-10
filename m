@@ -1,88 +1,70 @@
-From: Robert Baldyga <r.baldyga@samsung.com>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Fri, 10 Apr 2015 09:45:38 +0200
-Message-ID: <55277FA2.6090700@samsung.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
- <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
- <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
- <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
- <55277910.2070000@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <55277910.2070000@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH v6 RESEND 2/3] leds: ktd2692: add device tree bindings for
+ ktd2692
+Date: Fri, 10 Apr 2015 16:51:00 +0900
+Message-ID: <1428652261-24142-3-git-send-email-ingi2.kim@samsung.com>
+References: <1428652261-24142-1-git-send-email-ingi2.kim@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1428652261-24142-1-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
-> Hi Robert,
-> 
-> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
->> Hi Chanwoo,
->>
->> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->>> Hi Robert,
->>>
->>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>>> Hi Chanwoo,
->>>>
->>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>>> Hi Robert,
->>>>>
->>>
->>> [snip]
->>>
->>>>> But, I have one question about case[3]
->>>>>
->>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>>
->>>>
->>>> It's because state of single USB cable connection cannot be completely
->>>> described using single extcon cable. USB cable state has two bits (VBUS
->>>> and ID), so we need to use two cables for single cable connection. We
->>>> use following convention:
->>>> cable "USB" = VBUS
->>>> cable "USB-HOST" = !ID.
->>>
->>> I think that extcon provider driver have to update the only one cable state
->>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->>> at the same time through one h/w port.
->>>
->>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>>
->>
->> It can. USB OTG allows for that. Moreover device can be host even if
->> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
->> detected cable type is USB host). Devices would need to have complete
->> information about USB cable connection, because OTG state machine needs
-> 
-> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
-> at the same time. The case3 in your patch update two cable state about one h/w port.
-> 
+This patch adds the device tree bindings for ktd2692 flash LEDs.
+Add Optional properties of child node for Flash LED
 
-It's because simple "USB" or "USB-HOST" means nothing for USB OTG
-machine. It needs to know exact VBUS and ID states, which cannot be
-concluded basing on cable type only. That's why I have used "USB-HOST"
-name together with "USB" to pass additional information about USB cable
-connection.
+Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+---
+ .../devicetree/bindings/leds/leds-ktd2692.txt      | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
 
-> I don't agree. 
-> 
->> that. As I wrote, current USB cable names are misleading. It would be
->> better to have "USB-VBUS" and "USB-ID".
-> 
-> It is strange cable name. I prefer to use only 'USB' cable name.
-> But, we could support the other method to get the state of whether USB-VBUS or USB-ID
-> by using helper API or others.
-> 
-
-Ok, so do you have any idea how to do it? Do we want to supply
-additional API for notifying about VBUS and ID changes?
-
-Thanks,
-Robert Baldyga
+diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+new file mode 100644
+index 0000000..68bb59e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+@@ -0,0 +1,40 @@
++* Kinetic Technologies - KTD2692 Flash LED Driver
++
++KTD2692 is the ideal power solution for high-power flash LEDs.
++It uses ExpressWire single-wire programming for maximum flexibility.
++
++The ExpressWire interface through CTRL pin can control LED on/off and
++enable/disable the IC, Movie(max 1/3 of Flash current) / Flash mode current,
++Flash timeout, LVP(low voltage protection).
++
++Also, When the AUX pin is pulled high while CTRL pin is high,
++LED current will be ramped up to the flash-mode current level.
++
++Required properties:
++- compatible: "kinetic,ktd2692"
++- ctrl-gpio : gpio pin in order control CTRL pin
++- aux-gpio : gpio pin in order control AUX pin
++- vin-supply : "vin" LED supply (2.7V to 5.5V)
++  See Documentation/devicetree/bindings/regulator/regulator.txt
++
++A discrete LED element connected to the device must be represented by a child
++node - see Documentation/devicetree/bindings/leds/common.txt.
++
++Optional properties of flash LED child node:
++- label : see Documentation/devicetree/bindings/leds/common.txt
++- flash-timeout-us : Maximum flash timeout in microseconds.
++  flash timeout ranges from 0 to 1835000us and default is 1049000us.
++
++Example:
++
++ktd2692 {
++	compatible = "kinetic,ktd2692";
++	ctrl-gpio = <&gpc0 1 0>;
++	aux-gpio = <&gpc0 2 0>;
++	vin-supply = <&vbat>;
++
++	flash-led {
++		label = "ktd2692-flash";
++		flash-timeout-us = <1835000>;
++	};
++};
+-- 
+2.0.5
