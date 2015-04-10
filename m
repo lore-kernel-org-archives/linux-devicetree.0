@@ -1,96 +1,117 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: Re: [PATCH v5 01/12] drm/exynos: add Exynos5433 decon driver
-Date: Fri, 10 Apr 2015 15:38:19 +0900
-Message-ID: <20150410153819.079034a8@hwh-ubuntu>
-References: <1428645330-1043-1-git-send-email-human.hwang@samsung.com>
- <1428645330-1043-2-git-send-email-human.hwang@samsung.com>
- <5527680E.6010709@gmail.com>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v5 3/3] leds: Add ktd2692 flash LED driver
+Date: Fri, 10 Apr 2015 15:40:44 +0900
+Message-ID: <5527706C.9020300@samsung.com>
+References: <1427860708-32559-1-git-send-email-ingi2.kim@samsung.com>
+ <1427860708-32559-4-git-send-email-ingi2.kim@samsung.com>
+ <551B948D.5060905@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <5527680E.6010709@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: devicetree@vger.kernel.org, dh09.lee@samsung.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <551B948D.5060905@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sakari.ailus@iki.fi, varkabhadram@gmail.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBWYXJrYSBCaGFkcmFtLAoKT24gRnJpLCAxMCBBcHIgMjAxNSAxMTozNTowMiArMDUzMApW
-YXJrYSBCaGFkcmFtIDx2YXJrYWJoYWRyYW1AZ21haWwuY29tPiB3cm90ZToKCj4gT24gMDQvMTAv
-MjAxNSAxMToyNSBBTSwgSHl1bmd3b24gSHdhbmcgd3JvdGU6Cj4gCj4gPiBGcm9tOiBKb29ueW91
-bmcgU2hpbSA8ankwOTIyLnNoaW1Ac2Ftc3VuZy5jb20+Cj4gPgo+ID4gREVDT04oRGlzcGxheSBh
-bmQgRW5oYW5jZW1lbnQgQ29udHJvbGxlcikgaXMgbmV3IElQIHJlcGxhY2luZyBGSU1ECj4gPiBp
-biBFeHlub3M1NDMzLiBUaGlzIHBhdGNoIGFkZHMgRXh5bm9zNTQzMyBkZWNvbiBkcml2ZXIuCj4g
-Pgo+ID4gU2lnbmVkLW9mZi1ieTogSm9vbnlvdW5nIFNoaW0gPGp5MDkyMi5zaGltQHNhbXN1bmcu
-Y29tPgo+ID4gU2lnbmVkLW9mZi1ieTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1
-bmcuY29tPgo+ID4gLS0tCj4gPiBDaGFuZ2VzIGZvciB2MjoKPiA+IC0gY2hhbmdlIGZpbGUgbmFt
-ZXMgYW5kIHZhcmlhYmxlIG5hbWVzIG9mIGRlY29uIHRvIHJlcHJlc250Cj4gPiBleHlub3M1NDMz
-IGluc3RlYWQgb2YgZXh5bm9zIHRvIGRpc3Rpbmd1aXNoIHRoZW0gZnJvbSBleHlub3M3IGRlY29u
-Cj4gPgo+ID4gQ2hhbmdlcyBmb3IgdjM6Cj4gPiAtIGZhaWwgZmFzdCB3aGVuIHRoZSBwcm9wZXIg
-aW1hZ2UgZm9ybWF0IGlzIG5vdCBzZXQKPiA+IC0gcmVtb3ZlIHVubmVjZXNzYXJ5IGNoZWNraW5n
-IGNvZGUKPiA+IC0gYWRkIGFuZCBtb2RpZnkgdGhlIGZ1bmN0aW9uIHRvIG1ha2UgRFBNUyB3b3Jr
-IHdlbGwKPiA+Cj4gPiBDaGFuZ2VzIGZvciB2NDoKPiA+IC0gcmViYXNlZCB0byBleHlub3MtZHJt
-LW5leHQgd2l0aCB0aGUgY2xlYW4tdXAgcGF0Y2hzZXQgYnkgR3VzdGF2bwo+ID4gUGFkb3Zhbi4K
-PiA+Cj4gPiBDaGFuZ2VzIGZvciB2NToKPiA+IC0gTm9uZQo+ID4gIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0IHwgIDY1ICsrKwo+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9leHlub3MvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsKPiA+ICBk
-cml2ZXJzL2dwdS9kcm0vZXh5bm9zL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSAr
-Cj4gPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2RybV9kZWNvbi5jICAgICAg
-fCA2MTcKPiA+ICsrKysrKysrKysrKysrKysrKysrKwo+ID4gZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9leHlub3NfZHJtX2Rydi5jICAgICAgICAgICAgfCAgIDMgKwo+ID4gZHJpdmVycy9ncHUvZHJt
-L2V4eW5vcy9leHlub3NfZHJtX2Rydi5oICAgICAgICAgICAgfCAgIDEgKwo+ID4gaW5jbHVkZS92
-aWRlby9leHlub3M1NDMzX2RlY29uLmggICAgICAgICAgICAgICAgICAgfCAxNjMgKysrKysrIDcK
-PiA+IGZpbGVzIGNoYW5nZWQsIDg1NiBpbnNlcnRpb25zKCspIGNyZWF0ZSBtb2RlIDEwMDY0NAo+
-ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVj
-b24udHh0IGNyZWF0ZQo+ID4gbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
-b3M1NDMzX2RybV9kZWNvbi5jIGNyZWF0ZQo+ID4gbW9kZSAxMDA2NDQgaW5jbHVkZS92aWRlby9l
-eHlub3M1NDMzX2RlY29uLmgKPiA+Cj4gKC4uLikKPiAKPiA+ICsJcmVzID0gcGxhdGZvcm1fZ2V0
-X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKPiA+ICsJaWYgKCFyZXMpIHsKPiA+
-ICsJCWRldl9lcnIoZGV2LCAiY2Fubm90IGZpbmQgSU8gcmVzb3VyY2VcbiIpOwo+ID4gKwkJcmV0
-dXJuIC1FTlhJTzsKPiA+ICsJfQo+ID4gKwo+IAo+IFJlbW92ZSB0aGUgYWJvdmUgY2hlY2suIENo
-ZWNrIG9uZSAqcmVzKiB3aWxsIGJlIGRvbmUgYnkKPiAqZGV2bV9pb3JlbWFwX3Jlc291cmNlKCkq
-CgpPSy4KCj4gCj4gPiArCWN0eC0+YWRkciA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJl
-cyk7Cj4gPiArCWlmIChJU19FUlIoY3R4LT5hZGRyKSkgewo+ID4gKwkJZGV2X2VycihkZXYsICJp
-b3JlbWFwIGZhaWxlZFxuIik7Cj4gPiArCQlyZXR1cm4gUFRSX0VSUihjdHgtPmFkZHIpOwo+ID4g
-Kwl9Cj4gPiArCj4gPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwg
-SU9SRVNPVVJDRV9JUlEsCj4gPiArCQkJY3R4LT5pODBfaWYgPyAibGNkX3N5cyIgOiAidnN5bmMi
-KTsKPiA+ICsJaWYgKCFyZXMpIHsKPiA+ICsJCWRldl9lcnIoZGV2LCAiY2Fubm90IGZpbmQgSVJR
-IHJlc291cmNlXG4iKTsKPiA+ICsJCXJldHVybiAtRU5YSU87Cj4gPiArCX0KPiA+ICsKPiA+ICsJ
-cmV0ID0gZGV2bV9yZXF1ZXN0X2lycShkZXYsIHJlcy0+c3RhcnQsIGN0eC0+aTgwX2lmID8KPiA+
-ICsJCQlkZWNvbl9sY2Rfc3lzX2lycV9oYW5kbGVyIDoKPiA+IGRlY29uX3ZzeW5jX2lycV9oYW5k
-bGVyLCAwLAo+ID4gKwkJCSJkcm1fZGVjb24iLCBjdHgpOwo+ID4gKwlpZiAocmV0IDwgMCkgewo+
-ID4gKwkJZGV2X2VycihkZXYsICJsY2Rfc3lzIGlycSByZXF1ZXN0IGZhaWxlZFxuIik7Cj4gPiAr
-CQlyZXR1cm4gcmV0Owo+ID4gKwl9Cj4gPiArCj4gPiArCXJldCA9IGV4eW5vc19kcm1fY29tcG9u
-ZW50X2FkZChkZXYsCj4gPiBFWFlOT1NfREVWSUNFX1RZUEVfQ1JUQywKPiA+ICsJCQkJICAgICAg
-IEVYWU5PU19ESVNQTEFZX1RZUEVfTENEKTsKPiA+ICsJaWYgKHJldCA8IDApCj4gPiArCQlyZXR1
-cm4gcmV0Owo+ID4gKwo+ID4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBjdHgpOwo+ID4g
-Kwo+ID4gKwlyZXQgPSBjb21wb25lbnRfYWRkKGRldiwgJmRlY29uX2NvbXBvbmVudF9vcHMpOwo+
-ID4gKwlpZiAocmV0IDwgMCkgewo+ID4gKwkJZXh5bm9zX2RybV9jb21wb25lbnRfZGVsKGRldiwK
-PiA+IEVYWU5PU19ERVZJQ0VfVFlQRV9DUlRDKTsKPiA+ICsJCXJldHVybiByZXQ7Cj4gPiArCX0K
-PiA+ICsKPiA+ICsJcmV0dXJuIDA7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgZXh5bm9z
-NTQzM19kZWNvbl9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ICt7Cj4g
-PiArCWNvbXBvbmVudF9kZWwoJnBkZXYtPmRldiwgJmRlY29uX2NvbXBvbmVudF9vcHMpOwo+ID4g
-KwlleHlub3NfZHJtX2NvbXBvbmVudF9kZWwoJnBkZXYtPmRldiwKPiA+IEVYWU5PU19ERVZJQ0Vf
-VFlQRV9DUlRDKTsgKwo+ID4gKwlyZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQKPiA+IGV4eW5vczU0MzNfZGVjb25fZHJpdmVyX2R0X21h
-dGNoW10gPSB7Cj4gPiArCXsgLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1NDMzLWRlY29u
-IiB9LAo+ID4gKwl7fSwKPiA+ICt9Owo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGV4eW5v
-czU0MzNfZGVjb25fZHJpdmVyX2R0X21hdGNoKTsKPiA+ICsKPiA+ICtzdHJ1Y3QgcGxhdGZvcm1f
-ZHJpdmVyIGV4eW5vczU0MzNfZGVjb25fZHJpdmVyID0gewo+ID4gKwkucHJvYmUJCT0gZXh5bm9z
-NTQzM19kZWNvbl9wcm9iZSwKPiA+ICsJLnJlbW92ZQkJPSBleHlub3M1NDMzX2RlY29uX3JlbW92
-ZSwKPiA+ICsJLmRyaXZlcgkJPSB7Cj4gPiArCQkubmFtZQk9ICJleHlub3M1NDMzLWRlY29uIiwK
-PiA+ICsJCS5vd25lcgk9IFRISVNfTU9EVUxFLAo+IAo+IFJlbW92ZSB0aGlzIGZpZWxkLiBJdCB3
-aWxsIGJlIHVwZGF0ZWQgYnkgcGxhdGZvcm0gY29yZS4KPiAKCk9LLgoKVGhhbmtzIGZvciB5b3Vy
-IHJldmlldy4KCkJlc3QgcmVnYXJkcywKSHl1bmd3b24gSHdhbmcKCj4gPiArCQkub2ZfbWF0Y2hf
-dGFibGUgPSBleHlub3M1NDMzX2RlY29uX2RyaXZlcl9kdF9tYXRjaCwKPiA+ICsJfSwKPiA+ICt9
-Owo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Jacek,
+
+On 2015=EB=85=84 04=EC=9B=94 01=EC=9D=BC 15:47, Jacek Anaszewski wrote:
+> Hi Ingi,
+>=20
+> On 04/01/2015 05:58 AM, Ingi Kim wrote:
+>> This patch adds a driver to support the ktd2692 flash LEDs.
+>> ktd2692 can control flash current by ExpressWire interface.
+>>
+
+=2E..
+
+>> +    ktd2692_init_flash_timeout(flash_timeout_us, &flash_timeout);
+>> +
+>> +    fled_cdev->timeout =3D flash_timeout;
+>> +    fled_cdev->ops =3D &flash_ops;
+>> +
+>> +    led_cdev->name =3D KTD2692_DEFAULT_NAME;
+>=20
+> Device Tree label should be used for the LED class device name.
+> Please refer to :
+> Documentation/devicetree/bindings/leds/common.txt
+>=20
+> Also the documentation states that the LED should be represented
+> by DT child node of the LED controller.
+>=20
+> You can parse the label as follows:
+>=20
+> led_cdev->name =3D of_get_property(child, "label", NULL) ? :
+>                            child->name;
+>=20
+
+Sorry about late comments,
+I fix the name and DT such as LED style
+Thank you!
+
+>> +    led_cdev->brightness_set =3D ktd2692_led_brightness_set;
+>> +    led_cdev->brightness_set_sync =3D ktd2692_led_brightness_set_sy=
+nc;
+>> +    led_cdev->flags |=3D LED_CORE_SUSPENDRESUME | LED_DEV_CAP_FLASH=
+;
+>> +
+>> +    mutex_init(&led->lock);
+>> +    INIT_WORK(&led->work_brightness_set, ktd2692_brightness_set_wor=
+k);
+>> +
+>> +    platform_set_drvdata(pdev, led);
+>> +
+>> +    ret =3D led_classdev_flash_register(&pdev->dev, fled_cdev);
+>> +    if (ret) {
+>> +        dev_err(&pdev->dev, "can't register LED %s\n", led_cdev->na=
+me);
+>> +        mutex_destroy(&led->lock);
+>> +        return ret;
+>> +    }
+>> +
+>> +    ktd2692_setup(led);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int ktd2692_remove(struct platform_device *pdev)
+>> +{
+>> +    struct ktd2692_context *led =3D platform_get_drvdata(pdev);
+>> +    int ret;
+>> +
+>> +    led_classdev_flash_unregister(&led->fled_cdev);
+>> +    cancel_work_sync(&led->work_brightness_set);
+>> +
+>> +    ret =3D regulator_disable(led->regulator);
+>> +    if (ret)
+>> +        dev_err(&pdev->dev, "Failed to disable supply: %d\n", ret);
+>> +
+>> +    mutex_destroy(&led->lock);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct of_device_id ktd2692_match[] =3D {
+>> +    { .compatible =3D "kinetic,ktd2692", },
+>> +    { /* sentinel */ },
+>> +};
+>> +
+>> +static struct platform_driver ktd2692_driver =3D {
+>> +    .driver =3D {
+>> +        .name  =3D "leds-ktd2692",
+>> +        .of_match_table =3D ktd2692_match,
+>> +    },
+>> +    .probe  =3D ktd2692_probe,
+>> +    .remove =3D ktd2692_remove,
+>> +};
+>> +
+>> +module_platform_driver(ktd2692_driver);
+>> +
+>> +MODULE_AUTHOR("Ingi Kim <ingi2.kim@samsung.com>");
+>> +MODULE_DESCRIPTION("Kinetic KTD2692 LED driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+>=20
+>=20
