@@ -1,64 +1,63 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 05/12] ARM: dts: apq8064: Add SATA controller support.
-Date: Fri, 10 Apr 2015 10:24:59 -0700
-Message-ID: <5528076B.1010808@codeaurora.org>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669263-10990-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Ben Gamari <ben@smart-cactus.org>
+Subject: Re: [PATCH 6/6] hwmon: pwm-fan: Update the duty cycle inorder to control the pwm-fan
+Date: Fri, 10 Apr 2015 13:25:52 -0400
+Message-ID: <87h9snvqsf.fsf@gmail.com>
+References: <20150408104415.07e1c821@amdc2363> <20150408153214.GA15942@roeck-us.net> <CANAwSgSD52sDpP7NH2hhiZX-=LZF6Qo-X3enqsqM+5XAMfyP=Q@mail.gmail.com> <20150408165351.GA22846@roeck-us.net> <CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com> <CANAwSgRSxj9frUHRXh3JwD+bpnFrj8WkpDMKHZn-OPmuCEgP7w@mail.gmail.com> <1428667201.22057.20.camel@collabora.co.uk> <CANAwSgQHi2-i8xHn+X+KTGg8HFpe6SPgkuSvuApJP3342N8+zQ@mail.gmail.com> <5527CB78.4040002@roeck-us.net> <1428672601.22057.25.camel@collabora.co.uk> <20150410135844.GA20147@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1428669263-10990-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bjorn.andersson@sonymobile.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150410135844.GA20147@ulmo.nvidia.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>, Anand Moon <linux.amoon@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/15 05:34, Srinivas Kandagatla wrote:
-> This patch adds AHCI based SATA controller support to APQ8064.
-> Tested on IFC6410 board.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Thierry Reding <thierry.reding@gmail.com> writes:
+
+> On Fri, Apr 10, 2015 at 03:30:01PM +0200, Sjoerd Simons wrote:
+>>=20
+>> Yes/no/maybe :). Imho this is something to clarify in the pwm API
+>> documentation. As currently all it says is:=20
+>>   "pwm_disable - stop a PWM output toggling",=20
+>>=20
+>> Which is what the exynos driver does.=20
+>>=20
+>> Thierry, could you clearify what the intention is here? I'm happy to
+>> prepare a pwm driver patch if needed to solve this?
 >
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  9 ++++++++
->  arch/arm/boot/dts/qcom-apq8064.dtsi        | 35 ++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
+> I think the safest thing to do is for users to do both. You call
+> pwm_config() with a zero duty cycle to make it clear what the status is
+> that you want. Then you call pwm_disable() to state that you don't need
+> the output signal anymore, so that any clocks needed by the PWM can be
+> stopped. Doing so gives the driver the most information and should make
+> the user more resilient against any possible quirks in drivers.
 >
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> index 122bf34..c9c9c5e 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -116,6 +116,15 @@
->  			};
->  		};
->  
-> +		sata_phy0: sata-phy@1b400000{
+It would be great if the documentation were more clear on this matter
+regardless. This is something I can imagine having to spend substantial
+amounts of time Googling whereas a simple note in the documentation would
+have removed all ambiguity.
 
-Space before '{' please.
+Cheers,
 
-> +			status = "okay";
-> +		};
-> +
-> +		sata0: sata@29000000 {
-> +			status		= "okay";
-> +			target-supply	= <&pm8921_s4>;
-> +		};
-> +
->  		/* OTG */
->  		usb1_phy: phy@12500000 {
->  			status		= "okay";
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 5aac9a5..56cc65e 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -379,6 +379,41 @@
->  			usb-phy		= <&usb4_phy>;
->  		};
->  
-> +		sata_phy0: sata-phy@1b400000{
+=2D Ben
 
-Space before '{' please. Also I wonder if it should just be called
-phy@1b400000 because phy is more standard than sata-phy.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBAgAGBQJVKAehAAoJEHPt6ejPuu8BJNQH/jeNzpQjLNqqhX/I94cQ5O0H
+wmteEl4B6GGvbWjxQrrIeC2ehezj8lle3ZfeABkpG/W3mLkxig1sN1w8Nbl52iwR
+BUD0/daUXUctAh+505B530Na9HlVdqRmsNCTbDivQPkKJ4nTM9Hpn18iSB+sFXEh
+CDLlYWOrm7hf60kCPo7mtT6glfG5Nfl9edp3gqs+/VHG7tXX6t4GLjZsldB5ZWGY
+Hxb6XpjoukNt3NHU6dUPIRDEqEzGRbEh8cyj90b+qocAntcJ2s0qPHluJU2QYxiK
+EdocDkhd6xzi++CtN7SBO676q3dIdWzOHXyXzluBbJVGKk3H+aHucMbPlLg1/ts=
+=bVp/
+-----END PGP SIGNATURE-----
+--=-=-=--
