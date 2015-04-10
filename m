@@ -1,52 +1,65 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v6 3/6] regulator: axp20x: prepare support
- for multiple AXP chip families
-Date: Thu, 9 Apr 2015 20:36:44 -0700
-Message-ID: <CAGb2v64hsRV1S1E=9t1Gezx-HPT_mzVNc8p7hy_4jcoj5-1bsw@mail.gmail.com>
-References: <1427868203-7486-1-git-send-email-wens@csie.org>
- <1427868203-7486-4-git-send-email-wens@csie.org> <CAGb2v66zbATMHY5SgZLs3RCoRETroSh5nC3h4TXRLm5UAbythw@mail.gmail.com>
- <20150409195502.GC6023@sirena.org.uk> <CAGb2v66B-__CRcoyoiebNUs-=UBWxP4kQBGVpO4R_FMUSh7MKw@mail.gmail.com>
- <20150409203634.GD6023@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
+Date: Thu, 9 Apr 2015 22:55:40 -0500
+Message-ID: <1428638140.22867.583.camel@freescale.com>
+References: <1427782669-20368-1-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZUKTWUQKGQEQW562FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150409203634.GD6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427782669-20368-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 9, 2015 at 1:36 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Apr 09, 2015 at 01:30:25PM -0700, Chen-Yu Tsai wrote:
->> On Thu, Apr 9, 2015 at 12:55 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->> > Someone would need to resend them to me as I've deleted them and it
->> > appears that this is a part of a series - are you sure there are no
->> > dependencies?
->
->> The 2 patches only touch drivers/regulator/axp20x-regulator.c.
->> Unless someone else is doing cleanup on them (AFAIK no one has),
->> there should be no problem.
->
-> No header file dependencies?
+On Tue, 2015-03-31 at 14:17 +0800, Jia Hongtao wrote:
+> This is Thermal Monitoring Unit for QorIQ platform.
+> 
+> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/thermal/qoriq-thermal.txt  | 58 +++++++++++++++
+>  arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi   | 82 ++++++++++++++++++++++
+>  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi        |  1 +
+>  3 files changed, 141 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+>  create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> new file mode 100644
+> index 0000000..dfc17fa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> @@ -0,0 +1,58 @@
+> +* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
+> +
+> +Required properties:
+> +- compatible : "fsl,qoriq-tmu".
 
-The next patch (4/6) depends on mfd headers. That's why I'm asking
-if the whole series, including the regulator patches, could go
-through the mfd tree.
+compatible: Must include "fsl,qoriq-tmu". The version of the device is
+	    determined by the TMU IP Block Revision Register (IPBRR0)
+	    at offset 0x0BF8.
 
->> In any case, I will resend them after 4.1-rc1 if they aren't merged
->> by then.
->
-> To be clear there is no chance they will be applied if they're not
-> resent before the merge window.
+	    Table of correspondences between IPBRR0 values and example  
+	    chips:
+		Value           Device
+		-----------     -------
+		0x01900102      T1040
 
-Got it. I'll resend it with comments to clarify what I'm asking.
+> +- reg : address range of TMU registers.
+> +- interrupts : should contain the interrupt for TMU.
 
-ChenYu
+s/should contain/contains/
+
+> +- calibration : calibration table for TMU.
+
+What is the format of the calibration table, and where does one get the
+data?
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
