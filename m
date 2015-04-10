@@ -1,75 +1,71 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 09/12] ARM: dts: apq8064: Add USB OTG support for CM
- QS-600
-Date: Fri, 10 Apr 2015 19:32:31 +0100
-Message-ID: <5528173F.6000509@linaro.org>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669293-11165-1-git-send-email-srinivas.kandagatla@linaro.org> <552807CF.4070600@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/12] ARM: dts: apq8064: Add SATA controller support.
+Date: Fri, 10 Apr 2015 19:33:45 +0100
+Message-ID: <55281789.2060402@linaro.org>
+References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669263-10990-1-git-send-email-srinivas.kandagatla@linaro.org> <5528076B.1010808@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <552807CF.4070600@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bjorn.andersson@sonymobile.com, Nicolas Dechesne <nicolas.dechesne@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5528076B.1010808-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/04/15 18:26, Stephen Boyd wrote:
+On 10/04/15 18:24, Stephen Boyd wrote:
 > On 04/10/15 05:34, Srinivas Kandagatla wrote:
->> From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+>> This patch adds AHCI based SATA controller support to APQ8064.
+>> Tested on IFC6410 board.
 >>
->> This patch adds USB OTG support on USB1 for Compulab QS-600 Board.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> [Srinivas Kandagatla: fixed up regulators and status properties]
->> Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >> ---
->>   arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
+>>   arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  9 ++++++++
+>>   arch/arm/boot/dts/qcom-apq8064.dtsi        | 35 ++++++++++++++++++++++++++++++
+>>   2 files changed, 44 insertions(+)
 >>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
->> index fc69931..d353694 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
->> @@ -101,6 +101,14 @@
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> index 122bf34..c9c9c5e 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> @@ -116,6 +116,15 @@
 >>   			};
 >>   		};
 >>
->> +		/* OTG */
->> +		usb1_phy:phy@12500000 {
+>> +		sata_phy0: sata-phy@1b400000{
 >
-> Space after that ':' please.
+> Space before '{' please.
+Yeo, Will fix it in next version.
 >
-Yep, I will fix it in next version.
->> +			status		= "okay";
->> +			vddcx-supply	= <&pm8921_s3>;
->> +			v3p3-supply	= <&pm8921_l3>;
->> +			v1p8-supply	= <&pm8921_l4>;
+>> +			status = "okay";
 >> +		};
 >> +
->>   		usb3_phy:phy@12520000 {
+>> +		sata0: sata@29000000 {
+>> +			status		= "okay";
+>> +			target-supply	= <&pm8921_s4>;
+>> +		};
+>> +
+>>   		/* OTG */
+>>   		usb1_phy: phy@12500000 {
 >>   			status		= "okay";
->>   			vddcx-supply	= <&pm8921_s3>;
->> @@ -115,6 +123,15 @@
->>   			v1p8-supply	= <&pm8921_l23>;
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> index 5aac9a5..56cc65e 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> @@ -379,6 +379,41 @@
+>>   			usb-phy		= <&usb4_phy>;
 >>   		};
 >>
->> +		gadget1:gadget@12500000 {
->> +			status = "ok";
->> +		};
->> +
->> +		/* OTG */
->> +		usb1: usb@12500000 {
+>> +		sata_phy0: sata-phy@1b400000{
 >
-> This one is good.
+> Space before '{' please. Also I wonder if it should just be called
+> phy@1b400000 because phy is more standard than sata-phy.
+Make sense, I will fix it in next version.
+
 >
->> +			status = "ok";
->> +		};
->> +
->>   		usb3: usb@12520000 {
->>   			status = "okay";
->>   		};
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
