@@ -1,46 +1,57 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 06/12] ARM: dts: apq8064: Add MDP support
-Date: Fri, 10 Apr 2015 17:01:51 -0400
-Message-ID: <CAF6AEGtYQJVt+ETtgnhANJq8c8Z0CyQj=8UddGLL2FR+jpgXAg@mail.gmail.com>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<1428669271-11032-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<552802B6.2040804@codeaurora.org>
-	<552826F6.5040105@linaro.org>
-	<552830C9.4030601@codeaurora.org>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH] ARM: socfpga: dts: Add a ciu clock node for sdmmc
+Date: Fri, 10 Apr 2015 15:56:26 -0500
+Message-ID: <1428699386-2622-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552830C9.4030601-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 4:21 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> That's true, These are existing bindings, so I can't change it as part
->> of this patch, However I will make another patch to fix this in both
->> drivers and DT for good reasons. Just noticed that bindings are not
->> consistent with the examples and the driver, which I guess is another
->> issue.
->
-> Yes, the driver/binding should be fixed and then this patch can be
-> corrected and applied. There are no implementations of the DT for this
-> device upstream in the dts directory so there's no breakage or backwards
-> incompatibility problem by fixing the driver/binding.
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
+The CIU(Card Interface Unit) clock is used by the dw_mmc IP to clock an SD
+card. The ciu_clk is the sdmmc_clk passed through a fixed divider of 4. This patch
+adds the ciu_clk node and makes the sdmmc_clk it's parent.
 
-jfyi, some of the current bindings are the way they are to simplify
-compatibility w/ downstream kernels which I unfortunately still have
-to deal with.. ofc, the sooner I don't have to deal w/ downstream
-kernels, the easier it gets to clean up ;-)
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+ arch/arm/boot/dts/socfpga.dtsi | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-ofc, since the number of devices that can run upstream kernel but
-don't have upstream dts files is approximately zero, this would be a
-case were it would be useful to be able to mark certain bindings as
-non-abi and refactor them later.
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index d9176e6..25418ee 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -451,6 +451,14 @@
+ 						clk-phase = <0 135>;
+ 					};
+ 
++					ciu_clk: ciu_clk {
++						#clock-cells = <0>;
++						compatible = "altr,socfpga-gate-clk";
++						clocks = <&sdmmc_clk>;
++						clk-gate = <0xa0 8>;
++						fixed-divider = <4>;
++					};
++
+ 					nand_x_clk: nand_x_clk {
+ 						#clock-cells = <0>;
+ 						compatible = "altr,socfpga-gate-clk";
+@@ -635,7 +643,7 @@
+ 			fifo-depth = <0x400>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
++			clocks = <&l4_mp_clk>, <&ciu_clk>;
+ 			clock-names = "biu", "ciu";
+ 		};
+ 
+-- 
+2.2.1
 
-BR,
--R
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
