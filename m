@@ -1,445 +1,486 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: [RFC PATCH v2 4/4] arm64: qcom: add cpu operations
-Date: Fri, 10 Apr 2015 15:43:25 -0500
-Message-ID: <1428698605-13166-5-git-send-email-galak@codeaurora.org>
-References: <1428698605-13166-1-git-send-email-galak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428698605-13166-1-git-send-email-galak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Abhimanyu Kapur <abhimany@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, Kumar Gala <galak@codeaurora.org>
+From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 4/7] clk: Add clock driver for mb86s7x
+Date: Fri, 10 Apr 2015 13:52:10 -0700
+Message-ID: <20150410205210.14369.28019@quantum>
+References: <1425466367-30556-1-git-send-email-vincent.yang@socionext.com>
+ <1425467043-30733-1-git-send-email-vincent.yang@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425467043-30733-1-git-send-email-vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Abhimanyu Kapur <abhimany@codeaurora.org>
+Quoting Vincent Yang (2015-03-04 03:04:03)
+> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+>  The CRG11 clock controller is managed by remote f/w.
+> This driver simply maps Linux CLK ops onto mailbox api.
+> 
+> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
-Add qcom cpu operations for arm-v8 cpus. Implement secondary cpu boot ops
-As a part of this change update device tree documentation for:
+Patch looks OK to me. We might to replace that __clk_lookup in crg11_get
+with clk_get or something else like it someday if I ever get around to
+removing __clk_lookup.
 
-1. Arm cortex-a ACC device which provides percpu reg
-2. Armv8 cortex-a compatible string in arm/cpus.txt
+Applied.
 
-Signed-off-by: Abhimanyu Kapur <abhimany@codeaurora.org>
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt     |   2 +
- Documentation/devicetree/bindings/arm/msm/acc.txt  |  19 ++
- arch/arm64/kernel/Makefile                         |   3 +
- arch/arm64/kernel/cpu_ops.c                        |   4 +
- .../kernel/qcom-special-cpu-ops-dont-copy-this.c   | 329 +++++++++++++++++++++
- 5 files changed, 357 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/acc.txt
- create mode 100644 arch/arm64/kernel/qcom-special-cpu-ops-dont-copy-this.c
+Regards,
+Mike
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 8b9e0a9..35cabe5 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -185,6 +185,8 @@ nodes to be present and contain the properties described below.
- 			  be one of:
- 			     "psci"
- 			     "spin-table"
-+			     "qcom,arm-cortex-acc"
-+
- 			# On ARM 32-bit systems this property is optional and
- 			  can be one of:
- 			    "allwinner,sun6i-a31"
-diff --git a/Documentation/devicetree/bindings/arm/msm/acc.txt b/Documentation/devicetree/bindings/arm/msm/acc.txt
-new file mode 100644
-index 0000000..ae2d725
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/acc.txt
-@@ -0,0 +1,19 @@
-+Application Processor Sub-system (APSS) Application Clock Controller (ACC)
-+
-+The ACC provides clock, power domain, and reset control to a CPU. There is one ACC
-+register region per CPU within the APSS remapped region as well as an alias register
-+region that remaps accesses to the ACC associated with the CPU accessing the region.
-+
-+Required properties:
-+- compatible:		Must be "qcom,arm-cortex-acc"
-+- reg:			The first element specifies the base address and size of
-+			the register region. An optional second element specifies
-+			the base address and size of the alias register region.
-+
-+Example:
-+
-+	clock-controller@b088000 {
-+		compatible = "qcom,arm-cortex-acc";
-+		reg = <0x0b088000 0x1000>,
-+		      <0x0b008000 0x1000>;
-+	}
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 5ee07ee..8d77ac5 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -25,6 +25,9 @@ arm64-obj-$(CONFIG_COMPAT)		+= sys32.o kuser32.o signal32.o 	\
- arm64-obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace.o entry-ftrace.o
- arm64-obj-$(CONFIG_MODULES)		+= arm64ksyms.o module.o
- arm64-obj-$(CONFIG_SMP)			+= smp.o smp_spin_table.o topology.o
-+ifdef CONFIG_SMP
-+arm64-obj-$(CONFIG_ARCH_QCOM)		+= qcom-special-cpu-ops-dont-copy-this.o
-+endif
- arm64-obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o
- arm64-obj-$(CONFIG_HW_PERF_EVENTS)	+= perf_event.o
- arm64-obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
-diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
-index cce9524..d002168 100644
---- a/arch/arm64/kernel/cpu_ops.c
-+++ b/arch/arm64/kernel/cpu_ops.c
-@@ -24,6 +24,7 @@
- 
- extern const struct cpu_operations smp_spin_table_ops;
- extern const struct cpu_operations cpu_psci_ops;
-+extern const struct cpu_operations qcom_cortex_a_ops;
- 
- const struct cpu_operations *cpu_ops[NR_CPUS];
- 
-@@ -32,6 +33,9 @@ static const struct cpu_operations *supported_cpu_ops[] __initconst = {
- 	&smp_spin_table_ops,
- #endif
- 	&cpu_psci_ops,
-+#ifdef CONFIG_ARCH_QCOM
-+	&qcom_cortex_a_ops,
-+#endif
- 	NULL,
- };
- 
-diff --git a/arch/arm64/kernel/qcom-special-cpu-ops-dont-copy-this.c b/arch/arm64/kernel/qcom-special-cpu-ops-dont-copy-this.c
-new file mode 100644
-index 0000000..11995d6
---- /dev/null
-+++ b/arch/arm64/kernel/qcom-special-cpu-ops-dont-copy-this.c
-@@ -0,0 +1,329 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2013 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/* MSM ARMv8 CPU Operations
-+ * Based on arch/arm64/kernel/smp_spin_table.c
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/smp.h>
-+#include <linux/qcom_scm.h>
-+
-+#include <asm/barrier.h>
-+#include <asm/cacheflush.h>
-+#include <asm/cpu_ops.h>
-+#include <asm/cputype.h>
-+#include <asm/smp_plat.h>
-+
-+static DEFINE_RAW_SPINLOCK(boot_lock);
-+
-+DEFINE_PER_CPU(int, cold_boot_done);
-+
-+/* CPU power domain register offsets */
-+#define CPU_PWR_CTL		0x4
-+#define CPU_PWR_GATE_CTL	0x14
-+#define LDO_BHS_PWR_CTL		0x28
-+
-+/* L2 power domain register offsets */
-+#define L2_PWR_CTL_OVERRIDE	0xc
-+#define L2_PWR_CTL		0x14
-+#define L2_PWR_STATUS		0x18
-+#define	L2_CORE_CBCR		0x58
-+#define L1_RST_DIS		0x284
-+
-+#define L2_SPM_STS		0xc
-+#define L2_VREG_CTL		0x1c
-+
-+/*
-+ * struct qcom_l2ccc_of_info: represents of data for l2 cache clock controller.
-+ * @compat: compat string for l2 cache clock controller
-+ * @l2_pon: l2 cache power on routine
-+ */
-+struct qcom_l2ccc_of_info {
-+	const char *compat;
-+	int (*l2_power_on) (struct device_node *dn, u32 l2_mask, int cpu);
-+	u32 l2_power_on_mask;
-+};
-+
-+static int power_on_l2_msm8916(struct device_node *l2ccc_node, u32 pon_mask,
-+				int cpu)
-+{
-+	u32 pon_status;
-+	void __iomem *l2_base;
-+
-+	l2_base = of_iomap(l2ccc_node, 0);
-+	if (!l2_base)
-+		return -ENOMEM;
-+
-+	/* Skip power-on sequence if l2 cache is already powered up*/
-+	pon_status = (__raw_readl(l2_base + L2_PWR_STATUS) & pon_mask)
-+				== pon_mask;
-+	if (pon_status) {
-+		iounmap(l2_base);
-+		return 0;
-+	}
-+
-+	/* Close L2/SCU Logic GDHS and power up the cache */
-+	writel_relaxed(0x10D700, l2_base + L2_PWR_CTL);
-+
-+	/* Assert PRESETDBGn */
-+	writel_relaxed(0x400000, l2_base + L2_PWR_CTL_OVERRIDE);
-+	mb();
-+	udelay(2);
-+
-+	/* De-assert L2/SCU memory Clamp */
-+	writel_relaxed(0x101700, l2_base + L2_PWR_CTL);
-+
-+	/* Wakeup L2/SCU RAMs by deasserting sleep signals */
-+	writel_relaxed(0x101703, l2_base + L2_PWR_CTL);
-+	mb();
-+	udelay(2);
-+
-+	/* Enable clocks via SW_CLK_EN */
-+	writel_relaxed(0x01, l2_base + L2_CORE_CBCR);
-+
-+	/* De-assert L2/SCU logic clamp */
-+	writel_relaxed(0x101603, l2_base + L2_PWR_CTL);
-+	mb();
-+	udelay(2);
-+
-+	/* De-assert PRESSETDBg */
-+	writel_relaxed(0x0, l2_base + L2_PWR_CTL_OVERRIDE);
-+
-+	/* De-assert L2/SCU Logic reset */
-+	writel_relaxed(0x100203, l2_base + L2_PWR_CTL);
-+	mb();
-+	udelay(54);
-+
-+	/* Turn on the PMIC_APC */
-+	writel_relaxed(0x10100203, l2_base + L2_PWR_CTL);
-+
-+	/* Set H/W clock control for the cpu CBC block */
-+	writel_relaxed(0x03, l2_base + L2_CORE_CBCR);
-+	mb();
-+	iounmap(l2_base);
-+
-+	return 0;
-+}
-+
-+static const struct qcom_l2ccc_of_info l2ccc_info[] = {
-+	{
-+		.compat = "qcom,8916-l2ccc",
-+		.l2_power_on = power_on_l2_msm8916,
-+		.l2_power_on_mask = BIT(9),
-+	},
-+};
-+
-+static int power_on_l2_cache(struct device_node *l2ccc_node, int cpu)
-+{
-+	int ret, i;
-+	const char *compat;
-+
-+	ret = of_property_read_string(l2ccc_node, "compatible", &compat);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(l2ccc_info); i++) {
-+		const struct qcom_l2ccc_of_info *ptr = &l2ccc_info[i];
-+
-+		if (!of_compat_cmp(ptr->compat, compat, strlen(compat)))
-+				return ptr->l2_power_on(l2ccc_node,
-+						ptr->l2_power_on_mask, cpu);
-+	}
-+	pr_err("Compat string not found for L2CCC node\n");
-+	return -EIO;
-+}
-+
-+static int qcom_unclamp_secondary_arm_cpu(unsigned int cpu)
-+{
-+
-+	int ret = 0;
-+	struct device_node *cpu_node, *acc_node, *l2_node, *l2ccc_node;
-+	void __iomem *reg;
-+
-+	cpu_node = of_get_cpu_node(cpu, NULL);
-+	if (!cpu_node)
-+		return -ENODEV;
-+
-+	acc_node = of_parse_phandle(cpu_node, "qcom,acc", 0);
-+	if (!acc_node) {
-+			ret = -ENODEV;
-+			goto out_acc;
-+	}
-+
-+	l2_node = of_parse_phandle(cpu_node, "next-level-cache", 0);
-+	if (!l2_node) {
-+		ret = -ENODEV;
-+		goto out_l2;
-+	}
-+
-+	l2ccc_node = of_parse_phandle(l2_node, "power-domain", 0);
-+	if (!l2ccc_node) {
-+		ret = -ENODEV;
-+		goto out_l2;
-+	}
-+
-+	/* Ensure L2-cache of the CPU is powered on before
-+	 * unclamping cpu power rails.
-+	 */
-+	ret = power_on_l2_cache(l2ccc_node, cpu);
-+	if (ret) {
-+		pr_err("L2 cache power up failed for CPU%d\n", cpu);
-+		goto out_l2ccc;
-+	}
-+
-+	reg = of_iomap(acc_node, 0);
-+	if (!reg) {
-+		ret = -ENOMEM;
-+		goto out_acc_reg;
-+	}
-+
-+	/* Assert Reset on cpu-n */
-+	writel_relaxed(0x00000033, reg + CPU_PWR_CTL);
-+	mb();
-+
-+	/*Program skew to 16 X0 clock cycles*/
-+	writel_relaxed(0x10000001, reg + CPU_PWR_GATE_CTL);
-+	mb();
-+	udelay(2);
-+
-+	/* De-assert coremem clamp */
-+	writel_relaxed(0x00000031, reg + CPU_PWR_CTL);
-+	mb();
-+
-+	/* Close coremem array gdhs */
-+	writel_relaxed(0x00000039, reg + CPU_PWR_CTL);
-+	mb();
-+	udelay(2);
-+
-+	/* De-assert cpu-n clamp */
-+	writel_relaxed(0x00020038, reg + CPU_PWR_CTL);
-+	mb();
-+	udelay(2);
-+
-+	/* De-assert cpu-n reset */
-+	writel_relaxed(0x00020008, reg + CPU_PWR_CTL);
-+	mb();
-+
-+	/* Assert PWRDUP signal on core-n */
-+	writel_relaxed(0x00020088, reg + CPU_PWR_CTL);
-+	mb();
-+
-+	/* Secondary CPU-N is now alive */
-+	iounmap(reg);
-+out_acc_reg:
-+	of_node_put(l2ccc_node);
-+out_l2ccc:
-+	of_node_put(l2_node);
-+out_l2:
-+	of_node_put(acc_node);
-+out_acc:
-+	of_node_put(cpu_node);
-+
-+	return ret;
-+}
-+
-+static void write_pen_release(u64 val)
-+{
-+	void *start = (void *)&secondary_holding_pen_release;
-+	unsigned long size = sizeof(secondary_holding_pen_release);
-+
-+	secondary_holding_pen_release = val;
-+	smp_wmb();
-+	__flush_dcache_area(start, size);
-+}
-+
-+static int secondary_pen_release(unsigned int cpu)
-+{
-+	unsigned long timeout;
-+
-+	/*
-+	 * Set synchronisation state between this boot processor
-+	 * and the secondary one
-+	 */
-+	raw_spin_lock(&boot_lock);
-+	write_pen_release(cpu_logical_map(cpu));
-+
-+	timeout = jiffies + (1 * HZ);
-+	while (time_before(jiffies, timeout)) {
-+		if (secondary_holding_pen_release == INVALID_HWID)
-+			break;
-+		udelay(10);
-+	}
-+	raw_spin_unlock(&boot_lock);
-+
-+	return secondary_holding_pen_release != INVALID_HWID ? -ENOSYS : 0;
-+}
-+
-+static int __init qcom_cpu_init(struct device_node *dn, unsigned int cpu)
-+{
-+	/* Mark CPU0 cold boot flag as done */
-+	if (!cpu && !per_cpu(cold_boot_done, cpu))
-+		per_cpu(cold_boot_done, cpu) = true;
-+
-+	return 0;
-+}
-+
-+static int __init qcom_cpu_prepare(unsigned int cpu)
-+{
-+	const cpumask_t *mask = cpumask_of(cpu);
-+
-+	if (qcom_scm_set_cold_boot_addr(secondary_holding_pen, mask)) {
-+		pr_warn("CPU%d:Failed to set boot address\n", cpu);
-+		return -ENOSYS;
-+	}
-+
-+	return 0;
-+}
-+
-+static int qcom_cpu_boot(unsigned int cpu)
-+{
-+	int ret = 0;
-+
-+	if (per_cpu(cold_boot_done, cpu) == false) {
-+		ret = qcom_unclamp_secondary_arm_cpu(cpu);
-+		if (ret)
-+			return ret;
-+		per_cpu(cold_boot_done, cpu) = true;
-+	}
-+	return secondary_pen_release(cpu);
-+}
-+
-+void qcom_cpu_postboot(void)
-+{
-+	/*
-+	 * Let the primary processor know we're out of the pen.
-+	 */
-+	write_pen_release(INVALID_HWID);
-+
-+	/*
-+	 * Synchronise with the boot thread.
-+	 */
-+	raw_spin_lock(&boot_lock);
-+	raw_spin_unlock(&boot_lock);
-+}
-+
-+const struct cpu_operations qcom_cortex_a_ops = {
-+	.name		= "qcom,arm-cortex-acc",
-+	.cpu_init	= qcom_cpu_init,
-+	.cpu_prepare	= qcom_cpu_prepare,
-+	.cpu_boot	= qcom_cpu_boot,
-+	.cpu_postboot	= qcom_cpu_postboot,
-+};
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> ---
+>  .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 ++
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++++++++++++
+>  3 files changed, 413 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
+>  create mode 100644 drivers/clk/clk-mb86s7x.c
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
+> new file mode 100644
+> index 0000000..3323962
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
+> @@ -0,0 +1,26 @@
+> +Fujitsu CRG11 clock driver bindings
+> +-----------------------------------
+> +
+> +Required properties :
+> +- compatible : Shall contain "fujitsu,mb86s70-crg11"
+> +- #clock-cells : Shall be 3 {cntrlr domain port}
+> +
+> +The consumer specifies the desired clock pointing to its phandle.
+> +
+> +Example:
+> +
+> +       clock: crg11 {
+> +               compatible = "fujitsu,mb86s70-crg11";
+> +               #clock-cells = <3>;
+> +       };
+> +
+> +       mhu: mhu0@2b1f0000 {
+> +               #mbox-cells = <1>;
+> +               compatible = "arm,mhu";
+> +               reg = <0 0x2B1F0000 0x1000>;
+> +               interrupts = <0 36 4>, /* LP Non-Sec */
+> +                            <0 35 4>, /* HP Non-Sec */
+> +                            <0 37 4>; /* Secure */
+> +               clocks = <&clock 0 2 1>; /* Cntrlr:0 Domain:2 Port:1 */
+> +               clock-names = "clk";
+> +       };
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index d478ceb..1d35f3b 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_MACH_LOONGSON1)          += clk-ls1x.o
+>  obj-$(CONFIG_COMMON_CLK_MAX_GEN)       += clk-max-gen.o
+>  obj-$(CONFIG_COMMON_CLK_MAX77686)      += clk-max77686.o
+>  obj-$(CONFIG_COMMON_CLK_MAX77802)      += clk-max77802.o
+> +obj-$(CONFIG_ARCH_MB86S7X)             += clk-mb86s7x.o
+>  obj-$(CONFIG_ARCH_MOXART)              += clk-moxart.o
+>  obj-$(CONFIG_ARCH_NOMADIK)             += clk-nomadik.o
+>  obj-$(CONFIG_ARCH_NSPIRE)              += clk-nspire.o
+> diff --git a/drivers/clk/clk-mb86s7x.c b/drivers/clk/clk-mb86s7x.c
+> new file mode 100644
+> index 0000000..f39c25a
+> --- /dev/null
+> +++ b/drivers/clk/clk-mb86s7x.c
+> @@ -0,0 +1,386 @@
+> +/*
+> + * Copyright (C) 2013-2015 FUJITSU SEMICONDUCTOR LIMITED
+> + * Copyright (C) 2015 Linaro Ltd.
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clkdev.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/cpu.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/module.h>
+> +#include <linux/topology.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <soc/mb86s7x/scb_mhu.h>
+> +
+> +#define to_crg_clk(p) container_of(p, struct crg_clk, hw)
+> +#define to_clc_clk(p) container_of(p, struct cl_clk, hw)
+> +
+> +struct mb86s7x_peri_clk {
+> +       u32 payload_size;
+> +       u32 cntrlr;
+> +       u32 domain;
+> +       u32 port;
+> +       u32 en;
+> +       u64 frequency;
+> +} __packed __aligned(4);
+> +
+> +struct hack_rate {
+> +       unsigned clk_id;
+> +       unsigned long rate;
+> +       int gated;
+> +};
+> +
+> +struct crg_clk {
+> +       struct clk_hw hw;
+> +       u8 cntrlr, domain, port;
+> +};
+> +
+> +static int crg_gate_control(struct clk_hw *hw, int en)
+> +{
+> +       struct crg_clk *crgclk = to_crg_clk(hw);
+> +       struct mb86s7x_peri_clk cmd;
+> +       int ret;
+> +
+> +       cmd.payload_size = sizeof(cmd);
+> +       cmd.cntrlr = crgclk->cntrlr;
+> +       cmd.domain = crgclk->domain;
+> +       cmd.port = crgclk->port;
+> +       cmd.en = en;
+> +
+> +       /* Port is UngatedCLK */
+> +       if (cmd.port == 8)
+> +               return en ? 0 : -EINVAL;
+> +
+> +       pr_debug("%s:%d CMD Cntrlr-%u Dom-%u Port-%u En-%u}\n",
+> +                __func__, __LINE__, cmd.cntrlr,
+> +                cmd.domain, cmd.port, cmd.en);
+> +
+> +       ret = mb86s7x_send_packet(CMD_PERI_CLOCK_GATE_SET_REQ,
+> +                                 &cmd, sizeof(cmd));
+> +       if (ret < 0) {
+> +               pr_err("%s:%d failed!\n", __func__, __LINE__);
+> +               return ret;
+> +       }
+> +
+> +       pr_debug("%s:%d REP Cntrlr-%u Dom-%u Port-%u En-%u}\n",
+> +                __func__, __LINE__, cmd.cntrlr,
+> +                cmd.domain, cmd.port, cmd.en);
+> +
+> +       /* If the request was rejected */
+> +       if (cmd.en != en)
+> +               ret = -EINVAL;
+> +       else
+> +               ret = 0;
+> +
+> +       return ret;
+> +}
+> +
+> +static int crg_port_prepare(struct clk_hw *hw)
+> +{
+> +       return crg_gate_control(hw, 1);
+> +}
+> +
+> +static void crg_port_unprepare(struct clk_hw *hw)
+> +{
+> +       crg_gate_control(hw, 0);
+> +}
+> +
+> +static int
+> +crg_rate_control(struct clk_hw *hw, int set, unsigned long *rate)
+> +{
+> +       struct crg_clk *crgclk = to_crg_clk(hw);
+> +       struct mb86s7x_peri_clk cmd;
+> +       int code, ret;
+> +
+> +       cmd.payload_size = sizeof(cmd);
+> +       cmd.cntrlr = crgclk->cntrlr;
+> +       cmd.domain = crgclk->domain;
+> +       cmd.port = crgclk->port;
+> +       cmd.frequency = *rate;
+> +
+> +       if (set) {
+> +               code = CMD_PERI_CLOCK_RATE_SET_REQ;
+> +               pr_debug("%s:%d CMD Cntrlr-%u Dom-%u Port-%u Rate-SET %lluHz}\n",
+> +                        __func__, __LINE__, cmd.cntrlr,
+> +                        cmd.domain, cmd.port, cmd.frequency);
+> +       } else {
+> +               code = CMD_PERI_CLOCK_RATE_GET_REQ;
+> +               pr_debug("%s:%d CMD Cntrlr-%u Dom-%u Port-%u Rate-GET}\n",
+> +                        __func__, __LINE__, cmd.cntrlr,
+> +                        cmd.domain, cmd.port);
+> +       }
+> +
+> +       ret = mb86s7x_send_packet(code, &cmd, sizeof(cmd));
+> +       if (ret < 0) {
+> +               pr_err("%s:%d failed!\n", __func__, __LINE__);
+> +               return ret;
+> +       }
+> +
+> +       if (set)
+> +               pr_debug("%s:%d REP Cntrlr-%u Dom-%u Port-%u Rate-SET %lluHz}\n",
+> +                        __func__, __LINE__, cmd.cntrlr,
+> +                        cmd.domain, cmd.port, cmd.frequency);
+> +       else
+> +               pr_debug("%s:%d REP Cntrlr-%u Dom-%u Port-%u Rate-GOT %lluHz}\n",
+> +                        __func__, __LINE__, cmd.cntrlr,
+> +                        cmd.domain, cmd.port, cmd.frequency);
+> +
+> +       *rate = cmd.frequency;
+> +       return 0;
+> +}
+> +
+> +static unsigned long
+> +crg_port_recalc_rate(struct clk_hw *hw,        unsigned long parent_rate)
+> +{
+> +       unsigned long rate;
+> +
+> +       crg_rate_control(hw, 0, &rate);
+> +
+> +       return rate;
+> +}
+> +
+> +static long
+> +crg_port_round_rate(struct clk_hw *hw,
+> +                   unsigned long rate, unsigned long *pr)
+> +{
+> +       return rate;
+> +}
+> +
+> +static int
+> +crg_port_set_rate(struct clk_hw *hw,
+> +                 unsigned long rate, unsigned long parent_rate)
+> +{
+> +       return crg_rate_control(hw, 1, &rate);
+> +}
+> +
+> +const struct clk_ops crg_port_ops = {
+> +       .prepare = crg_port_prepare,
+> +       .unprepare = crg_port_unprepare,
+> +       .recalc_rate = crg_port_recalc_rate,
+> +       .round_rate = crg_port_round_rate,
+> +       .set_rate = crg_port_set_rate,
+> +};
+> +
+> +struct mb86s70_crg11 {
+> +       struct mutex lock; /* protects CLK populating and searching */
+> +};
+> +
+> +static struct clk *crg11_get(struct of_phandle_args *clkspec, void *data)
+> +{
+> +       struct mb86s70_crg11 *crg11 = data;
+> +       struct clk_init_data init;
+> +       u32 cntrlr, domain, port;
+> +       struct crg_clk *crgclk;
+> +       struct clk *clk;
+> +       char clkp[20];
+> +
+> +       if (clkspec->args_count != 3)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       cntrlr = clkspec->args[0];
+> +       domain = clkspec->args[1];
+> +       port = clkspec->args[2];
+> +
+> +       if (port > 7)
+> +               snprintf(clkp, 20, "UngatedCLK%d_%X", cntrlr, domain);
+> +       else
+> +               snprintf(clkp, 20, "CLK%d_%X_%d", cntrlr, domain, port);
+> +
+> +       mutex_lock(&crg11->lock);
+> +
+> +       clk = __clk_lookup(clkp);
+> +       if (clk) {
+> +               mutex_unlock(&crg11->lock);
+> +               return clk;
+> +       }
+> +
+> +       crgclk = kzalloc(sizeof(*crgclk), GFP_KERNEL);
+> +       if (!crgclk) {
+> +               mutex_unlock(&crg11->lock);
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       init.name = clkp;
+> +       init.num_parents = 0;
+> +       init.ops = &crg_port_ops;
+> +       init.flags = CLK_IS_ROOT;
+> +       crgclk->hw.init = &init;
+> +       crgclk->cntrlr = cntrlr;
+> +       crgclk->domain = domain;
+> +       crgclk->port = port;
+> +       clk = clk_register(NULL, &crgclk->hw);
+> +       if (IS_ERR(clk))
+> +               pr_err("%s:%d Error!\n", __func__, __LINE__);
+> +       else
+> +               pr_debug("Registered %s\n", clkp);
+> +
+> +       clk_register_clkdev(clk, clkp, NULL);
+> +       mutex_unlock(&crg11->lock);
+> +       return clk;
+> +}
+> +
+> +static void __init crg_port_init(struct device_node *node)
+> +{
+> +       struct mb86s70_crg11 *crg11;
+> +
+> +       crg11 = kzalloc(sizeof(*crg11), GFP_KERNEL);
+> +       if (!crg11)
+> +               return;
+> +
+> +       mutex_init(&crg11->lock);
+> +
+> +       of_clk_add_provider(node, crg11_get, crg11);
+> +}
+> +CLK_OF_DECLARE(crg11_gate, "fujitsu,mb86s70-crg11", crg_port_init);
+> +
+> +struct cl_clk {
+> +       struct clk_hw hw;
+> +       int cluster;
+> +};
+> +
+> +struct mb86s7x_cpu_freq {
+> +       u32 payload_size;
+> +       u32 cluster_class;
+> +       u32 cluster_id;
+> +       u32 cpu_id;
+> +       u64 frequency;
+> +};
+> +
+> +static void mhu_cluster_rate(struct clk_hw *hw, unsigned long *rate, int get)
+> +{
+> +       struct cl_clk *clc = to_clc_clk(hw);
+> +       struct mb86s7x_cpu_freq cmd;
+> +       int code, ret;
+> +
+> +       cmd.payload_size = sizeof(cmd);
+> +       cmd.cluster_class = 0;
+> +       cmd.cluster_id = clc->cluster;
+> +       cmd.cpu_id = 0;
+> +       cmd.frequency = *rate;
+> +
+> +       if (get)
+> +               code = CMD_CPU_CLOCK_RATE_GET_REQ;
+> +       else
+> +               code = CMD_CPU_CLOCK_RATE_SET_REQ;
+> +
+> +       pr_debug("%s:%d CMD Cl_Class-%u CL_ID-%u CPU_ID-%u Freq-%llu}\n",
+> +                __func__, __LINE__, cmd.cluster_class,
+> +                cmd.cluster_id, cmd.cpu_id, cmd.frequency);
+> +
+> +       ret = mb86s7x_send_packet(code, &cmd, sizeof(cmd));
+> +       if (ret < 0) {
+> +               pr_err("%s:%d failed!\n", __func__, __LINE__);
+> +               return;
+> +       }
+> +
+> +       pr_debug("%s:%d REP Cl_Class-%u CL_ID-%u CPU_ID-%u Freq-%llu}\n",
+> +                __func__, __LINE__, cmd.cluster_class,
+> +                cmd.cluster_id, cmd.cpu_id, cmd.frequency);
+> +
+> +       *rate = cmd.frequency;
+> +}
+> +
+> +static unsigned long
+> +clc_recalc_rate(struct clk_hw *hw, unsigned long unused)
+> +{
+> +       unsigned long rate;
+> +
+> +       mhu_cluster_rate(hw, &rate, 1);
+> +       return rate;
+> +}
+> +
+> +static long
+> +clc_round_rate(struct clk_hw *hw, unsigned long rate,
+> +              unsigned long *unused)
+> +{
+> +       return rate;
+> +}
+> +
+> +static int
+> +clc_set_rate(struct clk_hw *hw, unsigned long rate,
+> +            unsigned long unused)
+> +{
+> +       unsigned long res = rate;
+> +
+> +       mhu_cluster_rate(hw, &res, 0);
+> +
+> +       return (res == rate) ? 0 : -EINVAL;
+> +}
+> +
+> +static struct clk_ops clk_clc_ops = {
+> +       .recalc_rate = clc_recalc_rate,
+> +       .round_rate = clc_round_rate,
+> +       .set_rate = clc_set_rate,
+> +};
+> +
+> +struct clk *mb86s7x_clclk_register(struct device *cpu_dev)
+> +{
+> +       struct clk_init_data init;
+> +       struct cl_clk *clc;
+> +
+> +       clc = kzalloc(sizeof(*clc), GFP_KERNEL);
+> +       if (!clc)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       clc->hw.init = &init;
+> +       clc->cluster = topology_physical_package_id(cpu_dev->id);
+> +
+> +       init.name = dev_name(cpu_dev);
+> +       init.ops = &clk_clc_ops;
+> +       init.flags = CLK_IS_ROOT | CLK_GET_RATE_NOCACHE;
+> +       init.num_parents = 0;
+> +
+> +       return devm_clk_register(cpu_dev, &clc->hw);
+> +}
+> +
+> +static int mb86s7x_clclk_of_init(void)
+> +{
+> +       int cpu, ret = -ENODEV;
+> +       struct device_node *np;
+> +       struct clk *clk;
+> +
+> +       np = of_find_compatible_node(NULL, NULL, "fujitsu,mb86s70-scb-1.0");
+> +       if (!np || !of_device_is_available(np))
+> +               goto exit;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               struct device *cpu_dev = get_cpu_device(cpu);
+> +
+> +               if (!cpu_dev) {
+> +                       pr_err("failed to get cpu%d device\n", cpu);
+> +                       continue;
+> +               }
+> +
+> +               clk = mb86s7x_clclk_register(cpu_dev);
+> +               if (IS_ERR(clk)) {
+> +                       pr_err("failed to register cpu%d clock\n", cpu);
+> +                       continue;
+> +               }
+> +               if (clk_register_clkdev(clk, NULL, dev_name(cpu_dev))) {
+> +                       pr_err("failed to register cpu%d clock lookup\n", cpu);
+> +                       continue;
+> +               }
+> +               pr_debug("registered clk for %s\n", dev_name(cpu_dev));
+> +       }
+> +       ret = 0;
+> +
+> +       platform_device_register_simple("arm-bL-cpufreq-dt", -1, NULL, 0);
+> +exit:
+> +       of_node_put(np);
+> +       return ret;
+> +}
+> +module_init(mb86s7x_clclk_of_init);
+> -- 
+> 1.9.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
