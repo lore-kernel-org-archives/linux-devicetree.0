@@ -1,98 +1,58 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 06/11] ARM: dts: apq8064-cm-qs600: Add basic regulators.
-Date: Fri, 10 Apr 2015 21:44:05 +0100
-Message-ID: <1428698645-12156-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 07/11] ARM: dts: apq8064: Add usb host support to CM QS-600
+Date: Fri, 10 Apr 2015 21:44:15 +0100
+Message-ID: <1428698655-12198-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic regulator support for USB and HDMI.
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patch adds device tree nodes to support two usb hosts on Compulab QS600 board.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+[Srinivas Kandagatla: fixed up regulators and status properties]
+Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 61 +++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-index 5d75666..142885d 100644
+index 142885d..4eedfe4 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-@@ -14,6 +14,67 @@
+@@ -101,6 +101,28 @@
  			};
  		};
  
-+		rpm@108000 {
-+			regulators {
-+				vin_lvs1_3_6-supply = <&pm8921_s4>;
-+				vin_lvs2-supply = <&pm8921_s1>;
-+				vin_lvs4_5_7-supply = <&pm8921_s4>;
-+
-+				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+				vdd_l24-supply = <&pm8921_s1>;
-+				vdd_l25-supply = <&pm8921_s1>;
-+				vdd_l26-supply = <&pm8921_s7>;
-+				vdd_l27-supply = <&pm8921_s7>;
-+				vdd_l28-supply = <&pm8921_s7>;
-+
-+
-+				/* Buck SMPS */
-+				pm8921_s1: s1 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1225000>;
-+					regulator-max-microvolt = <1225000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+					bias-pull-down;
-+				};
-+
-+				pm8921_s3: s3 {
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1400000>;
-+					qcom,switch-mode-frequency = <4800000>;
-+				};
-+
-+				pm8921_s4: s4 {
-+					regulator-min-microvolt	= <1800000>;
-+					regulator-max-microvolt	= <1800000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+				};
-+
-+				pm8921_s7: s7 {
-+					regulator-min-microvolt = <1300000>;
-+					regulator-max-microvolt = <1300000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+				};
-+
-+				pm8921_l3: l3 {
-+					regulator-min-microvolt = <3050000>;
-+					regulator-max-microvolt = <3300000>;
-+					bias-pull-down;
-+				};
-+
-+				pm8921_l4: l4 {
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				pm8921_l23: l23 {
-+					regulator-min-microvolt = <1700000>;
-+					regulator-max-microvolt = <1900000>;
-+					bias-pull-down;
-+				};
-+			};
++		usb3_phy: phy@12520000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
 +		};
 +
- 		gsbi@12440000 {
- 			status = "okay";
- 			qcom,mode = <GSBI_PROT_I2C>;
++		usb4_phy: phy@12530000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		usb3: usb@12520000 {
++			status = "okay";
++		};
++
++		usb4: usb@12530000 {
++			status = "okay";
++		};
++
+ 		amba {
+ 			/* eMMC */
+ 			sdcc1: sdcc@12400000 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
