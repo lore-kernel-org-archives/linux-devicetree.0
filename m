@@ -1,104 +1,188 @@
-From: Robert Baldyga <r.baldyga@samsung.com>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Fri, 10 Apr 2015 10:46:11 +0200
-Message-ID: <55278DD3.3020409@samsung.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
- <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
- <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
- <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
- <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
- <55278580.2090809@samsung.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] mtd: nand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Fri, 10 Apr 2015 10:46:42 +0200
+Message-ID: <99af1297029d7f1624db2f5fd9d228d1@agner.ch>
+References: <1428522370-18035-1-git-send-email-dev@lynxeye.de>
+ <1428522370-18035-3-git-send-email-dev@lynxeye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <55278580.2090809@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428522370-18035-3-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
-> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
->> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
->>> Hi Robert,
->>>
->>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
->>>> Hi Chanwoo,
->>>>
->>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->>>>> Hi Robert,
->>>>>
->>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>>>>> Hi Chanwoo,
->>>>>>
->>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>>>>> Hi Robert,
->>>>>>>
->>>>>
->>>>> [snip]
->>>>>
->>>>>>> But, I have one question about case[3]
->>>>>>>
->>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>>>>
->>>>>>
->>>>>> It's because state of single USB cable connection cannot be completely
->>>>>> described using single extcon cable. USB cable state has two bits (VBUS
->>>>>> and ID), so we need to use two cables for single cable connection. We
->>>>>> use following convention:
->>>>>> cable "USB" = VBUS
->>>>>> cable "USB-HOST" = !ID.
->>>>>
->>>>> I think that extcon provider driver have to update the only one cable state
->>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->>>>> at the same time through one h/w port.
->>>>>
->>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>>>>
->>>>
->>>> It can. USB OTG allows for that. Moreover device can be host even if
->>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
->>>> detected cable type is USB host). Devices would need to have complete
->>>> information about USB cable connection, because OTG state machine needs
->>>
->>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
->>> at the same time. The case3 in your patch update two cable state about one h/w port.
->>>
->>
->> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
->> machine. It needs to know exact VBUS and ID states, which cannot be
->> concluded basing on cable type only. That's why I have used "USB-HOST"
->> name together with "USB" to pass additional information about USB cable
->> connection.
-> 
-> I think this method is not proper to support this case.
-> It may cause the confusion about other case using USB/USB-HOST cable state
-> except of you commented case.
+Hi Lucas,
 
-That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
-with old names. It seems to be simpler solution than adding new
-mechanism notifying about VBUS and ID states changes.
+Thanks for working on that. Some minor comments below...
 
+On 2015-04-08 21:46, Lucas Stach wrote:
+> Add support for the NAND flash controller found on NVIDIA
+> Tegra 2/3 SoCs.
 > 
->>
->>> I don't agree. 
->>>
->>>> that. As I wrote, current USB cable names are misleading. It would be
->>>> better to have "USB-VBUS" and "USB-ID".
->>>
->>> It is strange cable name. I prefer to use only 'USB' cable name.
->>> But, we could support the other method to get the state of whether USB-VBUS or USB-ID
->>> by using helper API or others.
->>>
->>
->> Ok, so do you have any idea how to do it? Do we want to supply
->> additional API for notifying about VBUS and ID changes?
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+> ---
+> v2:
+> - remove Tegra 3 compatible
+> - remove useless part_probes
+> - don't store irq number
+> - use gpiod API instead of deprecated of_gpios
+> - don't store reset
+> - correct TIMING_TCS mask
+> - simplify irq handler
+> - correct timing calculations
+> - don't store buswidth
+> - drop compile test
+> - correct ECC handling
+> ---
+>  MAINTAINERS                   |   6 +
+>  drivers/mtd/nand/Kconfig      |   6 +
+>  drivers/mtd/nand/Makefile     |   1 +
+>  drivers/mtd/nand/tegra_nand.c | 786 ++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 799 insertions(+)
+>  create mode 100644 drivers/mtd/nand/tegra_nand.c
 > 
-> No, we need to consider more standard solution to support this case.
-> 
+[...]
+> +static struct nand_ecclayout tegra_nand_oob_16 = {
+> +	.eccbytes = 4,
+> +	.eccpos = { 3, 4, 5, 6 },
+> +	.oobfree = {
+> +		{ .offset = 7, . length = 8 }
+> +	}
+> +};
+> +
+> +static struct nand_ecclayout tegra_nand_oob_64 = {
+> +	.eccbytes = 36,
+> +	.eccpos = {
+> +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+> +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+> +		35, 36, 37, 38, 39
+> +	},
 
-Thanks,
-Robert Baldyga
+The amount of eccbytes vs. length of eccpos do not match...
+
+> +	.oobfree = {
+> +		{ .offset = 40, .length = 24 }
+> +	}
+> +};
+> +
+> +static struct nand_ecclayout tegra_nand_oob_128 = {
+> +	.eccbytes = 72,
+> +	.eccpos = {
+> +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+> +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+> +		35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+> +		51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
+> +		67, 68, 69, 70, 71, 72, 73, 74, 75
+> +	},
+
+Here...
+
+> +	.oobfree = {
+> +		{ .offset = 76, .length = 52 }
+> +	}
+> +};
+> +
+> +static struct nand_ecclayout tegra_nand_oob_224 = {
+> +	.eccbytes = 144,
+> +	.eccpos = {
+> +		  3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,
+> +		 15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,
+> +		 27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,
+> +		 39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,
+> +		 51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,
+> +		 63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,
+> +		 75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,
+> +		 87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,
+> +		 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+> +		111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+> +		123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
+> +		135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146,
+> +		147
+> +	},
+
+... and here too.
+
+[...]
+> +static int tegra_nand_probe(struct platform_device *pdev)
+> +{
+> +	struct reset_control *rst;
+> +	struct tegra_nand *nand;
+> +	struct nand_chip *chip;
+> +	struct mtd_info *mtd;
+> +	struct resource *res;
+> +	unsigned long value;
+> +	int irq, buswidth, err = 0;
+> +
+> +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
+> +	if (!nand)
+> +		return -ENOMEM;
+> +
+> +	nand->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(nand->regs))
+> +		return PTR_ERR(nand->regs);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
+> +			       dev_name(&pdev->dev), nand);
+> +	if (err)
+> +		return err;
+> +
+> +	rst = devm_reset_control_get(&pdev->dev, "nand");
+> +	if (IS_ERR(rst))
+> +		return PTR_ERR(rst);
+> +
+> +	nand->clk = devm_clk_get(&pdev->dev, "nand");
+> +	if (IS_ERR(nand->clk))
+> +		return PTR_ERR(nand->clk);
+> +
+> +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "nvidia,wp-gpios",
+> +					   GPIOD_OUT_HIGH);
+> +	if (IS_ERR(nand->wp_gpio))
+> +		return PTR_ERR(nand->wp_gpio);
+> +
+> +	buswidth = of_get_nand_bus_width(pdev->dev.of_node);
+> +	if (buswidth < 0)
+> +		return buswidth;
+> +
+> +	err = clk_prepare_enable(nand->clk);
+> +	if (err)
+> +		return err;
+> +
+> +	reset_control_assert(rst);
+> +	udelay(2);
+> +	reset_control_deassert(rst);
+> +
+> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
+> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
+> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
+> +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
+> +	writel(value, nand->regs + HWSTATUS_MASK);
+> +
+> +	init_completion(&nand->command_complete);
+> +	init_completion(&nand->dma_complete);
+> +
+> +	mtd = &nand->mtd;
+> +	mtd->name = dev_name(&pdev->dev);
+> +	mtd->owner = THIS_MODULE;
+> +	mtd->priv = &nand->chip;
+> +
+> +	mtd->type = MTD_NANDFLASH;
+> +	mtd->flags = MTD_CAP_NANDFLASH;
+
+This get filled by nand_scan_tail anyway, any reason to have it here
+too?
+
+Other than that, looks solid to me.
+
+Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+
+--
+Stefan
