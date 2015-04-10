@@ -1,44 +1,27 @@
-From: Michael Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5] clk: Add PWM clock driver
-Date: Fri, 10 Apr 2015 14:45:05 -0700
-Message-ID: <20150410214505.14369.98377@quantum>
-References: <1423855132-20939-1-git-send-email-p.zabel@pengutronix.de>
- <1426154657.14455.13.camel@pengutronix.de>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 1/9] ARM: tegra: Cardhu device-tree comment spelling
+ fix
+Date: Fri, 10 Apr 2015 22:18:25 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1504102217130.19540@utopia.booyaka.com>
+References: <cover.1428700856.git.marcel.ziswiler@toradex.com> <cb3321c697591c3b2ae2ad799282448cff4bef21.1428700856.git.marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1426154657.14455.13.camel@pengutronix.de>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Thierry Reding <thierry.reding@gmail.com>
-Cc: =?utf-8?q?Janusz_U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cb3321c697591c3b2ae2ad799282448cff4bef21.1428700856.git.marcel.ziswiler@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mikko Perttunen <mperttunen@nvidia.com>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Matt Porter <mporter@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Takashi Iwai <tiwai@suse.de>, Dylan Reid <dgreid@chromium.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>Rob Herring <ro>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Philipp Zabel (2015-03-12 03:04:17)
-> Am Freitag, den 13.02.2015, 20:18 +0100 schrieb Philipp Zabel:
-> > Some board designers, when running out of clock output pads, decide to
-> > (mis)use PWM output pads to provide a clock to external components.
-> > This driver supports this practice by providing an adapter between the
-> > PWM and clock bindings in the device tree. As the PWM bindings specify
-> > the period in the device tree, this is a fixed clock.
-> > 
-> > Tested-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > Changes since v4:
-> > - Added missing static keywords, as pointed out by Stephen Boyd
-> > - Turned to_clk_pwm into an inline function,
-> > - added MODULE_AUTHOR/DESCRIPTION/LICENSE,
-> > - and fixed PWM spelling issues, as pointed out by Thierry Reding
-> 
-> Are there any further changes you'd like me to make to this patch?
+On Fri, 10 Apr 2015, Marcel Ziswiler wrote:
 
-Applied.
-
-Thanks,
-Mike
-
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
-> regards
-> Philipp
-> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
+This patch is missing a commit message; please add one.
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/SubmittingPatches#n109
+
+
+- Paul
