@@ -1,43 +1,97 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [net-next PATCH 1/3] devicetree: Add compatible string for Zynq
- Ultrascale MPSoC
-Date: Fri, 10 Apr 2015 11:41:48 +0200
-Message-ID: <d9d4238d-c8f7-4b15-8ba5-22d77be05a45@BN1AFFO11FD041.protection.gbl>
-References: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>, nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v5 5/9] mmc: sdhci-st: Add sdhci_st_set_uhs_signaling function.
+Date: Fri, 10 Apr 2015 10:40:27 +0100
+Message-ID: <1428658831-14308-6-git-send-email-peter.griffin@linaro.org>
+References: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, ulf.hansson@linaro.org, peppe.cavallaro@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 11:17 AM, Harini Katakam wrote:
-> Add "cdns,zynqmp-gem" to be used for Zynq Ultrascal MPSoc.
+To allow UHS modes to work properly we need to provide the st specific
+set_uhs_signaling callback function. This function differs from the
+generic sdhci_set_uhs_signaling callback in that we need to configure
+the correct delay depending on the UHS mode, and also set the V18_EN
+bit.
 
-type here. And look below.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+---
+ drivers/mmc/host/sdhci-st.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-> 
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> ---
->  Documentation/devicetree/bindings/net/macb.txt |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-> index ba19d67..a112add 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -9,6 +9,7 @@ Required properties:
->    the Cadence GEM, or the generic form: "cdns,gem".
->    Use "cdns,sama5d3-gem" for the Gigabit IP available on Atmel sama5d3 SoCs.
->    Use "cdns,sama5d4-gem" for the Gigabit IP available on Atmel sama5d4 SoCs.
-> +  Use "cdns,zynqmp-gem" for Zynq Ultrascale MPSoC.
+diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
+index 10989ed..42a361c 100644
+--- a/drivers/mmc/host/sdhci-st.c
++++ b/drivers/mmc/host/sdhci-st.c
+@@ -261,6 +261,56 @@ static int sdhci_st_set_dll_for_clock(struct sdhci_host *host)
+ 	return ret;
+ }
+ 
++static void sdhci_st_set_uhs_signaling(struct sdhci_host *host,
++					unsigned int uhs)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct st_mmc_platform_data *pdata = pltfm_host->priv;
++	u16 ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
++	int ret = 0;
++
++	/* Select Bus Speed Mode for host */
++	ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
++	switch (uhs) {
++	/*
++	 * Set V18_EN -- UHS modes do not work without this.
++	 * does not change signaling voltage
++	 */
++
++	case MMC_TIMING_UHS_SDR12:
++		st_mmcss_set_static_delay(pdata->top_ioaddr);
++		ctrl_2 |= SDHCI_CTRL_UHS_SDR12 | SDHCI_CTRL_VDD_180;
++		break;
++	case MMC_TIMING_UHS_SDR25:
++		st_mmcss_set_static_delay(pdata->top_ioaddr);
++		ctrl_2 |= SDHCI_CTRL_UHS_SDR25 | SDHCI_CTRL_VDD_180;
++		break;
++	case MMC_TIMING_UHS_SDR50:
++		st_mmcss_set_static_delay(pdata->top_ioaddr);
++		ctrl_2 |= SDHCI_CTRL_UHS_SDR50 | SDHCI_CTRL_VDD_180;
++		ret = sdhci_st_set_dll_for_clock(host);
++		break;
++	case MMC_TIMING_UHS_SDR104:
++	case MMC_TIMING_MMC_HS200:
++		st_mmcss_set_static_delay(pdata->top_ioaddr);
++		ctrl_2 |= SDHCI_CTRL_UHS_SDR104 | SDHCI_CTRL_VDD_180;
++		ret =  sdhci_st_set_dll_for_clock(host);
++		break;
++	case MMC_TIMING_UHS_DDR50:
++	case MMC_TIMING_MMC_DDR52:
++		st_mmcss_set_static_delay(pdata->top_ioaddr);
++		ctrl_2 |= SDHCI_CTRL_UHS_DDR50 | SDHCI_CTRL_VDD_180;
++		break;
++	}
++
++	if (ret)
++		dev_warn(mmc_dev(host->mmc), "Error setting dll for clock "
++						"(uhs %d)\n", uhs);
++
++	dev_dbg(mmc_dev(host->mmc), "uhs %d, ctrl_2 %04X\n", uhs, ctrl_2);
++
++	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
++}
+ 
+ static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
+ {
+@@ -284,6 +334,7 @@ static const struct sdhci_ops sdhci_st_ops = {
+ 	.set_bus_width = sdhci_set_bus_width,
+ 	.read_l = sdhci_st_readl,
+ 	.reset = sdhci_reset,
++	.set_uhs_signaling = sdhci_st_set_uhs_signaling,
+ };
+ 
+ static const struct sdhci_pltfm_data sdhci_st_pdata = {
+-- 
+1.9.1
 
-Please use official name
-Zynq UltraScale+ MPSoC
-
-Thanks,
-Michal
