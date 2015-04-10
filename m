@@ -1,188 +1,52 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] mtd: nand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Fri, 10 Apr 2015 10:46:42 +0200
-Message-ID: <99af1297029d7f1624db2f5fd9d228d1@agner.ch>
-References: <1428522370-18035-1-git-send-email-dev@lynxeye.de>
- <1428522370-18035-3-git-send-email-dev@lynxeye.de>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 00/11] ARM: vf610m4: Add Vybrid Cortex-M4 support
+Date: Fri, 10 Apr 2015 10:50:34 +0200
+Message-ID: <CALszF6Cc_7g873cz-zr=k4dDqDu+aMRjT1o2RGEh-tpSjYyREA@mail.gmail.com>
+References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428522370-18035-3-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428609855-27657-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, marc.zyngier-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+Hi Stefan,
 
-Thanks for working on that. Some minor comments below...
+2015-04-09 22:04 GMT+02:00 Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>:
+> In this fifth revision the patchset moves away from the idea
+> including ARMv7-M platforms into ARCH_MULTIPLATFORM, but
+> instead adds a new top-level config symbol ARM_SINGLE_ARMV7M
+> Patch 7 adds this new config symbol while patch 8 alters the
+> existing ARMv7-M platform ARCH_EFM32 to use ARM_SINGLE_ARMV7M.
+> I chose to move the config symbol of the ARMv7-M specific
+> architectures (ARCH_EFM32 at that point) below the multiarch
+> includes. I think it is a good idea to keep them together, but
+> I'm not sure if this is an appropriate place. The architecture
+> which Vybrid is depending on, ARCH_MXC, is not also selectable
+> when ARM_SINGLE_ARMV7M is selected.
+>
+> Since v3, this patchset does not contain the interrupt router
+> driver anymore (MSCM IR). The driver has been merged inbetween:
+> https://lkml.org/lkml/2015/3/8/6
+>
+> This patchset extends the NVIC driver to support irq domain
+> hierarchy and the MSCM IR driver to support NVIC as a parent
+> irq controller.
+>
+> The patchset has proven to be working on the Cortex-M4 of the
+> Vybrid SoC using a Colibri VF61 module.
+>
+> Note: This patchset has dependencies on "ARM: ARMv7-M: Enlarge
+> vector table up to 256 entries" (Maxime Coquelin) and the
 
-On 2015-04-08 21:46, Lucas Stach wrote:
-> Add support for the NAND flash controller found on NVIDIA
-> Tegra 2/3 SoCs.
-> 
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-> ---
-> v2:
-> - remove Tegra 3 compatible
-> - remove useless part_probes
-> - don't store irq number
-> - use gpiod API instead of deprecated of_gpios
-> - don't store reset
-> - correct TIMING_TCS mask
-> - simplify irq handler
-> - correct timing calculations
-> - don't store buswidth
-> - drop compile test
-> - correct ECC handling
-> ---
->  MAINTAINERS                   |   6 +
->  drivers/mtd/nand/Kconfig      |   6 +
->  drivers/mtd/nand/Makefile     |   1 +
->  drivers/mtd/nand/tegra_nand.c | 786 ++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 799 insertions(+)
->  create mode 100644 drivers/mtd/nand/tegra_nand.c
-> 
-[...]
-> +static struct nand_ecclayout tegra_nand_oob_16 = {
-> +	.eccbytes = 4,
-> +	.eccpos = { 3, 4, 5, 6 },
-> +	.oobfree = {
-> +		{ .offset = 7, . length = 8 }
-> +	}
-> +};
-> +
-> +static struct nand_ecclayout tegra_nand_oob_64 = {
-> +	.eccbytes = 36,
-> +	.eccpos = {
-> +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-> +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-> +		35, 36, 37, 38, 39
-> +	},
+I just submitted the patch to Russell's patch tracking system:
+http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8340/1
 
-The amount of eccbytes vs. length of eccpos do not match...
-
-> +	.oobfree = {
-> +		{ .offset = 40, .length = 24 }
-> +	}
-> +};
-> +
-> +static struct nand_ecclayout tegra_nand_oob_128 = {
-> +	.eccbytes = 72,
-> +	.eccpos = {
-> +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-> +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-> +		35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-> +		51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
-> +		67, 68, 69, 70, 71, 72, 73, 74, 75
-> +	},
-
-Here...
-
-> +	.oobfree = {
-> +		{ .offset = 76, .length = 52 }
-> +	}
-> +};
-> +
-> +static struct nand_ecclayout tegra_nand_oob_224 = {
-> +	.eccbytes = 144,
-> +	.eccpos = {
-> +		  3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,
-> +		 15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,
-> +		 27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,
-> +		 39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,
-> +		 51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,
-> +		 63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,
-> +		 75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,
-> +		 87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,
-> +		 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
-> +		111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
-> +		123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
-> +		135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146,
-> +		147
-> +	},
-
-... and here too.
-
-[...]
-> +static int tegra_nand_probe(struct platform_device *pdev)
-> +{
-> +	struct reset_control *rst;
-> +	struct tegra_nand *nand;
-> +	struct nand_chip *chip;
-> +	struct mtd_info *mtd;
-> +	struct resource *res;
-> +	unsigned long value;
-> +	int irq, buswidth, err = 0;
-> +
-> +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
-> +	if (!nand)
-> +		return -ENOMEM;
-> +
-> +	nand->dev = &pdev->dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(nand->regs))
-> +		return PTR_ERR(nand->regs);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
-> +			       dev_name(&pdev->dev), nand);
-> +	if (err)
-> +		return err;
-> +
-> +	rst = devm_reset_control_get(&pdev->dev, "nand");
-> +	if (IS_ERR(rst))
-> +		return PTR_ERR(rst);
-> +
-> +	nand->clk = devm_clk_get(&pdev->dev, "nand");
-> +	if (IS_ERR(nand->clk))
-> +		return PTR_ERR(nand->clk);
-> +
-> +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "nvidia,wp-gpios",
-> +					   GPIOD_OUT_HIGH);
-> +	if (IS_ERR(nand->wp_gpio))
-> +		return PTR_ERR(nand->wp_gpio);
-> +
-> +	buswidth = of_get_nand_bus_width(pdev->dev.of_node);
-> +	if (buswidth < 0)
-> +		return buswidth;
-> +
-> +	err = clk_prepare_enable(nand->clk);
-> +	if (err)
-> +		return err;
-> +
-> +	reset_control_assert(rst);
-> +	udelay(2);
-> +	reset_control_deassert(rst);
-> +
-> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
-> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
-> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
-> +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
-> +	writel(value, nand->regs + HWSTATUS_MASK);
-> +
-> +	init_completion(&nand->command_complete);
-> +	init_completion(&nand->dma_complete);
-> +
-> +	mtd = &nand->mtd;
-> +	mtd->name = dev_name(&pdev->dev);
-> +	mtd->owner = THIS_MODULE;
-> +	mtd->priv = &nand->chip;
-> +
-> +	mtd->type = MTD_NANDFLASH;
-> +	mtd->flags = MTD_CAP_NANDFLASH;
-
-This get filled by nand_scan_tail anyway, any reason to have it here
-too?
-
-Other than that, looks solid to me.
-
-Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-
+Kind regards,
+Maxime
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
