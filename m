@@ -1,131 +1,183 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 06/12] ARM: dts: apq8064: Add MDP support
-Date: Fri, 10 Apr 2015 20:39:34 +0100
-Message-ID: <552826F6.5040105@linaro.org>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669271-11032-1-git-send-email-srinivas.kandagatla@linaro.org> <552802B6.2040804@codeaurora.org>
+From: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Fri, 10 Apr 2015 12:48:39 -0700
+Message-ID: <20150410194839.GA31621@linux.vnet.ibm.com>
+References: <20150408165920.25007.6869.stgit@buzz>
+ <55255F84.6060608@yandex-team.ru>
+ <20150408230740.GB53918@linux.vnet.ibm.com>
+ <CALYGNiP_Ru0PpWoXOYPbviiNuY+9JHDqzL0jDNJeZAtmYZGFUg@mail.gmail.com>
+ <20150409225817.GI53918@linux.vnet.ibm.com>
+ <5527B5EF.8090401@yandex-team.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <552802B6.2040804@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <owner-linux-mm@kvack.org>
+Content-Disposition: inline
+In-Reply-To: <5527B5EF.8090401@yandex-team.ru>
+Sender: owner-linux-mm@kvack.org
+To: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Konstantin Khlebnikov <koct9i@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 10.04.2015 [14:37:19 +0300], Konstantin Khlebnikov wrote:
+> On 10.04.2015 01:58, Tanisha Aravamudan wrote:
+> >On 09.04.2015 [07:27:28 +0300], Konstantin Khlebnikov wrote:
+> >>On Thu, Apr 9, 2015 at 2:07 AM, Nishanth Aravamudan
+> >><nacc@linux.vnet.ibm.com> wrote:
+> >>>On 08.04.2015 [20:04:04 +0300], Konstantin Khlebnikov wrote:
+> >>>>On 08.04.2015 19:59, Konstantin Khlebnikov wrote:
+> >>>>>Node 0 might be offline as well as any other numa node,
+> >>>>>in this case kernel cannot handle memory allocation and crashes.
+> >>>
+> >>>Isn't the bug that numa_node_id() returned an offline node? That
+> >>>shouldn't happen.
+> >>
+> >>Offline node 0 came from static-inline copy of that function from of.h
+> >>I've patched weak function for keeping consistency.
+> >
+> >Got it, that's not necessarily clear in the original commit message.
+> 
+> Sorry.
+> 
+> >
+> >>>#ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
+> >>>...
+> >>>#ifndef numa_node_id
+> >>>/* Returns the number of the current Node. */
+> >>>static inline int numa_node_id(void)
+> >>>{
+> >>>         return raw_cpu_read(numa_node);
+> >>>}
+> >>>#endif
+> >>>...
+> >>>#else   /* !CONFIG_USE_PERCPU_NUMA_NODE_ID */
+> >>>
+> >>>/* Returns the number of the current Node. */
+> >>>#ifndef numa_node_id
+> >>>static inline int numa_node_id(void)
+> >>>{
+> >>>         return cpu_to_node(raw_smp_processor_id());
+> >>>}
+> >>>#endif
+> >>>...
+> >>>
+> >>>So that's either the per-cpu numa_node value, right? Or the result of
+> >>>cpu_to_node on the current processor.
+> >>>
+> >>>>Example:
+> >>>>
+> >>>>[    0.027133] ------------[ cut here ]------------
+> >>>>[    0.027938] kernel BUG at include/linux/gfp.h:322!
+> >>>
+> >>>This is
+> >>>
+> >>>VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES || !node_online(nid));
+> >>>
+> >>>in
+> >>>
+> >>>alloc_pages_exact_node().
+> >>>
+> >>>And based on the trace below, that's
+> >>>
+> >>>__slab_alloc -> alloc
+> >>>
+> >>>alloc_pages_exact_node
+> >>>         <- alloc_slab_page
+> >>>                 <- allocate_slab
+> >>>                         <- new_slab
+> >>>                                 <- new_slab_objects
+> >>>                                         < __slab_alloc?
+> >>>
+> >>>which is just passing the node value down, right? Which I think was
+> >>>from:
+> >>>
+> >>>         domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+> >>>                               GFP_KERNEL, of_node_to_nid(of_node));
+> >>>
+> >>>?
+> >>>
+> >>>
+> >>>What platform is this on, looks to be x86? qemu emulation of a
+> >>>pathological topology? What was the topology?
+> >>
+> >>qemu x86_64, 2 cpu, 2 numa nodes, all memory in second.
+> >
+> >Ok, this worked before? That is, this is a regression?
+> 
+> Seems like that worked before 3.17 where
+> bug was exposed by commit 44767bfaaed782d6d635ecbb13f3980041e6f33e
+> (x86, irq: Enhance mp_register_ioapic() to support irqdomain)
+> this is first usage of  *irq_domain_add*() in x86.
 
+Ok.
 
-On 10/04/15 18:04, Stephen Boyd wrote:
-> On 04/10/15 05:34, Srinivas Kandagatla wrote:
->> @@ -250,6 +265,18 @@
->>   			};
->>   		};
->>
->> +		ext_3p3v: regulator-fixed@1 {
->> +			compatible = "regulator-fixed";
->> +			regulator-min-microvolt = <3300000>;
->> +			regulator-max-microvolt = <3300000>;
->> +			regulator-name = "ext_3p3v";
->> +			regulator-type = "voltage";
->> +			startup-delay-us = <0>;
->> +			gpio = <&tlmm_pinmux 77 GPIO_ACTIVE_HIGH>;
->> +			enable-active-high;
->> +			regulator-boot-on;
->> +		};
->
-> This shouldn't be inside the SoC node because it doesn't have a reg
-> property. It should be in a 'regulators' node that's in the root of the
-> tree:
+> >>  I've slightly patched it to allow that setup (in qemu hardcoded 1Mb
+> >>of memory connected to node 0) And i've found unrelated bug --
+> >>if numa node has less that 4Mb ram then kernel crashes even
+> >>earlier because numa code ignores that node
+> >>but buddy allocator still tries to use that pages.
+> >
+> >So this isn't an actually supported topology by qemu?
+> 
+> Qemu easily created memoryless numa nodes but node 0 have hardcoded
+> 1Mb of ram. This seems like legacy prop for DOS era software.
 
-Is this new DT requirement/style? I have not noticed such a dt style in 
-the past. I might have missed it. Any advantage of doing this way?
->
-> 	regulators {
-> 		compatible = "simple-bus";
->
-> 		ext_3p3v: fixedregulator@0 {
-> 			compatible = "regulator-fixed";
-> 			...
-> 		};
-> 	};
->
-I will move this to the suggested style in next version.
->
->> +
->>   		qcom,ssbi@500000 {
->>   			compatible = "qcom,ssbi";
->>   			reg = <0x00500000 0x1000>;
->> @@ -522,5 +549,82 @@
->>   			compatible = "qcom,tcsr-apq8064", "syscon";
->>   			reg = <0x1a400000 0x100>;
->>   		};
->> +
->> +		hdmi: qcom,hdmi-tx@4a00000 {
->> +			compatible = "qcom,hdmi-tx-8960";
->> +			reg-names = "core_physical";
->> +			reg = <0x04a00000 0x1000>;
->> +			interrupts = <GIC_SPI 79 IRQ_TYPE_NONE>;
->> +			clock-names =
->> +			    "core_clk",
->> +			    "master_iface_clk",
->> +			    "slave_iface_clk";
->> +			clocks =
->> +			    <&mmcc HDMI_APP_CLK>,
->> +			    <&mmcc HDMI_M_AHB_CLK>,
->> +			    <&mmcc HDMI_S_AHB_CLK>;
->> +			qcom,hdmi-tx-ddc-clk = <&tlmm_pinmux 70
->> +						GPIO_ACTIVE_HIGH>;
->> +			qcom,hdmi-tx-ddc-data = <&tlmm_pinmux 71
->> +						GPIO_ACTIVE_HIGH>;
->> +			qcom,hdmi-tx-hpd = <&tlmm_pinmux 72
->> +						GPIO_ACTIVE_HIGH>;
->
-> This should be done via the *-gpios method. i.e. hdmi-tx-ddc-clk-gpios,
-> hdmi-tx-ddc-data-gpios, etc.
->
-Thanks for the inputs,
+Well, the problem is that x86 doesn't support memoryless nodes.
 
-That's true, These are existing bindings, so I can't change it as part 
-of this patch, However I will make another patch to fix this in both 
-drivers and DT for good reasons. Just noticed that bindings are not 
-consistent with the examples and the driver, which I guess is another issue.
->> +			core-vdda-supply = <&pm8921_hdmi_switch>;
->> +			hdmi-mux-supply = <&ext_3p3v>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&hdmi_pinctrl>;
->> +		};
->> +
->> +		gpu: qcom,adreno-3xx@4300000 {
->> +			compatible = "qcom,adreno-3xx";
->> +			reg = <0x04300000 0x20000>;
->> +			reg-names = "kgsl_3d0_reg_memory";
->> +			interrupts = <GIC_SPI 80 IRQ_TYPE_NONE>;
->> +			interrupt-names = "kgsl_3d0_irq";
->> +			clock-names =
->> +			    "core_clk",
->> +			    "iface_clk",
->> +			    "mem_clk",
->> +			    "mem_iface_clk";
->> +			clocks =
->> +			    <&mmcc GFX3D_CLK>,
->> +			    <&mmcc GFX3D_AHB_CLK>,
->> +			    <&mmcc GFX3D_AXI_CLK>,
->> +			    <&mmcc MMSS_IMEM_AHB_CLK>;
->> +			qcom,chipid = <0x03020002>;
->> +			qcom,gpu-pwrlevels {
->> +				compatible = "qcom,gpu-pwrlevels";
->> +				qcom,gpu-pwrlevel@0 {
->> +					qcom,gpu-freq = <450000000>;
->> +				};
->> +				qcom,gpu-pwrlevel@1 {
->> +					qcom,gpu-freq = <27000000>;
->> +				};
->> +			};
->
-> This should be an OPP.
-Yes, that looks reasonable approch, But as I said before the driver and 
-the bindings are still using this style, so I cant change this as part 
-of this patch. I will create another patch to for better bindings with 
-driver fixes too.
+git grep MEMORYLESS_NODES
+arch/ia64/Kconfig:config HAVE_MEMORYLESS_NODES
+arch/powerpc/Kconfig:config HAVE_MEMORYLESS_NODES
 
->
+> >>>Note that there is a ton of code that seems to assume node 0 is online.
+> >>>I started working on removing this assumption myself and it just led
+> >>>down a rathole (on power, we always have node 0 online, even if it is
+> >>>memoryless and cpuless, as a result).
+> >>>
+> >>>I am guessing this is just happening early in boot before the per-cpu
+> >>>areas are setup? That's why (I think) x86 has the early_cpu_to_node()
+> >>>function...
+> >>>
+> >>>Or do you not have CONFIG_OF set? So isn't the only change necessary to
+> >>>the include file, and it should just return first_online_node rather
+> >>>than 0?
+> >>>
+> >>>Ah and there's more of those node 0 assumptions :)
+> >>
+> >>That was x86 where is no CONFIG_OF at all.
+> >>
+> >>I don't know what's wrong with that machine but ACPI reports that
+> >>cpus and memory from node 0 as connected to node 1 and everything
+> >>seems worked fine until lates upgrade -- seems like buggy static-inline
+> >>of_node_to_nid was intoduced in 3.13 but x86 ioapic uses it during
+> >>early allocations only in since 3.17. Machine owner teells that 3.15
+> >>worked fine.
+> >
+> >So, this was a qemu emulation of this actual physical machine without a
+> >node 0?
+> 
+> Yep. Also I have crash from real machine but that stacktrace is messy
+> because CONFIG_DEBUG_VM wasn't enabled and kernel crashed inside
+> buddy allocator when tried to touch unallocated numa node structure.
+> 
+> >
+> >As I mentioned, there are lots of node 0 assumptions through the kernel.
+> >You might run into more issues at runtime.
+> 
+> I think it's possible to trigger kernel crash for any memoryless numa
+> node (not just for 0) if some device (like ioapic in my case) points to
+> it in its acpi tables. In runtime numa affinity configured by user
+> usually validated by the kernel, while numbers from firmware might
+> be used without proper validation.
+> 
+> Anyway seems like at least one x86 machines works fine without
+> memory in node 0.
+
+You're going to run into more issues, without adding proper memoryless
+node support, I think.
+
+-Nish
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
