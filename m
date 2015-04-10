@@ -1,96 +1,46 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [net-next PATCH 2/3] net: macb: Add support for jumbo frames
-Date: Fri, 10 Apr 2015 11:50:58 +0200
-Message-ID: <392788e2-6d6b-44c7-83eb-151d1fde0b49@BN1BFFO11FD052.protection.gbl>
-References: <1428657441-27710-1-git-send-email-harinik@xilinx.com>
- <1428657441-27710-2-git-send-email-harinik@xilinx.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Fri, 10 Apr 2015 11:05:29 +0100
+Message-ID: <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428657441-27710-2-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>, nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, abhimany@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 11:17 AM, Harini Katakam wrote:
-> Check for "cdns,zynqmp-gem" compatible string and enable jumbo frame support
-> in NWCFG register, update descriptor length masks and registers accordingly.
-> Jumbo max length register should be set according to support in SoC; it is
-> set to 10240 for Zynq Ultrascale ZynqMPSoC.
+On Thu, Apr 09, 2015 at 12:37:06PM -0500, Kumar Gala wrote:
+> This patch set adds support for SMP boot on the MSM8x16 family of Qualcomm SoCs.
 > 
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> Reviewed-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> ---
->  drivers/net/ethernet/cadence/macb.c |   19 ++++++++++++++++---
->  drivers/net/ethernet/cadence/macb.h |    8 ++++++++
->  2 files changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-> index 448a323..85de91d 100644
-> --- a/drivers/net/ethernet/cadence/macb.c
-> +++ b/drivers/net/ethernet/cadence/macb.c
-> @@ -779,7 +779,7 @@ static int gem_rx(struct macb *bp, int budget)
->  		}
->  		/* now everything is ready for receiving packet */
->  		bp->rx_skbuff[entry] = NULL;
-> -		len = MACB_BFEXT(RX_FRMLEN, ctrl);
-> +		len = ctrl & bp->rx_frm_len_mask;
->  
->  		netdev_vdbg(bp->dev, "gem_rx %u (len %u)\n", entry, len);
->  
-> @@ -825,7 +825,7 @@ static int macb_rx_frame(struct macb *bp, unsigned int first_frag,
->  	struct macb_dma_desc *desc;
->  
->  	desc = macb_rx_desc(bp, last_frag);
-> -	len = MACB_BFEXT(RX_FRMLEN, desc->ctrl);
-> +	len = desc->ctrl & bp->rx_frm_len_mask;
->  
->  	netdev_vdbg(bp->dev, "macb_rx_frame frags %u - %u (len %u)\n",
->  		macb_rx_ring_wrap(first_frag),
-> @@ -1630,7 +1630,10 @@ static void macb_init_hw(struct macb *bp)
->  	config |= MACB_BF(RBOF, NET_IP_ALIGN);	/* Make eth data aligned */
->  	config |= MACB_BIT(PAE);		/* PAuse Enable */
->  	config |= MACB_BIT(DRFCS);		/* Discard Rx FCS */
-> -	config |= MACB_BIT(BIG);		/* Receive oversized frames */
-> +	if (bp->isjumbo)
-> +		config |= MACB_BIT(JFRAME);	/* Enable jumbo frames */
-> +	else
-> +		config |= MACB_BIT(BIG);	/* Receive oversized frames */
->  	if (bp->dev->flags & IFF_PROMISC)
->  		config |= MACB_BIT(CAF);	/* Copy All Frames */
->  	else if (macb_is_gem(bp) && bp->dev->features & NETIF_F_RXCSUM)
-> @@ -1639,8 +1642,13 @@ static void macb_init_hw(struct macb *bp)
->  		config |= MACB_BIT(NBC);	/* No BroadCast */
->  	config |= macb_dbw(bp);
->  	macb_writel(bp, NCFGR, config);
-> +	if (bp->isjumbo && bp->jumbo_max_len)
-> +		gem_writel(bp, JML, bp->jumbo_max_len);
->  	bp->speed = SPEED_10;
->  	bp->duplex = DUPLEX_HALF;
-> +	bp->rx_frm_len_mask = MACB_RX_FRMLEN_MASK;
-> +	if (bp->isjumbo)
-> +		bp->rx_frm_len_mask = MACB_RX_JFRMLEN_MASK;
->  
->  	macb_configure_dma(bp);
->  
-> @@ -2759,6 +2767,11 @@ static int macb_probe(struct platform_device *pdev)
->  	bp->pclk = pclk;
->  	bp->hclk = hclk;
->  	bp->tx_clk = tx_clk;
-> +	if (of_device_is_compatible(pdev->dev.of_node, "cdns,zynqmp-gem")) {
-> +		bp->isjumbo = 1;
-> +		bp->jumbo_max_len = GEM_ZYNQMP_JUMBO_MAX;
-> +	}
+> To support SMP on the MSM8x16 SoCs we need to add ARMv8/64-bit SCM interfaces to
+> setup the boot/release addresses for the secondary CPUs.  In addition we need
+> a uniquie set of cpu ops.  I'm aware the desired methods for booting secondary
+> CPUs is either via spintable or PSCI.  However, these SoCs are shipping with a
+> firmware that does not support those methods.
 
-Not like this.
+And the reason is? Some guesses:
 
-Nicolas will look at the rest but I think you should extend "struct
-macb_config" and add that setup there instead of checking compatible
-string here.
-Maybe isjumbo can be hadled via caps bit already present in this
-structure but please wait for others.
+a) QC doesn't think boot interface (and cpuidle) standardisation is
+   worth the effort (to put it nicely)
+b) The hardware was available before we even mentioned PSCI
+c) PSCI is not suitable for the QC's SCM interface
+d) Any combination of the above
 
-Thanks,
-Michal
+I strongly suspect it's point (a). Should we expect future QC hardware
+to do the same?
+
+You could argue the reason was (b), though we've been discussing PSCI
+for at least two years and, according to QC press releases, MSM8916
+started sampling in 2014.
+
+The only valid reason is (c) and if that's the case, I would expect a
+proposal for a new firmware interface protocol (it could be PSCI-based),
+well documented, that can be shared with others that may encounter the
+same shortcomings.
+
+-- 
+Catalin
