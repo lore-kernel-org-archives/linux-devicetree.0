@@ -1,60 +1,64 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] i2c: Support for Netlogic XLP9XX/5XX I2C
- controller
-Date: Fri, 10 Apr 2015 19:17:08 +0200
-Message-ID: <20150410171707.GD2408@katana>
-References: <1426679430-26134-1-git-send-email-jchandra@broadcom.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 05/12] ARM: dts: apq8064: Add SATA controller support.
+Date: Fri, 10 Apr 2015 10:24:59 -0700
+Message-ID: <5528076B.1010808@codeaurora.org>
+References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org> <1428669263-10990-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OROCMA9jn6tkzFBc"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1426679430-26134-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1428669263-10990-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, galak@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bjorn.andersson@sonymobile.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/10/15 05:34, Srinivas Kandagatla wrote:
+> This patch adds AHCI based SATA controller support to APQ8064.
+> Tested on IFC6410 board.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  9 ++++++++
+>  arch/arm/boot/dts/qcom-apq8064.dtsi        | 35 ++++++++++++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> index 122bf34..c9c9c5e 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> @@ -116,6 +116,15 @@
+>  			};
+>  		};
+>  
+> +		sata_phy0: sata-phy@1b400000{
 
---OROCMA9jn6tkzFBc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Space before '{' please.
 
+> +			status = "okay";
+> +		};
+> +
+> +		sata0: sata@29000000 {
+> +			status		= "okay";
+> +			target-supply	= <&pm8921_s4>;
+> +		};
+> +
+>  		/* OTG */
+>  		usb1_phy: phy@12500000 {
+>  			status		= "okay";
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 5aac9a5..56cc65e 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -379,6 +379,41 @@
+>  			usb-phy		= <&usb4_phy>;
+>  		};
+>  
+> +		sata_phy0: sata-phy@1b400000{
 
-> Changes v3->v4:
-> * Second round of changes from Uwe Kleine-K=C3=B6nig's review:
-> * Changes for comments from Arnd Bergmann
-> =20
-> Changes v2->v3:
-> * Implement changes from Uwe Kleine-K=C3=B6nig's review:
->=20
-> Changes v1->v2:
-> * Implement changes from Ray Jui's review
+Space before '{' please. Also I wonder if it should just be called
+phy@1b400000 because phy is more standard than sata-phy.
 
-Thanks to Ray, Uwe, and Arnd for the reviews. Much appreciated!
-
-
---OROCMA9jn6tkzFBc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVKAWTAAoJEBQN5MwUoCm28pAP/2RIihp13Sz0r5qrlCs9Uc26
-teTqEjexE5172uTVso8XeVv5C2qnsPkJJrt1sglqUBTM865OJHOQXdRYYurPUFq9
-emnkjYzrwsHsfkRHNpmB2ppm/WrQtdpRKkQzBHfqWOzuxNRVPa/KdZORXRnx/J29
-h+7TmO301WvVK95wlL5R5i7OwJh9h7nEFXWfTfLNSUp7a4OKOCH05VftJG/4T5vy
-/QiHqEnL5xw2n0bMjTspLIEJGg1zBFcgYUkXYcM4kpwQUqOh9fPqFEVN/ejOOmbb
-NC1tq+/VE4GSv7DvGGOh4PRDQqElV6OLOS8PgFD0uVW2RpYseBR2B/I1GUjiXtbg
-RLcVrNQLmjYGhUWIOMTDNrFefzpoSxTQFWKkhj1JbmLQpCwWEmbv7MUCEVIm6aCg
-jIlVYcWe2KURbZqJIaRnrV42pw31tR2WQOvrSJxwYQjEnWxNoGtu/7hgXcr3eSMl
-gGWbvuJtatKyn5rBvIoqTaPC70eTCV5oZV+vCMGAcC2ErAkeux5TcIMTjbxjWeg8
-iO4q1FOOPUMvYDyfAYoEZ3eKbOMOrNYblKMDd1GNF/dNxbPLnPnnjnxq5RDGeT0p
-5mHMpr0cvZDcoYfJw/b0gg5FvxiknieSW0ot/oPKzb55xpapeXH9eMs/I808fWKk
-g/Ym7FOGTlUzGgvCQRLB
-=ooR3
------END PGP SIGNATURE-----
-
---OROCMA9jn6tkzFBc--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
