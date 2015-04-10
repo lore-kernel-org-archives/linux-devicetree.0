@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 10/11] ARM: dts: apq8064: Move i2c1 pinctrl to apq8064.dtsi
-Date: Fri, 10 Apr 2015 21:44:40 +0100
-Message-ID: <1428698680-12324-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 03/11] ARM: dts: apq8064: Add usb host support.
+Date: Fri, 10 Apr 2015 21:43:30 +0100
+Message-ID: <1428698610-12030-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,50 +10,112 @@ To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
 Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-I2C1 pinctrl is not really specific to a board, moving to SOC dtsi would
-avoid redefining this in every board.
+This patch adds device tree nodes to support two usb hosts on APQ8064
+SOC.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 7 -------
- arch/arm/boot/dts/qcom-apq8064.dtsi        | 7 +++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 22 ++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi        | 47 ++++++++++++++++++++++++++++++
+ 2 files changed, 69 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 528cb31..f97339a 100644
+index ca2d7ba..8fe60fc 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -11,13 +11,6 @@
- 
- 	soc {
- 		pinctrl@800000 {
--			i2c1_pins: i2c1 {
--				mux {
--					pins = "gpio20", "gpio21";
--					function = "gsbi1";
--				};
--			};
--
- 			card_detect: card_detect {
- 				mux {
- 					pins = "gpio26";
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 93de48a..345ea08 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -113,6 +113,13 @@
- 					function = "ps_hold";
- 				};
+@@ -116,6 +116,28 @@
  			};
-+
-+			i2c1_pins: i2c1 {
-+				mux {
-+					pins = "gpio20", "gpio21";
-+					function = "gsbi1";
-+				};
-+			};
  		};
  
- 		intc: interrupt-controller@2000000 {
++		usb3_phy: phy@12520000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		usb4_phy: phy@12530000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		usb3: usb@12520000 {
++			status = "okay";
++		};
++
++		usb4: usb@12530000 {
++			status = "okay";
++		};
++
+ 		amba {
+ 			/* eMMC */
+ 			sdcc1: sdcc@12400000 {
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 19629c9..99d8e07 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -2,6 +2,7 @@
+ 
+ #include "skeleton.dtsi"
+ #include <dt-bindings/clock/qcom,gcc-msm8960.h>
++#include <dt-bindings/reset/qcom,gcc-msm8960.h>
+ #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
+ #include <dt-bindings/soc/qcom,gsbi.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -300,6 +301,52 @@
+ 			};
+ 		};
+ 
++		usb3_phy: phy@12520000 {
++			compatible	= "qcom,usb-otg-ci";
++			reg		= <0x12520000 0x400>;
++			interrupts	= <GIC_SPI 188 IRQ_TYPE_NONE>;
++			status		= "disabled";
++			dr_mode		= "host";
++
++			clocks		= <&gcc USB_HS3_XCVR_CLK>,
++					  <&gcc USB_HS3_H_CLK>;
++			clock-names	= "core", "iface";
++
++			resets		= <&gcc USB_HS3_RESET>;
++			reset-names	= "link";
++		};
++
++		usb4_phy: phy@12530000 {
++			compatible	= "qcom,usb-otg-ci";
++			reg		= <0x12530000 0x400>;
++			interrupts	= <GIC_SPI 215 IRQ_TYPE_NONE>;
++			status		= "disabled";
++			dr_mode		= "host";
++
++			clocks		= <&gcc USB_HS4_XCVR_CLK>,
++					  <&gcc USB_HS4_H_CLK>;
++			clock-names	= "core", "iface";
++
++			resets		= <&gcc USB_HS4_RESET>;
++			reset-names	= "link";
++		};
++
++		usb3: usb@12520000 {
++			compatible	= "qcom,ehci-host";
++			reg		= <0x12520000 0x400>;
++			interrupts	= <GIC_SPI 188 IRQ_TYPE_NONE>;
++			status		= "disabled";
++			usb-phy		= <&usb3_phy>;
++		};
++
++		usb4: usb@12530000 {
++			compatible	= "qcom,ehci-host";
++			reg		= <0x12530000 0x400>;
++			interrupts	= <GIC_SPI 215 IRQ_TYPE_NONE>;
++			status		= "disabled";
++			usb-phy		= <&usb4_phy>;
++		};
++
+ 		/* Temporary fixed regulator */
+ 		vsdcc_fixed: vsdcc-regulator {
+ 			compatible = "regulator-fixed";
 -- 
 1.9.1
