@@ -1,65 +1,93 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Thu, 9 Apr 2015 18:54:13 -0500
-Message-ID: <1428623653.22867.562.camel@freescale.com>
-References: <1428379720-3247-1-git-send-email-igal.liberman@freescale.com>
-	 <1428446404.22867.479.camel@freescale.com>
-	 <DM2PR03MB383BB3A8993435B4F7D2EFDE6FC0@DM2PR03MB383.namprd03.prod.outlook.com>
+From: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: add core audio driver for Broadcom Cygnus SOC.
+Date: Thu, 9 Apr 2015 19:06:22 -0700
+Message-ID: <5527301E.6070906@broadcom.com>
+References: <1427771784-29950-1-git-send-email-sbranden@broadcom.com> <1427771784-29950-3-git-send-email-sbranden@broadcom.com> <20150331064209.GD2869@sirena.org.uk> <551D8EB6.1050004@broadcom.com> <20150406161939.GJ6023@sirena.org.uk> <552492E1.3050207@broadcom.com> <20150408192309.GI6023@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR03MB383BB3A8993435B4F7D2EFDE6FC0-ufbTtyGzTTRJonC5hhDUuuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+In-Reply-To: <20150408192309.GI6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, bryeung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, pwestin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-04-08 at 03:54 -0500, Liberman Igal-B31950 wrote:
-> Hi Scott
-> 
-> Regards,
-> Igal Liberman.
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Wednesday, April 08, 2015 1:40 AM
-> > To: Liberman Igal-B31950
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Subject: Re: [PATCH] dt/bindings: qoriq-clock: Add binding for FMan clock
-> > mux
-> > 
-> > On Tue, 2015-04-07 at 07:08 +0300, Igal.Liberman wrote:
-> > > From: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > >
-> > > Signed-off-by: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/clock/qoriq-clock.txt      |   59
-> > ++++++++++++++++++++
-> > >  1 file changed, 59 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > > index df4a259..a7e84ce 100644
-> > > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > > @@ -65,6 +65,7 @@ Required properties:
-> > >  		It takes parent's clock-frequency as its clock.
-> > >  	* "fsl,qoriq-platform-pll-1.0" for the platform PLL clock (v1.0)
-> > >  	* "fsl,qoriq-platform-pll-2.0" for the platform PLL clock (v2.0)
-> > > +	* "fsl,fman-clk-mux" for the Frame Manager clock.
-> > 
-> > Is there any versioning required on this?
-> > 
-> 
-> I don't think we need versioning here.
 
-Even though we needed it on the other nodes?
 
--Scott
-
+On 15-04-08 12:23 PM, Mark Brown wrote:
+> On Tue, Apr 07, 2015 at 07:30:57PM -0700, Lori Hikichi wrote:
+>> On 15-04-06 09:19 AM, Mark Brown wrote:
+>=20
+>>> OK, so that seems fragile - what happens if we're slightly late
+>>> processing an interrupt or miss one entirely?  Most hardware has so=
+me
+>>> way to read back the current position which tends to be more reliab=
+le,
+>>> is that not an option here?
+>=20
+>> The hardware updates a read pointer (rdaddr) which we feed to ALSA v=
+ia the
+>> ".pointer" hook. So yes, the hardware does have a register that tell=
+s us its
+>> progress.  This routine (ringbuf_inc) actually updates a write point=
+er
+>> (wraddr) which is a misnomer.  The write pointer doesn=E2=80=99t act=
+ually tell us
+>> where we are writing to =E2=80=93 ALSA keeps track of that. The wrad=
+dr only prevents
+>> the hardware from reading past it.  We just use it, along with a low=
+ water
+>> mark configuration register, to keep the periodic interrupts firing.=
+  The
+>> hardware is tracking the distance between rdaddr and wraddr and comp=
+aring
+>> that to the low water mark.
+>=20
+> The code has handling for both read and write so it's not just updati=
+ng
+> a write pointer.  Is there no flexibility in the hardware regarding
+> interrupt generation?
+>=20
+>> Being late processing the interrupt is okay since there are more sam=
+ples to
+>> read.  That is, it was only a low water mark interrupt and we have o=
+ne
+>> period of valid data still (we configure low water to be one period)=
+=2E
+>> Missing an interrupt is okay since the hardware will just stop readi=
+ng from
+>> buffer when rdaddr has hit wraddr.
+>=20
+> Stopping if we miss an interrupt is precisely the sort of situation w=
+e
+> want to avoid if we can - if the application is sufficiently far ahea=
+d
+> of the hardware everything should continue to work fine.  The minimal
+> period size appears to be very small so this is a potential issue, if=
+ an
+> application tries to use many very small periods it's both more
+> vulnerable to some other interrupt taking longer than might be desira=
+ble
+> and likely that things would be fine as the application is hopefully
+> more than one period ahead of where the hardware is at.
+>=20
+> If the hardware is always going to halt at the end of the period ther=
+e's
+> not a huge amount we can do about this except possibly raise the mini=
+mum
+> period if systems are running into trouble but if there's a way to av=
+oid
+> doing that then that would be even better.
+>=20
+Makes sense, thanks for clarifying the desired behaviour, I will make t=
+he=20
+necessary adjustments to keep the hardware supplied with valid data eve=
+n if=20
+interrupts are held off past a whole period.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
