@@ -1,65 +1,73 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
-Date: Thu, 9 Apr 2015 22:55:40 -0500
-Message-ID: <1428638140.22867.583.camel@freescale.com>
-References: <1427782669-20368-1-git-send-email-hongtao.jia@freescale.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH RESEND v6 0/6] mfd: axp20x: add AXP221 PMIC support
+Date: Fri, 10 Apr 2015 12:09:00 +0800
+Message-ID: <1428638946-24890-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427782669-20368-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3UZTWUQKGQE7DFYKLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-03-31 at 14:17 +0800, Jia Hongtao wrote:
-> This is Thermal Monitoring Unit for QorIQ platform.
-> 
-> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/thermal/qoriq-thermal.txt  | 58 +++++++++++++++
->  arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi   | 82 ++++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi        |  1 +
->  3 files changed, 141 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
->  create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-> new file mode 100644
-> index 0000000..dfc17fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-> @@ -0,0 +1,58 @@
-> +* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-> +
-> +Required properties:
-> +- compatible : "fsl,qoriq-tmu".
+Hi Lee,
 
-compatible: Must include "fsl,qoriq-tmu". The version of the device is
-	    determined by the TMU IP Block Revision Register (IPBRR0)
-	    at offset 0x0BF8.
+This is a resend of the AXP221 PMIC series, rebased onto the latest
+for-mfd-next.
 
-	    Table of correspondences between IPBRR0 values and example  
-	    chips:
-		Value           Device
-		-----------     -------
-		0x01900102      T1040
+Original changelog
 
-> +- reg : address range of TMU registers.
-> +- interrupts : should contain the interrupt for TMU.
+Changes since v5:
 
-s/should contain/contains/
+    - Rebased onto mfd-for-next (ba867bc60a44)
 
-> +- calibration : calibration table for TMU.
+    - Dropped dts patches
 
-What is the format of the calibration table, and where does one get the
-data?
+    - Removed double line spacing
 
--Scott
+Changes since v4:
+
+  - Rebased onto v4.0-rc1 and axp20x bindings v10
+
+  - Dropped regulator set registration patches
+
+  - Group regmap ranges/tables by AXP variant
+
+  - Fix AXP221 interrupt numbers to match datasheet
+
+  - Handle AXP variants when setting DC-DC regulator work mode
+
+  - Add "switch" type regulator DC1SW, which is a secondary output
+    of DCDC1 with a separate on/off switch.
+
+  - Add AXP221 to DT bindings
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+ChenYu
+
+Boris BREZILLON (3):
+  mfd: axp20x: add AXP22x PMIC support
+  regulator: axp20x: prepare support for multiple AXP chip families
+  regulator: axp20x: add support for AXP22X regulators
+
+Chen-Yu Tsai (3):
+  mfd: axp20x: update DT bindings with AXP22x compatibles
+  mfd: axp20x: Add AXP22x regulator information to DT bindings
+  mfd: axp20x: Enable AXP22X regulators
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt |  32 ++-
+ drivers/mfd/axp20x.c                             | 100 ++++++++++
+ drivers/regulator/axp20x-regulator.c             | 239 ++++++++++++++++++-----
+ include/linux/mfd/axp20x.h                       |  86 ++++++++
+ 4 files changed, 405 insertions(+), 52 deletions(-)
+
+-- 
+2.1.4
