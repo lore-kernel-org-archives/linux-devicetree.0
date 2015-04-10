@@ -1,150 +1,219 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 04/10] eeprom: Add a simple EEPROM framework for
- eeprom consumers
-Date: Fri, 10 Apr 2015 13:45:50 +0200
-Message-ID: <20150410114550.GR26727@lukather>
-References: <1427752492-17039-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1427752670-17219-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150407184533.GA10278@codeaurora.org>
- <55243982.7020907@linaro.org>
- <20150409144522.GB9663@codeaurora.org>
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: Re: [PATCH 6/6] hwmon: pwm-fan: Update the duty cycle inorder to
+ control the pwm-fan
+Date: Fri, 10 Apr 2015 14:00:01 +0200
+Message-ID: <1428667201.22057.20.camel@collabora.co.uk>
+References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
+	 <1427387955-5129-7-git-send-email-linux.amoon@gmail.com>
+	 <20150408104415.07e1c821@amdc2363> <20150408153214.GA15942@roeck-us.net>
+	 <CANAwSgSD52sDpP7NH2hhiZX-=LZF6Qo-X3enqsqM+5XAMfyP=Q@mail.gmail.com>
+	 <20150408165351.GA22846@roeck-us.net>
+	 <CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
+	 <CANAwSgRSxj9frUHRXh3JwD+bpnFrj8WkpDMKHZn-OPmuCEgP7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="foM9DbudB2CcldhH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150409144522.GB9663@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgRSxj9frUHRXh3JwD+bpnFrj8WkpDMKHZn-OPmuCEgP7w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
+Hey Anand,
 
---foM9DbudB2CcldhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Stephen,
-
-On Thu, Apr 09, 2015 at 07:45:22AM -0700, Stephen Boyd wrote:
-> > eeprom block array is just another way intended to get hold of
-> > eeprom content for non-DT providers/consumers, but DT
-> > consumers/providers can also use it. As of today SOC/mach level code
-> > could use it as well.
-> >=20
-> > In eeprom_cell_get() case the lookup of provider is done based on
-> > provider name, this provider name is generally supplied by all the
-> > providers (both DT/non DT).
-> >=20
-> > for example in qfprom case,
-> > provider is registered from DT with eeprom config containing a unique n=
-ame:
-> > static struct eeprom_config econfig =3D {
-> > 	.name =3D "qfprom",
-> > 	.id =3D 0,
-> > };
-> >=20
-> > In the consumer case, the tsens driver could do some like in non DT way:
-> >=20
-> > 	struct eeprom_block blocks[4] =3D{
-> > 		{
-> > 		.offset =3D 0x404,
-> > 		.count =3D 0x4,
-> > 		},
-> > 		{
-> > 		.offset =3D 0x408,
-> > 		.count =3D 0x4,
-> > 		},
-> > 		{
-> > 		.offset =3D 0x40c,
-> > 		.count =3D 0x4,
-> > 		},
-> > 		{
-> > 		.offset =3D 0x410,
-> > 		.count =3D 0x4,
-> > 		},
-> > 	};
-> > 	calib_cell =3D eeprom_cell_get("qfprom0", blocks, 4);
-> >=20
-> >=20
-> > Or in DT way
-> > calib_cell  =3D of_eeprom_cell_get(np, "calib");
-> >=20
+On Fri, 2015-04-10 at 16:58 +0530, Anand Moon wrote:
+> Hi Guenter/Lukasz,
 >=20
-> Ok. I guess I was hoping for a more device centric approach like
-> we have for clks/regulators/etc. That way a driver doesn't need
-> to know it's using DT or not to figure out which API to call.
-> Also the global namespace is sort of worrying (qfprom0 part). How
-> do we know it's qfprom0? What if it's qfprom1 sometimes?
-
-Through platform_data?
-
-Or maybe that could be done using a function that would attach a cell
-to a struct device?
-
-I'm not sure that would cover all cases though.
-
-> Also, how are we supposed to encode certain bits inside the
-> stream of bytes (blocks)? In some situations (e.g. the qcom CPR
-> stuff) we have quite a few fuse bits we need to read that are
-> packed into different bytes and may cross byte boundaries (i.e.
-> bits 6 to 10 of a 32-bit word). The current API looks to be byte
-> focused when I have bit based/non-byte aligned data.
+> Earlier I send v2 version of the patch spiking this one.
 >=20
-> My current feeling is that I don't want to use any of the block
-> stuff at all. I just want a simple byte-based API that allows me
-> to read a number of contiguous bytes from the fuses. Then I'll
-> need to shift that data down by a few bits and mask it with the
-> width of the data I want to read to extract the data needed.
+> Markus Riechl came back to me with below mail.
+> So This patch confirms fixes the bug.
+>=20
+> I will send v3 version of the patch. Earlier I was in delima about th=
+e bug.
+>=20
+> -Anand Moon
+> -------------------------------------------
+> Hi Anand,
+>=20
+> I tested your patch.
+>=20
+> After booting the fan is spinning despite only 44=C2=B0C.
+>=20
+> /sys/class/thermal/cooling_device0/curstate is 0.
+> /sys/class/hwmon/hwmon4/pwm1 is 0
+>=20
+> when I echo 1 > cur_state and then echo 0 > cur_state again,
+> the fan switches to off and behaves as expected.
+>=20
+> It looks like there is a bug in initializing the pwm output
+> immediately after booting.
 
-Except that this is highly dependent on the usage you're making of
-this API.
+The problem here will be that at boot the PWM runs at full duty. With
+the current exynos PWM drive if you disable the PWM it will stop pulsin=
+g
+but remain high if it was at 100% duty. My patch on which you depend
+upon fixed a race  where disabling the pwm right after changing the dut=
+y
+cycle (e.g. to 0%) also kept the signal high.=20
 
-It could be fine to expect that if your writing machine code, that for
-one given SoC will always be true.
+=46rom looking at other PWM users at the time it seemed that most if no=
+t
+all always first set to duty to 0% and then disable the pwm. Which
+should work fine on exynos now. However iirc Thierry recently clarified
+that the expected result of pwm_disable is not just that the modulation
+stops but also that the output signal goes low, although that's not ver=
+y
+explicit in the current pwm documentation.. The exynos PWM driver will
+need another fix tweak to make that true.
 
-If you're writing driver code, that will just have to lookup one value
-=66rom an EEPROM, the exact offset, size and device being completely
-board dependant, it's not really practical.
 
-> The only thing after that where I have a problem is figuring out
-> which eeprom is present in the consumer driver.
 
-Is that really necessary? I mean, the point of having an abstraction
-layer is precisely to *not* care about the provider when you are the
-consumer.
+> Best Regards,
 
-If we can't, then the abstraction layer is not good enough and we
-should improve it, but we shouldn't need to hack around it.
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---foM9DbudB2CcldhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVJ7fuAAoJEBx+YmzsjxAgaiQP/3i9NmguuibkO56JVHuDSIKn
-eIfYWZ+iRQGUgrHLnrW4vrCkd8ymZn/I6feoOAlIl72oQtw5WrqJWDI38EU/51IB
-sbVDa2EavUgrxOJDvq0ULKWbPcd8GRfqRZl4Jbr9NbOgjslpyROsHVI7a2uqLfJs
-hJjf9t6RkLijwkC29caQXZeeNcZHpdt2hx1szx+fyUwaGkHoDz8pHuISwiCWsSSD
-kJJyfYN3Y234jFxwd9930Br2QXIXN2APhgBuAkxzHAKMpaV8C+E1sEa7weVTBeBZ
-twHybsyvCWpKlr7F58ScL0eV7bu3LSok1MnUpkjsG1RX61RqmnK8zhE1lS8z4gW+
-eMcs0UzQ4AOjlTOoZKs5HqXOwszmAA/L1o5BXH9ik7Ol0ZeQj+WXpi3yAyoFjgOz
-7XYxKAewvPV2DP/QlnrOoeM4zrXT95qyH80MIiLTdz7h+geGohLZcxjlAnY//hr3
-PeuGArWxEQ+U8dIF2RDpRxd0+QCHbQNPxLgsf223pgxbVGXPw+d/sNrbGxyA6ydl
-Dy5947+Bxv9ICQYzDMajIoWuuuQaukpCJWXDrbThbAm/ZoaJsXbGSjO6oWfOTcEv
-l16eqlY0L29S7h3uWIekN3Xa2VYvT2EbdsB8vkAwVoOccabnzC40E+1SUejxLXb5
-RQWwM7OgFLeHOx6qAXYq
-=xdxJ
------END PGP SIGNATURE-----
-
---foM9DbudB2CcldhH--
+> --
+> Markus Reichl
+>=20
+> On 8 April 2015 at 23:19, Anand Moon <linux.amoon@gmail.com> wrote:
+> > Hi Guenter,
+> >
+> > Sorry my blunder mistake. Sorry for the noise.
+> >
+> > I just tested with spiking this patch and my observation and testin=
+g
+> > were wrong we can skip this patch.
+> >
+> > I will send an v2 patch series removing the patch 5 and patch 6.
+> >
+> > With correct dts changes.
+> >
+> > Thanks for pointing my mistake.
+> >
+> > -Anand Moon
+> >
+> > On 8 April 2015 at 22:23, Guenter Roeck <linux@roeck-us.net> wrote:
+> >> On Wed, Apr 08, 2015 at 09:32:05PM +0530, Anand Moon wrote:
+> >>> Hi Guenter,
+> >>>
+> >>> Initially the board bootup the cooling level state is 0.
+> >>> So update the duty cycle and this power off the fan.
+> >>> As their is no state change the fan will not spin.
+> >>>
+> >>> Once the temperature sensor is reached to alert temperature it ch=
+anges state.
+> >>> With the state change the fan cools the CPU and then stop's
+> >>>
+> >>> I have observed this state change with tmon utility in linux/tool=
+s/thermal/tmon/
+> >>>
+> >> Sorry, I am missing something. I still don't see what problem you =
+are fixing
+> >> with this patch. What behavior is wrong with the current code, and=
+ how does your
+> >> patch fix it ?
+> >>
+> >> Guenter
+> >>
+> >>> -Anand Moon
+> >>>
+> >>> On 8 April 2015 at 21:02, Guenter Roeck <linux@roeck-us.net> wrot=
+e:
+> >>> > On Wed, Apr 08, 2015 at 10:44:15AM +0200, Lukasz Majewski wrote=
+:
+> >>> >> Hi Anand,
+> >>> >>
+> >>> >> > Below changes depend on following patch.
+> >>> >> > https://patchwork.kernel.org/patch/5944061/
+> >>> >> >
+> >>> >> > Update the pwm_config with duty then update the pwm_disable
+> >>> >> > to poweroff the cpu fan.
+> >>> >> >
+> >>> >
+> >>> > Unfortunately, the patch does not include an explanation why it=
+ is needed.
+> >>> >
+> >>> > The original code presumably did not update the duty cycle beca=
+use
+> >>> > pwm was about to be disabled anyway. That kind of made sense to=
+ me.
+> >>> > Updating the duty cycle to 0 just to disable the pwm channel ri=
+ght
+> >>> > afterwards does not immediately make sense.
+> >>> >
+> >>> > Given that, I would expect to see a rationale here. Why is this=
+ patch needed ?
+> >>> > Does it fix a bug ? If yes, pelase describe the bug. If not, wh=
+at is the
+> >>> > purpose of this patch ?
+> >>> >
+> >>> > Maybe that is all explained in patch 0/6, which I was not copie=
+d on. Even
+> >>> > if so, the reationale will be needed in the changelog to explai=
+n to future
+> >>> > developers why this change was made.
+> >>> >
+> >>> > Thanks,
+> >>> > Guenter
+> >>> >
+> >>> >> > Tested on OdroidXU3 board.
+> >>> >> >
+> >>> >> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> >>> >> > ---
+> >>> >> >  drivers/hwmon/pwm-fan.c | 10 ++++------
+> >>> >> >  1 file changed, 4 insertions(+), 6 deletions(-)
+> >>> >> >
+> >>> >> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan=
+=2Ec
+> >>> >> > index 7c83dc4..f25c841 100644
+> >>> >> > --- a/drivers/hwmon/pwm-fan.c
+> >>> >> > +++ b/drivers/hwmon/pwm-fan.c
+> >>> >> > @@ -44,26 +44,24 @@ static int  __set_pwm(struct pwm_fan_ctx=
+ *ctx,
+> >>> >> > unsigned long pwm) int ret =3D 0;
+> >>> >> >
+> >>> >> >     mutex_lock(&ctx->lock);
+> >>> >> > +
+> >>> >
+> >>> > [ please refrain from unnecessary whitespace changes ]
+> >>> >
+> >>> >> >     if (ctx->pwm_value =3D=3D pwm)
+> >>> >> >             goto exit_set_pwm_err;
+> >>> >> >
+> >>> >> > -   if (pwm =3D=3D 0) {
+> >>> >> > -           pwm_disable(ctx->pwm);
+> >>> >> > -           goto exit_set_pwm;
+> >>> >> > -   }
+> >>> >> > -
+> >>> >> >     duty =3D DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MAX_=
+PWM);
+> >>> >> >     ret =3D pwm_config(ctx->pwm, duty, ctx->pwm->period);
+> >>> >> >     if (ret)
+> >>> >> >             goto exit_set_pwm_err;
+> >>> >> >
+> >>> >> > +   if (pwm =3D=3D 0)
+> >>> >> > +           pwm_disable(ctx->pwm);
+> >>> >> > +
+> >>> >> >     if (ctx->pwm_value =3D=3D 0) {
+> >>> >> >             ret =3D pwm_enable(ctx->pwm);
+> >>> >> >             if (ret)
+> >>> >> >                     goto exit_set_pwm_err;
+> >>> >> >     }
+> >>> >> >
+> >>> >> > -exit_set_pwm:
+> >>> >> >     ctx->pwm_value =3D pwm;
+> >>> >> >  exit_set_pwm_err:
+> >>> >> >     mutex_unlock(&ctx->lock);
+> >>> >>
+> >>> >> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+> >>> >>
+> >>> >> BTW: I've added Guenter to CC.
+> >>> >>
+> >>> >> --
+> >>> >> Best regards,
+> >>> >>
+> >>> >> Lukasz Majewski
+> >>> >>
+> >>> >> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
