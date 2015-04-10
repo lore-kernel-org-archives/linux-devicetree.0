@@ -1,58 +1,27 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH] ARM: socfpga: dts: Add a ciu clock node for sdmmc
-Date: Fri, 10 Apr 2015 15:56:26 -0500
-Message-ID: <1428699386-2622-1-git-send-email-dinguyen@opensource.altera.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v3 01/11] ARM: dts: apq8064: add RPM regulators support
+Date: Fri, 10 Apr 2015 14:04:24 -0700
+Message-ID: <20150410210424.GQ19186@sonymobile.com>
+References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1428698564-11938-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1428698564-11938-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Fri 10 Apr 13:42 PDT 2015, Srinivas Kandagatla wrote:
 
-The CIU(Card Interface Unit) clock is used by the dw_mmc IP to clock an SD
-card. The ciu_clk is the sdmmc_clk passed through a fixed divider of 4. This patch
-adds the ciu_clk node and makes the sdmmc_clk it's parent.
+> This patch adds rpm node to apq8064 dt as rpm would be used by other
+> devices for regulator support.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- arch/arm/boot/dts/socfpga.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index d9176e6..25418ee 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -451,6 +451,14 @@
- 						clk-phase = <0 135>;
- 					};
- 
-+					ciu_clk: ciu_clk {
-+						#clock-cells = <0>;
-+						compatible = "altr,socfpga-gate-clk";
-+						clocks = <&sdmmc_clk>;
-+						clk-gate = <0xa0 8>;
-+						fixed-divider = <4>;
-+					};
-+
- 					nand_x_clk: nand_x_clk {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-gate-clk";
-@@ -635,7 +643,7 @@
- 			fifo-depth = <0x400>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-+			clocks = <&l4_mp_clk>, <&ciu_clk>;
- 			clock-names = "biu", "ciu";
- 		};
- 
--- 
-2.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
