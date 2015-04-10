@@ -1,78 +1,108 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [RFC PATCH v3 3/4] arm64: smp: move the pen to a header file
-Date: Fri, 10 Apr 2015 15:43:24 -0500
-Message-ID: <1428698605-13166-4-git-send-email-galak@codeaurora.org>
-References: <1428698605-13166-1-git-send-email-galak@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428698605-13166-1-git-send-email-galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 04/11] ARM: dts: apq8064: Add USB OTG support
+Date: Fri, 10 Apr 2015 21:43:42 +0100
+Message-ID: <1428698622-12072-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+This patch adds USB OTG support on USB1 of APQ8064 SOC.
+Tested on IFC6410 with ethernet gadget.
 
-Move the secondary_pen_release variable and the secondary_holding_pen
-entry function to asm/smp_plat.h so that the other cpu ops implementations
-can share them.
-
-Signed-off-by: Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/include/asm/smp_plat.h  | 2 ++
- arch/arm64/kernel/smp.c            | 1 +
- arch/arm64/kernel/smp_spin_table.c | 3 ---
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 17 ++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi        | 32 ++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/arch/arm64/include/asm/smp_plat.h b/arch/arm64/include/asm/smp_plat.h
-index 59e2823..235ff04 100644
---- a/arch/arm64/include/asm/smp_plat.h
-+++ b/arch/arm64/include/asm/smp_plat.h
-@@ -34,10 +34,12 @@ static inline u32 mpidr_hash_size(void)
- 	return 1 << mpidr_hash.bits;
- }
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 8fe60fc..122bf34 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -116,6 +116,14 @@
+ 			};
+ 		};
  
-+extern void secondary_holding_pen(void);
- /*
-  * Logical CPU mapping.
-  */
- extern u64 __cpu_logical_map[NR_CPUS];
- #define cpu_logical_map(cpu)    __cpu_logical_map[cpu]
-+extern volatile unsigned long secondary_holding_pen_release;
++		/* OTG */
++		usb1_phy: phy@12500000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l4>;
++		};
++
+ 		usb3_phy: phy@12520000 {
+ 			status		= "okay";
+ 			vddcx-supply	= <&pm8921_s3>;
+@@ -130,6 +138,15 @@
+ 			v1p8-supply	= <&pm8921_l23>;
+ 		};
  
- #endif /* __ASM_SMP_PLAT_H */
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 328b8ce..4ce1f23 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -61,6 +61,7 @@
-  * where to place its SVC stack
-  */
- struct secondary_data secondary_data;
-+volatile unsigned long secondary_holding_pen_release = INVALID_HWID;
++		gadget1: gadget@12500000 {
++			status = "okay";
++		};
++
++		/* OTG */
++		usb1: usb@12500000 {
++			status = "okay";
++		};
++
+ 		usb3: usb@12520000 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 99d8e07..5aac9a5 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -301,6 +301,21 @@
+ 			};
+ 		};
  
- enum ipi_msg_type {
- 	IPI_RESCHEDULE,
-diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
-index 14944e5..808536e 100644
---- a/arch/arm64/kernel/smp_spin_table.c
-+++ b/arch/arm64/kernel/smp_spin_table.c
-@@ -28,9 +28,6 @@
- #include <asm/io.h>
- #include <asm/smp_plat.h>
++		usb1_phy: phy@12500000 {
++			compatible	= "qcom,usb-otg-ci";
++			reg		= <0x12500000 0x400>;
++			interrupts	= <GIC_SPI 100 IRQ_TYPE_NONE>;
++			status		= "disabled";
++			dr_mode		= "host";
++
++			clocks		= <&gcc USB_HS1_XCVR_CLK>,
++					  <&gcc USB_HS1_H_CLK>;
++			clock-names	= "core", "iface";
++
++			resets		= <&gcc USB_HS1_RESET>;
++			reset-names	= "link";
++		};
++
+ 		usb3_phy: phy@12520000 {
+ 			compatible	= "qcom,usb-otg-ci";
+ 			reg		= <0x12520000 0x400>;
+@@ -331,6 +346,23 @@
+ 			reset-names	= "link";
+ 		};
  
--extern void secondary_holding_pen(void);
--volatile unsigned long secondary_holding_pen_release = INVALID_HWID;
--
- static phys_addr_t cpu_release_addr[NR_CPUS];
- 
- /*
++		gadget1: gadget@12500000 {
++			compatible	= "qcom,ci-hdrc";
++			reg		= <0x12500000 0x400>;
++			status		= "disabled";
++			dr_mode		= "peripheral";
++			interrupts	= <GIC_SPI 100 IRQ_TYPE_NONE>;
++			usb-phy		= <&usb1_phy>;
++		};
++
++		usb1: usb@12500000 {
++			compatible	= "qcom,ehci-host";
++			reg		= <0x12500000 0x400>;
++			interrupts	= <GIC_SPI 100 IRQ_TYPE_NONE>;
++			status		= "disabled";
++			usb-phy		= <&usb1_phy>;
++		};
++
+ 		usb3: usb@12520000 {
+ 			compatible	= "qcom,ehci-host";
+ 			reg		= <0x12520000 0x400>;
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
