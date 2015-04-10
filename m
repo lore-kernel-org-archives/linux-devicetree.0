@@ -1,185 +1,162 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 4/5] pci: designware: remove pci_common_init_dev()
-Date: Fri, 10 Apr 2015 11:12:47 +0200
-Message-ID: <1428657168-12495-5-git-send-email-gabriel.fernandez@linaro.org>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND] ARM: dts: Support audio on
+ Exynos5422-odroidxu3 using simple-audio-card
+Date: Fri, 10 Apr 2015 14:48:13 +0530
+Message-ID: <CANAwSgS98n0kX8oBUk5Ehk1fwU4DA_DNuAqztp3LrOBcmrtAZw@mail.gmail.com>
+References: <1428651178-18186-1-git-send-email-ideal.song@samsung.com>
+	<552791A4.40203@fivetechno.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@n>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <552791A4.40203-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+Cc: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Call directly pci_*() instead of using pci_common_init_dev().
-Enforce error handling in probe.
-It also allows st pcie driver not to declare IO space:
-pci_common_init_dev() is assigning one by default.
+Hi Inha,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/pci/host/pcie-designware.c | 62 ++++++++++++++++++++------------------
- drivers/pci/host/pcie-designware.h |  1 +
- 2 files changed, 33 insertions(+), 30 deletions(-)
+Tested-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index 1f4ea6f..d4b1bf7 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -67,8 +67,6 @@
- #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
- #define PCIE_ATU_UPPER_TARGET		0x91C
- 
--static struct hw_pci dw_pci;
--
- static unsigned long global_io_offset;
- 
- static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
-@@ -342,6 +340,9 @@ static const struct irq_domain_ops msi_domain_ops = {
- 	.map = dw_pcie_msi_map,
- };
- 
-+static int dw_pcie_setup(struct pci_sys_data *sys);
-+static struct pci_bus *dw_pcie_scan_bus(struct pci_sys_data *sys);
-+
- int __init dw_pcie_host_init(struct pcie_port *pp)
- {
- 	struct device_node *np = pp->dev->of_node;
-@@ -352,6 +353,9 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
- 	u32 val, na, ns;
- 	const __be32 *addrp;
- 	int i, index, ret;
-+	struct list_head *resources = &pp->sysdata.resources;
-+
-+	INIT_LIST_HEAD(resources);
- 
- 	/* Find the address cell size and the number of cells in order to get
- 	 * the untranslated address.
-@@ -504,13 +508,17 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
- 
- #ifdef CONFIG_PCI_MSI
- 	dw_pcie_msi_chip.dev = pp->dev;
--	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
-+	pp->sysdata.msi_ctrl = &dw_pcie_msi_chip;
- #endif
- 
--	dw_pci.nr_controllers = 1;
--	dw_pci.private_data = (void **)&pp;
-+	pp->sysdata.private_data = pp;
- 
--	pci_common_init_dev(pp->dev, &dw_pci);
-+	ret = dw_pcie_setup(&pp->sysdata);
-+	if (ret)
-+		return ret;
-+
-+	if (!dw_pcie_scan_bus(&pp->sysdata))
-+		return -ENXIO;
- 
- 	return 0;
- }
-@@ -701,15 +709,19 @@ static struct pci_ops dw_pcie_ops = {
- 	.write = dw_pcie_wr_conf,
- };
- 
--static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
-+static int dw_pcie_setup(struct pci_sys_data *sys)
- {
- 	struct pcie_port *pp;
-+	int err;
- 
- 	pp = sys_to_pcie(sys);
- 
- 	if (global_io_offset < SZ_1M && pp->io_size > 0) {
- 		sys->io_offset = global_io_offset - pp->io_bus_addr;
--		pci_ioremap_io(global_io_offset, pp->io_base);
-+		err = pci_ioremap_io(global_io_offset, pp->io_base);
-+		if (err)
-+			return err;
-+
- 		global_io_offset += SZ_64K;
- 		pci_add_resource_offset(&sys->resources, &pp->io,
- 					sys->io_offset);
-@@ -719,10 +731,10 @@ static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
- 	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
- 	pci_add_resource(&sys->resources, &pp->busn);
- 
--	return 1;
-+	return 0;
- }
- 
--static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
-+static struct pci_bus *dw_pcie_scan_bus(struct pci_sys_data *sys)
- {
- 	struct pci_bus *bus;
- 	struct pcie_port *pp = sys_to_pcie(sys);
-@@ -738,27 +750,13 @@ static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
- 	if (bus && pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
- 
--	return bus;
--}
--
--static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
--	int irq;
--
--	irq = of_irq_parse_and_map_pci(dev, slot, pin);
--	if (!irq)
--		irq = pp->irq;
-+	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+	pci_assign_unassigned_bus_resources(bus);
-+	pci_bus_add_devices(bus);
- 
--	return irq;
-+	return bus;
- }
- 
--static struct hw_pci dw_pci = {
--	.setup		= dw_pcie_setup,
--	.scan		= dw_pcie_scan_bus,
--	.map_irq	= dw_pcie_map_irq,
--};
--
- void dw_pcie_setup_rc(struct pcie_port *pp)
- {
- 	u32 val;
-@@ -822,8 +820,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	/* setup command register */
- 	dw_pcie_readl_rc(pp, PCI_COMMAND, &val);
- 	val &= 0xffff0000;
--	val |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
--		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
-+
-+	if (!pp->io_size)
-+		val |= PCI_COMMAND_IO;
-+
-+	val |= PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
-+
- 	dw_pcie_writel_rc(pp, val, PCI_COMMAND);
- }
- 
-diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-index d0bbd27..45bc2c2 100644
---- a/drivers/pci/host/pcie-designware.h
-+++ b/drivers/pci/host/pcie-designware.h
-@@ -46,6 +46,7 @@ struct pcie_port {
- 	struct resource		io;
- 	struct resource		mem;
- 	struct resource		busn;
-+	struct pci_sys_data	sysdata;
- 	int			irq;
- 	u32			lanes;
- 	struct pcie_host_ops	*ops;
--- 
-1.9.1
+-Anand Moon
+
+On 10 April 2015 at 14:32, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org> wrote:
+> Hi Inha,
+>
+> I have tested this on XU3 (Headphone output).
+>
+> Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+>
+> Best Regards
+> --
+> Markus Reichl
+>
+> Am 10.04.2015 um 09:32 schrieb Inha Song:
+>> Add MAX98090 audio codec, I2S interface and the sound nodes to support
+>> audio on Exynos5422 SoC Based Odroid-XU3 board. Now we can support audio
+>> in Odroid-XU3 board using simple-audio-card DT binding.
+>>
+>> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/exynos5420.dtsi          |  9 +++++
+>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 59 ++++++++++++++++++++++++++++++
+>>  2 files changed, 68 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index ac6f860..73886d6 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -415,6 +415,9 @@
+>>                       <&clock_audss EXYNOS_I2S_BUS>,
+>>                       <&clock_audss EXYNOS_SCLK_I2S>;
+>>               clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+>> +             #clock-cells = <1>;
+>> +             clock-output-names = "i2s_cdclk0";
+>> +             #sound-dai-cells = <1>;
+>>               samsung,idma-addr = <0x03000000>;
+>>               pinctrl-names = "default";
+>>               pinctrl-0 = <&i2s0_bus>;
+>> @@ -429,6 +432,9 @@
+>>               dma-names = "tx", "rx";
+>>               clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
+>>               clock-names = "iis", "i2s_opclk0";
+>> +             #clock-cells = <1>;
+>> +             clock-output-names = "i2s_cdclk1";
+>> +             #sound-dai-cells = <1>;
+>>               pinctrl-names = "default";
+>>               pinctrl-0 = <&i2s1_bus>;
+>>               status = "disabled";
+>> @@ -442,6 +448,9 @@
+>>               dma-names = "tx", "rx";
+>>               clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
+>>               clock-names = "iis", "i2s_opclk0";
+>> +             #clock-cells = <1>;
+>> +             clock-output-names = "i2s_cdclk2";
+>> +             #sound-dai-cells = <1>;
+>>               pinctrl-names = "default";
+>>               pinctrl-0 = <&i2s2_bus>;
+>>               status = "disabled";
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> index edc25cf..c038f0d 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> @@ -11,6 +11,7 @@
+>>  */
+>>
+>>  /dts-v1/;
+>> +#include <dt-bindings/sound/samsung-i2s.h>
+>>  #include "exynos5800.dtsi"
+>>
+>>  / {
+>> @@ -285,6 +286,64 @@
+>>       rtc@101E0000 {
+>>               status = "okay";
+>>       };
+>> +
+>> +     sound: sound {
+>> +             compatible = "simple-audio-card";
+>> +
+>> +             simple-audio-card,name = "Odroid-XU3";
+>> +             simple-audio-card,widgets =
+>> +                     "Headphone", "Headphone Jack",
+>> +                     "Speakers", "Speakers";
+>> +             simple-audio-card,routing =
+>> +                     "Headphone Jack", "HPL",
+>> +                     "Headphone Jack", "HPR",
+>> +                     "Headphone Jack", "MICBIAS",
+>> +                     "IN1", "Headphone Jack",
+>> +                     "Speakers", "SPKL",
+>> +                     "Speakers", "SPKR";
+>> +
+>> +             simple-audio-card,format = "i2s";
+>> +             simple-audio-card,bitclock-master = <&link0_codec>;
+>> +             simple-audio-card,frame-master = <&link0_codec>;
+>> +
+>> +             simple-audio-card,cpu {
+>> +                     sound-dai = <&i2s0 0>;
+>> +                     system-clock-frequency = <19200000>;
+>> +             };
+>> +
+>> +             link0_codec: simple-audio-card,codec {
+>> +                     sound-dai = <&max98090>;
+>> +                     clocks = <&i2s0 CLK_I2S_CDCLK>;
+>> +             };
+>> +     };
+>> +};
+>> +
+>> +&clock_audss {
+>> +     assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
+>> +                     <&clock_audss EXYNOS_MOUT_I2S>,
+>> +                     <&clock_audss EXYNOS_DOUT_AUD_BUS>;
+>> +     assigned-clock-parents = <&clock CLK_FIN_PLL>,
+>> +                     <&clock_audss EXYNOS_MOUT_AUDSS>;
+>> +     assigned-clock-rates = <0>,
+>> +                     <0>,
+>> +                     <19200000>;
+>> +};
+>> +
+>> +&hsi2c_5 {
+>> +     status = "okay";
+>> +     max98090: max98090@10 {
+>> +             compatible = "maxim,max98090";
+>> +             reg = <0x10>;
+>> +             interrupt-parent = <&gpx3>;
+>> +             interrupts = <2 0>;
+>> +             clocks = <&i2s0 CLK_I2S_CDCLK>;
+>> +             clock-names = "mclk";
+>> +             #sound-dai-cells = <0>;
+>> +     };
+>> +};
+>> +
+>> +&i2s0 {
+>> +     status = "okay";
+>>  };
+>>
+>>  &hdmi {
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
