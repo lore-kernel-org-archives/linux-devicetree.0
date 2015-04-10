@@ -1,63 +1,46 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 0/5] PCI: st: provide support for dw pcie
-Date: Fri, 10 Apr 2015 11:12:43 +0200
-Message-ID: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v6] DT: leds: Improve description of flash LEDs
+ related properties
+Date: Fri, 10 Apr 2015 12:14:53 +0300
+Message-ID: <5527948D.1020603@linux.intel.com>
+References: <1428655016-17752-1-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@n>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1428655016-17752-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Changes in v3:
- - Remove power management functions (was not fully tested)
- - Remove configuration space range from dt binding
- - Remove pci_common_init_dev() call in pcie-designware.c to avoid 
-   default IO space declaration. 
+Hi Jacek,
 
-Changes in v2:
- - comestic corrections in device tree binding
- - add pci-st.c into MAINTAINERS
- - remove st_pcie_ops structure to avoid another level of indirection
- - remove nasty busy-loop
- - remove useless test using virt_to_phys()
- - move disable io support into dw-pcie driver
+Thank you for the quick update!
 
-I don't change the st_pcie_abort_handler() function because abort handling
-is masked during boot.
+Jacek Anaszewski wrote:
+> 1. Since max-microamp property has had no users so far, then rename
+>    it to more descriptive led-max-microamp.
+> 2. Since flash-timeout-us property has had no users so far, then rename
+>    it to more accurate flash-max-timeout-us.
+> 3. Describe led-max-microamp property as mandatory for specific board
+>    configurations.
+> 4. Make flash-max-microamp and flash-max-timeout-us properties mandatory
+>    for devices with configurable flash current and flash timeout settings
+>    respectively.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: devicetree@vger.kernel.org
 
-
-This patch-set introduces a STMicroelectronics PCIe controller.
-It's based on designware PCIe driver.
-
-Gabriel Fernandez (5):
-  ARM: STi: Kconfig update for PCIe support
-  PCI: st: Add Device Tree bindings for sti pcie
-  PCI: st: Provide support for the sti PCIe controller
-  pci: designware: remove pci_common_init_dev()
-  MAINTAINERS: Add pci-st.c to ARCH/STI architecture
-
- Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
- MAINTAINERS                                       |   1 +
- arch/arm/mach-sti/Kconfig                         |   2 +
- drivers/pci/host/Kconfig                          |   9 +
- drivers/pci/host/Makefile                         |   1 +
- drivers/pci/host/pci-st.c                         | 583 ++++++++++++++++++++++
- drivers/pci/host/pcie-designware.c                |  62 +--
- drivers/pci/host/pcie-designware.h                |   1 +
- 8 files changed, 682 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
- create mode 100644 drivers/pci/host/pci-st.c
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
 -- 
-1.9.1
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
