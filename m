@@ -1,80 +1,98 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Fri, 10 Apr 2015 22:30:08 +0000
-Message-ID: <20150410223008.GA18660@io.lakedaemon.net>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
- <20150410135056.GB28873@io.lakedaemon.net>
- <20150410171148.07bc9429@bbrezillon>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
+Date: Fri, 10 Apr 2015 17:40:46 -0500
+Message-ID: <1428705646.22867.601.camel@freescale.com>
+References: <1427782669-20368-1-git-send-email-hongtao.jia@freescale.com>
+	 <1428638140.22867.583.camel@freescale.com>
+	 <BLUPR03MB14924B9EBBD1C5635B0487DE1FA0@BLUPR03MB149.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150410171148.07bc9429@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <info@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <BLUPR03MB14924B9EBBD1C5635B0487DE1FA0-GeMU99Gfrrs/d2CkLcLUf+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jia Hongtao-B38951 <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Boris,
-
-On Fri, Apr 10, 2015 at 05:11:48PM +0200, Boris Brezillon wrote:
-> On Fri, 10 Apr 2015 13:50:56 +0000 Jason Cooper <jason@lakedaemon.net> wrote:
-> > On Thu, Apr 09, 2015 at 04:58:41PM +0200, Boris Brezillon wrote:
-> > > I know we usually try to adapt existing drivers instead of replacing them
-> > > by new ones, but after trying to refactor the mv_cesa driver I realized it
-> > > would take longer than writing an new one from scratch.
-> > 
-> > I'm sorry, but this makes me *very* uncomfortable.  Any organization
-> > worth it's salt will do a very careful audit of code touching
-> > cryptographic material and sensitive (decrypted) data.  From that point
-> > on, small audits of the changes to the code allow the organization to
-> > build a comfort level with kernel updates.  iow, following the git
-> > history of the driver.
-> > 
-> > By apply this series, we are basically forcing those organizations to
-> > either a) stop updating, or b) expend significant resources to do
-> > another full audit.
-> > 
-> > In short, this series breaks the audit chain for the mv_cesa driver.
-> > 
-> > Maybe I'm the only person with this level of paranoia.  If so, I'm sure
-> > others will override me.
-> > 
-> > From my POV, it looks like the *only* reason we've chosen this route is
-> > developer convenience.  I don't think that's sufficient reason to break
-> > the change history of a driver handling sensitive data.
+On Fri, 2015-04-10 at 01:23 -0500, Jia Hongtao-B38951 wrote:
 > 
-> Well, I understand you concern, but if you read carefully the old and
-> new drivers, you'll notice that they are completely different (the only
-> thing I kept are the macro definitions).
+> 
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Friday, April 10, 2015 11:56 AM
+> > To: Jia Hongtao-B38951
+> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> > Subject: Re: [PATCH] QorIQ/TMU: add TMU node to device tree for QorIQ
+> > T104x
+> > 
+> > On Tue, 2015-03-31 at 14:17 +0800, Jia Hongtao wrote:
+> > > This is Thermal Monitoring Unit for QorIQ platform.
+> > >
+> > > Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/thermal/qoriq-thermal.txt  | 58
+> > +++++++++++++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi   | 82
+> > ++++++++++++++++++++++
+> > >  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi        |  1 +
+> > >  3 files changed, 141 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> > >  create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-tmu-t104xsi.dtsi
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> > > b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> > > new file mode 100644
+> > > index 0000000..dfc17fa
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> > > @@ -0,0 +1,58 @@
+> > > +* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
+> > > +
+> > > +Required properties:
+> > > +- compatible : "fsl,qoriq-tmu".
+> > 
+> > compatible: Must include "fsl,qoriq-tmu". The version of the device is
+> > 	    determined by the TMU IP Block Revision Register (IPBRR0)
+> > 	    at offset 0x0BF8.
+> > 
+> > 	    Table of correspondences between IPBRR0 values and example
+> > 	    chips:
+> > 		Value           Device
+> > 		-----------     -------
+> > 		0x01900102      T1040
+> 
+> I will update it in next version.
+> 
+> > 
+> > > +- reg : address range of TMU registers.
+> > > +- interrupts : should contain the interrupt for TMU.
+> > 
+> > s/should contain/contains/
+> 
+> Thanks for the correction.
+> 
+> > 
+> > > +- calibration : calibration table for TMU.
+> > 
+> > What is the format of the calibration table, and where does one get the
+> > data?
+> 
+> There are four calibration config range, for each range we got a couple of
+> pairs formatted like <TTCFGR, TSCFGR> at offset of <0x0080, 0x0084>.
 
-Yes, that's the worrying part for me. ;-)
+The binding document needs to explain this, in more detail, as well as
+how one determines the data.
 
-> I really tried to adapt the existing driver to add the missing
-> features (especially the support for TDMA), but all my attempts
-> ended up introducing hackish code (not even talking about the
-> performance penalty of this approach).
+Is this configuration or hardware description?
 
-Ok, fair enough.  It would be helpful if this account of attempting to
-reconcile the old driver made it into the commit message.  This puts us
-in "perfect is the enemy of getting it done" territory.
+-Scott
 
-> I have another solution though: keep the existing driver for old
-> marvell SoCs (orion, kirkwood and dove), and add a new one for modern
-> SoCs (armada 370, XP, 375 and 38x), so that users of the mv_cesa driver
-> won't have to audit the new code.
 
-A fair proposal, but I'll freely admit the number of people actually auditing
-their code paths is orders of magnitude smaller than the number of users
-of the driver.
-
-There's such a large population of compatible legacy SoCs in the wild,
-adding an artificial boundary doesn't make sense.  Especially since
-we're talking about features everyone would want to use.
-
-Perhaps we should keep both around, and deprecate the legacy driver over
-3 to 4 cycles?
-
-thx,
-
-Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
