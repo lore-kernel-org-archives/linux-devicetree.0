@@ -1,60 +1,58 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 08/11] ARM: dts: apq8064: Add USB OTG support for CM QS-600
-Date: Fri, 10 Apr 2015 21:44:23 +0100
-Message-ID: <1428698663-12240-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 09/11] ARM: dts: apq8064-ifc6410: Add DT alias for serial port
+Date: Fri, 10 Apr 2015 21:44:31 +0100
+Message-ID: <1428698671-12282-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pramod Gurav <pramod.gurav@smartplayin.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+From: Pramod Gurav <pramod.gurav@smartplayin.com>
 
-This patch adds USB OTG support on USB1 for Compulab QS-600 Board.
+Define an alias for serial port present on ifc6410 which is used as
+console.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-[Srinivas Kandagatla: fixed up regulators and status properties]
-Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+[Srinivas Kandagatla: renamed the serial0 label appropriately]
+Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
 ---
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 4 ++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi        | 3 +--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-index 4eedfe4..71512b3 100644
---- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-@@ -101,6 +101,14 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 3d96cb8..528cb31 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -5,6 +5,10 @@
+ 	model = "Qualcomm APQ8064/IFC6410";
+ 	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
  
-+		/* OTG */
-+		usb1_phy: phy@12500000 {
-+			status		= "okay";
-+			vddcx-supply	= <&pm8921_s3>;
-+			v3p3-supply	= <&pm8921_l3>;
-+			v1p8-supply	= <&pm8921_l4>;
-+		};
++	aliases {
++		serial0 = &gsbi7_serial;
++	};
 +
- 		usb3_phy: phy@12520000 {
- 			status		= "okay";
- 			vddcx-supply	= <&pm8921_s3>;
-@@ -115,6 +123,15 @@
- 			v1p8-supply	= <&pm8921_l23>;
- 		};
+ 	soc {
+ 		pinctrl@800000 {
+ 			i2c1_pins: i2c1 {
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 1f900c7..93de48a 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -236,10 +236,9 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+-
+ 			syscon-tcsr = <&tcsr>;
  
-+		gadget1: gadget@12500000 {
-+			status = "ok";
-+		};
-+
-+		/* OTG */
-+		usb1: usb@12500000 {
-+			status = "ok";
-+		};
-+
- 		usb3: usb@12520000 {
- 			status = "okay";
- 		};
+-			serial@16640000 {
++			gsbi7_serial: serial@16640000 {
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x16640000 0x1000>,
+ 				      <0x16600000 0x1000>;
 -- 
 1.9.1
