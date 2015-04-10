@@ -1,190 +1,169 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 6/6] hwmon: pwm-fan: Update the duty cycle inorder to
- control the pwm-fan
-Date: Fri, 10 Apr 2015 16:58:40 +0530
-Message-ID: <CANAwSgRSxj9frUHRXh3JwD+bpnFrj8WkpDMKHZn-OPmuCEgP7w@mail.gmail.com>
-References: <1427387955-5129-1-git-send-email-linux.amoon@gmail.com>
-	<1427387955-5129-7-git-send-email-linux.amoon@gmail.com>
-	<20150408104415.07e1c821@amdc2363>
-	<20150408153214.GA15942@roeck-us.net>
-	<CANAwSgSD52sDpP7NH2hhiZX-=LZF6Qo-X3enqsqM+5XAMfyP=Q@mail.gmail.com>
-	<20150408165351.GA22846@roeck-us.net>
-	<CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Fri, 10 Apr 2015 14:37:19 +0300
+Message-ID: <5527B5EF.8090401@yandex-team.ru>
+References: <20150408165920.25007.6869.stgit@buzz> <55255F84.6060608@yandex-team.ru> <20150408230740.GB53918@linux.vnet.ibm.com> <CALYGNiP_Ru0PpWoXOYPbviiNuY+9JHDqzL0jDNJeZAtmYZGFUg@mail.gmail.com> <20150409225817.GI53918@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgQbNV9QZ2bFGk6g+RyWW6f5iW4e8ii_5rJ4srv02L=L_Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Markus Reichl <m.reichl@fivetechno.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20150409225817.GI53918@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>, Konstantin Khlebnikov <koct9i@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter/Lukasz,
+On 10.04.2015 01:58, Tanisha Aravamudan wrote:
+> On 09.04.2015 [07:27:28 +0300], Konstantin Khlebnikov wrote:
+>> On Thu, Apr 9, 2015 at 2:07 AM, Nishanth Aravamudan
+>> <nacc@linux.vnet.ibm.com> wrote:
+>>> On 08.04.2015 [20:04:04 +0300], Konstantin Khlebnikov wrote:
+>>>> On 08.04.2015 19:59, Konstantin Khlebnikov wrote:
+>>>>> Node 0 might be offline as well as any other numa node,
+>>>>> in this case kernel cannot handle memory allocation and crashes.
+>>>
+>>> Isn't the bug that numa_node_id() returned an offline node? That
+>>> shouldn't happen.
+>>
+>> Offline node 0 came from static-inline copy of that function from of.h
+>> I've patched weak function for keeping consistency.
+>
+> Got it, that's not necessarily clear in the original commit message.
 
-Earlier I send v2 version of the patch spiking this one.
+Sorry.
 
-Markus Riechl came back to me with below mail.
-So This patch confirms fixes the bug.
+>
+>>> #ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
+>>> ...
+>>> #ifndef numa_node_id
+>>> /* Returns the number of the current Node. */
+>>> static inline int numa_node_id(void)
+>>> {
+>>>          return raw_cpu_read(numa_node);
+>>> }
+>>> #endif
+>>> ...
+>>> #else   /* !CONFIG_USE_PERCPU_NUMA_NODE_ID */
+>>>
+>>> /* Returns the number of the current Node. */
+>>> #ifndef numa_node_id
+>>> static inline int numa_node_id(void)
+>>> {
+>>>          return cpu_to_node(raw_smp_processor_id());
+>>> }
+>>> #endif
+>>> ...
+>>>
+>>> So that's either the per-cpu numa_node value, right? Or the result of
+>>> cpu_to_node on the current processor.
+>>>
+>>>> Example:
+>>>>
+>>>> [    0.027133] ------------[ cut here ]------------
+>>>> [    0.027938] kernel BUG at include/linux/gfp.h:322!
+>>>
+>>> This is
+>>>
+>>> VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES || !node_online(nid));
+>>>
+>>> in
+>>>
+>>> alloc_pages_exact_node().
+>>>
+>>> And based on the trace below, that's
+>>>
+>>> __slab_alloc -> alloc
+>>>
+>>> alloc_pages_exact_node
+>>>          <- alloc_slab_page
+>>>                  <- allocate_slab
+>>>                          <- new_slab
+>>>                                  <- new_slab_objects
+>>>                                          < __slab_alloc?
+>>>
+>>> which is just passing the node value down, right? Which I think was
+>>> from:
+>>>
+>>>          domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>>>                                GFP_KERNEL, of_node_to_nid(of_node));
+>>>
+>>> ?
+>>>
+>>>
+>>> What platform is this on, looks to be x86? qemu emulation of a
+>>> pathological topology? What was the topology?
+>>
+>> qemu x86_64, 2 cpu, 2 numa nodes, all memory in second.
+>
+> Ok, this worked before? That is, this is a regression?
 
-I will send v3 version of the patch. Earlier I was in delima about the =
-bug.
+Seems like that worked before 3.17 where
+bug was exposed by commit 44767bfaaed782d6d635ecbb13f3980041e6f33e
+(x86, irq: Enhance mp_register_ioapic() to support irqdomain)
+this is first usage of  *irq_domain_add*() in x86.
 
--Anand Moon
--------------------------------------------
-Hi Anand,
+>
+>>   I've slightly patched it to allow that setup (in qemu hardcoded 1Mb
+>> of memory connected to node 0) And i've found unrelated bug --
+>> if numa node has less that 4Mb ram then kernel crashes even
+>> earlier because numa code ignores that node
+>> but buddy allocator still tries to use that pages.
+>
+> So this isn't an actually supported topology by qemu?
 
-I tested your patch.
+Qemu easily created memoryless numa nodes but node 0 have hardcoded 1Mb 
+of ram. This seems like legacy prop for DOS era software.
 
-After booting the fan is spinning despite only 44=B0C.
+>
+>>> Note that there is a ton of code that seems to assume node 0 is online.
+>>> I started working on removing this assumption myself and it just led
+>>> down a rathole (on power, we always have node 0 online, even if it is
+>>> memoryless and cpuless, as a result).
+>>>
+>>> I am guessing this is just happening early in boot before the per-cpu
+>>> areas are setup? That's why (I think) x86 has the early_cpu_to_node()
+>>> function...
+>>>
+>>> Or do you not have CONFIG_OF set? So isn't the only change necessary to
+>>> the include file, and it should just return first_online_node rather
+>>> than 0?
+>>>
+>>> Ah and there's more of those node 0 assumptions :)
+>>
+>> That was x86 where is no CONFIG_OF at all.
+>>
+>> I don't know what's wrong with that machine but ACPI reports that
+>> cpus and memory from node 0 as connected to node 1 and everything
+>> seems worked fine until lates upgrade -- seems like buggy static-inline
+>> of_node_to_nid was intoduced in 3.13 but x86 ioapic uses it during
+>> early allocations only in since 3.17. Machine owner teells that 3.15
+>> worked fine.
+>
+> So, this was a qemu emulation of this actual physical machine without a
+> node 0?
 
-/sys/class/thermal/cooling_device0/curstate is 0.
-/sys/class/hwmon/hwmon4/pwm1 is 0
+Yep. Also I have crash from real machine but that stacktrace is messy
+because CONFIG_DEBUG_VM wasn't enabled and kernel crashed inside
+buddy allocator when tried to touch unallocated numa node structure.
 
-when I echo 1 > cur_state and then echo 0 > cur_state again,
-the fan switches to off and behaves as expected.
+>
+> As I mentioned, there are lots of node 0 assumptions through the kernel.
+> You might run into more issues at runtime.
 
-It looks like there is a bug in initializing the pwm output
-immediately after booting.
+I think it's possible to trigger kernel crash for any memoryless numa
+node (not just for 0) if some device (like ioapic in my case) points to
+it in its acpi tables. In runtime numa affinity configured by user
+usually validated by the kernel, while numbers from firmware might be 
+used without proper validation.
 
-Best Regards,
+Anyway seems like at least one x86 machines works fine without memory in 
+node 0.
+
+-- 
+Konstantin
 
 --
-Markus Reichl
-
-On 8 April 2015 at 23:19, Anand Moon <linux.amoon@gmail.com> wrote:
-> Hi Guenter,
->
-> Sorry my blunder mistake. Sorry for the noise.
->
-> I just tested with spiking this patch and my observation and testing
-> were wrong we can skip this patch.
->
-> I will send an v2 patch series removing the patch 5 and patch 6.
->
-> With correct dts changes.
->
-> Thanks for pointing my mistake.
->
-> -Anand Moon
->
-> On 8 April 2015 at 22:23, Guenter Roeck <linux@roeck-us.net> wrote:
->> On Wed, Apr 08, 2015 at 09:32:05PM +0530, Anand Moon wrote:
->>> Hi Guenter,
->>>
->>> Initially the board bootup the cooling level state is 0.
->>> So update the duty cycle and this power off the fan.
->>> As their is no state change the fan will not spin.
->>>
->>> Once the temperature sensor is reached to alert temperature it chan=
-ges state.
->>> With the state change the fan cools the CPU and then stop's
->>>
->>> I have observed this state change with tmon utility in linux/tools/=
-thermal/tmon/
->>>
->> Sorry, I am missing something. I still don't see what problem you ar=
-e fixing
->> with this patch. What behavior is wrong with the current code, and h=
-ow does your
->> patch fix it ?
->>
->> Guenter
->>
->>> -Anand Moon
->>>
->>> On 8 April 2015 at 21:02, Guenter Roeck <linux@roeck-us.net> wrote:
->>> > On Wed, Apr 08, 2015 at 10:44:15AM +0200, Lukasz Majewski wrote:
->>> >> Hi Anand,
->>> >>
->>> >> > Below changes depend on following patch.
->>> >> > https://patchwork.kernel.org/patch/5944061/
->>> >> >
->>> >> > Update the pwm_config with duty then update the pwm_disable
->>> >> > to poweroff the cpu fan.
->>> >> >
->>> >
->>> > Unfortunately, the patch does not include an explanation why it i=
-s needed.
->>> >
->>> > The original code presumably did not update the duty cycle becaus=
-e
->>> > pwm was about to be disabled anyway. That kind of made sense to m=
-e.
->>> > Updating the duty cycle to 0 just to disable the pwm channel righ=
-t
->>> > afterwards does not immediately make sense.
->>> >
->>> > Given that, I would expect to see a rationale here. Why is this p=
-atch needed ?
->>> > Does it fix a bug ? If yes, pelase describe the bug. If not, what=
- is the
->>> > purpose of this patch ?
->>> >
->>> > Maybe that is all explained in patch 0/6, which I was not copied =
-on. Even
->>> > if so, the reationale will be needed in the changelog to explain =
-to future
->>> > developers why this change was made.
->>> >
->>> > Thanks,
->>> > Guenter
->>> >
->>> >> > Tested on OdroidXU3 board.
->>> >> >
->>> >> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>> >> > ---
->>> >> >  drivers/hwmon/pwm-fan.c | 10 ++++------
->>> >> >  1 file changed, 4 insertions(+), 6 deletions(-)
->>> >> >
->>> >> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->>> >> > index 7c83dc4..f25c841 100644
->>> >> > --- a/drivers/hwmon/pwm-fan.c
->>> >> > +++ b/drivers/hwmon/pwm-fan.c
->>> >> > @@ -44,26 +44,24 @@ static int  __set_pwm(struct pwm_fan_ctx *=
-ctx,
->>> >> > unsigned long pwm) int ret =3D 0;
->>> >> >
->>> >> >     mutex_lock(&ctx->lock);
->>> >> > +
->>> >
->>> > [ please refrain from unnecessary whitespace changes ]
->>> >
->>> >> >     if (ctx->pwm_value =3D=3D pwm)
->>> >> >             goto exit_set_pwm_err;
->>> >> >
->>> >> > -   if (pwm =3D=3D 0) {
->>> >> > -           pwm_disable(ctx->pwm);
->>> >> > -           goto exit_set_pwm;
->>> >> > -   }
->>> >> > -
->>> >> >     duty =3D DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MAX_PW=
-M);
->>> >> >     ret =3D pwm_config(ctx->pwm, duty, ctx->pwm->period);
->>> >> >     if (ret)
->>> >> >             goto exit_set_pwm_err;
->>> >> >
->>> >> > +   if (pwm =3D=3D 0)
->>> >> > +           pwm_disable(ctx->pwm);
->>> >> > +
->>> >> >     if (ctx->pwm_value =3D=3D 0) {
->>> >> >             ret =3D pwm_enable(ctx->pwm);
->>> >> >             if (ret)
->>> >> >                     goto exit_set_pwm_err;
->>> >> >     }
->>> >> >
->>> >> > -exit_set_pwm:
->>> >> >     ctx->pwm_value =3D pwm;
->>> >> >  exit_set_pwm_err:
->>> >> >     mutex_unlock(&ctx->lock);
->>> >>
->>> >> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
->>> >>
->>> >> BTW: I've added Guenter to CC.
->>> >>
->>> >> --
->>> >> Best regards,
->>> >>
->>> >> Lukasz Majewski
->>> >>
->>> >> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
