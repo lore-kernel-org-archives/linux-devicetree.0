@@ -1,121 +1,390 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Fri, 10 Apr 2015 18:18:08 +0900
-Message-ID: <55279550.1060609@samsung.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
- <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
- <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
- <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
- <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
- <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v6 1/6] mfd: axp20x: add AXP22x PMIC support
+Date: Fri, 10 Apr 2015 10:25:39 +0100
+Message-ID: <20150410092539.GC3467@x1>
+References: <1428638946-24890-1-git-send-email-wens@csie.org>
+ <1428638946-24890-2-git-send-email-wens@csie.org>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <55278DD3.3020409@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Baldyga <r.baldyga@samsung.com>
-Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBGFOT2UQKGQE2SA2JQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1428638946-24890-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 05:46 PM, Robert Baldyga wrote:
-> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
->> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
->>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
->>>> Hi Robert,
->>>>
->>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
->>>>> Hi Chanwoo,
->>>>>
->>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->>>>>> Hi Robert,
->>>>>>
->>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>>>>>> Hi Chanwoo,
->>>>>>>
->>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>>>>>> Hi Robert,
->>>>>>>>
->>>>>>
->>>>>> [snip]
->>>>>>
->>>>>>>> But, I have one question about case[3]
->>>>>>>>
->>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>>>>>
->>>>>>>
->>>>>>> It's because state of single USB cable connection cannot be completely
->>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
->>>>>>> and ID), so we need to use two cables for single cable connection. We
->>>>>>> use following convention:
->>>>>>> cable "USB" = VBUS
->>>>>>> cable "USB-HOST" = !ID.
->>>>>>
->>>>>> I think that extcon provider driver have to update the only one cable state
->>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->>>>>> at the same time through one h/w port.
->>>>>>
->>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>>>>>
->>>>>
->>>>> It can. USB OTG allows for that. Moreover device can be host even if
->>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
->>>>> detected cable type is USB host). Devices would need to have complete
->>>>> information about USB cable connection, because OTG state machine needs
->>>>
->>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
->>>> at the same time. The case3 in your patch update two cable state about one h/w port.
->>>>
->>>
->>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
->>> machine. It needs to know exact VBUS and ID states, which cannot be
->>> concluded basing on cable type only. That's why I have used "USB-HOST"
->>> name together with "USB" to pass additional information about USB cable
->>> connection.
->>
->> I think this method is not proper to support this case.
->> It may cause the confusion about other case using USB/USB-HOST cable state
->> except of you commented case.
-> 
-> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
-> with old names. It seems to be simpler solution than adding new
-> mechanism notifying about VBUS and ID states changes.
+On Fri, 10 Apr 2015, Chen-Yu Tsai wrote:
 
+> From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>=20
+> Add support for the AXP22x PMIC devices to the existing AXP20x driver.
+> This includes the AXP221 and AXP223, which are identical except for
+> the external data bus. Only AXP221 is added for now. AXP223 will be
+> added after it's Reduced Serial Bus (RSB) interface is supported.
+>=20
+> AXP22x defines a new set of registers, power supplies and regulators,
+> but most of the API is similar to the AXP20x ones.
+>=20
+> A new irq chip definition is used, even though the available interrupts
+> on AXP22x is a subset of those on AXP20x. This is done so the interrupt
+> numbers match those on the datasheet.
+>=20
+> This patch only enables the interrupts, system power-off function, and PE=
+K
+> sub-device. The regulator driver must first support different variants
+> before we enable it from the mfd driver.
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> [wens-jdAy2FN1RRM@public.gmane.org: fix interrupts and move regulators to separate patch]
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>=20
+> Hi Lee,
+>=20
+> I've asked Mark about merging the regulator patches through the mfd tree
+> (in the 4th patch). If he agrees, could you take the whole series?
 
-As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
-If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
-name continuoulsy.
+These sorts of messages are best left in PATCH 0/X rather than hidden
+in a random patch.  But yes, I'll take these patches though the MFD
+tree.  It's too late to take, test and send out pull-requests for v4.1
+now, but I will take them in once the merge-window closes.
 
-I think that extcon core provide the helper API to get the value of VBUS.
-But I need to consider it.
+> ---
+>  drivers/mfd/axp20x.c       | 98 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/mfd/axp20x.h | 86 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 184 insertions(+)
+>=20
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index d18029be6a78..cfbb7d7aead6 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -32,6 +32,7 @@
+>  static const char * const axp20x_model_names[] =3D {
+>  	"AXP202",
+>  	"AXP209",
+> +	"AXP221",
+>  	"AXP288",
+>  };
+> =20
+> @@ -54,6 +55,25 @@ static const struct regmap_access_table axp20x_volatil=
+e_table =3D {
+>  	.n_yes_ranges	=3D ARRAY_SIZE(axp20x_volatile_ranges),
+>  };
+> =20
+> +static const struct regmap_range axp22x_writeable_ranges[] =3D {
+> +	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+> +	regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
+> +};
+> +
+> +static const struct regmap_range axp22x_volatile_ranges[] =3D {
+> +	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+> +};
+> +
+> +static const struct regmap_access_table axp22x_writeable_table =3D {
+> +	.yes_ranges	=3D axp22x_writeable_ranges,
+> +	.n_yes_ranges	=3D ARRAY_SIZE(axp22x_writeable_ranges),
+> +};
+> +
+> +static const struct regmap_access_table axp22x_volatile_table =3D {
+> +	.yes_ranges	=3D axp22x_volatile_ranges,
+> +	.n_yes_ranges	=3D ARRAY_SIZE(axp22x_volatile_ranges),
+> +};
+> +
+>  static const struct regmap_range axp288_writeable_ranges[] =3D {
+>  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ6_STATE),
+>  	regmap_reg_range(AXP20X_DCDC_MODE, AXP288_FG_TUNE5),
+> @@ -87,6 +107,20 @@ static struct resource axp20x_pek_resources[] =3D {
+>  	},
+>  };
+> =20
+> +static struct resource axp22x_pek_resources[] =3D {
+> +	{
+> +		.name   =3D "PEK_DBR",
+> +		.start  =3D AXP22X_IRQ_PEK_RIS_EDGE,
+> +		.end    =3D AXP22X_IRQ_PEK_RIS_EDGE,
+> +		.flags  =3D IORESOURCE_IRQ,
+> +	}, {
+> +		.name   =3D "PEK_DBF",
+> +		.start  =3D AXP22X_IRQ_PEK_FAL_EDGE,
+> +		.end    =3D AXP22X_IRQ_PEK_FAL_EDGE,
+> +		.flags  =3D IORESOURCE_IRQ,
+> +	},
+> +};
+> +
+>  static struct resource axp288_fuel_gauge_resources[] =3D {
+>  	{
+>  		.start =3D AXP288_IRQ_QWBTU,
+> @@ -129,6 +163,15 @@ static const struct regmap_config axp20x_regmap_conf=
+ig =3D {
+>  	.cache_type	=3D REGCACHE_RBTREE,
+>  };
+> =20
+> +static const struct regmap_config axp22x_regmap_config =3D {
+> +	.reg_bits	=3D 8,
+> +	.val_bits	=3D 8,
+> +	.wr_table	=3D &axp22x_writeable_table,
+> +	.volatile_table	=3D &axp22x_volatile_table,
+> +	.max_register	=3D AXP22X_BATLOW_THRES1,
+> +	.cache_type	=3D REGCACHE_RBTREE,
+> +};
+> +
+>  static const struct regmap_config axp288_regmap_config =3D {
+>  	.reg_bits	=3D 8,
+>  	.val_bits	=3D 8,
+> @@ -181,6 +224,34 @@ static const struct regmap_irq axp20x_regmap_irqs[] =
+=3D {
+>  	INIT_REGMAP_IRQ(AXP20X, GPIO0_INPUT,		4, 0),
+>  };
+> =20
+> +static const struct regmap_irq axp22x_regmap_irqs[] =3D {
+> +	INIT_REGMAP_IRQ(AXP22X, ACIN_OVER_V,		0, 7),
+> +	INIT_REGMAP_IRQ(AXP22X, ACIN_PLUGIN,		0, 6),
+> +	INIT_REGMAP_IRQ(AXP22X, ACIN_REMOVAL,	        0, 5),
+> +	INIT_REGMAP_IRQ(AXP22X, VBUS_OVER_V,		0, 4),
+> +	INIT_REGMAP_IRQ(AXP22X, VBUS_PLUGIN,		0, 3),
+> +	INIT_REGMAP_IRQ(AXP22X, VBUS_REMOVAL,	        0, 2),
+> +	INIT_REGMAP_IRQ(AXP22X, VBUS_V_LOW,		0, 1),
+> +	INIT_REGMAP_IRQ(AXP22X, BATT_PLUGIN,		1, 7),
+> +	INIT_REGMAP_IRQ(AXP22X, BATT_REMOVAL,	        1, 6),
+> +	INIT_REGMAP_IRQ(AXP22X, BATT_ENT_ACT_MODE,	1, 5),
+> +	INIT_REGMAP_IRQ(AXP22X, BATT_EXIT_ACT_MODE,	1, 4),
+> +	INIT_REGMAP_IRQ(AXP22X, CHARG,		        1, 3),
+> +	INIT_REGMAP_IRQ(AXP22X, CHARG_DONE,		1, 2),
+> +	INIT_REGMAP_IRQ(AXP22X, BATT_TEMP_HIGH,	        1, 1),
+> +	INIT_REGMAP_IRQ(AXP22X, BATT_TEMP_LOW,	        1, 0),
+> +	INIT_REGMAP_IRQ(AXP22X, DIE_TEMP_HIGH,	        2, 7),
+> +	INIT_REGMAP_IRQ(AXP22X, PEK_SHORT,		2, 1),
+> +	INIT_REGMAP_IRQ(AXP22X, PEK_LONG,		2, 0),
+> +	INIT_REGMAP_IRQ(AXP22X, LOW_PWR_LVL1,	        3, 1),
+> +	INIT_REGMAP_IRQ(AXP22X, LOW_PWR_LVL2,	        3, 0),
+> +	INIT_REGMAP_IRQ(AXP22X, TIMER,		        4, 7),
+> +	INIT_REGMAP_IRQ(AXP22X, PEK_RIS_EDGE,	        4, 6),
+> +	INIT_REGMAP_IRQ(AXP22X, PEK_FAL_EDGE,	        4, 5),
+> +	INIT_REGMAP_IRQ(AXP22X, GPIO1_INPUT,		4, 1),
+> +	INIT_REGMAP_IRQ(AXP22X, GPIO0_INPUT,		4, 0),
+> +};
+> +
+>  /* some IRQs are compatible with axp20x models */
+>  static const struct regmap_irq axp288_regmap_irqs[] =3D {
+>  	INIT_REGMAP_IRQ(AXP288, VBUS_FALL,              0, 2),
+> @@ -224,6 +295,7 @@ static const struct regmap_irq axp288_regmap_irqs[] =
+=3D {
+>  static const struct of_device_id axp20x_of_match[] =3D {
+>  	{ .compatible =3D "x-powers,axp202", .data =3D (void *) AXP202_ID },
+>  	{ .compatible =3D "x-powers,axp209", .data =3D (void *) AXP209_ID },
+> +	{ .compatible =3D "x-powers,axp221", .data =3D (void *) AXP221_ID },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, axp20x_of_match);
+> @@ -258,6 +330,18 @@ static const struct regmap_irq_chip axp20x_regmap_ir=
+q_chip =3D {
+> =20
+>  };
+> =20
+> +static const struct regmap_irq_chip axp22x_regmap_irq_chip =3D {
+> +	.name			=3D "axp22x_irq_chip",
+> +	.status_base		=3D AXP20X_IRQ1_STATE,
+> +	.ack_base		=3D AXP20X_IRQ1_STATE,
+> +	.mask_base		=3D AXP20X_IRQ1_EN,
+> +	.mask_invert		=3D true,
+> +	.init_ack_masked	=3D true,
+> +	.irqs			=3D axp22x_regmap_irqs,
+> +	.num_irqs		=3D ARRAY_SIZE(axp22x_regmap_irqs),
+> +	.num_regs		=3D 5,
+> +};
+> +
+>  static const struct regmap_irq_chip axp288_regmap_irq_chip =3D {
+>  	.name			=3D "axp288_irq_chip",
+>  	.status_base		=3D AXP20X_IRQ1_STATE,
+> @@ -281,6 +365,14 @@ static struct mfd_cell axp20x_cells[] =3D {
+>  	},
+>  };
+> =20
+> +static struct mfd_cell axp22x_cells[] =3D {
+> +	{
+> +		.name			=3D "axp20x-pek",
+> +		.num_resources		=3D ARRAY_SIZE(axp22x_pek_resources),
+> +		.resources		=3D axp22x_pek_resources,
+> +	},
+> +};
+> +
+>  static struct resource axp288_adc_resources[] =3D {
+>  	{
+>  		.name  =3D "GPADC",
+> @@ -426,6 +518,12 @@ static int axp20x_match_device(struct axp20x_dev *ax=
+p20x, struct device *dev)
+>  		axp20x->regmap_cfg =3D &axp20x_regmap_config;
+>  		axp20x->regmap_irq_chip =3D &axp20x_regmap_irq_chip;
+>  		break;
+> +	case AXP221_ID:
+> +		axp20x->nr_cells =3D ARRAY_SIZE(axp22x_cells);
+> +		axp20x->cells =3D axp22x_cells;
+> +		axp20x->regmap_cfg =3D &axp22x_regmap_config;
+> +		axp20x->regmap_irq_chip =3D &axp22x_regmap_irq_chip;
+> +		break;
+>  	case AXP288_ID:
+>  		axp20x->cells =3D axp288_cells;
+>  		axp20x->nr_cells =3D ARRAY_SIZE(axp288_cells);
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index dfabd6db7ddf..95568eb798c3 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -14,6 +14,7 @@
+>  enum {
+>  	AXP202_ID =3D 0,
+>  	AXP209_ID,
+> +	AXP221_ID,
+>  	AXP288_ID,
+>  	NR_AXP20X_VARIANTS,
+>  };
+> @@ -45,6 +46,28 @@ enum {
+>  #define AXP20X_V_LTF_DISCHRG		0x3c
+>  #define AXP20X_V_HTF_DISCHRG		0x3d
+> =20
+> +#define AXP22X_PWR_OUT_CTRL1		0x10
+> +#define AXP22X_PWR_OUT_CTRL2		0x12
+> +#define AXP22X_PWR_OUT_CTRL3		0x13
+> +#define AXP22X_DLDO1_V_OUT		0x15
+> +#define AXP22X_DLDO2_V_OUT		0x16
+> +#define AXP22X_DLDO3_V_OUT		0x17
+> +#define AXP22X_DLDO4_V_OUT		0x18
+> +#define AXP22X_ELDO1_V_OUT		0x19
+> +#define AXP22X_ELDO2_V_OUT		0x1a
+> +#define AXP22X_ELDO3_V_OUT		0x1b
+> +#define AXP22X_DC5LDO_V_OUT		0x1c
+> +#define AXP22X_DCDC1_V_OUT		0x21
+> +#define AXP22X_DCDC2_V_OUT		0x22
+> +#define AXP22X_DCDC3_V_OUT		0x23
+> +#define AXP22X_DCDC4_V_OUT		0x24
+> +#define AXP22X_DCDC5_V_OUT		0x25
+> +#define AXP22X_DCDC23_V_RAMP_CTRL	0x27
+> +#define AXP22X_ALDO1_V_OUT		0x28
+> +#define AXP22X_ALDO2_V_OUT		0x29
+> +#define AXP22X_ALDO3_V_OUT		0x2a
+> +#define AXP22X_CHRG_CTRL3		0x35
+> +
+>  /* Interrupt */
+>  #define AXP20X_IRQ1_EN			0x40
+>  #define AXP20X_IRQ2_EN			0x41
+> @@ -100,6 +123,9 @@ enum {
+>  #define AXP20X_VBUS_MON			0x8b
+>  #define AXP20X_OVER_TMP			0x8f
+> =20
+> +#define AXP22X_PWREN_CTRL1		0x8c
+> +#define AXP22X_PWREN_CTRL2		0x8d
+> +
+>  /* GPIO */
+>  #define AXP20X_GPIO0_CTRL		0x90
+>  #define AXP20X_LDO5_V_OUT		0x91
+> @@ -108,6 +134,11 @@ enum {
+>  #define AXP20X_GPIO20_SS		0x94
+>  #define AXP20X_GPIO3_CTRL		0x95
+> =20
+> +#define AXP22X_LDO_IO0_V_OUT		0x91
+> +#define AXP22X_LDO_IO1_V_OUT		0x93
+> +#define AXP22X_GPIO_STATE		0x94
+> +#define AXP22X_GPIO_PULL_DOWN		0x95
+> +
+>  /* Battery */
+>  #define AXP20X_CHRG_CC_31_24		0xb0
+>  #define AXP20X_CHRG_CC_23_16		0xb1
+> @@ -120,6 +151,9 @@ enum {
+>  #define AXP20X_CC_CTRL			0xb8
+>  #define AXP20X_FG_RES			0xb9
+> =20
+> +/* AXP22X specific registers */
+> +#define AXP22X_BATLOW_THRES1		0xe6
+> +
+>  /* AXP288 specific registers */
+>  #define AXP288_PMIC_ADC_H               0x56
+>  #define AXP288_PMIC_ADC_L               0x57
+> @@ -158,6 +192,30 @@ enum {
+>  	AXP20X_REG_ID_MAX,
+>  };
+> =20
+> +enum {
+> +	AXP22X_DCDC1 =3D 0,
+> +	AXP22X_DCDC2,
+> +	AXP22X_DCDC3,
+> +	AXP22X_DCDC4,
+> +	AXP22X_DCDC5,
+> +	AXP22X_DC1SW,
+> +	AXP22X_DC5LDO,
+> +	AXP22X_ALDO1,
+> +	AXP22X_ALDO2,
+> +	AXP22X_ALDO3,
+> +	AXP22X_ELDO1,
+> +	AXP22X_ELDO2,
+> +	AXP22X_ELDO3,
+> +	AXP22X_DLDO1,
+> +	AXP22X_DLDO2,
+> +	AXP22X_DLDO3,
+> +	AXP22X_DLDO4,
+> +	AXP22X_RTC_LDO,
+> +	AXP22X_LDO_IO0,
+> +	AXP22X_LDO_IO1,
+> +	AXP22X_REG_ID_MAX,
+> +};
+> +
+>  /* IRQs */
+>  enum {
+>  	AXP20X_IRQ_ACIN_OVER_V =3D 1,
+> @@ -199,6 +257,34 @@ enum {
+>  	AXP20X_IRQ_GPIO0_INPUT,
+>  };
+> =20
+> +enum axp22x_irqs {
+> +	AXP22X_IRQ_ACIN_OVER_V =3D 1,
+> +	AXP22X_IRQ_ACIN_PLUGIN,
+> +	AXP22X_IRQ_ACIN_REMOVAL,
+> +	AXP22X_IRQ_VBUS_OVER_V,
+> +	AXP22X_IRQ_VBUS_PLUGIN,
+> +	AXP22X_IRQ_VBUS_REMOVAL,
+> +	AXP22X_IRQ_VBUS_V_LOW,
+> +	AXP22X_IRQ_BATT_PLUGIN,
+> +	AXP22X_IRQ_BATT_REMOVAL,
+> +	AXP22X_IRQ_BATT_ENT_ACT_MODE,
+> +	AXP22X_IRQ_BATT_EXIT_ACT_MODE,
+> +	AXP22X_IRQ_CHARG,
+> +	AXP22X_IRQ_CHARG_DONE,
+> +	AXP22X_IRQ_BATT_TEMP_HIGH,
+> +	AXP22X_IRQ_BATT_TEMP_LOW,
+> +	AXP22X_IRQ_DIE_TEMP_HIGH,
+> +	AXP22X_IRQ_PEK_SHORT,
+> +	AXP22X_IRQ_PEK_LONG,
+> +	AXP22X_IRQ_LOW_PWR_LVL1,
+> +	AXP22X_IRQ_LOW_PWR_LVL2,
+> +	AXP22X_IRQ_TIMER,
+> +	AXP22X_IRQ_PEK_RIS_EDGE,
+> +	AXP22X_IRQ_PEK_FAL_EDGE,
+> +	AXP22X_IRQ_GPIO1_INPUT,
+> +	AXP22X_IRQ_GPIO0_INPUT,
+> +};
+> +
+>  enum axp288_irqs {
+>  	AXP288_IRQ_VBUS_FALL     =3D 2,
+>  	AXP288_IRQ_VBUS_RISE,
 
-> 
->>
->>>
->>>> I don't agree. 
->>>>
->>>>> that. As I wrote, current USB cable names are misleading. It would be
->>>>> better to have "USB-VBUS" and "USB-ID".
->>>>
->>>> It is strange cable name. I prefer to use only 'USB' cable name.
->>>> But, we could support the other method to get the state of whether USB-VBUS or USB-ID
->>>> by using helper API or others.
->>>>
->>>
->>> Ok, so do you have any idea how to do it? Do we want to supply
->>> additional API for notifying about VBUS and ID changes?
->>
->> No, we need to consider more standard solution to support this case.
->>
-> 
-> Thanks,
-> Robert Baldyga
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
