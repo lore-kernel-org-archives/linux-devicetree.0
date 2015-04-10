@@ -1,59 +1,62 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 00/11] ARM: dts: apq8064 dt patches
-Date: Fri, 10 Apr 2015 21:41:31 +0100
-Message-ID: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1428669187-10775-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: galak@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: bjorn.andersson@sonymobile.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 01/11] ARM: dts: apq8064: add RPM regulators support
+Date: Fri, 10 Apr 2015 21:42:44 +0100
+Message-ID: <1428698564-11938-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1428698491-11881-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428698491-11881-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks all for reviewing v2 patches.
+This patch adds rpm node to apq8064 dt as rpm would be used by other
+devices for regulator support.
 
-Hi Kumar, 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Now that the rpm redesign dependency is resolved, If its not too late could you
-queue these dt patches for v4.1-rc1 or v4.1-rc2.
-
-I tested these patches on APQ8064 based IFC6410 and CMQS600 board with SATA/USB.
-I also rebased these patches on top of your qcom/dt branch.
-
-Thanks,
-srini
-
-Changes since v2
- * Some cosmetic fixes spotted by Stephen Boyd.
- * Rename sata_phy to phy suggested by Stephen Boyd
- * Dropped MDP patch to track it in different patchset.
-
-Changes since v1
- * Made regulators board specific, as suggested by Bjorn.
- * Used correct IRQF flags for rpm, spotted by Bjorn.
- * Fixed serial lable to be more appropriate, spotted by Bjorn.
-
-Nicolas Dechesne (2):
-  ARM: dts: apq8064: Add usb host support to CM QS-600
-  ARM: dts: apq8064: Add USB OTG support for CM QS-600
-
-Pramod Gurav (1):
-  ARM: dts: apq8064-ifc6410: Add DT alias for serial port
-
-Srinivas Kandagatla (8):
-  ARM: dts: apq8064: add RPM regulators support
-  ARM: dts: apq8064-ifc6410: Add basic regulators
-  ARM: dts: apq8064: Add usb host support.
-  ARM: dts: apq8064: Add USB OTG support
-  ARM: dts: apq8064: Add SATA controller support.
-  ARM: dts: apq8064-cm-qs600: Add basic regulators.
-  ARM: dts: apq8064: Move i2c1 pinctrl to apq8064.dtsi
-  ARM: dts: apq8064: add i2c3 node for panel.
-
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 100 ++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  | 136 +++++++++++++++++++--
- arch/arm/boot/dts/qcom-apq8064.dtsi         | 175 +++++++++++++++++++++++++++-
- 3 files changed, 402 insertions(+), 9 deletions(-)
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 6c15112..19629c9 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -276,6 +276,30 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		l2cc: clock-controller@2011000 {
++			compatible	= "syscon";
++			reg		= <0x2011000 0x1000>;
++		};
++
++		rpm@108000 {
++			compatible	= "qcom,rpm-apq8064";
++			reg		= <0x108000 0x1000>;
++			qcom,ipc	= <&l2cc 0x8 2>;
++
++			interrupts	= <GIC_SPI 19 IRQ_TYPE_EDGE_RISING>,
++					  <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>,
++					  <GIC_SPI 22 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names	= "ack", "err", "wakeup";
++
++			regulators {
++				compatible = "qcom,rpm-pm8921-regulators";
++
++				pm8921_hdmi_switch: hdmi-switch {
++					bias-pull-down;
++				};
++			};
++		};
++
+ 		/* Temporary fixed regulator */
+ 		vsdcc_fixed: vsdcc-regulator {
+ 			compatible = "regulator-fixed";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
