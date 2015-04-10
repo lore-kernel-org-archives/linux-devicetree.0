@@ -1,97 +1,102 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v5 5/9] mmc: sdhci-st: Add sdhci_st_set_uhs_signaling function.
-Date: Fri, 10 Apr 2015 10:40:27 +0100
-Message-ID: <1428658831-14308-6-git-send-email-peter.griffin@linaro.org>
-References: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1428658831-14308-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, ulf.hansson@linaro.org, peppe.cavallaro@st.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Fri, 10 Apr 2015 11:42:27 +0200
+Message-ID: <55279B03.7060202@samsung.com>
+References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com>
+ <1427980385-21285-3-git-send-email-r.baldyga@samsung.com>
+ <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com>
+ <55264148.8070903@samsung.com> <55264534.4020006@samsung.com>
+ <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
+ <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com>
+ <55279550.1060609@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <55279550.1060609@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, rogerq@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-To allow UHS modes to work properly we need to provide the st specific
-set_uhs_signaling callback function. This function differs from the
-generic sdhci_set_uhs_signaling callback in that we need to configure
-the correct delay depending on the UHS mode, and also set the V18_EN
-bit.
+On 04/10/2015 11:18 AM, Chanwoo Choi wrote:
+> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+>>>>> Hi Robert,
+>>>>>
+>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+>>>>>> Hi Chanwoo,
+>>>>>>
+>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>>>>>>> Hi Robert,
+>>>>>>>
+>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>>>>>>> Hi Chanwoo,
+>>>>>>>>
+>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>>>>>>> Hi Robert,
+>>>>>>>>>
+>>>>>>>
+>>>>>>> [snip]
+>>>>>>>
+>>>>>>>>> But, I have one question about case[3]
+>>>>>>>>>
+>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> It's because state of single USB cable connection cannot be completely
+>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>>>>>>> and ID), so we need to use two cables for single cable connection. We
+>>>>>>>> use following convention:
+>>>>>>>> cable "USB" = VBUS
+>>>>>>>> cable "USB-HOST" = !ID.
+>>>>>>>
+>>>>>>> I think that extcon provider driver have to update the only one cable state
+>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>>>>>>> at the same time through one h/w port.
+>>>>>>>
+>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+>>>>>>>
+>>>>>>
+>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+>>>>>> detected cable type is USB host). Devices would need to have complete
+>>>>>> information about USB cable connection, because OTG state machine needs
+>>>>>
+>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+>>>>>
+>>>>
+>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+>>>> machine. It needs to know exact VBUS and ID states, which cannot be
+>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+>>>> name together with "USB" to pass additional information about USB cable
+>>>> connection.
+>>>
+>>> I think this method is not proper to support this case.
+>>> It may cause the confusion about other case using USB/USB-HOST cable state
+>>> except of you commented case.
+>>
+>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+>> with old names. It seems to be simpler solution than adding new
+>> mechanism notifying about VBUS and ID states changes.
+> 
+> 
+> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+> name continuoulsy.
+> 
+> I think that extcon core provide the helper API to get the value of VBUS.
+> But I need to consider it.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
----
- drivers/mmc/host/sdhci-st.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+We need more than API for getting VBUS value - we need to be notified
+about its changes, because if we don't distinguish between USB-HOST with
+VBUS on, and USB-HOST with VBUS off, then we will not receive
+notification from extcon at VBUS state change.
 
-diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
-index 10989ed..42a361c 100644
---- a/drivers/mmc/host/sdhci-st.c
-+++ b/drivers/mmc/host/sdhci-st.c
-@@ -261,6 +261,56 @@ static int sdhci_st_set_dll_for_clock(struct sdhci_host *host)
- 	return ret;
- }
- 
-+static void sdhci_st_set_uhs_signaling(struct sdhci_host *host,
-+					unsigned int uhs)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct st_mmc_platform_data *pdata = pltfm_host->priv;
-+	u16 ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	int ret = 0;
-+
-+	/* Select Bus Speed Mode for host */
-+	ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
-+	switch (uhs) {
-+	/*
-+	 * Set V18_EN -- UHS modes do not work without this.
-+	 * does not change signaling voltage
-+	 */
-+
-+	case MMC_TIMING_UHS_SDR12:
-+		st_mmcss_set_static_delay(pdata->top_ioaddr);
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR12 | SDHCI_CTRL_VDD_180;
-+		break;
-+	case MMC_TIMING_UHS_SDR25:
-+		st_mmcss_set_static_delay(pdata->top_ioaddr);
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR25 | SDHCI_CTRL_VDD_180;
-+		break;
-+	case MMC_TIMING_UHS_SDR50:
-+		st_mmcss_set_static_delay(pdata->top_ioaddr);
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR50 | SDHCI_CTRL_VDD_180;
-+		ret = sdhci_st_set_dll_for_clock(host);
-+		break;
-+	case MMC_TIMING_UHS_SDR104:
-+	case MMC_TIMING_MMC_HS200:
-+		st_mmcss_set_static_delay(pdata->top_ioaddr);
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR104 | SDHCI_CTRL_VDD_180;
-+		ret =  sdhci_st_set_dll_for_clock(host);
-+		break;
-+	case MMC_TIMING_UHS_DDR50:
-+	case MMC_TIMING_MMC_DDR52:
-+		st_mmcss_set_static_delay(pdata->top_ioaddr);
-+		ctrl_2 |= SDHCI_CTRL_UHS_DDR50 | SDHCI_CTRL_VDD_180;
-+		break;
-+	}
-+
-+	if (ret)
-+		dev_warn(mmc_dev(host->mmc), "Error setting dll for clock "
-+						"(uhs %d)\n", uhs);
-+
-+	dev_dbg(mmc_dev(host->mmc), "uhs %d, ctrl_2 %04X\n", uhs, ctrl_2);
-+
-+	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
-+}
- 
- static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
- {
-@@ -284,6 +334,7 @@ static const struct sdhci_ops sdhci_st_ops = {
- 	.set_bus_width = sdhci_set_bus_width,
- 	.read_l = sdhci_st_readl,
- 	.reset = sdhci_reset,
-+	.set_uhs_signaling = sdhci_st_set_uhs_signaling,
- };
- 
- static const struct sdhci_pltfm_data sdhci_st_pdata = {
--- 
-1.9.1
-
+Thanks,
+Robert Baldyga
