@@ -1,59 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Sat, 11 Apr 2015 16:55:50 +0200
-Message-ID: <2529595.kpEIoZMpcn@wuerfel>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org> <1428657168-12495-4-git-send-email-gabriel.fernandez@linaro.org> <1428747477.17822.90.camel@x220>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
+ TAB7200
+Date: Sat, 11 Apr 2015 19:18:16 +0300
+Message-ID: <20150411191816.cdc5ec802b01028eb2913906@gmail.com>
+References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
+	<20150331144338.GG23664@lukather>
+	<20150331221420.3b65d2540c7dbe1d12611e12@gmail.com>
+	<20150402092259.GK23664@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1428747477.17822.90.camel@x220>
-Sender: linux-pci-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150402092259.GK23664@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 11 April 2015 12:17:57 Paul Bolle wrote:
-> Something I didn't spot in my first look at this patch.
-> 
-> On Fri, 2015-04-10 at 11:12 +0200, Gabriel FERNANDEZ wrote:
-> > --- a/drivers/pci/host/Kconfig
-> > +++ b/drivers/pci/host/Kconfig
-> >  
-> > +config PCI_ST
-> > +     bool "ST PCIe controller"
-> > +     depends on ARCH_STI || (ARM && COMPILE_TEST)
-> > +     select PCIE_DW
-> > +     help
-> > +       Enable PCIe controller support on ST Socs. This controller is based
-> > +       on Designware hardware and therefore the driver re-uses the
-> > +       Designware core functions to implement the driver.
-> 
-> You can't have ARCH_STI without ARM, so ARM will always be set if this
-> driver is enabled. Correct?
+On Thu, 2 Apr 2015 11:22:59 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Right, though the ARM dependency could soon be dropped, once the PCIE_DW
-driver can use generic infrastructure in the few places it relies on
-ARM specific code today.
-
-> > --- /dev/null
-> > +++ b/drivers/pci/host/pci-st.c
+> On Tue, Mar 31, 2015 at 10:14:20PM +0300, Aleksei Mamlin wrote:
+> > On Tue, 31 Mar 2015 07:43:38 -0700
+> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > 
+> > > Hi,
+> > > 
+> > > On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
+> > > > This patch adds nodes for the Goodix GT911 touchscreen controller found
+> > > > on the Wexler TAB7200 tablet. Controller uses one of following I2C
+> > > > addresses: 0x5d or 0x14, so just add two nodes.
+> > > 
+> > > In which case are these different addresses encountered? Different
+> > > revisions of the same board?
+> >
+> > According to the datasheet it is a feature of the controller. 
+> > The address(0x5d or 0x14) can be configured using a reset sequence,
+> > which has not yet been implemented in the driver.
 > 
-> > +     if (IS_ENABLED(CONFIG_ARM)) {
-> > +             /*
-> > +              * We have to hook the abort handler so that we can intercept
-> > +              * bus errors when doing config read/write that return UR,
-> > +              * which is flagged up as a bus error
-> > +              */
-> > +             hook_fault_code(16+6, st_pcie_abort_handler, SIGBUS, 0,
-> > +                             "imprecise external abort");
-> > +     }
+> Which address is set up by the bootloader then?
 > 
-> So, unless I'm missing something obvious here, IS_ENABLED(CONFIG_ARM)
-> will always evaluate to 1. Can't that test be dropped?
+I assume that bootloader(u-boot) didn't sets up any address, but touchscreen
+controller usually uses 0x5d. Sometimes, after hard reset, it uses 0x14.
+For this we need nodes on both adresses.
+>
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
-I would leave it in, as it's quite likely to get reused with ARM64 at some
-point in the future (no, I don't know anything about ST's product plans,
-but everybody seems to be doing this).
 
-	Arnd
+-- 
+Thanks and regards,
+Aleksei Mamlin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
