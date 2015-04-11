@@ -1,59 +1,77 @@
-From: "Rowand, Frank" <Frank.Rowand@sonymobile.com>
-Subject: Invitation and RFC: Linux Plumbers Device Tree track proposed
-Date: Sat, 11 Apr 2015 21:20:33 +0200
-Message-ID: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+From: Jakub =?UTF-8?B?S2ljacWEc2tp?= <moorray3-5tc4TXWwyLM@public.gmane.org>
+Subject: I2C device tree driver compatible strings
+Date: Sat, 11 Apr 2015 21:36:14 +0200
+Message-ID: <20150411213614.63632aff@north>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-embedded-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-embedded-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-compiler@vger.kernel.org" <devicetree-compiler@vger.kernel.org>, "linux-embedded@vger.kernel.org" <linux-embedded@vger.kernel.org>, "celinux-dev@lists.celinuxforum.org" <celinux-dev@lists.celinuxforum.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In recent years there have been proposed tools to aid in the creation of valid
-device trees and in debugging device tree issues.  An example of this is the
-various approaches proposed (with source code provided) to validate device tree
-source against valid bindings.  As of today, device tree related tools,
-techniques, and debugging infrastructure have not progressed very far.  I have
-submitted a device tree related proposal for the Linux Plumbers 2015 conference
-to spur action and innovation in such tools, techniques, and debugging
-infrastructure.
+Hello,
 
-The current title of the track is "Device Tree Tools, Validation, and
-Troubleshooting".  The proposal is located at
+sc16is7xx declares two device id tables, one with OF ids:
 
-   http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
+static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
+	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
+	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
+	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },	
+	{ .compatible = "nxp,sc16is752",	.data = &sc16is752_devtype, },
+	{ .compatible = "nxp,sc16is760",	.data = &sc16is760_devtype, },
+	{ .compatible = "nxp,sc16is762",	.data = &sc16is762_devtype, },
+	{ }
+};
+MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
 
-I am looking for several things at the moment:
+and one with i2c ids:
 
-   1) Suggestions of additional topics to be discussed.
+static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
+	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
+	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
+	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
+	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
+	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
+	{ }
+};
+MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
 
-   2) Emails or other messages expressing an interest in attending the
-      device tree track.
+I declare my device in DT under I2C controller as
+>	compatible = "nxp,sc16is740";
+However, the driver does not get loaded automatically because its
+i2c id table contains "sc16is74x" instead of "sc16is740".
 
-   3) Commitments to attend the device tree track (the conference committee
-      is looking at attendee interest and commitments as part of the process
-      of accepting the device tree track).
+I have three questions:
 
-   4) Identifying additional people who should attend the device tree track.
+(1) What is the relation between i2c_device_id and of_device_id strings
+    and why does the driver define both?
 
-The desired outcome of the device tree track is to encourage the future
-development of tools, process, etc to make device tree related development,
-test, review and system administration more efficient, faster, easier, more
-robust, and to improve troubleshooting and debugging facilities.  Some
-examples of areas of interest could include:
-   - make it easier to create correct device tree source files
-   - support for debugging incorrect device tree source files
-   - create a kernel that correctly boots one or more specific device trees
-     (eg a kernel configured to include the proper drivers and subsystems)
-   - create drivers that properly work for a device tree binding definition
-   - create drivers that support detecting errors in the related node(s) in
-     a device tree
+(2) What are the rules for loading i2c drivers based on DT and why is the
+    driver not loaded even though its compatible with one of the OF ids?
 
-The wiki page lists additional areas of interest.
+(3) Is it OK for the driver to define incompatible strings or should I
+    correct them like this (keeping the old entry for backwards
+    compatibility):
+
+diff --git a/drivers/tty/serial/sc16is7xx.c
+b/drivers/tty/serial/sc16is7xx.c index eaf0008a39cb..efe286d00174 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -1219,6 +1219,8 @@ static int sc16is7xx_i2c_remove(struct i2c_client
+*client) 
+ static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
+        { "sc16is74x",  (kernel_ulong_t)&sc16is74x_devtype, },
++       { "sc16is740",  (kernel_ulong_t)&sc16is74x_devtype, },
++       { "sc16is741",  (kernel_ulong_t)&sc16is74x_devtype, },
+        { "sc16is750",  (kernel_ulong_t)&sc16is750_devtype, },
+        { "sc16is752",  (kernel_ulong_t)&sc16is752_devtype, },
+        { "sc16is760",  (kernel_ulong_t)&sc16is760_devtype, },
+
 
 Thanks,
-
-Frank Rowand
-Sony Mobile Communications
+Kuba
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
