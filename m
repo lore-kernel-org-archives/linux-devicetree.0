@@ -1,66 +1,59 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
- TAB7200
-Date: Sat, 11 Apr 2015 19:36:14 +0300
-Message-ID: <20150411193614.83013f345aaa1123ef55ecbf@gmail.com>
-References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
-	<20150331144338.GG23664@lukather>
-	<20150331223120.10199bf9e3fb41b16f879eca@gmail.com>
-	<20150402185008.GC14618@lukather>
+From: "Rowand, Frank" <Frank.Rowand@sonymobile.com>
+Subject: Invitation and RFC: Linux Plumbers Device Tree track proposed
+Date: Sat, 11 Apr 2015 21:20:33 +0200
+Message-ID: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150402185008.GC14618@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-embedded-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-embedded-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-compiler@vger.kernel.org" <devicetree-compiler@vger.kernel.org>, "linux-embedded@vger.kernel.org" <linux-embedded@vger.kernel.org>, "celinux-dev@lists.celinuxforum.org" <celinux-dev@lists.celinuxforum.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 Apr 2015 20:50:08 +0200
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+In recent years there have been proposed tools to aid in the creation of valid
+device trees and in debugging device tree issues.  An example of this is the
+various approaches proposed (with source code provided) to validate device tree
+source against valid bindings.  As of today, device tree related tools,
+techniques, and debugging infrastructure have not progressed very far.  I have
+submitted a device tree related proposal for the Linux Plumbers 2015 conference
+to spur action and innovation in such tools, techniques, and debugging
+infrastructure.
 
-> On Tue, Mar 31, 2015 at 10:31:20PM +0300, Aleksei Mamlin wrote:
-> > > > +		compatible = "goodix,gt911";
-> > > > +		reg = <0x5d>;
-> > > > +		interrupt-parent = <&pio>;
-> > > > +		interrupts = <21 IRQ_TYPE_NONE>; /* EINT21 (PH21) */
-> > > 
-> > > Unfortunately, IRQ_TYPE_NONE is not a valid value for the GIC
-> > > bindings.
-> > > 
-> >
-> > Hmm. Which value I must use in this case? IRQ type is set by the
-> > touchscreen controller driver, so I think that value must be 0.
-> 
-> Whatever the hardware is using. Presumably the same value than the
-> driver sets.
-> 
-> > >
-> > > You're also not adding a pinctrl group for that pin?
-> >
-> > No, because it works fine with this DT nodes. It seems that I should
-> > first configure pin to work in interrupt mode. Correct?
-> 
-> You don't have to, since the pio driver will already take care of
-> muxing it to the right function, but that will prevent any driver to
-> call pinctrl_request on the same pin.
-> 
-It is still necessary?
-I see that you have accepted Hans de Goede's patches: http://www.spinics.net/lists/arm-kernel/msg411142.html
->
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+The current title of the track is "Device Tree Tools, Validation, and
+Troubleshooting".  The proposal is located at
 
+   http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
 
--- 
-Thanks and regards,
-Aleksei Mamlin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I am looking for several things at the moment:
+
+   1) Suggestions of additional topics to be discussed.
+
+   2) Emails or other messages expressing an interest in attending the
+      device tree track.
+
+   3) Commitments to attend the device tree track (the conference committee
+      is looking at attendee interest and commitments as part of the process
+      of accepting the device tree track).
+
+   4) Identifying additional people who should attend the device tree track.
+
+The desired outcome of the device tree track is to encourage the future
+development of tools, process, etc to make device tree related development,
+test, review and system administration more efficient, faster, easier, more
+robust, and to improve troubleshooting and debugging facilities.  Some
+examples of areas of interest could include:
+   - make it easier to create correct device tree source files
+   - support for debugging incorrect device tree source files
+   - create a kernel that correctly boots one or more specific device trees
+     (eg a kernel configured to include the proper drivers and subsystems)
+   - create drivers that properly work for a device tree binding definition
+   - create drivers that support detecting errors in the related node(s) in
+     a device tree
+
+The wiki page lists additional areas of interest.
+
+Thanks,
+
+Frank Rowand
+Sony Mobile Communications
