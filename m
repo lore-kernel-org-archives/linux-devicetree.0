@@ -1,34 +1,40 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v5 00/11] ARM: vf610m4: Add Vybrid Cortex-M4 support
-Date: Sat, 11 Apr 2015 00:13:29 +0000
-Message-ID: <20150411001329.GE18660@io.lakedaemon.net>
-References: <1428609855-27657-1-git-send-email-stefan@agner.ch>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH 0/2] Qualcomm Shared Memory Driver
+Date: Fri, 10 Apr 2015 17:16:52 -0700
+Message-ID: <1428711414-17079-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428609855-27657-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stefan,
+This patch implements the shared memory based communication system found on all
+Qualcomm platforms. SMD was originally used to communicate with the modem but
+has grown to be part of power management as well as the various DSPs etc found
+in Qualcomm platforms.
 
-On Thu, Apr 09, 2015 at 10:04:04PM +0200, Stefan Agner wrote:
-> Stefan Agner (11):
->   genirq: generic chip: support hierarchy domain
->   irqchip: nvic: support hierarchy irq domain
->   irqchip: vf610-mscm: support NVIC parent
+The code depends on the SMEM implementation found here:
+https://patchwork.kernel.org/patch/6160431/
 
-I've applied patches 1 to 3 onto irqchip/vybrid.  And will merge them in for
--next testing.  We don't know if v4.0 is dropping on Sunday or not.  If
-it doesn't, we should be able to get these in for v4.1.  Otherwise,
-they'll have to wait for the next cycle.
+Bjorn Andersson (2):
+  soc: qcom: Add device tree binding for Shared Memory Device
+  soc: qcom: Add Shared Memory Driver
 
-thx,
+ .../devicetree/bindings/soc/qcom/qcom,smd.txt      |   78 ++
+ drivers/soc/qcom/Kconfig                           |    8 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/smd.c                             | 1263 ++++++++++++++++++++
+ include/linux/soc/qcom/smd.h                       |   47 +
+ 5 files changed, 1397 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+ create mode 100644 drivers/soc/qcom/smd.c
+ create mode 100644 include/linux/soc/qcom/smd.h
 
-Jason.
+-- 
+1.8.2.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
