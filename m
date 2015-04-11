@@ -1,77 +1,67 @@
-From: Jakub =?UTF-8?B?S2ljacWEc2tp?= <moorray3-5tc4TXWwyLM@public.gmane.org>
-Subject: I2C device tree driver compatible strings
-Date: Sat, 11 Apr 2015 21:36:14 +0200
-Message-ID: <20150411213614.63632aff@north>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Andrew Andrianov <andrew@ncrmnt.org>
+Subject: [PATCH 0/2] ARM: mvebu: Add DLINK-DNS327L support
+Date: Sat, 11 Apr 2015 23:29:18 +0300
+Message-ID: <1428784160-19431-1-git-send-email-andrew@ncrmnt.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org
+Cc: Andrew Andrianov <andrew@ncrmnt.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patchset adds support for armada370-based NAS by DLINK.
 
-sc16is7xx declares two device id tables, one with OF ids:
+DNS-327L is a 2-bay NAS with the following specs:     
+     - 512MiB RAM
+     - 128MiB NAND Flash
+     - 1 GbE interface (Marvell PHY)
+     - 1 rear USB 3.0 port (via PCIe USB 3.0 controller)
+     - 2 internal SATA ports handled by the Armada 370: 
+       	 uses 2 gpios for power control
+     - two front 2-color leds (amber + white) for both discs, 
+        controlled by the SoC
+     - One white LED handled by SoC (USB)
+     - 3 buttons. Power handled by weltrend, USB and 
+       RESET (on the bottom) are wired via GPIOs 
+     - Unidentified i2c device at address 0x13 (via i2cdetect)
+     - UART0 providing serial console
+     - Weltrend MCU serving for RTC, temperature, fan control, 
+       and power button handling interfaced via UART1 (dns320l-daemon)
+     
+Hardware notes follow: 
+Everything's supported, save for mysterious i2c device at 
+address 0x13 that I couldn't even find on the PCB.
 
-static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
-	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
-	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
-	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },	
-	{ .compatible = "nxp,sc16is752",	.data = &sc16is752_devtype, },
-	{ .compatible = "nxp,sc16is760",	.data = &sc16is760_devtype, },
-	{ .compatible = "nxp,sc16is762",	.data = &sc16is762_devtype, },
-	{ }
-};
-MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
+Stock firmware performs some messing with PHY registers (that 
+have no public documentation) using a userspace script. With 
+upstream kernel it is possible to match the stock behavior using 
+the following in u-boot prompt:
 
-and one with i2c ids:
+mw.l 0xd00184e0 0xa8a; 
+phyWrite 0 16 2; 
+phyWrite 0 19 77; 
+phyWrite 0 18 5747; 
 
-static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
-	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
-	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
-	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
-	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
-	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-	{ }
-};
-MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
+When power button is pressed to turn the NAS off, weltrend signals 
+the SoC by driving mpp63 line low. Apparently right now pinctrl assumes
+that this line can only work as 'gpo' that screws up gpio-buttons driver.
+Since without gpio-buttons, mpp63 works as input properly via sysfs 
+interface, I've added a patch for pinctrl-armada-370.c that fixes the 
+issue.
 
-I declare my device in DT under I2C controller as
->	compatible = "nxp,sc16is740";
-However, the driver does not get loaded automatically because its
-i2c id table contains "sc16is74x" instead of "sc16is740".
+The only remaining issue are hard-freezes every 4-16 hours when
+CONFIG_ARM_MVEBU_V7_CPUIDLE=y
+As of 3.18 this issue was still present, I'm testing if things changed 
+in 4.0-rc7 right now (Still live for 3 hours at the time of writing)
 
-I have three questions:
+Andrew Andrianov (2):
+  pinctrl: mvebu: Fix mapping of pin 63 (gpo -> gpio)
+  ARM: mvebu: dts: Add dts file for DLink DNS-327L
 
-(1) What is the relation between i2c_device_id and of_device_id strings
-    and why does the driver define both?
+ arch/arm/boot/dts/Makefile                     |    1 +
+ arch/arm/boot/dts/armada-370-dlink-dns327l.dts |  309 ++++++++++++++++++++++++
+ drivers/pinctrl/mvebu/pinctrl-armada-370.c     |    2 +-
+ 3 files changed, 311 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/armada-370-dlink-dns327l.dts
 
-(2) What are the rules for loading i2c drivers based on DT and why is the
-    driver not loaded even though its compatible with one of the OF ids?
-
-(3) Is it OK for the driver to define incompatible strings or should I
-    correct them like this (keeping the old entry for backwards
-    compatibility):
-
-diff --git a/drivers/tty/serial/sc16is7xx.c
-b/drivers/tty/serial/sc16is7xx.c index eaf0008a39cb..efe286d00174 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1219,6 +1219,8 @@ static int sc16is7xx_i2c_remove(struct i2c_client
-*client) 
- static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
-        { "sc16is74x",  (kernel_ulong_t)&sc16is74x_devtype, },
-+       { "sc16is740",  (kernel_ulong_t)&sc16is74x_devtype, },
-+       { "sc16is741",  (kernel_ulong_t)&sc16is74x_devtype, },
-        { "sc16is750",  (kernel_ulong_t)&sc16is750_devtype, },
-        { "sc16is752",  (kernel_ulong_t)&sc16is752_devtype, },
-        { "sc16is760",  (kernel_ulong_t)&sc16is760_devtype, },
-
-
-Thanks,
-Kuba
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.10.4
