@@ -1,96 +1,56 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: Fwd: Re: [PATCH 2/2] ARM: mvebu: dts: Add dts file for DLink
- DNS-327L
-Date: Sun, 12 Apr 2015 14:16:09 +0200
-Message-ID: <552A6209.9040903@gmail.com>
-References: <b6534b962d2cf9d21cb72d43f19a6574@mail.ncrmnt.org>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <b6534b962d2cf9d21cb72d43f19a6574@mail.ncrmnt.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew <andrew@ncrmnt.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>
+From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Subject: [PATCH 0/7] ARM: dts: Refactor Exynos5 boards for phandle notation
+Date: Sun, 12 Apr 2015 21:24:47 +0900
+Message-ID: <1428841494-20769-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12.04.2015 13:43, Andrew wrote:
-> Sebastian Hesselbarth =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 12.04.2015 14:20=
-:
->> On 11.04.2015 22:29, Andrew Andrianov wrote:
->>> Signed-off-by: Andrew Andrianov <andrew@ncrmnt.org>
-[...]
->>> + * CONFIG_ARM_MVEBU_V7_CPUIDLE=3Dy causes hard freezes every 1-8 h=
-ours
->>
->> I don't think the dts is the right place for Linux issues.
->
-> Not sure if that's a hardware weirdness or software issue (yet).
-> Just checked - this goblin is there in 4.0-rc7.
+Hi,
 
-I understand the issue, but still the dts is not the right place
-for this comment.
 
-[...]
->>> +                marvell,nand-keep-config;
->>> +                marvell,nand-enable-arbiter;
->>> +                nand-on-flash-bbt;
->>
->> Do you know the ECC scheme used?
->
-> Any hints on how to find it apart from dumping NAND controller regist=
-ers
-> from bootloader ?
+The phandle notation reduces possible mistakes when overriding nodes
+by child board files and reduces duplication of addresses.
 
- From the original bootlog:
+The patchset refactors Exynos5 boards to use the phandle way.
 
-armada-nand armada-nand.0: Initialize HAL based NFC in 8bit mode with=20
-DMA Disabled using BCH 4bit ECC
+Tested by comparison of decompiled DTB for each commit.
 
-that translates into
 
-nand-ecc-strength =3D <4>;
-nand-ecc-step-size =3D <512>;
+Patchset depends (to reduce conflicts) on following patches:
+1. v2: ARM: dts: Enable S3C RTC on Trats2 and Arndale Octa
+   http://www.spinics.net/lists/arm-kernel/msg410429.html
+2. ARM: dts: Fix pinctrl settings for S2MPS11 RTC alarm IRQ on Arndale Octa
+   http://www.spinics.net/lists/linux-samsung-soc/msg43435.html
 
-[...]
->>> +                /* Hardwired into stock bootloader */
->>
->> I don't get the comment above.
->
-> The stock u-boot is hacked with a 'failsafe' kernel address.
 
-Ok, the above partition isn't passed by the bootloader on mtdparts
-cmdline, i.e. that is why you call it "hardwired" ?
+Best regards,
+Krzysztof
 
-Just remove the comment, actually the whole partition table is
-"hacked" into the stock bootloader.
+Krzysztof Kozlowski (7):
+  ARM: dts: Add labels to nodes used in Exynos5 based DTS
+  ARM: dts: Use phandle notation for overriding nodes in Exynos5250
+  ARM: dts: Remove duplicated I2C 7 nodes in Snow
+  ARM: dts: Use phandle notation for overriding nodes in Arndale Octa
+  ARM: dts: Use phandle notation for overriding nodes in Exynos5420
+  ARM: dts: Use phandle notation for overriding nodes in SMDK5420
+  ARM: dts: Use phandle notation for overriding nodes in Exynos5440
+    boards
 
-> If for some reason running the 'bootcmd' fails, it reads
-> 5MiBs from partition @ (5d00000 + 0x800) and tries to boot it.
-> There's no way to change this via environment, only by replacing
-> the bootloader.
-> Personally I'm more happy with a simpler partition table, but I
-> guess upstream should be oriented towards the stock bootloader.
+ arch/arm/boot/dts/exynos5.dtsi                |   6 +-
+ arch/arm/boot/dts/exynos5250-snow.dts         |  46 +-
+ arch/arm/boot/dts/exynos5250.dtsi             |  82 ++--
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts | 634 ++++++++++++-------------
+ arch/arm/boot/dts/exynos5420-peach-pit.dts    |   2 +-
+ arch/arm/boot/dts/exynos5420-smdk5420.dts     | 639 +++++++++++++-------------
+ arch/arm/boot/dts/exynos5420.dtsi             |  80 ++--
+ arch/arm/boot/dts/exynos5440-sd5v1.dts        |  10 +-
+ arch/arm/boot/dts/exynos5440-ssdk5440.dts     |  85 ++--
+ arch/arm/boot/dts/exynos5440.dtsi             |   4 +-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts     |   2 +-
+ 11 files changed, 794 insertions(+), 796 deletions(-)
 
-Yeah, leave the original partition table. Any other, smarter
-bootloader can replace it.
-
-[...]
-> Thanks for the review, I'll resubmit the fixed patchset shortly.
-> Please disregard my [PATCH v2] messages. I've send them the moment be=
-fore
-> I noticed your email and review.
-
-Please always leave the Cc-list in place.
-
-And you should relax and leave patches there a day or two (or three).
-Not everybody is reading patches immediately.
-
-We are in no hurry, the current merge window is already closed,
-the new one is 6 weeks away.
-
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.0
