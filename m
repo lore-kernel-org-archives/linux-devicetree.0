@@ -1,39 +1,57 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH RFC v3 4/4] MIPS: BMIPS: accept UHI interface for passing a dtb
-Date: Sun, 12 Apr 2015 12:25:01 +0200
-Message-ID: <1428834301-12721-5-git-send-email-jogo@openwrt.org>
-References: <1428834301-12721-1-git-send-email-jogo@openwrt.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428834301-12721-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 3/3] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Sun, 12 Apr 2015 11:57:35 +0100
+Message-ID: <7a9107efdfe64b0d9e9d93421595badb@www.loen.fr>
+References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
+ <1423128277-10297-4-git-send-email-bintian.wang@huawei.com>
+ <20150205193017.GF20735@leverpostej>
+ <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
+ <CAAS=xmgySDmwNpx5xpHd15M-1eJLvPBhudhGu+cRqw3g_X_SZA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAS=xmgySDmwNpx5xpHd15M-1eJLvPBhudhGu+cRqw3g_X_SZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brent Wang <wangbintian@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, dan.zhao@hisilicon.com, btw@mail.itp.ac.cn, Catalin Marinas <catalin.marinas@arm.com>, wangbinghui@hisilicon.com, Will Deacon <will.deacon@arm.com>, huxinwei@huawei.com, khilman@linaro.org, haojian.zhuang@linaro.org, yanhaifeng@gmail.com, rob.herring@linaro.org, mturquette@linaro.org, victor.lixin@hisilicon.com, xuwei5@hisilicon.com, jh80.chung@samsung.com, sledge.yanwei@huawei.com, kong.kongxinwei@hisilicon.com, heyunlei@huawei.com, w.f@huawei.com, zhangfei.gao@linaro.org, z.liuxinliang@huawei.com, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, puck.chen@hisilicon.com, olof@lixom.net, robh+dt@kernel.org, linux@arm.linux.org.uk, zhenwei.wang@hisilicon.com, linux-arm-kernel@lists.infradead.org, gu
 List-Id: devicetree@vger.kernel.org
 
-Detect and use passed dtb address using the UHI interface. This allows for
-booting with a vmlinux.bin appended dtb instead of using a built-in one.
+On 2015-04-12 07:40, Brent Wang wrote:
+> Hello Mark,
+>
+> 2015-02-06 16:42 GMT+08:00 Brent Wang <wangbintian@gmail.com>:
+> [...]
+>>>
+>>>> +     gic: interrupt-controller@f6800000 {
+>>>> +             compatible = "arm,gic-400", "arm,cortex-a15-gic";
+>>>
+>>> Surely there's no need for the "arm,cortex-a15-gic" fallback entry? 
+>>> What
+>>> am I missing?
+>> Remove it in next version.
+> After remove "arm,cortex-a15-gic", I get the following error during
+> kernel booting:
+> -----
+> kvm [1]: Using HYP init bounce page @396d9000
+> kvm [1]: error: no compatible GIC node found
+> kvm [1]: error initializing Hyp mode: -19
+> -----
+>
+> Check code "virt/kvm/arm/vgic.c", gicv2 only "cortex-a15-gic" and
+> gicv3 support kvm now,
+> so I think we should keep it, how about your idea?
 
-Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- arch/mips/bmips/setup.c |    2 ++
- 1 file changed, 2 insertions(+)
+Please look at commit 0f37247574b3 that is queued for merge in 4.1.
+It adds the required compatibility strings to KVM, so Mark is perfectly
+right to ask you to drop this "cortex-a15-gic" from your DT.
 
-diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index fae800e..526ec27 100644
---- a/arch/mips/bmips/setup.c
-+++ b/arch/mips/bmips/setup.c
-@@ -149,6 +149,8 @@ void __init plat_mem_setup(void)
- 	/* intended to somewhat resemble ARM; see Documentation/arm/Booting */
- 	if (fw_arg0 == 0 && fw_arg1 == 0xffffffff)
- 		dtb = phys_to_virt(fw_arg2);
-+	else if (fw_arg0 == -2) /* UHI interface */
-+		dtb = (void *)fw_arg1;
- 	else if (__dtb_start != __dtb_end)
- 		dtb = (void *)__dtb_start;
- 	else
+This DT won't be merged before 4.1 anyway, so there is no point trying
+to make it work with older kernels.
+
+Thanks,
+
+         M.
 -- 
-1.7.10.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fast, cheap, reliable. Pick two.
