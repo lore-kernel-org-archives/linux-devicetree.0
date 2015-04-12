@@ -1,47 +1,98 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [Celinux-dev] Invitation and RFC: Linux Plumbers Device Tree
- track proposed
-Date: Sun, 12 Apr 2015 09:53:41 +0200
-Message-ID: <CAMuHMdWeKn6MkmtFpWP-MqBnNYE0x0A0_3ZYD3cDhdnb9DCs5Q@mail.gmail.com>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
-	<CAOS_Y6Qmt2KTRu6urPs-Y1e2Xv1QPNTaQHH4_N8Kk8XU7n+ecQ@mail.gmail.com>
+Subject: Re: I2C device tree driver compatible strings
+Date: Sun, 12 Apr 2015 09:55:05 +0200
+Message-ID: <CAMuHMdXM4H3FDDd8Z07ugAAPMQLfDhPC+V2FKs1bKbOtSw1AOg@mail.gmail.com>
+References: <20150411213614.63632aff@north>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOS_Y6Qmt2KTRu6urPs-Y1e2Xv1QPNTaQHH4_N8Kk8XU7n+ecQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150411213614.63632aff@north>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Jakub_Kici=C5=84ski?= <moorray3-5tc4TXWwyLM@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+CC linux-i2c
 
-On Sun, Apr 12, 2015 at 2:05 AM, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org> wrote:
-> Is there a device tree porting HOWTO anywhere? If I have a board
-> that's using explicit C initialization, and I want to convert it over
-> to device tree, step by step what do I do?
+On Sat, Apr 11, 2015 at 9:36 PM, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> w=
+rote:
+> Hello,
 >
-> If I'm writing a new board support, what device tree bits do I need to
-> get a shell prompt on a serial port running out of initramfs?
-> (Physical memory, interrupt controller, timer to drive the scheduler,
-> serial chip...)
+> sc16is7xx declares two device id tables, one with OF ids:
 >
-> There's a bunch of device tree reference material out there, but no
-> tutorial material at all, that I can find...
-
-http://www.devicetree.org/Device_Tree_Usage
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] =3D=
+ {
+>         { .compatible =3D "nxp,sc16is740",        .data =3D &sc16is74=
+x_devtype, },
+>         { .compatible =3D "nxp,sc16is741",        .data =3D &sc16is74=
+x_devtype, },
+>         { .compatible =3D "nxp,sc16is750",        .data =3D &sc16is75=
+0_devtype, },
+>         { .compatible =3D "nxp,sc16is752",        .data =3D &sc16is75=
+2_devtype, },
+>         { .compatible =3D "nxp,sc16is760",        .data =3D &sc16is76=
+0_devtype, },
+>         { .compatible =3D "nxp,sc16is762",        .data =3D &sc16is76=
+2_devtype, },
+>         { }
+> };
+> MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
+>
+> and one with i2c ids:
+>
+> static const struct i2c_device_id sc16is7xx_i2c_id_table[] =3D {
+>         { "sc16is74x",  (kernel_ulong_t)&sc16is74x_devtype, },
+>         { "sc16is750",  (kernel_ulong_t)&sc16is750_devtype, },
+>         { "sc16is752",  (kernel_ulong_t)&sc16is752_devtype, },
+>         { "sc16is760",  (kernel_ulong_t)&sc16is760_devtype, },
+>         { "sc16is762",  (kernel_ulong_t)&sc16is762_devtype, },
+>         { }
+> };
+> MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
+>
+> I declare my device in DT under I2C controller as
+>>       compatible =3D "nxp,sc16is740";
+> However, the driver does not get loaded automatically because its
+> i2c id table contains "sc16is74x" instead of "sc16is740".
+>
+> I have three questions:
+>
+> (1) What is the relation between i2c_device_id and of_device_id strin=
+gs
+>     and why does the driver define both?
+>
+> (2) What are the rules for loading i2c drivers based on DT and why is=
+ the
+>     driver not loaded even though its compatible with one of the OF i=
+ds?
+>
+> (3) Is it OK for the driver to define incompatible strings or should =
+I
+>     correct them like this (keeping the old entry for backwards
+>     compatibility):
+>
+> diff --git a/drivers/tty/serial/sc16is7xx.c
+> b/drivers/tty/serial/sc16is7xx.c index eaf0008a39cb..efe286d00174 100=
+644
+> --- a/drivers/tty/serial/sc16is7xx.c
+> +++ b/drivers/tty/serial/sc16is7xx.c
+> @@ -1219,6 +1219,8 @@ static int sc16is7xx_i2c_remove(struct i2c_clie=
+nt
+> *client)
+>  static const struct i2c_device_id sc16is7xx_i2c_id_table[] =3D {
+>         { "sc16is74x",  (kernel_ulong_t)&sc16is74x_devtype, },
+> +       { "sc16is740",  (kernel_ulong_t)&sc16is74x_devtype, },
+> +       { "sc16is741",  (kernel_ulong_t)&sc16is74x_devtype, },
+>         { "sc16is750",  (kernel_ulong_t)&sc16is750_devtype, },
+>         { "sc16is752",  (kernel_ulong_t)&sc16is752_devtype, },
+>         { "sc16is760",  (kernel_ulong_t)&sc16is760_devtype, },
+>
+>
+> Thanks,
+> Kuba
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
