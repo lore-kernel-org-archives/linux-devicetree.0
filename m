@@ -1,68 +1,22 @@
-From: "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>
-Subject: RE: [PATCH] powerpc/dts: Add some SoC specific "fsl, *-device-config"
- compatibles
-Date: Sun, 12 Apr 2015 16:01:38 +0000
-Message-ID: <DM2PR03MB383C3457454CA9297696FE2E6F80@DM2PR03MB383.namprd03.prod.outlook.com>
-References: <1428560482-30938-1-git-send-email-igal.liberman@freescale.com>
- <1428598922.22867.534.camel@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1428598922.22867.534.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: v4 Exynos5422 odroidxu3 pwm-fan control using thermal sensors
+Date: Mon, 13 Apr 2015 04:14:05 +0930
+Message-ID: <1428864251-31780-1-git-send-email-linux.amoon@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Markus Reichl <m.reichl@fivetechno.de>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAw
-OSwgMjAxNSA4OjAyIFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0hdIHBvd2VycGMvZHRzOiBBZGQgc29tZSBTb0Mgc3BlY2lmaWMgImZz
-bCwqLWRldmljZS0NCj4gY29uZmlnIiBjb21wYXRpYmxlcw0KPiANCj4gT24gVGh1LCAyMDE1LTA0
-LTA5IGF0IDA5OjIxICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOg0KPiA+IEZyb206IElnYWwg
-TGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IFRoaXMgcGF0
-Y2ggaXMgcmVxdWlyZWQgZm9yOiBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzQ1
-OTU4NC8NCj4gDQo+IElmIGl0J3MgcmVxdWlyZWQgZm9yIHRoYXQgcGF0Y2gsIHdoeSBhcmVuJ3Qg
-dGhleSBwYXJ0IG9mIGEgcGF0Y2hzZXQgcmF0aGVyIHRoYW4NCj4gaW5kZXBlbmRlbnRseSBwb3N0
-ZWQ/ICBJIGRvbid0IHNlZSBhbnkgbWVudGlvbiBvZiBhIGRlcGVuZGVuY3kgaW4gdGhhdA0KPiBw
-YXRjaCwgc28gaG93IHdvdWxkIEkgaGF2ZSBrbm93biBub3QgdG8gYXBwbHkgaXQ/DQo+IA0KDQpU
-aGlzIHBhdGNoIHdhcyBsZWZ0IG91dCBmcm9tIHRoZSBvcmlnaW5hbCBzdWJtaXNzaW9ucy4NCkkn
-bGwgYWRkIGEgY29tbWVudCBpbiB0aGUgbmV4dCBzdWJtaXNzaW9uIG9mIGh0dHBzOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcGF0Y2gvNDU5NTg0Lw0KDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBJZ2Fs
-IExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+DQo+ID4gLS0tDQo+ID4gIGFy
-Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kgfCAgICAzICsrLQ0KPiA+
-ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2ktcG9zdC5kdHNpIHwgICAgMyArKy0N
-Cj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaSAgICB8ICAgIDMg
-KystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgfCAg
-ICAzICsrLQ0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNp
-IHwgICAgMyArKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3Qu
-ZHRzaSB8ICAgIDMgKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1w
-b3N0LmR0c2kgfCAgICAzICsrLQ0KPiA+ICA3IGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMo
-KyksIDcgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L2ZzbC9iNDQyMHNpLXBvc3QuZHRzaQ0KPiA+IGluZGV4IDFlYTg2MDIuLjliMTRmMjQgMTAwNjQ0
-DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaQ0K
-PiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kNCj4g
-PiBAQCAtNzcsNyArNzcsOCBAQA0KPiA+ICAJfTsNCj4gPg0KPiA+ICAJZ3V0czogZ2xvYmFsLXV0
-aWxpdGllc0BlMDAwMCB7DQo+ID4gLQkJY29tcGF0aWJsZSA9ICJmc2wsYjQ0MjAtZGV2aWNlLWNv
-bmZpZyIsICJmc2wscW9yaXEtZGV2aWNlLQ0KPiBjb25maWctMi4wIjsNCj4gPiArCQljb21wYXRp
-YmxlID0gImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIiwgImZzbCxiNC1kZXZpY2UtDQo+IGNvbmZp
-ZyIsDQo+ID4gKwkJCSAgICAgICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0yLjAiOw0KPiANCj4g
-V2h5Pw0KPiANCg0KV2Ugd2FudGVkIHRvIGJlIGFibGUgdG8gZGV0ZXJtaW5lIGI0IGRlcml2YXRp
-dmVzIHRvZ2V0aGVyIGluIHRoZSBGTWFuIGNsb2NrIGluaXRpYWxpemF0aW9uICh3aXRob3V0IGNo
-ZWNraW5nIGI0ODYwL2I0NDIwIGNvbXBhdGlibGUpLiANCg0KPiAtU2NvdHQNCj4gDQoNCklnYWwN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBj
-LWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
-aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Changes from v1
+        fixed the registration of thermal sensor to tmu_cpu0
+Dropped patches.
+        0005-pwm-samsung-Fix-output-race-on-disabling.patch
+        0006-hwmon-pwm-fan-Update-the-duty-cycle-inorder-to-contr.patch
+changes from v2
+Added patch
+	0006-hwmon-pwm-fan-Update-the-duty-cycle-inorder-to-contr.patch
+changes from v3
+	Simpilfy the commment in the patch.
+
+-Anand Moon
