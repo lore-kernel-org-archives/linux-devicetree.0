@@ -1,132 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Subject: [PATCH 2/7] ARM: dts: Use phandle notation for overriding nodes in Exynos5250
-Date: Sun, 12 Apr 2015 21:24:49 +0900
-Message-ID: <1428841494-20769-3-git-send-email-k.kozlowski.k@gmail.com>
-References: <1428841494-20769-1-git-send-email-k.kozlowski.k@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428841494-20769-1-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: [PATCH 1/2] pinctrl: bcm2835: add pinctrl pre-processor define
+Date: Sun, 12 Apr 2015 14:33:55 +0200
+Message-ID: <1428842036-14202-1-git-send-email-alexanders83@web.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The phandle notation reduces possible mistakes when overriding nodes.
+This adds defines for the BCM2835 function selections. This is notably
+useful as the functions are not ordered.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5250.dtsi | 82 +++++++++++++++++++--------------------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+ include/dt-bindings/pinctrl/bcm2835.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 77f656eb8e6b..4bd737ead680 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -241,13 +241,6 @@
- 		clock-names = "mfc";
- 	};
- 
--	rtc: rtc@101E0000 {
--		clocks = <&clock CLK_RTC>;
--		clock-names = "rtc";
--		interrupt-parent = <&pmu_system_controller>;
--		status = "disabled";
--	};
--
- 	tmu: tmu@10060000 {
- 		compatible = "samsung,exynos5250-tmu";
- 		reg = <0x10060000 0x100>;
-@@ -276,26 +269,6 @@
- 		};
- 	};
- 
--	serial@12C00000 {
--		clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
--	serial@12C10000 {
--		clocks = <&clock CLK_UART1>, <&clock CLK_SCLK_UART1>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
--	serial@12C20000 {
--		clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
--	serial@12C30000 {
--		clocks = <&clock CLK_UART3>, <&clock CLK_SCLK_UART3>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
- 	sata: sata@122F0000 {
- 		compatible = "snps,dwc-ahci";
- 		samsung,sata-freq = <66>;
-@@ -778,20 +751,6 @@
- 		#phy-cells = <0>;
- 	};
- 
--	dp: dp-controller@145B0000 {
--		power-domains = <&pd_disp1>;
--		clocks = <&clock CLK_DP>;
--		clock-names = "dp";
--		phys = <&dp_phy>;
--		phy-names = "dp";
--	};
--
--	fimd: fimd@14400000 {
--		power-domains = <&pd_disp1>;
--		clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
--		clock-names = "sclk_fimd", "fimd";
--	};
--
- 	adc: adc@12D10000 {
- 		compatible = "samsung,exynos-adc-v1";
- 		reg = <0x12D10000 0x100>;
-@@ -812,3 +771,44 @@
- 		clock-names = "secss";
- 	};
- };
+diff --git a/include/dt-bindings/pinctrl/bcm2835.h b/include/dt-bindings/pinctrl/bcm2835.h
+new file mode 100644
+index 000000000000..e90f437ce4a6
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/bcm2835.h
+@@ -0,0 +1,20 @@
++/*
++ * This header provides constants for bcm2835 pinctrl bindings.
++ *
++ * Copyright (C) 2015 Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
++ *
++ */
 +
-+&dp {
-+	power-domains = <&pd_disp1>;
-+	clocks = <&clock CLK_DP>;
-+	clock-names = "dp";
-+	phys = <&dp_phy>;
-+	phy-names = "dp";
-+};
++#ifndef __DT_BINDINGS_BCM2835_PINCTRL_H__
++#define __DT_BINDINGS_BCM2835_PINCTRL_H__
 +
-+&fimd {
-+	power-domains = <&pd_disp1>;
-+	clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
-+	clock-names = "sclk_fimd", "fimd";
-+};
++#define BCM2835_GPIO_INPUT		0
++#define BCM2835_GPIO_OUTPUT	1
++#define BCM2835_GPIO_ALT0		4
++#define BCM2835_GPIO_ALT1		5
++#define BCM2835_GPIO_ALT2		6
++#define BCM2835_GPIO_ALT3		7
++#define BCM2835_GPIO_ALT4		3
++#define BCM2835_GPIO_ALT5		2
 +
-+&rtc {
-+	clocks = <&clock CLK_RTC>;
-+	clock-names = "rtc";
-+	interrupt-parent = <&pmu_system_controller>;
-+	status = "disabled";
-+};
-+
-+&serial_0 {
-+	clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-+
-+&serial_1 {
-+	clocks = <&clock CLK_UART1>, <&clock CLK_SCLK_UART1>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-+
-+&serial_2 {
-+	clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-+
-+&serial_3 {
-+	clocks = <&clock CLK_UART3>, <&clock CLK_SCLK_UART3>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
++#endif /* __DT_BINDINGS_BCM2835_PINCTRL_H__ */
 -- 
-2.1.0
+2.3.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
