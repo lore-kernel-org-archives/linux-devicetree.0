@@ -1,69 +1,37 @@
-From: Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] clocksource: arm_global_timer: Detect if gt is usable with
- CPU_FREQ
-Date: Mon, 13 Apr 2015 19:37:29 +0200
-Message-ID: <552BFED9.3020105@adapteva.com>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: Re: Re: [PATCH 1/2] pinctrl: bcm2835: add pinctrl pre-processor define
+Date: Mon, 13 Apr 2015 19:43:20 +0200
+Message-ID: <3278687.WSiV7bO59Q@kongar>
+References: <1428842036-14202-1-git-send-email-alexanders83@web.de> <1128901690.288098.1428942677965.JavaMail.open-xchange@oxbaltgw03.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1128901690.288098.1428942677965.JavaMail.open-xchange-h4m1HHXQYNGvCDav5jC2oMgmgJlYmuWJ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some Cortex A9 CPU:s (e.g. zynq) have the tick tied to the CPU
-frequency. On those CPU:s we cannot use the global-timer as a reliable
-clocksource with CPU frequency scaling enabled since this is not
-currently taken into account by the driver.
+On Monday 13 April 2015, 18:31:17 wrote Stefan Wahren:
+> Hi Alexander,
+> 
+> > Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> hat am 12. April 2015 um 14:33
+> > geschrieben:
+> >
+> >
+> > This adds defines for the BCM2835 function selections. This is notably
+> > useful as the functions are not ordered.
+> 
+> if you look at Lee's repository then you will see this is already 
+implemented.
 
-Add a "tied-to-cpu-freq" boolean to the global-timer dt node indicate
-this condition.
+Thanks for that information. But I've yet to find it, those 2 on 
+https://git.kernel.org/cgit/ don't seem to contain that. Could you please give 
+me an URL for that repository + branch? Thanks a lot.
 
-When the global-timer register function sees this property return
-immediately and don't register the clocksource.
-
-Signed-off-by: Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/global_timer.txt | 4 ++++
- drivers/clocksource/arm_global_timer.c                 | 7 +++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/global_timer.txt b/Documentation/devicetree/bindings/arm/global_timer.txt
-index bdae3a818793..465e02c17b5b 100644
---- a/Documentation/devicetree/bindings/arm/global_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/global_timer.txt
-@@ -17,6 +17,10 @@
- 
- - clocks : Should be phandle to a clock.
- 
-+** Timer node optional properties:
-+
-+- tied-to-cpu-freq : indicates that the timer scales with the CPU frequency.
-+
- Example:
- 
- 	timer@2c000600 {
-diff --git a/drivers/clocksource/arm_global_timer.c b/drivers/clocksource/arm_global_timer.c
-index e6833771a716..8913ebda3f09 100644
---- a/drivers/clocksource/arm_global_timer.c
-+++ b/drivers/clocksource/arm_global_timer.c
-@@ -268,6 +268,13 @@ static void __init global_timer_of_register(struct device_node *np)
- 		return;
- 	}
- 
-+#ifdef CONFIG_CPU_FREQ
-+	if (of_property_read_bool(np, "tied-to-cpu-freq")) {
-+		pr_warn("global-timer: tied to cpu frequency, not supported with scaling\n");
-+		return;
-+	}
-+#endif
-+
- 	gt_clk = of_clk_get(np, 0);
- 	if (!IS_ERR(gt_clk)) {
- 		err = clk_prepare_enable(gt_clk);
--- 
-2.3.3
+Best regards,
+Alexander
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
