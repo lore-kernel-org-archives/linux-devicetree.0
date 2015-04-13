@@ -1,49 +1,56 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] Renesas Ethernet AVB driver
-Date: Mon, 13 Apr 2015 16:32:59 -0400 (EDT)
-Message-ID: <20150413.163259.2190743529898270341.davem@davemloft.net>
-References: <1453213.DoV6WFn45r@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Mon, 13 Apr 2015 23:34:17 +0300
+Message-ID: <552C2849.2080503@cogentembedded.com>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <1427982999.18722.35.camel@xylophone.i.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1453213.DoV6WFn45r@wasted.cogentembedded.com>
+In-Reply-To: <1427982999.18722.35.camel@xylophone.i.decadent.org.uk>
 Sender: linux-sh-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org
+To: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRkZWQuY29t
-Pg0KRGF0ZTogTW9uLCAxMyBBcHIgMjAxNSAwMTozNjo1NiArMDMwMA0KDQo+IEV0aGVybmV0IEFW
-QiBpbmNsdWRlcyBhbiBHaWdhYml0IEV0aGVybmV0IGNvbnRyb2xsZXIgKEUtTUFDKSB0aGF0IGlz
-IGJhc2ljYWxseQ0KPiBjb21wYXRpYmxlIHdpdGggU3VwZXJIIEdpZ2FiaXQgRXRoZXJuZXQgRS1N
-QUMpLiBFdGhlcm5ldCBBVkIgIGhhcyBhIGRlZGljYXRlZA0KPiBkaXJlY3QgbWVtb3J5IGFjY2Vz
-cyBjb250cm9sbGVyIChBVkItRE1BQykgdGhhdCBpcyBhIG5ldyBkZXNpZ24gY29tcGFyZWQgdG8g
-dGhlDQo+IFN1cGVySCBFLURNQUMuIFRoZSBBVkItRE1BQyBpcyBjb21wbGlhbnQgd2l0aCAzIHN0
-YW5kYXJkcyBmb3JtdWxhdGVkIGZvciBJRUVFDQo+IDgwMi4xQkE6IElFRUUgODAyLjFBUyB0aW1p
-bmcgYW5kIHN5bmNocm9uaXphdGlvbiBwcm90b2NvbCwgSUVFRSA4MDIuMVFhdiByZWFsLQ0KPiB0
-aW1lIHRyYW5zZmVyLCBhbmQgdGhlIElFRUUgODAyLjFRYXQgc3RyZWFtIHJlc2VydmF0aW9uIHBy
-b3RvY29sLg0KPiANCj4gTm90IG9ubHkgdGhlIEV0aGVybmV0IGRyaXZlciBpcyBlbmNsb3NlZCwg
-dGhlcmUgaXMgYWxzbyB0aGUgUFRQIGRyaXZlciBpbg0KPiB0aGUgc2FtZSBmaWxlLiAgVGhlc2Ug
-ZHJpdmVycyBvbmx5IHN1cHBvcnQgZGV2aWNlIHRyZWUgcHJvYmluZywgc28gdGhlIGJpbmRpbmcN
-Cj4gZG9jdW1lbnQgaXMgaW5jbHVkZWQgaW4gdGhpcyBwYXRjaC4NCj4gDQo+IEJhc2VkIG9uIHRo
-ZSBvcmlnaW5hbCBwYXRjaGVzIGJ5IE1pdHN1aGlybyBLaW11cmEgKEV0aGVybmV0IGRyaXZlcikg
-YW5kIE1hc2FydQ0KPiBOYWdhaSAoUFRQIGRyaXZlcikuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBN
-aXRzdWhpcm8gS2ltdXJhIDxtaXRzdWhpcm8ua2ltdXJhLmtjQHJlbmVzYXMuY29tPg0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBNYXNhcnUgTmFnYWkgPG1hc2FydS5uYWdhaS52eEByZW5lc2FzLmNvbT4NCj4g
-U2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1i
-ZWRkZWQuY29tPg0KDQpEb2Vzbid0IGJ1aWxkIHByb3Blcmx5IG9uIHg4Ni02NDoNCg0KICBDQyBb
-TV0gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3JlbmVzYXMvcmF2Yi5vDQpkcml2ZXJzL25ldC9ldGhl
-cm5ldC9yZW5lc2FzL3JhdmIuYzogSW4gZnVuY3Rpb24goXJhdmJfc2V0X2J1ZmZlcl9hbGlnbqI6
-DQpkcml2ZXJzL25ldC9ldGhlcm5ldC9yZW5lc2FzL3JhdmIuYzo5NTU6MTY6IHdhcm5pbmc6IGNh
-c3QgZnJvbSBwb2ludGVyIHRvIGludGVnZXIgb2YgZGlmZmVyZW50IHNpemUgWy1XcG9pbnRlci10
-by1pbnQtY2FzdF0NCiAgdTMyIHJlc2VydmUgPSAodTMyKXNrYi0+ZGF0YSAmIChSQVZCX0FMSUdO
-IC0gMSk7DQogICAgICAgICAgICAgICAgXg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvcmVuZXNhcy9y
-YXZiLmM6IEF0IHRvcCBsZXZlbDoNCmRyaXZlcnMvbmV0L2V0aGVybmV0L3JlbmVzYXMvcmF2Yi5j
-OjI3NzE6MjogZXJyb3I6IHVua25vd24gZmllbGQgoWdldHRpbWWiIHNwZWNpZmllZCBpbiBpbml0
-aWFsaXplcg0KICAuZ2V0dGltZSA9IHJhdmJfcHRwX2dldHRpbWUsDQogIF4NCmRyaXZlcnMvbmV0
-L2V0aGVybmV0L3JlbmVzYXMvcmF2Yi5jOjI3NzI6MjogZXJyb3I6IHVua25vd24gZmllbGQgoXNl
-dHRpbWWiIHNwZWNpZmllZCBpbiBpbml0aWFsaXplcg0KICAuc2V0dGltZSA9IHJhdmJfcHRwX3Nl
-dHRpbWUsDQogIF4NCg0KSXQgaXMgbm90IGFjY2VwdGFibGUgdG8gZml4IHRoaXMgYnkgcmVtb3Zp
-bmcgQ09NUElMRV9URVNUIGZyb20gdGhlIEtjb25maWcNCmRlcGVuZGVuY2llcyBvciBzb21ldGhp
-bmcgbGlrZSB0aGF0Lg0KDQpUaGFua3MuDQo=
+Hello.
+
+On 04/02/2015 04:56 PM, Ben Hutchings wrote:
+
+> This driver looks somewhat similar to sh-eth, but lacks some of the
+> recent bug fixes made to that.  At least commit 283e38db65e7 ("sh_eth:
+> Fix serialisation of interrupt disable with interrupt & NAPI handler")
+> appears to be applicable, but there are probably others.
+
+    I suspect this issue applies to many drivers...
+    I couldn't reproduce the bug that patch was fixing, so left this fix out 
+for the time being. Others cases were fixed (if applicable).
+
+> One feature request:
+
+> On Sat, 2015-03-28 at 02:13 +0300, Sergei Shtylyov wrote:
+> [...]
+>> +/* ioctl to device function */
+>> +static int ravb_do_ioctl(struct net_device *ndev, struct ifreq *req, int cmd)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +	struct phy_device *phydev = priv->phydev;
+>> +
+>> +	if (!netif_running(ndev))
+>> +		return -EINVAL;
+>> +
+>> +	if (!phydev)
+>> +		return -ENODEV;
+>> +
+>> +	if (cmd == SIOCSHWTSTAMP)
+>> +		return ravb_hwtstamp_ioctl(ndev, req, cmd);
+> [...]
+
+> The driver should also handle SIOCGHWTSTAMP.
+
+    Done.
+
+> Ben.
+
+WBR, Sergei
+
