@@ -1,66 +1,92 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCHv7] media: i2c/adp1653: fix includes
-Date: Mon, 13 Apr 2015 10:32:16 +0200
-Message-ID: <CABxcv==j=GLq0o6Shr32-81-6o0z4mSMOm7c_4Q1e+rQBgdEKQ@mail.gmail.com>
-References: <20150404074337.GA31064@amd>
-	<20150404102435.GR20756@valkosipuli.retiisi.org.uk>
-	<20150404171116.GA15025@Nokia-N900>
-	<20150404200307.GS20756@valkosipuli.retiisi.org.uk>
-	<20150409074238.GA22603@amd>
-	<20150409091017.GA4526@earth>
-	<20150409112943.GA31173@amd>
-	<20150409121913.GB18713@earth>
-	<20150409123155.GB9563@amd>
-	<CABxcv=mB=LqO2paGfYq1jCbky=kudT-mS8cJ-pPwdqZYQLeO4A@mail.gmail.com>
-	<20150409125927.GC12339@atrey.karlin.mff.cuni.cz>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v6] DT: leds: Improve description of flash LEDs related
+ properties
+Date: Mon, 13 Apr 2015 10:43:51 +0200
+Message-ID: <552B81C7.8010004@samsung.com>
+References: <1428655016-17752-1-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150409125927.GC12339@atrey.karlin.mff.cuni.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Andrew Morton <akpm@osdl.org>, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, Patrik Bachan <patrikbachan@gmail.com>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, m.chehab@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mchehab@osg.samsung.com, hverkuil@xs4all.nl
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1428655016-17752-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@linux.intel.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Pali,
+We're missing only a DT maintainer ack now. Could anyone take
+a look at this, please?
 
-On Thu, Apr 9, 2015 at 2:59 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> =
-wrote:
-> On Thursday 09 April 2015 14:43:59 Javier Martinez Canillas wrote:
->>
->> Please re-spin your previous patch and submit it properly.
->>
->> Best regards,
->> Javier
+On 04/10/2015 10:36 AM, Jacek Anaszewski wrote:
+> 1. Since max-microamp property has had no users so far, then rename
+>     it to more descriptive led-max-microamp.
+> 2. Since flash-timeout-us property has had no users so far, then rename
+>     it to more accurate flash-max-timeout-us.
+> 3. Describe led-max-microamp property as mandatory for specific board
+>     configurations.
+> 4. Make flash-max-microamp and flash-max-timeout-us properties mandatory
+>     for devices with configurable flash current and flash timeout settings
+>     respectively.
 >
-> Hi all! What about stopping this meaningless discussion about resendi=
-ng
-> full patch series when everybody know how to fix is quickly in editor
-> (e.g with sed under 5s) and not wasting another 10 minutes to generat=
-e
-> new unified diff sent via SMTP protocol?
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>   Documentation/devicetree/bindings/leds/common.txt |   27 ++++++++++++++-------
+>   1 file changed, 18 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 747c538..6841984 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -29,14 +29,23 @@ Optional properties for child nodes:
+>        "ide-disk" - LED indicates disk activity
+>        "timer" - LED flashes at a fixed, configurable rate
+>
+> -- max-microamp : maximum intensity in microamperes of the LED
+> -		 (torch LED for flash devices)
+> -- flash-max-microamp : maximum intensity in microamperes of the
+> -                       flash LED; it is mandatory if the LED should
+> -		       support the flash mode
+> -- flash-timeout-us : timeout in microseconds after which the flash
+> -                     LED is turned off
+> +- led-max-microamp : Maximum LED supply current in microamperes. This property
+> +                     can be made mandatory for the board configurations
+> +                     introducing a risk of hardware damage in case an excessive
+> +                     current is set.
+> +                     For flash LED controllers with configurable current this
+> +                     property is mandatory for the LEDs in the non-flash modes
+> +                     (e.g. torch or indicator).
+>
+> +Required properties for flash LED child nodes:
+> +- flash-max-microamp : Maximum flash LED supply current in microamperes.
+> +- flash-max-timeout-us : Maximum timeout in microseconds after which the flash
+> +                         LED is turned off.
+> +
+> +For controllers that have no configurable current the flash-max-microamp
+> +property can be omitted.
+> +For controllers that have no configurable timeout the flash-max-timeout-us
+> +property can be omitted.
+>
+>   Examples:
+>
+> @@ -49,7 +58,7 @@ system-status {
+>   camera-flash {
+>   	label = "Flash";
+>   	led-sources = <0>, <1>;
+> -	max-microamp = <50000>;
+> +	led-max-microamp = <50000>;
+>   	flash-max-microamp = <320000>;
+> -	flash-timeout-us = <500000>;
+> +	flash-max-timeout-us = <500000>;
+>   };
 >
 
-No, there is a reason why we have written rules on how patches should
-be submitted. Everyone in the kernel community is expected to optimize
-their workflow according to these rules to make life easier for people
-reviewing and merging the patches.
 
-As you said now someone has to fix this using an editor and that is an
-error prone process. Besides, why it would take 10 minutes to generate
-a proper patch-set? git is very good on this regard (i.e: git commit
----fixup && git rebase -i && git format-patch && git send-email).
-
-I won't argue anymore but I find very sad that people who have been in
-the kernel community for years don't follow the basic rules we have
-documented it. So I wonder why we have the documentation in the first
-place and how can we expect newcomers to follow if even experienced
-kernel hackers don't.
-
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
-
-Best regards,
-Javier
+-- 
+Best Regards,
+Jacek Anaszewski
