@@ -1,104 +1,66 @@
-From: Bintian <bintian.wang@huawei.com>
-Subject: Re: [PATCH v2 4/6] clk: hi6220: Clock driver support for Hisilicon
- hi6220 SoC
-Date: Mon, 13 Apr 2015 21:17:59 +0800
-Message-ID: <552BC207.40807@huawei.com>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com>	 <1428916660-25910-5-git-send-email-bintian.wang@huawei.com> <1428926202.11113.77.camel@x220>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Mon, 13 Apr 2015 08:22:26 -0500
+Message-ID: <CAL_JsqKQPtNPfTAiqsKnFuU6e-qozzPgujM=8MHseG75R9cbSA@mail.gmail.com>
+References: <20150408165920.25007.6869.stgit@buzz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428926202.11113.77.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.c
+Content-Type: text/plain; charset=UTF-8
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <20150408165920.25007.6869.stgit@buzz>
+Sender: sparclinux-owner@vger.kernel.org
+To: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Paul,
+On Wed, Apr 8, 2015 at 11:59 AM, Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+> Node 0 might be offline as well as any other numa node,
+> in this case kernel cannot handle memory allocation and crashes.
+>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Fixes: 0c3f061c195c ("of: implement of_node_to_nid as a weak function")
+> ---
+>  drivers/of/base.c  |    2 +-
+>  include/linux/of.h |    5 ++++-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 8f165b112e03..51f4bd16e613 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -89,7 +89,7 @@ EXPORT_SYMBOL(of_n_size_cells);
+>  #ifdef CONFIG_NUMA
+>  int __weak of_node_to_nid(struct device_node *np)
+>  {
+> -       return numa_node_id();
+> +       return NUMA_NO_NODE;
 
-Thank you very much for code review and testing on arm!
+This is going to break any NUMA machine that enables OF and expects
+the weak function to work.
 
-On 2015/4/13 19:56, Paul Bolle wrote:
-> On Mon, 2015-04-13 at 17:17 +0800, Bintian Wang wrote:
->> --- /dev/null
->> +++ b/drivers/clk/hisilicon/Kconfig
->> @@ -0,0 +1,5 @@
->> +config COMMON_CLK_HI6220
->> +	tristate "Hi6220 Clock Driver"
->> +	depends on OF && ARCH_HISI
->> +	help
->> +	  Build the Hisilicon Hi6220 clock driver based on the common clock framework.
->
-> In 5/6 you make arm64's ARCH_HISI (a bool) select COMMON_CLK_HI6220. So
-> for arm64 this driver will always be built-in.
->
-> For arm's ARCH_HISI it's possible to set COMMON_CLK_HI6220 to 'm'.
+Rob
 
-Setting COMMON_CLK_HI6220 to a bool symbol is a good solution based on
-current code base, I will fix it in next version.
-
+>  }
+>  #endif
 >
->> --- a/drivers/clk/hisilicon/Makefile
->> +++ b/drivers/clk/hisilicon/Makefile
->> @@ -2,8 +2,9 @@
->>   # Hisilicon Clock specific Makefile
->>   #
->>
->> -obj-y	+= clk.o clkgate-separated.o
->> +obj-y	+= clk.o clkgate-separated.o clkdivider-hi6220.o
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index dfde07e77a63..78a04ee85a9c 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -623,7 +623,10 @@ static inline const char *of_prop_next_string(struct property *prop,
+>  #if defined(CONFIG_OF) && defined(CONFIG_NUMA)
+>  extern int of_node_to_nid(struct device_node *np);
+>  #else
+> -static inline int of_node_to_nid(struct device_node *device) { return 0; }
+> +static inline int of_node_to_nid(struct device_node *device)
+> +{
+> +       return NUMA_NO_NODE;
+> +}
+>  #endif
 >
-> These objects will always be built-in, right?
+>  static inline struct device_node *of_find_matching_node(
 >
->>   obj-$(CONFIG_ARCH_HI3xxx)	+= clk-hi3620.o
->>   obj-$(CONFIG_ARCH_HIP04)	+= clk-hip04.o
->>   obj-$(CONFIG_ARCH_HIX5HD2)	+= clk-hix5hd2.o
->> +obj-$(CONFIG_COMMON_CLK_HI6220)	+= clk-hi6220.o
->
-> If CONFIG_COMMON_CLK_HI6220 is 'm' this will build a module named
-> clk-hi6220.ko. If I try to do that I get:
->      $ make -C ../../.. ARCH=arm CROSS_COMPILE=arm-linux-gnu- M=$PWD clk-hi6220.ko
->      make: Entering directory `[...]'
->        CC [M]  [...]/drivers/clk/hisilicon/clk-hi6220.o
->        MODPOST 1 modules
->      WARNING: "hisi_clk_register_gate" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->      WARNING: "hi6220_clk_register_divider" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->      WARNING: "hisi_clk_register_mux" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->      WARNING: "hisi_clk_register_gate_sep" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->      WARNING: "hisi_clk_register_fixed_factor" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->      WARNING: "hisi_clk_register_fixed_rate" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->      WARNING: "hisi_clk_init" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
->        CC      [...]/drivers/clk/hisilicon/clk-hi6220.mod.o
->        LDFINAL [M]  [...]/drivers/clk/hisilicon/clk-hi6220.ko
->      make: Leaving directory `[...]'
->
-> That is, I think, because nothing exports these symbols.
-
-[...]
-
-> There's nothing module specific in this file. And the lack of a
-> MODULE_LICENSE() macro is also telling. If this was built as a module
-> loading that module - ignoring the undefined symbols - would taint the
-> kernel.
->
-> It seems to me that COMMON_CLK_HI6220 is meant to be a bool symbol.
-You are right.
-
->
->
-> Paul Bolle
->
-> I wonder what checkpatch had to say about the length of the lines seen
-> in this patch.
-
-Yes, I ran this script before sending out this patch set, it reports
-warnings about "line over 80 characters ", but I find it's easier to
-read than shrinking one line to several lines, so just keep it, do I
-need to fix it?
-
-Thanks,
-
-Bintian
-
->
-> .
->
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
