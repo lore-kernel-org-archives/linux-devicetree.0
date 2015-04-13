@@ -1,41 +1,81 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] of/fdt: fix argument name and add comments of unflatten_dt_node()
-Date: Mon, 13 Apr 2015 10:30:20 +0900
-Message-ID: <1428888620-307-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
+From: Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
+Date: Mon, 13 Apr 2015 02:25:31 +0000
+Message-ID: <BLUPR03MB149C37D2049044E873F0CA5E1E70@BLUPR03MB149.namprd03.prod.outlook.com>
+References: <1427782669-20368-1-git-send-email-hongtao.jia@freescale.com>
+	 <1428638140.22867.583.camel@freescale.com>
+	 <BLUPR03MB14924B9EBBD1C5635B0487DE1FA0@BLUPR03MB149.namprd03.prod.outlook.com>
+ <1428705646.22867.601.camel@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428705646.22867.601.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Match the name of the third argument in the comment block
-to the actual function: p -> poffset
-
-Add missing comments about the arguments "nodepp" and "dryrun".
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- drivers/of/fdt.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3a896c9..35898ca 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -145,9 +145,12 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
-  * unflatten_dt_node - Alloc and populate a device_node from the flat tree
-  * @blob: The parent device tree blob
-  * @mem: Memory chunk to use for allocating device nodes and properties
-- * @p: pointer to node in flat tree
-+ * @poffset: pointer to node in flat tree
-  * @dad: Parent struct device_node
-+ * @nodepp: The device_node tree created by the call
-  * @fpsize: Size of the node path up at the current depth.
-+ * @dryrun: If true, do not allocate device nodes but still calculate needed
-+ * memory size
-  */
- static void * unflatten_dt_node(void *blob,
- 				void *mem,
--- 
-1.9.1
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
+DQo+IFNlbnQ6IFNhdHVyZGF5LCBBcHJpbCAxMSwgMjAxNSA2OjQxIEFNDQo+IFRvOiBKaWEgSG9u
+Z3Rhby1CMzg5NTENCj4gQ2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBydWkuemhhbmdAaW50
+ZWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFFvcklRL1RNVTogYWRkIFRNVSBub2RlIHRv
+IGRldmljZSB0cmVlIGZvciBRb3JJUQ0KPiBUMTA0eA0KPiANCj4gT24gRnJpLCAyMDE1LTA0LTEw
+IGF0IDAxOjIzIC0wNTAwLCBKaWEgSG9uZ3Rhby1CMzg5NTEgd3JvdGU6DQo+ID4NCj4gPg0KPiA+
+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFdvb2QgU2NvdHQtQjA3
+NDIxDQo+ID4gPiBTZW50OiBGcmlkYXksIEFwcmlsIDEwLCAyMDE1IDExOjU2IEFNDQo+ID4gPiBU
+bzogSmlhIEhvbmd0YW8tQjM4OTUxDQo+ID4gPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFi
+cy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gcm9iaCtkdEBrZXJuZWwu
+b3JnOyBydWkuemhhbmdAaW50ZWwuY29tDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBRb3JJ
+US9UTVU6IGFkZCBUTVUgbm9kZSB0byBkZXZpY2UgdHJlZSBmb3INCj4gPiA+IFFvcklRIFQxMDR4
+DQo+ID4gPg0KPiA+ID4gT24gVHVlLCAyMDE1LTAzLTMxIGF0IDE0OjE3ICswODAwLCBKaWEgSG9u
+Z3RhbyB3cm90ZToNCj4gPiA+ID4gVGhpcyBpcyBUaGVybWFsIE1vbml0b3JpbmcgVW5pdCBmb3Ig
+UW9ySVEgcGxhdGZvcm0uDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEppYSBIb25n
+dGFvIDxob25ndGFvLmppYUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1hbC50eHQgIHwgNTgNCj4g
+PiA+ICsrKysrKysrKysrKysrKw0KPiA+ID4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9x
+b3JpcS10bXUtdDEwNHhzaS5kdHNpICAgfCA4Mg0KPiA+ID4gKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ID4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0MHNpLXBvc3QuZHRzaSAg
+ICAgICAgfCAgMSArDQo+ID4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE0MSBpbnNlcnRpb25zKCsp
+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1hbC50eHQNCj4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NA0KPiA+ID4gPiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLXRtdS10MTA0eHNp
+LmR0c2kNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdA0KPiA+ID4gPiBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwudHh0DQo+ID4gPiA+
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1h
+bC50eHQNCj4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAw
+MC4uZGZjMTdmYQ0KPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwudHh0DQo+ID4g
+PiA+IEBAIC0wLDAgKzEsNTggQEANCj4gPiA+ID4gKyogVGhlcm1hbCBNb25pdG9yaW5nIFVuaXQg
+KFRNVSkgb24gRnJlZXNjYWxlIFFvcklRIFNvQ3MNCj4gPiA+ID4gKw0KPiA+ID4gPiArUmVxdWly
+ZWQgcHJvcGVydGllczoNCj4gPiA+ID4gKy0gY29tcGF0aWJsZSA6ICJmc2wscW9yaXEtdG11Ii4N
+Cj4gPiA+DQo+ID4gPiBjb21wYXRpYmxlOiBNdXN0IGluY2x1ZGUgImZzbCxxb3JpcS10bXUiLiBU
+aGUgdmVyc2lvbiBvZiB0aGUgZGV2aWNlDQo+IGlzDQo+ID4gPiAJICAgIGRldGVybWluZWQgYnkg
+dGhlIFRNVSBJUCBCbG9jayBSZXZpc2lvbiBSZWdpc3RlciAoSVBCUlIwKQ0KPiA+ID4gCSAgICBh
+dCBvZmZzZXQgMHgwQkY4Lg0KPiA+ID4NCj4gPiA+IAkgICAgVGFibGUgb2YgY29ycmVzcG9uZGVu
+Y2VzIGJldHdlZW4gSVBCUlIwIHZhbHVlcyBhbmQgZXhhbXBsZQ0KPiA+ID4gCSAgICBjaGlwczoN
+Cj4gPiA+IAkJVmFsdWUgICAgICAgICAgIERldmljZQ0KPiA+ID4gCQktLS0tLS0tLS0tLSAgICAg
+LS0tLS0tLQ0KPiA+ID4gCQkweDAxOTAwMTAyICAgICAgVDEwNDANCj4gPg0KPiA+IEkgd2lsbCB1
+cGRhdGUgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KPiA+DQo+ID4gPg0KPiA+ID4gPiArLSByZWcgOiBh
+ZGRyZXNzIHJhbmdlIG9mIFRNVSByZWdpc3RlcnMuDQo+ID4gPiA+ICstIGludGVycnVwdHMgOiBz
+aG91bGQgY29udGFpbiB0aGUgaW50ZXJydXB0IGZvciBUTVUuDQo+ID4gPg0KPiA+ID4gcy9zaG91
+bGQgY29udGFpbi9jb250YWlucy8NCj4gPg0KPiA+IFRoYW5rcyBmb3IgdGhlIGNvcnJlY3Rpb24u
+DQo+ID4NCj4gPiA+DQo+ID4gPiA+ICstIGNhbGlicmF0aW9uIDogY2FsaWJyYXRpb24gdGFibGUg
+Zm9yIFRNVS4NCj4gPiA+DQo+ID4gPiBXaGF0IGlzIHRoZSBmb3JtYXQgb2YgdGhlIGNhbGlicmF0
+aW9uIHRhYmxlLCBhbmQgd2hlcmUgZG9lcyBvbmUgZ2V0DQo+ID4gPiB0aGUgZGF0YT8NCj4gPg0K
+PiA+IFRoZXJlIGFyZSBmb3VyIGNhbGlicmF0aW9uIGNvbmZpZyByYW5nZSwgZm9yIGVhY2ggcmFu
+Z2Ugd2UgZ290IGENCj4gPiBjb3VwbGUgb2YgcGFpcnMgZm9ybWF0dGVkIGxpa2UgPFRUQ0ZHUiwg
+VFNDRkdSPiBhdCBvZmZzZXQgb2YgPDB4MDA4MCwNCj4gMHgwMDg0Pi4NCj4gDQo+IFRoZSBiaW5k
+aW5nIGRvY3VtZW50IG5lZWRzIHRvIGV4cGxhaW4gdGhpcywgaW4gbW9yZSBkZXRhaWwsIGFzIHdl
+bGwgYXMNCj4gaG93IG9uZSBkZXRlcm1pbmVzIHRoZSBkYXRhLg0KDQpSaWdodCwgSSB3aWxsIGFk
+ZCBkZXRhaWxzLg0KDQo+IA0KPiBJcyB0aGlzIGNvbmZpZ3VyYXRpb24gb3IgaGFyZHdhcmUgZGVz
+Y3JpcHRpb24/DQoNClRvIG15IHVuZGVyc3RhbmRpbmcgdGhpcyBpcyBraW5kIG9mIGhhcmR3YXJl
+IGRlc2NyaXB0aW9uLg0KVGhlIGNhbGlicmF0aW9uIGRhdGEgaXMgdmFyeSB3aXRoIGRpZmZlcmVu
+dCBTb0NzLg0KVGhlc2UgZGF0YSBpcyBwcm92aWRlZCBieSBoYXJkd2FyZSB2ZXJpZmljYXRpb24g
+dGVhbS4NCg0KLUhvbmd0YW8NCg0KPiANCj4gLVNjb3R0DQo+IA0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
