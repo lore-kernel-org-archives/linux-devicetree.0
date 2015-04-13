@@ -1,70 +1,70 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] usb: chipidea: Use extcon framework for VBUS and ID detection
-Date: Mon, 13 Apr 2015 10:08:28 +0300
-Message-ID: <ECE2E8CC-8833-4D40-A2EE-6DAD8E7683B0@linaro.org>
-References: <1428568418-22508-1-git-send-email-ivan.ivanov@linaro.org> <20150413035345.GA1341@shlinux2>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150413035345.GA1341@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v3 3/5] PCI: st: Provide support for the sti PCIe controller
+Date: Mon, 13 Apr 2015 09:35:34 +0200
+Message-ID: <CAG374jDUPK5hCZBLR_r5om8mh8wy1NyxDaZ-DP_A-xjNN6f2pQ@mail.gmail.com>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1428657168-12495-4-git-send-email-gabriel.fernandez@linaro.org>
+	<1428747477.17822.90.camel@x220>
+	<2529595.kpEIoZMpcn@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2529595.kpEIoZMpcn@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Bolle <pebolle@tiscali.nl>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>Viresh Kumar <v>
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
-> On Apr 13, 2015, at 6:53 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wr=
-ote:
->=20
-> On Thu, Apr 09, 2015 at 11:33:38AM +0300, Ivan T. Ivanov wrote:
->> On recent Qualcomm platforms VBUS and ID lines are not routed to
->> USB PHY LINK controller. Use extcon framework to receive connect
->> and disconnect ID and VBUS notification.
->>=20
->>=20
+Thanks for reviewing.
 
-<snip>
+On 11 April 2015 at 16:55, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Saturday 11 April 2015 12:17:57 Paul Bolle wrote:
+>> Something I didn't spot in my first look at this patch.
+>>
+>> On Fri, 2015-04-10 at 11:12 +0200, Gabriel FERNANDEZ wrote:
+>> > --- a/drivers/pci/host/Kconfig
+>> > +++ b/drivers/pci/host/Kconfig
+>> >
+>> > +config PCI_ST
+>> > +     bool "ST PCIe controller"
+>> > +     depends on ARCH_STI || (ARM && COMPILE_TEST)
+>> > +     select PCIE_DW
+>> > +     help
+>> > +       Enable PCIe controller support on ST Socs. This controller is based
+>> > +       on Designware hardware and therefore the driver re-uses the
+>> > +       Designware core functions to implement the driver.
+>>
+>> You can't have ARCH_STI without ARM, so ARM will always be set if this
+>> driver is enabled. Correct?
+>
+> Right, though the ARM dependency could soon be dropped, once the PCIE_DW
+> driver can use generic infrastructure in the few places it relies on
+> ARM specific code today.
+>
+>> > --- /dev/null
+>> > +++ b/drivers/pci/host/pci-st.c
+>>
+>> > +     if (IS_ENABLED(CONFIG_ARM)) {
+>> > +             /*
+>> > +              * We have to hook the abort handler so that we can intercept
+>> > +              * bus errors when doing config read/write that return UR,
+>> > +              * which is flagged up as a bus error
+>> > +              */
+>> > +             hook_fault_code(16+6, st_pcie_abort_handler, SIGBUS, 0,
+>> > +                             "imprecise external abort");
+>> > +     }
+>>
+>> So, unless I'm missing something obvious here, IS_ENABLED(CONFIG_ARM)
+>> will always evaluate to 1. Can't that test be dropped?
+>
+> I would leave it in, as it's quite likely to get reused with ARM64 at some
+> point in the future (no, I don't know anything about ST's product plans,
+> but everybody seems to be doing this).
+>
+>         Arnd
 
->>=20
->> +Optional properties:
->> +- extcon:       phandles to external connector devices. First phand=
-le
->> +                should point to external connector, which provide "=
-USB"
->> +                cable events, the second should point to external c=
-onnector
->> +                device, which provide "USB-HOST" cable events. If o=
-ne of
->> +                the external connector devices is not required empt=
-y <0>
->> +                phandle should be specified.
->=20
-> You mean if id connector is not needed, we write dts like below:
-> extcon =3D <&usb_vbus>, <0>;
->=20
-> If it is, you may miss ',' between "required" and "empty <0>=E2=80=9D=
-=2E
+Yes i agree with that.
 
-Yes. Will fix it.
-
->> u32 hw_read_otgsc(struct ci_hdrc *ci, u32 mask)
->> {
->> -	return hw_read(ci, OP_OTGSC, mask);
->> +	u32 val =3D hw_read(ci, OP_OTGSC, mask);
->> +
->> +	if ((mask & OTGSC_BSV) && ci->vbus.conn.edev) {
->=20
-> You may use "||" since you can't get vbus and id value from
-> cpu register (otgsc).
-
-The idea is to not rely on the register content for these
-bits if user have defined these DT bindings.
-
-Will fix rest of the comments and resend.
-
-Thank you,
-Ivan--
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gabriel
