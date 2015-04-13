@@ -1,75 +1,66 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: socfpga: dts: Add a ciu clock node for sdmmc
-Date: Mon, 13 Apr 2015 10:10:37 +0200
-Message-ID: <73wq1g30ua.fsf@unicorn.hi.pengutronix.de>
-References: <1428699386-2622-1-git-send-email-dinguyen@opensource.altera.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCHv7] media: i2c/adp1653: fix includes
+Date: Mon, 13 Apr 2015 10:32:16 +0200
+Message-ID: <CABxcv==j=GLq0o6Shr32-81-6o0z4mSMOm7c_4Q1e+rQBgdEKQ@mail.gmail.com>
+References: <20150404074337.GA31064@amd>
+	<20150404102435.GR20756@valkosipuli.retiisi.org.uk>
+	<20150404171116.GA15025@Nokia-N900>
+	<20150404200307.GS20756@valkosipuli.retiisi.org.uk>
+	<20150409074238.GA22603@amd>
+	<20150409091017.GA4526@earth>
+	<20150409112943.GA31173@amd>
+	<20150409121913.GB18713@earth>
+	<20150409123155.GB9563@amd>
+	<CABxcv=mB=LqO2paGfYq1jCbky=kudT-mS8cJ-pPwdqZYQLeO4A@mail.gmail.com>
+	<20150409125927.GC12339@atrey.karlin.mff.cuni.cz>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1428699386-2622-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150409125927.GC12339@atrey.karlin.mff.cuni.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Andrew Morton <akpm@osdl.org>, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, ivo.g.dimitrov.75@gmail.com, Patrik Bachan <patrikbachan@gmail.com>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, m.chehab@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mchehab@osg.samsung.com, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
+Hello Pali,
 
-Hi!
-
-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org writes:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Thu, Apr 9, 2015 at 2:59 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> =
+wrote:
+> On Thursday 09 April 2015 14:43:59 Javier Martinez Canillas wrote:
+>>
+>> Please re-spin your previous patch and submit it properly.
+>>
+>> Best regards,
+>> Javier
 >
-> The CIU(Card Interface Unit) clock is used by the dw_mmc IP to clock an SD
-> card. The ciu_clk is the sdmmc_clk passed through a fixed divider of 4. This patch
-> adds the ciu_clk node and makes the sdmmc_clk it's parent.
+> Hi all! What about stopping this meaningless discussion about resendi=
+ng
+> full patch series when everybody know how to fix is quickly in editor
+> (e.g with sed under 5s) and not wasting another 10 minutes to generat=
+e
+> new unified diff sent via SMTP protocol?
 >
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga.dtsi | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index d9176e6..25418ee 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -451,6 +451,14 @@
->  						clk-phase = <0 135>;
->  					};
->  
-> +					ciu_clk: ciu_clk {
-> +						#clock-cells = <0>;
-> +						compatible = "altr,socfpga-gate-clk";
-> +						clocks = <&sdmmc_clk>;
-> +						clk-gate = <0xa0 8>;
-> +						fixed-divider = <4>;
-> +					};
-> +
 
-Hm, is this correct? The clk-gate at 0xa0 is for the SDMMC_CLK, no?
-Also, maybe the clock should be named "sdmmc_clk_divided" like in the
-datasheet, so it is easier to find.
+No, there is a reason why we have written rules on how patches should
+be submitted. Everyone in the kernel community is expected to optimize
+their workflow according to these rules to make life easier for people
+reviewing and merging the patches.
 
->  					nand_x_clk: nand_x_clk {
->  						#clock-cells = <0>;
->  						compatible = "altr,socfpga-gate-clk";
-> @@ -635,7 +643,7 @@
->  			fifo-depth = <0x400>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> -			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-> +			clocks = <&l4_mp_clk>, <&ciu_clk>;
->  			clock-names = "biu", "ciu";
->  		};
->  
+As you said now someone has to fix this using an editor and that is an
+error prone process. Besides, why it would take 10 minutes to generate
+a proper patch-set? git is very good on this regard (i.e: git commit
+---fixup && git rebase -i && git format-patch && git send-email).
 
-Regards,
-Steffen
+I won't argue anymore but I find very sad that people who have been in
+the kernel community for years don't follow the basic rules we have
+documented it. So I wonder why we have the documentation in the first
+place and how can we expect newcomers to follow if even experienced
+kernel hackers don't.
 
--- 
-Pengutronix e.K.                           | Steffen Trumtrar            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+
+Best regards,
+Javier
