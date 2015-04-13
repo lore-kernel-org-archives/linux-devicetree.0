@@ -1,95 +1,94 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] clocksource: arm_global_timer: Detect if gt is usable
- with CPU_FREQ
-Date: Mon, 13 Apr 2015 18:55:18 +0100
-Message-ID: <20150413175518.GM4076@leverpostej>
-References: <552BFED9.3020105@adapteva.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
+ TAB7200
+Date: Mon, 13 Apr 2015 18:09:51 +0200
+Message-ID: <20150413160951.GJ29832@lukather>
+References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
+ <20150331144338.GG23664@lukather>
+ <20150331221420.3b65d2540c7dbe1d12611e12@gmail.com>
+ <20150402092259.GK23664@lukather>
+ <20150411191816.cdc5ec802b01028eb2913906@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x+WOirvrtTKur1pg"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <552BFED9.3020105-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150411191816.cdc5ec802b01028eb2913906-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2015 at 06:37:29PM +0100, Ola Jeppsson wrote:
-> Some Cortex A9 CPU:s (e.g. zynq) have the tick tied to the CPU
-> frequency. On those CPU:s we cannot use the global-timer as a reliable
-> clocksource with CPU frequency scaling enabled since this is not
-> currently taken into account by the driver.
 
-The global timer is _always_ tied to the CPU frequency -- it's fed by
-PERIPHCLK, which must have a period which is a multiple of CLK.
+--x+WOirvrtTKur1pg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Add a "tied-to-cpu-freq" boolean to the global-timer dt node indicate
-> this condition.
+On Sat, Apr 11, 2015 at 07:18:16PM +0300, Aleksei Mamlin wrote:
+> On Thu, 2 Apr 2015 11:22:59 +0200
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>=20
+> > On Tue, Mar 31, 2015 at 10:14:20PM +0300, Aleksei Mamlin wrote:
+> > > On Tue, 31 Mar 2015 07:43:38 -0700
+> > > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > >=20
+> > > > Hi,
+> > > >=20
+> > > > On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
+> > > > > This patch adds nodes for the Goodix GT911 touchscreen controller=
+ found
+> > > > > on the Wexler TAB7200 tablet. Controller uses one of following I2C
+> > > > > addresses: 0x5d or 0x14, so just add two nodes.
+> > > >=20
+> > > > In which case are these different addresses encountered? Different
+> > > > revisions of the same board?
+> > >
+> > > According to the datasheet it is a feature of the controller.=20
+> > > The address(0x5d or 0x14) can be configured using a reset sequence,
+> > > which has not yet been implemented in the driver.
+> >=20
+> > Which address is set up by the bootloader then?
+>
+> I assume that bootloader(u-boot) didn't sets up any address, but touchscr=
+een
+> controller usually uses 0x5d. Sometimes, after hard reset, it uses 0x14.
+> For this we need nodes on both adresses.
 
-Is this indicating the truism above, or that the kernel is performing
-frequency scaling? The latter is an OS property rather than a HW
-property, and thus doesn't belong in the DT.
+I'm confused, who changes that address then?
 
-The SMP TWD driver tries to account for frequency scaling. Assuming that
-works, the same should be possible here. Otherwise, the global timer is
-simply unusable with any frequency scaling.
+The controller itself?
 
-In either case the property seems pointless; all you care about is
-whether the platform actually performs CPU frequency scaling.
+Maxime
 
-Mark.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-> 
-> When the global-timer register function sees this property return
-> immediately and don't register the clocksource.
-> 
-> Signed-off-by: Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/global_timer.txt | 4 ++++
->  drivers/clocksource/arm_global_timer.c                 | 7 +++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/global_timer.txt b/Documentation/devicetree/bindings/arm/global_timer.txt
-> index bdae3a818793..465e02c17b5b 100644
-> --- a/Documentation/devicetree/bindings/arm/global_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/global_timer.txt
-> @@ -17,6 +17,10 @@
->  
->  - clocks : Should be phandle to a clock.
->  
-> +** Timer node optional properties:
-> +
-> +- tied-to-cpu-freq : indicates that the timer scales with the CPU frequency.
-> +
->  Example:
->  
->  	timer@2c000600 {
-> diff --git a/drivers/clocksource/arm_global_timer.c b/drivers/clocksource/arm_global_timer.c
-> index e6833771a716..8913ebda3f09 100644
-> --- a/drivers/clocksource/arm_global_timer.c
-> +++ b/drivers/clocksource/arm_global_timer.c
-> @@ -268,6 +268,13 @@ static void __init global_timer_of_register(struct device_node *np)
->  		return;
->  	}
->  
-> +#ifdef CONFIG_CPU_FREQ
-> +	if (of_property_read_bool(np, "tied-to-cpu-freq")) {
-> +		pr_warn("global-timer: tied to cpu frequency, not supported with scaling\n");
-> +		return;
-> +	}
-> +#endif
-> +
->  	gt_clk = of_clk_get(np, 0);
->  	if (!IS_ERR(gt_clk)) {
->  		err = clk_prepare_enable(gt_clk);
-> -- 
-> 2.3.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--x+WOirvrtTKur1pg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVK+pOAAoJEBx+YmzsjxAgxS4P/jC5ztpUmNEx/cyoxng9JyE7
+S/GCTj9EDhK6klWfkgZPgJjjDf6yLHIPsAmnVXU9/U5WDtpx3m2KlhkdxVTJiQEG
+9NImXja8uAbi3SnTXTumXKqPV2cpTSTSRM2T+uToElCRLb7ObXzFwfvJL0mYoV2Z
+9NN0KIBJqP78sHsRczAb5j5hidIOzcG4v/TGRMH7rbQLieUgSECTzEiKlvdeypEv
+wxN2kUawbTKnU7+EyDoB/m7n0CyV2A+/PtCM2CkUA7TiI9TYKeZcA0+eazEcyxba
+mv5p3H71ZtoUstOk5JfKzVeQKCSGT9CDHQJy2XJPFOdq0lWlWQZLSS/IyyQ9n+GO
+g4RPpmasTcxlY/Hwvu018hy1UlZFupm45B64P9yUG1KWdPK15U1rTz3kNrKBErKq
+/l+vI75TO65vG0GVDAdRTu9/chs+HFsXLQnUWVGUY+jpN9ShtlOQk/Npj2Lafq9t
+7w50sQ6BCDZuDYoKoBRAAZaVGJVrYKV6h/58ZCw0ztViuuCdr+hr8uB3HiTcx8Zd
+fVlJxe7wQUDMoHQ6yHFXgEEhzW7TcV/huhw9SC8RNWAIgGq3W5zU1U3SGLdM4y7I
+/AfLUgKZzkfu5g2UHNnJU/bPIbt4ThMrrBFZdMjtFZN8ETClCgREvj+bU/oKZD+a
+QvWvaTgfbJqolIcwNqjV
+=gcpf
+-----END PGP SIGNATURE-----
+
+--x+WOirvrtTKur1pg--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
