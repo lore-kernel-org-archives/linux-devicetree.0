@@ -1,109 +1,80 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Mon, 13 Apr 2015 18:06:49 +0200
-Message-ID: <87r3rom2qu.fsf@natisbad.org>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150410135056.GB28873@io.lakedaemon.net>
-	<20150410171148.07bc9429@bbrezillon>
-	<20150410223008.GA18660@io.lakedaemon.net>
-	<552B8EC4.209@free-electrons.com>
-	<20150413124711.GI18660@io.lakedaemon.net>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH v6 1/2] Devicetree: Add pl353 smc controller devicetree binding information
+Date: Mon, 13 Apr 2015 21:41:51 +0530
+Message-ID: <e3a73fa0-9159-4fbe-b042-4737dc9b041f@BN1BFFO11FD010.protection.gbl>
+References: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150413124711.GI18660@io.lakedaemon.net> (Jason Cooper's
-	message of "Mon, 13 Apr 2015 12:47:11 +0000")
-Sender: linux-crypto-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+Add pl353 static memory controller devicetree binding information.
 
-Jason Cooper <jason@lakedaemon.net> writes:
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+Changes in v6:
+ - None
+Changes in v5:
+ - Removed timing properties
+Changes in v4:
+ - none
+Changes in v3:
+ - none
+Changes in v2:
+ - modified timing binding info as per onfi timing parameters
+ - add suffix nano second as timing unit
+ - modified the clock names as per the IP spec
+---
+ .../bindings/memory-controllers/pl353-smc.txt      |   37 ++++++++++++++++++++
+ 1 files changed, 37 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
 
-> It's not about the crypto, it's about trust.  imho, one of the most
-> important security advances in the past 20 years is the default use of
-> git (or other SCMs) by open source projects.  Now, no one is forced to
-> trust the authors and maintainers tarball dumps.  Regular code audits
-> and security updates are *much* more feasible because you can audit
-> small changes.  It can even be automated to a large extent.
->
-> All this means the user has a choice: they can trust the authors and
-> maintainers, or they can trust their own audits.  Since updates are an
-> essential part of a security posture, small commits facilitate
-> maintaining the 'trust in audits'.
->
-> It's not about "Should you trust free-electrons?"  Or, "Should you trust
-> Jason / Herbert / Linus?"  It's about "Should you have to trust any of
-> them?"
-
-It's ok, you can call our driver fat. It is ;-) More seriously, I tend
-to agree w/ what you write above.
-
-
->> >> I really tried to adapt the existing driver to add the missing
->> >> features (especially the support for TDMA), but all my attempts
->> >> ended up introducing hackish code (not even talking about the
->> >> performance penalty of this approach).
->> > 
->> > Ok, fair enough.  It would be helpful if this account of attempting to
->> > reconcile the old driver made it into the commit message.  This puts us
->> > in "perfect is the enemy of getting it done" territory.
->> > 
->> >> I have another solution though: keep the existing driver for old
->> >> marvell SoCs (orion, kirkwood and dove), and add a new one for modern
->> >> SoCs (armada 370, XP, 375 and 38x), so that users of the mv_cesa driver
->> >> won't have to audit the new code.
->> > 
->> > A fair proposal, but I'll freely admit the number of people actually auditing
->> > their code paths is orders of magnitude smaller than the number of users
->> > of the driver.
->> > 
->> > There's such a large population of compatible legacy SoCs in the wild,
->> > adding an artificial boundary doesn't make sense.  Especially since
->> > we're talking about features everyone would want to use.
->> > 
->> > Perhaps we should keep both around, and deprecate the legacy driver over
->> > 3 to 4 cycles?
->> 
->> But I guess that some users will want to use the new driver on the "old" marvell
->> SoCs (especially kirkwood and dove).
->
-> Yes, despite my arguments, I'm one of those people.  :-P
->
->> If we go to this path, then the best solution would be to still update
->> all the the dts, and modifying the old driver to be able to use the
->> new binding: for my point of view the only adaptation should be
->> related to the SRAM. It will be also needed to find a way to be able
->> to load only one driver at a time: either the old or the new, but not
->> both.
-
-The approach Boris proposed above seems to make everyone happy:
-
- 1) Keep the old driver for old marvells SoCs (kirkwood, dove and orion)
- 2) Introduce the new driver for those that are not supported by the old
-    driver, i.e. armada (370, XP, 375, 38x)
-
-AFAICT, this can easily be done (based on compatible strings) and it
-will let everyone the time to audit the new driver. Current users will
-not be taken by surprise. At some point, when everyone is confident w/
-the new driver, we can then switch to that one for all SoCs so that
-old platform get more performance.
-
-Additionnally, for those who want to get the feature of the new driver
-for their old SoC right now, we *could* add a simple kernel config option
-for the new driver to use it for the old SoC too (that one disabling the
-old one).
-
-
-> I'd appreciate if we'd look into it.  I understand from on-list and
-> off-list discussion that the rewrite was unavoidable.  So I'm willing to
-> concede that.  Giving people time to migrate from old to new while still
-> being able to update for other security fixes seems reasonable.
-
-Jason, what do you think of the approach above? 
-
-Cheers,
-
-a+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+new file mode 100644
+index 0000000..a868f94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+@@ -0,0 +1,37 @@
++Device tree bindings for ARM PL353 static memory controller
++
++PL353 static memory controller supports two kinds of memory
++interfaces. i.e NAND and SRAM/NOR interfaces.
++The actual devices are instantiated from the child nodes of pl353 smc node.
++
++Required properties:
++- compatible		: Should be "arm,pl353-smc-r2p1"
++- reg			: Controller registers map and length.
++- clock-names		: List of input clock names - "memclk", "aclk"
++			  (See clock bindings for details).
++- clocks		: Clock phandles (see clock bindings for details).
++- address-cells	: Address cells, must be 1.
++- size-cells		: Size cells. Must be 1.
++
++Child nodes:
++ For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
++supported as child nodes.
++
++for nand partition information please refer the below file
++Documentation/devicetree/bindings/mtd/partition.txt
++
++Example:
++	pl353smcc_0: pl353smcc@e000e000 {
++			compatible = "arm,pl353-smcc-r2p1"
++			clock-names = "memclk", "aclk";
++			clocks = <&clkc 11>, <&clkc 44>;
++			reg = <0xe000e000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			nand_0: nand@e1000000 {
++				compatible = "arm,pl353-nand-r2p1"
++				reg = <0xe1000000 0x1000000>;
++				(...)
++			};
++	};
+-- 
+1.7.4
