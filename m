@@ -1,203 +1,241 @@
-From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] mtd: nand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Mon, 13 Apr 2015 21:22:54 +0200
-Message-ID: <1428952974.2616.2.camel@lynxeye.de>
-References: <1428522370-18035-1-git-send-email-dev@lynxeye.de>
-	 <1428522370-18035-3-git-send-email-dev@lynxeye.de>
-	 <99af1297029d7f1624db2f5fd9d228d1@agner.ch>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v6 1/6] clk: iproc: define Broadcom iProc clock binding
+Date: Mon, 13 Apr 2015 12:40:17 -0700
+Message-ID: <552C1BA1.1020101@broadcom.com>
+References: <1426657522-2473-1-git-send-email-rjui@broadcom.com> <1426657522-2473-2-git-send-email-rjui@broadcom.com> <20150411001231.18916.93186@quantum> <552B4140.6000705@broadcom.com> <20150413060254.19585.59701@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <99af1297029d7f1624db2f5fd9d228d1-XLVq0VzYD2Y@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150413060254.19585.59701@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Hi Mike,
 
-thanks for the review.
+On 4/12/2015 11:02 PM, Michael Turquette wrote:
+> Quoting Ray Jui (2015-04-12 21:08:32)
+>>
+>>
+>> On 4/10/2015 5:12 PM, Michael Turquette wrote:
+>>> Quoting Ray Jui (2015-03-17 22:45:17)
+>>>> Document the device tree binding for Broadcom iProc architecture based
+>>>> clock controller
+>>>>
+>>>> Signed-off-by: Ray Jui <rjui@broadcom.com>
+>>>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>>>> ---
+>>>>  .../bindings/clock/brcm,iproc-clocks.txt           |  171 ++++++++++++++++++++
+>>>>  1 file changed, 171 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>>>> new file mode 100644
+>>>> index 0000000..bf2316b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>>>> @@ -0,0 +1,171 @@
+>>>> +Broadcom iProc Family Clocks
+>>>> +
+>>>> +This binding uses the common clock binding:
+>>>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>>> +
+>>>> +The iProc clock controller manages clocks that are common to the iProc family.
+>>>> +An SoC from the iProc family may have several PPLs, e.g., ARMPLL, GENPLL,
+>>>> +LCPLL0, MIPIPLL, and etc., all derived from an onboard crystal. Each PLL
+>>>> +comprises of several leaf clocks
+>>>> +
+>>>> +Required properties for PLLs:
+>>>> +- compatible:
+>>>> +    Should have a value of the form "brcm,<soc>-<pll>". For example, GENPLL on
+>>>> +Cygnus has a compatible string of "brcm,cygnus-genpll"
+>>>> +
+>>>> +- #clock-cells:
+>>>> +    Must be <0>
+>>>> +
+>>>> +- reg:
+>>>> +    Define the base and range of the I/O address space that contain the iProc
+>>>> +clock control registers required for the PLL
+>>>> +
+>>>> +- clocks:
+>>>> +    The input parent clock phandle for the PLL. For all iProc PLLs, this is an
+>>>> +onboard crystal with a fixed rate
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +       osc: oscillator {
+>>>> +               #clock-cells = <0>;
+>>>> +               compatible = "fixed-clock";
+>>>> +               clock-frequency = <25000000>;
+>>>> +       };
+>>>> +
+>>>> +       genpll: genpll {
+>>>> +               #clock-cells = <0>;
+>>>> +               compatible = "brcm,cygnus-genpll";
+>>>> +               reg = <0x0301d000 0x2c>,
+>>>> +                       <0x0301c020 0x4>;
+>>>> +               clocks = <&osc>;
+>>>> +       };
+>>>> +
+>>>> +Required properties for leaf clocks of a PLL:
+>>>> +
+>>>> +- compatible:
+>>>> +    Should have a value of the form "brcm,<soc>-<pll>-clk". For example, leaf
+>>>> +clocks derived from the GENPLL on Cygnus SoC have a compatible string of
+>>>> +"brcm,cygnus-genpll-clk"
+>>>> +
+>>>> +- #clock-cells:
+>>>> +    Have a value of <1> since there are more than 1 leaf clock of a
+>>>> +given PLL
+>>>> +
+>>>> +- reg:
+>>>> +    Define the base and range of the I/O address space that contain the iProc
+>>>> +clock control registers required for the PLL leaf clocks
+>>>> +
+>>>> +- clocks:
+>>>> +    The input parent PLL phandle for the leaf clock
+>>>> +
+>>>> +- clock-output-names:
+>>>> +    An ordered list of strings defining the names of the leaf clocks
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +       genpll: genpll {
+>>>> +               #clock-cells = <0>;
+>>>> +               compatible = "brcm,cygnus-genpll";
+>>>> +               reg = <0x0301d000 0x2c>,
+>>>> +                       <0x0301c020 0x4>;
+>>>> +               clocks = <&osc>;
+>>>> +       };
+>>>> +
+>>>> +       genpll_clks: genpll_clks {
+>>>> +               #clock-cells = <1>;
+>>>> +               compatible = "brcm,cygnus-genpll-clk";
+>>>> +               reg = <0x0301d000 0x2c>;
+>>>> +               clocks = <&genpll>;
+>>>> +               clock-output-names = "axi21", "250mhz", "ihost_sys",
+>>>> +                       "enet_sw", "audio_125", "can";
+>>>> +       };
+>>>
+>>> Hi Ray,
+>>>
+>>> Thanks for submitting the patch. It was nice meeting you at ELC as well.
+>>>
+>>> This binding doesn't conform to the norms for clock bindings. It looks
+>>> like for each type of controllable clock node (e.g. pll, leaf clock,
+>>> etc) you have a dts node. Looking at the above example it seems that
+>>> those two nodes (genpll and genpll_clks) share the same register.
+>>>
+>>> /me checks patch #5
+>>>
+>>> Yup, you re-use the same register address for the *pll and *pll_clks
+>>> nodes. I'm not a DT expert but I think this is considered Wrong.
+>>>
+>>> More generally your clock dt binding should be modeling the hardware in
+>>> terms of IP blocks. If you have a clock generator IP block it may
+>>> control many clock bits and output many clock signals. E.g. for your
+>>> hardware (based only on the addresses in patch #5 and not having seen
+>>> any data manual) I will hazard a guess that the genpll, lcpll and asiu
+>>> clocks are all part of the same IP block.
+>>
+>> Hi Mike,
+>>
+>> In fact, lcpll, genpll, mipipll are similar but DIFFERENT IP blocks, and
+>> asiu is completely different from any of them. All of these plls are
+>> unique and have their own register banks, as you can see from the
+>> bcm-cygnus-clock.dtsi file. Therefore, I think it's totally correct and
+>> actually necessary to represent each of them with a separate device node.
+> 
+> OK, that makes sense to me, if those registers live in addresses ranges
+> which correspond to different IP blocks.
+> 
+>>
+>> Regarding the relationship between a PLL clock and its leaf clocks:
+>> Taking the genpll as an example, physically they are connected as:
+>>
+>> xtal -> genpll -> axi21, 250mhz, ihost_sys, ...
+>>
+>> The 25 MHz crystal feeds to the genpll, and the genpll generates 6
+>> different leaf clocks including axi21, 250mhz, ihost_sys, and etc. One
+>> can choose to set the genpll's vco to one frequency, and based on that
+>> frequency, different leaf clock frequencies can be generated with their
+>> own post divider.
+>>
+>> Therefore, I think it makes sense to represent xtal, genpll, genpll_clks
+>> (including axi21, 250mhz, ihost_sys, and etc) each with a unique device
+>> node, and genpll is the parent of these leaf clocks. Basically the
+>> device nodes and the way how the "clocks" phandle is used represent the
+>> hierarchy of the clock architecture within Cygnus (and in the future
+>> other iProc SoCs). Does that make sense?
+> 
+> This doesn't make sense to me. If I understand correctly, the register
+> range that controls the post-divider clock (e.g. axi21) is the same
+> register range that control's genpll. This is a reasonable indicator to
+> me that the leaf clocks are part of the same clock generator IP block as
+> the PLL controls. As such they should be on node.
+> 
+>>
+>> Regarding the register address overlapping, again, taking genpll as an
+>> example, the genpll and the genpll_clks actually never access the same
+>> set of registers, but the registers are sort of scattered within one
+>> bank, i.e., on Cygnus, genpll uses registers at offset 0x0, 0x8 ~ 0x1c,
+>> and genpll_clks uses registers at offset 0x4, 0x20 - 0x24.
+> 
+> Sure, my argument above doesn't hinge on the fact that the pll and child
+> clocks use the exact same register. It still looks to me like *pll and
+> it's child dividers belong in the same IP block. Is there an open data
+> sheet or technical reference manual I can look at for this part? That is
+> the best way to put my concerns at ease ;-)
+> 
+> Looking over your binding again, it looks like your nodes are divided
+> conveniently for the different clock types (e.g. pll versus
+> post-divider), but our goal with DT is to accurately describe the
+> hardware, not the C structures.
+> 
+> Regards,
+> Mike
+> 
 
-Am Freitag, den 10.04.2015, 10:46 +0200 schrieb Stefan Agner:
-> Hi Lucas,
-> 
-> Thanks for working on that. Some minor comments below...
-> 
-> On 2015-04-08 21:46, Lucas Stach wrote:
-> > Add support for the NAND flash controller found on NVIDIA
-> > Tegra 2/3 SoCs.
-> > 
-> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> > Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-> > ---
-> > v2:
-> > - remove Tegra 3 compatible
-> > - remove useless part_probes
-> > - don't store irq number
-> > - use gpiod API instead of deprecated of_gpios
-> > - don't store reset
-> > - correct TIMING_TCS mask
-> > - simplify irq handler
-> > - correct timing calculations
-> > - don't store buswidth
-> > - drop compile test
-> > - correct ECC handling
-> > ---
-> >  MAINTAINERS                   |   6 +
-> >  drivers/mtd/nand/Kconfig      |   6 +
-> >  drivers/mtd/nand/Makefile     |   1 +
-> >  drivers/mtd/nand/tegra_nand.c | 786 ++++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 799 insertions(+)
-> >  create mode 100644 drivers/mtd/nand/tegra_nand.c
-> > 
-> [...]
-> > +static struct nand_ecclayout tegra_nand_oob_16 = {
-> > +	.eccbytes = 4,
-> > +	.eccpos = { 3, 4, 5, 6 },
-> > +	.oobfree = {
-> > +		{ .offset = 7, . length = 8 }
-> > +	}
-> > +};
-> > +
-> > +static struct nand_ecclayout tegra_nand_oob_64 = {
-> > +	.eccbytes = 36,
-> > +	.eccpos = {
-> > +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-> > +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-> > +		35, 36, 37, 38, 39
-> > +	},
-> 
-> The amount of eccbytes vs. length of eccpos do not match...
-> 
-> > +	.oobfree = {
-> > +		{ .offset = 40, .length = 24 }
-> > +	}
-> > +};
-> > +
-> > +static struct nand_ecclayout tegra_nand_oob_128 = {
-> > +	.eccbytes = 72,
-> > +	.eccpos = {
-> > +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-> > +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-> > +		35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-> > +		51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
-> > +		67, 68, 69, 70, 71, 72, 73, 74, 75
-> > +	},
-> 
-> Here...
-> 
-> > +	.oobfree = {
-> > +		{ .offset = 76, .length = 52 }
-> > +	}
-> > +};
-> > +
-> > +static struct nand_ecclayout tegra_nand_oob_224 = {
-> > +	.eccbytes = 144,
-> > +	.eccpos = {
-> > +		  3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,
-> > +		 15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,
-> > +		 27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,
-> > +		 39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,
-> > +		 51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,
-> > +		 63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,
-> > +		 75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,
-> > +		 87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,
-> > +		 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
-> > +		111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
-> > +		123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
-> > +		135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146,
-> > +		147
-> > +	},
-> 
-> ... and here too.
-> 
+Yes, the genpll and genpll_clks are controlled by the same IP block. I
+can make the change to combine them to use one DT node. But before doing
+that, I just need to get one thing clarified with you. In SW, the pll
+and its leaf clocks will still be registered as separate two clock
+providers, since we need to be able to configure the PLL vco frequency
+and its leaf clock frequencies separately. The pll will be the parent of
+its leaf clocks, and the leaf clocks will be used by various peripherals.
 
-Urgh, actually they are all wrong, as the ECC starts at byte 4, not
-3. :/ Thanks for the hint.
+I plan to have the combined DT looks like this:
 
-> [...]
-> > +static int tegra_nand_probe(struct platform_device *pdev)
-> > +{
-> > +	struct reset_control *rst;
-> > +	struct tegra_nand *nand;
-> > +	struct nand_chip *chip;
-> > +	struct mtd_info *mtd;
-> > +	struct resource *res;
-> > +	unsigned long value;
-> > +	int irq, buswidth, err = 0;
-> > +
-> > +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
-> > +	if (!nand)
-> > +		return -ENOMEM;
-> > +
-> > +	nand->dev = &pdev->dev;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(nand->regs))
-> > +		return PTR_ERR(nand->regs);
-> > +
-> > +	irq = platform_get_irq(pdev, 0);
-> > +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
-> > +			       dev_name(&pdev->dev), nand);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	rst = devm_reset_control_get(&pdev->dev, "nand");
-> > +	if (IS_ERR(rst))
-> > +		return PTR_ERR(rst);
-> > +
-> > +	nand->clk = devm_clk_get(&pdev->dev, "nand");
-> > +	if (IS_ERR(nand->clk))
-> > +		return PTR_ERR(nand->clk);
-> > +
-> > +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "nvidia,wp-gpios",
-> > +					   GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(nand->wp_gpio))
-> > +		return PTR_ERR(nand->wp_gpio);
-> > +
-> > +	buswidth = of_get_nand_bus_width(pdev->dev.of_node);
-> > +	if (buswidth < 0)
-> > +		return buswidth;
-> > +
-> > +	err = clk_prepare_enable(nand->clk);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	reset_control_assert(rst);
-> > +	udelay(2);
-> > +	reset_control_deassert(rst);
-> > +
-> > +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
-> > +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
-> > +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
-> > +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
-> > +	writel(value, nand->regs + HWSTATUS_MASK);
-> > +
-> > +	init_completion(&nand->command_complete);
-> > +	init_completion(&nand->dma_complete);
-> > +
-> > +	mtd = &nand->mtd;
-> > +	mtd->name = dev_name(&pdev->dev);
-> > +	mtd->owner = THIS_MODULE;
-> > +	mtd->priv = &nand->chip;
-> > +
-> > +	mtd->type = MTD_NANDFLASH;
-> > +	mtd->flags = MTD_CAP_NANDFLASH;
-> 
-> This get filled by nand_scan_tail anyway, any reason to have it here
-> too?
-> 
-No, not really. Probably just cargo-culting. I'll remove this.
+genpll_clks: genpll_clks {
+    #clock-cells = <1>;
+    compatible = "brcm,cygnus-genpll-clk";
+    reg = <0x0301d000 0x2c>;
 
-> Other than that, looks solid to me.
-> 
-> Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> 
-I'll wait a bit more before posting a v3, to give other people a chance
-to look at this.
+    assigned-clocks = <&genpll_clks>;
+    /* this sets the PLL rate at the time when the PLL clock is
+registered */
+    assigned-clock-rates = <4000000000>;
+
+    clocks = <&osc>;
+
+    clock-output-names = "axi21", "250mhz", "ihost_sys", "enet_sw",
+"audio_125", "can";
+};
+
+peripheralA: peripheralA {
+    /* use the first leaf clock of genpll */
+    clocks = <&genpll_clks 0>;
+    clock-frequency  = <100000000>;
+};
+
+If we register both the genpll and its leaf clocks to the clock
+framework as two separate clock providers, would the above DT entries
+still work? For example, peripheralA refers to the phandle of
+genpll_clks, but how does the clock framework know to link it to the pll
+clock or the leaf clock?
 
 Thanks,
-Lucas
+
+Ray
