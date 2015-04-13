@@ -1,56 +1,80 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Mon, 13 Apr 2015 23:34:17 +0300
-Message-ID: <552C2849.2080503@cogentembedded.com>
-References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <1427982999.18722.35.camel@xylophone.i.decadent.org.uk>
+Subject: Re: [PATCH v2] Renesas Ethernet AVB driver
+Date: Mon, 13 Apr 2015 23:49:40 +0300
+Message-ID: <552C2BE4.7010804@cogentembedded.com>
+References: <1453213.DoV6WFn45r@wasted.cogentembedded.com> <20150413.163259.2190743529898270341.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-7;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1427982999.18722.35.camel@xylophone.i.decadent.org.uk>
+In-Reply-To: <20150413.163259.2190743529898270341.davem@davemloft.net>
 Sender: linux-sh-owner@vger.kernel.org
-To: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hello.
 
-On 04/02/2015 04:56 PM, Ben Hutchings wrote:
+On 04/13/2015 11:32 PM, David Miller wrote:
 
-> This driver looks somewhat similar to sh-eth, but lacks some of the
-> recent bug fixes made to that.  At least commit 283e38db65e7 ("sh_eth:
-> Fix serialisation of interrupt disable with interrupt & NAPI handler")
-> appears to be applicable, but there are probably others.
+>> Ethernet AVB includes an Gigabit Ethernet controller (E-MAC) that is=
+ basically
+>> compatible with SuperH Gigabit Ethernet E-MAC). Ethernet AVB  has a =
+dedicated
+>> direct memory access controller (AVB-DMAC) that is a new design comp=
+ared to the
+>> SuperH E-DMAC. The AVB-DMAC is compliant with 3 standards formulated=
+ for IEEE
+>> 802.1BA: IEEE 802.1AS timing and synchronization protocol, IEEE 802.=
+1Qav real-
+>> time transfer, and the IEEE 802.1Qat stream reservation protocol.
 
-    I suspect this issue applies to many drivers...
-    I couldn't reproduce the bug that patch was fixing, so left this fix out 
-for the time being. Others cases were fixed (if applicable).
+>> Not only the Ethernet driver is enclosed, there is also the PTP driv=
+er in
+>> the same file.  These drivers only support device tree probing, so t=
+he binding
+>> document is included in this patch.
 
-> One feature request:
+>> Based on the original patches by Mitsuhiro Kimura (Ethernet driver) =
+and Masaru
+>> Nagai (PTP driver).
 
-> On Sat, 2015-03-28 at 02:13 +0300, Sergei Shtylyov wrote:
-> [...]
->> +/* ioctl to device function */
->> +static int ravb_do_ioctl(struct net_device *ndev, struct ifreq *req, int cmd)
->> +{
->> +	struct ravb_private *priv = netdev_priv(ndev);
->> +	struct phy_device *phydev = priv->phydev;
->> +
->> +	if (!netif_running(ndev))
->> +		return -EINVAL;
->> +
->> +	if (!phydev)
->> +		return -ENODEV;
->> +
->> +	if (cmd == SIOCSHWTSTAMP)
->> +		return ravb_hwtstamp_ioctl(ndev, req, cmd);
-> [...]
+>> Signed-off-by: Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>
+>> Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> The driver should also handle SIOCGHWTSTAMP.
+> Doesn't build properly on x86-64:
 
-    Done.
+>    CC [M]  drivers/net/ethernet/renesas/ravb.o
+> drivers/net/ethernet/renesas/ravb.c: In function =A1ravb_set_buffer_a=
+lign=A2:
+> drivers/net/ethernet/renesas/ravb.c:955:16: warning: cast from pointe=
+r to integer of different size [-Wpointer-to-int-cast]
+>    u32 reserve =3D (u32)skb->data & (RAVB_ALIGN - 1);
+>                  ^
+> drivers/net/ethernet/renesas/ravb.c: At top level:
+> drivers/net/ethernet/renesas/ravb.c:2771:2: error: unknown field =A1g=
+ettime=A2 specified in initializer
+>    .gettime =3D ravb_ptp_gettime,
+>    ^
+> drivers/net/ethernet/renesas/ravb.c:2772:2: error: unknown field =A1s=
+ettime=A2 specified in initializer
+>    .settime =3D ravb_ptp_settime,
+>    ^
 
-> Ben.
+    So, timespec64 patches have been merged to net-next... In my haste =
+I just=20
+forgot to compile-test the driver in net-next, sorry about that. :-<
+
+> It is not acceptable to fix this by removing COMPILE_TEST from the Kc=
+onfig
+> dependencies or something like that.
+
+    It's also impossible as the errors themselves don't depend on ARCH.=
+ :-)
+
+> Thanks.
 
 WBR, Sergei
 
