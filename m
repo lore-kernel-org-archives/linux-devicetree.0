@@ -1,51 +1,82 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] nand: pl353: Add basic driver for arm pl353 smc
- nand interface
-Date: Mon, 13 Apr 2015 20:57:12 +0200
-Message-ID: <1428951432.3868.21.camel@x220>
-References: <1428941550-4620-1-git-send-email-punnaia@xilinx.com>
-	 <858a607d-7c5a-4066-aa79-ab14c456b8e5@BN1BFFO11FD046.protection.gbl>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
+ TAB7200
+Date: Mon, 13 Apr 2015 22:01:00 +0300
+Message-ID: <20150413220100.8666a3d121fce581ba836fe6@gmail.com>
+References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
+	<20150331144338.GG23664@lukather>
+	<20150331221420.3b65d2540c7dbe1d12611e12@gmail.com>
+	<20150402092259.GK23664@lukather>
+	<20150411191816.cdc5ec802b01028eb2913906@gmail.com>
+	<20150413160951.GJ29832@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <858a607d-7c5a-4066-aa79-ab14c456b8e5-fm2tX0oQAVzb5P7hixJ5yuhlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
+In-Reply-To: <20150413160951.GJ29832@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jussi.kivilinna-X3B1VOXEql0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, joern-PCqxUs/MD9bYtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-04-13 at 21:42 +0530, Punnaiah Choudary Kalluri wrote:
+On Mon, 13 Apr 2015 18:09:51 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> --- a/drivers/mtd/nand/Makefile
-> +++ b/drivers/mtd/nand/Makefile
+> On Sat, Apr 11, 2015 at 07:18:16PM +0300, Aleksei Mamlin wrote:
+> > On Thu, 2 Apr 2015 11:22:59 +0200
+> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > 
+> > > On Tue, Mar 31, 2015 at 10:14:20PM +0300, Aleksei Mamlin wrote:
+> > > > On Tue, 31 Mar 2015 07:43:38 -0700
+> > > > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > > 
+> > > > > Hi,
+> > > > > 
+> > > > > On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
+> > > > > > This patch adds nodes for the Goodix GT911 touchscreen controller found
+> > > > > > on the Wexler TAB7200 tablet. Controller uses one of following I2C
+> > > > > > addresses: 0x5d or 0x14, so just add two nodes.
+> > > > > 
+> > > > > In which case are these different addresses encountered? Different
+> > > > > revisions of the same board?
+> > > >
+> > > > According to the datasheet it is a feature of the controller. 
+> > > > The address(0x5d or 0x14) can be configured using a reset sequence,
+> > > > which has not yet been implemented in the driver.
+> > > 
+> > > Which address is set up by the bootloader then?
+> >
+> > I assume that bootloader(u-boot) didn't sets up any address, but touchscreen
+> > controller usually uses 0x5d. Sometimes, after hard reset, it uses 0x14.
+> > For this we need nodes on both adresses.
+> 
+> I'm confused, who changes that address then?
+> 
+> The controller itself?
+> 
+If I understood correctly, when device starts it sets reset pin (PB13) to
+high level and int pin(PH21) to low level. After this int pin sets up as
+external interrupt. This sequence triggers controller to use 0x5d address.
 
-> +obj-$(CONFIG_MTD_NAND_PL353)		+= pl353_nand.o
+After hard reset both pins may be hight level and it triggers controller
+to use 0x14 address.
 
-(I think pl353_nand.o can be part of a module. If that's incorrect, you
-can stop reading here.) 
+Please see datasheets at pages 8-10.
 
-> --- /dev/null
-> +++ b/drivers/mtd/nand/pl353_nand.c
-
-> + * This program is free software; you can redistribute it and/or modify it under
-> + * the terms of the GNU General Public License version 2 as published by the
-> + * Free Software Foundation; either version 2 of the License, or (at your
-> + * option) any later version.
-
-This states the license of this driver is GPL v2 or later.
-
-> +MODULE_LICENSE("GPL v2");
-
-And according to include/linux/module.h this states the license is GPL
-v2. So either the comment at the top of this file or the license ident
-used in the MODULE_LICENSE() macro needs to change.
-
-Thanks,
+https://drive.google.com/file/d/0BxCVOQS3ZymGdEE0cHI3bnp5WVE
+https://drive.google.com/file/d/0BxCVOQS3ZymGbDAzVnZwZ2lOZ1E
+>
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
 
-Paul Bolle
-
+-- 
+Thanks and regards,
+Aleksei Mamlin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
