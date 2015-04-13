@@ -1,70 +1,75 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v3 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Mon, 13 Apr 2015 09:35:34 +0200
-Message-ID: <CAG374jDUPK5hCZBLR_r5om8mh8wy1NyxDaZ-DP_A-xjNN6f2pQ@mail.gmail.com>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1428657168-12495-4-git-send-email-gabriel.fernandez@linaro.org>
-	<1428747477.17822.90.camel@x220>
-	<2529595.kpEIoZMpcn@wuerfel>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: socfpga: dts: Add a ciu clock node for sdmmc
+Date: Mon, 13 Apr 2015 10:10:37 +0200
+Message-ID: <73wq1g30ua.fsf@unicorn.hi.pengutronix.de>
+References: <1428699386-2622-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2529595.kpEIoZMpcn@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Bolle <pebolle@tiscali.nl>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>Viresh Kumar <v>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1428699386-2622-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-Thanks for reviewing.
+Hi!
 
-On 11 April 2015 at 16:55, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Saturday 11 April 2015 12:17:57 Paul Bolle wrote:
->> Something I didn't spot in my first look at this patch.
->>
->> On Fri, 2015-04-10 at 11:12 +0200, Gabriel FERNANDEZ wrote:
->> > --- a/drivers/pci/host/Kconfig
->> > +++ b/drivers/pci/host/Kconfig
->> >
->> > +config PCI_ST
->> > +     bool "ST PCIe controller"
->> > +     depends on ARCH_STI || (ARM && COMPILE_TEST)
->> > +     select PCIE_DW
->> > +     help
->> > +       Enable PCIe controller support on ST Socs. This controller is based
->> > +       on Designware hardware and therefore the driver re-uses the
->> > +       Designware core functions to implement the driver.
->>
->> You can't have ARCH_STI without ARM, so ARM will always be set if this
->> driver is enabled. Correct?
+dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org writes:
+> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >
-> Right, though the ARM dependency could soon be dropped, once the PCIE_DW
-> driver can use generic infrastructure in the few places it relies on
-> ARM specific code today.
+> The CIU(Card Interface Unit) clock is used by the dw_mmc IP to clock an SD
+> card. The ciu_clk is the sdmmc_clk passed through a fixed divider of 4. This patch
+> adds the ciu_clk node and makes the sdmmc_clk it's parent.
 >
->> > --- /dev/null
->> > +++ b/drivers/pci/host/pci-st.c
->>
->> > +     if (IS_ENABLED(CONFIG_ARM)) {
->> > +             /*
->> > +              * We have to hook the abort handler so that we can intercept
->> > +              * bus errors when doing config read/write that return UR,
->> > +              * which is flagged up as a bus error
->> > +              */
->> > +             hook_fault_code(16+6, st_pcie_abort_handler, SIGBUS, 0,
->> > +                             "imprecise external abort");
->> > +     }
->>
->> So, unless I'm missing something obvious here, IS_ENABLED(CONFIG_ARM)
->> will always evaluate to 1. Can't that test be dropped?
+> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >
-> I would leave it in, as it's quite likely to get reused with ARM64 at some
-> point in the future (no, I don't know anything about ST's product plans,
-> but everybody seems to be doing this).
->
->         Arnd
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index d9176e6..25418ee 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -451,6 +451,14 @@
+>  						clk-phase = <0 135>;
+>  					};
+>  
+> +					ciu_clk: ciu_clk {
+> +						#clock-cells = <0>;
+> +						compatible = "altr,socfpga-gate-clk";
+> +						clocks = <&sdmmc_clk>;
+> +						clk-gate = <0xa0 8>;
+> +						fixed-divider = <4>;
+> +					};
+> +
 
-Yes i agree with that.
+Hm, is this correct? The clk-gate at 0xa0 is for the SDMMC_CLK, no?
+Also, maybe the clock should be named "sdmmc_clk_divided" like in the
+datasheet, so it is easier to find.
 
-Gabriel
+>  					nand_x_clk: nand_x_clk {
+>  						#clock-cells = <0>;
+>  						compatible = "altr,socfpga-gate-clk";
+> @@ -635,7 +643,7 @@
+>  			fifo-depth = <0x400>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> -			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
+> +			clocks = <&l4_mp_clk>, <&ciu_clk>;
+>  			clock-names = "biu", "ciu";
+>  		};
+>  
+
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           | Steffen Trumtrar            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
