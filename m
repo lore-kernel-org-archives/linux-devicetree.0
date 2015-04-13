@@ -1,45 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 4/6] clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
-Date: Mon, 13 Apr 2015 15:30:23 +0200
-Message-ID: <2254597.TWaxeZsKvK@wuerfel>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com> <1428916660-25910-5-git-send-email-bintian.wang@huawei.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Mon, 13 Apr 2015 16:38:48 +0300
+Message-ID: <552BC6E8.1040400@yandex-team.ru>
+References: <20150408165920.25007.6869.stgit@buzz> <CAL_JsqKQPtNPfTAiqsKnFuU6e-qozzPgujM=8MHseG75R9cbSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428916660-25910-5-git-send-email-bintian.wang@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bintian Wang <bintian.wang@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.com, huxinwei@huawei.com, z.liuxinliang@huawei.com, heyunlei@huawe
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <CAL_JsqKQPtNPfTAiqsKnFuU6e-qozzPgujM=8MHseG75R9cbSA@mail.gmail.com>
+Sender: owner-linux-mm@kvack.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 13 April 2015 17:17:38 Bintian Wang wrote:
-> +#define HI6220_CFG_CSI2PHY     8
-> +#define HI6220_ISP_SCLK_GATE   9
-> +#define HI6220_ISP_SCLK_GATE1  10
-> +#define HI6220_ADE_CORE_GATE   11
-> +#define HI6220_CODEC_VPU_GATE  12
-> +#define HI6220_MED_SYSPLL      13
-> +
-> +/* mux clocks */
-> +#define HI6220_1440_1200       20
-> +#define HI6220_1000_1200       21
-> +#define HI6220_1000_1440       22
-> +
-> +/* divider clocks */
-> +#define HI6220_CODEC_JPEG      30
-> +#define HI6220_ISP_SCLK_SRC    31
-> +#define HI6220_ISP_SCLK1       32
-> 
+On 13.04.2015 16:22, Rob Herring wrote:
+> On Wed, Apr 8, 2015 at 11:59 AM, Konstantin Khlebnikov
+> <khlebnikov@yandex-team.ru> wrote:
+>> Node 0 might be offline as well as any other numa node,
+>> in this case kernel cannot handle memory allocation and crashes.
+>>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Fixes: 0c3f061c195c ("of: implement of_node_to_nid as a weak function")
+>> ---
+>>   drivers/of/base.c  |    2 +-
+>>   include/linux/of.h |    5 ++++-
+>>   2 files changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index 8f165b112e03..51f4bd16e613 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -89,7 +89,7 @@ EXPORT_SYMBOL(of_n_size_cells);
+>>   #ifdef CONFIG_NUMA
+>>   int __weak of_node_to_nid(struct device_node *np)
+>>   {
+>> -       return numa_node_id();
+>> +       return NUMA_NO_NODE;
+>
+> This is going to break any NUMA machine that enables OF and expects
+> the weak function to work.
 
-The numbers seem rather arbitrary, and you have both holes as well as duplicate
-numbers here. I would suggest you do one of two things instead:
+Why? NUMA_NO_NODE == -1 -- this's standard "no-affinity" signal.
+As I see powerpc/sparc versions of of_node_to_nid returns -1 if they
+cannot find out which node should be used.
 
-a) have a separate header file per clock driver and make all the
-   numbers unique and consecutive within that header
+>
+> Rob
+>
+>>   }
+>>   #endif
+>>
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index dfde07e77a63..78a04ee85a9c 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -623,7 +623,10 @@ static inline const char *of_prop_next_string(struct property *prop,
+>>   #if defined(CONFIG_OF) && defined(CONFIG_NUMA)
+>>   extern int of_node_to_nid(struct device_node *np);
+>>   #else
+>> -static inline int of_node_to_nid(struct device_node *device) { return 0; }
+>> +static inline int of_node_to_nid(struct device_node *device)
+>> +{
+>> +       return NUMA_NO_NODE;
+>> +}
+>>   #endif
+>>
+>>   static inline struct device_node *of_find_matching_node(
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-b) use the same numbers as the hardware registers so you can put the
-   numbers directly into the dts and don't need a header to create
-   an artificial ABI between the clock driver and the boot loader.
 
-	Arnd
+-- 
+Konstantin
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
