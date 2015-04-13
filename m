@@ -1,32 +1,67 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: bcm2835: add pinctrl pre-processor define
-Date: Mon, 13 Apr 2015 18:31:17 +0200 (CEST)
-Message-ID: <1128901690.288098.1428942677965.JavaMail.open-xchange@oxbaltgw03.schlund.de>
-References: <1428842036-14202-1-git-send-email-alexanders83@web.de>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
+Date: Mon, 13 Apr 2015 11:49:31 -0500
+Message-ID: <CAL_Jsq+vaufZJAchHC1OaV9g18zFfkXyRZ9j5wm0VWosh9i4kQ@mail.gmail.com>
+References: <20150408165920.25007.6869.stgit@buzz> <CAL_JsqKQPtNPfTAiqsKnFuU6e-qozzPgujM=8MHseG75R9cbSA@mail.gmail.com>
+ <552BC6E8.1040400@yandex-team.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428842036-14202-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
+In-Reply-To: <552BC6E8.1040400-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Konstantin Khlebnikov <khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
-
-> Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> hat am 12. April 2015 um 14:33
-> geschrieben:
+On Mon, Apr 13, 2015 at 8:38 AM, Konstantin Khlebnikov
+<khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org> wrote:
+> On 13.04.2015 16:22, Rob Herring wrote:
+>>
+>> On Wed, Apr 8, 2015 at 11:59 AM, Konstantin Khlebnikov
+>> <khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org> wrote:
+>>>
+>>> Node 0 might be offline as well as any other numa node,
+>>> in this case kernel cannot handle memory allocation and crashes.
+>>>
+>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
+>>> Fixes: 0c3f061c195c ("of: implement of_node_to_nid as a weak function")
+>>> ---
+>>>   drivers/of/base.c  |    2 +-
+>>>   include/linux/of.h |    5 ++++-
+>>>   2 files changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index 8f165b112e03..51f4bd16e613 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -89,7 +89,7 @@ EXPORT_SYMBOL(of_n_size_cells);
+>>>   #ifdef CONFIG_NUMA
+>>>   int __weak of_node_to_nid(struct device_node *np)
+>>>   {
+>>> -       return numa_node_id();
+>>> +       return NUMA_NO_NODE;
+>>
+>>
+>> This is going to break any NUMA machine that enables OF and expects
+>> the weak function to work.
 >
 >
-> This adds defines for the BCM2835 function selections. This is notably
-> useful as the functions are not ordered.
+> Why? NUMA_NO_NODE == -1 -- this's standard "no-affinity" signal.
+> As I see powerpc/sparc versions of of_node_to_nid returns -1 if they
+> cannot find out which node should be used.
 
-if you look at Lee's repository then you will see this is already implemented.
+Ah, I was thinking those platforms were relying on the default
+implementation. I guess any real NUMA support is going to need to
+override this function. The arm64 patch series does that as well. We
+need to be sure this change is correct for metag which appears to be
+the only other OF enabled platform with NUMA support.
 
-Best regards
-Stefan
+In that case, then there is little reason to keep the inline and we
+can just always enable the weak function (with your change). It is
+slightly less optimal, but the few callers hardly appear to be hot
+paths.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
