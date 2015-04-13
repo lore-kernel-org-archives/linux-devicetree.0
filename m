@@ -1,46 +1,93 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V3 5/6] dts: msm8974: Add blsp2_bam dma node
-Date: Mon, 13 Apr 2015 09:44:36 +0530
-Message-ID: <552B42AC.7010407@codeaurora.org>
-References: <1428736145-18361-1-git-send-email-sricharan@codeaurora.org> <1428736145-18361-6-git-send-email-sricharan@codeaurora.org> <55299C4A.3020905@cogentembedded.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
+Date: Mon, 13 Apr 2015 15:13:34 +1000
+Message-ID: <20150413051334.GE20172@voom.fritz.box>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55299C4A.3020905-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cYtjc4pxslFTELvY"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E-6yWnlZQfN9JoBVljSLT0Ysm4BeyDBExM@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 04/12/2015 03:42 AM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 04/11/2015 10:09 AM, Sricharan R wrote:
->
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/qcom-msm8974.dtsi | 12 +++++++++++-
->>   1 file changed, 11 insertions(+), 1 deletion(-)
->
->> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi
->> b/arch/arm/boot/dts/qcom-msm8974.dtsi
->> index e265ec1..2c26151 100644
->> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
->> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> [...]
->> @@ -247,5 +247,15 @@
->>               #address-cells = <1>;
->>               #size-cells = <0>;
->>           };
->> +
->> +        blsp2_dma: dma@f9944000 {
->
->     The ePAPR standard says that the node name should be
-> "dma-controller", not just "dma".
->
-  Ok, will correct this.
+--cYtjc4pxslFTELvY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-  Sricharan
+On Sat, Apr 11, 2015 at 09:20:33PM +0200, Rowand, Frank wrote:
+> In recent years there have been proposed tools to aid in the creation of =
+valid
+> device trees and in debugging device tree issues.  An example of this is =
+the
+> various approaches proposed (with source code provided) to validate devic=
+e tree
+> source against valid bindings.  As of today, device tree related tools,
+> techniques, and debugging infrastructure have not progressed very far.  I=
+ have
+> submitted a device tree related proposal for the Linux Plumbers 2015 conf=
+erence
+> to spur action and innovation in such tools, techniques, and debugging
+> infrastructure.
+>=20
+> The current title of the track is "Device Tree Tools, Validation, and
+> Troubleshooting".  The proposal is located at
+>=20
+>    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_an=
+d_trouble_shooting
+>=20
+> I am looking for several things at the moment:
+>=20
+>    1) Suggestions of additional topics to be discussed.
+>=20
+>    2) Emails or other messages expressing an interest in attending the
+>       device tree track.
+>=20
+>    3) Commitments to attend the device tree track (the conference committ=
+ee
+>       is looking at attendee interest and commitments as part of the proc=
+ess
+>       of accepting the device tree track).
+
+It happens that I'll be in Seattle at the time for the KVM Forum.
+It's my intention to attend the Plumbers' device tree track, except
+where it collides with things I need to attend at KVM Forum.
+
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--cYtjc4pxslFTELvY
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVK1B+AAoJEGw4ysog2bOSgJIP/iW3Gtz6SZCUbFJMzG7joxLR
+m37bz2QHcbUlXlxu3vriminZjbQWHVP+jY74slOlXPJS7qHNYvjtprzEkm21pS9i
+ALKkpRerhk2iQLCqS+JagGx8kXl8PihbXPK0rZSHgyCXoiNYOLl6XvIdxSiXOl5u
+smtKFwTABjHTw3ceaaEl58D233Udo7MIytmbZP4SixR6NcKC6E5P1I6G2fuLhUkL
+FAigHxQT1bOQ+tRyk3Nu8IpSlmQVyCwlQGqvUoWNhT/RxoCIal0mjj/M5S4v6bCM
+TB08PubPqhzN3j3b6YCW+yU/s4znKWTVuBfix2LXBax2N1zfZnTWR+mt6WMsmFcB
+/9mZ33RMeKntiO9Solcqkg+QYvwWIvyHHrsvfnVTSc/O8WFQCNS23FDWVqKpZHQ0
+1OXDgNa2yOLmtixPwI2yWLeu9WSZ7TDZhLvFxJV5r13rUQHzhZooPKzYLH8FTW0t
+XsBRzI++PyjV44a+u726OIU84RsQnMGJQeGpYyp57ebzrnbYtYlci2RuVMXlCtyv
+GjjiTci8juk7XwkgVVnZsx3CjP/tizZCgnCG+ohFZ9sX1m9jBgkrlxFzgia13R3r
+V6V0Th+B96SLAVgP2ebJRXe1Z24R+QEm03+7ZkYz+6b6uHjreRBdROWK2S3LoWBY
+NS/MkyhxUcn2Nh1Z93U9
+=sJLH
+-----END PGP SIGNATURE-----
+
+--cYtjc4pxslFTELvY--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
