@@ -1,302 +1,201 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] usb: chipidea: Use extcon framework for VBUS and ID
- detection
-Date: Mon, 13 Apr 2015 11:53:46 +0800
-Message-ID: <20150413035345.GA1341@shlinux2>
-References: <1428568418-22508-1-git-send-email-ivan.ivanov@linaro.org>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] clk: iproc: define Broadcom iProc clock binding
+Date: Sun, 12 Apr 2015 21:08:32 -0700
+Message-ID: <552B4140.6000705@broadcom.com>
+References: <1426657522-2473-1-git-send-email-rjui@broadcom.com> <1426657522-2473-2-git-send-email-rjui@broadcom.com> <20150411001231.18916.93186@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1428568418-22508-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150411001231.18916.93186@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 09, 2015 at 11:33:38AM +0300, Ivan T. Ivanov wrote:
-> On recent Qualcomm platforms VBUS and ID lines are not routed to
-> USB PHY LINK controller. Use extcon framework to receive connect
-> and disconnect ID and VBUS notification.
+
+
+On 4/10/2015 5:12 PM, Michael Turquette wrote:
+> Quoting Ray Jui (2015-03-17 22:45:17)
+>> Document the device tree binding for Broadcom iProc architecture based
+>> clock controller
+>>
+>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../bindings/clock/brcm,iproc-clocks.txt           |  171 ++++++++++++++++++++
+>>  1 file changed, 171 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>> new file mode 100644
+>> index 0000000..bf2316b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>> @@ -0,0 +1,171 @@
+>> +Broadcom iProc Family Clocks
+>> +
+>> +This binding uses the common clock binding:
+>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +The iProc clock controller manages clocks that are common to the iProc family.
+>> +An SoC from the iProc family may have several PPLs, e.g., ARMPLL, GENPLL,
+>> +LCPLL0, MIPIPLL, and etc., all derived from an onboard crystal. Each PLL
+>> +comprises of several leaf clocks
+>> +
+>> +Required properties for PLLs:
+>> +- compatible:
+>> +    Should have a value of the form "brcm,<soc>-<pll>". For example, GENPLL on
+>> +Cygnus has a compatible string of "brcm,cygnus-genpll"
+>> +
+>> +- #clock-cells:
+>> +    Must be <0>
+>> +
+>> +- reg:
+>> +    Define the base and range of the I/O address space that contain the iProc
+>> +clock control registers required for the PLL
+>> +
+>> +- clocks:
+>> +    The input parent clock phandle for the PLL. For all iProc PLLs, this is an
+>> +onboard crystal with a fixed rate
+>> +
+>> +Example:
+>> +
+>> +       osc: oscillator {
+>> +               #clock-cells = <0>;
+>> +               compatible = "fixed-clock";
+>> +               clock-frequency = <25000000>;
+>> +       };
+>> +
+>> +       genpll: genpll {
+>> +               #clock-cells = <0>;
+>> +               compatible = "brcm,cygnus-genpll";
+>> +               reg = <0x0301d000 0x2c>,
+>> +                       <0x0301c020 0x4>;
+>> +               clocks = <&osc>;
+>> +       };
+>> +
+>> +Required properties for leaf clocks of a PLL:
+>> +
+>> +- compatible:
+>> +    Should have a value of the form "brcm,<soc>-<pll>-clk". For example, leaf
+>> +clocks derived from the GENPLL on Cygnus SoC have a compatible string of
+>> +"brcm,cygnus-genpll-clk"
+>> +
+>> +- #clock-cells:
+>> +    Have a value of <1> since there are more than 1 leaf clock of a
+>> +given PLL
+>> +
+>> +- reg:
+>> +    Define the base and range of the I/O address space that contain the iProc
+>> +clock control registers required for the PLL leaf clocks
+>> +
+>> +- clocks:
+>> +    The input parent PLL phandle for the leaf clock
+>> +
+>> +- clock-output-names:
+>> +    An ordered list of strings defining the names of the leaf clocks
+>> +
+>> +Example:
+>> +
+>> +       genpll: genpll {
+>> +               #clock-cells = <0>;
+>> +               compatible = "brcm,cygnus-genpll";
+>> +               reg = <0x0301d000 0x2c>,
+>> +                       <0x0301c020 0x4>;
+>> +               clocks = <&osc>;
+>> +       };
+>> +
+>> +       genpll_clks: genpll_clks {
+>> +               #clock-cells = <1>;
+>> +               compatible = "brcm,cygnus-genpll-clk";
+>> +               reg = <0x0301d000 0x2c>;
+>> +               clocks = <&genpll>;
+>> +               clock-output-names = "axi21", "250mhz", "ihost_sys",
+>> +                       "enet_sw", "audio_125", "can";
+>> +       };
 > 
-> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+> Hi Ray,
 > 
-> Suggestions for better solution are welcome!
+> Thanks for submitting the patch. It was nice meeting you at ELC as well.
 > 
->  .../devicetree/bindings/usb/ci-hdrc-qcom.txt       |  9 +++
->  drivers/usb/chipidea/Kconfig                       |  1 +
->  drivers/usb/chipidea/ci.h                          | 18 +++++
->  drivers/usb/chipidea/core.c                        | 77 ++++++++++++++++++++++
->  drivers/usb/chipidea/otg.c                         | 19 +++++-
->  5 files changed, 123 insertions(+), 1 deletion(-)
+> This binding doesn't conform to the norms for clock bindings. It looks
+> like for each type of controllable clock node (e.g. pll, leaf clock,
+> etc) you have a dts node. Looking at the above example it seems that
+> those two nodes (genpll and genpll_clks) share the same register.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-> index f2899b5..788da49 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-> @@ -7,6 +7,14 @@ Required properties:
->  - usb-phy:      phandle for the PHY device
->  - dr_mode:      Should be "peripheral"
+> /me checks patch #5
 > 
-> +Optional properties:
-> +- extcon:       phandles to external connector devices. First phandle
-> +                should point to external connector, which provide "USB"
-> +                cable events, the second should point to external connector
-> +                device, which provide "USB-HOST" cable events. If one of
-> +                the external connector devices is not required empty <0>
-> +                phandle should be specified.
-
-You mean if id connector is not needed, we write dts like below:
-extcon = <&usb_vbus>, <0>;
-
-If it is, you may miss ',' between "required" and "empty <0>".
-
-> +
->  Examples:
->  	gadget@f9a55000 {
->  		compatible = "qcom,ci-hdrc";
-> @@ -14,4 +22,5 @@ Examples:
->  		dr_mode = "peripheral";
->  		interrupts = <0 134 0>;
->  		usb-phy = <&usbphy0>;
-> +		extcon = <&usb_vbus>, <&usb_id>;
->  	};
-> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
-> index 77b47d8..a67b67f 100644
-> --- a/drivers/usb/chipidea/Kconfig
-> +++ b/drivers/usb/chipidea/Kconfig
-> @@ -1,6 +1,7 @@
->  config USB_CHIPIDEA
->  	tristate "ChipIdea Highspeed Dual Role Controller"
->  	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
-> +	depends on EXTCON
-
-Would you use "select" instead of "depends on" since some
-defconfigs may not enable extcon?
-
->  	help
->  	  Say Y here if your system has a dual role high speed USB
->  	  controller based on ChipIdea silicon IP. Currently, only the
-> diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-> index 65913d4..04e7aee 100644
-> --- a/drivers/usb/chipidea/ci.h
-> +++ b/drivers/usb/chipidea/ci.h
-> @@ -13,6 +13,7 @@
->  #ifndef __DRIVERS_USB_CHIPIDEA_CI_H
->  #define __DRIVERS_USB_CHIPIDEA_CI_H
+> Yup, you re-use the same register address for the *pll and *pll_clks
+> nodes. I'm not a DT expert but I think this is considered Wrong.
 > 
-> +#include <linux/extcon.h>
->  #include <linux/list.h>
->  #include <linux/irqreturn.h>
->  #include <linux/usb.h>
-> @@ -132,6 +133,18 @@ struct hw_bank {
->  };
+> More generally your clock dt binding should be modeling the hardware in
+> terms of IP blocks. If you have a clock generator IP block it may
+> control many clock bits and output many clock signals. E.g. for your
+> hardware (based only on the addresses in patch #5 and not having seen
+> any data manual) I will hazard a guess that the genpll, lcpll and asiu
+> clocks are all part of the same IP block.
+
+Hi Mike,
+
+In fact, lcpll, genpll, mipipll are similar but DIFFERENT IP blocks, and
+asiu is completely different from any of them. All of these plls are
+unique and have their own register banks, as you can see from the
+bcm-cygnus-clock.dtsi file. Therefore, I think it's totally correct and
+actually necessary to represent each of them with a separate device node.
+
+Regarding the relationship between a PLL clock and its leaf clocks:
+Taking the genpll as an example, physically they are connected as:
+
+xtal -> genpll -> axi21, 250mhz, ihost_sys, ...
+
+The 25 MHz crystal feeds to the genpll, and the genpll generates 6
+different leaf clocks including axi21, 250mhz, ihost_sys, and etc. One
+can choose to set the genpll's vco to one frequency, and based on that
+frequency, different leaf clock frequencies can be generated with their
+own post divider.
+
+Therefore, I think it makes sense to represent xtal, genpll, genpll_clks
+(including axi21, 250mhz, ihost_sys, and etc) each with a unique device
+node, and genpll is the parent of these leaf clocks. Basically the
+device nodes and the way how the "clocks" phandle is used represent the
+hierarchy of the clock architecture within Cygnus (and in the future
+other iProc SoCs). Does that make sense?
+
+Regarding the register address overlapping, again, taking genpll as an
+example, the genpll and the genpll_clks actually never access the same
+set of registers, but the registers are sort of scattered within one
+bank, i.e., on Cygnus, genpll uses registers at offset 0x0, 0x8 ~ 0x1c,
+and genpll_clks uses registers at offset 0x4, 0x20 - 0x24.
+
+Thanks,
+
+Ray
+
 > 
->  /**
-> + * struct ci_hdrc - structure for exteternal connector cable state tracking
-
-%s/exteternal/external
-
-> + * @state: current state of the line
-> + * @nb: hold event notification callback
-> + * @conn: used for notification registration
-> + */
-> +struct ci_cable {
-> +	bool				state;
-> +	struct notifier_block		nb;
-> +	struct extcon_specific_cable_nb conn;
-> +};
-> +
-> +/**
->   * struct ci_hdrc - chipidea device representation
->   * @dev: pointer to parent device
->   * @lock: access synchronization
-> @@ -169,6 +182,8 @@ struct hw_bank {
->   * @b_sess_valid_event: indicates there is a vbus event, and handled
->   * at ci_otg_work
->   * @imx28_write_fix: Freescale imx28 needs swp instruction for writing
-> + * @vbus: VBUS signal state trakining, using extcon framework
-> + * @id: ID signal state trakining, using extcon framework
-
-%s/trakining/tracking
-
->   */
->  struct ci_hdrc {
->  	struct device			*dev;
-> @@ -211,6 +226,9 @@ struct ci_hdrc {
->  	bool				id_event;
->  	bool				b_sess_valid_event;
->  	bool				imx28_write_fix;
-> +
-> +	struct ci_cable			vbus;
-> +	struct ci_cable			id;
-
-I prefer using vbus_extcon and id_extcon
->  };
+> If my guess is correct then these clocks should all be represented by a
+> single node int DT. Lets say that the clock controller IP block that
+> manages the genpll, lcpll and asiu clocks (including their child/leaf
+> clocks) is called "foobar" in your data manual. You should have a dts
+> node with a compatible string such as "brcm,cygnus-foobar" or
+> "brcm,cygnus-foobar-clk".
 > 
->  static inline struct ci_role_driver *ci_role(struct ci_hdrc *ci)
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index a57dc88..0f805bd 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -47,6 +47,7 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/extcon.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/module.h>
-> @@ -646,9 +647,36 @@ static void ci_get_otg_capable(struct ci_hdrc *ci)
->  		dev_dbg(ci->dev, "It is OTG capable controller\n");
->  }
+> Your clock driver should be responsible for registering all of the
+> clocks controlled by this IP block, regardless of the "type" of clock
+> node.
 > 
-> +static int ci_vbus_notifier(struct notifier_block *nb, unsigned long event,
-> +			 void *ptr)
-> +{
-> +	struct ci_cable *vbus = container_of(nb, struct ci_cable, nb);
-> +
-> +	if (event)
-> +		vbus->state = true;
-> +	else
-> +		vbus->state = false;
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int ci_host_notifier(struct notifier_block *nb, unsigned long event,
-> +		       void *ptr)
-
-ci_id_notifier?
-
-> +{
-> +	struct ci_cable *id = container_of(nb, struct ci_cable, nb);
-> +
-> +	if (event)
-> +		id->state = false;
-> +	else
-> +		id->state = true;
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static int ci_hdrc_probe(struct platform_device *pdev)
->  {
->  	struct device	*dev = &pdev->dev;
-> +	struct extcon_dev *ext_vbus, *ext_id;
->  	struct ci_hdrc	*ci;
->  	struct resource	*res;
->  	void __iomem	*base;
-> @@ -702,6 +730,51 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  			ci->usb_phy = NULL;
->  	}
+> I think part of the reason for your approach is that the previous
+> (deprecated) binding/dts had a bunch of fixed-rate clocks in it. This is
+> a hack that we do every now and then to get a new platform up and
+> running with a mainline kernel, but we don't do per-clock nodes in dts
+> any more, we do them by clock controller ip block instead.
 > 
-> +	ext_id = ERR_PTR(-ENODEV);
-> +	ext_vbus = ERR_PTR(-ENODEV);
-> +	if (of_property_read_bool(dev->parent->of_node, "extcon")) {
-> +		/* Each one of them is not mandatory */
-> +		ext_vbus = extcon_get_edev_by_phandle(dev->parent, 0);
-> +		if (IS_ERR(ext_vbus) && PTR_ERR(ext_vbus) != -ENODEV)
-> +			return PTR_ERR(ext_vbus);
-> +
-> +		ext_id = extcon_get_edev_by_phandle(dev->parent, 1);
-> +		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
-> +			return PTR_ERR(ext_id);
-> +	}
-
-Would you move this code to ci_get_platdata which is used to get
-platform stuffs from parent
-
-> +
-> +	if (!IS_ERR(ext_vbus)) {
-> +		ci->vbus.nb.notifier_call = ci_vbus_notifier;
-> +		ret = extcon_register_interest(&ci->vbus.conn, ext_vbus->name,
-> +					       "USB", &ci->vbus.nb);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "register VBUS failed\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = extcon_get_cable_state(ext_vbus, "USB");
-> +		if (ret)
-> +			ci->vbus.state = true;
-> +		else
-> +			ci->vbus.state = false;
-> +	}
-> +
-> +	if (!IS_ERR(ext_id)) {
-> +		ci->id.nb.notifier_call = ci_host_notifier;
-> +		ret = extcon_register_interest(&ci->id.conn, ext_id->name,
-> +					       "USB-HOST", &ci->id.nb);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "register ID failed\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = extcon_get_cable_state(ext_id, "USB-HOST");
-> +		if (ret)
-> +			ci->id.state = false;
-> +		else
-> +			ci->id.state = true;
-> +	}
-> +
->  	ret = ci_usb_phy_init(ci);
->  	if (ret) {
->  		dev_err(dev, "unable to init phy: %d\n", ret);
-> @@ -807,6 +880,10 @@ static int ci_hdrc_remove(struct platform_device *pdev)
->  {
->  	struct ci_hdrc *ci = platform_get_drvdata(pdev);
+> There are plenty of good examples of this for Exynos and QCOM SoCs if
+> you want an example.
 > 
-> +	if (ci->id.conn.edev)
-> +		extcon_unregister_interest(&ci->id.conn);
-> +	if (ci->vbus.conn.edev)
-> +		extcon_unregister_interest(&ci->vbus.conn);
->  	dbg_remove_files(ci);
->  	ci_role_destroy(ci);
->  	ci_hdrc_enter_lpm(ci, true);
-> diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
-> index a048b08..2e97c0d 100644
-> --- a/drivers/usb/chipidea/otg.c
-> +++ b/drivers/usb/chipidea/otg.c
-> @@ -30,7 +30,24 @@
->   */
->  u32 hw_read_otgsc(struct ci_hdrc *ci, u32 mask)
->  {
-> -	return hw_read(ci, OP_OTGSC, mask);
-> +	u32 val = hw_read(ci, OP_OTGSC, mask);
-> +
-> +	if ((mask & OTGSC_BSV) && ci->vbus.conn.edev) {
-
-You may use "||" since you can't get vbus and id value from
-cpu register (otgsc).
-
-> +		if (ci->vbus.state)
-> +			val |= OTGSC_BSV;
-> +		else
-> +			val &= ~OTGSC_BSV;
-> +	}
-> +
-> +	if ((mask & OTGSC_ID) && ci->id.conn.edev) {
-> +		if (ci->id.state)
-> +			val |= OTGSC_ID;
-> +		else
-> +			val &= ~OTGSC_ID;
-> +	}
-> +
-> +	val &= mask;
-> +	return val;
->  }
+> Regards,
+> Mike
 > 
->  /**
-> --
-> 1.9.1
-> 
-
--- 
-
-Best Regards,
-Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
