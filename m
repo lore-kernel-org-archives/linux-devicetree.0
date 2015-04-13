@@ -1,103 +1,52 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v6 2/2] memory: pl353: Add driver for arm pl353 static
- memory controller
-Date: Mon, 13 Apr 2015 20:49:16 +0200
-Message-ID: <1428950956.3868.16.camel@x220>
-References: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
-	 <a1f437fe-51cf-4a89-87b4-8f0a305e68ed@BN1AFFO11FD026.protection.gbl>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] nand: pl353: Add basic driver for arm pl353 smc
+ nand interface
+Date: Mon, 13 Apr 2015 20:57:12 +0200
+Message-ID: <1428951432.3868.21.camel@x220>
+References: <1428941550-4620-1-git-send-email-punnaia@xilinx.com>
+	 <858a607d-7c5a-4066-aa79-ab14c456b8e5@BN1BFFO11FD046.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <a1f437fe-51cf-4a89-87b4-8f0a305e68ed@BN1AFFO11FD026.protection.gbl>
-Sender: linux-doc-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <858a607d-7c5a-4066-aa79-ab14c456b8e5-fm2tX0oQAVzb5P7hixJ5yuhlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jussi.kivilinna-X3B1VOXEql0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, joern-PCqxUs/MD9bYtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-04-13 at 21:41 +0530, Punnaiah Choudary Kalluri wrote:
-> --- a/drivers/memory/Kconfig
-> +++ b/drivers/memory/Kconfig
+On Mon, 2015-04-13 at 21:42 +0530, Punnaiah Choudary Kalluri wrote:
 
-> +config PL353_SMC
-> +	bool "ARM PL353 Static Memory Controller (SMC) driver"
-> +	depends on ARM
-> +	help
-> +	  This driver is for the ARM PL353 Static Memory Controller (SMC)
-> +	  module.
+> --- a/drivers/mtd/nand/Makefile
+> +++ b/drivers/mtd/nand/Makefile
 
-This adds a bool symbol.
+> +obj-$(CONFIG_MTD_NAND_PL353)		+= pl353_nand.o
 
-> --- a/drivers/memory/Makefile
-> +++ b/drivers/memory/Makefile
-
-> +obj-$(CONFIG_PL353_SMC)		+= pl353-smc.o
-
-Which means pl353-smc.o can never be part of a module, right?
-
-(If that's not right you can stop reading here.)
+(I think pl353_nand.o can be part of a module. If that's incorrect, you
+can stop reading here.) 
 
 > --- /dev/null
-> +++ b/drivers/memory/pl353-smc.c
+> +++ b/drivers/mtd/nand/pl353_nand.c
 
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation, either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+> + * This program is free software; you can redistribute it and/or modify it under
+> + * the terms of the GNU General Public License version 2 as published by the
+> + * Free Software Foundation; either version 2 of the License, or (at your
+> + * option) any later version.
 
-This states the license is GPL v2 or later.
+This states the license of this driver is GPL v2 or later.
 
-> +#include <linux/module.h>
-
-I wonder whether this include is needed, since this is built-in only
-code.
-
-> +MODULE_DEVICE_TABLE(of, pl353_smc_of_match);
-
-According to include/linux/module.h this will be preprocessed away for
-built-in code.
-
-> +static struct platform_driver pl353_smc_driver = {
-> +	.probe		= pl353_smc_probe,
-> +	.remove		= pl353_smc_remove,
-> +	.driver		= {
-> +		.name	= "pl353-smc",
-> +		.owner	= THIS_MODULE,
-
-THIS_MODULE will be equivalent to NULL for built-in code, according to
-include/linux/export.h.
-
-> +		.pm	= &pl353_smc_dev_pm_ops,
-> +		.of_match_table = pl353_smc_of_match,
-> +	},
-> +};
-
-> +module_platform_driver(pl353_smc_driver);
-
-Speaking from memory: for built-in only code this is equivalent to
-having a wrapper that only does
-    register_platform_driver(&pl353_smc_driver);
-
-and mark that wrapper with device_initcall().
-
-> +MODULE_AUTHOR("Xilinx, Inc.");
-> +MODULE_DESCRIPTION("ARM PL353 SMC Driver");
 > +MODULE_LICENSE("GPL v2");
 
-For built-in only code these macros will be effectively preprocessed
-away.
-
-(Would you make PL353_SMC a tristate symbol then you should note that
-according to include/linux/module.h "GPL" is the license ident that
-matches the license stated in the comment at the top of this file.)
+And according to include/linux/module.h this states the license is GPL
+v2. So either the comment at the top of this file or the license ident
+used in the MODULE_LICENSE() macro needs to change.
 
 Thanks,
 
 
 Paul Bolle
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
