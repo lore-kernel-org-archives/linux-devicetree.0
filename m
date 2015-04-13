@@ -1,159 +1,104 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] power_supply: Add TI BQ24257 charger driver
-Date: Mon, 13 Apr 2015 22:11:57 +0900
-Message-ID: <552BC09D.9040502@samsung.com>
-References: <1428671897-12232-1-git-send-email-laurentiu.palcu@intel.com>
+From: Bintian <bintian.wang@huawei.com>
+Subject: Re: [PATCH v2 4/6] clk: hi6220: Clock driver support for Hisilicon
+ hi6220 SoC
+Date: Mon, 13 Apr 2015 21:17:59 +0800
+Message-ID: <552BC207.40807@huawei.com>
+References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com>	 <1428916660-25910-5-git-send-email-bintian.wang@huawei.com> <1428926202.11113.77.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1428671897-12232-1-git-send-email-laurentiu.palcu@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>, Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428926202.11113.77.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, mturquette@linaro.org, rob.herring@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, xuwei5@hisilicon.com, jh80.chung@samsung.com, olof@lixom.net, yanhaifeng@gmail.com, sboyd@codeaurora.org, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, tomeu.vizoso@collabora.com, linux@arm.linux.org.uk, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, tyler.baker@linaro.org, xuyiping@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, victor.lixin@hisilicon.com, puck.chen@hisilicon.com, dan.zhao@hisilicon.c
 List-Id: devicetree@vger.kernel.org
 
-W dniu 10.04.2015 o 22:18, Laurentiu Palcu pisze:
-> Based on the datasheet found here:
-> http://www.ti.com/lit/ds/symlink/bq24257.pdf
+Hello Paul,
+
+Thank you very much for code review and testing on arm!
+
+On 2015/4/13 19:56, Paul Bolle wrote:
+> On Mon, 2015-04-13 at 17:17 +0800, Bintian Wang wrote:
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/Kconfig
+>> @@ -0,0 +1,5 @@
+>> +config COMMON_CLK_HI6220
+>> +	tristate "Hi6220 Clock Driver"
+>> +	depends on OF && ARCH_HISI
+>> +	help
+>> +	  Build the Hisilicon Hi6220 clock driver based on the common clock framework.
 >
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+> In 5/6 you make arm64's ARCH_HISI (a bool) select COMMON_CLK_HI6220. So
+> for arm64 this driver will always be built-in.
+>
+> For arm's ARCH_HISI it's possible to set COMMON_CLK_HI6220 to 'm'.
 
-(...)
+Setting COMMON_CLK_HI6220 to a bool symbol is a good solution based on
+current code base, I will fix it in next version.
 
-> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> new file mode 100644
-> index 0000000..58b9af1
-> --- /dev/null
-> +++ b/drivers/power/bq24257_charger.c
-> @@ -0,0 +1,868 @@
-> +/*
-> + * TI BQ24257 charger driver
-> + *
-> + * Copyright (C) 2015 Intel Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/delay.h>
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/of.h>
-> +
-> +#define BQ24257_REG_1			0x00
-> +#define BQ24257_REG_2			0x01
-> +#define BQ24257_REG_3			0x02
-> +#define BQ24257_REG_4			0x03
-> +#define BQ24257_REG_5			0x04
-> +#define BQ24257_REG_6			0x05
-> +#define BQ24257_REG_7			0x06
-> +
-> +#define BQ24257_MANUFACTURER		"Texas Instruments"
-> +#define BQ24257_STAT_IRQ		"stat"
-> +#define BQ24257_PG_GPIO			"pg"
-> +
-> +#define BQ24257_ILIM_SET_DELAY		1000	/* msec */
-> +
-> +enum bq24257_fields {
-> +	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
-> +	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
-> +	F_VBAT, F_USB_DET,					    /* REG 3 */
-> +	F_ICHG, F_ITERM,					    /* REG 4 */
-> +	F_LOOP_STATUS, F_LOW_CHG, F_DPDM_EN, F_CE_STATUS, F_VINDPM, /* REG 5 */
-> +	F_X2_TMR_EN, F_TMR, F_SYSOFF, F_TS_STAT,		    /* REG 6 */
-> +	F_VOVP, F_CLR_VDP, F_FORCE_BATDET, F_FORCE_PTM,		    /* REG 7 */
-> +
-> +	F_MAX_FIELDS
-> +};
-> +
-> +/* initial field values, converted from uV/uA */
-> +struct bq24257_init_data {
-> +	u8 ichg;	/* charge current      */
-> +	u8 vbat;	/* regulation voltage  */
-> +	u8 iterm;	/* termination current */
-> +};
-> +
-> +struct bq24257_state {
-> +	u8 status;
-> +	u8 fault;
-> +	bool power_good;
-> +};
-> +
-> +struct bq24257_device {
-> +	struct i2c_client *client;
-> +	struct device *dev;
-> +	struct power_supply *charger;
-> +	struct power_supply_desc charger_desc;
-> +
-> +	struct regmap *rmap;
-> +	struct regmap_field *rmap_fields[F_MAX_FIELDS];
-> +
-> +	struct gpio_desc *pg;
-> +
-> +	struct delayed_work iilimit_setup_work;
-> +
-> +	struct bq24257_init_data init_data;
-> +	struct bq24257_state state;
-> +
-> +	struct mutex lock; /* protect state data */
-> +};
-> +
-> +static bool bq24257_is_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	return true;
+>
+>> --- a/drivers/clk/hisilicon/Makefile
+>> +++ b/drivers/clk/hisilicon/Makefile
+>> @@ -2,8 +2,9 @@
+>>   # Hisilicon Clock specific Makefile
+>>   #
+>>
+>> -obj-y	+= clk.o clkgate-separated.o
+>> +obj-y	+= clk.o clkgate-separated.o clkdivider-hi6220.o
+>
+> These objects will always be built-in, right?
+>
+>>   obj-$(CONFIG_ARCH_HI3xxx)	+= clk-hi3620.o
+>>   obj-$(CONFIG_ARCH_HIP04)	+= clk-hip04.o
+>>   obj-$(CONFIG_ARCH_HIX5HD2)	+= clk-hix5hd2.o
+>> +obj-$(CONFIG_COMMON_CLK_HI6220)	+= clk-hi6220.o
+>
+> If CONFIG_COMMON_CLK_HI6220 is 'm' this will build a module named
+> clk-hi6220.ko. If I try to do that I get:
+>      $ make -C ../../.. ARCH=arm CROSS_COMPILE=arm-linux-gnu- M=$PWD clk-hi6220.ko
+>      make: Entering directory `[...]'
+>        CC [M]  [...]/drivers/clk/hisilicon/clk-hi6220.o
+>        MODPOST 1 modules
+>      WARNING: "hisi_clk_register_gate" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>      WARNING: "hi6220_clk_register_divider" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>      WARNING: "hisi_clk_register_mux" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>      WARNING: "hisi_clk_register_gate_sep" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>      WARNING: "hisi_clk_register_fixed_factor" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>      WARNING: "hisi_clk_register_fixed_rate" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>      WARNING: "hisi_clk_init" [[...]/drivers/clk/hisilicon/clk-hi6220.ko] undefined!
+>        CC      [...]/drivers/clk/hisilicon/clk-hi6220.mod.o
+>        LDFINAL [M]  [...]/drivers/clk/hisilicon/clk-hi6220.ko
+>      make: Leaving directory `[...]'
+>
+> That is, I think, because nothing exports these symbols.
 
-What is the benefit of such function always returning true?
+[...]
 
-(...)
+> There's nothing module specific in this file. And the lack of a
+> MODULE_LICENSE() macro is also telling. If this was built as a module
+> loading that module - ignoring the undefined symbols - would taint the
+> kernel.
+>
+> It seems to me that COMMON_CLK_HI6220 is meant to be a bool symbol.
+You are right.
 
-> +
-> +static enum power_supply_property bq24257_power_supply_props[] = {
-> +	POWER_SUPPLY_PROP_MANUFACTURER,
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_ONLINE,
-> +	POWER_SUPPLY_PROP_HEALTH,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
-> +	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-> +};
-> +
-> +static char *bq24257_charger_supplied_to[] = {
-> +	"main-battery",
-> +};
-> +
-> +static int bq24257_power_supply_init(struct bq24257_device *bq)
-> +{
-> +	struct power_supply_config psy_cfg = { .drv_data = bq, };
-> +	struct power_supply_desc *psy_desc = &bq->charger_desc;
-> +
-> +	psy_desc->name = "bq24257-charger";
-> +	psy_desc->type = POWER_SUPPLY_TYPE_USB;
-> +	psy_desc->properties = bq24257_power_supply_props;
-> +	psy_desc->num_properties = ARRAY_SIZE(bq24257_power_supply_props);
-> +	psy_desc->get_property = bq24257_power_supply_get_property;
+>
+>
+> Paul Bolle
+>
+> I wonder what checkpatch had to say about the length of the lines seen
+> in this patch.
 
-You are not modifying the power_supply_desc so it can be made a static 
-const variable (file scope).
+Yes, I ran this script before sending out this patch set, it reports
+warnings about "line over 80 characters ", but I find it's easier to
+read than shrinking one line to several lines, so just keep it, do I
+need to fix it?
 
-Best regards,
-Krzysztof
+Thanks,
 
+Bintian
 
+>
+> .
+>
