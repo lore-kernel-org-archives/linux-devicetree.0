@@ -1,35 +1,41 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 6/6] hwmon: pwm-fan: Update the duty cycle inorder
- to control the pwm-fan
-Date: Sun, 12 Apr 2015 16:00:23 -0700
-Message-ID: <552AF907.5000600@roeck-us.net>
-References: <1428864251-31780-1-git-send-email-linux.amoon@gmail.com> <1428864251-31780-7-git-send-email-linux.amoon@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1428864251-31780-7-git-send-email-linux.amoon@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Markus Reichl <m.reichl@fivetechno.de>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] of/fdt: fix argument name and add comments of unflatten_dt_node()
+Date: Mon, 13 Apr 2015 10:30:20 +0900
+Message-ID: <1428888620-307-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2015 11:44 AM, Anand Moon wrote:
-> pwm_config() must be called with a duty cycle of 0 prior to calling
-> pwm_disable() to ensure that the pwm signal is set to low.
->
-> Changes since v1 : None.
-> Changes since v2 : None
-> Changes since v3 : Simplify the comment.
->
-> Reported-by: Markus Reichl <m.reichl@fivetechno.de>
-> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
-> Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
-> Reviewed-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Match the name of the third argument in the comment block
+to the actual function: p -> poffset
 
-Applied to hwmon-next (after removing the changelog from
-the commit message).
+Add missing comments about the arguments "nodepp" and "dryrun".
 
-Thanks,
-Guenter
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ drivers/of/fdt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3a896c9..35898ca 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -145,9 +145,12 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+  * unflatten_dt_node - Alloc and populate a device_node from the flat tree
+  * @blob: The parent device tree blob
+  * @mem: Memory chunk to use for allocating device nodes and properties
+- * @p: pointer to node in flat tree
++ * @poffset: pointer to node in flat tree
+  * @dad: Parent struct device_node
++ * @nodepp: The device_node tree created by the call
+  * @fpsize: Size of the node path up at the current depth.
++ * @dryrun: If true, do not allocate device nodes but still calculate needed
++ * memory size
+  */
+ static void * unflatten_dt_node(void *blob,
+ 				void *mem,
+-- 
+1.9.1
