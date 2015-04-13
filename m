@@ -1,68 +1,42 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: return NUMA_NO_NODE from fallback of_node_to_nid()
-Date: Mon, 13 Apr 2015 11:49:31 -0500
-Message-ID: <CAL_Jsq+vaufZJAchHC1OaV9g18zFfkXyRZ9j5wm0VWosh9i4kQ@mail.gmail.com>
-References: <20150408165920.25007.6869.stgit@buzz> <CAL_JsqKQPtNPfTAiqsKnFuU6e-qozzPgujM=8MHseG75R9cbSA@mail.gmail.com>
- <552BC6E8.1040400@yandex-team.ru>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V4 0/5] Add big-endian MMIO support to serial8250
+Date: Mon, 13 Apr 2015 19:09:12 +0200
+Message-ID: <20150413170912.GA802@kroah.com>
+References: <1428609918-10290-1-git-send-email-cernekee@gmail.com>
+ <CAL_Jsq+-Yr3oB2=7X2a9XDU_-b+08WfJRJUqVsCHAaQEQxQ1Mg@mail.gmail.com>
+ <5527DE27.8060700@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552BC6E8.1040400-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Konstantin Khlebnikov <khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5527DE27.8060700@hurleysoftware.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Rob Herring <robh@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2015 at 8:38 AM, Konstantin Khlebnikov
-<khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org> wrote:
-> On 13.04.2015 16:22, Rob Herring wrote:
->>
->> On Wed, Apr 8, 2015 at 11:59 AM, Konstantin Khlebnikov
->> <khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org> wrote:
->>>
->>> Node 0 might be offline as well as any other numa node,
->>> in this case kernel cannot handle memory allocation and crashes.
->>>
->>> Signed-off-by: Konstantin Khlebnikov <khlebnikov-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
->>> Fixes: 0c3f061c195c ("of: implement of_node_to_nid as a weak function")
->>> ---
->>>   drivers/of/base.c  |    2 +-
->>>   include/linux/of.h |    5 ++++-
->>>   2 files changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>> index 8f165b112e03..51f4bd16e613 100644
->>> --- a/drivers/of/base.c
->>> +++ b/drivers/of/base.c
->>> @@ -89,7 +89,7 @@ EXPORT_SYMBOL(of_n_size_cells);
->>>   #ifdef CONFIG_NUMA
->>>   int __weak of_node_to_nid(struct device_node *np)
->>>   {
->>> -       return numa_node_id();
->>> +       return NUMA_NO_NODE;
->>
->>
->> This is going to break any NUMA machine that enables OF and expects
->> the weak function to work.
->
->
-> Why? NUMA_NO_NODE == -1 -- this's standard "no-affinity" signal.
-> As I see powerpc/sparc versions of of_node_to_nid returns -1 if they
-> cannot find out which node should be used.
+On Fri, Apr 10, 2015 at 10:28:55AM -0400, Peter Hurley wrote:
+> On 04/10/2015 09:52 AM, Rob Herring wrote:
+> > On Thu, Apr 9, 2015 at 3:05 PM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> >> V3->V4:
+> >>
+> >> Rebase on Linus' head of tree
+> >>
+> >> Tweak documentation per Grant's request
+> >>
+> >> Drop the of_earlycon patches in favor of Peter's series
+> > 
+> > Are there conflicts with Peter's stuff?
+> 
+> No.
+> 
+> It adds the required pieces so that a trivial patch on top of 
+> both series will enable mmio32be for earlycon.
+> 
+> > The series looks good to me.
+> 
+> Same.
+> 
+> Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
 
-Ah, I was thinking those platforms were relying on the default
-implementation. I guess any real NUMA support is going to need to
-override this function. The arm64 patch series does that as well. We
-need to be sure this change is correct for metag which appears to be
-the only other OF enabled platform with NUMA support.
-
-In that case, then there is little reason to keep the inline and we
-can just always enable the weak function (with your change). It is
-slightly less optimal, but the few callers hardly appear to be hot
-paths.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
