@@ -1,54 +1,67 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 0/2] ARM: mvebu: Add DLINK-DNS327L support
-Date: Mon, 13 Apr 2015 16:39:10 +0200
-Message-ID: <552BD50E.9080403@free-electrons.com>
-References: <1428784160-19431-1-git-send-email-andrew@ncrmnt.org> <20150411212823.GI5244@lunn.ch>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH] ARM: socfpga: dts: Add a ciu clock node for sdmmc
+Date: Mon, 13 Apr 2015 10:05:53 -0500
+Message-ID: <552BDB51.70903@opensource.altera.com>
+References: <1428699386-2622-1-git-send-email-dinguyen@opensource.altera.com>
+ <73wq1g30ua.fsf@unicorn.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150411212823.GI5244@lunn.ch>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Andrianov <andrew@ncrmnt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <73wq1g30ua.fsf-OEaqT8BN2ezyNQ+pvSAQRlGJkx2dXHkms0AfqQuZ5sE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Steffen,
 
-On 11/04/2015 23:28, Andrew Lunn wrote:
->> When power button is pressed to turn the NAS off, weltrend signals 
->> the SoC by driving mpp63 line low. Apparently right now pinctrl assumes
->> that this line can only work as 'gpo' that screws up gpio-buttons driver.
->> Since without gpio-buttons, mpp63 works as input properly via sysfs 
->> interface, I've added a patch for pinctrl-armada-370.c that fixes the 
->> issue.
+On 04/13/2015 03:10 AM, Steffen Trumtrar wrote:
 > 
-> Hi Andrew
+> Hi!
 > 
-> This is odd. I just checked the Marvell datasheets, and they list this
-> pin a GPO.
+> dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org writes:
+>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>
+>> The CIU(Card Interface Unit) clock is used by the dw_mmc IP to clock an SD
+>> card. The ciu_clk is the sdmmc_clk passed through a fixed divider of 4. This patch
+>> adds the ciu_clk node and makes the sdmmc_clk it's parent.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/socfpga.dtsi | 10 +++++++++-
+>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index d9176e6..25418ee 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -451,6 +451,14 @@
+>>  						clk-phase = <0 135>;
+>>  					};
+>>  
+>> +					ciu_clk: ciu_clk {
+>> +						#clock-cells = <0>;
+>> +						compatible = "altr,socfpga-gate-clk";
+>> +						clocks = <&sdmmc_clk>;
+>> +						clk-gate = <0xa0 8>;
+>> +						fixed-divider = <4>;
+>> +					};
+>> +
 > 
-> We probably want Thomas or Gregory to check this with Marvell.
-
-I have check on the datasheet I have (in case of it was different of the public one)
-and for all the variant of the Armada 370:  88F6710, 88F6707, and 88F6W11 the MPP63
-is list as GPO.
-
-I will ask Marvell to see if it was a typo on their datasheet.
-
-
-Thanks,
-
-Gregory
-
-
-> 
->    Andrew
+> Hm, is this correct? The clk-gate at 0xa0 is for the SDMMC_CLK, no?
+> Also, maybe the clock should be named "sdmmc_clk_divided" like in the
+> datasheet, so it is easier to find.
 > 
 
+Well, I didn't want to go down the path of defining a new clock that is
+just a fork of the sdmmc_clk, so I just defined it as a gate-clock. I
+think ultimately the gating of the sdmmc_clk is being done.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+I can rename it to sdmmc_clk_divided.
+
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
