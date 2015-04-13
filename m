@@ -1,54 +1,33 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH v6 0/2] Add arm pl353 smc driver for xilinx zynq soc
-Date: Mon, 13 Apr 2015 21:41:50 +0530
-Message-ID: <6a01528f-7482-4b89-887f-e270d4d72961@BL2FFO11FD019.protection.gbl>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: bcm2835: add pinctrl pre-processor define
+Date: Mon, 13 Apr 2015 18:31:17 +0200 (CEST)
+Message-ID: <1128901690.288098.1428942677965.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+References: <1428842036-14202-1-git-send-email-alexanders83@web.de>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1428842036-14202-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following patches add arm pl353 static memory controller driver for
-xilinx zynq soc. The arm pl353 smc supports two interfaces i.e nand and
-nor/sram memory interfaces. The current implementation supports only a
-single SMC instance and nand specific configuration.
+Hi Alexander,
 
-xilinx zynq TRM link:
-http://www.xilinx.com/support/documentation/user_guides/ug585-Zynq-7000-TRM.pdf
+> Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> hat am 12. April 2015 um 14:33
+> geschrieben:
+>
+>
+> This adds defines for the BCM2835 function selections. This is notably
+> useful as the functions are not ordered.
 
-ARM pl353 smc TRM link:
-http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
-DDI0380G_smc_pl350_series_r2p1_trm.pdf
+if you look at Lee's repository then you will see this is already implemented.
 
-Punnaiah Choudary Kalluri (2):
-  Devicetree: Add pl353 smc controller devicetree binding information
-  memory: pl353: Add driver for arm pl353 static memory controller
-
- .../bindings/memory-controllers/pl353-smc.txt      |   37 ++
- drivers/memory/Kconfig                             |    7 +
- drivers/memory/Makefile                            |    2 +-
- drivers/memory/pl353-smc.c                         |  526 ++++++++++++++++++++
- include/linux/memory/pl353-smc.h                   |   37 ++
- 5 files changed, 608 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
- create mode 100644 drivers/memory/pl353-smc.c
- create mode 100644 include/linux/memory/pl353-smc.h
-
--- 
-1.7.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Best regards
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
