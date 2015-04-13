@@ -1,83 +1,203 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add Goodix GT911 nodes for Wexler
- TAB7200
-Date: Mon, 13 Apr 2015 22:01:00 +0300
-Message-ID: <20150413220100.8666a3d121fce581ba836fe6@gmail.com>
-References: <1427789897-4085-1-git-send-email-mamlinav@gmail.com>
-	<20150331144338.GG23664@lukather>
-	<20150331221420.3b65d2540c7dbe1d12611e12@gmail.com>
-	<20150402092259.GK23664@lukather>
-	<20150411191816.cdc5ec802b01028eb2913906@gmail.com>
-	<20150413160951.GJ29832@lukather>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] mtd: nand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Mon, 13 Apr 2015 21:22:54 +0200
+Message-ID: <1428952974.2616.2.camel@lynxeye.de>
+References: <1428522370-18035-1-git-send-email-dev@lynxeye.de>
+	 <1428522370-18035-3-git-send-email-dev@lynxeye.de>
+	 <99af1297029d7f1624db2f5fd9d228d1@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150413160951.GJ29832@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <99af1297029d7f1624db2f5fd9d228d1-XLVq0VzYD2Y@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 Apr 2015 18:09:51 +0200
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi Stefan,
 
-> On Sat, Apr 11, 2015 at 07:18:16PM +0300, Aleksei Mamlin wrote:
-> > On Thu, 2 Apr 2015 11:22:59 +0200
-> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+thanks for the review.
+
+Am Freitag, den 10.04.2015, 10:46 +0200 schrieb Stefan Agner:
+> Hi Lucas,
+> 
+> Thanks for working on that. Some minor comments below...
+> 
+> On 2015-04-08 21:46, Lucas Stach wrote:
+> > Add support for the NAND flash controller found on NVIDIA
+> > Tegra 2/3 SoCs.
 > > 
-> > > On Tue, Mar 31, 2015 at 10:14:20PM +0300, Aleksei Mamlin wrote:
-> > > > On Tue, 31 Mar 2015 07:43:38 -0700
-> > > > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > > 
-> > > > > Hi,
-> > > > > 
-> > > > > On Tue, Mar 31, 2015 at 11:18:17AM +0300, Aleksei Mamlin wrote:
-> > > > > > This patch adds nodes for the Goodix GT911 touchscreen controller found
-> > > > > > on the Wexler TAB7200 tablet. Controller uses one of following I2C
-> > > > > > addresses: 0x5d or 0x14, so just add two nodes.
-> > > > > 
-> > > > > In which case are these different addresses encountered? Different
-> > > > > revisions of the same board?
-> > > >
-> > > > According to the datasheet it is a feature of the controller. 
-> > > > The address(0x5d or 0x14) can be configured using a reset sequence,
-> > > > which has not yet been implemented in the driver.
-> > > 
-> > > Which address is set up by the bootloader then?
-> >
-> > I assume that bootloader(u-boot) didn't sets up any address, but touchscreen
-> > controller usually uses 0x5d. Sometimes, after hard reset, it uses 0x14.
-> > For this we need nodes on both adresses.
+> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> > Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+> > ---
+> > v2:
+> > - remove Tegra 3 compatible
+> > - remove useless part_probes
+> > - don't store irq number
+> > - use gpiod API instead of deprecated of_gpios
+> > - don't store reset
+> > - correct TIMING_TCS mask
+> > - simplify irq handler
+> > - correct timing calculations
+> > - don't store buswidth
+> > - drop compile test
+> > - correct ECC handling
+> > ---
+> >  MAINTAINERS                   |   6 +
+> >  drivers/mtd/nand/Kconfig      |   6 +
+> >  drivers/mtd/nand/Makefile     |   1 +
+> >  drivers/mtd/nand/tegra_nand.c | 786 ++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 799 insertions(+)
+> >  create mode 100644 drivers/mtd/nand/tegra_nand.c
+> > 
+> [...]
+> > +static struct nand_ecclayout tegra_nand_oob_16 = {
+> > +	.eccbytes = 4,
+> > +	.eccpos = { 3, 4, 5, 6 },
+> > +	.oobfree = {
+> > +		{ .offset = 7, . length = 8 }
+> > +	}
+> > +};
+> > +
+> > +static struct nand_ecclayout tegra_nand_oob_64 = {
+> > +	.eccbytes = 36,
+> > +	.eccpos = {
+> > +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+> > +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+> > +		35, 36, 37, 38, 39
+> > +	},
 > 
-> I'm confused, who changes that address then?
+> The amount of eccbytes vs. length of eccpos do not match...
 > 
-> The controller itself?
+> > +	.oobfree = {
+> > +		{ .offset = 40, .length = 24 }
+> > +	}
+> > +};
+> > +
+> > +static struct nand_ecclayout tegra_nand_oob_128 = {
+> > +	.eccbytes = 72,
+> > +	.eccpos = {
+> > +		 3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+> > +		19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+> > +		35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+> > +		51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
+> > +		67, 68, 69, 70, 71, 72, 73, 74, 75
+> > +	},
 > 
-If I understood correctly, when device starts it sets reset pin (PB13) to
-high level and int pin(PH21) to low level. After this int pin sets up as
-external interrupt. This sequence triggers controller to use 0x5d address.
-
-After hard reset both pins may be hight level and it triggers controller
-to use 0x14 address.
-
-Please see datasheets at pages 8-10.
-
-https://drive.google.com/file/d/0BxCVOQS3ZymGdEE0cHI3bnp5WVE
-https://drive.google.com/file/d/0BxCVOQS3ZymGbDAzVnZwZ2lOZ1E
->
-> Maxime
+> Here...
 > 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+> > +	.oobfree = {
+> > +		{ .offset = 76, .length = 52 }
+> > +	}
+> > +};
+> > +
+> > +static struct nand_ecclayout tegra_nand_oob_224 = {
+> > +	.eccbytes = 144,
+> > +	.eccpos = {
+> > +		  3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,
+> > +		 15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,
+> > +		 27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,
+> > +		 39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,
+> > +		 51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,
+> > +		 63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,
+> > +		 75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,
+> > +		 87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,
+> > +		 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+> > +		111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+> > +		123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
+> > +		135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146,
+> > +		147
+> > +	},
+> 
+> ... and here too.
+> 
 
+Urgh, actually they are all wrong, as the ECC starts at byte 4, not
+3. :/ Thanks for the hint.
 
--- 
-Thanks and regards,
-Aleksei Mamlin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [...]
+> > +static int tegra_nand_probe(struct platform_device *pdev)
+> > +{
+> > +	struct reset_control *rst;
+> > +	struct tegra_nand *nand;
+> > +	struct nand_chip *chip;
+> > +	struct mtd_info *mtd;
+> > +	struct resource *res;
+> > +	unsigned long value;
+> > +	int irq, buswidth, err = 0;
+> > +
+> > +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
+> > +	if (!nand)
+> > +		return -ENOMEM;
+> > +
+> > +	nand->dev = &pdev->dev;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(nand->regs))
+> > +		return PTR_ERR(nand->regs);
+> > +
+> > +	irq = platform_get_irq(pdev, 0);
+> > +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
+> > +			       dev_name(&pdev->dev), nand);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	rst = devm_reset_control_get(&pdev->dev, "nand");
+> > +	if (IS_ERR(rst))
+> > +		return PTR_ERR(rst);
+> > +
+> > +	nand->clk = devm_clk_get(&pdev->dev, "nand");
+> > +	if (IS_ERR(nand->clk))
+> > +		return PTR_ERR(nand->clk);
+> > +
+> > +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "nvidia,wp-gpios",
+> > +					   GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(nand->wp_gpio))
+> > +		return PTR_ERR(nand->wp_gpio);
+> > +
+> > +	buswidth = of_get_nand_bus_width(pdev->dev.of_node);
+> > +	if (buswidth < 0)
+> > +		return buswidth;
+> > +
+> > +	err = clk_prepare_enable(nand->clk);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	reset_control_assert(rst);
+> > +	udelay(2);
+> > +	reset_control_deassert(rst);
+> > +
+> > +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
+> > +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
+> > +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
+> > +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
+> > +	writel(value, nand->regs + HWSTATUS_MASK);
+> > +
+> > +	init_completion(&nand->command_complete);
+> > +	init_completion(&nand->dma_complete);
+> > +
+> > +	mtd = &nand->mtd;
+> > +	mtd->name = dev_name(&pdev->dev);
+> > +	mtd->owner = THIS_MODULE;
+> > +	mtd->priv = &nand->chip;
+> > +
+> > +	mtd->type = MTD_NANDFLASH;
+> > +	mtd->flags = MTD_CAP_NANDFLASH;
+> 
+> This get filled by nand_scan_tail anyway, any reason to have it here
+> too?
+> 
+No, not really. Probably just cargo-culting. I'll remove this.
+
+> Other than that, looks solid to me.
+> 
+> Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> 
+I'll wait a bit more before posting a v3, to give other people a chance
+to look at this.
+
+Thanks,
+Lucas
