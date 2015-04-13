@@ -1,85 +1,75 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] soc: Mediatek: Add SCPSYS power domain driver
-Date: Mon, 13 Apr 2015 12:55:57 +0200
-Message-ID: <20150413105557.GR9742@pengutronix.de>
-References: <1426002063-25713-1-git-send-email-s.hauer@pengutronix.de>
- <1426002063-25713-3-git-send-email-s.hauer@pengutronix.de>
- <7hbnj9b08m.fsf@deeprootsystems.com>
+From: Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: [PATCH 1/2] Doc: DT: Add binding document for GPIO exporter
+Date: Mon, 13 Apr 2015 13:05:17 +0200
+Message-ID: <20150413110517.9681.2438.stgit@localhost>
+References: <20150413110515.9681.58848.stgit@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7hbnj9b08m.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150413110515.9681.58848.stgit@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2015 at 09:27:53AM -0700, Kevin Hilman wrote:
-> Hi Sascha,
-> 
-> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> 
-> > This adds a power domain driver for the Mediatek SCPSYS unit.
-> >
-> > The System Control Processor System (SCPSYS) has several power
-> > management related tasks in the system. The tasks include thermal
-> > measurement, dynamic voltage frequency scaling (DVFS), interrupt
-> > filter and lowlevel sleep control. The System Power Manager (SPM)
-> > inside the SCPSYS is for the MTCMOS power domain control.
-> >
-> > For now this driver only adds power domain support, the more
-> > advanced features are not yet supported. The driver implements
-> > the generic PM domain device tree bindings, the first user will
-> > most likely be the Mediatek AFE audio driver.
-> >
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Sorry for the lag, was travelling last week at ELC and not keeping up
-> with reviews.
-> 
-> This version looks pretty good to me, but had one minor
-> comment/question...
-> 
-> [...]
-> 
-> > +#define NUM_DOMAINS	ARRAY_SIZE(scp_domain_data)
-> > +
-> > +struct scp;
-> > +
-> > +struct scp_domain {
-> > +	struct generic_pm_domain pmd;
-> > +	struct scp_domain_data *data;
-> > +	struct scp *scp;
-> > +};
-> > +
-> > +struct scp {
-> > +	struct scp_domain domains[NUM_DOMAINS];
-> > +	struct generic_pm_domain *pmd[NUM_DOMAINS];
-> 
-> Why is this genpd pointer needed?  It's just a pointer to the
-> .domains.pmd[i] anyways, and IMO makes the code a bit hard to follow.
+Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+---
+ .../devicetree/bindings/gpio/gpio-exporter.txt     |   40 ++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-exporter.txt
 
-The driver itself does not need the genpd pointer, but
-of_genpd_add_provider_onecell() expects an array of pointers to struct
-generic_pm_domain.
-
-I can allocate the array of pointers separately and remove the pmd field
-from struct scp to make this a bit more clearer.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-exporter.txt b/Documentation/devicetree/bindings/gpio/gpio-exporter.txt
+new file mode 100644
+index 0000000..58fc2a9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-exporter.txt
+@@ -0,0 +1,40 @@
++Bindings to export some GPIOs to userspace.
++
++This is useful when some signals are made externally available by a piece
++of hardware (eg terminal blocks to connect sensors, actuators) but no
++special purpose kernel driver exists.
++
++Use of this binding allows userspace to have a stable name and input
++/ output mode across hardware and software versions.
++
++Required properties:
++- compatible: "linux,gpio-exporter"
++
++
++Each GPIO to be exported is represented as a child node with:
++
++Required child properties:
++- gpios : Reference to the GPIO to export (standard gpio binding)
++
++Optional child properties:
++- output : if present GPIO is output, otherwise input
++- initial-state : Initial state (0=low, 1=high) for output
++- allow-direction-change : Present if GPIO direction may be modified
++
++The name of the child node is that exposed to userspace.
++
++Example:
++	gpio_exporter:gpio-exporter {
++		compatible = "linux,gpio-exporter";
++
++		terminalblock_1_out1 {
++			gpios = <&gpio2 12 0>;
++			output;
++			initial-state = <0>;
++		};
++
++		terminalblock_1_in1 {
++			gpios = <&gpio2 15 0>;
++		};
++
++	};
