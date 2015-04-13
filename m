@@ -1,196 +1,112 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2 1/1] ata: ahci_xgene: Add AHCI Support for second generation of APM X-Gene SoC
-Date: Mon, 13 Apr 2015 15:02:40 +0530
-Message-ID: <1428917560-9142-2-git-send-email-stripathi@apm.com>
-References: <1428917560-9142-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428917560-9142-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
+Date: Mon, 13 Apr 2015 11:39:16 +0200
+Message-ID: <552B8EC4.209@free-electrons.com>
+References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com> <20150410135056.GB28873@io.lakedaemon.net> <20150410171148.07bc9429@bbrezillon> <20150410223008.GA18660@io.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150410223008.GA18660@io.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <info@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables full AHCI feature support for APM X-Gene SoC SATA host host
-controller. The following errata's are removed:
+Hi Jason, Boris,
 
-1. 2a0bdff6b95 ("ahci-xgene: fix the dma state machine lockup for the
-                 IDENTIFY DEVICE PIO mode command")
-2. 09c32aaa368 ("ahci_xgene: Fix the dma state machine lockup for the
-                 ATA_CMD_SMART PIO mode command")
-3. 1540035da71 ("ahci_xgene: Implement the xgene_ahci_poll_reg_val to
-                 support PMP")
-4. a3a84bc7c88 ("ahci_xgene: Implement the workaround to support PMP
-                 enumeration and discovery")
-5. 1102407bb71 ("ahci_xgene: Fix the DMA state machine lockup for the
-                 ATA_CMD_PACKET PIO mode command")
-6. 72f79f9e35b ("ahci_xgene: Removing NCQ support from the APM X-Gene SoC
-                 AHCI SATA Host Controller driver")
+On 11/04/2015 00:30, Jason Cooper wrote:
+> Hey Boris,
+> 
+> On Fri, Apr 10, 2015 at 05:11:48PM +0200, Boris Brezillon wrote:
+>> On Fri, 10 Apr 2015 13:50:56 +0000 Jason Cooper <jason@lakedaemon.net> wrote:
+>>> On Thu, Apr 09, 2015 at 04:58:41PM +0200, Boris Brezillon wrote:
+>>>> I know we usually try to adapt existing drivers instead of replacing them
+>>>> by new ones, but after trying to refactor the mv_cesa driver I realized it
+>>>> would take longer than writing an new one from scratch.
+>>>
+>>> I'm sorry, but this makes me *very* uncomfortable.  Any organization
+>>> worth it's salt will do a very careful audit of code touching
+>>> cryptographic material and sensitive (decrypted) data.  From that point
+>>> on, small audits of the changes to the code allow the organization to
+>>> build a comfort level with kernel updates.  iow, following the git
+>>> history of the driver.
+>>>
+>>> By apply this series, we are basically forcing those organizations to
+>>> either a) stop updating, or b) expend significant resources to do
+>>> another full audit.
+>>>
+>>> In short, this series breaks the audit chain for the mv_cesa driver.
+>>>
+>>> Maybe I'm the only person with this level of paranoia.  If so, I'm sure
+>>> others will override me.
+>>>
+>>> From my POV, it looks like the *only* reason we've chosen this route is
+>>> developer convenience.  I don't think that's sufficient reason to break
+>>> the change history of a driver handling sensitive data.
+>>
+>> Well, I understand you concern, but if you read carefully the old and
+>> new drivers, you'll notice that they are completely different (the only
+>> thing I kept are the macro definitions).
+> 
+> Yes, that's the worrying part for me. ;-)
 
-In addition, enable PMP support for APM X-Gene SoC and enable FBS support
-for second generation APM X-Gene SoC.
----
- drivers/ata/ahci_xgene.c | 96 +++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 78 insertions(+), 18 deletions(-)
+I understand the logic behind your concern, but I wonder if it is really
+an issue. My knowledge ans my background around crypto is very limited,
+so I really would like the opinion of other people on the subject.
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 2b78510..7320da3 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -27,6 +27,7 @@
- #include <linux/platform_device.h>
- #include <linux/ahci_platform.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/phy/phy.h>
- #include "ahci.h"
-@@ -84,6 +85,11 @@
- /* Max retry for link down */
- #define MAX_LINK_DOWN_RETRY 3
+> 
+>> I really tried to adapt the existing driver to add the missing
+>> features (especially the support for TDMA), but all my attempts
+>> ended up introducing hackish code (not even talking about the
+>> performance penalty of this approach).
+> 
+> Ok, fair enough.  It would be helpful if this account of attempting to
+> reconcile the old driver made it into the commit message.  This puts us
+> in "perfect is the enemy of getting it done" territory.
+> 
+>> I have another solution though: keep the existing driver for old
+>> marvell SoCs (orion, kirkwood and dove), and add a new one for modern
+>> SoCs (armada 370, XP, 375 and 38x), so that users of the mv_cesa driver
+>> won't have to audit the new code.
+> 
+> A fair proposal, but I'll freely admit the number of people actually auditing
+> their code paths is orders of magnitude smaller than the number of users
+> of the driver.
+> 
+> There's such a large population of compatible legacy SoCs in the wild,
+> adding an artificial boundary doesn't make sense.  Especially since
+> we're talking about features everyone would want to use.
+> 
+> Perhaps we should keep both around, and deprecate the legacy driver over
+> 3 to 4 cycles?
 
-+enum xgene_ahci_version {
-+	XGENE_AHCI_V1 = 1,
-+	XGENE_AHCI_V2,
-+};
-+
- struct xgene_ahci_context {
- 	struct ahci_host_priv *hpriv;
- 	struct device *dev;
-@@ -547,9 +553,6 @@ static struct ata_port_operations xgene_ahci_ops = {
- 	.host_stop = xgene_ahci_host_stop,
- 	.hardreset = xgene_ahci_hardreset,
- 	.read_id = xgene_ahci_read_id,
--	.qc_issue = xgene_ahci_qc_issue,
--	.softreset = xgene_ahci_softreset,
--	.pmp_softreset = xgene_ahci_pmp_softreset
- };
+But I guess that some users will want to use the new driver on the "old" marvell
+SoCs (especially kirkwood and dove). If we go to this path, then the best solution
+would be to still update all the the dts, and modifying the old driver to be able to
+use the new binding: for my point of view the only adaptation should be related
+to the SRAM. It will be also needed to find a way to be able to load only one driver
+at a time: either the old or the new, but not both.
 
- static const struct ata_port_info xgene_ahci_port_info = {
-@@ -629,12 +632,30 @@ static struct scsi_host_template ahci_platform_sht = {
- 	AHCI_SHT(DRV_NAME),
- };
+However I still wonder if it worth the effort.
 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id xgene_ahci_acpi_match[] = {
-+	{ "APMC0D0D", XGENE_AHCI_V1},
-+	{ "APMC0D32", XGENE_AHCI_V2},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
-+#endif
-+
-+static const struct of_device_id xgene_ahci_of_match[] = {
-+	{.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
-+	{.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xgene_ahci_of_match);
-+
- static int xgene_ahci_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct ahci_host_priv *hpriv;
- 	struct xgene_ahci_context *ctx;
- 	struct resource *res;
-+	const struct of_device_id *of_devid;
-+	enum xgene_ahci_version version;
- 	int rc;
 
- 	hpriv = ahci_platform_get_resources(pdev);
-@@ -677,6 +698,49 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 		ctx->csr_mux = csr;
- 	}
+Thanks,
 
-+	of_devid = of_match_device(xgene_ahci_of_match, dev);
-+	if (of_devid) {
-+		if (of_devid->data) {
-+			version = (enum xgene_ahci_version) of_devid->data;
-+		} else {
-+			dev_warn(&pdev->dev, "No device data found. Assume version1\n");
-+			version = XGENE_AHCI_V1;
-+		}
-+	}
-+#ifdef CONFIG_ACPI
-+	else if (!of_devid) {
-+		const struct acpi_device_id *acpi_id;
-+		struct acpi_device_info *info;
-+		acpi_status status;
-+
-+		acpi_id = acpi_match_device(xgene_ahci_acpi_match, &pdev->dev);
-+		if (!acpi_id) {
-+			dev_warn(&pdev->dev, "No node entry in ACPI table. Assume version1\n");
-+			version = XGENE_AHCI_V1;
-+		}
-+
-+		if (acpi_id->driver_data) {
-+			version = (enum xgene_ahci_version) acpi_id->driver_data;
-+			status = acpi_get_object_info(ACPI_HANDLE(&pdev->dev), &info);
-+			if (ACPI_FAILURE(status)) {
-+				dev_err(&pdev->dev, "%s: Error reading device info\n",
-+					__func__);
-+				return -EINVAL;
-+			}
-+			if (info->valid & ACPI_VALID_CID)
-+				version = XGENE_AHCI_V2;
-+
-+		} else {
-+			dev_warn(&pdev->dev, "No device data found. Assume version1\n");
-+			version = XGENE_AHCI_V1;
-+		}
-+	}
-+#endif
-+	else {
-+		dev_err(&pdev->dev, "No node entry in DTS\n");
-+		return -ENODEV;
-+	}
-+
- 	dev_dbg(dev, "VAddr 0x%p Mmio VAddr 0x%p\n", ctx->csr_core,
- 		hpriv->mmio);
+Gregory
 
-@@ -704,7 +768,17 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	/* Configure the host controller */
- 	xgene_ahci_hw_init(hpriv);
- skip_clk_phy:
--	hpriv->flags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_NCQ;
-+
-+	if (version == XGENE_AHCI_V1) {
-+		hpriv->flags = AHCI_HFLAG_NO_NCQ;
-+		/*
-+		 * Override the callbacks for storm ERRATA
-+		 */
-+		xgene_ahci_ops.qc_issue = xgene_ahci_qc_issue;
-+		xgene_ahci_ops.softreset = xgene_ahci_softreset;
-+		xgene_ahci_ops.pmp_softreset = xgene_ahci_pmp_softreset;
-+	} else
-+		hpriv->flags |= AHCI_HFLAG_YES_FBS;
 
- 	rc = ahci_platform_init_host(pdev, hpriv, &xgene_ahci_port_info,
- 				     &ahci_platform_sht);
-@@ -719,20 +793,6 @@ disable_resources:
- 	return rc;
- }
 
--#ifdef CONFIG_ACPI
--static const struct acpi_device_id xgene_ahci_acpi_match[] = {
--	{ "APMC0D0D", },
--	{ }
--};
--MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
--#endif
--
--static const struct of_device_id xgene_ahci_of_match[] = {
--	{.compatible = "apm,xgene-ahci"},
--	{},
--};
--MODULE_DEVICE_TABLE(of, xgene_ahci_of_match);
--
- static struct platform_driver xgene_ahci_driver = {
- 	.probe = xgene_ahci_probe,
- 	.remove = ata_platform_remove_one,
---
-1.8.2.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> thx,
+> 
+> Jason.
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
