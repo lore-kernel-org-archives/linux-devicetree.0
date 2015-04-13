@@ -1,87 +1,55 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
-Date: Mon, 13 Apr 2015 12:02:24 +0200
-Message-ID: <CAMuHMdWBsmtCH=oMzJYkY-hnGwQ8c5byNMEW=YRAxq528Wwcqg@mail.gmail.com>
-References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<20150319191834.5346CC40A35@trevor.secretlab.ca>
-	<8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com>
-	<CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com>
-	<1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com>
-	<CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com>
-	<20150402023803.E6A4DC4076D@trevor.secretlab.ca>
-	<CAMuHMdWVTsog2_9iyUEBWm-7xonvNibTTbOY5YxvpAhffUXdcg@mail.gmail.com>
-	<CAL_Jsq+9rYTvxX=Y6md5hgNhcBjbuM1m8Q3Y0gNkrV6yaDBskg@mail.gmail.com>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Mon, 13 Apr 2015 13:23:17 +0300
+Message-ID: <CAK=WgbY-5OsfdKJxGScvGj5sv-M-UvxhCfgSTunHiufvq1PXEQ@mail.gmail.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
+ <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
+ <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
+ <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
+ <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
+ <CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
+ <CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com>
+ <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com> <CAK=WgbauoPf52v3P7NLPsXaRUmGWo_K6ZcV4w3UO6xs7MUrJsw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+9rYTvxX=Y6md5hgNhcBjbuM1m8Q3Y0gNkrV6yaDBskg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbauoPf52v3P7NLPsXaRUmGWo_K6ZcV4w3UO6xs7MUrJsw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Tim Bird <tbird20d@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Apr 6, 2015 at 10:04 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+> Mark, are you OK with the latest iteration from Suman? it would be
+> nice to get your +1 just to make sure we don't merge stuff you're
+> uncomfortable with.
 
-On Wed, Apr 8, 2015 at 3:40 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 8, 2015 at 3:42 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Thu, Apr 2, 2015 at 4:38 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>> On Mon, 30 Mar 2015 15:27:27 +0200
->>> , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->>>  wrote:
->>>> On Tue, Mar 24, 2015 at 6:56 PM, Pantelis Antoniou
->>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>> >> On Mar 24, 2015, at 07:50 , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>>> >> IIUC, this would fix the issue I worked around in "ARM: shmobile: r8a73a4:
->>>> >> Move pfc node to work around probe ordering bug"?
->>>> >> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/commit/?h=r8a73a4-ccf-and-multiplatform-for-v4.1&id=e4ba0a9bddff3ba52cec100414d2f178440efc91
->>
->>> There are two ways to fix this so that .dtb order doesn't matter. The
->>> dirty hack is to change the pfc driver to use subsys_initcall (level 4)
->>> or later so that it happens after the devices are registered. The second
->>
->> I've just tried that, and it doesn't work.
->>
->>> solution is to make the pfc drivers able to return -EPROBE_DEFER, but
->>> that also requires fixing deferred probe to start retrying devices
->>> before late_initcall time. Right now there is a holdoff flag that
->>
->> All the pfc driver can detect is that some platform_device.resource[i] are
->> empty (resource_type zero). Returning -EPROBE_DEFER won't help,
->> as the resource won't change later.
->>
->> The problem is not the initialization order of the device drivers, but the
->> creation order of the platform devices.
->>
->> of_device_alloc() silently (except for the pr_debug() message) ignores
->> any failures to setup IRQ resources. Hence platform devices for interrupt
->> providers must be created before platform devices for interrupt consumers,
->> which is what the reordering in DT fixes.
->
-> This doesn't sound right. It ignores failures because platform_get_irq
-> will parse the interrupts when called rather than just using the
-> resource struct and will return EPROBE_DEFER if the irq resource is
-> not ready. We left the of_device_alloc code in to be safe, but we
-> should be able to remove it.
+Quick update:
 
-Thanks, using platform_get_irq() (and propagating EPROBE_DEFER) instead of
-accessing the platform_device's resources directly indeed does work, but will
-require some rework in the sh-pfc driver.
-One more thing to consider for a "porting your driver to DT" tutorial ;-)
+As Tim pointed out, we can move forward with the driver binding patch
+according to the process described under II.2 of [1]. Both Bjorn and
+myself would still prefer to make sure Mark is satisfied with the
+response Bjorn sent to Mark's question, but we understand if Mark is
+swamped and we eventually would proceed according to the DT's
+submitting-patches guidance below. Tim, thanks for pointing that out
+as I wasn't aware of this.
 
-One side effect is that almost all drivers now end up being probe-deferred, as
-the pinctrl configuration can't be done until the pfc driver is active.
+What we probably do need a DT ack on is the hwspinlock subsystem
+binding submitted by Suman, again according to the process described
+under II.2 of [1]: "Subsystem bindings (anything affecting more than a
+single device): then getting a devicetree maintainer to review it is
+required".
 
-Gr{oetje,eeting}s,
+Mark and Rob: thanks so much for all your help so far as you have
+substantially helped shaping the hwspinlock binding. Please let us
+know if you are satisfied with Suman's latest iteration, still prefer
+to take another look at it, or are too swamped. If the latter, then
+maybe we can ask Kumar to take a look, as this seems to be blocking
+Qualcomm's upstream roadmap.
 
-                        Geert
+Thanks,
+Ohad.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] Documentation/devicetree/bindings/submitting-patches.txt
