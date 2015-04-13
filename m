@@ -1,80 +1,42 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] Renesas Ethernet AVB driver
-Date: Mon, 13 Apr 2015 23:49:40 +0300
-Message-ID: <552C2BE4.7010804@cogentembedded.com>
-References: <1453213.DoV6WFn45r@wasted.cogentembedded.com> <20150413.163259.2190743529898270341.davem@davemloft.net>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH 0/3] Qualcomm 8974 RPM & Regulator drivers
+Date: Mon, 13 Apr 2015 14:57:59 -0700
+Message-ID: <1428962282-32430-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-7;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150413.163259.2190743529898270341.davem@davemloft.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+In 8974 Qualcomm replaced the previously used special purpose mmio
+communication with SMD; a packet based point-to-point communication interface
+used since the dawn of time for communicating with the modem - now used to
+communicate with everything.
 
-On 04/13/2015 11:32 PM, David Miller wrote:
+This series adds a smd client for the RPM as well as the regulator driver ontop
+of this RPM abstraction. It depends on the pending smd patches:
+ https://patchwork.kernel.org/patch/6200611/
 
->> Ethernet AVB includes an Gigabit Ethernet controller (E-MAC) that is=
- basically
->> compatible with SuperH Gigabit Ethernet E-MAC). Ethernet AVB  has a =
-dedicated
->> direct memory access controller (AVB-DMAC) that is a new design comp=
-ared to the
->> SuperH E-DMAC. The AVB-DMAC is compliant with 3 standards formulated=
- for IEEE
->> 802.1BA: IEEE 802.1AS timing and synchronization protocol, IEEE 802.=
-1Qav real-
->> time transfer, and the IEEE 802.1Qat stream reservation protocol.
+Bjorn Andersson (3):
+  mfd: devicetree: bindings: Add Qualcomm SMD based RPM DT binding
+  mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
+  regulator: qcom: smd: Regulator driver for the Qualcomm RPM
 
->> Not only the Ethernet driver is enclosed, there is also the PTP driv=
-er in
->> the same file.  These drivers only support device tree probing, so t=
-he binding
->> document is included in this patch.
+ .../devicetree/bindings/mfd/qcom-rpm-smd.txt       | 136 ++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/qcom-smd-rpm.c                         | 234 ++++++++++++++
+ drivers/regulator/Kconfig                          |  12 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/qcom_smd-regulator.c             | 351 +++++++++++++++++++++
+ include/linux/mfd/qcom-smd-rpm.h                   |  35 ++
+ 8 files changed, 784 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+ create mode 100644 drivers/mfd/qcom-smd-rpm.c
+ create mode 100644 drivers/regulator/qcom_smd-regulator.c
+ create mode 100644 include/linux/mfd/qcom-smd-rpm.h
 
->> Based on the original patches by Mitsuhiro Kimura (Ethernet driver) =
-and Masaru
->> Nagai (PTP driver).
-
->> Signed-off-by: Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>
->> Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-> Doesn't build properly on x86-64:
-
->    CC [M]  drivers/net/ethernet/renesas/ravb.o
-> drivers/net/ethernet/renesas/ravb.c: In function =A1ravb_set_buffer_a=
-lign=A2:
-> drivers/net/ethernet/renesas/ravb.c:955:16: warning: cast from pointe=
-r to integer of different size [-Wpointer-to-int-cast]
->    u32 reserve =3D (u32)skb->data & (RAVB_ALIGN - 1);
->                  ^
-> drivers/net/ethernet/renesas/ravb.c: At top level:
-> drivers/net/ethernet/renesas/ravb.c:2771:2: error: unknown field =A1g=
-ettime=A2 specified in initializer
->    .gettime =3D ravb_ptp_gettime,
->    ^
-> drivers/net/ethernet/renesas/ravb.c:2772:2: error: unknown field =A1s=
-ettime=A2 specified in initializer
->    .settime =3D ravb_ptp_settime,
->    ^
-
-    So, timespec64 patches have been merged to net-next... In my haste =
-I just=20
-forgot to compile-test the driver in net-next, sorry about that. :-<
-
-> It is not acceptable to fix this by removing COMPILE_TEST from the Kc=
-onfig
-> dependencies or something like that.
-
-    It's also impossible as the errors themselves don't depend on ARCH.=
- :-)
-
-> Thanks.
-
-WBR, Sergei
-
+-- 
+1.8.2.2
