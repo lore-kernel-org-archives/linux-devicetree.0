@@ -1,61 +1,50 @@
-From: Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] clk: hi6220: Document devicetree bindings for
- hi6220 clock
-Date: Tue, 14 Apr 2015 22:37:34 +0800
-Message-ID: <CAAS=xmip9WeN2AXH+YpQK9Un1TCaXkHbK-cRFcr3fMcFvrfhPQ@mail.gmail.com>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com>
-	<2456827.cDpE8M58pn@wuerfel>
-	<552D09F7.7080603@huawei.com>
-	<5065055.RUNnjWsHWj@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5065055.RUNnjWsHWj@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org" <btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, z.liuxinliang-hv44wF8Li91hl2p70BpVqQ@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Tue, 14 Apr 2015 09:44:11 -0500
+Message-ID: <97B1A2D4-6F6B-433B-83E6-9C8A95D1BFC6@codeaurora.org>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org> <20150410100529.GA6854@e104818-lin.cambridge.arm.com> <493B15F8-0EBE-4633-9604-671EF403F36E@codeaurora.org> <20150410161052.GF6854@e104818-lin.cambridge.arm.com> <FDC755A7-ACCF-4222-8730-782EEC632159@codeaurora.org> <20150413094117.GA2745@e104818-lin.cambridge.arm.com> <245B9FDD-E1B5-41E4-9F24-4D5BB86C450E@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <245B9FDD-E1B5-41E4-9F24-4D5BB86C450E@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, arm@kernel.org, Abhimanyu Kapur <abhimany@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
 
-2015-04-14 21:20 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Tuesday 14 April 2015 20:37:11 Bintian wrote:
->> It's really a smart fix!
->>
->> For the four system controllers, how about change the following strings:
->> +       - "hisilicon,aoctrl"
->> +       - "hisilicon,sysctrl"
->> +       - "hisilicon,mediactrl"
->> +       - "hisilicon,pmctrl"
->>
->> to
->> +       - "hisilicon,hi6220-aoctrl"
->> +       - "hisilicon,hi6220-sysctrl"
->> +       - "hisilicon,hi6220-mediactrl"
->> +       - "hisilicon,hi6220-pmctrl"
->
-> Yes, that works.
-Thanks, will fix in next version.
+> On Apr 14, 2015, at 9:21 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>=20
+>>>>=20
+>>>> So please come up with proper technical arguments rather than the =
+kernel
+>>>> should take whatever SoC vendors dreamt of.
+>>>=20
+>>> There is no technical argument to be made.  This is about the
+>>> community and you as maintainer wanting to accept code that complie=
+s
+>>> to your decision or not.
+>>=20
+>> If you are not willing to make technical arguments, I don't have to
+>> provide any further reasons in this thread. It's your choice. In the
+>> meantime, the short answer is NAK.
 
->
->> and I also use "hisilicon,hi6220-xxxx" for hi6220 clk driver directly ?
->
-> Seems fine to me, though I'd have to look at the bigger picture to see
-> any potential problems. At the moment, I don't see any.
-Sure, please also help to review the 6/6 patch of this patch set, many thanks!
+I assume you would than NAK someone trying to get support for their Nex=
+us 9 Tablet using a Tegra K1.  It appears the shipping code for that de=
+vice didn=E2=80=99t use PSCI (again guessing because it wasn=E2=80=99t =
+available at the time).
 
-BR,
+https://android.googlesource.com/kernel/tegra/+/android-tegra-flounder-=
+3.10-lollipop-release/arch/arm64/mach-tegra/platsmp.c
 
-Bintian
+If so, I find this counter to the Linux kernel communities normal desir=
+e to support the most hardware platforms.
 
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- k
+
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
