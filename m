@@ -1,8 +1,8 @@
 From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for
  tscadc
-Date: Tue, 14 Apr 2015 17:32:03 +0530
-Message-ID: <552D01BB.5040500@ti.com>
+Date: Tue, 14 Apr 2015 17:32:42 +0530
+Message-ID: <552D01E2.4080305@ti.com>
 References: <OFD386DA80.D9FD2A2E-ONC1257E27.003DC94D-C1257E27.003DF465@br-automation.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
@@ -20,9 +20,6 @@ On Tuesday 14 April 2015 04:46 PM, Hannes Petermaier wrote:
 > Hi Vignesh,
 > 
 > did you recognize my last email ? whats your opinion around that =
-
-Apologies...
-
 > 
 > best regards,
 > Hannes
