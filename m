@@ -1,114 +1,110 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dmaengine: xgene-dma: Fix sparse wannings and coccinelle warnings
-Date: Tue, 14 Apr 2015 10:43:03 +0200
-Message-ID: <4208569.BKk8XynHVe@wuerfel>
-References: <1428995040-11815-1-git-send-email-rsahu@apm.com>
+From: YiPing Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] clk: hi6220: Clock driver support for Hisilicon
+ hi6220 SoC
+Date: Tue, 14 Apr 2015 16:53:45 +0800
+Message-ID: <552CD599.4010705@hisilicon.com>
+References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com> <2254597.TWaxeZsKvK@wuerfel> <552BCB5A.8010705@huawei.com> <3183355.UnoLoN8dF8@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428995040-11815-1-git-send-email-rsahu@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rameshwar Prasad Sahu <rsahu@apm.com>, vinod.koul@intel.com, dan.j.williams@intel.com, devicetree@vger.kernel.org, jcm@redhat.com, patches@apm.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3183355.UnoLoN8dF8@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, sboyd@codeaurora.o
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 14 April 2015 12:34:00 Rameshwar Prasad Sahu wrote:
-> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-> index aa61935..59f95db 100755
-> --- a/drivers/dma/xgene-dma.c
-> +++ b/drivers/dma/xgene-dma.c
-> @@ -238,10 +238,10 @@
->         dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
-> 
->  struct xgene_dma_desc_hw {
-> -       u64 m0;
-> -       u64 m1;
-> -       u64 m2;
-> -       u64 m3;
-> +       __le64 m0;
-> +       __le64 m1;
-> +       __le64 m2;
-> +       __le64 m3;
->  };
+=E5=9C=A8 2015/4/13 23:34, Arnd Bergmann =E5=86=99=E9=81=93:
+> On Monday 13 April 2015 21:57:46 Bintian wrote:
+>> Hello Arnd,
+>>
+>> Thanks for your code review.
+>>
+>> On 2015/4/13 21:30, Arnd Bergmann wrote:
+>>> On Monday 13 April 2015 17:17:38 Bintian Wang wrote:
+>>>> +#define HI6220_CFG_CSI2PHY     8
+>>>> +#define HI6220_ISP_SCLK_GATE   9
+>>>> +#define HI6220_ISP_SCLK_GATE1  10
+>>>> +#define HI6220_ADE_CORE_GATE   11
+>>>> +#define HI6220_CODEC_VPU_GATE  12
+>>>> +#define HI6220_MED_SYSPLL      13
+>>>> +
+>>>> +/* mux clocks */
+>>>> +#define HI6220_1440_1200       20
+>>>> +#define HI6220_1000_1200       21
+>>>> +#define HI6220_1000_1440       22
+>>>> +
+>>>> +/* divider clocks */
+>>>> +#define HI6220_CODEC_JPEG      30
+>>>> +#define HI6220_ISP_SCLK_SRC    31
+>>>> +#define HI6220_ISP_SCLK1       32
+>>>>
+>>>
+>>> The numbers seem rather arbitrary, and you have both holes as well =
+as duplicate
+>>> numbers here. I would suggest you do one of two things instead:
+>
+>> I just worry about some special clocks may be added later so keep so=
+me
+>> holes for them;
+>>
+>> The duplicate numbers means clocks belong to different system contro=
+l
+>> domains.
+>
+> I don't understand. How would there be additional clocks added later?
+> Wouldn't that be a new chip?
 
-This part looks good.
+   There are some clocks not used in linux system. e.g, some clocks are=
+=20
+used in base band processor. So, some numbers are not defined here.
 
->  enum xgene_dma_ring_cfgsize {
-> @@ -388,12 +388,12 @@ static bool is_pq_enabled(struct xgene_dma *pdma)
->         return !(val & XGENE_DMA_PQ_DISABLE_MASK);
->  }
-> 
-> -static void xgene_dma_cpu_to_le64(u64 *desc, int count)
-> +static void xgene_dma_cpu_to_le64(struct xgene_dma_desc_hw *desc)
->  {
-> -       int i;
-> -
-> -       for (i = 0; i < count; i++)
-> -               desc[i] = cpu_to_le64(desc[i]);
-> +       desc->m0 = cpu_to_le64(((u64 *)desc)[0]);
-> +       desc->m1 = cpu_to_le64(((u64 *)desc)[1]);
-> +       desc->m2 = cpu_to_le64(((u64 *)desc)[2]);
-> +       desc->m3 = cpu_to_le64(((u64 *)desc)[3]);
->  }
+> If you have separate system control domains, doesn't that mean that y=
+ou
+> also have separate DT bindings?
+>
+>>> a) have a separate header file per clock driver and make all the
+>>>      numbers unique and consecutive within that header
+>>>
+>>> b) use the same numbers as the hardware registers so you can put th=
+e
+>>>      numbers directly into the dts and don't need a header to creat=
+e
+>>>      an artificial ABI between the clock driver and the boot loader=
+=2E
+>> This header file will be used by device tree (I like using the clock
+>> name instead "magic number" in dts :) )
+>
+> That's not how it works though: The dts file is the place to define
+> the hardware numbers, we do that for all sorts of numbers: interrupts=
+,
+> gpios, register ranges etc are all defined in dts to avoid putting
+> magic numbers in external header files.
+>
+> There are some cases where it gets too ugly for clock controllers
+> that are highly irregular, but yours doesn't seem to be that kind.
+>
+> E.g. all the fixed rate clocks should just be separate device nodes,
+> which lets you remove the binding for that node.
+>
+>> so how about keep them in one header file and let dts just include
+>> one header file (not four files), but remove the holes?
+>
+> The header files constantly cause problems with merge dependencies,
+> and we have some other companies that keep releasing new chips
+> that each time require a new header file. If hisilicon plans to make
+> more chips like this one, please consider coming up with more
+> generic bindings to avoid this.
+>
+> 	Arnd
+>
+> .
+>
 
-This part does not: you are circumventing the checks that are supposed
-to help you here, and make things harder to read in the process.
 
->  static u16 xgene_dma_encode_len(u32 len)
-> @@ -499,9 +499,9 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
-> 
->  skip_additional_src:
->         /* Hardware stores descriptor in little endian format */
-> -       xgene_dma_cpu_to_le64(desc1, 4);
-> +       xgene_dma_cpu_to_le64(desc1);
->         if (desc2)
-> -               xgene_dma_cpu_to_le64(desc2, 4);
-> +               xgene_dma_cpu_to_le64(desc2);
->  }
-> 
->  static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
-> @@ -540,8 +540,8 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
->         }
-> 
->         /* Hardware stores descriptor in little endian format */
-> -       xgene_dma_cpu_to_le64(desc1, 4);
-> -       xgene_dma_cpu_to_le64(desc2, 4);
-> +       xgene_dma_cpu_to_le64(desc1);
-> +       xgene_dma_cpu_to_le64(desc2);
-> 
->         /* Update meta data */
->         *nbytes = len;
-
-All these calls should just be removed, and the accesses to the descriptor
-get changed to be little-endian. You can use the opportunity to remove
-a lot of the macros that make the code harder to understand, and open-code
-them like this:
-
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index aa61935ee706..3e3854559ecc 100755
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -446,12 +446,12 @@ static void *xgene_dma_lookup_ext8(u64 *desc, int idx)
- 	return (idx % 2) ? (desc + idx - 1) : (desc + idx + 1);
- }
- 
--static void xgene_dma_init_desc(void *desc, u16 dst_ring_num)
-+static void xgene_dma_init_desc(struct xgene_dma_desc_hw *desc, u16 dst_ring_num)
- {
--	XGENE_DMA_DESC_C_SET(desc); /* Coherent IO */
--	XGENE_DMA_DESC_IN_SET(desc);
--	XGENE_DMA_DESC_H0ENQ_NUM_SET(desc, dst_ring_num);
--	XGENE_DMA_DESC_RTYPE_SET(desc, XGENE_DMA_RING_OWNER_DMA);
-+	desc->m1 |= cpu_to_le64(XGENE_DMA_DESC_C_BIT);
-+	desc->m0 |= cpu_to_le64(XGENE_DMA_DESC_IN_BIT);
-+	desc->m3 |= cpu_to_le64(dst_ring_num << XGENE_DMA_DESC_HOENQ_NUM_POS);
-+	desc->m0 |= cpu_to_le64(dst_ring_num << XGENE_DMA_RING_OWNER_DMA);
- }
- 
-
-which will store the descriptors in the right format with correct endianess,
-make use of the sparse checking and let the reader see what's actually
-going on.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
