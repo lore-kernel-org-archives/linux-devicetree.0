@@ -1,92 +1,61 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Tue, 14 Apr 2015 14:31:07 +0800
-Message-ID: <1428993067.13552.14.camel@mhfsdcap03>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
-	<CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
-	<1426677749.22581.38.camel@mhfsdcap03>
-	<CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A@mail.gmail.com>
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [PATCH v6 1/3] nand: pl353: Add basic driver for arm pl353 smc
+ nand interface
+Date: Tue, 14 Apr 2015 12:09:26 +0530
+Message-ID: <CAGnW=Ba7oYT6qf=ag49r6Z-xkVTANcvLqK8848Hg2fTd6L6egw@mail.gmail.com>
+References: <1428941550-4620-1-git-send-email-punnaia@xilinx.com>
+	<858a607d-7c5a-4066-aa79-ab14c456b8e5@BN1BFFO11FD046.protection.gbl>
+	<1428951432.3868.21.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1428951432.3868.21.camel@x220>
+Sender: linux-doc-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, Alexandre Courbot <acourbot@nvidia.co>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9tYXN6LAoKICAgICBUaGFua3MgdmVyeSBtdWNoIGZvciB5b3Ugc3VnZ2VzdGlvbiBhbmQg
-ZXhwbGFpbiBzbyBkZXRhaWwuCiAgICAgcGxlYXNlIGhlbHAgY2hlY2sgYmVsb3cuCgpPbiBGcmks
-IDIwMTUtMDMtMjcgYXQgMTg6NDEgKzA5MDAsIFRvbWFzeiBGaWdhIHdyb3RlOgo+IEhpIFlvbmcg
-V3UsCj4gCj4gU29ycnkgZm9yIGxvbmcgZGVsYXksIEkgaGFkIHRvIGZpZ3VyZSBvdXQgc29tZSB0
-aW1lIHRvIGxvb2sgYXQgdGhpcyBhZ2Fpbi4KPiAKPiBPbiBXZWQsIE1hciAxOCwgMjAxNSBhdCA4
-OjIyIFBNLCBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4gd3JvdGU6Cj4gPj4KPiA+PiA+
-ICsgICAgICAgICAgICAgICBpbXVkZXYgPSBwaW9tbXUtPmRldjsKPiA+PiA+ICsKPiA+PiA+ICsg
-ICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJnByaXYtPnBvcnRsb2NrLCBmbGFncyk7Cj4gPj4KPiA+
-PiBXaGF0IGlzIHByb3RlY3RlZCBieSB0aGlzIHNwaW5sb2NrPwo+ID4gICAgICAgICBXZSB3aWxs
-IHdyaXRlIGEgcmVnaXN0ZXIgb2YgdGhlIGxvY2FsIGFyYml0ZXIgd2hpbGUgY29uZmlnIHBvcnQu
-IElmCj4gPiBzb21lIG1vZHVsZXMgYXJlIGluIHRoZSBzYW1lIGxvY2FsIGFyYml0ZXIsIGl0IG1h
-eSBiZSBvdmVyd3JpdGUuIHNvIEkKPiA+IGFkZCBpdCBoZXJlLgo+ID4+Cj4gCj4gT0suIE1heWJl
-IGl0IGNvdWxkIGJlIGNhbGxlZCBsYXJiX2xvY2sgdGhlbj8gSXQgd291bGQgYmUgZ29vZCB0byBo
-YXZlCj4gc3RydWN0dXJlcyBvciBjb2RlIHRoYXQgc2hvdWxkIGJlIHJ1bm5pbmcgdW5kZXIgdGhp
-cyBzcGlubG9jawo+IGFubm90YXRlZCB3aXRoIHByb3BlciBjb21tZW50cy4gQW5kIHB1cnBvc2Ug
-b2YgdGhlIGxvY2sgZG9jdW1lbnRlZCBpbgo+IGEgY29tbWVudCBhcyB3ZWxsIChwcm9iYWJseSBp
-biBhIGtlcm5lbGRvYy1zdHlsZSBkb2N1bWVudGF0aW9uIG9mCj4gcHJpdikuCiAgIFRoYW5rcy4g
-SSBoYXZlIG1vdmUgdGhlIHNwaW5sb2NrIGludG8gdGhlIHNtaSBkcml2ZXIsIGl0IHdpbGwgbG9j
-awpmb3Igd3JpdGluZyB0aGUgbG9jYWwgYXJiaXRlciByZWdzaXRlciBvbmx5Lgo+IAo+ID4+ID4g
-K3N0YXRpYyB2b2lkIG10a19pb21tdV9kZXRhY2hfZGV2aWNlKHN0cnVjdCBpb21tdV9kb21haW4g
-KmRvbWFpbiwKPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
-dCBkZXZpY2UgKmRldikKPiA+PiA+ICt7Cj4gPj4KPiA+PiBObyBoYXJkd2FyZSAoZGUpY29uZmln
-dXJhdGlvbiBvciBjbGVhbi11cCBuZWNlc3Nhcnk/Cj4gPiBJIHdpbGwgYWRkIGl0LiBBY3R1YWxs
-eSB3ZSBkZXNpZ24gbGlrZSB0aGlzOklmIGEgZGV2aWNlIGhhdmUgYXR0YWNoZWQgdG8KPiA+IGlv
-bW11IGRvbWFpbiwgaXQgd29uJ3QgZGV0YWNoIGZyb20gaXQuCj4gCj4gSXNuJ3QgcHJvcGVyIGNs
-ZWFuLXVwIHJlcXVpcmVkIGZvciBtb2R1bGUgcmVtb3ZhbD8gU29tZSBkcml2ZXJzIG1pZ2h0Cj4g
-YmUgcmVxdWlyZWQgdG8gYmUgbG9hZGFibGUgbW9kdWxlcywgd2hpY2ggc2hvdWxkIGJlIHVubG9h
-ZGFibGUuCj4gCj4gPj4KPiA+PiA+ICsKPiA+PiA+ICsgICAgICAgcGlvbW11LT5wcm90ZWN0X3Zh
-ID0gZGV2bV9rbWFsbG9jKHBpb21tdS0+ZGV2LCBNVEtfUFJPVEVDVF9QQV9BTElHTioyLAo+ID4+
-Cj4gPj4gc3R5bGU6IE9wZXJhdG9ycyBsaWtlICogc2hvdWxkIGhhdmUgc3BhY2Ugb24gYm90aCBz
-aWRlcy4KPiA+Pgo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgR0ZQX0tFUk5FTCk7Cj4gPj4KPiA+PiBTaG91bGRuJ3QgZG1hX2FsbG9jX2NvaGVyZW50KCkg
-YmUgdXNlZCBmb3IgdGhpcz8KPiA+ICAgICAgV2UgZG9uJ3QgY2FyZSB0aGUgZGF0YSBpbiBpdC4g
-SSB0aGluayB0aGV5IGFyZSB0aGUgc2FtZS4gQ291bGQgeW91Cj4gPiBoZWxwIHRlbGwgbWUgd2h5
-IGRtYV9hbGxvY19jb2hlcmVudCBtYXkgYmUgYmV0dGVyLgo+IAo+IENhbiB5b3UgZ3VhcmFudGVl
-IHRoYXQgYXQgdGhlIHRpbWUgeW91IGFsbG9jYXRlIHRoZSBtZW1vcnkgdXNpbmcKPiBkZXZtX2tt
-YWxsb2MoKSB0aGUgbWVtb3J5IGlzIG5vdCBkaXJ0eSAoaS5lLiBzb21lIHdyaXRlIGJhY2sgZGF0
-YSBhcmUKPiBzdG9yZWQgaW4gQ1BVIGNhY2hlKSBhbmQgaXMgbm90IGdvaW5nIHRvIGJlIHdyaXR0
-ZW4gYmFjayBpbiBzb21lIHRpbWUsCj4gb3ZlcndyaXRpbmcgZGF0YSBwdXQgdGhlcmUgYnkgSU9N
-TVUgaGFyZHdhcmU/Cj4gCkFzIEkgbm90ZWQgaW4gdGhlIGZ1bmN0aW9uICJtdGtfaW9tbXVfaHdf
-aW5pdCI6CgogICAgICAgLyogcHJvdGVjdCBtZW1vcnksSFcgd2lsbCB3cml0ZSBoZXJlIHdoaWxl
-IHRyYW5zbGF0aW9uIGZhdWx0ICovCiAgICAgICBwcm90ZWN0cGEgPSBfX3ZpcnRfdG9fcGh5cyhw
-aW9tbXUtPnByb3RlY3RfdmEpOwoKICAgICBXZSBkb27igJl0IGNhcmUgdGhlIGNvbnRlbnQgb2Yg
-dGhpcyBidWZmZXIsIEl0IGlzIG9rIGV2ZW4gdGhvdWdoIGl0cwpkYXRhIGlzIGRpcnR5LgogICAg
-SXQgc2VlbSB0byBiZSBhIHRoZSBwcm90ZWN0IG1lbW9yeS4gV2hpbGUgYSB0cmFuc2xhdGlvbiBm
-YXVsdApoYXBwZW5lZCwgVGhlIGlvbW11IEhXIHdpbGwgb3ZlcndyaXRlIGhlcmUgaW5zdGVhZCBv
-ZiB3cml0aW5nIHRvIHRoZQpmYXVsdCBwaHlzaWNhbCBhZGRyZXNzIHdoaWNoIG1heSBiZSAwIG9y
-IHNvbWUgcmFuZG9tIGFkZHJlc3MuCgo+ID4+ID4gKwo+ID4+ID4gKyAgICAgICBpb21tdV9zZXRf
-ZmF1bHRfaGFuZGxlcihkb21haW4sIG10a19pb21tdV9mYXVsdF9oYW5kbGVyLCBwaW9tbXUpOwo+
-ID4+Cj4gPj4gSSBkb24ndCBzZWUgYW55IG90aGVyIGRyaXZlcnMgZG9pbmcgdGhpcy4gSXNuJ3Qg
-dGhpcyBmb3IgdXBwZXIgbGF5ZXJzLAo+ID4+IHNvIHRoYXQgdGhleSBjYW4gc2V0IHRoZWlyIG93
-biBnZW5lcmljIGZhdWx0IGhhbmRsZXJzPwo+ID4gICAgICBJIHRoaW5rIHRoYXQgdGhpcyBmdW5j
-dGlvbiBpcyByZWxhdGVkIHdpdGggdGhlIGlvbW11IGRvbWFpbiwgd2UKPiA+IGhhdmUgb25seSBv
-bmUgbXVsdGltZWRpYSBpb21tdSBkb21haW4uIHNvIEkgYWRkIGl0IGFmdGVyIHRoZSBpb21tdQo+
-ID4gZG9tYWluIGFyZSBjcmVhdGVkLgo+IAo+IE5vLCB0aGlzIGZ1bmN0aW9uIGlzIGZvciBkcml2
-ZXJzIG9mIElPTU1VIGNsaWVudHMgKGkuZS4gbWFzdGVyIElQCj4gYmxvY2tzKSB3aGljaCB3YW50
-IHRvIHN1YnNjcmliZSB0byBwYWdlIGZhdWx0IHRvIGRvIHRoaW5ncyBsaWtlIHBhZ2luZwo+IG9u
-IGRlbWFuZCBhbmQgc28gb24uIEl0IHNob3VsZG4ndCBiZSBjYWxsZWQgYnkgSU9NTVUgZHJpdmVy
-LiBQbGVhc2UKPiBzZWUgb3RoZXIgSU9NTVUgZHJpdmVycywgZm9yIGV4YW1wbGUgcm9ja2NoaXAt
-aW9tbW11LmMuCiAgICAgVGhhbmtzLiBJIGhhdmUgcmVhZCBpdC4gSSB3aWxsIGRlbGV0ZSBpdCBh
-bmQgcHJpbnQgdGhlIGVycm9yIGluZm8KaW4gdGhlIElTUi4gQWxzbyBjYWxsIHRoZSByZXBvcnRf
-aW9tbXVfZmF1bHQgaW4gdGhlIElTUi4KCj4gQmVzdCByZWdhcmRzLAo+IFRvbWFzegoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcg
-bGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4
-Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
+Hi Paul Bolle,
+
+On Tue, Apr 14, 2015 at 12:27 AM, Paul Bolle <pebolle@tiscali.nl> wrote:
+> On Mon, 2015-04-13 at 21:42 +0530, Punnaiah Choudary Kalluri wrote:
+>
+>> --- a/drivers/mtd/nand/Makefile
+>> +++ b/drivers/mtd/nand/Makefile
+>
+>> +obj-$(CONFIG_MTD_NAND_PL353)         += pl353_nand.o
+>
+> (I think pl353_nand.o can be part of a module. If that's incorrect, you
+> can stop reading here.)
+>
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/pl353_nand.c
+>
+>> + * This program is free software; you can redistribute it and/or modify it under
+>> + * the terms of the GNU General Public License version 2 as published by the
+>> + * Free Software Foundation; either version 2 of the License, or (at your
+>> + * option) any later version.
+>
+> This states the license of this driver is GPL v2 or later.
+>
+>> +MODULE_LICENSE("GPL v2");
+>
+> And according to include/linux/module.h this states the license is GPL
+> v2. So either the comment at the top of this file or the license ident
+> used in the MODULE_LICENSE() macro needs to change.
+
+Thanks for the review. I will change the licence ident to "GPL".
+
+I will wait some time for further functional comments on this driver
+before sending the next version
+of patches.
+
+Regards,
+Punnaiah
+
+>
+> Thanks,
+>
+>
+> Paul Bolle
+>
