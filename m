@@ -1,94 +1,98 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for
- tscadc
-Date: Tue, 14 Apr 2015 17:32:42 +0530
-Message-ID: <552D01E2.4080305@ti.com>
-References: <OFD386DA80.D9FD2A2E-ONC1257E27.003DC94D-C1257E27.003DF465@br-automation.com>
+From: Bintian <bintian.wang@huawei.com>
+Subject: Re: [PATCH v2 3/6] clk: hi6220: Document devicetree bindings for
+ hi6220 clock
+Date: Tue, 14 Apr 2015 20:37:11 +0800
+Message-ID: <552D09F7.7080603@huawei.com>
+References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com> <7304398.GVjUsTVoce@wuerfel> <552C8AFE.9040907@huawei.com> <2456827.cDpE8M58pn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <OFD386DA80.D9FD2A2E-ONC1257E27.003DC94D-C1257E27.003DF465-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hannes Petermaier <Hannes.Petermaier-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, Johannes Pointner <Johannes.Pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2456827.cDpE8M58pn@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, dan.zhao@hisilicon.com, btw@mail.itp.ac.cn, catalin.marinas@arm.com, wangbinghui@hisilicon.com, will.deacon@arm.com, huxinwei@huawei.com, haojian.zhuang@linaro.org, yanhaifeng@gmail.com, rob.herring@linaro.org, mturquette@linaro.org, victor.lixin@hisilicon.com, xuwei5@hisilicon.com, jh80.chung@samsung.com, sledge.yanwei@huawei.com, kong.kongxinwei@hisilicon.com, heyunlei@huawei.com, puck.chen@hisilicon.com, zhangfei.gao@linaro.org, z.liuxinliang@huawei.com, devicetree@vger.kernel.org, khilman@linaro.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tyler.baker@linaro.org, olof@lixom.net, robh+dt@kernel.org, linux@arm.linux.org.uk, zhenwei.wang@hisilicon.com, w.f@huawei.com, guodong.xu@linaro.org, tomeu.vizoso@collabora.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hannes,
+Hello Arnd,
 
-On Tuesday 14 April 2015 04:46 PM, Hannes Petermaier wrote:
-> Hi Vignesh,
-> 
-> did you recognize my last email ? whats your opinion around that =
-> 
-> best regards,
-> Hannes
-> ----- Forwarded by Hannes Petermaier/Eggelsberg/AT/B&R on 14.04.2015 13:14 
-> -----
-> 
-> Hannes Petermaier/Eggelsberg/AT/B&R schrieb am 07.04.2015 14:30:19:
-> 
->> From: Hannes Petermaier/Eggelsberg/AT/B&R
->> To: vigneshr-l0cyMroinI0@public.gmane.org
->> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Date: 07.04.2015 14:30
->> Subject: WG: Fwd: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT 
-> properties for tscadc
+On 2015/4/14 18:19, Arnd Bergmann wrote:
+> On Tuesday 14 April 2015 11:35:26 Bintian wrote:
+>> Hello Arnd,
 >>
->> Hi Vignesh,
->>
->> would it be possible to add some more channel-specific settings ?
->>
->> It would be nice to have allmost full control to the STEPCONFIGx 
-> register.
->>
->> At least we need to write the bits
->>
->> SEL_RFM_SWC_1_0
->> SEL_INM_SWC_3_0 
->> SEL_RFP_SWC_2_0 
->>
->> In the current mainline version only (SEL_INP_SWC_3_0) is written.
->> So for the other bits "0" is value is used, for my point of view this is 
-> not correct.
->>
->> For example if we want to read a value from AIN5 the negative pin from 
-> adc is 
->> muxed allways to AIN0.
+>> On 2015/4/13 23:32, Arnd Bergmann wrote:
+>>> On Monday 13 April 2015 17:17:37 Bintian Wang wrote:
+>>>> +- compatible: the compatible should be one of the following strings to
+>>>> +       indicate the clock controller functionality.
+>>>> +
+>>>> +       - "hisilicon,aoctrl"
+>>>> +       - "hisilicon,sysctrl"
+>>>> +       - "hisilicon,mediactrl"
+>>>> +       - "hisilicon,pmctrl"
+>>>> +
+>>>>
+>>>
+>>> These ones already have bindings, you can't reuse the strings.
+>>> Please work with someone in hisilicon to set up a registry of
+>>> device names so you can avoid conflicts in the future.
+>> All the clock registers are under above four system controllers,
+>> discussed with Mark and Haojian two months ago, I think using above
+>> same four binding strings is enough for clk module.
+>> On second thoughts, there really some problems for future hisilicon
+>> code upstream, how about change back to the first version of this
+>> patch set, just like following:
+>> +		sys_ctrl: sys_ctrl {
+>> +			compatible = "hisilicon,sysctrl", "syscon";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			reg = <0x0 0xf7030000 0x0 0x2000>;
+>> +			ranges = <0 0x0 0xf7030000 0x2000>;
+>> +
+>> +			clock_sys: clock1@0 {
+>> +				compatible = "hisilicon,hi6220-clock-sys";
+>> +				reg = <0 0x1000>;
+>> +				#clock-cells = <1>;
+>> +			};
+>> +		};
+>
+> Sub-nodes are fine, but you also can't have a device node that
+> is just 'compatible = "hisilicon,sysctrl", "syscon";' when
+> hisilicon,sysctrl can refer to multiple mutually incompatible
+> controllers.
+>
+> The minimum fix would be to mandate the string to be
+> compatible = "hisilicon,hi6220-sysctrl", "hisilicon,sysctrl", "syscon";
+> for this model, and use respective compatible strings for the other
+> chips.
+It's really a smart fix!
 
-Sorry... I didn't understand what you meant by"AIN5 is muxed always with
-AIN0"?
+For the four system controllers, how about change the following strings:
++       - "hisilicon,aoctrl"
++       - "hisilicon,sysctrl"
++       - "hisilicon,mediactrl"
++       - "hisilicon,pmctrl"
 
->> In fact i can readout heavy jitter even if AIN5 is connected to ground - 
-> after
->> setting up negative adc pin within code (to use REFN)  the readout value 
-> is 0 
->> as expected without nameable jitter.
->> If i short AIN0 also to ground, jitter is also eliminated.
+to
++       - "hisilicon,hi6220-aoctrl"
++       - "hisilicon,hi6220-sysctrl"
++       - "hisilicon,hi6220-mediactrl"
++       - "hisilicon,hi6220-pmctrl"
+?
 
-Hmmm... nobody has reported such behavior before. ADC support for
-am335x-evm/beaglebone has been there for quite long time, but nobody
-reported any jitter on AIN5 line. I think this may be specific to
-your setup. Can you provide more info with regard to your setup?
-Which kernel? Is it am335x-evm or beaglebone or a custom board?
+and I also use "hisilicon,hi6220-xxxx" for hi6220 clk driver directly ?
 
->>
->> Maybe this is also some fault of TI SoC ... in normal case somebody 
-> could 
->> expect, that negative adc pin is equal even the Diff_CNTRL bit isn't set 
-> - but
->> in practice it isn't.
->>
->> Also actually it isn't possible to make some accurate measurement due to 
-> the 
->> fact that allways VDDA_ADC is used as positive reference.
->>
->> So it would be nice to have control around this bits.
->> Whats your opinion around that?
+>
+> For the documentation, I think it would make sense to move that
+> description to "hisilicon,sysctrl" and list all the variants of that
+> component and the respective compatible strings there, rather than
+> have one document per chip and list multiple components in it.
+Sure,
 
-Sorry, I am not yet clear on your bug/use-case.
+Thanks,
 
-Please comment inline while replying on mailing list
-
-Regards
-Vignesh
+Bintian
+>
+> 	Arnd
+>
+> .
+>
