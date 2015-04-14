@@ -1,117 +1,55 @@
-From: punnaiah choudary kalluri <punnaia@xilinx.com>
-Subject: Re: [PATCH v6 2/2] memory: pl353: Add driver for arm pl353 static
- memory controller
-Date: Tue, 14 Apr 2015 12:14:32 +0530
-Message-ID: <CAGnW=BY_-Hiw1GoFs0vfmsTgybh=FvW2inG_fJAtdUj7aRchXw@mail.gmail.com>
-References: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
-	<a1f437fe-51cf-4a89-87b4-8f0a305e68ed@BN1AFFO11FD026.protection.gbl>
-	<1428950956.3868.16.camel@x220>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v6 4/6] regulator: axp20x: add
+ support for AXP22X regulators
+Date: Tue, 14 Apr 2015 07:45:43 +0100
+Message-ID: <20150414064543.GB3447@x1>
+References: <1428638946-24890-1-git-send-email-wens@csie.org>
+ <1428638946-24890-5-git-send-email-wens@csie.org>
+ <20150410154809.GN6023@sirena.org.uk>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428950956.3868.16.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, Alexandre Courbot <acourbot@nvidia.co>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBG7PWKUQKGQE6ZZGUZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150410154809.GN6023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul Bolle
+On Fri, 10 Apr 2015, Mark Brown wrote:
 
-On Tue, Apr 14, 2015 at 12:19 AM, Paul Bolle <pebolle@tiscali.nl> wrote:
-> On Mon, 2015-04-13 at 21:41 +0530, Punnaiah Choudary Kalluri wrote:
->> --- a/drivers/memory/Kconfig
->> +++ b/drivers/memory/Kconfig
->
->> +config PL353_SMC
->> +     bool "ARM PL353 Static Memory Controller (SMC) driver"
->> +     depends on ARM
->> +     help
->> +       This driver is for the ARM PL353 Static Memory Controller (SMC)
->> +       module.
->
-> This adds a bool symbol.
->
->> --- a/drivers/memory/Makefile
->> +++ b/drivers/memory/Makefile
->
->> +obj-$(CONFIG_PL353_SMC)              += pl353-smc.o
->
-> Which means pl353-smc.o can never be part of a module, right?
->
-> (If that's not right you can stop reading here.)
->
->> --- /dev/null
->> +++ b/drivers/memory/pl353-smc.c
->
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation, either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->
-> This states the license is GPL v2 or later.
->
->> +#include <linux/module.h>
->
-> I wonder whether this include is needed, since this is built-in only
-> code.
->
->> +MODULE_DEVICE_TABLE(of, pl353_smc_of_match);
->
-> According to include/linux/module.h this will be preprocessed away for
-> built-in code.
->
->> +static struct platform_driver pl353_smc_driver = {
->> +     .probe          = pl353_smc_probe,
->> +     .remove         = pl353_smc_remove,
->> +     .driver         = {
->> +             .name   = "pl353-smc",
->> +             .owner  = THIS_MODULE,
->
-> THIS_MODULE will be equivalent to NULL for built-in code, according to
-> include/linux/export.h.
->
->> +             .pm     = &pl353_smc_dev_pm_ops,
->> +             .of_match_table = pl353_smc_of_match,
->> +     },
->> +};
->
->> +module_platform_driver(pl353_smc_driver);
->
-> Speaking from memory: for built-in only code this is equivalent to
-> having a wrapper that only does
->     register_platform_driver(&pl353_smc_driver);
->
-> and mark that wrapper with device_initcall().
->
->> +MODULE_AUTHOR("Xilinx, Inc.");
->> +MODULE_DESCRIPTION("ARM PL353 SMC Driver");
->> +MODULE_LICENSE("GPL v2");
->
-> For built-in only code these macros will be effectively preprocessed
-> away.
->
-> (Would you make PL353_SMC a tristate symbol then you should note that
-> according to include/linux/module.h "GPL" is the license ident that
-> matches the license stated in the comment at the top of this file.)
+> On Fri, Apr 10, 2015 at 12:09:04PM +0800, Chen-Yu Tsai wrote:
+>=20
+> > This patch depends on the previous patch "regulator: axp20x: prepare
+> > support for multiple AXP chip families" and the mfd header from the
+> > first patch "mfd: axp20x: add AXP22x PMIC support".
+>=20
+> > Could we merge both regulator patches through the mfd tree, with the
+> > other patches in the series? There are no other external dependencies.
+>=20
+> Yes, of course we can - that's the whole point of me sending a
+> Reviewed-by!  Half of what I'm trying to do with that is to cut down on
+> the number of reposts of MFD series I get sent :(
 
-Ok. I will make PL353_SMC as tristate symbol and also i will change the
-licence ident to "GPL".
+Welcome to my world!
 
-Thanks for the review.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-I will wait some time for further functional comments on this driver before
-sending the next version of patches
-
-Thanks,
-Punnaiah
->
-> Thanks,
->
->
-> Paul Bolle
->
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
