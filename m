@@ -1,98 +1,51 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
-Date: Tue, 14 Apr 2015 16:45:10 +0100
-Message-ID: <20150414154509.GI28709@leverpostej>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 3/5] arm64: introduce CPU_OF_TABLES for cpu ops
+ selection
+Date: Tue, 14 Apr 2015 16:52:14 +0100
+Message-ID: <20150414155214.GJ28709@leverpostej>
 References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
- <493B15F8-0EBE-4633-9604-671EF403F36E@codeaurora.org>
- <20150410161052.GF6854@e104818-lin.cambridge.arm.com>
- <FDC755A7-ACCF-4222-8730-782EEC632159@codeaurora.org>
- <20150413094117.GA2745@e104818-lin.cambridge.arm.com>
- <245B9FDD-E1B5-41E4-9F24-4D5BB86C450E@codeaurora.org>
- <97B1A2D4-6F6B-433B-83E6-9C8A95D1BFC6@codeaurora.org>
+ <1428601031-5366-4-git-send-email-galak@codeaurora.org>
+ <3133453.Cys8lc6CAy@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <97B1A2D4-6F6B-433B-83E6-9C8A95D1BFC6@codeaurora.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <3133453.Cys8lc6CAy@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Abhimanyu Kapur <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 03:44:11PM +0100, Kumar Gala wrote:
->=20
-> > On Apr 14, 2015, at 9:21 AM, Kumar Gala <galak@codeaurora.org> wrot=
-e:
-> >=20
-> >>>>=20
-> >>>> So please come up with proper technical arguments rather than th=
-e kernel
-> >>>> should take whatever SoC vendors dreamt of.
-> >>>=20
-> >>> There is no technical argument to be made.  This is about the
-> >>> community and you as maintainer wanting to accept code that compl=
-ies
-> >>> to your decision or not.
-> >>=20
-> >> If you are not willing to make technical arguments, I don't have t=
-o
-> >> provide any further reasons in this thread. It's your choice. In t=
-he
-> >> meantime, the short answer is NAK.
->=20
-> I assume you would than NAK someone trying to get support for their
-> Nexus 9 Tablet using a Tegra K1.
+On Thu, Apr 09, 2015 at 10:17:06PM +0100, Arnd Bergmann wrote:
+> On Thursday 09 April 2015 12:37:09 Kumar Gala wrote:
+> > @@ -67,4 +67,9 @@ extern const struct cpu_operations *cpu_ops[NR_CPUS];
+> >  int __init cpu_read_ops(struct device_node *dn, int cpu);
+> >  void __init cpu_read_bootcpu_ops(void);
+> >  
+> > +#define CPU_METHOD_OF_DECLARE(name, __ops)                             \
+> > +       static const struct cpu_operations *__cpu_method_table_##name   \
+> > +       __used __section(__cpu_method_of_table)                         \
+> > +       = __ops;
+> > +
+> >  #endif /* ifndef __ASM_CPU_OPS_H */
+> > 
+> 
+> I'd rather not add this, to avoid giving the appearance that platforms
+> can just add another one here.
 
-That would depend on how they try to boot secondary CPUs. It's
-unfortunate that a product is shipping with an arbitrary implementation
-specific SMP bringup mechanism, but its existence doesn't necessitate
-that we support it.
+Likewise.
 
-People are currently working on PSCI support for 32-bit Tegra platforms
-in U-Boot, and it's my understanding that a reasonable proportion of
-that could should be possible to reuse for 64-bit. That may be
-applicable to the Nexus 9.
+SMP bringup is always hairy, and giving the appearance that such code
+should be hidden away somewhere (and missing critical review) is a bad
+idea.
 
-Otherwise it's possible to have a shim which can place the secondaries
-into a spin-table. It looks like that would be necessary anyway; there
-seem to be some egregious boot protocol violations.=20
+While this seemed like a good idea in the past for 32-bit, we've only
+seen marginal decoupling, and very little in the way of actual semantics
+defined for the enable-methods. Which effectively spreads implementation
+details further rather than separating them from the interface.
 
-> It appears the shipping code for that device didn=E2=80=99t use PSCI =
-(again guessing because it wasn=E2=80=99t available at the time).
->=20
-> https://android.googlesource.com/kernel/tegra/+/android-tegra-flounde=
-r-3.10-lollipop-release/arch/arm64/mach-tegra/platsmp.c
-
-Commit e790f1deb26a2e23 ("arm64: psci: add support for PSCI invocations
-from the kernel") has been upstream since v3.9-rc1. It's even in the
-(v3.10 derived) tree you link to:
-
-https://android.googlesource.com/kernel/tegra/+/android-tegra-flounder-=
-3.10-lollipop-release/arch/arm64/kernel/psci.c
-
-As is spin-table:
-
-https://android.googlesource.com/kernel/tegra/+/android-tegra-flounder-=
-3.10-lollipop-release/arch/arm64/kernel/smp_spin_table.c
-
-> If so, I find this counter to the Linux kernel communities normal des=
-ire to support the most hardware platforms.
-
-Supporting hardware platforms doesn't mean that we must accept code
-which we believe to be problematic.
-
-We don't want implementation-specific SMP bringup mechanisms because
-we've learnt from the lessons of the past. They're almost always
-ill-defined, not reusable, and they're a maintenance burden for all
-system software targeting ARM which gets worse over time.
-
-If there are technical problems with the existing mechanisms, we're ope=
-n
-to solving them. Others have engaged with the kernel community and/or
-ARM (in the case of PSCI) to do so, and all others upstream so far have
-used common enable methods.
-
-Mark.=20
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
