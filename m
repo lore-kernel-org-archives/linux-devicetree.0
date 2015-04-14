@@ -1,118 +1,606 @@
-From: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH] NFC: trf7970a: Handle extra byte in response to Type 5 RMB commands
-Date: Tue, 14 Apr 2015 14:51:24 -0700
-Message-ID: <1429048284-8916-1-git-send-email-mgreer@animalcreek.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Subject: Re: [PATCH v2 3/3] phy: cygnus-usbphy: Add Broadcom Cygnus USB phy
+ driver
+Date: Tue, 14 Apr 2015 15:05:13 -0700
+Message-ID: <552D8F19.7020002@broadcom.com>
+References: <1427921457-18235-1-git-send-email-arun.ramamurthy@broadcom.com> <1427921457-18235-4-git-send-email-arun.ramamurthy@broadcom.com> <551EAE5B.7000907@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <551EAE5B.7000907@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The current versions of the trf7970a has an erratum where it returns
-an extra byte in the response to 'Read Multiple Block' (RMB) commands.
-This command is issued to Type 5 tags (i.e., ISO/IEC 15693 tags) by
-the neard daemon.
+Hi Kishon
 
-To handle this, define a new Device Tree property,
-'t5t-rmb-extra-byte-quirk', which indicates that the associated
-trf7970a device has this erratum.  The trf7970a device driver
-will then ensure that the response length to RMB commands is
-reduced by one byte (for devices with the erratum).
+I will address your comments on multi level if and error checking.
+I have replied to your comments on phy power on and power off. Thanks
 
-Signed-off-by: Mark A. Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
----
- .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++++
- drivers/nfc/trf7970a.c                             | 23 ++++++++++++++++++----
- 2 files changed, 23 insertions(+), 4 deletions(-)
+Arun
+On 15-04-03 08:14 AM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Thursday 02 April 2015 02:20 AM, Arun Ramamurthy wrote:
+>> This driver adds support for USB 2.0 host and device phy for
+>> Broadcom's Cygnus chipset. The host controller is connected to
+>> three separate phys and one of the phys (port 2) is connected to
+>> the device controller
+>>
+>> Reviewed-by: Ray Jui <rjui@broadcom.com>
+>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+>> ---
+>>   drivers/phy/Kconfig              |  12 +
+>>   drivers/phy/Makefile             |   1 +
+>>   drivers/phy/phy-bcm-cygnus-usb.c | 484
+>> +++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 497 insertions(+)
+>>   create mode 100644 drivers/phy/phy-bcm-cygnus-usb.c
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 2962de2..0aa62dc 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -291,4 +291,16 @@ config PHY_QCOM_UFS
+>>       help
+>>         Support for UFS PHY on QCOM chipsets.
+>>
+>> +config PHY_BCM_CYGNUS_USB
+>> +    tristate "Broadcom Cygnus USB PHY support"
+>> +    depends on OF
+>> +    depends on ARCH_BCM_CYGNUS || COMPILE_TEST
+>> +    select GENERIC_PHY
+>> +    default ARCH_BCM_CYGNUS
+>> +    help
+>> +      Enable this to support the USB PHY in Broadcom's Cygnus chip.
+>> +      The phys are capable of supporting host mode for all ports
+>> +      and device mode for port 2. The host or device configuration is
+>> +      read from the device tree.
+>> +
+>>   endmenu
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index f080e1b..47a37fa 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -6,6 +6,7 @@ obj-$(CONFIG_GENERIC_PHY)        += phy-core.o
+>>   obj-$(CONFIG_PHY_BERLIN_USB)        += phy-berlin-usb.o
+>>   obj-$(CONFIG_PHY_BERLIN_SATA)        += phy-berlin-sata.o
+>>   obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)    += phy-armada375-usb2.o
+>> +obj-$(CONFIG_PHY_BCM_CYGNUS_USB)    += phy-bcm-cygnus-usb.o
+>>   obj-$(CONFIG_BCM_KONA_USB2_PHY)        += phy-bcm-kona-usb2.o
+>>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)    += phy-exynos-dp-video.o
+>>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)    += phy-exynos-mipi-video.o
+>> diff --git a/drivers/phy/phy-bcm-cygnus-usb.c
+>> b/drivers/phy/phy-bcm-cygnus-usb.c
+>> new file mode 100644
+>> index 0000000..b017e3b
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-bcm-cygnus-usb.c
+>> @@ -0,0 +1,484 @@
+>> +/*
+>> + * Copyright (C) 2015 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/delay.h>
+>> +
+>> +#define CDRU_USBPHY_CLK_RST_SEL_OFFSET            0x11b4
+>> +#define CDRU_USBPHY2_HOST_DEV_SEL_OFFSET        0x11b8
+>> +#define CDRU_SPARE_REG_0_OFFSET                0x1238
+>> +#define CRMU_USB_PHY_AON_CTRL_OFFSET            0x00028
+>> +#define CDRU_USB_DEV_SUSPEND_RESUME_CTRL_OFFSET        0x1210
+>> +#define CDRU_USBPHY_P0_STATUS_OFFSET            0x11D0
+>> +#define CDRU_USBPHY_P1_STATUS_OFFSET            0x11E8
+>> +#define CDRU_USBPHY_P2_STATUS_OFFSET            0x1200
+>> +#define CDRU_USBPHY_USBPHY_ILDO_ON_FLAG            1
+>> +#define CDRU_USBPHY_USBPHY_PLL_LOCK            0
+>> +#define CDRU_USB_DEV_SUSPEND_RESUME_CTRL_DISABLE    0
+>> +#define PHY2_DEV_HOST_CTRL_SEL_HOST            1
+>> +
+>> +#define CRMU_USBPHY_P0_AFE_CORERDY_VDDC            1
+>> +#define CRMU_USBPHY_P0_RESETB                2
+>> +#define CRMU_USBPHY_P1_AFE_CORERDY_VDDC            9
+>> +#define CRMU_USBPHY_P1_RESETB                10
+>> +#define CRMU_USBPHY_P2_AFE_CORERDY_VDDC            17
+>> +#define CRMU_USBPHY_P2_RESETB                18
+>> +
+>> +#define USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET        0x0408
+>> +#define USB2_IDM_IDM_IO_CONTROL_DIRECT__clk_enable    0
+>
+> Did you run checkpatch on this patch?
+I did run checkpatch and it passed. However I can see that the 
+indentation is ok, I will address that.
+>> +#define USB2_IDM_IDM_RESET_CONTROL_OFFSET        0x0800
+>> +#define USB2_IDM_IDM_RESET_CONTROL__RESET        0
+>> +
+>> +#define PLL_LOCK_RETRY_COUNT    1000
+>> +#define MAX_PHY_PORTS        3
+>> +
+>> +static int power_bit[] = {CRMU_USBPHY_P0_AFE_CORERDY_VDDC,
+>> +                CRMU_USBPHY_P1_AFE_CORERDY_VDDC,
+>> +                CRMU_USBPHY_P2_AFE_CORERDY_VDDC};
+>> +static int reset_bit[] = {CRMU_USBPHY_P0_RESETB,
+>> +                CRMU_USBPHY_P1_RESETB,
+>> +                CRMU_USBPHY_P2_RESETB};
+>> +static int status_reg[] = {CDRU_USBPHY_P0_STATUS_OFFSET,
+>> +                CDRU_USBPHY_P1_STATUS_OFFSET,
+>> +                CDRU_USBPHY_P2_STATUS_OFFSET};
+>> +
+>> +struct bcm_phy_instance;
+>> +
+>> +struct bcm_phy_driver {
+>> +    void __iomem *usbphy_regs;
+>> +    void __iomem *usb2h_idm_regs;
+>> +    void __iomem *usb2d_idm_regs;
+>> +    struct bcm_phy_instance *ports[MAX_PHY_PORTS];
+>> +    spinlock_t lock;
+>> +    bool idm_host_enabled;
+>> +};
+>> +
+>> +struct bcm_phy_instance {
+>> +    struct bcm_phy_driver *driver;
+>> +    struct phy *generic_phy;
+>> +    int port_no;
+>> +    bool host_mode; /* true - Host, false - device */
+>> +    bool power;
+>> +};
+>> +
+>> +static inline int bcm_phy_cdru_usbphy_status_wait(u32 usb_reg, int
+>> reg_bit,
+>> +                      struct bcm_phy_driver *phy_driver)
+>> +{
+>> +    /* Wait for the PLL lock status */
+>> +    int retry = PLL_LOCK_RETRY_COUNT;
+>> +    u32 reg_val;
+>> +
+>> +    do {
+>> +        udelay(1);
+>> +        reg_val = readl(phy_driver->usbphy_regs +
+>> +                usb_reg);
+>> +        if (reg_val & (1 << reg_bit))
+>> +            return 0;
+>> +    } while (--retry > 0);
+>> +
+>> +    return -EBUSY;
+>> +
+>> +}
+>> +
+>> +static struct phy *bcm_usb_phy_xlate(struct device *dev,
+>> +                     struct of_phandle_args *args)
+>> +{
+>> +    struct bcm_phy_driver *phy_driver = dev_get_drvdata(dev);
+>> +    struct bcm_phy_instance *port = NULL;
+>> +    int i;
+>> +
+>> +    if (!phy_driver)
+>> +        return ERR_PTR(-EINVAL);
+>
+> use ENODEV here to make phy_optional_get happy.
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-index 7c89ca2..32b35a0 100644
---- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-@@ -18,6 +18,9 @@ Optional SoC Specific Properties:
-   "IRQ Status Read" erratum.
- - en2-rf-quirk: Specify that the trf7970a being used has the "EN2 RF"
-   erratum.
-+- t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
-+  where an extra byte is returned by Read Multiple Block commands issued
-+  to Type 5 tags.
- 
- Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 
-@@ -39,6 +42,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 		autosuspend-delay = <30000>;
- 		irq-status-read-quirk;
- 		en2-rf-quirk;
-+		t5t-rmb-extra-byte-quirk;
- 		status = "okay";
- 	};
- };
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index aa6a333..85b4d86 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -149,6 +149,7 @@
-  */
- #define TRF7970A_QUIRK_IRQ_STATUS_READ		BIT(0)
- #define TRF7970A_QUIRK_EN2_MUST_STAY_LOW	BIT(1)
-+#define TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE	BIT(2)
- 
- /* Direct commands */
- #define TRF7970A_CMD_IDLE			0x00
-@@ -446,6 +447,7 @@ struct trf7970a {
- 	u8				md_rf_tech;
- 	u8				tx_cmd;
- 	bool				issue_eof;
-+	bool				adjust_resp_len;
- 	int				en2_gpio;
- 	int				en_gpio;
- 	struct mutex			lock;
-@@ -626,6 +628,11 @@ static void trf7970a_send_upstream(struct trf7970a *trf)
- 		trf->aborting = false;
- 	}
- 
-+	if (trf->adjust_resp_len) {
-+		skb_trim(trf->rx_skb, trf->rx_skb->len - 1);
-+		trf->adjust_resp_len = false;
-+	}
-+
- 	trf->cb(trf->ddev, trf->cb_arg, trf->rx_skb);
- 
- 	trf->rx_skb = NULL;
-@@ -1429,10 +1436,15 @@ static int trf7970a_per_cmd_config(struct trf7970a *trf, struct sk_buff *skb)
- 			trf->iso_ctrl = iso_ctrl;
- 		}
- 
--		if ((trf->framing == NFC_DIGITAL_FRAMING_ISO15693_T5T) &&
--				trf7970a_is_iso15693_write_or_lock(req[1]) &&
--				(req[0] & ISO15693_REQ_FLAG_OPTION))
--			trf->issue_eof = true;
-+		if (trf->framing == NFC_DIGITAL_FRAMING_ISO15693_T5T) {
-+			if (trf7970a_is_iso15693_write_or_lock(req[1]) &&
-+					(req[0] & ISO15693_REQ_FLAG_OPTION))
-+				trf->issue_eof = true;
-+			else if ((trf->quirks &
-+					TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE) &&
-+				 (req[1] == ISO15693_CMD_READ_MULTIPLE_BLOCK))
-+				trf->adjust_resp_len = true;
-+		}
- 	}
- 
- 	return 0;
-@@ -1992,6 +2004,9 @@ static int trf7970a_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
-+	if (of_property_read_bool(np, "t5t-rmb-extra-byte-quirk"))
-+		trf->quirks |= TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE;
-+
- 	if (of_property_read_bool(np, "irq-status-read-quirk"))
- 		trf->quirks |= TRF7970A_QUIRK_IRQ_STATUS_READ;
- 
--- 
-2.2.1
+>> +
+>> +    if (WARN_ON(args->args_count != 1))
+>> +        return ERR_PTR(-EINVAL);
+>
+> same here..
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +
+>> +    if (WARN_ON(args->args[0] < 0 || args->args[0] > 1))
+>> +        return ERR_PTR(-EINVAL);
+>
+> here..
+
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(phy_driver->ports); i++) {
+>> +        struct bcm_phy_instance *p = phy_driver->ports[i];
+>> +
+>> +        if (p && p->generic_phy->dev.of_node == args->np) {
+>> +            port = p;
+>> +            break;
+>> +        }
+>> +    }
+>> +
+>> +    if (!port) {
+>> +        dev_err(dev, "Failed to locate phy %s\n", args->np->name);
+>> +        return ERR_PTR(-EINVAL);
+>> +    }
+>> +
+>> +    port->host_mode = args->args[0];
+>> +
+>> +    return port->generic_phy;
+>> +}
+>> +
+>> +static int bcm_phy_init(struct phy *generic_phy)
+>> +{
+>> +    struct bcm_phy_instance *port = phy_get_drvdata(generic_phy);
+>> +    struct bcm_phy_driver *phy_driver = port->driver;
+>> +    unsigned long flags;
+>> +    u32 reg_val;
+>> +
+>> +    spin_lock_irqsave(&phy_driver->lock, flags);
+>
+> if (port->port_no != 2)
+>      return;
+>
+> avoids multi level if..else.
+
+>> +
+>> +    /*
+>> +     * Only PORT 2 is capable of being device and host
+>> +     * Default setting is device, check if it is set to host.
+>> +     */
+>> +    if (port->port_no == 2) {
+>> +        if (port->host_mode) {
+>> +            writel(PHY2_DEV_HOST_CTRL_SEL_HOST,
+>> +                phy_driver->usbphy_regs +
+>> +                CDRU_USBPHY2_HOST_DEV_SEL_OFFSET);
+>> +        } else {
+>> +            /*
+>> +             * Disable suspend/resume signals to device controller
+>> +             * when a port is in device mode.
+>> +             */
+>> +            reg_val = readl(phy_driver->usbphy_regs +
+>> +                      CDRU_USB_DEV_SUSPEND_RESUME_CTRL_OFFSET);
+>> +            reg_val |=
+>> +                1 << CDRU_USB_DEV_SUSPEND_RESUME_CTRL_DISABLE;
+>> +            writel(reg_val, phy_driver->usbphy_regs +
+>> +                   CDRU_USB_DEV_SUSPEND_RESUME_CTRL_OFFSET);
+>> +        }
+>> +    }
+>> +
+>> +    spin_unlock_irqrestore(&phy_driver->lock, flags);
+>> +    return 0;
+>> +}
+>> +
+>> +static int bcm_phy_shutdown(struct phy *generic_phy)
+>> +{
+>> +    struct bcm_phy_instance *port = phy_get_drvdata(generic_phy);
+>> +    struct bcm_phy_driver *phy_driver = port->driver;
+>> +    unsigned long flags;
+>> +    int i;
+>> +    u32 reg_val, powered_on_phy;
+>> +    bool power_off_flag = true;
+>> +
+>> +    spin_lock_irqsave(&phy_driver->lock, flags);
+>> +
+>> +    /* power down the phy */
+>> +    reg_val = readl(phy_driver->usbphy_regs +
+>> +            CRMU_USB_PHY_AON_CTRL_OFFSET);
+>> +    reg_val &= ~(1 << power_bit[port->port_no]);
+>> +    reg_val &= ~(1 << reset_bit[port->port_no]);
+>> +    writel(reg_val, phy_driver->usbphy_regs +
+>> +        CRMU_USB_PHY_AON_CTRL_OFFSET);
+>> +    port->power = false;
+>> +
+>> +    /*
+>> +     * If a port is configured to device and it is being shutdown,
+>> +     * turn off the clocks to the usb device controller.
+>> +     */
+>> +    if (port->port_no == 2 && !port->host_mode) {
+>> +        reg_val = readl(phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +        reg_val &= ~(1 << USB2_IDM_IDM_IO_CONTROL_DIRECT__clk_enable);
+>> +        writel(reg_val, phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +
+>> +        reg_val = readl(phy_driver->usb2d_idm_regs +
+>> +                 USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +        reg_val |= 1 << USB2_IDM_IDM_RESET_CONTROL__RESET;
+>> +        writel(reg_val, phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>
+> just do a spin_unlock_irqrestore and return here. With that we can remove
+> multiple levels of if..else.
+>> +    } else {
+>> +        /*
+>> +         * If the phy being shutdown provides clock and reset to
+>> +         * the host controller, change it do a different powered on phy
+> %s/do/to/
+>
+> Won't this cause a glitch or something?
+We might submit patches for this later, we are still doing some testing.
+>
+>> +         * If all phys are powered off, shut of the host controller
+>> +         */
+>> +        reg_val = readl(phy_driver->usbphy_regs +
+>> +                CDRU_USBPHY_CLK_RST_SEL_OFFSET);
+>> +        powered_on_phy = reg_val;
+>> +        if (reg_val == port->port_no) {
+>> +            for (i = 0; i < ARRAY_SIZE(phy_driver->ports); i++) {
+>> +                if (phy_driver->ports[i] &&
+>> +                    phy_driver->ports[i]->power &&
+>> +                    phy_driver->ports[i]->host_mode) {
+>> +                    power_off_flag = false;
+>> +                    powered_on_phy = i;
+> "break" here?
+>> +                }
+>> +            }
+>> +        }
+>> +
+>> +        if (power_off_flag) {
+>> +            /*
+>> +             * Put the host controller into reset state and
+>> +             * disable clock.
+>> +             */
+>> +            reg_val = readl(phy_driver->usb2h_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +            reg_val &=
+>> +              ~(1 << USB2_IDM_IDM_IO_CONTROL_DIRECT__clk_enable);
+>> +            writel(reg_val, phy_driver->usb2h_idm_regs +
+>> +                    USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +
+>> +            reg_val = readl(phy_driver->usb2h_idm_regs +
+>> +                     USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +            reg_val |= (1 << USB2_IDM_IDM_RESET_CONTROL__RESET);
+>> +            writel(reg_val, phy_driver->usb2h_idm_regs +
+>> +                    USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +            phy_driver->idm_host_enabled = 0;
+>> +        } else {
+>> +            writel(powered_on_phy, phy_driver->usbphy_regs +
+>> +                   CDRU_USBPHY_CLK_RST_SEL_OFFSET);
+>> +        }
+>> +    }
+>> +
+>> +    spin_unlock_irqrestore(&phy_driver->lock, flags);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int bcm_phy_poweron(struct phy *generic_phy)
+>> +{
+>> +    struct bcm_phy_instance *port = phy_get_drvdata(generic_phy);
+>> +    struct bcm_phy_driver *phy_driver = port->driver;
+>> +    unsigned long flags;
+>> +    int ret;
+>> +    u32 reg_val;
+>> +    bool clock_reset_flag = true;
+>> +
+>> +    spin_lock_irqsave(&phy_driver->lock, flags);
+>> +
+>> +    /* Bring the AFE block out of reset to start powering up the PHY */
+>> +    reg_val = readl(phy_driver->usbphy_regs +
+>> CRMU_USB_PHY_AON_CTRL_OFFSET);
+>> +    reg_val |= 1 << power_bit[port->port_no];
+>> +    writel(reg_val, phy_driver->usbphy_regs +
+>> CRMU_USB_PHY_AON_CTRL_OFFSET);
+>> +
+>> +    /* Check for power on and PLL lock */
+>> +    ret = bcm_phy_cdru_usbphy_status_wait(status_reg[port->port_no],
+>> +           CDRU_USBPHY_USBPHY_ILDO_ON_FLAG, phy_driver);
+>> +    if (ret < 0) {
+>> +        dev_err(&generic_phy->dev,
+>> +            "Timed out waiting for USBPHY_ILDO_ON_FLAG on port %d",
+>> +            port->port_no);
+>> +        goto err_shutdown;
+>> +    }
+>> +    ret = bcm_phy_cdru_usbphy_status_wait(status_reg[port->port_no],
+>> +        CDRU_USBPHY_USBPHY_PLL_LOCK, phy_driver);
+>> +    if (ret < 0) {
+>> +        dev_err(&generic_phy->dev,
+>> +            "Timed out waiting for USBPHY_PLL_LOCK on port %d",
+>> +            port->port_no);
+>> +        goto err_shutdown;
+>> +    }
+>> +    port->power = true;
+>> +
+>> +    /* Check if the port 2 is configured for device */
+>> +    if (port->port_no == 2 && !port->host_mode) {
+>> +        /*
+>> +         * Enable clock to USB device and get the USB device
+>> +         * out of reset.
+>> +         */
+>> +        reg_val = readl(phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +        reg_val |= 1 << USB2_IDM_IDM_IO_CONTROL_DIRECT__clk_enable;
+>> +        writel(reg_val, phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +
+>> +        reg_val = readl(phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +        reg_val &= ~(1 << USB2_IDM_IDM_RESET_CONTROL__RESET);
+>> +        writel(reg_val, phy_driver->usb2d_idm_regs +
+>> +                USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +
+>> +    } else {
+>> +        reg_val = readl(phy_driver->usbphy_regs +
+>> +                CDRU_USBPHY_CLK_RST_SEL_OFFSET);
+>> +
+>> +        /*
+>> +         * Check if the phy that is configured to provide clock
+>> +         * and reset is powered on.
+>> +         */
+>> +        if (reg_val >= 0 && reg_val < ARRAY_SIZE(phy_driver->ports))
+>> +            if (phy_driver->ports[reg_val])
+>> +                if (phy_driver->ports[reg_val]->power)
+>> +                    clock_reset_flag = false;
+>> +
+>> +        /* if not set the current phy */
+>> +        if (clock_reset_flag) {
+>> +            reg_val = port->port_no;
+>> +            writel(reg_val, phy_driver->usbphy_regs +
+>> +                   CDRU_USBPHY_CLK_RST_SEL_OFFSET);
+>
+> Not sure if this is the right thing to do. We don't want to be powering on
+> some other PHY when the request was to enable this PHY. Same w.r.t
+> shutdown.
+This logic is to check if the phy specified in the 
+CDRU_USBPHY_CLK_RST_SEL_OFFSET is turned on. If it is not, the register 
+value is changed to this current phy that is being powered on. We do not 
+power on any other phys
+>> +        }
+>> +    }
+>> +
+>> +    if (!phy_driver->idm_host_enabled) {
+>> +        /* Enable clock to USB and get the USB out of reset */
+>
+> What if one PHY resets the USB when another is using it?
+This reset is for the HOST controller and not the phy. The 
+idm_host_enabled flag will prevent a PHY from powering on and resetting 
+the controller if another phy has already done so.
+>> +        reg_val = readl(phy_driver->usb2h_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +        reg_val |= 1 << USB2_IDM_IDM_IO_CONTROL_DIRECT__clk_enable;
+>> +        writel(reg_val, phy_driver->usb2h_idm_regs +
+>> +                USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET);
+>> +
+>> +        reg_val = readl(phy_driver->usb2h_idm_regs +
+>> +                USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +        reg_val &= ~(1 << USB2_IDM_IDM_RESET_CONTROL__RESET);
+>> +        writel(reg_val, phy_driver->usb2h_idm_regs +
+>> +                USB2_IDM_IDM_RESET_CONTROL_OFFSET);
+>> +        phy_driver->idm_host_enabled = true;
+>> +    }
+>> +
+>> +    spin_unlock_irqrestore(&phy_driver->lock, flags);
+>> +    return 0;
+>> +
+>> +err_shutdown:
+>> +    spin_unlock_irqrestore(&phy_driver->lock, flags);
+>> +    bcm_phy_shutdown(generic_phy);
+>> +    return ret;
+>> +}
+>> +
+>> +static struct phy_ops ops = {
+>> +    .init        = bcm_phy_init,
+>> +    .power_on    = bcm_phy_poweron,
+>> +    .power_off    = bcm_phy_shutdown,
+>> +};
+>> +
+>> +static const struct of_device_id bcm_phy_dt_ids[] = {
+>> +    { .compatible = "brcm,cygnus-usb-phy", },
+>> +    { }
+>> +};
+>> +
+>> +static int bcm_phy_probe(struct platform_device *pdev)
+>> +{
+>> +    struct device *dev = &pdev->dev;
+>> +    struct bcm_phy_driver *phy_driver;
+>> +    struct phy_provider *phy_provider;
+>> +    struct device_node *child;
+>> +    struct resource *res;
+>> +    int error;
+>> +    u32 reg_val;
+>> +
+>> +    phy_driver = devm_kzalloc(dev, sizeof(struct bcm_phy_driver),
+>> +                  GFP_KERNEL);
+>> +    if (!phy_driver)
+>> +        return -ENOMEM;
+>> +
+>> +    spin_lock_init(&phy_driver->lock);
+>> +
+>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> check return value of res.
+>
+will fix
+>> +    phy_driver->usbphy_regs = devm_ioremap_nocache(dev, res->start,
+>> +                        resource_size(res));
+>> +    if (!phy_driver->usbphy_regs) {
+>> +        dev_err(dev, "Failed to remap usbphy_regs\n");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> same here..
+>
+will fix
+>> +    phy_driver->usb2h_idm_regs = devm_ioremap_nocache(dev, res->start,
+>> +                          resource_size(res));
+>> +    if (!phy_driver->usb2h_idm_regs) {
+>> +        dev_err(dev, "Failed to remap usb2h_idm_regs\n");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+>
+> here too..
+will fix
+>> +    phy_driver->usb2d_idm_regs = devm_ioremap_nocache(dev, res->start,
+>> +                           resource_size(res));
+>> +    if (!phy_driver->usb2d_idm_regs) {
+>> +        dev_err(dev, "Failed to remap usb2d_idm_regs\n");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    dev_set_drvdata(dev, phy_driver);
+>> +
+>> +    phy_driver->idm_host_enabled = false;
+>> +
+>> +    /* Shut down all ports. They can be powered up as required */
+>> +    reg_val = readl(phy_driver->usbphy_regs +
+>> +            CRMU_USB_PHY_AON_CTRL_OFFSET);
+>> +    reg_val &= ~(1 << CRMU_USBPHY_P0_AFE_CORERDY_VDDC);
+>> +    reg_val &= ~(1 << CRMU_USBPHY_P0_RESETB);
+>> +    reg_val &= ~(1 << CRMU_USBPHY_P1_AFE_CORERDY_VDDC);
+>> +    reg_val &= ~(1 << CRMU_USBPHY_P1_RESETB);
+>> +    reg_val &= ~(1 << CRMU_USBPHY_P2_AFE_CORERDY_VDDC);
+>> +    reg_val &= ~(1 << CRMU_USBPHY_P2_RESETB);
+>> +    writel(reg_val, phy_driver->usbphy_regs +
+>> +        CRMU_USB_PHY_AON_CTRL_OFFSET);
+>> +
+>> +    for_each_available_child_of_node(dev->of_node, child) {
+>> +        struct bcm_phy_instance *port;
+>> +        u32 port_no;
+>> +
+>> +        if (of_property_read_u32(child, "reg", &port_no)) {
+>> +            dev_err(dev, "missing reg property in node %s\n",
+>> +                child->name);
+>> +            return -EINVAL;
+>> +        }
+>> +
+>> +        if (port_no >= ARRAY_SIZE(phy_driver->ports)) {
+>> +            dev_err(dev, "invalid reg in node %s: %u\n",
+>> +                child->name, port_no);
+>> +            return -EINVAL;
+>> +        }
+>> +
+>> +        port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+>> +        if (!port)
+>> +            return -ENOMEM;
+>> +
+>> +        port->generic_phy = devm_phy_create(dev, child, &ops);
+>> +        if (IS_ERR(port->generic_phy)) {
+>> +            error = PTR_ERR(port->generic_phy);
+>> +            dev_err(dev, "Failed to create phy %u: %d",
+>> +                port_no, error);
+>> +            return error;
+>> +        }
+>> +
+>> +        port->port_no = port_no;
+>> +        port->driver = phy_driver;
+>> +        phy_set_drvdata(port->generic_phy, port);
+>> +
+>> +        phy_driver->ports[port_no] = port;
+>> +    }
+>> +
+>> +    phy_provider = devm_of_phy_provider_register(dev,
+>> bcm_usb_phy_xlate);
+>> +    if (IS_ERR(phy_provider)) {
+>> +        error = PTR_ERR(phy_provider);
+>> +        dev_err(dev, "Failed to register as phy provider: %d\n",
+>> +            error);
+>> +        return error;
+>> +    }
+>> +
+>> +    platform_set_drvdata(pdev, phy_driver);
+>
+> dev_get_drvdata should be sufficient.
+>
+I assume you mean dev_set_drvdata. Will fix.
+> Thanks
+> Kishon
