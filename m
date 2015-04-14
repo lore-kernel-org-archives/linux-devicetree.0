@@ -1,98 +1,63 @@
-From: Bintian <bintian.wang@huawei.com>
-Subject: Re: [PATCH v2 3/6] clk: hi6220: Document devicetree bindings for
- hi6220 clock
-Date: Tue, 14 Apr 2015 20:37:11 +0800
-Message-ID: <552D09F7.7080603@huawei.com>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com> <7304398.GVjUsTVoce@wuerfel> <552C8AFE.9040907@huawei.com> <2456827.cDpE8M58pn@wuerfel>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 7/9] ARM: tegra: enable HDA in defconfig
+Date: Tue, 14 Apr 2015 14:50:42 +0200
+Message-ID: <20150414125041.GA13446@ulmo.nvidia.com>
+References: <cover.1428700856.git.marcel.ziswiler@toradex.com>
+ <16307b8af5a65c8ba5a2b9cb640b4718142adbca.1428700856.git.marcel.ziswiler@toradex.com>
+ <alpine.DEB.2.02.1504102218290.19540@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2456827.cDpE8M58pn@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, dan.zhao@hisilicon.com, btw@mail.itp.ac.cn, catalin.marinas@arm.com, wangbinghui@hisilicon.com, will.deacon@arm.com, huxinwei@huawei.com, haojian.zhuang@linaro.org, yanhaifeng@gmail.com, rob.herring@linaro.org, mturquette@linaro.org, victor.lixin@hisilicon.com, xuwei5@hisilicon.com, jh80.chung@samsung.com, sledge.yanwei@huawei.com, kong.kongxinwei@hisilicon.com, heyunlei@huawei.com, puck.chen@hisilicon.com, zhangfei.gao@linaro.org, z.liuxinliang@huawei.com, devicetree@vger.kernel.org, khilman@linaro.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tyler.baker@linaro.org, olof@lixom.net, robh+dt@kernel.org, linux@arm.linux.org.uk, zhenwei.wang@hisilicon.com, w.f@huawei.com, guodong.xu@linaro.org, tomeu.vizoso@collabora.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1504102218290.19540-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+d>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
 
-On 2015/4/14 18:19, Arnd Bergmann wrote:
-> On Tuesday 14 April 2015 11:35:26 Bintian wrote:
->> Hello Arnd,
->>
->> On 2015/4/13 23:32, Arnd Bergmann wrote:
->>> On Monday 13 April 2015 17:17:37 Bintian Wang wrote:
->>>> +- compatible: the compatible should be one of the following strings to
->>>> +       indicate the clock controller functionality.
->>>> +
->>>> +       - "hisilicon,aoctrl"
->>>> +       - "hisilicon,sysctrl"
->>>> +       - "hisilicon,mediactrl"
->>>> +       - "hisilicon,pmctrl"
->>>> +
->>>>
->>>
->>> These ones already have bindings, you can't reuse the strings.
->>> Please work with someone in hisilicon to set up a registry of
->>> device names so you can avoid conflicts in the future.
->> All the clock registers are under above four system controllers,
->> discussed with Mark and Haojian two months ago, I think using above
->> same four binding strings is enough for clk module.
->> On second thoughts, there really some problems for future hisilicon
->> code upstream, how about change back to the first version of this
->> patch set, just like following:
->> +		sys_ctrl: sys_ctrl {
->> +			compatible = "hisilicon,sysctrl", "syscon";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			reg = <0x0 0xf7030000 0x0 0x2000>;
->> +			ranges = <0 0x0 0xf7030000 0x2000>;
->> +
->> +			clock_sys: clock1@0 {
->> +				compatible = "hisilicon,hi6220-clock-sys";
->> +				reg = <0 0x1000>;
->> +				#clock-cells = <1>;
->> +			};
->> +		};
->
-> Sub-nodes are fine, but you also can't have a device node that
-> is just 'compatible = "hisilicon,sysctrl", "syscon";' when
-> hisilicon,sysctrl can refer to multiple mutually incompatible
-> controllers.
->
-> The minimum fix would be to mandate the string to be
-> compatible = "hisilicon,hi6220-sysctrl", "hisilicon,sysctrl", "syscon";
-> for this model, and use respective compatible strings for the other
-> chips.
-It's really a smart fix!
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For the four system controllers, how about change the following strings:
-+       - "hisilicon,aoctrl"
-+       - "hisilicon,sysctrl"
-+       - "hisilicon,mediactrl"
-+       - "hisilicon,pmctrl"
+On Fri, Apr 10, 2015 at 10:18:44PM +0000, Paul Walmsley wrote:
+> On Fri, 10 Apr 2015, Marcel Ziswiler wrote:
+>=20
+> > From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> >=20
+> > Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+>=20
+> This one is also missing a commit message; please add one.
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Docu=
+mentation/SubmittingPatches#n109
 
-to
-+       - "hisilicon,hi6220-aoctrl"
-+       - "hisilicon,hi6220-sysctrl"
-+       - "hisilicon,hi6220-mediactrl"
-+       - "hisilicon,hi6220-pmctrl"
-?
+defconfig updates are generally an exception to this rule. The reason is
+that I'll end up squashing them into a single commit anyway.
 
-and I also use "hisilicon,hi6220-xxxx" for hi6220 clk driver directly ?
+Thierry
 
->
-> For the documentation, I think it would make sense to move that
-> description to "hisilicon,sysctrl" and list all the variants of that
-> component and the respective compatible strings there, rather than
-> have one document per chip and list multiple components in it.
-Sure,
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Bintian
->
-> 	Arnd
->
-> .
->
+iQIcBAABCAAGBQJVLQ0eAAoJEN0jrNd/PrOhu28QAKIBBkwq6KyUj0J0MQe8wm/j
+/c7GOIh3EHclhTAH+Uz15X8kmyLh4TB/bg9oBL2LJ7BKGzGC6yQMU5RVwWo7Akb2
+rhhtCCCBkmZjatEmpoJsfO9COVLjutkye3CjicwZCqy+JzVBYtqO02Nv4Rxo18Xe
+eBKMoXfi2l8Gw4WYY6GN1L1VjkAT2dwNo+VDj1QJOphZsAiLfe8us97cz9fBq2qn
+HXk7UWUntSEmXbIAND/uT6IjFW/PVvJuFNBaBMTgrFWHb9oBLQ6lPsbdk7sJZwtx
+OIZr8uyRkikfdWQAAorbJsybERdANemrmfaVFoXNFqftTELy75+zkrYxJWrfJkmY
+F7qTsk/le7a5vqv5K+fYK0H22f2FpFv+unaPTdqRVNzNypHAzE6wrQeSFuy8AspD
+jBBKEwLWD+lL5eG24bFX3oPoBJm3scVLqjb8Lfvcu7+xOKHnQr8B9+ER2kT6l8W7
+uZCUEtPxu0qHC7ibVNg7bAA7L5rfDNiJH8HGlHdJ9obKiDvOVaPYJLkB95rnIk1C
+mHi8LrdVLunUmbRWkDbZPUgJHo5vEf7KpKIHZFmzOfiqM55T1Z9Ykp+VgcJVdLg0
+o5cLw/fLWyNzXOnI68/75zKIeYG3cR1D1AMLGbuzvUqkAun9IGbwoOiC5YwNk8HA
+iL2yysXG6t22/1GnV34I
+=KlHQ
+-----END PGP SIGNATURE-----
+
+--PEIAKu/WMn1b1Hv9--
