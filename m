@@ -1,28 +1,49 @@
-From: Valentin Rothberg <valentinrothberg@gmail.com>
-Subject: clk: mb86s7x: ARCH_MB86S7X not defined
-Date: Tue, 14 Apr 2015 11:30:28 +0200
-Message-ID: <20150414093028.GB29667@station.rsr.lip6.fr>
+From: "Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_property_read_string
+Date: Tue, 14 Apr 2015 09:16:33 +0000
+Message-ID: <DM2PR03MB3983A1321E647873C660AA5F8E60@DM2PR03MB398.namprd03.prod.outlook.com>
+References: <1428401462-5907-1-git-send-email-Shengzhou.Liu@freescale.com>
+ <CAL_JsqLpD8UXoHZ-KF74LaN5HEvu3bpu6aeO9_SOHYrut0nV_Q@mail.gmail.com>
+ <BLUPR03MB391F3BA6A3691F36D73D5EDF8FC0@BLUPR03MB391.namprd03.prod.outlook.com>
+ <CAL_JsqL1+oXxV=4pNieCD=+8qb9-9GKREg366Mj8wu3sPRDzBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jaswinder.singh@linaro.org
-Cc: andy.green@linaro.org, vincent.yang@socionext.com, nuriya.tetsuya@socionext.com, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, Andreas Ruprecht <rupran@einserver.de>, stefan.hengelein@fau.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqL1+oXxV=4pNieCD=+8qb9-9GKREg366Mj8wu3sPRDzBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
-
-your commit 1ccdd04f5365 ("clk: Add clock driver for mb86s7x") is in
-today's Linux next tree.  The clock driver clk-mb86s7x.c is
-conditionally compiled depending on CONFIG_ARCH_MB86S7X.  This option is
-nowhere defined in Kconfig, so that the driver cannot be compiled at its
-current tate.
-
-Is there a patch queued somewhere that adds this feature?
-
-I detected this issue with ./scripts/checkkconfigsymbols.py by diffing
-yesterday's and today's next tree.
-
-Kind regards,
- Valentin
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
+OnJvYmhlcnJpbmcyQGdtYWlsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBBcHJpbCAwOCwgMjAx
+NSAxMDoyNiBQTQ0KPiBUbzogTGl1IFNoZW5nemhvdS1CMzY2ODUNCj4gQ2M6IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBHcmFudCBMaWtlbHkNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gb2Y6
+IGZpeCBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZw0KPiANCj4gT24gV2VkLCBBcHIgOCwgMjAxNSBh
+dCAxOjI5IEFNLCBTaGVuZ3pob3UuTGl1QGZyZWVzY2FsZS5jb20NCj4gPFNoZW5nemhvdS5MaXVA
+ZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+ID4+IE9uIFR1ZSwgQXByIDcsIDIwMTUgYXQgNToxMSBB
+TSwgU2hlbmd6aG91IExpdQ0KPiA+PiA8U2hlbmd6aG91LkxpdUBmcmVlc2NhbGUuY29tPiB3cm90
+ZToNCj4gPj4gPiBJbiBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyBmdW5jdGlvbiwgc3Rybmxlbihw
+cm9wLT52YWx1ZSwNCj4gPj4gPiBwcm9wLT5sZW5ndGgpIGlzIGFsd2F5cyBsZXNzIG9yIGVxdWFs
+IHRvIHByb3AtPmxlbmd0aCwgYW5kIHdlDQo+ID4+ID4gcHJvcC0+c2hvdWxkDQo+ID4+IGFsbG93
+IHRoZSAnPT0nDQo+ID4+ID4gY29uZGl0aW9uLCBzbyBsZXQncyByZW1vdmUgdGhlIG9yaWdpbmFs
+IHVucmVhc29uYWJsZSBjb25kaXRpb24uDQo+ID4+DQo+ID4+IEkgYmVsaWV2ZSB3ZSBkb24ndCB3
+YW50IHRvIGFsbG93IGVxdWFsIGJlY2F1c2UgcHJvcC0+bGVuZ3RoIHNob3VsZA0KPiA+PiBpbmNs
+dWRlIHRoZSBcMCB0ZXJtaW5hdGlvbiB3aGlsZSBzdHJubGVuIHdpbGwgbm90Lg0KPiA+Pg0KPiA+
+PiBSb2INCj4gPg0KPiA+IFllcywgSSB0aG91Z2h0IHNvLCBpZGVhbGx5IHByb3AtPmxlbmd0aCBz
+aG91bGQgYmUgYXNzaWduZWQgd2l0aA0KPiA+IHN0cmxlbih2YWx1ZSkrMSwgYnV0IHVuZm9ydHVu
+YXRlbHkgaW4gdS1ib290IGFuZCBrZXJuZWwgdGhlcmUgYXJlIHRvbw0KPiA+IG1hbnkgY2FsbGVy
+cyB0aGF0IGhhdmUgcHJvcC0+bGVuZ3RoIGFzc2lnbmVkIHdpdGggc3RybGVuKHZhbHVlKSBpbnN0
+ZWFkIG9mDQo+ID4gc3RybGVuKHZhbHVlKSsxLCBpbiBwcmFjdGljZSwgd2UgY2FuIGFsbG93IGVx
+dWFsLg0KPiA+IA0KPiANCj4gTm8gb25lIHNob3VsZCB0b3VjaCBwcm9wLT5sZW5ndGggYW5kIGl0
+IGNvbWVzIGZyb20gdGhlIERUQiBkaXJlY3RseS4NCj4gSXQgZG9lc24ndCBjb21lIGZyb20gc3Ry
+bGVuLg0KPiANCmUuZy4gIHUtYm9vdCBjaGFuZ2VzIHByb3AtPmxlbmd0aCBkeW5hbWljYWxseSBi
+eSBmZHRfc2V0cHJvcCgpLg0Kd2UgY2FuIGZpeCBpdCBieSB1c2luZyBzdHJsZW4oKSsxIGluc3Rl
+YWQgb2Ygc3RybGVuKCkgaW4gdS1ib290Lg0Kd2VsbCwgbGV0J3MgZHJvcCB0aGUgcGF0Y2guDQoN
+Cg0KDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
