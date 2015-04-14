@@ -1,94 +1,316 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
-Date: Tue, 14 Apr 2015 22:17:26 +0100
-Message-ID: <20150414211720.GA56647@MBP>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
- <20150414163613.GM28709@leverpostej>
- <07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
+Date: Wed, 15 Apr 2015 00:37:28 +0300
+Message-ID: <552D8898.3060905@cogentembedded.com>
+References: <32501816.HtkLenWQpn@wasted.cogentembedded.com> <552C4554.2070608@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "abhimany@codeaurora.org" <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <552C4554.2070608@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com
+Cc: linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 02:49:04PM -0500, Kumar Gala wrote:
-> On Apr 14, 2015, at 11:36 AM, Mark Rutland <mark.rutland@arm.com> wro=
-te:
-> > On Fri, Apr 10, 2015 at 11:05:29AM +0100, Catalin Marinas wrote:
-> >> On Thu, Apr 09, 2015 at 12:37:06PM -0500, Kumar Gala wrote:
-> >>> This patch set adds support for SMP boot on the MSM8x16 family of=
- Qualcomm SoCs.
-> >>>=20
-> >>> To support SMP on the MSM8x16 SoCs we need to add ARMv8/64-bit SC=
-M interfaces to
-> >>> setup the boot/release addresses for the secondary CPUs.  In addi=
-tion we need
-> >>> a uniquie set of cpu ops.  I'm aware the desired methods for boot=
-ing secondary
-> >>> CPUs is either via spintable or PSCI.  However, these SoCs are sh=
-ipping with a
-> >>> firmware that does not support those methods.
-> >>=20
-> >> And the reason is? Some guesses:
-> >>=20
-> >> a) QC doesn't think boot interface (and cpuidle) standardisation i=
-s
-> >>   worth the effort (to put it nicely)
-> >> b) The hardware was available before we even mentioned PSCI
-> >> c) PSCI is not suitable for the QC's SCM interface
-> >> d) Any combination of the above
-> >>=20
-> >> I strongly suspect it's point (a). Should we expect future QC hard=
-ware
-> >> to do the same?
-> >>=20
-> >> You could argue the reason was (b), though we've been discussing P=
-SCI
-> >> for at least two years and, according to QC press releases, MSM891=
-6
-> >> started sampling in 2014.
-> >>=20
-> >> The only valid reason is (c) and if that's the case, I would expec=
-t a
-> >> proposal for a new firmware interface protocol (it could be PSCI-b=
-ased),
-> >> well documented, that can be shared with others that may encounter=
- the
-> >> same shortcomings.
-> >=20
-> > There's no need to even fork PSCI. The PSCI specification will evol=
-ve
-> > over time as vendors request changes and we try to accomodate them.
-> >=20
-> > If there's something that PSCI doesn't do that you need it to, cont=
-act
-> > ARM. Other vendors already have.
+Hello.
 
-Mostly yes but there may be valid reasons for not being able to use
-PSCI. The spin-table method is still a firmware interface, though not
-necessarily secure (a.k.a. SMC-based). The ACPI parking protocol is
-another and, who knows, maybe we define a way to park CPUs back to
-firmware without SMC calls (when EL3 is not available).
+On 04/14/2015 01:38 AM, Florian Fainelli wrote:
 
-> But what is someone to do between the period of getting PSCI spec
-> updated and needing to ship a product with firmware?
->=20
-> The take still sounds like if you don=E2=80=99t implement an exact ve=
-rsion of
-> PSCI you are screwed from being supported in the upstream ARM64
-> kernel.
+> [snip]
 
-These are silly arguments. There is a big difference between "we
-couldn't get the firmware implementing the standard for the early
-silicon but we are working on fixing it for future revisions" vs. "we
-don't give a s**t about these standards, the kernel must be inclusive".
-So please make up your mind on which direction you want to pursue.
+>> +struct ravb_private {
+>> +	struct net_device *ndev;
+>> +	struct platform_device *pdev;
+>> +	void __iomem *addr;
+>> +	struct mdiobb_ctrl mdiobb;
+>> +	u32 num_rx_ring[NUM_RX_QUEUE];
+>> +	u32 num_tx_ring[NUM_TX_QUEUE];
+>> +	u32 desc_bat_size;
+>> +	dma_addr_t desc_bat_dma;
+>> +	struct ravb_desc *desc_bat;
+>> +	dma_addr_t rx_desc_dma[NUM_RX_QUEUE];
+>> +	dma_addr_t tx_desc_dma[NUM_TX_QUEUE];
 
---=20
-Catalin
+> As a future optimization, you could try to group the variables by
+> direction: RX and TX such that you have better cache locality.
+
+    Thanks for the idea.
+
+> [snip]
+
+>> +static void ravb_set_duplex(struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +
+>> +	if (priv->duplex)	/* Full */
+>> +		ravb_write(ndev, ravb_read(ndev, ECMR) | ECMR_DM, ECMR);
+>> +	else			/* Half */
+>> +		ravb_write(ndev, ravb_read(ndev, ECMR) & ~ECMR_DM, ECMR);
+
+> 	reg = ravb_read(ndev, ECMR);
+> 	if (priv->duplex)
+> 		reg |= ECMR_DM;
+> 	else
+> 		reg &= ~ECMR_DM;
+> 	ravb_writel(ndev, reg, ECMR);
+
+    OK, missed this.
+
+>> +}
+>> +
+>> +static void ravb_set_rate(struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +
+>> +	switch (priv->speed) {
+>> +	case 100:		/* 100BASE */
+>> +		ravb_write(ndev, GECMR_SPEED_100, GECMR);
+>> +		break;
+>> +	case 1000:		/* 1000BASE */
+>> +		ravb_write(ndev, GECMR_SPEED_1000, GECMR);
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+
+> That still won't quite work with 10Mbits/sec will it? Or is this
+> controller 100/1000 only (which would be extremely surprising).
+
+    Yes, only 100/1000, at least so says the manual.
+
+> [snip]
+
+>> +		if (desc_status & (MSC_CRC | MSC_RFE | MSC_RTSF | MSC_RTLF |
+>> +				   MSC_CEEF)) {
+>> +			stats->rx_errors++;
+>> +			if (desc_status & MSC_CRC)
+>> +				stats->rx_crc_errors++;
+>> +			if (desc_status & MSC_RFE)
+>> +				stats->rx_frame_errors++;
+>> +			if (desc_status & (MSC_RTLF | MSC_RTSF))
+>> +				stats->rx_length_errors++;
+>> +			if (desc_status & MSC_CEEF)
+>> +				stats->rx_missed_errors++;
+
+> The flow after the else condition, while refiling might deserve some
+> explanation.
+
+>> +		} else {
+>> +			u32 get_ts = priv->tstamp_rx_ctrl & RAVB_RXTSTAMP_TYPE;
+>> +
+>> +			skb = priv->rx_skb[q][entry];
+
+> Based on the refill logic below, it seems to me like you could leave
+> holes in your ring where rx_skb[q][entry] is NULL, should not that be
+> checked here?
+
+    We don't set the descriptor type to FEMPTY for such cases, so the AVB-DMAC 
+shouldn't handle such descriptors.
+
+[...]
+>> +			skb_put(skb, pkt_len);
+>> +			skb->protocol = eth_type_trans(skb, ndev);
+>> +			if (q == RAVB_NC)
+>> +				netif_rx(skb);
+>> +			else
+>> +				netif_receive_skb(skb);
+
+> Can't you always invoke netif_receive_skb() here? Why is there a special
+> queue?
+
+    The comments in ravb_interrupt() say that the network control queue should 
+be handled ASAP, due to timestamping.
+
+>> +			stats->rx_packets++;
+>> +			stats->rx_bytes += pkt_len;
+>> +		}
+>> +
+>> +		entry = (++priv->cur_rx[q]) % priv->num_rx_ring[q];
+>> +		desc = &priv->rx_ring[q][entry];
+>> +	}
+>> +
+>> +	/* Refill the RX ring buffers. */
+>> +	for (; priv->cur_rx[q] - priv->dirty_rx[q] > 0; priv->dirty_rx[q]++) {
+>> +		entry = priv->dirty_rx[q] % priv->num_rx_ring[q];
+>> +		desc = &priv->rx_ring[q][entry];
+>> +		/* The size of the buffer should be on 16-byte boundary. */
+>> +		desc->ds = ALIGN(priv->rx_buffer_size, 16);
+>> +
+>> +		if (!priv->rx_skb[q][entry]) {
+>> +			skb = netdev_alloc_skb(ndev, skb_size);
+>> +			if (!skb)
+>> +				break;	/* Better luck next round. */
+
+> Should this really be a break or a continue?
+
+    We don't expect the allocation to succeed after it failed, so the *break* 
+is appropriate, I think.
+
+> [snip]
+
+>> +/* function for waiting dma process finished */
+>> +static void ravb_wait_stop_dma(struct net_device *ndev)
+>> +{
+
+> Should not you stop the MAC TX here as well for consistency?
+
+    Perhaps, though the manual doesn't say so...
+
+>> +	/* Wait for stopping the hardware TX process */
+>> +	ravb_wait(ndev, TCCR, TCCR_TSRQ0 | TCCR_TSRQ1 | TCCR_TSRQ2 | TCCR_TSRQ3,
+>> +		  0);
+>> +
+>> +	ravb_wait(ndev, CSR, CSR_TPO0 | CSR_TPO1 | CSR_TPO2 | CSR_TPO3, 0);
+>> +
+>> +	/* Stop the E-MAC's RX processes. */
+>> +	ravb_write(ndev, ravb_read(ndev, ECMR) & ~ECMR_RE, ECMR);
+
+> [snip]
+
+>> +		/* Transmited network control queue */
+>> +		if (tis & TIS_FTF1) {
+>> +			ravb_tx_free(ndev, RAVB_NC);
+>> +			netif_wake_queue(ndev);
+
+> This would be better moved to the NAPI handler.
+
+    Maybe, not sure...
+
+>> +			result = IRQ_HANDLED;
+>> +		}
+
+> [snip]
+
+>> +	if (ecmd->duplex == DUPLEX_FULL)
+>> +		priv->duplex = 1;
+>> +	else
+>> +		priv->duplex = 0;
+
+> Why not use what priv->phydev->duplex has cached for you?
+
+    Because we compare 'priv->duplex' with 'priv->phydev->duplex' in 
+ravb_adjust_link(). Or what did you mean?
+
+[...]
+
+>> +static int ravb_nway_reset(struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +	int error = -ENODEV;
+>> +	unsigned long flags;
+>> +
+>> +	if (priv->phydev) {
+
+> Is checking against priv->phydev really necessary, it does not look like
+> the driver will work or accept an invalid PHY device at all anyway?
+
+    You still can run 'ethtool' on a closed network device.
+
+[...]
+
+>> +/* Network device open function for Ethernet AVB */
+>> +static int ravb_open(struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +	int error;
+>> +
+>> +	napi_enable(&priv->napi);
+>> +
+>> +	error = request_irq(ndev->irq, ravb_interrupt, IRQF_SHARED, ndev->name,
+>> +			    ndev);
+>> +	if (error) {
+>> +		netdev_err(ndev, "cannot request IRQ\n");
+>> +		goto out_napi_off;
+>> +	}
+>> +
+>> +	/* Descriptor set */
+>> +	/* +26 gets the maximum ethernet encapsulation, +7 & ~7 because the
+>> +	 * card needs room to do 8 byte alignment, +2 so we can reserve
+>> +	 * the first 2 bytes, and +16 gets room for the status word from the
+>> +	 * card.
+>> +	 */
+>> +	priv->rx_buffer_size = (ndev->mtu <= 1492 ? PKT_BUF_SZ :
+>> +				(((ndev->mtu + 26 + 7) & ~7) + 2 + 16));
+
+> Is not that something that should be moved to a local ndo_change_mtu()
+
+    That was copied from sh_eth.c verbatim, I even doubt that the formula is 
+correct for EtherAVB...
+
+> function? What happens if I change the MTU of an interface running, does
+> not that completely break this RX buffer estimation?
+
+    Well, not completely, I think. eth_change_mtu() doesn't allow MTU > 1500 
+bytes, so it looks like we just need to change 1492 to 1500 here.
+
+[...]
+
+>> +static int ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>> +{
+>> +	struct ravb_private *priv = netdev_priv(ndev);
+>> +	struct ravb_tstamp_skb *ts_skb = NULL;
+>> +	struct ravb_tx_desc *desc;
+>> +	unsigned long flags;
+>> +	void *buffer;
+>> +	u32 entry;
+>> +	u32 tccr;
+>> +	int q;
+>> +
+>> +	/* If skb needs TX timestamp, it is handled in network control queue */
+>> +	q = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) ? RAVB_NC : RAVB_BE;
+>> +
+>> +	spin_lock_irqsave(&priv->lock, flags);
+>> +	if (priv->cur_tx[q] - priv->dirty_tx[q] >= priv->num_tx_ring[q] - 4) {
+
+> What's so special about 4 here, you don't seem to be using 4 descriptors
+
+    Not sure, this was clearly copied from sh_eth.c. Perhaps it's just a 
+threshold for calling ravb_tx_free()...
+
+>> +		if (!ravb_tx_free(ndev, q)) {
+>> +			netif_warn(priv, tx_queued, ndev, "TX FD exhausted.\n");
+>> +			netif_stop_queue(ndev);
+>> +			spin_unlock_irqrestore(&priv->lock, flags);
+>> +			return NETDEV_TX_BUSY;
+>> +		}
+>> +	}
+>> +	entry = priv->cur_tx[q] % priv->num_tx_ring[q];
+>> +	priv->cur_tx[q]++;
+>> +	spin_unlock_irqrestore(&priv->lock, flags);
+>> +
+>> +	if (skb_put_padto(skb, ETH_ZLEN))
+>> +		return NETDEV_TX_OK;
+>> +
+>> +	priv->tx_skb[q][entry] = skb;
+>> +	buffer = PTR_ALIGN(priv->tx_buffers[q][entry], RAVB_ALIGN);
+>> +	memcpy(buffer, skb->data, skb->len);
+
+> ~1500 bytes memcpy(), not good...
+
+    I'm looking in the manual and not finding the hard requirement to have the 
+buffer address aligned to 128 bytes (RAVB_ALIGN), sigh... Kimura-san?
+
+>> +	desc = &priv->tx_ring[q][entry];
+
+> Since we have released the spinlock few lines above, is there something
+> protecting ravb_tx_free() from concurrently running with this xmit()
+> call and trashing this entry?
+
+    Probably nothing... :-)
+
+>> +	desc->ds = skb->len;
+>> +	desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
+>> +				    DMA_TO_DEVICE);
+>> +	if (dma_mapping_error(&ndev->dev, desc->dptr)) {
+>> +		dev_kfree_skb_any(skb);
+>> +		priv->tx_skb[q][entry] = NULL;
+
+> Don't you need to make sure this NULL is properly seen by ravb_tx_free()?
+
+    You mean doing this before releasing the spinlock? Or what?
+
+[...]
+
+WBR, Sergei
+
