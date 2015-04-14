@@ -1,40 +1,74 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Tue, 14 Apr 2015 19:58:18 +0300
-Message-ID: <552D472A.6080309@cogentembedded.com>
-References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <20150328082853.GA4255@localhost.localdomain> <5519D380.6070200@cogentembedded.com> <552C25BE.3070606@cogentembedded.com> <20150414052729.GA5179@netboy> <552CE890.3040103@cogentembedded.com> <20150414163002.GB4309@localhost.localdomain>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
+Date: Tue, 14 Apr 2015 18:14:43 +0100
+Message-ID: <20150414171443.GN28709@leverpostej>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+ <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20150414163002.GB4309@localhost.localdomain>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, masaru.nagai.vx@renesas.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tue, Apr 14, 2015 at 04:36:15PM +0100, Rob Herring wrote:
+> On Sat, Apr 11, 2015 at 2:20 PM, Rowand, Frank
+> <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> > In recent years there have been proposed tools to aid in the creation of valid
+> > device trees and in debugging device tree issues.  An example of this is the
+> > various approaches proposed (with source code provided) to validate device tree
+> > source against valid bindings.  As of today, device tree related tools,
+> > techniques, and debugging infrastructure have not progressed very far.  I have
+> > submitted a device tree related proposal for the Linux Plumbers 2015 conference
+> > to spur action and innovation in such tools, techniques, and debugging
+> > infrastructure.
+> >
+> > The current title of the track is "Device Tree Tools, Validation, and
+> > Troubleshooting".  The proposal is located at
+> >
+> >    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
+> >
+> > I am looking for several things at the moment:
+> >
+> >    1) Suggestions of additional topics to be discussed.
+> 
+> A few things on my list:
+> 
+> - Supported and not supported overlay usecases
 
-On 04/14/2015 07:30 PM, Richard Cochran wrote:
+I guess Kernel-driven overlay application (it's been called "quirks"
+elsewhere) would fall under this? It's rather scary, and would need
+fairly strict rules to be feasible and remain maintainable, which is
+going to limit where it can be used.
 
->>> It is surely avoidable.  The driver knows (or should know) whether or
->>> not the hardware has been configured or not.
+I think the core guys for that are on the list already?
 
->>     So you only want to avoid the register read here?
+> - Standardizing Android dtb handling. Appended DTB for arm64? Not
+> liked by upstream, but already in use.
 
-> No, that is not what I mean.  The two callers are gettime and adjtime.
-> Can't you make sure the hardware is ready before you register the
+If people are going to package a kernel and DTB together, it would be
+nice if they could at least be easily decomposed (using something like
+FIT).
 
-    I tried to explain to you that I can't. We enter the device configuration 
-mode (from the operation mode) when e.g. the *Ethernet* device is closed.
+So +1 for that discussion.
 
-> clock in the first place?  If not, what is purpose of returning EBUSY?
+> >    2) Emails or other messages expressing an interest in attending the
+> >       device tree track.
 
-    I'm not sure (remember, I'm not the primary author), perhaps this is to 
-prevent bad time values when the AVB-DMAC in not operational... Nagai-san, 
-could you explain this please?
+I'm interested.
 
-> Thanks,
-> Richard
+> >    3) Commitments to attend the device tree track (the conference committee
+> >       is looking at attendee interest and commitments as part of the process
+> >       of accepting the device tree track).
 
-WBR, Sergei
+If the DT track goes ahead, I'll be there.
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
