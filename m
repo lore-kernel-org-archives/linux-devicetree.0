@@ -1,104 +1,61 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [v2] powerpc/dts: Add some SoC specific "fsl,
- *-device-config" compatibles
-Date: Tue, 14 Apr 2015 13:25:23 +0300
-Message-ID: <1429007123-24649-1-git-send-email-igal.liberman@freescale.com>
+From: Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] clk: hi6220: Document devicetree bindings for
+ hi6220 clock
+Date: Tue, 14 Apr 2015 22:37:34 +0800
+Message-ID: <CAAS=xmip9WeN2AXH+YpQK9Un1TCaXkHbK-cRFcr3fMcFvrfhPQ@mail.gmail.com>
+References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com>
+	<2456827.cDpE8M58pn@wuerfel>
+	<552D09F7.7080603@huawei.com>
+	<5065055.RUNnjWsHWj@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5065055.RUNnjWsHWj@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org" <btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, z.liuxinliang-hv44wF8Li91hl2p70BpVqQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
-YXRjaCBhZGRzICJmc2wsPGNoaXA+LWRldmljZS1jb25maWciIGNvbXBhdGlibGVzIHRvIGd1dHMg
-bm9kZS4KVGhlIGFkZGVkIGNvbXBhdGlibGVzIHVzZWQgaW4gRnJlZXNjYWxlIEZNYW4gY2xvY2sg
-aW5pdGlhbGl6YXRpb24uCiAKVGhpcyBwYXRjaGVzIGlzIGRlc2NyaWJlZCBieSB0aGUgZm9sbG93
-aW5nIGJpbmRpbmcgZG9jdW1lbnQgdXBkYXRlOgoJaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9y
-Zy9wYXRjaC80NjExNTMvCgp2MjogVXBkYXRlZCBjb21taXQgbWVzc2FnZQoKU2lnbmVkLW9mZi1i
-eTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgotLS0KIGFyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kgfCAgICAzICsrLQogYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBvc3QuZHRzaSB8ICAgIDMgKystCiBhcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpICAgIHwgICAgMyArKy0KIGFyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgfCAgICAzICsrLQogYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaSB8ICAgIDMgKystCiBhcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpIHwgICAgMyArKy0KIGFyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgfCAgICAzICsrLQogNyBmaWxlcyBjaGFu
-Z2VkLCAxNCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9v
-dC9kdHMvZnNsL2I0NDIwc2ktcG9zdC5kdHNpCmluZGV4IDFlYTg2MDIuLjliMTRmMjQgMTAwNjQ0
-Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kKKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaQpAQCAtNzcsNyArNzcs
-OCBAQAogCX07CiAKIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29tcGF0aWJs
-ZSA9ICJmc2wsYjQ0MjAtZGV2aWNlLWNvbmZpZyIsICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0y
-LjAiOworCQljb21wYXRpYmxlID0gImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIiwgImZzbCxiNC1k
-ZXZpY2UtY29uZmlnIiwKKwkJCSAgICAgICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0yLjAiOwog
-CX07CiAKIAlnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL2I0ODYwc2ktcG9zdC5kdHNpCmluZGV4IDAyY2NkZTYuLjc0YTlmNWYgMTAwNjQ0Ci0tLSBh
-L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0LmR0c2kKKysrIGIvYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBvc3QuZHRzaQpAQCAtMjQ4LDcgKzI0OCw4IEBA
-CiAJfTsKIAogCWd1dHM6IGdsb2JhbC11dGlsaXRpZXNAZTAwMDAgewotCQljb21wYXRpYmxlID0g
-ImZzbCxiNDg2MC1kZXZpY2UtY29uZmlnIiwgImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTIuMCI7
-CisJCWNvbXBhdGlibGUgPSAiZnNsLGI0ODYwLWRldmljZS1jb25maWciLCAiZnNsLGI0LWRldmlj
-ZS1jb25maWciLAorCQkJICAgICAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4wIjsKIAl9Owog
-CiAJZ2xvYmFsLXV0aWxpdGllc0BlMTAwMCB7CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9v
-dC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNp
-LXBvc3QuZHRzaQppbmRleCBmOGMzMjVlLi5iYWJiMDc2IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvYjRzaS1wb3N0LmR0c2kKQEAgLTM5MSw3ICszOTEsOCBAQAogL2luY2x1ZGUvICJxb3Jp
-cS1tcGljNC4zLmR0c2kiCiAKIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29t
-cGF0aWJsZSA9ICJmc2wsYjQtZGV2aWNlLWNvbmZpZyI7CisJCWNvbXBhdGlibGUgPSAiZnNsLGI0
-LWRldmljZS1jb25maWciLAorCQkJICAgICAgImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTIuMCI7
-CiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNsLGhhcy1yc3RjcjsKIAkJZnNsLGxpb2Ru
-LWJpdHMgPSA8MTI+OwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0
-MXNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0
-c2kKaW5kZXggMWYxOGI4Yi4uYTdhZTVhZSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
-L3AyMDQxc2ktcG9zdC5kdHNpCkBAIC0zMTEsNyArMzExLDggQEAKIC9pbmNsdWRlLyAicW9yaXEt
-bXBpYy5kdHNpIgogCiAJZ3V0czogZ2xvYmFsLXV0aWxpdGllc0BlMDAwMCB7Ci0JCWNvbXBhdGli
-bGUgPSAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMS4wIjsKKwkJY29tcGF0aWJsZSA9ICJmc2ws
-cDIwNDEtZGV2aWNlLWNvbmZpZyIsCisJCQkgICAgICAiZnNsLHFvcmlxLWRldmljZS1jb25maWct
-MS4wIjsKIAkJcmVnID0gPDB4ZTAwMDAgMHhlMDA+OwogCQlmc2wsaGFzLXJzdGNyOwogCQkjc2xl
-ZXAtY2VsbHMgPSA8MT47CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Az
-MDQxc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3Qu
-ZHRzaQppbmRleCBhNTU1ZDI0Li44OWQwOGQ2IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9v
-dC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvcDMwNDFzaS1wb3N0LmR0c2kKQEAgLTMzOCw3ICszMzgsOCBAQAogL2luY2x1ZGUvICJxb3Jp
-cS1tcGljLmR0c2kiCiAKIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29tcGF0
-aWJsZSA9ICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiOworCQljb21wYXRpYmxlID0gImZz
-bCxwMzA0MS1kZXZpY2UtY29uZmlnIiwKKwkJCSAgICAgICJmc2wscW9yaXEtZGV2aWNlLWNvbmZp
-Zy0xLjAiOwogCQlyZWcgPSA8MHhlMDAwMCAweGUwMD47CiAJCWZzbCxoYXMtcnN0Y3I7CiAJCSNz
-bGVlcC1jZWxscyA9IDwxPjsKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
-cDQwODBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9z
-dC5kdHNpCmluZGV4IDBmZTcyODEuLjE4NjNkNmEgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9i
-b290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L2ZzbC9wNDA4MHNpLXBvc3QuZHRzaQpAQCAtMzU4LDcgKzM1OCw4IEBACiAvaW5jbHVkZS8gInFv
-cmlxLW1waWMuZHRzaSIKIAogCWd1dHM6IGdsb2JhbC11dGlsaXRpZXNAZTAwMDAgewotCQljb21w
-YXRpYmxlID0gImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTEuMCI7CisJCWNvbXBhdGlibGUgPSAi
-ZnNsLHA0MDgwLWRldmljZS1jb25maWciLAorCQkJICAgICAgImZzbCxxb3JpcS1kZXZpY2UtY29u
-ZmlnLTEuMCI7CiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNsLGhhcy1yc3RjcjsKIAkJ
-I3NsZWVwLWNlbGxzID0gPDE+OwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
-bC9wNTAyMHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1w
-b3N0LmR0c2kKaW5kZXggYTM0Y2EyMC4uZDk3OWQwMSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9k
-dHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpCkBAIC0zNDMsNyArMzQzLDggQEAKIC9pbmNsdWRlLyAi
-cW9yaXEtbXBpYy5kdHNpIgogCiAJZ3V0czogZ2xvYmFsLXV0aWxpdGllc0BlMDAwMCB7Ci0JCWNv
-bXBhdGlibGUgPSAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMS4wIjsKKwkJY29tcGF0aWJsZSA9
-ICJmc2wscDUwMjAtZGV2aWNlLWNvbmZpZyIsCisJCQkgICAgICAiZnNsLHFvcmlxLWRldmljZS1j
-b25maWctMS4wIjsKIAkJcmVnID0gPDB4ZTAwMDAgMHhlMDA+OwogCQlmc2wsaGFzLXJzdGNyOwog
-CQkjc2xlZXAtY2VsbHMgPSA8MT47Ci0tIAoxLjcuOS41CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
-cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9saW51eHBwYy1kZXY=
+Hello Arnd,
+
+2015-04-14 21:20 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Tuesday 14 April 2015 20:37:11 Bintian wrote:
+>> It's really a smart fix!
+>>
+>> For the four system controllers, how about change the following strings:
+>> +       - "hisilicon,aoctrl"
+>> +       - "hisilicon,sysctrl"
+>> +       - "hisilicon,mediactrl"
+>> +       - "hisilicon,pmctrl"
+>>
+>> to
+>> +       - "hisilicon,hi6220-aoctrl"
+>> +       - "hisilicon,hi6220-sysctrl"
+>> +       - "hisilicon,hi6220-mediactrl"
+>> +       - "hisilicon,hi6220-pmctrl"
+>
+> Yes, that works.
+Thanks, will fix in next version.
+
+>
+>> and I also use "hisilicon,hi6220-xxxx" for hi6220 clk driver directly ?
+>
+> Seems fine to me, though I'd have to look at the bigger picture to see
+> any potential problems. At the moment, I don't see any.
+Sure, please also help to review the 6/6 patch of this patch set, many thanks!
+
+BR,
+
+Bintian
+
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
