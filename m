@@ -1,46 +1,55 @@
-From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM: tegra: collection of enhancements/fixes
-Date: Tue, 14 Apr 2015 22:01:27 +0200
-Message-ID: <1429041687.3963.33.camel@localhost.localdomain>
-References: <cover.1428700856.git.marcel.ziswiler@toradex.com>
-	 <20150414125222.GB13446@ulmo.nvidia.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [v2] powerpc/dts: Add some SoC specific "fsl,*-device-config"
+ compatibles
+Date: Tue, 14 Apr 2015 15:09:25 -0500
+Message-ID: <1429042165.22867.683.camel@freescale.com>
+References: <1429007123-24649-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150414125222.GB13446-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt@kerne>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1429007123-24649-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-04-14 at 14:52 +0200, Thierry Reding wrote:
-> This duplicates a lot of a series that I've been carrying locally for
-> quite some time but never got around to posting publicly. Sorry about
-> that. I'll rebase what I have on top of this and then take this for
-> v4.2.
-
-OK, thanks Thierry.
-
-Two questions:
-
-A) You don't think it would make sense to get any of this applied sooner
-than v4.2?
-
-B) I would not need to post a second version of this series then?
-
-I just noticed that patch 8 is actually missing the pinmux entry for the
-touch interrupt which mandates a second version thereof. Or should I
-just send a fix for that as a separate patch later?
-
-BTW: I also noticed another regression with the following two patches
-causing a hard freeze on our Apalis/Colibri T30 modules upon starting X
-using a plain fbdev driver. This does not happen if I revert those two
-commits but it also does not happen if I disable X startup. Do you have
-any idea what might cause this?
-
-a9fe46
-ARM: tegra: Add memory controller support for Tegra30
-
-6d9adf
-ARM: tegra: Enable IOMMU for display controllers on Tegra30
+T24gVHVlLCAyMDE1LTA0LTE0IGF0IDEzOjI1ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBU
+aGlzIHBhdGNoIGFkZHMgImZzbCw8Y2hpcD4tZGV2aWNlLWNvbmZpZyIgY29tcGF0aWJsZXMgdG8g
+Z3V0cyBub2RlLgo+IFRoZSBhZGRlZCBjb21wYXRpYmxlcyB1c2VkIGluIEZyZWVzY2FsZSBGTWFu
+IGNsb2NrIGluaXRpYWxpemF0aW9uLgo+ICAKPiBUaGlzIHBhdGNoZXMgaXMgZGVzY3JpYmVkIGJ5
+IHRoZSBmb2xsb3dpbmcgYmluZGluZyBkb2N1bWVudCB1cGRhdGU6Cj4gCWh0dHBzOi8vcGF0Y2h3
+b3JrLm96bGFicy5vcmcvcGF0Y2gvNDYxMTUzLwo+IAo+IHYyOiBVcGRhdGVkIGNvbW1pdCBtZXNz
+YWdlCj4gCj4gU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVl
+c2NhbGUuY29tPgo+IC0tLQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0NDIwc2ktcG9z
+dC5kdHNpIHwgICAgMyArKy0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBv
+c3QuZHRzaSB8ICAgIDMgKystCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0
+LmR0c2kgICAgfCAgICAzICsrLQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2kt
+cG9zdC5kdHNpIHwgICAgMyArKy0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNp
+LXBvc3QuZHRzaSB8ICAgIDMgKystCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBz
+aS1wb3N0LmR0c2kgfCAgICAzICsrLQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIw
+c2ktcG9zdC5kdHNpIHwgICAgMyArKy0KPiAgNyBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25z
+KCspLCA3IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9k
+dHMvZnNsL2I0NDIwc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQy
+MHNpLXBvc3QuZHRzaQo+IGluZGV4IDFlYTg2MDIuLjliMTRmMjQgMTAwNjQ0Cj4gLS0tIGEvYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaQo+ICsrKyBiL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kKPiBAQCAtNzcsNyArNzcsOCBAQAo+
+ICAJfTsKPiAgCj4gIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKPiAtCQljb21wYXRp
+YmxlID0gImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIiwgImZzbCxxb3JpcS1kZXZpY2UtY29uZmln
+LTIuMCI7Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wsYjQ0MjAtZGV2aWNlLWNvbmZpZyIsICJmc2ws
+YjQtZGV2aWNlLWNvbmZpZyIsCj4gKwkJCSAgICAgICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0y
+LjAiOwo+ICAJfTsKCkkgdGhvdWdodCB5b3Ugc2FpZCB5b3Ugd2VyZSBnb2luZyB0byBkcm9wIHRo
+aXM/ICBQbGVhc2UganVzdCB1c2UgdGhlCmV4aXN0aW5nIGNvbXBhdGlibGVzLgoKLVNjb3R0CgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
+ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
+c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
