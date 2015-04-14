@@ -1,61 +1,50 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv2] ARM: socfpga: dts: Add a clock node for sdmmc CIU
-Date: Tue, 14 Apr 2015 11:05:19 -0500
-Message-ID: <1429027519-22209-1-git-send-email-dinguyen@opensource.altera.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 0/3] clk: socfpga: Add clock driver for Arria10
+Date: Tue, 14 Apr 2015 11:07:00 -0500
+Message-ID: <552D3B24.501@opensource.altera.com>
+References: <1428036055-27607-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, setka-3PjVBYxTQDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428036055-27607-1-git-send-email-dinguyen@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sboyd@codeaurora.org, mturquette@linaro.org
+Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Hi Mike, Stephen,
 
-The CIU(Card Interface Unit) get its clock from the sdmmc_clk_divided clock
-which is used to clock the card. The sdmmc_clk_divided clock is the sdmmc_clk
-passed through a fixed divider of 4. This patch adds the sdmmc_clk_divided
-node and makes the sdmmc_clk it's parent.
+On 04/02/2015 11:40 PM, dinguyen@opensource.altera.com wrote:
+> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+> 
+> Hi,
+> 
+> This patch series add the clock driver for the Arria10 platform. Although the
+> Arria10 SoC's clock framework has some similarities the Cyclone/Arria 5, the
+> differences are enough to warrant it's own driver, rather than polluting the
+> existing driver with platform lookups.
+> 
+> Dinh Nguyen (3):
+>   clk: socfpga: update clk.h so for Arria10 platform to use
+>   clk: socfpga: add a clock driver for the Arria 10 platform
+>   ARM: socfpga: dts: add clocks to the Arria10 platform
+> 
+>  arch/arm/boot/dts/socfpga_arria10.dtsi | 298 ++++++++++++++++++++++++++++++++-
+>  drivers/clk/socfpga/Makefile           |   1 +
+>  drivers/clk/socfpga/clk-gate-a10.c     | 187 +++++++++++++++++++++
+>  drivers/clk/socfpga/clk-gate.c         |   4 -
+>  drivers/clk/socfpga/clk-periph-a10.c   | 131 +++++++++++++++
+>  drivers/clk/socfpga/clk-pll-a10.c      | 132 +++++++++++++++
+>  drivers/clk/socfpga/clk.c              |   7 +-
+>  drivers/clk/socfpga/clk.h              |  10 +-
+>  8 files changed, 760 insertions(+), 10 deletions(-)
+>  create mode 100644 drivers/clk/socfpga/clk-gate-a10.c
+>  create mode 100644 drivers/clk/socfpga/clk-periph-a10.c
+>  create mode 100644 drivers/clk/socfpga/clk-pll-a10.c
+> 
 
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v2: renamed ciu_clk to sdmmc_clk_divided
----
- arch/arm/boot/dts/socfpga.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Just wondering if you have had a chance to look over this patch series?
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index d9176e6..be4beda 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -451,6 +451,14 @@
- 						clk-phase = <0 135>;
- 					};
- 
-+					sdmmc_clk_divided: sdmmc_clk_divided {
-+						#clock-cells = <0>;
-+						compatible = "altr,socfpga-gate-clk";
-+						clocks = <&sdmmc_clk>;
-+						clk-gate = <0xa0 8>;
-+						fixed-divider = <4>;
-+					};
-+
- 					nand_x_clk: nand_x_clk {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-gate-clk";
-@@ -635,7 +643,7 @@
- 			fifo-depth = <0x400>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-+			clocks = <&l4_mp_clk>, <&sdmmc_clk_divided>;
- 			clock-names = "biu", "ciu";
- 		};
- 
--- 
-2.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Dinh
