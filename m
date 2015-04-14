@@ -1,104 +1,155 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Tue, 14 Apr 2015 14:50:09 +0800
-Message-ID: <1428994209.13552.29.camel@mhfsdcap03>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
-	<CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
-	<1426677749.22581.38.camel@mhfsdcap03> <550C71B3.1080708@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <550C71B3.1080708-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH] dmaengine: xgene-dma: Fix sparse wannings and coccinelle warnings
+Date: Tue, 14 Apr 2015 12:34:00 +0530
+Message-ID: <1428995040-11815-1-git-send-email-rsahu@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sCiAgICAgIFRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIgY29uZmlybS4KICAgICAg
-QWJvdXQgdGhlIHYzIG9mIHRoZSBETUEtbWFwcGluZywgSSBoYXZlIHNvbWUgcXVlc3Rpb24gYmVs
-b3cuCgpPbiBGcmksIDIwMTUtMDMtMjAgYXQgMTk6MTQgKzAwMDAsIFJvYmluIE11cnBoeSB3cm90
-ZToKPiBPbiAxOC8wMy8xNSAxMToyMiwgWW9uZyBXdSB3cm90ZToKPiA+IEhpIFRvbWFzeiwKPiA+
-ICAgICBUaGFua3MgdmVyeSBtdWNoIGZvciB5b3VyIHJldmlldy4gcGxlYXNlIGhlbHAgY2hlY2sg
-YmVsb3cuCj4gPiBUaGUgb3RoZXJzIEkgd2lsbCBmaXggaW4gdGhlIG5leHQgdmVyc2lvbi4KPiA+
-Cj4gPiBIaSBSb2JpbiwKPiA+ICAgICBUaGVyZSBhcmUgc29tZSBwbGFjZSBJIHdvdWxkIGxpa2Ug
-eW91IGNhbiBoYXZlIGEgbG9vayBhbmQgZ2l2ZSBtZQo+ID4gc29tZSBzdWdnZXN0aW9uLgo+ID4K
-PiA+IE9uIFdlZCwgMjAxNS0wMy0xMSBhdCAxOTo1MyArMDkwMCwgVG9tYXN6IEZpZ2Egd3JvdGU6
-Cj4gPj4gSGksCj4gPj4KPiA+PiBQbGVhc2UgZmluZCBuZXh0IHBhcnQgb2YgbXkgY29tbWVudHMg
-aW5saW5lLgo+ID4+Cj4gPj4+ICsvKgo+ID4+PiArICogcGltdWRldiBpcyBhIGdsb2JhbCB2YXIg
-Zm9yIGRtYV9hbGxvY19jb2hlcmVudC4KPiA+Pj4gKyAqIEl0IGlzIG5vdCBhY2NlcGF0YWJsZSwg
-d2Ugd2lsbCBkZWxldGUgaXQgaWYgImRvbWFpbl9hbGxvYyIgaXMgZW5hYmxlZAo+ID4+Cj4gPj4g
-SXQgbG9va3MgbGlrZSB3ZSBpbmRlZWQgbmVlZCB0byB1c2UgZG1hX2FsbG9jX2NvaGVyZW50KCkg
-YW5kIHdlIGRvbid0Cj4gPj4gaGF2ZSBhIGdvb2Qgd2F5IHRvIHBhc3MgdGhlIGRldmljZSBwb2lu
-dGVyIHRvIGRvbWFpbl9pbml0IGNhbGxiYWNrLgo+ID4+Cj4gPj4gSWYgeW91IGRvbid0IGV4cGVj
-dCBTb0NzIGluIHRoZSBuZWFyZXN0IGZ1dHVyZSB0byBoYXZlIG11bHRpcGxlIE00VQo+ID4+IGJs
-b2NrcywgdGhlbiBJIGd1ZXNzIHRoaXMgZ2xvYmFsIHZhcmlhYmxlIGNvdWxkIHN0YXksIGFmdGVy
-IGNoYW5naW5nCj4gPj4gdGhlIGNvbW1lbnQgaW50byBhbiBleHBsYW5hdGlvbiB3aHkgaXQncyBj
-b3JyZWN0LiBBbHNvIGl0IHNob3VsZCBiZQo+ID4+IG1vdmVkIHRvIHRoZSB0b3Agb2YgdGhlIGZp
-bGUsIGJlbG93ICNpbmNsdWRlIGRpcmVjdGl2ZXMsIGFzIHRoaXMgaXMKPiA+PiB3aGVyZSB1c3Vh
-bGx5IGdsb2JhbCB2YXJpYWJsZXMgYXJlIGxvY2F0ZWQuCj4gPiBAUm9iaW4sCj4gPiAgICAgICBX
-ZSBoYXZlIG1lcmdlZCB0aGlzIHBhdGNoWzBdIGluIG9yZGVyIHRvIGRlbGV0ZSB0aGUgZ2xvYmFs
-IHZhciwgQnV0Cj4gPiBpdCBzZWVtcyB0aGF0IHlvdXIgcGF0Y2ggb2YgImFybTY0OklPTU1VIiBp
-c24ndCBiYXNlZCBvbiBpdCByaWdodCByb3cuCj4gPiBpdCB3aWxsIGJ1aWxkIGZhaWwuCj4gCj4g
-WWVhaCwgSSd2ZSBub3QgeWV0IG1hbmFnZWQgdG8gdHJ5IHB1bGxpbmcgaW4gdGhhdCBzZXJpZXMg
-KG11Y2ggYXMgSSAKPiBhcHByb3ZlIG9mIGl0KSwgcGFydGx5IGFzIEkga25vdyBkb2luZyBzbyBp
-cyBnb2luZyB0byBsZWFuIHRvd2FyZHMgYSAKPiBub3QtaW5zaWduaWZpY2FudCByZXdvcmsgYW5k
-IEknZCByYXRoZXIgYXZvaWQgcGlja2luZyB1cCBtb3JlIHVubWVyZ2VkIAo+IGRlcGVuZGVuY2ll
-cyB0byBibG9jayBnZXR0aW5nIF9zb21ldGhpbmdfIGluIGZvciBhcm02NCAod2hpY2ggd2UgY2Fu
-IAo+IHRoZW4gaW1wcm92ZSkuCj4gCj4gPgo+ID4gWzBdOmh0dHA6Ly9saXN0cy5saW51eGZvdW5k
-YXRpb24ub3JnL3BpcGVybWFpbC9pb21tdS8yMDE1LUphbnVhcnkvMDExOTM5Lmh0bWwKPiA+Cltz
-bmlwXQo+IAo+IENhbGxpbmcgYXJjaF9zZXR1cF9kbWFfb3BzKCkgZnJvbSB0aGUgZHJpdmVyIGxv
-b2tzIHBsYWluIHdyb25nLCAKPiBlc3BlY2lhbGx5IGdpdmVuIHRoYXQgeW91IGFwcGFyZW50bHkg
-YXR0YWNoIHRoZSBJT01NVSB0byBpdHNlbGYgLSBpZiB5b3UgCj4gd2FudCB5b3VyIG93biBkb21h
-aW4geW91IHNob3VsZCB1c2UgaW9tbXVfZG1hX2NyZWF0ZV9kb21haW4oKS4gSSBhZG1pdCAKPiB0
-aGF0IHN0aWxsIGxlYXZlcyB5b3UgaGF2aW5nIHRvIGRhbmNlIGFyb3VuZCBhIGJpdCBpbiBvcmRl
-ciB0byB0ZWFyIGRvd24gCj4gdGhlIGF1dG9tYXRpYyBkb21haW5zIGZvciBub3csIGJ1dCBob3Bl
-ZnVsbHkgd2UnbGwgZ2V0IHRoZSBjb3JlIGNvZGUgCj4gc29ydGVkIG91dCBzb29uZXIgcmF0aGVy
-IHRoYW4gbGF0ZXIuCj4gPj4+ICsKPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgbXRrX2lv
-bW11X2NvbmZpZ19wb3J0KHBpb21tdSwgcG9ydGlkKTsKPiA+Pj4gKwo+ID4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBpZiAoaSA9PSAwKQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGRldi0+YXJjaGRhdGEuZG1hX29wcyA9Cj4gPj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBwaW9tbXUtPmRldi0+YXJjaGRhdGEuZG1hX29wczsKPiA+Pgo+
-ID4+IFNob3VsZG4ndCB0aGlzIGJlIHNldCBhdXRvbWF0aWNhbGx5IGJ5IElPTU1VIG9yIERNQSBt
-YXBwaW5nIGNvcmU/Cj4gPiBAUm9iaW4sCj4gPiAgICAgICBJbiB0aGUgb3JpZ2luYWwgImFybV9p
-b21tdV9hdHRhY2hfZGV2aWNlIiBvZiBhcm0vbW0sIGl0IHdpbGwgY2FsbAo+ID4gc2V0X2RtYV9v
-cHMgdG8gYWRkIGlvbW11X29wcyBmb3IgZWFjaCBpb21tdSBkZXZpY2UuCj4gPiBCdXQgaW9tbXVf
-ZG1hX2F0dGFjaF9kZXZpY2UgZG9uJ3QgaGVscCB0aGlzLCBzbyBJIGhhdmUgdG8gYWRkIGl0IGhl
-cmUuCj4gPiBDb3VsZCB0aGlzIGJlIGltcHJvdmVkPwo+IAo+IElmIHlvdSBpbXBsZW1lbnRlZCBh
-IHNpbXBsZSBvZl94bGF0ZSBjYWxsYmFjayBzbyB0aGF0IHRoZSBjb3JlIGNvZGUgCj4gaGFuZGxl
-cyB0aGUgZG1hX29wcyBhcyBpbnRlbmRlZCwgSSB0aGluayB0aGUgc2ltcGxlc3QgY2hlYXQgd291
-bGQgYmUgdG8gCj4gY2hlY2sgdGhlIGNsaWVudCBkZXZpY2UncyBkb21haW4sIGVpdGhlciBvbiBh
-dHRhY2htZW50IG9yIHdoZW4gdGhleSAKPiBzdGFydCBtYXBwaW5nL3VubWFwcGluZywgYW5kIG1v
-dmUgdGhlbSB0byB5b3VyIG93biBkb21haW4gaWYgbmVjZXNzYXJ5LiAKPiBJJ20gcHV0dGluZyB0
-b2dldGhlciBhIHYzIG9mIHRoZSBETUEgbWFwcGluZyBzZXJpZXMsIHNvIEknbGwgaGF2ZSBhIGxv
-b2sgCj4gdG8gc2VlIGlmIEkgY2FuIHNxdWVlemUgaW4gYSB3YXkgdG8gbWFrZSB0aGF0IGEgYml0
-IGxlc3MgcGFpbmZ1bCB1bnRpbCAKPiB3ZSBzb2x2ZSBpdCBwcm9wZXJseS4KPiAKPiAKPiBSb2Jp
-bi4KPiAKICAgICAgSSBoYXZlIGltcGxlbWVudGVkIGEgc2ltcGxlIG9mX3hsYXRlLCBidXQgSSBj
-YW7igJl0IGdldCB0aGUgc3RhbmRhcmQKc3RydWN0IGRtYV9tYXBfb3BzIOKAnGlvbW11X2RtYV9v
-cHPigJ0gdG8gYXNzaWduZWQgaXQgdG8gdGhlIGNsaWVudCBkZXZpY2UuClNvIHRoZSB2MyBvZiBk
-bWEgbWFwcGluZyB3aWxsIGltcHJvdmUgdGhpcyBpc3N1ZT8gIAoKICAgICAgQW5kIElzIHRoZSB2
-MyBvZiB0aGUgRE1BLW1hcHBpbmcgYmFzZWQgb24gNC4wLXJjMT8gYmVjYXVzZSB3ZQpleHBlY3Qg
-aXQgY291bGQgY29udGFpbiB3aWxs4oCZcyBpby1wYWdldGFibGUuCgogICAgICBBbmQgd2hlbiB0
-aGUgdjMgd2lsbCBiZSByZWFkeT8KPiA+Pgo+ID4+PiArICAgICAgICAgICAgICAgfQo+ID4+PiAr
-ICAgICAgICAgICAgICAgaSsrOwo+ID4+PiArICAgICAgIH0KPiA+Pj4gKwo+ID4+PiArICAgICAg
-IHNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnByaXYtPnBvcnRsb2NrLCBmbGFncyk7Cj4gPj4+ICsK
-PiA+Pj4gK2ltdWRldjoKPiA+Pj4gKyAgICAgICByZXR1cm4gMDsKPiA+Pj4gK30KPiA+Pj4gKwo+
-ID4+PiArc3RhdGljIHZvaWQgbXRrX2lvbW11X2RldGFjaF9kZXZpY2Uoc3RydWN0IGlvbW11X2Rv
-bWFpbiAqZG9tYWluLAo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBz
-dHJ1Y3QgZGV2aWNlICpkZXYpCj4gPj4+ICt7Cj4gPj4KPiA+PiBObyBoYXJkd2FyZSAoZGUpY29u
-ZmlndXJhdGlvbiBvciBjbGVhbi11cCBuZWNlc3Nhcnk/Cj4gPiBJIHdpbGwgYWRkIGl0LiBBY3R1
-YWxseSB3ZSBkZXNpZ24gbGlrZSB0aGlzOklmIGEgZGV2aWNlIGhhdmUgYXR0YWNoZWQgdG8KPiA+
-IGlvbW11IGRvbWFpbiwgaXQgd29uJ3QgZGV0YWNoIGZyb20gaXQuCj4gPj4KPiA+Pj4gK30KPiA+
-Pj4gKwo+ID4gW3NuaXBdCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24u
-b3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lv
-bW11
+This patch fixes compilation sparse warnings like incorrect type in assignment
+(different base types), cast to restricted __le64, symbol
+'__UNIQUE_ID_author__COUNTER__' has multiple initializers etc and
+coccinelle warnings (No need to set .owner here. The core will do it.)
+
+This patch is based on slave-dma / for-linus branch.
+(commit: 9f2fd0dfa594d857fbdaeda523ff7a46f16567f5 [26/28]
+	dmaengine: Add support for APM X-Gene SoC DMA engine driver)
+
+Reported-by: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+---
+ drivers/dma/xgene-dma.c | 44 +++++++++++++++++++++-----------------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index aa61935..59f95db 100755
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -238,10 +238,10 @@
+ 	dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
+
+ struct xgene_dma_desc_hw {
+-	u64 m0;
+-	u64 m1;
+-	u64 m2;
+-	u64 m3;
++	__le64 m0;
++	__le64 m1;
++	__le64 m2;
++	__le64 m3;
+ };
+
+ enum xgene_dma_ring_cfgsize {
+@@ -388,12 +388,12 @@ static bool is_pq_enabled(struct xgene_dma *pdma)
+ 	return !(val & XGENE_DMA_PQ_DISABLE_MASK);
+ }
+
+-static void xgene_dma_cpu_to_le64(u64 *desc, int count)
++static void xgene_dma_cpu_to_le64(struct xgene_dma_desc_hw *desc)
+ {
+-	int i;
+-
+-	for (i = 0; i < count; i++)
+-		desc[i] = cpu_to_le64(desc[i]);
++	desc->m0 = cpu_to_le64(((u64 *)desc)[0]);
++	desc->m1 = cpu_to_le64(((u64 *)desc)[1]);
++	desc->m2 = cpu_to_le64(((u64 *)desc)[2]);
++	desc->m3 = cpu_to_le64(((u64 *)desc)[3]);
+ }
+
+ static u16 xgene_dma_encode_len(u32 len)
+@@ -499,9 +499,9 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
+
+ skip_additional_src:
+ 	/* Hardware stores descriptor in little endian format */
+-	xgene_dma_cpu_to_le64(desc1, 4);
++	xgene_dma_cpu_to_le64(desc1);
+ 	if (desc2)
+-		xgene_dma_cpu_to_le64(desc2, 4);
++		xgene_dma_cpu_to_le64(desc2);
+ }
+
+ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+@@ -540,8 +540,8 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+ 	}
+
+ 	/* Hardware stores descriptor in little endian format */
+-	xgene_dma_cpu_to_le64(desc1, 4);
+-	xgene_dma_cpu_to_le64(desc2, 4);
++	xgene_dma_cpu_to_le64(desc1);
++	xgene_dma_cpu_to_le64(desc2);
+
+ 	/* Update meta data */
+ 	*nbytes = len;
+@@ -1895,9 +1895,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_dma = devm_ioremap(&pdev->dev, res->start,
+ 				     resource_size(res));
+-	if (IS_ERR(pdma->csr_dma)) {
++	if (!pdma->csr_dma) {
+ 		dev_err(&pdev->dev, "Failed to ioremap csr region");
+-		return PTR_ERR(pdma->csr_dma);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get DMA ring csr region */
+@@ -1909,9 +1909,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_ring =  devm_ioremap(&pdev->dev, res->start,
+ 				       resource_size(res));
+-	if (IS_ERR(pdma->csr_ring)) {
++	if (!pdma->csr_ring) {
+ 		dev_err(&pdev->dev, "Failed to ioremap ring csr region");
+-		return PTR_ERR(pdma->csr_ring);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get DMA ring cmd csr region */
+@@ -1923,9 +1923,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_ring_cmd = devm_ioremap(&pdev->dev, res->start,
+ 					  resource_size(res));
+-	if (IS_ERR(pdma->csr_ring_cmd)) {
++	if (!pdma->csr_ring_cmd) {
+ 		dev_err(&pdev->dev, "Failed to ioremap ring cmd csr region");
+-		return PTR_ERR(pdma->csr_ring_cmd);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get efuse csr region */
+@@ -1937,9 +1937,9 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+
+ 	pdma->csr_efuse = devm_ioremap(&pdev->dev, res->start,
+ 				       resource_size(res));
+-	if (IS_ERR(pdma->csr_efuse)) {
++	if (!pdma->csr_efuse) {
+ 		dev_err(&pdev->dev, "Failed to ioremap efuse csr region");
+-		return PTR_ERR(pdma->csr_efuse);
++		return -ENOMEM;
+ 	}
+
+ 	/* Get DMA error interrupt */
+@@ -2076,7 +2076,6 @@ static struct platform_driver xgene_dma_driver = {
+ 	.remove = xgene_dma_remove,
+ 	.driver = {
+ 		.name = "X-Gene-DMA",
+-		.owner = THIS_MODULE,
+ 		.of_match_table = xgene_dma_of_match_ptr,
+ 	},
+ };
+@@ -2085,6 +2084,5 @@ module_platform_driver(xgene_dma_driver);
+
+ MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
+ MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>");
+-MODULE_AUTHOR("Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION("1.0");
+--
+1.8.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
