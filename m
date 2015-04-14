@@ -1,58 +1,116 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v7 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Tue, 14 Apr 2015 16:53:35 +0900
-Message-ID: <552CC77F.10801@samsung.com>
-References: <1426637856-3730-1-git-send-email-cw00.choi@samsung.com>
- <1426637856-3730-2-git-send-email-cw00.choi@samsung.com>
- <20150330160940.GA13731@leverpostej> <5519E2B6.2030905@samsung.com>
- <20150402173558.GB30669@leverpostej> <551DD321.6030707@samsung.com>
- <20150407102523.GA23190@leverpostej> <20150413105618.GD4076@leverpostej>
- <552BB14A.6010205@samsung.com> <20150413154949.GI4076@leverpostej>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] clocksource: arm_global_timer: Detect if gt is usable
+ with CPU_FREQ
+Date: Tue, 14 Apr 2015 10:06:18 +0200
+Message-ID: <552CCA7A.3090306@st.com>
+References: <552BFED9.3020105@adapteva.com> <552CC490.4010002@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20150413154949.GI4076@leverpostej>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, "kgene@kernel.org" <kgene@kernel.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <552CC490.4010002-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?windows-1252?Q?S=F6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin and Mark,
+Hi Srini, Ola,
 
-On 04/14/2015 12:49 AM, Mark Rutland wrote:
->>>>>> So NAK to the PSCI node and PSCI enable method in this dts until we
->>>>>> either have a working firmware, or a reasonable mechanism to handle the
->>>>>> deficiency.
->>>>>
->>>>> There is only CPU0 hotplug issue. Excpet CPU{1-7} are well working.
->>>>
->>>> I understand that, but the issue with CPU0 is still a blocker from my
->>>> PoV.
->>>>
->>>>> To fix this issue, we must need the help of firmware developer.
->>>>> But, We never get the any help.
->>>>
->>>> Previously dyou said that you did not have access to the source code
->>>> rather than not having help from the relevant firmware engineers. I take
->>>> it you have informed them of the issue with CPU0?
+On 04/14/2015 09:41 AM, Srinivas Kandagatla wrote:
+> +Adding Pete and Maxime
+>
+> Hi Ola,
+> Thankyou for sending the patch,
+>
+> I like the Idea, but I have some specific concerns which would break 
+> existing SOCs.
+
+I like the idea too.
+
+>
+>
+> On 13/04/15 18:37, Ola Jeppsson wrote:
+>> Some Cortex A9 CPU:s (e.g. zynq) have the tick tied to the CPU
+>> frequency. On those CPU:s we cannot use the global-timer as a reliable
+>> clocksource with CPU frequency scaling enabled since this is not
+>> currently taken into account by the driver.
 >>
->> I didn't ask any help to firmware engineer because I didn't know who firmware engineer
->> and also didn't access the source code. If I knew the engineer and can access them,
->> I would have asked some help to them or inquired the reason about CPU0 not hotplugged.
-> 
-> You must have acquired the firmware (or board(s) with the firmware
-> preloaded) from somewhere. Surely you can work backwards from there to
-> file a bug report and/or inquire as to who you need to speak to...
+>> Add a "tied-to-cpu-freq" boolean to the global-timer dt node indicate
+>> this condition.
+>>
+>> When the global-timer register function sees this property return
+>> immediately and don't register the clocksource.
+>>
+>> Signed-off-by: Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/arm/global_timer.txt | 4 ++++
+>>   drivers/clocksource/arm_global_timer.c                 | 7 +++++++
+>>   2 files changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/global_timer.txt 
+>> b/Documentation/devicetree/bindings/arm/global_timer.txt
+>> index bdae3a818793..465e02c17b5b 100644
+>> --- a/Documentation/devicetree/bindings/arm/global_timer.txt
+>> +++ b/Documentation/devicetree/bindings/arm/global_timer.txt
+>> @@ -17,6 +17,10 @@
+>>
+>>   - clocks : Should be phandle to a clock.
+>>
+>> +** Timer node optional properties:
+>> +
+>> +- tied-to-cpu-freq : indicates that the timer scales with the CPU 
+>> frequency.
+>> +
+>>   Example:
+>>
+>>       timer@2c000600 {
+>> diff --git a/drivers/clocksource/arm_global_timer.c 
+>> b/drivers/clocksource/arm_global_timer.c
+>> index e6833771a716..8913ebda3f09 100644
+>> --- a/drivers/clocksource/arm_global_timer.c
+>> +++ b/drivers/clocksource/arm_global_timer.c
+>> @@ -268,6 +268,13 @@ static void __init 
+>> global_timer_of_register(struct device_node *np)
+>>           return;
+>>       }
+>>
+>> +#ifdef CONFIG_CPU_FREQ
+>> +    if (of_property_read_bool(np, "tied-to-cpu-freq")) {
+>> +        pr_warn("global-timer: tied to cpu frequency, not supported 
+>> with scaling\n");
+>> +        return;
+>> +    }
+>> +#endif
+>> +
+>
+> This patch would not let the SOC like STiH415/416 or zynq with 
+> "tied-to-cpu-freq" property to boot with multi_v7_defconfig. Which is 
+> not correct thing to do, as STi SOC's do not use cpufreq driver 
+> however the tick is tied to this clocksource.
+Yes, you are right, but I don't see any cleaner way to do this.
 
-As you commented, I got the board that firmware was preloaded.
-Unfortunately, I didn't know the any routine to contact firmware developer
-and developer about SoC design.
+On STi, we have another timer we can use as a clocksource when doing CPU 
+Freq, the ST LPC timer.
+It is not upstreamed yet, but we will try to have it for next release.
 
-Dear Kukjin,
-I need your help about CPU0 issue of Exynos SoC.
-Could you answer why CPU0 cannot be hotplugged on Exynos SoC?
+I propose we set the "tied-to-cpu-freq" in GT node of STi family as soon 
+as we enable the LPC timer one.
+Doing that, the STi boot won't break in multi_v7 config.
 
-Thanks,
-Chanwoo Choi
+Kind regards,
+Maxime
+
+>
+>
+>
+> --srini
+>
+>>       gt_clk = of_clk_get(np, 0);
+>>       if (!IS_ERR(gt_clk)) {
+>>           err = clk_prepare_enable(gt_clk);
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
