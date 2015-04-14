@@ -1,147 +1,130 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Tue, 14 Apr 2015 13:02:40 +0300
-Message-ID: <552CE5C0.3010207@ti.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com> <1427980385-21285-3-git-send-email-r.baldyga@samsung.com> <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com> <55264148.8070903@samsung.com> <55264534.4020006@samsung.com> <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com> <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com> <55279550.1060609@samsung.com> <552CE579.6060702@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: mediatek: Add smi dts binding
+Date: Tue, 14 Apr 2015 11:06:58 +0100
+Message-ID: <20150414100657.GB28709@leverpostej>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+ <1425638900-24989-4-git-send-email-yong.wu@mediatek.com>
+ <20150306111338.GD8700@leverpostej>
+ <1429002474.14855.7.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552CE579.6060702-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429002474.14855.7.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixed Kishon's id.
+On Tue, Apr 14, 2015 at 10:07:54AM +0100, Yong Wu wrote:
+> Hi Mark,
+>     Thanks very much for review.=20
+>     About the clock name should be the PoV of _this_ device. Could yo=
+u
+> help check below?
+>=20
+> On Fri, 2015-03-06 at 11:13 +0000, Mark Rutland wrote:
+> > On Fri, Mar 06, 2015 at 10:48:18AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrot=
+e:
+> > > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >=20
+> > > This patch add smi binding document.
+> >=20
+> > Please move binding documents to the start of the series. It makes
+> > things far easier to review.
+> >=20
+> > >=20
+> > > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi=
+=2Etxt
+> > > @@ -0,0 +1,17 @@
+> > > +SMI hardware block diagram please help check <bindings/iommu/med=
+iatek,iommu.txt>
+> > > +
+> > > +Required properties:
+> > > +- compatible : must be "mediatek,mediatek,mt8173-smi-larb"
+> >=20
+> > Double vendor prefix?
+> >=20
+> > What does "larb" mean? It would be nice for the intorductory paragr=
+aph
+> > in this file to explain.
+> >=20
+> > > +- reg : the register of each local arbiter
+> > > +- clocks : the clocks of each local arbiter
+> > > +- clock-name: larb_sub*(3 clockes at most)
+> >=20
+> > The names required _must_ be specified here, or clock-names is
+> > pointless.
+> >=20
+> > The clock names should be from the PoV of _this_ device (i.e. they
+> > should be the names of the inputs) not from the PoV of the provider
+> > (i.e. they should not be the names of the outputs from the provider=
+).
+> >=20
+> > Mark.
+> >=20
+>      After we check with our SMI Designer. Every SMI local arbiter ne=
+ed
+> two clocks, which is called  APB clocks and SMI clock.
+>      APB clock : Advanced Peripheral Bus Clock. It is the clock for
+> setting the register of local arbiter.
+>      SMI clock : Smart Multimedia Interface Clock, It is the clock fo=
+r
+> transfering the data and command.=20
+>=20
+>      And all the local arbiters need the smi common clock, so we
+> separate it.=20
+>=20
+>      Then I prepare to design the smi the dtsi like this:=20
+>=20
+>       smi_common:smi@14022000 {
+>                  compatible =3D =E2=80=9Cmediate, mt8173-smi=E2=80=9D=
+;
+>                  reg =3D <0 0x14022000 0 0x1000>;
+>                  clocks =3D <&mmsys MM_SMI_COMMON>;
+>                  clocks-names =3D =E2=80=9Csmi_common=E2=80=9D;
+>       };
+>=20
+>       larb0: larb@14021000 {
+>                  compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=E2=80=
+=9D;
+>                  reg =3D <0 0x14021000 0 0x1000>;
+>                  smi =3D <&smi_common>;
+>                  clocks =3D <&mmsys MM_SMI_LARB0>,=20
+> 		 	<&mmsys MM_SMI_LARB0>;
+>                  clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=9C=
+smi_clk=E2=80=9D;
+>      };
+>=20
+>      larb1: larb@16010000 {
+>                  compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=E2=80=
+=9D;
+>                  reg =3D <0 0x16010000 0 0x1000>;
+>                  smi =3D <&smi_common>;
+>                  clocks =3D <&vdecsys VDEC_CKEN>,=20
+> 			 <&mmsys VDEC_LARB_CKEN>;
+>                  clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=9C=
+smi_clk=E2=80=9D;
+>       };
+>       =E2=80=A6=20
+>      In some local arbiter, the source clock of the APB clock and the
+> SMI clock may be the same, like larb0. so the two clocks are the same=
+=2E
+> And they may be different in other local arbiteres, like larb1.     =20
+>=20
+>      If it is designed like this, is it ok?
 
-On 14/04/15 13:01, Roger Quadros wrote:
-> On 10/04/15 12:18, Chanwoo Choi wrote:
->> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
->>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
->>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
->>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
->>>>>> Hi Robert,
->>>>>>
->>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
->>>>>>> Hi Chanwoo,
->>>>>>>
->>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->>>>>>>> Hi Robert,
->>>>>>>>
->>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>>>>>>>> Hi Chanwoo,
->>>>>>>>>
->>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>>>>>>>> Hi Robert,
->>>>>>>>>>
->>>>>>>>
->>>>>>>> [snip]
->>>>>>>>
->>>>>>>>>> But, I have one question about case[3]
->>>>>>>>>>
->>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> It's because state of single USB cable connection cannot be completely
->>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
->>>>>>>>> and ID), so we need to use two cables for single cable connection. We
->>>>>>>>> use following convention:
->>>>>>>>> cable "USB" = VBUS
->>>>>>>>> cable "USB-HOST" = !ID.
->>>>>>>>
->>>>>>>> I think that extcon provider driver have to update the only one cable state
->>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->>>>>>>> at the same time through one h/w port.
->>>>>>>>
->>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>>>>>>>
->>>>>>>
->>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
->>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
->>>>>>> detected cable type is USB host). Devices would need to have complete
->>>>>>> information about USB cable connection, because OTG state machine needs
->>>>>>
->>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
->>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
->>>>>>
->>>>>
->>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
->>>>> machine. It needs to know exact VBUS and ID states, which cannot be
->>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
->>>>> name together with "USB" to pass additional information about USB cable
->>>>> connection.
->>>>
->>>> I think this method is not proper to support this case.
->>>> It may cause the confusion about other case using USB/USB-HOST cable state
->>>> except of you commented case.
->>>
->>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
->>> with old names. It seems to be simpler solution than adding new
->>> mechanism notifying about VBUS and ID states changes.
->>
->>
->> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
->> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
->> name continuoulsy.
->>
->> I think that extcon core provide the helper API to get the value of VBUS.
->> But I need to consider it.
-> 
-> Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
-> VBUS and ID information reliably.
-> This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
-> and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
-> attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
-> capturing only the ID pin state.
-> 
-> I can suggest the following options
-> a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
-> Maybe call it "USB-POWER" or something.
-> 
-> NOTE: "USB-POWER" can become attached simultaneously with "USB" or "USB-HOST". But "USB-POWER" is now really
-> a different cable like "Fast-Charger" or "Slow-Charger".
-> 
-> b) stop using extcon framework for USB VBUS and ID notification.
-> 
-> cheers,
-> -roger
-> 
->>
->>>
->>>>
->>>>>
->>>>>> I don't agree. 
->>>>>>
->>>>>>> that. As I wrote, current USB cable names are misleading. It would be
->>>>>>> better to have "USB-VBUS" and "USB-ID".
->>>>>>
->>>>>> It is strange cable name. I prefer to use only 'USB' cable name.
->>>>>> But, we could support the other method to get the state of whether USB-VBUS or USB-ID
->>>>>> by using helper API or others.
->>>>>>
->>>>>
->>>>> Ok, so do you have any idea how to do it? Do we want to supply
->>>>> additional API for notifying about VBUS and ID changes?
->>>>
->>>> No, we need to consider more standard solution to support this case.
->>>>
->>>
->>> Thanks,
->>> Robert Baldyga
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>> Please read the FAQ at  http://www.tux.org/lkml/
->>>
->>
-> 
+That looks pretty good; the clocks and names on the larb nodes seem
+sensible.
 
+The naming of the "smi_common" clock on the smi_common node looks a bit
+odd though. Is that really what the clock input is called?
+
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
