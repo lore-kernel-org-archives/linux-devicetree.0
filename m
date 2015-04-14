@@ -1,106 +1,125 @@
-From: YiPing Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] clk: hi6220: Clock driver support for Hisilicon
- hi6220 SoC
-Date: Tue, 14 Apr 2015 16:53:45 +0800
-Message-ID: <552CD599.4010705@hisilicon.com>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com> <2254597.TWaxeZsKvK@wuerfel> <552BCB5A.8010705@huawei.com> <3183355.UnoLoN8dF8@wuerfel>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: mediatek: Add smi dts binding
+Date: Tue, 14 Apr 2015 17:07:54 +0800
+Message-ID: <1429002474.14855.7.camel@mhfsdcap03>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	 <1425638900-24989-4-git-send-email-yong.wu@mediatek.com>
+	 <20150306111338.GD8700@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3183355.UnoLoN8dF8@wuerfel>
+In-Reply-To: <20150306111338.GD8700@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, btw-aAikPa0K0u50tdys+9eLAQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, sboyd@codeaurora.o
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2015/4/13 23:34, Arnd Bergmann =E5=86=99=E9=81=93:
-> On Monday 13 April 2015 21:57:46 Bintian wrote:
->> Hello Arnd,
->>
->> Thanks for your code review.
->>
->> On 2015/4/13 21:30, Arnd Bergmann wrote:
->>> On Monday 13 April 2015 17:17:38 Bintian Wang wrote:
->>>> +#define HI6220_CFG_CSI2PHY     8
->>>> +#define HI6220_ISP_SCLK_GATE   9
->>>> +#define HI6220_ISP_SCLK_GATE1  10
->>>> +#define HI6220_ADE_CORE_GATE   11
->>>> +#define HI6220_CODEC_VPU_GATE  12
->>>> +#define HI6220_MED_SYSPLL      13
->>>> +
->>>> +/* mux clocks */
->>>> +#define HI6220_1440_1200       20
->>>> +#define HI6220_1000_1200       21
->>>> +#define HI6220_1000_1440       22
->>>> +
->>>> +/* divider clocks */
->>>> +#define HI6220_CODEC_JPEG      30
->>>> +#define HI6220_ISP_SCLK_SRC    31
->>>> +#define HI6220_ISP_SCLK1       32
->>>>
->>>
->>> The numbers seem rather arbitrary, and you have both holes as well =
-as duplicate
->>> numbers here. I would suggest you do one of two things instead:
->
->> I just worry about some special clocks may be added later so keep so=
-me
->> holes for them;
->>
->> The duplicate numbers means clocks belong to different system contro=
-l
->> domains.
->
-> I don't understand. How would there be additional clocks added later?
-> Wouldn't that be a new chip?
+Hi Mark,
+    Thanks very much for review.=20
+    About the clock name should be the PoV of _this_ device. Could you
+help check below?
 
-   There are some clocks not used in linux system. e.g, some clocks are=
-=20
-used in base band processor. So, some numbers are not defined here.
+On Fri, 2015-03-06 at 11:13 +0000, Mark Rutland wrote:
+> On Fri, Mar 06, 2015 at 10:48:18AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >=20
+> > This patch add smi binding document.
+>=20
+> Please move binding documents to the start of the series. It makes
+> things far easier to review.
+>=20
+> >=20
+> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.t=
+xt
+> > @@ -0,0 +1,17 @@
+> > +SMI hardware block diagram please help check <bindings/iommu/media=
+tek,iommu.txt>
+> > +
+> > +Required properties:
+> > +- compatible : must be "mediatek,mediatek,mt8173-smi-larb"
+>=20
+> Double vendor prefix?
+>=20
+> What does "larb" mean? It would be nice for the intorductory paragrap=
+h
+> in this file to explain.
+>=20
+> > +- reg : the register of each local arbiter
+> > +- clocks : the clocks of each local arbiter
+> > +- clock-name: larb_sub*(3 clockes at most)
+>=20
+> The names required _must_ be specified here, or clock-names is
+> pointless.
+>=20
+> The clock names should be from the PoV of _this_ device (i.e. they
+> should be the names of the inputs) not from the PoV of the provider
+> (i.e. they should not be the names of the outputs from the provider).
+>=20
+> Mark.
+>=20
+     After we check with our SMI Designer. Every SMI local arbiter need
+two clocks, which is called  APB clocks and SMI clock.
+     APB clock : Advanced Peripheral Bus Clock. It is the clock for
+setting the register of local arbiter.
+     SMI clock : Smart Multimedia Interface Clock, It is the clock for
+transfering the data and command.=20
 
-> If you have separate system control domains, doesn't that mean that y=
-ou
-> also have separate DT bindings?
->
->>> a) have a separate header file per clock driver and make all the
->>>      numbers unique and consecutive within that header
->>>
->>> b) use the same numbers as the hardware registers so you can put th=
-e
->>>      numbers directly into the dts and don't need a header to creat=
-e
->>>      an artificial ABI between the clock driver and the boot loader=
-=2E
->> This header file will be used by device tree (I like using the clock
->> name instead "magic number" in dts :) )
->
-> That's not how it works though: The dts file is the place to define
-> the hardware numbers, we do that for all sorts of numbers: interrupts=
-,
-> gpios, register ranges etc are all defined in dts to avoid putting
-> magic numbers in external header files.
->
-> There are some cases where it gets too ugly for clock controllers
-> that are highly irregular, but yours doesn't seem to be that kind.
->
-> E.g. all the fixed rate clocks should just be separate device nodes,
-> which lets you remove the binding for that node.
->
->> so how about keep them in one header file and let dts just include
->> one header file (not four files), but remove the holes?
->
-> The header files constantly cause problems with merge dependencies,
-> and we have some other companies that keep releasing new chips
-> that each time require a new header file. If hisilicon plans to make
-> more chips like this one, please consider coming up with more
-> generic bindings to avoid this.
->
-> 	Arnd
->
-> .
->
+     And all the local arbiters need the smi common clock, so we
+separate it.=20
+
+     Then I prepare to design the smi the dtsi like this:=20
+
+      smi_common:smi@14022000 {
+                 compatible =3D =E2=80=9Cmediate, mt8173-smi=E2=80=9D;
+                 reg =3D <0 0x14022000 0 0x1000>;
+                 clocks =3D <&mmsys MM_SMI_COMMON>;
+                 clocks-names =3D =E2=80=9Csmi_common=E2=80=9D;
+      };
+
+      larb0: larb@14021000 {
+                 compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=E2=80=
+=9D;
+                 reg =3D <0 0x14021000 0 0x1000>;
+                 smi =3D <&smi_common>;
+                 clocks =3D <&mmsys MM_SMI_LARB0>,=20
+		 	<&mmsys MM_SMI_LARB0>;
+                 clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=9Cs=
+mi_clk=E2=80=9D;
+     };
+
+     larb1: larb@16010000 {
+                 compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=E2=80=
+=9D;
+                 reg =3D <0 0x16010000 0 0x1000>;
+                 smi =3D <&smi_common>;
+                 clocks =3D <&vdecsys VDEC_CKEN>,=20
+			 <&mmsys VDEC_LARB_CKEN>;
+                 clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=9Cs=
+mi_clk=E2=80=9D;
+      };
+      =E2=80=A6=20
+     In some local arbiter, the source clock of the APB clock and the
+SMI clock may be the same, like larb0. so the two clocks are the same.
+And they may be different in other local arbiteres, like larb1.     =20
+
+     If it is designed like this, is it ok?
+
+> > +
+> > +Example:
+> > +	larb1:larb@16010000 {
+> > +	        compatible =3D "mediatek,mt8173-smi-larb";
+> > +		reg =3D <0 0x16010000 0 0x1000>;
+> > +		clocks =3D <&mmsys MM_SMI_COMMON>,
+> > +		        <&vdecsys VDEC_CKEN>,
+> > +                        <&vdecsys VDEC_LARB_CKEN>;
+> > +		clock-names =3D "larb_sub0", "larb_sub1", "larb_sub2";
+> > +	};
+> > --=20
+> > 1.8.1.1.dirty
+> >=20
+> >=20
 
 
 --
