@@ -1,49 +1,28 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 5/5] arm64: qcom: add cpu operations
-Date: Tue, 14 Apr 2015 22:51:40 +0200
-Message-ID: <2167031.4Enm47D6vo@wuerfel>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org> <1428601031-5366-6-git-send-email-galak@codeaurora.org> <20150414162953.GL28709@leverpostej>
+Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
+Date: Tue, 14 Apr 2015 22:58:46 +0200
+Message-ID: <10482596.MaespZJCtk@wuerfel>
+References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net> <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150414162953.GL28709@leverpostej>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>
+Return-path: <linux-embedded-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com>
+Sender: linux-embedded-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "Rowand, Frank" <Frank.Rowand@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-compiler@vger.kernel.org" <devicetree-compiler@vger.kernel.org>, "linux-embedded@vger.kernel.org" <linux-embedded@vger.kernel.org>, "celinux-dev@lists.celinuxforum.org" <celinux-dev@lists.celinuxforum.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Jon Loeliger <jdl@jdl.com>, Gaurav Minocha <gaurav.minocha.os@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 14 April 2015 17:29:53 Mark Rutland wrote:
+On Tuesday 14 April 2015 10:36:15 Rob Herring wrote:
 > 
-> > +static int msm_cpu_boot(unsigned int cpu)
-> > +{
-> > +       int ret = 0;
-> > +
-> > +       if (per_cpu(cold_boot_done, cpu) == false) {
-> > +               ret = msm_unclamp_secondary_arm_cpu(cpu);
-> > +               if (ret)
-> > +                       return ret;
-> > +               per_cpu(cold_boot_done, cpu) = true;
-> > +       }
-> > +       return secondary_pen_release(cpu);
-> > +}
+> >    4) Identifying additional people who should attend the device tree track.
 > 
-> Ah, so cold_boot_done is for pseudo-hotplug. Absolute NAK to that.
-> 
-> The only thing this gives you over spin-table is one-time powering up of
-> the CPUs that can be performed prior to entry to Linux. If you do that,
-> you can trivially share the spin-table code by setting each CPU's
-> enable-method to "spin-table".
-> 
-> That won't give you cpuidle or actual hotplug. For those you'll need
-> PSCI.
+> Arnd Bergmann
+> Matt Porter
+> Jon Loeliger
+> Gaurav Minocha
 
-Maybe a way out for the broken firmware is to have a custom boot wrapper
-that gets distributed separately and that uses the normal spin-table
-API. We've done similar things on arch/arm/mach-sunxi for boot loaders
-that are just too different from what we expect.
-
-Once someone implements a proper loader, they could skip that extra
-wrapper.
+Sorry, I won't be there. I should have replied earlier, but I'll be on
+parental leave at the time.
 
 	Arnd
