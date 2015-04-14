@@ -1,163 +1,138 @@
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Subject: Re: [PATCH] power_supply: Add TI BQ24257 charger driver
-Date: Tue, 14 Apr 2015 12:49:22 +0300
-Message-ID: <20150414094922.GA3838@lpalcu-linux>
-References: <1428671897-12232-1-git-send-email-laurentiu.palcu@intel.com>
- <552BC09D.9040502@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Tue, 14 Apr 2015 13:01:29 +0300
+Message-ID: <552CE579.6060702@ti.com>
+References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com> <1427980385-21285-3-git-send-email-r.baldyga@samsung.com> <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com> <55264148.8070903@samsung.com> <55264534.4020006@samsung.com> <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com> <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com> <55279550.1060609@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <552BC09D.9040502@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55279550.1060609@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, Robert Baldyga <r.baldyga@samsung.com>
+Cc: myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, "Balbi, Felipe" <balbi@ti.com>, kishon@ti.comg, Peter Chen <peter.chen@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2015 at 10:11:57PM +0900, Krzysztof Kozlowski wrote:
-> W dniu 10.04.2015 o 22:18, Laurentiu Palcu pisze:
-> >Based on the datasheet found here:
-> >http://www.ti.com/lit/ds/symlink/bq24257.pdf
-> >
-> >Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+On 10/04/15 12:18, Chanwoo Choi wrote:
+> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+>>>>> Hi Robert,
+>>>>>
+>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+>>>>>> Hi Chanwoo,
+>>>>>>
+>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>>>>>>> Hi Robert,
+>>>>>>>
+>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>>>>>>> Hi Chanwoo,
+>>>>>>>>
+>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>>>>>>> Hi Robert,
+>>>>>>>>>
+>>>>>>>
+>>>>>>> [snip]
+>>>>>>>
+>>>>>>>>> But, I have one question about case[3]
+>>>>>>>>>
+>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> It's because state of single USB cable connection cannot be completely
+>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>>>>>>> and ID), so we need to use two cables for single cable connection. We
+>>>>>>>> use following convention:
+>>>>>>>> cable "USB" = VBUS
+>>>>>>>> cable "USB-HOST" = !ID.
+>>>>>>>
+>>>>>>> I think that extcon provider driver have to update the only one cable state
+>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>>>>>>> at the same time through one h/w port.
+>>>>>>>
+>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+>>>>>>>
+>>>>>>
+>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+>>>>>> detected cable type is USB host). Devices would need to have complete
+>>>>>> information about USB cable connection, because OTG state machine needs
+>>>>>
+>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+>>>>>
+>>>>
+>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+>>>> machine. It needs to know exact VBUS and ID states, which cannot be
+>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+>>>> name together with "USB" to pass additional information about USB cable
+>>>> connection.
+>>>
+>>> I think this method is not proper to support this case.
+>>> It may cause the confusion about other case using USB/USB-HOST cable state
+>>> except of you commented case.
+>>
+>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+>> with old names. It seems to be simpler solution than adding new
+>> mechanism notifying about VBUS and ID states changes.
 > 
-> (...)
 > 
-> >diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> >new file mode 100644
-> >index 0000000..58b9af1
-> >--- /dev/null
-> >+++ b/drivers/power/bq24257_charger.c
-> >@@ -0,0 +1,868 @@
-> >+/*
-> >+ * TI BQ24257 charger driver
-> >+ *
-> >+ * Copyright (C) 2015 Intel Corporation
-> >+ *
-> >+ * This program is free software; you can redistribute it and/or modify
-> >+ * it under the terms of the GNU General Public License as published by
-> >+ * the Free Software Foundation; either version 2 of the License, or
-> >+ * (at your option) any later version.
-> >+ *
-> >+ * This program is distributed in the hope that it will be useful,
-> >+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >+ * GNU General Public License for more details.
-> >+ *
-> >+ */
-> >+
-> >+#include <linux/module.h>
-> >+#include <linux/i2c.h>
-> >+#include <linux/power_supply.h>
-> >+#include <linux/regmap.h>
-> >+#include <linux/types.h>
-> >+#include <linux/gpio/consumer.h>
-> >+#include <linux/interrupt.h>
-> >+#include <linux/delay.h>
-> >+
-> >+#include <linux/acpi.h>
-> >+#include <linux/of.h>
-> >+
-> >+#define BQ24257_REG_1			0x00
-> >+#define BQ24257_REG_2			0x01
-> >+#define BQ24257_REG_3			0x02
-> >+#define BQ24257_REG_4			0x03
-> >+#define BQ24257_REG_5			0x04
-> >+#define BQ24257_REG_6			0x05
-> >+#define BQ24257_REG_7			0x06
-> >+
-> >+#define BQ24257_MANUFACTURER		"Texas Instruments"
-> >+#define BQ24257_STAT_IRQ		"stat"
-> >+#define BQ24257_PG_GPIO			"pg"
-> >+
-> >+#define BQ24257_ILIM_SET_DELAY		1000	/* msec */
-> >+
-> >+enum bq24257_fields {
-> >+	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
-> >+	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
-> >+	F_VBAT, F_USB_DET,					    /* REG 3 */
-> >+	F_ICHG, F_ITERM,					    /* REG 4 */
-> >+	F_LOOP_STATUS, F_LOW_CHG, F_DPDM_EN, F_CE_STATUS, F_VINDPM, /* REG 5 */
-> >+	F_X2_TMR_EN, F_TMR, F_SYSOFF, F_TS_STAT,		    /* REG 6 */
-> >+	F_VOVP, F_CLR_VDP, F_FORCE_BATDET, F_FORCE_PTM,		    /* REG 7 */
-> >+
-> >+	F_MAX_FIELDS
-> >+};
-> >+
-> >+/* initial field values, converted from uV/uA */
-> >+struct bq24257_init_data {
-> >+	u8 ichg;	/* charge current      */
-> >+	u8 vbat;	/* regulation voltage  */
-> >+	u8 iterm;	/* termination current */
-> >+};
-> >+
-> >+struct bq24257_state {
-> >+	u8 status;
-> >+	u8 fault;
-> >+	bool power_good;
-> >+};
-> >+
-> >+struct bq24257_device {
-> >+	struct i2c_client *client;
-> >+	struct device *dev;
-> >+	struct power_supply *charger;
-> >+	struct power_supply_desc charger_desc;
-> >+
-> >+	struct regmap *rmap;
-> >+	struct regmap_field *rmap_fields[F_MAX_FIELDS];
-> >+
-> >+	struct gpio_desc *pg;
-> >+
-> >+	struct delayed_work iilimit_setup_work;
-> >+
-> >+	struct bq24257_init_data init_data;
-> >+	struct bq24257_state state;
-> >+
-> >+	struct mutex lock; /* protect state data */
-> >+};
-> >+
-> >+static bool bq24257_is_writeable_reg(struct device *dev, unsigned int reg)
-> >+{
-> >+	return true;
+> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+> name continuoulsy.
 > 
-> What is the benefit of such function always returning true?
-Apparently, none. :) regmap_writeable() returns true, by default, anyway.
-Thanks for spotting it.
+> I think that extcon core provide the helper API to get the value of VBUS.
+> But I need to consider it.
+
+Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
+VBUS and ID information reliably.
+This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
+and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
+attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
+capturing only the ID pin state.
+
+I can suggest the following options
+a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
+Maybe call it "USB-POWER" or something.
+
+NOTE: "USB-POWER" can become attached simultaneously with "USB" or "USB-HOST". But "USB-POWER" is now really
+a different cable like "Fast-Charger" or "Slow-Charger".
+
+b) stop using extcon framework for USB VBUS and ID notification.
+
+cheers,
+-roger
 
 > 
-> (...)
+>>
+>>>
+>>>>
+>>>>> I don't agree. 
+>>>>>
+>>>>>> that. As I wrote, current USB cable names are misleading. It would be
+>>>>>> better to have "USB-VBUS" and "USB-ID".
+>>>>>
+>>>>> It is strange cable name. I prefer to use only 'USB' cable name.
+>>>>> But, we could support the other method to get the state of whether USB-VBUS or USB-ID
+>>>>> by using helper API or others.
+>>>>>
+>>>>
+>>>> Ok, so do you have any idea how to do it? Do we want to supply
+>>>> additional API for notifying about VBUS and ID changes?
+>>>
+>>> No, we need to consider more standard solution to support this case.
+>>>
+>>
+>> Thanks,
+>> Robert Baldyga
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+>>
 > 
-> >+
-> >+static enum power_supply_property bq24257_power_supply_props[] = {
-> >+	POWER_SUPPLY_PROP_MANUFACTURER,
-> >+	POWER_SUPPLY_PROP_STATUS,
-> >+	POWER_SUPPLY_PROP_ONLINE,
-> >+	POWER_SUPPLY_PROP_HEALTH,
-> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
-> >+	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-> >+};
-> >+
-> >+static char *bq24257_charger_supplied_to[] = {
-> >+	"main-battery",
-> >+};
-> >+
-> >+static int bq24257_power_supply_init(struct bq24257_device *bq)
-> >+{
-> >+	struct power_supply_config psy_cfg = { .drv_data = bq, };
-> >+	struct power_supply_desc *psy_desc = &bq->charger_desc;
-> >+
-> >+	psy_desc->name = "bq24257-charger";
-> >+	psy_desc->type = POWER_SUPPLY_TYPE_USB;
-> >+	psy_desc->properties = bq24257_power_supply_props;
-> >+	psy_desc->num_properties = ARRAY_SIZE(bq24257_power_supply_props);
-> >+	psy_desc->get_property = bq24257_power_supply_get_property;
-> 
-> You are not modifying the power_supply_desc so it can be made a
-> static const variable (file scope).
-Fair enough. Will change in v2. I'll just give it a couple more days for
-others to review.
-
-laurentiu
