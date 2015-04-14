@@ -1,146 +1,130 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Tue, 14 Apr 2015 13:38:58 +0300
-Message-ID: <552CEE42.1050907@ti.com>
-References: <1427980385-21285-1-git-send-email-r.baldyga@samsung.com> <1427980385-21285-3-git-send-email-r.baldyga@samsung.com> <5525E012.5050207@samsung.com> <552630E4.9030309@samsung.com> <55264148.8070903@samsung.com> <55264534.4020006@samsung.com> <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com> <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com> <55279550.1060609@samsung.com> <552CE579.6060702@ti.com> <552CE5C0.3010207@ti.com> <552CEC97.1050205@samsung.com>
+From: Hannes Petermaier <Hannes.Petermaier-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
+Subject: Fwd: Fwd: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for
+ tscadc
+Date: Tue, 14 Apr 2015 13:16:42 +0200
+Message-ID: <OFD386DA80.D9FD2A2E-ONC1257E27.003DC94D-C1257E27.003DF465@br-automation.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552CEC97.1050205-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, Johannes Pointner <Johannes.Pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/04/15 13:31, Chanwoo Choi wrote:
-> On 04/14/2015 07:02 PM, Roger Quadros wrote:
->> Fixed Kishon's id.
->>
->> On 14/04/15 13:01, Roger Quadros wrote:
->>> On 10/04/15 12:18, Chanwoo Choi wrote:
->>>> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
->>>>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
->>>>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
->>>>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
->>>>>>>> Hi Robert,
->>>>>>>>
->>>>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
->>>>>>>>> Hi Chanwoo,
->>>>>>>>>
->>>>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
->>>>>>>>>> Hi Robert,
->>>>>>>>>>
->>>>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
->>>>>>>>>>> Hi Chanwoo,
->>>>>>>>>>>
->>>>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
->>>>>>>>>>>> Hi Robert,
->>>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> [snip]
->>>>>>>>>>
->>>>>>>>>>>> But, I have one question about case[3]
->>>>>>>>>>>>
->>>>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
->>>>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> It's because state of single USB cable connection cannot be completely
->>>>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
->>>>>>>>>>> and ID), so we need to use two cables for single cable connection. We
->>>>>>>>>>> use following convention:
->>>>>>>>>>> cable "USB" = VBUS
->>>>>>>>>>> cable "USB-HOST" = !ID.
->>>>>>>>>>
->>>>>>>>>> I think that extcon provider driver have to update the only one cable state
->>>>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
->>>>>>>>>> at the same time through one h/w port.
->>>>>>>>>>
->>>>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
->>>>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
->>>>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
->>>>>>>>> detected cable type is USB host). Devices would need to have complete
->>>>>>>>> information about USB cable connection, because OTG state machine needs
->>>>>>>>
->>>>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
->>>>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
->>>>>>>>
->>>>>>>
->>>>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
->>>>>>> machine. It needs to know exact VBUS and ID states, which cannot be
->>>>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
->>>>>>> name together with "USB" to pass additional information about USB cable
->>>>>>> connection.
->>>>>>
->>>>>> I think this method is not proper to support this case.
->>>>>> It may cause the confusion about other case using USB/USB-HOST cable state
->>>>>> except of you commented case.
->>>>>
->>>>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
->>>>> with old names. It seems to be simpler solution than adding new
->>>>> mechanism notifying about VBUS and ID states changes.
->>>>
->>>>
->>>> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
->>>> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
->>>> name continuoulsy.
->>>>
->>>> I think that extcon core provide the helper API to get the value of VBUS.
->>>> But I need to consider it.
->>>
->>> Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
->>> VBUS and ID information reliably.
->>> This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
->>> and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
->>> attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
->>> capturing only the ID pin state.
->>>
->>> I can suggest the following options
->>> a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
->>> Maybe call it "USB-POWER" or something.
+Hi Vignesh,
+
+did you recognize my last email ? whats your opinion around that =
+
+best regards,
+Hannes
+----- Forwarded by Hannes Petermaier/Eggelsberg/AT/B&R on 14.04.2015 13:14 
+-----
+
+Hannes Petermaier/Eggelsberg/AT/B&R schrieb am 07.04.2015 14:30:19:
+
+> From: Hannes Petermaier/Eggelsberg/AT/B&R
+> To: vigneshr-l0cyMroinI0@public.gmane.org
+> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Date: 07.04.2015 14:30
+> Subject: WG: Fwd: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT 
+properties for tscadc
 > 
-> We must discuss it before using the new cable name
-> such as "USB-POWER", "USB-ID" and "USB-VBUS".
-
-I didn't say to add "USB-ID" or "USB-VBUS". solution (a) was to have the following
-"USB" - attached means ID is high. i.e. Type-B plug attached.
-"USB-HOST" - attached means ID is low. i.e. Type-A plug attached.
-"USB-POWER" - attached means USB power is present. i.e. VBUS is alive.
-
-This way the definition of USB and USB-HOST remain true to their name and avoid further confusions.
-VBUS state is got through the "USB-POWER" cable state.
-
+> Hi Vignesh,
 > 
-> What is the appropriate method of following two solution?
-> - Fisrt, use the new cable name "USB-*".
-I explained this above.
-
-> - Second, use the additional API to get the VBUS state.
-
-You keep mentioning additional API for VBUS. But I don't see any such API. Can you please
-suggest what API you are talking about?
-
-cheers,
--roger
-
-
+> would it be possible to add some more channel-specific settings ?
 > 
-> Cheers,
-> Chanwoo Choi
+> It would be nice to have allmost full control to the STEPCONFIGx 
+register.
 > 
->>>
->>> NOTE: "USB-POWER" can become attached simultaneously with "USB" or "USB-HOST". But "USB-POWER" is now really
->>> a different cable like "Fast-Charger" or "Slow-Charger".
->>>
->>> b) stop using extcon framework for USB VBUS and ID notification.
+> At least we need to write the bits
+> 
+> SEL_RFM_SWC_1_0
+> SEL_INM_SWC_3_0 
+> SEL_RFP_SWC_2_0 
+> 
+> In the current mainline version only (SEL_INP_SWC_3_0) is written.
+> So for the other bits "0" is value is used, for my point of view this is 
+not correct.
+> 
+> For example if we want to read a value from AIN5 the negative pin from 
+adc is 
+> muxed allways to AIN0.
+> In fact i can readout heavy jitter even if AIN5 is connected to ground - 
+after
+> setting up negative adc pin within code (to use REFN)  the readout value 
+is 0 
+> as expected without nameable jitter.
+> If i short AIN0 also to ground, jitter is also eliminated.
+> 
+> Maybe this is also some fault of TI SoC ... in normal case somebody 
+could 
+> expect, that negative adc pin is equal even the Diff_CNTRL bit isn't set 
+- but
+> in practice it isn't.
+> 
+> Also actually it isn't possible to make some accurate measurement due to 
+the 
+> fact that allways VDDA_ADC is used as positive reference.
+> 
+> So it would be nice to have control around this bits.
+> Whats your opinion around that?
+> 
+> best regards,
+> Hannes
+> ----- Forwarded by Hannes Petermaier/Eggelsberg/AT/B&R on 07.04.2015 
+14:17 -----
+> 
+> From: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> To: hannes.petermaier-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org
+> Date: 07.04.2015 13:58
+> Subject: Fwd: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties 
+for tscadc
+> 
+> ---------- Forwarded message ----------
+> From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> Date: 2015-03-31 13:12 GMT+02:00
+> Subject: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for 
+tscadc
+> To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>,
+> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell
+> <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>,
+> Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen
+> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov
+> <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jan
+> Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+> fcooper-l0cyMroinI0@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 > 
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Hi,
+> 
+> This patch adds optional DT properties for tscadc to set open delay,
+> sample delay and number of averages per sample for each adc channel.
+> Open delay, sample delay and averaging are some of the parameters that
+> affect the sampling rate and accuracy of the tscadc. Decreasing delays
+> and averaging helps to achieve higher sampling rates, while increasing
+> this parameters provides greater accuracy. Hence, this patch provides DT
+> properties to set the initial values for delays and number of averages
+> per sample. User space control via sysfs can be added later.
+> 
+> 
+> Vignesh R (2):
+>   iio: adc: ti_am335x_adc: refactor DT parsing into a function
+>   iio: adc: ti_am335x_adc: make sample delay, open delay, averaging DT
+>     parameters
+> 
+>  .../bindings/input/touchscreen/ti-tsc-adc.txt      | 24 +++++++
+>  drivers/iio/adc/ti_am335x_adc.c                    | 83 
++++++++++++++++++-----
+>  2 files changed, 91 insertions(+), 16 deletions(-)
+> 
+> --
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
