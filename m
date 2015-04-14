@@ -1,38 +1,37 @@
-From: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] of/fdt: fix allocation size for device node path
-Date: Tue, 14 Apr 2015 12:36:05 +0800
-Message-ID: <1428986165-6250-1-git-send-email-jcliang@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Tue, 14 Apr 2015 07:27:29 +0200
+Message-ID: <20150414052729.GA5179@netboy>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
+ <20150328082853.GA4255@localhost.localdomain>
+ <5519D380.6070200@cogentembedded.com>
+ <552C25BE.3070606@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <552C25BE.3070606@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-The allocation size of device node path is off by one which drops the
-'\0' terminator.
+On Mon, Apr 13, 2015 at 11:23:26PM +0300, Sergei Shtylyov wrote:
+> >>This is a bit hacky.  Can't your driver make sure that the HW is ready?
+> 
+> >    Will look into this. Perhaps it's a remainder from when the PTP driver was
+> >separate...
+> 
+>    No, we enter this mode upon closing the Ethernet device and when
+> the ring DMA sizes are changed. Seems unavoidable...
+> 
+> >>>+    if (ravb_read(priv->ndev, CSR) & CSR_OPS_CONFIG)
+> >>>+        return true;
+> >>>+    else
+> >>>+        return false;
 
-Signed-off-by: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It is surely avoidable.  The driver knows (or should know) whether or
+not the hardware has been configured or not.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3a896c9..98a9e6e 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -172,7 +172,7 @@ static void * unflatten_dt_node(void *blob,
- 	if (!pathp)
- 		return mem;
- 
--	allocl = l++;
-+	allocl = ++l;
- 
- 	/* version 0x10 has a more compact unit name here instead of the full
- 	 * path. we accumulate the full path size using "fpsize", we'll rebuild
--- 
-2.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Richard
