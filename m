@@ -1,93 +1,98 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Invitation and RFC: Linux Plumbers Device Tree track proposed
-Date: Tue, 14 Apr 2015 10:36:15 -0500
-Message-ID: <CAL_JsqL0FdvKtGTxFNYxtrGWkm3z-1m0v9dHwYezCtkFOW6EgQ@mail.gmail.com>
-References: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E@SELDMBX99.corpusers.net>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Tue, 14 Apr 2015 16:45:10 +0100
+Message-ID: <20150414154509.GI28709@leverpostej>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
+ <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
+ <493B15F8-0EBE-4633-9604-671EF403F36E@codeaurora.org>
+ <20150410161052.GF6854@e104818-lin.cambridge.arm.com>
+ <FDC755A7-ACCF-4222-8730-782EEC632159@codeaurora.org>
+ <20150413094117.GA2745@e104818-lin.cambridge.arm.com>
+ <245B9FDD-E1B5-41E4-9F24-4D5BB86C450E@codeaurora.org>
+ <97B1A2D4-6F6B-433B-83E6-9C8A95D1BFC6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8251B150E4DF5041A62C3EA9F0AB2E0603A53FE1082E-6yWnlZQfN9JoBVljSLT0Ysm4BeyDBExM@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rowand, Frank" <Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-embedded-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org" <celinux-dev-idqoXFIVOFIh9xQPArXXUATG8MYbGj4l@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <97B1A2D4-6F6B-433B-83E6-9C8A95D1BFC6@codeaurora.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 11, 2015 at 2:20 PM, Rowand, Frank
-<Frank.Rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> In recent years there have been proposed tools to aid in the creation of valid
-> device trees and in debugging device tree issues.  An example of this is the
-> various approaches proposed (with source code provided) to validate device tree
-> source against valid bindings.  As of today, device tree related tools,
-> techniques, and debugging infrastructure have not progressed very far.  I have
-> submitted a device tree related proposal for the Linux Plumbers 2015 conference
-> to spur action and innovation in such tools, techniques, and debugging
-> infrastructure.
->
-> The current title of the track is "Device Tree Tools, Validation, and
-> Troubleshooting".  The proposal is located at
->
->    http://wiki.linuxplumbersconf.org/2015:device_tree_tools_validation_and_trouble_shooting
->
-> I am looking for several things at the moment:
->
->    1) Suggestions of additional topics to be discussed.
+On Tue, Apr 14, 2015 at 03:44:11PM +0100, Kumar Gala wrote:
+>=20
+> > On Apr 14, 2015, at 9:21 AM, Kumar Gala <galak@codeaurora.org> wrot=
+e:
+> >=20
+> >>>>=20
+> >>>> So please come up with proper technical arguments rather than th=
+e kernel
+> >>>> should take whatever SoC vendors dreamt of.
+> >>>=20
+> >>> There is no technical argument to be made.  This is about the
+> >>> community and you as maintainer wanting to accept code that compl=
+ies
+> >>> to your decision or not.
+> >>=20
+> >> If you are not willing to make technical arguments, I don't have t=
+o
+> >> provide any further reasons in this thread. It's your choice. In t=
+he
+> >> meantime, the short answer is NAK.
+>=20
+> I assume you would than NAK someone trying to get support for their
+> Nexus 9 Tablet using a Tegra K1.
 
-A few things on my list:
+That would depend on how they try to boot secondary CPUs. It's
+unfortunate that a product is shipping with an arbitrary implementation
+specific SMP bringup mechanism, but its existence doesn't necessitate
+that we support it.
 
-- Supported and not supported overlay usecases
-- Tools for overlays - I think overlays has created new challenges in
-validation and a need for new tools. How to test an overlay applies?
-Generating a dtb from dts + overlay dts. Generating an overlay from a
-diff of old and new dts (overlay as a way to update old dtbs)
-- Shrinking the binding review fire hose. How to improve binding
-documentation structure and review.
-- Standardizing Android dtb handling. Appended DTB for arm64? Not
-liked by upstream, but already in use.
+People are currently working on PSCI support for 32-bit Tegra platforms
+in U-Boot, and it's my understanding that a reasonable proportion of
+that could should be possible to reuse for 64-bit. That may be
+applicable to the Nexus 9.
 
+Otherwise it's possible to have a shim which can place the secondaries
+into a spin-table. It looks like that would be necessary anyway; there
+seem to be some egregious boot protocol violations.=20
 
->    2) Emails or other messages expressing an interest in attending the
->       device tree track.
->
->    3) Commitments to attend the device tree track (the conference committee
->       is looking at attendee interest and commitments as part of the process
->       of accepting the device tree track).
+> It appears the shipping code for that device didn=E2=80=99t use PSCI =
+(again guessing because it wasn=E2=80=99t available at the time).
+>=20
+> https://android.googlesource.com/kernel/tegra/+/android-tegra-flounde=
+r-3.10-lollipop-release/arch/arm64/mach-tegra/platsmp.c
 
-I plan to attend. I'm probably attending some of the Android mini conf
-too, so I'll have to split my time.
+Commit e790f1deb26a2e23 ("arm64: psci: add support for PSCI invocations
+from the kernel") has been upstream since v3.9-rc1. It's even in the
+(v3.10 derived) tree you link to:
 
->    4) Identifying additional people who should attend the device tree track.
+https://android.googlesource.com/kernel/tegra/+/android-tegra-flounder-=
+3.10-lollipop-release/arch/arm64/kernel/psci.c
 
-Arnd Bergmann
-Matt Porter
-Jon Loeliger
-Gaurav Minocha
+As is spin-table:
 
-Rob
+https://android.googlesource.com/kernel/tegra/+/android-tegra-flounder-=
+3.10-lollipop-release/arch/arm64/kernel/smp_spin_table.c
 
-> The desired outcome of the device tree track is to encourage the future
-> development of tools, process, etc to make device tree related development,
-> test, review and system administration more efficient, faster, easier, more
-> robust, and to improve troubleshooting and debugging facilities.  Some
-> examples of areas of interest could include:
->    - make it easier to create correct device tree source files
->    - support for debugging incorrect device tree source files
->    - create a kernel that correctly boots one or more specific device trees
->      (eg a kernel configured to include the proper drivers and subsystems)
->    - create drivers that properly work for a device tree binding definition
->    - create drivers that support detecting errors in the related node(s) in
->      a device tree
->
-> The wiki page lists additional areas of interest.
->
-> Thanks,
->
-> Frank Rowand
-> Sony Mobile Communications
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If so, I find this counter to the Linux kernel communities normal des=
+ire to support the most hardware platforms.
+
+Supporting hardware platforms doesn't mean that we must accept code
+which we believe to be problematic.
+
+We don't want implementation-specific SMP bringup mechanisms because
+we've learnt from the lessons of the past. They're almost always
+ill-defined, not reusable, and they're a maintenance burden for all
+system software targeting ARM which gets worse over time.
+
+If there are technical problems with the existing mechanisms, we're ope=
+n
+to solving them. Others have engaged with the kernel community and/or
+ARM (in the case of PSCI) to do so, and all others upstream so far have
+used common enable methods.
+
+Mark.=20
