@@ -1,87 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/5] dt-bindings: mediatek: Add smi dts binding
-Date: Tue, 14 Apr 2015 14:56:47 +0100
-Message-ID: <20150414135647.GG28709@leverpostej>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
- <1425638900-24989-4-git-send-email-yong.wu@mediatek.com>
- <20150306111338.GD8700@leverpostej>
- <1429002474.14855.7.camel@mhfsdcap03>
- <20150414100657.GB28709@leverpostej>
- <1429019389.16264.5.camel@mhfsdcap03>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [PATCH] powerpc/dts: Update the core cluster PLL node(s)
+Date: Tue, 14 Apr 2015 12:55:06 +0300
+Message-ID: <1429005306-24544-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1429019389.16264.5.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <Robin.Murphy@arm.com>, Will Deacon <Will.Deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Lucas Stach <l.stach@pengutronix.de>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sasha Hauer <kernel@pengutronix.de>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-> > >       smi_common:smi@14022000 {
-> > >                  compatible =3D =E2=80=9Cmediate, mt8173-smi=E2=80=
-=9D;
-> > >                  reg =3D <0 0x14022000 0 0x1000>;
-> > >                  clocks =3D <&mmsys MM_SMI_COMMON>;
-> > >                  clocks-names =3D =E2=80=9Csmi_common=E2=80=9D;
-> > >       };
-> > >=20
-> > >       larb0: larb@14021000 {
-> > >                  compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=
-=E2=80=9D;
-> > >                  reg =3D <0 0x14021000 0 0x1000>;
-> > >                  smi =3D <&smi_common>;
-> > >                  clocks =3D <&mmsys MM_SMI_LARB0>,=20
-> > > 		 	<&mmsys MM_SMI_LARB0>;
-> > >                  clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=
-=9Csmi_clk=E2=80=9D;
-> > >      };
-> > >=20
-> > >      larb1: larb@16010000 {
-> > >                  compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=
-=E2=80=9D;
-> > >                  reg =3D <0 0x16010000 0 0x1000>;
-> > >                  smi =3D <&smi_common>;
-> > >                  clocks =3D <&vdecsys VDEC_CKEN>,=20
-> > > 			 <&mmsys VDEC_LARB_CKEN>;
-> > >                  clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=
-=9Csmi_clk=E2=80=9D;
-> > >       };
-> > >       =E2=80=A6=20
-> > >      In some local arbiter, the source clock of the APB clock and=
- the
-> > > SMI clock may be the same, like larb0. so the two clocks are the =
-same.
-> > > And they may be different in other local arbiteres, like larb1.  =
-   =20
-> > >=20
-> > >      If it is designed like this, is it ok?
-> >=20
-> > That looks pretty good; the clocks and names on the larb nodes seem
-> > sensible.
-> >=20
-> > The naming of the "smi_common" clock on the smi_common node looks a=
- bit
-> > odd though. Is that really what the clock input is called?
-> >=20
-> > Mark.
->      After check with DE, the smi_common clock also have its APB cloc=
-k
-> and the smi clock(they have the same clock source).
->     And I prepare to delete "_clk" in all the clock-names.
->     So it may be like this:
->          smi_common:smi@14022000 {
->                  compatible =3D =E2=80=9Cmediate, mt8173-smi=E2=80=9D=
-;
->                     reg =3D <0 0x14022000 0 0x1000>;
->                   clocks =3D <&mmsys MM_SMI_COMMON>,=20
-> 			   <&mmsys MM_SMI_COMMON>;
->                   clocks-names =3D =E2=80=9Capk=E2=80=9D,"smi";
->         };
->      How about this?
-
-That looks fine to me. I assume "apk" should be "apb" in the last
-example.
-
-Mark.
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
+YXRjaCByZXBsYWNlcyB0aGUgZm9sbG93aW5nOgoJaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9y
+Zy9wYXRjaC80Mjc2NjQvCgpUaGlzIHBhdGNoIGlzIGRlc2NyaWJlZCBieSB0aGUgZm9sbG93aW5n
+IGJpbmRpbmcgZG9jdW1lbnQgdXBkYXRlOgoJaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9w
+YXRjaC80NjExNTAvCgpTaWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFu
+QGZyZWVzY2FsZS5jb20+Ci0tLQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9j
+a2dlbjIuZHRzaSB8ICAgIDYgKysrKy0tCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+cW9yaXEtY2xvY2tnZW4yLmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNs
+b2NrZ2VuMi5kdHNpCmluZGV4IDQ4ZTBiNmUuLjdlMWYwNzQgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtY2xvY2tnZW4yLmR0c2kKKysrIGIvYXJjaC9wb3dlcnBj
+L2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjIuZHRzaQpAQCAtNDksMTQgKzQ5LDE2IEBAIGds
+b2JhbC11dGlsaXRpZXNAZTEwMDAgewogCQlyZWcgPSA8MHg4MDAgMHg0PjsKIAkJY29tcGF0aWJs
+ZSA9ICJmc2wscW9yaXEtY29yZS1wbGwtMi4wIjsKIAkJY2xvY2tzID0gPCZzeXNjbGs+OwotCQlj
+bG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXY0IjsKKwkJ
+Y2xvY2stb3V0cHV0LW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDAtZGl2MyIsCisJ
+CQkJICAgICAgInBsbDAtZGl2NCI7CiAJfTsKIAlwbGwxOiBwbGwxQDgyMCB7CiAJCSNjbG9jay1j
+ZWxscyA9IDwxPjsKIAkJcmVnID0gPDB4ODIwIDB4ND47CiAJCWNvbXBhdGlibGUgPSAiZnNsLHFv
+cmlxLWNvcmUtcGxsLTIuMCI7CiAJCWNsb2NrcyA9IDwmc3lzY2xrPjsKLQkJY2xvY2stb3V0cHV0
+LW5hbWVzID0gInBsbDEiLCAicGxsMS1kaXYyIiwgInBsbDEtZGl2NCI7CisJCWNsb2NrLW91dHB1
+dC1uYW1lcyA9ICJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjMiLAorCQkJCSAgICAgICJw
+bGwxLWRpdjQiOwogCX07CiAJcGxhdGZvcm1fcGxsOiBwbGF0Zm9ybS1wbGxAYzAwIHsKIAkJI2Ns
+b2NrLWNlbGxzID0gPDE+OwotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1k
+ZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGlu
+dXhwcGMtZGV2
