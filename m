@@ -1,49 +1,163 @@
-From: "Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shengzhou.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] of: fix of_property_read_string
-Date: Tue, 14 Apr 2015 09:16:33 +0000
-Message-ID: <DM2PR03MB3983A1321E647873C660AA5F8E60@DM2PR03MB398.namprd03.prod.outlook.com>
-References: <1428401462-5907-1-git-send-email-Shengzhou.Liu@freescale.com>
- <CAL_JsqLpD8UXoHZ-KF74LaN5HEvu3bpu6aeO9_SOHYrut0nV_Q@mail.gmail.com>
- <BLUPR03MB391F3BA6A3691F36D73D5EDF8FC0@BLUPR03MB391.namprd03.prod.outlook.com>
- <CAL_JsqL1+oXxV=4pNieCD=+8qb9-9GKREg366Mj8wu3sPRDzBg@mail.gmail.com>
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Subject: Re: [PATCH] power_supply: Add TI BQ24257 charger driver
+Date: Tue, 14 Apr 2015 12:49:22 +0300
+Message-ID: <20150414094922.GA3838@lpalcu-linux>
+References: <1428671897-12232-1-git-send-email-laurentiu.palcu@intel.com>
+ <552BC09D.9040502@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL1+oXxV=4pNieCD=+8qb9-9GKREg366Mj8wu3sPRDzBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <552BC09D.9040502@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
-OnJvYmhlcnJpbmcyQGdtYWlsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBBcHJpbCAwOCwgMjAx
-NSAxMDoyNiBQTQ0KPiBUbzogTGl1IFNoZW5nemhvdS1CMzY2ODUNCj4gQ2M6IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBHcmFudCBMaWtlbHkNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gb2Y6
-IGZpeCBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZw0KPiANCj4gT24gV2VkLCBBcHIgOCwgMjAxNSBh
-dCAxOjI5IEFNLCBTaGVuZ3pob3UuTGl1QGZyZWVzY2FsZS5jb20NCj4gPFNoZW5nemhvdS5MaXVA
-ZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+ID4+IE9uIFR1ZSwgQXByIDcsIDIwMTUgYXQgNToxMSBB
-TSwgU2hlbmd6aG91IExpdQ0KPiA+PiA8U2hlbmd6aG91LkxpdUBmcmVlc2NhbGUuY29tPiB3cm90
-ZToNCj4gPj4gPiBJbiBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyBmdW5jdGlvbiwgc3Rybmxlbihw
-cm9wLT52YWx1ZSwNCj4gPj4gPiBwcm9wLT5sZW5ndGgpIGlzIGFsd2F5cyBsZXNzIG9yIGVxdWFs
-IHRvIHByb3AtPmxlbmd0aCwgYW5kIHdlDQo+ID4+ID4gcHJvcC0+c2hvdWxkDQo+ID4+IGFsbG93
-IHRoZSAnPT0nDQo+ID4+ID4gY29uZGl0aW9uLCBzbyBsZXQncyByZW1vdmUgdGhlIG9yaWdpbmFs
-IHVucmVhc29uYWJsZSBjb25kaXRpb24uDQo+ID4+DQo+ID4+IEkgYmVsaWV2ZSB3ZSBkb24ndCB3
-YW50IHRvIGFsbG93IGVxdWFsIGJlY2F1c2UgcHJvcC0+bGVuZ3RoIHNob3VsZA0KPiA+PiBpbmNs
-dWRlIHRoZSBcMCB0ZXJtaW5hdGlvbiB3aGlsZSBzdHJubGVuIHdpbGwgbm90Lg0KPiA+Pg0KPiA+
-PiBSb2INCj4gPg0KPiA+IFllcywgSSB0aG91Z2h0IHNvLCBpZGVhbGx5IHByb3AtPmxlbmd0aCBz
-aG91bGQgYmUgYXNzaWduZWQgd2l0aA0KPiA+IHN0cmxlbih2YWx1ZSkrMSwgYnV0IHVuZm9ydHVu
-YXRlbHkgaW4gdS1ib290IGFuZCBrZXJuZWwgdGhlcmUgYXJlIHRvbw0KPiA+IG1hbnkgY2FsbGVy
-cyB0aGF0IGhhdmUgcHJvcC0+bGVuZ3RoIGFzc2lnbmVkIHdpdGggc3RybGVuKHZhbHVlKSBpbnN0
-ZWFkIG9mDQo+ID4gc3RybGVuKHZhbHVlKSsxLCBpbiBwcmFjdGljZSwgd2UgY2FuIGFsbG93IGVx
-dWFsLg0KPiA+IA0KPiANCj4gTm8gb25lIHNob3VsZCB0b3VjaCBwcm9wLT5sZW5ndGggYW5kIGl0
-IGNvbWVzIGZyb20gdGhlIERUQiBkaXJlY3RseS4NCj4gSXQgZG9lc24ndCBjb21lIGZyb20gc3Ry
-bGVuLg0KPiANCmUuZy4gIHUtYm9vdCBjaGFuZ2VzIHByb3AtPmxlbmd0aCBkeW5hbWljYWxseSBi
-eSBmZHRfc2V0cHJvcCgpLg0Kd2UgY2FuIGZpeCBpdCBieSB1c2luZyBzdHJsZW4oKSsxIGluc3Rl
-YWQgb2Ygc3RybGVuKCkgaW4gdS1ib290Lg0Kd2VsbCwgbGV0J3MgZHJvcCB0aGUgcGF0Y2guDQoN
-Cg0KDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Apr 13, 2015 at 10:11:57PM +0900, Krzysztof Kozlowski wrote:
+> W dniu 10.04.2015 o 22:18, Laurentiu Palcu pisze:
+> >Based on the datasheet found here:
+> >http://www.ti.com/lit/ds/symlink/bq24257.pdf
+> >
+> >Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+> 
+> (...)
+> 
+> >diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> >new file mode 100644
+> >index 0000000..58b9af1
+> >--- /dev/null
+> >+++ b/drivers/power/bq24257_charger.c
+> >@@ -0,0 +1,868 @@
+> >+/*
+> >+ * TI BQ24257 charger driver
+> >+ *
+> >+ * Copyright (C) 2015 Intel Corporation
+> >+ *
+> >+ * This program is free software; you can redistribute it and/or modify
+> >+ * it under the terms of the GNU General Public License as published by
+> >+ * the Free Software Foundation; either version 2 of the License, or
+> >+ * (at your option) any later version.
+> >+ *
+> >+ * This program is distributed in the hope that it will be useful,
+> >+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >+ * GNU General Public License for more details.
+> >+ *
+> >+ */
+> >+
+> >+#include <linux/module.h>
+> >+#include <linux/i2c.h>
+> >+#include <linux/power_supply.h>
+> >+#include <linux/regmap.h>
+> >+#include <linux/types.h>
+> >+#include <linux/gpio/consumer.h>
+> >+#include <linux/interrupt.h>
+> >+#include <linux/delay.h>
+> >+
+> >+#include <linux/acpi.h>
+> >+#include <linux/of.h>
+> >+
+> >+#define BQ24257_REG_1			0x00
+> >+#define BQ24257_REG_2			0x01
+> >+#define BQ24257_REG_3			0x02
+> >+#define BQ24257_REG_4			0x03
+> >+#define BQ24257_REG_5			0x04
+> >+#define BQ24257_REG_6			0x05
+> >+#define BQ24257_REG_7			0x06
+> >+
+> >+#define BQ24257_MANUFACTURER		"Texas Instruments"
+> >+#define BQ24257_STAT_IRQ		"stat"
+> >+#define BQ24257_PG_GPIO			"pg"
+> >+
+> >+#define BQ24257_ILIM_SET_DELAY		1000	/* msec */
+> >+
+> >+enum bq24257_fields {
+> >+	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
+> >+	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
+> >+	F_VBAT, F_USB_DET,					    /* REG 3 */
+> >+	F_ICHG, F_ITERM,					    /* REG 4 */
+> >+	F_LOOP_STATUS, F_LOW_CHG, F_DPDM_EN, F_CE_STATUS, F_VINDPM, /* REG 5 */
+> >+	F_X2_TMR_EN, F_TMR, F_SYSOFF, F_TS_STAT,		    /* REG 6 */
+> >+	F_VOVP, F_CLR_VDP, F_FORCE_BATDET, F_FORCE_PTM,		    /* REG 7 */
+> >+
+> >+	F_MAX_FIELDS
+> >+};
+> >+
+> >+/* initial field values, converted from uV/uA */
+> >+struct bq24257_init_data {
+> >+	u8 ichg;	/* charge current      */
+> >+	u8 vbat;	/* regulation voltage  */
+> >+	u8 iterm;	/* termination current */
+> >+};
+> >+
+> >+struct bq24257_state {
+> >+	u8 status;
+> >+	u8 fault;
+> >+	bool power_good;
+> >+};
+> >+
+> >+struct bq24257_device {
+> >+	struct i2c_client *client;
+> >+	struct device *dev;
+> >+	struct power_supply *charger;
+> >+	struct power_supply_desc charger_desc;
+> >+
+> >+	struct regmap *rmap;
+> >+	struct regmap_field *rmap_fields[F_MAX_FIELDS];
+> >+
+> >+	struct gpio_desc *pg;
+> >+
+> >+	struct delayed_work iilimit_setup_work;
+> >+
+> >+	struct bq24257_init_data init_data;
+> >+	struct bq24257_state state;
+> >+
+> >+	struct mutex lock; /* protect state data */
+> >+};
+> >+
+> >+static bool bq24257_is_writeable_reg(struct device *dev, unsigned int reg)
+> >+{
+> >+	return true;
+> 
+> What is the benefit of such function always returning true?
+Apparently, none. :) regmap_writeable() returns true, by default, anyway.
+Thanks for spotting it.
+
+> 
+> (...)
+> 
+> >+
+> >+static enum power_supply_property bq24257_power_supply_props[] = {
+> >+	POWER_SUPPLY_PROP_MANUFACTURER,
+> >+	POWER_SUPPLY_PROP_STATUS,
+> >+	POWER_SUPPLY_PROP_ONLINE,
+> >+	POWER_SUPPLY_PROP_HEALTH,
+> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
+> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
+> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
+> >+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
+> >+	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
+> >+};
+> >+
+> >+static char *bq24257_charger_supplied_to[] = {
+> >+	"main-battery",
+> >+};
+> >+
+> >+static int bq24257_power_supply_init(struct bq24257_device *bq)
+> >+{
+> >+	struct power_supply_config psy_cfg = { .drv_data = bq, };
+> >+	struct power_supply_desc *psy_desc = &bq->charger_desc;
+> >+
+> >+	psy_desc->name = "bq24257-charger";
+> >+	psy_desc->type = POWER_SUPPLY_TYPE_USB;
+> >+	psy_desc->properties = bq24257_power_supply_props;
+> >+	psy_desc->num_properties = ARRAY_SIZE(bq24257_power_supply_props);
+> >+	psy_desc->get_property = bq24257_power_supply_get_property;
+> 
+> You are not modifying the power_supply_desc so it can be made a
+> static const variable (file scope).
+Fair enough. Will change in v2. I'll just give it a couple more days for
+others to review.
+
+laurentiu
