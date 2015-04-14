@@ -1,70 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Tue, 14 Apr 2015 16:44:34 +0200
-Message-ID: <13386244.3fdoQHV2u9@wuerfel>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com> <1428916660-25910-7-git-send-email-bintian.wang@huawei.com>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Tue, 14 Apr 2015 13:56:08 +0300
+Message-ID: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428916660-25910-7-git-send-email-bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, heyunlei@huawe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 13 April 2015 17:17:40 Bintian Wang wrote:
-> +
-> +       soc {
-> +               compatible = "simple-bus";
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-
-Just one comment here: on a 64-bit system, the bus nodes must have
-"dma-ranges" properties that describe the width of the bus. By default,
-we assume that the bus is only 32-bit wide, which means that if you
-install memory over the 4GB address boundary, devices will not be
-able to do DMA there, even if the devices themselves are 64-bit DMA
-capable.
-
-> +               ao_ctrl: ao_ctrl {
-> +                       compatible = "hisilicon,aoctrl", "syscon";
-> +                       reg = <0x0 0xf7800000 0x0 0x2000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               sys_ctrl: sys_ctrl {
-> +                       compatible = "hisilicon,sysctrl", "syscon";
-> +                       reg = <0x0 0xf7030000 0x0 0x2000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               media_ctrl: media_ctrl {
-> +                       compatible = "hisilicon,mediactrl", "syscon";
-> +                       reg = <0x0 0xf4410000 0x0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               pm_ctrl: pm_ctrl {
-> +                       compatible = "hisilicon,pmctrl", "syscon";
-> +                       reg = <0x0 0xf7032000 0x0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               uart0: uart@f8015000 {  /* console */
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x0 0xf8015000 0x0 0x1000>;
-> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&ao_ctrl HI6220_UART0_PCLK>, <&ao_ctrl HI6220_UART0_PCLK>;
-> +                       clock-names = "uartclk", "apb_pclk";
-
-So far, none of hte devices you list are DMA masters, so there is no
-effect, but please check what DMA masters you have in the system, and
-whether they are capable of doing 64-bit DMA.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKdjM6IEFk
+ZHJlc3NlZCBmZWVkYmFjayBmcm9tIFNjb3R0OgoJLSBSZW1vdmVkIGNsb2NrIHNwZWNpZmllciBk
+ZXNjcmlwdGlvbi4KCnYyOiBBZGRyZXNzZWQgZmVlZGJhY2sgZnJvbSBTY290dDoKCS0gTW92ZWQg
+dGhlICJmbWFuLWNsay1tdXgiIGNsb2NrIHByb3ZpZGVyIGRldGFpbHMKCSAgdW5kZXIgImNsb2Nr
+cyIgcHJvcGVydHkuCgpTaWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFu
+QGZyZWVzY2FsZS5jb20+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEt
+Y2xvY2sudHh0ICAgICAgfCAgIDE3ICsrKysrKysrKysrKysrKy0tCiAxIGZpbGUgY2hhbmdlZCwg
+MTUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dAppbmRleCBiMGQ3
+YjczLi4yYmIzYjM4IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvY2xvY2svcW9yaXEtY2xvY2sudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQKQEAgLTY1LDkgKzY1LDEwIEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6CiAJCUl0IHRha2VzIHBhcmVudCdzIGNsb2NrLWZyZXF1ZW5jeSBhcyBpdHMg
+Y2xvY2suCiAJKiAiZnNsLHFvcmlxLXBsYXRmb3JtLXBsbC0xLjAiIGZvciB0aGUgcGxhdGZvcm0g
+UExMIGNsb2NrICh2MS4wKQogCSogImZzbCxxb3JpcS1wbGF0Zm9ybS1wbGwtMi4wIiBmb3IgdGhl
+IHBsYXRmb3JtIFBMTCBjbG9jayAodjIuMCkKKwkqICJmc2wsZm1hbi1jbGstbXV4IiBmb3IgdGhl
+IEZyYW1lIE1hbmFnZXIgY2xvY2suCiAtICNjbG9jay1jZWxsczogRnJvbSBjb21tb24gY2xvY2sg
+YmluZGluZy4gVGhlIG51bWJlciBvZiBjZWxscyBpbiBhCi0JY2xvY2stc3BlY2lmaWVyLiBTaG91
+bGQgYmUgPDA+IGZvciAiZnNsLHFvcmlxLXN5c2Nsay1bMSwyXS4wIgotCWNsb2Nrcywgb3IgPDE+
+IGZvciAiZnNsLHFvcmlxLWNvcmUtcGxsLVsxLDJdLjAiIGNsb2Nrcy4KKwljbG9jay1zcGVjaWZp
+ZXIuIFNob3VsZCBiZSA8MD4gZm9yICJmc2wscW9yaXEtc3lzY2xrLVsxLDJdLjAiIGFuZAorCSJm
+c2wsZm1hbi1jbGstbXV4IiBjbG9ja3Mgb3IgPDE+IGZvciAiZnNsLHFvcmlxLWNvcmUtcGxsLVsx
+LDJdLjAiLgogCUZvciAiZnNsLHFvcmlxLWNvcmUtcGxsLTEuMCIgY2xvY2tzLCB0aGUgc2luZ2xl
+CiAJY2xvY2stc3BlY2lmaWVyIGNlbGwgbWF5IHRha2UgdGhlIGZvbGxvd2luZyB2YWx1ZXM6CiAJ
+KiAwIC0gZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kKQEAgLTE0NSw2ICsxNDYsMTggQEAgRXhh
+bXBsZSBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHByb3ZpZGVyOgogCQkJY2xvY2tzID0gPCZz
+eXNjbGs+OwogCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsYXRmb3JtLXBsbCIsICJwbGF0Zm9y
+bS1wbGwtZGl2MiI7CiAJCX07CisKKwkJZm0wY2xrOiBmbTAtY2xrLW11eCB7CisJCQkjY2xvY2st
+Y2VsbHMgPSA8MD47CisJCQlyZWcgPSA8MHgxMCA0PgorCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1h
+bi1jbGstbXV4IjsKKwkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4s
+IDwmcGxsMCAzPiwKKwkJCQkgPCZwbGF0Zm9ybV9wbGwgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+
+OworCQkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXYzIiwKKwkJ
+CQkgICAgICAicGxsMC1kaXY0IiwgInBsYXRmb3JtLXBsbCIsICJwbGwxLWRpdjIiLAorCQkJCSAg
+ICAgICJwbGwxLWRpdjMiOworCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gImZtMC1jbGsiOworCQl9
+OwogCX07CiB9OwogCi0tIAoxLjcuOS41CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBw
+Yy1kZXY=
