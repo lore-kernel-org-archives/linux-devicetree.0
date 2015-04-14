@@ -1,43 +1,89 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v3] Renesas Ethernet AVB driver
-Date: Tue, 14 Apr 2015 11:31:07 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CB1DA25@AcuExch.aculab.com>
-References: <32501816.HtkLenWQpn@wasted.cogentembedded.com>
- <552C63FD.9010005@gmx.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] ARM: sun7i: dt: Add Security System to A20 SoC DTS
+Date: Tue, 14 Apr 2015 13:50:47 +0200
+Message-ID: <20150414115047.GB27280@lukather>
+References: <1429010461-9243-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1429010461-9243-2-git-send-email-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <552C63FD.9010005@gmx.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: 'Lino Sanfilippo' <LinoSanfilippo@gmx.de>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429010461-9243-2-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lino Sanfilippo
-> On 14.04.2015 00:07, Sergei Shtylyov wrote:
-> 
-...
-> > +#ifdef __LITTLE_ENDIAN
-> > +	u32 res: 16;	/* Reserved bits */
-> > +	u32 ts_sh: 16;	/* Timestamp high */
-> > +#else
-> > +	u32 ts_sh: 16;	/* Timestamp high */
-> > +	u32 res: 16;	/* Reserved bits */
-> > +#endif
-> > +};
-> 
-> I recall a thread in which the use of bitfields for structs that are
-> shared with the hardware was considered a bad idea (because the compiler
-> is free to reorder the fields). Shift operations are probably a better
-> choice here.
 
-The compiler itself isn't free to reorder the fields, but the order
-is an implementation decision for the compiler/ABI.
-An ABI will probably define a bit order, but it doesn't have to match
-the endianness.
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shifting and masking also tends to generate better code.
+Hi,
 
-	David
+On Tue, Apr 14, 2015 at 01:20:58PM +0200, LABBE Corentin wrote:
+> The Security System is a hardware cryptographic accelerator that support
+> AES/MD5/SHA1/DES/3DES/PRNG algorithms.
+> It could be found on many Allwinner SoC.
+>=20
+> This patch enable the Security System on the Allwinner A20 SoC Device-tre=
+e.
+>=20
+> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
+20.dtsi
+> index fdd1817..27b5701 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -679,6 +679,14 @@
+>  			status =3D "disabled";
+>  		};
+> =20
+> +		crypto: crypto-engine@01c15000 {
+> +			compatible =3D "allwinner,sun7i-a20-crypto";
+> +			reg =3D <0x01c15000 0x1000>;
+> +			interrupts =3D <0 86 4>;
+
+Please use the GIC's define here.
+
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVLP8XAAoJEBx+YmzsjxAgGwsP/0v/0/HiIXQCFSvLMjitp4nn
+3WK8HExsPIk0XVyRMHSsc2sJ7KyIdnENTDbIyXQ0bcfeo1Eh5Jq36QpFpE5WMCzj
+ZJaRcbXYCs16dhXS01HeIFXxtOSV0otDycNuuDh31Y018KNDP2K74gZHwiQQXrIa
+SfkVSc9NChQ+KHJD0btThmNwqERqYsFSC7jRGeYcALLbZGuZ2xUxalV6eerKPQqN
+7ILK3ueUJDOhYe8zTnGYo6Fa191tr2sQ1yOKVITLLE6zMp3oDPlEzkA1TsXB2Vlj
+CPqAI5zzYBYun1iQpeRuqqsL8aUk/B186AvUBG3eFDLjjobS+hyK19t5W/wUYMp0
+eAuEG8IPxT+oveGabDfoiR1q0Nr/Bp/3lqoxbUqjREz7htfOEvIZoV+qX6Z/XAm4
+pLbmjPkHPZiZKnklLVVx7aulmnV5IWmP5lXtS+rydz0Tk2WImB47MytbBw0W8IoY
+cDRCoRlqTNAXvHAGyX4HSzHh2PPOrfuKz5fr3ChD3dE9HMeXWpW9m+9mC9BHTYuY
+Tpuw4ONeQ5Cqpv9U8dbGEfqG2qoRRalX3V0nhnOMjr+vEB/AIBU1uOvaWDyxzCZM
+Qc7ftmRRo3TS//gtEgKGccoVjcJLdG2kaRNmjNXaQJ6DqbBXZPvcdgSv1lkMDxDl
+eoD/BFL7SG7+2KuwU1AG
+=xmsO
+-----END PGP SIGNATURE-----
+
+--TRYliJ5NKNqkz5bu--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
