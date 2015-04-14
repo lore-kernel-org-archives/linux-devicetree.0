@@ -1,80 +1,104 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: root node serial-number
- property documentation
-Date: Tue, 14 Apr 2015 16:31:02 +0200
-Message-ID: <1429021862.2422.16.camel@collins>
-References: <1427564371-26039-1-git-send-email-contact@paulk.fr>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [v2] powerpc/dts: Add some SoC specific "fsl,
+ *-device-config" compatibles
+Date: Tue, 14 Apr 2015 13:25:23 +0300
+Message-ID: <1429007123-24649-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-UQcyCM+L8clR5VowIh00"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427564371-26039-1-git-send-email-contact-W9ppeneeCTY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-
---=-UQcyCM+L8clR5VowIh00
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le samedi 28 mars 2015 =C3=A0 18:39 +0100, Paul Kocialkowski a =C3=A9crit :
-> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-
-Since the merge windows on both U-Boot and Linux are now open, I'd like
-to attract your attention on this again.
-
-Any comments/remarks are welcome!
-
-> ---
->  Documentation/devicetree/booting-without-of.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentat=
-ion/devicetree/booting-without-of.txt
-> index 7768518..8b055897 100644
-> --- a/Documentation/devicetree/booting-without-of.txt
-> +++ b/Documentation/devicetree/booting-without-of.txt
-> @@ -828,6 +828,10 @@ address which can extend beyond that limit.
->    name may clash with standard defined ones, you prefix them with your
->    vendor name and a comma.
-> =20
-> +  Additional properties for the root node:
-> +
-> +    - serial-number : a string representing the board's serial number
-> +
->    b) The /cpus node
-> =20
->    This node is the parent of all individual CPU nodes. It doesn't
-
-
---=-UQcyCM+L8clR5VowIh00
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJVLSSmAAoJEIT9weqP7pUMXPMP/iQqmklYMlJMwhPD4K6g4OIu
-wXLHOn23M6PPxCvQT2AIfACzejzaxv3Yop8GGHFaD+pNF9QlfkEega8oChNdKkEJ
-/Nwhz6xXK/GK0sXlbZkkIqVvyqjkDm4/g7/kJjGqrHF5bnbdsxS7eUovHlc75usU
-7J4f67oVsUN2MoO3OGKgBGJ2pvrULt07mbwhtvgjGE3WazJ6JDVuiDSTezWBClYr
-5kyWku0YfL8xyyUtU28u7YEMM1LKzz6mL52hXynRc4/M+SPEik20vPOLfg+KYC3o
-0Qi2O1rpOmw9VGzLsiaJ52gIq8Axx84n10dXp0IwE6l4jj9DoxwD7JhhnyXj99X4
-/19zN5tbvxzhVQsBH3X9ui+m/jERohoEXCXZamCpczIWWL5iajlIQahKQkjafgRK
-+NCPYknsk41YKPDu0zfr4GixlHOcD6qFODZf5F30T4v5GBgLnhccAhqgVYu2DWxh
-wCv3VcuwgZ9XZpdaUv75nu9rTeeaCl+rAupTXOA8lF23C+i5INjX4Ut9tD83xLtD
-JTiOSVU7yp+KTw3C65tqshHUt5kYQ26yRr5Z51LwMs5AzsC0Iyv53TDZGq86uvds
-/ZEqqtE5mY8HuiXmxGyVoTlnywcrKWv9/OgG/HDDxr/WlFV9lku5LGdoRVyqQ9Zx
-PKYFxZD2p3OKLm38YOTY
-=/R/7
------END PGP SIGNATURE-----
-
---=-UQcyCM+L8clR5VowIh00--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
+YXRjaCBhZGRzICJmc2wsPGNoaXA+LWRldmljZS1jb25maWciIGNvbXBhdGlibGVzIHRvIGd1dHMg
+bm9kZS4KVGhlIGFkZGVkIGNvbXBhdGlibGVzIHVzZWQgaW4gRnJlZXNjYWxlIEZNYW4gY2xvY2sg
+aW5pdGlhbGl6YXRpb24uCiAKVGhpcyBwYXRjaGVzIGlzIGRlc2NyaWJlZCBieSB0aGUgZm9sbG93
+aW5nIGJpbmRpbmcgZG9jdW1lbnQgdXBkYXRlOgoJaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9y
+Zy9wYXRjaC80NjExNTMvCgp2MjogVXBkYXRlZCBjb21taXQgbWVzc2FnZQoKU2lnbmVkLW9mZi1i
+eTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgotLS0KIGFyY2gv
+cG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kgfCAgICAzICsrLQogYXJjaC9w
+b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBvc3QuZHRzaSB8ICAgIDMgKystCiBhcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpICAgIHwgICAgMyArKy0KIGFyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgfCAgICAzICsrLQogYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaSB8ICAgIDMgKystCiBhcmNoL3Bvd2Vy
+cGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpIHwgICAgMyArKy0KIGFyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgfCAgICAzICsrLQogNyBmaWxlcyBjaGFu
+Z2VkLCAxNCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gv
+cG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL2I0NDIwc2ktcG9zdC5kdHNpCmluZGV4IDFlYTg2MDIuLjliMTRmMjQgMTAwNjQ0
+Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wb3N0LmR0c2kKKysrIGIv
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaQpAQCAtNzcsNyArNzcs
+OCBAQAogCX07CiAKIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29tcGF0aWJs
+ZSA9ICJmc2wsYjQ0MjAtZGV2aWNlLWNvbmZpZyIsICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0y
+LjAiOworCQljb21wYXRpYmxlID0gImZzbCxiNDQyMC1kZXZpY2UtY29uZmlnIiwgImZzbCxiNC1k
+ZXZpY2UtY29uZmlnIiwKKwkJCSAgICAgICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0yLjAiOwog
+CX07CiAKIAlnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL2I0ODYwc2ktcG9zdC5kdHNpCmluZGV4IDAyY2NkZTYuLjc0YTlmNWYgMTAwNjQ0Ci0tLSBh
+L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0LmR0c2kKKysrIGIvYXJjaC9w
+b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBvc3QuZHRzaQpAQCAtMjQ4LDcgKzI0OCw4IEBA
+CiAJfTsKIAogCWd1dHM6IGdsb2JhbC11dGlsaXRpZXNAZTAwMDAgewotCQljb21wYXRpYmxlID0g
+ImZzbCxiNDg2MC1kZXZpY2UtY29uZmlnIiwgImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTIuMCI7
+CisJCWNvbXBhdGlibGUgPSAiZnNsLGI0ODYwLWRldmljZS1jb25maWciLCAiZnNsLGI0LWRldmlj
+ZS1jb25maWciLAorCQkJICAgICAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4wIjsKIAl9Owog
+CiAJZ2xvYmFsLXV0aWxpdGllc0BlMTAwMCB7CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNp
+LXBvc3QuZHRzaQppbmRleCBmOGMzMjVlLi5iYWJiMDc2IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2Vy
+cGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0
+cy9mc2wvYjRzaS1wb3N0LmR0c2kKQEAgLTM5MSw3ICszOTEsOCBAQAogL2luY2x1ZGUvICJxb3Jp
+cS1tcGljNC4zLmR0c2kiCiAKIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29t
+cGF0aWJsZSA9ICJmc2wsYjQtZGV2aWNlLWNvbmZpZyI7CisJCWNvbXBhdGlibGUgPSAiZnNsLGI0
+LWRldmljZS1jb25maWciLAorCQkJICAgICAgImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTIuMCI7
+CiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNsLGhhcy1yc3RjcjsKIAkJZnNsLGxpb2Ru
+LWJpdHMgPSA8MTI+OwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0
+MXNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0
+c2kKaW5kZXggMWYxOGI4Yi4uYTdhZTVhZSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3Qv
+ZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L3AyMDQxc2ktcG9zdC5kdHNpCkBAIC0zMTEsNyArMzExLDggQEAKIC9pbmNsdWRlLyAicW9yaXEt
+bXBpYy5kdHNpIgogCiAJZ3V0czogZ2xvYmFsLXV0aWxpdGllc0BlMDAwMCB7Ci0JCWNvbXBhdGli
+bGUgPSAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMS4wIjsKKwkJY29tcGF0aWJsZSA9ICJmc2ws
+cDIwNDEtZGV2aWNlLWNvbmZpZyIsCisJCQkgICAgICAiZnNsLHFvcmlxLWRldmljZS1jb25maWct
+MS4wIjsKIAkJcmVnID0gPDB4ZTAwMDAgMHhlMDA+OwogCQlmc2wsaGFzLXJzdGNyOwogCQkjc2xl
+ZXAtY2VsbHMgPSA8MT47CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Az
+MDQxc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3Qu
+ZHRzaQppbmRleCBhNTU1ZDI0Li44OWQwOGQ2IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvcDMwNDFzaS1wb3N0LmR0c2kKQEAgLTMzOCw3ICszMzgsOCBAQAogL2luY2x1ZGUvICJxb3Jp
+cS1tcGljLmR0c2kiCiAKIAlndXRzOiBnbG9iYWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29tcGF0
+aWJsZSA9ICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiOworCQljb21wYXRpYmxlID0gImZz
+bCxwMzA0MS1kZXZpY2UtY29uZmlnIiwKKwkJCSAgICAgICJmc2wscW9yaXEtZGV2aWNlLWNvbmZp
+Zy0xLjAiOwogCQlyZWcgPSA8MHhlMDAwMCAweGUwMD47CiAJCWZzbCxoYXMtcnN0Y3I7CiAJCSNz
+bGVlcC1jZWxscyA9IDwxPjsKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+cDQwODBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9z
+dC5kdHNpCmluZGV4IDBmZTcyODEuLjE4NjNkNmEgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
+L2ZzbC9wNDA4MHNpLXBvc3QuZHRzaQpAQCAtMzU4LDcgKzM1OCw4IEBACiAvaW5jbHVkZS8gInFv
+cmlxLW1waWMuZHRzaSIKIAogCWd1dHM6IGdsb2JhbC11dGlsaXRpZXNAZTAwMDAgewotCQljb21w
+YXRpYmxlID0gImZzbCxxb3JpcS1kZXZpY2UtY29uZmlnLTEuMCI7CisJCWNvbXBhdGlibGUgPSAi
+ZnNsLHA0MDgwLWRldmljZS1jb25maWciLAorCQkJICAgICAgImZzbCxxb3JpcS1kZXZpY2UtY29u
+ZmlnLTEuMCI7CiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNsLGhhcy1yc3RjcjsKIAkJ
+I3NsZWVwLWNlbGxzID0gPDE+OwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9wNTAyMHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1w
+b3N0LmR0c2kKaW5kZXggYTM0Y2EyMC4uZDk3OWQwMSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBj
+L2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9k
+dHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpCkBAIC0zNDMsNyArMzQzLDggQEAKIC9pbmNsdWRlLyAi
+cW9yaXEtbXBpYy5kdHNpIgogCiAJZ3V0czogZ2xvYmFsLXV0aWxpdGllc0BlMDAwMCB7Ci0JCWNv
+bXBhdGlibGUgPSAiZnNsLHFvcmlxLWRldmljZS1jb25maWctMS4wIjsKKwkJY29tcGF0aWJsZSA9
+ICJmc2wscDUwMjAtZGV2aWNlLWNvbmZpZyIsCisJCQkgICAgICAiZnNsLHFvcmlxLWRldmljZS1j
+b25maWctMS4wIjsKIAkJcmVnID0gPDB4ZTAwMDAgMHhlMDA+OwogCQlmc2wsaGFzLXJzdGNyOwog
+CQkjc2xlZXAtY2VsbHMgPSA8MT47Ci0tIAoxLjcuOS41CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
+cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
+by9saW51eHBwYy1kZXY=
