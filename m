@@ -1,130 +1,41 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/5] dt-bindings: mediatek: Add smi dts binding
-Date: Tue, 14 Apr 2015 11:06:58 +0100
-Message-ID: <20150414100657.GB28709@leverpostej>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
- <1425638900-24989-4-git-send-email-yong.wu@mediatek.com>
- <20150306111338.GD8700@leverpostej>
- <1429002474.14855.7.camel@mhfsdcap03>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Tue, 14 Apr 2015 13:14:40 +0300
+Message-ID: <552CE890.3040103@cogentembedded.com>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <20150328082853.GA4255@localhost.localdomain> <5519D380.6070200@cogentembedded.com> <552C25BE.3070606@cogentembedded.com> <20150414052729.GA5179@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429002474.14855.7.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20150414052729.GA5179@netboy>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 10:07:54AM +0100, Yong Wu wrote:
-> Hi Mark,
->     Thanks very much for review.=20
->     About the clock name should be the PoV of _this_ device. Could yo=
-u
-> help check below?
->=20
-> On Fri, 2015-03-06 at 11:13 +0000, Mark Rutland wrote:
-> > On Fri, Mar 06, 2015 at 10:48:18AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrot=
-e:
-> > > From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > >=20
-> > > This patch add smi binding document.
-> >=20
-> > Please move binding documents to the start of the series. It makes
-> > things far easier to review.
-> >=20
-> > >=20
-> > > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,smi=
-=2Etxt
-> > > @@ -0,0 +1,17 @@
-> > > +SMI hardware block diagram please help check <bindings/iommu/med=
-iatek,iommu.txt>
-> > > +
-> > > +Required properties:
-> > > +- compatible : must be "mediatek,mediatek,mt8173-smi-larb"
-> >=20
-> > Double vendor prefix?
-> >=20
-> > What does "larb" mean? It would be nice for the intorductory paragr=
-aph
-> > in this file to explain.
-> >=20
-> > > +- reg : the register of each local arbiter
-> > > +- clocks : the clocks of each local arbiter
-> > > +- clock-name: larb_sub*(3 clockes at most)
-> >=20
-> > The names required _must_ be specified here, or clock-names is
-> > pointless.
-> >=20
-> > The clock names should be from the PoV of _this_ device (i.e. they
-> > should be the names of the inputs) not from the PoV of the provider
-> > (i.e. they should not be the names of the outputs from the provider=
-).
-> >=20
-> > Mark.
-> >=20
->      After we check with our SMI Designer. Every SMI local arbiter ne=
-ed
-> two clocks, which is called  APB clocks and SMI clock.
->      APB clock : Advanced Peripheral Bus Clock. It is the clock for
-> setting the register of local arbiter.
->      SMI clock : Smart Multimedia Interface Clock, It is the clock fo=
-r
-> transfering the data and command.=20
->=20
->      And all the local arbiters need the smi common clock, so we
-> separate it.=20
->=20
->      Then I prepare to design the smi the dtsi like this:=20
->=20
->       smi_common:smi@14022000 {
->                  compatible =3D =E2=80=9Cmediate, mt8173-smi=E2=80=9D=
-;
->                  reg =3D <0 0x14022000 0 0x1000>;
->                  clocks =3D <&mmsys MM_SMI_COMMON>;
->                  clocks-names =3D =E2=80=9Csmi_common=E2=80=9D;
->       };
->=20
->       larb0: larb@14021000 {
->                  compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=E2=80=
-=9D;
->                  reg =3D <0 0x14021000 0 0x1000>;
->                  smi =3D <&smi_common>;
->                  clocks =3D <&mmsys MM_SMI_LARB0>,=20
-> 		 	<&mmsys MM_SMI_LARB0>;
->                  clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=9C=
-smi_clk=E2=80=9D;
->      };
->=20
->      larb1: larb@16010000 {
->                  compatible =3D =E2=80=9Cmediate, mt8173-smi-larb=E2=80=
-=9D;
->                  reg =3D <0 0x16010000 0 0x1000>;
->                  smi =3D <&smi_common>;
->                  clocks =3D <&vdecsys VDEC_CKEN>,=20
-> 			 <&mmsys VDEC_LARB_CKEN>;
->                  clocks-names =3D =E2=80=9Capb_clk=E2=80=9D, =E2=80=9C=
-smi_clk=E2=80=9D;
->       };
->       =E2=80=A6=20
->      In some local arbiter, the source clock of the APB clock and the
-> SMI clock may be the same, like larb0. so the two clocks are the same=
-=2E
-> And they may be different in other local arbiteres, like larb1.     =20
->=20
->      If it is designed like this, is it ok?
+Hello.
 
-That looks pretty good; the clocks and names on the larb nodes seem
-sensible.
+On 4/14/2015 8:27 AM, Richard Cochran wrote:
 
-The naming of the "smi_common" clock on the smi_common node looks a bit
-odd though. Is that really what the clock input is called?
+>>>> This is a bit hacky.  Can't your driver make sure that the HW is ready?
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>     Will look into this. Perhaps it's a remainder from when the PTP driver was
+>>> separate...
+
+>>     No, we enter this mode upon closing the Ethernet device and when
+>> the ring DMA sizes are changed. Seems unavoidable...
+
+>>>>> +    if (ravb_read(priv->ndev, CSR) & CSR_OPS_CONFIG)
+>>>>> +        return true;
+>>>>> +    else
+>>>>> +        return false;
+
+> It is surely avoidable.  The driver knows (or should know) whether or
+> not the hardware has been configured or not.
+
+    So you only want to avoid the register read here?
+
+> Thanks,
+> Richard
+
+WBR, Sergei
