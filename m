@@ -1,61 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: fix allocation size for device node path
-Date: Wed, 15 Apr 2015 08:00:02 -0500
-Message-ID: <CAL_Jsq+QfBENXDg3yJEv6+9gVynS-eAFNg1ZR_1xFLQ7o3fPDw@mail.gmail.com>
-References: <1428986165-6250-1-git-send-email-jcliang@chromium.org> <20150415121515.8E1FAC40A0B@trevor.secretlab.ca>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 0/2] gpio: Allow userspace export from DT
+Date: Wed, 15 Apr 2015 08:19:52 -0500
+Message-ID: <CAL_JsqJorndYh4ROdKbJfpG1KY=Xosjc6BMFYRPrb+BsauFsnQ@mail.gmail.com>
+References: <20150413110515.9681.58848.stgit@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150415121515.8E1FAC40A0B-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150413110515.9681.58848.stgit@localhost>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Fuzzey <mfuzzey@parkeon.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2015 at 7:15 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 14 Apr 2015 12:36:05 +0800
-> , Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->  wrote:
->> The allocation size of device node path is off by one which drops the
->> '\0' terminator.
->>
->> Signed-off-by: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> This looks like something that should be backported to stable. Do you agree?
+On Mon, Apr 13, 2015 at 6:05 AM, Martin Fuzzey <mfuzzey@parkeon.com> wrote:
+> Currently the gpio sysfs interface allows userspace to access simple hardware
+> where no kernel driver exists or would be useful.
 
-I've applied, but didn't tag it. I'll send it for stable once it is in
-Linus' tree.
+Whether or not a kernel driver exists can vary by kernel version. The
+dtb needs to work either way. The way you have done it would require
+dtb changes.
 
-BTW, it only affects old dtb versions less than 0x10 because allocl is
-overwritten in the 'if' statement just below here.
+It would be useful to describe the function of gpios in a way that
+either subsystems can bind to them (e.g. leds, rf-kill, keys, etc.) or
+that information can be exported to userspace.
 
-Rob
+> However it requires userspace to know the gpio number that has been assigned
+> by the kernel.
+>
+> That number, in the case of gpio drviers using dynamic allocation, is not fixed,
+> and may change when:
+> * The kernel version changes and ARCH_NR_GPIOS is changed (happened in 3.17)
+> * The kernel version changes and probe order changes for gpio chips.
+> * The kernel configuration is changed if CONFIG_ARCH_NR_GPIO is used
+> * The board is redesigned (eg switching an externally visible signal from a
+> SoC provided GPIO to an I2C expander chip or vice versa).
+> * Other GPIO chips are added to the system.
 
+Isn't there some plan/desire to fix the GPIO sysfs interface?
+
+> The above means that, in order to export the GPIO to userspace via
+> /sys/class/gpio/export the userspace code must know the exact hardware and
+> kernel version information.
 >
-> g.
+> Furthermore, in many cases, it makes no sense to allow userspace to change the
+> signal direction; even if the GPIO itself allows it the circuitry connected
+> to the pin often does not (eg a signal dedicated to an output function driving
+> a  transistor).
 >
->> ---
->>  drivers/of/fdt.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 3a896c9..98a9e6e 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -172,7 +172,7 @@ static void * unflatten_dt_node(void *blob,
->>       if (!pathp)
->>               return mem;
->>
->> -     allocl = l++;
->> +     allocl = ++l;
->>
->>       /* version 0x10 has a more compact unit name here instead of the full
->>        * path. we accumulate the full path size using "fpsize", we'll rebuild
->> --
->> 2.1.2
->>
+> This patch series solves both problems by performing the external
+> signal => GPIO mapping in the device tree.
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
