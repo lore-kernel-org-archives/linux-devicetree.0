@@ -1,43 +1,33 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Fix dr_mode of usb0
-Date: Wed, 15 Apr 2015 04:59:58 +0200
-Message-ID: <201504150459.58238.marex@denx.de>
-References: <1429043846-28731-1-git-send-email-stefan.wahren@i2se.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Wed, 15 Apr 2015 07:31:09 +0200
+Message-ID: <20150415053108.GA5443@netboy>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com>
+ <20150328082853.GA4255@localhost.localdomain>
+ <5519D380.6070200@cogentembedded.com>
+ <552C25BE.3070606@cogentembedded.com>
+ <20150414052729.GA5179@netboy>
+ <552CE890.3040103@cogentembedded.com>
+ <20150414163002.GB4309@localhost.localdomain>
+ <552D472A.6080309@cogentembedded.com>
+ <20150414183000.GA5327@localhost.localdomain>
+ <552DB851.8050800@renesas.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429043846-28731-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <552DB851.8050800@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: masaru.nagai.vx@renesas.com
+Cc: sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, April 14, 2015 at 10:37:26 PM, Stefan Wahren wrote:
-> The dr_mode of usb0 on imx233-olinuxino is left to default "otg".
-> Since the green LED (GPIO2_1) on imx233-olinuxino is connected to the
-> same pin as USB_OTG_ID it's possible to disable USB host by LED toggling:
+On Wed, Apr 15, 2015 at 10:01:05AM +0900, masaru.nagai.vx@renesas.com wrote:
 > 
-> echo 0 > /sys/class/leds/green/brightness
-> [ 1068.890000] ci_hdrc ci_hdrc.0: remove, state 1
-> [ 1068.890000] usb usb1: USB disconnect, device number 1
-> [ 1068.920000] usb 1-1: USB disconnect, device number 2
-> [ 1068.920000] usb 1-1.1: USB disconnect, device number 3
-> [ 1069.070000] usb 1-1.2: USB disconnect, device number 4
-> [ 1069.450000] ci_hdrc ci_hdrc.0: USB bus 1 deregistered
-> [ 1074.460000] ci_hdrc ci_hdrc.0: timeout waiting for 00000800 in 11
-> 
-> This patch fixes the issue by setting dr_mode to "host" in the dts file.
-> 
-> Reported-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Oddly, This hardware is linked operation mode of the Ethernet I/F with PTP clock.
 
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+In that case, you should remove the clock along with the interface.
+Please see ixgbe as an example.
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Richard
