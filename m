@@ -1,38 +1,58 @@
-From: <masaru.nagai.vx@renesas.com>
-Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
-Date: Wed, 15 Apr 2015 10:01:05 +0900
-Message-ID: <552DB851.8050800@renesas.com>
-References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <20150328082853.GA4255@localhost.localdomain> <5519D380.6070200@cogentembedded.com> <552C25BE.3070606@cogentembedded.com> <20150414052729.GA5179@netboy> <552CE890.3040103@cogentembedded.com> <20150414163002.GB4309@localhost.localdomain> <552D472A.6080309@cogentembedded.com> <20150414183000.GA5327@localhost.localdomain>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v5 04/12] drm/exynos: dsi: rename pll_clk to sclk_clk
+Date: Wed, 15 Apr 2015 10:24:21 +0900
+Message-ID: <552DBDC5.1080701@samsung.com>
+References: <1428645330-1043-1-git-send-email-human.hwang@samsung.com>
+ <1428645330-1043-5-git-send-email-human.hwang@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150414183000.GA5327@localhost.localdomain>
-Sender: linux-sh-owner@vger.kernel.org
-To: richardcochran@gmail.com, sergei.shtylyov@cogentembedded.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1428645330-1043-5-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyungwon Hwang <human.hwang@samsung.com>
+Cc: devicetree@vger.kernel.org, sw0312.kim@samsung.com, dh09.lee@samsung.com, cw00.choi@samsung.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015=E5=B9=B404=E6=9C=8815=E6=97=A5 03:30, Richard Cochran wrote:
-> On Tue, Apr 14, 2015 at 07:58:18PM +0300, Sergei Shtylyov wrote:
->>
->>     I tried to explain to you that I can't. We enter the device
->> configuration mode (from the operation mode) when e.g. the
->> *Ethernet* device is closed.
->
-> Is this a hardware restriction?
-
-Yes
-
-> Logically speaking, the clock has nothing to do with the state of the
-> Ethernet interface.  If the clock keeps ticking and you can access
-> it, then there is no reason to return EBUSY just because the interfac=
-e
-> is down.
-
-Oddly, This hardware is linked operation mode of the Ethernet I/F with =
-PTP clock.
-
-Best Regards,
-Masaru Nagai
+T24gMjAxNeuFhCAwNOyblCAxMOydvCAxNDo1NSwgSHl1bmd3b24gSHdhbmcgd3JvdGU6Cj4gVGhp
+cyBwYXRjaCByZW5hbWVzIHBsbF9jbGsgdG8gc2Nsa19jbGsuIFRoZSBjbG9jayByZWZlcmVuY2Vk
+IGJ5IHBsbF9jbGsKPiBpcyBhY3R1YWxseSBub3QgdGhlIHBsbCBpbnB1dCBjbG9jayBmb3IgZHNp
+LiBUaGUgcGxsIGlucHV0IGNsb2NrIGNvbWVzCj4gZnJvbSB0aGUgYm9hcmQncyBvc2NpbGxhdG9y
+IGRpcmVjdGx5Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2Fu
+Z0BzYW1zdW5nLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIGZvciB2MzoKPiAtIE5ld2x5IGFkZGVkCj4g
+Cj4gQ2hhbmdlcyBmb3IgdjQ6Cj4gLSBOb25lCj4gCj4gQ2hhbmdlcyBmb3IgdjU6Cj4gLSBOb25l
+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vc19kc2ltLnR4dCAgICAgIHwg
+IDcgKystLS0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jICAgICAg
+ICAgICAgfCAzMSArKysrKysrKy0tLS0tLS0tLS0tLS0tCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTUg
+aW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRpb25zKC0pCj4gCiAgICAuLi5zbmlwLi4uCj4gQEAgLTEz
+NTAsNyArMTM0MSw3IEBAIHN0YXRpYyB2b2lkIGV4eW5vc19kc2lfcG93ZXJvZmYoc3RydWN0IGV4
+eW5vc19kc2kgKmRzaSkKPiAgCj4gIAlwaHlfcG93ZXJfb2ZmKGRzaS0+cGh5KTsKPiAgCj4gLQlj
+bGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxfY2xrKTsKPiArCWNsa19kaXNhYmxlX3VucHJl
+cGFyZShkc2ktPnNjbGtfY2xrKTsKPiAgCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPmJ1c19j
+bGspOwo+ICAKPiAgCXJldCA9IHJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoQVJSQVlfU0laRShkc2kt
+PnN1cHBsaWVzKSwgZHNpLT5zdXBwbGllcyk7Cj4gQEAgLTE3MTMsMTAgKzE3MDQsMTAgQEAgc3Rh
+dGljIGludCBleHlub3NfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4g
+IAkJcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4gIAl9Cj4gIAo+IC0JZHNpLT5wbGxfY2xrID0gZGV2
+bV9jbGtfZ2V0KGRldiwgInBsbF9jbGsiKTsKPiAtCWlmIChJU19FUlIoZHNpLT5wbGxfY2xrKSkg
+ewo+IC0JCWRldl9pbmZvKGRldiwgImZhaWxlZCB0byBnZXQgZHNpIHBsbCBpbnB1dCBjbG9ja1xu
+Iik7Cj4gLQkJcmV0ID0gUFRSX0VSUihkc2ktPnBsbF9jbGspOwo+ICsJZHNpLT5zY2xrX2NsayA9
+IGRldm1fY2xrX2dldChkZXYsICJzY2xrX21pcGkiKTsKCkFzIEkgbWVudGlvbmVkIGJlZm9yZSwg
+dGhpcyBwYXRjaCBtYWtlcyBleGlzdGluZyBkZXZpY2UgdHJlZSB0byBiZQpicm9rZW4gc28gdGhp
+cyBjYW5ub3QgYmUgbWVyZ2VkIGV2ZW4gdGhvdWdoIHlvdSBwb3N0ZWQgYW4gYW5vdGhlciBwYXRj
+aAp3aGljaCByZXNvbHZlcyB0aGUgZHQgYnJva2VuIGlzc3VlLiBUaGF0IGlzIGJlY2F1c2UgZWFj
+aCBwYXRjaCBzaG91bGRuJ3QKaW5jdXIgYW55IHByb2JsZW0gb24gd29ya2luZy4gU28gaXQnZCBi
+ZSBiZXR0ZXIgdG8gaW50ZWdyYXRlIHRoaXMgcGF0Y2gKYW5kIHBhdGNoIDkuCgpUaGFua3MsCklu
+a2kgRGFlCgo+ICsJaWYgKElTX0VSUihkc2ktPnNjbGtfY2xrKSkgewo+ICsJCWRldl9pbmZvKGRl
+diwgImZhaWxlZCB0byBnZXQgZHNpIHNjbGsgY2xvY2tcbiIpOwo+ICsJCXJldCA9IFBUUl9FUlIo
+ZHNpLT5zY2xrX2Nsayk7Cj4gIAkJZ290byBlcnJfZGVsX2NvbXBvbmVudDsKPiAgCX0KPiAgCj4g
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
