@@ -1,99 +1,66 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v5 09/10] DT: aat1290: Document handling external strobe sources
-Date: Wed, 15 Apr 2015 08:48:39 +0200
-Message-ID: <1429080520-10687-10-git-send-email-j.anaszewski@samsung.com>
-References: <1429080520-10687-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1429080520-10687-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
-Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Wed, 15 Apr 2015 15:06:07 +0800
+Message-ID: <1429081567.16400.16.camel@mhfsdcap03>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
+	<CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
+	<1426677749.22581.38.camel@mhfsdcap03>
+	<CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A@mail.gmail.com>
+	<1428993067.13552.14.camel@mhfsdcap03>
+	<CAAFQd5Db+DacQYa1pdr=w5JpU76AYa-Xhd20wHBF=F6m=Efokw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAAFQd5Db+DacQYa1pdr=w5JpU76AYa-Xhd20wHBF=F6m=Efokw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for a pinctrl-names property.
-The property, when present, is used for switching the source
-of the strobe signal for the device.
-
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/leds/leds-aat1290.txt      |   36 ++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-aat1290.txt b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-index ef88b9c..c05ed91 100644
---- a/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-@@ -2,7 +2,9 @@
- 
- The device is controlled through two pins: FL_EN and EN_SET. The pins when,
- asserted high, enable flash strobe and movie mode (max 1/2 of flash current)
--respectively.
-+respectively. In order to add a capability of selecting the strobe signal source
-+(e.g. CPU or camera sensor) there is an additional switch required, independent
-+of the flash chip. The switch is controlled with pin control.
- 
- Required properties:
- 
-@@ -10,6 +12,13 @@ Required properties:
- - flen-gpios : Must be device tree identifier of the flash device FL_EN pin.
- - enset-gpios : Must be device tree identifier of the flash device EN_SET pin.
- 
-+Optional properties:
-+- pinctrl-names : Must contain entries: "default", "host", "isp". Entries
-+		"default" and "host" must refer to the same pin configuration
-+		node, which sets the host as a strobe signal provider. Entry
-+		"isp" must refer to the pin configuration node, which sets the
-+		ISP as a strobe signal provider.
-+
- A discrete LED element connected to the device must be represented by a child
- node - see Documentation/devicetree/bindings/leds/common.txt.
- 
-@@ -25,13 +34,22 @@ Required properties of the LED child node:
- Optional properties of the LED child node:
- - label : see Documentation/devicetree/bindings/leds/common.txt
- 
--Example (by Ct = 220nF, Rset = 160kohm):
-+Example (by Ct = 220nF, Rset = 160kohm and exynos4412-trats2 board with
-+a switch that allows for routing strobe signal either from the host or from
-+the camera sensor):
-+
-+#include "exynos4412.dtsi"
- 
- aat1290 {
- 	compatible = "skyworks,aat1290";
- 	flen-gpios = <&gpj1 1 GPIO_ACTIVE_HIGH>;
- 	enset-gpios = <&gpj1 2 GPIO_ACTIVE_HIGH>;
- 
-+	pinctrl-names = "default", "host", "isp";
-+	pinctrl-0 = <&camera_flash_host>;
-+	pinctrl-1 = <&camera_flash_host>;
-+	pinctrl-2 = <&camera_flash_isp>;
-+
- 	camera_flash: flash-led {
- 		label = "aat1290-flash";
- 		led-max-microamp = <520833>;
-@@ -39,3 +57,17 @@ aat1290 {
- 		flash-timeout-us = <1940000>;
- 	};
- };
-+
-+&pinctrl_0 {
-+	camera_flash_host: camera-flash-host {
-+		samsung,pins = "gpj1-0";
-+		samsung,pin-function = <1>;
-+		samsung,pin-val = <0>;
-+	};
-+
-+	camera_flash_isp: camera-flash-isp {
-+		samsung,pins = "gpj1-0";
-+		samsung,pin-function = <1>;
-+		samsung,pin-val = <1>;
-+	};
-+};
--- 
-1.7.9.5
+T24gV2VkLCAyMDE1LTA0LTE1IGF0IDExOjIwICswOTAwLCBUb21hc3ogRmlnYSB3cm90ZToKPiBP
+biBUdWUsIEFwciAxNCwgMjAxNSBhdCAzOjMxIFBNLCBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVr
+LmNvbT4gd3JvdGU6Cj4gPj4gPj4KPiA+PiA+PiA+ICsKPiA+PiA+PiA+ICsgICAgICAgcGlvbW11
+LT5wcm90ZWN0X3ZhID0gZGV2bV9rbWFsbG9jKHBpb21tdS0+ZGV2LCBNVEtfUFJPVEVDVF9QQV9B
+TElHTioyLAo+ID4+ID4+Cj4gPj4gPj4gc3R5bGU6IE9wZXJhdG9ycyBsaWtlICogc2hvdWxkIGhh
+dmUgc3BhY2Ugb24gYm90aCBzaWRlcy4KPiA+PiA+Pgo+ID4+ID4+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgR0ZQX0tFUk5FTCk7Cj4gPj4gPj4KPiA+PiA+PiBT
+aG91bGRuJ3QgZG1hX2FsbG9jX2NvaGVyZW50KCkgYmUgdXNlZCBmb3IgdGhpcz8KPiA+PiA+ICAg
+ICAgV2UgZG9uJ3QgY2FyZSB0aGUgZGF0YSBpbiBpdC4gSSB0aGluayB0aGV5IGFyZSB0aGUgc2Ft
+ZS4gQ291bGQgeW91Cj4gPj4gPiBoZWxwIHRlbGwgbWUgd2h5IGRtYV9hbGxvY19jb2hlcmVudCBt
+YXkgYmUgYmV0dGVyLgo+ID4+Cj4gPj4gQ2FuIHlvdSBndWFyYW50ZWUgdGhhdCBhdCB0aGUgdGlt
+ZSB5b3UgYWxsb2NhdGUgdGhlIG1lbW9yeSB1c2luZwo+ID4+IGRldm1fa21hbGxvYygpIHRoZSBt
+ZW1vcnkgaXMgbm90IGRpcnR5IChpLmUuIHNvbWUgd3JpdGUgYmFjayBkYXRhIGFyZQo+ID4+IHN0
+b3JlZCBpbiBDUFUgY2FjaGUpIGFuZCBpcyBub3QgZ29pbmcgdG8gYmUgd3JpdHRlbiBiYWNrIGlu
+IHNvbWUgdGltZSwKPiA+PiBvdmVyd3JpdGluZyBkYXRhIHB1dCB0aGVyZSBieSBJT01NVSBoYXJk
+d2FyZT8KPiA+Pgo+ID4gQXMgSSBub3RlZCBpbiB0aGUgZnVuY3Rpb24gIm10a19pb21tdV9od19p
+bml0IjoKPiA+Cj4gPiAgICAgICAgLyogcHJvdGVjdCBtZW1vcnksSFcgd2lsbCB3cml0ZSBoZXJl
+IHdoaWxlIHRyYW5zbGF0aW9uIGZhdWx0ICovCj4gPiAgICAgICAgcHJvdGVjdHBhID0gX192aXJ0
+X3RvX3BoeXMocGlvbW11LT5wcm90ZWN0X3ZhKTsKPiA+Cj4gPiAgICAgIFdlIGRvbuKAmXQgY2Fy
+ZSB0aGUgY29udGVudCBvZiB0aGlzIGJ1ZmZlciwgSXQgaXMgb2sgZXZlbiB0aG91Z2ggaXRzCj4g
+PiBkYXRhIGlzIGRpcnR5Lgo+ID4gICAgIEl0IHNlZW0gdG8gYmUgYSB0aGUgcHJvdGVjdCBtZW1v
+cnkuIFdoaWxlIGEgdHJhbnNsYXRpb24gZmF1bHQKPiA+IGhhcHBlbmVkLCBUaGUgaW9tbXUgSFcg
+d2lsbCBvdmVyd3JpdGUgaGVyZSBpbnN0ZWFkIG9mIHdyaXRpbmcgdG8gdGhlCj4gPiBmYXVsdCBw
+aHlzaWNhbCBhZGRyZXNzIHdoaWNoIG1heSBiZSAwIG9yIHNvbWUgcmFuZG9tIGFkZHJlc3MuCj4g
+Pgo+IAo+IERvIHlvdSBtZWFuIHRoYXQgaXQncyBqdXN0IGEgZHVtbXkgcGFnZSBmb3IgaGFyZHdh
+cmUgYmVoaW5kIHRoZSBJT01NVQo+IHRvIGFjY2VzcyB3aGVuIHRoZSBtYXBwaW5nIGlzIG5vdCBh
+dmFpbGFibGU/IEhvdyB3b3VsZCB0aGF0IHdvcmsgd2l0aAo+IHBvdGVudGlhbCBvbiBkZW1hbmQg
+cGFnaW5nIHdoZW4gdGhlIGhhcmR3YXJlIG5lZWRzIHRvIGJlIGJsb2NrZWQgdW50aWwKPiB0aGUg
+bWFwcGluZyBpcyBjcmVhdGVkPwo+IAo+IEJlc3QgcmVnYXJkcywKPiBUb21hc3oKIDEuIFlFUwog
+Mi4gU29ycnkuIE91ciBpb21tdSBIVyBjYW4gbm90IHN1cHBvcnQgdGhpcyByaWdodCBub3cuIFRo
+ZSBIVyBjYW4gbm90CmJlIGJsb2NrZWQgdW50aWwgdGhlIG1hcHBpbmcgaXMgY3JlYXRlZC4KICAg
+IElmIHRoZSBwYWdlIGlzIG5vdCByZWFkeSwgd2UgY2FuIG5vdCBnZXQgdGhlIHBoeXNpY2FsIGFk
+ZHJlc3MsIHRoZW4KSG93IHRvIGZpbGwgdGhlIHBhZ2V0YWJsZSBmb3IgdGhhdCBtZW1vcnkuIEkg
+dGhpbmsgdGhlIGRtYSZpb21tdSBtYXkKZ3VhcmFudHkgaXQ/CgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxp
+c3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
