@@ -1,19 +1,20 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: imx23-olinuxino: Fix dr_mode of usb0
-Date: Wed, 15 Apr 2015 11:32:12 +0800
-Message-ID: <20150415033211.GB29095@shlinux2>
+Date: Wed, 15 Apr 2015 04:59:58 +0200
+Message-ID: <201504150459.58238.marex@denx.de>
 References: <1429043846-28731-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
 In-Reply-To: <1429043846-28731-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 08:37:26PM +0000, Stefan Wahren wrote:
+On Tuesday, April 14, 2015 at 10:37:26 PM, Stefan Wahren wrote:
 > The dr_mode of usb0 on imx233-olinuxino is left to default "otg".
 > Since the green LED (GPIO2_1) on imx233-olinuxino is connected to the
 > same pin as USB_OTG_ID it's possible to disable USB host by LED toggling:
@@ -31,34 +32,11 @@ On Tue, Apr 14, 2015 at 08:37:26PM +0000, Stefan Wahren wrote:
 > 
 > Reported-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
 > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx23-olinuxino.dts |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx23-olinuxino.dts b/arch/arm/boot/dts/imx23-olinuxino.dts
-> index 7e6eef2..3b2d74d 100644
-> --- a/arch/arm/boot/dts/imx23-olinuxino.dts
-> +++ b/arch/arm/boot/dts/imx23-olinuxino.dts
-> @@ -93,6 +93,7 @@
->  
->  	ahb@80080000 {
->  		usb0: usb@80080000 {
-> +			dr_mode = "host";
->  			vbus-supply = <&reg_usb0_vbus>;
->  			status = "okay";
->  		};
-> -- 
-> 1.7.9.5
-> 
 
-If this board has only host function, I am ok for it.
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
--- 
-
-Best Regards,
-Peter Chen
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
