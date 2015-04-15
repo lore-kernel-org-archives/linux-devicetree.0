@@ -1,133 +1,158 @@
-From: Hannes Petermaier <Hannes.Petermaier-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 0/2] iio: ti_am335x_adc: Add optional DT properties for tscadc
-Date: Wed, 15 Apr 2015 07:33:13 +0200
-Message-ID: <OF8FD6AADF.98AD3B30-ONC1257E28.001B8C0B-C1257E28.001E820E@br-automation.com>
-References: <OFD386DA80.D9FD2A2E-ONC1257E27.003DC94D-C1257E27.003DF465@br-automation.com> <552D01BB.5040500@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] dmaengine: imx-sdma: Add DMA event remapping for imx6sx-sdma
+Date: Tue, 14 Apr 2015 22:39:11 -0700
+Message-ID: <1429076351-4429-1-git-send-email-nicoleotsuka@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <552D01BB.5040500-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fcooper-l0cyMroinI0@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, Johannes Pointner <Johannes.Pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Hi Hannes,
-Hi Vignesh,
-thanks for answer.
+The SDMA on imx6sx has a few DMA event remapping configurations
+inside the GPR (General Purpose Register) of that SoC. When users
+want to use a non-default DMA event, they need to configure the
+GPR register. So this patch gives an interface of the GPR and
+implements it in the SDMA driver so as to finish the DMA event
+remapping.
 
-> >>
-> >> would it be possible to add some more channel-specific settings ?
-> >>
-> >> It would be nice to have allmost full control to the STEPCONFIGx 
-> > register.
-> >>
-> >> At least we need to write the bits
-> >>
-> >> SEL_RFM_SWC_1_0
-> >> SEL_INM_SWC_3_0 
-> >> SEL_RFP_SWC_2_0 
-> >>
-> >> In the current mainline version only (SEL_INP_SWC_3_0) is written.
-> >> So for the other bits "0" is value is used, for my point of view this 
-is 
-> > not correct.
-> >>
-> >> For example if we want to read a value from AIN5 the negative pin 
-from 
-> > adc is 
-> >> muxed allways to AIN0.
-> 
-> Sorry... I didn't understand what you meant by"AIN5 is muxed always with
-> AIN0"?
-Have a look to the TRM (spruh73k.pdf) Page 1740 / Figure 12-2. Functional 
-Block Diagram.
-There you can see that the ADC-cell which has two inputs, one positive and 
-one negative.
-Also there are two reference inputs, one positive - one negative.
+Signed-off-by: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  9 ++++
+ drivers/dma/imx-sdma.c                             | 58 ++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
 
-All this "pins" are muxed, because only one channel per time can be 
-sampled.
-This muxes are controlled through the STEPCONFIGx registers.
-
-If you want for example take some measurement from AIN5 the driver muxes 
-the positive input from the ADC to AIN5 by setting the bits for 
-SEL_INP<3:0> - this is ok.
-But the bits for SEL_INM<3:0> are still 'zero'. 
-In summary this results in following mux-setting (regarding page 1771 in 
-TRM):
-
-positive-reference muxed to   VDDA
-negative-reference muxed to   VSSA
-positive-input muxed to       AIN5
-negative-input muxed to       AIN0
-
->From this setup we run into 2 problems:
-- the negative input terminal is muxed maybe to wrong potential
-In much cases we have a single-ended signal so this setup looks good at 
-first, because the "Diff_CNTRL" bit is also false. 
-In fact there is an influence to the reading if the negative 
-input-terminal isn't setup correctly (to VSSA or REFN). 
-Maybe i interpret the "Diff_CNTRL" not correctly, there is no detailed 
-description within the TRM - maybe some of your workmates can explain you 
-the functionality of this bit.
-
-- reference is allways taken from VDDA/VSSA
-For a precision measurement you dont't use in normal case the 
-analog-supply.
-This rail brings noise, drift - all things whicht we don't need for 
-accurate measurement.
-
-> 
-> >> In fact i can readout heavy jitter even if AIN5 is connected to 
-ground - 
-> > after
-> >> setting up negative adc pin within code (to use REFN)  the readout 
-value 
-> > is 0 
-> >> as expected without nameable jitter.
-> >> If i short AIN0 also to ground, jitter is also eliminated.
-> 
-> Hmmm... nobody has reported such behavior before. ADC support for
-> am335x-evm/beaglebone has been there for quite long time, but nobody
-> reported any jitter on AIN5 line. I think this may be specific to
-> your setup. Can you provide more info with regard to your setup?
-> Which kernel? Is it am335x-evm or beaglebone or a custom board?
-Maybe nobody does some precision measurement with beaglebone.
-For operating some touchscreen or readout a potentiometer for evaluation 
-purpose it is still good enough.
-
-Kernel is current mainline, 4.0
-Board is some custom board of my company.
-But all this parameters shouldn't have some influence to the case.
-
-> >>
-> >> Maybe this is also some fault of TI SoC ... in normal case somebody 
-> > could 
-> >> expect, that negative adc pin is equal even the Diff_CNTRL bit isn't 
-set 
-> > - but
-> >> in practice it isn't.
-> >>
-> >> Also actually it isn't possible to make some accurate measurement due 
-to 
-> > the 
-> >> fact that allways VDDA_ADC is used as positive reference.
-> >>
-> >> So it would be nice to have control around this bits.
-> >> Whats your opinion around that?
-> 
-> Sorry, I am not yet clear on your bug/use-case.
-> 
-> Please comment inline while replying on mailing list
-okay so ?
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+index dc8d3aa..03315a6 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+@@ -8,6 +8,7 @@ Required properties:
+       "fsl,imx51-sdma"
+       "fsl,imx53-sdma"
+       "fsl,imx6q-sdma"
++      "fsl,imx6sx-sdma"
+   The -to variants should be preferred since they allow to determine the
+   correct ROM script addresses needed for the driver to work without additional
+   firmware.
+@@ -19,6 +20,14 @@ Required properties:
+ - fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
+   scripts firmware
  
-> Regards
-> Vignesh
-best regards,
-Hannes
-
-
++Optional properties:
++- fsl, sdma-event-remap : List of one or more DMA event remapping
++  configurations. Its format: <&gpr addr shift val>
++	gpr : the gpr phandle
++	addr : the register address of the GPR
++	shift : the bit shift of the GPR register
++	val : the value of that bit
++
+ The second cell of dma phandle specifies the peripheral type of DMA transfer.
+ The full ID of peripheral types can be found below.
+ 
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 62bbd79..f0339ab 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -25,6 +25,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/regmap.h>
+ #include <linux/sched.h>
+ #include <linux/semaphore.h>
+ #include <linux/spinlock.h>
+@@ -39,6 +40,7 @@
+ #include <linux/of_dma.h>
+ 
+ #include <asm/irq.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/platform_data/dma-imx-sdma.h>
+ #include <linux/platform_data/dma-imx.h>
+ 
+@@ -440,12 +442,16 @@ static struct platform_device_id sdma_devtypes[] = {
+ 		.name = "imx6q-sdma",
+ 		.driver_data = (unsigned long)&sdma_imx6q,
+ 	}, {
++		.name = "imx6sx-sdma",
++		.driver_data = (unsigned long)&sdma_imx6q,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
+ MODULE_DEVICE_TABLE(platform, sdma_devtypes);
+ 
+ static const struct of_device_id sdma_dt_ids[] = {
++	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6q, },
+ 	{ .compatible = "fsl,imx6q-sdma", .data = &sdma_imx6q, },
+ 	{ .compatible = "fsl,imx53-sdma", .data = &sdma_imx53, },
+ 	{ .compatible = "fsl,imx51-sdma", .data = &sdma_imx51, },
+@@ -1337,6 +1343,54 @@ err_firmware:
+ 	release_firmware(fw);
+ }
+ 
++static int sdma_event_remap(struct sdma_engine *sdma)
++{
++	struct device_node *np = sdma->dev->of_node;
++	char propname[] = "fsl,sdma-event-remap";
++	struct of_phandle_args gpr_spec;
++	struct regmap *gpr;
++	int i = 0, ret = 0;
++
++	/* Only support DT */
++	if (IS_ERR(np))
++		return ret;
++
++	/* Only apply to imx6sx platform */
++	if (!of_device_is_compatible(np, "fsl,imx6sx-sdma"))
++		return ret;
++
++	/* Bypass if no need to remap */
++	if (!of_find_property(np, propname, NULL))
++		return ret;
++
++	/* Fetch the remap configurations of GPR */
++	ret = of_parse_phandle_with_args(np, propname, "#gpr-cells", i++,
++					 &gpr_spec);
++	if (ret) {
++		dev_err(sdma->dev, "failed to get a correct %s property: %d\n",
++				propname, ret);
++		return ret;
++	}
++
++next:
++	gpr = syscon_node_to_regmap(gpr_spec.np);
++	if (IS_ERR(gpr)) {
++		ret = PTR_ERR(gpr);
++		dev_err(sdma->dev, "failed to get gpr regmap: %d\n", reg);
++		return ret;
++	}
++
++	/* 0 : Register address, 1 : Bit shift, 2 : Bit value */
++	regmap_update_bits(gpr, gpr_spec.args[0], BIT(gpr_spec.args[1]),
++			   gpr_spec.args[2] << gpr_spec.args[1]);
++
++	if (!of_parse_phandle_with_args(np, propname, "#gpr-cells", i++,
++					&gpr_spec))
++		goto next;
++
++	return ret;
++}
++
+ static int sdma_get_firmware(struct sdma_engine *sdma,
+ 		const char *fw_name)
+ {
+@@ -1551,6 +1605,10 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_init;
+ 
++	ret = sdma_event_remap(sdma);
++	if (ret)
++		goto err_init;
++
+ 	if (sdma->drvdata->script_addrs)
+ 		sdma_add_scripts(sdma, sdma->drvdata->script_addrs);
+ 	if (pdata && pdata->script_addrs)
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
