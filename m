@@ -1,59 +1,91 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v2] dt/bindings: fsl/guts: Added global-utilities compatibles
-Date: Wed, 15 Apr 2015 12:16:20 -0500
-Message-ID: <1429118180.22867.720.camel@freescale.com>
-References: <1429006329-24597-1-git-send-email-igal.liberman@freescale.com>
- <1429042131.22867.682.camel@freescale.com>
- <DM2PR03MB3837B6B30125C77F1C6F89EE6E50@DM2PR03MB383.namprd03.prod.outlook.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Wed, 15 Apr 2015 18:35:13 +0100
+Message-ID: <20150415173513.GE23758@red-moon>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
+ <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
+ <493B15F8-0EBE-4633-9604-671EF403F36E@codeaurora.org>
+ <20150410161052.GF6854@e104818-lin.cambridge.arm.com>
+ <FDC755A7-ACCF-4222-8730-782EEC632159@codeaurora.org>
+ <20150413094117.GA2745@e104818-lin.cambridge.arm.com>
+ <245B9FDD-E1B5-41E4-9F24-4D5BB86C450E@codeaurora.org>
+ <20150414223242.GA18888@e107981-lin.cambridge.arm.com>
+ <20150415161759.GB1111@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <DM2PR03MB3837B6B30125C77F1C6F89EE6E50@DM2PR03MB383.namprd03.prod.outlook.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Liberman Igal-B31950 <Igal.Liberman@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150415161759.GB1111@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE1LTA0LTE1IGF0IDAzOjQzIC0wNTAwLCBMaWJlcm1hbiBJZ2FsLUIzMTk1MCB3
-cm90ZToKPiAKPiAKPiBSZWdhcmRzLAo+IElnYWwgTGliZXJtYW4uCj4gCj4gPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTogV29vZCBTY290dC1CMDc0MjEKPiA+IFNlbnQ6IFR1
-ZXNkYXksIEFwcmlsIDE0LCAyMDE1IDExOjA5IFBNCj4gPiBUbzogTGliZXJtYW4gSWdhbC1CMzE5
-NTAKPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3Rz
-Lm96bGFicy5vcmcKPiA+IFN1YmplY3Q6IFJlOiBbdjJdIGR0L2JpbmRpbmdzOiBmc2wvZ3V0czog
-QWRkZWQgZ2xvYmFsLXV0aWxpdGllcyBjb21wYXRpYmxlcwo+ID4gCj4gPiBPbiBUdWUsIDIwMTUt
-MDQtMTQgYXQgMTM6MTIgKzAzMDAsIElnYWwuTGliZXJtYW4gd3JvdGU6Cj4gPiA+IEZyb206IEln
-YWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiA+ID4KPiA+ID4gdjIg
-LSBBZGRyZXNzZWQgU2NvdHQncyBmZWVkYmFjawo+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBJ
-Z2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+Cj4gPiA+IC0tLQo+ID4g
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZ3V0cy50eHQgICAgICAgfCAg
-ICA0ICsrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPiA+ID4KPiA+
-ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBj
-L2ZzbC9ndXRzLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
-ZXJwYy9mc2wvZ3V0cy50eHQKPiA+ID4gaW5kZXggN2YxNTBiNS4uNjk2NDRlNiAxMDA2NDQKPiA+
-ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1
-dHMudHh0Cj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
-cnBjL2ZzbC9ndXRzLnR4dAo+ID4gPiBAQCAtOSw2ICs5LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRp
-ZXM6Cj4gPiA+Cj4gPiA+ICAgLSBjb21wYXRpYmxlIDogU2hvdWxkIGRlZmluZSB0aGUgY29tcGF0
-aWJsZSBkZXZpY2UgdHlwZSBmb3IKPiA+ID4gICAgIGdsb2JhbC11dGlsaXRpZXMuCj4gPiA+ICsg
-ICBQb3NzaWJsZSBjb21wYXRpYmxlczoKPiA+ID4gKwkiZnNsLHFvcmlxLWRldmljZS1jb25maWct
-MS4wIgo+ID4gPiArCSJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0yLjAiCj4gPiA+ICsJImZzbCw8
-Y2hpcD4tZGV2aWNlLWNvbmZpZyIKPiA+IAo+ID4gZnNsLDxjaGlwPi1ndXRzIGlzIGFsc28gcG9z
-c2libGUgb24gbm9uLWNvcmVuZXQgY2hpcHMuCj4gPiAKPiAKPiBJIGFkZGVkIGNvbXBhdGlibGVz
-IHdoaWNoIGFyZSB1c2VkIGZvciBGTWFuIENsb2NrIG9ubHkuCj4gRG8geW91IHdhbnQgdG8gYWRk
-IG90aGVyIGNvbXBhdGlibGVzIHRvbz8gV2hpY2g/IE9yIGp1c3QgbWVudGlvbiB0aGF0IHRoZSAz
-IGNvbXBhdGlibGVzIEkndmUgYWRkZWQgZG9lc24ndCBjb3ZlciBhbGwgYXZhaWxhYmxlIG9wdGlv
-bnM/CgpZb3UncmUgY2hhbmdpbmcgdGhlIGJpbmRpbmcgZnJvbSBvbmUgdGhhdCBkb2Vzbid0IGxp
-c3QgY29tcGF0aWJsZXMgdG8Kb25lIHRoYXQgZG9lcyAtLSBzbyBwbGVhc2UgZ2V0IGFsbCBvZiB0
-aGVtLgoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
-Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On Wed, Apr 15, 2015 at 05:17:59PM +0100, Lina Iyer wrote:
+> On Tue, Apr 14 2015 at 16:32 -0600, Lorenzo Pieralisi wrote:
+> >On Tue, Apr 14, 2015 at 03:21:17PM +0100, Kumar Gala wrote:
+> >
+> >[...]
+> >
+> >> > Looking beyond this set of patches, I can foresee that you won't care
+> >> > about the generic arm64 cpuidle driver either, or more precisely the
+> >> > separation between cpuidle subsystem+driver and the SoC-specific
+> >> > back-end (cpu_operations).
+> >>
+> >> That's probably true for what I guess are a number of reasons.  I'm guessing the arm64 cpuidle driver expects PSCI.
+> >
+> >Wrap lines sensibly please.
+> >
+> >The arm64 cpuidle driver, that is now arm generic cpuidle driver does
+> >not expect anything apart from an enable-method (and you pulled
+> >part of its back-end implementation for arm32 Qualcomm platforms, FYI).
+> >
+> The backend for this SoC would leverage the same platform code as ARM32.
+> The cpu_operations callbacks for init and suspend will call into the the
+> same platform functions used by arm32 QCOM SoCs.
+
+It is understood, but this does not mean we should merge this patchset,
+actually it is the other way around. It was extremely complicated
+to factor out some common CPUidle bits because of the prolification
+of power down interfaces in arm/mach code, each with its quirks
+du jour.
+
+If we had a standard interface (that encompasses what all ARM mach code
+power interfaces do, basically PSCI) when arm32 power management code
+was being pushed upstream we would not have that power management arm/mach
+code today.
+
+PSCI is there to solve that problem, and it predates v8, there is no
+reason to merge code that provides no added value (I am obviously
+talking about the pseudo-boot protocol this patchset is enabling, not
+the platforms themselves which we definitely want to support upstream,
+with some preconditions that are equal for everyone) and to leverage
+a legacy that does not exist for arm64.
+
+Thanks,
+Lorenzo
+
+> 
+> Thanks,
+> Lina
+> 
+> >It took years to consolidate it and the main reason was the lack of
+> >standard interfaces for power down/up sequences that this patchset of
+> >yours wants to promote in arm64 world.
+> >
+> >The lack of standard power interfaces may not have been an issue for you,
+> >who cares about Qualcomm code, it has been a sore issue for people
+> >trying to generalize things across ARM platforms in the kernel, which is
+> >the only sensible way forward.
+> >
+> >PSCI is a standard interface (and Qualcomm are already contributing to
+> >it, for the records) that can certainly be extended, and you are welcome
+> >to contribute to it, but certainly not ignored.
+> >
+> >Thanks,
+> >Lorenzo
+> >--
+> >To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> >the body of a message to majordomo@vger.kernel.org
+> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
