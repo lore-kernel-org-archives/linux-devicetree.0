@@ -1,58 +1,39 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
-Date: Wed, 15 Apr 2015 11:01:17 -0400
-Message-ID: <CAF6AEGucYT4LHkFggR0fO_c7gZe7hD7STx1xwKrOvwsnnFbw7Q@mail.gmail.com>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
-	<20150410100529.GA6854@e104818-lin.cambridge.arm.com>
-	<20150414163613.GM28709@leverpostej>
-	<07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
-	<20150414211720.GA56647@MBP>
-	<CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw@mail.gmail.com>
-	<20150415133403.GB26099@e104818-lin.cambridge.arm.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v4 3/7] drm/tilcdc: Add support for external tda998x encoder
+Date: Wed, 15 Apr 2015 18:04:16 +0300
+Message-ID: <552E7DF0.9020105@ti.com>
+References: <cover.1427877412.git.jsarha@ti.com> <e22d703d6ee5fe02e8c34b78a63f98a4b2ea1f22.1427877412.git.jsarha@ti.com> <20150401222030.GD4027@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150415133403.GB26099@e104818-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "abhimany@codeaurora.org" <abhimany@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150401222030.GD4027@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, tomi.valkeinen@ti.com, robdclark@gmail.com, moinejf@free.fr
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2015 at 9:34 AM, Catalin Marinas
-<catalin.marinas@arm.com> wrote:
-> On Tue, Apr 14, 2015 at 05:48:48PM -0400, Rob Clark wrote:
->> Just speaking as an outsider to this topic, but seems like most/all
->> tablets/phones/etc ship with signed firmware.  Which means for most of
->> the population, upgrading the firmware to a new version which did
->> support the standard (assuming it existed), isn't really an option on
->> our devices, any more than fixing buggy acpi tables is on our
->> laptops..
+On 04/02/15 01:20, Russell King - ARM Linux wrote:
+> This is where the DRM model is weak - we don't really have a way to
+> say "this is the set of CRTCs which/can/  be associated with this
+> connector, can any of the CRTCs accept this mode?" and eliminate
+> modes which fail that check.
 >
-> I wouldn't expect most population to build their own kernels on
-> tablets/phones. And even if you could install a custom kernel, mainline
-> rarely runs on such devices because of tons of out of tree patches (just
-> look at the Nexus 9 patches that Kumar pointed at; even ignoring the
-> booting protocol they are extremely far from an upstreamable form).
+> This problem seems to be one which recurrs, so I wonder if it's
+> something which ought to be solved properly.
 >
+> It's made slightly more difficult because we don't really know which
+> connectors could be associated with which CRTCs - that information is
+> stored at the encoder level (with the encoders possible_crtcs), and
+> I'm not sure we have a way for generic DRM code to know which encoders
+> could be associated with which connectors.
 
-my point being, that it happens some times.. for example John Stultz's
-work on nexus7:
+I agree that this is not the most elegant solution to the problem, but 
+it works with Beaglebone-Black - which is AFAIK the only piece of HW 
+that uses tda998x with tilcdc.
 
-https://plus.google.com/111524780435806926688/posts/DzvpMLmzQiQ
+I would like to get these patches merged and revisit the mode validation 
+code once we have a better solution for it.
 
-If this had been a year or two in the future and on some 64b
-snapdragon, and support for devices with non-PSCI fw is rejected, then
-he'd be stuck.
-
-There are folks who are working to get saner, more-upstream kernels
-working on devices.. and improving kernel infrastructure for
-device-needs (well, in my neck of the woods, there is drm/kms atomic
-and dsi/panel framework stuff.. I'm sure other similar things in other
-kernel domains).  And it seems like that is a good thing to encourage,
-rather than stymie.
-
-BR,
--R
-
-> --
-> Catalin
+Best regards,
+Jyri
