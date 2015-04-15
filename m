@@ -1,44 +1,220 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 5/5] arm64: qcom: add cpu operations
-Date: Wed, 15 Apr 2015 10:04:25 +0100
-Message-ID: <20150415090425.GA2866@leverpostej>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <1428601031-5366-6-git-send-email-galak@codeaurora.org>
- <20150414162953.GL28709@leverpostej>
- <552D9A37.6070107@redhat.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Wed, 15 Apr 2015 18:26:23 +0900
+Message-ID: <552E2EBF.5090906@samsung.com>
+References: <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
+ <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com>
+ <55279550.1060609@samsung.com> <552CE579.6060702@ti.com>
+ <552CE5C0.3010207@ti.com> <552CEC97.1050205@samsung.com>
+ <552CEE42.1050907@ti.com> <552CFA1E.5070400@samsung.com>
+ <20150415032734.GA29095@shlinux2> <552E1862.6090709@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <552D9A37.6070107@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Al Stone <ahs3@redhat.com>
-Cc: Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <552E1862.6090709@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Peter Chen <peter.chen@freescale.com>, Robert Baldyga <r.baldyga@samsung.com>, myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, "Balbi, Felipe" <balbi@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 11:52:39PM +0100, Al Stone wrote:
-> On 04/14/2015 10:29 AM, Mark Rutland wrote:
-> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> >> index 8b9e0a9..35cabe5 100644
-> >> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> >> @@ -185,6 +185,8 @@ nodes to be present and contain the properties described below.
-> >>                           be one of:
-> >>                              "psci"
-> >>                              "spin-table"
-> > 
-> > In the case of these two, there's documentation on what the OS, FW, and
-> > HW are expected to do. There's a PSCI spec, and spin-table is documented
-> > in booting.txt (which is admittedly not fantastic).
-> > [snip...]
+Hi Roger and Peter,
+
+On 04/15/2015 04:50 PM, Roger Quadros wrote:
+> On 15/04/15 06:27, Peter Chen wrote:
+>> On Tue, Apr 14, 2015 at 08:29:34PM +0900, Chanwoo Choi wrote:
+>>> On 04/14/2015 07:38 PM, Roger Quadros wrote:
+>>>> On 14/04/15 13:31, Chanwoo Choi wrote:
+>>>>> On 04/14/2015 07:02 PM, Roger Quadros wrote:
+>>>>>> Fixed Kishon's id.
+>>>>>>
+>>>>>> On 14/04/15 13:01, Roger Quadros wrote:
+>>>>>>> On 10/04/15 12:18, Chanwoo Choi wrote:
+>>>>>>>> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+>>>>>>>>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+>>>>>>>>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+>>>>>>>>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>
+>>>>>>>>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+>>>>>>>>>>>>> Hi Chanwoo,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>>>>>>>>>>>>>> Hi Chanwoo,
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> [snip]
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> But, I have one question about case[3]
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>>>>>>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> It's because state of single USB cable connection cannot be completely
+>>>>>>>>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>>>>>>>>>>>>>> and ID), so we need to use two cables for single cable connection. We
+>>>>>>>>>>>>>>> use following convention:
+>>>>>>>>>>>>>>> cable "USB" = VBUS
+>>>>>>>>>>>>>>> cable "USB-HOST" = !ID.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I think that extcon provider driver have to update the only one cable state
+>>>>>>>>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>>>>>>>>>>>>>> at the same time through one h/w port.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>>>>>>>>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+>>>>>>>>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+>>>>>>>>>>>>> detected cable type is USB host). Devices would need to have complete
+>>>>>>>>>>>>> information about USB cable connection, because OTG state machine needs
+>>>>>>>>>>>>
+>>>>>>>>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+>>>>>>>>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+>>>>>>>>>>> machine. It needs to know exact VBUS and ID states, which cannot be
+>>>>>>>>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+>>>>>>>>>>> name together with "USB" to pass additional information about USB cable
+>>>>>>>>>>> connection.
+>>>>>>>>>>
+>>>>>>>>>> I think this method is not proper to support this case.
+>>>>>>>>>> It may cause the confusion about other case using USB/USB-HOST cable state
+>>>>>>>>>> except of you commented case.
+>>>>>>>>>
+>>>>>>>>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+>>>>>>>>> with old names. It seems to be simpler solution than adding new
+>>>>>>>>> mechanism notifying about VBUS and ID states changes.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+>>>>>>>> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+>>>>>>>> name continuoulsy.
+>>>>>>>>
+>>>>>>>> I think that extcon core provide the helper API to get the value of VBUS.
+>>>>>>>> But I need to consider it.
+>>>>>>>
+>>>>>>> Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
+>>>>>>> VBUS and ID information reliably.
+>>>>>>> This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
+>>>>>>> and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
+>>>>>>> attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
+>>>>>>> capturing only the ID pin state.
+>>>>>>>
+>>>>>>> I can suggest the following options
+>>>>>>> a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
+>>>>>>> Maybe call it "USB-POWER" or something.
+>>>>>
+>>>>> We must discuss it before using the new cable name
+>>>>> such as "USB-POWER", "USB-ID" and "USB-VBUS".
+>>>>
+>>>> I didn't say to add "USB-ID" or "USB-VBUS". solution (a) was to have the following
+>>>
+>>> Right. Robert suggested the "USB-ID" and "USB-VBUS" cable name on previous mail in mail thread.
+>>
+>> From USB/USB-PHY driver point, it needs to know id and vbus value
+>> for their internal logic, so as extcon users, the cable name
+>> is better to reflect meaning of id and vbus, like "USB-ID" and "USB-VBUS",
+>> if the power is from vbus pin at USB cable, I don't think we need another
+>> cable name "USB-POWER" even the USB/USB-PHY driver don't need it.
 > 
-> Perhaps a side topic, but I thought spin-table was being actively discouraged
-> for arm64.  Forgive me if I missed the memo, but is that not correct?
+> I agree as well that this is the *best* option for USB case. Just because Chanwoo was
+> objecting these names I suggested "USB-POWER".
+> 
+> Chanwoo, can we simply get rid of "USB" and "USB-HOST" cables and move to
+> "USB-ID" and "USB-VBUS"?
 
-We prefer that people implement PSCI, and if they must use spin-table,
-each CPU has its own release address.
+I'm wondering about changing the previous cable name from 'USB'/'USB-HOST'
+to 'USB-ID/USB-VBUS' because extcon framework update the state of cable by
+using uevent and the user-space process would catch the changed state by
+using cable name ('USB'/'USB-HOST').
 
-However, we don't want implementation-specific mechanisms, and
-spin-table is preferable to these.
+The user-space process may not consider the both id and vbus of USB.
+If 'USB-ID'/'USB-VBUS' cable name is used instead of 'USB'/'USB-HOST',
+It may cause the confusion about what is meaning of cable name
+on user-space process.
 
-Mark.
+So,
+I prefer to use existing 'USB' and 'USB-HOST' cable name.
+and then want to add additional method to get the vbus state.
+
+I think two following method to get the vbus state.
+1) Add the extcon_{get|set}_vbus_state()
+- extcon_{get|set}_vbus_state()
+- the list of of return value
+	#define EXTCON_USB_VBUS_OFF	0
+	#define EXTCON_USB_VBUS_ON	1
+
+When USB/USB-HOST is attached and receive the notification onextcon consumer driver
+,extcon consumer driver would get the vbus state by extcon_get_vbus_state().
+
+2) Add the notifier chain for vbus state update
+- extcon_{register|unregister}_vbus_notifier()
+- the list of notifier event
+	#define EXTCON_USB_VBUS_OFF	0
+	#define EXTCON_USB_VBUS_ON	1
+
+
+3) add the new cable 'USB-POWER' by Roger suggestion .
+- When 'USB-POWER' cable is attached, extcon will update the cable state
+'USB-POWER' means only the vbus state. But, 'USB-POWER' is not h/w cable.
+The user-space process would handle this uevent of 'USB-POWER'
+such as h/w cable's uevent. I think it is not clear on the user-space process aspect.
+
+> 
+> The only reason you objected was saying that it is a strange cable name. Well this is
+> only what we care about from USB PHY drivers and user space is not interested in it
+> so what is the concern?
+
+I added the reason why don't want to change the legacy cable name about USB/USB-HOST.
+
+> 
+>>
+>>>
+>>>> "USB" - attached means ID is high. i.e. Type-B plug attached.
+>>>> "USB-HOST" - attached means ID is low. i.e. Type-A plug attached.
+>>>> "USB-POWER" - attached means USB power is present. i.e. VBUS is alive.
+>>>>
+>>>> This way the definition of USB and USB-HOST remain true to their name and avoid further confusions.
+>>>> VBUS state is got through the "USB-POWER" cable state.
+>>>
+>>> There is the same case for MHL cable.
+>>> Also, MHL cable could be connected to VBUS line.
+>>> - MHL : attached just MHL cable.
+>>> - MHL-POWER : attache MHL cable which is connected with VBUS line.
+>>>
+>>> We must need the opinion of USB/PHY driver's maintainer.
+>>>
+>>>>
+>>>>>
+>>>>> What is the appropriate method of following two solution?
+>>>>> - Fisrt, use the new cable name "USB-*".
+>>>> I explained this above.
+>>>>
+>>>>> - Second, use the additional API to get the VBUS state.
+>>>>
+>>>> You keep mentioning additional API for VBUS. But I don't see any such API. Can you please
+>>>> suggest what API you are talking about?
+>>>
+>>> I'm considering following functions for VBUS state. But it is my opinion,
+>>> If USB/PHY drivers's maintainers don't agree the new cable ("USB-POWER"),
+>>> We could use the following function to get VBUS state.
+>>> Because new cable name will affect the USB/PHY drivers.
+>>> - int extcon_{get|set}_vbus_state(struct extcon_dev *edev);
+> 
+> This is not suitable for us as USB drivers need VBUS notification event to come.
+> They can't keep polling for VBUS state using this API.
+
+I don't agree the polling method. You refer to upper my description.
+
+Thanks,
+Chanwoo Choi
