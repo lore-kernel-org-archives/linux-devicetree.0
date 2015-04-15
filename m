@@ -1,63 +1,50 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: Remove "reg" data prints from early_init_dt_scan_memory
-Date: Wed, 15 Apr 2015 07:52:12 -0500
-Message-ID: <CAL_JsqLr=0bYWCzTQ7BiFy9+nUWDTSw8sK2yLAK6jdH6fwy-WA@mail.gmail.com>
-References: <55259B4D.2020304@gmail.com> <1428869786-26897-1-git-send-email-f.fainelli@gmail.com>
+Subject: Re: [PATCH] of: add vendor prefix for Artesyn
+Date: Wed, 15 Apr 2015 07:53:26 -0500
+Message-ID: <CAL_JsqJC_afcP6ue1nOx38JNqsCiApSpu44E+PhuXrTUEZVxWg@mail.gmail.com>
+References: <1428483879-13949-1-git-send-email-alessio.bogani@elettra.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428869786-26897-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1428483879-13949-1-git-send-email-alessio.bogani-9b6o1nMz89Julxpn9UvDqw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Alessio Igor Bogani <alessio.bogani-9b6o1nMz89Julxpn9UvDqw@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 12, 2015 at 3:16 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Commit 51975db0b7333 ("of/flattree: merge early_init_dt_scan_memory()
-> common code") consolidated some code from PowerPC (typically
-> big-endian), and ended-up adding a pr_debug() printing reg properties in
-> big-endian (DT native) format, not CPU endian.
->
-> This debug print suffers from two problems:
-> - we only print 4 "reg" values, while there could be more on typical
->   systems having multiple memory ranges
-> - we print these 4 "reg" values in FDT endianess, that is big-endian,
->   and these values could be confusing for little-endian configurations
->
-> Since we are already printing the base address and size of the memory
-> regions parsed by early_init_dt_scan_memory() later in a way that is
-> both endian correct, and takes into account arbitrary number of memory
-> banks, just remove that part of the debug print.
->
-> Suggested-by: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wed, Apr 8, 2015 at 4:04 AM, Alessio Igor Bogani
+<alessio.bogani-9b6o1nMz89Julxpn9UvDqw@public.gmane.org> wrote:
+> Signed-off-by: Alessio Igor Bogani <alessio.bogani-9b6o1nMz89Julxpn9UvDqw@public.gmane.org>
 > ---
-> Patch against devicetree/next
+> https://www.artesyn.com/about-us/company-profile
+>
+> The prefix is already used in the MVME2500 powerpc system
+> (arch/powerpc/boot/dts/mvme2500.dts).
 
-Applied. Thanks.
+This should have been in the commit msg.
+
+Anyway, I've applied it.
 
 Rob
 
 >
->  drivers/of/fdt.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 3a896c9..34bdc4d 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -879,8 +879,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->
->         endp = reg + (l / sizeof(__be32));
->
-> -       pr_debug("memory scan node %s, reg size %d, data: %x %x %x %x,\n",
-> -           uname, l, reg[0], reg[1], reg[2], reg[3]);
-> +       pr_debug("memory scan node %s, reg size %d,\n", uname, l);
->
->         while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->                 u64 base, size;
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index fae26d0..404dc47 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -23,6 +23,7 @@ apm   Applied Micro Circuits Corporation (APM)
+>  arasan Arasan Chip Systems
+>  arm    ARM Ltd.
+>  armadeus       ARMadeus Systems SARL
+> +artesyn        Artesyn Embedded Technologies Inc.
+>  asahi-kasei    Asahi Kasei Corp.
+>  atmel  Atmel Corporation
+>  auo    AU Optronics Corporation
 > --
-> 2.1.0
+> 2.3.5
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
