@@ -1,113 +1,65 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
-Date: Wed, 15 Apr 2015 15:51:36 -0500
-Message-ID: <20150415205136.GA3399@deathray>
-References: <20150414211734.GA28974@deathray>
- <552E0688.1020903@ti.com>
- <20150415140945.GA30787@deathray>
- <552EB152.7050306@ti.com>
- <20150415194707.GA11007@deathray>
- <CAPtuhTggHctp5ArGPEuKn2GuPzb-WnKv2_CzPrHzq8hwOR5Aqw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPtuhTggHctp5ArGPEuKn2GuPzb-WnKv2_CzPrHzq8hwOR5Aqw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Tero Kristo <t-kristo@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Mack <daniel@zonque.org>
+From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 1/3] ASoC: tas571x: Add DT binding document
+Date: Wed, 15 Apr 2015 14:42:19 -0700
+Message-ID: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2015 at 01:45:53PM -0700, Mike Turquette wrote:
-> On Wed, Apr 15, 2015 at 12:47 PM, Michael Welling <mwelling@ieee.org> wrote:
-> > On Wed, Apr 15, 2015 at 09:43:30PM +0300, Tero Kristo wrote:
-> >> On 04/15/2015 05:09 PM, Michael Welling wrote:
-> >> >On Wed, Apr 15, 2015 at 09:34:48AM +0300, Tero Kristo wrote:
-> >> >>On 04/15/2015 12:17 AM, Michael Welling wrote:
-> >> >>>Greetings,
-> >> >>>
-> >> >>>I have developed an AM3354 based SoM and it uses an external SI5351 clock
-> >> >>>generator to drive the clock inputs for an external duart and I2S audio
-> >> >>>master clock. With the registration according to the documentation the
-> >> >>>reference clock is not being detected and hence the clock generator is
-> >> >>>not working as expect.
-> >> >>>
-> >> >>>After trying many different things, I started to look around the mailing
-> >> >>>lists to find information related to this issue.
-> >> >>>
-> >> >>>I came acrossed post that has the exact same issue:
-> >> >>>https://lkml.org/lkml/2013/2/18/468
-> >> >>>
-> >> >>>Seeing as the patch did not land upstream, I am wondering if there is
-> >> >>>a solution that I am not seeing.
-> >> >>>
-> >> >>>I am willing to provide a patch given appropriate guidance.
-> >> >>
-> >> >>Hi Michael,
-> >> >>
-> >> >>The info on the email you referenced is kind of obsolete, TI SoCs
-> >> >>are calling of_clk_init() during boot now, and thus external clock
-> >> >>nodes should be registered fine also. Maybe you can provide the
-> >> >>actual DTS patch you are trying out so we can help better...? Are
-> >> >
-> >> >See attached patch and console output.
-> >>
-> >> I see a bug in your dt data.
-> >>
-> >> <snip>
-> >>
-> >> +     clocks {
-> >> +             ref27: ref27 {
-> >> +                     #clock-cells = <0>;
-> >> +                     compatibale = "fixed-clock";
-> >>
-> >> This should be compatible, right? DT is annoying in that it doesn't
-> >> verify property names.
-> >>
-> >
-> > Ooops.
-> >
-> > Now the clock appears in /sys/kernel/debug/clk:
-> > root@som3517-som200:/sys/kernel/debug/clk# cat clk_summary
-> >    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
-> > ----------------------------------------------------------------------------------------
-> >  ref27                                    0            0    27000000          0 0
-> > ...
-> >
-> > There is still an issue with the si5351.
-> >
-> > I had to comment out the clk_put here for the frequency to show up:
-> > http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1133
-> >
-> > Ideas?
-> 
-> What is the most recent upstream commit that you are based on?
+Document the bindings for the soon-to-be-added tas571x driver.
 
-I am working from 4.0.0-rc7.
+Signed-off-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ .../devicetree/bindings/sound/tas571x.txt          | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas571x.txt
 
-7b43b47373d40d557cd7e1a84a0bd8ebc4d745ab
+diff --git a/Documentation/devicetree/bindings/sound/tas571x.txt b/Documentation/devicetree/bindings/sound/tas571x.txt
+new file mode 100644
+index 000000000000..ac704c1f143d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas571x.txt
+@@ -0,0 +1,34 @@
++Texas Instruments TAS5711/TAS5717/TAS5719 stereo power amplifiers
++
++The codec is controlled through an I2C interface.  It also has two other
++signals that can be wired up to GPIOs: reset (strongly recommended), and
++powerdown (optional).
++
++Required properties:
++
++- compatible: "ti,tas5711", "ti,tas5717", or "ti,tas5719"
++- reg: The I2C address of the device
++- #sound-dai-cells: must be equal to 0
++
++Optional properties:
++
++- reset-gpios: GPIO specifier for the TAS571x's active low reset line
++- pdn-gpios: GPIO specifier for the TAS571x's active low powerdown line
++- clocks: clock phandle for the MCLK input
++- clock-names: should be "mclk"
++- VDD-supply: regulator phandle for the AVDD/DVDD/HP_VDD supply
++- PVDD-supply: regulator phandle for the PVDD supply
++
++Example:
++
++	tas5717: audio-codec@2a {
++		compatible = "ti,tas5717";
++		reg = <0x2a>;
++		#sound-dai-cells = <0>;
++
++		reset-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
++		pdn-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
++
++		clocks = <&clk_core CLK_I2S>;
++		clock-names = "mclk";
++	};
+-- 
+2.2.0.rc0.207.ga3a616c
 
-> 
-> Regards,
-> Mike
-> 
-> >
-> >> +                     clock-frequency = <27000000>;
-> >> +             };
-> >> +     };
-> >>
-> >> -Tero
-> >>
-> >> >
-> >> >>you seeing any boot time error / warning prints for your new clock?
-> >> >
-> >> >With the debug messages on you see that the reference clock is not being
-> >> >detected.
-> >> >
-> >> >Whilest debugging I found that the of_clk_get is returning an error no matter
-> >> >which clock I pass it:
-> >> >http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1131
-> >> >
-> >> >>
-> >> >>-Tero
-> >>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
