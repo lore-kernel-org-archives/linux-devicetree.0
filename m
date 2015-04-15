@@ -1,58 +1,163 @@
-From: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Wed, 15 Apr 2015 11:20:51 +0900
-Message-ID: <CAAFQd5Db+DacQYa1pdr=w5JpU76AYa-Xhd20wHBF=F6m=Efokw@mail.gmail.com>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
-	<CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
-	<1426677749.22581.38.camel@mhfsdcap03>
-	<CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A@mail.gmail.com>
-	<1428993067.13552.14.camel@mhfsdcap03>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Wed, 15 Apr 2015 11:27:35 +0800
+Message-ID: <20150415032734.GA29095@shlinux2>
+References: <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com>
+ <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com>
+ <55279550.1060609@samsung.com> <552CE579.6060702@ti.com>
+ <552CE5C0.3010207@ti.com> <552CEC97.1050205@samsung.com>
+ <552CEE42.1050907@ti.com> <552CFA1E.5070400@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1428993067.13552.14.camel@mhfsdcap03>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <552CFA1E.5070400@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Roger Quadros <rogerq@ti.com>, Robert Baldyga <r.baldyga@samsung.com>, myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, "Balbi, Felipe" <balbi@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTQsIDIwMTUgYXQgMzozMSBQTSwgWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRl
-ay5jb20+IHdyb3RlOgo+PiA+Pgo+PiA+PiA+ICsKPj4gPj4gPiArICAgICAgIHBpb21tdS0+cHJv
-dGVjdF92YSA9IGRldm1fa21hbGxvYyhwaW9tbXUtPmRldiwgTVRLX1BST1RFQ1RfUEFfQUxJR04q
-MiwKPj4gPj4KPj4gPj4gc3R5bGU6IE9wZXJhdG9ycyBsaWtlICogc2hvdWxkIGhhdmUgc3BhY2Ug
-b24gYm90aCBzaWRlcy4KPj4gPj4KPj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBHRlBfS0VSTkVMKTsKPj4gPj4KPj4gPj4gU2hvdWxkbid0IGRtYV9hbGxv
-Y19jb2hlcmVudCgpIGJlIHVzZWQgZm9yIHRoaXM/Cj4+ID4gICAgICBXZSBkb24ndCBjYXJlIHRo
-ZSBkYXRhIGluIGl0LiBJIHRoaW5rIHRoZXkgYXJlIHRoZSBzYW1lLiBDb3VsZCB5b3UKPj4gPiBo
-ZWxwIHRlbGwgbWUgd2h5IGRtYV9hbGxvY19jb2hlcmVudCBtYXkgYmUgYmV0dGVyLgo+Pgo+PiBD
-YW4geW91IGd1YXJhbnRlZSB0aGF0IGF0IHRoZSB0aW1lIHlvdSBhbGxvY2F0ZSB0aGUgbWVtb3J5
-IHVzaW5nCj4+IGRldm1fa21hbGxvYygpIHRoZSBtZW1vcnkgaXMgbm90IGRpcnR5IChpLmUuIHNv
-bWUgd3JpdGUgYmFjayBkYXRhIGFyZQo+PiBzdG9yZWQgaW4gQ1BVIGNhY2hlKSBhbmQgaXMgbm90
-IGdvaW5nIHRvIGJlIHdyaXR0ZW4gYmFjayBpbiBzb21lIHRpbWUsCj4+IG92ZXJ3cml0aW5nIGRh
-dGEgcHV0IHRoZXJlIGJ5IElPTU1VIGhhcmR3YXJlPwo+Pgo+IEFzIEkgbm90ZWQgaW4gdGhlIGZ1
-bmN0aW9uICJtdGtfaW9tbXVfaHdfaW5pdCI6Cj4KPiAgICAgICAgLyogcHJvdGVjdCBtZW1vcnks
-SFcgd2lsbCB3cml0ZSBoZXJlIHdoaWxlIHRyYW5zbGF0aW9uIGZhdWx0ICovCj4gICAgICAgIHBy
-b3RlY3RwYSA9IF9fdmlydF90b19waHlzKHBpb21tdS0+cHJvdGVjdF92YSk7Cj4KPiAgICAgIFdl
-IGRvbuKAmXQgY2FyZSB0aGUgY29udGVudCBvZiB0aGlzIGJ1ZmZlciwgSXQgaXMgb2sgZXZlbiB0
-aG91Z2ggaXRzCj4gZGF0YSBpcyBkaXJ0eS4KPiAgICAgSXQgc2VlbSB0byBiZSBhIHRoZSBwcm90
-ZWN0IG1lbW9yeS4gV2hpbGUgYSB0cmFuc2xhdGlvbiBmYXVsdAo+IGhhcHBlbmVkLCBUaGUgaW9t
-bXUgSFcgd2lsbCBvdmVyd3JpdGUgaGVyZSBpbnN0ZWFkIG9mIHdyaXRpbmcgdG8gdGhlCj4gZmF1
-bHQgcGh5c2ljYWwgYWRkcmVzcyB3aGljaCBtYXkgYmUgMCBvciBzb21lIHJhbmRvbSBhZGRyZXNz
-Lgo+CgpEbyB5b3UgbWVhbiB0aGF0IGl0J3MganVzdCBhIGR1bW15IHBhZ2UgZm9yIGhhcmR3YXJl
-IGJlaGluZCB0aGUgSU9NTVUKdG8gYWNjZXNzIHdoZW4gdGhlIG1hcHBpbmcgaXMgbm90IGF2YWls
-YWJsZT8gSG93IHdvdWxkIHRoYXQgd29yayB3aXRoCnBvdGVudGlhbCBvbiBkZW1hbmQgcGFnaW5n
-IHdoZW4gdGhlIGhhcmR3YXJlIG5lZWRzIHRvIGJlIGJsb2NrZWQgdW50aWwKdGhlIG1hcHBpbmcg
-aXMgY3JlYXRlZD8KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5s
-aW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFp
-bG1hbi9saXN0aW5mby9pb21tdQ==
+On Tue, Apr 14, 2015 at 08:29:34PM +0900, Chanwoo Choi wrote:
+> On 04/14/2015 07:38 PM, Roger Quadros wrote:
+> > On 14/04/15 13:31, Chanwoo Choi wrote:
+> >> On 04/14/2015 07:02 PM, Roger Quadros wrote:
+> >>> Fixed Kishon's id.
+> >>>
+> >>> On 14/04/15 13:01, Roger Quadros wrote:
+> >>>> On 10/04/15 12:18, Chanwoo Choi wrote:
+> >>>>> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+> >>>>>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+> >>>>>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+> >>>>>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+> >>>>>>>>> Hi Robert,
+> >>>>>>>>>
+> >>>>>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+> >>>>>>>>>> Hi Chanwoo,
+> >>>>>>>>>>
+> >>>>>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+> >>>>>>>>>>> Hi Robert,
+> >>>>>>>>>>>
+> >>>>>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+> >>>>>>>>>>>> Hi Chanwoo,
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+> >>>>>>>>>>>>> Hi Robert,
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>
+> >>>>>>>>>>> [snip]
+> >>>>>>>>>>>
+> >>>>>>>>>>>>> But, I have one question about case[3]
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+> >>>>>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> It's because state of single USB cable connection cannot be completely
+> >>>>>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+> >>>>>>>>>>>> and ID), so we need to use two cables for single cable connection. We
+> >>>>>>>>>>>> use following convention:
+> >>>>>>>>>>>> cable "USB" = VBUS
+> >>>>>>>>>>>> cable "USB-HOST" = !ID.
+> >>>>>>>>>>>
+> >>>>>>>>>>> I think that extcon provider driver have to update the only one cable state
+> >>>>>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+> >>>>>>>>>>> at the same time through one h/w port.
+> >>>>>>>>>>>
+> >>>>>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+> >>>>>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+> >>>>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+> >>>>>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+> >>>>>>>>>> detected cable type is USB host). Devices would need to have complete
+> >>>>>>>>>> information about USB cable connection, because OTG state machine needs
+> >>>>>>>>>
+> >>>>>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+> >>>>>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+> >>>>>>>>>
+> >>>>>>>>
+> >>>>>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+> >>>>>>>> machine. It needs to know exact VBUS and ID states, which cannot be
+> >>>>>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+> >>>>>>>> name together with "USB" to pass additional information about USB cable
+> >>>>>>>> connection.
+> >>>>>>>
+> >>>>>>> I think this method is not proper to support this case.
+> >>>>>>> It may cause the confusion about other case using USB/USB-HOST cable state
+> >>>>>>> except of you commented case.
+> >>>>>>
+> >>>>>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+> >>>>>> with old names. It seems to be simpler solution than adding new
+> >>>>>> mechanism notifying about VBUS and ID states changes.
+> >>>>>
+> >>>>>
+> >>>>> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+> >>>>> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+> >>>>> name continuoulsy.
+> >>>>>
+> >>>>> I think that extcon core provide the helper API to get the value of VBUS.
+> >>>>> But I need to consider it.
+> >>>>
+> >>>> Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
+> >>>> VBUS and ID information reliably.
+> >>>> This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
+> >>>> and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
+> >>>> attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
+> >>>> capturing only the ID pin state.
+> >>>>
+> >>>> I can suggest the following options
+> >>>> a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
+> >>>> Maybe call it "USB-POWER" or something.
+> >>
+> >> We must discuss it before using the new cable name
+> >> such as "USB-POWER", "USB-ID" and "USB-VBUS".
+> > 
+> > I didn't say to add "USB-ID" or "USB-VBUS". solution (a) was to have the following
+> 
+> Right. Robert suggested the "USB-ID" and "USB-VBUS" cable name on previous mail in mail thread.
+
+>From USB/USB-PHY driver point, it needs to know id and vbus value
+for their internal logic, so as extcon users, the cable name
+is better to reflect meaning of id and vbus, like "USB-ID" and "USB-VBUS",
+if the power is from vbus pin at USB cable, I don't think we need another
+cable name "USB-POWER" even the USB/USB-PHY driver don't need it.
+
+> 
+> > "USB" - attached means ID is high. i.e. Type-B plug attached.
+> > "USB-HOST" - attached means ID is low. i.e. Type-A plug attached.
+> > "USB-POWER" - attached means USB power is present. i.e. VBUS is alive.
+> > 
+> > This way the definition of USB and USB-HOST remain true to their name and avoid further confusions.
+> > VBUS state is got through the "USB-POWER" cable state.
+> 
+> There is the same case for MHL cable.
+> Also, MHL cable could be connected to VBUS line.
+> - MHL : attached just MHL cable.
+> - MHL-POWER : attache MHL cable which is connected with VBUS line.
+> 
+> We must need the opinion of USB/PHY driver's maintainer.
+> 
+> > 
+> >>
+> >> What is the appropriate method of following two solution?
+> >> - Fisrt, use the new cable name "USB-*".
+> > I explained this above.
+> > 
+> >> - Second, use the additional API to get the VBUS state.
+> > 
+> > You keep mentioning additional API for VBUS. But I don't see any such API. Can you please
+> > suggest what API you are talking about?
+> 
+> I'm considering following functions for VBUS state. But it is my opinion,
+> If USB/PHY drivers's maintainers don't agree the new cable ("USB-POWER"),
+> We could use the following function to get VBUS state.
+> Because new cable name will affect the USB/PHY drivers.
+> - int extcon_{get|set}_vbus_state(struct extcon_dev *edev);
+> 
+> Cheers,
+> Chanwoo Choi
+
+-- 
+
+Best Regards,
+Peter Chen
