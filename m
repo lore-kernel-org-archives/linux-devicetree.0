@@ -1,42 +1,38 @@
-From: Al Stone <ahs3@redhat.com>
-Subject: Re: [RFC PATCH 5/5] arm64: qcom: add cpu operations
-Date: Tue, 14 Apr 2015 16:52:39 -0600
-Message-ID: <552D9A37.6070107@redhat.com>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org> <1428601031-5366-6-git-send-email-galak@codeaurora.org> <20150414162953.GL28709@leverpostej>
+From: <masaru.nagai.vx@renesas.com>
+Subject: Re: [PATCH resend] Renesas Ethernet AVB driver
+Date: Wed, 15 Apr 2015 10:01:05 +0900
+Message-ID: <552DB851.8050800@renesas.com>
+References: <2926619.fiYHPz1IBk@wasted.cogentembedded.com> <20150328082853.GA4255@localhost.localdomain> <5519D380.6070200@cogentembedded.com> <552C25BE.3070606@cogentembedded.com> <20150414052729.GA5179@netboy> <552CE890.3040103@cogentembedded.com> <20150414163002.GB4309@localhost.localdomain> <552D472A.6080309@cogentembedded.com> <20150414183000.GA5327@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150414162953.GL28709@leverpostej>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150414183000.GA5327@localhost.localdomain>
+Sender: linux-sh-owner@vger.kernel.org
+To: richardcochran@gmail.com, sergei.shtylyov@cogentembedded.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/14/2015 10:29 AM, Mark Rutland wrote:
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 8b9e0a9..35cabe5 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -185,6 +185,8 @@ nodes to be present and contain the properties described below.
->>                           be one of:
->>                              "psci"
->>                              "spin-table"
-> 
-> In the case of these two, there's documentation on what the OS, FW, and
-> HW are expected to do. There's a PSCI spec, and spin-table is documented
-> in booting.txt (which is admittedly not fantastic).
-> [snip...]
+On 2015=E5=B9=B404=E6=9C=8815=E6=97=A5 03:30, Richard Cochran wrote:
+> On Tue, Apr 14, 2015 at 07:58:18PM +0300, Sergei Shtylyov wrote:
+>>
+>>     I tried to explain to you that I can't. We enter the device
+>> configuration mode (from the operation mode) when e.g. the
+>> *Ethernet* device is closed.
+>
+> Is this a hardware restriction?
 
-Perhaps a side topic, but I thought spin-table was being actively discouraged
-for arm64.  Forgive me if I missed the memo, but is that not correct?
+Yes
 
--- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+> Logically speaking, the clock has nothing to do with the state of the
+> Ethernet interface.  If the clock keeps ticking and you can access
+> it, then there is no reason to return EBUSY just because the interfac=
+e
+> is down.
+
+Oddly, This hardware is linked operation mode of the Ethernet I/F with =
+PTP clock.
+
+Best Regards,
+Masaru Nagai
