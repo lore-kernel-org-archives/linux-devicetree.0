@@ -1,69 +1,30 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Wed, 15 Apr 2015 12:35:57 -0500
-Message-ID: <1429119357.22867.724.camel@freescale.com>
-References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Wed, 15 Apr 2015 21:20:03 +0300
+Message-ID: <CAK=WgbZ1pSTjVkCECL81XmwD+8h-USvFc_ptHx+FfyCbdkUkqw@mail.gmail.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com> <BF866EB6-5C06-44A3-B782-F1D43A3B532D@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Igal.Liberman" <igal.liberman@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BF866EB6-5C06-44A3-B782-F1D43A3B532D@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTA0LTE0IGF0IDEzOjU2ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
-IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxlLmNvbT4KPiAKPiB2
-MzogQWRkcmVzc2VkIGZlZWRiYWNrIGZyb20gU2NvdHQ6Cj4gCS0gUmVtb3ZlZCBjbG9jayBzcGVj
-aWZpZXIgZGVzY3JpcHRpb24uCj4gCj4gdjI6IEFkZHJlc3NlZCBmZWVkYmFjayBmcm9tIFNjb3R0
-Ogo+IAktIE1vdmVkIHRoZSAiZm1hbi1jbGstbXV4IiBjbG9jayBwcm92aWRlciBkZXRhaWxzCj4g
-CSAgdW5kZXIgImNsb2NrcyIgcHJvcGVydHkuCj4gCj4gU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJl
-cm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQgICAgICB8ICAgMTcgKysrKysrKysrKysr
-KysrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
-ay9xb3JpcS1jbG9jay50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
-Y2svcW9yaXEtY2xvY2sudHh0Cj4gaW5kZXggYjBkN2I3My4uMmJiM2IzOCAxMDA2NDQKPiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0
-Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNs
-b2NrLnR4dAo+IEBAIC02NSw5ICs2NSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAJCUl0
-IHRha2VzIHBhcmVudCdzIGNsb2NrLWZyZXF1ZW5jeSBhcyBpdHMgY2xvY2suCj4gIAkqICJmc2ws
-cW9yaXEtcGxhdGZvcm0tcGxsLTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xvY2sgKHYxLjAp
-Cj4gIAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTIuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwg
-Y2xvY2sgKHYyLjApCj4gKwkqICJmc2wsZm1hbi1jbGstbXV4IiBmb3IgdGhlIEZyYW1lIE1hbmFn
-ZXIgY2xvY2suCj4gIC0gI2Nsb2NrLWNlbGxzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLiBU
-aGUgbnVtYmVyIG9mIGNlbGxzIGluIGEKPiAtCWNsb2NrLXNwZWNpZmllci4gU2hvdWxkIGJlIDww
-PiBmb3IgImZzbCxxb3JpcS1zeXNjbGstWzEsMl0uMCIKPiAtCWNsb2Nrcywgb3IgPDE+IGZvciAi
-ZnNsLHFvcmlxLWNvcmUtcGxsLVsxLDJdLjAiIGNsb2Nrcy4KPiArCWNsb2NrLXNwZWNpZmllci4g
-U2hvdWxkIGJlIDwwPiBmb3IgImZzbCxxb3JpcS1zeXNjbGstWzEsMl0uMCIgYW5kCj4gKwkiZnNs
-LGZtYW4tY2xrLW11eCIgY2xvY2tzIG9yIDwxPiBmb3IgImZzbCxxb3JpcS1jb3JlLXBsbC1bMSwy
-XS4wIi4KPiAgCUZvciAiZnNsLHFvcmlxLWNvcmUtcGxsLTEuMCIgY2xvY2tzLCB0aGUgc2luZ2xl
-Cj4gIAljbG9jay1zcGVjaWZpZXIgY2VsbCBtYXkgdGFrZSB0aGUgZm9sbG93aW5nIHZhbHVlczoK
-PiAgCSogMCAtIGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVlbmN5Cj4gQEAgLTE0NSw2ICsxNDYsMTgg
-QEAgRXhhbXBsZSBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHByb3ZpZGVyOgo+ICAJCQljbG9j
-a3MgPSA8JnN5c2Nsaz47Cj4gIAkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbGF0Zm9ybS1wbGwi
-LCAicGxhdGZvcm0tcGxsLWRpdjIiOwo+ICAJCX07Cj4gKwo+ICsJCWZtMGNsazogZm0wLWNsay1t
-dXggewo+ICsJCQkjY2xvY2stY2VsbHMgPSA8MD47Cj4gKwkJCXJlZyA9IDwweDEwIDQ+Cj4gKwkJ
-CWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tY2xrLW11eCI7Cj4gKwkJCWNsb2NrcyA9IDwmcGxsMCAw
-PiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sIDwmcGxsMCAzPiwKPiArCQkJCSA8JnBsYXRmb3JtX3Bs
-bCAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47Cj4gKwkJCWNsb2NrLW5hbWVzID0gInBsbDAiLCAi
-cGxsMC1kaXYyIiwgInBsbDAtZGl2MyIsCj4gKwkJCQkgICAgICAicGxsMC1kaXY0IiwgInBsYXRm
-b3JtLXBsbCIsICJwbGwxLWRpdjIiLAo+ICsJCQkJICAgICAgInBsbDEtZGl2MyI7Cj4gKwkJCWNs
-b2NrLW91dHB1dC1uYW1lcyA9ICJmbTAtY2xrIjsKPiArCQl9Owo+ICAJfTsKPiAgfTsKPiAgCgpJ
-IGRvbid0IHNlZSB0aGlzIHJlZ2lzdGVyIGluIHRoZSBtYW51YWxzIGZvciBvbGRlciBEUEFBIGNo
-aXBzLCBzdWNoIGFzCnA0MDgwIG9yIHAzMDQxLiAgSXMgaXQgcHJlc2VudCBidXQgdW5kb2N1bWVu
-dGVkPyAgU2hvdWxkIEkgYmUgbG9va2luZwpzb21ld2hlcmUgb3RoZXIgdGhhbiAiQ2xvY2tpbmcg
-TWVtb3J5IE1hcCI/CgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0
-cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1k
-ZXY=
+On Tue, Apr 14, 2015 at 10:18 PM, Kumar Gala <galak@codeaurora.org> wro=
+te:
+>> On Feb 27, 2015, at 4:30 PM, Bjorn Andersson <bjorn.andersson@sonymo=
+bile.com> wrote:
+>>
+>> Add binding documentation for the Qualcomm Hardware Mutex.
+>>
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>> =E2=80=94
+>>
+>
+> Acked-by: Kumar Gala <galak@codeaurora.org>
+
+Perfect, thanks a lot, Kumar.
