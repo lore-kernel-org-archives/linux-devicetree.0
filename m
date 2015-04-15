@@ -1,63 +1,98 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
- Qualcomm hwmutex
-Date: Wed, 15 Apr 2015 14:40:22 -0500
-Message-ID: <CAL_Jsq+GhhhoHgRDOkK4=oWtSVmvw=UpLoU-Ey5M7tdNi5OZ2Q@mail.gmail.com>
-References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAK=WgbYw2cuPGC0cnd0qgYF8pa5Rbe7i+JN9fEpXfjz=gw-FQg@mail.gmail.com>
- <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
- <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
- <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
- <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
- <CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
- <CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com>
- <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com>
- <CAK=WgbauoPf52v3P7NLPsXaRUmGWo_K6ZcV4w3UO6xs7MUrJsw@mail.gmail.com> <CAK=WgbY-5OsfdKJxGScvGj5sv-M-UvxhCfgSTunHiufvq1PXEQ@mail.gmail.com>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
+Date: Wed, 15 Apr 2015 14:47:07 -0500
+Message-ID: <20150415194707.GA11007@deathray>
+References: <20150414211734.GA28974@deathray>
+ <552E0688.1020903@ti.com>
+ <20150415140945.GA30787@deathray>
+ <552EB152.7050306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbY-5OsfdKJxGScvGj5sv-M-UvxhCfgSTunHiufvq1PXEQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Tim Bird <tbird20d@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <552EB152.7050306@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, gregkh@linuxfoundation.org, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2015 at 5:23 AM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
-> On Mon, Apr 6, 2015 at 10:04 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
->> Mark, are you OK with the latest iteration from Suman? it would be
->> nice to get your +1 just to make sure we don't merge stuff you're
->> uncomfortable with.
+On Wed, Apr 15, 2015 at 09:43:30PM +0300, Tero Kristo wrote:
+> On 04/15/2015 05:09 PM, Michael Welling wrote:
+> >On Wed, Apr 15, 2015 at 09:34:48AM +0300, Tero Kristo wrote:
+> >>On 04/15/2015 12:17 AM, Michael Welling wrote:
+> >>>Greetings,
+> >>>
+> >>>I have developed an AM3354 based SoM and it uses an external SI5351 clock
+> >>>generator to drive the clock inputs for an external duart and I2S audio
+> >>>master clock. With the registration according to the documentation the
+> >>>reference clock is not being detected and hence the clock generator is
+> >>>not working as expect.
+> >>>
+> >>>After trying many different things, I started to look around the mailing
+> >>>lists to find information related to this issue.
+> >>>
+> >>>I came acrossed post that has the exact same issue:
+> >>>https://lkml.org/lkml/2013/2/18/468
+> >>>
+> >>>Seeing as the patch did not land upstream, I am wondering if there is
+> >>>a solution that I am not seeing.
+> >>>
+> >>>I am willing to provide a patch given appropriate guidance.
+> >>
+> >>Hi Michael,
+> >>
+> >>The info on the email you referenced is kind of obsolete, TI SoCs
+> >>are calling of_clk_init() during boot now, and thus external clock
+> >>nodes should be registered fine also. Maybe you can provide the
+> >>actual DTS patch you are trying out so we can help better...? Are
+> >
+> >See attached patch and console output.
+> 
+> I see a bug in your dt data.
+> 
+> <snip>
+> 
+> +	clocks {
+> +		ref27: ref27 {
+> +			#clock-cells = <0>;
+> +			compatibale = "fixed-clock";
+> 
+> This should be compatible, right? DT is annoying in that it doesn't
+> verify property names.
 >
-> Quick update:
->
-> As Tim pointed out, we can move forward with the driver binding patch
-> according to the process described under II.2 of [1]. Both Bjorn and
-> myself would still prefer to make sure Mark is satisfied with the
-> response Bjorn sent to Mark's question, but we understand if Mark is
-> swamped and we eventually would proceed according to the DT's
-> submitting-patches guidance below. Tim, thanks for pointing that out
-> as I wasn't aware of this.
->
-> What we probably do need a DT ack on is the hwspinlock subsystem
-> binding submitted by Suman, again according to the process described
-> under II.2 of [1]: "Subsystem bindings (anything affecting more than a
-> single device): then getting a devicetree maintainer to review it is
-> required".
 
-Right, you can't really merge this driver binding until the binding is
-done and acked. Your binding would be referring to a binding doc that
-doesn't exist in the tree if you merge this.
+Ooops.
 
-> Mark and Rob: thanks so much for all your help so far as you have
-> substantially helped shaping the hwspinlock binding. Please let us
-> know if you are satisfied with Suman's latest iteration, still prefer
-> to take another look at it, or are too swamped. If the latter, then
-> maybe we can ask Kumar to take a look, as this seems to be blocking
-> Qualcomm's upstream roadmap.
+Now the clock appears in /sys/kernel/debug/clk:
+root@som3517-som200:/sys/kernel/debug/clk# cat clk_summary 
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ ref27                                    0            0    27000000          0 0  
+...
 
-While I think the binding looks fine, I'm not going to go around Mark
-either. He's invested the most thought in this (of DT maintainers) and
-should be the one to ack it. The part I'm not clear what the purpose
-of "pool-hwlock" was.
+There is still an issue with the si5351.
 
-Rob
+I had to comment out the clk_put here for the frequency to show up:
+http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1133
+
+Ideas?
+
+> +			clock-frequency = <27000000>;
+> +		};
+> +	};
+> 
+> -Tero
+> 
+> >
+> >>you seeing any boot time error / warning prints for your new clock?
+> >
+> >With the debug messages on you see that the reference clock is not being
+> >detected.
+> >
+> >Whilest debugging I found that the of_clk_get is returning an error no matter
+> >which clock I pass it:
+> >http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1131
+> >
+> >>
+> >>-Tero
+> 
