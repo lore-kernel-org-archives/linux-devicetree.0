@@ -1,159 +1,82 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] of: unittest: overlay: Keep track of created overlays
-Date: Tue, 14 Apr 2015 20:29:14 -0500
-Message-ID: <CAL_JsqJQjWpktxHx=U3L6jzxT6011EB6XoRmbVp0z0rw5oAPAg@mail.gmail.com>
-References: <1428434632-13789-1-git-send-email-pantelis.antoniou@konsulko.com> <1428434632-13789-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Viet Nga Dao <vndao@altera.com>
+Subject: Re: [PATCH] [PATCH v3] mtd:spi-nor: Add Altera Quad SPI Driver
+Date: Wed, 15 Apr 2015 09:56:23 +0800
+Message-ID: <CAN1oZWzH2t4rY7Lh7oiqM=gbVJ6v31vzFk96gumA+JBgRwN6kQ@mail.gmail.com>
+References: <1426493782-3791-1-git-send-email-vndao@altera.com>
+	<CACna6rxx9TN1vko0fVPQgJPLZ3ZN17JjPki+q1Y3Ep9e0HppEA@mail.gmail.com>
+	<CAN1oZWxG8pnr-COMZRnOZvbaQ=vw+BRMgZpkQyk_v0NuGZPckA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1428434632-13789-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAN1oZWxG8pnr-COMZRnOZvbaQ=vw+BRMgZpkQyk_v0NuGZPckA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, nga_chi86 <ngachi86@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2015 at 2:23 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> During the course of the overlay selftests some of them remain
-> applied. While this does not pose a real problem, make sure you track
-> them and destroy them at the end of the test.
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Hi,
+Could you please help me to review this patch?
+Thanks
 
-I've applied this one. Patch 2 is okay, but the rest still needs some work.
-
-Rob
-
-> ---
->  drivers/of/unittest.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
+On Mon, Mar 16, 2015 at 4:40 PM, Viet Nga Dao <vndao@altera.com> wrote:
+> On Mon, Mar 16, 2015 at 4:35 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmai=
+l.com> wrote:
+>> On 16 March 2015 at 09:16,  <vndao@altera.com> wrote:
+>>> +static struct flash_device flash_devices[] =3D {
+>>> +       FLASH_ID("epcq16-nonjedec",  2, 0x15),
+>>> +       FLASH_ID("epcq32-nonjedec",  2, 0x16),
+>>> +       FLASH_ID("epcq64-nonjedec",  2, 0x17),
+>>> +       FLASH_ID("epcq128-nonjedec", 2, 0x18),
+>>> +       FLASH_ID("epcq256-nonjedec", 2, 0x19),
+>>> +       FLASH_ID("epcq512-nonjedec", 2, 0x20),
+>>
+>> You could probably use EPCQ_OPCODE_ID
+>>
+>>
+>>> +
+>>> +       FLASH_ID("epcs16-nonjedec",  1, 0x14),
+>>> +       FLASH_ID("epcs64-nonjedec",  1, 0x16),
+>>> +       FLASH_ID("epcs128-nonjedec", 1, 0x18),
+>>
+>> And EPCS_OPCODE_ID here.
+>>
+> Noted
+>>
+>>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/sp=
+i-nor.c
+>>> index 43bb552..ad0c274 100644
+>>> --- a/drivers/mtd/spi-nor/spi-nor.c
+>>> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>>> @@ -683,6 +683,17 @@ static const struct spi_device_id spi_nor_ids[=
+] =3D {
+>>>         { "cat25c09", CAT25_INFO( 128, 8, 32, 2, SPI_NOR_NO_ERASE |=
+ SPI_NOR_NO_FR) },
+>>>         { "cat25c17", CAT25_INFO( 256, 8, 32, 2, SPI_NOR_NO_ERASE |=
+ SPI_NOR_NO_FR) },
+>>>         { "cat25128", CAT25_INFO(2048, 8, 64, 2, SPI_NOR_NO_ERASE |=
+ SPI_NOR_NO_FR) },
+>>> +
+>>> +       /* Altera EPCQ/EPCS Flashes */
+>>> +       { "epcq16-nonjedec",  INFO(0, 0, 0x10000, 32,   0) },
+>>> +       { "epcq32-nonjedec",  INFO(0, 0, 0x10000, 64,   0) },
+>>> +       { "epcq64-nonjedec",  INFO(0, 0, 0x10000, 128,  0) },
+>>> +       { "epcq128-nonjedec", INFO(0, 0, 0x10000, 256,  0) },
+>>> +       { "epcq256-nonjedec", INFO(0, 0, 0x10000, 512,  0) },
+>>> +       { "epcq512-nonjedec", INFO(0, 0, 0x10000, 1024, 0) },
+>>> +       { "epcs16-nonjedec",  INFO(0, 0, 0x10000, 32,   0) },
+>>> +       { "epcs64-nonjedec",  INFO(0, 0, 0x10000, 128,  0) },
+>>> +       { "epcs128-nonjedec", INFO(0, 0, 0x40000, 256,  0) },
+>>>         { },
+>>>  };
+>>
+>> But mostly, I just wanted to say I like your integration with spi-no=
+r.
+>> Nice work :)
+>>
+>> --
+>> Rafa=C5=82
 >
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index fdb5977..995cc73 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -23,6 +23,8 @@
->  #include <linux/i2c.h>
->  #include <linux/i2c-mux.h>
->
-> +#include <linux/bitops.h>
-> +
->  #include "of_private.h"
->
->  static struct unittest_results {
-> @@ -1095,6 +1097,59 @@ static const char *overlay_path(int nr)
->
->  static const char *bus_path = "/testcase-data/overlay-node/test-bus";
->
-> +/* it is guaranteed that overlay ids are assigned in sequence */
-> +#define MAX_UNITTEST_OVERLAYS  256
-> +static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_UNITTEST_OVERLAYS)];
-> +static int overlay_first_id = -1;
-> +
-> +static void of_unittest_track_overlay(int id)
-> +{
-> +       if (overlay_first_id < 0)
-> +               overlay_first_id = id;
-> +       id -= overlay_first_id;
-> +
-> +       /* we shouldn't need that many */
-> +       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
-> +       overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
-> +}
-> +
-> +static void of_unittest_untrack_overlay(int id)
-> +{
-> +       if (overlay_first_id < 0)
-> +               return;
-> +       id -= overlay_first_id;
-> +       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
-> +       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
-> +}
-> +
-> +static void of_unittest_destroy_tracked_overlays(void)
-> +{
-> +       int id, ret, defers;
-> +
-> +       if (overlay_first_id < 0)
-> +               return;
-> +
-> +       /* try until no defers */
-> +       do {
-> +               defers = 0;
-> +               /* remove in reverse order */
-> +               for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
-> +                       if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
-> +                               continue;
-> +
-> +                       ret = of_overlay_destroy(id + overlay_first_id);
-> +                       if (ret != 0) {
-> +                               defers++;
-> +                               pr_warn("%s: overlay destroy failed for #%d\n",
-> +                                       __func__, id + overlay_first_id);
-> +                               continue;
-> +                       }
-> +
-> +                       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
-> +               }
-> +       } while (defers > 0);
-> +}
-> +
->  static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
->                 int *overlay_id)
->  {
-> @@ -1116,6 +1171,7 @@ static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
->                 goto out;
->         }
->         id = ret;
-> +       of_unittest_track_overlay(id);
->
->         ret = 0;
->
-> @@ -1329,6 +1385,7 @@ static void of_unittest_overlay_6(void)
->                         return;
->                 }
->                 ov_id[i] = ret;
-> +               of_unittest_track_overlay(ov_id[i]);
->         }
->
->         for (i = 0; i < 2; i++) {
-> @@ -1353,6 +1410,7 @@ static void of_unittest_overlay_6(void)
->                                                 PDEV_OVERLAY));
->                         return;
->                 }
-> +               of_unittest_untrack_overlay(ov_id[i]);
->         }
->
->         for (i = 0; i < 2; i++) {
-> @@ -1397,6 +1455,7 @@ static void of_unittest_overlay_8(void)
->                         return;
->                 }
->                 ov_id[i] = ret;
-> +               of_unittest_track_overlay(ov_id[i]);
->         }
->
->         /* now try to remove first overlay (it should fail) */
-> @@ -1419,6 +1478,7 @@ static void of_unittest_overlay_8(void)
->                                                 PDEV_OVERLAY));
->                         return;
->                 }
-> +               of_unittest_untrack_overlay(ov_id[i]);
->         }
->
->         unittest(1, "overlay test %d passed\n", 8);
-> @@ -1841,6 +1901,8 @@ static void __init of_unittest_overlay(void)
->         of_unittest_overlay_i2c_cleanup();
->  #endif
->
-> +       of_unittest_destroy_tracked_overlays();
-> +
->  out:
->         of_node_put(bus_np);
->  }
-> --
-> 1.7.12
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thank you. This is all thanks to you and Brian for helpful comments. =
+I
+> learned a lot :)
