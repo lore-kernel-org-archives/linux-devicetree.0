@@ -1,44 +1,50 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
-Date: Wed, 15 Apr 2015 09:34:48 +0300
-Message-ID: <552E0688.1020903@ti.com>
-References: <20150414211734.GA28974@deathray>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150414211734.GA28974@deathray>
-Sender: linux-omap-owner@vger.kernel.org
-To: Michael Welling <mwelling@ieee.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, gregkh@linuxfoundation.org
-Cc: Daniel Mack <daniel@zonque.org>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Import of dtc/libfdt upstream into kernel
+Date: Tue, 14 Apr 2015 23:37:05 -0700
+Message-ID: <1429079825-14405-1-git-send-email-gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2015 12:17 AM, Michael Welling wrote:
-> Greetings,
->
-> I have developed an AM3354 based SoM and it uses an external SI5351 clock
-> generator to drive the clock inputs for an external duart and I2S audio
-> master clock. With the registration according to the documentation the
-> reference clock is not being detected and hence the clock generator is
-> not working as expect.
->
-> After trying many different things, I started to look around the mailing
-> lists to find information related to this issue.
->
-> I came acrossed post that has the exact same issue:
-> https://lkml.org/lkml/2013/2/18/468
->
-> Seeing as the patch did not land upstream, I am wondering if there is
-> a solution that I am not seeing.
->
-> I am willing to provide a patch given appropriate guidance.
+From: Gaurav <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Hi Michael,
+The following script is used to import dtc upstream
+into kernel. It was missing import of dtc/libfdt, with
+this commit it will include the same.
 
-The info on the email you referenced is kind of obsolete, TI SoCs are 
-calling of_clk_init() during boot now, and thus external clock nodes 
-should be registered fine also. Maybe you can provide the actual DTS 
-patch you are trying out so we can help better...? Are you seeing any 
-boot time error / warning prints for your new clock?
+Signed-off-by: Gaurav <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ scripts/dtc/update-dtc-source.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
 
--Tero
+diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
+index feb01ef..a645906 100755
+--- a/scripts/dtc/update-dtc-source.sh
++++ b/scripts/dtc/update-dtc-source.sh
+@@ -34,6 +34,7 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
+ 		srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
+ 		dtc-lexer.l dtc-parser.y"
+ DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
++LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
+ 
+ # Build DTC
+ cd $DTC_UPSTREAM_PATH
+@@ -50,5 +51,9 @@ for f in $DTC_GENERATED; do
+ 	cp ${DTC_UPSTREAM_PATH}/$f ${f}_shipped
+ 	git add ${f}_shipped
+ done
++for f in $LIBFDT_SOURCE; do
++	cp ${DTC_UPSTREAM_PATH}/libfdt/${f} libfdt/${f}
++	git add libfdt/${f}
++done
+ 
+ git commit -e -v -m "scripts/dtc: Update to upstream version [CHANGEME]"
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
