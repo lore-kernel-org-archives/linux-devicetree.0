@@ -1,102 +1,48 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v4 1/8] dmaengine: of_dma: Support for DMA routers
-Date: Wed, 15 Apr 2015 11:36:55 +0300
-Message-ID: <552E2327.4050203@ti.com>
-References: <1428498892-28471-1-git-send-email-peter.ujfalusi@ti.com> <1428498892-28471-2-git-send-email-peter.ujfalusi@ti.com> <20150408154251.GE26727@lukather> <5526375A.7090708@ti.com> <20150410074058.GN26727@lukather>
+From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [v2] dt/bindings: fsl/guts: Added global-utilities compatibles
+Date: Wed, 15 Apr 2015 08:43:28 +0000
+Message-ID: <DM2PR03MB3837B6B30125C77F1C6F89EE6E50@DM2PR03MB383.namprd03.prod.outlook.com>
+References: <1429006329-24597-1-git-send-email-igal.liberman@freescale.com>
+ <1429042131.22867.682.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150410074058.GN26727@lukather>
-Sender: linux-omap-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: vinod.koul@intel.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com, arnd@arndb.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429042131.22867.682.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2015 10:40 AM, Maxime Ripard wrote:
-> On Thu, Apr 09, 2015 at 11:24:58AM +0300, Peter Ujfalusi wrote:
->> On 04/08/2015 06:42 PM, Maxime Ripard wrote:
->>>> ---
->>>>  Documentation/devicetree/bindings/dma/dma.txt | 28 +++++++++
->>>>  drivers/dma/dmaengine.c                       |  7 +++
->>>>  drivers/dma/of-dma.c                          | 86 ++++++++++++++=
-+++++++++++++
->>>>  include/linux/dmaengine.h                     | 17 ++++++
->>>>  include/linux/of_dma.h                        | 21 +++++++
->>>>  5 files changed, 159 insertions(+)
->>>
->>> Can that be moved to a header / C file of its own?
->>>
->>> There's a lot of various code already in dmaengine.h and dmaengine.=
-c,
->>> it would be really great to avoid adding more random stuff in there=
-=2E
->>
->> This patch adds the core support for DMA signal routers. It adds
->> fairly small amount of generic code to the core to achieve this. I
->> don't think it would be better to create let's say of-dma-router.c
->> and .h just for this and export functions from of-dma.c to be used
->> outside of the file.
->=20
-> A lot of "a fairly small amount of generic code" has been added over
-> time, and we ended up in the current situation.
-
-So that we have fairly good dmaengine core? If people using the code, t=
-hey
-will eventually fix things, add new features. When dmaengine came to ex=
-istence
-we did not had DMA routers, now that the SoCs are getting even more
-complicated they are coming (in case of DRA7x, it is already here).
-
-> It's a bit sad if we just end up moving this just after it got merged=
-,
-> especially if it doesn't have any kind of dependency on any of the
-> core function.
-
-This provides core functionality to handle DMA signal routers via DT. I=
-t does
-depend on the DT DMA parsing core code as it integrates with it.
-
->> The signal router is not a DMA device, it is represented in the devi=
-ce tree
->> and the code will do the needed translation, which is transparent fo=
-r the DMA
->> clients and also for the DMA controllers. Neither should know about =
-the signal
->> router.
->=20
-> Yeah, I got that part, and we do agree on that.
->=20
->> Similar translation can be done for ACPI.
->=20
-> But this argument is exactly why it shouldn't be tied to the device
-> tree. We wouldn't like to re-do all this all over again for ACPI,
-> while your code seems to just handle that very well, wouldn't we?
-
-The data structures used by the DT and ACPI layers are different. Under=
-neath
-DT and ACPI we do not have enough information on how to handle the DMA =
-signal
-router. If you happen to have multiple DMA controllers in the system fo=
-r
-example how would you tell how the routers are connected?
-In DRA7x we have sDMA and eDMA controllers. Both have similar DMA cross=
-bar. It
-is only possible to know the hierarchy of the components via DT. I'm su=
-re this
-is the same for ACPI. You take away the ACPI layer and you loose the to=
-pology
-of the system.
-Probably with huge architectural change in the dmaengine core (and thus=
- with
-all the drivers) this might be possible, but I don't think that is a va=
-lid
-route to take.
-
---=20
-P=E9ter
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDE0
+LCAyMDE1IDExOjA5IFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1
+YmplY3Q6IFJlOiBbdjJdIGR0L2JpbmRpbmdzOiBmc2wvZ3V0czogQWRkZWQgZ2xvYmFsLXV0aWxp
+dGllcyBjb21wYXRpYmxlcw0KPiANCj4gT24gVHVlLCAyMDE1LTA0LTE0IGF0IDEzOjEyICswMzAw
+LCBJZ2FsLkxpYmVybWFuIHdyb3RlOg0KPiA+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGli
+ZXJtYW5AZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IHYyIC0gQWRkcmVzc2VkIFNjb3R0J3MgZmVl
+ZGJhY2sNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJt
+YW5AZnJlZXNjYWxlLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cG93ZXJwYy9mc2wvZ3V0cy50eHQgICAgICAgfCAgICA0ICsrKysNCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ndXRzLnR4dA0KPiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ndXRzLnR4dA0KPiA+IGluZGV4IDdm
+MTUwYjUuLjY5NjQ0ZTYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1dHMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2d1dHMudHh0DQo+ID4gQEAgLTksNiArOSwx
+MCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+DQo+ID4gICAtIGNvbXBhdGlibGUgOiBTaG91
+bGQgZGVmaW5lIHRoZSBjb21wYXRpYmxlIGRldmljZSB0eXBlIGZvcg0KPiA+ICAgICBnbG9iYWwt
+dXRpbGl0aWVzLg0KPiA+ICsgICBQb3NzaWJsZSBjb21wYXRpYmxlczoNCj4gPiArCSJmc2wscW9y
+aXEtZGV2aWNlLWNvbmZpZy0xLjAiDQo+ID4gKwkiZnNsLHFvcmlxLWRldmljZS1jb25maWctMi4w
+Ig0KPiA+ICsJImZzbCw8Y2hpcD4tZGV2aWNlLWNvbmZpZyINCj4gDQo+IGZzbCw8Y2hpcD4tZ3V0
+cyBpcyBhbHNvIHBvc3NpYmxlIG9uIG5vbi1jb3JlbmV0IGNoaXBzLg0KPiANCg0KSSBhZGRlZCBj
+b21wYXRpYmxlcyB3aGljaCBhcmUgdXNlZCBmb3IgRk1hbiBDbG9jayBvbmx5Lg0KRG8geW91IHdh
+bnQgdG8gYWRkIG90aGVyIGNvbXBhdGlibGVzIHRvbz8gV2hpY2g/IE9yIGp1c3QgbWVudGlvbiB0
+aGF0IHRoZSAzIGNvbXBhdGlibGVzIEkndmUgYWRkZWQgZG9lc24ndCBjb3ZlciBhbGwgYXZhaWxh
+YmxlIG9wdGlvbnM/DQoNCj4gLVNjb3R0DQo+IA0KDQpJZ2FsDQoNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
