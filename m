@@ -1,40 +1,281 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
-Date: Wed, 15 Apr 2015 14:34:03 +0100
-Message-ID: <20150415133403.GB26099@e104818-lin.cambridge.arm.com>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
- <20150414163613.GM28709@leverpostej>
- <07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
- <20150414211720.GA56647@MBP>
- <CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] usb: chipidea: Use extcon framework for VBUS and ID detect
+Date: Wed, 15 Apr 2015 16:35:15 +0300
+Message-ID: <1429104915-11079-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 05:48:48PM -0400, Rob Clark wrote:
-> Just speaking as an outsider to this topic, but seems like most/all
-> tablets/phones/etc ship with signed firmware.  Which means for most of
-> the population, upgrading the firmware to a new version which did
-> support the standard (assuming it existed), isn't really an option on
-> our devices, any more than fixing buggy acpi tables is on our
-> laptops..
+On recent Qualcomm platforms VBUS and ID lines are not routed to
+USB PHY LINK controller. Use extcon framework to receive connect
+and disconnect ID and VBUS notification.
 
-I wouldn't expect most population to build their own kernels on
-tablets/phones. And even if you could install a custom kernel, mainline
-rarely runs on such devices because of tons of out of tree patches (just
-look at the Nexus 9 patches that Kumar pointed at; even ignoring the
-booting protocol they are extremely far from an upstreamable form).
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
 
--- 
-Catalin
+Changes since v0 [1], as per Peter Chen suggestions:
+
+* Moved external connector parsing code to ci_get_platdata()
+* Moved external connector related variables to struct ci_hdrc_platform_data
+* Rename ci_host_notifier() to ci_id_notifier()
+* Fixed device bindings description
+* Use select EXTCON framework, instead of depends on.
+
+[1] https://lkml.org/lkml/2015/4/9/116
+
+ .../devicetree/bindings/usb/ci-hdrc-qcom.txt       |  9 +++
+ drivers/usb/chipidea/Kconfig                       |  1 +
+ drivers/usb/chipidea/core.c                        | 87 ++++++++++++++++++++++
+ drivers/usb/chipidea/otg.c                         | 26 ++++++-
+ include/linux/usb/chipidea.h                       | 17 +++++
+ 5 files changed, 139 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
+index f2899b5..c635aca 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
+@@ -7,6 +7,14 @@ Required properties:
+ - usb-phy:      phandle for the PHY device
+ - dr_mode:      Should be "peripheral"
+
++Optional properties:
++- extcon:       phandles to external connector devices. First phandle
++                should point to external connector, which provide "USB"
++                cable events, the second should point to external connector
++                device, which provide "USB-HOST" cable events. If one of
++                the external connector devices is not required, empty <0>
++                phandle should be specified.
++
+ Examples:
+ 	gadget@f9a55000 {
+ 		compatible = "qcom,ci-hdrc";
+@@ -14,4 +22,5 @@ Examples:
+ 		dr_mode = "peripheral";
+ 		interrupts = <0 134 0>;
+ 		usb-phy = <&usbphy0>;
++		extcon = <0>, <&usb_id>;
+ 	};
+diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+index 5ce3f1d..5619b8c 100644
+--- a/drivers/usb/chipidea/Kconfig
++++ b/drivers/usb/chipidea/Kconfig
+@@ -1,6 +1,7 @@
+ config USB_CHIPIDEA
+ 	tristate "ChipIdea Highspeed Dual Role Controller"
+ 	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
++	select EXTCON
+ 	help
+ 	  Say Y here if your system has a dual role high speed USB
+ 	  controller based on ChipIdea silicon IP. Currently, only the
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 74fea4f..e1d495d 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -47,6 +47,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
++#include <linux/extcon.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/module.h>
+@@ -557,9 +558,39 @@ static irqreturn_t ci_irq(int irq, void *data)
+ 	return ret;
+ }
+
++static int ci_vbus_notifier(struct notifier_block *nb, unsigned long event,
++			 void *ptr)
++{
++	struct ci_hdrc_cable *vbus = container_of(nb, struct ci_hdrc_cable, nb);
++
++	if (event)
++		vbus->state = true;
++	else
++		vbus->state = false;
++
++	return NOTIFY_DONE;
++}
++
++static int ci_id_notifier(struct notifier_block *nb, unsigned long event,
++		       void *ptr)
++{
++	struct ci_hdrc_cable *id = container_of(nb, struct ci_hdrc_cable, nb);
++
++	if (event)
++		id->state = false;
++	else
++		id->state = true;
++
++	return NOTIFY_DONE;
++}
++
+ static int ci_get_platdata(struct device *dev,
+ 		struct ci_hdrc_platform_data *platdata)
+ {
++	struct extcon_dev *ext_vbus, *ext_id;
++	struct ci_hdrc_cable *cable;
++	int ret;
++
+ 	if (!platdata->phy_mode)
+ 		platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
+
+@@ -591,6 +622,53 @@ static int ci_get_platdata(struct device *dev,
+ 	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+ 		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+
++	ext_id = ERR_PTR(-ENODEV);
++	ext_vbus = ERR_PTR(-ENODEV);
++	if (of_property_read_bool(dev->of_node, "extcon")) {
++		/* Each one of them is not mandatory */
++		ext_vbus = extcon_get_edev_by_phandle(dev, 0);
++		if (IS_ERR(ext_vbus) && PTR_ERR(ext_vbus) != -ENODEV)
++			return PTR_ERR(ext_vbus);
++
++		ext_id = extcon_get_edev_by_phandle(dev, 1);
++		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
++			return PTR_ERR(ext_id);
++	}
++
++	if (!IS_ERR(ext_vbus)) {
++		cable = &platdata->vbus_extcon;
++		cable->nb.notifier_call = ci_vbus_notifier;
++		ret = extcon_register_interest(&cable->conn, ext_vbus->name,
++					       "USB", &cable->nb);
++		if (ret < 0) {
++			dev_err(dev, "register VBUS failed\n");
++			return ret;
++		}
++
++		ret = extcon_get_cable_state(ext_vbus, "USB");
++		if (ret)
++			cable->state = true;
++		else
++			cable->state = false;
++	}
++
++	if (!IS_ERR(ext_id)) {
++		cable = &platdata->id_extcon;
++		cable->nb.notifier_call = ci_id_notifier;
++		ret = extcon_register_interest(&cable->conn, ext_id->name,
++					       "USB-HOST", &cable->nb);
++		if (ret < 0) {
++			dev_err(dev, "register ID failed\n");
++			return ret;
++		}
++
++		ret = extcon_get_cable_state(ext_id, "USB-HOST");
++		if (ret)
++			cable->state = false;
++		else
++			cable->state = true;
++	}
++
+ 	return 0;
+ }
+
+@@ -845,6 +923,7 @@ deinit_phy:
+ static int ci_hdrc_remove(struct platform_device *pdev)
+ {
+ 	struct ci_hdrc *ci = platform_get_drvdata(pdev);
++	struct extcon_specific_cable_nb *cable_nb;
+
+ 	if (ci->supports_runtime_pm) {
+ 		pm_runtime_get_sync(&pdev->dev);
+@@ -852,6 +931,14 @@ static int ci_hdrc_remove(struct platform_device *pdev)
+ 		pm_runtime_put_noidle(&pdev->dev);
+ 	}
+
++	cable_nb = &ci->platdata->id_extcon.conn;
++	if (cable_nb->edev)
++		extcon_unregister_interest(cable_nb);
++
++	cable_nb = &ci->platdata->vbus_extcon.conn;
++	if (cable_nb->edev)
++		extcon_unregister_interest(cable_nb);
++
+ 	dbg_remove_files(ci);
+ 	ci_role_destroy(ci);
+ 	ci_hdrc_enter_lpm(ci, true);
+diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
+index ad6c87a..34dd196 100644
+--- a/drivers/usb/chipidea/otg.c
++++ b/drivers/usb/chipidea/otg.c
+@@ -30,7 +30,31 @@
+  */
+ u32 hw_read_otgsc(struct ci_hdrc *ci, u32 mask)
+ {
+-	return hw_read(ci, OP_OTGSC, mask);
++	struct ci_hdrc_cable *cable;
++	u32 val = hw_read(ci, OP_OTGSC, mask);
++
++	/*
++	 * If using extcon framework for VBUS and/or ID signal
++	 * detection overwrite OTGSC resiter value
++	 */
++	cable = &ci->platdata->vbus_extcon;
++	if ((mask & OTGSC_BSV) && cable->conn.edev) {
++		if (cable->state)
++			val |= OTGSC_BSV;
++		else
++			val &= ~OTGSC_BSV;
++	}
++
++	cable = &ci->platdata->id_extcon;
++	if ((mask & OTGSC_ID) && cable->conn.edev) {
++		if (cable->state)
++			val |= OTGSC_ID;
++		else
++			val &= ~OTGSC_ID;
++	}
++
++	val &= mask;
++	return val;
+ }
+
+ /**
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index ab94f78..0eedaf6 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -5,8 +5,21 @@
+ #ifndef __LINUX_USB_CHIPIDEA_H
+ #define __LINUX_USB_CHIPIDEA_H
+
++#include <linux/extcon.h>
+ #include <linux/usb/otg.h>
+
++/**
++ * struct ci_hdrc_cable - structure for external connector cable state tracking
++ * @state: current state of the line
++ * @nb: hold event notification callback
++ * @conn: used for notification registration
++ */
++struct ci_hdrc_cable {
++	bool				state;
++	struct notifier_block		nb;
++	struct extcon_specific_cable_nb conn;
++};
++
+ struct ci_hdrc;
+ struct ci_hdrc_platform_data {
+ 	const char	*name;
+@@ -35,6 +48,10 @@ struct ci_hdrc_platform_data {
+ 	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
+ 	bool			tpl_support;
++
++	/* VBUS and ID signal state tracking, using extcon framework */
++	struct ci_hdrc_cable		vbus_extcon;
++	struct ci_hdrc_cable		id_extcon;
+ };
+
+ /* Default offset of capability registers */
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
