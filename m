@@ -1,69 +1,47 @@
-From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] powerpc/dts: Update the core cluster PLL node(s)
-Date: Wed, 15 Apr 2015 11:07:34 +0000
-Message-ID: <DM2PR03MB3831BEEDD2C17991818FFA9E6E50@DM2PR03MB383.namprd03.prod.outlook.com>
-References: <1429005306-24544-1-git-send-email-igal.liberman@freescale.com>
-	 <1429042868.22867.689.camel@freescale.com>
- <1429042950.22867.690.camel@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: fix allocation size for device node path
+Date: Wed, 15 Apr 2015 13:15:15 +0100
+Message-ID: <20150415121515.8E1FAC40A0B@trevor.secretlab.ca>
+References: <1428986165-6250-1-git-send-email-jcliang@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429042950.22867.690.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1428986165-6250-1-git-send-email-jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDE0
-LCAyMDE1IDExOjIzIFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0hdIHBvd2VycGMvZHRzOiBVcGRhdGUgdGhlIGNvcmUgY2x1c3RlciBQ
-TEwgbm9kZShzKQ0KPiANCj4gT24gVHVlLCAyMDE1LTA0LTE0IGF0IDE1OjIxIC0wNTAwLCBTY290
-dCBXb29kIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxNS0wNC0xNCBhdCAxMjo1NSArMDMwMCwgSWdh
-bC5MaWJlcm1hbiB3cm90ZToNCj4gPiA+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJt
-YW5AZnJlZXNjYWxlLmNvbT4NCj4gPiA+DQo+ID4gPiBUaGlzIHBhdGNoIHJlcGxhY2VzIHRoZSBm
-b2xsb3dpbmc6DQo+ID4gPiAJaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC80Mjc2
-NjQvDQo+ID4gPg0KPiA+ID4gVGhpcyBwYXRjaCBpcyBkZXNjcmliZWQgYnkgdGhlIGZvbGxvd2lu
-ZyBiaW5kaW5nIGRvY3VtZW50IHVwZGF0ZToNCj4gPiA+IAlodHRwczovL3BhdGNod29yay5vemxh
-YnMub3JnL3BhdGNoLzQ2MTE1MC8NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBJZ2FsIExp
-YmVybWFuIDxJZ2FsLkxpYmVybWFuQGZyZWVzY2FsZS5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBh
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5kdHNpIHwgICAgNiArKysr
-LS0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
-KQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Fv
-cmlxLWNsb2NrZ2VuMi5kdHNpDQo+ID4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9y
-aXEtY2xvY2tnZW4yLmR0c2kNCj4gPiA+IGluZGV4IDQ4ZTBiNmUuLjdlMWYwNzQgMTAwNjQ0DQo+
-ID4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5kdHNp
-DQo+ID4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5k
-dHNpDQo+ID4gPiBAQCAtNDksMTQgKzQ5LDE2IEBAIGdsb2JhbC11dGlsaXRpZXNAZTEwMDAgew0K
-PiA+ID4gIAkJcmVnID0gPDB4ODAwIDB4ND47DQo+ID4gPiAgCQljb21wYXRpYmxlID0gImZzbCxx
-b3JpcS1jb3JlLXBsbC0yLjAiOw0KPiA+ID4gIAkJY2xvY2tzID0gPCZzeXNjbGs+Ow0KPiA+ID4g
-LQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDAtZGl2NCI7
-DQo+ID4gPiArCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxs
-MC1kaXYzIiwNCj4gPiA+ICsJCQkJICAgICAgInBsbDAtZGl2NCI7DQo+ID4gPiAgCX07DQo+ID4g
-PiAgCXBsbDE6IHBsbDFAODIwIHsNCj4gPiA+ICAJCSNjbG9jay1jZWxscyA9IDwxPjsNCj4gPiA+
-ICAJCXJlZyA9IDwweDgyMCAweDQ+Ow0KPiA+ID4gIAkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEt
-Y29yZS1wbGwtMi4wIjsNCj4gPiA+ICAJCWNsb2NrcyA9IDwmc3lzY2xrPjsNCj4gPiA+IC0JCWNs
-b2NrLW91dHB1dC1uYW1lcyA9ICJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiOw0KPiA+
-ID4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsbDEiLCAicGxsMS1kaXYyIiwgInBsbDEtZGl2
-MyIsDQo+ID4gPiArCQkJCSAgICAgICJwbGwxLWRpdjQiOw0KPiA+DQo+ID4gV2FpdCwgc28gaWYg
-dGhlIGRyaXZlciBpbXBsZW1lbnRzIHRoZSBiaW5kaW5nIHlvdSBzdWJtaXR0ZWQsIHlvdSdsbA0K
-PiA+IGJyZWFrIGNvbXBhdGliaWxpdHkgd2l0aCB0aGVzZSBvbGRlciBkZXZpY2UgdHJlZXMuLi4N
-Cj4gPg0KPiA+IEkgdGhpbmsgd2UgbmVlZCB0byBqdXN0IGFjY2VwdCB0aGUgdWdseSBjb3VudC10
-aGUtY2xvY2stbmFtZXMgYXBwcm9hY2gNCj4gPiBhbmQgZG9jdW1lbnQgaXQuDQo+IA0KPiBJcyB0
-aGVyZSBhbnkgY3VycmVudCAyLjAgY2xvY2sgY29uc3VtZXIgdGhhdCByZWZlcmVuY2VzIHBsbC1k
-aXY0Pw0KPiANCg0KSSBsb29rZWQgYXQgVDQyNDAgZm9yIGV4YW1wbGUsIHRoZXJlJ3MgYSBtdXgg
-bm9kZSB3aGljaCBhZGRzIHBsbC1kaXY0IG9wdGlvbjoNCm11eDA6IG11eDBAMCB7DQoJI2Nsb2Nr
-LWNlbGxzID0gPDA+Ow0KCXJlZyA9IDwweDAgMHg0PjsNCgljb21wYXRpYmxlID0gImZzbCxxb3Jp
-cS1jb3JlLW11eC0yLjAiOw0KCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAg
-Mj4sDQoJCTwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj4sDQoJCTwmcGxsMiAwPiwgPCZw
-bGwyIDE+LCA8JnBsbDIgMj47DQoJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAi
-cGxsMC1kaXY0IiwNCgkJInBsbDEiLCAicGxsMS1kaXYyIiwgInBsbDEtZGl2NCIsDQoJCSJwbGwy
-IiwgInBsbDItZGl2MiIsICJwbGwyLWRpdjQiOw0KCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4
-MCI7DQp9Ow0KDQpBZnRlciB0aGlzIGNoYW5nZSA8JnBsbDAgMj4gd2lsbCByZXByZXNlbnQgInBs
-bDAtZGl2MyIgYW5kIG5vdCAicGxsMC1kaXY0Ii4NCiANCj4gLVNjb3R0DQoNCg==
+On Tue, 14 Apr 2015 12:36:05 +0800
+, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+ wrote:
+> The allocation size of device node path is off by one which drops the
+> '\0' terminator.
+> 
+> Signed-off-by: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+This looks like something that should be backported to stable. Do you agree?
+
+g.
+
+> ---
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 3a896c9..98a9e6e 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -172,7 +172,7 @@ static void * unflatten_dt_node(void *blob,
+>  	if (!pathp)
+>  		return mem;
+>  
+> -	allocl = l++;
+> +	allocl = ++l;
+>  
+>  	/* version 0x10 has a more compact unit name here instead of the full
+>  	 * path. we accumulate the full path size using "fpsize", we'll rebuild
+> -- 
+> 2.1.2
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
