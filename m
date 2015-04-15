@@ -1,96 +1,173 @@
-From: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Wed, 15 Apr 2015 16:41:17 +0900
-Message-ID: <CAAFQd5A2FgsbusEbxVVqSeC7hY=Ewe-YbJ7bbvk-SjpSC==xDw@mail.gmail.com>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
- <1425638900-24989-3-git-send-email-yong.wu@mediatek.com> <CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
- <1426677749.22581.38.camel@mhfsdcap03> <CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A@mail.gmail.com>
- <1428993067.13552.14.camel@mhfsdcap03> <CAAFQd5Db+DacQYa1pdr=w5JpU76AYa-Xhd20wHBF=F6m=Efokw@mail.gmail.com>
- <1429081567.16400.16.camel@mhfsdcap03>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Wed, 15 Apr 2015 10:50:58 +0300
+Message-ID: <552E1862.6090709@ti.com>
+References: <55277910.2070000@samsung.com> <55277FA2.6090700@samsung.com> <55278580.2090809@samsung.com> <55278DD3.3020409@samsung.com> <55279550.1060609@samsung.com> <552CE579.6060702@ti.com> <552CE5C0.3010207@ti.com> <552CEC97.1050205@samsung.com> <552CEE42.1050907@ti.com> <552CFA1E.5070400@samsung.com> <20150415032734.GA29095@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429081567.16400.16.camel@mhfsdcap03>
+In-Reply-To: <20150415032734.GA29095@shlinux2>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2015 at 4:06 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Wed, 2015-04-15 at 11:20 +0900, Tomasz Figa wrote:
->> On Tue, Apr 14, 2015 at 3:31 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrot=
-e:
->> >> >>
->> >> >> > +
->> >> >> > +       piommu->protect_va =3D devm_kmalloc(piommu->dev, MTK=
-_PROTECT_PA_ALIGN*2,
->> >> >>
->> >> >> style: Operators like * should have space on both sides.
->> >> >>
->> >> >> > +                                         GFP_KERNEL);
->> >> >>
->> >> >> Shouldn't dma_alloc_coherent() be used for this?
->> >> >      We don't care the data in it. I think they are the same. C=
-ould you
->> >> > help tell me why dma_alloc_coherent may be better.
->> >>
->> >> Can you guarantee that at the time you allocate the memory using
->> >> devm_kmalloc() the memory is not dirty (i.e. some write back data=
- are
->> >> stored in CPU cache) and is not going to be written back in some =
-time,
->> >> overwriting data put there by IOMMU hardware?
->> >>
->> > As I noted in the function "mtk_iommu_hw_init":
->> >
->> >        /* protect memory,HW will write here while translation faul=
-t */
->> >        protectpa =3D __virt_to_phys(piommu->protect_va);
->> >
->> >      We don=E2=80=99t care the content of this buffer, It is ok ev=
-en though its
->> > data is dirty.
->> >     It seem to be a the protect memory. While a translation fault
->> > happened, The iommu HW will overwrite here instead of writing to t=
-he
->> > fault physical address which may be 0 or some random address.
->> >
+On 15/04/15 06:27, Peter Chen wrote:
+> On Tue, Apr 14, 2015 at 08:29:34PM +0900, Chanwoo Choi wrote:
+>> On 04/14/2015 07:38 PM, Roger Quadros wrote:
+>>> On 14/04/15 13:31, Chanwoo Choi wrote:
+>>>> On 04/14/2015 07:02 PM, Roger Quadros wrote:
+>>>>> Fixed Kishon's id.
+>>>>>
+>>>>> On 14/04/15 13:01, Roger Quadros wrote:
+>>>>>> On 10/04/15 12:18, Chanwoo Choi wrote:
+>>>>>>> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+>>>>>>>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+>>>>>>>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+>>>>>>>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>
+>>>>>>>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+>>>>>>>>>>>> Hi Chanwoo,
+>>>>>>>>>>>>
+>>>>>>>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>>>>>>>>>>>>> Hi Chanwoo,
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> [snip]
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> But, I have one question about case[3]
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>>>>>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> It's because state of single USB cable connection cannot be completely
+>>>>>>>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>>>>>>>>>>>>> and ID), so we need to use two cables for single cable connection. We
+>>>>>>>>>>>>>> use following convention:
+>>>>>>>>>>>>>> cable "USB" = VBUS
+>>>>>>>>>>>>>> cable "USB-HOST" = !ID.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I think that extcon provider driver have to update the only one cable state
+>>>>>>>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>>>>>>>>>>>>> at the same time through one h/w port.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>>>>>>>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+>>>>>>>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+>>>>>>>>>>>> detected cable type is USB host). Devices would need to have complete
+>>>>>>>>>>>> information about USB cable connection, because OTG state machine needs
+>>>>>>>>>>>
+>>>>>>>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+>>>>>>>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+>>>>>>>>>> machine. It needs to know exact VBUS and ID states, which cannot be
+>>>>>>>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+>>>>>>>>>> name together with "USB" to pass additional information about USB cable
+>>>>>>>>>> connection.
+>>>>>>>>>
+>>>>>>>>> I think this method is not proper to support this case.
+>>>>>>>>> It may cause the confusion about other case using USB/USB-HOST cable state
+>>>>>>>>> except of you commented case.
+>>>>>>>>
+>>>>>>>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+>>>>>>>> with old names. It seems to be simpler solution than adding new
+>>>>>>>> mechanism notifying about VBUS and ID states changes.
+>>>>>>>
+>>>>>>>
+>>>>>>> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+>>>>>>> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+>>>>>>> name continuoulsy.
+>>>>>>>
+>>>>>>> I think that extcon core provide the helper API to get the value of VBUS.
+>>>>>>> But I need to consider it.
+>>>>>>
+>>>>>> Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
+>>>>>> VBUS and ID information reliably.
+>>>>>> This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
+>>>>>> and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
+>>>>>> attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
+>>>>>> capturing only the ID pin state.
+>>>>>>
+>>>>>> I can suggest the following options
+>>>>>> a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
+>>>>>> Maybe call it "USB-POWER" or something.
+>>>>
+>>>> We must discuss it before using the new cable name
+>>>> such as "USB-POWER", "USB-ID" and "USB-VBUS".
+>>>
+>>> I didn't say to add "USB-ID" or "USB-VBUS". solution (a) was to have the following
 >>
->> Do you mean that it's just a dummy page for hardware behind the IOMM=
-U
->> to access when the mapping is not available? How would that work wit=
-h
->> potential on demand paging when the hardware needs to be blocked unt=
-il
->> the mapping is created?
+>> Right. Robert suggested the "USB-ID" and "USB-VBUS" cable name on previous mail in mail thread.
+> 
+> From USB/USB-PHY driver point, it needs to know id and vbus value
+> for their internal logic, so as extcon users, the cable name
+> is better to reflect meaning of id and vbus, like "USB-ID" and "USB-VBUS",
+> if the power is from vbus pin at USB cable, I don't think we need another
+> cable name "USB-POWER" even the USB/USB-PHY driver don't need it.
+
+I agree as well that this is the *best* option for USB case. Just because Chanwoo was
+objecting these names I suggested "USB-POWER".
+
+Chanwoo, can we simply get rid of "USB" and "USB-HOST" cables and move to
+"USB-ID" and "USB-VBUS"?
+
+The only reason you objected was saying that it is a strange cable name. Well this is
+only what we care about from USB PHY drivers and user space is not interested in it
+so what is the concern?
+
+> 
 >>
->> Best regards,
->> Tomasz
->  1. YES
->  2. Sorry. Our iommu HW can not support this right now. The HW can no=
-t
-> be blocked until the mapping is created.
+>>> "USB" - attached means ID is high. i.e. Type-B plug attached.
+>>> "USB-HOST" - attached means ID is low. i.e. Type-A plug attached.
+>>> "USB-POWER" - attached means USB power is present. i.e. VBUS is alive.
+>>>
+>>> This way the definition of USB and USB-HOST remain true to their name and avoid further confusions.
+>>> VBUS state is got through the "USB-POWER" cable state.
+>>
+>> There is the same case for MHL cable.
+>> Also, MHL cable could be connected to VBUS line.
+>> - MHL : attached just MHL cable.
+>> - MHL-POWER : attache MHL cable which is connected with VBUS line.
+>>
+>> We must need the opinion of USB/PHY driver's maintainer.
+>>
+>>>
+>>>>
+>>>> What is the appropriate method of following two solution?
+>>>> - Fisrt, use the new cable name "USB-*".
+>>> I explained this above.
+>>>
+>>>> - Second, use the additional API to get the VBUS state.
+>>>
+>>> You keep mentioning additional API for VBUS. But I don't see any such API. Can you please
+>>> suggest what API you are talking about?
+>>
+>> I'm considering following functions for VBUS state. But it is my opinion,
+>> If USB/PHY drivers's maintainers don't agree the new cable ("USB-POWER"),
+>> We could use the following function to get VBUS state.
+>> Because new cable name will affect the USB/PHY drivers.
+>> - int extcon_{get|set}_vbus_state(struct extcon_dev *edev);
 
-OK, that explains it. Well, then I guess this is necessary and
-contents of that memory don't matter that much. (Although, this might
-be a minor security issue, because the faulting hardware would get
-access to some data previously stored by kernel code. Not sure how
-much of a threat would that be, though.)
+This is not suitable for us as USB drivers need VBUS notification event to come.
+They can't keep polling for VBUS state using this API.
 
->     If the page is not ready, we can not get the physical address, th=
-en
-> How to fill the pagetable for that memory. I think the dma&iommu may
-> guaranty it?
-
-If your hardware can't block until the mapping is created then what
-you do currently seems to be the only option. (+/- the missing cache
-maintenance at initialization)
-
-Best regards,
-Tomasz
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
