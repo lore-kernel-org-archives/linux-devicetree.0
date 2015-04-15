@@ -1,82 +1,58 @@
-From: Viet Nga Dao <vndao@altera.com>
-Subject: Re: [PATCH] [PATCH v3] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Wed, 15 Apr 2015 09:56:23 +0800
-Message-ID: <CAN1oZWzH2t4rY7Lh7oiqM=gbVJ6v31vzFk96gumA+JBgRwN6kQ@mail.gmail.com>
-References: <1426493782-3791-1-git-send-email-vndao@altera.com>
-	<CACna6rxx9TN1vko0fVPQgJPLZ3ZN17JjPki+q1Y3Ep9e0HppEA@mail.gmail.com>
-	<CAN1oZWxG8pnr-COMZRnOZvbaQ=vw+BRMgZpkQyk_v0NuGZPckA@mail.gmail.com>
+From: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Wed, 15 Apr 2015 11:20:51 +0900
+Message-ID: <CAAFQd5Db+DacQYa1pdr=w5JpU76AYa-Xhd20wHBF=F6m=Efokw@mail.gmail.com>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
+	<CAAFQd5ASywTX7P9L8cogBbBTra0W1=oVxeWfK5=K7L+SR2xaFA@mail.gmail.com>
+	<1426677749.22581.38.camel@mhfsdcap03>
+	<CAAFQd5DOzFmfXki8GwUC75VQFEWzxBUNUgOtSuRtV6tc27kD2A@mail.gmail.com>
+	<1428993067.13552.14.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1oZWxG8pnr-COMZRnOZvbaQ=vw+BRMgZpkQyk_v0NuGZPckA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, nga_chi86 <ngachi86@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1428993067.13552.14.camel@mhfsdcap03>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-Could you please help me to review this patch?
-Thanks
-
-On Mon, Mar 16, 2015 at 4:40 PM, Viet Nga Dao <vndao@altera.com> wrote:
-> On Mon, Mar 16, 2015 at 4:35 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmai=
-l.com> wrote:
->> On 16 March 2015 at 09:16,  <vndao@altera.com> wrote:
->>> +static struct flash_device flash_devices[] =3D {
->>> +       FLASH_ID("epcq16-nonjedec",  2, 0x15),
->>> +       FLASH_ID("epcq32-nonjedec",  2, 0x16),
->>> +       FLASH_ID("epcq64-nonjedec",  2, 0x17),
->>> +       FLASH_ID("epcq128-nonjedec", 2, 0x18),
->>> +       FLASH_ID("epcq256-nonjedec", 2, 0x19),
->>> +       FLASH_ID("epcq512-nonjedec", 2, 0x20),
->>
->> You could probably use EPCQ_OPCODE_ID
->>
->>
->>> +
->>> +       FLASH_ID("epcs16-nonjedec",  1, 0x14),
->>> +       FLASH_ID("epcs64-nonjedec",  1, 0x16),
->>> +       FLASH_ID("epcs128-nonjedec", 1, 0x18),
->>
->> And EPCS_OPCODE_ID here.
->>
-> Noted
->>
->>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/sp=
-i-nor.c
->>> index 43bb552..ad0c274 100644
->>> --- a/drivers/mtd/spi-nor/spi-nor.c
->>> +++ b/drivers/mtd/spi-nor/spi-nor.c
->>> @@ -683,6 +683,17 @@ static const struct spi_device_id spi_nor_ids[=
-] =3D {
->>>         { "cat25c09", CAT25_INFO( 128, 8, 32, 2, SPI_NOR_NO_ERASE |=
- SPI_NOR_NO_FR) },
->>>         { "cat25c17", CAT25_INFO( 256, 8, 32, 2, SPI_NOR_NO_ERASE |=
- SPI_NOR_NO_FR) },
->>>         { "cat25128", CAT25_INFO(2048, 8, 64, 2, SPI_NOR_NO_ERASE |=
- SPI_NOR_NO_FR) },
->>> +
->>> +       /* Altera EPCQ/EPCS Flashes */
->>> +       { "epcq16-nonjedec",  INFO(0, 0, 0x10000, 32,   0) },
->>> +       { "epcq32-nonjedec",  INFO(0, 0, 0x10000, 64,   0) },
->>> +       { "epcq64-nonjedec",  INFO(0, 0, 0x10000, 128,  0) },
->>> +       { "epcq128-nonjedec", INFO(0, 0, 0x10000, 256,  0) },
->>> +       { "epcq256-nonjedec", INFO(0, 0, 0x10000, 512,  0) },
->>> +       { "epcq512-nonjedec", INFO(0, 0, 0x10000, 1024, 0) },
->>> +       { "epcs16-nonjedec",  INFO(0, 0, 0x10000, 32,   0) },
->>> +       { "epcs64-nonjedec",  INFO(0, 0, 0x10000, 128,  0) },
->>> +       { "epcs128-nonjedec", INFO(0, 0, 0x40000, 256,  0) },
->>>         { },
->>>  };
->>
->> But mostly, I just wanted to say I like your integration with spi-no=
-r.
->> Nice work :)
->>
->> --
->> Rafa=C5=82
->
-> Thank you. This is all thanks to you and Brian for helpful comments. =
-I
-> learned a lot :)
+T24gVHVlLCBBcHIgMTQsIDIwMTUgYXQgMzozMSBQTSwgWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRl
+ay5jb20+IHdyb3RlOgo+PiA+Pgo+PiA+PiA+ICsKPj4gPj4gPiArICAgICAgIHBpb21tdS0+cHJv
+dGVjdF92YSA9IGRldm1fa21hbGxvYyhwaW9tbXUtPmRldiwgTVRLX1BST1RFQ1RfUEFfQUxJR04q
+MiwKPj4gPj4KPj4gPj4gc3R5bGU6IE9wZXJhdG9ycyBsaWtlICogc2hvdWxkIGhhdmUgc3BhY2Ug
+b24gYm90aCBzaWRlcy4KPj4gPj4KPj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBHRlBfS0VSTkVMKTsKPj4gPj4KPj4gPj4gU2hvdWxkbid0IGRtYV9hbGxv
+Y19jb2hlcmVudCgpIGJlIHVzZWQgZm9yIHRoaXM/Cj4+ID4gICAgICBXZSBkb24ndCBjYXJlIHRo
+ZSBkYXRhIGluIGl0LiBJIHRoaW5rIHRoZXkgYXJlIHRoZSBzYW1lLiBDb3VsZCB5b3UKPj4gPiBo
+ZWxwIHRlbGwgbWUgd2h5IGRtYV9hbGxvY19jb2hlcmVudCBtYXkgYmUgYmV0dGVyLgo+Pgo+PiBD
+YW4geW91IGd1YXJhbnRlZSB0aGF0IGF0IHRoZSB0aW1lIHlvdSBhbGxvY2F0ZSB0aGUgbWVtb3J5
+IHVzaW5nCj4+IGRldm1fa21hbGxvYygpIHRoZSBtZW1vcnkgaXMgbm90IGRpcnR5IChpLmUuIHNv
+bWUgd3JpdGUgYmFjayBkYXRhIGFyZQo+PiBzdG9yZWQgaW4gQ1BVIGNhY2hlKSBhbmQgaXMgbm90
+IGdvaW5nIHRvIGJlIHdyaXR0ZW4gYmFjayBpbiBzb21lIHRpbWUsCj4+IG92ZXJ3cml0aW5nIGRh
+dGEgcHV0IHRoZXJlIGJ5IElPTU1VIGhhcmR3YXJlPwo+Pgo+IEFzIEkgbm90ZWQgaW4gdGhlIGZ1
+bmN0aW9uICJtdGtfaW9tbXVfaHdfaW5pdCI6Cj4KPiAgICAgICAgLyogcHJvdGVjdCBtZW1vcnks
+SFcgd2lsbCB3cml0ZSBoZXJlIHdoaWxlIHRyYW5zbGF0aW9uIGZhdWx0ICovCj4gICAgICAgIHBy
+b3RlY3RwYSA9IF9fdmlydF90b19waHlzKHBpb21tdS0+cHJvdGVjdF92YSk7Cj4KPiAgICAgIFdl
+IGRvbuKAmXQgY2FyZSB0aGUgY29udGVudCBvZiB0aGlzIGJ1ZmZlciwgSXQgaXMgb2sgZXZlbiB0
+aG91Z2ggaXRzCj4gZGF0YSBpcyBkaXJ0eS4KPiAgICAgSXQgc2VlbSB0byBiZSBhIHRoZSBwcm90
+ZWN0IG1lbW9yeS4gV2hpbGUgYSB0cmFuc2xhdGlvbiBmYXVsdAo+IGhhcHBlbmVkLCBUaGUgaW9t
+bXUgSFcgd2lsbCBvdmVyd3JpdGUgaGVyZSBpbnN0ZWFkIG9mIHdyaXRpbmcgdG8gdGhlCj4gZmF1
+bHQgcGh5c2ljYWwgYWRkcmVzcyB3aGljaCBtYXkgYmUgMCBvciBzb21lIHJhbmRvbSBhZGRyZXNz
+Lgo+CgpEbyB5b3UgbWVhbiB0aGF0IGl0J3MganVzdCBhIGR1bW15IHBhZ2UgZm9yIGhhcmR3YXJl
+IGJlaGluZCB0aGUgSU9NTVUKdG8gYWNjZXNzIHdoZW4gdGhlIG1hcHBpbmcgaXMgbm90IGF2YWls
+YWJsZT8gSG93IHdvdWxkIHRoYXQgd29yayB3aXRoCnBvdGVudGlhbCBvbiBkZW1hbmQgcGFnaW5n
+IHdoZW4gdGhlIGhhcmR3YXJlIG5lZWRzIHRvIGJlIGJsb2NrZWQgdW50aWwKdGhlIG1hcHBpbmcg
+aXMgY3JlYXRlZD8KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5s
+aW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFp
+bG1hbi9saXN0aW5mby9pb21tdQ==
