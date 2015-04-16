@@ -1,39 +1,66 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2] power_supply: Add TI BQ24257 charger driver
-Date: Thu, 16 Apr 2015 18:59:50 +0900
-Message-ID: <CAJKOXPfb1TSQ9k+9nXfrefPRxJtsRjVw5WfpcV3DPpse5fzO+g@mail.gmail.com>
-References: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: UniPhier: add support for UniPhier SoCs
+ and boards
+Date: Thu, 16 Apr 2015 13:08:56 +0300
+Message-ID: <20150416100856.GJ30380@tarshish>
+References: <1429171147-19464-1-git-send-email-yamada.masahiro@socionext.com>
+ <1429171147-19464-4-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429171147-19464-4-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-04-16 18:31 GMT+09:00 Laurentiu Palcu <laurentiu.palcu@intel.com>:
-> Based on the datasheet found here:
-> http://www.ti.com/lit/ds/symlink/bq24257.pdf
->
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Hi Masahiro Yamada,
+
+On Thu, Apr 16, 2015 at 04:59:06PM +0900, Masahiro Yamada wrote:
+> Initial device trees for UniPhier SoCs: PH1-sLD3, PH1-LD4, PH1-Pro4,
+> and PH1-sLD8.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 > ---
-> Changes since v1:
->  * removed redundant bq24257_is_writeable_reg();
->  * made power_supply_desc struct a static const, since it's not changed;
->
-> laurentiu
->
->  .../devicetree/bindings/power/bq24257.txt          |  21 +
->  drivers/power/Kconfig                              |   7 +
->  drivers/power/Makefile                             |   1 +
->  drivers/power/bq24257_charger.c                    | 863 +++++++++++++++++++++
->  4 files changed, 892 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/bq24257.txt
->  create mode 100644 drivers/power/bq24257_charger.c
->
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+[...]
 
-Best regards,
-Krzysztof
+> diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+> new file mode 100644
+> index 0000000..2e83363
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+> @@ -0,0 +1,51 @@
+> +/*
+> + * Device Tree Source for UniPhier PH1-LD4 Reference Board
+> + *
+> + * Copyright (C) 2015 Socionext Inc.
+> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+
+Please consider licensing .dts/.dtsi files also under another, more liberal 
+license, e.g. X11. This would allow easier reuse of these device tree in other 
+software projects. See for example 2ef6ef91c54e (ARM: sun4i: a1000: Relicense 
+the device tree under GPLv2/X11, 2014-09-02).
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
