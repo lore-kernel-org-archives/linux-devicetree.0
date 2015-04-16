@@ -1,264 +1,68 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 1/2] leds: add DT binding for BCM6328 LED controller
-Date: Thu, 16 Apr 2015 16:39:48 +0200
-Message-ID: <552FC9B4.3030303@samsung.com>
-References: <1427975661-29964-1-git-send-email-noltari@gmail.com>
- <1428246485-32305-1-git-send-email-noltari@gmail.com>
- <1428246485-32305-2-git-send-email-noltari@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Thu, 16 Apr 2015 16:21:22 +0100
+Message-ID: <20150416152121.GE819@e104818-lin.cambridge.arm.com>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
+ <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
+ <20150414163613.GM28709@leverpostej>
+ <07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
+ <20150414211720.GA56647@MBP>
+ <CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw@mail.gmail.com>
+ <20150415133403.GB26099@e104818-lin.cambridge.arm.com>
+ <CAF6AEGucYT4LHkFggR0fO_c7gZe7hD7STx1xwKrOvwsnnFbw7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1428246485-32305-2-git-send-email-noltari@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc: linux-leds@vger.kernel.org, cooloney@gmail.com, jogo@openwrt.org, f.fainelli@gmail.com, cernekee@gmail.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGucYT4LHkFggR0fO_c7gZe7hD7STx1xwKrOvwsnnFbw7Q@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "abhimany@codeaurora.org" <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alvaro,
+On Wed, Apr 15, 2015 at 11:01:17AM -0400, Rob Clark wrote:
+> On Wed, Apr 15, 2015 at 9:34 AM, Catalin Marinas
+> <catalin.marinas@arm.com> wrote:
+> > On Tue, Apr 14, 2015 at 05:48:48PM -0400, Rob Clark wrote:
+> >> Just speaking as an outsider to this topic, but seems like most/all
+> >> tablets/phones/etc ship with signed firmware.  Which means for most of
+> >> the population, upgrading the firmware to a new version which did
+> >> support the standard (assuming it existed), isn't really an option on
+> >> our devices, any more than fixing buggy acpi tables is on our
+> >> laptops..
+> >
+> > I wouldn't expect most population to build their own kernels on
+> > tablets/phones. And even if you could install a custom kernel, mainline
+> > rarely runs on such devices because of tons of out of tree patches (just
+> > look at the Nexus 9 patches that Kumar pointed at; even ignoring the
+> > booting protocol they are extremely far from an upstreamable form).
+> 
+> my point being, that it happens some times.. for example John Stultz's
+> work on nexus7:
+> 
+> https://plus.google.com/111524780435806926688/posts/DzvpMLmzQiQ
+> 
+> If this had been a year or two in the future and on some 64b
+> snapdragon, and support for devices with non-PSCI fw is rejected, then
+> he'd be stuck.
+> 
+> There are folks who are working to get saner, more-upstream kernels
+> working on devices.. and improving kernel infrastructure for
+> device-needs (well, in my neck of the woods, there is drm/kms atomic
+> and dsi/panel framework stuff.. I'm sure other similar things in other
+> kernel domains).  And it seems like that is a good thing to encourage,
+> rather than stymie.
 
-On 04/05/2015 05:08 PM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> This adds device tree binding documentation for the Broadcom BCM6328 =
-LED
-> controller.
->
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> Signed-off-by: Jonas Gorski <jogo@openwrt.org>
-> ---
-> v2: Introduce changes suggested by Florian and Jonas.
->   - Change compatible string to "brcm,bcm6328-leds-ctrl".
->   - Make valid LEDs statement more strict.
->   - Remove compatible strings from LED subnodes.
->   - Clarify that LEDs are active high by default.
->   - Add a better description for brcm,link-signal-sources and brcm,ac=
-tivity-signal-sources.
->
->   .../devicetree/bindings/leds/leds-bcm6328.txt      | 162 ++++++++++=
-+++++++++++
->   1 file changed, 162 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-bcm6=
-328.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-bcm6328.txt =
-b/Documentation/devicetree/bindings/leds/leds-bcm6328.txt
-> new file mode 100644
-> index 0000000..6e4f5563a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-bcm6328.txt
-> @@ -0,0 +1,162 @@
-> +LEDs connected to Broadcom BCM6328 controller
+I'm not looking to discourage individuals trying to get upstream support
+for older boards. Should the need arise, we'll look at options which may
+or may not include kernel changes (e.g. wrap the kernel in a shim).
 
-Part of description from the cover letter could find its way here.
-It could be more precise though. I am wondering who controls the LEDs
-through spi-gpio interface.
+But I'm definitely going to discourage companies like Qualcomm
+deliberately ignoring the existing booting protocols while trying to get
+their code upstream. This patch series is posted by Qualcomm without
+providing any technical reason on why they don't want to/couldn't use
+PSCI (well, I guess there is no technical reason but they may not care
+much about mainline either).
 
-> +
-> +Required properties:
-> +- compatible: should be : "brcm,bcm6328-leds-ctrl".
-
-I liked brcm,bcm6328-leds more. It is obvious that all LED subsystem
-drivers are for LED *controllers*.
-
-> +- #address-cells: must be 1
-> +- #size-cells: must be 0
-> +- reg: BCM6328 LED controller address and size.
-> +
-> +Optional properties:
-> +- brcm,serial-leds: boolean which enables Serial LEDs.
-> +
-> +Each LED is represented as a sub-node of the brcm,bcm6328-leds devic=
-e.
-> +
-> +LED sub-node properties:
-> +- reg: LED pin number (only LEDs 0 to 23 are valid).
-> +
-> +Normal LED:
-
-Please give it more meaningful description. Software controlled?
-
-> +LEDs are active high by default.
-
-This should be put next to active-low property, like:
-
-active-low: boolean that makes LED active low.
-             Default: false
-
-> +- label (optional): see Documentation/devicetree/bindings/leds/commo=
-n.txt
-> +- active-low (optional): boolean that makes LED active low.
-> +- default-state (optional): see
-> +  Documentation/devicetree/bindings/leds/leds-gpio.txt
-> +- linux,default-trigger (optional): see
-> +  Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Hardware controlled LED:
-> +- brcm,hardware-controlled (optional): boolean that makes this LED h=
-ardware
-> +  controlled.
-> +- brcm,link-signal-sources (optional): An array of hardware link
-> +  signal sources. Up to four link hardware signals can get muxed int=
-o
-> +  these LEDs. Only valid for LEDs 0 to 7, where LED signals 0 to 3 m=
-ay
-> +  be muxed to LEDs 0 to 3, and signals 4 to 7 may be muxed to LEDs
-> +  4 to 7. A signal can be muxed to more than one LED, and one LED ca=
-n
-> +  have more than one source signal.
-> +- brcm,activity-signal-sources (optional): An array of hardware acti=
-vity
-> +  signal sources. Up to four activity hardware signals can get muxed=
- into
-> +  these LEDs. Only valid for LEDs 0 to 7, where LED signals 0 to 3 m=
-ay
-> +  be muxed to LEDs 0 to 3, and signals 4 to 7 may be muxed to LEDs
-> +  4 to 7. A signal can be muxed to more than one LED, and one LED ca=
-n
-> +  have more than one source signal.
-
-It is more common to group properties in sections - in this case:
-"Required properties for child nodes" and "Optional properties for
-child nodes".
-
-
-> +example 1) BCM6328
-> +
-> +leds0: led-controller@10000800 {
-> +	compatible =3D "brcm,bcm6328-leds-ctrl";
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +	reg =3D <0x10000800 0x24>;
-> +
-> +	alarm_red@2 {
-> +		reg =3D <2>;
-> +		active-low;
-> +		label =3D "red:alarm";
-> +	};
-> +	inet_green@3 {
-> +		reg =3D <3>;
-> +		active-low;
-> +		label =3D "green:inet";
-> +	};
-> +	power_green@4 {
-> +		reg =3D <4>;
-> +		active-low;
-> +		label =3D "green:power";
-> +		default-state =3D "on";
-> +	};
-> +	ephy0_spd@17 {
-> +		reg =3D <17>;
-> +		brcm,hardware-controlled;
-
-If there is no LED class device created for hardware controlled LED,
-then why does it need the node if has no brcm,link-signal-sources
-or brcm,activity-signal-sources properties? There seems to be nothing
-to configure then.
-
-> +	};
-> +	ephy1_spd@18 {
-> +		reg =3D <18>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy2_spd@19 {
-> +		reg =3D <19>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy3_spd@20 {
-> +		reg =3D <20>;
-> +		brcm,hardware-controlled;
-> +	};
-> +};
-> +
-> +example 2) BCM63268
-> +
-> +leds0: led-controller@10001900 {
-> +	compatible =3D "brcm,bcm6328-leds-ctrl";
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +	reg =3D <0x10001900 0x24>;
-> +	brcm,serial-leds;
-> +
-> +	gphy0_spd0@0 {
-> +		reg =3D <0>;
-> +		brcm,hardware-controlled;
-> +		brcm,link-signal-sources =3D <0>;
-
-More valid examples with brcm,link-signal-sources and
-brcm,activity-signal-sources properties would be useful. This is
-especially vital taking into account limitations mentioned in the
-description of these properties. The examples should be as
-comprehensive as possible, i.e. the lists should contain more than
-one element.
-
-> +	};
-> +	gphy0_spd1@1 {
-> +		reg =3D <1>;
-> +		brcm,hardware-controlled;
-> +		brcm,link-signal-sources =3D <1>;
-> +	};
-> +	inet_red@2 {
-> +		reg =3D <2>;
-> +		active-low;
-> +		label =3D "red:inet";
-> +	};
-> +	dsl_green@3 {
-> +		reg =3D <3>;
-> +		active-low;
-> +		label =3D "green:dsl";
-> +	};
-> +	usb_green@4 {
-> +		reg =3D <4>;
-> +		active-low;
-> +		label =3D "green:usb";
-> +	};
-> +	wps_green@7 {
-> +		reg =3D <7>;
-> +		active-low;
-> +		label =3D "green:wps";
-> +	};
-> +	inet_green@8 {
-> +		reg =3D <8>;
-> +		active-low;
-> +		label =3D "green:inet";
-> +	};
-> +	ephy0_act@9 {
-> +		reg =3D <9>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy1_act@10 {
-> +		reg =3D <10>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy2_act@11 {
-> +		reg =3D <11>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	gphy0_act@12 {
-> +		reg =3D <12>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy0_spd@13 {
-> +		reg =3D <13>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy1_spd@14 {
-> +		reg =3D <14>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	ephy2_spd@15 {
-> +		reg =3D <15>;
-> +		brcm,hardware-controlled;
-> +	};
-> +	power_green@20 {
-> +		reg =3D <20>;
-> +		active-low;
-> +		label =3D "green:power";
-> +		default-state =3D "on";
-> +	};
-> +};
->
-
-
---=20
-Best Regards,
-Jacek Anaszewski
+-- 
+Catalin
