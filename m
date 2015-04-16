@@ -1,41 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next 4/6] net: hip04: Don't free the tx skb when the buffer is not ready for xmit
-Date: Thu, 16 Apr 2015 10:41:09 +0200
-Message-ID: <4971105.FJGVdDRE9f@wuerfel>
-References: <1429101008-9464-1-git-send-email-dingtianhong@huawei.com> <2218546.M1hzu1bzfh@wuerfel> <552F560D.4070309@huawei.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: root node serial-number
+ property documentation
+Date: Thu, 16 Apr 2015 11:10:21 +0200
+Message-ID: <1429175421.2483.1.camel@collins>
+References: <1427564371-26039-1-git-send-email-contact@paulk.fr>
+	 <f6f4f862c78fa626e7f94bde51eec5b1@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <552F560D.4070309@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>
-Cc: davem@davemloft.net, grant.likely@linaro.org, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, zhangfei.gao@linaro.org, joe@perches.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-a/FDKcJLymSLyQkl38u/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f6f4f862c78fa626e7f94bde51eec5b1-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 April 2015 14:26:21 Ding Tianhong wrote:
-> On 2015/4/15 22:19, Arnd Bergmann wrote:
-> > On Wednesday 15 April 2015 20:30:06 Ding Tianhong wrote:
-> >> @@ -489,6 +487,8 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> >>  
-> >>         /* Ensure tx_head update visible to tx reclaim */
-> >>         smp_wmb();
-> >> +       count++;
-> >> +       priv->tx_head = TX_NEXT(tx_head);
-> >>  
-> >>
-> > 
-> > Something is wrong here, the comment does not match the code any more, because
-> > the smp_wmb() won't actually make the tx_head update visible.
-> > 
-> >       Arnd
-> > 
-> Yes, the smp_wmb() could only make sure the tx buffer was ready to xmit.
 
-The problem you need to avoid is that the tx reclaim function thinks it's
-done with all outstanding packets and does not retrigger, while the
-start_xmit thinks it will still get to that. This means you
-need a barrier between the priv->tx_head update and the
-napi_schedule_prep() call.
+--=-a/FDKcJLymSLyQkl38u/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
+Le jeudi 16 avril 2015 =C3=A0 09:56 +0200, Stefan Agner a =C3=A9crit :
+> On 2015-03-28 18:39, Paul Kocialkowski wrote:
+> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+>=20
+> I think this is a worthwhile standardization.
+>=20
+> Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+
+Thanks! I should also add a commit message in v2 mentioning that this is
+already used in open firmware and reported by lshw.
+
+> > ---
+> >  Documentation/devicetree/booting-without-of.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/booting-without-of.txt
+> > b/Documentation/devicetree/booting-without-of.txt
+> > index 7768518..8b055897 100644
+> > --- a/Documentation/devicetree/booting-without-of.txt
+> > +++ b/Documentation/devicetree/booting-without-of.txt
+> > @@ -828,6 +828,10 @@ address which can extend beyond that limit.
+> >    name may clash with standard defined ones, you prefix them with your
+> >    vendor name and a comma.
+> > =20
+> > +  Additional properties for the root node:
+> > +
+> > +    - serial-number : a string representing the board's serial number
+> > +
+> >    b) The /cpus node
+> > =20
+> >    This node is the parent of all individual CPU nodes. It doesn't
+>=20
+
+
+--=-a/FDKcJLymSLyQkl38u/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJVL3x+AAoJEIT9weqP7pUMCZEP/iKxaW/3wi3/bdwt3wIWQX2Y
+eS4GEPVSc4vAVnv+QnO5FLF3bkUukOqTggrvPSF7FC6VuTw8bLXso0VLnqKbFpnf
+U6HKqKeiTjkkJPBYbBB4ECNkum3sMv/lqY8h0INAOTvu2g7vFzO0ke3bWysb+lVv
+Cbfq/sUdjh7jOmcxcPenFZkfTDrKMShr0jJwOzRee2B8KT2q1L6dSJAdgqv7//wU
+2I1exdgyutn0xPtVaHPZz7l2CGxZ0DlLvf59/smxeIZPboR8BFU+ZIPonhWTxFCc
+U6v6TzGdib9jB7Iyi6r8NpNtDaBHb7U4KdszCVszMk4Up/dpI34mm9HqiC021xyu
+N1AjAgdKpXC+XiKmZffBiBArENdFOxSM6gTufkSs+ewviLEH58BwUNCtK2rRg4Uf
+a4fXgZ2rzvGJki0M5z5bAw7zjZPtLEy4MoFMG4ASAcVDKQASF7SYwpI6brdyK18O
+oFBTeINxqVLOKIO78lWcsnTVx1xmMY/E55pwkW0lyT/rJCFF7w2QNQGxtmTpVyZg
+qKr5FJgFlmReijmzQa3eEVFzn39DeMyUS62ySrjfmotPle59jC0oeOR+GabOiEt2
+uLGu6/f4OMERMcOQShCxug5B6rogGXLzC3UJk/LGGkajN+YnODgEYWtkDFElfCL7
+q/epKcxWvu2djWiq+nFe
+=1vMJ
+-----END PGP SIGNATURE-----
+
+--=-a/FDKcJLymSLyQkl38u/--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
