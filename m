@@ -1,45 +1,74 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v8 1/1] media: i2c/adp1653: Devicetree support for adp1653
-Date: Thu, 16 Apr 2015 07:58:18 +0200
-Message-ID: <20150416055817.GA2749@amd>
-References: <1429141034-29237-1-git-send-email-sakari.ailus@iki.fi>
- <20150416052442.GA31095@earth>
+From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Thu, 16 Apr 2015 06:11:11 +0000
+Message-ID: <DM2PR03MB38330DBBFFD1BC45D58F447E6E40@DM2PR03MB383.namprd03.prod.outlook.com>
+References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
+ <1429119357.22867.724.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150416052442.GA31095@earth>
-Sender: linux-media-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429119357.22867.724.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2015-04-16 07:24:42, Sebastian Reichel wrote:
-> Hi Sakari,
-> 
-> Since this driver won't make it into 4.1 anyways, I have one more
-> comment:
-
-Like this driver did not receive enough bikesheding.
-
-> > +	} else {
-> > +		gpiod_set_value(flash->platform_data->enable_gpio, on);
-> > +		if (on)
-> > +			/* Some delay is apparently required. */
-> > +			udelay(20);
-> > +	}
-> 
-> I suggest to remove the power callback from platform data. Instead
-> you can require to setup a gpiod lookup table in the boardcode, if
-> platform data based initialization is used (see for example si4713
-> initialization in board-rx51-periphals.c).
-> 
-> This will reduce complexity in the driver and should be fairly easy
-> to implement, since there is no adp1653 platform code user in the
-> mainline kernel anyways.
-
-I'd hate to break out of tree users for very little gain.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwg
+MTUsIDIwMTUgODozNiBQTQ0KPiBUbzogTGliZXJtYW4gSWdhbC1CMzE5NTANCj4gQ2M6IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiBT
+dWJqZWN0OiBSZTogW3YzXSBkdC9iaW5kaW5nczogcW9yaXEtY2xvY2s6IEFkZCBiaW5kaW5nIGZv
+ciBGTWFuIGNsb2NrIG11eA0KPiANCj4gT24gVHVlLCAyMDE1LTA0LTE0IGF0IDEzOjU2ICswMzAw
+LCBJZ2FsLkxpYmVybWFuIHdyb3RlOg0KPiA+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGli
+ZXJtYW5AZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IHYzOiBBZGRyZXNzZWQgZmVlZGJhY2sgZnJv
+bSBTY290dDoNCj4gPiAJLSBSZW1vdmVkIGNsb2NrIHNwZWNpZmllciBkZXNjcmlwdGlvbi4NCj4g
+Pg0KPiA+IHYyOiBBZGRyZXNzZWQgZmVlZGJhY2sgZnJvbSBTY290dDoNCj4gPiAJLSBNb3ZlZCB0
+aGUgImZtYW4tY2xrLW11eCIgY2xvY2sgcHJvdmlkZXIgZGV0YWlscw0KPiA+IAkgIHVuZGVyICJj
+bG9ja3MiIHByb3BlcnR5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8
+SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQgICAgICB8ICAgMTcgKysrKysrKysrKysr
+KysrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dA0KPiA+IGluZGV4IGIwZDdiNzMuLjJiYjNi
+MzggMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ns
+b2NrL3FvcmlxLWNsb2NrLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQNCj4gPiBAQCAtNjUsOSArNjUsMTAgQEAgUmVx
+dWlyZWQgcHJvcGVydGllczoNCj4gPiAgCQlJdCB0YWtlcyBwYXJlbnQncyBjbG9jay1mcmVxdWVu
+Y3kgYXMgaXRzIGNsb2NrLg0KPiA+ICAJKiAiZnNsLHFvcmlxLXBsYXRmb3JtLXBsbC0xLjAiIGZv
+ciB0aGUgcGxhdGZvcm0gUExMIGNsb2NrICh2MS4wKQ0KPiA+ICAJKiAiZnNsLHFvcmlxLXBsYXRm
+b3JtLXBsbC0yLjAiIGZvciB0aGUgcGxhdGZvcm0gUExMIGNsb2NrICh2Mi4wKQ0KPiA+ICsJKiAi
+ZnNsLGZtYW4tY2xrLW11eCIgZm9yIHRoZSBGcmFtZSBNYW5hZ2VyIGNsb2NrLg0KPiA+ICAtICNj
+bG9jay1jZWxsczogRnJvbSBjb21tb24gY2xvY2sgYmluZGluZy4gVGhlIG51bWJlciBvZiBjZWxs
+cyBpbiBhDQo+ID4gLQljbG9jay1zcGVjaWZpZXIuIFNob3VsZCBiZSA8MD4gZm9yICJmc2wscW9y
+aXEtc3lzY2xrLVsxLDJdLjAiDQo+ID4gLQljbG9ja3MsIG9yIDwxPiBmb3IgImZzbCxxb3JpcS1j
+b3JlLXBsbC1bMSwyXS4wIiBjbG9ja3MuDQo+ID4gKwljbG9jay1zcGVjaWZpZXIuIFNob3VsZCBi
+ZSA8MD4gZm9yICJmc2wscW9yaXEtc3lzY2xrLVsxLDJdLjAiIGFuZA0KPiA+ICsJImZzbCxmbWFu
+LWNsay1tdXgiIGNsb2NrcyBvciA8MT4gZm9yICJmc2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIu
+DQo+ID4gIAlGb3IgImZzbCxxb3JpcS1jb3JlLXBsbC0xLjAiIGNsb2NrcywgdGhlIHNpbmdsZQ0K
+PiA+ICAJY2xvY2stc3BlY2lmaWVyIGNlbGwgbWF5IHRha2UgdGhlIGZvbGxvd2luZyB2YWx1ZXM6
+DQo+ID4gIAkqIDAgLSBlcXVhbCB0byB0aGUgUExMIGZyZXF1ZW5jeQ0KPiA+IEBAIC0xNDUsNiAr
+MTQ2LDE4IEBAIEV4YW1wbGUgZm9yIGNsb2NrIGJsb2NrIGFuZCBjbG9jayBwcm92aWRlcjoNCj4g
+PiAgCQkJY2xvY2tzID0gPCZzeXNjbGs+Ow0KPiA+ICAJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAi
+cGxhdGZvcm0tcGxsIiwgInBsYXRmb3JtLXBsbC0NCj4gZGl2MiI7DQo+ID4gIAkJfTsNCj4gPiAr
+DQo+ID4gKwkJZm0wY2xrOiBmbTAtY2xrLW11eCB7DQo+ID4gKwkJCSNjbG9jay1jZWxscyA9IDww
+PjsNCj4gPiArCQkJcmVnID0gPDB4MTAgND4NCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1h
+bi1jbGstbXV4IjsNCj4gPiArCQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwmcGxs
+MCAyPiwgPCZwbGwwIDM+LA0KPiA+ICsJCQkJIDwmcGxhdGZvcm1fcGxsIDA+LCA8JnBsbDEgMT4s
+IDwmcGxsMSAyPjsNCj4gPiArCQkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAi
+cGxsMC1kaXYzIiwNCj4gPiArCQkJCSAgICAgICJwbGwwLWRpdjQiLCAicGxhdGZvcm0tcGxsIiwg
+InBsbDEtZGl2MiIsDQo+ID4gKwkJCQkgICAgICAicGxsMS1kaXYzIjsNCj4gPiArCQkJY2xvY2st
+b3V0cHV0LW5hbWVzID0gImZtMC1jbGsiOw0KPiA+ICsJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0K
+PiA+DQo+IA0KPiBJIGRvbid0IHNlZSB0aGlzIHJlZ2lzdGVyIGluIHRoZSBtYW51YWxzIGZvciBv
+bGRlciBEUEFBIGNoaXBzLCBzdWNoIGFzDQo+IHA0MDgwIG9yIHAzMDQxLiAgSXMgaXQgcHJlc2Vu
+dCBidXQgdW5kb2N1bWVudGVkPyAgU2hvdWxkIEkgYmUgbG9va2luZw0KPiBzb21ld2hlcmUgb3Ro
+ZXIgdGhhbiAiQ2xvY2tpbmcgTWVtb3J5IE1hcCI/DQo+IA0KDQpJdCdzIGF2YWlsYWJsZSBvbmx5
+IGluIHBhcnQgb2YgdGhlIG5ldyBjaGlwcyAoVDQsIFQyLCBCNCkuDQpJbiBUMTAyNC9UMTA0MCB0
+aGVyZSdzIG9ubHkgb25lIG9wdGlvbiBmb3IgRk1hbiBjbG9jayBzbyB0aGlzIHJlZ2lzdGVyIGlz
+IG5vdCBhdmFpbGFibGUuDQoNCj4gLVNjb3R0DQo+IA0KDQpJZ2FsLg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
