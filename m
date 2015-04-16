@@ -1,54 +1,67 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
-Date: Thu, 16 Apr 2015 22:39:51 +0100
-Message-ID: <20150416213950.GA3302@e104818-lin.cambridge.arm.com>
-References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
- <20150410100529.GA6854@e104818-lin.cambridge.arm.com>
- <20150414163613.GM28709@leverpostej>
- <07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
- <20150414211720.GA56647@MBP>
- <CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw@mail.gmail.com>
- <20150415133403.GB26099@e104818-lin.cambridge.arm.com>
- <CAF6AEGucYT4LHkFggR0fO_c7gZe7hD7STx1xwKrOvwsnnFbw7Q@mail.gmail.com>
- <20150416152121.GE819@e104818-lin.cambridge.arm.com>
- <CAF6AEGt3bf70MUWFU_kqtc8KDR09tMUCkXbqOq0SpOXU44moTg@mail.gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: dra7: Fix efuse register size for ABB
+Date: Thu, 16 Apr 2015 16:56:33 -0500
+Message-ID: <1429221394-18896-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGt3bf70MUWFU_kqtc8KDR09tMUCkXbqOq0SpOXU44moTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Matt Gessner <Matt.Gessner@windriver.com>, Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2015 at 01:17:32PM -0400, Rob Clark wrote:
-> On Thu, Apr 16, 2015 at 11:21 AM, Catalin Marinas
-> <catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Wed, Apr 15, 2015 at 11:01:17AM -0400, Rob Clark wrote:
-> >> There are folks who are working to get saner, more-upstream kernels
-> >> working on devices.. and improving kernel infrastructure for
-> >> device-needs (well, in my neck of the woods, there is drm/kms atomic
-> >> and dsi/panel framework stuff.. I'm sure other similar things in other
-> >> kernel domains).  And it seems like that is a good thing to encourage,
-> >> rather than stymie.
-> >
-> > I'm not looking to discourage individuals trying to get upstream support
-> > for older boards. Should the need arise, we'll look at options which may
-> > or may not include kernel changes (e.g. wrap the kernel in a shim).
-> 
-> I had wondered about that, but afaiu psci is a smc interface, and I
-> would assume bootloader drops you out of secure mode before entering
-> the kernel or whatever comes after first stage bootloader if you are
-> chain-loading?
+Fix a typo in DRA7 dtsi where 12 bytes are needed for register
+description of ABB efuse registers, however only 8 bytes are provided
+to map. For some weird reason, this does not generate abort at offset
+0x8, probably due to default maps already provided in io.c for the bus
+register ranges.
 
-One option is to run the shim at EL2 (hyp mode) which can intercept the
-SMC calls from EL1. Another option is to release all the CPUs from
-firmware into the shim and use a spin-table enable method.
+Reported-by: Matt Gessner <Matt.Gessner@windriver.com>
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 5332b57b4950..92b8bb873f43 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -911,7 +911,7 @@
+ 			ti,clock-cycles = <16>;
+ 
+ 			reg = <0x4ae07ddc 0x4>, <0x4ae07de0 0x4>,
+-			      <0x4ae06014 0x4>, <0x4a003b20 0x8>,
++			      <0x4ae06014 0x4>, <0x4a003b20 0xc>,
+ 			      <0x4ae0c158 0x4>;
+ 			reg-names = "setup-address", "control-address",
+ 				    "int-address", "efuse-address",
+@@ -944,7 +944,7 @@
+ 			ti,clock-cycles = <16>;
+ 
+ 			reg = <0x4ae07e34 0x4>, <0x4ae07e24 0x4>,
+-			      <0x4ae06010 0x4>, <0x4a0025cc 0x8>,
++			      <0x4ae06010 0x4>, <0x4a0025cc 0xc>,
+ 			      <0x4a002470 0x4>;
+ 			reg-names = "setup-address", "control-address",
+ 				    "int-address", "efuse-address",
+@@ -977,7 +977,7 @@
+ 			ti,clock-cycles = <16>;
+ 
+ 			reg = <0x4ae07e30 0x4>, <0x4ae07e20 0x4>,
+-			      <0x4ae06010 0x4>, <0x4a0025e0 0x8>,
++			      <0x4ae06010 0x4>, <0x4a0025e0 0xc>,
+ 			      <0x4a00246c 0x4>;
+ 			reg-names = "setup-address", "control-address",
+ 				    "int-address", "efuse-address",
+@@ -1010,7 +1010,7 @@
+ 			ti,clock-cycles = <16>;
+ 
+ 			reg = <0x4ae07de4 0x4>, <0x4ae07de8 0x4>,
+-			      <0x4ae06010 0x4>, <0x4a003b08 0x8>,
++			      <0x4ae06010 0x4>, <0x4a003b08 0xc>,
+ 			      <0x4ae0c154 0x4>;
+ 			reg-names = "setup-address", "control-address",
+ 				    "int-address", "efuse-address",
 -- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
