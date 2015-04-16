@@ -1,131 +1,84 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
-Date: Thu, 16 Apr 2015 11:17:56 -0500
-Message-ID: <20150416161756.GA27590@deathray>
-References: <20150414211734.GA28974@deathray>
- <552E0688.1020903@ti.com>
- <20150415140945.GA30787@deathray>
- <552EB152.7050306@ti.com>
- <20150415194707.GA11007@deathray>
- <CAPtuhTggHctp5ArGPEuKn2GuPzb-WnKv2_CzPrHzq8hwOR5Aqw@mail.gmail.com>
- <20150415205136.GA3399@deathray>
- <552F3B60.8050703@ti.com>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [PATCH] powerpc/dts: Move pll0/1-div4 index
+Date: Thu, 16 Apr 2015 15:08:25 +0300
+Message-ID: <1429186105-6991-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <552F3B60.8050703@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, sebastian.hesselbarth@gmail.com
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2015 at 07:32:32AM +0300, Tero Kristo wrote:
-> On 04/15/2015 11:51 PM, Michael Welling wrote:
-> >On Wed, Apr 15, 2015 at 01:45:53PM -0700, Mike Turquette wrote:
-> >>On Wed, Apr 15, 2015 at 12:47 PM, Michael Welling <mwelling@ieee.org> wrote:
-> >>>On Wed, Apr 15, 2015 at 09:43:30PM +0300, Tero Kristo wrote:
-> >>>>On 04/15/2015 05:09 PM, Michael Welling wrote:
-> >>>>>On Wed, Apr 15, 2015 at 09:34:48AM +0300, Tero Kristo wrote:
-> >>>>>>On 04/15/2015 12:17 AM, Michael Welling wrote:
-> >>>>>>>Greetings,
-> >>>>>>>
-> >>>>>>>I have developed an AM3354 based SoM and it uses an external SI5351 clock
-> >>>>>>>generator to drive the clock inputs for an external duart and I2S audio
-> >>>>>>>master clock. With the registration according to the documentation the
-> >>>>>>>reference clock is not being detected and hence the clock generator is
-> >>>>>>>not working as expect.
-> >>>>>>>
-> >>>>>>>After trying many different things, I started to look around the mailing
-> >>>>>>>lists to find information related to this issue.
-> >>>>>>>
-> >>>>>>>I came acrossed post that has the exact same issue:
-> >>>>>>>https://lkml.org/lkml/2013/2/18/468
-> >>>>>>>
-> >>>>>>>Seeing as the patch did not land upstream, I am wondering if there is
-> >>>>>>>a solution that I am not seeing.
-> >>>>>>>
-> >>>>>>>I am willing to provide a patch given appropriate guidance.
-> >>>>>>
-> >>>>>>Hi Michael,
-> >>>>>>
-> >>>>>>The info on the email you referenced is kind of obsolete, TI SoCs
-> >>>>>>are calling of_clk_init() during boot now, and thus external clock
-> >>>>>>nodes should be registered fine also. Maybe you can provide the
-> >>>>>>actual DTS patch you are trying out so we can help better...? Are
-> >>>>>
-> >>>>>See attached patch and console output.
-> >>>>
-> >>>>I see a bug in your dt data.
-> >>>>
-> >>>><snip>
-> >>>>
-> >>>>+     clocks {
-> >>>>+             ref27: ref27 {
-> >>>>+                     #clock-cells = <0>;
-> >>>>+                     compatibale = "fixed-clock";
-> >>>>
-> >>>>This should be compatible, right? DT is annoying in that it doesn't
-> >>>>verify property names.
-> >>>>
-> >>>
-> >>>Ooops.
-> >>>
-> >>>Now the clock appears in /sys/kernel/debug/clk:
-> >>>root@som3517-som200:/sys/kernel/debug/clk# cat clk_summary
-> >>>    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
-> >>>----------------------------------------------------------------------------------------
-> >>>  ref27                                    0            0    27000000          0 0
-> >>>...
-> >>>
-> >>>There is still an issue with the si5351.
-> >>>
-> >>>I had to comment out the clk_put here for the frequency to show up:
-> >>>http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1133
-> >>>
-> >>>Ideas?
-> >>
-> >>What is the most recent upstream commit that you are based on?
-> >
-> >I am working from 4.0.0-rc7.
-> >
-> >7b43b47373d40d557cd7e1a84a0bd8ebc4d745ab
-> 
-> Hmm, I wonder why si5351 calls clk_put immediately after of_clk_get
-> in the first place, as far as I understand this destroys the clock
-> handle, which is still being used later in the code.
-> 
-> -Tero
-
-Not sure how this ever worked. This has been in the code since the
-initial commit.
-
-Sebastian?
-
-> 
-> >
-> >>
-> >>Regards,
-> >>Mike
-> >>
-> >>>
-> >>>>+                     clock-frequency = <27000000>;
-> >>>>+             };
-> >>>>+     };
-> >>>>
-> >>>>-Tero
-> >>>>
-> >>>>>
-> >>>>>>you seeing any boot time error / warning prints for your new clock?
-> >>>>>
-> >>>>>With the debug messages on you see that the reference clock is not being
-> >>>>>detected.
-> >>>>>
-> >>>>>Whilest debugging I found that the of_clk_get is returning an error no matter
-> >>>>>which clock I pass it:
-> >>>>>http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1131
-> >>>>>
-> >>>>>>
-> >>>>>>-Tero
-> >>>>
-> 
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
+YXRjaCB1cGRhdGVzIHBsbDAvMS1kaXY0IGluZGV4IHRvICczJy4KT3JpZ2luYWxseSBpdCB3YXMg
+JzInLgoKVGhlIGZvbGxvd2luZyBwYXRjaCBhZGRzIHBsbDAvMS1kaXYzIG9wdGlvbjoKCWh0dHBz
+Oi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvNDYxMTUxLwpBZnRlciB0aGlzIHBhdGNoLCBp
+bmRleCAnMicgYmVjb21lcyBwbGwwLzEtZGl2My4KClRoaXMgcGF0Y2ggYmFzZWQgb24gdG9wIG9m
+IHRoZSBmb2xsb3dpbmc6CglodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzQ2MTgx
+MS8KClNpZ25lZC1vZmYtYnk6IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxl
+LmNvbT4KLS0tCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpICAgIHwg
+ICAgNCArKy0tCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpIHwg
+ICAgOCArKysrLS0tLQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXBvc3QuZHRz
+aSB8ICAgIDggKysrKy0tLS0KIDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTAg
+ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNp
+LXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kKaW5k
+ZXggOGQwNjFhNC4uZDZjNDEwZCAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9iNHNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9z
+dC5kdHNpCkBAIC00NDYsOCArNDQ2LDggQEAKIAkJCSNjbG9jay1jZWxscyA9IDwwPjsKIAkJCXJl
+ZyA9IDwweDAgMHg0PjsKIAkJCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNvcmUtbXV4LTIuMCI7
+Ci0JCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZwbGwwIDI+LAotCQkJCTwmcGxs
+MSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxs
+MCAxPiwgPCZwbGwwIDM+LAorCQkJCTwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMz47CiAJ
+CQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjQiLAogCQkJCSJw
+bGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiOwogCQkJY2xvY2stb3V0cHV0LW5hbWVzID0g
+ImNtdXgwIjsKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1w
+b3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpCmlu
+ZGV4IDE0NjI0MzEuLmUzNDdmMmQgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvdDIwODFzaS1wb3N0LmR0c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4
+MXNpLXBvc3QuZHRzaQpAQCAtNTg3LDggKzU4Nyw4IEBACiAJCQkjY2xvY2stY2VsbHMgPSA8MD47
+CiAJCQlyZWcgPSA8MHgwIDQ+OwogCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1tdXgt
+Mi4wIjsKLQkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sCi0JCQkJ
+IDwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9ja3MgPSA8JnBsbDAgMD4s
+IDwmcGxsMCAxPiwgPCZwbGwwIDM+LAorCQkJCSA8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwx
+IDM+OwogCQkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXY0IiwK
+IAkJCQkicGxsMSIsICJwbGwxLWRpdjIiLCAicGxsMS1kaXY0IjsKIAkJCWNsb2NrLW91dHB1dC1u
+YW1lcyA9ICJjbXV4MCI7CkBAIC01OTgsOCArNTk4LDggQEAKIAkJCSNjbG9jay1jZWxscyA9IDww
+PjsKIAkJCXJlZyA9IDwweDIwIDQ+OwogCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1t
+dXgtMi4wIjsKLQkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sCi0J
+CQkJIDwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9ja3MgPSA8JnBsbDAg
+MD4sIDwmcGxsMCAxPiwgPCZwbGwwIDM+LAorCQkJCSA8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZw
+bGwxIDM+OwogCQkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXY0
+IiwKIAkJCQkicGxsMSIsICJwbGwxLWRpdjIiLCAicGxsMS1kaXY0IjsKIAkJCWNsb2NrLW91dHB1
+dC1uYW1lcyA9ICJjbXV4MSI7CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L3Q0MjQwc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXBv
+c3QuZHRzaQppbmRleCAxYzkxZDAwLi4xZmRjZTQ0IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMv
+Ym9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0
+cy9mc2wvdDQyNDBzaS1wb3N0LmR0c2kKQEAgLTEwOTksOCArMTA5OSw4IEBACiAJCQkjY2xvY2st
+Y2VsbHMgPSA8MD47CiAJCQlyZWcgPSA8MHgwIDB4ND47CiAJCQljb21wYXRpYmxlID0gImZzbCxx
+b3JpcS1jb3JlLW11eC0yLjAiOwotCQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwm
+cGxsMCAyPiwKLQkJCQk8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+LAorCQkJY2xvY2tz
+ID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAzPiwKKwkJCQk8JnBsbDEgMD4sIDwmcGxs
+MSAxPiwgPCZwbGwxIDM+LAogCQkJCTwmcGxsMiAwPiwgPCZwbGwyIDE+LCA8JnBsbDIgMj47CiAJ
+CQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjQiLAogCQkJCSJw
+bGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiLApAQCAtMTExMiw4ICsxMTEyLDggQEAKIAkJ
+CSNjbG9jay1jZWxscyA9IDwwPjsKIAkJCXJlZyA9IDwweDIwIDB4ND47CiAJCQljb21wYXRpYmxl
+ID0gImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOwotCQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBs
+bDAgMT4sIDwmcGxsMCAyPiwKLQkJCQk8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+LAor
+CQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAzPiwKKwkJCQk8JnBsbDEg
+MD4sIDwmcGxsMSAxPiwgPCZwbGwxIDM+LAogCQkJCTwmcGxsMiAwPiwgPCZwbGwyIDE+LCA8JnBs
+bDIgMj47CiAJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjQi
+LAogCQkJCSJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiLAotLSAKMS43LjkuNQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
+IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
