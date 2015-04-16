@@ -1,45 +1,118 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
- Qualcomm hwmutex
-Date: Thu, 16 Apr 2015 13:01:27 +0100
-Message-ID: <20150416120127.GM2866@leverpostej>
-References: <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
- <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
- <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
- <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
- <CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
- <CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com>
- <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com>
- <CAK=WgbauoPf52v3P7NLPsXaRUmGWo_K6ZcV4w3UO6xs7MUrJsw@mail.gmail.com>
- <CAK=WgbY-5OsfdKJxGScvGj5sv-M-UvxhCfgSTunHiufvq1PXEQ@mail.gmail.com>
- <CAL_Jsq+GhhhoHgRDOkK4=oWtSVmvw=UpLoU-Ey5M7tdNi5OZ2Q@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [RFC PATCH 0/4] pinctrl: prototyping a per pin mux approach
+Date: Thu, 16 Apr 2015 14:26:51 +0200
+Message-ID: <20150416122651.GE10236@odux.rfo.atmel.com>
+References: <1427967496-22533-1-git-send-email-ludovic.desroches@atmel.com>
+ <20150414084005.GT9742@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+GhhhoHgRDOkK4=oWtSVmvw=UpLoU-Ey5M7tdNi5OZ2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20150414084005.GT9742@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-> The part I'm not clear what the purpose of "pool-hwlock" was.
+Hello Sascha,
 
-One use-case was a set of hwlocks having no fixed purpose, and being
-available for dynamic allocation between the OS and other entities (e.g.
-some RTOS on another core).
+On Tue, Apr 14, 2015 at 10:40:05AM +0200, Sascha Hauer wrote:
+> On Thu, Apr 02, 2015 at 11:38:12AM +0200, Ludovic Desroches wrote:
+> > 
+> > Hi,
+> > 
+> > Here is an implementation of what I need for the future at91 pin controller.
+> > The pinctrl driver is a draft made for a sama5d4 in order to test it. 
+> > It is not clean and many things are missing but I think it will be easier to
+> > debate on code.
+> > 
+> > From the discussion with Sascha, it seems that we agree that current pinctrl
+> > doesn't fit the needs of controllers who have per pin muxing because the
+> > concepts of groups is not real.
+> > In my opinion, even if groups are not real it is quite convenient to use them
+> > at least for debug sysfs.
+> > 
+> > The new at91 pin controller is close to Mediatek one. I am not totally happy
+> > with their solution since a group is describing a pin. It is probably the
+> > easiest way to do it but it doesn't fit my needs. I have two constraints:
+> > 
+> > - I want something readable in sysfs as:
+> > 
+> > device fc000000.mmc
+> > state default
+> > type MUX_GROUP (2)
+> > controlling device ahb:apb:pinctrl@fc06a000
+> > group mci1_0_4bit
+> > function C
+> > 
+> > device fc000000.mmc
+> > state default
+> > type CONFIGS_PIN (3)
+> > controlling device ahb:apb:pinctrl@fc06a000
+> > pin PE19
+> > config 00010003
+> > 
+> > I don't want to have a group named as a pin.
+> > 
+> > - I want to perform some verifications on user choices. A concept of ioset is
+> > introduced. An ioset is a set of pins dedicated to a device. A device can have
+> > several iosets. For example we can have i2c0 ioset1 with pins PA0 and PA1 and
+> > i2c0 ioset2 with pins PE10 and PE11. The controller has no knowledge about
+> > iosets. It means I could take the i2c data signal from ioset1 and the i2c
+> > clock signal from ioset2 BUT validation has been done only per ioset. For
+> > devices such as i2c it should not be a problem but it could be for other ones
+> > such as mci, isi, etc.
+> > 
+> > - I don't want big tables describing pins in my driver. It represents a huge
+> > amount of code mainly useless in the case of a multiplatform image.
+> 
+> This is needed due to some misdesign in the pinctrl core that's just,
+> sorry, braindamaged. The pinctrl core forces you to parse a device node
+> (which your driver perfectly understands) into a struct pinctrl_map.
+> This struct contains a struct pinctrl_map_mux which contains a group and
+> a function as strings. With the help of the driver struct pinctrl_map is
+> converted to struct pinctrl_setting which basically contains the same
+> information, but with a struct pinctrl_setting_mux which contains a
+> group and a function as integers. Instead of passing this data back to
+> the driver to act upon the structs are shred into pieces and passed to
+> the driver as individual variables.
+> 
+> So to recap the pinctrl core forces you to parse your data from the
+> device node into a format not native to the driver, then uses the
+> drivers help to convert this data in yet another format which it then
+> passes back to the driver in little pieces. Note that the pinctrl core
+> doesn't even use all this data except for requesting pins and for
+> generating debugfs entries.  These debugfs entries even often contain
+> useless information because neither struct pinctrl_map nor struct
+> pinctrl_setting are suitable for storing information for per-pin
+> controllers. Most drivers only put some information in there to find the
+> informations back the device node already contained.
+> 
+> A sane approach would just let the driver parse the data from a device
+> node into a cookie which is then passed back to the driver to be
+> activated. The driver would then be free to store whatever information
+> it needs in this cookie. The driver just request the necessary pins
+> itself from the pinctrl core instead of letting the core doing it.
+> 
+> I know this is not the answer you were looking for, but the pinctrl core
+> in my eyes is a big midlayer mistake and I'm not very fond of stretching
+> this concept further to be able to live with it for another round.
+> 
 
-The set of locks forming a reusable pool, and any information associated
-with them (e.g. the logical IDs used by the other entity) are a property
-of that interface rather than the hwlock provider.
+For sure it was not the kind of answer I was looking for :) I understand
+your point of view.
 
-So you'd describe those pools of locks in some interface-specific
-manner, consuming hwlocks from a set of hwlock providers.
+I won't discuss about the design of the pinctrl. I don't have enough
+knowledge about other controllers and I have never worked on a midlayer.
 
-Hopefully that doesn't maek things less clear...
+My concern is the actual pinctrl doesn't fit my needs and add some strong
+constraints. I don't have the time (and probably not the skill) to
+re-design pinctrl without introducing breakage for existing users. My
+goal is to try to find some ways to make it more flexible.
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Linus, what do you think about all this? Are the changes proposed
+acceptable?
+
+Regards
+
+Ludovic
