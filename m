@@ -1,78 +1,167 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
-Date: Thu, 16 Apr 2015 17:26:50 +0900
-Message-ID: <552F724A.1050500@samsung.com>
-References: <552CEC97.1050205@samsung.com> <552CEE42.1050907@ti.com>
- <552CFA1E.5070400@samsung.com> <20150415032734.GA29095@shlinux2>
- <552E1862.6090709@ti.com> <552E2EBF.5090906@samsung.com>
- <20150416015922.GB22269@shlinux2> <552F5E17.5020902@samsung.com>
- <1429168424.26621.1.camel@mm-sol.com> <552F6BE3.5080604@samsung.com>
- <20150416080107.GC1709@shlinux2>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 2/6] i2c: qup: Add V2 tags support
+Date: Thu, 16 Apr 2015 11:36:35 +0300
+Message-ID: <1429173395.26621.5.camel@mm-sol.com>
+References: <1428736145-18361-1-git-send-email-sricharan@codeaurora.org>
+		 <1428736145-18361-3-git-send-email-sricharan@codeaurora.org>
+		 <1429024595.16939.5.camel@mm-sol.com> <552E07B5.5080605@codeaurora.org>
+	 <1429087776.30601.1.camel@mm-sol.com> <552E7962.40606@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150416080107.GC1709@shlinux2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, "Balbi, Felipe" <balbi@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Roger Quadros <rogerq@ti.com>, Robert Baldyga <r.baldyga@samsung.com>, myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <552E7962.40606-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2015 05:01 PM, Peter Chen wrote:
-> On Thu, Apr 16, 2015 at 04:59:31PM +0900, Chanwoo Choi wrote:
->> On 04/16/2015 04:13 PM, Ivan T. Ivanov wrote:
->>> Hi,
->>>
->>> On Thu, 2015-04-16 at 16:00 +0900, Chanwoo Choi wrote:
->>>> Hi Peter,
->>>>
->>>> On 04/16/2015 10:59 AM, Peter Chen wrote:
->>>>>
->>>
->>>>> Ok, from USB point, external id/vbus value can't decide
->>>>> which role the controller will be, the controller driver
->>>>> will decide role according to many things, eg, user configurations,
->>>>> id/vbus value, OTG HNP, etc.
->>>>>
->>>>> So, from USB controller/phy driver, it doesn't care which cable is
->>>>> inserted, it cares about id/vbus value. Eg, it can get id/vbus value
->>>>> and it will be notified when the id/vbus value has changed.
->>>>
->>>> OK, I change the notifier name and add notifier events as following:
->>>>
->>>> - extcon_{register|unregister}_usb_notifier(struct extcon_dev *edev, struct notifier_block *nb);
->>>> - list of notifier events
->>>>         #define EXTCON_USB_ID_L_VBUS_L0       /* ID low  and VBUS low */
->>>>         #define EXTCON_USB_ID_L_VBUS_H1       /* ID low  and VBUS high */
->>>>         #define EXTCON_USB_ID_H_VBUS_L2       /* ID high and VBUS low */
->>>>         #define EXTCON_USB_ID_H_VBUS_H3       /* ID high and VBUS high */
->>>
->>> I am still confused, why we mix ID and VBUS events into one? 
->>> Those are two lines and they are not necessarily handled by
->>> the same extcon_dev.
->>
->> IMO, if some usb driver check both id and vbus pin at the same time,
->> the usb driver can know the both id and vbus pin state through only one notifier event.
->>
->> Also,
->> If some usb driver want to know the state of id pin except of vbus state,
->> when receiving following events, id pin is low.
->> 	#define EXTCON_USB_ID_L_VBUS_L0
->> 	#define EXTCON_USB_ID_L_VBUS_H1
->> when receiving following events, id pin is high.
->> 	#define EXTCON_USB_ID_H_VBUS_L2
->> 	#define EXTCON_USB_ID_H_VBUS_H3
->> Also, some usb driver would catch the vbus pin state with same method.
->>
->> But, it is just my opinion. We may use following notifier events for each pin.
->> We need to discuss it.
->> 	#define EXTCON_USB_ID_LOW
->> 	#define EXTCON_USB_ID_HIGH	
->> 	#define EXTCON_USB_VBUS_LOW
->> 	#define EXTCON_USB_VBUS_HIGH
->> 	
-> 
-> I agree with above definition.
-> 
 
-OK. I understand.
+Hi Sricharan,
+
+On Wed, 2015-04-15 at 20:14 +0530, Sricharan R wrote:
+> 
+> > > > > 
+> > > > > +#define QUP_I2C_MX_CONFIG_DURING_RUN   BIT(31)
+> > > > 
+> > > > Could you explain what is this for?
+> > > > 
+> > >     This is a new feature in the V2 version of the controller,
+> > >     to support multiple i2c sub transfers without having
+> > >     a 'stop' bit in-between. Without this the i2c controller
+> > >     inserts a 'stop' on the bus when the WR/RD count registers
+> > >     reaches zero and are configured for the next transfer. So setting
+> > >     this bit when the controller is in 'RUN' state, avoids sending the
+> > >     'stop' during RUN state.
+> > >     I can add this comment in the patch.
+> > 
+> > And how v2 of this patch was worked if you introduce this bit now?
+> > Bit is also not used by downstream driver, AFICS?
+> > 
+> The one of the reason for this and the bam support patches in
+> this series was to support multiple transfers of i2c_msgs without
+>   a 'stop' inbetween them. So without that the driver sends a 'stop'
+> between each sub-transfer. 
+
+Are you saying that there is bug in the hardware? Please, could you
+point me to codeaurora driver, which is using this bit? 
+
+
+
+-static void qup_i2c_set_write_mode(struct qup_i2c_dev *qup, struct i2c_msg *msg)
+> > > > > +static void qup_i2c_set_write_mode(struct qup_i2c_dev *qup, struct i2c_msg *msg,
+> > > > > +                                                       int run)
+> > > > 
+> > > > And 'run' stands for?
+> > >    'run' just says whether the controller is in 'RUN' or 'RESET' state.
+> > >     I can change it to is_run_st to make it clear.
+> > > > >    {
+> > > > > -       /* Number of entries to shift out, including the start */
+> > > > > -       int total = msg->len + 1;
+> > > > > +       /* Total Number of entries to shift out, including the tags */
+> > > > > +       int total;
+> > > > > +
+> > > > > +       if (qup->use_v2_tags) {
+> > > > > +               total = msg->len + qup->tx_tag_len;
+> > > > > +               if (run)
+> > > > > +                       total |= QUP_I2C_MX_CONFIG_DURING_RUN;
+> > > > 
+> > > > What?
+> > > > 
+> > >        This means, if the controller is in 'RUN' state, for
+> > >        reconfiguring the RD/WR counts this bit has to be set to avoid
+> > >        'stop' bits.
+> > 
+> > I don't buy it, sorry. Problem with v1 of the tags is that controller
+> > can not read more than 256 bytes without automatically generate STOP
+> > at the end, because transfer length specified with QUP_TAG_REC tag
+> > is 8 bits wide. There is no limitation for writes with v1 tags,
+> > because controller is explicitly instructed when to send out STOP.
+> > 
+> correct till this.
+> 
+> > For v2 of the tags, writes behaves more or less the same, and the
+> > good news are that there is new read tag QUP_TAG_V2_DATARD, which
+> > did't generate STOP when specified amount of data is read, still
+> > up to 256 bytes in chunk. Read transfers with size more than 256
+> > could be formed in following way:
+> > 
+> > V2_START | Slave Address | V2_DATARD | countx | ... | V2_DATARD_STOP | county.
+> > 
+>   The above is true for a single subtransfer for reading/writing
+> more than > 256 bytes. But for doing WRITE, READ kind of sub
+>   transfers once the first sub transfer (write) is over, and
+>   while re-configuring the _COUNT registers for the next transfers,
+> 'a stop' between is inserted.
+
+>From controller itself or driver?
+
+> > > > > +static void qup_i2c_issue_xfer_v2(struct qup_i2c_dev *qup, struct i2c_msg *msg)
+> > > > > +{
+> > > > > +       u32 data_len = 0, tag_len;
+> > > > > +
+> > > > > +       tag_len = qup->blk.block_tag_len[qup->blk.block_pos];
+> > > > > +
+> > > > > +       if (!(msg->flags & I2C_M_RD))
+> > > > > +               data_len = qup->blk.block_data_len[qup->blk.block_pos];
+> > > > > +
+> > > > > +       qup_i2c_send_data(qup, tag_len, qup->tags, data_len, msg->buf);
+> > > > 
+> > > > This assumes that writes are up to 256 bytes, and tags and data blocks
+> > > > are completely written to FIFO buffer, right?
+> > > > 
+> > >    Yes, since we send/read data in blocks (256 bytes).
+> > 
+> > How deep is the FIFO? Is it guaranteed that "the whole" write
+> > or read data, including tags will fit in.
+> > 
+>   Write/read fifo functions (also for V1) currently wait for the
+>    fifo full and empty flags conditions.
+
+I will say that this is true for v1, but not for v2, 
+because the way of how FIFO is filled in v2.
+
+> > > > > +static int qup_i2c_write_one(struct qup_i2c_dev *qup, struct i2c_msg *msg,
+> > > > > +                                                               int run, int last)
+> > > > >    {
+> > > > >           unsigned long left;
+> > > > >           int ret;
+> > > > > @@ -329,13 +501,20 @@ static int qup_i2c_write_one(struct qup_i2c_dev *qup, struct 
+> > > > > i2c_msg *msg)
+> > > > >           qup->msg = msg;
+> > > > >           qup->pos = 0;
+> > > > > 
+> > > > > +       if (qup->use_v2_tags)
+> > > > > +               qup_i2c_create_tag_v2(qup, msg, last);
+> > > > > +       else
+> > > > > +               qup->blk.blocks = 0;
+> > > > > +
+> > > > >           enable_irq(qup->irq);
+> > > > > 
+> > > > > -       qup_i2c_set_write_mode(qup, msg);
+> > > > > +       qup_i2c_set_write_mode(qup, msg, run);
+> > > > > 
+> > > > > -       ret = qup_i2c_change_state(qup, QUP_RUN_STATE);
+> > > > > -       if (ret)
+> > > > > -               goto err;
+> > > > > +       if (!run) {
+> > > > > +               ret = qup_i2c_change_state(qup, QUP_RUN_STATE);
+> > > > 
+> > > > To run away, or not?
+> > > > 
+> > >     Means, if the controller is not in RUN state, put it in to 'RUN'
+> > >     state.
+> > 
+> > And what is the problem if controller is put in PAUSED state, FIFO
+> > filled with data and then RUN again, like in v2 of this patch?
+> > 
+>   This function is not entered with controller in PAUSED state
+>   Only in Reset state (for the first transfer) and Run state for
+>   the subsequent sub-transfers. The reason for having this 'run'
+>   variable was that while using the lock-unlock feature, the
+>   controller should not be put in to run-reset-run state
+>   in-between transfers.
+
+Lets see how it will look, when new qup_i2c_write_one_v2 is introduced :-)
+
+Ivan
