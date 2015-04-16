@@ -1,159 +1,378 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: root node serial-number
- property documentation
-Date: Thu, 16 Apr 2015 21:15:49 +0200
-Message-ID: <1429211749.2563.15.camel@collins>
-References: <1427564371-26039-1-git-send-email-contact@paulk.fr>
-	 <f6f4f862c78fa626e7f94bde51eec5b1@agner.ch>
-	 <1429175421.2483.1.camel@collins>
-	 <CAL_JsqKdHQZL5Z6hKgquKihFykX0ZiCDQfeHOfOZWOh2NMg4Rw@mail.gmail.com>
-	 <CFEF8F54-7A3E-482C-B295-6A6BC5D837C8@codeaurora.org>
-	 <1429199145.2563.9.camel@collins>
-	 <F4D05489-ACF0-44BB-AEC7-7E8FB83FAE4C@codeaurora.org>
-	 <1429208077.2563.14.camel@collins>
-	 <B1128C28-AC17-47F6-A64A-FD3197112751@codeaurora.org>
+From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] clk: iproc: define Broadcom iProc clock binding
+Date: Thu, 16 Apr 2015 12:20:14 -0700
+Message-ID: <20150416192014.19585.9663@quantum>
+References: <1426657522-2473-1-git-send-email-rjui@broadcom.com>
+ <1426657522-2473-2-git-send-email-rjui@broadcom.com>
+ <20150411001231.18916.93186@quantum> <552B4140.6000705@broadcom.com>
+ <20150413060254.19585.59701@quantum> <552C1BA1.1020101@broadcom.com>
+ <552D662B.80201@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-rDLsC/sURMPwZXezJAe3"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B1128C28-AC17-47F6-A64A-FD3197112751-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <552D662B.80201-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Ray Jui (2015-04-14 12:10:35)
+> Hi Mike,
+> 
+> On 4/13/2015 12:40 PM, Ray Jui wrote:
+> > Hi Mike,
+> > 
+> > On 4/12/2015 11:02 PM, Michael Turquette wrote:
+> >> Quoting Ray Jui (2015-04-12 21:08:32)
+> >>>
+> >>>
+> >>> On 4/10/2015 5:12 PM, Michael Turquette wrote:
+> >>>> Quoting Ray Jui (2015-03-17 22:45:17)
+> >>>>> Document the device tree binding for Broadcom iProc architecture based
+> >>>>> clock controller
+> >>>>>
+> >>>>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >>>>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >>>>> ---
+> >>>>>  .../bindings/clock/brcm,iproc-clocks.txt           |  171 ++++++++++++++++++++
+> >>>>>  1 file changed, 171 insertions(+)
+> >>>>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+> >>>>> new file mode 100644
+> >>>>> index 0000000..bf2316b
+> >>>>> --- /dev/null
+> >>>>> +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+> >>>>> @@ -0,0 +1,171 @@
+> >>>>> +Broadcom iProc Family Clocks
+> >>>>> +
+> >>>>> +This binding uses the common clock binding:
+> >>>>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >>>>> +
+> >>>>> +The iProc clock controller manages clocks that are common to the iProc family.
+> >>>>> +An SoC from the iProc family may have several PPLs, e.g., ARMPLL, GENPLL,
+> >>>>> +LCPLL0, MIPIPLL, and etc., all derived from an onboard crystal. Each PLL
+> >>>>> +comprises of several leaf clocks
+> >>>>> +
+> >>>>> +Required properties for PLLs:
+> >>>>> +- compatible:
+> >>>>> +    Should have a value of the form "brcm,<soc>-<pll>". For example, GENPLL on
+> >>>>> +Cygnus has a compatible string of "brcm,cygnus-genpll"
+> >>>>> +
+> >>>>> +- #clock-cells:
+> >>>>> +    Must be <0>
+> >>>>> +
+> >>>>> +- reg:
+> >>>>> +    Define the base and range of the I/O address space that contain the iProc
+> >>>>> +clock control registers required for the PLL
+> >>>>> +
+> >>>>> +- clocks:
+> >>>>> +    The input parent clock phandle for the PLL. For all iProc PLLs, this is an
+> >>>>> +onboard crystal with a fixed rate
+> >>>>> +
+> >>>>> +Example:
+> >>>>> +
+> >>>>> +       osc: oscillator {
+> >>>>> +               #clock-cells = <0>;
+> >>>>> +               compatible = "fixed-clock";
+> >>>>> +               clock-frequency = <25000000>;
+> >>>>> +       };
+> >>>>> +
+> >>>>> +       genpll: genpll {
+> >>>>> +               #clock-cells = <0>;
+> >>>>> +               compatible = "brcm,cygnus-genpll";
+> >>>>> +               reg = <0x0301d000 0x2c>,
+> >>>>> +                       <0x0301c020 0x4>;
+> >>>>> +               clocks = <&osc>;
+> >>>>> +       };
+> >>>>> +
+> >>>>> +Required properties for leaf clocks of a PLL:
+> >>>>> +
+> >>>>> +- compatible:
+> >>>>> +    Should have a value of the form "brcm,<soc>-<pll>-clk". For example, leaf
+> >>>>> +clocks derived from the GENPLL on Cygnus SoC have a compatible string of
+> >>>>> +"brcm,cygnus-genpll-clk"
+> >>>>> +
+> >>>>> +- #clock-cells:
+> >>>>> +    Have a value of <1> since there are more than 1 leaf clock of a
+> >>>>> +given PLL
+> >>>>> +
+> >>>>> +- reg:
+> >>>>> +    Define the base and range of the I/O address space that contain the iProc
+> >>>>> +clock control registers required for the PLL leaf clocks
+> >>>>> +
+> >>>>> +- clocks:
+> >>>>> +    The input parent PLL phandle for the leaf clock
+> >>>>> +
+> >>>>> +- clock-output-names:
+> >>>>> +    An ordered list of strings defining the names of the leaf clocks
+> >>>>> +
+> >>>>> +Example:
+> >>>>> +
+> >>>>> +       genpll: genpll {
+> >>>>> +               #clock-cells = <0>;
+> >>>>> +               compatible = "brcm,cygnus-genpll";
+> >>>>> +               reg = <0x0301d000 0x2c>,
+> >>>>> +                       <0x0301c020 0x4>;
+> >>>>> +               clocks = <&osc>;
+> >>>>> +       };
+> >>>>> +
+> >>>>> +       genpll_clks: genpll_clks {
+> >>>>> +               #clock-cells = <1>;
+> >>>>> +               compatible = "brcm,cygnus-genpll-clk";
+> >>>>> +               reg = <0x0301d000 0x2c>;
+> >>>>> +               clocks = <&genpll>;
+> >>>>> +               clock-output-names = "axi21", "250mhz", "ihost_sys",
+> >>>>> +                       "enet_sw", "audio_125", "can";
+> >>>>> +       };
+> >>>>
+> >>>> Hi Ray,
+> >>>>
+> >>>> Thanks for submitting the patch. It was nice meeting you at ELC as well.
+> >>>>
+> >>>> This binding doesn't conform to the norms for clock bindings. It looks
+> >>>> like for each type of controllable clock node (e.g. pll, leaf clock,
+> >>>> etc) you have a dts node. Looking at the above example it seems that
+> >>>> those two nodes (genpll and genpll_clks) share the same register.
+> >>>>
+> >>>> /me checks patch #5
+> >>>>
+> >>>> Yup, you re-use the same register address for the *pll and *pll_clks
+> >>>> nodes. I'm not a DT expert but I think this is considered Wrong.
+> >>>>
+> >>>> More generally your clock dt binding should be modeling the hardware in
+> >>>> terms of IP blocks. If you have a clock generator IP block it may
+> >>>> control many clock bits and output many clock signals. E.g. for your
+> >>>> hardware (based only on the addresses in patch #5 and not having seen
+> >>>> any data manual) I will hazard a guess that the genpll, lcpll and asiu
+> >>>> clocks are all part of the same IP block.
+> >>>
+> >>> Hi Mike,
+> >>>
+> >>> In fact, lcpll, genpll, mipipll are similar but DIFFERENT IP blocks, and
+> >>> asiu is completely different from any of them. All of these plls are
+> >>> unique and have their own register banks, as you can see from the
+> >>> bcm-cygnus-clock.dtsi file. Therefore, I think it's totally correct and
+> >>> actually necessary to represent each of them with a separate device node.
+> >>
+> >> OK, that makes sense to me, if those registers live in addresses ranges
+> >> which correspond to different IP blocks.
+> >>
+> >>>
+> >>> Regarding the relationship between a PLL clock and its leaf clocks:
+> >>> Taking the genpll as an example, physically they are connected as:
+> >>>
+> >>> xtal -> genpll -> axi21, 250mhz, ihost_sys, ...
+> >>>
+> >>> The 25 MHz crystal feeds to the genpll, and the genpll generates 6
+> >>> different leaf clocks including axi21, 250mhz, ihost_sys, and etc. One
+> >>> can choose to set the genpll's vco to one frequency, and based on that
+> >>> frequency, different leaf clock frequencies can be generated with their
+> >>> own post divider.
+> >>>
+> >>> Therefore, I think it makes sense to represent xtal, genpll, genpll_clks
+> >>> (including axi21, 250mhz, ihost_sys, and etc) each with a unique device
+> >>> node, and genpll is the parent of these leaf clocks. Basically the
+> >>> device nodes and the way how the "clocks" phandle is used represent the
+> >>> hierarchy of the clock architecture within Cygnus (and in the future
+> >>> other iProc SoCs). Does that make sense?
+> >>
+> >> This doesn't make sense to me. If I understand correctly, the register
+> >> range that controls the post-divider clock (e.g. axi21) is the same
+> >> register range that control's genpll. This is a reasonable indicator to
+> >> me that the leaf clocks are part of the same clock generator IP block as
+> >> the PLL controls. As such they should be on node.
+> >>
+> >>>
+> >>> Regarding the register address overlapping, again, taking genpll as an
+> >>> example, the genpll and the genpll_clks actually never access the same
+> >>> set of registers, but the registers are sort of scattered within one
+> >>> bank, i.e., on Cygnus, genpll uses registers at offset 0x0, 0x8 ~ 0x1c,
+> >>> and genpll_clks uses registers at offset 0x4, 0x20 - 0x24.
+> >>
+> >> Sure, my argument above doesn't hinge on the fact that the pll and child
+> >> clocks use the exact same register. It still looks to me like *pll and
+> >> it's child dividers belong in the same IP block. Is there an open data
+> >> sheet or technical reference manual I can look at for this part? That is
+> >> the best way to put my concerns at ease ;-)
+> >>
+> >> Looking over your binding again, it looks like your nodes are divided
+> >> conveniently for the different clock types (e.g. pll versus
+> >> post-divider), but our goal with DT is to accurately describe the
+> >> hardware, not the C structures.
+> >>
+> >> Regards,
+> >> Mike
+> >>
+> > 
+> > Yes, the genpll and genpll_clks are controlled by the same IP block. I
+> > can make the change to combine them to use one DT node. But before doing
+> > that, I just need to get one thing clarified with you. In SW, the pll
+> > and its leaf clocks will still be registered as separate two clock
+> > providers, since we need to be able to configure the PLL vco frequency
+> > and its leaf clock frequencies separately. The pll will be the parent of
+> > its leaf clocks, and the leaf clocks will be used by various peripherals.
+> > 
+> > I plan to have the combined DT looks like this:
+> > 
+> > genpll_clks: genpll_clks {
+> >     #clock-cells = <1>;
+> >     compatible = "brcm,cygnus-genpll-clk";
+> >     reg = <0x0301d000 0x2c>;
+> > 
+> >     assigned-clocks = <&genpll_clks>;
+> >     /* this sets the PLL rate at the time when the PLL clock is
+> > registered */
+> >     assigned-clock-rates = <4000000000>;
+> > 
+> >     clocks = <&osc>;
+> > 
+> >     clock-output-names = "axi21", "250mhz", "ihost_sys", "enet_sw",
+> > "audio_125", "can";
+> > };
+> > 
+> > peripheralA: peripheralA {
+> >     /* use the first leaf clock of genpll */
+> >     clocks = <&genpll_clks 0>;
+> >     clock-frequency  = <100000000>;
+> > };
+> > 
+> > If we register both the genpll and its leaf clocks to the clock
+> > framework as two separate clock providers, would the above DT entries
+> > still work? For example, peripheralA refers to the phandle of
+> > genpll_clks, but how does the clock framework know to link it to the pll
+> > clock or the leaf clock?
 
---=-rDLsC/sURMPwZXezJAe3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Ray,
 
-Le jeudi 16 avril 2015 =C3=A0 13:54 -0500, Kumar Gala a =C3=A9crit :
-> > On Apr 16, 2015, at 1:14 PM, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> wrote=
-:
-> >=20
-> > Le jeudi 16 avril 2015 =C3=A0 10:53 -0500, Kumar Gala a =C3=A9crit :
-> >>> On Apr 16, 2015, at 10:45 AM, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> wr=
-ote:
-> >>>=20
-> >>> Le jeudi 16 avril 2015 =C3=A0 10:23 -0500, Kumar Gala a =C3=A9crit :
-> >>>>> On Apr 16, 2015, at 9:36 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> >>>>>=20
-> >>>>> On Thu, Apr 16, 2015 at 4:10 AM, Paul Kocialkowski <contact@paulk.f=
-r> wrote:
-> >>>>>> Le jeudi 16 avril 2015 =C3=A0 09:56 +0200, Stefan Agner a =C3=A9cr=
-it :
-> >>>>>>> On 2015-03-28 18:39, Paul Kocialkowski wrote:
-> >>>>>>>> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> >>>>>>>=20
-> >>>>>>> I think this is a worthwhile standardization.
-> >>>>>>>=20
-> >>>>>>> Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> >>>>>>=20
-> >>>>>> Thanks! I should also add a commit message in v2 mentioning that t=
-his is
-> >>>>>> already used in open firmware and reported by lshw.
-> >>>>>=20
-> >>>>> With that,
-> >>>>>=20
-> >>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>>=20
-> >>> [snip]
-> >>>=20
-> >>>> I feel like this is a little lite either in the doc or commit messag=
-e.
-> >>>> Is the string completely arbitrary?  Is it meant to match labeling o=
-n
-> >>>> a board or case?  Is this meant to be used by the kernel at all?
-> >>>=20
-> >>> I guess it doesn't really matter what it is, as long as it's a string=
-.
-> >>> The kernel does not suggest any use for it either, it's just made
-> >>> available to userspace through cpuinfo.
-> >>>=20
-> >>> Now if there is a particular use for this in user-space, it would hav=
-e
-> >>> to match some standards. For instance, it Android, ro.serialno is
-> >>> usually a 16-bytes (plus one null byte) representation of a 64 bit
-> >>> number. For USB, I recall it is usually a 32 bytes string (including =
-the
-> >>> null byte), but may be extended to more.
-> >>>=20
-> >>> What the string actually represents depends and some SOCs have serial
-> >>> number bytes (I know that omap and sunxi have some for instance, that
-> >>> are usually used) while other devices may take it from somewhere else=
-.
-> >>> In any case, it doesn't really matter and is not up to the kernel any=
-way
-> >>> since it is just passed through from the bootloader.
-> >>>=20
-> >>> Thus, I don't think it's very relevant to mention it in either the
-> >>> documentation or the commit message.
-> >>=20
-> >> So you say =E2=80=98board=E2=80=99 in the patch, since it could be SoC=
- specific, we
-> >> should probably clean up the wording a bit.
-> >=20
-> > It really doesn't matter where the string comes from, what it contains
-> > or whether some SoCs have provisions to generate one.
-> > I think board is one the most common words that we can use to describe
-> > devices. "devices" is also fine, I could go with it if you prefer, but =
-I
-> > don't really see what it changes.
->=20
-> Lets go with device instead of board.
->=20
-> >=20
-> >> I=E2=80=99m just saying when someone reads this 6 months or a year lat=
-er and
-> >> tries to figure out what the purpose of the property is they don=E2=80=
-=99t
-> >> really have enough info.  Putting some examples in the commit message
-> >> of what possibly usages is I think a reasonable thing.
-> >=20
-> > Okay, that would make sense. Still, the purpose of this is to pass the
-> > serial number string from the bootloader to userspace. All of the
-> > discussion about where to grab the serial from and what it should look
-> > like is not relevant to the kernel. Instead, it's up to the bootloader
-> > that is in charge of generating the serial string, so the discussion
-> > should happen there.
->=20
-> Again, I=E2=80=99ve got no issues with the property and its purpose to be=
- used
-> by user space, just saying we need to convey more of the intent via
-> commit message or updating the doc.
+There are two options here: using clock-output-names or not using
+clock-output-names.
 
-Okay so I'll go with "device" and mention a few use cases and what the
-serial numbers look like for those. Is that satisfying to you?
+I would recommend against using clock-output-names. If both your
+clock driver and the peripheral devices that consume these clocks are
+all represented in DT then you can skip clock-output-names and instead
+create phandle linkage between the clocks inside of your clock provider
+and the consumer devices. String names are still important here, but now
+you only need to specify the string name as an *input* to the consumer
+device, and not as an *output* from the clock provider node. Let's look
+at how the qcom bindings do it:
 
-> - k
+gcc is a clock generator ip block.
 
+arch/arm/boot/dts/qcom-apq8084.dtsi:
+                gcc: clock-controller@fc400000 {
+                        compatible = "qcom,gcc-apq8084";
+                        #clock-cells = <1>;
+                        #reset-cells = <1>;
+                        reg = <0xfc400000 0x4000>;
+                };
 
---=-rDLsC/sURMPwZXezJAe3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+This same file includes this header:
+#include <dt-bindings/clock/qcom,gcc-apq8084.h>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+That header creates a map of clocks by numbers. An example:
+#define GCC_BLSP2_UART2_APPS_CLK                        142
 
-iQIcBAABAgAGBQJVMAplAAoJEIT9weqP7pUM3JYP/RJcOQx8tEPBdv1SFn9MuaHz
-lERpAtyRfDwMsqywp3mjntBS7sJkeQYdd3b+uek/bN/0RhswhWA0QKjxB0ykhzjZ
-DxheYJxbKCms5PTG3tGPIZUFD8MbAD/NVHAuQwelBqHZUUd1NFT4BWu/hE/1vZva
-YPylkBrXd+FaOMKlKP+S7zbUUhRk7/0/3tftI88lqmQH2bWaJ4B/QY9FyXBm5frA
-Y+oztRG9DgrIKwiXR3kl3fj/wCLQVPgp6tGsf/4x2fDcT7GC7pfFmaIJpP5F5kbr
-uWfP6dE+aGNsSZWNjRQpFkWPWQ+9JzU2BVjVmX4DZ4b91o0i031QEl9D6Zd+QHgp
-WkraqaKGLJZ2/vyMl0zumSjQG+KAQ3H9iPmh883CvYF0TyTFyi+8rIc6Yc3uZLmn
-QVy0rloDb9mcDOGz8LU9Nxix31HSR1D6DdGsSRQ6XrbWuvxlEQY0EJxL6QWKiIZV
-LfVdewzjqaCzPqLhMt8/Yw46pT5udEMaZwmCVqtfSXQeSzck3dqwP2J0mqOw2PGv
-Xd0Aj4Nq26KpPk3AEljYl7PwpJg4WJwdsDElfOIY0GDVZPniMHRZ2DIalzZsPiBa
-QrjhQf88Oz3VDxN1hjwlPiqXsuAXC8I5VnSX5ws+7c6HWIzD4aLqeLbkBQin/ztz
-fQtbBohKJ+MObI9X8XWS
-=L2Y6
------END PGP SIGNATURE-----
+We can see how it used by the serial controller in
+arch/arm/boot/dts/qcom-apq8084.dtsi:
+                serial@f995e000 {
+                        compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+                        reg = <0xf995e000 0x1000>;
+                        interrupts = <0 114 0x0>;
+                        clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
+                        clock-names = "core", "iface";
+                        status = "disabled";
+                };
 
---=-rDLsC/sURMPwZXezJAe3--
+Note the 'clock-names' property. This lists a string name which is a property
+of the *consuming* device (uart controller), not the *providing* device (gcc
+clock generator).
 
+Finally, it all comes together in the driver simply using clk_get:
+        msm_port->clk = devm_clk_get(&pdev->dev, "core");
+        if (IS_ERR(msm_port->clk))
+                return PTR_ERR(msm_port->clk);
+
+        if (msm_port->is_uartdm) {
+                msm_port->pclk = devm_clk_get(&pdev->dev, "iface");
+                if (IS_ERR(msm_port->pclk))
+                        return PTR_ERR(msm_port->pclk);
+
+                clk_set_rate(msm_port->clk, 1843200);
+        }
+
+This works because we have created linkage between the clock phandle and
+the consuming device node. The shared header is used by the Linux kernel
+to look up the clock as well as the consumer node to map the string name
+onto a clock input.
+
+Back to clock-output-names:
+
+If you decide to keep using clock-output-names you can still represent
+the pll clock in your "clock-output-names". In a perfect world DT nodes
+that use clock-output-names would only expose the leaf clocks that your
+peripheral devices consume, but there is no technical reason why your
+pll can't be a part of the clock-output-names array. It is simply an
+array of string names that maps to an index. There is no sense of
+parent-child hierarchy in the DT binding, so there is no problem adding
+a parent pll clock to the array of clock-output-names. I think that this
+will tactically solve your problem in the short term, but I encourage
+you to inspect the qcom binding example I gave above to see if it a
+better fit for you long term.
+
+Regards,
+Mike
+
+> > 
+> > Thanks,
+> > 
+> > Ray
+> > 
+> 
+> So I've changed the code to merge pll and pll_clks nodes and have played
+> around with it a bit. Let me try to explain the issue I'm having here,
+> and see if you can help to shed some light:
+> 
+> As far as I know, the correct way to configure a clock's rate at the
+> time of registering to the clock framework, as you mentioned previously,
+> is to use the "assigned-clock" and "assigned-clock-rates" properties.
+> 
+> Assuming we have a pll clock called "pll", with 6 leaf clocks derived
+> from the pll called "clk-0", "clk-1", etc., and a peripheral using the
+> first leaf clock: "clk-0".
+> 
+> pll: pll {
+>    #clock-cell = <1>;
+>    compatible = "brcm,pll";
+>    clocks = <&osc>;
+>    clock-output-names = "clk-0", "clk-1", ...;
+> };
+> 
+> peripheral: peripheral {
+>     clocks = <&pll 0>;
+> };
+> 
+> With your proposed way of constructing the above clock device tree,
+> i.e., to combine "pll" and "clk-x" to use the same DT node, now how can
+> one configure the frequency of the "pll" through device tree at the time
+> of clock registration? There's now no access to "pll" through device
+> tree but only access to its leaf clocks, e.g., clocks = <&pll 0>.
+> 
+> The requirement comes from the fact that we need the peripheral to run
+> at a certain clock rate off the leaf clock, and to achieve that we need
+> the pll to run at a specific rate, since we only have an integer based
+> post-divider between the pll and its leaf clocks. I was able to achieve
+> this previously by separating the pll and its leaf clocks into two DT
+> nodes, but I am really not sure how one can do this when merging pll and
+> its leaf clocks into the same node.
+> 
+> Any idea how this can be done cleanly with a single DT node representing
+> the pll and its leaf clocks?
+> 
+> Thanks,
+> 
+> Ray
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
