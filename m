@@ -1,45 +1,39 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [PATCH] powerpc/dts: Fix incorrect clock-names property
-Date: Thu, 16 Apr 2015 14:53:36 +0300
-Message-ID: <1429185216-6856-1-git-send-email-igal.liberman@freescale.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arch: arm: Show the serial number from devicetree in
+ cpuinfo
+Date: Thu, 16 Apr 2015 17:05:07 +0100
+Message-ID: <20150416160506.GA12732@n2100.arm.linux.org.uk>
+References: <1427564371-26039-1-git-send-email-contact@paulk.fr>
+ <1427564371-26039-2-git-send-email-contact@paulk.fr>
+ <20150416094623.GX12732@n2100.arm.linux.org.uk>
+ <1429179791.2483.13.camel@collins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429179791.2483.13.camel@collins>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKU2lnbmVk
-LW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgotLS0K
-IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kgfCAgICA0ICsrLS0K
-IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0t
-Z2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaSBiL2FyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kKaW5kZXggM2RlZTMwNy4uMTQ2
-MjQzMSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3Qu
-ZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpCkBA
-IC01ODksNyArNTg5LDcgQEAKIAkJCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNvcmUtbXV4LTIu
-MCI7CiAJCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZwbGwwIDI+LAogCQkJCSA8
-JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+OwotCQkJY2xvY2stbmFtZXMgPSAicGxsMCIs
-ICJwbGwwLWRpdjIiLCAicGxsMS1kaXY0IiwKKwkJCWNsb2NrLW5hbWVzID0gInBsbDAiLCAicGxs
-MC1kaXYyIiwgInBsbDAtZGl2NCIsCiAJCQkJInBsbDEiLCAicGxsMS1kaXYyIiwgInBsbDEtZGl2
-NCI7CiAJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAiY211eDAiOwogCQl9OwpAQCAtNjAwLDcgKzYw
-MCw3IEBACiAJCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOwogCQkJY2xv
-Y2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAyPiwKIAkJCQkgPCZwbGwxIDA+LCA8
-JnBsbDEgMT4sIDwmcGxsMSAyPjsKLQkJCWNsb2NrLW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYy
-IiwgInBsbDEtZGl2NCIsCisJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJw
-bGwwLWRpdjQiLAogCQkJCSJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiOwogCQkJY2xv
-Y2stb3V0cHV0LW5hbWVzID0gImNtdXgxIjsKIAkJfTsKLS0gCjEuNy45LjUKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5n
-IGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMu
-b3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On Thu, Apr 16, 2015 at 12:23:11PM +0200, Paul Kocialkowski wrote:
+> We could simply check whether the serial-number property is there (when
+> DT is enabled at all) and fallback to using serial_low/high when it's
+> not the case (which would perhaps be 0), at a later point in
+> initialization. If you think init_machine_late is a good fit, then I'll
+> go for it.
+
+I do.  The only user of the string right now is userspace.  We don't
+expect the serial number to change over the lifetime of the kernel,
+and we expect that it's initialised by the time userspace gets to run.
+
+So, doing this at late_initcall() time seems completely sensible to me.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
