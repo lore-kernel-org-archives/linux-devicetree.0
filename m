@@ -1,46 +1,98 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH] of: base: improve of_get_next_child() kernel-doc
-Date: Thu, 16 Apr 2015 19:46:31 +0300
-Message-ID: <20150416164631.GL30380@tarshish>
-References: <360c70ee4131ea8048b193bfff359360bb854fe3.1426766621.git.baruch@tkos.co.il>
- <CAL_JsqKvEYC9NUB2ZNgAgr7KrimT9ZmvGdxjJhNE+5uF9n+nkQ@mail.gmail.com>
- <20150328202939.GA12479@tarshish>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Thu, 16 Apr 2015 13:17:32 -0400
+Message-ID: <CAF6AEGt3bf70MUWFU_kqtc8KDR09tMUCkXbqOq0SpOXU44moTg@mail.gmail.com>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
+	<20150410100529.GA6854@e104818-lin.cambridge.arm.com>
+	<20150414163613.GM28709@leverpostej>
+	<07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
+	<20150414211720.GA56647@MBP>
+	<CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw@mail.gmail.com>
+	<20150415133403.GB26099@e104818-lin.cambridge.arm.com>
+	<CAF6AEGucYT4LHkFggR0fO_c7gZe7hD7STx1xwKrOvwsnnFbw7Q@mail.gmail.com>
+	<20150416152121.GE819@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150328202939.GA12479@tarshish>
+In-Reply-To: <20150416152121.GE819-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <abhimany-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Apr 16, 2015 at 11:21 AM, Catalin Marinas
+<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Wed, Apr 15, 2015 at 11:01:17AM -0400, Rob Clark wrote:
+>> On Wed, Apr 15, 2015 at 9:34 AM, Catalin Marinas
+>> <catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Tue, Apr 14, 2015 at 05:48:48PM -0400, Rob Clark wrote:
+>> >> Just speaking as an outsider to this topic, but seems like most/all
+>> >> tablets/phones/etc ship with signed firmware.  Which means for most of
+>> >> the population, upgrading the firmware to a new version which did
+>> >> support the standard (assuming it existed), isn't really an option on
+>> >> our devices, any more than fixing buggy acpi tables is on our
+>> >> laptops..
+>> >
+>> > I wouldn't expect most population to build their own kernels on
+>> > tablets/phones. And even if you could install a custom kernel, mainline
+>> > rarely runs on such devices because of tons of out of tree patches (just
+>> > look at the Nexus 9 patches that Kumar pointed at; even ignoring the
+>> > booting protocol they are extremely far from an upstreamable form).
+>>
+>> my point being, that it happens some times.. for example John Stultz's
+>> work on nexus7:
+>>
+>> https://plus.google.com/111524780435806926688/posts/DzvpMLmzQiQ
+>>
+>> If this had been a year or two in the future and on some 64b
+>> snapdragon, and support for devices with non-PSCI fw is rejected, then
+>> he'd be stuck.
+>>
+>> There are folks who are working to get saner, more-upstream kernels
+>> working on devices.. and improving kernel infrastructure for
+>> device-needs (well, in my neck of the woods, there is drm/kms atomic
+>> and dsi/panel framework stuff.. I'm sure other similar things in other
+>> kernel domains).  And it seems like that is a good thing to encourage,
+>> rather than stymie.
+>
+> I'm not looking to discourage individuals trying to get upstream support
+> for older boards. Should the need arise, we'll look at options which may
+> or may not include kernel changes (e.g. wrap the kernel in a shim).
 
-On Sat, Mar 28, 2015 at 11:29:39PM +0300, Baruch Siach wrote:
-> On Tue, Mar 24, 2015 at 11:45:16PM -0500, Rob Herring wrote:
-> > On Thu, Mar 19, 2015 at 7:03 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > > Add two new facts to of_get_next_child() documentation:
-> > >
-> > >    * of_get_next_child() returns NULL when there is not next child
-> > >
-> > >    * of_get_next_child() decrements the refcount of prev
-> > >
-> > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > 
-> > Applied. Thanks.
-> 
-> Thanks. Which tree is this patch going through? I don't see it in current 
-> -next (next-20150327).
+I had wondered about that, but afaiu psci is a smc interface, and I
+would assume bootloader drops you out of secure mode before entering
+the kernel or whatever comes after first stage bootloader if you are
+chain-loading?  So wasn't sure even how that could work..   (ofc, well
+outside of my areas so I could be quite off base)
 
-Ping?
+If there is a workaround, then I am much less concerned, and would
+rather talk about that :-)
 
-baruch
+> But I'm definitely going to discourage companies like Qualcomm
+> deliberately ignoring the existing booting protocols while trying to get
+> their code upstream. This patch series is posted by Qualcomm without
+> providing any technical reason on why they don't want to/couldn't use
+> PSCI (well, I guess there is no technical reason but they may not care
+> much about mainline either).
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+Sure.. just trying to make sure the wrong people don't end up being
+the ones that suffer.  I would assume/expect that it is at least
+possible for qcom to change firmware/bootloader for their dev boards
+and future devices and whatnot, whether they grumble about it or not.
+But I guess most of what the general public has are devices w/ signed
+fw, which is why "go fix your firmware" is an option that sets off
+alarm bells for me.
+
+I guess the first device where this will matter to me and a large
+group of community folks would be the dragonboard 410c..  *hopefully*
+it does not require signed firmware or at least qcom could make
+available signed firmware which supports psci..
+
+BR,
+-R
+
+> --
+> Catalin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
