@@ -1,96 +1,45 @@
-From: Mark Rutland <mark.rutland@arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
  Qualcomm hwmutex
-Date: Thu, 16 Apr 2015 12:52:38 +0100
-Message-ID: <20150416115238.GL2866@leverpostej>
-References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+Date: Thu, 16 Apr 2015 13:01:27 +0100
+Message-ID: <20150416120127.GM2866@leverpostej>
+References: <CA+bK7J6donXZvLqN2Fv_9dVYgj9j=xJAwmEEo86+XKZ4oj166A@mail.gmail.com>
+ <CAK=WgbaAtBBNpf61rvO22TXq+6M6wk5jX1Cgxjqce8dXCJyigw@mail.gmail.com>
+ <CA+bK7J6rXtF54Tp1+mkDbv8Hok88MVZeC+mLvjjGjzZ4KtTHEw@mail.gmail.com>
+ <CAK=WgbZxZ0SUjZzBeqELZ=WQH5B5c41UCYc8_uHqOpgBtLVOfQ@mail.gmail.com>
+ <CA+bK7J7OB2bbGna7y-O4egF-rhig-bdf1W5Uw+GG7F0VjDepUg@mail.gmail.com>
+ <CAK=WgbYwk=DEgNFKn11BHpS=V_m=6Okf=i7w5NkLHwu8ryMaJg@mail.gmail.com>
+ <CAJAp7OgZo8rUGL1xkrSVTXMZfgzbV8eGEMniSquw7owkRAqKmg@mail.gmail.com>
+ <CAK=WgbauoPf52v3P7NLPsXaRUmGWo_K6ZcV4w3UO6xs7MUrJsw@mail.gmail.com>
+ <CAK=WgbY-5OsfdKJxGScvGj5sv-M-UvxhCfgSTunHiufvq1PXEQ@mail.gmail.com>
+ <CAL_Jsq+GhhhoHgRDOkK4=oWtSVmvw=UpLoU-Ey5M7tdNi5OZ2Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+GhhhoHgRDOkK4=oWtSVmvw=UpLoU-Ey5M7tdNi5OZ2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 10:30:16PM +0000, Bjorn Andersson wrote:
-> Add binding documentation for the Qualcomm Hardware Mutex.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
-> 
-> I think the conclusion on the dt binding discussion for hwspinlocks was that
-> we're down to having the #hwlock-cells intact. So this version includes that,
-> but non of the other previously discussed properties.
-> 
-> Changes since v5:
-> - Extracted the dt binding documentation into a separate patch
-> - Moved the driver to consume a syscon
-> - Dropped previously suggested generic hwlock dt bindings
-> 
->  .../devicetree/bindings/hwlock/qcom-hwspinlock.txt | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> new file mode 100644
-> index 0000000..28ade7d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> @@ -0,0 +1,39 @@
-> +Qualcomm Hardware Mutex Block:
-> +
-> +The hardware block provides mutexes utilized between different processors on
-> +the SoC as part of the communication protocol used by these processors.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,sfpb-mutex",
-> +		    "qcom,tcsr-mutex"
-> +
-> +- syscon:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: one cell containing:
-> +		    syscon phandle
-> +		    offset of the hwmutex block within the syscon
-> +		    stride of the hwmutex registers
-> +
-> +- #hwlock-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 1, the specified cell represent the lock id
-> +		    (hwlock standard property, see hwlock.txt)
+> The part I'm not clear what the purpose of "pool-hwlock" was.
 
-I guess that this is a linear ID, matching some ID in a data sheet? It
-would be nice to have something a little more explicit as to what the
-valid values of the cell are.
+One use-case was a set of hwlocks having no fixed purpose, and being
+available for dynamic allocation between the OS and other entities (e.g.
+some RTOS on another core).
 
-Otherwise this looks fine, and seems to pair fine with the generic
-bindings. The nit above can be corrected with a followup.
+The set of locks forming a reusable pool, and any information associated
+with them (e.g. the logical IDs used by the other entity) are a property
+of that interface rather than the hwlock provider.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+So you'd describe those pools of locks in some interface-specific
+manner, consuming hwlocks from a set of hwlock providers.
+
+Hopefully that doesn't maek things less clear...
 
 Mark.
-
-> +
-> +Example:
-> +
-> +        tcsr: syscon@1a400000 {
-> +		compatible = "qcom,tcsr-msm8974", "syscon";
-> +		reg = <0xfd484000 0x2000>;
-> +	};
-> +
-> +	hwlock@fd484000 {
-> +		compatible = "qcom,tcsr-mutex";
-> +		syscon = <&tcsr 0 0x80>;
-> +
-> +		#hwlock-cells = <1>;
-> +	};
-> -- 
-> 1.8.2.2
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
