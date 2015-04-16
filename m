@@ -1,118 +1,98 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [RFC PATCH 0/4] pinctrl: prototyping a per pin mux approach
-Date: Thu, 16 Apr 2015 14:26:51 +0200
-Message-ID: <20150416122651.GE10236@odux.rfo.atmel.com>
-References: <1427967496-22533-1-git-send-email-ludovic.desroches@atmel.com>
- <20150414084005.GT9742@pengutronix.de>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: UniPhier: add support for UniPhier SoCs
+ and boards
+Date: Thu, 16 Apr 2015 14:31:51 +0200
+Message-ID: <20150416123151.GF13105@lunn.ch>
+References: <1429170038-16757-1-git-send-email-yamada.masahiro@socionext.com>
+ <1429170038-16757-4-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150414084005.GT9742@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, laurent.pinchart@ideasonboard.com, swarren@wwwdotorg.org, tony@atomide.com, nicolas.ferre@atmel.com
+In-Reply-To: <1429170038-16757-4-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sascha,
-
-On Tue, Apr 14, 2015 at 10:40:05AM +0200, Sascha Hauer wrote:
-> On Thu, Apr 02, 2015 at 11:38:12AM +0200, Ludovic Desroches wrote:
-> > 
-> > Hi,
-> > 
-> > Here is an implementation of what I need for the future at91 pin controller.
-> > The pinctrl driver is a draft made for a sama5d4 in order to test it. 
-> > It is not clean and many things are missing but I think it will be easier to
-> > debate on code.
-> > 
-> > From the discussion with Sascha, it seems that we agree that current pinctrl
-> > doesn't fit the needs of controllers who have per pin muxing because the
-> > concepts of groups is not real.
-> > In my opinion, even if groups are not real it is quite convenient to use them
-> > at least for debug sysfs.
-> > 
-> > The new at91 pin controller is close to Mediatek one. I am not totally happy
-> > with their solution since a group is describing a pin. It is probably the
-> > easiest way to do it but it doesn't fit my needs. I have two constraints:
-> > 
-> > - I want something readable in sysfs as:
-> > 
-> > device fc000000.mmc
-> > state default
-> > type MUX_GROUP (2)
-> > controlling device ahb:apb:pinctrl@fc06a000
-> > group mci1_0_4bit
-> > function C
-> > 
-> > device fc000000.mmc
-> > state default
-> > type CONFIGS_PIN (3)
-> > controlling device ahb:apb:pinctrl@fc06a000
-> > pin PE19
-> > config 00010003
-> > 
-> > I don't want to have a group named as a pin.
-> > 
-> > - I want to perform some verifications on user choices. A concept of ioset is
-> > introduced. An ioset is a set of pins dedicated to a device. A device can have
-> > several iosets. For example we can have i2c0 ioset1 with pins PA0 and PA1 and
-> > i2c0 ioset2 with pins PE10 and PE11. The controller has no knowledge about
-> > iosets. It means I could take the i2c data signal from ioset1 and the i2c
-> > clock signal from ioset2 BUT validation has been done only per ioset. For
-> > devices such as i2c it should not be a problem but it could be for other ones
-> > such as mci, isi, etc.
-> > 
-> > - I don't want big tables describing pins in my driver. It represents a huge
-> > amount of code mainly useless in the case of a multiplatform image.
+On Thu, Apr 16, 2015 at 04:40:37PM +0900, Masahiro Yamada wrote:
+> Initial device trees for UniPhier SoCs: PH1-sLD3, PH1-LD4, PH1-Pro4,
+> and PH1-sLD8.
 > 
-> This is needed due to some misdesign in the pinctrl core that's just,
-> sorry, braindamaged. The pinctrl core forces you to parse a device node
-> (which your driver perfectly understands) into a struct pinctrl_map.
-> This struct contains a struct pinctrl_map_mux which contains a group and
-> a function as strings. With the help of the driver struct pinctrl_map is
-> converted to struct pinctrl_setting which basically contains the same
-> information, but with a struct pinctrl_setting_mux which contains a
-> group and a function as integers. Instead of passing this data back to
-> the driver to act upon the structs are shred into pieces and passed to
-> the driver as individual variables.
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
 > 
-> So to recap the pinctrl core forces you to parse your data from the
-> device node into a format not native to the driver, then uses the
-> drivers help to convert this data in yet another format which it then
-> passes back to the driver in little pieces. Note that the pinctrl core
-> doesn't even use all this data except for requesting pins and for
-> generating debugfs entries.  These debugfs entries even often contain
-> useless information because neither struct pinctrl_map nor struct
-> pinctrl_setting are suitable for storing information for per-pin
-> controllers. Most drivers only put some information in there to find the
-> informations back the device node already contained.
+>  arch/arm/boot/dts/Makefile                   |  5 ++
+>  arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts   | 51 +++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-ld4.dtsi      | 78 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts  | 51 +++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-pro4.dtsi     | 85 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts  | 52 +++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-sld3.dtsi     | 85 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts  | 51 +++++++++++++++++
+>  arch/arm/boot/dts/uniphier-ph1-sld8.dtsi     | 78 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-support-card.dtsi | 39 +++++++++++++
+>  10 files changed, 575 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+>  create mode 100644 arch/arm/boot/dts/uniphier-support-card.dtsi
 > 
-> A sane approach would just let the driver parse the data from a device
-> node into a cookie which is then passed back to the driver to be
-> activated. The driver would then be free to store whatever information
-> it needs in this cookie. The driver just request the necessary pins
-> itself from the pinctrl core instead of letting the core doing it.
-> 
-> I know this is not the answer you were looking for, but the pinctrl core
-> in my eyes is a big midlayer mistake and I'm not very fond of stretching
-> this concept further to be able to live with it for another round.
-> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index a1c776b..d639a90 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -588,6 +588,11 @@ dtb-$(CONFIG_ARCH_U8500) += \
+>  	ste-hrefv60plus-tvk.dtb \
+>  	ste-ccu8540.dtb \
+>  	ste-ccu9540.dtb
+> +dtb-$(CONFIG_ARCH_UNIPHIER) += \
+> +	uniphier-ph1-sld3-ref.dtb \
+> +	uniphier-ph1-ld4-ref.dtb \
+> +	uniphier-ph1-pro4-ref.dtb \
+> +	uniphier-ph1-sld8-ref.dtb
+>  dtb-$(CONFIG_ARCH_VERSATILE) += \
+>  	versatile-ab.dtb \
+>  	versatile-pb.dtb
+> diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+> new file mode 100644
+> index 0000000..2e83363
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+> @@ -0,0 +1,51 @@
+> +/*
+> + * Device Tree Source for UniPhier PH1-LD4 Reference Board
+> + *
+> + * Copyright (C) 2015 Socionext Inc.
+> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
-For sure it was not the kind of answer I was looking for :) I understand
-your point of view.
+Hi Masahiro
 
-I won't discuss about the design of the pinctrl. I don't have enough
-knowledge about other controllers and I have never worked on a midlayer.
+There is a growing trend to license DT files dual GPL and X11. Having
+the X11 license can help with bootloaders also using the device tree
+files.
 
-My concern is the actual pinctrl doesn't fit my needs and add some strong
-constraints. I don't have the time (and probably not the skill) to
-re-design pinctrl without introducing breakage for existing users. My
-goal is to try to find some ways to make it more flexible.
+Please spend some time researching the issue and consider it.
 
-Linus, what do you think about all this? Are the changes proposed
-acceptable?
-
-Regards
-
-Ludovic
+Thanks
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
