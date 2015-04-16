@@ -1,95 +1,60 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v8 1/1] media: i2c/adp1653: Devicetree support for adp1653
-Date: Thu, 16 Apr 2015 23:22:15 +0300
-Message-ID: <20150416202215.GH27451@valkosipuli.retiisi.org.uk>
-References: <1429141034-29237-1-git-send-email-sakari.ailus@iki.fi>
- <20150416052442.GA31095@earth>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150416052442.GA31095@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: pavel-+ZI9xUNit7I@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
+Date: Thu, 16 Apr 2015 22:37:19 +0200
+Message-ID: <55301D7F.30708@gmail.com>
+References: <20150414211734.GA28974@deathray> <552E0688.1020903@ti.com> <20150415140945.GA30787@deathray> <552EB152.7050306@ti.com> <20150415194707.GA11007@deathray> <CAPtuhTggHctp5ArGPEuKn2GuPzb-WnKv2_CzPrHzq8hwOR5Aqw@mail.gmail.com> <20150415205136.GA3399@deathray> <552F3B60.8050703@ti.com> <20150416161756.GA27590@deathray>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150416161756.GA27590@deathray>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>, Tero Kristo <t-kristo@ti.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On 16.04.2015 18:17, Michael Welling wrote:
+> On Thu, Apr 16, 2015 at 07:32:32AM +0300, Tero Kristo wrote:
+>> On 04/15/2015 11:51 PM, Michael Welling wrote:
+>>> On Wed, Apr 15, 2015 at 01:45:53PM -0700, Mike Turquette wrote:
+>>>> On Wed, Apr 15, 2015 at 12:47 PM, Michael Welling <mwelling@ieee.org> wrote:
+[...]
+>>>>> There is still an issue with the si5351.
+>>>>>
+>>>>> I had to comment out the clk_put here for the frequency to show up:
+>>>>> http://lxr.free-electrons.com/source/drivers/clk/clk-si5351.c#L1133
+>>>>>
+>>>>> Ideas?
+>>>>
+>>>> What is the most recent upstream commit that you are based on?
+>>>
+>>> I am working from 4.0.0-rc7.
+>>>
+>>> 7b43b47373d40d557cd7e1a84a0bd8ebc4d745ab
+>>
+>> Hmm, I wonder why si5351 calls clk_put immediately after of_clk_get
+>> in the first place, as far as I understand this destroys the clock
+>> handle, which is still being used later in the code.
+>
+> Not sure how this ever worked. This has been in the code since the
+> initial commit.
 
-On Thu, Apr 16, 2015 at 07:24:42AM +0200, Sebastian Reichel wrote:
-> Hi Sakari,
-> 
-> Since this driver won't make it into 4.1 anyways, I have one more
-> comment:
-> 
-> On Thu, Apr 16, 2015 at 02:37:13AM +0300, Sakari Ailus wrote:
-...
-> > @@ -308,16 +311,28 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
-> >  {
-> >  	int ret;
-> >  
-> > -	ret = flash->platform_data->power(&flash->subdev, on);
-> > -	if (ret < 0)
-> > -		return ret;
-> > +	if (flash->platform_data->power) {
-> > +		ret = flash->platform_data->power(&flash->subdev, on);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	} else {
-> > +		gpiod_set_value(flash->platform_data->enable_gpio, on);
-> > +		if (on)
-> > +			/* Some delay is apparently required. */
-> > +			udelay(20);
-> > +	}
-> 
-> I suggest to remove the power callback from platform data. Instead
-> you can require to setup a gpiod lookup table in the boardcode, if
-> platform data based initialization is used (see for example si4713
-> initialization in board-rx51-periphals.c).
-> 
-> This will reduce complexity in the driver and should be fairly easy
-> to implement, since there is no adp1653 platform code user in the
-> mainline kernel anyways.
+The reason it worked before may be related with recent rework of
+clk_put() itself and clk cookies instead of pointers. I lost track on
+the recent clk subsystem changes here, sorry.
 
-There are a couple of out-of-tree users perhaps. I think that I'd rather
-remove platform data support altogether than trying to polish it.
+However, droping the clk immediately surely isn't right.
+The thing is, we can remove the clk_put() just because there is no
+_remove() for that driver. I remember that back in the days the driver
+was mainlined, clk removal wasn't too easy.
 
-The timeline could be about the same than with the omap3isp driver, that
-shouldn't be too many minor kernel versions either.
+FWIW, as soon as _remove() support will be added by someone, we'll have
+to rethink passing struct clk* by platform_data or at least
+double-check if we ever used [of_]clk_get() to obtain it.
 
-What do you think?
+Mind to send a patch removing the clk_put() on !IS_ERR and add a proper
+error path instead? While of_clk_get() is the only calls that need
+cleanup on error in si5351_dt_parse() we should probably move that
+calls to the end of this function. Otherwise we'd also have to cleanup
+on every of_parse_foo() failure.
 
-...
-
-> > diff --git a/include/media/adp1653.h b/include/media/adp1653.h
-> > index 1d9b48a..9779c85 100644
-> > --- a/include/media/adp1653.h
-> > +++ b/include/media/adp1653.h
-> > @@ -100,9 +100,11 @@ struct adp1653_platform_data {
-> >  	int (*power)(struct v4l2_subdev *sd, int on);
-> >  
-> >  	u32 max_flash_timeout;		/* flash light timeout in us */
-> > -	u32 max_flash_intensity;	/* led intensity, flash mode */
-> > -	u32 max_torch_intensity;	/* led intensity, torch mode */
-> > -	u32 max_indicator_intensity;	/* indicator led intensity */
-> > +	u32 max_flash_intensity;	/* led intensity, flash mode, mA */
-> > +	u32 max_torch_intensity;	/* led intensity, torch mode, mA */
-> > +	u32 max_indicator_intensity;	/* indicator led intensity, uA */
-> > +
-> > +	struct gpio_desc *enable_gpio;	/* for device-tree based boot */
-> 
-> IMHO this should become part of "struct adp1653_flash", so that
-> adp1653_platform_data only contains variables, which should be
-> filled by boardcode / manual DT parsing code.
-
-We'll get rid of the whole header with platform data support removal. :-)
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sebastian
