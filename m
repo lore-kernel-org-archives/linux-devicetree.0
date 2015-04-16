@@ -1,34 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/3] PCI: host: designware: support ARM64
-Date: Thu, 16 Apr 2015 10:00:12 +0200
-Message-ID: <4046182.mBfkEVqZjc@wuerfel>
-References: <1429077843-184462-1-git-send-email-wangzhou1@hisilicon.com> <5374927.lpgzSJ47Sk@wuerfel> <552F4DF3.6000402@hisilicon.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Thu, 16 Apr 2015 15:59:58 +0800
+Message-ID: <20150416075957.GB1709@shlinux2>
+References: <552CE5C0.3010207@ti.com> <552CEC97.1050205@samsung.com>
+ <552CEE42.1050907@ti.com> <552CFA1E.5070400@samsung.com>
+ <20150415032734.GA29095@shlinux2> <552E1862.6090709@ti.com>
+ <552E2EBF.5090906@samsung.com> <20150416015922.GB22269@shlinux2>
+ <552F5E17.5020902@samsung.com> <1429168424.26621.1.camel@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <552F4DF3.6000402@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, gabriele.paoloni@huawei.com, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, xiehaitao@huawei.com, liguozhu@hisilicon.com, wangzhou.bry@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429168424.26621.1.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 April 2015 13:51:47 Zhou Wang wrote:
-> > 
-> > Again, separate patch.
-> > 
-> > I've just tried to come up with a nicer way of doing all this, can
-> > you try the experimental patch below?
-> > 
-> >       Arnd
-> > 
+On Thu, Apr 16, 2015 at 10:13:44AM +0300, Ivan T. Ivanov wrote:
+> Hi,
 > 
-> Sure, I will try the patch below. I think it can work well in my Hisilicon
-> D02 board. But I don't have arm32 PCIe related board to test. It will be helpful
-> if someone could help to test it.
+> On Thu, 2015-04-16 at 16:00 +0900, Chanwoo Choi wrote:
+> > Hi Peter,
+> > 
+> > On 04/16/2015 10:59 AM, Peter Chen wrote:
+> > > 
+> 
+> > > Ok, from USB point, external id/vbus value can't decide
+> > > which role the controller will be, the controller driver
+> > > will decide role according to many things, eg, user configurations,
+> > > id/vbus value, OTG HNP, etc.
+> > > 
+> > > So, from USB controller/phy driver, it doesn't care which cable is
+> > > inserted, it cares about id/vbus value. Eg, it can get id/vbus value
+> > > and it will be notified when the id/vbus value has changed.
+> > 
+> > OK, I change the notifier name and add notifier events as following:
+> > 
+> > - extcon_{register|unregister}_usb_notifier(struct extcon_dev *edev, struct notifier_block *nb);
+> > - list of notifier events
+> >         #define EXTCON_USB_ID_L_VBUS_L0       /* ID low  and VBUS low */
+> >         #define EXTCON_USB_ID_L_VBUS_H1       /* ID low  and VBUS high */
+> >         #define EXTCON_USB_ID_H_VBUS_L2       /* ID high and VBUS low */
+> >         #define EXTCON_USB_ID_H_VBUS_H3       /* ID high and VBUS high */
+> 
+> I am still confused, why we mix ID and VBUS events into one? 
+> Those are two lines and they are not necessarily handled by
+> the same extcon_dev.
 
-Ok, please incorporate the patch into your series then and make sure it
-builds fine on both 32-bit (multi_v7_defconfig) and 64-bit ARM. If we
-get consensus on the code, I'm sure we can find testers.
+Yes, from consumer side, we only need one element per time, eg vbus
+or id.
 
-	Arnd
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
