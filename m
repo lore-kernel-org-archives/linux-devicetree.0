@@ -1,84 +1,108 @@
-From: Igal.Liberman <igal.liberman@freescale.com>
-Subject: [PATCH] powerpc/dts: Move pll0/1-div4 index
-Date: Thu, 16 Apr 2015 15:08:25 +0300
-Message-ID: <1429186105-6991-1-git-send-email-igal.liberman@freescale.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 1/1] media: i2c/adp1653: Devicetree support for adp1653
+Date: Thu, 16 Apr 2015 18:29:06 +0200
+Message-ID: <20150416162905.GA3181@earth>
+References: <1429141034-29237-1-git-send-email-sakari.ailus@iki.fi>
+ <20150416052442.GA31095@earth>
+ <20150416055817.GA2749@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150416055817.GA2749@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhpcyBw
-YXRjaCB1cGRhdGVzIHBsbDAvMS1kaXY0IGluZGV4IHRvICczJy4KT3JpZ2luYWxseSBpdCB3YXMg
-JzInLgoKVGhlIGZvbGxvd2luZyBwYXRjaCBhZGRzIHBsbDAvMS1kaXYzIG9wdGlvbjoKCWh0dHBz
-Oi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvNDYxMTUxLwpBZnRlciB0aGlzIHBhdGNoLCBp
-bmRleCAnMicgYmVjb21lcyBwbGwwLzEtZGl2My4KClRoaXMgcGF0Y2ggYmFzZWQgb24gdG9wIG9m
-IHRoZSBmb2xsb3dpbmc6CglodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzQ2MTgx
-MS8KClNpZ25lZC1vZmYtYnk6IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxl
-LmNvbT4KLS0tCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpICAgIHwg
-ICAgNCArKy0tCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpIHwg
-ICAgOCArKysrLS0tLQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXBvc3QuZHRz
-aSB8ICAgIDggKysrKy0tLS0KIDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTAg
-ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNp
-LXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kKaW5k
-ZXggOGQwNjFhNC4uZDZjNDEwZCAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
-bC9iNHNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9z
-dC5kdHNpCkBAIC00NDYsOCArNDQ2LDggQEAKIAkJCSNjbG9jay1jZWxscyA9IDwwPjsKIAkJCXJl
-ZyA9IDwweDAgMHg0PjsKIAkJCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNvcmUtbXV4LTIuMCI7
-Ci0JCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZwbGwwIDI+LAotCQkJCTwmcGxs
-MSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxs
-MCAxPiwgPCZwbGwwIDM+LAorCQkJCTwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMz47CiAJ
-CQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjQiLAogCQkJCSJw
-bGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiOwogCQkJY2xvY2stb3V0cHV0LW5hbWVzID0g
-ImNtdXgwIjsKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1w
-b3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpCmlu
-ZGV4IDE0NjI0MzEuLmUzNDdmMmQgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvdDIwODFzaS1wb3N0LmR0c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4
-MXNpLXBvc3QuZHRzaQpAQCAtNTg3LDggKzU4Nyw4IEBACiAJCQkjY2xvY2stY2VsbHMgPSA8MD47
-CiAJCQlyZWcgPSA8MHgwIDQ+OwogCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1tdXgt
-Mi4wIjsKLQkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sCi0JCQkJ
-IDwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9ja3MgPSA8JnBsbDAgMD4s
-IDwmcGxsMCAxPiwgPCZwbGwwIDM+LAorCQkJCSA8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwx
-IDM+OwogCQkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXY0IiwK
-IAkJCQkicGxsMSIsICJwbGwxLWRpdjIiLCAicGxsMS1kaXY0IjsKIAkJCWNsb2NrLW91dHB1dC1u
-YW1lcyA9ICJjbXV4MCI7CkBAIC01OTgsOCArNTk4LDggQEAKIAkJCSNjbG9jay1jZWxscyA9IDww
-PjsKIAkJCXJlZyA9IDwweDIwIDQ+OwogCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1t
-dXgtMi4wIjsKLQkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sCi0J
-CQkJIDwmcGxsMSAwPiwgPCZwbGwxIDE+LCA8JnBsbDEgMj47CisJCQljbG9ja3MgPSA8JnBsbDAg
-MD4sIDwmcGxsMCAxPiwgPCZwbGwwIDM+LAorCQkJCSA8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZw
-bGwxIDM+OwogCQkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXY0
-IiwKIAkJCQkicGxsMSIsICJwbGwxLWRpdjIiLCAicGxsMS1kaXY0IjsKIAkJCWNsb2NrLW91dHB1
-dC1uYW1lcyA9ICJjbXV4MSI7CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
-L3Q0MjQwc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXBv
-c3QuZHRzaQppbmRleCAxYzkxZDAwLi4xZmRjZTQ0IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMv
-Ym9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvdDQyNDBzaS1wb3N0LmR0c2kKQEAgLTEwOTksOCArMTA5OSw4IEBACiAJCQkjY2xvY2st
-Y2VsbHMgPSA8MD47CiAJCQlyZWcgPSA8MHgwIDB4ND47CiAJCQljb21wYXRpYmxlID0gImZzbCxx
-b3JpcS1jb3JlLW11eC0yLjAiOwotCQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwm
-cGxsMCAyPiwKLQkJCQk8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+LAorCQkJY2xvY2tz
-ID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAzPiwKKwkJCQk8JnBsbDEgMD4sIDwmcGxs
-MSAxPiwgPCZwbGwxIDM+LAogCQkJCTwmcGxsMiAwPiwgPCZwbGwyIDE+LCA8JnBsbDIgMj47CiAJ
-CQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjQiLAogCQkJCSJw
-bGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiLApAQCAtMTExMiw4ICsxMTEyLDggQEAKIAkJ
-CSNjbG9jay1jZWxscyA9IDwwPjsKIAkJCXJlZyA9IDwweDIwIDB4ND47CiAJCQljb21wYXRpYmxl
-ID0gImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOwotCQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBs
-bDAgMT4sIDwmcGxsMCAyPiwKLQkJCQk8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+LAor
-CQkJY2xvY2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAzPiwKKwkJCQk8JnBsbDEg
-MD4sIDwmcGxsMSAxPiwgPCZwbGwxIDM+LAogCQkJCTwmcGxsMiAwPiwgPCZwbGwyIDE+LCA8JnBs
-bDIgMj47CiAJCQljbG9jay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjQi
-LAogCQkJCSJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiLAotLSAKMS43LjkuNQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
-IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Pavel,
+
+On Thu, Apr 16, 2015 at 07:58:18AM +0200, Pavel Machek wrote:
+> On Thu 2015-04-16 07:24:42, Sebastian Reichel wrote:
+> > Hi Sakari,
+> >=20
+> > Since this driver won't make it into 4.1 anyways, I have one more
+> > comment:
+>=20
+> Like this driver did not receive enough bikesheding.
+
+You should become more restrained with this argument if
+you want it to be taken seriously by me in the future...
+
+> > > +	} else {
+> > > +		gpiod_set_value(flash->platform_data->enable_gpio, on);
+> > > +		if (on)
+> > > +			/* Some delay is apparently required. */
+> > > +			udelay(20);
+> > > +	}
+> >=20
+> > I suggest to remove the power callback from platform data. Instead
+> > you can require to setup a gpiod lookup table in the boardcode, if
+> > platform data based initialization is used (see for example si4713
+> > initialization in board-rx51-periphals.c).
+> >=20
+> > This will reduce complexity in the driver and should be fairly easy
+> > to implement, since there is no adp1653 platform code user in the
+> > mainline kernel anyways.
+>=20
+> I'd hate to break out of tree users for very little gain.
+
+This normally happens as the kernel progresses. If you want your
+driver not to break, you should sent it upstream and maintain it.
+Also the only out-of-tree user I know is the Nokia N900 (which has
+already broken camera subsystem). Note that the required out of tree
+changes to use the platform code with gpiod interface are actually
+quite small and if you really care about it, they could actually be
+done *in kernel*.
+
+Note that many drivers are updated to use new kernel APIs together
+with the DT changes - especially those, which haven't been updated
+for quite some time.
+
+So let's have a look at the advantages of removing the power gpio:
+
+ + gpio handling is always done in the driver, making code
+   easier to read
+ + less loc in the driver, making it easier to read
+ + less loc in the boardcode (no gpio requesting/releasing)
+ + less branching in driver code - easier testing coverage
+ - out of tree users will break
+
+So basically its code quality vs minor out-of-tree breakage.
+
+-- Sebastian
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVL+NPAAoJENju1/PIO/qaCkgP+wRFedHH49l4MJkEoo9itGAP
++7y4otju5bFsuPJCGUAOwpsmIRrNqkz2F8Rb2kKVkuwSnnFhv9ltkuR077b1WjCT
+9R9rE7jiiLLDOkjmQTd70q/TEigDDu7w2Apk5WoNHYtPIG9gtAMlZiW0x/WL2JzO
+05e7Kf8AX0+gkp3tDc6autji+INAiVEHPrQ/L3R0ohVWJxKv5992znGF/iCnb1uP
+/3i+glksApTHesMlfRkNaEndlOgZ/u9dKBO0gH8xQToTzNvZgLPL4Ims1ExkC3kd
+cg/h26h7YIRI47oebrIcCYGvOv+f1Ioxd0dim0ngUmHSycVU/bSncRcDRC0rSBkD
+zBeTFv6od9/wDKjMvpqgzukm0cD4G3UGT9mB9qGG9LCpxd6ytJ49p4dNJbFs63bj
+pjgtiWeY4CZ90PUPg+U4TBYxhLjaQ3ikjgPbv5x9ObYpblJiDXjfc5cdBGxnP+45
+zXlJChgLcPBPT/zvp04hZRDg3tDcJV3h4zlf234gSO8vpyAS1y4v5cSmRVSuC0Cu
+M2cEsq49+0OiytDBHVoS7Uclxp+WrsM0Cd3PeHuP1E/gby4BA0EGsGbc3MWz1cDi
+fm5nQZa5t0SS8x2dTAs8IC9uYtx2+ntN7IEijTaI03u1qeZ6w7+zuVAAmKn/8oHe
+uEKImql8BtlxuWzSLUKc
+=gzfH
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
