@@ -1,44 +1,46 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
-Date: Thu, 16 Apr 2015 06:40:24 -0400
-Message-ID: <552F9198.4030902@hurleysoftware.com>
-References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com> <20150319191834.5346CC40A35@trevor.secretlab.ca> <8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com> <CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com> <1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com> <CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com> <20150402023803.E6A4DC4076D@trevor.secretlab.ca> <CAMuHMdWVTsog2_9iyUEBWm-7xonvNibTTbOY5YxvpAhffUXdcg@mail.gmail.com> <CAL_Jsq+9rYTvxX=Y6md5hgNhcBjbuM1m8Q3Y0gNkrV6yaDBskg@mail.gmail.com> <552E7309.8020505@hurleysoftware.com> <CAL_JsqJR4NFtwoUsPq3S7nyCBL6v+skarrXA+wvgzy-gR5fKWA@mail.gmail.com>
+From: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+Subject: [RFC/PATCH v2 0/5] Add cpuidle support for r8a7791
+Date: Thu, 16 Apr 2015 19:35:35 +0900
+Message-ID: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJR4NFtwoUsPq3S7nyCBL6v+skarrXA+wvgzy-gR5fKWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, rjw@rjwysocki.net, daniel.lezcano@linaro.org
+Cc: linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Keita Kobayashi <keita.kobayashi.ym@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2015 10:35 AM, Rob Herring wrote:
-> On Wed, Apr 15, 2015 at 9:17 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
- 
->> 2. Should DT-specific drivers not be using irq_of_parse_and_map()?
->>    On probe failure irq_dispose_mapping() will be junking the mapping,
->>    thus invalidating the irq assignment in the platform resource table,
->>    which breaks platform drivers which might otherwise probe successfully.
-> 
-> Generally no, they should not use irq_of_parse_and_map as we want
-> drivers to work with platform_data, DT, ACPI, or Bob's Firmware
-> Interface. I think most users are PPC drivers which don't have so much
-> of the probe ordering problems.
+Hello
 
-Apologies for hijacking this thread for a moment.
+These patches add cpuidle support for Renesas r8a7791 SoC.
+The r8a7791 cpuidle supports WFI and the cpu power state(Core-Standby)
+using Generic ARM CPU idle driver(cpuidle-arm).
+Generic ARM CPU idle driver have been merged in linux-pm.git / pm+acpi-4.1-rc1 tag.
 
-If of_device_alloc() creates the irq mapping, and no driver probes succeed,
-what is disposing the mapping?
+Based on : renesas.git / renesas-devel-20150413-v4.0 tag
+Tested on : koelsch board
 
-Similarly, if a platform driver fails its probe after platform_get_irq()
-what should dispose of that mapping?
+Changes from v1:
+ - Change "select" to "depend on"
+ - Document a new enable method of Renesas cpuidle
 
-Regards,
-Peter Hurley
+Keita Kobayashi (5):
+  ARM: cpuidle: Add cpuidle support for R-Car Gen2 series
+  ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
+  devicetree: bindings: Add new cpuidle enable method for Renesas R-car
+    SoCs
+  ARM: shmobile: dtsi: Add cpuidle parameters into each cpu for r8a7791
+  ARM: shmobile: Enable Renesas R-Car cpuidle for shmobile_defconfig
 
+ Documentation/devicetree/bindings/arm/cpus.txt |  1 +
+ arch/arm/boot/dts/r8a7791.dtsi                 | 13 +++++++++++++
+ arch/arm/configs/shmobile_defconfig            |  3 +++
+ arch/arm/mach-shmobile/platsmp-apmu.c          | 14 +++++++++++---
+ arch/arm/mach-shmobile/platsmp-apmu.h          |  1 +
+ arch/arm/mach-shmobile/pm-rcar-gen2.c          | 17 +++++++++++++++++
+ drivers/cpuidle/Kconfig.arm                    |  8 ++++++++
+ 7 files changed, 54 insertions(+), 3 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
+
