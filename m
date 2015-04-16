@@ -1,58 +1,55 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH net-next 4/6] net: hip04: Don't free the tx skb when the
- buffer is not ready for xmit
-Date: Thu, 16 Apr 2015 17:38:40 +0800
-Message-ID: <552F8320.9080100@huawei.com>
-References: <1429101008-9464-1-git-send-email-dingtianhong@huawei.com> <2218546.M1hzu1bzfh@wuerfel> <552F560D.4070309@huawei.com> <4971105.FJGVdDRE9f@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: UniPhier: add basic support for UniPhier architecture
+Date: Thu, 16 Apr 2015 11:41:48 +0200
+Message-ID: <3655031.20bjeBBBYS@wuerfel>
+References: <1429170038-16757-1-git-send-email-yamada.masahiro@socionext.com> <1429170038-16757-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4971105.FJGVdDRE9f@wuerfel>
+In-Reply-To: <1429170038-16757-2-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/4/16 16:41, Arnd Bergmann wrote:
-> On Thursday 16 April 2015 14:26:21 Ding Tianhong wrote:
->> On 2015/4/15 22:19, Arnd Bergmann wrote:
->>> On Wednesday 15 April 2015 20:30:06 Ding Tianhong wrote:
->>>> @@ -489,6 +487,8 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->>>>  
->>>>         /* Ensure tx_head update visible to tx reclaim */
->>>>         smp_wmb();
->>>> +       count++;
->>>> +       priv->tx_head = TX_NEXT(tx_head);
->>>>  
->>>>
->>>
->>> Something is wrong here, the comment does not match the code any more, because
->>> the smp_wmb() won't actually make the tx_head update visible.
->>>
->>>       Arnd
->>>
->> Yes, the smp_wmb() could only make sure the tx buffer was ready to xmit.
-> 
-> The problem you need to avoid is that the tx reclaim function thinks it's
-> done with all outstanding packets and does not retrigger, while the
-> start_xmit thinks it will still get to that. This means you
-> need a barrier between the priv->tx_head update and the
-> napi_schedule_prep() call.
-> 
+On Thursday 16 April 2015 16:40:35 Masahiro Yamada wrote:
 
-But I still doubt about that, when the buffer is ready to xmit, it will add to fifo queue, but it
-doesn't mean it is finished xmit yet, the tx reclaim function will free the skb only
-depend on whether tx_head is updated.
+>+ENTRY(uniphier_secondary_startup)
+>+       bl      v7_invalidate_l1
+>+       b       secondary_startup
+>+ENDPROC(uniphier_secondary_startup)
 
-Ding
+Since this file is really trivial, I wonder if you could just use
+a 'naked' inline assembly function from C code here, to have
+the entire SMP support in one file.
 
-> 	Arnd
-> 
-> .
-> 
+> +
+> +#define ROM_BOOT_ROMRSV2		0x59801208
+
+Please don't hardcode any physical addresses, instead find the DT node
+or syscon device in the _boot_secondary implementation.
 
 
+Which device is this register part of?
+
+> +
+> +static const char * const uniphier_board_dt_compat[] __initconst = {
+> +	"socionext,ph1-sld3",
+> +	"socionext,ph1-ld4",
+> +	"socionext,ph1-pro4",
+> +	"socionext,ph1-sld8",
+> +	"socionext,ph1-pro5",
+> +	"socionext,ph1-proxstream2",
+> +	"socionext,ph1-ld6b",
+> +	NULL,
+> +};
+
+Are these chip names or board names? The list should normally have
+just the socs, which I assume you do, but it's not completely clear
+from the source.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
