@@ -1,71 +1,40 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 0/4] ARM: SoC: add a new platform,
- UniPhier (arch/arm/mach-uniphier)
-Date: Thu, 16 Apr 2015 16:40:34 +0900
-Message-ID: <1429170038-16757-1-git-send-email-yamada.masahiro@socionext.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v2] usb: chipidea: Use extcon framework for VBUS and ID
+ detect
+Date: Thu, 16 Apr 2015 15:46:50 +0800
+Message-ID: <20150416074649.GA1709@shlinux2>
+References: <1429104915-11079-1-git-send-email-ivan.ivanov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1429104915-11079-1-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, cw00.choi@samsung.com
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 15, 2015 at 04:35:15PM +0300, Ivan T. Ivanov wrote:
+> On recent Qualcomm platforms VBUS and ID lines are not routed to
+> USB PHY LINK controller. Use extcon framework to receive connect
+> and disconnect ID and VBUS notification.
+> 
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+> ---
+> 
+> Changes since v0 [1], as per Peter Chen suggestions:
+> 
+> * Moved external connector parsing code to ci_get_platdata()
+> * Moved external connector related variables to struct ci_hdrc_platform_data
+> * Rename ci_host_notifier() to ci_id_notifier()
+> * Fixed device bindings description
+> * Use select EXTCON framework, instead of depends on.
 
-This is an initial series for supporting Socionext UniPhier SoCs,
-based on ARM Cortex-A9, mainly used for digital TVs, video recorders, etc.
+Hi Chanwoo,
 
+It seems the CONFIG_EXTCON is better as a hide config.
+See below thread for GENERIC_PHY.
 
+http://marc.info/?l=linux-kernel&m=142902133811818&w=2
 
-Masahiro Yamada (4):
-  ARM: UniPhier: add basic support for UniPhier architecture
-  ARM: multi_v7_defconfig: enable UniPhier SoC family
-  ARM: dts: UniPhier: add support for UniPhier SoCs and boards
-  MAINTAINERS: add myself as ARM/UniPhier maintainer
-
- MAINTAINERS                                  |  7 +++
- arch/arm/Kconfig                             |  2 +
- arch/arm/Makefile                            |  1 +
- arch/arm/boot/dts/Makefile                   |  5 ++
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts   | 51 +++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-ld4.dtsi      | 78 +++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts  | 51 +++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi     | 85 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts  | 52 +++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld3.dtsi     | 85 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts  | 51 +++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld8.dtsi     | 78 +++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-support-card.dtsi | 39 +++++++++++++
- arch/arm/configs/multi_v7_defconfig          |  1 +
- arch/arm/mach-uniphier/Kconfig               | 11 ++++
- arch/arm/mach-uniphier/Makefile              |  2 +
- arch/arm/mach-uniphier/headsmp.S             | 21 +++++++
- arch/arm/mach-uniphier/platsmp.c             | 78 +++++++++++++++++++++++++
- arch/arm/mach-uniphier/uniphier.c            | 31 ++++++++++
- 19 files changed, 729 insertions(+)
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-support-card.dtsi
- create mode 100644 arch/arm/mach-uniphier/Kconfig
- create mode 100644 arch/arm/mach-uniphier/Makefile
- create mode 100644 arch/arm/mach-uniphier/headsmp.S
- create mode 100644 arch/arm/mach-uniphier/platsmp.c
- create mode 100644 arch/arm/mach-uniphier/uniphier.c
-
--- 
-1.9.1
+Peter
