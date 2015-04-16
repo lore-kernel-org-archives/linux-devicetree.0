@@ -1,34 +1,116 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCH v8 0/4] hwspinlock core & omap dt support
-Date: Thu, 16 Apr 2015 13:28:10 +0300
-Message-ID: <CAK=WgbYJAnc_DFbqc3nJfYGWfqk4Krgi_BuJ=UXUNHHA-hvzKw@mail.gmail.com>
-References: <1425520876-37826-1-git-send-email-s-anna@ti.com>
- <CAK=WgbY1Gbc+b1YtHafUyph6P60fees1ND_K5OE=9MXuqszbOg@mail.gmail.com>
- <5509F4E7.6070607@ti.com> <551D70EE.307@ti.com> <20150416093130.GH2866@leverpostej>
+From: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+Subject: [RFC/PATCH v2 2/5] ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
+Date: Thu, 16 Apr 2015 19:35:37 +0900
+Message-ID: <1429180540-5692-3-git-send-email-keita.kobayashi.ym@renesas.com>
+References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150416093130.GH2866@leverpostej>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Suman Anna <s-anna@ti.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, rjw@rjwysocki.net, daniel.lezcano@linaro.org
+Cc: linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Keita Kobayashi <keita.kobayashi.ym@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2015 at 12:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> Hi,
->
-> Apologies for the delay on this.
->
->> > Gentle reminder. Can you please provide your ack on the bindings in this
->> > series (Patches 1 & 3) for Ohad to queue up the series for 4.1.
->> >
->>
->> Ping again, if you can provide your ack on these bindings and the qcom
->> hwmutex bindings, then Ohad can pick up both the series for 4.1. Both
->> series are blocked on getting the binding acks.
->
-> Both the bindings look sane to me, so for patches 1 and 3:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+This patch add Core-Standby support for R-Car cpuidle.
 
-Great, thanks a lot Mark!
+Signed-off-by: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+---
+ arch/arm/mach-shmobile/platsmp-apmu.c | 14 +++++++++++---
+ arch/arm/mach-shmobile/platsmp-apmu.h |  1 +
+ arch/arm/mach-shmobile/pm-rcar-gen2.c | 17 +++++++++++++++++
+ 3 files changed, 29 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/mach-shmobile/platsmp-apmu.c b/arch/arm/mach-shmobile/platsmp-apmu.c
+index f483b56..a35f97c 100644
+--- a/arch/arm/mach-shmobile/platsmp-apmu.c
++++ b/arch/arm/mach-shmobile/platsmp-apmu.c
+@@ -139,7 +139,8 @@ int shmobile_smp_apmu_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ }
+ #endif
+ 
+-#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_SUSPEND)
++#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_SUSPEND) || \
++    defined(CONFIG_ARM_RCAR_CPUIDLE)
+ /* nicked from arch/arm/mach-exynos/hotplug.c */
+ static inline void cpu_enter_lowpower_a15(void)
+ {
+@@ -215,7 +216,7 @@ int shmobile_smp_apmu_cpu_kill(unsigned int cpu)
+ }
+ #endif
+ 
+-#if defined(CONFIG_SUSPEND)
++#if defined(CONFIG_SUSPEND) || defined(CONFIG_ARM_RCAR_CPUIDLE)
+ static int shmobile_smp_apmu_do_suspend(unsigned long cpu)
+ {
+ 	shmobile_smp_hook(cpu, virt_to_phys(cpu_resume), 0);
+@@ -224,10 +225,17 @@ static int shmobile_smp_apmu_do_suspend(unsigned long cpu)
+ 	return 1;
+ }
+ 
+-static int shmobile_smp_apmu_enter_suspend(suspend_state_t state)
++void shmobile_smp_apmu_enter_corestandby(void)
+ {
+ 	cpu_suspend(smp_processor_id(), shmobile_smp_apmu_do_suspend);
+ 	cpu_leave_lowpower();
++}
++#endif
++
++#if defined(CONFIG_SUSPEND)
++static int shmobile_smp_apmu_enter_suspend(suspend_state_t state)
++{
++	shmobile_smp_apmu_enter_corestandby();
+ 	return 0;
+ }
+ 
+diff --git a/arch/arm/mach-shmobile/platsmp-apmu.h b/arch/arm/mach-shmobile/platsmp-apmu.h
+index 76512c9..c7dc00a 100644
+--- a/arch/arm/mach-shmobile/platsmp-apmu.h
++++ b/arch/arm/mach-shmobile/platsmp-apmu.h
+@@ -28,5 +28,6 @@ extern int shmobile_smp_apmu_boot_secondary(unsigned int cpu,
+ 					    struct task_struct *idle);
+ extern void shmobile_smp_apmu_cpu_die(unsigned int cpu);
+ extern int shmobile_smp_apmu_cpu_kill(unsigned int cpu);
++extern void shmobile_smp_apmu_enter_corestandby(void);
+ 
+ #endif /* PLATSMP_APMU_H */
+diff --git a/arch/arm/mach-shmobile/pm-rcar-gen2.c b/arch/arm/mach-shmobile/pm-rcar-gen2.c
+index 6815781..846b8ae 100644
+--- a/arch/arm/mach-shmobile/pm-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/pm-rcar-gen2.c
+@@ -10,11 +10,15 @@
+  * for more details.
+  */
+ 
++#include <linux/cpuidle.h>
++#include <linux/ioport.h>
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+ #include <linux/smp.h>
++#include <asm/cpuidle.h>
+ #include <asm/io.h>
+ #include "common.h"
++#include "platsmp-apmu.h"
+ #include "pm-rcar.h"
+ #include "rcar-gen2.h"
+ 
+@@ -113,3 +117,16 @@ void __init rcar_gen2_pm_init(void)
+ 	rcar_gen2_sysc_init(syscier);
+ 	shmobile_smp_apmu_suspend_init();
+ }
++
++#if defined(CONFIG_ARM_RCAR_CPUIDLE)
++static int rcar_cpuidle_enter(int cpu, unsigned long index)
++{
++	shmobile_smp_apmu_enter_corestandby();
++	return 0;
++}
++
++struct cpuidle_ops rcar_cpuidle_ops __initdata = {
++	.suspend = rcar_cpuidle_enter,
++};
++CPUIDLE_METHOD_OF_DECLARE(rcar, "renesas,rcar-idle", &rcar_cpuidle_ops);
++#endif
+-- 
+1.9.1
+
