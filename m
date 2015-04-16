@@ -1,96 +1,51 @@
-From: "Igal.Liberman@freescale.com" <Igal.Liberman@freescale.com>
-Subject: RE: [PATCH] powerpc/dts: Update the core cluster PLL node(s)
-Date: Thu, 16 Apr 2015 06:13:04 +0000
-Message-ID: <DM2PR03MB383381357861862EC77024DE6E40@DM2PR03MB383.namprd03.prod.outlook.com>
-References: <1429005306-24544-1-git-send-email-igal.liberman@freescale.com>
- <1429042868.22867.689.camel@freescale.com>
- <1429042950.22867.690.camel@freescale.com>
- <DM2PR03MB3831BEEDD2C17991818FFA9E6E50@DM2PR03MB383.namprd03.prod.outlook.com>
- <1429118075.22867.719.camel@freescale.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH net-next 2/6] net: hip04: use the big endian for tx and
+ rx desc
+Date: Thu, 16 Apr 2015 14:25:26 +0800
+Message-ID: <552F55D6.1040307@huawei.com>
+References: <1429101008-9464-1-git-send-email-dingtianhong@huawei.com> <1429101008-9464-3-git-send-email-dingtianhong@huawei.com> <6631765.x1c1LvG6uN@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1429118075.22867.719.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <6631765.x1c1LvG6uN@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: davem@davemloft.net, grant.likely@linaro.org, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, zhangfei.gao@linaro.org, joe@perches.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwg
-MTUsIDIwMTUgODoxNSBQTQ0KPiBUbzogTGliZXJtYW4gSWdhbC1CMzE5NTANCj4gQ2M6IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIXSBwb3dlcnBjL2R0czogVXBkYXRlIHRoZSBjb3JlIGNsdXN0ZXIg
-UExMIG5vZGUocykNCj4gDQo+IE9uIFdlZCwgMjAxNS0wNC0xNSBhdCAwNjowNyAtMDUwMCwgTGli
-ZXJtYW4gSWdhbC1CMzE5NTAgd3JvdGU6DQo+ID4NCj4gPg0KPiA+IFJlZ2FyZHMsDQo+ID4gSWdh
-bCBMaWJlcm1hbi4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+
-IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+ID4gPiBTZW50OiBUdWVzZGF5LCBBcHJpbCAxNCwg
-MjAxNSAxMToyMyBQTQ0KPiA+ID4gVG86IExpYmVybWFuIElnYWwtQjMxOTUwDQo+ID4gPiBDYzog
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
-DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwb3dlcnBjL2R0czogVXBkYXRlIHRoZSBjb3Jl
-IGNsdXN0ZXIgUExMDQo+ID4gPiBub2RlKHMpDQo+ID4gPg0KPiA+ID4gT24gVHVlLCAyMDE1LTA0
-LTE0IGF0IDE1OjIxIC0wNTAwLCBTY290dCBXb29kIHdyb3RlOg0KPiA+ID4gPiBPbiBUdWUsIDIw
-MTUtMDQtMTQgYXQgMTI6NTUgKzAzMDAsIElnYWwuTGliZXJtYW4gd3JvdGU6DQo+ID4gPiA+ID4g
-RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gVGhpcyBwYXRjaCByZXBsYWNlcyB0aGUgZm9sbG93aW5nOg0KPiA+ID4g
-PiA+IAlodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzQyNzY2NC8NCj4gPiA+ID4g
-Pg0KPiA+ID4gPiA+IFRoaXMgcGF0Y2ggaXMgZGVzY3JpYmVkIGJ5IHRoZSBmb2xsb3dpbmcgYmlu
-ZGluZyBkb2N1bWVudCB1cGRhdGU6DQo+ID4gPiA+ID4gCWh0dHBzOi8vcGF0Y2h3b3JrLm96bGFi
-cy5vcmcvcGF0Y2gvNDYxMTUwLw0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTog
-SWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiA+IC0t
-LQ0KPiA+ID4gPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5k
-dHNpIHwgICAgNiArKysrLS0NCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
-cygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5kdHNpDQo+ID4gPiA+ID4g
-Yi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5kdHNpDQo+ID4gPiA+
-ID4gaW5kZXggNDhlMGI2ZS4uN2UxZjA3NCAxMDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9hcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5kdHNpDQo+ID4gPiA+ID4gKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjIuZHRzaQ0KPiA+ID4gPiA+
-IEBAIC00OSwxNCArNDksMTYgQEAgZ2xvYmFsLXV0aWxpdGllc0BlMTAwMCB7DQo+ID4gPiA+ID4g
-IAkJcmVnID0gPDB4ODAwIDB4ND47DQo+ID4gPiA+ID4gIAkJY29tcGF0aWJsZSA9ICJmc2wscW9y
-aXEtY29yZS1wbGwtMi4wIjsNCj4gPiA+ID4gPiAgCQljbG9ja3MgPSA8JnN5c2Nsaz47DQo+ID4g
-PiA+ID4gLQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDAt
-ZGl2NCI7DQo+ID4gPiA+ID4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsbDAiLCAicGxsMC1k
-aXYyIiwgInBsbDAtZGl2MyIsDQo+ID4gPiA+ID4gKwkJCQkgICAgICAicGxsMC1kaXY0IjsNCj4g
-PiA+ID4gPiAgCX07DQo+ID4gPiA+ID4gIAlwbGwxOiBwbGwxQDgyMCB7DQo+ID4gPiA+ID4gIAkJ
-I2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ID4gPiA+ICAJCXJlZyA9IDwweDgyMCAweDQ+Ow0KPiA+
-ID4gPiA+ICAJCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNvcmUtcGxsLTIuMCI7DQo+ID4gPiA+
-ID4gIAkJY2xvY2tzID0gPCZzeXNjbGs+Ow0KPiA+ID4gPiA+IC0JCWNsb2NrLW91dHB1dC1uYW1l
-cyA9ICJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiOw0KPiA+ID4gPiA+ICsJCWNsb2Nr
-LW91dHB1dC1uYW1lcyA9ICJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjMiLA0KPiA+ID4g
-PiA+ICsJCQkJICAgICAgInBsbDEtZGl2NCI7DQo+ID4gPiA+DQo+ID4gPiA+IFdhaXQsIHNvIGlm
-IHRoZSBkcml2ZXIgaW1wbGVtZW50cyB0aGUgYmluZGluZyB5b3Ugc3VibWl0dGVkLA0KPiA+ID4g
-PiB5b3UnbGwgYnJlYWsgY29tcGF0aWJpbGl0eSB3aXRoIHRoZXNlIG9sZGVyIGRldmljZSB0cmVl
-cy4uLg0KPiA+ID4gPg0KPiA+ID4gPiBJIHRoaW5rIHdlIG5lZWQgdG8ganVzdCBhY2NlcHQgdGhl
-IHVnbHkgY291bnQtdGhlLWNsb2NrLW5hbWVzDQo+ID4gPiA+IGFwcHJvYWNoIGFuZCBkb2N1bWVu
-dCBpdC4NCj4gPiA+DQo+ID4gPiBJcyB0aGVyZSBhbnkgY3VycmVudCAyLjAgY2xvY2sgY29uc3Vt
-ZXIgdGhhdCByZWZlcmVuY2VzIHBsbC1kaXY0Pw0KPiA+ID4NCj4gPg0KPiA+IEkgbG9va2VkIGF0
-IFQ0MjQwIGZvciBleGFtcGxlLCB0aGVyZSdzIGEgbXV4IG5vZGUgd2hpY2ggYWRkcyBwbGwtZGl2
-NA0KPiBvcHRpb246DQo+ID4gbXV4MDogbXV4MEAwIHsNCj4gPiAJI2Nsb2NrLWNlbGxzID0gPDA+
-Ow0KPiA+IAlyZWcgPSA8MHgwIDB4ND47DQo+ID4gCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNv
-cmUtbXV4LTIuMCI7DQo+ID4gCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAg
-Mj4sDQo+ID4gCQk8JnBsbDEgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+LA0KPiA+IAkJPCZwbGwy
-IDA+LCA8JnBsbDIgMT4sIDwmcGxsMiAyPjsNCj4gPiAJY2xvY2stbmFtZXMgPSAicGxsMCIsICJw
-bGwwLWRpdjIiLCAicGxsMC1kaXY0IiwNCj4gPiAJCSJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwx
-LWRpdjQiLA0KPiA+IAkJInBsbDIiLCAicGxsMi1kaXYyIiwgInBsbDItZGl2NCI7DQo+ID4gCWNs
-b2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MCI7DQo+ID4gfTsNCj4gPg0KPiA+IEFmdGVyIHRoaXMg
-Y2hhbmdlIDwmcGxsMCAyPiB3aWxsIHJlcHJlc2VudCAicGxsMC1kaXYzIiBhbmQgbm90ICJwbGww
-LWRpdjQiLg0KPiANCj4gU28gdGhpcyBuZWVkcyB0byBiZSB1cGRhdGVkIHRvIG1hdGNoIC0tIGFu
-ZCBpdCBjb25maXJtcyB0aGF0IGV4aXN0aW5nIGRldmljZQ0KPiB0cmVlcyB3aWxsIGJlIGJyb2tl
-biBpZiB5b3UgYmFzZSB0aGUgaW50ZXJwcmV0YXRpb24gb24gY29tcGF0aWJsZSByYXRoZXIgdGhh
-bg0KPiB0aGUgbnVtYmVyIG9mIGNsb2NrLW91dHB1dC1uYW1lcy4NCj4gDQoNClllcy4NCkknbGwg
-c3VibWl0IGEgcGF0Y2ggYW5kIG1lbnRpb24gdGhpcyBkZXBlbmRlbmN5LiANCg0KPiAtU2NvdHQN
-Cj4gDQoNCklnYWwuDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFi
-cy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On 2015/4/15 22:13, Arnd Bergmann wrote:
+> On Wednesday 15 April 2015 20:30:04 Ding Tianhong wrote:
+>> The hip04 ethernet use the big endian for tx and rx, so set desc to
+>> big endian and remove the unused next_addr.
+> 
+> I don't understand:
+> 
+>> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+>> index b0a7f03..6473462 100644
+>> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
+>> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+>> @@ -132,19 +132,18 @@
+>>  #define HIP04_MIN_TX_COALESCE_FRAMES   1
+>>  
+>>  struct tx_desc {
+>> -       u32 send_addr;
+>> -       u32 send_size;
+>> -       u32 next_addr;
+>> -       u32 cfg;
+>> -       u32 wb_addr;
+>> +       __be32 send_addr;
+>> +       __be32 send_size;
+>> +       __be32 cfg;
+>> +       __be32 wb_addr;
+>>  } __aligned(64);
+> 
+> I would think this is a hardware structure, does this not break
+> access to the cfg and wb_addr fields if you remove next_addr?
+> 
+> 	Arnd
+> 
+good cache, I make a mistake here, thanks.
+
+> .
+> 
