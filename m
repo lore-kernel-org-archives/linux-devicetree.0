@@ -1,70 +1,390 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH RFC v9 11/20] drm/bridge: Add Synopsys DesignWare MIPI
- DSI host controller driver
-Date: Thu, 16 Apr 2015 11:09:58 +0530
-Message-ID: <552F4B2E.2000209@codeaurora.org>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-12-git-send-email-Ying.Liu@freescale.com>
- <20150409084353.GD12103@ulmo>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] PCI: host: designware: support ARM64
+Date: Thu, 16 Apr 2015 13:51:47 +0800
+Message-ID: <552F4DF3.6000402@hisilicon.com>
+References: <1429077843-184462-1-git-send-email-wangzhou1@hisilicon.com> <1429077843-184462-2-git-send-email-wangzhou1@hisilicon.com> <5374927.lpgzSJ47Sk@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150409084353.GD12103@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Liu Ying <Ying.Liu@freescale.com>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5374927.lpgzSJ47Sk@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xiehaitao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNC8wOS8yMDE1IDAyOjEzIFBNLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiBPbiBUaHUs
-IEZlYiAxMiwgMjAxNSBhdCAwMjowMTozNFBNICswODAwLCBMaXUgWWluZyB3cm90ZToKPiBbLi4u
-XQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5jIGIv
-ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5jCj4gWy4uLl0KPj4gK3N0cnVjdCBk
-d19taXBpX2RzaSB7Cj4+ICsJc3RydWN0IG1pcGlfZHNpX2hvc3QgZHNpX2hvc3Q7Cj4+ICsJc3Ry
-dWN0IGRybV9jb25uZWN0b3IgY29ubmVjdG9yOwo+PiArCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5j
-b2RlcjsKPj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlOwo+PiArCXN0cnVjdCBkcm1fcGFu
-ZWwgKnBhbmVsOwo+PiArCXN0cnVjdCBkZXZpY2UgKmRldjsKPj4gKwo+PiArCXZvaWQgX19pb21l
-bSAqYmFzZTsKPj4gKwo+PiArCXN0cnVjdCBjbGsgKnBsbHJlZl9jbGs7Cj4+ICsJc3RydWN0IGNs
-ayAqY2ZnX2NsazsKPj4gKwlzdHJ1Y3QgY2xrICpwY2xrOwo+PiArCj4+ICsJdW5zaWduZWQgaW50
-IGxhbmVfbWJwczsgLyogcGVyIGxhbmUgKi8KPj4gKwl1MzIgY2hhbm5lbDsKPj4gKwl1MzIgbGFu
-ZXM7Cj4+ICsJdTMyIGZvcm1hdDsKPj4gKwlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsK
-Pj4gKwo+PiArCWNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgKnBkYXRhOwo+PiAr
-Cj4+ICsJYm9vbCBlbmFibGVkOwo+PiArfTsKPgo+IFdoaWxlIHJldmlld2luZyB0aGlzIEkga2Vw
-dCB0aGlua2luZyB3aGV0aGVyIHRoaXMgaXMgcmVhbGx5IHRoZSByaWdodAo+IGFyY2hpdGVjdHVy
-YWwgZGVzaWduLiBUaGlzIGRyaXZlciBpcyBhIE1JUEkgRFNJIGhvc3QsIGEgY29ubmVjdG9yIGFu
-ZAo+IGEgYnJpZGdlLCBhbGwgaW4gb25lLiBCdXQgaXQgc2VlbXMgdG8gbWUgbGlrZSBpdCBzaG91
-bGQgcmVhbGx5IGJlIGFuCj4gZW5jb2Rlci9jb25uZWN0b3IgYW5kIGEgTUlQSSBEU0kgaG9zdC4g
-V2h5IHRoZSBuZWVkIGZvciBhIGJyaWRnZT8gVGhlCj4gYnJpZGdlIGFic3RyYWN0aW9uIHRhcmdl
-dHMgYmxvY2tzIG91dHNpZGUgb2YgdGhlIFNvQywgYnV0IGl0IGlzIG15Cj4gdW5kZXJzdGFuZGlu
-ZyB0aGF0IHRoZXNlIERlc2lnbldhcmUgSVAgYmxvY2tzIGFyZSBkZXNpZ25lZCBpbnRvIFNvQ3Mu
-Cj4KClRoZSBtc20gZHJpdmVyIHVzZXMgYnJpZGdlcyBmb3IgYmxvY2tzIHdpdGhpbiB0aGUgU29D
-IHRvby4gV2UgaGF2ZSB0b28gCm1hbnkgc3ViIGJsb2NrcyBpbiB0aGUgZGlzcGxheSBjb250cm9s
-bGVyIHRoYXQgdXNlIHVwIGNydGNzIGFuZCBlbmNvZGVyIAplbnRpdGllcy4gQSBicmlkZ2UgaXMg
-dGhlIG9ubHkgb3B0aW9uIG9uZSBoYXMgaWYgYW4gZW5jb2RlciBpbiB0aGUgCmRpc3BsYXkgY2hh
-aW4gaXMgYWxyZWFkeSB0YWtlbi4KCkluIHRoZSBhYm92ZSBkZXNpZ253YXJlIGNvbmZpZ3VyYXRp
-b24sIGlmIHNvbWUgb25lIGNyZWF0ZWQgYSBib2FyZCB0aGF0IAp1c2VkIGFuIGV4dGVybmFsIGNo
-aXAgdG8gZnVydGhlciBjb252ZXJ0IERTSSB0byBzb21lIG90aGVyIG91dHB1dCAKZm9ybWF0LCB0
-aGVuIHdlIHdvdWxkIGJlIGNvbXBsZXRlbHkgZXhoYXVzdGVkIG9mIGFsbCBlbnRpdGllcy4KCkkg
-cG9zdGVkIGEgcGF0Y2ggdGhhdCBhbGxvd3MgdXMgdG8gY3JlYXRlIGEgY2hhaW4gb2YgYnJpZGdl
-cyBmb3Igc3VjaCAKY2FzZXMuIEl0IHNlZW1zIHRvIHdvcmsgd2VsbCBhcyBhbiBpbnRlcmltIHNv
-bHV0aW9uLiBJZGVhbGx5LCBpdCB3b3VsZCAKYmUgYmV0dGVyIGlmIHdlIGNvdWxkIG1ha2UgYnJp
-ZGdlIGEgc3BlY2lhbCBjYXNlIG9mIGFuIGVuY29kZXIsIGFuZCBsZXQgCm9uZSBlbmNvZGVyIGNv
-bm5lY3QgdG8gYW5vdGhlciBlbmNvZGVyLgoKU3VjaCBhIHRoaW5nIHdvdWxkIGFsc28gaGVscCB1
-cyB1bmlmeSBpMmMgc2xhdmUgZW5jb2RlcnMgYW5kIGJyaWRnZSAKZHJpdmVycyB0b28uIEEgY2hp
-cCBkZXNpZ25lZCBhcyBhbiBpMmMgc2xhdmUgZW5jb2RlciB3b3VsZCB3b3JrIHdlbGwgCndpdGgg
-YSBkcm0gZHJpdmVyIHRoYXQgZG9lc24ndCBoYXZlIGFuIGVuY29kZXIsIGJ1dCB3b24ndCB3b3Jr
-IGZvciBTb0NzIApTb0NzIHRoYXQgYWxyZWFkeSBoYXZlIGFuIGVuY29kZXIgYW5kIHdlcmUgZXhw
-ZWN0aW5nIGEgYnJpZGdlIGVudGl0eSAKaW5zdGVhZC4KCkFyY2hpdAoKLS0gClF1YWxjb21tIElu
-bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAph
-IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 2015/4/15 18:04, Arnd Bergmann wrote:
+> On Wednesday 15 April 2015 14:04:01 Zhou Wang wrote:
+>> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> 
+> Please provide a changelog with every patch you do
+
+Will add the related changelog next version.
+
+> 
+>> ---
+>>  drivers/pci/host/pcie-designware.c | 44 +++++++++++++++++++++++++++++++++++---
+>>  1 file changed, 41 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+>> index 17ca986..e88a7d9 100644
+>> --- a/drivers/pci/host/pcie-designware.c
+>> +++ b/drivers/pci/host/pcie-designware.c
+>> @@ -31,6 +32,7 @@
+>>  #define PORT_LINK_MODE_1_LANES		(0x1 << 16)
+>>  #define PORT_LINK_MODE_2_LANES		(0x3 << 16)
+>>  #define PORT_LINK_MODE_4_LANES		(0x7 << 16)
+>> +#define PORT_LINK_MODE_8_LANES		(0xf << 16)
+>>  
+>>  #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
+>>  #define PORT_LOGIC_SPEED_CHANGE		(0x1 << 17)
+>>
+>> @@ -38,6 +40,7 @@
+>>  #define PORT_LOGIC_LINK_WIDTH_1_LANES	(0x1 << 8)
+>>  #define PORT_LOGIC_LINK_WIDTH_2_LANES	(0x2 << 8)
+>>  #define PORT_LOGIC_LINK_WIDTH_4_LANES	(0x4 << 8)
+>> +#define PORT_LOGIC_LINK_WIDTH_8_LANES	(0x8 << 8)
+>>  
+>>  #define PCIE_MSI_ADDR_LO		0x820
+>>  #define PCIE_MSI_ADDR_HI		0x824
+> 
+> This seems unrelated to arm64 support, so put that in a separate patch
+> 
+> 
+
+Yes, I will put the PCIe X8 support code in another patch.
+
+>> @@ -68,14 +71,19 @@
+>>  #define PCIE_ATU_UPPER_TARGET		0x91C
+>>  
+>>  static struct hw_pci dw_pci;
+>> +static struct pci_ops dw_pcie_ops;
+>>  
+>>  static unsigned long global_io_offset;
+>>  
+>> -static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
+>> +static inline struct pcie_port *sys_to_pcie(void *sys)
+>>  {
+>> -	BUG_ON(!sys->private_data);
+>> +#ifdef CONFIG_ARM
+>> +	pci_sys_data *sys_data = (struct pci_sys_data *)sys;
+>>  
+>> -	return sys->private_data;
+>> +	BUG_ON(!sys->private_data);
+>> +	return sys_data->private_data;
+>> +#endif
+>> +	return (struct pcie_port *)sys;
+>>  }
+>>  
+>>  int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
+> 
+> Yes, I guess this is the best workaround for now, and we should be able to
+> drop that arm32 specific section soon.
+> 
+>> @@ -502,6 +510,27 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>>  	val |= PORT_LOGIC_SPEED_CHANGE;
+>>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+>>  
+>> +#ifdef CONFIG_ARM64
+>> +	struct pci_bus *bus;
+>> +	LIST_HEAD(res);
+>> +
+>> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
+>> +				  pp, &res);
+>> +	if (!bus)
+>> +		return -ENOMEM;
+>> +
+>> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
+>> +
+>> +	pci_scan_child_bus(bus);
+>> +	pci_assign_unassigned_bus_resources(bus);
+>> +	pci_bus_add_devices(bus);
+>> +#endif
+>> +
+>> +#ifdef CONFIG_ARM
+>>  #ifdef CONFIG_PCI_MSI
+>>  	dw_pcie_msi_chip.dev = pp->dev;
+>>  	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
+>> @@ -514,6 +543,7 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>>  #ifdef CONFIG_PCI_DOMAINS
+>>  	dw_pci.domain++;
+>>  #endif
+>> +#endif
+>>  
+> 
+> I think here we should move everything to the new model and do it the
+> same way on ARM, except for setting the sysdata pointer.
+> 
+>> @@ -704,6 +734,7 @@ static struct pci_ops dw_pcie_ops = {
+>>  	.write = dw_pcie_wr_conf,
+>>  };
+>>  
+>> +#ifdef CONFIG_ARM
+>>  static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+>>  {
+>>  	struct pcie_port *pp;
+>> @@ -761,6 +792,7 @@ static struct hw_pci dw_pci = {
+>>  	.scan		= dw_pcie_scan_bus,
+>>  	.map_irq	= dw_pcie_map_irq,
+>>  };
+>> +#endif
+>>  
+>>  void dw_pcie_setup_rc(struct pcie_port *pp)
+> 
+> Same here, just remove the dw_pcie_setup function and dw_pci structure
+> and use the arm64 implementation.
+> 
+>> @@ -781,6 +813,9 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>  	case 4:
+>>  		val |= PORT_LINK_MODE_4_LANES;
+>>  		break;
+>> +	case 8:
+>> +		val |= PORT_LINK_MODE_8_LANES;
+>> +		break;
+>>  	}
+>>  	dw_pcie_writel_rc(pp, val, PCIE_PORT_LINK_CONTROL);
+>>  
+>> @@ -797,6 +832,9 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>  	case 4:
+>>  		val |= PORT_LOGIC_LINK_WIDTH_4_LANES;
+>>  		break;
+>> +	case 8:
+>> +		val |= PORT_LOGIC_LINK_WIDTH_8_LANES;
+>> +		break;
+>>  	}
+>>  	dw_pcie_writel_rc(pp, val, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> 
+> Again, separate patch.
+> 
+> I've just tried to come up with a nicer way of doing all this, can
+> you try the experimental patch below?
+> 
+> 	Arnd
+> 
+
+Sure, I will try the patch below. I think it can work well in my Hisilicon
+D02 board. But I don't have arm32 PCIe related board to test. It will be helpful
+if someone could help to test it.
+
+Thanks for your comments, Arnd.
+
+Regards,
+Zhou
+
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 2e9f84fdd9ce..4ef2ca8e3404 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -67,7 +67,7 @@
+>  #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
+>  #define PCIE_ATU_UPPER_TARGET		0x91C
+>  
+> -static struct hw_pci dw_pci;
+> +static struct pci_ops dw_pcie_ops;
+>  
+>  static unsigned long global_io_offset;
+>  
+> @@ -238,7 +238,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
+>  static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+>  {
+>  	int irq, pos0, i;
+> -	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
+> +	struct pcie_port *pp = desc->dev->bus->sysdata;
+>  
+>  	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
+>  				       order_base_2(no_irqs));
+> @@ -281,7 +281,7 @@ static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
+>  {
+>  	int irq, pos;
+>  	struct msi_msg msg;
+> -	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
+> +	struct pcie_port *pp = pdev->bus->sysdata;
+>  
+>  	if (desc->msi_attrib.is_msix)
+>  		return -EINVAL;
+> @@ -310,7 +310,7 @@ static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
+>  {
+>  	struct irq_data *data = irq_get_irq_data(irq);
+>  	struct msi_desc *msi = irq_data_get_msi(data);
+> -	struct pcie_port *pp = sys_to_pcie(msi->dev->bus->sysdata);
+> +	struct pcie_port *pp = msi->dev->bus->sysdata;
+>  
+>  	clear_irq_range(pp, irq, 1, data->hwirq);
+>  }
+> @@ -348,7 +348,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	struct platform_device *pdev = to_platform_device(pp->dev);
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+> +	struct pci_bus *bus;
+>  	struct resource *cfg_res;
+> +	LIST_HEAD(res);
+>  	u32 val, na, ns;
+>  	const __be32 *addrp;
+>  	int i, index, ret;
+> @@ -502,15 +504,42 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	val |= PORT_LOGIC_SPEED_CHANGE;
+>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+>  
+> -#ifdef CONFIG_PCI_MSI
+> -	dw_pcie_msi_chip.dev = pp->dev;
+> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
+> -#endif
+> +#ifdef CONFIG_ARM
+> +	/* FIXME: we should really be able to use
+> +	 * of_pci_get_host_bridge_resources on arm32 as well,
+> +	 * but the conversion needs some more testing */
+> +	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+> +		sys->io_offset = global_io_offset - pp->io_bus_addr;
+> +		pci_ioremap_io(global_io_offset, pp->io_base);
+> +		global_io_offset += SZ_64K;
+> +		pci_add_resource_offset(&sys->resources, &pp->io,
+> +					sys->io_offset);
+> +	}
+> +
+> +	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
+> +	pci_add_resource_offset(&res, &pp->mem, sys->mem_offset);
+> +	pci_add_resource(&res, &pp->busn);
+> +#else
+> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
+> +	if (ret)
+> +		return ret;
+> +#endif	
+> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
+> +				  pp, &res);
+> +	if (!bus)
+> +		return -ENOMEM;
+> +
+> +	/* support old dtbs that incorrectly describe IRQs */
+> +	pci_fixup_irqs(pcibios_swizzle, pcibios_map_irq);
+> +
+> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
+>  
+> -	dw_pci.nr_controllers = 1;
+> -	dw_pci.private_data = (void **)&pp;
+> +	pci_scan_child_bus(bus);
+> +	if (pp->ops->scan_bus)
+> +		pp->ops->scan_bus(pp);
+>  
+> -	pci_common_init_dev(pp->dev, &dw_pci);
+> +	pci_assign_unassigned_bus_resources(bus);
+> +	pci_bus_add_devices(bus);
+>  
+>  	return 0;
+>  }
+> @@ -653,7 +682,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
+>  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+>  			int size, u32 *val)
+>  {
+> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
+> +	struct pcie_port *pp = bus->sysdata;
+>  	int ret;
+>  
+>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
+> @@ -677,7 +706,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+>  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+>  			int where, int size, u32 val)
+>  {
+> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
+> +	struct pcie_port *pp = bus->sysdata;
+>  	int ret;
+>  
+>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
+> @@ -701,64 +730,6 @@ static struct pci_ops dw_pcie_ops = {
+>  	.write = dw_pcie_wr_conf,
+>  };
+>  
+> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+> -{
+> -	struct pcie_port *pp;
+> -
+> -	pp = sys_to_pcie(sys);
+> -
+> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
+> -		pci_ioremap_io(global_io_offset, pp->io_base);
+> -		global_io_offset += SZ_64K;
+> -		pci_add_resource_offset(&sys->resources, &pp->io,
+> -					sys->io_offset);
+> -	}
+> -
+> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
+> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
+> -	pci_add_resource(&sys->resources, &pp->busn);
+> -
+> -	return 1;
+> -}
+> -
+> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> -{
+> -	struct pci_bus *bus;
+> -	struct pcie_port *pp = sys_to_pcie(sys);
+> -
+> -	pp->root_bus_nr = sys->busnr;
+> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
+> -				  &dw_pcie_ops, sys, &sys->resources);
+> -	if (!bus)
+> -		return NULL;
+> -
+> -	pci_scan_child_bus(bus);
+> -
+> -	if (bus && pp->ops->scan_bus)
+> -		pp->ops->scan_bus(pp);
+> -
+> -	return bus;
+> -}
+> -
+> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> -{
+> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
+> -	int irq;
+> -
+> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
+> -	if (!irq)
+> -		irq = pp->irq;
+> -
+> -	return irq;
+> -}
+> -
+> -static struct hw_pci dw_pci = {
+> -	.setup		= dw_pcie_setup,
+> -	.scan		= dw_pcie_scan_bus,
+> -	.map_irq	= dw_pcie_map_irq,
+> -};
+> -
+>  void dw_pcie_setup_rc(struct pcie_port *pp)
+>  {
+>  	u32 val;
+> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+> index d0bbd276840d..be7e4b72fbfc 100644
+> --- a/drivers/pci/host/pcie-designware.h
+> +++ b/drivers/pci/host/pcie-designware.h
+> @@ -23,6 +23,15 @@
+>  #define MAX_MSI_CTRLS			(MAX_MSI_IRQS / 32)
+>  
+>  struct pcie_port {
+> +#ifdef CONFIG_ARM
+> +	/*
+> +	 * this is a temporary hack to let the driver work on
+> +	 * both arm32 and arm64. it can be removed after the
+> +	 * arm32 cleanup is complete and bios32.c has stopped
+> +	 * referencing host->pci_sys_data.
+> +	 */
+> +	struct pci_sys_data	dummy;
+> +#endif
+>  	struct device		*dev;
+>  	u8			root_bus_nr;
+>  	void __iomem		*dbi_base;
+> 
+> 
+> .
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
