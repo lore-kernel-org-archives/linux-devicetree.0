@@ -1,37 +1,44 @@
-From: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
-Subject: [RFC/PATCH v2 3/5] devicetree: bindings: Add new cpuidle enable method for Renesas R-car SoCs
-Date: Thu, 16 Apr 2015 19:35:38 +0900
-Message-ID: <1429180540-5692-4-git-send-email-keita.kobayashi.ym@renesas.com>
-References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] [RFC] OF: probe order dependency aware of_platform_populate
+Date: Thu, 16 Apr 2015 06:40:24 -0400
+Message-ID: <552F9198.4030902@hurleysoftware.com>
+References: <1418731891-24768-1-git-send-email-pantelis.antoniou@konsulko.com> <20150319191834.5346CC40A35@trevor.secretlab.ca> <8E250936-B06C-40B4-8C34-557D2361CAF6@konsulko.com> <CAMuHMdU=Zh00DnkAdAJBaAVn8LthYoRoGCVdFAhxQmWaEGHfkw@mail.gmail.com> <1B3AF599-4A64-4FB0-BFB0-0C0544917C6C@konsulko.com> <CAMuHMdWgAzkAJ-ix9NYc46yJRGPHCpmimOjF=HUYprxdgtzkaw@mail.gmail.com> <20150402023803.E6A4DC4076D@trevor.secretlab.ca> <CAMuHMdWVTsog2_9iyUEBWm-7xonvNibTTbOY5YxvpAhffUXdcg@mail.gmail.com> <CAL_Jsq+9rYTvxX=Y6md5hgNhcBjbuM1m8Q3Y0gNkrV6yaDBskg@mail.gmail.com> <552E7309.8020505@hurleysoftware.com> <CAL_JsqJR4NFtwoUsPq3S7nyCBL6v+skarrXA+wvgzy-gR5fKWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: horms@verge.net.au, rjw@rjwysocki.net, daniel.lezcano@linaro.org
-Cc: linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJR4NFtwoUsPq3S7nyCBL6v+skarrXA+wvgzy-gR5fKWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the ARM CPUs Device Tree binding to document a new
-enable method of Renesas cpuidle.
-
-Signed-off-by: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 8b9e0a9..663ee11 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -196,6 +196,7 @@ nodes to be present and contain the properties described below.
- 			    "qcom,gcc-msm8660"
- 			    "qcom,kpss-acc-v1"
- 			    "qcom,kpss-acc-v2"
-+			    "renesas,rcar-idle"
- 			    "rockchip,rk3066-smp"
+On 04/15/2015 10:35 AM, Rob Herring wrote:
+> On Wed, Apr 15, 2015 at 9:17 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
  
- 	- cpu-release-addr
--- 
-1.9.1
+>> 2. Should DT-specific drivers not be using irq_of_parse_and_map()?
+>>    On probe failure irq_dispose_mapping() will be junking the mapping,
+>>    thus invalidating the irq assignment in the platform resource table,
+>>    which breaks platform drivers which might otherwise probe successfully.
+> 
+> Generally no, they should not use irq_of_parse_and_map as we want
+> drivers to work with platform_data, DT, ACPI, or Bob's Firmware
+> Interface. I think most users are PPC drivers which don't have so much
+> of the probe ordering problems.
 
+Apologies for hijacking this thread for a moment.
+
+If of_device_alloc() creates the irq mapping, and no driver probes succeed,
+what is disposing the mapping?
+
+Similarly, if a platform driver fails its probe after platform_get_irq()
+what should dispose of that mapping?
+
+Regards,
+Peter Hurley
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
