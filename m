@@ -1,67 +1,68 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH] ARM: dts: dra7: Fix efuse register size for ABB
-Date: Thu, 16 Apr 2015 16:56:33 -0500
-Message-ID: <1429221394-18896-1-git-send-email-nm@ti.com>
+From: Matt Sealey <neko@bakuhatsu.net>
+Subject: Re: [RFC PATCH 0/5] Add smp booting support for Qualcomm ARMv8 SoCs
+Date: Thu, 16 Apr 2015 17:03:12 -0500
+Message-ID: <CAHCPf3uf+VP5NuEnwABQefeLLm07xb1gwa-tNvLGug1j=Wi-Jg@mail.gmail.com>
+References: <1428601031-5366-1-git-send-email-galak@codeaurora.org>
+	<20150410100529.GA6854@e104818-lin.cambridge.arm.com>
+	<20150414163613.GM28709@leverpostej>
+	<07185B2C-3F37-4E70-9096-1EF5EA8D68CE@codeaurora.org>
+	<20150414211720.GA56647@MBP>
+	<CAF6AEGtoxNrCoxT5n0CXmKMnL-YprJ3DkAuM4Myi87WMxPqBGw@mail.gmail.com>
+	<20150415133403.GB26099@e104818-lin.cambridge.arm.com>
+	<CAF6AEGucYT4LHkFggR0fO_c7gZe7hD7STx1xwKrOvwsnnFbw7Q@mail.gmail.com>
+	<20150416152121.GE819@e104818-lin.cambridge.arm.com>
+	<CAF6AEGt3bf70MUWFU_kqtc8KDR09tMUCkXbqOq0SpOXU44moTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Matt Gessner <Matt.Gessner@windriver.com>, Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGt3bf70MUWFU_kqtc8KDR09tMUCkXbqOq0SpOXU44moTg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "abhimany@codeaurora.org" <abhimany@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix a typo in DRA7 dtsi where 12 bytes are needed for register
-description of ABB efuse registers, however only 8 bytes are provided
-to map. For some weird reason, this does not generate abort at offset
-0x8, probably due to default maps already provided in io.c for the bus
-register ranges.
+Hi Rob,
 
-Reported-by: Matt Gessner <Matt.Gessner@windriver.com>
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Thu, Apr 16, 2015 at 12:17 PM, Rob Clark <robdclark@gmail.com> wrote:
+> On Thu, Apr 16, 2015 at 11:21 AM, Catalin Marinas
+> <catalin.marinas@arm.com> wrote:
+>
+>> But I'm definitely going to discourage companies like Qualcomm
+>> deliberately ignoring the existing booting protocols while trying to get
+>> their code upstream. This patch series is posted by Qualcomm without
+>> providing any technical reason on why they don't want to/couldn't use
+>> PSCI (well, I guess there is no technical reason but they may not care
+>> much about mainline either).
+>
+> Sure.. just trying to make sure the wrong people don't end up being
+> the ones that suffer.  I would assume/expect that it is at least
+> possible for qcom to change firmware/bootloader for their dev boards
+> and future devices and whatnot, whether they grumble about it or not.
+> But I guess most of what the general public has are devices w/ signed
+> fw, which is why "go fix your firmware" is an option that sets off
+> alarm bells for me.
+>
+> I guess the first device where this will matter to me and a large
+> group of community folks would be the dragonboard 410c..  *hopefully*
+> it does not require signed firmware or at least qcom could make
+> available signed firmware which supports psci..
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 5332b57b4950..92b8bb873f43 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -911,7 +911,7 @@
- 			ti,clock-cycles = <16>;
- 
- 			reg = <0x4ae07ddc 0x4>, <0x4ae07de0 0x4>,
--			      <0x4ae06014 0x4>, <0x4a003b20 0x8>,
-+			      <0x4ae06014 0x4>, <0x4a003b20 0xc>,
- 			      <0x4ae0c158 0x4>;
- 			reg-names = "setup-address", "control-address",
- 				    "int-address", "efuse-address",
-@@ -944,7 +944,7 @@
- 			ti,clock-cycles = <16>;
- 
- 			reg = <0x4ae07e34 0x4>, <0x4ae07e24 0x4>,
--			      <0x4ae06010 0x4>, <0x4a0025cc 0x8>,
-+			      <0x4ae06010 0x4>, <0x4a0025cc 0xc>,
- 			      <0x4a002470 0x4>;
- 			reg-names = "setup-address", "control-address",
- 				    "int-address", "efuse-address",
-@@ -977,7 +977,7 @@
- 			ti,clock-cycles = <16>;
- 
- 			reg = <0x4ae07e30 0x4>, <0x4ae07e20 0x4>,
--			      <0x4ae06010 0x4>, <0x4a0025e0 0x8>,
-+			      <0x4ae06010 0x4>, <0x4a0025e0 0xc>,
- 			      <0x4a00246c 0x4>;
- 			reg-names = "setup-address", "control-address",
- 				    "int-address", "efuse-address",
-@@ -1010,7 +1010,7 @@
- 			ti,clock-cycles = <16>;
- 
- 			reg = <0x4ae07de4 0x4>, <0x4ae07de8 0x4>,
--			      <0x4ae06010 0x4>, <0x4a003b08 0x8>,
-+			      <0x4ae06010 0x4>, <0x4a003b08 0xc>,
- 			      <0x4ae0c154 0x4>;
- 			reg-names = "setup-address", "control-address",
- 				    "int-address", "efuse-address",
--- 
-1.7.9.5
+For development boards, one would hope there is a way to sign your own firmware.
+You can't expect - even for a phone SoC - that the development boards require
+entering some kind of Faustian contract for development of low-level
+software. What if
+someone wants to develop a platform that doesn't require signing?
+
+That said most of these dev boards have completely mangled JTAG anyway, and
+I know Inforce (and Hardkernel, and so on) love their barely-ever-updated custom
+firmware binaries, so..
+
+The best thing would be to pick up one of those boards and port a PSCI firmware
+to it (ATF or your own..) and just embarrass the SoC vendor by having better
+mainline power management support (implemented by 10 lines in a device tree)
+with the complicated code hidden away behind the scenes there, like it
+should have
+been done in the first place..
+
+Ta.
+Matt Sealey <neko@bakuhatsu.net>
