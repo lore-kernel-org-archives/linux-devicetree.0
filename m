@@ -1,240 +1,221 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH net-next 0/6] net: hip04: fix some problem for hip04 drivers
-Date: Thu, 16 Apr 2015 14:28:14 +0800
-Message-ID: <552F567E.6060808@huawei.com>
-References: <1429101008-9464-1-git-send-email-dingtianhong@huawei.com> <3635761.IYy1QBa93a@wuerfel>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 2/4] extcon: usb-gpio: add support for VBUS detection
+Date: Thu, 16 Apr 2015 16:00:39 +0900
+Message-ID: <552F5E17.5020902@samsung.com>
+References: <55278DD3.3020409@samsung.com> <55279550.1060609@samsung.com>
+ <552CE579.6060702@ti.com> <552CE5C0.3010207@ti.com>
+ <552CEC97.1050205@samsung.com> <552CEE42.1050907@ti.com>
+ <552CFA1E.5070400@samsung.com> <20150415032734.GA29095@shlinux2>
+ <552E1862.6090709@ti.com> <552E2EBF.5090906@samsung.com>
+ <20150416015922.GB22269@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3635761.IYy1QBa93a@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20150416015922.GB22269@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>, "Balbi, Felipe" <balbi@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>, Robert Baldyga <r.baldyga@samsung.com>, myungjoo.ham@samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 2015/4/15 22:25, Arnd Bergmann wrote:
-> On Wednesday 15 April 2015 20:30:02 Ding Tianhong wrote:
->> The patches series was used to fix the issues of the hip04 driver, and added
->> some optimizations according to some good suggestion. 
+Hi Peter,
+
+On 04/16/2015 10:59 AM, Peter Chen wrote:
+> On Wed, Apr 15, 2015 at 06:26:23PM +0900, Chanwoo Choi wrote:
+>> Hi Roger and Peter,
 >>
+>> On 04/15/2015 04:50 PM, Roger Quadros wrote:
+>>> On 15/04/15 06:27, Peter Chen wrote:
+>>>> On Tue, Apr 14, 2015 at 08:29:34PM +0900, Chanwoo Choi wrote:
+>>>>> On 04/14/2015 07:38 PM, Roger Quadros wrote:
+>>>>>> On 14/04/15 13:31, Chanwoo Choi wrote:
+>>>>>>> On 04/14/2015 07:02 PM, Roger Quadros wrote:
+>>>>>>>> Fixed Kishon's id.
+>>>>>>>>
+>>>>>>>> On 14/04/15 13:01, Roger Quadros wrote:
+>>>>>>>>> On 10/04/15 12:18, Chanwoo Choi wrote:
+>>>>>>>>>> On 04/10/2015 05:46 PM, Robert Baldyga wrote:
+>>>>>>>>>>> On 04/10/2015 10:10 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>> On 04/10/2015 04:45 PM, Robert Baldyga wrote:
+>>>>>>>>>>>>> On 04/10/2015 09:17 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 04/09/2015 06:24 PM, Robert Baldyga wrote:
+>>>>>>>>>>>>>>> Hi Chanwoo,
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> On 04/09/2015 11:07 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> On 04/09/2015 04:57 PM, Robert Baldyga wrote:
+>>>>>>>>>>>>>>>>> Hi Chanwoo,
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> On 04/09/2015 04:12 AM, Chanwoo Choi wrote:
+>>>>>>>>>>>>>>>>>> Hi Robert,
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> [snip]
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> But, I have one question about case[3]
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> If id is low and vbus is high, this patch will update the state of both USB and USB-HOST cable as attached state.
+>>>>>>>>>>>>>>>>>> Is it possible that two different cables (both USB and USB-HOST) are connected to one port simultaneously?
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> It's because state of single USB cable connection cannot be completely
+>>>>>>>>>>>>>>>>> described using single extcon cable. USB cable state has two bits (VBUS
+>>>>>>>>>>>>>>>>> and ID), so we need to use two cables for single cable connection. We
+>>>>>>>>>>>>>>>>> use following convention:
+>>>>>>>>>>>>>>>>> cable "USB" = VBUS
+>>>>>>>>>>>>>>>>> cable "USB-HOST" = !ID.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> I think that extcon provider driver have to update the only one cable state
+>>>>>>>>>>>>>>>> of either USB or USB-HOST because USB and USB-HOST feature can not be used
+>>>>>>>>>>>>>>>> at the same time through one h/w port.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> If extcon-usb-gpio.c update two connected event of both USB and USB-HOST cable
+>>>>>>>>>>>>>>>> at the same time, the extcon consumer driver can not decide what handle either USB or USB-HOST.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> It can. USB OTG allows for that. Moreover device can be host even if
+>>>>>>>>>>>>>>> ID=1 (so detected cable type is USB device), or peripheral when ID=0 (so
+>>>>>>>>>>>>>>> detected cable type is USB host). Devices would need to have complete
+>>>>>>>>>>>>>>> information about USB cable connection, because OTG state machine needs
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> As I knew, USB OTG port don't send the attached cable of both USB and USB-HOST
+>>>>>>>>>>>>>> at the same time. The case3 in your patch update two cable state about one h/w port.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> It's because simple "USB" or "USB-HOST" means nothing for USB OTG
+>>>>>>>>>>>>> machine. It needs to know exact VBUS and ID states, which cannot be
+>>>>>>>>>>>>> concluded basing on cable type only. That's why I have used "USB-HOST"
+>>>>>>>>>>>>> name together with "USB" to pass additional information about USB cable
+>>>>>>>>>>>>> connection.
+>>>>>>>>>>>>
+>>>>>>>>>>>> I think this method is not proper to support this case.
+>>>>>>>>>>>> It may cause the confusion about other case using USB/USB-HOST cable state
+>>>>>>>>>>>> except of you commented case.
+>>>>>>>>>>>
+>>>>>>>>>>> That's why I finally proposed to use "USB-ID" and "USB-VBUS" in parallel
+>>>>>>>>>>> with old names. It seems to be simpler solution than adding new
+>>>>>>>>>>> mechanism notifying about VBUS and ID states changes.
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> As I commented on previous reply, I don't agree to use 'USB-ID' and 'USB-VBUS'.
+>>>>>>>>>> If we add new strange 'USB-ID' and 'USB-VBUS' name, we would add non-general cable
+>>>>>>>>>> name continuoulsy.
+>>>>>>>>>>
+>>>>>>>>>> I think that extcon core provide the helper API to get the value of VBUS.
+>>>>>>>>>> But I need to consider it.
+>>>>>>>>>
+>>>>>>>>> Now it is starting to look like existing extcon states are not suitable for USB/PHY drivers to deliver
+>>>>>>>>> VBUS and ID information reliably.
+>>>>>>>>> This is because based on your comments the "USB" and "USB-HOST" states look like some fuzzy states
+>>>>>>>>> and have no direct correspondence with "VBUS" and "ID". The fact that they can't become
+>>>>>>>>> attached simultaneously makes me conclude that "USB" and "USB-HOST" cable states are really 
+>>>>>>>>> capturing only the ID pin state.
+>>>>>>>>>
+>>>>>>>>> I can suggest the following options
+>>>>>>>>> a) let "USB" and "USB-HOST" only indicate ID pin status. Add a new cable state for "VBUS" notification.
+>>>>>>>>> Maybe call it "USB-POWER" or something.
+>>>>>>>
+>>>>>>> We must discuss it before using the new cable name
+>>>>>>> such as "USB-POWER", "USB-ID" and "USB-VBUS".
+>>>>>>
+>>>>>> I didn't say to add "USB-ID" or "USB-VBUS". solution (a) was to have the following
+>>>>>
+>>>>> Right. Robert suggested the "USB-ID" and "USB-VBUS" cable name on previous mail in mail thread.
+>>>>
+>>>> From USB/USB-PHY driver point, it needs to know id and vbus value
+>>>> for their internal logic, so as extcon users, the cable name
+>>>> is better to reflect meaning of id and vbus, like "USB-ID" and "USB-VBUS",
+>>>> if the power is from vbus pin at USB cable, I don't think we need another
+>>>> cable name "USB-POWER" even the USB/USB-PHY driver don't need it.
+>>>
+>>> I agree as well that this is the *best* option for USB case. Just because Chanwoo was
+>>> objecting these names I suggested "USB-POWER".
+>>>
+>>> Chanwoo, can we simply get rid of "USB" and "USB-HOST" cables and move to
+>>> "USB-ID" and "USB-VBUS"?
+>>
+>> I'm wondering about changing the previous cable name from 'USB'/'USB-HOST'
+>> to 'USB-ID/USB-VBUS' because extcon framework update the state of cable by
+>> using uevent and the user-space process would catch the changed state by
+>> using cable name ('USB'/'USB-HOST').
+>>
+>> The user-space process may not consider the both id and vbus of USB.
+>> If 'USB-ID'/'USB-VBUS' cable name is used instead of 'USB'/'USB-HOST',
+>> It may cause the confusion about what is meaning of cable name
+>> on user-space process.
+> 
+>>From the user point, maybe the name of 'USB-OTG' is more suitable
+> due to below reasons:
+> - The users usually call this Micro-AB cable as 'USB-OTG' cable
+> - When this Micro-AB cable is inserted, the current port may will work as
+> host role, but if OTG HNP is supported, this port may be switched to device
+> role on the fly, eg, use case like Apple Carplay.
+
+OK. I agree that using the 'USB-OTG' cable name instead of 'USB-HOST'.
+- 'USB' for usb device
+- 'USB-HOST' -> 'USB-OTG' for usb host
+
+> 
+>>
+>> So,
+>> I prefer to use existing 'USB' and 'USB-HOST' cable name.
+>> and then want to add additional method to get the vbus state.
+>>
+>> I think two following method to get the vbus state.
+>> 1) Add the extcon_{get|set}_vbus_state()
+>> - extcon_{get|set}_vbus_state()
+>> - the list of of return value
+>> 	#define EXTCON_USB_VBUS_OFF	0
+>> 	#define EXTCON_USB_VBUS_ON	1
+>>
+>> When USB/USB-HOST is attached and receive the notification onextcon consumer driver
+>> ,extcon consumer driver would get the vbus state by extcon_get_vbus_state().
+>>
+>> 2) Add the notifier chain for vbus state update
+>> - extcon_{register|unregister}_vbus_notifier()
+>> - the list of notifier event
+>> 	#define EXTCON_USB_VBUS_OFF	0
+>> 	#define EXTCON_USB_VBUS_ON	1
 >>
 > 
-> Thanks, that looks much better, except for patch 4 that I commented on.
+> Ok, from USB point, external id/vbus value can't decide
+> which role the controller will be, the controller driver 
+> will decide role according to many things, eg, user configurations,
+> id/vbus value, OTG HNP, etc.
 > 
-I will check and fix it.
+> So, from USB controller/phy driver, it doesn't care which cable is
+> inserted, it cares about id/vbus value. Eg, it can get id/vbus value
+> and it will be notified when the id/vbus value has changed.
 
-> I had at some point sent a patch that is archived at
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318120.html
-> 
-> I believe that one is also still needed, but I have not tested whether it
-> is correct. Can you have a look at the patch from back then and see if it
-> works, of if you find something wrong about it?
-> 
-> I'm sending the unmodified patch from then here again for you to apply
-> or comment. It will have to be rebased on top of your current changes.
-> 
-> 	Arnd
-> 
+OK, I change the notifier name and add notifier events as following:
 
-Thanks for the suggestion, I notices that I miss this patch in my series from the maillist, 
-I need time to check the code and try to test it, thanks for the work.:)
+- extcon_{register|unregister}_usb_notifier(struct extcon_dev *edev, struct notifier_block *nb);
+- list of notifier events
+	#define EXTCON_USB_ID_L_VBUS_L	0	/* ID low  and VBUS low */
+	#define EXTCON_USB_ID_L_VBUS_H	1	/* ID low  and VBUS high */
+	#define EXTCON_USB_ID_H_VBUS_L	2	/* ID high and VBUS low */
+	#define EXTCON_USB_ID_H_VBUS_H	3	/* ID high and VBUS high */
 
-Ding
+I think that we need the opinion of Felipe and Kishon about this notifier chain.
 
-> 8<----
-> Subject: [PATCH] net/hip04: refactor interrupt masking
 > 
-> The hip04 ethernet driver currently acknowledges all interrupts directly
-> in the interrupt handler, and leaves all interrupts except the RX data
-> enabled the whole time. This causes multiple problems:
+>>
+>> 3) add the new cable 'USB-POWER' by Roger suggestion .
+>> - When 'USB-POWER' cable is attached, extcon will update the cable state
+>> 'USB-POWER' means only the vbus state. But, 'USB-POWER' is not h/w cable.
+>> The user-space process would handle this uevent of 'USB-POWER'
+>> such as h/w cable's uevent. I think it is not clear on the user-space process aspect.
 > 
-> - When more packets come in between the original interrupt and the
->   NAPI poll function, we will get an extraneous RX interrupt as soon
->   as interrupts are enabled again.
-> 
-> - The two error interrupts are by definition combining all errors that
->   may have happened since the last time they were handled, but just
->   acknowledging the irq without dealing with the cause of the condition
->   makes it come back immediately. In particular, when NAPI is intentionally
->   stalling the rx queue, this causes a storm of "rx dropped" messages.  
-> 
-> - The access to the 'reg_inten' field in hip_priv is used for serializing
->   access, but is in fact racy itself.
-> 
-> To deal with these issues, the driver is changed to only acknowledge
-> the IRQ at the point when it is being handled. The RX interrupts now get
-> acked right before reading the number of received frames to keep spurious
-> interrupts to the absolute minimum without losing interrupts.
-> 
-> As there is no tx-complete interrupt, only an informational tx-dropped
-> one, we now ack that in the tx reclaim handler, hoping that clearing
-> the descriptors has also eliminated the error condition.
-> 
-> The only place that reads the reg_inten now just relies on
-> napi_schedule_prep() to return whether NAPI is active or not, and
-> the poll() function is then going to ack and reenabled the IRQ if
-> necessary.
-> 
-> Finally, when we disable interrupts, they are now all disabled
-> together, in order to simplify the logic and to avoid getting
-> rx-dropped interrupts when NAPI is in control of the rx queue.
-> 
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> index 525214ef5984..83773247a368 100644
-> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> @@ -56,6 +56,8 @@
->  #define RCV_DROP                       BIT(7)
->  #define TX_DROP                                BIT(6)
->  #define DEF_INT_ERR                    (RCV_NOBUF | RCV_DROP | TX_DROP)
-> +#define DEF_INT_RX                     (RCV_INT | RCV_NOBUF | RCV_DROP)
-> +#define DEF_INT_TX                     (TX_DROP)
->  #define DEF_INT_MASK                   (RCV_INT | DEF_INT_ERR)
->  
->  /* TX descriptor config */
-> @@ -154,7 +156,6 @@ struct hip04_priv {
->         unsigned int port;
->         unsigned int speed;
->         unsigned int duplex;
-> -       unsigned int reg_inten;
->  
->         struct napi_struct napi;
->         struct net_device *ndev;
-> @@ -303,17 +304,15 @@ static void hip04_mac_enable(struct net_device *ndev)
->         val |= GE_RX_PORT_EN | GE_TX_PORT_EN;
->         writel_relaxed(val, priv->base + GE_PORT_EN);
->  
-> -       /* clear rx int */
-> -       val = RCV_INT;
-> -       writel_relaxed(val, priv->base + PPE_RINT);
-> +       /* clear prior interrupts */
-> +       writel_relaxed(DEF_INT_MASK, priv->base + PPE_RINT);
->  
->         /* config recv int */
->         val = GE_RX_INT_THRESHOLD | GE_RX_TIMEOUT;
->         writel_relaxed(val, priv->base + PPE_CFG_RX_PKT_INT);
->  
->         /* enable interrupt */
-> -       priv->reg_inten = DEF_INT_MASK;
-> -       writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +       writel_relaxed(DEF_INT_MASK, priv->base + PPE_INTEN);
->  }
->  
->  static void hip04_mac_disable(struct net_device *ndev)
-> @@ -322,8 +321,7 @@ static void hip04_mac_disable(struct net_device *ndev)
->         u32 val;
->  
->         /* disable int */
-> -       priv->reg_inten &= ~(DEF_INT_MASK);
-> -       writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +       writel_relaxed(0, priv->base + PPE_INTEN);
->  
->         /* disable tx & rx */
->         val = readl_relaxed(priv->base + GE_PORT_EN);
-> @@ -403,6 +401,8 @@ static int hip04_tx_reclaim(struct net_device *ndev, bool force)
->         priv->tx_tail = tx_tail;
->         smp_wmb(); /* Ensure tx_tail visible to xmit */
->  
-> +       writel_relaxed(DEF_INT_TX, priv->base + PPE_RINT);
-> +
->  out:
->         if (pkts_compl || bytes_compl)
->                 netdev_completed_queue(ndev, pkts_compl, bytes_compl);
-> @@ -458,9 +458,7 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->         if (count >= priv->tx_coalesce_frames) {
->                 if (napi_schedule_prep(&priv->napi)) {
->                         /* disable rx interrupt and timer */
-> -                       priv->reg_inten &= ~(RCV_INT);
-> -                       writel_relaxed(DEF_INT_MASK & ~RCV_INT,
-> -                                      priv->base + PPE_INTEN);
-> +                       writel_relaxed(0, priv->base + PPE_INTEN);
->                         hrtimer_cancel(&priv->tx_coalesce_timer);
->                         __napi_schedule(&priv->napi);
->                 }
-> @@ -478,7 +476,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
->         struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
->         struct net_device *ndev = priv->ndev;
->         struct net_device_stats *stats = &ndev->stats;
-> -       unsigned int cnt = hip04_recv_cnt(priv);
-> +       unsigned int cnt;
->         struct rx_desc *desc;
->         struct sk_buff *skb;
->         unsigned char *buf;
-> @@ -489,6 +487,10 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
->         u16 len;
->         u32 err;
->  
-> +       /* acknowledge interrupts and read status */
-> +       writel_relaxed(DEF_INT_RX, priv->base + PPE_RINT);
-> +       cnt = hip04_recv_cnt(priv);
-> +
->         while (cnt && !last) {
->                 buf = priv->rx_buf[priv->rx_head];
->                 skb = build_skb(buf, priv->rx_buf_size);
-> @@ -539,11 +541,8 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
->                         cnt = hip04_recv_cnt(priv);
->         }
->  
-> -       if (!(priv->reg_inten & RCV_INT)) {
-> -               /* enable rx interrupt */
-> -               priv->reg_inten |= RCV_INT;
-> -               writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> -       }
-> +       /* enable rx interrupt */
-> +       writel_relaxed(DEF_INT_MASK, priv->base + PPE_INTEN);
->         napi_complete(napi);
->  done:
->         /* clean up tx descriptors and start a new timer if necessary */
-> @@ -564,23 +563,21 @@ static irqreturn_t hip04_mac_interrupt(int irq, void *dev_id)
->         if (!ists)
->                 return IRQ_NONE;
->  
-> -       writel_relaxed(DEF_INT_MASK, priv->base + PPE_RINT);
-> -
->         if (unlikely(ists & DEF_INT_ERR)) {
-> -               if (ists & (RCV_NOBUF | RCV_DROP))
-> +               if (ists & (RCV_NOBUF | RCV_DROP)) {
->                         stats->rx_errors++;
->                         stats->rx_dropped++;
-> -                       netdev_err(ndev, "rx drop\n");
-> +                       netdev_dbg(ndev, "rx drop\n");
-> +               }
->                 if (ists & TX_DROP) {
->                         stats->tx_dropped++;
-> -                       netdev_err(ndev, "tx drop\n");
-> +                       netdev_dbg(ndev, "tx drop\n");
->                 }
->         }
->  
-> -       if (ists & RCV_INT && napi_schedule_prep(&priv->napi)) {
-> -               /* disable rx interrupt */
-> -               priv->reg_inten &= ~(RCV_INT);
-> -               writel_relaxed(DEF_INT_MASK & ~RCV_INT, priv->base + PPE_INTEN);
-> +       if (napi_schedule_prep(&priv->napi)) {
-> +               /* disable interrupt */
-> +               writel_relaxed(0, priv->base + PPE_INTEN);
->                 hrtimer_cancel(&priv->tx_coalesce_timer);
->                 __napi_schedule(&priv->napi);
->         }
-> @@ -596,8 +593,7 @@ enum hrtimer_restart tx_done(struct hrtimer *hrtimer)
->  
->         if (napi_schedule_prep(&priv->napi)) {
->                 /* disable rx interrupt */
-> -               priv->reg_inten &= ~(RCV_INT);
-> -               writel_relaxed(DEF_INT_MASK & ~RCV_INT, priv->base + PPE_INTEN);
-> +               writel_relaxed(0, priv->base + PPE_INTEN);
->                 __napi_schedule(&priv->napi);
->         }
->  
-> 
-> .
-> 
+> Would you explain the user for 'USB-POWER', and what it stands for from
+> user point?
 
+IMO, I think '*-POWER' keyword is not standard cable name on the user-space.
+As I commend on upper reply, I agree USB/USB-OTG cable name.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+Thanks,
+Chanwoo Choi
