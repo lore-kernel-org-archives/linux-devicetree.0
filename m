@@ -1,52 +1,39 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: UniPhier: add basic support for UniPhier
- architecture
-Date: Thu, 16 Apr 2015 10:56:31 +0100
-Message-ID: <20150416095631.GY12732@n2100.arm.linux.org.uk>
-References: <1429170038-16757-1-git-send-email-yamada.masahiro@socionext.com>
- <1429170038-16757-2-git-send-email-yamada.masahiro@socionext.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2] power_supply: Add TI BQ24257 charger driver
+Date: Thu, 16 Apr 2015 18:59:50 +0900
+Message-ID: <CAJKOXPfb1TSQ9k+9nXfrefPRxJtsRjVw5WfpcV3DPpse5fzO+g@mail.gmail.com>
+References: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429170038-16757-2-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1429176676-10354-1-git-send-email-laurentiu.palcu@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2015 at 04:40:35PM +0900, Masahiro Yamada wrote:
-> diff --git a/arch/arm/mach-uniphier/platsmp.c b/arch/arm/mach-uniphier/platsmp.c
-> new file mode 100644
-> index 0000000..6b61f8d
-> --- /dev/null
-> +++ b/arch/arm/mach-uniphier/platsmp.c
-> @@ -0,0 +1,78 @@
-> +/*
-> + * Copyright (C) 2015 Socionext Inc.
-> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/sizes.h>
-> +#include <linux/init.h>
-> +#include <asm/io.h>
+2015-04-16 18:31 GMT+09:00 Laurentiu Palcu <laurentiu.palcu@intel.com>:
+> Based on the datasheet found here:
+> http://www.ti.com/lit/ds/symlink/bq24257.pdf
+>
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+> ---
+> Changes since v1:
+>  * removed redundant bq24257_is_writeable_reg();
+>  * made power_supply_desc struct a static const, since it's not changed;
+>
+> laurentiu
+>
+>  .../devicetree/bindings/power/bq24257.txt          |  21 +
+>  drivers/power/Kconfig                              |   7 +
+>  drivers/power/Makefile                             |   1 +
+>  drivers/power/bq24257_charger.c                    | 863 +++++++++++++++++++++
+>  4 files changed, 892 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/bq24257.txt
+>  create mode 100644 drivers/power/bq24257_charger.c
+>
 
-Please use linux/io.h rather than asm/io.h
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
