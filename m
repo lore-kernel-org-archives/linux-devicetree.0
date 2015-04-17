@@ -1,48 +1,87 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: LED subsystem child DT node ref counting
-Date: Fri, 17 Apr 2015 13:03:45 +0200
-Message-ID: <5530E891.20707@samsung.com>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [RESEND PATCH V2 2/2] devicetree: Add bindings for DA9063 OnKey
+Date: Fri, 17 Apr 2015 13:03:20 +0100
+Message-ID: <0041c467a10d678cfde41e82804ddc4703f7f09d.1429272201.git.stwiss.opensource@diasemi.com>
+References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <cover.1429272200.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, INPUT <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-I'd like to clarify whether LED subsystem drivers behave correctly
-or not, regarding child DT nodes reference counting.
-
-Single LED controller can have connected more then one LED to it.
-The LEDs are represented by child DT nodes of the node representing
-the controller (see Documentation/devicetree/bindings/leds).
-
-LED subsystem drivers parse child DT nodes and use the node name,
-or 'label' property string as the LED class device name.
-
-This is usually accomplished like below:
-
-for_each_child_of_node(np, child) {
-     ...
-     led.name = of_get_property(child, "label", NULL) ? : child->name;
+Add device tree bindings for the DA9063 OnKey driver
 
 
-The question is whether reference count of the child node shouldn't
-be increased here with of_node_get(child). Whereas intuitively it could
-be thought of as a right thing to do, empirical experiments don't
-necessary confirm that.
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
-When I print the value of child_node->kobj.kref.refcount.counter
-inside for_each loop it is 3 and and after leaving the loop it gets
-decreased to 2. On driver removal the value is also 2. It means that
-label is available all the time, without increasing child node ref
-counter.
+---
+Changes from PATCH V1 to V2
+---------------------------
+- Remove the circular dependency comment linking patches in the main e-mail
+- Search and replace 'keyword' with 'property' in onkey sub-node description
+- Reformat onkey sub-node content to move the description for disable-key-power
+  into a new optional properties sub-section so it has a more promiment
+  position
 
-I'd like to ask if this is guaranteed to be always true.
+This patch applies against linux-next and v4.0-rc6 
 
+
+ Documentation/devicetree/bindings/mfd/da9063.txt | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
+index 42c6fa6..c671784 100644
+--- a/Documentation/devicetree/bindings/mfd/da9063.txt
++++ b/Documentation/devicetree/bindings/mfd/da9063.txt
+@@ -2,9 +2,10 @@
+ 
+ DA9093 consists of a large and varied group of sub-devices (I2C Only):
+ 
+-Device                   Supply Names    Description
+-------                   ------------    -----------
++Device			 Supply Names	 Description
++------			 ------------	 -----------
+ da9063-regulator        :               : LDOs & BUCKs
++da9063-onkey            :               : On Key
+ da9063-rtc              :               : Real-Time Clock
+ da9063-watchdog         :               : Watchdog
+ 
+@@ -51,6 +52,18 @@ Sub-nodes:
+   the DA9063. There are currently no entries in this binding, however
+   compatible = "dlg,da9063-rtc" should be added if a node is created.
+ 
++- onkey : This node defines the OnKey settings for controlling the key
++  functionality of the device. The node should contain the compatible property
++  with the value "dlg,da9063-onkey".
++
++  Optional onkey properties:
++
++  - dlg,disable-key-power : Disable power-down using a long key-press. If this
++    entry exists the OnKey driver will remove support for the KEY_POWER key
++    press. If this entry does not exist then by default the key-press
++    triggered power down is enabled and the OnKey will support both KEY_POWER
++    and KEY_SLEEP.
++
+ - watchdog : This node defines settings for the Watchdog timer associated
+   with the DA9063. There are currently no entries in this binding, however
+   compatible = "dlg,da9063-watchdog" should be added if a node is created.
+@@ -73,6 +86,11 @@ Example:
+ 			compatible = "dlg,da9063-watchdog";
+ 		};
+ 
++		onkey {
++			compatible = "dlg,da9063-onkey";
++			dlg,disable-key-power;
++		};
++
+ 		regulators {
+ 			DA9063_BCORE1: bcore1 {
+ 				regulator-name = "BCORE1";
 -- 
-Best Regards,
-Jacek Anaszewski
+end-of-patch for RESEND PATCH V2
+
