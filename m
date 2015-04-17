@@ -1,66 +1,91 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Fri, 17 Apr 2015 10:39:46 +0200
-Message-ID: <20150417103946.2a46c243@bbrezillon>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150410135056.GB28873@io.lakedaemon.net>
-	<20150410171148.07bc9429@bbrezillon>
-	<20150410223008.GA18660@io.lakedaemon.net>
-	<552B8EC4.209@free-electrons.com>
-	<20150413124711.GI18660@io.lakedaemon.net>
-	<87r3rom2qu.fsf@natisbad.org>
-	<20150413201146.GL18660@io.lakedaemon.net>
-	<20150417103356.6ce78145@bbrezillon>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3] dmaengine: xgene-dma: Fix sparse wannings and coccinelle warnings
+Date: Fri, 17 Apr 2015 10:49:32 +0200
+Message-ID: <2380806.YAnOxsf686@wuerfel>
+References: <1429212673-22254-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150417103356.6ce78145@bbrezillon>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Arnaud Ebalard <arno@natisbad.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429212673-22254-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2015 10:33:56 +0200
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+On Friday 17 April 2015 01:01:13 Rameshwar Prasad Sahu wrote:
+> v3 changes:
+> 	* Minor changes in length setting in DMA descriptor
+> 
+> v2 changes:
+> 	* Code cleanup
+> 	* Changed way of setting DMA descriptors for big-endian
+> 
+> This patch fixes compilation sparse warnings like incorrect type in assignment
+> (different base types), cast to restricted __le64, symbol
+> '__UNIQUE_ID_author__COUNTER__' has multiple initializers etc and
+> coccinelle warnings (No need to set .owner here. The core will do it.)
+> 
+> This patch is based on slave-dma / for-linus branch.
+> (commit: 9f2fd0dfa594d857fbdaeda523ff7a46f16567f5 [26/28]
+> 	dmaengine: Add support for APM X-Gene SoC DMA engine driver)
+> 
+> Reported-by: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 
-> Hi Jason,
-> 
-> On Mon, 13 Apr 2015 20:11:46 +0000
-> Jason Cooper <jason@lakedaemon.net> wrote:
-> 
-> > > 
-> > > > I'd appreciate if we'd look into it.  I understand from on-list and
-> > > > off-list discussion that the rewrite was unavoidable.  So I'm willing to
-> > > > concede that.  Giving people time to migrate from old to new while still
-> > > > being able to update for other security fixes seems reasonable.
-> > > 
-> > > Jason, what do you think of the approach above? 
-> > 
-> > I say keep it simple.  We shouldn't use the DT changes to trigger one
-> > vice the other.  We need to be able to build both, but only load one at
-> > a time.  If that's anything other than simple to do, then we make it a
-> > Kconfig binary choice and move on.
-> 
-> Actually I was planning to handle it with a Kconfig dependency rule
-> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
-> on !NEW_DRIVER).
-> I don't know how to make it a runtime check without adding new
-> compatible strings for the kirkwood, dove and orion platforms, and I'm
-> sure sure this is a good idea.
-  ^ not
+Looks good now,
 
-> Do you have any ideas ?
-> 
-> Regards,
-> 
-> Boris
-> 
-> 
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
+There is one small enhancement that you could still do and I'll shut up after
+that ;-)
 
+> 
+> -static void *xgene_dma_lookup_ext8(u64 *desc, int idx)
+> +static __le64 *xgene_dma_lookup_ext8(struct xgene_dma_desc_hw *desc, int idx)
+>  {
+> -	return (idx % 2) ? (desc + idx - 1) : (desc + idx + 1);
+> +	switch (idx) {
+> +	case 0:
+> +		return &desc->m1;
+> +	case 1:
+> +		return &desc->m0;
+> +	case 2:
+> +		return &desc->m3;
+> +	case 3:
+> +		return &desc->m2;
+> +	default:
+> +		pr_err("Invalid dma descriptor index\n");
+> +	}
+> +
+> +	return NULL;
+>  }
+> 
+...
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+>  	/* Set 1st to 5th source addresses */
+>  	for (i = 0; i < src_cnt; i++) {
+>  		len = *nbytes;
+> -		xgene_dma_set_src_buffer((i == 0) ? (desc1 + 8) :
+> +		xgene_dma_set_src_buffer((i == 0) ? &desc1->m1 :
+>  					 xgene_dma_lookup_ext8(desc2, i - 1),
+>  					 &len, &src[i]);
+> -		XGENE_DMA_DESC_MULTI_SET(desc1, scf[i], i);
+> +		desc1->m2 |= cpu_to_le64((scf[i] << ((i + 1) * 8)));
+>  	}
+
+If you just unroll this loop, you get code that is smaller and easier to
+understand:
+
+	/* Set 1st to 5th source addresses */
+	xgene_dma_set_src_buffer(&desc1->m1, &len, &src[0]);
+	xgene_dma_set_src_buffer(&desc2->m0, &len, &src[1]);
+	xgene_dma_set_src_buffer(&desc2->m3, &len, &src[2]);
+	xgene_dma_set_src_buffer(&desc2->m2, &len, &src[3]);
+	desc1->m2 |= cpu_to_le64(scf[0] | scf[1] << 8 | scf[2] << 16 | scf[3] << 24);
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
