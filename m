@@ -1,125 +1,123 @@
-From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: s3c2416: Use labels for overriding nodes in SMDK2416
-Date: Fri, 17 Apr 2015 22:00:11 +0900
-Message-ID: <1429275611-2542-2-git-send-email-k.kozlowski.k@gmail.com>
-References: <1429275611-2542-1-git-send-email-k.kozlowski.k@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429275611-2542-1-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: tegra: Add labels to Tegra114 nodes
+Date: Fri, 17 Apr 2015 22:03:44 +0900
+Message-ID: <1429275825-3008-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Krzysztof Kozlowski <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Usage of labels instead of full paths reduces possible mistakes when
-overriding nodes.
+Add new labels to certain nodes on Tegra114 so they could be easily
+referenced by board DTS files.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/s3c2416-smdk2416.dts | 86 +++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 43 deletions(-)
+ arch/arm/boot/dts/tegra114.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/s3c2416-smdk2416.dts b/arch/arm/boot/dts/s3c2416-smdk2416.dts
-index ea92fd69529a..f257926c13b7 100644
---- a/arch/arm/boot/dts/s3c2416-smdk2416.dts
-+++ b/arch/arm/boot/dts/s3c2416-smdk2416.dts
-@@ -31,55 +31,55 @@
- 			#clock-cells = <0>;
- 		};
+diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+index f58a3d9d5f13..1b31cefd1047 100644
+--- a/arch/arm/boot/dts/tegra114.dtsi
++++ b/arch/arm/boot/dts/tegra114.dtsi
+@@ -10,7 +10,7 @@
+ 	compatible = "nvidia,tegra114";
+ 	interrupt-parent = <&lic>;
+ 
+-	host1x@50000000 {
++	host1x: host1x@50000000 {
+ 		compatible = "nvidia,tegra114-host1x", "simple-bus";
+ 		reg = <0x50000000 0x00028000>;
+ 		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>, /* syncpt */
+@@ -318,7 +318,7 @@
+ 		status = "disabled";
  	};
-+};
  
--	serial@50000000 {
--		status = "okay";
--		pinctrl-names = "default";
--		pinctrl-0 = <&uart0_data>, <&uart0_fctl>;
--	};
-+&rtc {
-+	status = "okay";
-+};
+-	i2c@7000c000 {
++	i2c1: i2c@7000c000 {
+ 		compatible = "nvidia,tegra114-i2c";
+ 		reg = <0x7000c000 0x100>;
+ 		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+@@ -363,7 +363,7 @@
+ 		status = "disabled";
+ 	};
  
--	serial@50004000 {
--		status = "okay";
--		pinctrl-names = "default";
--		pinctrl-0 = <&uart1_data>, <&uart1_fctl>;
--	};
-+&sdhci_0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>,
-+			<&sd1_bus1>, <&sd1_bus4>;
-+	bus-width = <4>;
-+	broken-cd;
-+	status = "okay";
-+};
+-	i2c@7000c700 {
++	i2c4: i2c@7000c700 {
+ 		compatible = "nvidia,tegra114-i2c";
+ 		reg = <0x7000c700 0x100>;
+ 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+@@ -378,7 +378,7 @@
+ 		status = "disabled";
+ 	};
  
--	serial@50008000 {
--		status = "okay";
--		pinctrl-names = "default";
--		pinctrl-0 = <&uart2_data>;
--	};
-+&sdhci_1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>,
-+			<&sd0_bus1>, <&sd0_bus4>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpf 1 0>;
-+	cd-inverted;
-+	status = "okay";
-+};
+-	i2c@7000d000 {
++	i2c5: i2c@7000d000 {
+ 		compatible = "nvidia,tegra114-i2c";
+ 		reg = <0x7000d000 0x100>;
+ 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+@@ -438,7 +438,7 @@
+ 		status = "disabled";
+ 	};
  
--	serial@5000C000 {
--		status = "okay";
--		pinctrl-names = "default";
--		pinctrl-0 = <&uart3_data>;
--	};
-+&uart_0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_data>, <&uart0_fctl>;
-+};
+-	spi@7000da00 {
++	spi4: spi@7000da00 {
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000da00 0x200>;
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+@@ -500,7 +500,7 @@
+ 		status = "disabled";
+ 	};
  
--	watchdog@53000000 {
--		status = "okay";
--	};
-+&uart_1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_data>, <&uart1_fctl>;
-+};
+-	pmc@7000e400 {
++	pmc: pmc@7000e400 {
+ 		compatible = "nvidia,tegra114-pmc";
+ 		reg = <0x7000e400 0x400>;
+ 		clocks = <&tegra_car TEGRA114_CLK_PCLK>, <&clk32k_in>;
+@@ -527,7 +527,7 @@
+ 		#iommu-cells = <1>;
+ 	};
  
--	rtc@57000000 {
--		status = "okay";
--	};
-+&uart_2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_data>;
-+};
+-	ahub@70080000 {
++	ahub: ahub@70080000 {
+ 		compatible = "nvidia,tegra114-ahub";
+ 		reg = <0x70080000 0x200>,
+ 		      <0x70080200 0x100>,
+@@ -648,7 +648,7 @@
+ 		status = "disabled";
+ 	};
  
--	sdhci@4AC00000 {
--		pinctrl-names = "default";
--		pinctrl-0 = <&sd0_clk>, <&sd0_cmd>,
--				<&sd0_bus1>, <&sd0_bus4>;
--		bus-width = <4>;
--		cd-gpios = <&gpf 1 0>;
--		cd-inverted;
--		status = "okay";
--	};
-+&uart_3 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_data>;
-+};
+-	sdhci@78000400 {
++	sdhci3: sdhci@78000400 {
+ 		compatible = "nvidia,tegra114-sdhci", "nvidia,tegra30-sdhci";
+ 		reg = <0x78000400 0x200>;
+ 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+@@ -658,7 +658,7 @@
+ 		status = "disabled";
+ 	};
  
--	sdhci@4A800000 {
--		pinctrl-names = "default";
--		pinctrl-0 = <&sd1_clk>, <&sd1_cmd>,
--				<&sd1_bus1>, <&sd1_bus4>;
--		bus-width = <4>;
--		broken-cd;
--		status = "okay";
--	};
-+&watchdog {
-+	status = "okay";
- };
+-	sdhci@78000600 {
++	sdhci4: sdhci@78000600 {
+ 		compatible = "nvidia,tegra114-sdhci", "nvidia,tegra30-sdhci";
+ 		reg = <0x78000600 0x200>;
+ 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+@@ -668,7 +668,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	usb@7d000000 {
++	usb1: usb@7d000000 {
+ 		compatible = "nvidia,tegra30-ehci", "usb-ehci";
+ 		reg = <0x7d000000 0x4000>;
+ 		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+@@ -704,7 +704,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	usb@7d008000 {
++	usb3: usb@7d008000 {
+ 		compatible = "nvidia,tegra30-ehci", "usb-ehci";
+ 		reg = <0x7d008000 0x4000>;
+ 		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.1.0
