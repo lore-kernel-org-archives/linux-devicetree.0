@@ -1,51 +1,49 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
-Date: Fri, 17 Apr 2015 11:18:33 +0100
-Message-ID: <20150417101833.GU4027@n2100.arm.linux.org.uk>
-References: <20150415194707.GA11007@deathray>
- <CAPtuhTggHctp5ArGPEuKn2GuPzb-WnKv2_CzPrHzq8hwOR5Aqw@mail.gmail.com>
- <20150415205136.GA3399@deathray>
- <552F3B60.8050703@ti.com>
- <20150416161756.GA27590@deathray>
- <55301D7F.30708@gmail.com>
- <20150416220918.GA6057@deathray>
- <55304486.5020404@gmail.com>
- <20150417020048.GA27174@deathray>
- <5530CE63.9070508@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5530CE63.9070508@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Michael Welling <mwelling@ieee.org>, Tero Kristo <t-kristo@ti.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Mack <daniel@zonque.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] Add st_lpc clocksource timer driver.
+Date: Fri, 17 Apr 2015 11:50:18 +0100
+Message-ID: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2015 at 11:12:03AM +0200, Sebastian Hesselbarth wrote:
-> On 17.04.2015 04:00, Michael Welling wrote:
-> >On Fri, Apr 17, 2015 at 01:23:50AM +0200, Sebastian Hesselbarth wrote:
-> >>On 17.04.2015 00:09, Michael Welling wrote:
-> >>>On Thu, Apr 16, 2015 at 10:37:19PM +0200, Sebastian Hesselbarth wrote:
-> >>>>On 16.04.2015 18:17, Michael Welling wrote:
-> [...]
-> >>>What would be the proper error path?
-> >>>What cleanup is required?
-> >>
-> >>A proper error path would be to release any claimed resource
-> >>on any error. If you look at the code, the only resources that
-> >>need to be released are the two clocks in question.
-> >
-> >So for every error return in the probe function and in the of si5351_dt_parse
-> >it needs to clk_put first right?
-> 
-> Not quite. The driver should clk_put() every clock that it called a
-> [of_]clk_get() for. The thing is that clocks can be passed by
-> platform_data and we never claim them.
+Hi,
 
-I've always said clocks (as in struct clk) should never be passed through
-platform data.
+Following on from the discussion here
+https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg68857.html
+
+This series adds the st_lpc clocksource driver found on stih407 family
+silicon. Regardless of whether the change referenced above actually gets
+merged, adding this alternative clocksource driver is useful so that we
+can activate cpufreq upstream on stih407 family.
+
+regards,
+
+Peter.
+
+Peter Griffin (5):
+  clocksource: st_lpc: Add LPC timer as a clocksource.
+  clocksource: st_lpc: Add DT bindings documentation for lpc timer
+  MAINTAINERS: Add st_lpc.c to ARCH/STI section of maintainers
+  ARM: sti: Always enable CLKSRC_ST_LPC_CLOCK
+  ARM: DT: STi: STiH407: Add DT node for st-lpc timer.
+
+ .../devicetree/bindings/timer/st,lpc-timer.txt     |  15 ++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/stih407-family.dtsi              |   7 +
+ arch/arm/mach-sti/Kconfig                          |   7 +-
+ drivers/clocksource/Kconfig                        |  16 +++
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/st_lpc.c                       | 154 +++++++++++++++++++++
+ 7 files changed, 198 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/st,lpc-timer.txt
+ create mode 100644 drivers/clocksource/st_lpc.c
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
