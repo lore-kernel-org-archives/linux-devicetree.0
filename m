@@ -1,280 +1,57 @@
-From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RFC PATCH 2/2] tee: add OP-TEE driver
-Date: Fri, 17 Apr 2015 09:50:57 +0200
-Message-ID: <1429257057-7935-3-git-send-email-jens.wiklander@linaro.org>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429257057-7935-1-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC/PATCH v2 0/5] Add cpuidle support for r8a7791
+Date: Fri, 17 Apr 2015 17:19:37 +0900
+Message-ID: <20150417081937.GB28811@verge.net.au>
+References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+Cc: rjw@rjwysocki.net, daniel.lezcano@linaro.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Adds mostly stubbed OP-TEE driver which also can be compiled as a
-loadable module.
+Hi Kobayashi-san,
 
-Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/tee/Kconfig        |  10 +++
- drivers/tee/Makefile       |   1 +
- drivers/tee/optee/Kconfig  |   7 ++
- drivers/tee/optee/Makefile |   2 +
- drivers/tee/optee/core.c   | 192 +++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 212 insertions(+)
- create mode 100644 drivers/tee/optee/Kconfig
- create mode 100644 drivers/tee/optee/Makefile
- create mode 100644 drivers/tee/optee/core.c
+from my point of view this looks reasonable.
+Is it marked as an RFC because you see some problems with it.
+If not perhaps it would be best to proceed to a more formal
+stage of the review process by dropping the RFC designation?
 
-diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
-index 64a8cd7..b269276 100644
---- a/drivers/tee/Kconfig
-+++ b/drivers/tee/Kconfig
-@@ -6,3 +6,13 @@ config TEE
- 	help
- 	  This implements a generic interface towards a Trusted Execution
- 	  Environment (TEE).
-+
-+if TEE
-+
-+menu "TEE drivers"
-+
-+source "drivers/tee/optee/Kconfig"
-+
-+endmenu
-+
-+endif
-diff --git a/drivers/tee/Makefile b/drivers/tee/Makefile
-index 60d2dab..53f3c76 100644
---- a/drivers/tee/Makefile
-+++ b/drivers/tee/Makefile
-@@ -1,3 +1,4 @@
- obj-y += tee.o
- obj-y += tee_shm.o
- obj-y += tee_shm_pool.o
-+obj-$(CONFIG_OPTEE) += optee/
-diff --git a/drivers/tee/optee/Kconfig b/drivers/tee/optee/Kconfig
-new file mode 100644
-index 0000000..f43af5e
---- /dev/null
-+++ b/drivers/tee/optee/Kconfig
-@@ -0,0 +1,7 @@
-+# OP-TEE Trusted Execution Environment Configuration
-+config OPTEE
-+	tristate "OP-TEE"
-+	default n
-+	select DMA_CMA
-+	help
-+	  This implements the OP-TEE Trusted Execution Environment (TEE) driver.
-diff --git a/drivers/tee/optee/Makefile b/drivers/tee/optee/Makefile
-new file mode 100644
-index 0000000..124d22c
---- /dev/null
-+++ b/drivers/tee/optee/Makefile
-@@ -0,0 +1,2 @@
-+obj-$(CONFIG_OPTEE) += optee.o
-+optee-objs += core.o
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-new file mode 100644
-index 0000000..e0f0755
---- /dev/null
-+++ b/drivers/tee/optee/core.c
-@@ -0,0 +1,192 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/types.h>
-+#include <linux/string.h>
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/dma-contiguous.h>
-+#include <linux/cma.h>
-+#include <linux/tee/tee_drv.h>
-+
-+#define DRIVER_NAME "tee-optee"
-+#define OPTEE_VERSION	1
-+
-+struct optee {
-+	struct tee_device *supp_teedev;
-+	struct tee_device *teedev;
-+	struct device *dev;
-+	struct tee_shm_pool *pool;
-+};
-+
-+struct optee_context_data {
-+	int dummy;
-+};
-+
-+static void optee_get_version(struct tee_context *ctx,
-+		u32 *version, u8 *uuid)
-+{
-+	*version = OPTEE_VERSION;
-+	memset(uuid, 0, TEE_UUID_SIZE);
-+}
-+
-+static int optee_open(struct tee_context *ctx)
-+{
-+	ctx->data = kzalloc(sizeof(struct optee_context_data), GFP_KERNEL);
-+	if (!ctx->data)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
-+static void optee_release(struct tee_context *ctx)
-+{
-+	kfree(ctx->data);
-+	ctx->data = NULL;
-+}
-+
-+static int optee_cmd(struct tee_context *ctx, void __user *buf, size_t len)
-+{
-+	return -EINVAL;
-+}
-+
-+static int optee_shm_share(struct tee_shm *shm)
-+{
-+	/* No special action needed to share memory with OP-TEE */
-+	return 0;
-+}
-+
-+static void optee_shm_unshare(struct tee_shm *shm)
-+{
-+}
-+
-+static struct tee_driver_ops optee_ops = {
-+	.get_version = optee_get_version,
-+	.open = optee_open,
-+	.release = optee_release,
-+	.cmd = optee_cmd,
-+	.shm_share = optee_shm_share,
-+	.shm_unshare = optee_shm_unshare,
-+};
-+
-+static struct tee_desc optee_desc = {
-+	.name = DRIVER_NAME "-clnt",
-+	.ops = &optee_ops,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int optee_supp_cmd(struct tee_context *teectx, void __user *buf,
-+			size_t len)
-+{
-+	return -EINVAL;
-+}
-+
-+static struct tee_driver_ops optee_supp_ops = {
-+	.get_version = optee_get_version,
-+	.open = optee_open,
-+	.release = optee_release,
-+	.cmd = optee_supp_cmd,
-+	.shm_share = optee_shm_share,
-+	.shm_unshare = optee_shm_unshare,
-+};
-+
-+static struct tee_desc optee_supp_desc = {
-+	.name = DRIVER_NAME "-supp",
-+	.ops = &optee_supp_ops,
-+	.owner = THIS_MODULE,
-+	.flags = TEE_DESC_PRIVILEGED,
-+};
-+
-+static int optee_probe(struct platform_device *pdev)
-+{
-+	struct tee_shm_pool *pool;
-+	struct optee *optee;
-+	u_long vaddr;
-+	phys_addr_t paddr;
-+	size_t size;
-+	int ret;
-+
-+	pool = tee_shm_pool_alloc_cma(&pdev->dev, &vaddr, &paddr, &size);
-+	if (IS_ERR(pool))
-+		return PTR_ERR(pool);
-+
-+	dev_info(&pdev->dev, "pool: va 0x%lx pa 0x%lx size %zx\n",
-+		vaddr, (u_long)paddr, size);
-+
-+	optee = devm_kzalloc(&pdev->dev, sizeof(*optee), GFP_KERNEL);
-+	if (!optee) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	optee->dev = &pdev->dev;
-+
-+	optee->teedev = tee_register(&optee_desc, &pdev->dev, pool, optee);
-+	if (IS_ERR(optee->teedev)) {
-+		ret = PTR_ERR(optee->teedev);
-+		goto err;
-+	}
-+
-+	optee->supp_teedev = tee_register(&optee_supp_desc, &pdev->dev, pool,
-+					  optee);
-+	if (!optee->teedev) {
-+		ret = PTR_ERR(optee->teedev);
-+		goto err;
-+	}
-+
-+	optee->pool = pool;
-+	platform_set_drvdata(pdev, optee);
-+
-+	dev_info(&pdev->dev, "initialized driver\n");
-+	return 0;
-+err:
-+	if (optee && optee->teedev)
-+		tee_unregister(optee->teedev);
-+	if (pool)
-+		tee_shm_pool_free(pool);
-+	return ret;
-+}
-+
-+static int optee_remove(struct platform_device *pdev)
-+{
-+	struct optee *optee = platform_get_drvdata(pdev);
-+
-+	tee_unregister(optee->teedev);
-+	tee_unregister(optee->supp_teedev);
-+	tee_shm_pool_free(optee->pool);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id optee_match[] = {
-+	{ .compatible = "optee,optee-tz" },
-+	{},
-+};
-+
-+static struct platform_driver optee_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.of_match_table = optee_match,
-+	},
-+	.probe = optee_probe,
-+	.remove = optee_remove,
-+};
-+
-+module_platform_driver(optee_driver);
-+
-+MODULE_AUTHOR("Linaro");
-+MODULE_DESCRIPTION("OP-TEE TEE driver");
-+MODULE_SUPPORTED_DEVICE("");
-+MODULE_VERSION("1.0");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Apr 16, 2015 at 07:35:35PM +0900, Keita Kobayashi wrote:
+> Hello
+> 
+> These patches add cpuidle support for Renesas r8a7791 SoC.
+> The r8a7791 cpuidle supports WFI and the cpu power state(Core-Standby)
+> using Generic ARM CPU idle driver(cpuidle-arm).
+> Generic ARM CPU idle driver have been merged in linux-pm.git / pm+acpi-4.1-rc1 tag.
+> 
+> Based on : renesas.git / renesas-devel-20150413-v4.0 tag
+> Tested on : koelsch board
+> 
+> Changes from v1:
+>  - Change "select" to "depend on"
+>  - Document a new enable method of Renesas cpuidle
+> 
+> Keita Kobayashi (5):
+>   ARM: cpuidle: Add cpuidle support for R-Car Gen2 series
+>   ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
+>   devicetree: bindings: Add new cpuidle enable method for Renesas R-car
+>     SoCs
+>   ARM: shmobile: dtsi: Add cpuidle parameters into each cpu for r8a7791
+>   ARM: shmobile: Enable Renesas R-Car cpuidle for shmobile_defconfig
+> 
+>  Documentation/devicetree/bindings/arm/cpus.txt |  1 +
+>  arch/arm/boot/dts/r8a7791.dtsi                 | 13 +++++++++++++
+>  arch/arm/configs/shmobile_defconfig            |  3 +++
+>  arch/arm/mach-shmobile/platsmp-apmu.c          | 14 +++++++++++---
+>  arch/arm/mach-shmobile/platsmp-apmu.h          |  1 +
+>  arch/arm/mach-shmobile/pm-rcar-gen2.c          | 17 +++++++++++++++++
+>  drivers/cpuidle/Kconfig.arm                    |  8 ++++++++
+>  7 files changed, 54 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
