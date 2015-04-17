@@ -1,57 +1,38 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [RFC/PATCH v2 0/5] Add cpuidle support for r8a7791
-Date: Fri, 17 Apr 2015 17:19:37 +0900
-Message-ID: <20150417081937.GB28811@verge.net.au>
-References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
-Cc: rjw@rjwysocki.net, daniel.lezcano@linaro.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com
+From: Inha Song <ideal.song@samsung.com>
+Subject: [alsa-devel] [PATCH 2/2] mfd: arizona: Update DT binding to support
+ hpdet channel
+Date: Fri, 17 Apr 2015 17:32:59 +0900
+Message-ID: <1429259579-16563-3-git-send-email-ideal.song@samsung.com>
+References: <1429259579-16563-1-git-send-email-ideal.song@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1429259579-16563-1-git-send-email-ideal.song@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, cw00.choi@samsung.com, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, rf@opensource.wolfsonmicro.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Inha Song <ideal.song@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kobayashi-san,
+This patch add device tree bindings for the pdata needed to configure
+the Accessory Detect Mode select when Headphone detection.
 
-from my point of view this looks reasonable.
-Is it marked as an RFC because you see some problems with it.
-If not perhaps it would be best to proceed to a more formal
-stage of the review process by dropping the RFC designation?
+Signed-off-by: Inha Song <ideal.song@samsung.com>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Thu, Apr 16, 2015 at 07:35:35PM +0900, Keita Kobayashi wrote:
-> Hello
-> 
-> These patches add cpuidle support for Renesas r8a7791 SoC.
-> The r8a7791 cpuidle supports WFI and the cpu power state(Core-Standby)
-> using Generic ARM CPU idle driver(cpuidle-arm).
-> Generic ARM CPU idle driver have been merged in linux-pm.git / pm+acpi-4.1-rc1 tag.
-> 
-> Based on : renesas.git / renesas-devel-20150413-v4.0 tag
-> Tested on : koelsch board
-> 
-> Changes from v1:
->  - Change "select" to "depend on"
->  - Document a new enable method of Renesas cpuidle
-> 
-> Keita Kobayashi (5):
->   ARM: cpuidle: Add cpuidle support for R-Car Gen2 series
->   ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
->   devicetree: bindings: Add new cpuidle enable method for Renesas R-car
->     SoCs
->   ARM: shmobile: dtsi: Add cpuidle parameters into each cpu for r8a7791
->   ARM: shmobile: Enable Renesas R-Car cpuidle for shmobile_defconfig
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt |  1 +
->  arch/arm/boot/dts/r8a7791.dtsi                 | 13 +++++++++++++
->  arch/arm/configs/shmobile_defconfig            |  3 +++
->  arch/arm/mach-shmobile/platsmp-apmu.c          | 14 +++++++++++---
->  arch/arm/mach-shmobile/platsmp-apmu.h          |  1 +
->  arch/arm/mach-shmobile/pm-rcar-gen2.c          | 17 +++++++++++++++++
->  drivers/cpuidle/Kconfig.arm                    |  8 ++++++++
->  7 files changed, 54 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 7bd1273..e7cb939 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -49,6 +49,10 @@ Optional properties:
+     input singals. If values less than the number of input signals, elements
+     that has not been specifed are set to 0 by default.
+ 
++  - wlf,hpdet-channel : Headphone detection channel, this filed to be used the
++    ACCDET_MODE bits in the ACCESSORY_DETECT_MODE_1 register. The valid values
++    are 0 for HPDETL and 1 for HPDETR.
++
+   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+     they are being externally supplied. As covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt
+-- 
+2.0.0.390.gcb682f8
