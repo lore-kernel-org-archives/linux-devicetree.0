@@ -1,54 +1,82 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: UniPhier: add support for UniPhier SoCs and boards
-Date: Sat, 18 Apr 2015 01:16:24 +0900
-Message-ID: <CAK7LNAQfUqZvTWZyETyXJUr3MDdMtU6MV++jfAcaoqzEKpUxtg@mail.gmail.com>
-References: <1429170038-16757-1-git-send-email-yamada.masahiro@socionext.com>
-	<1429170038-16757-4-git-send-email-yamada.masahiro@socionext.com>
-	<2204571.AOVr95oO32@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 04/14] devicetree: Add bindings for the ATH79 interrupt
+ controllers
+Date: Fri, 17 Apr 2015 19:17:27 +0300
+Message-ID: <55313217.1020604@cogentembedded.com>
+References: <1429280669-2986-1-git-send-email-albeu@free.fr> <1429280669-2986-5-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2204571.AOVr95oO32@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429280669-2986-5-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alban Bedel <albeu@free.fr>, linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hello.
 
-2015-04-16 18:44 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Thursday 16 April 2015 16:40:37 Masahiro Yamada wrote:
->> +
->> +/ {
->> +     model = "UniPhier PH1-LD4 Reference Board";
->> +     compatible = "socionext,ph1-ld4-ref", "socionext,ph1-ld4";
->> +
->> +     memory {
->> +             device_type = "memory";
->> +             reg = <0x80000000 0x20000000>;
->> +     };
->> +
->> +     chosen {
->> +             bootargs = "console=ttyS0,115200 earlyprintk";
->> +     };
->
-> I would remove the 'earlyprintk' option here. You don't add any options
-> for the platform in Kconfig.debug, and I hope that we can eventually
-> start using earlycon. Please add an appropriate stdio-path property
-> here, but note that we are still lacking the fixmap patches to make
-> earlycon work.
->
-> Otherwise looks good.
+On 04/17/2015 05:24 PM, Alban Bedel wrote:
 
-I dropped earlyprintk, added stdout-path in v3.
+> Signed-off-by: Alban Bedel <albeu@free.fr>
+> ---
+>   .../interrupt-controller/qca,ath79-cpu-intc.txt    | 45 ++++++++++++++++++++++
+>   1 file changed, 45 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
 
-Thanks!
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+> new file mode 100644
+> index 0000000..1548512
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+> @@ -0,0 +1,45 @@
+> +Binding for Qualcomm Atheros AR7xxx/AR9XXX CPU interrupt controller
+> +
+> +On most SoC the IRQ controller need to flush the DDR FIFO before running
+> +the interrupt handler of some devices. This is configured using the
+> +qca,ddr-wb-channels and qca,ddr-wb-channel-interrupts properties.
+> +
+> +Required Properties:
+> +
+> +- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-cpu-intc"
+> +  as fallback
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode interrupt
+> +		     source, should be 1 for intc
+> +
+> +Please refer to interrupts.txt in this directory for details of the common
+> +Interrupt Controllers bindings used by client devices.
+> +
+> +Optional Properties:
+> +
+> +- qca,ddr-wb-channel-interrupts: List of the interrupts needing a write
+> +  buffer flush
+> +- qca,ddr-wb-channels: List of phandles to the write buffer channels for
+> +  each interrupt. If qca,ddr-wb-channel-interrupts is not present the interrupt
+> +  default to the entry's index.
+> +
+> +Example:
+> +
+> +	cpuintc@0 {
 
+    @0 without the "reg" property?
+    And if this is an interrupt controller, the name should be 
+"interrupt-controller", not "cpuintc", according to the ePAPR standard.
 
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		compatible = "qca,ar9132-cpu-intc", "qca,ar7100-cpu-intc";
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +
+> +		qca,ddr-wb-channel-interrupts = <2>, <3>, <4>, <5>;
+> +		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>,
+> +					<&ddr_ctrl 0>, <&ddr_ctrl 1>;
+> +	};
+> +
+> +	...
+> +
+> +	ddr_ctrl: ddr-controller@18000000 {
+
+    ePAPR standardized "memory-controller" node name in this case.
+
+WBR, Sergei
