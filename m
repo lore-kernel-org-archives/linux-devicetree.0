@@ -1,59 +1,48 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Fri, 17 Apr 2015 10:59:57 +0000
-Message-ID: <20150417105957.GB8069@io.lakedaemon.net>
-References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
- <20150410135056.GB28873@io.lakedaemon.net>
- <20150410171148.07bc9429@bbrezillon>
- <20150410223008.GA18660@io.lakedaemon.net>
- <552B8EC4.209@free-electrons.com>
- <20150413124711.GI18660@io.lakedaemon.net>
- <87r3rom2qu.fsf@natisbad.org>
- <20150413201146.GL18660@io.lakedaemon.net>
- <20150417103356.6ce78145@bbrezillon>
- <20150417103946.2a46c243@bbrezillon>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: LED subsystem child DT node ref counting
+Date: Fri, 17 Apr 2015 13:03:45 +0200
+Message-ID: <5530E891.20707@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150417103946.2a46c243@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Boris,
+Hi,
 
-On Fri, Apr 17, 2015 at 10:39:46AM +0200, Boris Brezillon wrote:
-> On Fri, 17 Apr 2015 10:33:56 +0200 Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> > On Mon, 13 Apr 2015 20:11:46 +0000 Jason Cooper <jason@lakedaemon.net> wrote:
-> > > > 
-> > > > > I'd appreciate if we'd look into it.  I understand from on-list and
-> > > > > off-list discussion that the rewrite was unavoidable.  So I'm willing to
-> > > > > concede that.  Giving people time to migrate from old to new while still
-> > > > > being able to update for other security fixes seems reasonable.
-> > > > 
-> > > > Jason, what do you think of the approach above? 
-> > > 
-> > > I say keep it simple.  We shouldn't use the DT changes to trigger one
-> > > vice the other.  We need to be able to build both, but only load one at
-> > > a time.  If that's anything other than simple to do, then we make it a
-> > > Kconfig binary choice and move on.
-> > 
-> > Actually I was planning to handle it with a Kconfig dependency rule
-> > (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
-> > on !NEW_DRIVER).
-> > I don't know how to make it a runtime check without adding new
-> > compatible strings for the kirkwood, dove and orion platforms, and I'm
-> > sure sure this is a good idea.
->   ^ not
-> 
-> > Do you have any ideas ?
+I'd like to clarify whether LED subsystem drivers behave correctly
+or not, regarding child DT nodes reference counting.
 
-I'm kinda wrapped up with dayjob stuff atm...  But I'd look at the wireless
-drivers.  eg b43, b43legacy, brcm80211.  There are devices they overlap for.
-So, they need to deconflict in some way.
+Single LED controller can have connected more then one LED to it.
+The LEDs are represented by child DT nodes of the node representing
+the controller (see Documentation/devicetree/bindings/leds).
 
-thx,
+LED subsystem drivers parse child DT nodes and use the node name,
+or 'label' property string as the LED class device name.
 
-Jason.
+This is usually accomplished like below:
+
+for_each_child_of_node(np, child) {
+     ...
+     led.name = of_get_property(child, "label", NULL) ? : child->name;
+
+
+The question is whether reference count of the child node shouldn't
+be increased here with of_node_get(child). Whereas intuitively it could
+be thought of as a right thing to do, empirical experiments don't
+necessary confirm that.
+
+When I print the value of child_node->kobj.kref.refcount.counter
+inside for_each loop it is 3 and and after leaving the loop it gets
+decreased to 2. On driver removal the value is also 2. It means that
+label is available all the time, without increasing child node ref
+counter.
+
+I'd like to ask if this is guaranteed to be always true.
+
+-- 
+Best Regards,
+Jacek Anaszewski
