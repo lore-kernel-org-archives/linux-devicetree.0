@@ -1,236 +1,154 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 1/4] ARM: UniPhier: add basic support for UniPhier
- architecture
-Date: Sat, 18 Apr 2015 00:48:15 +0900
-Message-ID: <1429285698-11829-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1429285698-11829-1-git-send-email-yamada.masahiro@socionext.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
+Date: Fri, 17 Apr 2015 17:49:10 +0200
+Message-ID: <20150417154910.GS15807@lukather>
+References: <87r3rom2qu.fsf@natisbad.org>
+ <20150413201146.GL18660@io.lakedaemon.net>
+ <20150417103356.6ce78145@bbrezillon>
+ <20150417103946.2a46c243@bbrezillon>
+ <5531040D.4000007@free-electrons.com>
+ <20150417161922.54adec64@bbrezillon>
+ <20150417143216.GQ15807@lukather>
+ <55311B6B.2090108@free-electrons.com>
+ <20150417145022.GR15807@lukather>
+ <55312063.7050206@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1429285698-11829-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Olof Johansson <olof@lixom.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LXqH7sWsIplhrbjF"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55312063.7050206@free-electrons.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Initial commit for a new SoC family, UniPhier, developed by
-Socionext Inc. (formerly, System LSI Business Division of
-Panasonic Corporation).
 
-This commit includes a minimal set of components for booting the
-kernel, including SMP support.
+--LXqH7sWsIplhrbjF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On Fri, Apr 17, 2015 at 05:01:55PM +0200, Gregory CLEMENT wrote:
+> On 17/04/2015 16:50, Maxime Ripard wrote:
+> > On Fri, Apr 17, 2015 at 04:40:43PM +0200, Gregory CLEMENT wrote:
+> >> Hi Maxime,
+> >>
+> >> On 17/04/2015 16:32, Maxime Ripard wrote:
+> >>> On Fri, Apr 17, 2015 at 04:19:22PM +0200, Boris Brezillon wrote:
+> >>>> Hi Gregory,
+> >>>>
+> >>>> On Fri, 17 Apr 2015 15:01:01 +0200
+> >>>> Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+> >>>>
+> >>>>> Hi Boris,
+> >>>>>
+> >>>>> On 17/04/2015 10:39, Boris Brezillon wrote:
+> >>>>>> On Fri, 17 Apr 2015 10:33:56 +0200
+> >>>>>> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> >>>>>>
+> >>>>>>> Hi Jason,
+> >>>>>>>
+> >>>>>>> On Mon, 13 Apr 2015 20:11:46 +0000
+> >>>>>>> Jason Cooper <jason@lakedaemon.net> wrote:
+> >>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>> I'd appreciate if we'd look into it.  I understand from on-lis=
+t and
+> >>>>>>>>>> off-list discussion that the rewrite was unavoidable.  So I'm =
+willing to
+> >>>>>>>>>> concede that.  Giving people time to migrate from old to new w=
+hile still
+> >>>>>>>>>> being able to update for other security fixes seems reasonable.
+> >>>>>>>>>
+> >>>>>>>>> Jason, what do you think of the approach above?=20
+> >>>>>>>>
+> >>>>>>>> I say keep it simple.  We shouldn't use the DT changes to trigge=
+r one
+> >>>>>>>> vice the other.  We need to be able to build both, but only load=
+ one at
+> >>>>>>>> a time.  If that's anything other than simple to do, then we mak=
+e it a
+> >>>>>>>> Kconfig binary choice and move on.
+> >>>>>>>
+> >>>>>>> Actually I was planning to handle it with a Kconfig dependency ru=
+le
+> >>>>>>> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
+> >>>>>>> on !NEW_DRIVER).
+> >>>>>>> I don't know how to make it a runtime check without adding new
+> >>>>>>> compatible strings for the kirkwood, dove and orion platforms, an=
+d I'm
+> >>>>>>> sure sure this is a good idea.
+> >>>>>>   ^ not
+> >>>>>>
+> >>>>>>> Do you have any ideas ?
+> >>>>>
+> >>>>> You use devm_ioremap_resource() in the new driver, so if the old one
+> >>>>> is already loaded the memory region will be already hold and the new
+> >>>>> driver will simply fail during the probe. So for this part it is OK.
+> >>>>
+> >>>> I like the idea :-).
+> >>>
+> >>> Not really, how do you know which device is going to be probed? For
+> >>> that matter, it's pretty much random, and you have no control over it.
+> >>>
+> >>> Why not just have a choice option, and select which one you want to
+> >>> enable?
+> >>
+> >> Because you can't prevent an user to build a module, then modifying the
+> >> configuration and building the other module.
+> >=20
+> > Well, actually, you don't even know if it's going to be a module. You
+> > might very well have both drivers compiled statically in the kernel
+> > image, and this is where the trouble begins.
+>=20
+> No it won't be possible, Boris already speak about this issue (see below):
+> "Actually I was planning to handle it with a Kconfig dependency rule
+> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
+> on !NEW_DRIVER)."
 
-Changes in v3:
-  - Replace <asm/io.h> with <linux/io.h>
-  - Rename uniphier_board_dt_compat to uniphier_dt_compat
-  - Move uniphier_secondary_startup into platsmp.c as __naked function
-  - Add return before "err:" label (bug fix)
-  - Use syscon driver rather than hard-coded register address
+Which is a circular dependency and won't work.
 
-Changes in v2:
-  - Fix SoC compatible string
-    "socionext,ph1-proxstream2" -> "socionext,proxstream2"
+> >> So even if there is a choice at build time, and I think that it is
+> >> something expected for the v2, we still need preventing having the
+> >> both drivers trying accessing the same hardware in the same time.
+> >=20
+> > Of course, but this is already there, and doesn't really address the
+> > same issue.
+>=20
+> This was the only issue remaining, (see below again):
+> "I don't know how to make it a runtime check ". And my last emails
+> was bout it.
 
- arch/arm/Kconfig                  |  2 +
- arch/arm/Makefile                 |  1 +
- arch/arm/mach-uniphier/Kconfig    | 11 +++++
- arch/arm/mach-uniphier/Makefile   |  2 +
- arch/arm/mach-uniphier/platsmp.c  | 85 +++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-uniphier/uniphier.c | 30 ++++++++++++++
- 6 files changed, 131 insertions(+)
- create mode 100644 arch/arm/mach-uniphier/Kconfig
- create mode 100644 arch/arm/mach-uniphier/Makefile
- create mode 100644 arch/arm/mach-uniphier/platsmp.c
- create mode 100644 arch/arm/mach-uniphier/uniphier.c
+Ok, my bad then :)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 392e7ae..c332b98 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -963,6 +963,8 @@ source "arch/arm/mach-tegra/Kconfig"
- 
- source "arch/arm/mach-u300/Kconfig"
- 
-+source "arch/arm/mach-uniphier/Kconfig"
-+
- source "arch/arm/mach-ux500/Kconfig"
- 
- source "arch/arm/mach-versatile/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 5575d9f..9de6aa6 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -201,6 +201,7 @@ machine-$(CONFIG_ARCH_SUNXI)		+= sunxi
- machine-$(CONFIG_ARCH_TEGRA)		+= tegra
- machine-$(CONFIG_ARCH_U300)		+= u300
- machine-$(CONFIG_ARCH_U8500)		+= ux500
-+machine-$(CONFIG_ARCH_UNIPHIER)		+= uniphier
- machine-$(CONFIG_ARCH_VERSATILE)	+= versatile
- machine-$(CONFIG_ARCH_VEXPRESS)		+= vexpress
- machine-$(CONFIG_ARCH_VT8500)		+= vt8500
-diff --git a/arch/arm/mach-uniphier/Kconfig b/arch/arm/mach-uniphier/Kconfig
-new file mode 100644
-index 0000000..a017b1d
---- /dev/null
-+++ b/arch/arm/mach-uniphier/Kconfig
-@@ -0,0 +1,11 @@
-+config ARCH_UNIPHIER
-+	bool "Socionext UniPhier SoCs"
-+	depends on ARCH_MULTI_V7
-+	select ARM_AMBA
-+	select ARM_GLOBAL_TIMER
-+	select ARM_GIC
-+	select HAVE_ARM_SCU
-+	select HAVE_ARM_TWD
-+	help
-+	  Support for UniPhier SoC family developed by Socionext Inc.
-+	  (formerly, System LSI Business Division of Panasonic Corporation)
-diff --git a/arch/arm/mach-uniphier/Makefile b/arch/arm/mach-uniphier/Makefile
-new file mode 100644
-index 0000000..60bd226
---- /dev/null
-+++ b/arch/arm/mach-uniphier/Makefile
-@@ -0,0 +1,2 @@
-+obj-y			:= uniphier.o
-+obj-$(CONFIG_SMP)	+= platsmp.o
-diff --git a/arch/arm/mach-uniphier/platsmp.c b/arch/arm/mach-uniphier/platsmp.c
-new file mode 100644
-index 0000000..a10999d
---- /dev/null
-+++ b/arch/arm/mach-uniphier/platsmp.c
-@@ -0,0 +1,85 @@
-+/*
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/sizes.h>
-+#include <linux/compiler.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <asm/smp.h>
-+#include <asm/smp_scu.h>
-+
-+static void __init uniphier_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	static cpumask_t only_cpu_0 = { CPU_BITS_CPU0 };
-+	unsigned long scu_base_phys = 0;
-+	void __iomem *scu_base;
-+
-+	if (scu_a9_has_base())
-+		scu_base_phys = scu_a9_get_base();
-+
-+	if (!scu_base_phys) {
-+		pr_err("failed to get scu base\n");
-+		goto err;
-+	}
-+
-+	scu_base = ioremap(scu_base_phys, SZ_128);
-+	if (!scu_base) {
-+		pr_err("failed to remap scu base (0x%08lx)\n", scu_base_phys);
-+		goto err;
-+	}
-+
-+	scu_enable(scu_base);
-+	iounmap(scu_base);
-+
-+	return;
-+err:
-+	pr_warn("disabling SMP\n");
-+	init_cpu_present(&only_cpu_0);
-+}
-+
-+static void __naked uniphier_secondary_startup(void)
-+{
-+	asm("bl		v7_invalidate_l1\n"
-+	    "b		secondary_startup\n");
-+};
-+
-+static int uniphier_boot_secondary(unsigned int cpu,
-+				   struct task_struct *idle)
-+{
-+	struct regmap *smp_regmap;
-+	int ret;
-+
-+	smp_regmap = syscon_regmap_lookup_by_compatible(
-+						"socionext,uniphier-smp-reg");
-+	if (IS_ERR(smp_regmap)) {
-+		pr_err("no uniphier-smp-reg node found\n");
-+		return PTR_ERR(smp_regmap);
-+	}
-+
-+	ret = regmap_write(smp_regmap, 0,
-+			   virt_to_phys(uniphier_secondary_startup));
-+	if (!ret)
-+		asm("sev"); /* wake up secondary CPU */
-+
-+	return ret;
-+}
-+
-+struct smp_operations uniphier_smp_ops __initdata = {
-+	.smp_prepare_cpus	= uniphier_smp_prepare_cpus,
-+	.smp_boot_secondary	= uniphier_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(uniphier_smp, "socionext,uniphier-smp",
-+		      &uniphier_smp_ops);
-diff --git a/arch/arm/mach-uniphier/uniphier.c b/arch/arm/mach-uniphier/uniphier.c
-new file mode 100644
-index 0000000..9be10ef
---- /dev/null
-+++ b/arch/arm/mach-uniphier/uniphier.c
-@@ -0,0 +1,30 @@
-+/*
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <asm/mach/arch.h>
-+
-+static const char * const uniphier_dt_compat[] __initconst = {
-+	"socionext,ph1-sld3",
-+	"socionext,ph1-ld4",
-+	"socionext,ph1-pro4",
-+	"socionext,ph1-sld8",
-+	"socionext,ph1-pro5",
-+	"socionext,proxstream2",
-+	"socionext,ph1-ld6b",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(UNIPHIER, "Socionext UniPhier")
-+	.dt_compat	= uniphier_dt_compat,
-+MACHINE_END
--- 
-1.9.1
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--LXqH7sWsIplhrbjF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVMSt2AAoJEBx+YmzsjxAgGpEP/RwgySofHxRN38Jwsx07jQJE
+2J+Cwf8u+ih+y9sDtPon2K0BBSp2vGHZsnVL9+ppXpWwDD4cMOp7X6O5m94Di9bG
+nEPcMAGD3W02HK2MDtyr87FYyJoVaCw+rw/YSoTFX/nG+qyzEzy+N6eogAVfqN7h
+xxDZq51ChwGs7g2qTYOJeudnlAzD87oz5oV2y6w3Z75ko/1DIzFI1xq7wbMt5Gmt
+9atfRajyOdowpxjaFE5MRoConcU16rD1Cp+MRP3BzS/lO1igZemLYMoQZAF2oHYE
+zex+nVs32ZC7DoZTlcxY2CeJ2eY4d126W82Q1gcB6OV9/a5pFjXn0mRG+ZieVn5H
+TeVs5n5VAnhSAeHrhir4JxpUC3fFIg7Qk+IqHRsvPbNeeOyHjjXcV4py0cy+4iij
+tosE86hO7ywOD2IaOocqJgxsK1C9UelLctFzadYv7Bi4V6xjs0ntufr862FZLC73
+ug+8g9CaAqqH0lrGkeNs3yI8KrPZKCTqegB09TV+4wAd8z+ivrjmuEZWiJNONKGJ
+6+PrLQzaTt0EW7nqjgrUYoeOy8g+JOZ2HDQOWfvN0FmsnY9cu/vkguUeQUyvfSw2
+9lBtrClSvy6pSBhBkVtFJrlBiv8nHcs+NW1Xi8CQT3nI1VV2KKkR8z1A0HSexDl7
+T0hXzB955gd9Tss+WzK/
+=c2xZ
+-----END PGP SIGNATURE-----
+
+--LXqH7sWsIplhrbjF--
