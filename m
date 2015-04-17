@@ -1,124 +1,329 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Fri, 17 Apr 2015 18:04:53 +0200
-Message-ID: <55312F25.1060201@free-electrons.com>
-References: <87r3rom2qu.fsf@natisbad.org> <20150413201146.GL18660@io.lakedaemon.net> <20150417103356.6ce78145@bbrezillon> <20150417103946.2a46c243@bbrezillon> <5531040D.4000007@free-electrons.com> <20150417161922.54adec64@bbrezillon> <20150417143216.GQ15807@lukather> <55311B6B.2090108@free-electrons.com> <20150417145022.GR15807@lukather> <55312063.7050206@free-electrons.com> <20150417154910.GS15807@lukather>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V1 4/6] input: misc: onkey: da9062: DA9062 OnKey driver
+Date: Fri, 17 Apr 2015 09:12:17 -0700
+Message-ID: <20150417161217.GA27440@dtor-ws>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <c05802897197e71839a33b1f5ac224031b14e65b.1429280614.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150417154910.GS15807@lukather>
+Content-Disposition: inline
+In-Reply-To: <c05802897197e71839a33b1f5ac224031b14e65b.1429280614.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <info-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/04/2015 17:49, Maxime Ripard wrote:
-> On Fri, Apr 17, 2015 at 05:01:55PM +0200, Gregory CLEMENT wrote:
->> On 17/04/2015 16:50, Maxime Ripard wrote:
->>> On Fri, Apr 17, 2015 at 04:40:43PM +0200, Gregory CLEMENT wrote:
->>>> Hi Maxime,
->>>>
->>>> On 17/04/2015 16:32, Maxime Ripard wrote:
->>>>> On Fri, Apr 17, 2015 at 04:19:22PM +0200, Boris Brezillon wrote:
->>>>>> Hi Gregory,
->>>>>>
->>>>>> On Fri, 17 Apr 2015 15:01:01 +0200
->>>>>> Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>>>>
->>>>>>> Hi Boris,
->>>>>>>
->>>>>>> On 17/04/2015 10:39, Boris Brezillon wrote:
->>>>>>>> On Fri, 17 Apr 2015 10:33:56 +0200
->>>>>>>> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>>>>>>
->>>>>>>>> Hi Jason,
->>>>>>>>>
->>>>>>>>> On Mon, 13 Apr 2015 20:11:46 +0000
->>>>>>>>> Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
->>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>> I'd appreciate if we'd look into it.  I understand from on-list and
->>>>>>>>>>>> off-list discussion that the rewrite was unavoidable.  So I'm willing to
->>>>>>>>>>>> concede that.  Giving people time to migrate from old to new while still
->>>>>>>>>>>> being able to update for other security fixes seems reasonable.
->>>>>>>>>>>
->>>>>>>>>>> Jason, what do you think of the approach above? 
->>>>>>>>>>
->>>>>>>>>> I say keep it simple.  We shouldn't use the DT changes to trigger one
->>>>>>>>>> vice the other.  We need to be able to build both, but only load one at
->>>>>>>>>> a time.  If that's anything other than simple to do, then we make it a
->>>>>>>>>> Kconfig binary choice and move on.
->>>>>>>>>
->>>>>>>>> Actually I was planning to handle it with a Kconfig dependency rule
->>>>>>>>> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
->>>>>>>>> on !NEW_DRIVER).
->>>>>>>>> I don't know how to make it a runtime check without adding new
->>>>>>>>> compatible strings for the kirkwood, dove and orion platforms, and I'm
->>>>>>>>> sure sure this is a good idea.
->>>>>>>>   ^ not
->>>>>>>>
->>>>>>>>> Do you have any ideas ?
->>>>>>>
->>>>>>> You use devm_ioremap_resource() in the new driver, so if the old one
->>>>>>> is already loaded the memory region will be already hold and the new
->>>>>>> driver will simply fail during the probe. So for this part it is OK.
->>>>>>
->>>>>> I like the idea :-).
->>>>>
->>>>> Not really, how do you know which device is going to be probed? For
->>>>> that matter, it's pretty much random, and you have no control over it.
->>>>>
->>>>> Why not just have a choice option, and select which one you want to
->>>>> enable?
->>>>
->>>> Because you can't prevent an user to build a module, then modifying the
->>>> configuration and building the other module.
->>>
->>> Well, actually, you don't even know if it's going to be a module. You
->>> might very well have both drivers compiled statically in the kernel
->>> image, and this is where the trouble begins.
->>
->> No it won't be possible, Boris already speak about this issue (see below):
->> "Actually I was planning to handle it with a Kconfig dependency rule
->> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
->> on !NEW_DRIVER)."
+Hi,
+
+On Fri, Apr 17, 2015 at 03:23:33PM +0100, S Twiss wrote:
+> From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 > 
-> Which is a circular dependency and won't work.
-
-Indeed.
-
-Boris what about using choice/endchoice ?
-
-Thanks,
-
-Gregory
-
-
-
+> Add OnKey driver support for DA9062
 > 
->>>> So even if there is a choice at build time, and I think that it is
->>>> something expected for the v2, we still need preventing having the
->>>> both drivers trying accessing the same hardware in the same time.
->>>
->>> Of course, but this is already there, and doesn't really address the
->>> same issue.
->>
->> This was the only issue remaining, (see below again):
->> "I don't know how to make it a runtime check ". And my last emails
->> was bout it.
+> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 > 
-> Ok, my bad then :)
+> ---
 > 
-> Maxime
+> This patch applies against linux-next and v4.0 
+> 
+> 
+> 
+>  drivers/input/misc/Kconfig        |  10 ++
+>  drivers/input/misc/Makefile       |   1 +
+>  drivers/input/misc/da9062-onkey.c | 223 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 234 insertions(+)
+>  create mode 100644 drivers/input/misc/da9062-onkey.c
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 6deb8da..472ca38 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -586,6 +586,16 @@ config INPUT_DA9055_ONKEY
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called da9055_onkey.
+>  
+> +config INPUT_DA9062_ONKEY
+> +	tristate "Dialog DA9062 OnKey"
+> +	depends on MFD_DA9062
+> +	help
+> +	  Support the ONKEY of Dialog DA9062 Power Management IC as an
+> +	  input device reporting power button status.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called da9062-onkey.
+> +
+>  config INPUT_DM355EVM
+>  	tristate "TI DaVinci DM355 EVM Keypad and IR Remote"
+>  	depends on MFD_DM355EVM_MSP
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 403a1a5..a631283 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -25,6 +25,7 @@ obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
+>  obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
+>  obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
+>  obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
+> +obj-$(CONFIG_INPUT_DA9062_ONKEY)	+= da9062-onkey.o
+
+Can we maybe keep the same naming convention for all of these? Also, any
+chance all of them or some of them can be combined?
+
+>  obj-$(CONFIG_INPUT_DM355EVM)		+= dm355evm_keys.o
+>  obj-$(CONFIG_INPUT_E3X0_BUTTON)		+= e3x0-button.o
+>  obj-$(CONFIG_INPUT_DRV260X_HAPTICS)	+= drv260x.o
+> diff --git a/drivers/input/misc/da9062-onkey.c b/drivers/input/misc/da9062-onkey.c
+> new file mode 100644
+> index 0000000..c4c0295
+> --- /dev/null
+> +++ b/drivers/input/misc/da9062-onkey.c
+> @@ -0,0 +1,223 @@
+> +/*
+> + * da9062-onkey.c - ONKEY device driver for DA9062
+> + * Copyright (C) 2015  Dialog Semiconductor Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/errno.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of.h>
+> +#include <linux/mfd/da9062/core.h>
+> +#include <linux/mfd/da9062/registers.h>
+> +
+> +struct da9062_onkey {
+> +	struct da9062 *hw;
+> +	struct delayed_work work;
+> +	struct	input_dev *input;
+> +	int irq;
+> +	bool key_power;
+> +};
+> +
+> +static void da9062_poll_on(struct work_struct *work)
+> +{
+> +	struct da9062_onkey *onkey = container_of(work, struct da9062_onkey,
+> +						  work.work);
+> +	unsigned int val;
+> +	int fault_log = 0;
+> +	bool poll = true;
+> +	int ret;
+> +
+> +	/* poll to see when the pin is released */
+> +	ret = regmap_read(onkey->hw->regmap, DA9062AA_STATUS_A, &val);
+> +	if (ret < 0) {
+> +		dev_err(&onkey->input->dev,
+> +			"Failed to read ON status: %d\n", ret);
+> +		goto err_poll;
+> +	}
+> +
+> +	if (!(val & DA9062AA_NONKEY_MASK)) {
+> +		ret = regmap_update_bits(onkey->hw->regmap,
+> +					 DA9062AA_CONTROL_B,
+> +					 DA9062AA_NONKEY_LOCK_MASK, 0);
+> +		if (ret < 0) {
+> +			dev_err(&onkey->input->dev,
+> +				"Failed to reset the Key Delay %d\n", ret);
+> +			goto err_poll;
+> +		}
+> +
+> +		input_report_key(onkey->input, KEY_POWER, 0);
+> +		input_sync(onkey->input);
+> +
+> +		poll = false;
+> +	}
+> +
+> +	/* if the fault log KEY_RESET is detected,
+> +	 * then clear it and shutdown DA9062 via I2C
+> +	 */
+> +	ret = regmap_read(onkey->hw->regmap, DA9062AA_FAULT_LOG, &fault_log);
+> +	if (ret < 0)
+> +		dev_warn(&onkey->input->dev, "Cannot read FAULT_LOG\n");
+> +
+> +	if (fault_log & DA9062AA_KEY_RESET_MASK) {
+> +		ret = regmap_write(onkey->hw->regmap,
+> +				   DA9062AA_FAULT_LOG,
+> +				   DA9062AA_KEY_RESET_MASK);
+> +		if (ret < 0)
+> +			dev_warn(&onkey->input->dev,
+> +				 "Cannot reset KEY_RESET fault log\n");
+> +		else {
+> +			/* at this point we do any S/W housekeeping
+> +			 * and then send shutdown command
+> +			 */
+> +			dev_info(&onkey->input->dev,
+> +				 "Sending SHUTDOWN to DA9062 ...\n");
+> +			ret = regmap_write(onkey->hw->regmap,
+> +					   DA9062AA_CONTROL_F,
+> +					   DA9062AA_SHUTDOWN_MASK);
+> +			if (ret < 0)
+> +				dev_err(&onkey->input->dev,
+> +					"Cannot SHUTDOWN DA9062\n");
+> +		}
+> +	}
+
+This entire block seems to not belong to the input portion of MFD. Why
+do we do it here?
+
+> +
+> +err_poll:
+> +	if (poll)
+> +		schedule_delayed_work(&onkey->work, 50);
+> +}
+> +
+> +static irqreturn_t da9062_onkey_irq_handler(int irq, void *data)
+> +{
+> +	struct da9062_onkey *onkey = data;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(onkey->hw->regmap, DA9062AA_STATUS_A, &val);
+> +	if (onkey->key_power && (ret >= 0) && (val & DA9062AA_NONKEY_MASK)) {
+> +		input_report_key(onkey->input, KEY_POWER, 1);
+> +		input_sync(onkey->input);
+> +		schedule_delayed_work(&onkey->work, 0);
+> +		dev_notice(&onkey->input->dev, "KEY_POWER pressed.\n");
+> +	} else {
+> +		input_report_key(onkey->input, KEY_SLEEP, 1);
+> +		input_sync(onkey->input);
+> +		input_report_key(onkey->input, KEY_SLEEP, 0);
+> +		input_sync(onkey->input);
+> +		dev_notice(&onkey->input->dev, "KEY_SLEEP pressed.\n");
+> +	}
+
+Why do we handle KEY_POWER and KEY_SLEEP completely differently?
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int da9062_onkey_probe(struct platform_device *pdev)
+> +{
+> +	struct da9062 *chip = dev_get_drvdata(pdev->dev.parent);
+> +	struct da9062_onkey *onkey;
+> +	bool kp_tmp = true;
+> +	int ret = 0;
+> +
+> +		kp_tmp = of_property_read_bool((&pdev->dev)->of_node,
+> +					       "dlg,disable-key-power");
+> +		kp_tmp = !kp_tmp;
+
+Should we just allow specifying the keycode instead of hardcoding
+KEY_POWER/KEY_SLEEP?
+
+> +
+> +
+> +	onkey = devm_kzalloc(&pdev->dev, sizeof(struct da9062_onkey),
+> +			     GFP_KERNEL);
+> +	if (!onkey) {
+> +		dev_err(&pdev->dev, "Failed to allocate memory.\n");
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	INIT_DELAYED_WORK(&onkey->work, da9062_poll_on);
+> +
+> +	onkey->input = devm_input_allocate_device(&pdev->dev);
+> +	if (!onkey->input) {
+> +		dev_err(&pdev->dev, "Failed to allocated input device.\n");
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	ret = platform_get_irq_byname(pdev, "ONKEY");
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to get platform IRQ.\n");
+> +		goto err;
+> +	}
+> +	onkey->irq = ret;
+> +
+> +	ret = request_threaded_irq(onkey->irq, NULL,
+> +				   da9062_onkey_irq_handler,
+> +				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> +				   "ONKEY", onkey);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to request input device IRQ.\n");
+> +		goto err;
+> +	}
+> +
+> +	onkey->hw = chip;
+> +	onkey->key_power = kp_tmp;
+> +	onkey->input->evbit[0] = BIT_MASK(EV_KEY);
+> +	onkey->input->name = "da9062-onkey";
+> +	onkey->input->phys = "da9062-onkey/input0";
+> +	onkey->input->dev.parent = &pdev->dev;
+> +
+> +	if (onkey->key_power)
+> +		input_set_capability(onkey->input, EV_KEY, KEY_POWER);
+> +	input_set_capability(onkey->input, EV_KEY, KEY_SLEEP);
+> +
+> +	ret = input_register_device(onkey->input);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to register input device.\n");
+> +		goto err_irq;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, onkey);
+> +	return 0;
+> +
+> +err_irq:
+> +	free_irq(onkey->irq, onkey);
+> +	cancel_delayed_work_sync(&onkey->work);
+> +err:
+> +	return ret;
+> +}
+> +
+> +static int da9062_onkey_remove(struct platform_device *pdev)
+> +{
+> +	struct	da9062_onkey *onkey = platform_get_drvdata(pdev);
+> +
+> +	free_irq(onkey->irq, onkey);
+> +	cancel_delayed_work_sync(&onkey->work);
+> +	input_unregister_device(onkey->input);
+
+No need to unregister explicitly if you allocated input device with
+devm.
+
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver da9062_onkey_driver = {
+> +	.probe	= da9062_onkey_probe,
+> +	.remove	= da9062_onkey_remove,
+> +	.driver	= {
+> +		.name	= "da9062-onkey",
+> +		.owner	= THIS_MODULE,
+> +	},
+> +};
+> +
+> +module_platform_driver(da9062_onkey_driver);
+> +
+> +MODULE_AUTHOR("S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("ONKEY device driver for Dialog DA9062");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform: da9062-onkey");
+> -- 
+> end-of-patch for PATCH V1
 > 
 
+Thanks.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
