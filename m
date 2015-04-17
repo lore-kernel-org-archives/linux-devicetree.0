@@ -1,47 +1,17 @@
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 00/17] crypto: talitos - Add support for SEC1
-Date: Fri, 17 Apr 2015 15:47:30 +0200
-Message-ID: <20150417142353.76D561A242C@localhost.localdomain>
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATH] MIPS: ath79: Add OF support and DTS for TL-WR1043ND
+Date: Fri, 17 Apr 2015 16:24:15 +0200
+Message-ID: <1429280669-2986-1-git-send-email-albeu@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@freescale.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The purpose of this set of patchs is to add to talitos crypto driver
-the support for the SEC1 version of the security engine, which is
-found in mpc885 and mpc8272 processors.
+This series add OF bindings and code support for the interrupt
+controllers, clocks and GPIOs. However it was only tested on a
+TL-WR1043ND with an AR9132, others SoCs are untested, and a few are
+not supported at all.
 
-v3 is a complete rework of the patchset. Since a kernel can be built
-with support for both MPC82xx and MPC83xx at the same time, talitos
-driver shall support both SEC1 and SEC2+ at the same time.
-
-Based on cryptodev-2.6 tree
-
-Christophe Leroy (17):
-  crypto: talitos - Use zero entry to init descriptors ptrs to zero
-  crypto: talitos - Refactor the sg in/out chain allocation
-  crypto: talitos - talitos_ptr renamed ptr for more lisibility
-  crypto: talitos - Add a helper function to clear j_extent field
-  crypto: talitos - remove param 'extent' in map_single_talitos_ptr()
-  crypto: talitos - helper function for ptr len
-  crypto: talitos - enhanced talitos_desc struct for SEC1
-  crypto: talitos - add sub-choice in talitos CONFIG for SEC1
-  crypto: talitos - Add a feature to tag SEC1
-  crypto: talitos - fill in talitos descriptor iaw SEC1 or SEC2+
-  crypto: talitos - adaptation of talitos_submit() for SEC1
-  crypto: talitos - base address for Execution Units
-  crypto: talitos - adapt interrupts and reset functions to SEC1
-  crypto: talitos - implement scatter/gather copy for SEC1
-  crypto: talitos - SEC1 bugs on 0 data hash
-  crypto: talitos - Add fsl,sec1.0 compatible
-  crypto: talitos - Update DT bindings with SEC1
-
- .../devicetree/bindings/crypto/fsl-sec2.txt        |   6 +-
- drivers/crypto/Kconfig                             |  18 +
- drivers/crypto/talitos.c                           | 727 +++++++++++++++------
- drivers/crypto/talitos.h                           | 153 +++--
- 4 files changed, 644 insertions(+), 260 deletions(-)
-
--- 
-2.1.0
+Most code changes base on the previous bug fix series:
+[PATH] MIPS: ath79: Various small fix to prepare OF support
