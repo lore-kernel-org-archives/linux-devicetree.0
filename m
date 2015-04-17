@@ -1,87 +1,67 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC/PATCH v2 3/5] devicetree: bindings: Add new cpuidle enable
- method for Renesas R-car SoCs
-Date: Fri, 17 Apr 2015 15:37:23 +0100
-Message-ID: <20150417143723.GC2347@red-moon>
-References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
- <1429180540-5692-4-git-send-email-keita.kobayashi.ym@renesas.com>
- <20150417124624.GD21904@leverpostej>
- <CANqRtoTaGc7QCJAVj8Jhpo5HgbwyfiRQZz5j0zBkE1cBkDZAzQ@mail.gmail.com>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V1 0/6]  COVER LETTER
+Date: Fri, 17 Apr 2015 15:23:34 +0100
+Message-ID: <cover.1429280614.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANqRtoTaGc7QCJAVj8Jhpo5HgbwyfiRQZz5j0zBkE1cBkDZAzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Keita Kobayashi <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, S Twiss <stwiss.opensource@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Wim Van Sebroeck <wim@iguana.be>
+Cc: David Dajun Chen <david.chen@diasemi.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2015 at 02:11:24PM +0100, Magnus Damm wrote:
-> Hi Mark,
-> 
-> On Fri, Apr 17, 2015 at 9:46 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Thu, Apr 16, 2015 at 11:35:38AM +0100, Keita Kobayashi wrote:
-> >> This patch add the ARM CPUs Device Tree binding to document a new
-> >> enable method of Renesas cpuidle.
-> >>
-> >> Signed-off-by: Keita Kobayashi <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> >> index 8b9e0a9..663ee11 100644
-> >> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> >> @@ -196,6 +196,7 @@ nodes to be present and contain the properties described below.
-> >>                           "qcom,gcc-msm8660"
-> >>                           "qcom,kpss-acc-v1"
-> >>                           "qcom,kpss-acc-v2"
-> >> +                         "renesas,rcar-idle"
-> >
-> > The enable-method is about how to bring the CPU up (and potentially
-> > implies other things, like how to take it down again).
-> 
-> Thanks for your clarification. I now understand that this is related
-> to SMP boot and CPU Hotplug.
-> 
-> > These is no code in this series to that effect, no semantics are
-> > provided, and the name implies this is idle-specific.
-> >
-> > So this doesn't look right, and makes no sense to me.
-> 
-> Ok, I somehow (incorrectly?) assumed that the following line in patch
-> 2/5* tied into this:
-> +CPUIDLE_METHOD_OF_DECLARE(rcar, "renesas,rcar-idle", &rcar_cpuidle_ops);
-> 
-> [*] [RFC/PATCH v2 2/5] ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
-> 
-> But if it is unrelated it should of course be dropped or reworked.
+From: S Twiss <stwiss.opensource@diasemi.com>
 
-It is related, but Mark's remark is correct. We have to keep in mind
-that an enable-method defines how a CPU is powered {up/down} and
-also suspended (quiesced through idle).
+This patch set adds support for the Dialog DA9062 Power Management IC.
 
-It has to be defined through proper bindings and related code, adding a
-random compatible string for the sake of matching does not cut it,
-that is not acceptable and I stated it from the beginning.
+In this patch set the following is provided:
+ - [PATCH V1 1/6]: MFD core support  
+ - [PATCH V1 2/6]: BUCK and LDO regulator driver
+ - [PATCH V1 3/6]: RTC driver
+ - [PATCH V1 4/6]: OnKey driver
+ - [PATCH V1 5/6]: Watchdog driver
+ - [PATCH V1 6/6]: Add bindings for all DA9062 components
 
-So, to make it clear, an enable-method defines CPU operations as a
-whole, cpu init, power{up/down} and suspend.
+This patch applies against linux-next and v4.0 
 
-It must be documented with proper bindings that defines compatible string and
-related properties.
+Thank you,
+Steve Twiss, Dialog Semiconductor Ltd.
 
-The sooner we incorporate the CPUidle ops into SMP ops the better to
-prevent this abuse from happening, an enable-method encompasses SMP
-ops and CPUidle ops, actually they must be merged because they represent
-the enable-method implementation as a whole.
+S Twiss (6):
+  mfd: da9062: DA9062 MFD core driver
+  regulator: da9062: DA9062 regulator driver
+  rtc: da9062: DA9062 RTC driver
+  input: misc: onkey: da9062: DA9062 OnKey driver
+  watchdog: da9062: DA9062 watchdog driver
+  devicetree: da9062: Add bindings for DA9062 driver
 
-I hope this helps.
+ Documentation/devicetree/bindings/mfd/da9062.txt |  107 +++
+ drivers/input/misc/Kconfig                       |   10 +
+ drivers/input/misc/Makefile                      |    1 +
+ drivers/input/misc/da9062-onkey.c                |  223 +++++
+ drivers/mfd/Kconfig                              |   12 +
+ drivers/mfd/Makefile                             |    3 +-
+ drivers/mfd/da9062-core.c                        |  611 ++++++++++++
+ drivers/regulator/Kconfig                        |   10 +
+ drivers/regulator/Makefile                       |    1 +
+ drivers/regulator/da9062-regulator.c             |  968 +++++++++++++++++++
+ drivers/rtc/Kconfig                              |   10 +
+ drivers/rtc/Makefile                             |    1 +
+ drivers/rtc/rtc-da9062.c                         |  367 +++++++
+ drivers/watchdog/Kconfig                         |    9 +
+ drivers/watchdog/Makefile                        |    1 +
+ drivers/watchdog/da9062_wdt.c                    |  249 +++++
+ include/linux/mfd/da9062/core.h                  |   61 ++
+ include/linux/mfd/da9062/registers.h             | 1108 ++++++++++++++++++++++
+ 18 files changed, 3751 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9062.txt
+ create mode 100644 drivers/input/misc/da9062-onkey.c
+ create mode 100644 drivers/mfd/da9062-core.c
+ create mode 100644 drivers/regulator/da9062-regulator.c
+ create mode 100644 drivers/rtc/rtc-da9062.c
+ create mode 100644 drivers/watchdog/da9062_wdt.c
+ create mode 100644 include/linux/mfd/da9062/core.h
+ create mode 100644 include/linux/mfd/da9062/registers.h
 
-Lorenzo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+end-of-patch for PATCH V1
