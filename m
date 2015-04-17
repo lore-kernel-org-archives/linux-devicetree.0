@@ -1,120 +1,87 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
-Date: Fri, 17 Apr 2015 16:32:16 +0200
-Message-ID: <20150417143216.GQ15807@lukather>
-References: <20150410171148.07bc9429@bbrezillon>
- <20150410223008.GA18660@io.lakedaemon.net>
- <552B8EC4.209@free-electrons.com>
- <20150413124711.GI18660@io.lakedaemon.net>
- <87r3rom2qu.fsf@natisbad.org>
- <20150413201146.GL18660@io.lakedaemon.net>
- <20150417103356.6ce78145@bbrezillon>
- <20150417103946.2a46c243@bbrezillon>
- <5531040D.4000007@free-electrons.com>
- <20150417161922.54adec64@bbrezillon>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC/PATCH v2 3/5] devicetree: bindings: Add new cpuidle enable
+ method for Renesas R-car SoCs
+Date: Fri, 17 Apr 2015 15:37:23 +0100
+Message-ID: <20150417143723.GC2347@red-moon>
+References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
+ <1429180540-5692-4-git-send-email-keita.kobayashi.ym@renesas.com>
+ <20150417124624.GD21904@leverpostej>
+ <CANqRtoTaGc7QCJAVj8Jhpo5HgbwyfiRQZz5j0zBkE1cBkDZAzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rE45P3aZNSuYx5ND"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150417161922.54adec64@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <CANqRtoTaGc7QCJAVj8Jhpo5HgbwyfiRQZz5j0zBkE1cBkDZAzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Keita Kobayashi <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Apr 17, 2015 at 02:11:24PM +0100, Magnus Damm wrote:
+> Hi Mark,
+> 
+> On Fri, Apr 17, 2015 at 9:46 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Thu, Apr 16, 2015 at 11:35:38AM +0100, Keita Kobayashi wrote:
+> >> This patch add the ARM CPUs Device Tree binding to document a new
+> >> enable method of Renesas cpuidle.
+> >>
+> >> Signed-off-by: Keita Kobayashi <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> >> index 8b9e0a9..663ee11 100644
+> >> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> >> @@ -196,6 +196,7 @@ nodes to be present and contain the properties described below.
+> >>                           "qcom,gcc-msm8660"
+> >>                           "qcom,kpss-acc-v1"
+> >>                           "qcom,kpss-acc-v2"
+> >> +                         "renesas,rcar-idle"
+> >
+> > The enable-method is about how to bring the CPU up (and potentially
+> > implies other things, like how to take it down again).
+> 
+> Thanks for your clarification. I now understand that this is related
+> to SMP boot and CPU Hotplug.
+> 
+> > These is no code in this series to that effect, no semantics are
+> > provided, and the name implies this is idle-specific.
+> >
+> > So this doesn't look right, and makes no sense to me.
+> 
+> Ok, I somehow (incorrectly?) assumed that the following line in patch
+> 2/5* tied into this:
+> +CPUIDLE_METHOD_OF_DECLARE(rcar, "renesas,rcar-idle", &rcar_cpuidle_ops);
+> 
+> [*] [RFC/PATCH v2 2/5] ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
+> 
+> But if it is unrelated it should of course be dropped or reworked.
 
---rE45P3aZNSuYx5ND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is related, but Mark's remark is correct. We have to keep in mind
+that an enable-method defines how a CPU is powered {up/down} and
+also suspended (quiesced through idle).
 
-On Fri, Apr 17, 2015 at 04:19:22PM +0200, Boris Brezillon wrote:
-> Hi Gregory,
->=20
-> On Fri, 17 Apr 2015 15:01:01 +0200
-> Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
->=20
-> > Hi Boris,
-> >=20
-> > On 17/04/2015 10:39, Boris Brezillon wrote:
-> > > On Fri, 17 Apr 2015 10:33:56 +0200
-> > > Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> > >=20
-> > >> Hi Jason,
-> > >>
-> > >> On Mon, 13 Apr 2015 20:11:46 +0000
-> > >> Jason Cooper <jason@lakedaemon.net> wrote:
-> > >>
-> > >>>>
-> > >>>>> I'd appreciate if we'd look into it.  I understand from on-list a=
-nd
-> > >>>>> off-list discussion that the rewrite was unavoidable.  So I'm wil=
-ling to
-> > >>>>> concede that.  Giving people time to migrate from old to new whil=
-e still
-> > >>>>> being able to update for other security fixes seems reasonable.
-> > >>>>
-> > >>>> Jason, what do you think of the approach above?=20
-> > >>>
-> > >>> I say keep it simple.  We shouldn't use the DT changes to trigger o=
-ne
-> > >>> vice the other.  We need to be able to build both, but only load on=
-e at
-> > >>> a time.  If that's anything other than simple to do, then we make i=
-t a
-> > >>> Kconfig binary choice and move on.
-> > >>
-> > >> Actually I was planning to handle it with a Kconfig dependency rule
-> > >> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
-> > >> on !NEW_DRIVER).
-> > >> I don't know how to make it a runtime check without adding new
-> > >> compatible strings for the kirkwood, dove and orion platforms, and I=
-'m
-> > >> sure sure this is a good idea.
-> > >   ^ not
-> > >=20
-> > >> Do you have any ideas ?
-> >=20
-> > You use devm_ioremap_resource() in the new driver, so if the old one
-> > is already loaded the memory region will be already hold and the new
-> > driver will simply fail during the probe. So for this part it is OK.
->=20
-> I like the idea :-).
+It has to be defined through proper bindings and related code, adding a
+random compatible string for the sake of matching does not cut it,
+that is not acceptable and I stated it from the beginning.
 
-Not really, how do you know which device is going to be probed? For
-that matter, it's pretty much random, and you have no control over it.
+So, to make it clear, an enable-method defines CPU operations as a
+whole, cpu init, power{up/down} and suspend.
 
-Why not just have a choice option, and select which one you want to
-enable?
+It must be documented with proper bindings that defines compatible string and
+related properties.
 
-Maxime
+The sooner we incorporate the CPUidle ops into SMP ops the better to
+prevent this abuse from happening, an enable-method encompasses SMP
+ops and CPUidle ops, actually they must be merged because they represent
+the enable-method implementation as a whole.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I hope this helps.
 
---rE45P3aZNSuYx5ND
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVMRlwAAoJEBx+YmzsjxAg7EQP/1FqMkeMowR6Qa1lgbx6KinK
-o5ZyhARK3e12RVdboVYUWfwjr3C0EFz96/PyBIecBNwZn9AwXaFfbl+9pUKKk+Ef
-5AvbQP1VFtnE4gndyXISp0qmJYWyJPCkA23vDJoGUDj2sRa5404t01ZqFIH0YenA
-sbwIY2YtejQjtWtDZYTiq4g+lAdvZVDv/JiaS5uOWpEMXSUEQR53luJSSDHqRqHX
-drCFnZ3yfvtdptjd+OZgo52x9SBkvu0qWzna79P5O/7ury3NmwMPY/yFX7h8LS6A
-UZZ25nIl3Cg2NXb42kBsfVXvfM12VrvmfOArTlNvzno+XR2irDSO7mhd/99JKjcl
-OiC2H6QuZb33H2l8MQlLNaTGAdoCYTrPhNhxBAzKfBZ9xnjH0nnDnlPHMnZV8wj1
-rFO0j0DZd9jugiiFOdKbvP48mHxdD8eMMTIIwGhMaQ0wa5tUKR+jUwdxoAGSp62O
-Y6ua4hHxgiB1yOSfuBlJ7TVrEhq4CNvOogFRN3SLYgIxClcY2BgK3+fgLMiZndA1
-8n94A2R5VnQAjmeIFRMYOPHhQ6TCGqJ/CPaR5eJy3X9tURCLpvR52/Lbuk7AA13E
-LxVr+wtfUlhJMeO8K6HXsWLq3MhhRFPDK+yr9B4Zrd6B/8gIPoHOwhpQc7jj0yBP
-Nf9eqAdhnb3wcpahIlMr
-=bLvx
------END PGP SIGNATURE-----
-
---rE45P3aZNSuYx5ND--
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
