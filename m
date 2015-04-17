@@ -1,55 +1,57 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH v2 1/2] Documentation: devicetree: root node serial-number property documentation
-Date: Fri, 17 Apr 2015 20:43:54 +0200
-Message-ID: <1429296235-14123-1-git-send-email-contact@paulk.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: AM335x OMAP2 common clock external fixed-clock registration
+Date: Fri, 17 Apr 2015 14:06:23 -0500
+Message-ID: <20150417190623.GA24506@deathray>
+References: <CAPtuhTggHctp5ArGPEuKn2GuPzb-WnKv2_CzPrHzq8hwOR5Aqw@mail.gmail.com>
+ <20150415205136.GA3399@deathray>
+ <552F3B60.8050703@ti.com>
+ <20150416161756.GA27590@deathray>
+ <55301D7F.30708@gmail.com>
+ <20150416220918.GA6057@deathray>
+ <55304486.5020404@gmail.com>
+ <20150417020048.GA27174@deathray>
+ <5530CE63.9070508@gmail.com>
+ <20150417101833.GU4027@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150417101833.GU4027@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Tero Kristo <t-kristo@ti.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Open firmware is already using the serial-number property for passing the
-device's serial number from the bootloader to the kernel. In addition, lshw
-already has support for scanning this property.
+On Fri, Apr 17, 2015 at 11:18:33AM +0100, Russell King - ARM Linux wrote:
+> On Fri, Apr 17, 2015 at 11:12:03AM +0200, Sebastian Hesselbarth wrote:
+> > On 17.04.2015 04:00, Michael Welling wrote:
+> > >On Fri, Apr 17, 2015 at 01:23:50AM +0200, Sebastian Hesselbarth wrote:
+> > >>On 17.04.2015 00:09, Michael Welling wrote:
+> > >>>On Thu, Apr 16, 2015 at 10:37:19PM +0200, Sebastian Hesselbarth wrote:
+> > >>>>On 16.04.2015 18:17, Michael Welling wrote:
+> > [...]
+> > >>>What would be the proper error path?
+> > >>>What cleanup is required?
+> > >>
+> > >>A proper error path would be to release any claimed resource
+> > >>on any error. If you look at the code, the only resources that
+> > >>need to be released are the two clocks in question.
+> > >
+> > >So for every error return in the probe function and in the of si5351_dt_parse
+> > >it needs to clk_put first right?
+> > 
+> > Not quite. The driver should clk_put() every clock that it called a
+> > [of_]clk_get() for. The thing is that clocks can be passed by
+> > platform_data and we never claim them.
+> 
+> I've always said clocks (as in struct clk) should never be passed through
+> platform data.
+>
 
-The serial number is a string that somewhat represents the device's serial
-number. It might come from some form of storage (e.g. an eeprom) and be
-programmed at factory-time by the manufacturer or come from identification
-bits available in e.g. the SoC (note that the soc_id property in the SoC bus
-should hold a full account of those bits).
+What is the alternative for systems that still use the old platform files?
 
-The serial number is taken as-is from the bootloader, so it is up to the
-bootloader to define where the serial number comes from and what length it
-should be. Some use cases for the serial number require it to have a maximum
-length (e.g. for USB serial number) and some other cases imply more restrictions
-on what the serial number should look like (e.g. in Android, the ro.serialno
-property is usually a 16-bytes (plus one null byte) representation of a 64 bit
-number).
-
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- Documentation/devicetree/booting-without-of.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-index 7768518..95fc385 100644
---- a/Documentation/devicetree/booting-without-of.txt
-+++ b/Documentation/devicetree/booting-without-of.txt
-@@ -828,6 +828,10 @@ address which can extend beyond that limit.
-   name may clash with standard defined ones, you prefix them with your
-   vendor name and a comma.
+Hypothetically speaking of course.
  
-+  Additional properties for the root node:
-+
-+    - serial-number : a string representing the device's serial number
-+
-   b) The /cpus node
- 
-   This node is the parent of all individual CPU nodes. It doesn't
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+> according to speedtest.net.
