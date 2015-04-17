@@ -1,167 +1,89 @@
-From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Subject: [PATCH v2 5/7] ARM: dts: exynos5: Use labels for overriding nodes in Exynos5420
-Date: Fri, 17 Apr 2015 22:56:24 +0900
-Message-ID: <1429278986-4374-6-git-send-email-k.kozlowski.k@gmail.com>
-References: <1429278986-4374-1-git-send-email-k.kozlowski.k@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1429278986-4374-1-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
+Date: Fri, 17 Apr 2015 16:19:22 +0200
+Message-ID: <20150417161922.54adec64@bbrezillon>
+References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20150410135056.GB28873@io.lakedaemon.net>
+	<20150410171148.07bc9429@bbrezillon>
+	<20150410223008.GA18660@io.lakedaemon.net>
+	<552B8EC4.209@free-electrons.com>
+	<20150413124711.GI18660@io.lakedaemon.net>
+	<87r3rom2qu.fsf@natisbad.org>
+	<20150413201146.GL18660@io.lakedaemon.net>
+	<20150417103356.6ce78145@bbrezillon>
+	<20150417103946.2a46c243@bbrezillon>
+	<5531040D.4000007@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5531040D.4000007@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Usage of labels instead of full paths reduces possible mistakes when
-overriding nodes. Additionally remove duplicated serial and uart labels
-for serial
+Hi Gregory,
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
----
- arch/arm/boot/dts/exynos5420-peach-pit.dts |  2 +-
- arch/arm/boot/dts/exynos5420.dtsi          | 80 +++++++++++++++---------------
- arch/arm/boot/dts/exynos5800-peach-pi.dts  |  2 +-
- 3 files changed, 42 insertions(+), 42 deletions(-)
+On Fri, 17 Apr 2015 15:01:01 +0200
+Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 0788d08fb43e..d5921ffe1e0e 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -1026,7 +1026,7 @@
- 	};
- };
- 
--&uart_3 {
-+&serial_3 {
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index f67b23f303c3..0ba0004aae44 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -328,13 +328,6 @@
- 		interrupts = <0 47 0>;
- 	};
- 
--	rtc: rtc@101E0000 {
--		clocks = <&clock CLK_RTC>;
--		clock-names = "rtc";
--		interrupt-parent = <&pmu_system_controller>;
--		status = "disabled";
--	};
--
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -496,26 +489,6 @@
- 		status = "disabled";
- 	};
- 
--	uart_0: serial@12C00000 {
--		clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
--	uart_1: serial@12C10000 {
--		clocks = <&clock CLK_UART1>, <&clock CLK_SCLK_UART1>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
--	uart_2: serial@12C20000 {
--		clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
--	uart_3: serial@12C30000 {
--		clocks = <&clock CLK_UART3>, <&clock CLK_SCLK_UART3>;
--		clock-names = "uart", "clk_uart_baud0";
--	};
--
- 	pwm: pwm@12dd0000 {
- 		compatible = "samsung,exynos4210-pwm";
- 		reg = <0x12dd0000 0x100>;
-@@ -531,13 +504,6 @@
- 		#phy-cells = <0>;
- 	};
- 
--	dp: dp-controller@145B0000 {
--		clocks = <&clock CLK_DP1>;
--		clock-names = "dp";
--		phys = <&dp_phy>;
--		phy-names = "dp";
--	};
--
- 	mipi_phy: video-phy@10040714 {
- 		compatible = "samsung,s5pv210-mipi-video-phy";
- 		reg = <0x10040714 12>;
-@@ -557,12 +523,6 @@
- 		status = "disabled";
- 	};
- 
--	fimd: fimd@14400000 {
--		clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
--		clock-names = "sclk_fimd", "fimd";
--		power-domains = <&disp_pd>;
--	};
--
- 	adc: adc@12D10000 {
- 		compatible = "samsung,exynos-adc-v2";
- 		reg = <0x12D10000 0x100>;
-@@ -962,3 +922,43 @@
- 		samsung,pmureg-phandle = <&pmu_system_controller>;
- 	};
- };
-+
-+&dp {
-+	clocks = <&clock CLK_DP1>;
-+	clock-names = "dp";
-+	phys = <&dp_phy>;
-+	phy-names = "dp";
-+};
-+
-+&fimd {
-+	clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
-+	clock-names = "sclk_fimd", "fimd";
-+	power-domains = <&disp_pd>;
-+};
-+
-+&rtc {
-+	clocks = <&clock CLK_RTC>;
-+	clock-names = "rtc";
-+	interrupt-parent = <&pmu_system_controller>;
-+	status = "disabled";
-+};
-+
-+&serial_0 {
-+	clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-+
-+&serial_1 {
-+	clocks = <&clock CLK_UART1>, <&clock CLK_SCLK_UART1>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-+
-+&serial_2 {
-+	clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-+
-+&serial_3 {
-+	clocks = <&clock CLK_UART3>, <&clock CLK_SCLK_UART3>;
-+	clock-names = "uart", "clk_uart_baud0";
-+};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 412f41d62686..3a1c46378460 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -989,7 +989,7 @@
- 	};
- };
- 
--&uart_3 {
-+&serial_3 {
- 	status = "okay";
- };
- 
+> Hi Boris,
+> 
+> On 17/04/2015 10:39, Boris Brezillon wrote:
+> > On Fri, 17 Apr 2015 10:33:56 +0200
+> > Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> > 
+> >> Hi Jason,
+> >>
+> >> On Mon, 13 Apr 2015 20:11:46 +0000
+> >> Jason Cooper <jason@lakedaemon.net> wrote:
+> >>
+> >>>>
+> >>>>> I'd appreciate if we'd look into it.  I understand from on-list and
+> >>>>> off-list discussion that the rewrite was unavoidable.  So I'm willing to
+> >>>>> concede that.  Giving people time to migrate from old to new while still
+> >>>>> being able to update for other security fixes seems reasonable.
+> >>>>
+> >>>> Jason, what do you think of the approach above? 
+> >>>
+> >>> I say keep it simple.  We shouldn't use the DT changes to trigger one
+> >>> vice the other.  We need to be able to build both, but only load one at
+> >>> a time.  If that's anything other than simple to do, then we make it a
+> >>> Kconfig binary choice and move on.
+> >>
+> >> Actually I was planning to handle it with a Kconfig dependency rule
+> >> (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
+> >> on !NEW_DRIVER).
+> >> I don't know how to make it a runtime check without adding new
+> >> compatible strings for the kirkwood, dove and orion platforms, and I'm
+> >> sure sure this is a good idea.
+> >   ^ not
+> > 
+> >> Do you have any ideas ?
+> 
+> You use devm_ioremap_resource() in the new driver, so if the old one
+> is already loaded the memory region will be already hold and the new
+> driver will simply fail during the probe. So for this part it is OK.
+
+I like the idea :-).
+
+> 
+> However, the old driver doesn't try to reserve the region, it directly
+> uses an ioremap(). So if the new driver is loaded first, then the old
+> one will manage to be loaded too. I think that just adding a
+> request_region()/release_region() (or converting the ioremap in a
+> devm_ioremap_resource() in the old driver would be enough.
+
+Absolutely. Unless someone is opposed to this solution I think I'll
+choose this solution.
+
+Thanks,
+
+Boris
+
+
 -- 
-2.1.0
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
