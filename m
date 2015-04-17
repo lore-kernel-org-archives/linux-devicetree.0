@@ -1,55 +1,59 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 2/5] mmc: mediatek: Add Mediatek MMC driver
-Date: Fri, 17 Apr 2015 11:12:13 +0200
-Message-ID: <20150417091213.GM4946@pengutronix.de>
-References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
- <1426562035-16709-3-git-send-email-chaotian.jing@mediatek.com>
- <CAPDyKFoUg1snXeOwCiKPF_daxAAfcWE0nUbRAj23Z=k9z5FCyA@mail.gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 1/2] extcon: arizona: Add support for
+	select accessory detect mode when headphone detection"
+Date: Fri, 17 Apr 2015 10:30:32 +0100
+Message-ID: <20150417093032.GE3480@opensource.wolfsonmicro.com>
+References: <1429259579-16563-1-git-send-email-ideal.song@samsung.com> <1429259579-16563-2-git-send-email-ideal.song@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFoUg1snXeOwCiKPF_daxAAfcWE0nUbRAj23Z=k9z5FCyA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
+In-Reply-To: <1429259579-16563-2-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ulf,
-
-On Tue, Mar 31, 2015 at 02:23:06PM +0200, Ulf Hansson wrote:
-> On 17 March 2015 at 04:13, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> > +
-> > +       msdc_set_buswidth(host, ios->bus_width);
-> > +
-> > +       /* Suspend/Resume will do power off/on */
-> > +       switch (ios->power_mode) {
-> > +       case MMC_POWER_UP:
-> > +               msdc_init_hw(host);
-> > +               if (!IS_ERR(mmc->supply.vmmc)) {
-> > +                       ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
-> > +                                       ios->vdd);
-> > +                       if (ret) {
-> > +                               dev_err(host->dev, "Failed to set vmmc power!\n");
-> > +                               return;
-> > +                       }
-> > +               }
-> > +               break;
-> > +       case MMC_POWER_ON:
-> > +               if (!IS_ERR(mmc->supply.vqmmc)) {
-> > +                       ret = regulator_enable(mmc->supply.vqmmc);
+On Fri, Apr 17, 2015 at 05:32:58PM +0900, Inha Song wrote:
+> This patch add support for select accessory detect mode to HPDETL or HPDETR.
+> Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
+> to measure the impedance of an external load connected to the headphone.
 > 
-> The calls to regulator_enable|disable() for the vqmmc will not be
-> balanced properly here. You need a local cache variable like
-> "is_enabled" to keep track of this.
+> Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
+> 
+> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/extcon/extcon-arizona.c   | 34 ++++++++++++++++++++++++++++++----
+>  include/linux/mfd/arizona/pdata.h |  3 +++
+>  2 files changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+> index 63f01c4..7bc9159 100644
+> --- a/drivers/extcon/extcon-arizona.c
+>  
+> +#ifdef CONFIG_OF
+> +static int arizona_of_get_extcon_pdata(struct arizona *arizona)
+> +{
+> +	struct arizona_pdata *pdata = &arizona->pdata;
+> +
+> +	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel",
+> +			     &pdata->hpdet_channel);
+> +
+> +	return 0;
+> +}
+> +#else
+> +static inline int arizona_of_get_extcon_pdata(struct arizona *arizona)
+> +{
+> +	return 0;
+> +}
+> +#endif
 
-Shouldn't the MMC core provide balanced hooks for this? What about
-MMC_POWER_UP, can this be used for enabling regulators?
+Oh and one other comment can we rename this functions to
+arizona_extcon_of_get_pdata.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
