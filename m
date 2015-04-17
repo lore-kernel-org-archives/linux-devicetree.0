@@ -1,40 +1,30 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 5/5] ARM: DT: STi: STiH407: Add DT node for st-lpc timer.
-Date: Fri, 17 Apr 2015 11:50:23 +0100
-Message-ID: <1429267823-8879-6-git-send-email-peter.griffin@linaro.org>
-References: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH 0/3] Add support for BMC150 magnetometer
+Date: Fri, 17 Apr 2015 13:50:27 +0300
+Message-ID: <1429267830-13681-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the dt node for the st-lpc timer found on
-stih407 famliy SoCs. This can then be used as a clocksource.
+This adds support for Bosch BMC150 magnetometer.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- arch/arm/boot/dts/stih407-family.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Irina Tirdea (3):
+  iio: core: Introduce IIO_CHAN_INFO_CALIBREPETITIONS
+  iio: magn: Add support for BMC150 magnetometer
+  iio: magn: bmc150_magn: Add devicetree binding documentation
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index c06a546..59c6a22 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -39,6 +39,13 @@
- 		reg = <0x08760000 0x1000>;
- 	};
- 
-+	lpc-timer@0x8788000 {
-+		compatible = "st,st_lpc_timer";
-+		reg = <0x8788000 0x1000>;
-+		clock-names = "lpc_clk";
-+		clocks = <&clk_s_d3_flexgen CLK_LPC_1>;
-+	};
-+
- 	timer@08760200 {
- 		interrupt-parent = <&intc>;
- 		compatible = "arm,cortex-a9-global-timer";
+ Documentation/ABI/testing/sysfs-bus-iio            |   10 +
+ .../bindings/iio/magnetometer/bmc150_magn.txt      |   20 +
+ drivers/iio/industrialio-core.c                    |    1 +
+ drivers/iio/magnetometer/Kconfig                   |   14 +
+ drivers/iio/magnetometer/Makefile                  |    2 +
+ drivers/iio/magnetometer/bmc150_magn.c             | 1060 ++++++++++++++++++++
+ include/linux/iio/iio.h                            |    1 +
+ 7 files changed, 1108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+ create mode 100644 drivers/iio/magnetometer/bmc150_magn.c
+
 -- 
 1.9.1
