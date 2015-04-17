@@ -1,55 +1,68 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 2/5] mmc: mediatek: Add Mediatek MMC driver
-Date: Fri, 17 Apr 2015 15:45:47 +0200
-Message-ID: <20150417134547.GN4946@pengutronix.de>
-References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
- <1426562035-16709-3-git-send-email-chaotian.jing@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426562035-16709-3-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Subject: [PATCH v3 00/11] ARM: dts: exynos4: labels for overriding nodes
+Date: Fri, 17 Apr 2015 22:47:08 +0900
+Message-ID: <1429278439-3919-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chaotian,
 
-On Tue, Mar 17, 2015 at 11:13:52AM +0800, Chaotian Jing wrote:
-> Add Mediatek MMC driver code
-> 
+Hi,
 
-[...]
+Changes since v2
+================
+1. Fix typo in commit msg (lablels -> labels).
 
-> +	host->dev = &pdev->dev;
-> +	host->mmc = mmc;
-> +	/* Set host parameters to mmc */
-> +	mmc->ops = &mt_msdc_ops;
-> +	mmc->f_min = 260000;
-> +	mmc->ocr_avail = MMC_VDD_30_31 | MMC_VDD_31_32 | MMC_VDD_32_33;
-> +
-> +	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
-> +	/* MMC core transfer sizes tunable parameters */
-> +	mmc->max_segs = MAX_BD_NUM;
-> +	mmc->max_seg_size = 64 * 1024;
+Changes since v1
+================
+1. Re-phrased the description (phandle->label). Suggested by Arnd.
 
-Earlier versions of this driver had 64 * 1024 - 512 here. Using 64k
-breaks SD card support here. Reading the partition table still works
-fine, but the next transfers fail with messages like:
+Description
+===========
 
-mtk-msdc 11240000.mmc: msdc_request_timeout: aborting cmd/data/mrq
-mtk-msdc 11240000.mmc: msdc_request_timeout: aborting mrq=ffffffc06e586860 cmd=18
-mtk-msdc 11240000.mmc: msdc_request_timeout: abort data: cmd18; 136 blocks
-mmcblk1: error -110 transferring data, sector 338488, nr 136, cmd response 0x900, card status 0xb00
-mtk-msdc 11240000.mmc: set mclk to 0 mmc1: tried to reset card
+The label-based notation reduces possible mistakes when overriding
+nodes by child DTSI and board files and reduces duplication
+of addresses.
 
-Can you confirm this?
+The patchset refactors Exynos4 boards to use labels for overriding nodes.
 
-Sascha
+Tested by comparison of decompiled DTB for each commit.
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (11):
+  ARM: dts: Add labels to Exynos4 nodes
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4210
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4210
+    Origen
+  ARM: dts: exynos4: Use labels for overriding nodes in SMDKv310
+  ARM: dts: exynos4: Use labels for overriding nodes in Trats
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4212
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4x12
+  ARM: dts: exynos4: Use labels for overriding nodes in Exynos4412
+  ARM: dts: exynos4: Use labels for overriding nodes in Odroid
+  ARM: dts: exynos4: Use labels for overriding nodes in SMDK4412
+  ARM: dts: exynos4: Use labels for overriding nodes in Trats2
+
+ arch/arm/boot/dts/exynos4.dtsi                  |   22 +-
+ arch/arm/boot/dts/exynos4210-origen.dts         |  418 +++----
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi       |    6 +-
+ arch/arm/boot/dts/exynos4210-smdkv310.dts       |  280 ++---
+ arch/arm/boot/dts/exynos4210-trats.dts          |  592 +++++-----
+ arch/arm/boot/dts/exynos4210.dtsi               |   49 +-
+ arch/arm/boot/dts/exynos4212.dtsi               |   12 +-
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  728 ++++++-------
+ arch/arm/boot/dts/exynos4412-odroidx.dts        |   16 +-
+ arch/arm/boot/dts/exynos4412-smdk4412.dts       |  210 ++--
+ arch/arm/boot/dts/exynos4412-trats2.dts         | 1331 ++++++++++++-----------
+ arch/arm/boot/dts/exynos4412.dtsi               |   20 +-
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi       |    8 +-
+ arch/arm/boot/dts/exynos4x12.dtsi               |  212 ++--
+ 14 files changed, 1952 insertions(+), 1952 deletions(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.1.0
