@@ -1,72 +1,56 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 1/5] clocksource: st_lpc: Add LPC timer as a clocksource.
-Date: Fri, 17 Apr 2015 23:16:45 +0200
-Message-ID: <1429305405.16771.114.camel@x220>
-References: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org>
-	 <1429267823-8879-2-git-send-email-peter.griffin@linaro.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to cell-index
+Date: Fri, 17 Apr 2015 17:53:06 -0500
+Message-ID: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429267823-8879-2-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de, lee.jones@linaro.org, devicetree@vger.kernel.org, Ajit Pal Singh <ajitpal.singh@st.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-04-17 at 11:50 +0100, Peter Griffin wrote:
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
+It turns out that existing U-Boots will dereference NULL pointers
+if the device tree does not have cell-index in the portal nodes.
 
-> +config CLKSRC_ST_LPC_CLOCK
-> +	bool
-> +	depends on ARCH_STI
-> +	select CLKSRC_OF if OF
-> +	help
-> +	  Enable this option to use the Low Power controller timer
-> +	  as clock source.
-> +
-> +config CLKSRC_ST_LPC_TIMER_SCHED_CLOCK
-> +	bool
-> +	depends on ST_LPC_CLOCK
+No patch has yet been merged adding device tree nodes for this binding
+(except a dtsi that has not yet been referenced), nor has any driver
+yet been merged making use of the binding, so it's not too late to
+change the binding in order to keep compatibility with existing
+U-Boots.
 
-It looks like you meant
-     depends on CLKSRC_ST_LPC_CLOCK
+Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/soc/fsl/qman-portals.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +	default y
-> +	help
-> +	  Use Low Power controller timer clock source as sched_clock
+diff --git a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
+index 48c4dae..47e46cc 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
+@@ -47,7 +47,7 @@ PROPERTIES
+ 
+ 	For additional details about the PAMU/LIODN binding(s) see pamu.txt
+ 
+-- fsl,qman-channel-id
++- cell-index
+ 	Usage:		Required
+ 	Value type:	<u32>
+ 	Definition:	The hardware index of the channel. This can also be
+@@ -136,7 +136,7 @@ The example below shows a (P4080) QMan portals container/bus node with two porta
+ 			reg = <0x4000 0x4000>, <0x101000 0x1000>;
+ 			interrupts = <106 2 0 0>;
+ 			fsl,liodn = <3 4>;
+-			fsl,qman-channel-id = <1>;
++			cell-index = <1>;
+ 
+ 			fman0 {
+ 				fsl,liodn = <0x22>;
+-- 
+2.1.0
 
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-
-> +obj-$(CONFIG_CLKSRC_ST_LPC_CLOCK)	+= st_lpc.o
-
-> --- /dev/null
-> +++ b/drivers/clocksource/st_lpc.c
-
-> +#ifdef CONFIG_CLKSRC_LPC_TIMER_SCHED_CLOCK
-
-#ifdef CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK here?
-
-> +static u64 notrace st_lpc_sched_clock_read(void)
-> +{
-> +	return st_lpc_counter_read();
-> +}
-> +#endif
-
-> +#ifdef CONFIG_CLKSRC_LPC_TIMER_SCHED_CLOCK
-
-Again, #ifdef CONFIG_CLKSRC_ST_LPC_TIMER_SCHED_CLOCK here?
-
-> +	sched_clock_register(st_lpc_sched_clock_read, 64, rate);
-> +#endif
-
-Assuming the above suggestions are correct: checkkconfigsymbols.py, as
-shipped in linux-next, helps detect stuff like this. See
-    scripts/checkkconfigsymbols.py --help.
-
-Thanks,
-
-
-Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
