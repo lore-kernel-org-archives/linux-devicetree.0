@@ -1,71 +1,59 @@
-From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [PATCH 1/3] iio: core: Introduce IIO_CHAN_INFO_CALIBREPETITIONS
-Date: Fri, 17 Apr 2015 13:50:28 +0300
-Message-ID: <1429267830-13681-2-git-send-email-irina.tirdea@intel.com>
-References: <1429267830-13681-1-git-send-email-irina.tirdea@intel.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/2] crypto: add new driver for Marvell CESA
+Date: Fri, 17 Apr 2015 10:59:57 +0000
+Message-ID: <20150417105957.GB8069@io.lakedaemon.net>
+References: <1428591523-1780-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20150410135056.GB28873@io.lakedaemon.net>
+ <20150410171148.07bc9429@bbrezillon>
+ <20150410223008.GA18660@io.lakedaemon.net>
+ <552B8EC4.209@free-electrons.com>
+ <20150413124711.GI18660@io.lakedaemon.net>
+ <87r3rom2qu.fsf@natisbad.org>
+ <20150413201146.GL18660@io.lakedaemon.net>
+ <20150417103356.6ce78145@bbrezillon>
+ <20150417103946.2a46c243@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429267830-13681-1-git-send-email-irina.tirdea@intel.com>
+Content-Disposition: inline
+In-Reply-To: <20150417103946.2a46c243@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Irina Tirdea <irina.tirdea@intel.com>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <info@free-electrons.com>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Tawfik Bayouk <tawfik@marvell.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some magnetometers can perform a number of repetitions in HW
-for each measurement to increase accuracy. One example is
-Bosch BMC150:
-http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf.
+Hey Boris,
 
-Introduce an interface to set the number of repetitions
-for these devices.
+On Fri, Apr 17, 2015 at 10:39:46AM +0200, Boris Brezillon wrote:
+> On Fri, 17 Apr 2015 10:33:56 +0200 Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> > On Mon, 13 Apr 2015 20:11:46 +0000 Jason Cooper <jason@lakedaemon.net> wrote:
+> > > > 
+> > > > > I'd appreciate if we'd look into it.  I understand from on-list and
+> > > > > off-list discussion that the rewrite was unavoidable.  So I'm willing to
+> > > > > concede that.  Giving people time to migrate from old to new while still
+> > > > > being able to update for other security fixes seems reasonable.
+> > > > 
+> > > > Jason, what do you think of the approach above? 
+> > > 
+> > > I say keep it simple.  We shouldn't use the DT changes to trigger one
+> > > vice the other.  We need to be able to build both, but only load one at
+> > > a time.  If that's anything other than simple to do, then we make it a
+> > > Kconfig binary choice and move on.
+> > 
+> > Actually I was planning to handle it with a Kconfig dependency rule
+> > (NEW_DRIVER depends on !OLD_DRIVER and OLD_DRIVER depends
+> > on !NEW_DRIVER).
+> > I don't know how to make it a runtime check without adding new
+> > compatible strings for the kirkwood, dove and orion platforms, and I'm
+> > sure sure this is a good idea.
+>   ^ not
+> 
+> > Do you have any ideas ?
 
-Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-iio | 10 ++++++++++
- drivers/iio/industrialio-core.c         |  1 +
- include/linux/iio/iio.h                 |  1 +
- 3 files changed, 12 insertions(+)
+I'm kinda wrapped up with dayjob stuff atm...  But I'd look at the wireless
+drivers.  eg b43, b43legacy, brcm80211.  There are devices they overlap for.
+So, they need to deconflict in some way.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 866b4ec..74c1444 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1375,3 +1375,13 @@ Description:
- 		The emissivity ratio of the surface in the field of view of the
- 		contactless temperature sensor.  Emissivity varies from 0 to 1,
- 		with 1 being the emissivity of a black body.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_magn_x_calibrepetitions
-+What:		/sys/bus/iio/devices/iio:deviceX/in_magn_y_calibrepetitions
-+What:		/sys/bus/iio/devices/iio:deviceX/in_magn_z_calibrepetitions
-+KernelVersion:	4.2
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Hardware applied number of repetitions for acquiring one
-+		data point. The HW will do <type>[_name]_calibrepetitions
-+		measurements and return the average value as output data.
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 7c98bc1..9e0da7f 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -129,6 +129,7 @@ static const char * const iio_chan_info_postfix[] = {
- 	[IIO_CHAN_INFO_DEBOUNCE_COUNT] = "debounce_count",
- 	[IIO_CHAN_INFO_DEBOUNCE_TIME] = "debounce_time",
- 	[IIO_CHAN_INFO_CALIBEMISSIVITY] = "calibemissivity",
-+	[IIO_CHAN_INFO_CALIBREPETITIONS] = "calibrepetitions",
- };
- 
- /**
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index b1e46ae..07fbfb2 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -44,6 +44,7 @@ enum iio_chan_info_enum {
- 	IIO_CHAN_INFO_DEBOUNCE_COUNT,
- 	IIO_CHAN_INFO_DEBOUNCE_TIME,
- 	IIO_CHAN_INFO_CALIBEMISSIVITY,
-+	IIO_CHAN_INFO_CALIBREPETITIONS,
- };
- 
- enum iio_shared_by {
--- 
-1.9.1
+thx,
+
+Jason.
