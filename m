@@ -1,68 +1,120 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: tas571x: New driver for TI
- TAS571x power amplifiers
-Date: Sat, 18 Apr 2015 12:39:57 +0100
-Message-ID: <20150418113957.GF26185@sirena.org.uk>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org>
- <552FB1CD.3040401@metafoo.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V1 2/6] regulator: da9062: DA9062 regulator driver
+Date: Sat, 18 Apr 2015 12:48:28 +0100
+Message-ID: <20150418114828.GG26185@sirena.org.uk>
+References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
+ <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="E7i4zwmWs5DOuDSH"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <552FB1CD.3040401-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: S Twiss <stwiss.opensource@diasemi.com>
+Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
 
---E7i4zwmWs5DOuDSH
+--kjpMrWxdCilgNbo1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Apr 16, 2015 at 02:57:49PM +0200, Lars-Peter Clausen wrote:
-> On 04/15/2015 11:42 PM, Kevin Cernekee wrote:
+On Fri, Apr 17, 2015 at 03:23:32PM +0100, S Twiss wrote:
 
-> >+	case TAS571X_ID_5711:
-> >+		priv->codec_driver.controls = tas5711_controls;
-> >+		priv->codec_driver.num_controls = ARRAY_SIZE(tas5711_controls);
-> >+		break;
-> >+	case TAS571X_ID_5717:
-> >+	case TAS571X_ID_5719:
-> >+		priv->codec_driver.controls = tas5717_controls;
-> >+		priv->codec_driver.num_controls = ARRAY_SIZE(tas5717_controls);
+> +/* Regulator interrupt handlers */
+> +static irqreturn_t da9062_ldo_lim_event(int irq, void *data)
+> +{
+> +	struct da9062_regulators *regulators = data;
+> +	struct da9062 *hw = regulators->regulator[0].hw;
+> +	struct da9062_regulator *regl;
+> +	int bits, i, ret;
+> +
+> +	ret = regmap_read(hw->regmap, DA9062AA_STATUS_D, &bits);
+> +	if (ret < 0)
+> +		return IRQ_NONE;
 
-> Typically when a driver supports multiple chips with different control sets
-> the snd_soc_codec_driver implements a probe callback in which the correct
-> controls are registered.
+Please log an error for this, if we're having trouble talking to the
+device that seems like a serious issue.
 
-I'm fine with doing it with tables (though just having two static CODEC
-driver structures would be a bit cleaner).  The pattern with probe() is
-usually that there's some base set of controls all the devices have
-which then gets device specific controls/routes/whatever added to it so
-you get benefits fromm sharing the table but in this case the table is
-so tiny anyway that I'm not sure it's worth caring.
+> +	for (i = regulators->n_regulators - 1; i >= 0; i--) {
+> +		regl = &regulators->regulator[i];
+> +		if (regl->info->oc_event.reg != DA9062AA_STATUS_D)
+> +			continue;
+> +
+> +		if (BIT(regl->info->oc_event.lsb) & bits)
+> +			regulator_notifier_call_chain(regl->rdev,
+> +					REGULATOR_EVENT_OVER_CURRENT, NULL);
+> +	}
+> +
+> +	return IRQ_HANDLED;
 
---E7i4zwmWs5DOuDSH
+This will return IRQ_HANDLED even if none of the regulators were
+flagginng an event.
+
+> +static irqreturn_t da9062_vdd_warn_event(int irq, void *data)
+> +{
+> +	return IRQ_HANDLED;
+> +}
+
+Ignoring an interrupt is not usefully handling it - at the *least* this
+should be generating a log message.
+
+> +static struct da9062_regulators_pdata *da9062_parse_regulators_dt(
+> +		struct platform_device *pdev,
+> +		struct of_regulator_match **reg_matches)
+> +{
+> +	struct da9062_regulators_pdata *pdata;
+> +	struct da9062_regulator_data *rdata;
+> +	struct device_node *node;
+> +	int i, n, num;
+> +
+> +	node = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
+> +	if (!node) {
+> +		dev_err(&pdev->dev, "Regulators device node not found\n");
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	num = of_regulator_match(&pdev->dev, node, da9062_matches,
+> +				 ARRAY_SIZE(da9062_matches));
+
+Don't open code this, describe the DT names in the regualtor_desc and
+let the core register.
+
+> +	if (IS_ERR(pdata) || pdata->n_regulators == 0) {
+> +		dev_err(&pdev->dev,
+> +			"No regulators defined for the platform\n");
+> +		return PTR_ERR(pdata);
+> +	}
+> +
+> +	n_regulators = ARRAY_SIZE(local_regulator_info),
+
+This is broken, the set of regulators in the silicon is not a property
+of the platform.  The driver should just register all the regualtors
+that are present in the silicon.  I'm fairly sure I've been through this
+before...
+
+> +	ret = request_threaded_irq(irq,
+> +				   NULL, da9062_vdd_warn_event,
+> +				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> +				   "VDD_WARN", regulators);
+
+devm_request_threaded_irq().
+
+--kjpMrWxdCilgNbo1
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVMkKMAAoJECTWi3JdVIfQ6YgH/2i2xJMcX5Q+9C1nFFG7d+Wv
-N6TYqVsznTCfXAUBkhCTxh08ZQTu/5TtlpXX0JS6aUdxCmvu/f6SZRrt5ua0hYB8
-RVme09EnlbdAHI7xCdYfNMu5DRkYas0ztPsE+g1zw79XHKvJ0JTDqOJwgop5fRlN
-wqID+EEmD51zlqpv7ZGaC/4941qhy3PB6SKCKiRttQv65Zi2hKfGKI+IVhI8GJfx
-e5SQ5y9Jyo2uKjGnHUFplqrVk/lB1jRJK7ScqVCGH1eChumdEkzIcwTml47Z0Wvj
-3h48bSVKqMrVL+wj4r9Rlu8J8BHdqUvoiqaiIans7F+FNNRwThFsl9UtniNVkKk=
-=MQmg
+iQEcBAEBCAAGBQJVMkSMAAoJECTWi3JdVIfQH7AH/2dX0yzWNTBV76jedKR0IxZJ
+53JdeMqgiWZAPiLDH9lD5KL0nRjMppri7uHPns81faOI3/ZvxesGrnsN1AYu9PZJ
+Uqi4zi6aV+mj1uKziMMVpsT7WQqAhU1IeCAr7VV0UxCWqr/WgOAa+4hCjk7LnKcX
+sxYiJVu0HpK9vh1/XdLN7yYS01VyIedanuP0ebvuBRtVAJOXIVkZoeNRVtzWflKS
+qcNLXkhPe5e8vm8qWynqKn7O23t9KWZQFVrIOMh27GcTUuh6wkBwpOD/EAt2TZZh
+SzkqnCOSDnXOOeKY5G3pzZPw8MkFCz2i8jul3DFKrd7T7xyhXTE54Mpnvmg7U0g=
+=b4Hb
 -----END PGP SIGNATURE-----
 
---E7i4zwmWs5DOuDSH--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--kjpMrWxdCilgNbo1--
