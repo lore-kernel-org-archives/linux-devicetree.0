@@ -1,99 +1,101 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 11/14] MIPS: ath79: Add OF support to the GPIO driver
-Date: Sat, 18 Apr 2015 18:57:21 +0200
-Message-ID: <20150418185721.3e9afaba@tock>
-References: <1429280669-2986-1-git-send-email-albeu@free.fr>
-	<1429280669-2986-12-git-send-email-albeu@free.fr>
-	<4071167.An8CoV6UJC@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power
+ amplifiers
+Date: Sat, 18 Apr 2015 18:11:37 +0100
+Message-ID: <20150418171137.GY26185@sirena.org.uk>
+References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
+ <1429134141-17924-2-git-send-email-cernekee@chromium.org>
+ <20150418113632.GE26185@sirena.org.uk>
+ <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4071167.An8CoV6UJC@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hkxLWrKAgbGf75mf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@chromium.org>
+Cc: lgirdwood@gmail.com, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2015 16:53:31 +0200
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-> On Friday 17 April 2015 16:24:26 Alban Bedel wrote:
-> > Replace the simple GPIO chip registration by a platform driver
-> > and make ath79_gpio_init() just register the device.
-> > 
-> > Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> > ---
-> >  arch/mips/ath79/dev-common.c | 13 ++++++++
-> >  arch/mips/ath79/gpio.c       | 73
-> > +++++++++++++++++++++++++++++++++++++++++--- 2 files changed, 81
-> > insertions(+), 5 deletions(-)
-> 
-> Could you move the driver to drivers/gpio/ now?
+--hkxLWrKAgbGf75mf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sure, I'll add a patch to move it there.
+On Sat, Apr 18, 2015 at 09:16:36AM -0700, Kevin Cernekee wrote:
+> On Sat, Apr 18, 2015 at 4:36 AM, Mark Brown <broonie@kernel.org> wrote:
 
-> > +void __init ath79_gpio_init(void)
-> > +{
-> > +	struct resource res;
-> > +
-> > +	memset(&res, 0, sizeof(res));
-> > +
-> > +	res.flags = IORESOURCE_MEM;
-> > +	res.start = AR71XX_GPIO_BASE;
-> > +	res.end = res.start + AR71XX_GPIO_SIZE - 1;
-> > +
-> > +	platform_device_register_simple("ath79-gpio", -1, &res, 1);
-> > +}
-> 
-> Your code looks correct, but could be shortened to 
-> 
-> 	struct resource mem = DEFINE_RES_MEM(AR71XX_GPIO_BASE,
-> AR71XX_GPIO_SIZE);
+> >> +static int tas571x_set_sysclk(struct snd_soc_dai *dai,
+> >> +                           int clk_id, unsigned int freq, int dir)
 
-I'll do that.
+> > Remove empty functions, at best they waste space at worst they break
+> > things.
 
-> >  
-> > -void __init ath79_gpio_init(void)
-> > +static const struct of_device_id ath79_gpio_of_match[] = {
-> > +	{
-> > +		.compatible = "qca,ar7100-gpio",
-> > +		.data = (void *)AR71XX_GPIO_COUNT,
-> > +	},
-> > +	{
-> > +		.compatible = "qca,ar7240-gpio",
-> > +		.data = (void *)AR7240_GPIO_COUNT,
-> > +	},
-> > +	{
-> > +		.compatible = "qca,ar7241-gpio",
-> > +		.data = (void *)AR7241_GPIO_COUNT,
-> > +	},
-> > +	{
-> > +		.compatible = "qca,ar9130-gpio",
-> > +		.data = (void *)AR913X_GPIO_COUNT,
-> > +	},
-> > +	{
-> > +		.compatible = "qca,ar9330-gpio",
-> > +		.data = (void *)AR933X_GPIO_COUNT,
-> > +	},
-> > +	{
-> > +		.compatible = "qca,ar9340-gpio",
-> > +		.data = (void *)AR934X_GPIO_COUNT,
-> > +	},
-> > +	{
-> > +		.compatible = "qca,qca9550-gpio",
-> > +		.data = (void *)QCA955X_GPIO_COUNT,
-> > +	},
-> > +	{},
-> > +};
-> 
-> How about putting the number into an 'ngpios' property like some other
-> bindings do?
+> Without the empty function, we run into problems with drivers that
+> abort when they get -ENOTSUPP here:
 
-I'll do that, it would make things simpler.
+> sound/soc/atmel/atmel_wm8904.c: ret =
+> snd_soc_dai_set_sysclk(codec_dai, WM8904_CLK_FLL,
+> sound/soc/atmel/atmel_wm8904.c-                 0, SND_SOC_CLOCK_IN);
+> sound/soc/atmel/atmel_wm8904.c- if (ret < 0) {
+> sound/soc/atmel/atmel_wm8904.c-         pr_err("%s -failed to set
+> wm8904 SYSCLK\n", __func__);
+> sound/soc/atmel/atmel_wm8904.c-         return ret;
+> sound/soc/atmel/atmel_wm8904.c- }
 
-Alban
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Someone trying to use the atmel_wm8904 driver with something other than
+a wm8904 shouldn't really be expecting a good experince...
+
+> Is there a stub version that I can use instead?  Nothing jumped out at
+> me when looking at the other codec drivers.
+
+No, such a stub would make no sense - why would we put a stub in all the
+drivers rather than just making the core do the right thing?
+
+> >> +             /*
+> >> +              * The master volume defaults to 0x3ff (mute), but we ignore
+> >> +              * (zero) the LSB because the hardware step size is 0.125 dB
+> >> +              * and TLV_DB_SCALE_ITEM has a resolution of 0.01 dB.
+> >> +              */
+> >> +             if (regmap_write(priv->regmap, TAS571X_MVOL_REG, 0x3fe))
+> >> +                     return -EIO;
+
+> > I don't understand this - is the LSB a mute bit or sommething?
+
+> The 10-bit master volume field on 5717/5719 works like:
+
+> 0x3ff: MUTE (power-on default)
+> 0x3fe: -103.750 dB
+> 0x3fd: -103.625 dB
+> [lots more options, in 0.125 dB increments]
+> 0x001: 23.875 dB
+> 0x000: 24.000 dB
+
+> Since we only have a resolution of 0.01 dB, the driver forces the LSB
+> to 0 and uses 0.25 dB increments instead of 0.125 dB.  Mute is handled
+> through the dedicated per-channel soft mute register bits instead of
+> the 0x3ff volume setting.
+
+It's not entirely clear to me why we need to reset the bit, or why if
+we're just trying to update that one bit we write the entire register
+value rather than use _update_bits().  If the goal is just to change
+that one bit then _update_bits() would be a lot clearer.
+
+--hkxLWrKAgbGf75mf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVMpBIAAoJECTWi3JdVIfQ5wUH/12ZWuXL78rXmt4t28h8IRPP
+xoOFW9YAKnVdhewJZxWsKmjOyd8bUgXbdXpINNQdU7adLUfEnt9Z0P8+/Jus0aZC
+Xeiz5M59RCd0YqhaCcC99dMfrNrqe+ffJUlofmD1ukkmniuNK14y/eOFvoTZLEhC
+3OX+X+OWjRIbh5TOvo8tv4VmOK09lQyNtgdxEg1eKURA2lMFUbV/RrPUIajfR4Ku
+u8oaZc9NQW5wt95WwmVKcfLAtPXJ8vRfkHdOIHWVkWvFzS7nGOLpVTmjE4LqdwLs
+wz7geTrYafbRpLOsa6RUdEd8gv2Sa7wkVh9aoiHXkjRP51gC6syyM+UU4w2rbys=
+=exjq
+-----END PGP SIGNATURE-----
+
+--hkxLWrKAgbGf75mf--
