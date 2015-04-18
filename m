@@ -1,101 +1,100 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power
- amplifiers
-Date: Sat, 18 Apr 2015 18:11:37 +0100
-Message-ID: <20150418171137.GY26185@sirena.org.uk>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org>
- <20150418113632.GE26185@sirena.org.uk>
- <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Sat, 18 Apr 2015 11:29:23 -0600
+Message-ID: <20150418172923.GA10605@obsidianresearch.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150417163054.GA28241@obsidianresearch.com>
+ <20150418090147.GF12732@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hkxLWrKAgbGf75mf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: lgirdwood@gmail.com, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20150418090147.GF12732-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Apr 18, 2015 at 10:01:47AM +0100, Russell King - ARM Linux wrote:
+> On Fri, Apr 17, 2015 at 10:30:54AM -0600, Jason Gunthorpe wrote:
+> > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
+> > > +	teedev = devm_kzalloc(dev, sizeof(*teedev), GFP_KERNEL);
+> > [..]
+> > > +	rc = misc_register(&teedev->miscdev);
+> > [..]
+> > > +void tee_unregister(struct tee_device *teedev)
+> > > +{
+> > [..]
+> > > +	misc_deregister(&teedev->miscdev);
+> > > +}
+> > [..]
+> > >+static int optee_remove(struct platform_device *pdev)
+> > >+{
+> > >+       tee_unregister(optee->teedev);
+> > 
+> > Isn't that a potential use after free? AFAIK misc_deregister does not
+> > guarentee the miscdev will no longer be accessed after it returns, and
+> > the devm will free it after optee_remove returns.
+> > 
+> > Memory backing a stuct device needs to be freed via the release
+> > function.
+> 
+> Out of interest, which struct device are you talking about here?
 
---hkxLWrKAgbGf75mf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, I was imprecise. In the first paragraph I ment 'miscdev' to
+refer to the entire thing, struct tee_device, struct misc_device, the
+driver allocations, etc.
 
-On Sat, Apr 18, 2015 at 09:16:36AM -0700, Kevin Cernekee wrote:
-> On Sat, Apr 18, 2015 at 4:36 AM, Mark Brown <broonie@kernel.org> wrote:
+So, the first issue is the use-after-free via ioctl() touching struct
+tee_device that you described.
 
-> >> +static int tas571x_set_sysclk(struct snd_soc_dai *dai,
-> >> +                           int clk_id, unsigned int freq, int dir)
+But then we trundle down to:
 
-> > Remove empty functions, at best they waste space at worst they break
-> > things.
++ ctx->teedev->desc->ops->get_version(ctx, &vers.spec_version,
++   vers.uuid);
 
-> Without the empty function, we run into problems with drivers that
-> abort when they get -ENOTSUPP here:
+If we kref teedev so it is valid then calling a driver call back after
+(or during) it's remove function is very likely to blow up.
 
-> sound/soc/atmel/atmel_wm8904.c: ret =
-> snd_soc_dai_set_sysclk(codec_dai, WM8904_CLK_FLL,
-> sound/soc/atmel/atmel_wm8904.c-                 0, SND_SOC_CLOCK_IN);
-> sound/soc/atmel/atmel_wm8904.c- if (ret < 0) {
-> sound/soc/atmel/atmel_wm8904.c-         pr_err("%s -failed to set
-> wm8904 SYSCLK\n", __func__);
-> sound/soc/atmel/atmel_wm8904.c-         return ret;
-> sound/soc/atmel/atmel_wm8904.c- }
+Also, in TPM we discovered that adding a sysfs file was very ugly
+(impossible?) because without the misc_mtx protection that open has,
+getting a locked tee_device in the sysfs callback is difficult.
 
-Someone trying to use the atmel_wm8904 driver with something other than
-a wm8904 shouldn't really be expecting a good experince...
+With TPM, we ended up trying lots of options for fixing struct
+misc_device in the tpm core, which is handling multiple sub drivers,
+and basically gave up. Gave each struct tpm_device an embedded struct
+device like Greg suggested here. Then the tpm core is working with the
+APIs, not struggling against them.
 
-> Is there a stub version that I can use instead?  Nothing jumped out at
-> me when looking at the other codec drivers.
+But this is not a user-space invisible change, so better to do it right
+from day 1 ..
 
-No, such a stub would make no sense - why would we put a stub in all the
-drivers rather than just making the core do the right thing?
+We followed rtc as an example of how to create a mid-layer that
+exports it's own register function, with char dev and sysfs
+components. It seems properly implemented, and has elegant solutions
+to these problems (like ops):
+ - Don't mess with modules, use 'ops' and set 'ops' to null when the
+   driver removes. The driver core will keep the driver module around
+   for you bettwen the probe/remove calls. Setting ops = NULL ensures driver
+   module code cannot be called after remove.
+ - Use locking for 'ops' to serialize driver callbacks with driver removal
+ - Embed a struct device/etc in the struct tee_device and use the release
+   function to deallocate struct tee_device. All callbacks from the
+   driver/char/sysfs core can now use container_of on something that
+   is already holds the right kref.
+ - Consider an alloc/register pattern as we use now in TPM. This has proven
+   smart for TPM as it allows:
+       alloc tee_device + init struct device, etc
+       driver setup
+       core library helper calls for setup/etc
+       driver register + char dev publish
 
-> >> +             /*
-> >> +              * The master volume defaults to 0x3ff (mute), but we ignore
-> >> +              * (zero) the LSB because the hardware step size is 0.125 dB
-> >> +              * and TLV_DB_SCALE_ITEM has a resolution of 0.01 dB.
-> >> +              */
-> >> +             if (regmap_write(priv->regmap, TAS571X_MVOL_REG, 0x3fe))
-> >> +                     return -EIO;
+It appeared to me this driver was copying TPM's old architecture,
+which is very much known to be broken.
 
-> > I don't understand this - is the LSB a mute bit or sommething?
-
-> The 10-bit master volume field on 5717/5719 works like:
-
-> 0x3ff: MUTE (power-on default)
-> 0x3fe: -103.750 dB
-> 0x3fd: -103.625 dB
-> [lots more options, in 0.125 dB increments]
-> 0x001: 23.875 dB
-> 0x000: 24.000 dB
-
-> Since we only have a resolution of 0.01 dB, the driver forces the LSB
-> to 0 and uses 0.25 dB increments instead of 0.125 dB.  Mute is handled
-> through the dedicated per-channel soft mute register bits instead of
-> the 0x3ff volume setting.
-
-It's not entirely clear to me why we need to reset the bit, or why if
-we're just trying to update that one bit we write the entire register
-value rather than use _update_bits().  If the goal is just to change
-that one bit then _update_bits() would be a lot clearer.
-
---hkxLWrKAgbGf75mf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVMpBIAAoJECTWi3JdVIfQ5wUH/12ZWuXL78rXmt4t28h8IRPP
-xoOFW9YAKnVdhewJZxWsKmjOyd8bUgXbdXpINNQdU7adLUfEnt9Z0P8+/Jus0aZC
-Xeiz5M59RCd0YqhaCcC99dMfrNrqe+ffJUlofmD1ukkmniuNK14y/eOFvoTZLEhC
-3OX+X+OWjRIbh5TOvo8tv4VmOK09lQyNtgdxEg1eKURA2lMFUbV/RrPUIajfR4Ku
-u8oaZc9NQW5wt95WwmVKcfLAtPXJ8vRfkHdOIHWVkWvFzS7nGOLpVTmjE4LqdwLs
-wz7geTrYafbRpLOsa6RUdEd8gv2Sa7wkVh9aoiHXkjRP51gC6syyM+UU4w2rbys=
-=exjq
------END PGP SIGNATURE-----
-
---hkxLWrKAgbGf75mf--
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
