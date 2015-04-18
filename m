@@ -1,120 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V1 2/6] regulator: da9062: DA9062 regulator driver
-Date: Sat, 18 Apr 2015 12:48:28 +0100
-Message-ID: <20150418114828.GG26185@sirena.org.uk>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
- <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arch: arm: Show the serial number from devicetree
+ in cpuinfo
+Date: Sat, 18 Apr 2015 13:27:59 +0100
+Message-ID: <20150418122758.GJ12732@n2100.arm.linux.org.uk>
+References: <1429296235-14123-1-git-send-email-contact@paulk.fr>
+ <1429296235-14123-2-git-send-email-contact@paulk.fr>
+ <20150418091310.GI12732@n2100.arm.linux.org.uk>
+ <1429350313.2424.1.camel@collins>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+In-Reply-To: <1429350313.2424.1.camel@collins>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Apr 18, 2015 at 11:45:13AM +0200, Paul Kocialkowski wrote:
+> Le samedi 18 avril 2015 =E0 10:13 +0100, Russell King - ARM Linux a
+> =E9crit :
+> > Hi,
+> >=20
+> > On Fri, Apr 17, 2015 at 08:43:55PM +0200, Paul Kocialkowski wrote:
+> > >  static int __init init_machine_late(void)
+> > >  {
+> > > +#ifdef CONFIG_OF
+> > > +	unsigned long dt_root;
+> > > +	int size;
+> > > +
+> > > +	dt_root =3D of_get_flat_dt_root();
+> > > +
+> > > +	/* Scan for serial number */
+> > > +	system_serial =3D of_get_flat_dt_prop(dt_root, "serial-number",=
+ &size);
+> >=20
+> > I was really hoping for:
+> >=20
+> > 	if (of_property_read_string(of_root, "serial-number", &system_seri=
+al))
+> > 		system_serial =3D NULL;
+> >=20
+> > here.  I can't see a reason to use the flattened DT at this point a=
+s
+> > we've already parsed it.
+>=20
+> Good point -- I'm not very used to using device-tree so I didn't thin=
+k
+> of it, thanks for mentioning it.
+>=20
+> At this point, I guess I can also add your Signed-Off-By to the patch=
+=2E
 
---kjpMrWxdCilgNbo1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No - Signed-off-by is to indicate the path by which it was committed
+into the git tree, not for review, etc.
 
-On Fri, Apr 17, 2015 at 03:23:32PM +0100, S Twiss wrote:
+I'm assuming you'll be submitting this to my patch system eventually,
+which means when I apply the patch, it'll have my S-o-b automatically
+added.
 
-> +/* Regulator interrupt handlers */
-> +static irqreturn_t da9062_ldo_lim_event(int irq, void *data)
-> +{
-> +	struct da9062_regulators *regulators = data;
-> +	struct da9062 *hw = regulators->regulator[0].hw;
-> +	struct da9062_regulator *regl;
-> +	int bits, i, ret;
-> +
-> +	ret = regmap_read(hw->regmap, DA9062AA_STATUS_D, &bits);
-> +	if (ret < 0)
-> +		return IRQ_NONE;
-
-Please log an error for this, if we're having trouble talking to the
-device that seems like a serious issue.
-
-> +	for (i = regulators->n_regulators - 1; i >= 0; i--) {
-> +		regl = &regulators->regulator[i];
-> +		if (regl->info->oc_event.reg != DA9062AA_STATUS_D)
-> +			continue;
-> +
-> +		if (BIT(regl->info->oc_event.lsb) & bits)
-> +			regulator_notifier_call_chain(regl->rdev,
-> +					REGULATOR_EVENT_OVER_CURRENT, NULL);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-
-This will return IRQ_HANDLED even if none of the regulators were
-flagginng an event.
-
-> +static irqreturn_t da9062_vdd_warn_event(int irq, void *data)
-> +{
-> +	return IRQ_HANDLED;
-> +}
-
-Ignoring an interrupt is not usefully handling it - at the *least* this
-should be generating a log message.
-
-> +static struct da9062_regulators_pdata *da9062_parse_regulators_dt(
-> +		struct platform_device *pdev,
-> +		struct of_regulator_match **reg_matches)
-> +{
-> +	struct da9062_regulators_pdata *pdata;
-> +	struct da9062_regulator_data *rdata;
-> +	struct device_node *node;
-> +	int i, n, num;
-> +
-> +	node = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
-> +	if (!node) {
-> +		dev_err(&pdev->dev, "Regulators device node not found\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	num = of_regulator_match(&pdev->dev, node, da9062_matches,
-> +				 ARRAY_SIZE(da9062_matches));
-
-Don't open code this, describe the DT names in the regualtor_desc and
-let the core register.
-
-> +	if (IS_ERR(pdata) || pdata->n_regulators == 0) {
-> +		dev_err(&pdev->dev,
-> +			"No regulators defined for the platform\n");
-> +		return PTR_ERR(pdata);
-> +	}
-> +
-> +	n_regulators = ARRAY_SIZE(local_regulator_info),
-
-This is broken, the set of regulators in the silicon is not a property
-of the platform.  The driver should just register all the regualtors
-that are present in the silicon.  I'm fairly sure I've been through this
-before...
-
-> +	ret = request_threaded_irq(irq,
-> +				   NULL, da9062_vdd_warn_event,
-> +				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> +				   "VDD_WARN", regulators);
-
-devm_request_threaded_irq().
-
---kjpMrWxdCilgNbo1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVMkSMAAoJECTWi3JdVIfQH7AH/2dX0yzWNTBV76jedKR0IxZJ
-53JdeMqgiWZAPiLDH9lD5KL0nRjMppri7uHPns81faOI3/ZvxesGrnsN1AYu9PZJ
-Uqi4zi6aV+mj1uKziMMVpsT7WQqAhU1IeCAr7VV0UxCWqr/WgOAa+4hCjk7LnKcX
-sxYiJVu0HpK9vh1/XdLN7yYS01VyIedanuP0ebvuBRtVAJOXIVkZoeNRVtzWflKS
-qcNLXkhPe5e8vm8qWynqKn7O23t9KWZQFVrIOMh27GcTUuh6wkBwpOD/EAt2TZZh
-SzkqnCOSDnXOOeKY5G3pzZPw8MkFCz2i8jul3DFKrd7T7xyhXTE54Mpnvmg7U0g=
-=b4Hb
------END PGP SIGNATURE-----
-
---kjpMrWxdCilgNbo1--
+--=20
+=46TTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps u=
+p
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
