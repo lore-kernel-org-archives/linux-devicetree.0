@@ -1,43 +1,39 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH V1 2/6] regulator: da9062: DA9062 regulator driver
-Date: Sat, 18 Apr 2015 10:32:09 +0200
-Message-ID: <1429345929.16771.144.camel@x220>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
-	 <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Sat, 18 Apr 2015 10:55:50 +0200
+Message-ID: <20150418085550.GA29858@kroah.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
+Content-Disposition: inline
+In-Reply-To: <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, javier@javigon.com, Herbert Xu <herbert@gondor.apana.org.au>, tpmdd-devel@lists.sourceforge.net, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com
 List-Id: devicetree@vger.kernel.org
 
-I spotted only a license mismatch.
-
-On Fri, 2015-04-17 at 15:23 +0100, S Twiss wrote:
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
+On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
+> +/**
+> + * struct tee_cmd_data - Opaque command argument
+> + * @buf_ptr:	[in] A __user pointer to a command buffer
+> + * @buf_len:	[in] Length of the buffer above
 > + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+> + * Opaque command data which is passed on to the specific driver. The command
+> + * buffer doesn't have to reside in shared memory.
+> + * Used as argument for TEE_IOC_CMD below.
+> + */
+> +struct tee_ioctl_cmd_data {
+> +	uint64_t buf_ptr;
+> +	uint64_t buf_len;
+> +};
 
-This states the license is GPL v2 or later.
+All structures that cross the user/kernel boundry must use the __
+variant of variable names.  So for this one, it must be __u64.
 
-> +MODULE_LICENSE("GPL v2");
+Same for all of your ioctl structures.
 
-And, according to include/linux/module.h, this states the license is
-just GPL v2. So I think either the license comment or the license ident
-used in the MODULE_LICENSE() macro needs to change.
+thanks,
 
-The same mismatch can be found in 3/6, 4/6, and 5/6.
-
-Thanks,
-
-
-Paul Bolle
+greg k-h
