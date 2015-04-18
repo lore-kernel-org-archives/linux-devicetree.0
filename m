@@ -1,49 +1,52 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH 2/2] tee: add OP-TEE driver
-Date: Sat, 18 Apr 2015 20:49:03 +0200
-Message-ID: <20150418184903.GB30508@kroah.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Sat, 18 Apr 2015 20:02:24 +0100
+Message-ID: <20150418190224.GK12732@n2100.arm.linux.org.uk>
 References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
- <1429257057-7935-3-git-send-email-jens.wiklander@linaro.org>
- <20150418085747.GC29858@kroah.com>
- <FCFF5E10-0DDC-4ED1-A8B8-D649ADD5E506@javigon.com>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150418085712.GB29858@kroah.com>
+ <20150418090420.GG12732@n2100.arm.linux.org.uk>
+ <20150418184713.GA30508@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <FCFF5E10-0DDC-4ED1-A8B8-D649ADD5E506@javigon.com>
+In-Reply-To: <20150418184713.GA30508@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Herbert Xu <herbert@gondor.apana.org.au>, tpmdd-devel@lists.sourceforge.net, Valentin Manea <valentin.manea@huawei.com>, jean-michel.delorme@st.com, emmanuel.michel@st.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 18, 2015 at 11:36:53AM +0200, Javier Gonz=E1lez wrote:
-> Hi,
+On Sat, Apr 18, 2015 at 08:47:13PM +0200, Greg Kroah-Hartman wrote:
+> On Sat, Apr 18, 2015 at 10:04:20AM +0100, Russell King - ARM Linux wrote:
+> > On Sat, Apr 18, 2015 at 10:57:12AM +0200, Greg Kroah-Hartman wrote:
+> > > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
+> > > > +struct tee_device {
+> > > > +	char name[TEE_MAX_DEV_NAME_LEN];
+> > > > +	const struct tee_desc *desc;
+> > > > +	struct device *dev;
+> > > 
+> > > No, please embed the device in your structure, don't have a pointer to
+> > > it.
+> > 
+> > Greg, "dev" here is not a locally allocated device, but the parent device.
+> > It's actually the same as struct tee_device.miscdev.parent, which could be
+> > used instead and this member deleted.
+> 
+> A miscdev doesn't need to have a "parent", it's just there to provide a
+> character device node to userspace, not to represent a "device that you
+> can do things with in the heirachy".
+> 
+> If you really want that, then use a real 'struct device' as should be
+> done here.  Have just a pointer to a misc device, that is meant to be
+> dynamic.
 
-A: No.
-Q: Should I include quotations after my reply?
+Let's rewind.
 
-http://daringfireball.net/2007/07/on_top
+You are saying that "struct device *dev;" should be "struct device dev;"
 
-> We have discussed and implemented an in-kernel interface for the driv=
-er.
-> However, we need to agree on that interface with the kernel submodule=
-s that
-> can be interested in using it (e.g., IMA, keyring). We though it was =
-easier
-> to have a framework in place before taking this space. This makes sen=
-se
-> since a TEE driver will be, as for today, mostly used by user space.
-> applications.
+I'm saying that you are mis-interpreting in your review what _that_ is.
 
-No, please provide a "real" solution, just providing a framework that n=
-o
-one uses means that I get to delete it from the kernel tree the next
-release, and I doubt you want that :)
-
-Please do all of the work here, as odds are, what you need in the end
-will be different from what you have proposed here.
-
-thanks,
-
-greg k-h
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
