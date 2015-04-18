@@ -1,107 +1,55 @@
-From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power amplifiers
-Date: Sat, 18 Apr 2015 09:16:36 -0700
-Message-ID: <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org> <20150418113632.GE26185@sirena.org.uk>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 02/14] MIPS: ath79: Add basic device tree support
+Date: Sat, 18 Apr 2015 18:31:49 +0200
+Message-ID: <20150418183149.69c0795b@tock>
+References: <1429280669-2986-1-git-send-email-albeu@free.fr>
+	<1429280669-2986-3-git-send-email-albeu@free.fr>
+	<1429340752.16771.120.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150418113632.GE26185-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1429340752.16771.120.camel@x220>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 18, 2015 at 4:36 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Apr 15, 2015 at 02:42:20PM -0700, Kevin Cernekee wrote:
->> +static int tas571x_set_sysclk(struct snd_soc_dai *dai,
->> +                           int clk_id, unsigned int freq, int dir)
->> +{
->> +     /*
->> +      * TAS5717 datasheet pg 21: "The DAP can autodetect and set the
->> +      * internal clock-control logic to the appropriate settings for all
->> +      * supported clock rates as defined in the clock control register."
->> +      */
->> +     return 0;
->> +}
->
-> Remove empty functions, at best they waste space at worst they break
-> things.
+On Sat, 18 Apr 2015 09:05:52 +0200
+Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
 
-Without the empty function, we run into problems with drivers that
-abort when they get -ENOTSUPP here:
+> On Fri, 2015-04-17 at 16:24 +0200, Alban Bedel wrote:
+> 
+> > --- a/arch/mips/ath79/Kconfig
+> > +++ b/arch/mips/ath79/Kconfig
+> >  
+> > +choice
+> > +	prompt "Builtin devicetree selection"
+> > +	default DTB_ATH79_NONE
+> > +	help
+> > +	  Select the devicetree.
+> > +
+> > +	config DTB_ATH79_NONE
+> > +		bool "None"
+> > +endchoice
+> 
+> This adds a choice block with one config entry. So what this achieves
+> is that DTB_ATH79_NONE will always be 'y', right? Besides I didn't
+> notice on a user of CONFIG_DTB_ATH79_NONE. So as far as I can see
+> this choice has no effect on the build.
+> 
+> Why was this choice entry added?
 
-sound/soc/atmel/atmel_wm8904.c: ret =
-snd_soc_dai_set_sysclk(codec_dai, WM8904_CLK_FLL,
-sound/soc/atmel/atmel_wm8904.c-                 0, SND_SOC_CLOCK_IN);
-sound/soc/atmel/atmel_wm8904.c- if (ret < 0) {
-sound/soc/atmel/atmel_wm8904.c-         pr_err("%s -failed to set
-wm8904 SYSCLK\n", __func__);
-sound/soc/atmel/atmel_wm8904.c-         return ret;
-sound/soc/atmel/atmel_wm8904.c- }
+This menu is for boards that need a built-in DTB, as MIPS currently
+doesn't support appended DTBs it is the only way to load a DTB on
+boards stuck with a broken boot loader. But as no board has been added
+yet it only contain the entry for boards that don't need a built-in
+DTB, which do nothing as you pointed out.
 
-Is there a stub version that I can use instead?  Nothing jumped out at
-me when looking at the other codec drivers.
+A board is then added in this menu in patch 14, for some reasons git
+send-email didn't send the whole serie at once :(
 
->> +static int tas571x_set_shutdown(struct tas571x_private *priv, bool is_shutdown)
->> +{
->> +     return regmap_update_bits(priv->regmap, TAS571X_SYS_CTRL_2_REG,
->> +             TAS571X_SYS_CTRL_2_SDN_MASK,
->> +             is_shutdown ? TAS571X_SYS_CTRL_2_SDN_MASK : 0);
->> +}
->
->> +             ret = tas571x_set_shutdown(priv, false);
->> +             if (ret)
->> +                     return ret;
->> +             break;
->> +     case SND_SOC_BIAS_STANDBY:
->> +             ret = tas571x_set_shutdown(priv, true);
->> +             if (ret)
->> +                     return ret;
->
-> This looks like it'd be clearer just as direct register updates, I'm not
-> sure a function to set a single bit is addinng much.
-
-It might be useful if another tas571x variant put the bit somewhere
-else, but that hasn't happened yet so I can nuke the helper function
-for now.
-
->> +     case SND_SOC_BIAS_OFF:
->> +             /* Note that this kills I2C accesses. */
->> +             assert_pdn = 1;
->
-> No, the GPIO set associated with it kills I2C access.  I'd also expect
-> to see the regmap being marked cache only before we do this and a resync
-> of the register map when we power back up (assuming that is actually a
-> power down).
-
-Hmm, not sure if this actually resets the registers back to power-on
-defaults, but I'll check.
-
->> +             /*
->> +              * The master volume defaults to 0x3ff (mute), but we ignore
->> +              * (zero) the LSB because the hardware step size is 0.125 dB
->> +              * and TLV_DB_SCALE_ITEM has a resolution of 0.01 dB.
->> +              */
->> +             if (regmap_write(priv->regmap, TAS571X_MVOL_REG, 0x3fe))
->> +                     return -EIO;
->
-> I don't understand this - is the LSB a mute bit or sommething?
-
-The 10-bit master volume field on 5717/5719 works like:
-
-0x3ff: MUTE (power-on default)
-0x3fe: -103.750 dB
-0x3fd: -103.625 dB
-[lots more options, in 0.125 dB increments]
-0x001: 23.875 dB
-0x000: 24.000 dB
-
-Since we only have a resolution of 0.01 dB, the driver forces the LSB
-to 0 and uses 0.25 dB increments instead of 0.125 dB.  Mute is handled
-through the dedicated per-channel soft mute register bits instead of
-the 0x3ff volume setting.
+Alban
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
