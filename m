@@ -1,87 +1,99 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: core: Introduce IIO_CHAN_INFO_CALIBREPETITIONS
-Date: Sat, 18 Apr 2015 17:47:14 +0100
-Message-ID: <55328A92.9020807@kernel.org>
-References: <1429267830-13681-1-git-send-email-irina.tirdea@intel.com> <1429267830-13681-2-git-send-email-irina.tirdea@intel.com>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 11/14] MIPS: ath79: Add OF support to the GPIO driver
+Date: Sat, 18 Apr 2015 18:57:21 +0200
+Message-ID: <20150418185721.3e9afaba@tock>
+References: <1429280669-2986-1-git-send-email-albeu@free.fr>
+	<1429280669-2986-12-git-send-email-albeu@free.fr>
+	<4071167.An8CoV6UJC@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429267830-13681-2-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4071167.An8CoV6UJC@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/04/15 11:50, Irina Tirdea wrote:
-> Some magnetometers can perform a number of repetitions in HW
-> for each measurement to increase accuracy. One example is
-> Bosch BMC150:
-> http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf.
-> 
-> Introduce an interface to set the number of repetitions
-> for these devices.
-> 
-> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 10 ++++++++++
->  drivers/iio/industrialio-core.c         |  1 +
->  include/linux/iio/iio.h                 |  1 +
->  3 files changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 866b4ec..74c1444 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -1375,3 +1375,13 @@ Description:
->  		The emissivity ratio of the surface in the field of view of the
->  		contactless temperature sensor.  Emissivity varies from 0 to 1,
->  		with 1 being the emissivity of a black body.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_magn_x_calibrepetitions
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_magn_y_calibrepetitions
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_magn_z_calibrepetitions
-> +KernelVersion:	4.2
-> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +Description:
-> +		Hardware applied number of repetitions for acquiring one
-> +		data point. The HW will do <type>[_name]_calibrepetitions
-> +		measurements and return the average value as output data.
-This is an interesting way of naming what is often referred to as oversampling.
-I'd like to get some other opinions on naming before we go with the ABI for this..
+On Fri, 17 Apr 2015 16:53:31 +0200
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-We do have one driver in staging exporting oversampling_ratio which is probably
-the same thing, but that ABI was never standardized so I have no problem with
-ignoring that one case.  A couple of other drivers provide oversampling control
-via platform data.   We must make sure we give a sensible default for this.
-
-There is also the interesting question of whether sampling_frequency applies
-before or after this...  I'd argue after, but again would like more opinions
-before we dictate that.  However, whatever we choose should definitely be
-documented here!
-
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 7c98bc1..9e0da7f 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -129,6 +129,7 @@ static const char * const iio_chan_info_postfix[] = {
->  	[IIO_CHAN_INFO_DEBOUNCE_COUNT] = "debounce_count",
->  	[IIO_CHAN_INFO_DEBOUNCE_TIME] = "debounce_time",
->  	[IIO_CHAN_INFO_CALIBEMISSIVITY] = "calibemissivity",
-> +	[IIO_CHAN_INFO_CALIBREPETITIONS] = "calibrepetitions",
->  };
->  
->  /**
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index b1e46ae..07fbfb2 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -44,6 +44,7 @@ enum iio_chan_info_enum {
->  	IIO_CHAN_INFO_DEBOUNCE_COUNT,
->  	IIO_CHAN_INFO_DEBOUNCE_TIME,
->  	IIO_CHAN_INFO_CALIBEMISSIVITY,
-> +	IIO_CHAN_INFO_CALIBREPETITIONS,
->  };
->  
->  enum iio_shared_by {
+> On Friday 17 April 2015 16:24:26 Alban Bedel wrote:
+> > Replace the simple GPIO chip registration by a platform driver
+> > and make ath79_gpio_init() just register the device.
+> > 
+> > Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> > ---
+> >  arch/mips/ath79/dev-common.c | 13 ++++++++
+> >  arch/mips/ath79/gpio.c       | 73
+> > +++++++++++++++++++++++++++++++++++++++++--- 2 files changed, 81
+> > insertions(+), 5 deletions(-)
 > 
+> Could you move the driver to drivers/gpio/ now?
+
+Sure, I'll add a patch to move it there.
+
+> > +void __init ath79_gpio_init(void)
+> > +{
+> > +	struct resource res;
+> > +
+> > +	memset(&res, 0, sizeof(res));
+> > +
+> > +	res.flags = IORESOURCE_MEM;
+> > +	res.start = AR71XX_GPIO_BASE;
+> > +	res.end = res.start + AR71XX_GPIO_SIZE - 1;
+> > +
+> > +	platform_device_register_simple("ath79-gpio", -1, &res, 1);
+> > +}
+> 
+> Your code looks correct, but could be shortened to 
+> 
+> 	struct resource mem = DEFINE_RES_MEM(AR71XX_GPIO_BASE,
+> AR71XX_GPIO_SIZE);
+
+I'll do that.
+
+> >  
+> > -void __init ath79_gpio_init(void)
+> > +static const struct of_device_id ath79_gpio_of_match[] = {
+> > +	{
+> > +		.compatible = "qca,ar7100-gpio",
+> > +		.data = (void *)AR71XX_GPIO_COUNT,
+> > +	},
+> > +	{
+> > +		.compatible = "qca,ar7240-gpio",
+> > +		.data = (void *)AR7240_GPIO_COUNT,
+> > +	},
+> > +	{
+> > +		.compatible = "qca,ar7241-gpio",
+> > +		.data = (void *)AR7241_GPIO_COUNT,
+> > +	},
+> > +	{
+> > +		.compatible = "qca,ar9130-gpio",
+> > +		.data = (void *)AR913X_GPIO_COUNT,
+> > +	},
+> > +	{
+> > +		.compatible = "qca,ar9330-gpio",
+> > +		.data = (void *)AR933X_GPIO_COUNT,
+> > +	},
+> > +	{
+> > +		.compatible = "qca,ar9340-gpio",
+> > +		.data = (void *)AR934X_GPIO_COUNT,
+> > +	},
+> > +	{
+> > +		.compatible = "qca,qca9550-gpio",
+> > +		.data = (void *)QCA955X_GPIO_COUNT,
+> > +	},
+> > +	{},
+> > +};
+> 
+> How about putting the number into an 'ngpios' property like some other
+> bindings do?
+
+I'll do that, it would make things simpler.
+
+Alban
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
