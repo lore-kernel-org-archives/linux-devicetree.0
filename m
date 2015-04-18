@@ -1,53 +1,44 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] iio: magn: bmc150_magn: Add devicetree binding documentation
-Date: Sat, 18 Apr 2015 19:08:41 +0100
-Message-ID: <55329DA9.1050305@kernel.org>
-References: <1429267830-13681-1-git-send-email-irina.tirdea@intel.com> <1429267830-13681-4-git-send-email-irina.tirdea@intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Sat, 18 Apr 2015 20:47:13 +0200
+Message-ID: <20150418184713.GA30508@kroah.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150418085712.GB29858@kroah.com>
+ <20150418090420.GG12732@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429267830-13681-4-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150418090420.GG12732@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/04/15 11:50, Irina Tirdea wrote:
-> Add binding documentation for Bosch BMC150 magnetometer.
+On Sat, Apr 18, 2015 at 10:04:20AM +0100, Russell King - ARM Linux wrote:
+> On Sat, Apr 18, 2015 at 10:57:12AM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
+> > > +struct tee_device {
+> > > +	char name[TEE_MAX_DEV_NAME_LEN];
+> > > +	const struct tee_desc *desc;
+> > > +	struct device *dev;
+> > 
+> > No, please embed the device in your structure, don't have a pointer to
+> > it.
 > 
-> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/iio/magnetometer/bmc150_magn.txt        | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
-> new file mode 100644
-> index 0000000..4ed035c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
-> @@ -0,0 +1,20 @@
-> +* Bosch BMC150 magnetometer sensor
-> +
-> +http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf
-> +
-> +Required properties:
-> +
-> +  - compatible : should be "bosch,bmc150_magn"
-> +  - reg : the I2C address of the magnetometer
-> +
-> +Optional properties:
-> +
-> +  - gpios : should be device tree identifier of the magnetometer DRDY pin
-Hmm. Under device tree this should be done as an interrupt.  You only
-(currently) need the dubious frig with gpios for ACPI I think.
-> +
-> +Example:
-> +
-> +bmc150_magn@12 {
-> +        compatible = "bosch,bmc150_magn";
-> +        reg = <0x12>;
-> +        interrupt-gpio = <&gpio1 0 1>;
-> +};
-> 
+> Greg, "dev" here is not a locally allocated device, but the parent device.
+> It's actually the same as struct tee_device.miscdev.parent, which could be
+> used instead and this member deleted.
+
+A miscdev doesn't need to have a "parent", it's just there to provide a
+character device node to userspace, not to represent a "device that you
+can do things with in the heirachy".
+
+If you really want that, then use a real 'struct device' as should be
+done here.  Have just a pointer to a misc device, that is meant to be
+dynamic.
+
+thanks,
+
+greg k-h
