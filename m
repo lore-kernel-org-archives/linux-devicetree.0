@@ -1,100 +1,67 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
-Date: Sat, 18 Apr 2015 11:29:23 -0600
-Message-ID: <20150418172923.GA10605@obsidianresearch.com>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
- <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
- <20150417163054.GA28241@obsidianresearch.com>
- <20150418090147.GF12732@n2100.arm.linux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESEND RFC PATCH 1/3] ASoC: mediatek: Add binding support for
+ AFE driver
+Date: Sat, 18 Apr 2015 18:34:07 +0100
+Message-ID: <20150418173407.GE26185@sirena.org.uk>
+References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
+ <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yUw0eFUXHKnFujKq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150418090147.GF12732-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Koro Chen <koro.chen@mediatek.com>
+Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.de, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, s.hauer@pengutronix.de, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 18, 2015 at 10:01:47AM +0100, Russell King - ARM Linux wrote:
-> On Fri, Apr 17, 2015 at 10:30:54AM -0600, Jason Gunthorpe wrote:
-> > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
-> > > +	teedev = devm_kzalloc(dev, sizeof(*teedev), GFP_KERNEL);
-> > [..]
-> > > +	rc = misc_register(&teedev->miscdev);
-> > [..]
-> > > +void tee_unregister(struct tee_device *teedev)
-> > > +{
-> > [..]
-> > > +	misc_deregister(&teedev->miscdev);
-> > > +}
-> > [..]
-> > >+static int optee_remove(struct platform_device *pdev)
-> > >+{
-> > >+       tee_unregister(optee->teedev);
-> > 
-> > Isn't that a potential use after free? AFAIK misc_deregister does not
-> > guarentee the miscdev will no longer be accessed after it returns, and
-> > the devm will free it after optee_remove returns.
-> > 
-> > Memory backing a stuct device needs to be freed via the release
-> > function.
-> 
-> Out of interest, which struct device are you talking about here?
 
-Sorry, I was imprecise. In the first paragraph I ment 'miscdev' to
-refer to the entire thing, struct tee_device, struct misc_device, the
-driver allocations, etc.
+--yUw0eFUXHKnFujKq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So, the first issue is the use-after-free via ioctl() touching struct
-tee_device that you described.
+On Fri, Apr 10, 2015 at 04:14:07PM +0800, Koro Chen wrote:
 
-But then we trundle down to:
+> +Each external interface (called "IO" in this driver) is presented as a
+> +DAI to ASoC. An IO must be connected via the interconnect to a memif.
+> +The connection paths are configured through the device tree.
 
-+ ctx->teedev->desc->ops->get_version(ctx, &vers.spec_version,
-+   vers.uuid);
+Why are these connection paths configured via device tree?  I would
+expect that either there would be runtime configurability of these
+things (particularly if loopback configurations within the hardware are
+possible) or we'd just allocate memory interfaces to DAIs automatically
+as DAIs come into use.
 
-If we kref teedev so it is valid then calling a driver call back after
-(or during) it's remove function is very likely to blow up.
+> +- mem-interface-playback:
+> +  mem-interface-capture: property of memif, format is: <memif irq use_sram>;
+> +	                 memif: which memif to be used
+> +			        (defined in include/dt-bindings/sound/mtk-afe.h)
+> +		         irq: which irq to be used
+> +			      (defined in include/dt-bindings/sound/mtk-afe.h)
+> +		         use_sram: 1 is yes, 0 is no
 
-Also, in TPM we discovered that adding a sysfs file was very ugly
-(impossible?) because without the misc_mtx protection that open has,
-getting a locked tee_device in the sysfs callback is difficult.
+Again, this looks like stuff we should be able to figure out at runtime
+- the use of SRAM in particular looks like something we might want to
+change depending on use case.  Assuming it adds buffering then for a
+VoIP application we might not want to use SRAM to minimize latency but
+during music playback we might want to enable SRAM to minimize power
+consumption.
 
-With TPM, we ended up trying lots of options for fixing struct
-misc_device in the tpm core, which is handling multiple sub drivers,
-and basically gave up. Gave each struct tpm_device an embedded struct
-device like Greg suggested here. Then the tpm core is working with the
-APIs, not struggling against them.
+--yUw0eFUXHKnFujKq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-But this is not a user-space invisible change, so better to do it right
-from day 1 ..
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-We followed rtc as an example of how to create a mid-layer that
-exports it's own register function, with char dev and sysfs
-components. It seems properly implemented, and has elegant solutions
-to these problems (like ops):
- - Don't mess with modules, use 'ops' and set 'ops' to null when the
-   driver removes. The driver core will keep the driver module around
-   for you bettwen the probe/remove calls. Setting ops = NULL ensures driver
-   module code cannot be called after remove.
- - Use locking for 'ops' to serialize driver callbacks with driver removal
- - Embed a struct device/etc in the struct tee_device and use the release
-   function to deallocate struct tee_device. All callbacks from the
-   driver/char/sysfs core can now use container_of on something that
-   is already holds the right kref.
- - Consider an alloc/register pattern as we use now in TPM. This has proven
-   smart for TPM as it allows:
-       alloc tee_device + init struct device, etc
-       driver setup
-       core library helper calls for setup/etc
-       driver register + char dev publish
+iQEcBAEBCAAGBQJVMpWOAAoJECTWi3JdVIfQuWwH/08PJh1EXixYY1yYRWtSNW45
+JXWlvj8FAyKmtS7RkFz8osufXvfrNtsfc8J1Q9wHlNZ1eRKqXsj1x6HnfRHnJpF2
+oRU/p4BE0vWDS3tlBSJH+yLs+GXlyn5DYHREq6hSsLguYgvusTYi3zhqcF9fKNDB
+42gO5vVD/ZfN/Wp0qHC5D9ZPZAnPXF6yfih63PraSBSYRkf9EkEL7V30Y1xESO+z
+x645zIeZSecuvsX1J/rtusRzT9Fro/Lzi+rLwscUZNmeIaFksywmwcAmtj3xb7xt
+gLJde1efCvsMcPTx15WIcVzykiBP/iRSRhEmOgkO4AYKdIGXIQrp/ktbH3K8Hno=
+=GAGs
+-----END PGP SIGNATURE-----
 
-It appeared to me this driver was copying TPM's old architecture,
-which is very much known to be broken.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--yUw0eFUXHKnFujKq--
