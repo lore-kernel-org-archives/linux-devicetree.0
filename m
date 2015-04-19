@@ -1,178 +1,96 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v13 3/3] ARM: dts: add RK3288 power-domain node
-Date: Sun, 19 Apr 2015 18:47:10 +0800
-Message-ID: <1429440430-18989-1-git-send-email-wxt@rock-chips.com>
-References: <1429440280-18915-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1429440280-18915-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: heiko@sntech.de, khilman@linaro.org, linux-arm-kernel@lists.infradead.org
-Cc: tomasz.figa@gmail.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, grant.likely@linaro.org, Caesar Wang <wxt@rock-chips.com>, "jinkun.hong" <jinkun.hong@rock-chips.com>
+From: =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Subject: Re: [RFC PATCH 2/2] tee: add OP-TEE driver
+Date: Sun, 19 Apr 2015 13:17:20 +0200
+Message-ID: <3960750D-EAE4-4FA0-9E15-89F9CE39257E@javigon.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org> <FCFF5E10-0DDC-4ED1-A8B8-D649ADD5E506@javigon.com> <20150418184903.GB30508@kroah.com> <4984990.7rV4p0zMYU@wuerfel>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_D63DB89D-AE43-412C-8C96-80F186F5C80D"; protocol="application/pgp-signature"; micalg=pgp-sha512
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4984990.7rV4p0zMYU@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jens Wiklander <jens.wiklander@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, tpmdd-devel@lists.sourceforge.net, Valentin Manea <valentin.manea@huawei.com>, jean-michel.delorme@st.com, emmanuel.michel@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add the needed clocks into power-controller.
 
-why need we do so that?
+--Apple-Mail=_D63DB89D-AE43-412C-8C96-80F186F5C80D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=iso-8859-1
 
-Firstly, we always be needed turn off clocks to save power when
-the system enter suspend.So we need to enumerate the clocks are needed
-to switch power doamin no and off.
+> On 18 Apr 2015, at 21:01, Arnd Bergmann <arnd@arndb.de> wrote:
+>=20
+> On Saturday 18 April 2015 20:49:03 Greg Kroah-Hartman wrote:
+>> On Sat, Apr 18, 2015 at 11:36:53AM +0200, Javier Gonz=E1lez wrote:
+>>> Hi,
+>>=20
+>> A: No.
+>> Q: Should I include quotations after my reply?
+>>=20
+>> http://daringfireball.net/2007/07/on_top
+>>=20
+>>> We have discussed and implemented an in-kernel interface for the =
+driver.
+>>> However, we need to agree on that interface with the kernel =
+submodules that
+>>> can be interested in using it (e.g., IMA, keyring). We though it was =
+easier
+>>> to have a framework in place before taking this space. This makes =
+sense
+>>> since a TEE driver will be, as for today, mostly used by user space.
+>>> applications.
+>>=20
+>> No, please provide a "real" solution, just providing a framework that =
+no
+>> one uses means that I get to delete it from the kernel tree the next
+>> release, and I doubt you want that
+>>=20
+>> Please do all of the work here, as odds are, what you need in the end
+>> will be different from what you have proposed here.
+>=20
+> I guess an alternative would be to remove all the unused =
+infrastructure
+> code and only provide a user space interface for the features that
+> op_tee requires, but no optional user interfaces or in-kernel =
+interfaces.
+>=20
+> 	Arnd
 
-Secondly, RK3288 reset circuit should be syncchronous reset and
-then sync revoked.so we need to enable clocks of all devices.
+Only providing user space support would defeat one of the main purposes
+of the driver. We could better organize the patches and divide them into =
+user
+space support and in-kernel support if that is what you mean. In the end
+the interfaces are orthogonal, even though the functionality should be =
+very
+similar.
 
-Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-Changes in v13:
-    - Remove essential clocks from rk3288 PD_VIO domain
-    Some clocks are essential for the system health and should not
-    be turned down. However there is no owner for them so if they listed
-    as belonging to power domain we'll try toggling them up and down
-    during power domain.
-    - Device drivers expect their devices to be powered on before their
-    probing code is invoked. To achieve that we should start with
-    power domains powered on (we may turn them off later once all
-    devices enable runtime power managment and go idle).
-    - This change switches Rockchip power domain driver to use updated
-    device_attach and device_detach API.
-    - set the gpu/core power domain power delay time.
-    - fix enumerating PM clocks for devices.
-    - fix use after free
-    We can't use clk after we did clk_put(clk).
+Javier.
 
-Changes in v12:
-    - Remove essential clocks from rk3288 PD_VIO domain,
-    Some clocks are essential for the system health and should
-    not be turned down. However there is no owner for them so
-    if they listed as belonging to power domain we'll try toggling
-    them up and down during power domain transition. As a result we
-    either fail to suspend or resume the system.
+--Apple-Mail=_D63DB89D-AE43-412C-8C96-80F186F5C80D
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
 
-Changes in v11: None
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
 
-Changes in v10:
-    - fix missing the #include <dt-bindings/power-domain/rk3288.h>
-    - remove the notes
+iQIcBAEBCgAGBQJVM47AAAoJEDxGAX0tJXjgFXAP/1bqSk95c4nKGzkLSSCq44/z
+R7koKHcFilcb+GhZ+oa6/n71pzDaO4u92AkypbfDMK3IIS+lRvLebE4F+c+qADjL
+nc1pNKP4PhlrUfyjuxqGtFUG83stWgd7u47MLevVtG7AKOTs5NVBLm1NSwBztVak
+PHYJyIVlJrUzsXNvQn2pVbG4lf6tKge7nCZLQj3zPOKYiLI9JC91gwcUrgTT6F+u
+CF9D4P8pDj6y6Fh3eN0zAMA7xdplR5GSPQ8mRnVvdtD6K6CD2jUGDiJGV3TRciV8
+UwNJR2x21OUPzPRzpflLFu7MOOyzoTQLV7WoIBO6xSFDn0huvxnT04IcwvgShBSp
+TNc4udWg/w/A2+iuBGCCA3x7XQWQvzJgtj+xsAjqheJRI6xKgAcP8BPgB9K/wXN2
+/ehTdPfAZVOeLYc0TR4P9Ta1HN8APkoYLVHwyzCpTJajVsgrgN86NhX91ezjWluQ
+PzhAjLLvbZ03+kSJXs/UCEe+o5XRGEIPg32bpdi3v0koZTC7UR/etI5YmS29sTvx
+IJrhhsiPRbVXdbvCuzRiNlgP+sYToTVLMWlUt/efTgMK0g8R4hcS2lGNVOyL5GOQ
+8BH9DHZ3kdjpfoEmaIlg7cFw9YF5n5RPs0zR3elUZz/FneyIkid+hWtdGPZUXvfj
+y040vr63s7L+OTx+Uafu
+=iWGu
+-----END PGP SIGNATURE-----
 
-Changes in v9:
-    - add decription for power-doamin node
-
-Changes in v8:
-    - DTS go back to v2
-
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-
-Changes in v3:
-    - Decomposition power-controller, changed to multiple controller
-    (gpu-power-controller, hevc-power-controller)
-
-Changes in v2:
-    - make pd_vio clocks all one entry per line and alphabetize.
-    - power: power-controller move back to pinctrl: pinctrl.
-
----
-
- arch/arm/boot/dts/rk3288.dtsi             | 59 +++++++++++++++++++++++++++++++
- include/dt-bindings/power-domain/rk3288.h | 11 ++++++
- 2 files changed, 70 insertions(+)
- create mode 100644 include/dt-bindings/power-domain/rk3288.h
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5999029..f3992db 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -15,6 +15,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3288-cru.h>
-+#include <dt-bindings/power-domain/rk3288.h>
- #include <dt-bindings/thermal/thermal.h>
- #include "skeleton.dtsi"
- 
-@@ -1277,4 +1278,62 @@
- 			};
- 		};
- 	};
-+
-+	power: power-controller {
-+		compatible = "rockchip,rk3288-power-controller";
-+		#power-domain-cells = <1>;
-+		rockchip,pmu = <&pmu>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pd_gpu {
-+			reg = <RK3288_PD_GPU>;
-+			clocks = <&cru ACLK_GPU>;
-+		};
-+
-+		pd_hevc {
-+			reg = <RK3288_PD_HEVC>;
-+			clocks = <&cru ACLK_HEVC>,
-+				 <&cru SCLK_HEVC_CABAC>,
-+				 <&cru SCLK_HEVC_CORE>,
-+				 <&cru HCLK_HEVC>;
-+		};
-+
-+		pd_vio {
-+			reg = <RK3288_PD_VIO>;
-+			clocks = <&cru ACLK_IEP>,
-+				 <&cru ACLK_ISP>,
-+				 <&cru ACLK_RGA>,
-+				 <&cru ACLK_VIP>,
-+				 <&cru ACLK_VOP0>,
-+				 <&cru ACLK_VOP1>,
-+				 <&cru DCLK_VOP0>,
-+				 <&cru DCLK_VOP1>,
-+				 <&cru HCLK_IEP>,
-+				 <&cru HCLK_ISP>,
-+				 <&cru HCLK_RGA>,
-+				 <&cru HCLK_VIP>,
-+				 <&cru HCLK_VOP0>,
-+				 <&cru HCLK_VOP1>,
-+				 <&cru PCLK_EDP_CTRL>,
-+				 <&cru PCLK_HDMI_CTRL>,
-+				 <&cru PCLK_LVDS_PHY>,
-+				 <&cru PCLK_MIPI_CSI>,
-+				 <&cru PCLK_MIPI_DSI0>,
-+				 <&cru PCLK_MIPI_DSI1>,
-+				 <&cru SCLK_EDP_24M>,
-+				 <&cru SCLK_EDP>,
-+				 <&cru SCLK_HDMI_CEC>,
-+				 <&cru SCLK_HDMI_HDCP>,
-+				 <&cru SCLK_ISP_JPE>,
-+				 <&cru SCLK_ISP>,
-+				 <&cru SCLK_RGA>;
-+		};
-+
-+		pd_video {
-+			reg = <RK3288_PD_VIDEO>;
-+			clocks = <&cru ACLK_VCODEC>,
-+				 <&cru HCLK_VCODEC>;
-+		};
-+	};
- };
-diff --git a/include/dt-bindings/power-domain/rk3288.h b/include/dt-bindings/power-domain/rk3288.h
-new file mode 100644
-index 0000000..ca68c11
---- /dev/null
-+++ b/include/dt-bindings/power-domain/rk3288.h
-@@ -0,0 +1,11 @@
-+#ifndef __DT_BINDINGS_POWER_DOMAIN_RK3288_H__
-+#define __DT_BINDINGS_POWER_DOMAIN_RK3288_H__
-+
-+/* RK3288 power domain index */
-+#define RK3288_PD_GPU          0
-+#define RK3288_PD_VIO          1
-+#define RK3288_PD_VIDEO        2
-+#define RK3288_PD_HEVC         3
-+#define RK3288_PD_PERI         4
-+
-+#endif
--- 
-1.9.1
-
+--Apple-Mail=_D63DB89D-AE43-412C-8C96-80F186F5C80D--
