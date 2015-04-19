@@ -1,37 +1,37 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 2/2] tee: add OP-TEE driver
-Date: Sun, 19 Apr 2015 21:47:52 +0200
-Message-ID: <7401865.1Pb83TJP0q@wuerfel>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org> <4984990.7rV4p0zMYU@wuerfel> <3960750D-EAE4-4FA0-9E15-89F9CE39257E@javigon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3960750D-EAE4-4FA0-9E15-89F9CE39257E@javigon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Javier =?ISO-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>, Valentin Manea <valentin.manea@huawei.com>, devicetree@vger.kernel.org, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, Jens Wiklander <jens.wiklander@linaro.org>
+From: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
+Subject: [PATCH 0/2] i.MX6-SabreAuto: DTS: use gpio-hog to enable WEIM-NOR at boot
+Date: Sun, 19 Apr 2015 14:02:22 -0700
+Message-ID: <1429477343-11076-1-git-send-email-alison_chaiken@mentor.com>
+References: <20150116072716.GD18220@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150116072716.GD18220-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 19 April 2015 13:17:20 Javier Gonz=E1lez wrote:
->=20
-> Only providing user space support would defeat one of the main purpos=
-es
-> of the driver. We could better organize the patches and divide them i=
-nto user
-> space support and in-kernel support if that is what you mean. In the =
-end
-> the interfaces are orthogonal, even though the functionality should b=
-e very
-> similar.
+From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
-Splitting up the patches to separate the user interface from the in-ker=
-nel
-interface is certainly a good idea, but aside from that, I also agree w=
-ith
-Greg on this point: if you want to establish an in-kernel interface, do=
-n't
-add any dead code at the beginning, but add it together with the users
-of that interface.
+The parallel NOR on the i.MX6 SabreAuto boards is connected by the
+WEIM simple bus.  WEIM needs gpio5 low at boot in order to properly
+set the steering of I2C3.
 
-	Arnd
+Rather than override the GPIO5 node in a new DTSI file, it would be better
+to add the weim_nor gpio-hog to imx6qdl.dtsi and disable it by default.
+However, gpio-hogs are always enabled, so inclusion of a separate, new
+file is necessary.
+
+Alison Chaiken (1):
+  i.MX6-SabreAuto: DTS: use gpio-hog to enable WEIM-NOR at boot
+
+ arch/arm/boot/dts/imx6-sabreauto-weim-nor.dtsi | 56 ++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6-sabreauto-weim-nor.dtsi
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
