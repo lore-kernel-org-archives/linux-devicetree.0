@@ -1,104 +1,218 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH 1/2] tee: generic TEE subsystem
-Date: Sun, 19 Apr 2015 09:00:49 +0200
-Message-ID: <20150419070049.GA2391@kroah.com>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
- <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
- <20150418085712.GB29858@kroah.com>
- <20150418090420.GG12732@n2100.arm.linux.org.uk>
- <20150418184713.GA30508@kroah.com>
- <20150418190224.GK12732@n2100.arm.linux.org.uk>
- <20150418203716.GC1347@kroah.com>
- <20150418205019.GL12732@n2100.arm.linux.org.uk>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
+Date: Sun, 19 Apr 2015 11:19:25 +0200
+Message-ID: <20150419091923.GA5714@netboy>
+References: <32501816.HtkLenWQpn@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150418205019.GL12732@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <32501816.HtkLenWQpn@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 18, 2015 at 09:50:19PM +0100, Russell King - ARM Linux wrote:
-> On Sat, Apr 18, 2015 at 10:37:16PM +0200, Greg Kroah-Hartman wrote:
-> > On Sat, Apr 18, 2015 at 08:02:24PM +0100, Russell King - ARM Linux wrote:
-> > > On Sat, Apr 18, 2015 at 08:47:13PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Sat, Apr 18, 2015 at 10:04:20AM +0100, Russell King - ARM Linux wrote:
-> > > > > On Sat, Apr 18, 2015 at 10:57:12AM +0200, Greg Kroah-Hartman wrote:
-> > > > > > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
-> > > > > > > +struct tee_device {
-> > > > > > > +	char name[TEE_MAX_DEV_NAME_LEN];
-> > > > > > > +	const struct tee_desc *desc;
-> > > > > > > +	struct device *dev;
-> > > > > > 
-> > > > > > No, please embed the device in your structure, don't have a pointer to
-> > > > > > it.
-> > > > > 
-> > > > > Greg, "dev" here is not a locally allocated device, but the parent device.
-> > > > > It's actually the same as struct tee_device.miscdev.parent, which could be
-> > > > > used instead and this member deleted.
-> > > > 
-> > > > A miscdev doesn't need to have a "parent", it's just there to provide a
-> > > > character device node to userspace, not to represent a "device that you
-> > > > can do things with in the heirachy".
-> > > > 
-> > > > If you really want that, then use a real 'struct device' as should be
-> > > > done here.  Have just a pointer to a misc device, that is meant to be
-> > > > dynamic.
-> > > 
-> > > Let's rewind.
-> > > 
-> > > You are saying that "struct device *dev;" should be "struct device dev;"
-> > 
-> > Yes.
-> > 
-> > > I'm saying that you are mis-interpreting in your review what _that_ is.
-> > 
-> > Probably, I really have no idea what it is anymore.  What it _should_ be
-> > is the thing that controls the lifecycle of the structure.  Do not use a
-> > miscdevice for that, it will not work, as the TPM developers found out
-> > the hard way.
-> 
-> I _really_ don't understand what you're going on about.
-> 
-> The "struct device *dev" is a pointer to the struct device corresponding
-> to the _device_ which is being probed and the tee device is being
-> registered for - in the case of the submitted code, that is the
-> struct device embedded in the platform device.
-> 
-> This is a /really/ standard thing to do in drivers - saving a pointer
-> to the struct device which the driver is responsible for.
+On Tue, Apr 14, 2015 at 01:07:38AM +0300, Sergei Shtylyov wrote:
 
-Yes, but this structure says it is a "tee_device", and as such, should
-be a real device, not just an internal structure that is never exposed
-to userspace, right?
+> +static int ravb_wait(struct net_device *ndev, u16 reg, u32 mask, u32 value)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < 10000; i++) {
+> +		if ((ravb_read(ndev, reg) & mask) == value)
+> +			return 0;
+> +		udelay(10);
+> +	}
+> +	return -ETIMEDOUT;
+> +}
 
-> So why should this pointer become a struct device itself?
+This function performs a busy wait of up to 100 milliseconds.
 
-Because it is a device.  It should be a child of the platform device.
+It also has a return value.
 
-Unless it's just a "normal" device, then platform device shouldn't be
-used here :)
+> +/* function for waiting dma process finished */
+> +static void ravb_wait_stop_dma(struct net_device *ndev)
+> +{
+> +	/* Wait for stopping the hardware TX process */
+> +	ravb_wait(ndev, TCCR, TCCR_TSRQ0 | TCCR_TSRQ1 | TCCR_TSRQ2 | TCCR_TSRQ3,
+> +		  0);
+> +
+> +	ravb_wait(ndev, CSR, CSR_TPO0 | CSR_TPO1 | CSR_TPO2 | CSR_TPO3, 0);
 
-> Greg, I think you have performed a disservice by poorly reviewing the
-> driver, and giving _incorrect_ comments.  Please can you have another
-> look at both patches together and provide a better review.  Thanks.
+Ignores return value.
 
-I think the comment about how the model is all messed up as it looks
-like the TPM original code is correct.
+> +	/* Stop the E-MAC's RX processes. */
+> +	ravb_write(ndev, ravb_read(ndev, ECMR) & ~ECMR_RE, ECMR);
+> +
+> +	/* Wait for stopping the RX DMA process */
+> +	ravb_wait(ndev, CSR, CSR_RPO, 0);
+> +}
+> +
+> +/* Caller must hold the lock */
+> +static void ravb_ptp_update_compare(struct ravb_private *priv, u32 ns)
+> +{
+> +	struct net_device *ndev = priv->ndev;
+> +	/* When the comparison value (GPTC.PTCV) is in range of
+> +	 * [x-1 to x+1] (x is the configured increment value in
+> +	 * GTI.TIV), it may happen that a comparison match is
+> +	 * not detected when the timer wraps around.
+> +	 */
+> +	u32 gti_ns_plus_1 = (priv->ptp.current_addend >> 20) + 1;
+> +
+> +	if (ns < gti_ns_plus_1)
+> +		ns = gti_ns_plus_1;
+> +	else if (ns > 0 - gti_ns_plus_1)
+> +		ns = 0 - gti_ns_plus_1;
+> +
+> +	ravb_write(ndev, ns, GPTC);
+> +	ravb_write(ndev, ravb_read(ndev, GCCR) | GCCR_LPTC, GCCR);
+> +	if (ravb_read(ndev, CSR) & CSR_OPS_OPERATION)
+> +		ravb_wait(ndev, GCCR, GCCR_LPTC, 0);
 
-> Second point _against_ embedding a struct device here - a struct device
-> is exposed to userspace.  Why expose this to userspace - we have other
-> ways to manage the lifetime of data structures, such as krefs, which
-> are not exposed to userspace.  What's wrong with using a kref to
-> control the lifetime of this structure?
+Ignores return value.
 
-It's a device, why wouldn't it be exposed to userspace.
+> +}
 
-If this isn't a device, then yes, it doesn't need to be.  But then don't
-call it a "tee_device" :)
+> +static void ravb_ptp_tcr_request(struct ravb_private *priv, int request)
+> +{
+> +	struct net_device *ndev = priv->ndev;
+> +
+> +	if (ravb_read(ndev, CSR) & CSR_OPS_OPERATION) {
+> +		ravb_wait(ndev, GCCR, GCCR_TCR, GCCR_TCR_NOREQ);
+> +		ravb_write(ndev, ravb_read(ndev, GCCR) | request, GCCR);
+> +		ravb_wait(ndev, GCCR, GCCR_TCR, GCCR_TCR_NOREQ);
 
-thanks,
+Ignores return value.
 
-greg k-h
+> +	}
+> +}
+
+> +/* Caller must hold lock */
+> +static void ravb_ptp_time_write(struct ravb_private *priv,
+> +				const struct timespec64 *ts)
+> +{
+> +	struct net_device *ndev = priv->ndev;
+> +
+> +	ravb_ptp_tcr_request(priv, GCCR_TCR_RESET);
+> +
+> +	ravb_write(ndev, ts->tv_nsec, GTO0);
+> +	ravb_write(ndev, ts->tv_sec,  GTO1);
+> +	ravb_write(ndev, (ts->tv_sec >> 32) & 0xffff, GTO2);
+> +	ravb_write(ndev, ravb_read(ndev, GCCR) | GCCR_LTO, GCCR);
+> +	if (ravb_read(ndev, CSR) & CSR_OPS_OPERATION)
+> +		ravb_wait(ndev, GCCR, GCCR_LTO, 0);
+
+Ignores return value.
+
+> +}
+> +
+> +/* Caller must hold lock */
+> +static u64 ravb_ptp_cnt_read(struct ravb_private *priv)
+> +{
+> +	struct timespec64 ts;
+> +	ktime_t kt;
+> +
+> +	ravb_ptp_time_read(priv, &ts);
+> +	kt = timespec64_to_ktime(ts);
+> +
+> +	return ktime_to_ns(kt);
+> +}
+> +
+> +/* Caller must hold lock */
+> +static void ravb_ptp_cnt_write(struct ravb_private *priv, u64 ns)
+> +{
+> +	struct timespec64 ts = ns_to_timespec64(ns);
+> +
+> +	ravb_ptp_time_write(priv, &ts);
+> +}
+> +
+
+> +/* Caller must hold lock */
+> +static void ravb_ptp_select_counter(struct ravb_private *priv, u16 sel)
+> +{
+> +	struct net_device *ndev = priv->ndev;
+> +	u32 val;
+> +
+> +	ravb_wait(ndev, GCCR, GCCR_TCR, GCCR_TCR_NOREQ);
+
+Ignores return value.
+
+> +	val = ravb_read(ndev, GCCR) & ~GCCR_TCSS;
+> +	ravb_write(ndev, val | (sel << 8), GCCR);
+> +}
+> +
+> +/* Caller must hold lock */
+> +static void ravb_ptp_update_addend(struct ravb_private *priv, u32 addend)
+> +{
+> +	struct net_device *ndev = priv->ndev;
+> +
+> +	priv->ptp.current_addend = addend;
+> +
+> +	ravb_write(ndev, addend & GTI_TIV, GTI);
+> +	ravb_write(ndev, ravb_read(ndev, GCCR) | GCCR_LTI, GCCR);
+> +	if (ravb_read(ndev, CSR) & CSR_OPS_OPERATION)
+> +		ravb_wait(ndev, GCCR, GCCR_LTI, 0);
+
+Ignores return value.
+
+> +}
+> +
+> +/* PTP clock operations */
+> +static int ravb_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+> +{
+> +	struct ravb_private *priv = container_of(ptp, struct ravb_private,
+> +						 ptp.info);
+> +	unsigned long flags;
+> +	u32 diff, addend;
+> +	int neg_adj = 0;
+> +	u64 adj;
+> +
+> +	if (ppb < 0) {
+> +		neg_adj = 1;
+> +		ppb = -ppb;
+> +	}
+> +	addend = priv->ptp.default_addend;
+> +	adj = addend;
+> +	adj *= ppb;
+> +	diff = div_u64(adj, NSEC_PER_SEC);
+> +
+> +	addend = neg_adj ? addend - diff : addend + diff;
+> +
+> +	spin_lock_irqsave(&priv->lock, flags);
+> +	ravb_ptp_update_addend(priv, addend);
+
+This is one example of many where you make a call to ravb_wait() while:
+
+- holding a spinlock with interrupts disabled (for up to 100 milliseconds)
+- ignoring the return value
+
+> +	spin_unlock_irqrestore(&priv->lock, flags);
+> +
+> +	return 0;
+> +}
+
+The ravb_wait() callers follow this pattern.
+
+   1. set a HW bit
+   2. wait for HW bit to clear before continuing
+
+I suggest using a another pattern instead.
+
+   1. check HW bit is clear (from previous operation)
+   2. if (!clear) return timeout error
+   3. set a HW bit
+
+   Step #1 should include a limited retry.
+
+Your way blocks the CPU for a multiple of 10 usec every single time.
+The way I suggested allows the CPU to go to other work while the bit
+clears in parallel.
+
+Thanks,
+Richard
+
+
+
+
+
