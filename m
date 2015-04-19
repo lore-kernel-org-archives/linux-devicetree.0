@@ -1,33 +1,35 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [PATH] MIPS: ath79: Add OF support and DTS for TL-WR1043ND
-Date: Sun, 19 Apr 2015 13:50:55 +0200
-Message-ID: <20150419135055.7f14f014@tock>
-References: <1429280669-2986-1-git-send-email-albeu@free.fr>
-	<5532BF90.2040907@gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v5 04/10] DT: Add documentation for the Skyworks AAT1290
+Date: Sun, 19 Apr 2015 15:05:29 +0300
+Message-ID: <20150419120528.GN27451@valkosipuli.retiisi.org.uk>
+References: <1429080520-10687-1-git-send-email-j.anaszewski@samsung.com>
+ <1429080520-10687-5-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5532BF90.2040907@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Aban Bedel <albeu@free.fr>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gabor Juhos <juhosg@openwrt.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429080520-10687-5-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 18 Apr 2015 13:33:20 -0700
-=46lorian Fainelli <f.fainelli@gmail.com> wrote:
+On Wed, Apr 15, 2015 at 08:48:34AM +0200, Jacek Anaszewski wrote:
+> This patch adds device tree binding documentation for
+> 1.5A Step-Up Current Regulator for Flash LEDs.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-> Le 17/04/2015 07:24, Alban Bedel a =C3=A9crit :
-> > This series add OF bindings and code support for the interrupt
-> > controllers, clocks and GPIOs. However it was only tested on a
-> > TL-WR1043ND with an AR9132, others SoCs are untested, and a few are
-> > not supported at all.
-> >=20
-> > Most code changes base on the previous bug fix series:
-> > [PATH] MIPS: ath79: Various small fix to prepare OF support
->=20
-> Any reasons why Gabor Juhos is not CC'd on these patches?
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Because get_maintainer.pl didn't return him, I'll add him from now on.
-
-Alban
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
