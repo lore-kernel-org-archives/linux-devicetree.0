@@ -1,78 +1,58 @@
-From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v2 04/12] devicetree: Add bindings for the ATH79 interrupt controllers
-Date: Sun, 19 Apr 2015 14:58:00 +0200
-Message-ID: <1429448288-20742-5-git-send-email-albeu@free.fr>
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATCH v2 05/12] devicetree: Add bindings for the ATH79 MISC interrupt controllers
+Date: Sun, 19 Apr 2015 14:58:01 +0200
+Message-ID: <1429448288-20742-6-git-send-email-albeu@free.fr>
 References: <1429448288-20742-1-git-send-email-albeu@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429448288-20742-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429448288-20742-1-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Signed-off-by: Alban Bedel <albeu@free.fr>
 ---
 v2: * Fixed the node names to respect ePAPR
-    * Removed the unneeded @0 on the node name
 ---
- .../interrupt-controller/qca,ath79-cpu-intc.txt    | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+ .../interrupt-controller/qca,ath79-misc-intc.txt   | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
 new file mode 100644
-index 0000000..aabce78
+index 0000000..391717a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
-@@ -0,0 +1,44 @@
-+Binding for Qualcomm Atheros AR7xxx/AR9XXX CPU interrupt controller
++++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+@@ -0,0 +1,30 @@
++Binding for Qualcomm Atheros AR7xxx/AR9XXX MISC interrupt controller
 +
-+On most SoC the IRQ controller need to flush the DDR FIFO before running
-+the interrupt handler of some devices. This is configured using the
-+qca,ddr-wb-channels and qca,ddr-wb-channel-interrupts properties.
++The MISC interrupt controller is a secondary controller for lower priority
++interrupt.
 +
 +Required Properties:
-+
-+- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-cpu-intc"
++- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
 +  as fallback
++- reg: Base address and size of the controllers memory area
++- interrupt-parent: phandle of the parent interrupt controller.
++- interrupts: Interrupt specifier for the controllers interrupt.
 +- interrupt-controller : Identifies the node as an interrupt controller
 +- #interrupt-cells : Specifies the number of cells needed to encode interrupt
-+		     source, should be 1 for intc
++		     source, should be 1
 +
 +Please refer to interrupts.txt in this directory for details of the common
 +Interrupt Controllers bindings used by client devices.
 +
-+Optional Properties:
-+
-+- qca,ddr-wb-channel-interrupts: List of the interrupts needing a write
-+  buffer flush
-+- qca,ddr-wb-channels: List of phandles to the write buffer channels for
-+  each interrupt. If qca,ddr-wb-channel-interrupts is not present the interrupt
-+  default to the entry's index.
-+
 +Example:
 +
-+	interrupt-controller {
-+		compatible = "qca,ar9132-cpu-intc", "qca,ar7100-cpu-intc";
++	interrupt-controller@18060010 {
++		compatible = "qca,ar9132-misc-intc", qca,ar7100-misc-intc";
++		reg = <0x18060010 0x4>;
++
++		interrupt-parent = <&cpuintc>;
++		interrupts = <6>;
 +
 +		interrupt-controller;
 +		#interrupt-cells = <1>;
-+
-+		qca,ddr-wb-channel-interrupts = <2>, <3>, <4>, <5>;
-+		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>,
-+					<&ddr_ctrl 0>, <&ddr_ctrl 1>;
-+	};
-+
-+	...
-+
-+	ddr_ctrl: memory-controller@18000000 {
-+		...
-+		#qca,ddr-wb-channel-cells = <1>;
 +	};
 -- 
 2.0.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
