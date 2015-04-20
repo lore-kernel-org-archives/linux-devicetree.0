@@ -1,116 +1,35 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH v13 2/3] power-domain: rockchip: add power domain driver
-Date: Mon, 20 Apr 2015 22:42:44 +0800
-Message-ID: <55351064.7090409@rock-chips.com>
-References: <1429438552-17733-1-git-send-email-wxt@rock-chips.com>	 <1429440280-18915-1-git-send-email-wxt@rock-chips.com> <1429522004.14597.8.camel@x220>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Mon, 20 Apr 2015 16:54:32 +0200
+Message-ID: <20150420145432.GD7261@kroah.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150417163054.GA28241@obsidianresearch.com>
+ <20150418090147.GF12732@n2100.arm.linux.org.uk>
+ <20150418172923.GA10605@obsidianresearch.com>
+ <20150418215755.GM12732@n2100.arm.linux.org.uk>
+ <20150420050800.GA12928@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429522004.14597.8.camel@x220>
+Content-Disposition: inline
+In-Reply-To: <20150420050800.GA12928@obsidianresearch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: heiko@sntech.de, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, tomasz.figa@gmail.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, grant.likely@linaro.org, "jinkun.hong" <jinkun.hong@rock-chips.com>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jens Wiklander <jens.wiklander@linaro.org>, valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Paul,
+On Sun, Apr 19, 2015 at 11:08:00PM -0600, Jason Gunthorpe wrote:
+> I still suspect the expected way to write a new mid layer is to create
+> your own struct device and not rely on misc_device,
 
-Thanks your commnets!:-)
+Yes, that is the way.  You can not use misc_device for anything other
+than creating the char node that your driver can use through the fileops
+you pass to it.
 
-=E5=9C=A8 2015=E5=B9=B404=E6=9C=8820=E6=97=A5 17:26, Paul Bolle =E5=86=99=
-=E9=81=93:
-> On Sun, 2015-04-19 at 18:44 +0800, Caesar Wang wrote:
->> --- a/arch/arm/mach-rockchip/Makefile
->> +++ b/arch/arm/mach-rockchip/Makefile
-> +obj-$(CONFIG_PM_GENERIC_DOMAINS) +=3D pm_domains.o
->
-> PM_GENERIC_DOMAINS is a bool symbol, so pm_domains.o can never be par=
-t
-> of a module. Is that correct?
+Do not use a misc_device to create sysfs files for, or anything else, it
+will be wrong and racy, as you have pointed out.
 
-Yeah, So this platform_driver does not need to set an owner, it will be=
-=20
-populated by the
-driver core.
->
->> --- /dev/null
->> +++ b/arch/arm/mach-rockchip/pm_domains.c
->> +#include <linux/module.h>
-> This include could probably be dropped.
+thanks,
 
-Yeah. As the about said.
->> +static const struct of_device_id rockchip_pm_domain_dt_match[] =3D =
-{
->> +	{
->> +		.compatible =3D "rockchip,rk3288-power-controller",
->> +		.data =3D (void *)&rk3288_pmu,
->> +	},
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, rockchip_pm_domain_dt_match);
-> The MODULE_DEVICE_TABLE() macro will be preprocessed away for built-i=
-n
-> code, according to include/linux/module.h.
-
-So,do you think we should remove it?
-wow.....,looks we should remove it.
->> +static struct platform_driver rockchip_pm_domain_driver =3D {
->> +	.probe =3D rockchip_pm_domain_probe,
->> +	.driver =3D {
->> +		.name   =3D "rockchip-pm-domain",
->> +		.owner  =3D THIS_MODULE,
-> According to include/linux/export.h THIS_MODULE is equivalent to NULL
-> for built-in code. So I think this line is not needed.
->
-
-Yeah,you are right.
->> +		.of_match_table =3D rockchip_pm_domain_dt_match,
->> +		/*
->> +		 * We can't forcibly eject devices form power domain,
->> +		 * so we can't really remove power domains once they
->> +		 * were added.
->> +		 */
->> +		.suppress_bind_attrs =3D true,
->> +	},
->> +};
-> Thanks,
->
->
-> Paul Bolle
->
->
->
->
-Thanks,
-
-Caesar
-
---=20
-***********************************************************************=
-***************
-=E7=8E=8B=E6=99=93=E8=85=BE    Caesar Wang
-Product R&D Dept.III
-=46uzhou Rockchip Electronics Co.Ltd
-Addr=EF=BC=9A  NO.18 Building, A District, Fuzhou Software Park,Gulou D=
-istrict,Fuzhou, Fujian,China(Fuzhou Headquarters)
-               21F,Malata Building,Kejizhongyi Avenue,Nanshan District,=
-Shenzhen  (Shenzhen Office)
-Tel=EF=BC=9A+86-591-83991906/07 - 8221
-Mobile:+86 15059456742
-E-mail : wxt@rock-chips.com
-***********************************************************************=
-****************
-***********************************************************************=
-****************
-IMPORTANT NOTICE: This email is from Fuzhou Rockchip Electronics Co., L=
-td .The contents of this email and any attachments may
-contain information that is privileged, confidential and/or exempt from=
- disclosure under applicable law and relevant NDA.
-If you are not the intended recipient, you are hereby notified that any=
- disclosure, copying, distribution, or use of the
-information is STRICTLY PROHIBITED. Please immediately contact the send=
-er as soon as possible and destroy the material
-in its entirety in any format. Thank you.
-***********************************************************************=
-****************
+greg k-h
