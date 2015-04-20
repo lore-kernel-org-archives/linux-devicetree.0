@@ -1,93 +1,185 @@
-From: keita kobayashi <keita.kobayashi.ym@renesas.com>
-Subject: Re: [RFC/PATCH v2 3/5] devicetree: bindings: Add new cpuidle enable
- method for Renesas R-car SoCs
-Date: Mon, 20 Apr 2015 16:39:35 +0900
-Message-ID: <5534AD37.20705@renesas.com>
-References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com> <1429180540-5692-4-git-send-email-keita.kobayashi.ym@renesas.com> <20150417124624.GD21904@leverpostej> <CANqRtoTaGc7QCJAVj8Jhpo5HgbwyfiRQZz5j0zBkE1cBkDZAzQ@mail.gmail.com> <20150417143723.GC2347@red-moon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150417143723.GC2347@red-moon>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "horms@verge.net.au" <horms@verge.net.au>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH v2 2/7] ARM: dts: qcom: Add PM8941 functions device nodes
+Date: Mon, 20 Apr 2015 10:45:36 +0300
+Message-ID: <1429515941-15334-3-git-send-email-ivan.ivanov@linaro.org>
+References: <1429515941-15334-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1429515941-15334-1-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus, Mark, Lorenzo
+Add configuration nodes for following devices:
 
-Thank you for your comment.
+* GPIO block, with 36 pins
+* MPP block, with 8 pins
+* Current ADC (IADC)
+* Volatage ADC (VADC), with multiple inputs
+* Thermal sensor device, which is using on chip VADC
+  channel report PMIC die temperature
+* Power key device, which is responsible for clean system
+  reboot or shutdown
+* White LED device
+* RTC device
 
-(2015/04/17 23:37), Lorenzo Pieralisi wrote:
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+---
+ arch/arm/boot/dts/qcom-pm8941.dtsi | 133 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 132 insertions(+), 1 deletion(-)
 
-> On Fri, Apr 17, 2015 at 02:11:24PM +0100, Magnus Damm wrote:
->> Hi Mark,
->>
->> On Fri, Apr 17, 2015 at 9:46 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->>> On Thu, Apr 16, 2015 at 11:35:38AM +0100, Keita Kobayashi wrote:
->>>> This patch add the ARM CPUs Device Tree binding to document a new
->>>> enable method of Renesas cpuidle.
->>>>
->>>> Signed-off-by: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->>>> index 8b9e0a9..663ee11 100644
->>>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->>>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->>>> @@ -196,6 +196,7 @@ nodes to be present and contain the properties described below.
->>>>                           "qcom,gcc-msm8660"
->>>>                           "qcom,kpss-acc-v1"
->>>>                           "qcom,kpss-acc-v2"
->>>> +                         "renesas,rcar-idle"
->>>
->>> The enable-method is about how to bring the CPU up (and potentially
->>> implies other things, like how to take it down again).
->>
->> Thanks for your clarification. I now understand that this is related
->> to SMP boot and CPU Hotplug.
->>
->>> These is no code in this series to that effect, no semantics are
->>> provided, and the name implies this is idle-specific.
->>>
->>> So this doesn't look right, and makes no sense to me.
->>
->> Ok, I somehow (incorrectly?) assumed that the following line in patch
->> 2/5* tied into this:
->> +CPUIDLE_METHOD_OF_DECLARE(rcar, "renesas,rcar-idle", &rcar_cpuidle_ops);
->>
->> [*] [RFC/PATCH v2 2/5] ARM: shmobile: Add cpuidle_ops for R-Car cpuidle
->>
->> But if it is unrelated it should of course be dropped or reworked.
-> 
-> It is related, but Mark's remark is correct. We have to keep in mind
-> that an enable-method defines how a CPU is powered {up/down} and
-> also suspended (quiesced through idle).
-> 
-> It has to be defined through proper bindings and related code, adding a
-> random compatible string for the sake of matching does not cut it,
-> that is not acceptable and I stated it from the beginning.
-> 
-> So, to make it clear, an enable-method defines CPU operations as a
-> whole, cpu init, power{up/down} and suspend.
-> 
-> It must be documented with proper bindings that defines compatible string and
-> related properties.
-> 
-> The sooner we incorporate the CPUidle ops into SMP ops the better to
-> prevent this abuse from happening, an enable-method encompasses SMP
-> ops and CPUidle ops, actually they must be merged because they represent
-> the enable-method implementation as a whole.
-> 
-> I hope this helps.
-> 
-> Lorenzo
+diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+index 24c5088..aa774e6 100644
+--- a/arch/arm/boot/dts/qcom-pm8941.dtsi
++++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+@@ -1,3 +1,5 @@
++#include <dt-bindings/iio/qcom,spmi-vadc.h>
++#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/spmi/spmi.h>
 
+ &spmi_bus {
+@@ -7,12 +9,141 @@
+ 		reg = <0x0 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		rtc@6000 {
++			compatible = "qcom,pm8941-rtc";
++			reg = <0x6000 0x100>,
++			      <0x6100 0x100>;
++			reg-names = "rtc", "alarm";
++			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
++		};
++
++		pwrkey@800 {
++			compatible = "qcom,pm8941-pwrkey";
++			reg = <0x800 0x100>;
++			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
++			debounce = <15625>;
++			bias-pull-up;
++		};
++
++		pm8941_gpios: gpios@c000 {
++			compatible = "qcom,pm8941-gpio";
++			reg = <0xc000 0x2400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
++				     <0 0xc1 0 IRQ_TYPE_NONE>,
++				     <0 0xc2 0 IRQ_TYPE_NONE>,
++				     <0 0xc3 0 IRQ_TYPE_NONE>,
++				     <0 0xc4 0 IRQ_TYPE_NONE>,
++				     <0 0xc5 0 IRQ_TYPE_NONE>,
++				     <0 0xc6 0 IRQ_TYPE_NONE>,
++				     <0 0xc7 0 IRQ_TYPE_NONE>,
++				     <0 0xc8 0 IRQ_TYPE_NONE>,
++				     <0 0xc9 0 IRQ_TYPE_NONE>,
++				     <0 0xca 0 IRQ_TYPE_NONE>,
++				     <0 0xcb 0 IRQ_TYPE_NONE>,
++				     <0 0xcc 0 IRQ_TYPE_NONE>,
++				     <0 0xcd 0 IRQ_TYPE_NONE>,
++				     <0 0xce 0 IRQ_TYPE_NONE>,
++				     <0 0xcf 0 IRQ_TYPE_NONE>,
++				     <0 0xd0 0 IRQ_TYPE_NONE>,
++				     <0 0xd1 0 IRQ_TYPE_NONE>,
++				     <0 0xd2 0 IRQ_TYPE_NONE>,
++				     <0 0xd3 0 IRQ_TYPE_NONE>,
++				     <0 0xd4 0 IRQ_TYPE_NONE>,
++				     <0 0xd5 0 IRQ_TYPE_NONE>,
++				     <0 0xd6 0 IRQ_TYPE_NONE>,
++				     <0 0xd7 0 IRQ_TYPE_NONE>,
++				     <0 0xd8 0 IRQ_TYPE_NONE>,
++				     <0 0xd9 0 IRQ_TYPE_NONE>,
++				     <0 0xda 0 IRQ_TYPE_NONE>,
++				     <0 0xdb 0 IRQ_TYPE_NONE>,
++				     <0 0xdc 0 IRQ_TYPE_NONE>,
++				     <0 0xdd 0 IRQ_TYPE_NONE>,
++				     <0 0xde 0 IRQ_TYPE_NONE>,
++				     <0 0xdf 0 IRQ_TYPE_NONE>,
++				     <0 0xe0 0 IRQ_TYPE_NONE>,
++				     <0 0xe1 0 IRQ_TYPE_NONE>,
++				     <0 0xe2 0 IRQ_TYPE_NONE>,
++				     <0 0xe3 0 IRQ_TYPE_NONE>;
++		};
++
++		pm8941_mpps: mpps@a000 {
++			compatible = "qcom,pm8941-mpp";
++			reg = <0xa000 0x800>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <0 0xa0 0 IRQ_TYPE_NONE>,
++				     <0 0xa1 0 IRQ_TYPE_NONE>,
++				     <0 0xa2 0 IRQ_TYPE_NONE>,
++				     <0 0xa3 0 IRQ_TYPE_NONE>,
++				     <0 0xa4 0 IRQ_TYPE_NONE>,
++				     <0 0xa5 0 IRQ_TYPE_NONE>,
++				     <0 0xa6 0 IRQ_TYPE_NONE>,
++				     <0 0xa7 0 IRQ_TYPE_NONE>;
++		};
++
++		pm8941_temp: temp-alarm@2400 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0x2400 0x100>;
++			interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
++			io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
++			io-channel-names = "thermal";
++			#thermal-sensor-cells = <0>;
++		};
++
++		pm8941_vadc: vadc@3100 {
++			compatible = "qcom,spmi-vadc";
++			reg = <0x3100 0x100>;
++			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#io-channel-cells = <1>;
++
++			die_temp {
++				reg = <VADC_DIE_TEMP>;
++			};
++			ref_625mv {
++				reg = <VADC_REF_625MV>;
++			};
++			ref_1250v {
++				reg = <VADC_REF_1250MV>;
++			};
++			ref_gnd {
++				reg = <VADC_GND_REF>;
++			};
++			ref_vdd {
++				reg = <VADC_VDD_VADC>;
++			};
++		};
++
++		pm8941_iadc: iadc@3600 {
++			compatible = "qcom,pm8941-iadc", "qcom,spmi-iadc";
++			reg = <0x3600 0x100>,
++				  <0x12f1 0x1>;
++			interrupts = <0x0 0x36 0x0 IRQ_TYPE_EDGE_RISING>;
++			qcom,external-resistor-micro-ohms = <10000>;
++		};
+ 	};
 
-I will rename "renesas,rcar-idle" in the next patch.
-
-Regards.
-
-Keita Kobayashi
+ 	usid1: pm8941@1 {
+-		compatible ="qcom,spmi-pmic";
++		compatible = "qcom,spmi-pmic";
+ 		reg = <0x1 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		wled@d800 {
++			compatible = "qcom,pm8941-wled";
++			reg = <0xd800 0x100>;
++			label = "backlight";
++
++			qcom,cs-out;
++			qcom,current-limit = <20>;
++			qcom,current-boost-limit = <805>;
++			qcom,switching-freq = <1600>;
++			qcom,ovp = <29>;
++			qcom,num-strings = <2>;
++		};
+ 	};
+ };
+--
+1.9.1
