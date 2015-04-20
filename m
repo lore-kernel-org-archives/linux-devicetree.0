@@ -1,81 +1,49 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RESEND v6 1/2] leds: tlc591xx: Document binding for the TI
- 8/16 Channel i2c LED driver
-Date: Mon, 20 Apr 2015 15:09:01 +0200
-Message-ID: <5534FA6D.4000009@samsung.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
- <1426630107-25057-2-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1426630107-25057-2-git-send-email-andrew@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3] ARM: ux500: Fix SD-card regression by using GPIO regulator
+Date: Mon, 20 Apr 2015 16:02:30 +0200
+Message-ID: <1429538553-17366-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2015 11:08 PM, Andrew Lunn wrote:
-> Document the binding for the TLC591xx LED driver.
->
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> Tested-by: Imre Kaloz <kaloz@openwrt.org>
-> Cc: Matthew.Fatheree@belkin.com
-> ---
->   .../devicetree/bindings/leds/leds-tlc591xx.txt     | 40 ++++++++++++++++++++++
->   1 file changed, 40 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
-> new file mode 100644
-> index 000000000000..3bbbf7024411
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
-> @@ -0,0 +1,40 @@
-> +LEDs connected to tlc59116 or tlc59108
-> +
-> +Required properties
-> +- compatible: should be "ti,tlc59116" or "ti,tlc59108"
-> +- #address-cells: must be 1
-> +- #size-cells: must be 0
-> +- reg: typically 0x68
-> +
-> +Each led is represented as a sub-node of the ti,tlc59116.
-> +See Documentation/devicetree/bindings/leds/common.txt
-> +
-> +LED sub-node properties:
-> +- reg: number of LED line, 0 to 15 or 0 to 7
-> +- label: (optional) name of LED
-> +- linux,default-trigger : (optional)
-> +
-> +Examples:
-> +
-> +tlc59116@68 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "ti,tlc59116";
-> +	reg = <0x68>;
-> +
-> +	wan@0 {
-> +		label = "wrt1900ac:amber:wan";
-> +		reg = <0x0>;
-> +	};
-> +
-> +	2g@2 {
-> +		label = "wrt1900ac:white:2g";
-> +		reg = <0x2>;
-> +	};
-> +
-> +	alive@9 {
-> +		label = "wrt1900ac:green:alive";
-> +		reg = <0x9>;
-> +		linux,default_trigger = "heartbeat";
-> +	};
-> +};
->
+This patchset fixes an old stability issue for detection of SD-cards. The DT
+node for the GPIO regulator which controls the I/O voltage level towards the
+SD-card was disabled in below commit.
 
-Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+c94a4ab7af3f ("ARM: ux500: Disable the MMCI gpio-regulator by default")
+
+The conseqeunce from that commit, was that the initially chosen voltage level
+remained, even after I/O voltage switch sequence was performed for UHS-I cards,
+since no GPIO regulator could be fetched.
+
+Appearantly some SD-cards didn't have any problem to cope with that, but some
+had.
+
+Recently thorough error handling was introduced for the MMCI mmc host driver,
+while fetching the regulators for the SD-card. That actually made the driver to
+continously return -EPROBE_DEFER while probing, which thus meant failing all the
+times instead of just failing "sometimes".
+
+The commit that introduced the thorough error handling is:
+9369c97cc7ec ("mmc: mmci: Cascade EPROBE_DEFER from regulators")
+
+
+Ulf Hansson (3):
+  ARM: ux500: Move GPIO regulator for SD-card into board DTSs
+  ARM: ux500: Enable GPIO regulator for SD-card for HREF boards
+  ARM: ux500: Enable GPIO regulator for SD-card for snowball
+
+ arch/arm/boot/dts/ste-dbx5x0.dtsi  | 17 -----------------
+ arch/arm/boot/dts/ste-href.dtsi    | 15 +++++++++++++++
+ arch/arm/boot/dts/ste-snowball.dts | 13 +++++++++++++
+ 3 files changed, 28 insertions(+), 17 deletions(-)
 
 -- 
-Best Regards,
-Jacek Anaszewski
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
