@@ -1,53 +1,68 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
-Date: Mon, 20 Apr 2015 18:05:45 +0200
-Message-ID: <20150420160545.GA11296@kroah.com>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
- <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
- <20150417163054.GA28241@obsidianresearch.com>
- <20150418090147.GF12732@n2100.arm.linux.org.uk>
- <20150418172923.GA10605@obsidianresearch.com>
- <20150418215755.GM12732@n2100.arm.linux.org.uk>
- <20150420050800.GA12928@obsidianresearch.com>
- <20150420145432.GD7261@kroah.com>
- <20150420155648.GA7676@obsidianresearch.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: Add DMA event remapping for
+ imx6sx-sdma
+Date: Mon, 20 Apr 2015 10:34:33 -0700
+Message-ID: <20150420173433.GA6920@Asurada>
+References: <1429076351-4429-1-git-send-email-nicoleotsuka@gmail.com>
+ <20150420094541.GL6325@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150420155648.GA7676-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20150420094541.GL6325@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: vinod.koul@intel.com, fabio.estevam@freescale.com, b38343@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 09:56:48AM -0600, Jason Gunthorpe wrote:
-> On Mon, Apr 20, 2015 at 04:54:32PM +0200, Greg Kroah-Hartman wrote:
-> > On Sun, Apr 19, 2015 at 11:08:00PM -0600, Jason Gunthorpe wrote:
-> > > I still suspect the expected way to write a new mid layer is to create
-> > > your own struct device and not rely on misc_device,
+Hi Sascha,
+
+Thank you for the comments.
+
+On Mon, Apr 20, 2015 at 11:45:41AM +0200, Sascha Hauer wrote:
+> On Tue, Apr 14, 2015 at 10:39:11PM -0700, Nicolin Chen wrote:
+> > The SDMA on imx6sx has a few DMA event remapping configurations
+> > inside the GPR (General Purpose Register) of that SoC. When users
+> > want to use a non-default DMA event, they need to configure the
+> > GPR register. So this patch gives an interface of the GPR and
+> > implements it in the SDMA driver so as to finish the DMA event
+> > remapping.
 > > 
-> > Yes, that is the way.  You can not use misc_device for anything other
-> > than creating the char node that your driver can use through the fileops
-> > you pass to it.
-> > 
-> > Do not use a misc_device to create sysfs files for, or anything else, it
-> > will be wrong and racy, as you have pointed out.
+> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+> > diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > index dc8d3aa..03315a6 100644
+> > --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> > @@ -8,6 +8,7 @@ Required properties:
+> >        "fsl,imx51-sdma"
+> >        "fsl,imx53-sdma"
+> >        "fsl,imx6q-sdma"
+> > +      "fsl,imx6sx-sdma"
+> >    The -to variants should be preferred since they allow to determine the
+> >    correct ROM script addresses needed for the driver to work without additional
+> >    firmware.
+> > @@ -19,6 +20,14 @@ Required properties:
+> >  - fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
+> >    scripts firmware
+> >  
+> > +Optional properties:
+> > +- fsl, sdma-event-remap : List of one or more DMA event remapping
+> > +  configurations. Its format: <&gpr addr shift val>
+> > +	gpr : the gpr phandle
+> > +	addr : the register address of the GPR
+> > +	shift : the bit shift of the GPR register
+> > +	val : the value of that bit
 > 
-> Thanks!
-> 
-> Can you quickly comment on when a misc device should be used compared to
-> alloc_chrdev_region & cdev_add ?
+> This binding allows arbitrary register writes to the GPR register space.
+> I don't think we want to allow that. A binding for this if necessary at
+> all must be higher level.
 
-If you need more than one character device node, don't use a misc
-device.  If you only need one, and nothing "special" or "fancy", and
-don't want to put sysfs attribute files on your device, then use a misc
-device.
+I was actually wondering where could be the best place to put this in.
+But I couldn't figure out a better place than this driver while being
+worried about the violation as you mentioned.
 
-thanks,
+But what could be that higher level?
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you
+Nicolin
