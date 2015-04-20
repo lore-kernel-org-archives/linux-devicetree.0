@@ -1,77 +1,81 @@
-From: keita kobayashi <keita.kobayashi.ym@renesas.com>
-Subject: Re: [RFC/PATCH v2 1/5] ARM: cpuidle: Add cpuidle support for R-Car
- Gen2 series
-Date: Mon, 20 Apr 2015 15:54:14 +0900
-Message-ID: <5534A296.5070006@renesas.com>
-References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com> <1429180540-5692-2-git-send-email-keita.kobayashi.ym@renesas.com> <CANqRtoQ_tQB326cnxzKaM-Ts6QwSa8y+sn+jM95XuCfsa00hNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoQ_tQB326cnxzKaM-Ts6QwSa8y+sn+jM95XuCfsa00hNw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, SH-Linux <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] tee: add OP-TEE driver
+Date: Mon, 20 Apr 2015 09:05:56 +0200
+Message-ID: <C29F84BF-7972-4F9B-BEF1-6857BCEA26A0@javigon.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org> <4984990.7rV4p0zMYU@wuerfel> <3960750D-EAE4-4FA0-9E15-89F9CE39257E@javigon.com> <7401865.1Pb83TJP0q@wuerfel>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_CDAE8099-8B34-433E-BD50-2F6E816538E3"; protocol="application/pgp-signature"; micalg=pgp-sha512
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7401865.1Pb83TJP0q@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Valentin Manea <valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus
 
-(2015/04/17 21:14), Magnus Damm wrote:
+--Apple-Mail=_CDAE8099-8B34-433E-BD50-2F6E816538E3
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=iso-8859-1
 
-> Hi Kobayashi-san,
-> 
-> On Thu, Apr 16, 2015 at 7:35 PM, Keita Kobayashi
-> <keita.kobayashi.ym@renesas.com> wrote:
->> Define ARM_RCAR_CPUIDLE config item to enable cpuidle
->> support for Renesas R-Car Gen2 SoCs.
->>
->> Signed-off-by: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
->> ---
->>  drivers/cpuidle/Kconfig.arm | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
->> index 21340e0..1bff62e 100644
->> --- a/drivers/cpuidle/Kconfig.arm
->> +++ b/drivers/cpuidle/Kconfig.arm
->> @@ -74,3 +74,11 @@ config ARM_MVEBU_V7_CPUIDLE
->>         depends on ARCH_MVEBU && !ARM64
->>         help
->>           Select this to enable cpuidle on Armada 370, 38x and XP processors.
->> +
->> +config ARM_RCAR_CPUIDLE
->> +       bool "CPU Idle Driver for the R-Car SoCs"
->> +       depends on ARCH_RCAR_GEN2
->> +       depends on ARM_CPUIDLE
->> +       select ARM_CPU_SUSPEND
->> +       help
->> +         Select this to enable cpuidle for R-Car SoCs
-> 
-> Thanks for your efforts. May I ask why we need a separate Kconfig
-> entry for this portion? It looks a bit overkill to me.
-> 
-> I have not tried this myself, but it seems to me that you could simply
-> modify arch/arm/mach-shmobile/Kconfig something like this:
-> 
-> config ARCH_RCAR_GEN2
->  bool
->  select PM_RCAR if PM || SMP
-> + select ARM_CPU_SUSPEND if ARM_CPUIDLE
->  select RENESAS_IRQC
-> 
-> and then in patch 2/5 use ARM_CPUIDLE for the #ifdefs instead of
-> ARM_RCAR_CPUIDLE.
-> 
-> I think that would simplify things if possible.
+> On 19 Apr 2015, at 21:47, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>=20
+> On Sunday 19 April 2015 13:17:20 Javier Gonz=E1lez wrote:
+>>=20
+>> Only providing user space support would defeat one of the main =
+purposes
+>> of the driver. We could better organize the patches and divide them =
+into user
+>> space support and in-kernel support if that is what you mean. In the =
+end
+>> the interfaces are orthogonal, even though the functionality should =
+be very
+>> similar.
+>=20
+> Splitting up the patches to separate the user interface from the =
+in-kernel
+> interface is certainly a good idea, but aside from that, I also agree =
+with
+> Greg on this point: if you want to establish an in-kernel interface, =
+don't
+> add any dead code at the beginning, but add it together with the users
+> of that interface.
+>=20
+> 	Arnd
 
-Thank you for your proposal.
-I will try it.
+Thanks for the feedback. We will do so.
 
-> 
-> Thanks,
-> 
-> / magnus
+Javier.
 
-Regards.
+--Apple-Mail=_CDAE8099-8B34-433E-BD50-2F6E816538E3
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
 
-Keita Kobayashi
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iQIcBAEBCgAGBQJVNKVUAAoJEDxGAX0tJXjglssP/RyQto2BJbwX7C4aM+LJ9mch
+YjCNyS0MRnotlyIimOYOLNuHxLabTk+OiKwYln6yQpYoetR5BAoHNke97ZvQ3NmS
+SqOqt66A9YPP7vB9BEkPgeEFTmKj53gm2XUiCCskw89XN/7AcCBH/9xEcN2EJmEV
+GNlTqwZRXNU6fHypofCwDufyBM0nmCOx5yrQCTVdBq3F9qR7DcWUpYAj8I/wGHvb
+4ATdKSS88JuuvjOHpf7cgr+pToh3IcL3apepIYGvp6ePMRE9XCDhlH09cVWZn9SN
+imnCuYehDh6CzMyop7eemADpYl2+LullEVwg92GIDzoXL0oP/9ANn+XeJx2kGvVZ
+UMVkQxOBekecj4PSBgkzm65qXkf7hYCbvcvj/EopEIONHNHDS8xogNGty1Q2Pw53
+0FTU9CJPSLe6nyJFqqaCSgszjZrZ1tACu6GkvWNW6anABSGtCIW4G3C+Uv/uUkU7
+b24MHRzMAY060StBAO5xVu63gVcG9nUdpQ+BC53WjfjbAqAn2ygPnf+Jba0zHgJu
+GqlGMqt70kStO+0JJyMTvSUU3xkocU5SDbxq9bLkbt5WsNZWISPIxX1zRfPy4vYa
+ZNx4hwth0eKnygWY+9ERSlVUZflVmV4w4puFQQjmZ9w6c1jzVL8tBwVCui6VyQBH
+RjJCS+WCRgEC68wFXuj7
+=jhzc
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_CDAE8099-8B34-433E-BD50-2F6E816538E3--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
