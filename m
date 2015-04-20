@@ -1,38 +1,49 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 1/2] cpufreq: mediatek: Add MT8173 cpufreq driver
-Date: Mon, 20 Apr 2015 20:31:50 +0200
-Message-ID: <1429554710.14597.41.camel@x220>
-References: <1429522047-16675-1-git-send-email-pi-cheng.chen@linaro.org>
-	 <1429522047-16675-2-git-send-email-pi-cheng.chen@linaro.org>
-	 <20150420141719.GF27115@jcartwri.amer.corp.natinst.com>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCHv2 0/4] Add support for Arria10 devkit
+Date: Mon, 20 Apr 2015 13:50:21 -0500
+Message-ID: <1429555825-23560-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150420141719.GF27115@jcartwri.amer.corp.natinst.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>
-Cc: "pi-cheng.chen" <pi-cheng.chen@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Mike Turquette <mturquette@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, fan.chen@mediatek.com, Howard Chen <ibanezchen@gmail.com>, linux-mediatek@lists.infradead.org, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
+Cc: dinh.linux@gmail.com, arnd@arndb.de, olof@lixom.net, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-04-20 at 09:17 -0500, Josh Cartwright wrote:
-> On Mon, Apr 20, 2015 at 05:27:26PM +0800, pi-cheng.chen wrote:
-> > --- a/drivers/cpufreq/Kconfig.arm
-> > +++ b/drivers/cpufreq/Kconfig.arm
->   
-> > +config ARM_MT8173_CPUFREQ
-> > +	bool "Mediatek MT8173 CPUFreq support"
-> > +	depends on ARCH_MEDIATEK && REGULATOR
-> 
-> I think you want to 'select REGULATOR' here; because REGULATOR isn't
-> a user-visible option.
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-REGULATOR is user visible, at least in next-20150420.
+Hi,
 
-> > +	help
-> > +	  This adds the CPUFreq driver support for Mediatek MT8173 SoC.
+This patchset enables and tidy up support for the Arria10 devkit. Along with
+this patchset and the patchset for enabling clocks on the Arria10, the devkit
+can boot Linux.
+
+V2:
+- Patch "ARM: socfpga: dts: enable UART1 for the debug uart" adds the removal
+  of unused aliases in the dts file.
+
+- Split out the "Documentation: DT bindings: add doc for Altera's SoCFPGA
+  platform" patch.
+
+- Split out the 2 patches for early printk uart.
 
 Thanks,
 
+Dinh Nguyen (4):
+  ARM: socfpga: add cpu1-start-addr for Arria 10
+  ARM: socfpga: disable the sdmmc, and uart nodes in the base arria10
+  ARM: socfpga: dts: enable UART1 for the debug uart
+  ARM: socfpga: rename socdk board file to socdk_sdmmc
 
-Paul Bolle
+ arch/arm/boot/dts/Makefile                        |  2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi            | 16 ++------
+ arch/arm/boot/dts/socfpga_arria10_socdk.dts       | 48 -----------------------
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi      | 46 ++++++++++++++++++++++
+ arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts | 26 ++++++++++++
+ 5 files changed, 77 insertions(+), 61 deletions(-)
+ delete mode 100755 arch/arm/boot/dts/socfpga_arria10_socdk.dts
+ create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+ create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts
+
+-- 
+2.2.1
