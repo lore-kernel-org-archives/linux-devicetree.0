@@ -1,55 +1,77 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 3/5] mmc: mediatek: Add PM support for MMC driver
-Date: Mon, 20 Apr 2015 08:52:29 +0200
-Message-ID: <20150420065229.GP4946@pengutronix.de>
-References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
- <1426562035-16709-4-git-send-email-chaotian.jing@mediatek.com>
+From: keita kobayashi <keita.kobayashi.ym@renesas.com>
+Subject: Re: [RFC/PATCH v2 1/5] ARM: cpuidle: Add cpuidle support for R-Car
+ Gen2 series
+Date: Mon, 20 Apr 2015 15:54:14 +0900
+Message-ID: <5534A296.5070006@renesas.com>
+References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com> <1429180540-5692-2-git-send-email-keita.kobayashi.ym@renesas.com> <CANqRtoQ_tQB326cnxzKaM-Ts6QwSa8y+sn+jM95XuCfsa00hNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1426562035-16709-4-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoQ_tQB326cnxzKaM-Ts6QwSa8y+sn+jM95XuCfsa00hNw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, SH-Linux <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 11:13:53AM +0800, Chaotian Jing wrote:
-> Add PM support for Mediatek MMC driver
+Hi Magnus
+
+(2015/04/17 21:14), Magnus Damm wrote:
+
+> Hi Kobayashi-san,
 > 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  drivers/mmc/host/mtk-sd.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 93 insertions(+), 1 deletion(-)
+> On Thu, Apr 16, 2015 at 7:35 PM, Keita Kobayashi
+> <keita.kobayashi.ym@renesas.com> wrote:
+>> Define ARM_RCAR_CPUIDLE config item to enable cpuidle
+>> support for Renesas R-Car Gen2 SoCs.
+>>
+>> Signed-off-by: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+>> ---
+>>  drivers/cpuidle/Kconfig.arm | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+>> index 21340e0..1bff62e 100644
+>> --- a/drivers/cpuidle/Kconfig.arm
+>> +++ b/drivers/cpuidle/Kconfig.arm
+>> @@ -74,3 +74,11 @@ config ARM_MVEBU_V7_CPUIDLE
+>>         depends on ARCH_MVEBU && !ARM64
+>>         help
+>>           Select this to enable cpuidle on Armada 370, 38x and XP processors.
+>> +
+>> +config ARM_RCAR_CPUIDLE
+>> +       bool "CPU Idle Driver for the R-Car SoCs"
+>> +       depends on ARCH_RCAR_GEN2
+>> +       depends on ARM_CPUIDLE
+>> +       select ARM_CPU_SUSPEND
+>> +       help
+>> +         Select this to enable cpuidle for R-Car SoCs
 > 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 86c999b..e02f6a6 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -1186,6 +1232,8 @@ static void msdc_ops_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->  	int ret;
->  	u32 ddr = 0;
->  
-> +	pm_runtime_get_sync(host->dev);
-> +
->  	if (ios->timing == MMC_TIMING_UHS_DDR50)
->  		ddr = 1;
->  
-> @@ -1230,6 +1278,9 @@ static void msdc_ops_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->  
->  	if (host->mclk != ios->clock || host->ddr != ddr)
->  		msdc_set_mclk(host, ddr, ios->clock);
-> +
-> +	pm_runtime_mark_last_busy(host->dev);
-> +	pm_runtime_put_autosuspend(host->dev);
+> Thanks for your efforts. May I ask why we need a separate Kconfig
+> entry for this portion? It looks a bit overkill to me.
+> 
+> I have not tried this myself, but it seems to me that you could simply
+> modify arch/arm/mach-shmobile/Kconfig something like this:
+> 
+> config ARCH_RCAR_GEN2
+>  bool
+>  select PM_RCAR if PM || SMP
+> + select ARM_CPU_SUSPEND if ARM_CPUIDLE
+>  select RENESAS_IRQC
+> 
+> and then in patch 2/5 use ARM_CPUIDLE for the #ifdefs instead of
+> ARM_RCAR_CPUIDLE.
+> 
+> I think that would simplify things if possible.
 
-This may also be imbalanced. This function can return between
-pm_runtime_get_sync() and pm_runtime_put_autosuspend().
+Thank you for your proposal.
+I will try it.
 
-Sascha
+> 
+> Thanks,
+> 
+> / magnus
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards.
+
+Keita Kobayashi
