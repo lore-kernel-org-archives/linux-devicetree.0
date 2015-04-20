@@ -1,391 +1,282 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RESEND v6 2/2] leds: tlc591xx: Driver for the TI 8/16
- Channel i2c LED driver
-Date: Mon, 20 Apr 2015 11:06:09 +0200
-Message-ID: <5534C181.9060202@samsung.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
- <1426630107-25057-3-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1426630107-25057-3-git-send-email-andrew@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
+From: "pi-cheng.chen" <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] clk: mediatek: Export CPU mux clocks for CPU frequency control
+Date: Mon, 20 Apr 2015 17:25:50 +0800
+Message-ID: <1429521950-16431-1-git-send-email-pi-cheng.chen@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "pi-cheng.chen" <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+This patch adds CPU mux clocks which are used by Mediatek cpufreq driver for
+intermediate clock source switching. It is based on v11 of common clock support
+for Mediatek MT8135 and MT8173[1]
 
-Very nice driver. I have one question below.
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/335967.html
 
-On 03/17/2015 11:08 PM, Andrew Lunn wrote:
-> The TLC59116 is an I2C bus controlled 16-channel LED driver.  The
-> TLC59108 is an I2C bus controlled 8-channel LED driver, which is very
-> similar to the TLC59116. Each LED output has its own 8-bit
-> fixed-frequency PWM controller to control the brightness of the LED.
-> The LEDs can also be fixed off and on, making them suitable for use as
-> GPOs.
->
-> This is based on a driver from Belkin, but has been extensively
-> rewritten and extended to support both 08 and 16 versions.
->
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> Tested-by: Imre Kaloz <kaloz@openwrt.org>
-> Cc: Matthew.Fatheree@belkin.comG
-> ---
->   drivers/leds/Kconfig         |   8 ++
->   drivers/leds/Makefile        |   1 +
->   drivers/leds/leds-tlc591xx.c | 300 +++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 309 insertions(+)
->   create mode 100644 drivers/leds/leds-tlc591xx.c
->
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 966b9605f5f0..a38b17a10bd2 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -467,6 +467,14 @@ config LEDS_TCA6507
->   	  LED driver chips accessed via the I2C bus.
->   	  Driver support brightness control and hardware-assisted blinking.
->
-> +config LEDS_TLC591XX
-> +	tristate "LED driver for TLC59108 and TLC59116 controllers"
-> +	depends on LEDS_CLASS && I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  This option enables support for Texas Instruments TLC59108
-> +	  and TLC59116 LED controllers.
-> +
->   config LEDS_MAX8997
->   	tristate "LED support for MAX8997 PMIC"
->   	depends on LEDS_CLASS && MFD_MAX8997
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index bf4609338e10..749dbe38ab27 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -31,6 +31,7 @@ obj-$(CONFIG_LEDS_LP8501)		+= leds-lp8501.o
->   obj-$(CONFIG_LEDS_LP8788)		+= leds-lp8788.o
->   obj-$(CONFIG_LEDS_LP8860)		+= leds-lp8860.o
->   obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
-> +obj-$(CONFIG_LEDS_TLC591XX)		+= leds-tlc591xx.o
->   obj-$(CONFIG_LEDS_CLEVO_MAIL)		+= leds-clevo-mail.o
->   obj-$(CONFIG_LEDS_IPAQ_MICRO)		+= leds-ipaq-micro.o
->   obj-$(CONFIG_LEDS_HP6XX)		+= leds-hp6xx.o
-> diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-> new file mode 100644
-> index 000000000000..de16c29d7895
-> --- /dev/null
-> +++ b/drivers/leds/leds-tlc591xx.c
-> @@ -0,0 +1,300 @@
-> +/*
-> + * Copyright 2014 Belkin Inc.
-> + * Copyright 2015 Andrew Lunn <andrew@lunn.ch>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define TLC591XX_MAX_LEDS	16
-> +
-> +#define TLC591XX_REG_MODE1	0x00
-> +#define MODE1_RESPON_ADDR_MASK	0xF0
-> +#define MODE1_NORMAL_MODE	(0 << 4)
-> +#define MODE1_SPEED_MODE	(1 << 4)
-> +
-> +#define TLC591XX_REG_MODE2	0x01
-> +#define MODE2_DIM		(0 << 5)
-> +#define MODE2_BLINK		(1 << 5)
-> +#define MODE2_OCH_STOP		(0 << 3)
-> +#define MODE2_OCH_ACK		(1 << 3)
-> +
-> +#define TLC591XX_REG_PWM(x)	(0x02 + (x))
-> +
-> +#define TLC591XX_REG_GRPPWM	0x12
-> +#define TLC591XX_REG_GRPFREQ	0x13
-> +
-> +/* LED Driver Output State, determine the source that drives LED outputs */
-> +#define LEDOUT_OFF		0x0	/* Output LOW */
-> +#define LEDOUT_ON		0x1	/* Output HI-Z */
-> +#define LEDOUT_DIM		0x2	/* Dimming */
-> +#define LEDOUT_BLINK		0x3	/* Blinking */
-> +#define LEDOUT_MASK		0x3
-> +
-> +#define ldev_to_led(c)		container_of(c, struct tlc591xx_led, ldev)
-> +#define work_to_led(work)	container_of(work, struct tlc591xx_led, work)
-> +
-> +struct tlc591xx_led {
-> +	bool active;
-> +	unsigned int led_no;
-> +	struct led_classdev ldev;
-> +	struct work_struct work;
-> +	struct tlc591xx_priv *priv;
-> +};
-> +
-> +struct tlc591xx_priv {
-> +	struct tlc591xx_led leds[TLC591XX_MAX_LEDS];
-> +	struct regmap *regmap;
-> +	unsigned int reg_ledout_offset;
-> +};
-> +
-> +struct tlc591xx {
-> +	unsigned int max_leds;
-> +	unsigned int reg_ledout_offset;
-> +};
-> +
-> +static const struct tlc591xx tlc59116 = {
-> +	.max_leds = 16,
-> +	.reg_ledout_offset = 0x14,
-> +};
-> +
-> +static const struct tlc591xx tlc59108 = {
-> +	.max_leds = 8,
-> +	.reg_ledout_offset = 0x0c,
-> +};
-> +
-> +static int
-> +tlc591xx_set_mode(struct regmap *regmap, u8 mode)
-> +{
-> +	int err;
-> +	u8 val;
-> +
-> +	err = regmap_write(regmap, TLC591XX_REG_MODE1, MODE1_NORMAL_MODE);
-> +	if (err)
-> +		return err;
-> +
-> +	val = MODE2_OCH_STOP | mode;
-> +
-> +	return regmap_write(regmap, TLC591XX_REG_MODE2, val);
-> +}
-> +
-> +static int
-> +tlc591xx_set_ledout(struct tlc591xx_priv *priv, struct tlc591xx_led *led,
-> +		    u8 val)
-> +{
-> +	unsigned int i = (led->led_no % 4) * 2;
-> +	unsigned int mask = LEDOUT_MASK << i;
-> +	unsigned int addr = priv->reg_ledout_offset + (led->led_no >> 2);
-> +
-> +	val = val << i;
-> +
-> +	return regmap_update_bits(priv->regmap, addr, mask, val);
-> +}
-> +
-> +static int
-> +tlc591xx_set_pwm(struct tlc591xx_priv *priv, struct tlc591xx_led *led,
-> +		 u8 brightness)
-> +{
-> +	u8 pwm = TLC591XX_REG_PWM(led->led_no);
-> +
-> +	return regmap_write(priv->regmap, pwm, brightness);
-> +}
-> +
-> +static void
-> +tlc591xx_led_work(struct work_struct *work)
-> +{
-> +	struct tlc591xx_led *led = work_to_led(work);
-> +	struct tlc591xx_priv *priv = led->priv;
-> +	enum led_brightness brightness = led->ldev.brightness;
-> +	int err;
-> +
-> +	switch (brightness) {
-> +	case 0:
-> +		err = tlc591xx_set_ledout(priv, led, LEDOUT_OFF);
-> +		break;
-> +	case LED_FULL:
-> +		err = tlc591xx_set_ledout(priv, led, LEDOUT_ON);
-> +		break;
-> +	default:
-> +		err = tlc591xx_set_ledout(priv, led, LEDOUT_DIM);
-> +		if (!err)
-> +			err = tlc591xx_set_pwm(priv, led, brightness);
-> +	}
-> +
-> +	if (err)
-> +		dev_err(led->ldev.dev, "Failed setting brightness\n");
-> +}
-> +
-> +static void
-> +tlc591xx_brightness_set(struct led_classdev *led_cdev,
-> +			enum led_brightness brightness)
-> +{
-> +	struct tlc591xx_led *led = ldev_to_led(led_cdev);
-> +
-> +	led->ldev.brightness = brightness;
-> +	schedule_work(&led->work);
-> +}
-> +
-> +static void
-> +tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
-> +{
-> +	int i = j;
-> +
-> +	while (--i >= 0) {
-> +		if (priv->leds[i].active) {
-> +			led_classdev_unregister(&priv->leds[i].ldev);
-> +			cancel_work_sync(&priv->leds[i].work);
-> +		}
-> +	}
-> +}
-> +
-> +static int
-> +tlc591xx_configure(struct device *dev,
-> +		   struct tlc591xx_priv *priv,
-> +		   const struct tlc591xx *tlc591xx)
-> +{
-> +	unsigned int i;
-> +	int err = 0;
-> +
-> +	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
+Changes in v2:
+- Remove use of .determine_rate callback
 
-It seems that all leds will be initially turned on, in dim mode.
-This shouldn't be fixed and probably an optional 'led-mode' DT node
-property should be provided for defining the initial state. It would
-default to OFF if not present.
+Signed-off-by: pi-cheng.chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/clk/mediatek/Makefile          |   2 +-
+ drivers/clk/mediatek/clk-cpumux.c      | 122 +++++++++++++++++++++++++++++++++
+ drivers/clk/mediatek/clk-cpumux.h      |  31 +++++++++
+ drivers/clk/mediatek/clk-mt8173.c      |  23 +++++++
+ include/dt-bindings/clock/mt8173-clk.h |   4 +-
+ 5 files changed, 180 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/clk/mediatek/clk-cpumux.c
+ create mode 100644 drivers/clk/mediatek/clk-cpumux.h
 
-> +	for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
-> +		struct tlc591xx_led *led = &priv->leds[i];
-> +
-> +		if (!led->active)
-> +			continue;
-> +
-> +		led->priv = priv;
-> +		led->led_no = i;
-> +		led->ldev.brightness_set = tlc591xx_brightness_set;
-> +		led->ldev.max_brightness = LED_FULL;
-> +		INIT_WORK(&led->work, tlc591xx_led_work);
-> +		err = led_classdev_register(dev, &led->ldev);
-> +		if (err < 0) {
-> +			dev_err(dev, "couldn't register LED %s\n",
-> +				led->ldev.name);
-> +			goto exit;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +exit:
-> +	tlc591xx_destroy_devices(priv, i);
-> +	return err;
-> +}
-> +
-> +static const struct regmap_config tlc591xx_regmap = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 0x1e,
-> +};
-> +
-> +static const struct of_device_id of_tlc591xx_leds_match[] = {
-> +	{ .compatible = "ti,tlc59116",
-> +	  .data = &tlc59116 },
-> +	{ .compatible = "ti,tlc59108",
-> +	  .data = &tlc59108 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, of_tlc591xx_leds_match);
-> +
-> +static int
-> +tlc591xx_probe(struct i2c_client *client,
-> +	       const struct i2c_device_id *id)
-> +{
-> +	struct device_node *np = client->dev.of_node, *child;
-> +	struct device *dev = &client->dev;
-> +	const struct of_device_id *match;
-> +	const struct tlc591xx *tlc591xx;
-> +	struct tlc591xx_priv *priv;
-> +	int err, count, reg;
-> +
-> +	match = of_match_device(of_tlc591xx_leds_match, dev);
-> +	if (!match)
-> +		return -ENODEV;
-> +
-> +	tlc591xx = match->data;
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	count = of_get_child_count(np);
-> +	if (!count || count > tlc591xx->max_leds)
-> +		return -EINVAL;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_BYTE_DATA))
-> +		return -EIO;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->regmap = devm_regmap_init_i2c(client, &tlc591xx_regmap);
-> +	if (IS_ERR(priv->regmap)) {
-> +		err = PTR_ERR(priv->regmap);
-> +		dev_err(dev, "Failed to allocate register map: %d\n", err);
-> +		return err;
-> +	}
-> +	priv->reg_ledout_offset = tlc591xx->reg_ledout_offset;
-> +
-> +	i2c_set_clientdata(client, priv);
-> +
-> +	for_each_child_of_node(np, child) {
-> +		err = of_property_read_u32(child, "reg", &reg);
-> +		if (err)
-> +			return err;
-> +		if (reg < 0 || reg >= tlc591xx->max_leds)
-> +			return -EINVAL;
-> +		if (priv->leds[reg].active)
-> +			return -EINVAL;
-> +		priv->leds[reg].active = true;
-> +		priv->leds[reg].ldev.name =
-> +			of_get_property(child, "label", NULL) ? : child->name;
-> +		priv->leds[reg].ldev.default_trigger =
-> +			of_get_property(child, "linux,default-trigger", NULL);
-> +	}
-> +	return tlc591xx_configure(dev, priv, tlc591xx);
-> +}
-> +
-> +static int
-> +tlc591xx_remove(struct i2c_client *client)
-> +{
-> +	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
-> +
-> +	tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id tlc591xx_id[] = {
-> +	{ "tlc59116" },
-> +	{ "tlc59108" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, tlc591xx_id);
-> +
-> +static struct i2c_driver tlc591xx_driver = {
-> +	.driver = {
-> +		.name = "tlc591xx",
-> +		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
-> +	},
-> +	.probe = tlc591xx_probe,
-> +	.remove = tlc591xx_remove,
-> +	.id_table = tlc591xx_id,
-> +};
-> +
-> +module_i2c_driver(tlc591xx_driver);
-> +
-> +MODULE_AUTHOR("Andrew Lunn <andrew@lunn.ch>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("TLC591XX LED driver");
->
-
-
+diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+index 8e4b2a4..299917a 100644
+--- a/drivers/clk/mediatek/Makefile
++++ b/drivers/clk/mediatek/Makefile
+@@ -1,4 +1,4 @@
+-obj-y += clk-mtk.o clk-pll.o clk-gate.o
++obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-cpumux.o
+ obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+ obj-y += clk-mt8135.o
+ obj-y += clk-mt8173.o
+diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
+new file mode 100644
+index 0000000..dc14074
+--- /dev/null
++++ b/drivers/clk/mediatek/clk-cpumux.c
+@@ -0,0 +1,122 @@
++/*
++ * Copyright (c) 2015 Linaro Ltd.
++ * Author: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
++#include <linux/slab.h>
++
++#include "clk-mtk.h"
++#include "clk-cpumux.h"
++
++static inline struct mtk_clk_cpumux *to_clk_mux(struct clk_hw *_hw)
++{
++	return container_of(_hw, struct mtk_clk_cpumux, hw);
++}
++
++static u8 clk_cpumux_get_parent(struct clk_hw *hw)
++{
++	struct mtk_clk_cpumux *mux = to_clk_mux(hw);
++	int num_parents = __clk_get_num_parents(hw->clk);
++	u32 val;
++
++	regmap_read(mux->regmap, mux->reg, &val);
++
++	val >>= mux->shift;
++	val &= mux->mask;
++
++	if (val >= num_parents)
++		return -EINVAL;
++
++	return val;
++}
++
++static int clk_cpumux_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct mtk_clk_cpumux *mux = to_clk_mux(hw);
++	u32 mask, val;
++
++	val = index << mux->shift;
++	mask = mux->mask << mux->shift;
++
++	return regmap_update_bits(mux->regmap, mux->reg, mask, val);
++}
++
++static struct clk_ops clk_cpumux_ops = {
++	.get_parent = clk_cpumux_get_parent,
++	.set_parent = clk_cpumux_set_parent,
++};
++
++static struct clk *mtk_clk_register_cpumux(const struct mtk_composite *mux,
++					   struct regmap *regmap)
++{
++	struct mtk_clk_cpumux *cpumux;
++	struct clk *clk;
++	struct clk_init_data init;
++
++	cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
++	if (!cpumux)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = mux->name;
++	init.ops = &clk_cpumux_ops;
++	init.parent_names = mux->parent_names;
++	init.num_parents = mux->num_parents;
++
++	cpumux->reg = mux->mux_reg;
++	cpumux->shift = mux->mux_shift;
++	cpumux->mask = (BIT(mux->mux_width) - 1);
++	cpumux->regmap = regmap;
++	cpumux->hw.init = &init;
++
++	clk = clk_register(NULL, &cpumux->hw);
++	if (IS_ERR(clk))
++		kfree(cpumux);
++
++	return clk;
++}
++
++int mtk_clk_register_cpumuxes(struct device_node *node,
++			      const struct mtk_composite *clks, int num,
++			      struct clk_onecell_data *clk_data)
++{
++	int i;
++	struct clk *clk;
++	struct regmap *regmap;
++
++	if (!clk_data)
++		return -ENOMEM;
++
++	regmap = syscon_node_to_regmap(node);
++	if (IS_ERR(regmap)) {
++		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
++		       PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	for (i = 0; i < num; i++) {
++		const struct mtk_composite *mux = &clks[i];
++
++		clk = mtk_clk_register_cpumux(mux, regmap);
++		if (IS_ERR(clk)) {
++			pr_err("Failed to register clk %s: %ld\n",
++			       mux->name, PTR_ERR(clk));
++			continue;
++		}
++
++		clk_data->clks[mux->id] = clk;
++	}
++
++	return 0;
++}
+diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
+new file mode 100644
+index 0000000..b82ad20
+--- /dev/null
++++ b/drivers/clk/mediatek/clk-cpumux.h
+@@ -0,0 +1,31 @@
++/*
++ * Copyright (c) 2015 Linaro Ltd.
++ * Author: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __DRV_CLK_CPUMUX_H
++#define __DRV_CLK_CPUMUX_H
++
++#include <linux/regmap.h>
++
++struct mtk_clk_cpumux {
++	struct clk_hw	hw;
++	struct regmap	*regmap;
++	u32		reg;
++	u32		mask;
++	u8		shift;
++};
++
++int mtk_clk_register_cpumuxes(struct device_node *node,
++			      const struct mtk_composite *clks, int num,
++			      struct clk_onecell_data *clk_data);
++#endif /* __DRV_CLK_CPUMUX_H */
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 0584554..745f9d9 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -19,6 +19,7 @@
+ 
+ #include "clk-mtk.h"
+ #include "clk-gate.h"
++#include "clk-cpumux.h"
+ 
+ #include <dt-bindings/clock/mt8173-clk.h>
+ 
+@@ -517,6 +518,20 @@ static const char * const i2s3_b_ck_parents[] __initconst = {
+ 	"apll2_div5"
+ };
+ 
++static const char * const ca53_parents[] __initconst = {
++	"clk26m",
++	"armca7pll",
++	"mainpll",
++	"univpll"
++};
++
++static const char * const ca57_parents[] __initconst = {
++	"clk26m",
++	"armca15pll",
++	"mainpll",
++	"univpll"
++};
++
+ static const struct mtk_composite top_muxes[] __initconst = {
+ 	/* CLK_CFG_0 */
+ 	MUX(TOP_AXI_SEL, "axi_sel", axi_parents, 0x0040, 0, 3),
+@@ -589,6 +604,11 @@ static const struct mtk_composite top_muxes[] __initconst = {
+ 	MUX(TOP_I2S3_B_CK_SEL, "i2s3_b_ck_sel", i2s3_b_ck_parents, 0x120, 8, 1),
+ };
+ 
++static const struct mtk_composite cpu_muxes[] __initconst = {
++	MUX(INFRA_CA53SEL, "infra_ca53_sel", ca53_parents, 0x0000, 0, 2),
++	MUX(INFRA_CA57SEL, "infra_ca57_sel", ca57_parents, 0x0000, 2, 2),
++};
++
+ static void __init mtk_init_clk_topckgen(void __iomem *top_base,
+ 		struct clk_onecell_data *clk_data)
+ {
+@@ -745,6 +765,9 @@ static void __init mtk_infrasys_init(struct device_node *node)
+ 	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+ 						clk_data);
+ 
++	mtk_clk_register_cpumuxes(node, cpu_muxes, ARRAY_SIZE(cpu_muxes),
++						clk_data);
++
+ 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+ 	if (r)
+ 		pr_err("%s(): could not register clock provider: %d\n",
+diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+index e648b28..2503b03 100644
+--- a/include/dt-bindings/clock/mt8173-clk.h
++++ b/include/dt-bindings/clock/mt8173-clk.h
+@@ -187,7 +187,9 @@
+ #define INFRA_CEC		9
+ #define INFRA_PMICSPI		10
+ #define INFRA_PMICWRAP		11
+-#define INFRA_NR_CLK		12
++#define INFRA_CA53SEL		12
++#define INFRA_CA57SEL		13
++#define INFRA_NR_CLK		14
+ 
+ /* PERI_SYS */
+ 
 -- 
-Best Regards,
-Jacek Anaszewski
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
