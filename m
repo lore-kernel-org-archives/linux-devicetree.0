@@ -1,42 +1,43 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: ux500: Fix SD-card regression by using GPIO regulator
-Date: Mon, 20 Apr 2015 08:49:37 -0700
-Message-ID: <CAJAp7Oh1V7QKUtBnf-RCYyFD_RfTLOM5ir-jnr2DR3kg1xAOKg@mail.gmail.com>
-References: <1429538553-17366-1-git-send-email-ulf.hansson@linaro.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Mon, 20 Apr 2015 09:56:48 -0600
+Message-ID: <20150420155648.GA7676@obsidianresearch.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150417163054.GA28241@obsidianresearch.com>
+ <20150418090147.GF12732@n2100.arm.linux.org.uk>
+ <20150418172923.GA10605@obsidianresearch.com>
+ <20150418215755.GM12732@n2100.arm.linux.org.uk>
+ <20150420050800.GA12928@obsidianresearch.com>
+ <20150420145432.GD7261@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429538553-17366-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150420145432.GD7261-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 7:02 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patchset fixes an old stability issue for detection of SD-cards. The DT
-> node for the GPIO regulator which controls the I/O voltage level towards the
-> SD-card was disabled in below commit.
->
-[..]
-> The commit that introduced the thorough error handling is:
-> 9369c97cc7ec ("mmc: mmci: Cascade EPROBE_DEFER from regulators")
->
+On Mon, Apr 20, 2015 at 04:54:32PM +0200, Greg Kroah-Hartman wrote:
+> On Sun, Apr 19, 2015 at 11:08:00PM -0600, Jason Gunthorpe wrote:
+> > I still suspect the expected way to write a new mid layer is to create
+> > your own struct device and not rely on misc_device,
+> 
+> Yes, that is the way.  You can not use misc_device for anything other
+> than creating the char node that your driver can use through the fileops
+> you pass to it.
+> 
+> Do not use a misc_device to create sysfs files for, or anything else, it
+> will be wrong and racy, as you have pointed out.
 
-Glad I could help :)
+Thanks!
 
->
-> Ulf Hansson (3):
->   ARM: ux500: Move GPIO regulator for SD-card into board DTSs
->   ARM: ux500: Enable GPIO regulator for SD-card for HREF boards
->   ARM: ux500: Enable GPIO regulator for SD-card for snowball
->
+Can you quickly comment on when a misc device should be used compared to
+alloc_chrdev_region & cdev_add ?
 
-Looks good
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-
-Regards,
-Bjorn
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
