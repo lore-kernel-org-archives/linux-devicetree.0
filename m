@@ -1,119 +1,79 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: imx-sdma: Add DMA event remapping for
- imx6sx-sdma
-Date: Mon, 20 Apr 2015 11:45:41 +0200
-Message-ID: <20150420094541.GL6325@pengutronix.de>
-References: <1429076351-4429-1-git-send-email-nicoleotsuka@gmail.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 02/14] MIPS: ath79: Add basic device tree support
+Date: Mon, 20 Apr 2015 11:50:56 +0200
+Message-ID: <1429523456.14597.23.camel@x220>
+References: <1429280669-2986-1-git-send-email-albeu@free.fr>
+	 <1429280669-2986-3-git-send-email-albeu@free.fr>
+	 <1429340752.16771.120.camel@x220> <20150418183149.69c0795b@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429076351-4429-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150418183149.69c0795b@tock>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2015 at 10:39:11PM -0700, Nicolin Chen wrote:
-> The SDMA on imx6sx has a few DMA event remapping configurations
-> inside the GPR (General Purpose Register) of that SoC. When users
-> want to use a non-default DMA event, they need to configure the
-> GPR register. So this patch gives an interface of the GPR and
-> implements it in the SDMA driver so as to finish the DMA event
-> remapping.
+On Sat, 2015-04-18 at 18:31 +0200, Alban wrote:
+> On Sat, 18 Apr 2015 09:05:52 +0200
+> Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
 > 
-> Signed-off-by: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  9 ++++
->  drivers/dma/imx-sdma.c                             | 58 ++++++++++++++++++++++
->  2 files changed, 67 insertions(+)
+> > On Fri, 2015-04-17 at 16:24 +0200, Alban Bedel wrote:
+> > 
+> > > --- a/arch/mips/ath79/Kconfig
+> > > +++ b/arch/mips/ath79/Kconfig
+> > >  
+> > > +choice
+> > > +	prompt "Builtin devicetree selection"
+> > > +	default DTB_ATH79_NONE
+> > > +	help
+> > > +	  Select the devicetree.
+> > > +
+> > > +	config DTB_ATH79_NONE
+> > > +		bool "None"
+> > > +endchoice
+> > 
+> > This adds a choice block with one config entry. So what this achieves
+> > is that DTB_ATH79_NONE will always be 'y', right? Besides I didn't
+> > notice on a user of CONFIG_DTB_ATH79_NONE. So as far as I can see
+> > this choice has no effect on the build.
+> > 
+> > Why was this choice entry added?
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> index dc8d3aa..03315a6 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> @@ -8,6 +8,7 @@ Required properties:
->        "fsl,imx51-sdma"
->        "fsl,imx53-sdma"
->        "fsl,imx6q-sdma"
-> +      "fsl,imx6sx-sdma"
->    The -to variants should be preferred since they allow to determine the
->    correct ROM script addresses needed for the driver to work without additional
->    firmware.
-> @@ -19,6 +20,14 @@ Required properties:
->  - fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
->    scripts firmware
->  
-> +Optional properties:
-> +- fsl, sdma-event-remap : List of one or more DMA event remapping
-> +  configurations. Its format: <&gpr addr shift val>
-> +	gpr : the gpr phandle
-> +	addr : the register address of the GPR
-> +	shift : the bit shift of the GPR register
-> +	val : the value of that bit
+> This menu is for boards that need a built-in DTB, as MIPS currently
+> doesn't support appended DTBs it is the only way to load a DTB on
+> boards stuck with a broken boot loader. But as no board has been added
+> yet it only contain the entry for boards that don't need a built-in
+> DTB, which do nothing as you pointed out.
+> 
+> A board is then added in this menu in patch 14, for some reasons git
+> send-email didn't send the whole serie at once :(
 
-This binding allows arbitrary register writes to the GPR register space.
-I don't think we want to allow that. A binding for this if necessary at
-all must be higher level.
+I saw 14/14 fly by now. (And I saw 12/12 of v2, which basically replaces
+14/14.) That makes things clear.
 
-> +static int sdma_event_remap(struct sdma_engine *sdma)
-> +{
-> +	struct device_node *np = sdma->dev->of_node;
-> +	char propname[] = "fsl,sdma-event-remap";
-> +	struct of_phandle_args gpr_spec;
-> +	struct regmap *gpr;
-> +	int i = 0, ret = 0;
-> +
-> +	/* Only support DT */
-> +	if (IS_ERR(np))
-> +		return ret;
-> +
-> +	/* Only apply to imx6sx platform */
-> +	if (!of_device_is_compatible(np, "fsl,imx6sx-sdma"))
-> +		return ret;
+Perhaps, if you're going to send a v3, you might move this change into
+12/12. At least, I see little reason to add this choice block in two
+separate steps in this series.
 
-We already have struct sdma_driver_data. Please add a have_remap field
-or similar there.
+(Side note: you _might_ be able to drop config DTB_ATH79_NONE entirely
+if you also replace
+	default DTB_ATH79_NONE
 
-> +
-> +	/* Bypass if no need to remap */
-> +	if (!of_find_property(np, propname, NULL))
-> +		return ret;
-> +
-> +	/* Fetch the remap configurations of GPR */
-> +	ret = of_parse_phandle_with_args(np, propname, "#gpr-cells", i++,
-> +					 &gpr_spec);
-> +	if (ret) {
-> +		dev_err(sdma->dev, "failed to get a correct %s property: %d\n",
-> +				propname, ret);
-> +		return ret;
-> +	}
-> +
-> +next:
-> +	gpr = syscon_node_to_regmap(gpr_spec.np);
-> +	if (IS_ERR(gpr)) {
-> +		ret = PTR_ERR(gpr);
-> +		dev_err(sdma->dev, "failed to get gpr regmap: %d\n", reg);
-> +		return ret;
-> +	}
-> +
-> +	/* 0 : Register address, 1 : Bit shift, 2 : Bit value */
-> +	regmap_update_bits(gpr, gpr_spec.args[0], BIT(gpr_spec.args[1]),
-> +			   gpr_spec.args[2] << gpr_spec.args[1]);
-> +
-> +	if (!of_parse_phandle_with_args(np, propname, "#gpr-cells", i++,
-> +					&gpr_spec))
-> +		goto next;
+with
+	optional
 
-C has native support for loops. Please use it.
+optional is a little used option for choice blocks. I haven't tested
+this, so this suggestion could end up wasting your time. And even then
+this all looks like a complicated way to set just DTB_TL_WR1043ND_V1. I
+suppose you expect to add things to this choice block in the future.)
 
-Sascha
+Thanks,
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+Paul Bolle
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
