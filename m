@@ -1,115 +1,411 @@
-From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
-Date: Mon, 20 Apr 2015 11:40:37 +0000
-Message-ID: <DM2PR03MB383E5F67C358CCE2E38EA71E6E00@DM2PR03MB383.namprd03.prod.outlook.com>
-References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
-	 <1429119357.22867.724.camel@freescale.com>
-	 <DM2PR03MB38330DBBFFD1BC45D58F447E6E40@DM2PR03MB383.namprd03.prod.outlook.com>
- <1429249281.32545.52.camel@freescale.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH RESEND v6 2/2] leds: tlc591xx: Driver for the TI 8/16
+ Channel i2c LED driver
+Date: Mon, 20 Apr 2015 13:59:59 +0200
+Message-ID: <20150420115959.GA8050@lunn.ch>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+ <1426630107-25057-3-git-send-email-andrew@lunn.ch>
+ <5534C181.9060202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5534C181.9060202@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IExpYmVybWFuIElnYWwtQjMxOTUwDQo+IFNlbnQ6IE1vbmRheSwgQXByaWwg
-MjAsIDIwMTUgMjowNyBQTQ0KPiBUbzogV29vZCBTY290dC1CMDc0MjENCj4gQ2M6IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiBTdWJq
-ZWN0OiBSRTogW3YzXSBkdC9iaW5kaW5nczogcW9yaXEtY2xvY2s6IEFkZCBiaW5kaW5nIGZvciBG
-TWFuIGNsb2NrIG11eA0KPiANCj4gDQo+IA0KPiBSZWdhcmRzLA0KPiBJZ2FsIExpYmVybWFuLg0K
-PiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IFdvb2QgU2NvdHQt
-QjA3NDIxDQo+ID4gU2VudDogRnJpZGF5LCBBcHJpbCAxNywgMjAxNSA4OjQxIEFNDQo+ID4gVG86
-IExpYmVybWFuIElnYWwtQjMxOTUwDQo+ID4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiA+IFN1YmplY3Q6IFJlOiBbdjNdIGR0
-L2JpbmRpbmdzOiBxb3JpcS1jbG9jazogQWRkIGJpbmRpbmcgZm9yIEZNYW4gY2xvY2sNCj4gPiBt
-dXgNCj4gPg0KPiA+IE9uIFRodSwgMjAxNS0wNC0xNiBhdCAwMToxMSAtMDUwMCwgTGliZXJtYW4g
-SWdhbC1CMzE5NTAgd3JvdGU6DQo+ID4gPg0KPiA+ID4NCj4gPiA+IFJlZ2FyZHMsDQo+ID4gPiBJ
-Z2FsIExpYmVybWFuLg0KPiA+ID4NCj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-Cj4gPiA+ID4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gPiA+ID4gU2VudDogV2VkbmVzZGF5
-LCBBcHJpbCAxNSwgMjAxNSA4OjM2IFBNDQo+ID4gPiA+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1
-MA0KPiA+ID4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBs
-aXN0cy5vemxhYnMub3JnDQo+ID4gPiA+IFN1YmplY3Q6IFJlOiBbdjNdIGR0L2JpbmRpbmdzOiBx
-b3JpcS1jbG9jazogQWRkIGJpbmRpbmcgZm9yIEZNYW4NCj4gPiA+ID4gY2xvY2sgbXV4DQo+ID4g
-PiA+DQo+ID4gPiA+IE9uIFR1ZSwgMjAxNS0wNC0xNCBhdCAxMzo1NiArMDMwMCwgSWdhbC5MaWJl
-cm1hbiB3cm90ZToNCj4gPiA+ID4gPiBGcm9tOiBJZ2FsIExpYmVybWFuIDxJZ2FsLkxpYmVybWFu
-QGZyZWVzY2FsZS5jb20+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiB2MzogQWRkcmVzc2VkIGZlZWRi
-YWNrIGZyb20gU2NvdHQ6DQo+ID4gPiA+ID4gCS0gUmVtb3ZlZCBjbG9jayBzcGVjaWZpZXIgZGVz
-Y3JpcHRpb24uDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiB2MjogQWRkcmVzc2VkIGZlZWRiYWNrIGZy
-b20gU2NvdHQ6DQo+ID4gPiA+ID4gCS0gTW92ZWQgdGhlICJmbWFuLWNsay1tdXgiIGNsb2NrIHBy
-b3ZpZGVyIGRldGFpbHMNCj4gPiA+ID4gPiAJICB1bmRlciAiY2xvY2tzIiBwcm9wZXJ0eS4NCj4g
-PiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IElnYWwgTGliZXJtYW4gPElnYWwuTGli
-ZXJtYW5AZnJlZXNjYWxlLmNvbT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0ICAgICAgfCAgIDE3DQo+ID4gKysr
-KysrKysrKysrKysrLS0NCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMo
-KyksIDIgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0DQo+ID4g
-PiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xv
-Y2sudHh0DQo+ID4gPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
-Y2svcW9yaXEtY2xvY2sudHh0DQo+ID4gPiA+ID4gaW5kZXggYjBkN2I3My4uMmJiM2IzOCAxMDA2
-NDQNCj4gPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
-Y2svcW9yaXEtY2xvY2sudHh0DQo+ID4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4dA0KPiA+ID4gPiA+IEBAIC02NSw5ICs2
-NSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+ICAJCUl0IHRha2VzIHBhcmVu
-dCdzIGNsb2NrLWZyZXF1ZW5jeSBhcyBpdHMgY2xvY2suDQo+ID4gPiA+ID4gIAkqICJmc2wscW9y
-aXEtcGxhdGZvcm0tcGxsLTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xvY2sgKHYxLjApDQo+
-ID4gPiA+ID4gIAkqICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTIuMCIgZm9yIHRoZSBwbGF0Zm9y
-bSBQTEwgY2xvY2sNCj4gPiA+ID4gPiAodjIuMCkNCj4gPiA+ID4gPiArCSogImZzbCxmbWFuLWNs
-ay1tdXgiIGZvciB0aGUgRnJhbWUgTWFuYWdlciBjbG9jay4NCj4gPiA+ID4gPiAgLSAjY2xvY2st
-Y2VsbHM6IEZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmcuIFRoZSBudW1iZXIgb2YgY2VsbHMgaW4g
-YQ0KPiA+ID4gPiA+IC0JY2xvY2stc3BlY2lmaWVyLiBTaG91bGQgYmUgPDA+IGZvciAiZnNsLHFv
-cmlxLXN5c2Nsay1bMSwyXS4wIg0KPiA+ID4gPiA+IC0JY2xvY2tzLCBvciA8MT4gZm9yICJmc2ws
-cW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLg0KPiA+ID4gPiA+ICsJY2xvY2stc3BlY2lm
-aWVyLiBTaG91bGQgYmUgPDA+IGZvciAiZnNsLHFvcmlxLXN5c2Nsay1bMSwyXS4wIg0KPiBhbmQN
-Cj4gPiA+ID4gPiArCSJmc2wsZm1hbi1jbGstbXV4IiBjbG9ja3Mgb3IgPDE+IGZvciAiZnNsLHFv
-cmlxLWNvcmUtcGxsLQ0KPiBbMSwyXS4wIi4NCj4gPiA+ID4gPiAgCUZvciAiZnNsLHFvcmlxLWNv
-cmUtcGxsLTEuMCIgY2xvY2tzLCB0aGUgc2luZ2xlDQo+ID4gPiA+ID4gIAljbG9jay1zcGVjaWZp
-ZXIgY2VsbCBtYXkgdGFrZSB0aGUgZm9sbG93aW5nIHZhbHVlczoNCj4gPiA+ID4gPiAgCSogMCAt
-IGVxdWFsIHRvIHRoZSBQTEwgZnJlcXVlbmN5IEBAIC0xNDUsNiArMTQ2LDE4IEBADQo+IEV4YW1w
-bGUNCj4gPiA+ID4gPiBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHByb3ZpZGVyOg0KPiA+ID4g
-PiA+ICAJCQljbG9ja3MgPSA8JnN5c2Nsaz47DQo+ID4gPiA+ID4gIAkJCWNsb2NrLW91dHB1dC1u
-YW1lcyA9ICJwbGF0Zm9ybS1wbGwiLA0KPiAicGxhdGZvcm0tcGxsLQ0KPiA+ID4gPiBkaXYyIjsN
-Cj4gPiA+ID4gPiAgCQl9Ow0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArCQlmbTBjbGs6IGZtMC1j
-bGstbXV4IHsNCj4gPiA+ID4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiA+ID4gPiA+ICsJ
-CQlyZWcgPSA8MHgxMCA0Pg0KPiA+ID4gPiA+ICsJCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWNs
-ay1tdXgiOw0KPiA+ID4gPiA+ICsJCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZw
-bGwwIDI+LA0KPiA8JnBsbDAgMz4sDQo+ID4gPiA+ID4gKwkJCQkgPCZwbGF0Zm9ybV9wbGwgMD4s
-IDwmcGxsMSAxPiwgPCZwbGwxDQo+IDI+Ow0KPiA+ID4gPiA+ICsJCQljbG9jay1uYW1lcyA9ICJw
-bGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjMiLA0KPiA+ID4gPiA+ICsJCQkJICAgICAgInBs
-bDAtZGl2NCIsICJwbGF0Zm9ybS1wbGwiLCAicGxsMS0NCj4gZGl2MiIsDQo+ID4gPiA+ID4gKwkJ
-CQkgICAgICAicGxsMS1kaXYzIjsNCj4gPiA+ID4gPiArCQkJY2xvY2stb3V0cHV0LW5hbWVzID0g
-ImZtMC1jbGsiOw0KPiA+ID4gPiA+ICsJCX07DQo+ID4gPiA+ID4gIAl9Ow0KPiA+ID4gPiA+ICB9
-Ow0KPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEkgZG9uJ3Qgc2VlIHRoaXMgcmVnaXN0ZXIg
-aW4gdGhlIG1hbnVhbHMgZm9yIG9sZGVyIERQQUEgY2hpcHMsDQo+ID4gPiA+IHN1Y2ggYXMNCj4g
-PiA+ID4gcDQwODAgb3IgcDMwNDEuICBJcyBpdCBwcmVzZW50IGJ1dCB1bmRvY3VtZW50ZWQ/ICBT
-aG91bGQgSSBiZQ0KPiA+ID4gPiBsb29raW5nIHNvbWV3aGVyZSBvdGhlciB0aGFuICJDbG9ja2lu
-ZyBNZW1vcnkgTWFwIj8NCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBJdCdzIGF2YWlsYWJsZSBvbmx5
-IGluIHBhcnQgb2YgdGhlIG5ldyBjaGlwcyAoVDQsIFQyLCBCNCkuDQo+ID4gPiBJbiBUMTAyNC9U
-MTA0MCB0aGVyZSdzIG9ubHkgb25lIG9wdGlvbiBmb3IgRk1hbiBjbG9jayBzbyB0aGlzDQo+ID4g
-PiByZWdpc3RlciBpcyBub3QNCj4gPiBhdmFpbGFibGUuDQo+ID4NCj4gPiBTbyBpdCdzIHBhcnQg
-b2YgdGhlIDIuMCBjaGFzc2lzPyAgSSdkIHN0aWNrIGEgMi4wIGluIHRoZXJlLCB0aGVuLiAgV2hv
-DQo+ID4ga25vd3Mgd2hhdCB3ZSBtYXkgc2VlIGluIHRoZSBmdXR1cmUuDQo+ID4NCj4gDQo+IE9L
-LA0KPiBXZSBjYW4gZ28gd2l0aCAiZnNsLGZtYW4tY2xrLW11eC0xLzItMC4iLg0KPiBJbiB0aGF0
-IGNhc2UsIHdlIG5lZWQgdG8gdXBkYXRlIEZNYW4gbm9kZXMgYW5kIHRoZSBjbG9jayBkcml2ZXI6
-DQo+IGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvNDQzOTczLw0KPiBodHRwczov
-L3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzQ2MTgxMy8NCj4gSSB3aWxsIHVwZGF0ZSB0aG9z
-ZSBwYXRjaGVzIHNlcGFyYXRlbHkuDQo+IA0KDQpTY290dCwNClRoZXJlIGFyZSAyIG9wdGlvbnM6
-DQpVc2UgImZzbCxmbWFuLWNsay1tdXgtMS4wIiBmb3IgU29DIHdpdGhvdXQgQ0xLQ0duSFdBQ1NS
-IHJlZ2lzdGVyLg0KVXNlICJmc2wsZm1hbi1jbGstbXV4LTIuMCIgZm9yIFNvQyB3aXRoIENMS0NH
-bkhXQUNTUiByZWdpc3Rlci4NCk9yDQpVc2UgImZzbCxmbWFuLWNsay1tdXgtMS4wIiBmb3IgU29D
-IHdoaWNoIHN1cHBvcnQgRk1hbiBWMiAoUHh4eHgpDQpVc2UgImZzbCxmbWFuLWNsay1tdXgtMi4w
-IiBmb3IgU29DIHdoaWNoIHN1cHBvcnQgRk1hbiBWMyAoQi9UKQ0KDQpVc2luZyB0aGUgMXN0IG9w
-dGlvbiBtaWdodCBiZSBjb25mdXNpbmcgYmVjYXVzZSBjb3JlIHBsbC9tdXggMi4wIHJlcHJlc2Vu
-dHMgQi9UIGRldmljZXMgYW5kIDEuMCByZXByZXNlbnQgUHh4eHguDQpJbiB0aGlzIGNhc2UsIFQx
-MDQwIHVzZXMgImZzbCxxb3JpcS1jb3JlLXBsbC9tdXgtMi4wIiBhbmQgImZzbCxmbWFuLWNsay1t
-dXgtMS4wIi4NCk9uIHRoZSBvdGhlciBoYW5kLCB0aGUgc2Vjb25kIG9wdGlvbiBkb2Vzbid0IGRp
-c3Rpbmd1aXNoZXMgYmV0d2VlbiBUNCBhbmQgVDEgKGZvciBleGFtcGxlKSwgYXMgVDEgZG9lc24n
-dCBoYXZlIHJlZyBwcm9wZXJ0eSB3aGlsZSBUNCBoYXMuDQoNCldoYXQgZG8geW91IHRoaW5rPw0K
-IA0KPiA+IC1TY290dA0KPiA+DQo+IA0KPiBJZ2FsDQoNCklnYWwNCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Apr 20, 2015 at 11:06:09AM +0200, Jacek Anaszewski wrote:
+> Hi Andrew,
+> 
+> Very nice driver.
+
+Thanks. I just hope it gets accepted into this merge window. 
+
+> I have one question below.
+
+
+
+> 
+> On 03/17/2015 11:08 PM, Andrew Lunn wrote:
+> >The TLC59116 is an I2C bus controlled 16-channel LED driver.  The
+> >TLC59108 is an I2C bus controlled 8-channel LED driver, which is very
+> >similar to the TLC59116. Each LED output has its own 8-bit
+> >fixed-frequency PWM controller to control the brightness of the LED.
+> >The LEDs can also be fixed off and on, making them suitable for use as
+> >GPOs.
+> >
+> >This is based on a driver from Belkin, but has been extensively
+> >rewritten and extended to support both 08 and 16 versions.
+> >
+> >Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> >Tested-by: Imre Kaloz <kaloz@openwrt.org>
+> >Cc: Matthew.Fatheree@belkin.comG
+> >---
+> >  drivers/leds/Kconfig         |   8 ++
+> >  drivers/leds/Makefile        |   1 +
+> >  drivers/leds/leds-tlc591xx.c | 300 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 309 insertions(+)
+> >  create mode 100644 drivers/leds/leds-tlc591xx.c
+> >
+> >diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> >index 966b9605f5f0..a38b17a10bd2 100644
+> >--- a/drivers/leds/Kconfig
+> >+++ b/drivers/leds/Kconfig
+> >@@ -467,6 +467,14 @@ config LEDS_TCA6507
+> >  	  LED driver chips accessed via the I2C bus.
+> >  	  Driver support brightness control and hardware-assisted blinking.
+> >
+> >+config LEDS_TLC591XX
+> >+	tristate "LED driver for TLC59108 and TLC59116 controllers"
+> >+	depends on LEDS_CLASS && I2C
+> >+	select REGMAP_I2C
+> >+	help
+> >+	  This option enables support for Texas Instruments TLC59108
+> >+	  and TLC59116 LED controllers.
+> >+
+> >  config LEDS_MAX8997
+> >  	tristate "LED support for MAX8997 PMIC"
+> >  	depends on LEDS_CLASS && MFD_MAX8997
+> >diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> >index bf4609338e10..749dbe38ab27 100644
+> >--- a/drivers/leds/Makefile
+> >+++ b/drivers/leds/Makefile
+> >@@ -31,6 +31,7 @@ obj-$(CONFIG_LEDS_LP8501)		+= leds-lp8501.o
+> >  obj-$(CONFIG_LEDS_LP8788)		+= leds-lp8788.o
+> >  obj-$(CONFIG_LEDS_LP8860)		+= leds-lp8860.o
+> >  obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
+> >+obj-$(CONFIG_LEDS_TLC591XX)		+= leds-tlc591xx.o
+> >  obj-$(CONFIG_LEDS_CLEVO_MAIL)		+= leds-clevo-mail.o
+> >  obj-$(CONFIG_LEDS_IPAQ_MICRO)		+= leds-ipaq-micro.o
+> >  obj-$(CONFIG_LEDS_HP6XX)		+= leds-hp6xx.o
+> >diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+> >new file mode 100644
+> >index 000000000000..de16c29d7895
+> >--- /dev/null
+> >+++ b/drivers/leds/leds-tlc591xx.c
+> >@@ -0,0 +1,300 @@
+> >+/*
+> >+ * Copyright 2014 Belkin Inc.
+> >+ * Copyright 2015 Andrew Lunn <andrew@lunn.ch>
+> >+ *
+> >+ * This program is free software; you can redistribute it and/or modify
+> >+ * it under the terms of the GNU General Public License as published by
+> >+ * the Free Software Foundation; version 2 of the License.
+> >+ */
+> >+
+> >+#include <linux/i2c.h>
+> >+#include <linux/leds.h>
+> >+#include <linux/module.h>
+> >+#include <linux/of.h>
+> >+#include <linux/of_device.h>
+> >+#include <linux/regmap.h>
+> >+#include <linux/slab.h>
+> >+#include <linux/workqueue.h>
+> >+
+> >+#define TLC591XX_MAX_LEDS	16
+> >+
+> >+#define TLC591XX_REG_MODE1	0x00
+> >+#define MODE1_RESPON_ADDR_MASK	0xF0
+> >+#define MODE1_NORMAL_MODE	(0 << 4)
+> >+#define MODE1_SPEED_MODE	(1 << 4)
+> >+
+> >+#define TLC591XX_REG_MODE2	0x01
+> >+#define MODE2_DIM		(0 << 5)
+> >+#define MODE2_BLINK		(1 << 5)
+> >+#define MODE2_OCH_STOP		(0 << 3)
+> >+#define MODE2_OCH_ACK		(1 << 3)
+> >+
+> >+#define TLC591XX_REG_PWM(x)	(0x02 + (x))
+> >+
+> >+#define TLC591XX_REG_GRPPWM	0x12
+> >+#define TLC591XX_REG_GRPFREQ	0x13
+> >+
+> >+/* LED Driver Output State, determine the source that drives LED outputs */
+> >+#define LEDOUT_OFF		0x0	/* Output LOW */
+> >+#define LEDOUT_ON		0x1	/* Output HI-Z */
+> >+#define LEDOUT_DIM		0x2	/* Dimming */
+> >+#define LEDOUT_BLINK		0x3	/* Blinking */
+> >+#define LEDOUT_MASK		0x3
+> >+
+> >+#define ldev_to_led(c)		container_of(c, struct tlc591xx_led, ldev)
+> >+#define work_to_led(work)	container_of(work, struct tlc591xx_led, work)
+> >+
+> >+struct tlc591xx_led {
+> >+	bool active;
+> >+	unsigned int led_no;
+> >+	struct led_classdev ldev;
+> >+	struct work_struct work;
+> >+	struct tlc591xx_priv *priv;
+> >+};
+> >+
+> >+struct tlc591xx_priv {
+> >+	struct tlc591xx_led leds[TLC591XX_MAX_LEDS];
+> >+	struct regmap *regmap;
+> >+	unsigned int reg_ledout_offset;
+> >+};
+> >+
+> >+struct tlc591xx {
+> >+	unsigned int max_leds;
+> >+	unsigned int reg_ledout_offset;
+> >+};
+> >+
+> >+static const struct tlc591xx tlc59116 = {
+> >+	.max_leds = 16,
+> >+	.reg_ledout_offset = 0x14,
+> >+};
+> >+
+> >+static const struct tlc591xx tlc59108 = {
+> >+	.max_leds = 8,
+> >+	.reg_ledout_offset = 0x0c,
+> >+};
+> >+
+> >+static int
+> >+tlc591xx_set_mode(struct regmap *regmap, u8 mode)
+> >+{
+> >+	int err;
+> >+	u8 val;
+> >+
+> >+	err = regmap_write(regmap, TLC591XX_REG_MODE1, MODE1_NORMAL_MODE);
+> >+	if (err)
+> >+		return err;
+> >+
+> >+	val = MODE2_OCH_STOP | mode;
+> >+
+> >+	return regmap_write(regmap, TLC591XX_REG_MODE2, val);
+> >+}
+> >+
+> >+static int
+> >+tlc591xx_set_ledout(struct tlc591xx_priv *priv, struct tlc591xx_led *led,
+> >+		    u8 val)
+> >+{
+> >+	unsigned int i = (led->led_no % 4) * 2;
+> >+	unsigned int mask = LEDOUT_MASK << i;
+> >+	unsigned int addr = priv->reg_ledout_offset + (led->led_no >> 2);
+> >+
+> >+	val = val << i;
+> >+
+> >+	return regmap_update_bits(priv->regmap, addr, mask, val);
+> >+}
+> >+
+> >+static int
+> >+tlc591xx_set_pwm(struct tlc591xx_priv *priv, struct tlc591xx_led *led,
+> >+		 u8 brightness)
+> >+{
+> >+	u8 pwm = TLC591XX_REG_PWM(led->led_no);
+> >+
+> >+	return regmap_write(priv->regmap, pwm, brightness);
+> >+}
+> >+
+> >+static void
+> >+tlc591xx_led_work(struct work_struct *work)
+> >+{
+> >+	struct tlc591xx_led *led = work_to_led(work);
+> >+	struct tlc591xx_priv *priv = led->priv;
+> >+	enum led_brightness brightness = led->ldev.brightness;
+> >+	int err;
+> >+
+> >+	switch (brightness) {
+> >+	case 0:
+> >+		err = tlc591xx_set_ledout(priv, led, LEDOUT_OFF);
+> >+		break;
+> >+	case LED_FULL:
+> >+		err = tlc591xx_set_ledout(priv, led, LEDOUT_ON);
+> >+		break;
+> >+	default:
+> >+		err = tlc591xx_set_ledout(priv, led, LEDOUT_DIM);
+> >+		if (!err)
+> >+			err = tlc591xx_set_pwm(priv, led, brightness);
+> >+	}
+> >+
+> >+	if (err)
+> >+		dev_err(led->ldev.dev, "Failed setting brightness\n");
+> >+}
+> >+
+> >+static void
+> >+tlc591xx_brightness_set(struct led_classdev *led_cdev,
+> >+			enum led_brightness brightness)
+> >+{
+> >+	struct tlc591xx_led *led = ldev_to_led(led_cdev);
+> >+
+> >+	led->ldev.brightness = brightness;
+> >+	schedule_work(&led->work);
+> >+}
+> >+
+> >+static void
+> >+tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
+> >+{
+> >+	int i = j;
+> >+
+> >+	while (--i >= 0) {
+> >+		if (priv->leds[i].active) {
+> >+			led_classdev_unregister(&priv->leds[i].ldev);
+> >+			cancel_work_sync(&priv->leds[i].work);
+> >+		}
+> >+	}
+> >+}
+> >+
+> >+static int
+> >+tlc591xx_configure(struct device *dev,
+> >+		   struct tlc591xx_priv *priv,
+> >+		   const struct tlc591xx *tlc591xx)
+> >+{
+> >+	unsigned int i;
+> >+	int err = 0;
+> >+
+> >+	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
+> 
+> It seems that all leds will be initially turned on, in dim mode.
+> This shouldn't be fixed and probably an optional 'led-mode' DT node
+> property should be provided for defining the initial state. It would
+> default to OFF if not present.
+
+If you look further down, you will find 
+
+> >+		priv->leds[reg].ldev.default_trigger =
+> >+			of_get_property(child, "linux,default-trigger", NULL);
+
+This is the normal way in DT to specify the default on/off/keep
+current value/heartbeat etc.
+
+	Andrew
+
+> 
+> >+	for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
+> >+		struct tlc591xx_led *led = &priv->leds[i];
+> >+
+> >+		if (!led->active)
+> >+			continue;
+> >+
+> >+		led->priv = priv;
+> >+		led->led_no = i;
+> >+		led->ldev.brightness_set = tlc591xx_brightness_set;
+> >+		led->ldev.max_brightness = LED_FULL;
+> >+		INIT_WORK(&led->work, tlc591xx_led_work);
+> >+		err = led_classdev_register(dev, &led->ldev);
+> >+		if (err < 0) {
+> >+			dev_err(dev, "couldn't register LED %s\n",
+> >+				led->ldev.name);
+> >+			goto exit;
+> >+		}
+> >+	}
+> >+
+> >+	return 0;
+> >+
+> >+exit:
+> >+	tlc591xx_destroy_devices(priv, i);
+> >+	return err;
+> >+}
+> >+
+> >+static const struct regmap_config tlc591xx_regmap = {
+> >+	.reg_bits = 8,
+> >+	.val_bits = 8,
+> >+	.max_register = 0x1e,
+> >+};
+> >+
+> >+static const struct of_device_id of_tlc591xx_leds_match[] = {
+> >+	{ .compatible = "ti,tlc59116",
+> >+	  .data = &tlc59116 },
+> >+	{ .compatible = "ti,tlc59108",
+> >+	  .data = &tlc59108 },
+> >+	{},
+> >+};
+> >+MODULE_DEVICE_TABLE(of, of_tlc591xx_leds_match);
+> >+
+> >+static int
+> >+tlc591xx_probe(struct i2c_client *client,
+> >+	       const struct i2c_device_id *id)
+> >+{
+> >+	struct device_node *np = client->dev.of_node, *child;
+> >+	struct device *dev = &client->dev;
+> >+	const struct of_device_id *match;
+> >+	const struct tlc591xx *tlc591xx;
+> >+	struct tlc591xx_priv *priv;
+> >+	int err, count, reg;
+> >+
+> >+	match = of_match_device(of_tlc591xx_leds_match, dev);
+> >+	if (!match)
+> >+		return -ENODEV;
+> >+
+> >+	tlc591xx = match->data;
+> >+	if (!np)
+> >+		return -ENODEV;
+> >+
+> >+	count = of_get_child_count(np);
+> >+	if (!count || count > tlc591xx->max_leds)
+> >+		return -EINVAL;
+> >+
+> >+	if (!i2c_check_functionality(client->adapter,
+> >+				     I2C_FUNC_SMBUS_BYTE_DATA))
+> >+		return -EIO;
+> >+
+> >+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >+	if (!priv)
+> >+		return -ENOMEM;
+> >+
+> >+	priv->regmap = devm_regmap_init_i2c(client, &tlc591xx_regmap);
+> >+	if (IS_ERR(priv->regmap)) {
+> >+		err = PTR_ERR(priv->regmap);
+> >+		dev_err(dev, "Failed to allocate register map: %d\n", err);
+> >+		return err;
+> >+	}
+> >+	priv->reg_ledout_offset = tlc591xx->reg_ledout_offset;
+> >+
+> >+	i2c_set_clientdata(client, priv);
+> >+
+> >+	for_each_child_of_node(np, child) {
+> >+		err = of_property_read_u32(child, "reg", &reg);
+> >+		if (err)
+> >+			return err;
+> >+		if (reg < 0 || reg >= tlc591xx->max_leds)
+> >+			return -EINVAL;
+> >+		if (priv->leds[reg].active)
+> >+			return -EINVAL;
+> >+		priv->leds[reg].active = true;
+> >+		priv->leds[reg].ldev.name =
+> >+			of_get_property(child, "label", NULL) ? : child->name;
+> >+		priv->leds[reg].ldev.default_trigger =
+> >+			of_get_property(child, "linux,default-trigger", NULL);
+> >+	}
+> >+	return tlc591xx_configure(dev, priv, tlc591xx);
+> >+}
+> >+
+> >+static int
+> >+tlc591xx_remove(struct i2c_client *client)
+> >+{
+> >+	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
+> >+
+> >+	tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
+> >+
+> >+	return 0;
+> >+}
+> >+
+> >+static const struct i2c_device_id tlc591xx_id[] = {
+> >+	{ "tlc59116" },
+> >+	{ "tlc59108" },
+> >+	{},
+> >+};
+> >+MODULE_DEVICE_TABLE(i2c, tlc591xx_id);
+> >+
+> >+static struct i2c_driver tlc591xx_driver = {
+> >+	.driver = {
+> >+		.name = "tlc591xx",
+> >+		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
+> >+	},
+> >+	.probe = tlc591xx_probe,
+> >+	.remove = tlc591xx_remove,
+> >+	.id_table = tlc591xx_id,
+> >+};
+> >+
+> >+module_i2c_driver(tlc591xx_driver);
+> >+
+> >+MODULE_AUTHOR("Andrew Lunn <andrew@lunn.ch>");
+> >+MODULE_LICENSE("GPL");
+> >+MODULE_DESCRIPTION("TLC591XX LED driver");
+> >
+> 
+> 
+> -- 
+> Best Regards,
+> Jacek Anaszewski
