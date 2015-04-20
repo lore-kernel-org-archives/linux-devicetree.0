@@ -1,56 +1,59 @@
-From: Kevin Cernekee <cernekee@chromium.org>
-Subject: Re: [PATCH 1/3] ASoC: tas571x: Add DT binding document
-Date: Mon, 20 Apr 2015 14:18:56 -0700
-Message-ID: <CAJzqFtYBvNAgwROZ09MGanYOyyF0EXEL7W9ZF4eAhprQVquNcQ@mail.gmail.com>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org> <20150418111622.GD26185@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] regulator: max8973: add DT parsing of platform
+ specific parameter
+Date: Mon, 20 Apr 2015 22:19:07 +0100
+Message-ID: <20150420211907.GP14892@sirena.org.uk>
+References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com>
+ <1429534457-15515-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="i7KxW38SoMauyveo"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150418111622.GD26185@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1429534457-15515-4-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Resending from the correct account.
 
+--i7KxW38SoMauyveo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, Apr 18, 2015 at 4:16 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Apr 15, 2015 at 02:42:19PM -0700, Kevin Cernekee wrote:
->
->> +- VDD-supply: regulator phandle for the AVDD/DVDD/HP_VDD supply
->
-> This is clearly not correct - if there are three separate physical
-> supplies there should be three separate regulators requested.  They may
-> all resolve to one physical regulator on the board you are working with
-> but that might not be true on other boards.
+On Mon, Apr 20, 2015 at 06:24:17PM +0530, Laxman Dewangan wrote:
 
-In the "simplified diagram," TI shows a single AVDD/DVDD/HP_VDD supply:
+> +Optional properties:
+> +
+> +-maxim,externally-enable: boolean, externally control the regulator output
+> +		enable/disable.
 
-http://www.ti.com/lit/ds/symlink/tas5717.pdf#2
+I'd have expected this to be enabled if a GPIO is provided to do the
+control rather than having a specific property for it.
 
-Page 20 also suggests the use of a single 3.3V supply for AVDD/DVDD/HP_VDD.
+> +-maxim,enable-falling-slew-rate: boolean, enable falling slew rate.
+> +-maxim,enable-active-discharge: boolean: enable active discharge.
+> +-maxim,enable-frequency-shift: boolean, enable 9% frequency shift.
+> +-maxim,enable-bias-control: boolean, enable bias control. By enabling this
+> +		startup delay can be reduce to 20us from 220us.
 
-But this combines a number of separate pins.  On 5711 we have
-dedicated pins for:
+It looks like we should be implementing the set_ramp_delay() operation
+here?
 
-PVDD_A
-PVDD_B
-PVDD_C
-PVDD_D
-AVDD
-DVDD
+--i7KxW38SoMauyveo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-On 5717 we have dedicated pins for:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-PVDD_AB
-PVDD_CD
-AVDD
-DVDD
-HPVDD
+iQEcBAEBCAAGBQJVNW1KAAoJECTWi3JdVIfQ41EH/0J25mYNS2GrDCQj7xGuhWDk
+ExSWKkOpq4UIftf4HVwLchT/JOZlTBKp5NExDHGKgXuatcjz/jz8CjNnVd45DHsv
+b1DQdXl9rPKEzTedXcLAhTSQ1LYOTzrdi/BFoQOm/vGExf1l2nD7h5aAFpT5Qzua
+kTawWWq+lzaKry/7EFFXtWLpWUpRusKPXtCS4BxLHcgktCfv2Ku8jD72z3TrfvGf
+cjhzDzOndfqdS1O7gt9wVzGB2MB9+XR5WLhqkkjFu3ZYpOtwTJmSJXD7MaRw7GyW
+5KzErgx8KdVSDxMFBG4SbMJo0YJk2B95Fszgj47ug2s/Jnb7oFjI4q6gZM3CDTs=
+=Sy4+
+-----END PGP SIGNATURE-----
 
-I didn't see anything in the datasheet suggesting it is OK to have
-different voltages or power states on the various supply pins (other
-than the special voltage on PVDD).
-
-I can add as many regulator entries as appropriate.  What do you recommend?
+--i7KxW38SoMauyveo--
