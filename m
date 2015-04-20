@@ -1,65 +1,59 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 1/2] extcon: arizona: Add support for
-	select accessory detect mode when headphone detection"
-Date: Mon, 20 Apr 2015 09:29:18 +0100
-Message-ID: <20150420082918.GF3480@opensource.wolfsonmicro.com>
-References: <1429259579-16563-1-git-send-email-ideal.song@samsung.com> <1429259579-16563-2-git-send-email-ideal.song@samsung.com> <20150417090047.GC3480@opensource.wolfsonmicro.com> <20150420104514.5820fa93@songinha-Samsung-DeskTop-System>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v2 1/5] mmc: dt-bindings: add Mediatek MMC bindings
+Date: Mon, 20 Apr 2015 10:31:16 +0200
+Message-ID: <20150420083116.GQ4946@pengutronix.de>
+References: <1426562035-16709-1-git-send-email-chaotian.jing@mediatek.com>
+ <1426562035-16709-2-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150420104514.5820fa93@songinha-Samsung-DeskTop-System>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <1426562035-16709-2-git-send-email-chaotian.jing@mediatek.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 10:45:14AM +0900, Inha Song wrote:
-> Hi,
-> 
-> Thanks for your comments,
-> 
-> 
-> On Fri, 17 Apr 2015 10:00:47 +0100
-> Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> 
-> > On Fri, Apr 17, 2015 at 05:32:58PM +0900, Inha Song wrote:
-> > > This patch add support for select accessory detect mode to HPDETL or HPDETR.
-> > > Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
-> > > to measure the impedance of an external load connected to the headphone.
-> > > 
-> > > Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
-> > > 
-> > > Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > 
-> > > +
-> > >  	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
-> > >  	if (IS_ERR(info->micvdd)) {
-> > >  		ret = PTR_ERR(info->micvdd);
-> > > @@ -1338,6 +1359,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
-> > >  
-> > >  	arizona_extcon_set_mode(info, 0);
-> > >  
-> > > +	if (arizona->pdata.hpdet_channel)
-> > > +		info->hpdet_channel = ARIZONA_ACCDET_MODE_HPR;
-> > > +	else
-> > > +		info->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
-> > > +
-> > 
-> > Just move the two defines in include/dt-bindings/mfd/arizona.h
-> > and have the pdata get set directly to one of the values.
-> 
-> Ok, I agree. But I have a question.
-> Should I also move ACCDET_MODE_MIC define to dt-bindings header?
-> 
+Hi Chaotian,
 
-Yeah I think move that over too, there is a reasonable chance it
-will be need as part of the binding at some point in the future.
+On Tue, Mar 17, 2015 at 11:13:51AM +0800, Chaotian Jing wrote:
+> Document the device-tree binding of Mediatek MMC host
+> 
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 33 ++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> new file mode 100644
+> index 0000000..ac43f77
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -0,0 +1,33 @@
+> +* MTK MMC controller
+> +
+> +The MTK  MSDC can act as a MMC controller
+> +to support MMC, SD, and SDIO types of memory cards.
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the msdc driver.
+> +
+> +Required properties:
+> +- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc".
+> +- interrupts: Should contain MSDC interrupt number
+> +- clocks: MSDC source clock
+> +- clock-names: "source"
 
-Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When I remove the clk_ignore_unused from the command line SD/MMC stops
+working on the MT8173. This is because msdc50_0_h_sel is disabled, when
+I enable this clock SD/MMC works again. This clock should probably be
+added here and handled appropriatly in the driver.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
