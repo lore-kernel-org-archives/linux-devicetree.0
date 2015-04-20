@@ -1,47 +1,53 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power amplifiers
-Date: Mon, 20 Apr 2015 09:05:39 -0700
-Message-ID: <CAL1qeaGo_nwxFxUB4fEj259WqKNBuhdBT9QHGpv4Rt9uhit0ZA@mail.gmail.com>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
-	<1429134141-17924-2-git-send-email-cernekee@chromium.org>
-	<20150418113632.GE26185@sirena.org.uk>
-	<CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
-	<20150418171137.GY26185@sirena.org.uk>
-	<CAJzqFtZ97FjzDpgbSJbCkqNGnQx_QiGrzY1v1zV+croAL6_=qw@mail.gmail.com>
-	<20150420122129.GC14892@sirena.org.uk>
-	<CAJzqFtY3-jYTS-NmAE4UtsD+VXZHBUJUVuVQ=X4htB1akCThMg@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Mon, 20 Apr 2015 18:05:45 +0200
+Message-ID: <20150420160545.GA11296@kroah.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150417163054.GA28241@obsidianresearch.com>
+ <20150418090147.GF12732@n2100.arm.linux.org.uk>
+ <20150418172923.GA10605@obsidianresearch.com>
+ <20150418215755.GM12732@n2100.arm.linux.org.uk>
+ <20150420050800.GA12928@obsidianresearch.com>
+ <20150420145432.GD7261@kroah.com>
+ <20150420155648.GA7676@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJzqFtY3-jYTS-NmAE4UtsD+VXZHBUJUVuVQ=X4htB1akCThMg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Dylan Reid <dgreid@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150420155648.GA7676-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+On Mon, Apr 20, 2015 at 09:56:48AM -0600, Jason Gunthorpe wrote:
+> On Mon, Apr 20, 2015 at 04:54:32PM +0200, Greg Kroah-Hartman wrote:
+> > On Sun, Apr 19, 2015 at 11:08:00PM -0600, Jason Gunthorpe wrote:
+> > > I still suspect the expected way to write a new mid layer is to create
+> > > your own struct device and not rely on misc_device,
+> > 
+> > Yes, that is the way.  You can not use misc_device for anything other
+> > than creating the char node that your driver can use through the fileops
+> > you pass to it.
+> > 
+> > Do not use a misc_device to create sysfs files for, or anything else, it
+> > will be wrong and racy, as you have pointed out.
+> 
+> Thanks!
+> 
+> Can you quickly comment on when a misc device should be used compared to
+> alloc_chrdev_region & cdev_add ?
 
-On Mon, Apr 20, 2015 at 8:12 AM, Kevin Cernekee <cernekee@chromium.org> wrote:
-> On Mon, Apr 20, 2015 at 5:21 AM, Mark Brown <broonie@kernel.org> wrote:
->> On Sat, Apr 18, 2015 at 01:07:07PM -0700, Kevin Cernekee wrote:
->>> On Sat, Apr 18, 2015 at 10:11 AM, Mark Brown <broonie@kernel.org> wrote:
->>
->>> > Someone trying to use the atmel_wm8904 driver with something other than
->>> > a wm8904 shouldn't really be expecting a good experince...
->>
->>> The same check shows up in numerous other drivers, including the one
->>> for the audio controller on my board.
->>
->> Sounds like either that (undisclosed) driver has a problem or you're
->> using it inappropriately.
->
-> I don't think this driver has been posted on the list yet, but the
-> checks show up in these two functions:
->
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/sound/soc/img/concerto-audio.c#108
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/sound/soc/img/concerto-audio.c#147
->
-> Any suggestions on what to change?
+If you need more than one character device node, don't use a misc
+device.  If you only need one, and nothing "special" or "fancy", and
+don't want to put sysfs attribute files on your device, then use a misc
+device.
 
-I think the card driver should be ignoring a return value of -ENOTSUPP
-from snd_soc_dai_set_sysclk() in that case.
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
