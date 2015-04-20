@@ -1,102 +1,180 @@
-From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
-Date: Mon, 20 Apr 2015 01:45:23 +0200
-Message-ID: <55343E13.9090301@gmx.de>
-References: <32501816.HtkLenWQpn@wasted.cogentembedded.com> <552C63FD.9010005@gmx.de> <553427C9.7030605@cogentembedded.com>
+From: Inha Song <ideal.song@samsung.com>
+Subject: Re: [alsa-devel] [PATCH 1/2] extcon: arizona: Add support	for select
+ accessory detect mode when headphone detection"
+Date: Mon, 20 Apr 2015 10:45:14 +0900
+Message-ID: <20150420104514.5820fa93@songinha-Samsung-DeskTop-System>
+References: <1429259579-16563-1-git-send-email-ideal.song@samsung.com>
+ <1429259579-16563-2-git-send-email-ideal.song@samsung.com>
+ <20150417090047.GC3480@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <553427C9.7030605@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com
-Cc: linux-sh@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20150417090047.GC3480@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, rf@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, cw00.choi@samsung.com, broonie@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 20.04.2015 00:10, Sergei Shtylyov wrote:
+Thanks for your comments,
+
+
+On Fri, 17 Apr 2015 10:00:47 +0100
+Charles Keepax <ckeepax@opensource.wolfsonmicro.com> wrote:
+
+> On Fri, Apr 17, 2015 at 05:32:58PM +0900, Inha Song wrote:
+> > This patch add support for select accessory detect mode to HPDETL or HPDETR.
+> > Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
+> > to measure the impedance of an external load connected to the headphone.
+> > 
+> > Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
+> > 
+> > Signed-off-by: Inha Song <ideal.song@samsung.com>
+> > ---
+> >  drivers/extcon/extcon-arizona.c   | 34 ++++++++++++++++++++++++++++++----
+> >  include/linux/mfd/arizona/pdata.h |  3 +++
+> >  2 files changed, 33 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+> > index 63f01c4..7bc9159 100644
+> > --- a/drivers/extcon/extcon-arizona.c
+> > +++ b/drivers/extcon/extcon-arizona.c
+> > @@ -95,6 +95,7 @@ struct arizona_extcon_info {
+> >  	int jack_flips;
+> >  
+> >  	int hpdet_ip;
+> > +	int hpdet_channel;
 > 
->> I recall a thread in which the use of bitfields for structs that are
->> shared with the hardware was considered a bad idea (because the compiler
->> is free to reorder the fields). Shift operations are probably a better
->> choice here.
+> Don't really think this is necessary we can just use the pdata
+> value where required doesn't add much copying it to extcon_info.
 > 
->     Well, it looks as the compiler is not free to reorder bit fields, and the 
-> order is determined by the ABI. Will look into getting rid of them anyway...
 
-I think that thread I was referring to was this one:
-http://thread.gmane.org/gmane.linux.kernel/182862/focus=182986
-(See the first comment from Benjamin Herrenschmidt).
+OK,
 
->>> +/* Packet transmit function for Ethernet AVB */
->>> +static int ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->>> +{
->>> +	struct ravb_private *priv = netdev_priv(ndev);
->>> +	struct ravb_tstamp_skb *ts_skb = NULL;
->>> +	struct ravb_tx_desc *desc;
->>> +	unsigned long flags;
->>> +	void *buffer;
->>> +	u32 entry;
->>> +	u32 tccr;
->>> +	int q;
->>> +
->>> +	/* If skb needs TX timestamp, it is handled in network control queue */
->>> +	q = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) ? RAVB_NC : RAVB_BE;
->>> +
->>> +	spin_lock_irqsave(&priv->lock, flags);
->>> +	if (priv->cur_tx[q] - priv->dirty_tx[q] >= priv->num_tx_ring[q] - 4) {
->>> +		if (!ravb_tx_free(ndev, q)) {
->>> +			netif_warn(priv, tx_queued, ndev, "TX FD exhausted.\n");
->>> +			netif_stop_queue(ndev);
->>> +			spin_unlock_irqrestore(&priv->lock, flags);
->>> +			return NETDEV_TX_BUSY;
->>> +		}
->>> +	}
->>> +	entry = priv->cur_tx[q] % priv->num_tx_ring[q];
->>> +	priv->cur_tx[q]++;
->>> +	spin_unlock_irqrestore(&priv->lock, flags);
->>> +
->>> +	if (skb_put_padto(skb, ETH_ZLEN))
->>> +		return NETDEV_TX_OK;
->>> +
->>> +	priv->tx_skb[q][entry] = skb;
->>> +	buffer = PTR_ALIGN(priv->tx_buffers[q][entry], RAVB_ALIGN);
->>> +	memcpy(buffer, skb->data, skb->len);
->>> +	desc = &priv->tx_ring[q][entry];
->>> +	desc->ds = skb->len;
->>> +	desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
->>> +				    DMA_TO_DEVICE);
->>> +	if (dma_mapping_error(&ndev->dev, desc->dptr)) {
->>> +		dev_kfree_skb_any(skb);
->>> +		priv->tx_skb[q][entry] = NULL;
->>> +		return NETDEV_TX_OK;
->>> +	}
->>> +
->>> +	/* TX timestamp required */
->>> +	if (q == RAVB_NC) {
->>> +		ts_skb = kmalloc(sizeof(*ts_skb), GFP_ATOMIC);
->>> +		if (!ts_skb)
->>> +			return -ENOMEM;
+
+> >  
+> >  	struct extcon_dev *edev;
+> >  };
+> > @@ -653,9 +654,9 @@ static void arizona_identify_headphone(struct arizona_extcon_info *info)
+> >  	ret = regmap_update_bits(arizona->regmap,
+> >  				 ARIZONA_ACCESSORY_DETECT_MODE_1,
+> >  				 ARIZONA_ACCDET_MODE_MASK,
+> > -				 ARIZONA_ACCDET_MODE_HPL);
+> > +				 info->hpdet_channel);
+> >  	if (ret != 0) {
+> > -		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
+> > +		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
+> >  		goto err;
+> >  	}
+> >  
+> > @@ -705,9 +706,9 @@ static void arizona_start_hpdet_acc_id(struct arizona_extcon_info *info)
+> >  				 ARIZONA_ACCESSORY_DETECT_MODE_1,
+> >  				 ARIZONA_ACCDET_SRC | ARIZONA_ACCDET_MODE_MASK,
+> >  				 info->micd_modes[0].src |
+> > -				 ARIZONA_ACCDET_MODE_HPL);
+> > +				 info->hpdet_channel);
+> >  	if (ret != 0) {
+> > -		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
+> > +		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
+> >  		goto err;
+> >  	}
+> >  
+> > @@ -1103,6 +1104,23 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
+> >  	regmap_update_bits(arizona->regmap, reg, mask, level);
+> >  }
+> >  
+> > +#ifdef CONFIG_OF
+> > +static int arizona_of_get_extcon_pdata(struct arizona *arizona)
+> > +{
+> > +	struct arizona_pdata *pdata = &arizona->pdata;
+> > +
+> > +	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel",
+> > +			     &pdata->hpdet_channel);
+> > +
+> > +	return 0;
+> > +}
+> > +#else
+> > +static inline int arizona_of_get_extcon_pdata(struct arizona *arizona)
+> > +{
+> > +	return 0;
+> > +}
+> > +#endif
+> > +
 > 
->> Dma mapping has to be undone.
+> I believe it is preferred to leave this as not ifdef'ed...
 > 
->     OK, fixed. Not sure what we should return in this case: error code or
-> NETDEV_TX_OK...
-
-NETDEV_TX_OK is the correct return value even in error case. The only
-exception is NETDEV_TX_BUSY when the tx queue has been stopped. However
-returning NETDEV_TX_OK also means that the skb has to be consumed (so
-beside unmapping dma also the skb has to be freed in case that kmalloc
-fails in ravb_start_xmit).
-
->> example all ptp related code could be put into its own file.
+> >  static int arizona_extcon_probe(struct platform_device *pdev)
+> >  {
+> >  	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
+> > @@ -1120,6 +1138,9 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+> >  	if (!info)
+> >  		return -ENOMEM;
+> >  
+> > +	if (!dev_get_platdata(arizona->dev))
+> > +		arizona_of_get_extcon_pdata(arizona);
 > 
->     OK, will try to split the driver back... Perhaps I should also split the 
-> patch accordingly?
+> And to wrap this in an if (IS_ENABLED(CONFIG_OF)).
 
-Yes, sounds like a good idea.
+OK, I will fix. And I will also change to arizona_extcon_of_get_pdata().
 
-Regards,
-Lino
+> 
+> > +
+> >  	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
+> >  	if (IS_ERR(info->micvdd)) {
+> >  		ret = PTR_ERR(info->micvdd);
+> > @@ -1338,6 +1359,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+> >  
+> >  	arizona_extcon_set_mode(info, 0);
+> >  
+> > +	if (arizona->pdata.hpdet_channel)
+> > +		info->hpdet_channel = ARIZONA_ACCDET_MODE_HPR;
+> > +	else
+> > +		info->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
+> > +
+> 
+> Just move the two defines in include/dt-bindings/mfd/arizona.h
+> and have the pdata get set directly to one of the values.
 
+Ok, I agree. But I have a question.
+Should I also move ACCDET_MODE_MIC define to dt-bindings header?
+
+> 
+> >  	pm_runtime_enable(&pdev->dev);
+> >  	pm_runtime_idle(&pdev->dev);
+> >  	pm_runtime_get_sync(&pdev->dev);
+> > diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+> > index 4578c72..feb5903 100644
+> > --- a/include/linux/mfd/arizona/pdata.h
+> > +++ b/include/linux/mfd/arizona/pdata.h
+> > @@ -139,6 +139,9 @@ struct arizona_pdata {
+> >  	/** GPIO used for mic isolation with HPDET */
+> >  	int hpdet_id_gpio;
+> >  
+> > +	/** Channel to use for headphone detection */
+> > +	int hpdet_channel;
+> 
+> Lets use and unsigned here, we don't need it to be signed and it
+> saves type issues with read_u32.
+
+OK,
+
+Best Regards,
+Inha Song.
+
+> 
+> > +
+> >  	/** Extra debounce timeout used during initial mic detection (ms) */
+> >  	int micd_detect_debounce;
+> >  
+> > -- 
+> > 2.0.0.390.gcb682f8
+> > 
+> 
+> Thanks,
+> Charles
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
