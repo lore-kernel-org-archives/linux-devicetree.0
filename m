@@ -1,44 +1,58 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: ux500: Enable GPIO regulator for SD-card for
- HREF boards
-Date: Mon, 20 Apr 2015 19:27:30 +0100
-Message-ID: <20150420182730.GI3447@x1>
-References: <1429538553-17366-1-git-send-email-ulf.hansson@linaro.org>
- <1429538553-17366-3-git-send-email-ulf.hansson@linaro.org>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/2] cpufreq: mediatek: Add MT8173 cpufreq driver
+Date: Mon, 20 Apr 2015 20:28:37 +0200
+Message-ID: <1429554517.14597.38.camel@x220>
+References: <1429522047-16675-1-git-send-email-pi-cheng.chen@linaro.org>
+	 <1429522047-16675-2-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429538553-17366-3-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429522047-16675-2-git-send-email-pi-cheng.chen@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Mike Turquette <mturquette@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, fan.chen@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2015, Ulf Hansson wrote:
+On Mon, 2015-04-20 at 17:27 +0800, pi-cheng.chen wrote:
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+ 
+> +config ARM_MT8173_CPUFREQ
+> +	bool "Mediatek MT8173 CPUFreq support"
+> +	depends on ARCH_MEDIATEK && REGULATOR
+> +	help
+> +	  This adds the CPUFreq driver support for Mediatek MT8173 SoC.
 
-> Fixes: c94a4ab7af3f ("ARM: ux500: Disable the MMCI gpio-regulator by default")
-> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/ste-href.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-> index 8cf499a..744c1e3 100644
-> --- a/arch/arm/boot/dts/ste-href.dtsi
-> +++ b/arch/arm/boot/dts/ste-href.dtsi
-> @@ -124,8 +124,6 @@
->  
->  			states = <1800000 0x1
->  				  2900000 0x0>;
-> -
-> -			status = "disabled";
->  		};
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
 
-Seems weird to do this in a separate patch.
+> +obj-$(CONFIG_ARM_MT8173_CPUFREQ)	+= mt8173-cpufreq.o
 
->  		// External Micro SD slot
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ARM_MT8173_CPUFREQ is a bool symbol, so mt8173-cpufreq.o will never be
+part of a module.
+
+(If that's incorrect you can stop reading here.)
+
+> --- /dev/null
+> +++ b/drivers/cpufreq/mt8173-cpufreq.c
+
+> +#include <linux/module.h>
+
+I guess this include is not needed. And, for what it's worth,
+    make ARCH=arm CROSS_COMPILE=arm-linux-gnu- drivers/cpufreq/mt8173-cpufreq.o
+
+compiles silently even if it's dropped.
+
+> +module_init(mt8173_cpufreq_driver_init);
+
+According to include/linux/init.h, for built-in only code, this is
+equivalent to device_initcall([...]). And two runs of
+    make ARCH=arm CROSS_COMPILE=arm-linux-gnu- drivers/cpufreq/mt8173-cpufreq.i
+
+confirm that.
+
+Thanks,
+
+
+Paul Bolle
