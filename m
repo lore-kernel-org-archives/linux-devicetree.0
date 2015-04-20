@@ -1,7 +1,7 @@
 From: <Frank.Li@freescale.com>
-Subject: [PATCH v4 05/11] ARM: dts: add imx7d soc dtsi file
-Date: Tue, 21 Apr 2015 05:05:27 +0800
-Message-ID: <1429563933-3129-6-git-send-email-Frank.Li@freescale.com>
+Subject: [PATCH v4 07/11] ARM: imx: add msl support for imx7d
+Date: Tue, 21 Apr 2015 05:05:29 +0800
+Message-ID: <1429563933-3129-8-git-send-email-Frank.Li@freescale.com>
 References: <1429563933-3129-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,521 +21,307 @@ To: lznuaa@gmail.com, shawn.guo@linaro.org, linus.walleij@linaro.org, robh+dt@ke
 Cc: linux-gpio@vger.kernel.org, Anson Huang <b20788@freescale.com>, Frank Li <Frank.Li@freescale.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li@freescale.com>
+From: Anson Huang <b20788@freescale.com>
 
-Add i.mx7d support:
-	imx7d dtsi part
+Add i.MX7D MSL support.
 
 Signed-off-by: Anson Huang <b20788@freescale.com>
 Signed-off-by: Frank Li <Frank.Li@freescale.com>
 ---
- arch/arm/boot/dts/imx7d.dtsi | 498 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 498 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d.dtsi
+ arch/arm/mach-imx/Kconfig      | 11 +++++++++
+ arch/arm/mach-imx/Makefile     |  1 +
+ arch/arm/mach-imx/anatop.c     |  5 +++-
+ arch/arm/mach-imx/common.h     |  1 +
+ arch/arm/mach-imx/cpu.c        |  3 +++
+ arch/arm/mach-imx/hardware.h   |  7 +++++-
+ arch/arm/mach-imx/mach-imx7d.c | 53 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-imx/mx7.h        | 38 ++++++++++++++++++++++++++++++
+ arch/arm/mach-imx/mxc.h        |  8 ++++++-
+ arch/arm/mach-imx/platsmp.c    | 19 +++++++++++++++
+ 10 files changed, 143 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/mach-imx/mach-imx7d.c
+ create mode 100644 arch/arm/mach-imx/mx7.h
 
-diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 3a3d3e9..162f2c3 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -582,6 +582,17 @@ config SOC_IMX6SX
+ 	help
+ 	  This enables support for Freescale i.MX6 SoloX processor.
+ 
++config SOC_IMX7
++	bool
++	select ARM_GIC
++
++config SOC_IMX7D
++	bool "i.MX7 Dual support"
++	select SOC_IMX7
++	select PINCTRL_IMX7D
++	help
++		This enables support for Freescale i.MX7 Dual processor.
++
+ config SOC_VF610
+ 	bool "Vybrid Family VF610 support"
+ 	select IRQ_DOMAIN_HIERARCHY
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 3244cf1..3d9d755 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -90,6 +90,7 @@ endif
+ obj-$(CONFIG_SOC_IMX6Q) += clk-imx6q.o mach-imx6q.o
+ obj-$(CONFIG_SOC_IMX6SL) += clk-imx6sl.o mach-imx6sl.o
+ obj-$(CONFIG_SOC_IMX6SX) += clk-imx6sx.o mach-imx6sx.o
++obj-$(CONFIG_SOC_IMX7D) += clk-imx7d.o mach-imx7d.o
+ 
+ ifeq ($(CONFIG_SUSPEND),y)
+ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
+diff --git a/arch/arm/mach-imx/anatop.c b/arch/arm/mach-imx/anatop.c
+index 7f262fe..231bb25 100644
+--- a/arch/arm/mach-imx/anatop.c
++++ b/arch/arm/mach-imx/anatop.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2013 Freescale Semiconductor, Inc.
++ * Copyright (C) 2013-2015 Freescale Semiconductor, Inc.
+  *
+  * The code contained herein is licensed under the GNU General Public
+  * License. You may obtain a copy of the GNU General Public License
+@@ -28,6 +28,7 @@
+ #define ANADIG_USB2_CHRG_DETECT	0x210
+ #define ANADIG_DIGPROG		0x260
+ #define ANADIG_DIGPROG_IMX6SL	0x280
++#define ANADIG_DIGPROG_IMX7D	0x800
+ 
+ #define BM_ANADIG_REG_2P5_ENABLE_WEAK_LINREG	0x40000
+ #define BM_ANADIG_REG_2P5_ENABLE_PULLDOWN	0x8
+@@ -121,6 +122,8 @@ void __init imx_init_revision_from_anatop(void)
+ 	WARN_ON(!anatop_base);
+ 	if (of_device_is_compatible(np, "fsl,imx6sl-anatop"))
+ 		offset = ANADIG_DIGPROG_IMX6SL;
++	if (of_device_is_compatible(np, "fsl,imx7d-anatop"))
++		offset = ANADIG_DIGPROG_IMX7D;
+ 	digprog = readl_relaxed(anatop_base + offset);
+ 	iounmap(anatop_base);
+ 
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index 0f04e30..978c1a4 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -157,5 +157,6 @@ static inline void imx_init_l2cache(void) {}
+ 
+ extern struct smp_operations imx_smp_ops;
+ extern struct smp_operations ls1021a_smp_ops;
++extern struct smp_operations imx_ca7_smp_ops;
+ 
+ #endif
+diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
+index df42c14..a7fa92a 100644
+--- a/arch/arm/mach-imx/cpu.c
++++ b/arch/arm/mach-imx/cpu.c
+@@ -130,6 +130,9 @@ struct device * __init imx_soc_device_init(void)
+ 	case MXC_CPU_IMX6Q:
+ 		soc_id = "i.MX6Q";
+ 		break;
++	case MXC_CPU_IMX7D:
++		soc_id = "i.MX7D";
++		break;
+ 	default:
+ 		soc_id = "Unknown";
+ 	}
+diff --git a/arch/arm/mach-imx/hardware.h b/arch/arm/mach-imx/hardware.h
+index 76af2c0..747fe0b 100644
+--- a/arch/arm/mach-imx/hardware.h
++++ b/arch/arm/mach-imx/hardware.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2004-2007, 2014 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright 2004-2007, 2014-2015 Freescale Semiconductor, Inc.
+  * Copyright 2008 Juergen Beisert, kernel@pengutronix.de
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -93,6 +93,10 @@
+  *	CCM	0x020c4000+0x004000	->	0xf42c4000+0x004000
+  *	ANATOP	0x020c8000+0x004000	->	0xf42c8000+0x004000
+  *	UART4	0x021f0000+0x004000	->	0xf42f0000+0x004000
++ * mx7d:
++ *	CCM	0x30380000+0x010000	->	0xf5380000+0x010000
++ *	ANATOP	0x30360000+0x010000	->	0xf5360000+0x010000
++ *	UART1	0x30860000+0x010000	->	0xf5860000+0x010000
+  */
+ #define IMX_IO_P2V(x)	(						\
+ 			(((x) & 0x80000000) >> 7) |			\
+@@ -112,6 +116,7 @@
+ #include "mx21.h"
+ #include "mx27.h"
+ #include "mx1.h"
++#include "mx7.h"
+ 
+ #define imx_map_entry(soc, name, _type)	{				\
+ 	.virtual = soc ## _IO_P2V(soc ## _ ## name ## _BASE_ADDR),	\
+diff --git a/arch/arm/mach-imx/mach-imx7d.c b/arch/arm/mach-imx/mach-imx7d.c
 new file mode 100644
-index 0000000..dd391e2
+index 0000000..bf7a73a
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx7d.dtsi
-@@ -0,0 +1,498 @@
++++ b/arch/arm/mach-imx/mach-imx7d.c
+@@ -0,0 +1,53 @@
 +/*
-+ * Copyright 2015 Freescale Semiconductor, Inc.
++ * Copyright (C) 2015 Freescale Semiconductor, Inc.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
-+#include <dt-bindings/clock/imx7d-clock.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "imx7d-pinfunc.h"
-+#include "skeleton.dtsi"
++#include <linux/irqchip.h>
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/map.h>
++#include <linux/phy.h>
 +
-+/ {
-+	aliases {
-+		gpio0 = &gpio1;
-+		gpio1 = &gpio2;
-+		gpio2 = &gpio3;
-+		gpio3 = &gpio4;
-+		gpio4 = &gpio5;
-+		gpio5 = &gpio6;
-+		gpio6 = &gpio7;
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c2;
-+		i2c2 = &i2c3;
-+		i2c3 = &i2c4;
-+		mmc0 = &usdhc1;
-+		mmc1 = &usdhc2;
-+		mmc2 = &usdhc3;
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+		serial4 = &uart5;
-+		serial5 = &uart6;
-+		serial6 = &uart7;
-+	};
++#include "common.h"
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++static void __init imx7d_init_machine(void)
++{
++	struct device *parent;
 +
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0>;
-+			operating-points = <
-+				/* KHz	uV */
-+				996000	1075000
-+				792000	975000
-+			>;
-+			clock-latency = <61036>; /* two CLK32 periods */
-+			clocks = <&clks IMX7D_ARM_A7_ROOT_CLK>, <&clks IMX7D_ARM_A7_ROOT_SRC>,
-+				 <&clks IMX7D_PLL_ARM_MAIN_CLK>, <&clks IMX7D_PLL_SYS_MAIN_CLK>;
-+			clock-names = "arm", "arm_root_src", "pll_arm", "pll_sys_main";
-+		};
-+/*
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+*/
-+	};
++	parent = imx_soc_device_init();
++	if (parent == NULL)
++		pr_warn("failed to initialize soc device\n");
 +
-+	intc: interrupt-controller@31001000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x31001000 0x1000>,
-+		      <0x31002000 0x100>;
-+	};
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	imx_anatop_init();
++}
 +
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++static void __init imx7d_init_irq(void)
++{
++	imx_init_revision_from_anatop();
++	imx_src_init();
++	irqchip_init();
++}
 +
-+		ckil: clock@0 {
-+			compatible = "fixed-clock";
-+			reg = <0>;
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+			clock-output-names = "ckil";
-+		};
-+
-+		osc: clock@1 {
-+			compatible = "fixed-clock";
-+			reg = <1>;
-+			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
-+			clock-output-names = "osc";
-+		};
-+
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		arm,cpu-registers-not-fw-configured;
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		interrupt-parent = <&intc>;
-+		clock-frequency = <8000000>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&intc>;
-+		ranges;
-+
-+		pmu {
-+			compatible = "arm,cortex-a7-pmu";
-+			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		aips1: aips-bus@30000000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x30000000 0x400000>;
-+			ranges;
-+
-+			gpio1: gpio@30200000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30200000 0x10000>;
-+				interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>, /* GPIO1_INT15_0 */
-+					     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>; /* GPIO1_INT31_16 */
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio2: gpio@30210000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30210000 0x10000>;
-+				interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio3: gpio@30220000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30220000 0x10000>;
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio4: gpio@30230000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30230000 0x10000>;
-+				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio5: gpio@30240000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30240000 0x10000>;
-+				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio6: gpio@30250000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30250000 0x10000>;
-+				interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio7: gpio@30260000 {
-+				compatible = "fsl,imx7d-gpio", "fsl,imx35-gpio";
-+				reg = <0x30260000 0x10000>;
-+				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			iomuxc_lpsr: iomuxc-lpsr@302c0000 {
-+				compatible = "fsl,imx7d-iomuxc-lpsr";
-+				reg = <0x302c0000 0x10000>;
-+			};
-+
-+			gpt1: gpt@302d0000 {
-+				compatible = "fsl,imx7d-gpt", "fsl,imx31-gpt";
-+				reg = <0x302d0000 0x10000>;
-+				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_GPT1_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+			};
-+
-+			gpt2: gpt@302e0000 {
-+				compatible = "fsl,imx7d-gpt", "fsl,imx31-gpt";
-+				reg = <0x302e0000 0x10000>;
-+				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_GPT2_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			gpt3: gpt@302f0000 {
-+				compatible = "fsl,imx7d-gpt", "fsl,imx31-gpt";
-+				reg = <0x302f0000 0x10000>;
-+				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_GPT3_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			gpt4: gpt@30300000 {
-+				compatible = "fsl,imx7d-gpt", "fsl,imx31-gpt";
-+				reg = <0x30300000 0x10000>;
-+				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_GPT4_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			iomuxc: iomuxc@30330000 {
-+				compatible = "fsl,imx7d-iomuxc";
-+				reg = <0x30330000 0x10000>;
-+			};
-+
-+			gpr: iomuxc-gpr@30340000 {
-+				compatible = "fsl,imx7d-iomuxc-gpr", "syscon";
-+				reg = <0x30340000 0x10000>;
-+			};
-+
-+			ocotp: ocotp-ctrl@30350000 {
-+				compatible = "syscon";
-+				reg = <0x30350000 0x10000>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>;
-+				status = "disabled";
-+			};
-+
-+			anatop: anatop@30360000 {
-+				compatible = "fsl,imx7d-anatop", "fsl,imx6q-anatop",
-+					"syscon", "simple-bus";
-+				reg = <0x30360000 0x10000>;
-+				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				reg_1p0d: regulator-vdd1p0d@210 {
-+					compatible = "fsl,anatop-regulator";
-+					regulator-name = "vdd1p0d";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1200000>;
-+					anatop-reg-offset = <0x210>;
-+					anatop-vol-bit-shift = <8>;
-+					anatop-vol-bit-width = <5>;
-+					anatop-min-bit-val = <8>;
-+					anatop-min-voltage = <800000>;
-+					anatop-max-voltage = <1200000>;
-+					anatop-enable-bit = <31>;
-+				};
-+			};
-+
-+			snvs: snvs@30370000 {
-+				compatible = "fsl,sec-v4.0-mon", "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x30370000 0x10000>;
-+
-+				snvs-rtc-lp@34 {
-+					compatible = "fsl,sec-v4.0-mon-rtc-lp";
-+					reg = <0x34 0x58>;
-+					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+
-+			snvs-pwrkey@0x30370000 {
-+				compatible = "fsl, imx7d-snvs-pwrkey", "fsl,imx6sx-snvs-pwrkey";
-+				reg = <0x30370000 0x10000>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+				fsl,keycode = <116>; /* KEY_POWER */
-+				fsl,wakeup;
-+			};
-+
-+			clks: ccm@30380000 {
-+				compatible = "fsl,imx7d-ccm";
-+				reg = <0x30380000 0x10000>;
-+				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+				#clock-cells = <1>;
-+				clocks = <&ckil>, <&osc>;
-+				clock-names = "ckil", "osc";
-+			};
-+
-+			src: src@30390000 {
-+				compatible = "fsl,imx7d-src", "fsl,imx51-src", "syscon";
-+				reg = <0x30390000 0x10000>;
-+				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+				#reset-cells = <1>;
-+			};
-+
-+			gpc: gpc@303a0000 {
-+				compatible = "fsl,imx7d-gpc";
-+				reg = <0x303a0000 0x10000>;
-+				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+				fsl,mf-mix-wakeup-irq = <0x4000000 0xc00 0x0 0x0>;
-+				#power-domain-cells = <1>;
-+				pcie-phy-supply = <&reg_1p0d>;
-+			};
-+		};
-+
-+		aips3: aips-bus@30800000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x30800000 0x400000>;
-+			ranges;
-+
-+			uart1: serial@30860000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30860000 0x10000>;
-+				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART1_ROOT_CLK>,
-+					<&clks IMX7D_UART1_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			uart2: serial@30870000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30870000 0x10000>;
-+				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART2_ROOT_CLK>,
-+					<&clks IMX7D_UART2_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			uart3: serial@30880000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30880000 0x10000>;
-+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART3_ROOT_CLK>,
-+					<&clks IMX7D_UART3_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			i2c1: i2c@30a20000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx7d-i2c", "fsl,imx21-i2c";
-+				reg = <0x30a20000 0x10000>;
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_I2C1_ROOT_CLK>;
-+				status = "disabled";
-+			};
-+
-+			i2c2: i2c@30a30000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx7d-i2c", "fsl,imx21-i2c";
-+				reg = <0x30a30000 0x10000>;
-+				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_I2C2_ROOT_CLK>;
-+				status = "disabled";
-+			};
-+
-+			i2c3: i2c@30a40000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx7d-i2c", "fsl,imx21-i2c";
-+				reg = <0x30a40000 0x10000>;
-+				interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_I2C3_ROOT_CLK>;
-+				status = "disabled";
-+			};
-+
-+			i2c4: i2c@30a50000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx7d-i2c", "fsl,imx21-i2c";
-+				reg = <0x30a50000 0x10000>;
-+				interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_I2C4_ROOT_CLK>;
-+				status = "disabled";
-+			};
-+
-+			uart4: serial@30a60000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30a60000 0x10000>;
-+				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART4_ROOT_CLK>,
-+					<&clks IMX7D_UART4_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			uart5: serial@30a70000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30a70000 0x10000>;
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART5_ROOT_CLK>,
-+					<&clks IMX7D_UART5_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			uart6: serial@30a80000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30a80000 0x10000>;
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART6_ROOT_CLK>,
-+					<&clks IMX7D_UART6_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			uart7: serial@30a90000 {
-+				compatible = "fsl,imx7d-uart",
-+					     "fsl,imx6q-uart", "fsl,imx21-uart";
-+				reg = <0x30a90000 0x10000>;
-+				interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_UART7_ROOT_CLK>,
-+					<&clks IMX7D_UART7_ROOT_CLK>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
-+
-+			usdhc1: usdhc@30b40000 {
-+				compatible = "fsl,imx7d-usdhc", "fsl,imx6sx-usdhc", "fsl,imx6sl-usdhc";
-+				reg = <0x30b40000 0x10000>;
-+				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_USDHC1_ROOT_CLK>;
-+				clock-names = "ipg", "ahb", "per";
-+				bus-width = <4>;
-+				status = "disabled";
-+			};
-+
-+			usdhc2: usdhc@30b50000 {
-+				compatible = "fsl,imx7d-usdhc", "fsl,imx6sx-usdhc", "fsl,imx6sl-usdhc";
-+				reg = <0x30b50000 0x10000>;
-+				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_USDHC2_ROOT_CLK>;
-+				clock-names = "ipg", "ahb", "per";
-+				bus-width = <4>;
-+				status = "disabled";
-+			};
-+
-+			usdhc3: usdhc@30b60000 {
-+				compatible = "fsl,imx7d-usdhc", "fsl,imx6sx-usdhc", "fsl,imx6sl-usdhc";
-+				reg = <0x30b60000 0x10000>;
-+				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_CLK_DUMMY>,
-+					<&clks IMX7D_USDHC3_ROOT_CLK>;
-+				clock-names = "ipg", "ahb", "per";
-+				bus-width = <4>;
-+				status = "disabled";
-+			};
-+		};
-+	};
++static const char *imx7d_dt_compat[] __initconst = {
++	"fsl,imx7d",
++	NULL,
 +};
++
++static void __init imx7d_map_io(void)
++{
++	debug_ll_io_init();
++}
++
++DT_MACHINE_START(IMX7D, "Freescale i.MX7 Dual (Device Tree)")
++	.map_io		= imx7d_map_io,
++	.smp            = smp_ops(imx_ca7_smp_ops),
++	.init_irq	= imx7d_init_irq,
++	.init_machine	= imx7d_init_machine,
++	.dt_compat	= imx7d_dt_compat,
++	.restart	= mxc_restart,
++MACHINE_END
+diff --git a/arch/arm/mach-imx/mx7.h b/arch/arm/mach-imx/mx7.h
+new file mode 100644
+index 0000000..bfef936
+--- /dev/null
++++ b/arch/arm/mach-imx/mx7.h
+@@ -0,0 +1,38 @@
++/*
++ * Copyright (C) 2015 Freescale Semiconductor, Inc. All Rights Reserved.
++ */
++
++/*
++ *  * This program is free software; you can redistribute it and/or modify
++ *   * it under the terms of the GNU General Public License version 2 as
++ *    * published by the Free Software Foundation.
++ *     */
++
++#ifndef __ASM_ARCH_MX7_IOMAP_H__
++#define __ASM_ARCH_MX7_IOMAP_H__
++
++#define MX7D_IO_P2V(x)                  IMX_IO_P2V(x)
++#define MX7D_IO_ADDRESS(x)              IOMEM(MX7D_IO_P2V(x))
++
++#define MX7D_CCM_BASE_ADDR              0x30380000
++#define MX7D_CCM_SIZE                   0x10000
++#define MX7D_IOMUXC_BASE_ADDR           0x30330000
++#define MX7D_IOMUXC_SIZE                0x10000
++#define MX7D_ANATOP_BASE_ADDR           0x30360000
++#define MX7D_ANATOP_SIZE                0x10000
++#define MX7D_GPC_BASE_ADDR              0x303a0000
++#define MX7D_GPC_SIZE                   0x10000
++#define MX7D_SRC_BASE_ADDR              0x30390000
++#define MX7D_SRC_SIZE                   0x10000
++#define MX7D_DDRC_BASE_ADDR             0x307a0000
++#define MX7D_DDRC_SIZE                  0x10000
++#define MX7D_AIPS1_BASE_ADDR            0x30000000
++#define MX7D_AIPS1_SIZE                 0x400000
++#define MX7D_AIPS2_BASE_ADDR            0x30400000
++#define MX7D_AIPS2_SIZE                 0x400000
++#define MX7D_AIPS3_BASE_ADDR            0x30900000
++#define MX7D_AIPS3_SIZE                 0x300000
++
++#define TT_ATTRIB_NON_CACHEABLE_1M	0x802
++#define MX7_IRAM_TLB_SIZE		0x4000
++#endif
+diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
+index 4c1343d..e55c1e7 100644
+--- a/arch/arm/mach-imx/mxc.h
++++ b/arch/arm/mach-imx/mxc.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2004-2007, 2010 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright 2004-2007, 2010-2015 Freescale Semiconductor, Inc.
+  * Copyright (C) 2008 Juergen Beisert (kernel@pengutronix.de)
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -38,6 +38,7 @@
+ #define MXC_CPU_IMX6DL		0x61
+ #define MXC_CPU_IMX6SX		0x62
+ #define MXC_CPU_IMX6Q		0x63
++#define MXC_CPU_IMX7D		0x72
+ 
+ #define IMX_CHIP_REVISION_1_0		0x10
+ #define IMX_CHIP_REVISION_1_1		0x11
+@@ -185,6 +186,11 @@ static inline bool cpu_is_imx6q(void)
+ 	return __mxc_cpu_type == MXC_CPU_IMX6Q;
+ }
+ 
++static inline bool cpu_is_imx7d(void)
++{
++	return __mxc_cpu_type == MXC_CPU_IMX7D;
++}
++
+ struct cpu_op {
+ 	u32 cpu_rate;
+ };
+diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
+index 7f27001..a0d7774 100644
+--- a/arch/arm/mach-imx/platsmp.c
++++ b/arch/arm/mach-imx/platsmp.c
+@@ -98,6 +98,25 @@ struct smp_operations  imx_smp_ops __initdata = {
+ #endif
+ };
+ 
++
++static void __init imx_ca7_smp_init_cpus(void)
++{
++	int i, ncores;
++	unsigned long val;
++
++	asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
++	ncores = ((val >> 24) & 0x3) + 1;
++	if (setup_max_cpus < ncores)
++		ncores = (setup_max_cpus) ? setup_max_cpus : 1;
++
++	for (i = ncores; i < NR_CPUS; i++)
++		set_cpu_possible(i, false);
++}
++
++struct smp_operations	imx_ca7_smp_ops	__initdata = {
++	.smp_init_cpus		= imx_ca7_smp_init_cpus
++};
++
+ #define DCFG_CCSR_SCRATCHRW1	0x200
+ 
+ static int ls1021a_boot_secondary(unsigned int cpu, struct task_struct *idle)
 -- 
 1.9.1
