@@ -1,80 +1,394 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 02/14] MIPS: ath79: Add basic device tree support
-Date: Mon, 20 Apr 2015 11:50:56 +0200
-Message-ID: <1429523456.14597.23.camel@x220>
-References: <1429280669-2986-1-git-send-email-albeu@free.fr>
-	 <1429280669-2986-3-git-send-email-albeu@free.fr>
-	 <1429340752.16771.120.camel@x220> <20150418183149.69c0795b@tock>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150418183149.69c0795b@tock>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v4] dmaengine: xgene-dma: Fix sparse wannings and coccinelle warnings
+Date: Mon, 20 Apr 2015 16:23:58 +0530
+Message-ID: <1429527238-17440-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-04-18 at 18:31 +0200, Alban wrote:
-> On Sat, 18 Apr 2015 09:05:52 +0200
-> Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org> wrote:
-> 
-> > On Fri, 2015-04-17 at 16:24 +0200, Alban Bedel wrote:
-> > 
-> > > --- a/arch/mips/ath79/Kconfig
-> > > +++ b/arch/mips/ath79/Kconfig
-> > >  
-> > > +choice
-> > > +	prompt "Builtin devicetree selection"
-> > > +	default DTB_ATH79_NONE
-> > > +	help
-> > > +	  Select the devicetree.
-> > > +
-> > > +	config DTB_ATH79_NONE
-> > > +		bool "None"
-> > > +endchoice
-> > 
-> > This adds a choice block with one config entry. So what this achieves
-> > is that DTB_ATH79_NONE will always be 'y', right? Besides I didn't
-> > notice on a user of CONFIG_DTB_ATH79_NONE. So as far as I can see
-> > this choice has no effect on the build.
-> > 
-> > Why was this choice entry added?
-> 
-> This menu is for boards that need a built-in DTB, as MIPS currently
-> doesn't support appended DTBs it is the only way to load a DTB on
-> boards stuck with a broken boot loader. But as no board has been added
-> yet it only contain the entry for boards that don't need a built-in
-> DTB, which do nothing as you pointed out.
-> 
-> A board is then added in this menu in patch 14, for some reasons git
-> send-email didn't send the whole serie at once :(
+v4 changes:
+	* Re-generate patch on top of latest for-linux git
 
-I saw 14/14 fly by now. (And I saw 12/12 of v2, which basically replaces
-14/14.) That makes things clear.
+v3 changes:
+	* Minor changes in length setting in DMA descriptor
 
-Perhaps, if you're going to send a v3, you might move this change into
-12/12. At least, I see little reason to add this choice block in two
-separate steps in this series.
+v2 changes:
+	* Code cleanup
+	* Changed way of setting DMA descriptors for big-endian
 
-(Side note: you _might_ be able to drop config DTB_ATH79_NONE entirely
-if you also replace
-	default DTB_ATH79_NONE
+This patch fixes compilation sparse warnings like incorrect type in assignment
+(different base types), cast to restricted __le64, symbol
+'__UNIQUE_ID_author__COUNTER__' has multiple initializers etc and
+coccinelle warnings (No need to set .owner here. The core will do it.)
 
-with
-	optional
+This patch is based on slave-dma / for-linus branch.
+(commit: 9f2fd0dfa594d857fbdaeda523ff7a46f16567f5 [26/28]
+	dmaengine: Add support for APM X-Gene SoC DMA engine driver)
 
-optional is a little used option for choice blocks. I haven't tested
-this, so this suggestion could end up wasting your time. And even then
-this all looks like a complicated way to set just DTB_TL_WR1043ND_V1. I
-suppose you expect to add things to this choice block in the future.)
+Reported-by: kbuild test robot <fengguang.wu@intel.com>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
+ drivers/dma/xgene-dma.c | 161 ++++++++++++++++++------------------------------
+ 1 file changed, 61 insertions(+), 100 deletions(-)
 
-Thanks,
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index f52e3750..063c835 100755
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -127,29 +127,6 @@
+ #define XGENE_DMA_DESC_FLYBY_POS		4
+ #define XGENE_DMA_DESC_BUFLEN_POS		48
+ #define XGENE_DMA_DESC_HOENQ_NUM_POS		48
+-
+-#define XGENE_DMA_DESC_NV_SET(m)		\
+-	(((u64 *)(m))[0] |= XGENE_DMA_DESC_NV_BIT)
+-#define XGENE_DMA_DESC_IN_SET(m)		\
+-	(((u64 *)(m))[0] |= XGENE_DMA_DESC_IN_BIT)
+-#define XGENE_DMA_DESC_RTYPE_SET(m, v)		\
+-	(((u64 *)(m))[0] |= ((u64)(v) << XGENE_DMA_DESC_RTYPE_POS))
+-#define XGENE_DMA_DESC_BUFADDR_SET(m, v)	\
+-	(((u64 *)(m))[0] |= (v))
+-#define XGENE_DMA_DESC_BUFLEN_SET(m, v)		\
+-	(((u64 *)(m))[0] |= ((u64)(v) << XGENE_DMA_DESC_BUFLEN_POS))
+-#define XGENE_DMA_DESC_C_SET(m)			\
+-	(((u64 *)(m))[1] |= XGENE_DMA_DESC_C_BIT)
+-#define XGENE_DMA_DESC_FLYBY_SET(m, v)		\
+-	(((u64 *)(m))[2] |= ((v) << XGENE_DMA_DESC_FLYBY_POS))
+-#define XGENE_DMA_DESC_MULTI_SET(m, v, i)	\
+-	(((u64 *)(m))[2] |= ((u64)(v) << (((i) + 1) * 8)))
+-#define XGENE_DMA_DESC_DR_SET(m)		\
+-	(((u64 *)(m))[2] |= XGENE_DMA_DESC_DR_BIT)
+-#define XGENE_DMA_DESC_DST_ADDR_SET(m, v)	\
+-	(((u64 *)(m))[3] |= (v))
+-#define XGENE_DMA_DESC_H0ENQ_NUM_SET(m, v)	\
+-	(((u64 *)(m))[3] |= ((u64)(v) << XGENE_DMA_DESC_HOENQ_NUM_POS))
+ #define XGENE_DMA_DESC_ELERR_RD(m)		\
+ 	(((m) >> XGENE_DMA_DESC_ELERR_POS) & 0x3)
+ #define XGENE_DMA_DESC_LERR_RD(m)		\
+@@ -158,14 +135,7 @@
+ 	(((elerr) << 4) | (lerr))
 
+ /* X-Gene DMA descriptor empty s/w signature */
+-#define XGENE_DMA_DESC_EMPTY_INDEX		0
+ #define XGENE_DMA_DESC_EMPTY_SIGNATURE		~0ULL
+-#define XGENE_DMA_DESC_SET_EMPTY(m)		\
+-	(((u64 *)(m))[XGENE_DMA_DESC_EMPTY_INDEX] =	\
+-	 XGENE_DMA_DESC_EMPTY_SIGNATURE)
+-#define XGENE_DMA_DESC_IS_EMPTY(m)		\
+-	(((u64 *)(m))[XGENE_DMA_DESC_EMPTY_INDEX] ==	\
+-	 XGENE_DMA_DESC_EMPTY_SIGNATURE)
 
-Paul Bolle
+ /* X-Gene DMA configurable parameters defines */
+ #define XGENE_DMA_RING_NUM		512
+@@ -238,10 +208,10 @@
+ 	dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
 
+ struct xgene_dma_desc_hw {
+-	u64 m0;
+-	u64 m1;
+-	u64 m2;
+-	u64 m3;
++	__le64 m0;
++	__le64 m1;
++	__le64 m2;
++	__le64 m3;
+ };
+
+ enum xgene_dma_ring_cfgsize {
+@@ -388,14 +358,6 @@ static bool is_pq_enabled(struct xgene_dma *pdma)
+ 	return !(val & XGENE_DMA_PQ_DISABLE_MASK);
+ }
+
+-static void xgene_dma_cpu_to_le64(u64 *desc, int count)
+-{
+-	int i;
+-
+-	for (i = 0; i < count; i++)
+-		desc[i] = cpu_to_le64(desc[i]);
+-}
+-
+ static u16 xgene_dma_encode_len(u32 len)
+ {
+ 	return (len < XGENE_DMA_MAX_BYTE_CNT) ?
+@@ -424,34 +386,52 @@ static u32 xgene_dma_ring_desc_cnt(struct xgene_dma_ring *ring)
+ 	return XGENE_DMA_RING_DESC_CNT(ring_state);
+ }
+
+-static void xgene_dma_set_src_buffer(void *ext8, size_t *len,
++static void xgene_dma_set_src_buffer(__le64 *ext8, size_t *len,
+ 				     dma_addr_t *paddr)
+ {
+ 	size_t nbytes = (*len < XGENE_DMA_MAX_BYTE_CNT) ?
+ 			*len : XGENE_DMA_MAX_BYTE_CNT;
+
+-	XGENE_DMA_DESC_BUFADDR_SET(ext8, *paddr);
+-	XGENE_DMA_DESC_BUFLEN_SET(ext8, xgene_dma_encode_len(nbytes));
++	*ext8 |= cpu_to_le64(*paddr);
++	*ext8 |= cpu_to_le64((u64)xgene_dma_encode_len(nbytes) <<
++			     XGENE_DMA_DESC_BUFLEN_POS);
+ 	*len -= nbytes;
+ 	*paddr += nbytes;
+ }
+
+-static void xgene_dma_invalidate_buffer(void *ext8)
++static void xgene_dma_invalidate_buffer(__le64 *ext8)
+ {
+-	XGENE_DMA_DESC_BUFLEN_SET(ext8, XGENE_DMA_INVALID_LEN_CODE);
++	*ext8 |= cpu_to_le64((u64)XGENE_DMA_INVALID_LEN_CODE <<
++			     XGENE_DMA_DESC_BUFLEN_POS);
+ }
+
+-static void *xgene_dma_lookup_ext8(u64 *desc, int idx)
++static __le64 *xgene_dma_lookup_ext8(struct xgene_dma_desc_hw *desc, int idx)
+ {
+-	return (idx % 2) ? (desc + idx - 1) : (desc + idx + 1);
++	switch (idx) {
++	case 0:
++		return &desc->m1;
++	case 1:
++		return &desc->m0;
++	case 2:
++		return &desc->m3;
++	case 3:
++		return &desc->m2;
++	default:
++		pr_err("Invalid dma descriptor index\n");
++	}
++
++	return NULL;
+ }
+
+-static void xgene_dma_init_desc(void *desc, u16 dst_ring_num)
++static void xgene_dma_init_desc(struct xgene_dma_desc_hw *desc,
++				u16 dst_ring_num)
+ {
+-	XGENE_DMA_DESC_C_SET(desc); /* Coherent IO */
+-	XGENE_DMA_DESC_IN_SET(desc);
+-	XGENE_DMA_DESC_H0ENQ_NUM_SET(desc, dst_ring_num);
+-	XGENE_DMA_DESC_RTYPE_SET(desc, XGENE_DMA_RING_OWNER_DMA);
++	desc->m0 |= cpu_to_le64(XGENE_DMA_DESC_IN_BIT);
++	desc->m0 |= cpu_to_le64((u64)XGENE_DMA_RING_OWNER_DMA <<
++				XGENE_DMA_DESC_RTYPE_POS);
++	desc->m1 |= cpu_to_le64(XGENE_DMA_DESC_C_BIT);
++	desc->m3 |= cpu_to_le64((u64)dst_ring_num <<
++				XGENE_DMA_DESC_HOENQ_NUM_POS);
+ }
+
+ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
+@@ -459,7 +439,7 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
+ 				    dma_addr_t dst, dma_addr_t src,
+ 				    size_t len)
+ {
+-	void *desc1, *desc2;
++	struct xgene_dma_desc_hw *desc1, *desc2;
+ 	int i;
+
+ 	/* Get 1st descriptor */
+@@ -467,23 +447,21 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
+ 	xgene_dma_init_desc(desc1, chan->tx_ring.dst_ring_num);
+
+ 	/* Set destination address */
+-	XGENE_DMA_DESC_DR_SET(desc1);
+-	XGENE_DMA_DESC_DST_ADDR_SET(desc1, dst);
++	desc1->m2 |= cpu_to_le64(XGENE_DMA_DESC_DR_BIT);
++	desc1->m3 |= cpu_to_le64(dst);
+
+ 	/* Set 1st source address */
+-	xgene_dma_set_src_buffer(desc1 + 8, &len, &src);
++	xgene_dma_set_src_buffer(&desc1->m1, &len, &src);
+
+-	if (len <= 0) {
+-		desc2 = NULL;
+-		goto skip_additional_src;
+-	}
++	if (!len)
++		return;
+
+ 	/*
+ 	 * We need to split this source buffer,
+ 	 * and need to use 2nd descriptor
+ 	 */
+ 	desc2 = &desc_sw->desc2;
+-	XGENE_DMA_DESC_NV_SET(desc1);
++	desc1->m0 |= cpu_to_le64(XGENE_DMA_DESC_NV_BIT);
+
+ 	/* Set 2nd to 5th source address */
+ 	for (i = 0; i < 4 && len; i++)
+@@ -496,12 +474,6 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
+
+ 	/* Updated flag that we have prepared 64B descriptor */
+ 	desc_sw->flags |= XGENE_DMA_FLAG_64B_DESC;
+-
+-skip_additional_src:
+-	/* Hardware stores descriptor in little endian format */
+-	xgene_dma_cpu_to_le64(desc1, 4);
+-	if (desc2)
+-		xgene_dma_cpu_to_le64(desc2, 4);
+ }
+
+ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+@@ -510,7 +482,7 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+ 				    u32 src_cnt, size_t *nbytes,
+ 				    const u8 *scf)
+ {
+-	void *desc1, *desc2;
++	struct xgene_dma_desc_hw *desc1, *desc2;
+ 	size_t len = *nbytes;
+ 	int i;
+
+@@ -521,28 +493,25 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
+ 	xgene_dma_init_desc(desc1, chan->tx_ring.dst_ring_num);
+
+ 	/* Set destination address */
+-	XGENE_DMA_DESC_DR_SET(desc1);
+-	XGENE_DMA_DESC_DST_ADDR_SET(desc1, *dst);
++	desc1->m2 |= cpu_to_le64(XGENE_DMA_DESC_DR_BIT);
++	desc1->m3 |= cpu_to_le64(*dst);
+
+ 	/* We have multiple source addresses, so need to set NV bit*/
+-	XGENE_DMA_DESC_NV_SET(desc1);
++	desc1->m0 |= cpu_to_le64(XGENE_DMA_DESC_NV_BIT);
+
+ 	/* Set flyby opcode */
+-	XGENE_DMA_DESC_FLYBY_SET(desc1, xgene_dma_encode_xor_flyby(src_cnt));
++	desc1->m2 |= cpu_to_le64(xgene_dma_encode_xor_flyby(src_cnt) <<
++				 XGENE_DMA_DESC_FLYBY_POS);
+
+ 	/* Set 1st to 5th source addresses */
+ 	for (i = 0; i < src_cnt; i++) {
+ 		len = *nbytes;
+-		xgene_dma_set_src_buffer((i == 0) ? (desc1 + 8) :
++		xgene_dma_set_src_buffer((i == 0) ? &desc1->m1 :
+ 					 xgene_dma_lookup_ext8(desc2, i - 1),
+ 					 &len, &src[i]);
+-		XGENE_DMA_DESC_MULTI_SET(desc1, scf[i], i);
++		desc1->m2 |= cpu_to_le64((scf[i] << ((i + 1) * 8)));
+ 	}
+
+-	/* Hardware stores descriptor in little endian format */
+-	xgene_dma_cpu_to_le64(desc1, 4);
+-	xgene_dma_cpu_to_le64(desc2, 4);
+-
+ 	/* Update meta data */
+ 	*nbytes = len;
+ 	*dst += XGENE_DMA_MAX_BYTE_CNT;
+@@ -738,7 +707,7 @@ static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
+  * xgene_chan_xfer_ld_pending - push any pending transactions to hw
+  * @chan : X-Gene DMA channel
+  *
+- * LOCKING: must hold chan->desc_lock
++ * LOCKING: must hold chan->lock
+  */
+ static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
+ {
+@@ -808,7 +777,8 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 		desc_hw = &ring->desc_hw[ring->head];
+
+ 		/* Check if this descriptor has been completed */
+-		if (unlikely(XGENE_DMA_DESC_IS_EMPTY(desc_hw)))
++		if (unlikely(le64_to_cpu(desc_hw->m0) ==
++			     XGENE_DMA_DESC_EMPTY_SIGNATURE))
+ 			break;
+
+ 		if (++ring->head == ring->slots)
+@@ -842,7 +812,7 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 		iowrite32(-1, ring->cmd);
+
+ 		/* Mark this hw descriptor as processed */
+-		XGENE_DMA_DESC_SET_EMPTY(desc_hw);
++		desc_hw->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
+
+ 		xgene_dma_run_tx_complete_actions(chan, desc_sw);
+
+@@ -889,7 +859,7 @@ static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
+  * @chan: X-Gene DMA channel
+  * @list: the list to free
+  *
+- * LOCKING: must hold chan->desc_lock
++ * LOCKING: must hold chan->lock
+  */
+ static void xgene_dma_free_desc_list(struct xgene_dma_chan *chan,
+ 				     struct list_head *list)
+@@ -900,15 +870,6 @@ static void xgene_dma_free_desc_list(struct xgene_dma_chan *chan,
+ 		xgene_dma_clean_descriptor(chan, desc);
+ }
+
+-static void xgene_dma_free_tx_desc_list(struct xgene_dma_chan *chan,
+-					struct list_head *list)
+-{
+-	struct xgene_dma_desc_sw *desc, *_desc;
+-
+-	list_for_each_entry_safe(desc, _desc, list, node)
+-		xgene_dma_clean_descriptor(chan, desc);
+-}
+-
+ static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
+ {
+ 	struct xgene_dma_chan *chan = to_dma_chan(dchan);
+@@ -985,7 +946,7 @@ fail:
+ 	if (!first)
+ 		return NULL;
+
+-	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
++	xgene_dma_free_desc_list(chan, &first->tx_list);
+ 	return NULL;
+ }
+
+@@ -1093,7 +1054,7 @@ fail:
+ 	if (!first)
+ 		return NULL;
+
+-	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
++	xgene_dma_free_desc_list(chan, &first->tx_list);
+ 	return NULL;
+ }
+
+@@ -1141,7 +1102,7 @@ fail:
+ 	if (!first)
+ 		return NULL;
+
+-	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
++	xgene_dma_free_desc_list(chan, &first->tx_list);
+ 	return NULL;
+ }
+
+@@ -1218,7 +1179,7 @@ fail:
+ 	if (!first)
+ 		return NULL;
+
+-	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
++	xgene_dma_free_desc_list(chan, &first->tx_list);
+ 	return NULL;
+ }
+
+@@ -1316,7 +1277,6 @@ static void xgene_dma_setup_ring(struct xgene_dma_ring *ring)
+ {
+ 	void *ring_cfg = ring->state;
+ 	u64 addr = ring->desc_paddr;
+-	void *desc;
+ 	u32 i, val;
+
+ 	ring->slots = ring->size / XGENE_DMA_RING_WQ_DESC_SIZE;
+@@ -1358,8 +1318,10 @@ static void xgene_dma_setup_ring(struct xgene_dma_ring *ring)
+
+ 	/* Set empty signature to DMA Rx ring descriptors */
+ 	for (i = 0; i < ring->slots; i++) {
++		struct xgene_dma_desc_hw *desc;
++
+ 		desc = &ring->desc_hw[i];
+-		XGENE_DMA_DESC_SET_EMPTY(desc);
++		desc->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
+ 	}
+
+ 	/* Enable DMA Rx ring interrupt */
+@@ -2084,6 +2046,5 @@ module_platform_driver(xgene_dma_driver);
+
+ MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
+ MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
+-MODULE_AUTHOR("Loc Ho <lho@apm.com>");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION("1.0");
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
