@@ -1,54 +1,87 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH RFC 1/3] DT: imx28-clock: add ids for DC-DC clock domain
-Date: Mon, 20 Apr 2015 21:45:21 +0000
-Message-ID: <1429566323-8263-2-git-send-email-stefan.wahren@i2se.com>
-References: <1429566323-8263-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429566323-8263-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] ASoC: tas571x: Add DT binding document
+Date: Mon, 20 Apr 2015 23:03:38 +0100
+Message-ID: <20150420220338.GZ14892@sirena.org.uk>
+References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
+ <20150418111622.GD26185@sirena.org.uk>
+ <CAJzqFtYBvNAgwROZ09MGanYOyyF0EXEL7W9ZF4eAhprQVquNcQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="t3Rhqlz/9+3FgEet"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJzqFtYBvNAgwROZ09MGanYOyyF0EXEL7W9ZF4eAhprQVquNcQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the clock ids for the integrated DC-DC converter
-of the i.MX28:
 
- ref_xtal                             |\
- ------------------------------------>| \
-                                      |  \         +----------+
-                                      |   \        |          |
- ref_pll  |\                          |    +-------> CLK_DCDC |
- -------->| \       +---------+       |   /        |          |
-          |  \      |         |       |  /         +----------+
-          |   +-----> DIV INT |------>| /
- ref_gpmi |  /      |         |       |/
- -------->| /       +---------+       dcdc_sel
-          |/        dcdc_div
-          dcdc_pll
+--t3Rhqlz/9+3FgEet
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- .../devicetree/bindings/clock/imx28-clock.txt      |    3 +++
- 1 file changed, 3 insertions(+)
+On Mon, Apr 20, 2015 at 02:18:56PM -0700, Kevin Cernekee wrote:
+> On Sat, Apr 18, 2015 at 4:16 AM, Mark Brown <broonie@kernel.org> wrote:
+> > On Wed, Apr 15, 2015 at 02:42:19PM -0700, Kevin Cernekee wrote:
 
-diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.txt b/Documentation/devicetree/bindings/clock/imx28-clock.txt
-index e6587af..3678e3c 100644
---- a/Documentation/devicetree/bindings/clock/imx28-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/imx28-clock.txt
-@@ -76,6 +76,9 @@ clocks and IDs.
- 	usb0_phy	62
- 	usb1_phy	63
- 	enet_out	64
-+	dcdc_pll	65
-+	dcdc_div	66
-+	dcdc_sel	67
- 
- Examples:
- 
--- 
-1.7.9.5
+> >> +- VDD-supply: regulator phandle for the AVDD/DVDD/HP_VDD supply
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > This is clearly not correct - if there are three separate physical
+> > supplies there should be three separate regulators requested.  They may
+> > all resolve to one physical regulator on the board you are working with
+> > but that might not be true on other boards.
+
+> In the "simplified diagram," TI shows a single AVDD/DVDD/HP_VDD supply:
+
+> http://www.ti.com/lit/ds/symlink/tas5717.pdf#2
+
+> Page 20 also suggests the use of a single 3.3V supply for AVDD/DVDD/HP_VDD.
+
+> But this combines a number of separate pins.  On 5711 we have
+> dedicated pins for:
+
+> PVDD_A
+> PVDD_B
+> PVDD_C
+> PVDD_D
+> AVDD
+> DVDD
+
+Yes, those are three separate supplies that are typically tied together
+- it looks like PVDD has high current draw so is tied through multiple
+pins.  I'd not be surprised to see systems with AVDD tied to a separate
+pin, analogue supplies often benefit from low noise supplies separate to
+digital ones.  Indeed if you look at the pin descriptions the analogue
+and digital supplies even have separate grounds.
+
+> I didn't see anything in the datasheet suggesting it is OK to have
+> different voltages or power states on the various supply pins (other
+> than the special voltage on PVDD).
+
+That's more likely to go wrong if they're not controlled separately than
+if they are since we will only be able to turn a single supply on or
+off..
+
+> I can add as many regulator entries as appropriate.  What do you recommend?
+
+Have the driver accurately reflect the hardware, request one regulator
+per supply.
+
+--t3Rhqlz/9+3FgEet
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVNXe5AAoJECTWi3JdVIfQJgEH/3XwKBmnmaNw54q05rOQXXjv
+Oce9mCa1X+oRlxKMEVog9KkeumKCEiq2PSsKBk/exNYdG+/NZzK95X3HAJ+IYe6m
+AjYpQeU9L3n0mn7iJxilOIaHD+9Psp+yubK7imMg00FHHQoHQyKcTOamtHd1x9B6
+uzriV9YlyNTGh3qWR6+FYHZEpyqJsTSLpi9VeZ9yjM0zm5G4GXKrmiCnDRdBVEIN
+LVwwRqIleFceqkw8yThh/5C58hyQoB0dlvOYp70jX0JXvt3Lyoqe7G+hUzapb1Bz
+tAyLF46gMJhhR464IiJd/k13nNZ1KXivdbRQV1rCxqwPspRxpKfp1D9XBAgP0Ho=
+=b85K
+-----END PGP SIGNATURE-----
+
+--t3Rhqlz/9+3FgEet--
