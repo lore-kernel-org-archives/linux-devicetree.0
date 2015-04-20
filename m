@@ -1,130 +1,61 @@
-From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
-Date: Mon, 20 Apr 2015 15:02:03 +0200
-Message-ID: <20150420130203.GB25054@ermac>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
- <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
- <20150417163054.GA28241@obsidianresearch.com>
- <20150418090147.GF12732@n2100.arm.linux.org.uk>
- <20150418172923.GA10605@obsidianresearch.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH RESEND v6 2/2] leds: tlc591xx: Driver for the TI 8/16
+ Channel i2c LED driver
+Date: Mon, 20 Apr 2015 15:07:31 +0200
+Message-ID: <5534FA13.9090502@samsung.com>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+ <1426630107-25057-3-git-send-email-andrew@lunn.ch>
+ <5534C181.9060202@samsung.com> <20150420115959.GA8050@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150418172923.GA10605-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150420115959.GA8050@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 18, 2015 at 11:29:23AM -0600, Jason Gunthorpe wrote:
-> On Sat, Apr 18, 2015 at 10:01:47AM +0100, Russell King - ARM Linux wrote:
-> > On Fri, Apr 17, 2015 at 10:30:54AM -0600, Jason Gunthorpe wrote:
-> > > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
-> > > > +	teedev = devm_kzalloc(dev, sizeof(*teedev), GFP_KERNEL);
-> > > [..]
-> > > > +	rc = misc_register(&teedev->miscdev);
-> > > [..]
-> > > > +void tee_unregister(struct tee_device *teedev)
-> > > > +{
-> > > [..]
-> > > > +	misc_deregister(&teedev->miscdev);
-> > > > +}
-> > > [..]
-> > > >+static int optee_remove(struct platform_device *pdev)
-> > > >+{
-> > > >+       tee_unregister(optee->teedev);
-> > > 
-> > > Isn't that a potential use after free? AFAIK misc_deregister does not
-> > > guarentee the miscdev will no longer be accessed after it returns, and
-> > > the devm will free it after optee_remove returns.
-> > > 
-> > > Memory backing a stuct device needs to be freed via the release
-> > > function.
-> > 
-> > Out of interest, which struct device are you talking about here?
-> 
-> Sorry, I was imprecise. In the first paragraph I ment 'miscdev' to
-> refer to the entire thing, struct tee_device, struct misc_device, the
-> driver allocations, etc.
-> 
-> So, the first issue is the use-after-free via ioctl() touching struct
-> tee_device that you described.
-> 
-> But then we trundle down to:
-> 
-> + ctx->teedev->desc->ops->get_version(ctx, &vers.spec_version,
-> +   vers.uuid);
-> 
-> If we kref teedev so it is valid then calling a driver call back after
-> (or during) it's remove function is very likely to blow up.
-> 
-> Also, in TPM we discovered that adding a sysfs file was very ugly
-> (impossible?) because without the misc_mtx protection that open has,
-> getting a locked tee_device in the sysfs callback is difficult.
-> 
-> With TPM, we ended up trying lots of options for fixing struct
-> misc_device in the tpm core, which is handling multiple sub drivers,
-> and basically gave up. Gave each struct tpm_device an embedded struct
-> device like Greg suggested here. Then the tpm core is working with the
-> APIs, not struggling against them.
-> 
-> But this is not a user-space invisible change, so better to do it right
-> from day 1 ..
-> 
-> We followed rtc as an example of how to create a mid-layer that
-> exports it's own register function, with char dev and sysfs
-> components. It seems properly implemented, and has elegant solutions
-> to these problems (like ops):
->  - Don't mess with modules, use 'ops' and set 'ops' to null when the
->    driver removes. The driver core will keep the driver module around
->    for you bettwen the probe/remove calls. Setting ops = NULL ensures driver
->    module code cannot be called after remove.
->  - Use locking for 'ops' to serialize driver callbacks with driver removal
->  - Embed a struct device/etc in the struct tee_device and use the release
->    function to deallocate struct tee_device. All callbacks from the
->    driver/char/sysfs core can now use container_of on something that
->    is already holds the right kref.
->  - Consider an alloc/register pattern as we use now in TPM. This has proven
->    smart for TPM as it allows:
->        alloc tee_device + init struct device, etc
->        driver setup
->        core library helper calls for setup/etc
->        driver register + char dev publish
-> 
-> It appeared to me this driver was copying TPM's old architecture,
-> which is very much known to be broken.
+On 04/20/2015 01:59 PM, Andrew Lunn wrote:
+> On Mon, Apr 20, 2015 at 11:06:09AM +0200, Jacek Anaszewski wrote:
+>> Hi Andrew,
+>>
+>> Very nice driver.
+>
+> Thanks. I just hope it gets accepted into this merge window.
+>
+>> I have one question below.
+>
+[...]
+>>> +static int
+>>> +tlc591xx_configure(struct device *dev,
+>>> +		   struct tlc591xx_priv *priv,
+>>> +		   const struct tlc591xx *tlc591xx)
+>>> +{
+>>> +	unsigned int i;
+>>> +	int err = 0;
+>>> +
+>>> +	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
+>>
+>> It seems that all leds will be initially turned on, in dim mode.
+>> This shouldn't be fixed and probably an optional 'led-mode' DT node
+>> property should be provided for defining the initial state. It would
+>> default to OFF if not present.
+>
+> If you look further down, you will find
+>
+>>> +		priv->leds[reg].ldev.default_trigger =
+>>> +			of_get_property(child, "linux,default-trigger", NULL);
+>
+> This is the normal way in DT to specify the default on/off/keep
+> current value/heartbeat etc.
 
-The struct tee_device holds a shared memory pool from which shared
-memory objects are allocated. These shared memory objects can be mapped
-both by user space and secure world. When a shared memory object is
-freed secure world may need to be notified, OP-TEE doesn't need that but
-other TEEs may need it. To come around the problem with what should
-happen when the driver is removed I'm increasing the refcount on the
-driver for each allocated shared memory object and created file
-pointers. As long as any resource is in use by either user space or
-secure world the driver can't be unloaded.
+OK, I was initially thinking that initializing LED to MODE2_DIM
+turns the LED on.
 
-What should happen when user space or secure world has some shared
-memory which the driver owns (either allocated from CMA or from some
-memory range received from the TEE)? Killing the user space process
-would be a bit unfriendly. Secure world may not be prepared to release
-that memory right now either.
+Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
 
-What if I:
-* Keep all the reference counting I have today on the module
-  to make sure that the module can't be unloaded until all shared memory
-  resources are release
-* Change to use the pattern (with a struct device etc) as described above.
-  I can't protect the ops with just a mutex since tee_ioctl_cmd() needs to
-  be multithreaded. I need some reference counting too,
-  try_module_get()/module_put() does exactly what I need here.
 
-Is that pattern OK?
-
-Regards,
-Jens
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
