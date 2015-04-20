@@ -1,47 +1,129 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/3] regulator: max8973: make default/unset dvs gpio as invalid gpio
-Date: Mon, 20 Apr 2015 18:24:16 +0530
-Message-ID: <1429534457-15515-3-git-send-email-ldewangan@nvidia.com>
-References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com>
+From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Mon, 20 Apr 2015 15:02:03 +0200
+Message-ID: <20150420130203.GB25054@ermac>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150417163054.GA28241@obsidianresearch.com>
+ <20150418090147.GF12732@n2100.arm.linux.org.uk>
+ <20150418172923.GA10605@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429534457-15515-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150418172923.GA10605-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If platform data has dvs-gpio value 0 as default/unset then
-make this as invalid gpio so that function gpio_is_valid()
-can return false on this case.
+On Sat, Apr 18, 2015 at 11:29:23AM -0600, Jason Gunthorpe wrote:
+> On Sat, Apr 18, 2015 at 10:01:47AM +0100, Russell King - ARM Linux wrote:
+> > On Fri, Apr 17, 2015 at 10:30:54AM -0600, Jason Gunthorpe wrote:
+> > > On Fri, Apr 17, 2015 at 09:50:56AM +0200, Jens Wiklander wrote:
+> > > > +	teedev = devm_kzalloc(dev, sizeof(*teedev), GFP_KERNEL);
+> > > [..]
+> > > > +	rc = misc_register(&teedev->miscdev);
+> > > [..]
+> > > > +void tee_unregister(struct tee_device *teedev)
+> > > > +{
+> > > [..]
+> > > > +	misc_deregister(&teedev->miscdev);
+> > > > +}
+> > > [..]
+> > > >+static int optee_remove(struct platform_device *pdev)
+> > > >+{
+> > > >+       tee_unregister(optee->teedev);
+> > > 
+> > > Isn't that a potential use after free? AFAIK misc_deregister does not
+> > > guarentee the miscdev will no longer be accessed after it returns, and
+> > > the devm will free it after optee_remove returns.
+> > > 
+> > > Memory backing a stuct device needs to be freed via the release
+> > > function.
+> > 
+> > Out of interest, which struct device are you talking about here?
+> 
+> Sorry, I was imprecise. In the first paragraph I ment 'miscdev' to
+> refer to the entire thing, struct tee_device, struct misc_device, the
+> driver allocations, etc.
+> 
+> So, the first issue is the use-after-free via ioctl() touching struct
+> tee_device that you described.
+> 
+> But then we trundle down to:
+> 
+> + ctx->teedev->desc->ops->get_version(ctx, &vers.spec_version,
+> +   vers.uuid);
+> 
+> If we kref teedev so it is valid then calling a driver call back after
+> (or during) it's remove function is very likely to blow up.
+> 
+> Also, in TPM we discovered that adding a sysfs file was very ugly
+> (impossible?) because without the misc_mtx protection that open has,
+> getting a locked tee_device in the sysfs callback is difficult.
+> 
+> With TPM, we ended up trying lots of options for fixing struct
+> misc_device in the tpm core, which is handling multiple sub drivers,
+> and basically gave up. Gave each struct tpm_device an embedded struct
+> device like Greg suggested here. Then the tpm core is working with the
+> APIs, not struggling against them.
+> 
+> But this is not a user-space invisible change, so better to do it right
+> from day 1 ..
+> 
+> We followed rtc as an example of how to create a mid-layer that
+> exports it's own register function, with char dev and sysfs
+> components. It seems properly implemented, and has elegant solutions
+> to these problems (like ops):
+>  - Don't mess with modules, use 'ops' and set 'ops' to null when the
+>    driver removes. The driver core will keep the driver module around
+>    for you bettwen the probe/remove calls. Setting ops = NULL ensures driver
+>    module code cannot be called after remove.
+>  - Use locking for 'ops' to serialize driver callbacks with driver removal
+>  - Embed a struct device/etc in the struct tee_device and use the release
+>    function to deallocate struct tee_device. All callbacks from the
+>    driver/char/sysfs core can now use container_of on something that
+>    is already holds the right kref.
+>  - Consider an alloc/register pattern as we use now in TPM. This has proven
+>    smart for TPM as it allows:
+>        alloc tee_device + init struct device, etc
+>        driver setup
+>        core library helper calls for setup/etc
+>        driver register + char dev publish
+> 
+> It appeared to me this driver was copying TPM's old architecture,
+> which is very much known to be broken.
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-As discussed on the patch
-[PATCH] regulator: max8973: get rid of extra variable for gpio validity
-Adding handling of unset/default gpio on platform data which is set as
-0.
+The struct tee_device holds a shared memory pool from which shared
+memory objects are allocated. These shared memory objects can be mapped
+both by user space and secure world. When a shared memory object is
+freed secure world may need to be notified, OP-TEE doesn't need that but
+other TEEs may need it. To come around the problem with what should
+happen when the driver is removed I'm increasing the refcount on the
+driver for each allocated shared memory object and created file
+pointers. As long as any resource is in use by either user space or
+secure world the driver can't be unloaded.
 
- drivers/regulator/max8973-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What should happen when user space or secure world has some shared
+memory which the driver owns (either allocated from CMA or from some
+memory range received from the TEE)? Killing the user space process
+would be a bit unfriendly. Secure world may not be prepared to release
+that memory right now either.
 
-diff --git a/drivers/regulator/max8973-regulator.c b/drivers/regulator/max8973-regulator.c
-index 1890808..85fa2de 100644
---- a/drivers/regulator/max8973-regulator.c
-+++ b/drivers/regulator/max8973-regulator.c
-@@ -408,7 +408,7 @@ static int max8973_probe(struct i2c_client *client,
- 	}
- 
- 	if (pdata) {
--		max->dvs_gpio = pdata->dvs_gpio;
-+		max->dvs_gpio = (pdata->dvs_gpio) ? pdata->dvs_gpio : -EINVAL;
- 		max->enable_external_control = pdata->enable_ext_control;
- 		max->curr_gpio_val = pdata->dvs_def_state;
- 		max->curr_vout_reg = MAX8973_VOUT + pdata->dvs_def_state;
--- 
-1.8.1.5
+What if I:
+* Keep all the reference counting I have today on the module
+  to make sure that the module can't be unloaded until all shared memory
+  resources are release
+* Change to use the pattern (with a struct device etc) as described above.
+  I can't protect the ops with just a mutex since tee_ioctl_cmd() needs to
+  be multithreaded. I need some reference counting too,
+  try_module_get()/module_put() does exactly what I need here.
 
+Is that pattern OK?
+
+Regards,
+Jens
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
