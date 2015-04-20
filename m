@@ -1,75 +1,82 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND v6 2/2] leds: tlc591xx: Driver for the TI 8/16
- Channel i2c LED driver
-Date: Mon, 20 Apr 2015 10:49:07 -0700
-Message-ID: <CAK5ve-Kk+e_CrnREbJEsigiSR_22SY11Gb-x=DPP+1vbxdPeNw@mail.gmail.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
- <1426630107-25057-3-git-send-email-andrew@lunn.ch> <5534C181.9060202@samsung.com>
- <20150420115959.GA8050@lunn.ch> <5534FA13.9090502@samsung.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Mon, 20 Apr 2015 11:55:15 -0600
+Message-ID: <20150420175515.GA31958@obsidianresearch.com>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <20150417163054.GA28241@obsidianresearch.com>
+ <20150418090147.GF12732@n2100.arm.linux.org.uk>
+ <20150418172923.GA10605@obsidianresearch.com>
+ <20150420130203.GB25054@ermac>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5534FA13.9090502-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150420130203.GB25054@ermac>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matthew.Fatheree-REUqjI8E1xrQT0dZR+AlfA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 6:07 AM, Jacek Anaszewski
-<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 04/20/2015 01:59 PM, Andrew Lunn wrote:
->>
->> On Mon, Apr 20, 2015 at 11:06:09AM +0200, Jacek Anaszewski wrote:
->>>
->>> Hi Andrew,
->>>
->>> Very nice driver.
->>
->>
->> Thanks. I just hope it gets accepted into this merge window.
->>
->>> I have one question below.
->>
->>
-> [...]
->>>>
->>>> +static int
->>>> +tlc591xx_configure(struct device *dev,
->>>> +                  struct tlc591xx_priv *priv,
->>>> +                  const struct tlc591xx *tlc591xx)
->>>> +{
->>>> +       unsigned int i;
->>>> +       int err = 0;
->>>> +
->>>> +       tlc591xx_set_mode(priv->regmap, MODE2_DIM);
->>>
->>>
->>> It seems that all leds will be initially turned on, in dim mode.
->>> This shouldn't be fixed and probably an optional 'led-mode' DT node
->>> property should be provided for defining the initial state. It would
->>> default to OFF if not present.
->>
->>
->> If you look further down, you will find
->>
->>>> +               priv->leds[reg].ldev.default_trigger =
->>>> +                       of_get_property(child, "linux,default-trigger",
->>>> NULL);
->>
->>
->> This is the normal way in DT to specify the default on/off/keep
->> current value/heartbeat etc.
->
->
-> OK, I was initially thinking that initializing LED to MODE2_DIM
-> turns the LED on.
->
-> Acked-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
+On Mon, Apr 20, 2015 at 03:02:03PM +0200, Jens Wiklander wrote:
+> > It appeared to me this driver was copying TPM's old architecture,
+> > which is very much known to be broken.
+> 
+> The struct tee_device holds a shared memory pool from which shared
+> memory objects are allocated. These shared memory objects can be mapped
+> both by user space and secure world. 
 
-Thanks, I merged it into my tree but it will target for next merge window.
+So this is a whole other set of problems besides what was already
+brought up.
 
--Bryan
+You need to figure out a lifetime model for this shared memory that
+works.
+
+> To come around the problem with what should happen when the driver
+> is removed I'm increasing the refcount on the driver for each
+> allocated shared memory object and created file pointers. As long as
+> any resource is in use by either user space or secure world the
+> driver can't be unloaded.
+
+This isn't how the kernel works. The module refcount effects module
+unload (it protects the .text) - it does not interact with driver
+detatch. Userspace can trigger driver detatch (which results in
+tee_unregister being called) at any time via sysfs.
+
+If you properly design for that case then module unload sequencing
+works properly for free.
+
+Based on what I gather, I would suggest the following sequence in
+tee_unregister
+ - unregister all sysfs and char dev registrations.
+ - Write lock ops and set to null. This will error future cdev ioctls,
+   and guarentees no driver ops callbacks are in progress, or will be
+   started in future.
+ - Wait until all client accesses to shared memory are
+   released.
+ - Command the driver to release it's side of the
+   shared memory and wait for that to complete
+ - Free the shared memory
+ - deref the tee_device's struct device (match ref in tee_register)
+
+Then in your struct tee_device's release function free the tee_device
+memory.
+
+Replace all the module locking code with an active count in struct
+tee_device (see something like kernfs_drain for an example).
+
+> * Change to use the pattern (with a struct device etc) as described
+>   above.
+
+Yes, I think Greg confirmed you need to use a struct device, and purge
+misc_device from the mid layer.
+
+>   I can't protect the ops with just a mutex since tee_ioctl_cmd() needs to
+>   be multithreaded.
+
+Then use a sleeping read/write lock - aka an active count.
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
