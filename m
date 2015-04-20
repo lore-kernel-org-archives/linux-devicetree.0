@@ -1,42 +1,128 @@
-From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power amplifiers
-Date: Mon, 20 Apr 2015 08:12:36 -0700
-Message-ID: <CAJzqFtY3-jYTS-NmAE4UtsD+VXZHBUJUVuVQ=X4htB1akCThMg@mail.gmail.com>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org> <20150418113632.GE26185@sirena.org.uk>
- <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
- <20150418171137.GY26185@sirena.org.uk> <CAJzqFtZ97FjzDpgbSJbCkqNGnQx_QiGrzY1v1zV+croAL6_=qw@mail.gmail.com>
- <20150420122129.GC14892@sirena.org.uk>
+From: Andrew <andrew@ncrmnt.org>
+Subject: Re: Fwd: Re: [PATCH 2/2] ARM: mvebu: dts: Add dts file for DLink  DNS-327L
+Date: Mon, 20 Apr 2015 18:15:46 +0300
+Message-ID: <d28764ea5d0d5f4c2e5d3e9ca1d7217a@mail.ncrmnt.org>
+References: <b6534b962d2cf9d21cb72d43f19a6574@mail.ncrmnt.org>
+ <552A6209.9040903@gmail.com>
+ <cd7445f789f1082f464d464f77807f12@mail.ncrmnt.org>
+ <20150412145857.GA14038@lunn.ch>
+ <b172d775afa24cea69a9490f531c6b37@mail.ncrmnt.org>
+ <20150412194735.GA27921@lunn.ch> <552BCFAA.2020109@free-electrons.com>
+ <1ec8906f00468ca5a9fa227f8c83fe69@mail.ncrmnt.org>
+ <55351569.7000307@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150420122129.GC14892-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55351569.7000307@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 5:21 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Apr 18, 2015 at 01:07:07PM -0700, Kevin Cernekee wrote:
->> On Sat, Apr 18, 2015 at 10:11 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->> > Someone trying to use the atmel_wm8904 driver with something other than
->> > a wm8904 shouldn't really be expecting a good experince...
->
->> The same check shows up in numerous other drivers, including the one
->> for the audio controller on my board.
->
-> Sounds like either that (undisclosed) driver has a problem or you're
-> using it inappropriately.
+Gregory CLEMENT =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 20.04.2015 18:04:
+> Hi Andrew,
+>=20
+> On 13/04/2015 16:32, Andrew wrote:
+>> Gregory CLEMENT =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 13.04.2015 17:16:
+>>> Hi Andrew(s),
+>>>=20
+>>> On 12/04/2015 21:47, Andrew Lunn wrote:
+>>>> On Sun, Apr 12, 2015 at 06:41:31PM +0300, Andrew wrote:
+>>>>> Andrew Lunn ?????????? 12.04.2015 17:58:
+>>>>>>> Okay, got it.
+>>>>>>> I'll file a bug about this issue to the the bugzilla. However
+>>>>>>> something
+>>>>>>> tells me it might not be cpuidle, but D-link. This one's sounds
+>>>>>>> nasty
+>>>>>>> and it has been around since 3.16.x. How could it go unnoticed?
+>>>>>>> Unfortunately I have no other armada-370 hardware to test it.
+>>>>>>=20
+>>>>>> Hi Andrew
+>>>>>>=20
+>>>>>> A few of us here do have hardware to test with. Please give a
+>>>>>> detailed
+>>>>>> description of how you reproduce the issue, and your kernel
+>>>>>> configuration, if different from mvebu_v7_defconfig, or
+>>>>>> multi_v7_defconfig.
+>>>>>>=20
+>>>>>> 	Thanks
+>>>>>> 		Andrew
+>>>>>=20
+>>>>>=20
+>>>>> arch/arm/configs/mvebu_v7_defconfig has
+>>>>> CONFIG_ARM_MVEBU_V7_CPUIDLE=3Dy,
+>>>>> so it should be sufficient to reproduce the issue. I first
+>>>>> encountered
+>>>>> this issue using that very config and observed it on 2 DNS-327L=20
+>>>>> boxes
+>>>>> I
+>>>>> own.
+>>>>>=20
+>>>>> All I have to do to trigger the bug - enable cpuidle driver and l=
+et
+>>>>> the box
+>>>>> sit for some 4-12 hours, till it hard-freezes. If wdt is enabled =
+-
+>>>>> wdt reboot
+>>>>> will happen.
+>>>>=20
+>>>> That simple! Well i've got a 370RD which has been sat mostly idle=20
+>>>> for
+>>>> weeks, using the mvebu_v7_defconfig, with a few addition things=20
+>>>> turned
+>>>> on for testing the Ethernet switch on the board. I've not had that
+>>>> lockup.
+>>>>=20
+>>>> One thing you can try to narrow it down is the disable the second=20
+>>>> idle
+>>>> mode. Take a look at armada370_idle_driver. Keep the
+>>>> ARM_CPUIDLE_WFI_STATE but disable the "Deep Idle" state.
+>>>=20
+>>> Actually you don't have to modify the kernel you can setup the CPU=20
+>>> idle
+>>> level
+>>> you want at runtime:
+>>>=20
+>>> echo 1 > /sys/devices/system/cpu/cpu0/cpuidle/state1/disable
+>>>=20
+>>> will disable the state1. By doing this on Armada 370 then you
+>>> will only use the WFI state.
+>>>=20
+>>> Do you still have this issue on v4.0-rc7?
+>>=20
+>> Yep, I can confirm having this issue on 4.0-rc7. I will only be able=
+=20
+>> to
+>> test if
+>> disabling state1 fixes it the next weekend.
+>=20
+> Did you manage to do some test this week-end?
+>=20
+> Thanks,
+>=20
+> Gregory
+>=20
+>=20
+>>=20
+>>>=20
+>>> Thanks,
+>>>=20
+>>> Gregory
+>>>=20
+>>>=20
+>>>=20
+>>>>=20
+>>>>       Andrew
+>>>>=20
+>>=20
 
-I don't think this driver has been posted on the list yet, but the
-checks show up in these two functions:
+Sorry, I've been away for the weekend but managed to take the
+hardware home on my way back. I'll rig it for a long test today
+in the evening. Expect some test results somewhere around Wednesday.
+(Guess it doesn't count unless it's stable for 24+ hours).
 
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/sound/soc/img/concerto-audio.c#108
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/sound/soc/img/concerto-audio.c#147
-
-Any suggestions on what to change?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Regards,
+Andrew
