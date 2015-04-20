@@ -1,68 +1,86 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH] dmaengine: imx-sdma: Add DMA event remapping for
- imx6sx-sdma
-Date: Mon, 20 Apr 2015 10:34:33 -0700
-Message-ID: <20150420173433.GA6920@Asurada>
-References: <1429076351-4429-1-git-send-email-nicoleotsuka@gmail.com>
- <20150420094541.GL6325@pengutronix.de>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH RESEND v6 1/2] leds: tlc591xx: Document binding for the TI
+ 8/16 Channel i2c LED driver
+Date: Mon, 20 Apr 2015 10:46:50 -0700
+Message-ID: <CAK5ve-KJudsMQrJjQaqQmehk0tOeQF6j6Cfc0bBECwXX19YRNg@mail.gmail.com>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+ <1426630107-25057-2-git-send-email-andrew@lunn.ch> <5534FA6D.4000009@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150420094541.GL6325@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: vinod.koul@intel.com, fabio.estevam@freescale.com, b38343@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <5534FA6D.4000009@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+On Mon, Apr 20, 2015 at 6:09 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> On 03/17/2015 11:08 PM, Andrew Lunn wrote:
+>>
+>> Document the binding for the TLC591xx LED driver.
+>>
+>> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+>> Tested-by: Imre Kaloz <kaloz@openwrt.org>
+>> Cc: Matthew.Fatheree@belkin.com
+>> ---
+>>   .../devicetree/bindings/leds/leds-tlc591xx.txt     | 40
+>> ++++++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+>> b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+>> new file mode 100644
+>> index 000000000000..3bbbf7024411
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+>> @@ -0,0 +1,40 @@
+>> +LEDs connected to tlc59116 or tlc59108
+>> +
+>> +Required properties
+>> +- compatible: should be "ti,tlc59116" or "ti,tlc59108"
+>> +- #address-cells: must be 1
+>> +- #size-cells: must be 0
+>> +- reg: typically 0x68
+>> +
+>> +Each led is represented as a sub-node of the ti,tlc59116.
+>> +See Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +LED sub-node properties:
+>> +- reg: number of LED line, 0 to 15 or 0 to 7
+>> +- label: (optional) name of LED
+>> +- linux,default-trigger : (optional)
+>> +
+>> +Examples:
+>> +
+>> +tlc59116@68 {
+>> +       #address-cells = <1>;
+>> +       #size-cells = <0>;
+>> +       compatible = "ti,tlc59116";
+>> +       reg = <0x68>;
+>> +
+>> +       wan@0 {
+>> +               label = "wrt1900ac:amber:wan";
+>> +               reg = <0x0>;
+>> +       };
+>> +
+>> +       2g@2 {
+>> +               label = "wrt1900ac:white:2g";
+>> +               reg = <0x2>;
+>> +       };
+>> +
+>> +       alive@9 {
+>> +               label = "wrt1900ac:green:alive";
+>> +               reg = <0x9>;
+>> +               linux,default_trigger = "heartbeat";
+>> +       };
+>> +};
+>>
+>
+> Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>
 
-Thank you for the comments.
-
-On Mon, Apr 20, 2015 at 11:45:41AM +0200, Sascha Hauer wrote:
-> On Tue, Apr 14, 2015 at 10:39:11PM -0700, Nicolin Chen wrote:
-> > The SDMA on imx6sx has a few DMA event remapping configurations
-> > inside the GPR (General Purpose Register) of that SoC. When users
-> > want to use a non-default DMA event, they need to configure the
-> > GPR register. So this patch gives an interface of the GPR and
-> > implements it in the SDMA driver so as to finish the DMA event
-> > remapping.
-> > 
-> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-> > diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> > index dc8d3aa..03315a6 100644
-> > --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> > @@ -8,6 +8,7 @@ Required properties:
-> >        "fsl,imx51-sdma"
-> >        "fsl,imx53-sdma"
-> >        "fsl,imx6q-sdma"
-> > +      "fsl,imx6sx-sdma"
-> >    The -to variants should be preferred since they allow to determine the
-> >    correct ROM script addresses needed for the driver to work without additional
-> >    firmware.
-> > @@ -19,6 +20,14 @@ Required properties:
-> >  - fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
-> >    scripts firmware
-> >  
-> > +Optional properties:
-> > +- fsl, sdma-event-remap : List of one or more DMA event remapping
-> > +  configurations. Its format: <&gpr addr shift val>
-> > +	gpr : the gpr phandle
-> > +	addr : the register address of the GPR
-> > +	shift : the bit shift of the GPR register
-> > +	val : the value of that bit
-> 
-> This binding allows arbitrary register writes to the GPR register space.
-> I don't think we want to allow that. A binding for this if necessary at
-> all must be higher level.
-
-I was actually wondering where could be the best place to put this in.
-But I couldn't figure out a better place than this driver while being
-worried about the violation as you mentioned.
-
-But what could be that higher level?
-
-Thank you
-Nicolin
+Merged into my tree.
+-Bryan
