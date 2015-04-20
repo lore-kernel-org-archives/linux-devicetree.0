@@ -1,185 +1,56 @@
 From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH v2 2/7] ARM: dts: qcom: Add PM8941 functions device nodes
-Date: Mon, 20 Apr 2015 10:45:36 +0300
-Message-ID: <1429515941-15334-3-git-send-email-ivan.ivanov@linaro.org>
-References: <1429515941-15334-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1429515941-15334-1-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH v2 0/7] ARM: dts: qcom: Add more device coniguration nodes
+Date: Mon, 20 Apr 2015 10:45:34 +0300
+Message-ID: <1429515941-15334-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add configuration nodes for following devices:
+Recent Qualcomm PMIC's devices are accessed over SPMI bus.
+Every PMIC has several "sub-function" devices inside.
 
-* GPIO block, with 36 pins
-* MPP block, with 8 pins
-* Current ADC (IADC)
-* Volatage ADC (VADC), with multiple inputs
-* Thermal sensor device, which is using on chip VADC
-  channel report PMIC die temperature
-* Power key device, which is responsible for clean system
-  reboot or shutdown
-* White LED device
-* RTC device
+First three patches are adding device nodes to PM8841, PM8941 and PMA8084 PMIC's.
+Next two are introducing PM8916 PMIC chip with its device nodes. The sixth one
+add restart device node for MSM8916 chip. And the last one add initial GPIO
+definitions for APQ8016 SBC board.
 
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
----
- arch/arm/boot/dts/qcom-pm8941.dtsi | 133 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 132 insertions(+), 1 deletion(-)
+checkpatch will complain about "appears un-documented" for several drivers,
+but I am expecting they to mergeed soon, hopefully during this merge window.
 
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index 24c5088..aa774e6 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -1,3 +1,5 @@
-+#include <dt-bindings/iio/qcom,spmi-vadc.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
+Changes since v0 [2]:
 
- &spmi_bus {
-@@ -7,12 +9,141 @@
- 		reg = <0x0 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+
-+		rtc@6000 {
-+			compatible = "qcom,pm8941-rtc";
-+			reg = <0x6000 0x100>,
-+			      <0x6100 0x100>;
-+			reg-names = "rtc", "alarm";
-+			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-+		};
-+
-+		pwrkey@800 {
-+			compatible = "qcom,pm8941-pwrkey";
-+			reg = <0x800 0x100>;
-+			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-+			debounce = <15625>;
-+			bias-pull-up;
-+		};
-+
-+		pm8941_gpios: gpios@c000 {
-+			compatible = "qcom,pm8941-gpio";
-+			reg = <0xc000 0x2400>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
-+				     <0 0xc1 0 IRQ_TYPE_NONE>,
-+				     <0 0xc2 0 IRQ_TYPE_NONE>,
-+				     <0 0xc3 0 IRQ_TYPE_NONE>,
-+				     <0 0xc4 0 IRQ_TYPE_NONE>,
-+				     <0 0xc5 0 IRQ_TYPE_NONE>,
-+				     <0 0xc6 0 IRQ_TYPE_NONE>,
-+				     <0 0xc7 0 IRQ_TYPE_NONE>,
-+				     <0 0xc8 0 IRQ_TYPE_NONE>,
-+				     <0 0xc9 0 IRQ_TYPE_NONE>,
-+				     <0 0xca 0 IRQ_TYPE_NONE>,
-+				     <0 0xcb 0 IRQ_TYPE_NONE>,
-+				     <0 0xcc 0 IRQ_TYPE_NONE>,
-+				     <0 0xcd 0 IRQ_TYPE_NONE>,
-+				     <0 0xce 0 IRQ_TYPE_NONE>,
-+				     <0 0xcf 0 IRQ_TYPE_NONE>,
-+				     <0 0xd0 0 IRQ_TYPE_NONE>,
-+				     <0 0xd1 0 IRQ_TYPE_NONE>,
-+				     <0 0xd2 0 IRQ_TYPE_NONE>,
-+				     <0 0xd3 0 IRQ_TYPE_NONE>,
-+				     <0 0xd4 0 IRQ_TYPE_NONE>,
-+				     <0 0xd5 0 IRQ_TYPE_NONE>,
-+				     <0 0xd6 0 IRQ_TYPE_NONE>,
-+				     <0 0xd7 0 IRQ_TYPE_NONE>,
-+				     <0 0xd8 0 IRQ_TYPE_NONE>,
-+				     <0 0xd9 0 IRQ_TYPE_NONE>,
-+				     <0 0xda 0 IRQ_TYPE_NONE>,
-+				     <0 0xdb 0 IRQ_TYPE_NONE>,
-+				     <0 0xdc 0 IRQ_TYPE_NONE>,
-+				     <0 0xdd 0 IRQ_TYPE_NONE>,
-+				     <0 0xde 0 IRQ_TYPE_NONE>,
-+				     <0 0xdf 0 IRQ_TYPE_NONE>,
-+				     <0 0xe0 0 IRQ_TYPE_NONE>,
-+				     <0 0xe1 0 IRQ_TYPE_NONE>,
-+				     <0 0xe2 0 IRQ_TYPE_NONE>,
-+				     <0 0xe3 0 IRQ_TYPE_NONE>;
-+		};
-+
-+		pm8941_mpps: mpps@a000 {
-+			compatible = "qcom,pm8941-mpp";
-+			reg = <0xa000 0x800>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <0 0xa0 0 IRQ_TYPE_NONE>,
-+				     <0 0xa1 0 IRQ_TYPE_NONE>,
-+				     <0 0xa2 0 IRQ_TYPE_NONE>,
-+				     <0 0xa3 0 IRQ_TYPE_NONE>,
-+				     <0 0xa4 0 IRQ_TYPE_NONE>,
-+				     <0 0xa5 0 IRQ_TYPE_NONE>,
-+				     <0 0xa6 0 IRQ_TYPE_NONE>,
-+				     <0 0xa7 0 IRQ_TYPE_NONE>;
-+		};
-+
-+		pm8941_temp: temp-alarm@2400 {
-+			compatible = "qcom,spmi-temp-alarm";
-+			reg = <0x2400 0x100>;
-+			interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
-+			io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
-+			io-channel-names = "thermal";
-+			#thermal-sensor-cells = <0>;
-+		};
-+
-+		pm8941_vadc: vadc@3100 {
-+			compatible = "qcom,spmi-vadc";
-+			reg = <0x3100 0x100>;
-+			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#io-channel-cells = <1>;
-+
-+			die_temp {
-+				reg = <VADC_DIE_TEMP>;
-+			};
-+			ref_625mv {
-+				reg = <VADC_REF_625MV>;
-+			};
-+			ref_1250v {
-+				reg = <VADC_REF_1250MV>;
-+			};
-+			ref_gnd {
-+				reg = <VADC_GND_REF>;
-+			};
-+			ref_vdd {
-+				reg = <VADC_VDD_VADC>;
-+			};
-+		};
-+
-+		pm8941_iadc: iadc@3600 {
-+			compatible = "qcom,pm8941-iadc", "qcom,spmi-iadc";
-+			reg = <0x3600 0x100>,
-+				  <0x12f1 0x1>;
-+			interrupts = <0x0 0x36 0x0 IRQ_TYPE_EDGE_RISING>;
-+			qcom,external-resistor-micro-ohms = <10000>;
-+		};
- 	};
+* Add proper IRQ_TYPE_* specifiers in the interrupt bidings.
 
- 	usid1: pm8941@1 {
--		compatible ="qcom,spmi-pmic";
-+		compatible = "qcom,spmi-pmic";
- 		reg = <0x1 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+
-+		wled@d800 {
-+			compatible = "qcom,pm8941-wled";
-+			reg = <0xd800 0x100>;
-+			label = "backlight";
-+
-+			qcom,cs-out;
-+			qcom,current-limit = <20>;
-+			qcom,current-boost-limit = <805>;
-+			qcom,switching-freq = <1600>;
-+			qcom,ovp = <29>;
-+			qcom,num-strings = <2>;
-+		};
- 	};
- };
+Patches are created top of Kumar's kernel tree and tags/qcom-dt-for-4.1 [1].
+
+[1] https://lkml.org/lkml/2015/3/27/599
+[2] http://comments.gmane.org/gmane.linux.ports.arm.msm/12610
+
+Ivan T. Ivanov (7):
+  ARM: dts: qcom: Add PM8841 functions device nodes
+  ARM: dts: qcom: Add PM8941 functions device nodes
+  ARM: dts: qcom: Add PMA8084 functions device nodes
+  arm64: dts: qcom: Add SPMI PMIC Arbiter node for MSM8916
+  arm64: dts: qcom: Add 8x16 chipset SPMI PMIC's nodes
+  arm64: dts: qcom: Add MSM8916 restart device node
+  arm64: dts: qcom: Add initial set of PMIC and SoC pins for APQ8016 SBC
+    board
+
+ arch/arm/boot/dts/qcom-pm8841.dtsi                 |  18 +++
+ arch/arm/boot/dts/qcom-pm8941.dtsi                 | 133 ++++++++++++++++++++-
+ arch/arm/boot/dts/qcom-pma8084.dtsi                |  92 ++++++++++++++
+ .../arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi |  30 +++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi |  21 ++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          |   3 +
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi          |   1 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  25 +++-
+ arch/arm64/boot/dts/qcom/pm8916.dtsi               |  99 +++++++++++++++
+ 9 files changed, 420 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8916.dtsi
+
 --
 1.9.1
