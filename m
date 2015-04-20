@@ -1,50 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3] regulator: max8973: get rid of extra variable for
- gpio validity
-Date: Mon, 20 Apr 2015 16:06:05 +0100
-Message-ID: <20150420150605.GN6023@sirena.org.uk>
-References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com>
- <1429534457-15515-2-git-send-email-ldewangan@nvidia.com>
+From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power amplifiers
+Date: Mon, 20 Apr 2015 08:12:36 -0700
+Message-ID: <CAJzqFtY3-jYTS-NmAE4UtsD+VXZHBUJUVuVQ=X4htB1akCThMg@mail.gmail.com>
+References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
+ <1429134141-17924-2-git-send-email-cernekee@chromium.org> <20150418113632.GE26185@sirena.org.uk>
+ <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
+ <20150418171137.GY26185@sirena.org.uk> <CAJzqFtZ97FjzDpgbSJbCkqNGnQx_QiGrzY1v1zV+croAL6_=qw@mail.gmail.com>
+ <20150420122129.GC14892@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="q/1MAkI9S5Mtv7sU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1429534457-15515-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150420122129.GC14892-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 20, 2015 at 5:21 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Apr 18, 2015 at 01:07:07PM -0700, Kevin Cernekee wrote:
+>> On Sat, Apr 18, 2015 at 10:11 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+>> > Someone trying to use the atmel_wm8904 driver with something other than
+>> > a wm8904 shouldn't really be expecting a good experince...
+>
+>> The same check shows up in numerous other drivers, including the one
+>> for the audio controller on my board.
+>
+> Sounds like either that (undisclosed) driver has a problem or you're
+> using it inappropriately.
 
---q/1MAkI9S5Mtv7sU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't think this driver has been posted on the list yet, but the
+checks show up in these two functions:
 
-On Mon, Apr 20, 2015 at 06:24:15PM +0530, Laxman Dewangan wrote:
-> To find that dvs-gpio is valid or not, gpio API gpio_is_valid()
-> can be directly used instead of intermediate variable.
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/sound/soc/img/concerto-audio.c#108
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/sound/soc/img/concerto-audio.c#147
 
-> Removing the extra variable and using the gpio_is_valid().
-
-This still looks like it's got the same issue with not doing the right
-thing with platform data that uses zero as a default which is the point
-in having a flag like this.
-
---q/1MAkI9S5Mtv7sU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVNRXcAAoJECTWi3JdVIfQq+0H/3kfB1L1y2Tmy4CGeTpy2OHq
-MZLzDAyujZ6lWG3m+r3u3D2Ib2Y4r8H0Oq6P+jrTm6bUsrjga2EtAn0jnrGjvmsg
-olpOWGeo8C70OM3H8L0jkKRdOXx+IyA6Dm8GxRcxXPJcxR3+XUAKYJamYpfK2ExS
-cShx+CmuCbWcDFQout8jXQFzUE111PIMkt/GkxI/Y2XItIow2cqymvWQ7RCC5Igx
-ym8kUIDpYHUb/UTcAMd2/lFgGEND58BJHMy5H3FZZPJOBQiFwz5KU/UhDTuEkl5Q
-mA3R45EpvxYdU9fJJEO4U7Koq/HuAHuPWQ7yJeb4TIf9pYpnJ9lgl+C5w0AWmfs=
-=/SoK
------END PGP SIGNATURE-----
-
---q/1MAkI9S5Mtv7sU--
+Any suggestions on what to change?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
