@@ -1,77 +1,45 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH v4 08/11] ARM: imx: add gpt system timer support for imx7d
-Date: Tue, 21 Apr 2015 09:17:02 -0500
-Message-ID: <CAHrpEqT548H7kkpiCLa_VrWjHaoR5x2_6V-L1S_gWX49=aZK1Q@mail.gmail.com>
-References: <1429563933-3129-1-git-send-email-Frank.Li@freescale.com>
-	<1429563933-3129-9-git-send-email-Frank.Li@freescale.com>
-	<20150421100240.GR12732@n2100.arm.linux.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 13/14] of: Add vendor prefix for TP-Link Technologies Co. Ltd
+Date: Tue, 21 Apr 2015 09:26:34 -0500
+Message-ID: <CAL_JsqJJnkMH7Tk6TxvtESEJisCeUVxcSPc7d8W-_AnLvZYfuw@mail.gmail.com>
+References: <1429280669-2986-1-git-send-email-albeu@free.fr>
+ <1429373607-9226-1-git-send-email-albeu@free.fr> <1429373607-9226-2-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150421100240.GR12732@n2100.arm.linux.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, linux-gpio@vger.kernel.org, Anson Huang <b20788@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429373607-9226-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 5:02 AM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Tue, Apr 21, 2015 at 05:05:30AM +0800, Frank.Li@freescale.com wrote:
->> From: Frank Li <Frank.Li@freescale.com>
->>
->> Add GPT system timer support for i.MX7D, it has same hardware
->> as i.MX6DL.
->>
->> Signed-off-by: Frank Li <Frank.Li@freescale.com>
->> Signed-off-by: Anson Huang <b20788@freescale.com>
->> ---
->>  arch/arm/mach-imx/time.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
->> index 15d18e1..7c1d8a3 100644
->> --- a/arch/arm/mach-imx/time.c
->> +++ b/arch/arm/mach-imx/time.c
->> @@ -321,7 +321,7 @@ static void __init _mxc_timer_init(int irq,
->>               tctl_val = V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
->>               if (clk_get_rate(clk_per) == V2_TIMER_RATE_OSC_DIV8) {
->>                       tctl_val |= V2_TCTL_CLK_OSC_DIV8;
->> -                     if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
->> +                     if (cpu_is_imx6dl() || cpu_is_imx6sx() || cpu_is_imx7d()) {
->>                               /* 24 / 8 = 3 MHz */
->>                               __raw_writel(7 << V2_TPRER_PRE24M,
->>                                       timer_base + MXC_TPRER);
->> @@ -383,3 +383,4 @@ CLOCKSOURCE_OF_DECLARE(mx53_timer, "fsl,imx53-gpt", mxc_timer_init_dt);
->>  CLOCKSOURCE_OF_DECLARE(mx6q_timer, "fsl,imx6q-gpt", mxc_timer_init_dt);
->>  CLOCKSOURCE_OF_DECLARE(mx6sl_timer, "fsl,imx6sl-gpt", mxc_timer_init_dt);
->>  CLOCKSOURCE_OF_DECLARE(mx6sx_timer, "fsl,imx6sx-gpt", mxc_timer_init_dt);
->> +CLOCKSOURCE_OF_DECLARE(mx7d_timer, "fsl,imx7d-gpt", mxc_timer_init_dt);
+On Sat, Apr 18, 2015 at 11:13 AM, Alban Bedel <albeu-GANU6spQydw@public.gmane.org> wrote:
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Hmm, this suggests to me that something is very wrong here, especially
-> those cpu_is_imx*() things.
->
-> Several questions crop up:
->
-> * Shouldn't the code be split between a timer v1 and timer v2 driver,
->   and the appropriate one be selected via the DT compatible?
->
-> * Shouldn't the clock source for the v2 timer be determined from DT?
->   (It looks to me like the v2 timer can be clocked by the perclk or
->   by a 24MHz clock with a built-in prescaler.)
->
-> * Shouldn't the prescaler for the timer be calculated in the driver and
->   the associated divisor automatically set, or specified via DT?
->
-> Had these been fixed, you probably wouldn't need to modify the driver to
-> add iMX7 support here - which is really what DT is supposed to be about.
->
-> I'm not expecting you to fix them - but it would be good to get this
-> properly sorted out so that when iMX8 comes along, the same process
-> doesn't happen again.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index b13aa55..9e965b6 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -185,6 +185,7 @@ tbs TBS Technologies
+>  thine  THine Electronics, Inc.
+>  ti     Texas Instruments
+>  tlm    Trusted Logic Mobility
+> +tplink TP-LINK Technologies Co., Ltd.
 
-Thank you for your suggestion. I will do that after this patches.
+Alphabetical order please.
 
->
+Rob
+
+>  toradex        Toradex AG
+>  toshiba        Toshiba Corporation
+>  toumaz Toumaz
 > --
-> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-> according to speedtest.net.
+> 2.0.0
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
