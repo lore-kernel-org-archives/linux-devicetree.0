@@ -1,51 +1,31 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH 2/8] ASoC: arizona: add defines for
-	single-input gain control
-Date: Tue, 21 Apr 2015 13:33:50 +0100
-Message-ID: <1429619636-25478-3-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/3] regulator: max8973: make default/unset dvs gpio as
+ invalid gpio
+Date: Tue, 21 Apr 2015 18:45:24 +0530
+Message-ID: <55364D6C.4090702@nvidia.com>
+References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com> <1429534457-15515-3-git-send-email-ldewangan@nvidia.com> <20150420211514.GO14892@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150420211514.GO14892@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds convenience defines for declaring a gain control that
-has an input mux. These block are functionally equivalent to
-the existing mixer blocks but only have a single input.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
----
- sound/soc/codecs/arizona.h |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+On Tuesday 21 April 2015 02:45 AM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Mon, Apr 20, 2015 at 06:24:16PM +0530, Laxman Dewangan wrote:
+>> If platform data has dvs-gpio value 0 as default/unset then
+>> make this as invalid gpio so that function gpio_is_valid()
+>> can return false on this case.
+> OK, so this handles the problem with the first patch - it should have
+> been the first patch to help with review.
+>
+Yaah, I realized after reading your comment on patch 1 that I should 
+have on different sequence.
 
-diff --git a/sound/soc/codecs/arizona.h b/sound/soc/codecs/arizona.h
-index 11ff899..6559ca0 100644
---- a/sound/soc/codecs/arizona.h
-+++ b/sound/soc/codecs/arizona.h
-@@ -92,6 +92,11 @@ extern const unsigned int arizona_mixer_tlv[];
- extern const char *arizona_mixer_texts[ARIZONA_NUM_MIXER_INPUTS];
- extern int arizona_mixer_values[ARIZONA_NUM_MIXER_INPUTS];
- 
-+#define ARIZONA_GAINMUX_CONTROLS(name, base) \
-+	SOC_SINGLE_RANGE_TLV(name " Input Volume", base + 1,		\
-+			     ARIZONA_MIXER_VOL_SHIFT, 0x20, 0x50, 0,	\
-+			     arizona_mixer_tlv)
-+
- #define ARIZONA_MIXER_CONTROLS(name, base) \
- 	SOC_SINGLE_RANGE_TLV(name " Input 1 Volume", base + 1,		\
- 			     ARIZONA_MIXER_VOL_SHIFT, 0x20, 0x50, 0,	\
--- 
-1.7.2.5
+Thanks for accepting the patches.
