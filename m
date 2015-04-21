@@ -1,69 +1,106 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 10/37] devicetree: document Ingenic SoC interrupt controller
- binding
-Date: Tue, 21 Apr 2015 19:56:04 +0300
-Message-ID: <55368124.8020706@cogentembedded.com>
-References: <1429627624-30525-1-git-send-email-paul.burton@imgtec.com> <1429627624-30525-11-git-send-email-paul.burton@imgtec.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 05/11] ARM: dts: add imx7d soc dtsi file
+Date: Tue, 21 Apr 2015 18:28:34 +0100
+Message-ID: <20150421172834.GF10164@leverpostej>
+References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
+ <1429628007-8892-6-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429627624-30525-11-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1429628007-8892-6-git-send-email-Frank.Li@freescale.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Frank.Li@freescale.com" <Frank.Li@freescale.com>
+Cc: "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+> +/*
+> +               cpu1: cpu@1 {
+> +                       compatible = "arm,cortex-a7";
+> +                       device_type = "cpu";
+> +                       reg = <1>;
+> +               };
+> +*/
 
-On 04/21/2015 05:46 PM, Paul Burton wrote:
+Why have it commented out? If it's not available, leave it out entirely.
 
-> Add binding documentation for Ingenic SoC interrupt controllers.
+> +       intc: interrupt-controller@31001000 {
+> +               compatible = "arm,cortex-a7-gic";
+> +               #interrupt-cells = <3>;
+> +               interrupt-controller;
+> +               reg = <0x31001000 0x1000>,
+> +                     <0x31002000 0x100>;
+> +       };
 
-> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Changes in v3:
->    - Merge documentation for various Ingenic SoCs, which only differ by
->      their compatible strings.
+GICC should be larger than 0x100 bytes.
 
-> Changes in v2:
->    - None.
-> ---
->   .../bindings/interrupt-controller/ingenic,intc.txt | 25 ++++++++++++++++++++++
->   1 file changed, 25 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+What about GICH, GICV?
 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
-> new file mode 100644
-> index 0000000..5d652e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
-> @@ -0,0 +1,25 @@
-> +Ingenic SoC Interrupt Controller
+What state do CPUs enter the kernel?
+
 > +
-> +Required properties:
+> +       clocks {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
 > +
-> +- compatible : should be "ingenic,<socname>-intc". For example
-> +  "ingenic,jz4740-intc" or "ingenic,jz4780-intc".
-> +- reg : Specifies base physical address and size of the registers.
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
-> +- interrupt-parent : phandle of the CPU interrupt controller.
-> +- interrupts : Specifies the CPU interrupt the controller is connected to.
+> +               ckil: clock@0 {
+> +                       compatible = "fixed-clock";
+> +                       reg = <0>;
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <32768>;
+> +                       clock-output-names = "ckil";
+> +               };
 > +
-> +Example:
+> +               osc: clock@1 {
+> +                       compatible = "fixed-clock";
+> +                       reg = <1>;
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <24000000>;
+> +                       clock-output-names = "osc";
+> +               };
 > +
-> +intc: intc@10001000 {
+> +       };
 
-    The node should be named "interrupt-controller@10001000", according to the 
-epAPR standard.
+Get rid of the clocks container node, and put these under the root.
 
-WBR, Sergei
+> +
+> +       timer {
+> +               compatible = "arm,armv7-timer";
+> +               arm,cpu-registers-not-fw-configured;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This was bad enough the first time...
+
+> +               interrupts = <GIC_PPI 13
+> +                       (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                       <GIC_PPI 14
+> +                       (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+
+Two interrupts are missing.
+
+> +               interrupt-parent = <&intc>;
+> +               clock-frequency = <8000000>;
+
+Why isn't this programmed?
+
+> +       };
+> +
+> +       soc {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               compatible = "simple-bus";
+> +               interrupt-parent = <&intc>;
+> +               ranges;
+> +
+> +               pmu {
+> +                       compatible = "arm,cortex-a7-pmu";
+> +                       interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+> +                       status = "disabled";
+> +               };
+
+Move this under the root. It doesn't live on an SoC-specific bus.
+
+Why disabled?
+
+Thanks,
+Mark.
