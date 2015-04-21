@@ -1,36 +1,41 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 07/11] ARM: imx: add msl support for imx7d
-Date: Tue, 21 Apr 2015 18:31:10 +0100
-Message-ID: <20150421173110.GG10164@leverpostej>
-References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
- <1429628007-8892-8-git-send-email-Frank.Li@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1429628007-8892-8-git-send-email-Frank.Li@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Frank.Li@freescale.com" <Frank.Li@freescale.com>
-Cc: "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 1/9] dt-bindings: Add root properties for Raspberry Pi 2.
+Date: Tue, 21 Apr 2015 11:09:48 -0700
+Message-ID: <1429639796-2169-2-git-send-email-eric@anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429639796-2169-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +static void __init imx_ca7_smp_init_cpus(void)
-> +{
-> +       int i, ncores;
-> +       unsigned long val;
-> +
-> +       asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
-> +       ncores = ((val >> 24) & 0x3) + 1;
-> +       if (setup_max_cpus < ncores)
-> +               ncores = (setup_max_cpus) ? setup_max_cpus : 1;
-> +
-> +       for (i = ncores; i < NR_CPUS; i++)
-> +               set_cpu_possible(i, false);
-> +}
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/bcm2836.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm2836.txt
 
-NAK.
+diff --git a/Documentation/devicetree/bindings/arm/bcm2836.txt b/Documentation/devicetree/bindings/arm/bcm2836.txt
+new file mode 100644
+index 0000000..5e255ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm2836.txt
+@@ -0,0 +1,10 @@
++Broadcom BCM2836 device tree bindings
++-------------------------------------------
++
++Raspberry Pi 2 Model B
++Required root node properties:
++compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
++
++Generic BCM2836 board
++Required root node properties:
++compatible = "brcm,bcm2836";
+-- 
+2.1.4
 
-The set of available CPUs should come from the DT, as with other
-platforms.
-
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
