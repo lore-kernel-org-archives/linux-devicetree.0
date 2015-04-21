@@ -1,102 +1,106 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
-Date: Tue, 21 Apr 2015 16:02:19 -0700
-Message-ID: <87bnihhypw.fsf@eliezer.anholt.net>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <6559239.zHhRM8VZWD@wuerfel> <87oamh9q12.fsf@eliezer.anholt.net> <60195891.q3RtUhgfkn@wuerfel>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] thermal: allow creating hwmon for thermal zones on OF systems
+Date: Tue, 21 Apr 2015 18:13:12 -0500
+Message-ID: <CAL_Jsq+bvwnZMHfgxUVvCL05kBQP4VMQ_0NVQcD2XxZ86th46w@mail.gmail.com>
+References: <20150420222131.GA6077@dtor-ws> <CAL_Jsq+k4w_=eypwO_wot8BNboeG23CGe4SakNFjnecu+6NcRQ@mail.gmail.com>
+ <20150421210101.GA23820@dtor-glaptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <60195891.q3RtUhgfkn@wuerfel>
+In-Reply-To: <20150421210101.GA23820@dtor-glaptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
-
-> On Tuesday 21 April 2015 13:37:13 Eric Anholt wrote:
->> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
->>=20
->> > On Tuesday 21 April 2015 11:09:52 Eric Anholt wrote:
->> >> +static struct map_desc bcm2836_io_map __initdata =3D {
->> >> +       .virtual =3D BCM2835_PERIPH_VIRT,
->> >> +       .pfn =3D __phys_to_pfn(BCM2836_PERIPH_PHYS),
->> >> +       .length =3D BCM2835_PERIPH_SIZE,
->> >> +       .type =3D MT_DEVICE
->> >> +};
->> >> +
->> >>  static void __init bcm2835_map_io(void)
->> >>  {
->> >> -       iotable_init(&io_map, 1);
->> >> +       iotable_init(&bcm2835_io_map, 1);
->> >> +}
->> >> +
->> >> +static void __init bcm2836_map_io(void)
->> >> +{
->> >> +       iotable_init(&bcm2836_io_map, 1);
->> >>  }
->> >>=20
->> >
->> > Can you explain what this is needed for? Most platform ports don't
->> > do this any more.
->>=20
->> Nope, I can't!  I'm not sure what the bcm2835 side of it does, and I was
->> just replicating that for 2836.
->>=20
->> Should it be removed from 2835, too?
->>=20
+On Tue, Apr 21, 2015 at 4:01 PM, Dmitry Torokhov
+<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Apr 21, 2015 at 03:17:03PM -0500, Rob Herring wrote:
+>> On Mon, Apr 20, 2015 at 5:21 PM, Dmitry Torokhov
+>> <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > Current implementation forcibly suppresses creation of hwmon instances
+>> > for thermal zones defined in device tree data. Let's add a new property,
+>> > "linux,hwmon" to allow marking certain thermal zones as needing generic
+>> > hwmon interface.
+>>
+>> What is the decision process for deciding to add this property or not?
 >
-> Hard to know. Does anything reference BCM2835_PERIPH_VIRT? Does it work
-> if you remove it?
+> A platform may have dedicated hwmon device/driver already covering the thermal
+> sensor responsible for this thermal zone, in which case another hwmon instance
+> is not needed. If there isn't such driver then we may want to create standard
+> hwmon instance so that userspace tools can use standard interface to access the
+> readings.
 
-Well, that's clear enough. It dies early with:
+This sounds similar to the general problem we have of how to have 2
+drivers where one is preferred over another. Say a h/w block has 2
+compatible strings (one being a generic string perhaps) and different
+drivers for each compatible string.
 
-Uncompressing Linux... done, booting the kernel.
-[    0.000000] Booting Linux on physical CPU 0xf00
-[    0.000000] Initializing cgroup subsys cpu
-[    0.000000] Initializing cgroup subsys cpuacct
-[    0.000000] Linux version 4.0.0-rc1-v7+ (anholt@eliezer) (gcc version 4.=
-9.2 ( 4.9.2-10) ) #487 SMP PREEMPT Tue Apr 21 15:58:29 PDT 2015
-[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=3D10c=
-5387d
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instr=
-uction cache
-[    0.000000] Machine model: Raspberry Pi 2 Model B+
-[    0.000000] bootconsole [earlycon0] enabled
-[    0.000000] cma: Reserved 64 MiB at 0x37000000
-[    0.000000] Memory policy: Data cache writealloc
+The DT can't really know what drivers the kernel may or may not have,
+so I don't think the DT is the right place for this. You could have a
+compatible match list for hardware that doesn't have a driver and you
+want to use the standard/generic driver. That doesn't really solve the
+above problem, but does allow you to statically decide. Would
+something like that work for you?
 
-(hung)
+> Board code has hooks to support both options, but in case of DT we don't (hence
+> this patch).
 
-The only thing I see using this 0xf0000000 range is DEBUG_BCM2836's
-serial stuff, though.
+Yes, but that doesn't mean it gets moved to DT necessarily.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Rob
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVNtb7AAoJELXWKTbR/J7o7hIQALv0Iiii9xBM76Vu+Lxmy1rn
-QcJPIUV1o+iOqI77vQhwZlKQqqWcTmJERml6Hi5sfUK2M47+hvRU+AS3gaYXodBG
-ZgFLX7ru5dfu8MxE2wMUGIeTj7hGUJqOq6QmzJ7op921r1c04GzOghZwQAycdfkl
-T8Jz4jyPHDavOl3wl547e+yNmmoSlBYJanjhAfjXvTvxlOm+DGhu43wPkyMfCepL
-8PseppBPf7HP42bPFRFm3vz5WSE6lAlWaYHgz0jwQL31EfVR1l/co9UafNImBtqL
-/d6mYQPLeJ9Hj+mnvKzSN4aj8yMGmB0G1sZer4e+/ndd/vwKiIKayIbcgH8+GDtP
-hwoiUDWI5FY1jRYXWjShM4u+YBcpzGiXvNziDaY13uGsyWDgXto4+/Czt7Zgcwih
-wNP/hjehJaNVs7F7U39WpbmnOfiG4BH8PA83EmJtxrzuuvR9MjfkfnMhCC/eSIB+
-92LR3RvVOOQKSTu2dxdBzrUEcg4sYpxfc0Wv5U9G0dmPNgQPyRAsH2i2jjgjufCS
-lUjf4wq04BczEvl8qI0bOSk0Hs5RZ/0mSywRGR9aA2yumRdXDMuBgTuCw2PuKMVQ
-SrkPYG/D3y+3FTkdJByFoQNx/QwmbjIP4Epytqj0KdJNp6PDE0MWsqp6S3QUvnjl
-7SkwyEvCOBcFTxLdfczX
-=dpKd
------END PGP SIGNATURE-----
---=-=-=--
+>
+>>
+>>
+>> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/thermal/thermal.txt | 4 ++++
+>> >  drivers/thermal/of-thermal.c                          | 7 +++++--
+>> >  2 files changed, 9 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> > index 8a49362..0106f8f 100644
+>> > --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> > +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> > @@ -174,6 +174,10 @@ Optional property:
+>> >                         2000mW, while on a 10'' tablet is around
+>> >                         4500mW.
+>> >
+>> > +- linux,hwmon:         A boolean property that instructs Linux thermal core
+>> > +                       to create an instance of hwmon device representing
+>> > +                       this thermal zone.
+>> > +
+>> >  Note: The delay properties are bound to the maximum dT/dt (temperature
+>> >  derivative over time) in two situations for a thermal zone:
+>> >  (i)  - when passive cooling is activated (polling-delay-passive); and
+>> > diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+>> > index 9e8c614..7b7a70c 100644
+>> > --- a/drivers/thermal/of-thermal.c
+>> > +++ b/drivers/thermal/of-thermal.c
+>> > @@ -891,8 +891,11 @@ int __init of_parse_thermal_zones(void)
+>> >                         goto exit_free;
+>> >                 }
+>> >
+>> > -               /* No hwmon because there might be hwmon drivers registering */
+>> > -               tzp->no_hwmon = true;
+>> > +               /*
+>> > +                * Do not attach hwmon device unless explicitly requested,
+>> > +                * since there might be dedicated hwmon drivers registering.
+>> > +                */
+>> > +               tzp->no_hwmon = !of_property_read_bool(child, "linux,hwmon");
+>> >
+>> >                 if (!of_property_read_u32(child, "sustainable-power", &prop))
+>> >                         tzp->sustainable_power = prop;
+>> > --
+>> > 2.2.0.rc0.207.ga3a616c
+>> >
+>> >
+>> > --
+>> > Dmitry
+>
+> --
+> Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
