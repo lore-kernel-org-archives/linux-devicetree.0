@@ -1,59 +1,32 @@
-From: Rob Herring <robherring2@gmail.com>
+From: Zhi Li <lznuaa@gmail.com>
 Subject: Re: [PATCH v5 09/11] ARM: imx: add imx7d clk tree support
-Date: Tue, 21 Apr 2015 15:47:02 -0500
-Message-ID: <CAL_JsqLsLBxH+SKTeHV0c+WerXzD1u0KSYKUEFAoLiKKgLvn_g@mail.gmail.com>
+Date: Tue, 21 Apr 2015 15:51:04 -0500
+Message-ID: <CAHrpEqQLik0vqKVOxcTpo00A+bMyN-QgXyZxLPJUP04ewnseLg@mail.gmail.com>
 References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
- <1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
- <CAL_Jsq+V+q78e1QqtZJK2inCDv+rRjWnzcUgRKXComnJ2O3myg@mail.gmail.com> <CAHrpEqTNNn1=g6X9-iYDmWdLp58SOYWMerccy-BR++E7TU4M-Q@mail.gmail.com>
+	<1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
+	<CAL_Jsq+V+q78e1QqtZJK2inCDv+rRjWnzcUgRKXComnJ2O3myg@mail.gmail.com>
+	<CAHrpEqTNNn1=g6X9-iYDmWdLp58SOYWMerccy-BR++E7TU4M-Q@mail.gmail.com>
+	<CAL_JsqLsLBxH+SKTeHV0c+WerXzD1u0KSYKUEFAoLiKKgLvn_g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAHrpEqTNNn1=g6X9-iYDmWdLp58SOYWMerccy-BR++E7TU4M-Q@mail.gmail.com>
+In-Reply-To: <CAL_JsqLsLBxH+SKTeHV0c+WerXzD1u0KSYKUEFAoLiKKgLvn_g@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Zhi Li <lznuaa@gmail.com>
+To: Rob Herring <robherring2@gmail.com>
 Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, Adrian Alonso <aalonso@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 3:39 PM, Zhi Li <lznuaa@gmail.com> wrote:
-> On Tue, Apr 21, 2015 at 3:30 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On Tue, Apr 21, 2015 at 9:53 AM,  <Frank.Li@freescale.com> wrote:
->>> From: Frank Li <Frank.Li@freescale.com>
->>>
->>> Add i.MX7D clk tree support.
->>>
->>> Enable all clock to bring up imx7.
->>> Clock framework need be modified a little since imx7d
->>> change clock design. otherwise system will halt and block the
->>> other part upstream.
->>>
->>> All clock refine need wait for Dong Aisheng's patch
->>> clk: support clocks which requires parent clock on during operation
->>> Or other solution ready.
->>>
->>> Signed-off-by: Anson Huang <b20788@freescale.com>
->>> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
->>> Signed-off-by: Frank Li <Frank.Li@freescale.com>
->>> ---
->>>  arch/arm/mach-imx/clk-imx7d.c | 887 ++++++++++++++++++++++++++++++++++++++++++
->>>  arch/arm/mach-imx/clk-pllv3.c |  16 +-
->>>  arch/arm/mach-imx/clk.h       |   9 +
->>>  3 files changed, 911 insertions(+), 1 deletion(-)
->>>  create mode 100644 arch/arm/mach-imx/clk-imx7d.c
->>
->> Why is i.MX clock code not moved to drivers/clk?
 >
-> Guo Shawn:
->         what's plan clock code move to driver/clk?
+> If it was going in my tree, no. But it is not, so it is not my call.
+> However, I would not let you continue to add stuff if you have not
+> done the clean-up that has been done for almost every other modern
+> platform.
+
+Shawn:
+      What's your opinion?
+
+best regards
+Frank Li
+
 >
-> Rob:
->        It is not related i.mx7 bring up.
->        There are many upstream work depend on this.
->        we can work on code movement after that.
->        Are you okay?
-
-If it was going in my tree, no. But it is not, so it is not my call.
-However, I would not let you continue to add stuff if you have not
-done the clean-up that has been done for almost every other modern
-platform.
-
-Rob
+> Rob
