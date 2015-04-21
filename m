@@ -1,58 +1,43 @@
-From: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] arm64: Enable Hisilicon ARMv8 SoC family in Kconfig
- and defconfig
-Date: Tue, 21 Apr 2015 08:39:36 +0800
-Message-ID: <55359C48.4000503@huawei.com>
-References: <1428916660-25910-1-git-send-email-bintian.wang@huawei.com>	<1428916660-25910-2-git-send-email-bintian.wang@huawei.com> <7hvbgqfqv5.fsf@deeprootsystems.com>
+From: Koro Chen <koro.chen@mediatek.com>
+Subject: Re: [RESEND RFC PATCH 3/3] ASoC: mediatek: Add AFE platform driver
+Date: Tue, 21 Apr 2015 10:27:13 +0800
+Message-ID: <1429583233.14794.40.camel@mtksdaap41>
+References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
+	 <1428653649-38200-4-git-send-email-koro.chen@mediatek.com>
+	 <20150418175139.GG26185@sirena.org.uk>
+	 <1429510944.30743.36.camel@mtksdaap41>
+	 <20150420205511.GL14892@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7hvbgqfqv5.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, huxinwei@huawei.
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150420205511.GL14892@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.de, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, s.hauer@pengutronix.de, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Kevin,
+On Mon, 2015-04-20 at 21:55 +0100, Mark Brown wrote:
+> On Mon, Apr 20, 2015 at 02:22:24PM +0800, Koro Chen wrote:
+> > On Sat, 2015-04-18 at 18:51 +0100, Mark Brown wrote:
+> > > On Fri, Apr 10, 2015 at 04:14:09PM +0800, Koro Chen wrote:
+> 
+> > > Ah, so the SRAM is directly memory mappable.  Nice.  But we have a
+> > > limited amount of it so need to allocate it to a device somehow based on
+> > > some factor I guess?
+> 
+> > Yes, actually SRAM is only used for the main playback path (which is
+> > memif "DL1") to achieve low power in real use case. Maybe you think it's
+> > better to not describe this in the device tree, but to choose SRAM
+> > automatically if memif "DL1" is chosen?
+> 
+> Since it's directly memory mappable is there actually any cost in
+> latency terms from using the SRAM in low latency cases (or did I misread
+> what the code was doing there)?  If it can only be used with one
+> interface and there's no downside from using it...
+The SRAM size to be used is defined by params_buffer_bytes(params), not
+fixed (of course limited by the actual available SRAM size on HW), so
+the latency should be the same compared to a DRAM having the same size. 
 
-On 2015/4/21 5:10, Kevin Hilman wrote:
-> Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> writes:
->
->> This patch introduces ARCH_HISI to enable Hisilicon SoC family in
->> Kconfig and defconfig.
->>
->> Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->
-> [...]
->
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index be1f12a..36ebd9b 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -36,6 +36,7 @@ CONFIG_ARCH_MEDIATEK=y
->>   CONFIG_ARCH_THUNDER=y
->>   CONFIG_ARCH_VEXPRESS=y
->>   CONFIG_ARCH_XGENE=y
->> +CONFIG_ARCH_HISI=y
->
-> nit: please keep CONFIG_ARCH_* sorted alphabetically.
-Will fix in next version, thanks for helping review.
-
-BR,
-
-Bintian
->
-> Thanks,
->
-> Kevin
->
-> .
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The SRAM can be used by any memif, and that's why the plan was let DT
+make the decision.
