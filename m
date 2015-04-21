@@ -1,60 +1,72 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2 v2] of/platform: Use platform_device interface
-Date: Tue, 21 Apr 2015 15:13:33 -0500
-Message-ID: <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com>
-References: <1429604702-14157-1-git-send-email-ricardo.ribalda@gmail.com> <1429604702-14157-2-git-send-email-ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH] thermal: allow creating hwmon for thermal zones on OF systems
+Date: Tue, 21 Apr 2015 15:17:03 -0500
+Message-ID: <CAL_Jsq+k4w_=eypwO_wot8BNboeG23CGe4SakNFjnecu+6NcRQ@mail.gmail.com>
+References: <20150420222131.GA6077@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429604702-14157-2-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150420222131.GA6077@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 3:25 AM, Ricardo Ribalda Delgado
-<ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> of_platform_device_create_pdata() was using of_device_add() to create
-> the devices, but of_platform_device_destroy was using
-> of_platform_device_destroy().
->
-> of_device_add(), do not call insert_resource(), which initializes the
-> parent field of the resource structure, needed by release_resource(),
-> called by of_platform_device_destroy().
+On Mon, Apr 20, 2015 at 5:21 PM, Dmitry Torokhov
+<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Current implementation forcibly suppresses creation of hwmon instances
+> for thermal zones defined in device tree data. Let's add a new property,
+> "linux,hwmon" to allow marking certain thermal zones as needing generic
+> hwmon interface.
 
-This is because some DTs have overlapping resources and doing this
-would break things. If you look at the git history, this was fixed and
-then reverted by Grant.
+What is the decision process for deciding to add this property or not?
 
-Rob
 
-> This leads to a NULL pointer deference.
->
-> This patch, replaces of_device_add() with platform_device_data().
->
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/of/platform.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/thermal/thermal.txt | 4 ++++
+>  drivers/thermal/of-thermal.c                          | 7 +++++--
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index a01f57c..f011f57 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -183,8 +183,9 @@ static struct platform_device *of_platform_device_create_pdata(
->         dev->dev.bus = &platform_bus_type;
->         dev->dev.platform_data = platform_data;
->         of_dma_configure(&dev->dev, dev->dev.of_node);
-> +       dev->name = dev_name(&dev->dev);
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> index 8a49362..0106f8f 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> @@ -174,6 +174,10 @@ Optional property:
+>                         2000mW, while on a 10'' tablet is around
+>                         4500mW.
 >
-> -       if (of_device_add(dev) != 0) {
-> +       if (platform_device_add(dev) != 0) {
->                 of_dma_deconfigure(&dev->dev);
->                 platform_device_put(dev);
->                 goto err_clear_flag;
+> +- linux,hwmon:         A boolean property that instructs Linux thermal core
+> +                       to create an instance of hwmon device representing
+> +                       this thermal zone.
+> +
+>  Note: The delay properties are bound to the maximum dT/dt (temperature
+>  derivative over time) in two situations for a thermal zone:
+>  (i)  - when passive cooling is activated (polling-delay-passive); and
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index 9e8c614..7b7a70c 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -891,8 +891,11 @@ int __init of_parse_thermal_zones(void)
+>                         goto exit_free;
+>                 }
+>
+> -               /* No hwmon because there might be hwmon drivers registering */
+> -               tzp->no_hwmon = true;
+> +               /*
+> +                * Do not attach hwmon device unless explicitly requested,
+> +                * since there might be dedicated hwmon drivers registering.
+> +                */
+> +               tzp->no_hwmon = !of_property_read_bool(child, "linux,hwmon");
+>
+>                 if (!of_property_read_u32(child, "sustainable-power", &prop))
+>                         tzp->sustainable_power = prop;
 > --
-> 2.1.4
+> 2.2.0.rc0.207.ga3a616c
 >
+>
+> --
+> Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
