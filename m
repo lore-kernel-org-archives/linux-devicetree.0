@@ -1,57 +1,69 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] ARM: dts: UniPhier: add support for UniPhier SoCs
- and boards
-Date: Tue, 21 Apr 2015 16:23:12 +0900
-Message-ID: <CAK7LNAQoS4vbU_ZEsf=F8Sy8be8xn8N2taTVkEeJ3ROBQmar=g@mail.gmail.com>
-References: <1429285698-11829-1-git-send-email-yamada.masahiro@socionext.com>
-	<1429285698-11829-4-git-send-email-yamada.masahiro@socionext.com>
-	<2809229.iRV9NgGGKe@wuerfel>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v4 0/4] ARM: SoC: add a new platform,
+ UniPhier (arch/arm/mach-uniphier)
+Date: Tue, 21 Apr 2015 16:21:26 +0900
+Message-ID: <1429600890-26713-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2809229.iRV9NgGGKe@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+
+This is an initial series for supporting Socionext UniPhier SoCs,
+based on ARM Cortex-A9, mainly used for digital TVs, video recorders, etc.
 
 
-2015-04-18 0:56 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Saturday 18 April 2015 00:48:17 Masahiro Yamada wrote:
->> +
->> +               smp_syscon@59801208 {
->> +                       compatible = "socionext,uniphier-smp-reg", "syscon";
->> +                       reg = <0x59801208 0x4>;
->> +               };
->> +
->>
->
-> Using syscon here is a good idea, but please name the register area
-> according to what it is called in the data sheet, not according to how
-> it is used in Linux, and list all the registers that belong in this
-> device. It's quite possible that another driver needs a second
-> register from the same syscon.
->
-> E.g. if there is a device called a foo controller, make this device
->
->         foo-controller@0x59800000 {
->                 compatible = "socionext,uniphier-foo-controller", "syscon";
->                 reg = <0x59800000 0x4000>;
->         };
->
-> then hardcode the 0x1208 offset in the smp code, or add it as an
-> argument to the property containing the phandle.
->
 
-OK, I updated this part in v4.
+Masahiro Yamada (4):
+  ARM: UniPhier: add basic support for UniPhier architecture
+  ARM: multi_v7_defconfig: enable UniPhier SoC family
+  ARM: dts: UniPhier: add support for UniPhier SoCs and boards
+  MAINTAINERS: add myself as ARM/UniPhier maintainer
 
+ MAINTAINERS                                  |   7 ++
+ arch/arm/Kconfig                             |   2 +
+ arch/arm/Makefile                            |   1 +
+ arch/arm/boot/dts/Makefile                   |   5 ++
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts   |  79 ++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi      | 111 +++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts  |  79 ++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi     | 118 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts  |  80 ++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi     | 118 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts  |  79 ++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi     | 111 +++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-support-card.dtsi |  66 +++++++++++++++
+ arch/arm/configs/multi_v7_defconfig          |   1 +
+ arch/arm/mach-uniphier/Kconfig               |  11 +++
+ arch/arm/mach-uniphier/Makefile              |   2 +
+ arch/arm/mach-uniphier/platsmp.c             |  85 +++++++++++++++++++
+ arch/arm/mach-uniphier/uniphier.c            |  30 +++++++
+ 18 files changed, 985 insertions(+)
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+ create mode 100644 arch/arm/boot/dts/uniphier-support-card.dtsi
+ create mode 100644 arch/arm/mach-uniphier/Kconfig
+ create mode 100644 arch/arm/mach-uniphier/Makefile
+ create mode 100644 arch/arm/mach-uniphier/platsmp.c
+ create mode 100644 arch/arm/mach-uniphier/uniphier.c
 
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
