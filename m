@@ -1,70 +1,34 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 7/9] ARM: Add Kconfig support for bcm2836.
-Date: Tue, 21 Apr 2015 20:59:05 +0200
-Message-ID: <13864545.foFMzEn7Xk@wuerfel>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <1429639796-2169-8-git-send-email-eric@anholt.net>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 1/2] ARM: socfpga: dts: Add multicast bins and unicast
+ filter entries
+Date: Tue, 21 Apr 2015 14:28:28 -0500
+Message-ID: <5536A4DC.6000404@opensource.altera.com>
+References: <1429547068-12501-1-git-send-email-vbridger@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429639796-2169-8-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429547068-12501-1-git-send-email-vbridger@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vince Bridgers <vbridger@opensource.altera.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+Cc: vbridger@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 April 2015 11:09:54 Eric Anholt wrote:
-> @@ -116,17 +122,19 @@ config ARCH_BCM283X
->  config ARCH_BCM2835
->         bool "Broadcom BCM2835 family" if ARCH_MULTI_V6
->         select ARCH_BCM283X
-> -       select ARCH_REQUIRE_GPIOLIB
-> -       select ARM_AMBA
->         select ARM_ERRATA_411920
->         select ARM_TIMER_SP804
-> -       select CLKSRC_OF
-> -       select PINCTRL
-> -       select PINCTRL_BCM2835
->         help
->           This enables support for the Broadcom BCM2835 SoC. This SoC is
->           used in the Raspberry Pi and Roku 2 devices.
->  
-> +config ARCH_BCM2836
-> +       bool "Broadcom BCM2836 family" if ARCH_MULTI_V7
-> +       select ARCH_BCM283X
-> +       help
-> +         This enables support for the Broadcom BCM2836 SoC. This SoC is
-> +         used in the Raspberry Pi 2
-> +
+On 04/20/2015 11:24 AM, Vince Bridgers wrote:
+> Add multicast-filter-bins and perfect-filter-entries configuration properties
+> to the socfpga devicetree for the Arria 10 socfpga.
+> 
+> Signed-off-by: Vince Bridgers <vbridger@opensource.altera.com>
+> ---
+> This patch is based on patches
+> http://www.spinics.net/lists/devicetree/msg75270.html
+> http://www.spinics.net/lists/devicetree/msg75273.html
+> ---
+>  arch/arm/boot/dts/socfpga_arria10.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-The description for the first one says "Broadcom BCM2835 family", and I
-guess they are both in the same family. How about leaving the
-CONFIG_BCM2835 symbol to mean one of them, and just duplicating the
-DEBUG_LL symbols?
+Both patches applied!
 
-You could do something like
-
-config ARCH_BCM2835
-        bool "Broadcom BCM2835 family" if ARCH_MULTI_V6 || ARCH_MULTI_V7
-        select ARCH_BCM283X
-        select ARCH_REQUIRE_GPIOLIB
-        select ARM_AMBA
-        select ARM_ERRATA_411920 if ARCH_MULTI_V6
-        select ARM_TIMER_SP804 if ARCH_MULTI_V6
-        select CLKSRC_OF
-        select PINCTRL
-        select PINCTRL_BCM2835
-        help
-          This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
-	  These SoCs is used in the Raspberry Pi and Roku 2 devices.
-
-That should make it less confusing to the user, because they don't have
-to know which specific SoC they are building for, other than enabling
-the right architecture level.
-
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Dinh
