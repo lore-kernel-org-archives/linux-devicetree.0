@@ -1,40 +1,43 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH v5 07/11] ARM: imx: add msl support for imx7d
-Date: Tue, 21 Apr 2015 13:51:04 -0500
-Message-ID: <CAHrpEqRAEMammfaovi6QQxGJfW-LZsgwg5rX4-3Y=+m6qhqeTg@mail.gmail.com>
-References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
-	<1429628007-8892-8-git-send-email-Frank.Li@freescale.com>
-	<20150421173110.GG10164@leverpostej>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
+Date: Tue, 21 Apr 2015 20:53:04 +0200
+Message-ID: <6559239.zHhRM8VZWD@wuerfel>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <1429639796-2169-6-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150421173110.GG10164@leverpostej>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429639796-2169-6-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 12:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> +static void __init imx_ca7_smp_init_cpus(void)
->> +{
->> +       int i, ncores;
->> +       unsigned long val;
->> +
->> +       asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
->> +       ncores = ((val >> 24) & 0x3) + 1;
->> +       if (setup_max_cpus < ncores)
->> +               ncores = (setup_max_cpus) ? setup_max_cpus : 1;
->> +
->> +       for (i = ncores; i < NR_CPUS; i++)
->> +               set_cpu_possible(i, false);
->> +}
->
-> NAK.
->
-> The set of available CPUs should come from the DT, as with other
-> platforms.
+On Tuesday 21 April 2015 11:09:52 Eric Anholt wrote:
+> +static struct map_desc bcm2836_io_map __initdata = {
+> +       .virtual = BCM2835_PERIPH_VIRT,
+> +       .pfn = __phys_to_pfn(BCM2836_PERIPH_PHYS),
+> +       .length = BCM2835_PERIPH_SIZE,
+> +       .type = MT_DEVICE
+> +};
+> +
+>  static void __init bcm2835_map_io(void)
+>  {
+> -       iotable_init(&io_map, 1);
+> +       iotable_init(&bcm2835_io_map, 1);
+> +}
+> +
+> +static void __init bcm2836_map_io(void)
+> +{
+> +       iotable_init(&bcm2836_io_map, 1);
+>  }
+> 
 
-Can you give me a reference platform implement?
+Can you explain what this is needed for? Most platform ports don't
+do this any more.
 
->
-> Mark.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
