@@ -1,58 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND RFC PATCH 1/3] ASoC: mediatek: Add binding support for
- AFE driver
-Date: Tue, 21 Apr 2015 11:56:23 +0100
-Message-ID: <20150421105623.GG22845@sirena.org.uk>
-References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
- <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
- <20150418173407.GE26185@sirena.org.uk>
- <20150420043747.GH6325@pengutronix.de>
- <20150420204849.GJ14892@sirena.org.uk>
- <20150421094926.GU6325@pengutronix.de>
- <1429611306.23823.52.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ahP6B03r4gLOj5uD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1429611306.23823.52.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koro Chen <koro.chen@mediatek.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, robh+dt@kernel.org, matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.de, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: [PATCH 0/8] Add support for Wolfson WM8998 and WM1814 codecs
+Date: Tue, 21 Apr 2015 13:33:48 +0100
+Message-ID: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com
+Cc: ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This set of patches adds support for the Wolfson Microelectronics
+WM8998 and WM1814 codecs.
 
---ahP6B03r4gLOj5uD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Richard Fitzgerald (8):
+  mfd: arizona: Split INx_MODE into two fields
+  ASoC: arizona: add defines for single-input gain control
+  mfd: arizona: Add support for WM8998 and WM1814
+  gpio: arizona: add support for WM8998 and WM1814
+  regulator: arizona: add support for WM8998 and WM1814
+  extcon: arizona: Add support for WM8998 and WM1814
+  ASoC: wm8998: Initial WM8998 codec driver
+  Documentation: Add WM8998/WM1814 device tree bindings
 
-On Tue, Apr 21, 2015 at 06:15:06PM +0800, Koro Chen wrote:
-> On Tue, 2015-04-21 at 11:49 +0200, Sascha Hauer wrote:
+ Documentation/devicetree/bindings/mfd/arizona.txt |    3 +
+ drivers/extcon/extcon-arizona.c                   |   33 +-
+ drivers/gpio/gpio-arizona.c                       |    2 +
+ drivers/mfd/Kconfig                               |    6 +
+ drivers/mfd/Makefile                              |    3 +
+ drivers/mfd/arizona-core.c                        |  106 ++-
+ drivers/mfd/arizona-i2c.c                         |    8 +
+ drivers/mfd/arizona-irq.c                         |    9 +
+ drivers/mfd/arizona.h                             |    5 +
+ drivers/mfd/wm8998-tables.c                       | 1592 +++++++++++++++++++++
+ drivers/regulator/arizona-ldo1.c                  |    2 +
+ include/linux/mfd/arizona/core.h                  |    3 +
+ include/linux/mfd/arizona/pdata.h                 |    5 +-
+ include/linux/mfd/arizona/registers.h             |  247 +++-
+ sound/soc/codecs/Kconfig                          |    6 +
+ sound/soc/codecs/Makefile                         |    2 +
+ sound/soc/codecs/arizona.c                        |    7 +
+ sound/soc/codecs/arizona.h                        |    7 +-
+ sound/soc/codecs/wm8998.c                         | 1392 ++++++++++++++++++
+ sound/soc/codecs/wm8998.h                         |   23 +
+ 20 files changed, 3432 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/mfd/wm8998-tables.c
+ create mode 100644 sound/soc/codecs/wm8998.c
+ create mode 100644 sound/soc/codecs/wm8998.h
 
-> > there are two programmable hardware gain blocks which can be inserted to
-> > the digital audio path using the crossbar switch. There must be some
-> > mechanism to configure them into different places.
+-- 
+1.7.2.5
 
-> Maybe in DPCM, they can be "widgets", and we can define "routes" and
-> corresponding controls for them.=20
-
-Yes, exactly - it's basically just like a CODEC.
-
---ahP6B03r4gLOj5uD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVNizXAAoJECTWi3JdVIfQThcH/inMRPhH27+o4/rXhIl3j7DX
-gCQNfqI0DC2iXXQfU7WagXj/4NBeoe7Zv/3I17RnSvMzf0vzpEoSbeLpKiFuY0PX
-REGyKvt1WPyrzKuZhXZe3Kc4lWe+XpBGqjNW1MUBWMyjWZYdOeKcrqJyL+XWUYGF
-nH4wOtLwwHiGAYWmUdYRWcNUWHhe3NL+VYjDNDvI4zRRCvdcckk5Z71k3boduGDQ
-gauqxEyThK9GaSg6sh9oEOWeC2G3jTPlOZA8q/qABNvI5ySBMGsqRVjlbcwBXjrO
-hoq0zfVUOaBA3i9W445hLHClJl+dfpSYdd+nVkN9Zaf3ujSIBT+tWclK20pWmXM=
-=d1vG
------END PGP SIGNATURE-----
-
---ahP6B03r4gLOj5uD--
