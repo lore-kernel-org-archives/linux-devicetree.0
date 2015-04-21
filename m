@@ -1,54 +1,55 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH 2/2 v2] of/platform: Use platform_device interface
-Date: Tue, 21 Apr 2015 23:09:46 +0200
-Message-ID: <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
-References: <1429604702-14157-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429604702-14157-2-git-send-email-ricardo.ribalda@gmail.com> <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
+Date: Tue, 21 Apr 2015 23:11:33 +0200
+Message-ID: <60195891.q3RtUhgfkn@wuerfel>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <6559239.zHhRM8VZWD@wuerfel> <87oamh9q12.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Vivek Goyal <vgoyal@redhat.com>, Jakub Sitnicki <jsitnicki@gmail.com>, Mike Travis <travis@sgi.com>, Jiang Liu <jiang.liu@linux.intel.com>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87oamh9q12.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob
+On Tuesday 21 April 2015 13:37:13 Eric Anholt wrote:
+> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+> 
+> > On Tuesday 21 April 2015 11:09:52 Eric Anholt wrote:
+> >> +static struct map_desc bcm2836_io_map __initdata = {
+> >> +       .virtual = BCM2835_PERIPH_VIRT,
+> >> +       .pfn = __phys_to_pfn(BCM2836_PERIPH_PHYS),
+> >> +       .length = BCM2835_PERIPH_SIZE,
+> >> +       .type = MT_DEVICE
+> >> +};
+> >> +
+> >>  static void __init bcm2835_map_io(void)
+> >>  {
+> >> -       iotable_init(&io_map, 1);
+> >> +       iotable_init(&bcm2835_io_map, 1);
+> >> +}
+> >> +
+> >> +static void __init bcm2836_map_io(void)
+> >> +{
+> >> +       iotable_init(&bcm2836_io_map, 1);
+> >>  }
+> >> 
+> >
+> > Can you explain what this is needed for? Most platform ports don't
+> > do this any more.
+> 
+> Nope, I can't!  I'm not sure what the bcm2835 side of it does, and I was
+> just replicating that for 2836.
+> 
+> Should it be removed from 2835, too?
+> 
 
-On Tue, Apr 21, 2015 at 10:13 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, Apr 21, 2015 at 3:25 AM, Ricardo Ribalda Delgado
-> <ricardo.ribalda@gmail.com> wrote:
->> of_platform_device_create_pdata() was using of_device_add() to create
->> the devices, but of_platform_device_destroy was using
->> of_platform_device_destroy().
->>
->> of_device_add(), do not call insert_resource(), which initializes the
->> parent field of the resource structure, needed by release_resource(),
->> called by of_platform_device_destroy().
->
-> This is because some DTs have overlapping resources and doing this
-> would break things. If you look at the git history, this was fixed and
-> then reverted by Grant.
+Hard to know. Does anything reference BCM2835_PERIPH_VIRT? Does it work
+if you remove it?
 
-I cannot find that commit sorry, could you give me the hash or a link
-to the mailing list?
-
-ricardo@pilix:~/linux$ git shortlog drivers/of/platform.c | grep -i Revert
-      Revert "drivers: of: add initialization code for dma reserved memory"
-
-
-To give a litte context to this patch, the issue started with this
-conversaion with Bjorn:
-https://lkml.org/lkml/2015/4/20/435
-
-
-What we have today is also wrong, it leads to a null pointer deference
-(and therefore a whole crash).
-
-If we cannot use platform_device_add, then we cannot use
-platform_device_destroy :)
-
-Shall I prepare a patch replacing platform_device_destroy()?
-
-
-Thanks!
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
