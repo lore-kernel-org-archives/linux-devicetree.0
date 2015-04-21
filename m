@@ -1,78 +1,77 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] regulator: max8973: add DT parsing of platform specific
- parameter
-Date: Tue, 21 Apr 2015 19:45:25 +0530
-Message-ID: <55365B7D.7030300@nvidia.com>
-References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com> <1429534457-15515-4-git-send-email-ldewangan@nvidia.com> <20150420211907.GP14892@sirena.org.uk>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH v4 08/11] ARM: imx: add gpt system timer support for imx7d
+Date: Tue, 21 Apr 2015 09:17:02 -0500
+Message-ID: <CAHrpEqT548H7kkpiCLa_VrWjHaoR5x2_6V-L1S_gWX49=aZK1Q@mail.gmail.com>
+References: <1429563933-3129-1-git-send-email-Frank.Li@freescale.com>
+	<1429563933-3129-9-git-send-email-Frank.Li@freescale.com>
+	<20150421100240.GR12732@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150420211907.GP14892-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150421100240.GR12732@n2100.arm.linux.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, linux-gpio@vger.kernel.org, Anson Huang <b20788@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Tuesday 21 April 2015 02:49 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
+On Tue, Apr 21, 2015 at 5:02 AM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Tue, Apr 21, 2015 at 05:05:30AM +0800, Frank.Li@freescale.com wrote:
+>> From: Frank Li <Frank.Li@freescale.com>
+>>
+>> Add GPT system timer support for i.MX7D, it has same hardware
+>> as i.MX6DL.
+>>
+>> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+>> Signed-off-by: Anson Huang <b20788@freescale.com>
+>> ---
+>>  arch/arm/mach-imx/time.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
+>> index 15d18e1..7c1d8a3 100644
+>> --- a/arch/arm/mach-imx/time.c
+>> +++ b/arch/arm/mach-imx/time.c
+>> @@ -321,7 +321,7 @@ static void __init _mxc_timer_init(int irq,
+>>               tctl_val = V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
+>>               if (clk_get_rate(clk_per) == V2_TIMER_RATE_OSC_DIV8) {
+>>                       tctl_val |= V2_TCTL_CLK_OSC_DIV8;
+>> -                     if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
+>> +                     if (cpu_is_imx6dl() || cpu_is_imx6sx() || cpu_is_imx7d()) {
+>>                               /* 24 / 8 = 3 MHz */
+>>                               __raw_writel(7 << V2_TPRER_PRE24M,
+>>                                       timer_base + MXC_TPRER);
+>> @@ -383,3 +383,4 @@ CLOCKSOURCE_OF_DECLARE(mx53_timer, "fsl,imx53-gpt", mxc_timer_init_dt);
+>>  CLOCKSOURCE_OF_DECLARE(mx6q_timer, "fsl,imx6q-gpt", mxc_timer_init_dt);
+>>  CLOCKSOURCE_OF_DECLARE(mx6sl_timer, "fsl,imx6sl-gpt", mxc_timer_init_dt);
+>>  CLOCKSOURCE_OF_DECLARE(mx6sx_timer, "fsl,imx6sx-gpt", mxc_timer_init_dt);
+>> +CLOCKSOURCE_OF_DECLARE(mx7d_timer, "fsl,imx7d-gpt", mxc_timer_init_dt);
 >
-> On Mon, Apr 20, 2015 at 06:24:17PM +0530, Laxman Dewangan wrote:
+> Hmm, this suggests to me that something is very wrong here, especially
+> those cpu_is_imx*() things.
 >
->> +Optional properties:
->> +
->> +-maxim,externally-enable: boolean, externally control the regulator output
->> +		enable/disable.
-> I'd have expected this to be enabled if a GPIO is provided to do the
-> control rather than having a specific property for it.
-Curently there is no support for providing a GPIO for external control 
-pins. I have follow on patch to support this as my platform control the 
-EN pin of the device through GPIO.
+> Several questions crop up:
+>
+> * Shouldn't the code be split between a timer v1 and timer v2 driver,
+>   and the appropriate one be selected via the DT compatible?
+>
+> * Shouldn't the clock source for the v2 timer be determined from DT?
+>   (It looks to me like the v2 timer can be clocked by the perclk or
+>   by a 24MHz clock with a built-in prescaler.)
+>
+> * Shouldn't the prescaler for the timer be calculated in the driver and
+>   the associated divisor automatically set, or specified via DT?
+>
+> Had these been fixed, you probably wouldn't need to modify the driver to
+> add iMX7 support here - which is really what DT is supposed to be about.
+>
+> I'm not expecting you to fix them - but it would be good to get this
+> properly sorted out so that when iMX8 comes along, the same process
+> doesn't happen again.
 
-There is also case that the EN pin is controlled by the control signal 
-from host power management controller directly and this control signal 
-is not exported as GPIO.
-So we need this option to support on both cases.
-
-There is another device from Maxim, MAX77621, which is compatible on 
-register with this device but it has converted the EN pin as SHTDN pin. 
-I have follow on patches to support this device through this driver 
-instead of duplicating the driver.
-
-MAX8973: Vout is enabled when EN pin OR EN bit on register is 1.
-MAX77621: Vout is enabled when EN pin AND EN bit on register is 1. If EN 
-pin (renamed as SHTDN pin) goes low, it reset the entire register 
-configuration.
-
-In our platform, we are using MAX77621 and SHTDN pin of MAX77621 is 
-controlled through GPIO.
-On this case, we will use the GPIO as always HIGH and control Vout 
-enable/disable through the register EN bit write otherwise, we will need 
-to restore all configuration on each regulator enable.
-
-So on MAX77621 use, we will provide the GPIO for SHTDN pin to make it 
-enable always and it will not be controlled externally, it will be 
-controlled through register access.
+Thank you for your suggestion. I will do that after this patches.
 
 >
->> +-maxim,enable-falling-slew-rate: boolean, enable falling slew rate.
->> +-maxim,enable-active-discharge: boolean: enable active discharge.
->> +-maxim,enable-frequency-shift: boolean, enable 9% frequency shift.
->> +-maxim,enable-bias-control: boolean, enable bias control. By enabling this
->> +		startup delay can be reduce to 20us from 220us.
-> It looks like we should be implementing the set_ramp_delay() operation
-> here?
->
-It is actually enable_time which changes with this bias enable/disable.
-So we need to provide desc->enable_time based on this flag. Currently it 
-is missing on driver.
-
-I have few more patches, not sent because did not want to bulk the 
-review and started with small changes which can be discussed easily.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+> according to speedtest.net.
