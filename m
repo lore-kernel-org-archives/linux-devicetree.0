@@ -1,55 +1,108 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
-Date: Tue, 21 Apr 2015 23:11:33 +0200
-Message-ID: <60195891.q3RtUhgfkn@wuerfel>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <6559239.zHhRM8VZWD@wuerfel> <87oamh9q12.fsf@eliezer.anholt.net>
+From: <Frank.Li@freescale.com>
+Subject: [PATCH v6 00/11] Add Freescale i.mx7d support
+Date: Wed, 22 Apr 2015 05:43:19 +0800
+Message-ID: <1429652610-25265-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87oamh9q12.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lznuaa@gmail.com, shawn.guo@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 April 2015 13:37:13 Eric Anholt wrote:
-> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
-> 
-> > On Tuesday 21 April 2015 11:09:52 Eric Anholt wrote:
-> >> +static struct map_desc bcm2836_io_map __initdata = {
-> >> +       .virtual = BCM2835_PERIPH_VIRT,
-> >> +       .pfn = __phys_to_pfn(BCM2836_PERIPH_PHYS),
-> >> +       .length = BCM2835_PERIPH_SIZE,
-> >> +       .type = MT_DEVICE
-> >> +};
-> >> +
-> >>  static void __init bcm2835_map_io(void)
-> >>  {
-> >> -       iotable_init(&io_map, 1);
-> >> +       iotable_init(&bcm2835_io_map, 1);
-> >> +}
-> >> +
-> >> +static void __init bcm2836_map_io(void)
-> >> +{
-> >> +       iotable_init(&bcm2836_io_map, 1);
-> >>  }
-> >> 
-> >
-> > Can you explain what this is needed for? Most platform ports don't
-> > do this any more.
-> 
-> Nope, I can't!  I'm not sure what the bcm2835 side of it does, and I was
-> just replicating that for 2836.
-> 
-> Should it be removed from 2835, too?
-> 
+From: Frank Li <Frank.Li@freescale.com>
 
-Hard to know. Does anything reference BCM2835_PERIPH_VIRT? Does it work
-if you remove it?
+add basic support for chip imx7d.
+ - MSL
+ - Clock support. All clock enabled.
+ - pinctrl support
+ - SD Card support
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Change from v5 to v6
+ - dual license for dts
+ - fix typo statue
+ - Remove smp_operations
+ - Remove GPT check cpu_is_mx7() by use old compatible mode
+ - Remove dts arch_timer part, which not used in this patch series
+ - correct GIC reg map
+
+Change from v4 to v5
+ - Remove imx7d_map_io()
+ - Remove  clk_register_clkdev(clks[IMX7D_GPT1_ROOT_CLK], "ipg", "imx-gpt.0");
+ - Remove  clk_register_clkdev(clks[IMX7D_GPT_3M_CLK], "gpt_3m", "imx-gpt.0");
+ - Add comment about enable all clock
+ - Add Type IMX_PLLV3_ENET_IMX7 and remove cpu_is_imx7d()
+
+Change from v3 to v4
+ - Fixed the problem review by Russel king.
+   Remove __mxc_arch_type
+   Remove MXC_ARCH_CA7
+   use new smp_operation for ca7 platform
+ - imx7d.dtsi remove unecessary part for bring up
+ - imx7d-sdb.dsi, just enable uart i2c and sd card
+ - Add device tree binding document for timer, clock and pinctrl
+
+Change from v2 to v3
+  - remove unsupport part in imx7d-sdb.dtb
+
+Change from V1 to V2:
+  - split patch1 to three small one to avoid 100k maillist limitation.
+  - fix imx7d.dtsi code style problem
+
+Anson Huang (1):
+  ARM: imx: add msl support for imx7d
+
+Frank Li (10):
+  ARM: dts: add pinfunc include file to support imx7d
+  ARM: dts: add pinfunc include file gpio1 to support imx7d
+  ARM: dts: add clock include file to support imx7d
+  Document: dt: binding: imx: update document for imx7d support
+  ARM: dts: add imx7d soc dtsi file
+  pinctrl: add imx7d support
+  ARM: imx: add gpt system timer support for imx7d
+  ARM: imx: add imx7d clk tree support
+  arm: dts: add imx7d-sdb support
+  ARM: config: imx_v6_v7_defconfig add imx7d support
+
+ .../devicetree/bindings/clock/imx7d-clock.txt      |   13 +
+ .../bindings/pinctrl/fsl,imx-pinctrl.txt           |    3 +
+ .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         |   27 +
+ .../devicetree/bindings/timer/fsl,imxgpt.txt       |    3 +
+ arch/arm/boot/dts/Makefile                         |    2 +
+ arch/arm/boot/dts/imx7d-pinfunc.h                  | 1153 ++++++++++++++++++++
+ arch/arm/boot/dts/imx7d-sdb.dts                    |  444 ++++++++
+ arch/arm/boot/dts/imx7d.dtsi                       |  513 +++++++++
+ arch/arm/configs/imx_v6_v7_defconfig               |    1 +
+ arch/arm/mach-imx/Kconfig                          |   11 +
+ arch/arm/mach-imx/Makefile                         |    1 +
+ arch/arm/mach-imx/anatop.c                         |    5 +-
+ arch/arm/mach-imx/clk-imx7d.c                      |  887 +++++++++++++++
+ arch/arm/mach-imx/clk-pllv3.c                      |   16 +-
+ arch/arm/mach-imx/clk.h                            |    9 +
+ arch/arm/mach-imx/cpu.c                            |    3 +
+ arch/arm/mach-imx/hardware.h                       |    7 +-
+ arch/arm/mach-imx/mach-imx7d.c                     |   46 +
+ arch/arm/mach-imx/mx7.h                            |   38 +
+ arch/arm/mach-imx/mxc.h                            |    8 +-
+ arch/arm/mach-imx/time.c                           |    1 +
+ drivers/pinctrl/freescale/Kconfig                  |    7 +
+ drivers/pinctrl/freescale/Makefile                 |    1 +
+ drivers/pinctrl/freescale/pinctrl-imx.c            |    3 +-
+ drivers/pinctrl/freescale/pinctrl-imx.h            |    1 +
+ drivers/pinctrl/freescale/pinctrl-imx7d.c          |  411 +++++++
+ include/dt-bindings/clock/imx7d-clock.h            |  450 ++++++++
+ 27 files changed, 4058 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+ create mode 100644 arch/arm/boot/dts/imx7d-pinfunc.h
+ create mode 100644 arch/arm/boot/dts/imx7d-sdb.dts
+ create mode 100644 arch/arm/boot/dts/imx7d.dtsi
+ create mode 100644 arch/arm/mach-imx/clk-imx7d.c
+ create mode 100644 arch/arm/mach-imx/mach-imx7d.c
+ create mode 100644 arch/arm/mach-imx/mx7.h
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx7d.c
+ create mode 100644 include/dt-bindings/clock/imx7d-clock.h
+
+-- 
+1.9.1
+
