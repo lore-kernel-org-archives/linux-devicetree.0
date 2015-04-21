@@ -1,78 +1,103 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/2 v2] of/platform: Use platform_device interface
-Date: Tue, 21 Apr 2015 18:01:00 -0500
-Message-ID: <CAL_JsqKV-+A196XaiGTGdx6tr1DStWYca5JnHR-QgBbMUyOiRA@mail.gmail.com>
-References: <1429604702-14157-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429604702-14157-2-git-send-email-ricardo.ribalda@gmail.com>
- <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com> <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
+Date: Tue, 21 Apr 2015 16:02:19 -0700
+Message-ID: <87bnihhypw.fsf@eliezer.anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <6559239.zHhRM8VZWD@wuerfel> <87oamh9q12.fsf@eliezer.anholt.net> <60195891.q3RtUhgfkn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Vivek Goyal <vgoyal@redhat.com>, Jakub Sitnicki <jsitnicki@gmail.com>, Mike Travis <travis@sgi.com>, Jiang Liu <jiang.liu@linux.intel.com>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <60195891.q3RtUhgfkn@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 4:09 PM, Ricardo Ribalda Delgado
-<ricardo.ribalda@gmail.com> wrote:
-> Hello Rob
->
-> On Tue, Apr 21, 2015 at 10:13 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On Tue, Apr 21, 2015 at 3:25 AM, Ricardo Ribalda Delgado
->> <ricardo.ribalda@gmail.com> wrote:
->>> of_platform_device_create_pdata() was using of_device_add() to create
->>> the devices, but of_platform_device_destroy was using
->>> of_platform_device_destroy().
->>>
->>> of_device_add(), do not call insert_resource(), which initializes the
->>> parent field of the resource structure, needed by release_resource(),
->>> called by of_platform_device_destroy().
->>
->> This is because some DTs have overlapping resources and doing this
->> would break things. If you look at the git history, this was fixed and
->> then reverted by Grant.
->
-> I cannot find that commit sorry, could you give me the hash or a link
-> to the mailing list?
->
-> ricardo@pilix:~/linux$ git shortlog drivers/of/platform.c | grep -i Revert
->       Revert "drivers: of: add initialization code for dma reserved memory"
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-commit 02bbde7849e68e193cefaa1885fe0df0f03c9fcd
-Author: Grant Likely <grant.likely@secretlab.ca>
-Date:   Sun Feb 17 20:03:27 2013 +0000
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-    Revert "of: use platform_device_add"
+> On Tuesday 21 April 2015 13:37:13 Eric Anholt wrote:
+>> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+>>=20
+>> > On Tuesday 21 April 2015 11:09:52 Eric Anholt wrote:
+>> >> +static struct map_desc bcm2836_io_map __initdata =3D {
+>> >> +       .virtual =3D BCM2835_PERIPH_VIRT,
+>> >> +       .pfn =3D __phys_to_pfn(BCM2836_PERIPH_PHYS),
+>> >> +       .length =3D BCM2835_PERIPH_SIZE,
+>> >> +       .type =3D MT_DEVICE
+>> >> +};
+>> >> +
+>> >>  static void __init bcm2835_map_io(void)
+>> >>  {
+>> >> -       iotable_init(&io_map, 1);
+>> >> +       iotable_init(&bcm2835_io_map, 1);
+>> >> +}
+>> >> +
+>> >> +static void __init bcm2836_map_io(void)
+>> >> +{
+>> >> +       iotable_init(&bcm2836_io_map, 1);
+>> >>  }
+>> >>=20
+>> >
+>> > Can you explain what this is needed for? Most platform ports don't
+>> > do this any more.
+>>=20
+>> Nope, I can't!  I'm not sure what the bcm2835 side of it does, and I was
+>> just replicating that for 2836.
+>>=20
+>> Should it be removed from 2835, too?
+>>=20
+>
+> Hard to know. Does anything reference BCM2835_PERIPH_VIRT? Does it work
+> if you remove it?
 
-    This reverts commit aac73f34542bc7ae4317928d2eabfeb21d247323. That
-    commit causes two kinds of breakage; it breaks registration of AMBA
-    devices when one of the parent nodes already contains overlapping
-    resource regions, and it breaks calls to request_region() by device
-    drivers in certain conditions where there are overlapping memory
-    regions. Both of these problems can probably be fixed, but it is better
-    to back out the commit and get a proper fix designed before trying again.
+Well, that's clear enough. It dies early with:
 
-    Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0xf00
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Initializing cgroup subsys cpuacct
+[    0.000000] Linux version 4.0.0-rc1-v7+ (anholt@eliezer) (gcc version 4.=
+9.2 ( 4.9.2-10) ) #487 SMP PREEMPT Tue Apr 21 15:58:29 PDT 2015
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=3D10c=
+5387d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instr=
+uction cache
+[    0.000000] Machine model: Raspberry Pi 2 Model B+
+[    0.000000] bootconsole [earlycon0] enabled
+[    0.000000] cma: Reserved 64 MiB at 0x37000000
+[    0.000000] Memory policy: Data cache writealloc
 
->
->
-> To give a litte context to this patch, the issue started with this
-> conversaion with Bjorn:
-> https://lkml.org/lkml/2015/4/20/435
->
->
-> What we have today is also wrong, it leads to a null pointer deference
-> (and therefore a whole crash).
->
-> If we cannot use platform_device_add, then we cannot use
-> platform_device_destroy :)
->
-> Shall I prepare a patch replacing platform_device_destroy()?
+(hung)
 
-Perhaps we make inserting resource failure non-fatal so by default we
-can have resources inserted but not break the cases Grant mentioned.
-Ideally we want to not have new platforms with overlapping resources
-in the DT.
+The only thing I see using this 0xf0000000 range is DEBUG_BCM2836's
+serial stuff, though.
 
-Rob
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVNtb7AAoJELXWKTbR/J7o7hIQALv0Iiii9xBM76Vu+Lxmy1rn
+QcJPIUV1o+iOqI77vQhwZlKQqqWcTmJERml6Hi5sfUK2M47+hvRU+AS3gaYXodBG
+ZgFLX7ru5dfu8MxE2wMUGIeTj7hGUJqOq6QmzJ7op921r1c04GzOghZwQAycdfkl
+T8Jz4jyPHDavOl3wl547e+yNmmoSlBYJanjhAfjXvTvxlOm+DGhu43wPkyMfCepL
+8PseppBPf7HP42bPFRFm3vz5WSE6lAlWaYHgz0jwQL31EfVR1l/co9UafNImBtqL
+/d6mYQPLeJ9Hj+mnvKzSN4aj8yMGmB0G1sZer4e+/ndd/vwKiIKayIbcgH8+GDtP
+hwoiUDWI5FY1jRYXWjShM4u+YBcpzGiXvNziDaY13uGsyWDgXto4+/Czt7Zgcwih
+wNP/hjehJaNVs7F7U39WpbmnOfiG4BH8PA83EmJtxrzuuvR9MjfkfnMhCC/eSIB+
+92LR3RvVOOQKSTu2dxdBzrUEcg4sYpxfc0Wv5U9G0dmPNgQPyRAsH2i2jjgjufCS
+lUjf4wq04BczEvl8qI0bOSk0Hs5RZ/0mSywRGR9aA2yumRdXDMuBgTuCw2PuKMVQ
+SrkPYG/D3y+3FTkdJByFoQNx/QwmbjIP4Epytqj0KdJNp6PDE0MWsqp6S3QUvnjl
+7SkwyEvCOBcFTxLdfczX
+=dpKd
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
