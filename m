@@ -1,42 +1,57 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v4 4/4] MAINTAINERS: add myself as ARM/UniPhier maintainer
-Date: Tue, 21 Apr 2015 16:21:30 +0900
-Message-ID: <1429600890-26713-5-git-send-email-yamada.masahiro@socionext.com>
-References: <1429600890-26713-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429600890-26713-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] ARM: dts: UniPhier: add support for UniPhier SoCs
+ and boards
+Date: Tue, 21 Apr 2015 16:23:12 +0900
+Message-ID: <CAK7LNAQoS4vbU_ZEsf=F8Sy8be8xn8N2taTVkEeJ3ROBQmar=g@mail.gmail.com>
+References: <1429285698-11829-1-git-send-email-yamada.masahiro@socionext.com>
+	<1429285698-11829-4-git-send-email-yamada.masahiro@socionext.com>
+	<2809229.iRV9NgGGKe@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2809229.iRV9NgGGKe@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Hi Arnd,
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+2015-04-18 0:56 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Saturday 18 April 2015 00:48:17 Masahiro Yamada wrote:
+>> +
+>> +               smp_syscon@59801208 {
+>> +                       compatible = "socionext,uniphier-smp-reg", "syscon";
+>> +                       reg = <0x59801208 0x4>;
+>> +               };
+>> +
+>>
+>
+> Using syscon here is a good idea, but please name the register area
+> according to what it is called in the data sheet, not according to how
+> it is used in Linux, and list all the registers that belong in this
+> device. It's quite possible that another driver needs a second
+> register from the same syscon.
+>
+> E.g. if there is a device called a foo controller, make this device
+>
+>         foo-controller@0x59800000 {
+>                 compatible = "socionext,uniphier-foo-controller", "syscon";
+>                 reg = <0x59800000 0x4000>;
+>         };
+>
+> then hardcode the 0x1208 offset in the smp code, or add it as an
+> argument to the property containing the phandle.
+>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ce3eb0f..26b42be 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1533,6 +1533,13 @@ F:	drivers/rtc/rtc-ab3100.c
- F:	drivers/rtc/rtc-coh901331.c
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-stericsson.git
- 
-+ARM/UNIPHIER ARCHITECTURE
-+M:	Masahiro Yamada <yamada.masahiro@socionext.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	arch/arm/mach-uniphier/
-+N:	uniphier
-+
- ARM/Ux500 ARM ARCHITECTURE
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+OK, I updated this part in v4.
+
+
 -- 
-1.9.1
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
