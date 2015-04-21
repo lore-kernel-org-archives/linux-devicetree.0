@@ -1,112 +1,144 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: ux500: Move GPIO regulator for SD-card into
- board DTSs
-Date: Tue, 21 Apr 2015 11:34:00 +0100
-Message-ID: <20150421103400.GW3447@x1>
-References: <1429538553-17366-1-git-send-email-ulf.hansson@linaro.org>
- <1429538553-17366-2-git-send-email-ulf.hansson@linaro.org>
- <20150420182634.GH3447@x1>
- <CAPDyKFrDOGBkfg48mmsbktCWFTaNV4WnTm_Fui=Kp30u1yH-tQ@mail.gmail.com>
- <20150421073336.GJ3447@x1>
- <CAPDyKFrdEHMA-AtdTr9kwx+UXihZf4TirWS0Bq+W5wa66T+vtg@mail.gmail.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
+Date: Tue, 21 Apr 2015 12:45:07 +0200
+Message-ID: <20150421104507.GB7760@ermac>
+References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
+ <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
+ <2102140.2VHBUJBHNB@wuerfel>
+ <20150420062044.GA7767@ermac>
+ <20150420182052.GA32299@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrdEHMA-AtdTr9kwx+UXihZf4TirWS0Bq+W5wa66T+vtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <20150420182052.GA32299@obsidianresearch.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Apr 2015, Ulf Hansson wrote:
+On Mon, Apr 20, 2015 at 12:20:52PM -0600, Jason Gunthorpe wrote:
+> On Mon, Apr 20, 2015 at 08:20:44AM +0200, Jens Wiklander wrote:
+> 
+> > I'm not sure I understand what you mean. This function is a building
+> > block for the TEE driver to supply whatever interface is needed for user
+> > space. For a Global Platform like TEE it will typically have support for
+> > TEEC_OpenSession(), TEEC_InvokeCommand(), TEEC_RequestCancellation() and
+> > TEEC_CloseSession(). But how that's done is depending on how the
+> > interface towards the TEE (in secure world) looks like. From what I've
+> > heard so far those interfaces diverges a lot so we've compromised with
+> > this function.
+> 
+> The goal of the mid layer is to bring all these differences into a
+> common abstraction, not punt on them to higher layers.
+> 
+> The goal if the driver is to translate and transport the common
+> abstraction to the hardware.
+> 
+> It is an absolute failure if each TEE driver implements a different
+> TEEC_OpenSession() ioctl. They must be the same, the common code
+> must de-marshal the request from user space and then call
+> ops->open_session()
+> 
+> Driver specific ioctls are a terrible way to start a new mid layer.
+The example I gave above concerns Global Platform like TEEs, we're
+trying to cover TEEs that doesn't follow Global Platform also here. Most
+(or at least a significant part) deployed TEEs, in terms of volume,
+today are not Global Platform compliant.
 
-> On 21 April 2015 at 09:33, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue, 21 Apr 2015, Ulf Hansson wrote:
-> >
-> >> On 20 April 2015 at 20:26, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >> > On Mon, 20 Apr 2015, Ulf Hansson wrote:
-> >> >
-> >> >> The GPIO regulator for the SD-card isn't a ux500 SOC configurat=
-ion, but
-> >> >> instead it's specific to the board. Move the definition of it, =
-into the
-> >> >> board DTSs.
-> >> >
-> >> > What makes you think that?
-> >>
-> >> Because of how it was structured today.
-> >>
-> >> ste-dbx5x0.dtsi - common for all ux500 boards, thus I considered t=
-his
-> >> as the SoC configuration.
-> >
-> > ste-dbx5x0.dtsi is common for all ux500 and ux540 boards.
-> >
-> >> Then below are board configs which uses the above dtsi:
-> >> ste-href.dtsi - common for href boards (used by ste-hrefprev60.dts=
-i
-> >> and ste-hrefv60plus.dtsi), have vmmci
-> >> ste-snowball.dts, have vmmci
-> >> ste-ccu8540.dts, don't have vmmci
-> >> ste-ccu9540.dts, don't have vmmci
-> >
-> > Ah, got you.  In which case it doesn't belong in ste-dbx5x0.dtsi.
-> >
-> >> > We normally place the common pieces (of which there are many in =
-this
-> >> > node) in the highest level DTSI file, then add the platform spec=
-ific
-> >> > ones in the DTS files.
-> >>
-> >> Okay, so maybe it's due to the naming of ste-dbx5x0.dtsi, that I
-> >> thought this was intended to cover the SoC configuration and not a=
-ny
-> >> of the platform specific stuff.
-> >
-> > ste-dbx5x0.dtsi should cover all pieces which are common to all ux5=
-00
-> > and ux540 devices.  Then the lower level file ste-href-ab8500.dtsi
-> > should cover all pieces which are common to ux500 devices and final=
-ly
-> > the DTS files should add board specific information.  Duplicate
-> > nodes and properties are frowned upon.
-> >
-> >> So what your advise of doing this?
-> >
-> > So the file which covers the x500 boards is ste-href-ab8500.dtsi.  =
-I
-> > would move the node into there instead.  Keep it disabled and enabl=
-e
-> > the associated nodes in the 2 DTS files.
->=20
-> Why ste-href-ab8500.dtsi? Isn't that suppose to cover configurations
-> common to the ab8500 subsystem?
+I'd like to view TEE_IOC_CMD as communication channel directly into the
+TEE. What goes inside the channel is not something that this subsystem
+cares about. The kernel driver will likely need to translate memory
+references from user space inside this channel to something usable by
+secure world (and vice versa), but apart from that it does as little as
+possible except delivering messages.
 
-Only because up until now that has been what is a) different from the
-abx5{40,05} platforms and b) common on abx500 ones.
+There's no single definition of what interfaces a TEE has to normal
+world. As soon as we try to define a common interface we're bound to
+either miss a function completely or just define something that can't be
+used by some TEE.
 
-However, the point of the DTS(I) hierarchy is to prevent duplication.
-Lower level DTSI files contain nodes which are similar to a sub-set of
-platforms, whereas the highest level DTSI files contain nodes which
-are shared between all associated platforms.
+Global Platform has "TEE Client specification" and "TEE Internal Core
+API Specification", but neither says anything about what happens between
+the lower layers in user space and the TEE.
 
-> The vmmci models a board specific mounted circuit (aka level-shifter)=
-=2E
-> Thus it exist on some boards but not on others.
+> 
+> > > What is the typical and maximum allocation size here?
+> > It depends on the design of the Trusted Application in secure world and
+> > the client in user space.  A few KiB could be the typical allocation
+> > size, with a maximum at perhaps 512 KiB (for instance when loading a
+> > very large Trusted Application).
+> 
+> So this TEE stuff also encompasses a 'firmware' loader (to the secure
+> world, presumably)?
+Yes, but that's driver specific. Some TEEs don't have this and the rest
+does it in their own way. Global Platform doesn't say anything at all
+about this.
 
-Many of the peripherals we use on the boards are 'off-chip'.  That
-does not preclude them from DTSI files if they are shared among
-various platforms.
+> 
+> That is probably your base level of 'ops' functionality, plus the
+> shared memroy stuff.
+> 
+> How does this work if two userspace things run concurrently with
+> different firmwares? Is there some locking or something? What is the
+> lifetime of this firmware tied to?
+In secure world there's a trusted OS (the TEE) with possibly embedded
+Trusted Applications (TAs). The TEE may support loading TAs dynamically.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the OP-TEE case when running on ARM with TrustZone it works like this:
+1. The TEE is already loaded when kernel boots.
+2. A tee_context is created when user space opens /dev/teeX, this
+   context holds the sessions.
+3. TAs are loaded when needed when a session to the TA is opened.
+4. When the context is closed all sessions that are still open are
+   closed.
+5. What happens with the TAs when sessions are closed is internal to the
+   TEE. The TAs are stored in protected memory which the kernel can't
+   access any way.
+
+OP-TEE is currently single threaded in the sense that only one thread
+can be active in secure world at a time. We have some synchronization
+around the SMC that enters secure world, but that's implementation
+specific and only there to avoid unnecessary ping pong or spinlock in
+secure world.
+
+> 
+> > I agree that we can drop least one of the _version fields probably both,
+> > but something is needed for user space to be able to know which TEE (in
+> > secure world) it's communicating with. The uuid will let the client know
+> > how how to format the commands passed to TEE_IOC_CMD below.
+> 
+> So you load the firmare, learn what command set it supports then use
+> TEE_IOC_CMD to shuttle firmware-specific data to and from?
+Correct, except that the firmware (the TEE) is in most cases already
+loaded at this stage.
+
+> 
+> > I've touched on this above, this function the essential when
+> > communicating with the driver and secure world. Different TEEs (running
+> > in some secure environment) provides different interfaces. By providing
+> > an opaque channel we don't have to force something on the TEE.  The
+> > problem is moved to the user space library which is used when talking to
+> > the TEE. The assumption here is that the interface provided the TEE is
+> > stable or something that the specific TEE driver can handle with a glue
+> > layer.
+> 
+> I would use read/write for this, not ioctl. read/write can work with
+> select/poll so you can send your command then go into a polling loop
+> waiting for the reply from the firmware.
+
+There's two reasons I'm using ioctl instead.
+On ARM with TrustZone (common case right now) the TEE is executing on
+the same CPUs as the kernel (but with the ns-bit cleared instead of
+set). Delivering a message/request is done with an SMC, you can compare
+it with a syscall in user space. OP-TEE doesn't have a scheduler instead
+we run on the time of the user space process doing the request. If we
+where doing read/write/poll in which of the syscalls would we do the
+SMC?
+
+We have to be able to run several commands in parallel. How do we
+connect the different reads and writes? A separate file descriptor would
+do it, but we would need more than one for each session.
+
+Regards,
+Jens
