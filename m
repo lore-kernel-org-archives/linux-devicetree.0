@@ -1,66 +1,63 @@
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 33/37] devicetree: document Ingenic SoC UART binding
-Date: Tue, 21 Apr 2015 15:47:00 +0100
-Message-ID: <1429627624-30525-34-git-send-email-paul.burton@imgtec.com>
-References: <1429627624-30525-1-git-send-email-paul.burton@imgtec.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 1/4] ARM: UniPhier: add basic support for UniPhier architecture
+Date: Tue, 21 Apr 2015 16:56:46 +0200
+Message-ID: <4816076.vmWnA5VvTb@diego>
+References: <1429600890-26713-1-git-send-email-yamada.masahiro@socionext.com> <1429600890-26713-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429627624-30525-1-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429600890-26713-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the UARTs found in Ingenic SoCs.
+Am Dienstag, 21. April 2015, 16:21:27 schrieb Masahiro Yamada:
+> Initial commit for a new SoC family, UniPhier, developed by
+> Socionext Inc. (formerly, System LSI Business Division of
+> Panasonic Corporation).
+> 
+> This commit includes a minimal set of components for booting the
+> kernel, including SMP support.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-Changes in v3:
-  - Merge binding documentation for Ingenic SoCs whose bindings differ
-    only by their compatible strings.
+[...]
 
-Changes in v2:
-  - None.
----
- .../devicetree/bindings/serial/ingenic,uart.txt    | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/ingenic,uart.txt
+> +static int uniphier_boot_secondary(unsigned int cpu,
+> +				   struct task_struct *idle)
+> +{
+> +	struct regmap *sbcm_regmap;
+> +	int ret;
+> +
+> +	sbcm_regmap = syscon_regmap_lookup_by_compatible(
+> +			"socionext,uniphier-system-bus-controller-misc");
+> +	if (IS_ERR(sbcm_regmap)) {
+> +		pr_err("failed to regmap system-bus-controller-misc\n");
+> +		return PTR_ERR(sbcm_regmap);
+> +	}
+> +
+> +	ret = regmap_write(sbcm_regmap, 0x1208,
+> +			   virt_to_phys(uniphier_secondary_startup));
+> +	if (!ret)
+> +		asm("sev"); /* wake up secondary CPU */
+> +
+> +	return ret;
+> +}
+> +
+> +struct smp_operations uniphier_smp_ops __initdata = {
+> +	.smp_prepare_cpus	= uniphier_smp_prepare_cpus,
+> +	.smp_boot_secondary	= uniphier_boot_secondary,
+> +};
 
-diff --git a/Documentation/devicetree/bindings/serial/ingenic,uart.txt b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-new file mode 100644
-index 0000000..c2d3b3a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-@@ -0,0 +1,22 @@
-+* Ingenic SoC UART
-+
-+Required properties:
-+- compatible : "ingenic,jz4740-uart" or "ingenic,jz4780-uart"
-+- reg : offset and length of the register set for the device.
-+- interrupts : should contain uart interrupt.
-+- clocks : phandles to the module & baud clocks.
-+- clock-names: tuple listing input clock names.
-+	Required elements: "baud", "module"
-+
-+Example:
-+
-+uart0: serial@10030000 {
-+	compatible = "ingenic,jz4740-uart";
-+	reg = <0x10030000 0x100>;
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <9>;
-+
-+	clocks = <&ext>, <&cgu JZ4740_CLK_UART0>;
-+	clock-names = "baud", "module";
-+};
--- 
-2.3.5
+this is more of a drive-by comment, but you're doing the syscon lookup on 
+every boot of a core, which includes walking big parts of the devicetree every 
+time.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is there anything speaking against doing this once in a .smp_prepare_cpus 
+callback?
+
+
+Heiko
