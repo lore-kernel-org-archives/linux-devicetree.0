@@ -1,56 +1,58 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC/PATCH v2 3/5] devicetree: bindings: Add new cpuidle enable
- method for Renesas R-car SoCs
-Date: Tue, 21 Apr 2015 11:55:39 +0100
-Message-ID: <20150421105539.GA26706@red-moon>
-References: <1429180540-5692-1-git-send-email-keita.kobayashi.ym@renesas.com>
- <1429180540-5692-4-git-send-email-keita.kobayashi.ym@renesas.com>
- <20150417124624.GD21904@leverpostej>
- <CANqRtoTaGc7QCJAVj8Jhpo5HgbwyfiRQZz5j0zBkE1cBkDZAzQ@mail.gmail.com>
- <20150417143723.GC2347@red-moon>
- <5534AD37.20705@renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESEND RFC PATCH 1/3] ASoC: mediatek: Add binding support for
+ AFE driver
+Date: Tue, 21 Apr 2015 11:56:23 +0100
+Message-ID: <20150421105623.GG22845@sirena.org.uk>
+References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
+ <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
+ <20150418173407.GE26185@sirena.org.uk>
+ <20150420043747.GH6325@pengutronix.de>
+ <20150420204849.GJ14892@sirena.org.uk>
+ <20150421094926.GU6325@pengutronix.de>
+ <1429611306.23823.52.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ahP6B03r4gLOj5uD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5534AD37.20705@renesas.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: keita kobayashi <keita.kobayashi.ym@renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "horms@verge.net.au" <horms@verge.net.au>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1429611306.23823.52.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Koro Chen <koro.chen@mediatek.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, robh+dt@kernel.org, matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.de, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 08:39:35AM +0100, keita kobayashi wrote:
 
-[...]
+--ahP6B03r4gLOj5uD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > It is related, but Mark's remark is correct. We have to keep in mind
-> > that an enable-method defines how a CPU is powered {up/down} and
-> > also suspended (quiesced through idle).
-> > 
-> > It has to be defined through proper bindings and related code, adding a
-> > random compatible string for the sake of matching does not cut it,
-> > that is not acceptable and I stated it from the beginning.
-> > 
-> > So, to make it clear, an enable-method defines CPU operations as a
-> > whole, cpu init, power{up/down} and suspend.
-> > 
-> > It must be documented with proper bindings that defines compatible string and
-> > related properties.
-> > 
-> > The sooner we incorporate the CPUidle ops into SMP ops the better to
-> > prevent this abuse from happening, an enable-method encompasses SMP
-> > ops and CPUidle ops, actually they must be merged because they represent
-> > the enable-method implementation as a whole.
-> > 
-> > I hope this helps.
-> > 
-> > Lorenzo
-> 
-> 
-> I will rename "renesas,rcar-idle" in the next patch.
+On Tue, Apr 21, 2015 at 06:15:06PM +0800, Koro Chen wrote:
+> On Tue, 2015-04-21 at 11:49 +0200, Sascha Hauer wrote:
 
-It is not just about renaming a compatible string, it is about defining
-a DT binding and related enable-method as a whole.
+> > there are two programmable hardware gain blocks which can be inserted to
+> > the digital audio path using the crossbar switch. There must be some
+> > mechanism to configure them into different places.
 
-Thanks,
-Lorenzo
+> Maybe in DPCM, they can be "widgets", and we can define "routes" and
+> corresponding controls for them.=20
+
+Yes, exactly - it's basically just like a CODEC.
+
+--ahP6B03r4gLOj5uD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVNizXAAoJECTWi3JdVIfQThcH/inMRPhH27+o4/rXhIl3j7DX
+gCQNfqI0DC2iXXQfU7WagXj/4NBeoe7Zv/3I17RnSvMzf0vzpEoSbeLpKiFuY0PX
+REGyKvt1WPyrzKuZhXZe3Kc4lWe+XpBGqjNW1MUBWMyjWZYdOeKcrqJyL+XWUYGF
+nH4wOtLwwHiGAYWmUdYRWcNUWHhe3NL+VYjDNDvI4zRRCvdcckk5Z71k3boduGDQ
+gauqxEyThK9GaSg6sh9oEOWeC2G3jTPlOZA8q/qABNvI5ySBMGsqRVjlbcwBXjrO
+hoq0zfVUOaBA3i9W445hLHClJl+dfpSYdd+nVkN9Zaf3ujSIBT+tWclK20pWmXM=
+=d1vG
+-----END PGP SIGNATURE-----
+
+--ahP6B03r4gLOj5uD--
