@@ -1,72 +1,45 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] thermal: allow creating hwmon for thermal zones on OF systems
-Date: Tue, 21 Apr 2015 15:17:03 -0500
-Message-ID: <CAL_Jsq+k4w_=eypwO_wot8BNboeG23CGe4SakNFjnecu+6NcRQ@mail.gmail.com>
-References: <20150420222131.GA6077@dtor-ws>
+Subject: Re: [PATCH v5 07/11] ARM: imx: add msl support for imx7d
+Date: Tue, 21 Apr 2015 15:22:49 -0500
+Message-ID: <CAL_Jsq+NV5Ok-P6JGZzNyQCD=PdwXbDY39XmwzKB0U+vuyHxVA@mail.gmail.com>
+References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
+ <1429628007-8892-8-git-send-email-Frank.Li@freescale.com> <20150421173110.GG10164@leverpostej>
+ <CAHrpEqRAEMammfaovi6QQxGJfW-LZsgwg5rX4-3Y=+m6qhqeTg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150420222131.GA6077@dtor-ws>
+In-Reply-To: <CAHrpEqRAEMammfaovi6QQxGJfW-LZsgwg5rX4-3Y=+m6qhqeTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 5:21 PM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Current implementation forcibly suppresses creation of hwmon instances
-> for thermal zones defined in device tree data. Let's add a new property,
-> "linux,hwmon" to allow marking certain thermal zones as needing generic
-> hwmon interface.
+On Tue, Apr 21, 2015 at 1:51 PM, Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Apr 21, 2015 at 12:31 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> +static void __init imx_ca7_smp_init_cpus(void)
+>>> +{
+>>> +       int i, ncores;
+>>> +       unsigned long val;
+>>> +
+>>> +       asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
+>>> +       ncores = ((val >> 24) & 0x3) + 1;
+>>> +       if (setup_max_cpus < ncores)
+>>> +               ncores = (setup_max_cpus) ? setup_max_cpus : 1;
+>>> +
+>>> +       for (i = ncores; i < NR_CPUS; i++)
+>>> +               set_cpu_possible(i, false);
+>>> +}
+>>
+>> NAK.
+>>
+>> The set of available CPUs should come from the DT, as with other
+>> platforms.
+>
+> Can you give me a reference platform implement?
 
-What is the decision process for deciding to add this property or not?
+All of the ones with no smp_operations.
 
-
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 4 ++++
->  drivers/thermal/of-thermal.c                          | 7 +++++--
->  2 files changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index 8a49362..0106f8f 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -174,6 +174,10 @@ Optional property:
->                         2000mW, while on a 10'' tablet is around
->                         4500mW.
->
-> +- linux,hwmon:         A boolean property that instructs Linux thermal core
-> +                       to create an instance of hwmon device representing
-> +                       this thermal zone.
-> +
->  Note: The delay properties are bound to the maximum dT/dt (temperature
->  derivative over time) in two situations for a thermal zone:
->  (i)  - when passive cooling is activated (polling-delay-passive); and
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index 9e8c614..7b7a70c 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -891,8 +891,11 @@ int __init of_parse_thermal_zones(void)
->                         goto exit_free;
->                 }
->
-> -               /* No hwmon because there might be hwmon drivers registering */
-> -               tzp->no_hwmon = true;
-> +               /*
-> +                * Do not attach hwmon device unless explicitly requested,
-> +                * since there might be dedicated hwmon drivers registering.
-> +                */
-> +               tzp->no_hwmon = !of_property_read_bool(child, "linux,hwmon");
->
->                 if (!of_property_read_u32(child, "sustainable-power", &prop))
->                         tzp->sustainable_power = prop;
-> --
-> 2.2.0.rc0.207.ga3a616c
->
->
-> --
-> Dmitry
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
