@@ -1,43 +1,148 @@
-From: Joshua Scott <Joshua.Scott-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: A question on device initialization ordering
-Date: Tue, 21 Apr 2015 06:20:07 +0000
-Message-ID: <5535EC16.4030609@alliedtelesis.co.nz>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: ux500: Move GPIO regulator for SD-card into
+ board DTSs
+Date: Tue, 21 Apr 2015 09:15:14 +0200
+Message-ID: <CAPDyKFrDOGBkfg48mmsbktCWFTaNV4WnTm_Fui=Kp30u1yH-tQ@mail.gmail.com>
+References: <1429538553-17366-1-git-send-email-ulf.hansson@linaro.org>
+	<1429538553-17366-2-git-send-email-ulf.hansson@linaro.org>
+	<20150420182634.GH3447@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Content-ID: <84DFFB6ED9940A4CB83A6B8E0CE9F6B0-aR5bhbO/t7M@public.gmane.org>
+In-Reply-To: <20150420182634.GH3447@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkkgaGF2ZSBhIHF1ZXN0aW9uIGFib3V0IHRoZSBvcmRlciBpbiB3aGljaCBkZXZpY2Vz
-IGFyZSBpbml0aWFsaXplZC4NCg0KVGhlIHNpbXBsZXIgY2FzZSBpcyB0aGlzOiBBIGRldmljZSBY
-IG5lZWRzIHRvIGJlIHRha2VuIG91dCBvZiByZXNldCBieSANCmFub3RoZXIgZGV2aWNlIFkgYmVm
-b3JlIGl0IGNhbiBiZSB1c2VkLg0KDQpUbyBnZXQgdGhpcyB0byB3b3JrLCBvbmUgb3B0aW9uIGlz
-IHRvIG1vZGlmeSB0aGUgZHJpdmVyIGZvciBZIHRvIHVzZSANCmFyY2hfaW5pdGNhbGwgaW5zdGVh
-ZCBvZiBkZXZpY2VfaW5pdGNhbGwuIFRoaXMgcmVzdWx0cyBpbiBpdCBiZWluZyBydW4gDQpmaXJz
-dCwgc28gdGhhdCB0aGUgb3RoZXIgZGV2aWNlIFggaXMgb3V0IG9mIHJlc2V0IGJ5IHRoZSB0aW1l
-IGl0IGlzIA0KaW5pdGlhbGl6ZWQuDQoNCklzIGl0IHBvc3NpYmxlIHdpdGhpbiB0aGUgZGV2aWNl
-dHJlZSB0byBzcGVjaWZ5IHRoYXQgb25lIGRldmljZSBtdXN0IGJlIA0KaW5pdGlhbGl6ZWQgYmVm
-b3JlIGF0dGVtcHRpbmcgdG8gaW5pdGlhbGl6ZSBhbm90aGVyICh0byBhdm9pZCBuZWVkaW5nIHRv
-IA0KbW9kaWZ5IHRoZSBkcml2ZXIpPw0KDQoNCg0KQSBjaGlja2VuLWFuZC1lZ2cgY2FzZTogV2hh
-dCBpZiB0d28gZGV2aWNlcyB1c2UgYSBjb21tb24gZHJpdmVyLCBidXQgb25lIA0KbXVzdCBmaXJz
-dCBiZSB1c2VkIHRvIGJyaW5nIHRoZSBvdGhlciBvdXQgb2YgcmVzZXQ/IEVnOiBBIEdQSU8gZXhw
-YW5kZXIgDQp0aGF0IGlzIGhlbGQgaW4gcmVzZXQgYnkgYW5vdGhlciBHUElPIGV4cGFuZGVyLg0K
-DQpUaGUgZ29hbCB3b3VsZCBiZSB0bzoNCiAgMS4gSW5pdGlhbGl6ZSB0aGUgZmlyc3QgR1BJTyBl
-eHBhbmRlcg0KICAyLiBSdW4gYSBkcml2ZXIgdGhhdCB0YWtlcyB0aGUgc2Vjb25kIGV4cGFuZGVy
-IG91dCBvZiByZXNldCB1c2luZyB0aGUgDQpmaXJzdA0KICAzLiBJbml0aWFsaXplIHRoZSBzZWNv
-bmQgR1BJTyBleHBhbmRlciAod2hpY2ggdXNlcyB0aGUgc2FtZSBkcml2ZXIgYXMgDQp0aGUgZmly
-c3QpLg0KDQpJbiB0aGlzIGNhc2UsIGJlY2F1c2UgdGhlIGRyaXZlcnMgZm9yIHN0ZXAgMSBhbmQg
-c3RlcCAzIGFyZSB0aGUgc2FtZSANCmRyaXZlciwgaXQgaXMgbm90IHBvc3NpYmxlIHRvIGFkanVz
-dCB0aGUgX2luaXRjYWxsIG9mIHRoZSBkcml2ZXIgZm9yIA0Kc3RlcCAyIHRvIGJlIGluLWJldHdl
-ZW4gdGhlbS4NCg0KSXMgdGhlcmUgYSB3YXkgdG8gZGVzY3JpYmUgdGhpcyBzaXR1YXRpb24gaW4g
-YSBkZXZpY2V0cmVlIHN1Y2ggdGhhdCB0aGUgDQpkcml2ZXIgZm9yIHN0ZXAgMiBnZXRzIHJ1biBp
-bi1iZXR3ZWVuIHdoZW4gdGhlIGZpcnN0IGFuZCBzZWNvbmQgR1BJTyANCmV4cGFuZGVycyBhcmUg
-aW5pdGlhbGl6ZWQ/DQoNCg0KVGhhbmsgeW91LA0KSm9zaHVhIFNjb3R0
+On 20 April 2015 at 20:26, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 20 Apr 2015, Ulf Hansson wrote:
+>
+>> The GPIO regulator for the SD-card isn't a ux500 SOC configuration, but
+>> instead it's specific to the board. Move the definition of it, into the
+>> board DTSs.
+>
+> What makes you think that?
+
+Because of how it was structured today.
+
+ste-dbx5x0.dtsi - common for all ux500 boards, thus I considered this
+as the SoC configuration.
+
+Then below are board configs which uses the above dtsi:
+ste-href.dtsi - common for href boards (used by ste-hrefprev60.dtsi
+and ste-hrefv60plus.dtsi), have vmmci
+ste-snowball.dts, have vmmci
+ste-ccu8540.dts, don't have vmmci
+ste-ccu9540.dts, don't have vmmci
+
+>
+> We normally place the common pieces (of which there are many in this
+> node) in the highest level DTSI file, then add the platform specific
+> ones in the DTS files.
+
+Okay, so maybe it's due to the naming of ste-dbx5x0.dtsi, that I
+thought this was intended to cover the SoC configuration and not any
+of the platform specific stuff.
+
+So what your advise of doing this?
+
+Kind regards
+Uffe
+
+>
+>> Fixes: c94a4ab7af3f ("ARM: ux500: Disable the MMCI gpio-regulator by default")
+>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/ste-dbx5x0.dtsi  | 17 -----------------
+>>  arch/arm/boot/dts/ste-href.dtsi    | 17 +++++++++++++++++
+>>  arch/arm/boot/dts/ste-snowball.dts | 15 +++++++++++++++
+>>  3 files changed, 32 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+>> index bfd3f1c..2201cd5 100644
+>> --- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
+>> +++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+>> @@ -1017,23 +1017,6 @@
+>>                       status = "disabled";
+>>               };
+>>
+>> -             vmmci: regulator-gpio {
+>> -                     compatible = "regulator-gpio";
+>> -
+>> -                     regulator-min-microvolt = <1800000>;
+>> -                     regulator-max-microvolt = <2900000>;
+>> -                     regulator-name = "mmci-reg";
+>> -                     regulator-type = "voltage";
+>> -
+>> -                     startup-delay-us = <100>;
+>> -                     enable-active-high;
+>> -
+>> -                     states = <1800000 0x1
+>> -                               2900000 0x0>;
+>> -
+>> -                     status = "disabled";
+>> -             };
+>> -
+>>               mcde@a0350000 {
+>>                       compatible = "stericsson,mcde";
+>>                       reg = <0xa0350000 0x1000>, /* MCDE */
+>> diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+>> index bf8f0ed..8cf499a 100644
+>> --- a/arch/arm/boot/dts/ste-href.dtsi
+>> +++ b/arch/arm/boot/dts/ste-href.dtsi
+>> @@ -111,6 +111,23 @@
+>>                       pinctrl-1 = <&i2c3_sleep_mode>;
+>>               };
+>>
+>> +             vmmci: regulator-gpio {
+>> +                     compatible = "regulator-gpio";
+>> +
+>> +                     regulator-min-microvolt = <1800000>;
+>> +                     regulator-max-microvolt = <2900000>;
+>> +                     regulator-name = "mmci-reg";
+>> +                     regulator-type = "voltage";
+>> +
+>> +                     startup-delay-us = <100>;
+>> +                     enable-active-high;
+>> +
+>> +                     states = <1800000 0x1
+>> +                               2900000 0x0>;
+>> +
+>> +                     status = "disabled";
+>> +             };
+>> +
+>>               // External Micro SD slot
+>>               sdi0_per1@80126000 {
+>>                       arm,primecell-periphid = <0x10480180>;
+>> diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+>> index 206826a..65a7f63 100644
+>> --- a/arch/arm/boot/dts/ste-snowball.dts
+>> +++ b/arch/arm/boot/dts/ste-snowball.dts
+>> @@ -146,8 +146,23 @@
+>>               };
+>>
+>>               vmmci: regulator-gpio {
+>> +                     compatible = "regulator-gpio";
+>> +
+>>                       gpios = <&gpio7 4 0x4>;
+>>                       enable-gpio = <&gpio6 25 0x4>;
+>> +
+>> +                     regulator-min-microvolt = <1800000>;
+>> +                     regulator-max-microvolt = <2900000>;
+>> +                     regulator-name = "mmci-reg";
+>> +                     regulator-type = "voltage";
+>> +
+>> +                     startup-delay-us = <100>;
+>> +                     enable-active-high;
+>> +
+>> +                     states = <1800000 0x1
+>> +                               2900000 0x0>;
+>> +
+>> +                     status = "disabled";
+>>               };
+>>
+>>               // External Micro SD slot
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
