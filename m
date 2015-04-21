@@ -1,134 +1,67 @@
-From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [alsa-devel] [PATCH v2 1/2] extcon: arizona: Add support for select
- accessory detect mode when headphone detection
-Date: Tue, 21 Apr 2015 13:11:44 +0900
-Message-ID: <1429589505-11954-2-git-send-email-ideal.song@samsung.com>
-References: <1429589505-11954-1-git-send-email-ideal.song@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1429589505-11954-1-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RESEND RFC PATCH 2/3] ASoC: mediatek: Add AFE connection control
+Date: Tue, 21 Apr 2015 07:50:41 +0200
+Message-ID: <20150421055041.GQ6325@pengutronix.de>
+References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
+ <1428653649-38200-3-git-send-email-koro.chen@mediatek.com>
+ <20150418173740.GF26185@sirena.org.uk>
+ <20150420045017.GI6325@pengutronix.de>
+ <20150420205230.GK14892@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150420205230.GK14892-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for select accessory detect mode to HPDETL or HPDETR.
-Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
-to measure the impedance of an external load connected to the headphone.
+On Mon, Apr 20, 2015 at 09:52:30PM +0100, Mark Brown wrote:
+> On Mon, Apr 20, 2015 at 06:50:17AM +0200, Sascha Hauer wrote:
+> > On Sat, Apr 18, 2015 at 06:37:40PM +0100, Mark Brown wrote:
+> > > On Fri, Apr 10, 2015 at 04:14:08PM +0800, Koro Chen wrote:
+> 
+> > > > +	[0][0] =   { .creg = 0x020, .cshift =  0, .sreg = 0x020, .sshift = 10},
+> > > > +	[0][1] =   { .creg = 0x020, .cshift = 16, .sreg = 0x020, .sshift = 26},
+> 
+> > > It'd also be nice to have less magic numbers in the table, at least for
+> > > the indexes (which I guess correspond to some of the defines in the
+> > > headers)?
+> 
+> > With defines the above two lines would become something like:
+> 
+> > [0][0] = { .creg = AFE_CONN0, .cshift = CONN0_I00_O00_S, .sreg = AFE_CONN0, .sshift = CONN0_I00_O00_R },
+> > [0][1] = { .creg = AFE_CONN0, .cshift = CONN0_I00_O01_S, .sreg = AFE_CONN0, .sshift = CONN0_I00_O01_S },
+> 
+> > For the registers we could use defines, but I think using defines for
+> > the shifts doesn't add much value given they are only used once.
+> 
+> By indexes I actually meant the [0][0] and so on - they seem the more
+> magic bit.
 
-Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
+Oh, that's not magic at all, the crossbar switch has inputs and outputs
+numbered from 0 to MTK_AFE_INTERCONN_NUM_INPUT /
+MTK_AFE_INTERCONN_NUM_OUTPUT (they have the same numbers in the
+datasheet. To connect input x with output y look at index [x][y] in the
+table and write the register values found at that place. If .creg is 0x0
+then it's not possible to connect the given input with the given output.
 
-Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/extcon/extcon-arizona.c   | 28 ++++++++++++++++++++--------
- include/dt-bindings/mfd/arizona.h |  8 ++++++++
- include/linux/mfd/arizona/pdata.h |  3 +++
- 3 files changed, 31 insertions(+), 8 deletions(-)
- create mode 100644 include/dt-bindings/mfd/arizona.h
+Sascha
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 63f01c4..c827342 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -32,13 +32,10 @@
- #include <linux/mfd/arizona/core.h>
- #include <linux/mfd/arizona/pdata.h>
- #include <linux/mfd/arizona/registers.h>
-+#include <dt-bindings/mfd/arizona.h>
- 
- #define ARIZONA_MAX_MICD_RANGE 8
- 
--#define ARIZONA_ACCDET_MODE_MIC 0
--#define ARIZONA_ACCDET_MODE_HPL 1
--#define ARIZONA_ACCDET_MODE_HPR 2
--
- #define ARIZONA_MICD_CLAMP_MODE_JDL      0x4
- #define ARIZONA_MICD_CLAMP_MODE_JDH      0x5
- #define ARIZONA_MICD_CLAMP_MODE_JDL_GP5H 0x9
-@@ -653,9 +650,9 @@ static void arizona_identify_headphone(struct arizona_extcon_info *info)
- 	ret = regmap_update_bits(arizona->regmap,
- 				 ARIZONA_ACCESSORY_DETECT_MODE_1,
- 				 ARIZONA_ACCDET_MODE_MASK,
--				 ARIZONA_ACCDET_MODE_HPL);
-+				 arizona->pdata.hpdet_channel);
- 	if (ret != 0) {
--		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
-+		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
- 		goto err;
- 	}
- 
-@@ -705,9 +702,9 @@ static void arizona_start_hpdet_acc_id(struct arizona_extcon_info *info)
- 				 ARIZONA_ACCESSORY_DETECT_MODE_1,
- 				 ARIZONA_ACCDET_SRC | ARIZONA_ACCDET_MODE_MASK,
- 				 info->micd_modes[0].src |
--				 ARIZONA_ACCDET_MODE_HPL);
-+				 arizona->pdata.hpdet_channel);
- 	if (ret != 0) {
--		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
-+		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
- 		goto err;
- 	}
- 
-@@ -1103,6 +1100,16 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
- 	regmap_update_bits(arizona->regmap, reg, mask, level);
- }
- 
-+static int arizona_extcon_of_get_pdata(struct arizona *arizona)
-+{
-+	struct arizona_pdata *pdata = &arizona->pdata;
-+
-+	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel",
-+			     &pdata->hpdet_channel);
-+
-+	return 0;
-+}
-+
- static int arizona_extcon_probe(struct platform_device *pdev)
- {
- 	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
-@@ -1120,6 +1127,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENOMEM;
- 
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		if (!dev_get_platdata(arizona->dev))
-+			arizona_extcon_of_get_pdata(arizona);
-+	}
-+
- 	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
- 	if (IS_ERR(info->micvdd)) {
- 		ret = PTR_ERR(info->micvdd);
-diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/mfd/arizona.h
-new file mode 100644
-index 0000000..9ecff78
---- /dev/null
-+++ b/include/dt-bindings/mfd/arizona.h
-@@ -0,0 +1,8 @@
-+#ifndef __DT_BINDINGS_ARIZONA_H__
-+#define __DT_BINDINGS_ARIZONA_H__
-+
-+#define ARIZONA_ACCDET_MODE_MIC 0
-+#define ARIZONA_ACCDET_MODE_HPL 1
-+#define ARIZONA_ACCDET_MODE_HPR 2
-+
-+#endif /* __DT_BINDINGS_ARIZONA_H__ */
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index 4578c72..2473a67 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -139,6 +139,9 @@ struct arizona_pdata {
- 	/** GPIO used for mic isolation with HPDET */
- 	int hpdet_id_gpio;
- 
-+	/** Channel to use for headphone detection */
-+	unsigned int hpdet_channel;
-+
- 	/** Extra debounce timeout used during initial mic detection (ms) */
- 	int micd_detect_debounce;
- 
+
+
 -- 
-2.0.0.390.gcb682f8
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
