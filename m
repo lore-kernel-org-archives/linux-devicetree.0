@@ -1,84 +1,44 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [tpmdd-devel] [RFC PATCH 1/2] tee: generic TEE subsystem
-Date: Tue, 21 Apr 2015 07:59:32 +0200
-Message-ID: <20150421055932.GA7760@ermac>
-References: <1429257057-7935-1-git-send-email-jens.wiklander@linaro.org>
- <1429257057-7935-2-git-send-email-jens.wiklander@linaro.org>
- <20150417163054.GA28241@obsidianresearch.com>
- <20150418090147.GF12732@n2100.arm.linux.org.uk>
- <20150418172923.GA10605@obsidianresearch.com>
- <20150420130203.GB25054@ermac>
- <20150420175515.GA31958@obsidianresearch.com>
+From: Joshua Scott <Joshua.Scott-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: A question on device initialization ordering
+Date: Tue, 21 Apr 2015 06:20:07 +0000
+Message-ID: <5535EC16.4030609@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150420175515.GA31958@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, tpmdd-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Content-ID: <84DFFB6ED9940A4CB83A6B8E0CE9F6B0-aR5bhbO/t7M@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 11:55:15AM -0600, Jason Gunthorpe wrote:
-> On Mon, Apr 20, 2015 at 03:02:03PM +0200, Jens Wiklander wrote:
-> > > It appeared to me this driver was copying TPM's old architecture,
-> > > which is very much known to be broken.
-> > 
-> > The struct tee_device holds a shared memory pool from which shared
-> > memory objects are allocated. These shared memory objects can be mapped
-> > both by user space and secure world. 
-> 
-> So this is a whole other set of problems besides what was already
-> brought up.
-> 
-> You need to figure out a lifetime model for this shared memory that
-> works.
-> 
-> > To come around the problem with what should happen when the driver
-> > is removed I'm increasing the refcount on the driver for each
-> > allocated shared memory object and created file pointers. As long as
-> > any resource is in use by either user space or secure world the
-> > driver can't be unloaded.
-> 
-> This isn't how the kernel works. The module refcount effects module
-> unload (it protects the .text) - it does not interact with driver
-> detatch. Userspace can trigger driver detatch (which results in
-> tee_unregister being called) at any time via sysfs.
-> 
-> If you properly design for that case then module unload sequencing
-> works properly for free.
-> 
-> Based on what I gather, I would suggest the following sequence in
-> tee_unregister
->  - unregister all sysfs and char dev registrations.
->  - Write lock ops and set to null. This will error future cdev ioctls,
->    and guarentees no driver ops callbacks are in progress, or will be
->    started in future.
->  - Wait until all client accesses to shared memory are
->    released.
->  - Command the driver to release it's side of the
->    shared memory and wait for that to complete
->  - Free the shared memory
->  - deref the tee_device's struct device (match ref in tee_register)
-> 
-> Then in your struct tee_device's release function free the tee_device
-> memory.
-> 
-> Replace all the module locking code with an active count in struct
-> tee_device (see something like kernfs_drain for an example).
-> 
-> > * Change to use the pattern (with a struct device etc) as described
-> >   above.
-> 
-> Yes, I think Greg confirmed you need to use a struct device, and purge
-> misc_device from the mid layer.
-> 
-> >   I can't protect the ops with just a mutex since tee_ioctl_cmd() needs to
-> >   be multithreaded.
-> 
-> Then use a sleeping read/write lock - aka an active count.
-
-Thanks for the clarification, I got it now.
-
-Regards,
-Jens
+SGksDQoNCkkgaGF2ZSBhIHF1ZXN0aW9uIGFib3V0IHRoZSBvcmRlciBpbiB3aGljaCBkZXZpY2Vz
+IGFyZSBpbml0aWFsaXplZC4NCg0KVGhlIHNpbXBsZXIgY2FzZSBpcyB0aGlzOiBBIGRldmljZSBY
+IG5lZWRzIHRvIGJlIHRha2VuIG91dCBvZiByZXNldCBieSANCmFub3RoZXIgZGV2aWNlIFkgYmVm
+b3JlIGl0IGNhbiBiZSB1c2VkLg0KDQpUbyBnZXQgdGhpcyB0byB3b3JrLCBvbmUgb3B0aW9uIGlz
+IHRvIG1vZGlmeSB0aGUgZHJpdmVyIGZvciBZIHRvIHVzZSANCmFyY2hfaW5pdGNhbGwgaW5zdGVh
+ZCBvZiBkZXZpY2VfaW5pdGNhbGwuIFRoaXMgcmVzdWx0cyBpbiBpdCBiZWluZyBydW4gDQpmaXJz
+dCwgc28gdGhhdCB0aGUgb3RoZXIgZGV2aWNlIFggaXMgb3V0IG9mIHJlc2V0IGJ5IHRoZSB0aW1l
+IGl0IGlzIA0KaW5pdGlhbGl6ZWQuDQoNCklzIGl0IHBvc3NpYmxlIHdpdGhpbiB0aGUgZGV2aWNl
+dHJlZSB0byBzcGVjaWZ5IHRoYXQgb25lIGRldmljZSBtdXN0IGJlIA0KaW5pdGlhbGl6ZWQgYmVm
+b3JlIGF0dGVtcHRpbmcgdG8gaW5pdGlhbGl6ZSBhbm90aGVyICh0byBhdm9pZCBuZWVkaW5nIHRv
+IA0KbW9kaWZ5IHRoZSBkcml2ZXIpPw0KDQoNCg0KQSBjaGlja2VuLWFuZC1lZ2cgY2FzZTogV2hh
+dCBpZiB0d28gZGV2aWNlcyB1c2UgYSBjb21tb24gZHJpdmVyLCBidXQgb25lIA0KbXVzdCBmaXJz
+dCBiZSB1c2VkIHRvIGJyaW5nIHRoZSBvdGhlciBvdXQgb2YgcmVzZXQ/IEVnOiBBIEdQSU8gZXhw
+YW5kZXIgDQp0aGF0IGlzIGhlbGQgaW4gcmVzZXQgYnkgYW5vdGhlciBHUElPIGV4cGFuZGVyLg0K
+DQpUaGUgZ29hbCB3b3VsZCBiZSB0bzoNCiAgMS4gSW5pdGlhbGl6ZSB0aGUgZmlyc3QgR1BJTyBl
+eHBhbmRlcg0KICAyLiBSdW4gYSBkcml2ZXIgdGhhdCB0YWtlcyB0aGUgc2Vjb25kIGV4cGFuZGVy
+IG91dCBvZiByZXNldCB1c2luZyB0aGUgDQpmaXJzdA0KICAzLiBJbml0aWFsaXplIHRoZSBzZWNv
+bmQgR1BJTyBleHBhbmRlciAod2hpY2ggdXNlcyB0aGUgc2FtZSBkcml2ZXIgYXMgDQp0aGUgZmly
+c3QpLg0KDQpJbiB0aGlzIGNhc2UsIGJlY2F1c2UgdGhlIGRyaXZlcnMgZm9yIHN0ZXAgMSBhbmQg
+c3RlcCAzIGFyZSB0aGUgc2FtZSANCmRyaXZlciwgaXQgaXMgbm90IHBvc3NpYmxlIHRvIGFkanVz
+dCB0aGUgX2luaXRjYWxsIG9mIHRoZSBkcml2ZXIgZm9yIA0Kc3RlcCAyIHRvIGJlIGluLWJldHdl
+ZW4gdGhlbS4NCg0KSXMgdGhlcmUgYSB3YXkgdG8gZGVzY3JpYmUgdGhpcyBzaXR1YXRpb24gaW4g
+YSBkZXZpY2V0cmVlIHN1Y2ggdGhhdCB0aGUgDQpkcml2ZXIgZm9yIHN0ZXAgMiBnZXRzIHJ1biBp
+bi1iZXR3ZWVuIHdoZW4gdGhlIGZpcnN0IGFuZCBzZWNvbmQgR1BJTyANCmV4cGFuZGVycyBhcmUg
+aW5pdGlhbGl6ZWQ/DQoNCg0KVGhhbmsgeW91LA0KSm9zaHVhIFNjb3R0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
