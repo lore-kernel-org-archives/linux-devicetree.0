@@ -1,86 +1,187 @@
-From: Kevin Cernekee <cernekee@chromium.org>
-Subject: Re: [PATCH 1/3] ASoC: tas571x: Add DT binding document
-Date: Mon, 20 Apr 2015 15:48:19 -0700
-Message-ID: <CAJzqFtbseDe8c19ZpZjw3y72-+eO1+Zcq7D+DC=0G5_LbimRJg@mail.gmail.com>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <20150418111622.GD26185@sirena.org.uk> <CAJzqFtYBvNAgwROZ09MGanYOyyF0EXEL7W9ZF4eAhprQVquNcQ@mail.gmail.com>
- <20150420220338.GZ14892@sirena.org.uk>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Mon, 20 Apr 2015 19:51:44 -0500
+Message-ID: <1429577504.4352.67.camel@freescale.com>
+References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
+	 <1429119357.22867.724.camel@freescale.com>
+	 <DM2PR03MB38330DBBFFD1BC45D58F447E6E40@DM2PR03MB383.namprd03.prod.outlook.com>
+	 <1429249281.32545.52.camel@freescale.com>
+	  <DM2PR03MB383E5F67C358CCE2E38EA71E6E00@DM2PR03MB383.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150420220338.GZ14892@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DM2PR03MB383E5F67C358CCE2E38EA71E6E00-ufbTtyGzTTRJonC5hhDUuuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 3:03 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Apr 20, 2015 at 02:18:56PM -0700, Kevin Cernekee wrote:
->> On Sat, Apr 18, 2015 at 4:16 AM, Mark Brown <broonie@kernel.org> wrote:
->> > On Wed, Apr 15, 2015 at 02:42:19PM -0700, Kevin Cernekee wrote:
->
->> >> +- VDD-supply: regulator phandle for the AVDD/DVDD/HP_VDD supply
->
->> > This is clearly not correct - if there are three separate physical
->> > supplies there should be three separate regulators requested.  They may
->> > all resolve to one physical regulator on the board you are working with
->> > but that might not be true on other boards.
->
->> In the "simplified diagram," TI shows a single AVDD/DVDD/HP_VDD supply:
->
->> http://www.ti.com/lit/ds/symlink/tas5717.pdf#2
->
->> Page 20 also suggests the use of a single 3.3V supply for AVDD/DVDD/HP_VDD.
->
->> But this combines a number of separate pins.  On 5711 we have
->> dedicated pins for:
->
->> PVDD_A
->> PVDD_B
->> PVDD_C
->> PVDD_D
->> AVDD
->> DVDD
->
-> Yes, those are three separate supplies that are typically tied together
-> - it looks like PVDD has high current draw so is tied through multiple
-> pins.
+On Mon, 2015-04-20 at 06:40 -0500, Liberman Igal-B31950 wrote:
+> 
+> 
+> Regards,
+> Igal Liberman.
+> 
+> > -----Original Message-----
+> > From: Liberman Igal-B31950
+> > Sent: Monday, April 20, 2015 2:07 PM
+> > To: Wood Scott-B07421
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Subject: RE: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+> > 
+> > 
+> > 
+> > Regards,
+> > Igal Liberman.
+> > 
+> > > -----Original Message-----
+> > > From: Wood Scott-B07421
+> > > Sent: Friday, April 17, 2015 8:41 AM
+> > > To: Liberman Igal-B31950
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > > Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock
+> > > mux
+> > >
+> > > On Thu, 2015-04-16 at 01:11 -0500, Liberman Igal-B31950 wrote:
+> > > >
+> > > >
+> > > > Regards,
+> > > > Igal Liberman.
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Wood Scott-B07421
+> > > > > Sent: Wednesday, April 15, 2015 8:36 PM
+> > > > > To: Liberman Igal-B31950
+> > > > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > > > > Subject: Re: [v3] dt/bindings: qoriq-clock: Add binding for FMan
+> > > > > clock mux
+> > > > >
+> > > > > On Tue, 2015-04-14 at 13:56 +0300, Igal.Liberman wrote:
+> > > > > > From: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > > >
+> > > > > > v3: Addressed feedback from Scott:
+> > > > > > 	- Removed clock specifier description.
+> > > > > >
+> > > > > > v2: Addressed feedback from Scott:
+> > > > > > 	- Moved the "fman-clk-mux" clock provider details
+> > > > > > 	  under "clocks" property.
+> > > > > >
+> > > > > > Signed-off-by: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/clock/qoriq-clock.txt      |   17
+> > > +++++++++++++++--
+> > > > > >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git
+> > > > > > a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > > > > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > > > > index b0d7b73..2bb3b38 100644
+> > > > > > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > > > > > @@ -65,9 +65,10 @@ Required properties:
+> > > > > >  		It takes parent's clock-frequency as its clock.
+> > > > > >  	* "fsl,qoriq-platform-pll-1.0" for the platform PLL clock (v1.0)
+> > > > > >  	* "fsl,qoriq-platform-pll-2.0" for the platform PLL clock
+> > > > > > (v2.0)
+> > > > > > +	* "fsl,fman-clk-mux" for the Frame Manager clock.
+> > > > > >  - #clock-cells: From common clock binding. The number of cells in a
+> > > > > > -	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
+> > > > > > -	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
+> > > > > > +	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
+> > and
+> > > > > > +	"fsl,fman-clk-mux" clocks or <1> for "fsl,qoriq-core-pll-
+> > [1,2].0".
+> > > > > >  	For "fsl,qoriq-core-pll-1.0" clocks, the single
+> > > > > >  	clock-specifier cell may take the following values:
+> > > > > >  	* 0 - equal to the PLL frequency @@ -145,6 +146,18 @@
+> > Example
+> > > > > > for clock block and clock provider:
+> > > > > >  			clocks = <&sysclk>;
+> > > > > >  			clock-output-names = "platform-pll",
+> > "platform-pll-
+> > > > > div2";
+> > > > > >  		};
+> > > > > > +
+> > > > > > +		fm0clk: fm0-clk-mux {
+> > > > > > +			#clock-cells = <0>;
+> > > > > > +			reg = <0x10 4>
+> > > > > > +			compatible = "fsl,fman-clk-mux";
+> > > > > > +			clocks = <&pll0 0>, <&pll0 1>, <&pll0 2>,
+> > <&pll0 3>,
+> > > > > > +				 <&platform_pll 0>, <&pll1 1>, <&pll1
+> > 2>;
+> > > > > > +			clock-names = "pll0", "pll0-div2", "pll0-div3",
+> > > > > > +				      "pll0-div4", "platform-pll", "pll1-
+> > div2",
+> > > > > > +				      "pll1-div3";
+> > > > > > +			clock-output-names = "fm0-clk";
+> > > > > > +		};
+> > > > > >  	};
+> > > > > >  };
+> > > > > >
+> > > > >
+> > > > > I don't see this register in the manuals for older DPAA chips,
+> > > > > such as
+> > > > > p4080 or p3041.  Is it present but undocumented?  Should I be
+> > > > > looking somewhere other than "Clocking Memory Map"?
+> > > > >
+> > > >
+> > > > It's available only in part of the new chips (T4, T2, B4).
+> > > > In T1024/T1040 there's only one option for FMan clock so this
+> > > > register is not
+> > > available.
+> > >
+> > > So it's part of the 2.0 chassis?  I'd stick a 2.0 in there, then.  Who
+> > > knows what we may see in the future.
+> > >
+> > 
+> > OK,
+> > We can go with "fsl,fman-clk-mux-1/2-0.".
+> > In that case, we need to update FMan nodes and the clock driver:
+> > https://patchwork.ozlabs.org/patch/443973/
+> > https://patchwork.ozlabs.org/patch/461813/
+> > I will update those patches separately.
+> > 
+> 
+> Scott,
+> There are 2 options:
+> Use "fsl,fman-clk-mux-1.0" for SoC without CLKCGnHWACSR register.
+> Use "fsl,fman-clk-mux-2.0" for SoC with CLKCGnHWACSR register.
+> Or
+> Use "fsl,fman-clk-mux-1.0" for SoC which support FMan V2 (Pxxxx)
+> Use "fsl,fman-clk-mux-2.0" for SoC which support FMan V3 (B/T)
 
-Each half-bridge output OUT_{A,B,C,D} has its own dedicated
-PVDD_{A,B,C,D} supply on 5711:
+1.0/2.0 in the clockgen node refers to chassis version.  It has nothing
+to do with FMan version.
 
-http://www.ti.com/lit/ds/symlink/tas5711.pdf#7
+In fact, fman should not be in the compatible because, now that I found
+the documentation for this, I see that it's more generic than that.
+"fman-clk-mux" should be replaced with "qoriq-hwacsr".
 
-I don't understand the statement: "those are three separate supplies
-that are typically tied together."  AVDD/DVDD are 3.3v fixed but PVDD
-is 8V minimum (5711) or 4.5V minimum (5717/5719).  So AVDD/DVDD can
-never be driven by the same regulator output as PVDD.  Perhaps you
-were thinking of HPVDD/AVDD/DVDD on 5717/5719?
+> Using the 1st option might be confusing because core pll/mux 2.0 represents B/T devices and 1.0 represent Pxxxx.
+> In this case, T1040 uses "fsl,qoriq-core-pll/mux-2.0" and "fsl,fman-clk-mux-1.0".
+> On the other hand, the second option doesn't distinguishes between T4 and T1 (for example), as T1 doesn't have reg property while T4 has.
 
-The simplified application diagram on page 2 does show that AVDD/DVDD
-are typically tied together, and that PVDD_* are also typically tied
-together.  But as you pointed out, there may be situations where that
-isn't the case, so that leaves us with up to 6 separate supplies on
-5711, or 5 on 5717/5719.  The typical case is probably closer to 2 or
-3, though.
+How would t1040 have a so-called "fman-clk-mux" node at all if it
+doesn't have this register?
 
-> I'd not be surprised to see systems with AVDD tied to a separate
-> pin, analogue supplies often benefit from low noise supplies separate to
-> digital ones.  Indeed if you look at the pin descriptions the analogue
-> and digital supplies even have separate grounds.
->
->> I didn't see anything in the datasheet suggesting it is OK to have
->> different voltages or power states on the various supply pins (other
->> than the special voltage on PVDD).
->
-> That's more likely to go wrong if they're not controlled separately than
-> if they are since we will only be able to turn a single supply on or
-> off..
->
->> I can add as many regulator entries as appropriate.  What do you recommend?
->
-> Have the driver accurately reflect the hardware, request one regulator
-> per supply.
+I think we've made a mess of the clock bindings and this is only going
+to make it worse.  We need to stay compatible with the mess we've made,
+but I'm inclined to say that we shouldn't add more nodes to it.  
 
-So, request one regulator per VDD pin?  Or group all of PVDD_* into a
-single regulator?
+Instead, have the toplevel clockgen node have a chip-based compatible in
+addition to version (e.g. compatible = "fsl,t4240-clockgen",
+"fsl,qoriq-clockgen-2.0") and have the toplevel node export whatever
+clocks are needed.  Put the logic to deal with all the different
+dividers, register values, and such in code, not the device tree.  The
+binding should be focused on how to encode the specifier of the exported
+clocks.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
