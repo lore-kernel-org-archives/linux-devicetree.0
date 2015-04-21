@@ -1,106 +1,76 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/2] extcon: arizona: Add support for
- select accessory detect mode when headphone detection
-Date: Tue, 21 Apr 2015 18:38:10 +0900
-Message-ID: <20150421183810.32826087@songinha-Samsung-DeskTop-System>
-References: <1429589505-11954-1-git-send-email-ideal.song@samsung.com>
- <1429589505-11954-2-git-send-email-ideal.song@samsung.com>
- <20150421092826.GH3480@opensource.wolfsonmicro.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RESEND RFC PATCH 1/3] ASoC: mediatek: Add binding support for
+ AFE driver
+Date: Tue, 21 Apr 2015 11:49:26 +0200
+Message-ID: <20150421094926.GU6325@pengutronix.de>
+References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
+ <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
+ <20150418173407.GE26185@sirena.org.uk>
+ <20150420043747.GH6325@pengutronix.de>
+ <20150420204849.GJ14892@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150421092826.GH3480@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, cw00.choi@samsung.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150420204849.GJ14892-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Thanks for your review :)
-
-On Tue, 21 Apr 2015 10:28:26 +0100
-Charles Keepax <ckeepax@opensource.wolfsonmicro.com> wrote:
-
-> On Tue, Apr 21, 2015 at 01:11:44PM +0900, Inha Song wrote:
-> > This patch add support for select accessory detect mode to HPDETL or HPDETR.
-> > Arizona provides a headphone detection circuit on the HPDETL and HPDETR pins
-> > to measure the impedance of an external load connected to the headphone.
-> > 
-> > Depending on board design, headphone detect pins can change to HPDETR or HPDETL.
-> > 
-> > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > ---
-> >  drivers/extcon/extcon-arizona.c   | 28 ++++++++++++++++++++--------
-> >  include/dt-bindings/mfd/arizona.h |  8 ++++++++
-> >  include/linux/mfd/arizona/pdata.h |  3 +++
-> >  3 files changed, 31 insertions(+), 8 deletions(-)
-> >  create mode 100644 include/dt-bindings/mfd/arizona.h
-> > 
-> > diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> > index 63f01c4..c827342 100644
-> > --- a/drivers/extcon/extcon-arizona.c
-> > +++ b/drivers/extcon/extcon-arizona.c
-> > @@ -32,13 +32,10 @@
-> >  #include <linux/mfd/arizona/core.h>
-> >  #include <linux/mfd/arizona/pdata.h>
-> >  #include <linux/mfd/arizona/registers.h>
-> > +#include <dt-bindings/mfd/arizona.h>
-> >  
-> >  #define ARIZONA_MAX_MICD_RANGE 8
-> >  
-> > -#define ARIZONA_ACCDET_MODE_MIC 0
-> > -#define ARIZONA_ACCDET_MODE_HPL 1
-> > -#define ARIZONA_ACCDET_MODE_HPR 2
-> > -
-> >  #define ARIZONA_MICD_CLAMP_MODE_JDL      0x4
-> >  #define ARIZONA_MICD_CLAMP_MODE_JDH      0x5
-> >  #define ARIZONA_MICD_CLAMP_MODE_JDL_GP5H 0x9
-> > @@ -653,9 +650,9 @@ static void arizona_identify_headphone(struct arizona_extcon_info *info)
-> >  	ret = regmap_update_bits(arizona->regmap,
-> >  				 ARIZONA_ACCESSORY_DETECT_MODE_1,
-> >  				 ARIZONA_ACCDET_MODE_MASK,
-> > -				 ARIZONA_ACCDET_MODE_HPL);
-> > +				 arizona->pdata.hpdet_channel);
-> >  	if (ret != 0) {
-> > -		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
-> > +		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
-> >  		goto err;
-> >  	}
-> >  
-> > @@ -705,9 +702,9 @@ static void arizona_start_hpdet_acc_id(struct arizona_extcon_info *info)
-> >  				 ARIZONA_ACCESSORY_DETECT_MODE_1,
-> >  				 ARIZONA_ACCDET_SRC | ARIZONA_ACCDET_MODE_MASK,
-> >  				 info->micd_modes[0].src |
-> > -				 ARIZONA_ACCDET_MODE_HPL);
-> > +				 arizona->pdata.hpdet_channel);
-> >  	if (ret != 0) {
-> > -		dev_err(arizona->dev, "Failed to set HPDETL mode: %d\n", ret);
-> > +		dev_err(arizona->dev, "Failed to set HPDET mode: %d\n", ret);
-> >  		goto err;
-> >  	}
-> >  
-> > @@ -1103,6 +1100,16 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
-> >  	regmap_update_bits(arizona->regmap, reg, mask, level);
-> >  }
-> >  
-> > +static int arizona_extcon_of_get_pdata(struct arizona *arizona)
-> > +{
-> > +	struct arizona_pdata *pdata = &arizona->pdata;
-> > +
-> > +	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel",
-> > +			     &pdata->hpdet_channel);
+On Mon, Apr 20, 2015 at 09:48:49PM +0100, Mark Brown wrote:
+> On Mon, Apr 20, 2015 at 06:37:47AM +0200, Sascha Hauer wrote:
+> > On Sat, Apr 18, 2015 at 06:34:07PM +0100, Mark Brown wrote:
+> > > On Fri, Apr 10, 2015 at 04:14:07PM +0800, Koro Chen wrote:
 > 
-> I think we need to verify this is either HPL or HPR and default
-> it to HPL if isn't one of those. Otherwise this looks fine.
+> > > > +Each external interface (called "IO" in this driver) is presented as a
+> > > > +DAI to ASoC. An IO must be connected via the interconnect to a memif.
+> > > > +The connection paths are configured through the device tree.
 > 
+> > > Why are these connection paths configured via device tree?  I would
+> > > expect that either there would be runtime configurability of these
+> > > things (particularly if loopback configurations within the hardware are
+> > > possible) or we'd just allocate memory interfaces to DAIs automatically
+> > > as DAIs come into use.
+> 
+> > There is a crossbar switch between the memory interfaces and the DAIs.
+> > Not every connection is possible, so not every memory interface can be
+> > used for every DAI. An algorithm choosing a suitable memory interface
+> > must be quite clever, complicated and also SoC dependent (the same but
+> > different hardware is used on MT8135 aswell), so I thought offering a
+> > static configuration via device tree is a good start. Should there be
+> > runtime configuration possible later the device tree settings could
+> > provide a good default.
+> 
+> What exactly do the restrictions look like and how often do they vary in
+> practice (can we get away with just doing a single static setup in the
+> driver)? I'd have thought it should be fairly straightforward to have a
+> table of valid mappings and just pick the first free memory interface?
 
-Ok, We can check hpdet_channel value to use switch-case in arizona_extcon_of_get_pdata() function.
-I will fix.
+I think this could be done. I checked the possible connections in the
+crossbar switch and it seems all memory interfaces can be connected with
+all relevant external interfaces. So indeed the memory interfaces could
+be dynamically allocated instead of statically associated to an
+external interface. There are two problems I see: Some memory interfaces
+are limited in the rates they support, they can only do 8k/16k/32k (for
+speech). How can we know such memory interface should be used? Also
+there are two programmable hardware gain blocks which can be inserted to
+the digital audio path using the crossbar switch. There must be some
+mechanism to configure them into different places.
 
-Best Regards,
-Inha Song.
+Sascha
 
-> Thanks,
-> Charles
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
