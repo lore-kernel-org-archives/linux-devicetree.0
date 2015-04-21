@@ -1,41 +1,48 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v5 09/11] ARM: imx: add imx7d clk tree support
-Date: Tue, 21 Apr 2015 15:30:05 -0500
-Message-ID: <CAL_Jsq+V+q78e1QqtZJK2inCDv+rRjWnzcUgRKXComnJ2O3myg@mail.gmail.com>
-References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com> <1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH v5 07/11] ARM: imx: add msl support for imx7d
+Date: Tue, 21 Apr 2015 15:37:17 -0500
+Message-ID: <CAHrpEqS5qQ7-0bEFEZ3tkeupL0cBU1aPiVnS5RWy=GBW9JAhWw@mail.gmail.com>
+References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
+	<1429628007-8892-8-git-send-email-Frank.Li@freescale.com>
+	<20150421173110.GG10164@leverpostej>
+	<CAHrpEqRAEMammfaovi6QQxGJfW-LZsgwg5rX4-3Y=+m6qhqeTg@mail.gmail.com>
+	<CAL_Jsq+NV5Ok-P6JGZzNyQCD=PdwXbDY39XmwzKB0U+vuyHxVA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
+In-Reply-To: <CAL_Jsq+NV5Ok-P6JGZzNyQCD=PdwXbDY39XmwzKB0U+vuyHxVA@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Frank.Li@freescale.com
-Cc: lznuaa@gmail.com, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, Adrian Alonso <aalonso@freescale.com>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 9:53 AM,  <Frank.Li@freescale.com> wrote:
-> From: Frank Li <Frank.Li@freescale.com>
+On Tue, Apr 21, 2015 at 3:22 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Apr 21, 2015 at 1:51 PM, Zhi Li <lznuaa@gmail.com> wrote:
+>> On Tue, Apr 21, 2015 at 12:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>>>> +static void __init imx_ca7_smp_init_cpus(void)
+>>>> +{
+>>>> +       int i, ncores;
+>>>> +       unsigned long val;
+>>>> +
+>>>> +       asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
+>>>> +       ncores = ((val >> 24) & 0x3) + 1;
+>>>> +       if (setup_max_cpus < ncores)
+>>>> +               ncores = (setup_max_cpus) ? setup_max_cpus : 1;
+>>>> +
+>>>> +       for (i = ncores; i < NR_CPUS; i++)
+>>>> +               set_cpu_possible(i, false);
+>>>> +}
+>>>
+>>> NAK.
+>>>
+>>> The set of available CPUs should come from the DT, as with other
+>>> platforms.
+>>
+>> Can you give me a reference platform implement?
 >
-> Add i.MX7D clk tree support.
->
-> Enable all clock to bring up imx7.
-> Clock framework need be modified a little since imx7d
-> change clock design. otherwise system will halt and block the
-> other part upstream.
->
-> All clock refine need wait for Dong Aisheng's patch
-> clk: support clocks which requires parent clock on during operation
-> Or other solution ready.
->
-> Signed-off-by: Anson Huang <b20788@freescale.com>
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
-> Signed-off-by: Frank Li <Frank.Li@freescale.com>
-> ---
->  arch/arm/mach-imx/clk-imx7d.c | 887 ++++++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-imx/clk-pllv3.c |  16 +-
->  arch/arm/mach-imx/clk.h       |   9 +
->  3 files changed, 911 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/mach-imx/clk-imx7d.c
+> All of the ones with no smp_operations.
 
-Why is i.MX clock code not moved to drivers/clk?
+Okay, I just remove it.
 
-Rob
+>
+> Rob
