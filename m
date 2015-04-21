@@ -1,55 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 08/11] ARM: imx: add gpt system timer support for imx7d
-Date: Tue, 21 Apr 2015 15:25:01 -0500
-Message-ID: <CAL_JsqJiYoFvi5K792t8fPAxdsMnNfaXzAvGkaeQcHf=HsQ8bg@mail.gmail.com>
-References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com> <1429628007-8892-9-git-send-email-Frank.Li@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 09/11] ARM: imx: add imx7d clk tree support
+Date: Tue, 21 Apr 2015 15:30:05 -0500
+Message-ID: <CAL_Jsq+V+q78e1QqtZJK2inCDv+rRjWnzcUgRKXComnJ2O3myg@mail.gmail.com>
+References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com> <1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429628007-8892-9-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: lznuaa@gmail.com, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, Adrian Alonso <aalonso@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 9:53 AM,  <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Apr 21, 2015 at 9:53 AM,  <Frank.Li@freescale.com> wrote:
+> From: Frank Li <Frank.Li@freescale.com>
 >
-> Add GPT system timer support for i.MX7D, it has same hardware
-> as i.MX6DL.
+> Add i.MX7D clk tree support.
 >
-> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Enable all clock to bring up imx7.
+> Clock framework need be modified a little since imx7d
+> change clock design. otherwise system will halt and block the
+> other part upstream.
+>
+> All clock refine need wait for Dong Aisheng's patch
+> clk: support clocks which requires parent clock on during operation
+> Or other solution ready.
+>
+> Signed-off-by: Anson Huang <b20788@freescale.com>
+> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
 > ---
->  arch/arm/mach-imx/time.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
-> index 15d18e1..7c1d8a3 100644
-> --- a/arch/arm/mach-imx/time.c
-> +++ b/arch/arm/mach-imx/time.c
-> @@ -321,7 +321,7 @@ static void __init _mxc_timer_init(int irq,
->                 tctl_val = V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
->                 if (clk_get_rate(clk_per) == V2_TIMER_RATE_OSC_DIV8) {
->                         tctl_val |= V2_TCTL_CLK_OSC_DIV8;
-> -                       if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
-> +                       if (cpu_is_imx6dl() || cpu_is_imx6sx() || cpu_is_imx7d()) {
+>  arch/arm/mach-imx/clk-imx7d.c | 887 ++++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-imx/clk-pllv3.c |  16 +-
+>  arch/arm/mach-imx/clk.h       |   9 +
+>  3 files changed, 911 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/mach-imx/clk-imx7d.c
 
-You should get this information from DT so you aren't changing this
-again on the next chip.
+Why is i.MX clock code not moved to drivers/clk?
 
->                                 /* 24 / 8 = 3 MHz */
->                                 __raw_writel(7 << V2_TPRER_PRE24M,
->                                         timer_base + MXC_TPRER);
-> @@ -383,3 +383,4 @@ CLOCKSOURCE_OF_DECLARE(mx53_timer, "fsl,imx53-gpt", mxc_timer_init_dt);
->  CLOCKSOURCE_OF_DECLARE(mx6q_timer, "fsl,imx6q-gpt", mxc_timer_init_dt);
->  CLOCKSOURCE_OF_DECLARE(mx6sl_timer, "fsl,imx6sl-gpt", mxc_timer_init_dt);
->  CLOCKSOURCE_OF_DECLARE(mx6sx_timer, "fsl,imx6sx-gpt", mxc_timer_init_dt);
-> +CLOCKSOURCE_OF_DECLARE(mx7d_timer, "fsl,imx7d-gpt", mxc_timer_init_dt);
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
