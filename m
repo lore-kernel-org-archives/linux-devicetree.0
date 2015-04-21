@@ -1,31 +1,79 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/3] regulator: max8973: make default/unset dvs gpio as
- invalid gpio
-Date: Tue, 21 Apr 2015 18:45:24 +0530
-Message-ID: <55364D6C.4090702@nvidia.com>
-References: <1429534457-15515-1-git-send-email-ldewangan@nvidia.com> <1429534457-15515-3-git-send-email-ldewangan@nvidia.com> <20150420211514.GO14892@sirena.org.uk>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH v4 09/11] ARM: imx: add imx7d clk tree support
+Date: Tue, 21 Apr 2015 09:15:36 -0500
+Message-ID: <CAHrpEqSuJbAEBDBfVMXdFk-p-xwtwfmHbSw3OsN-2sa9fNmA=A@mail.gmail.com>
+References: <1429563933-3129-1-git-send-email-Frank.Li@freescale.com>
+	<1429563933-3129-10-git-send-email-Frank.Li@freescale.com>
+	<20150421102255.GW6325@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150420211514.GO14892@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150421102255.GW6325@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, Adrian Alonso <aalonso@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 21, 2015 at 5:22 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, Apr 21, 2015 at 05:05:31AM +0800, Frank.Li@freescale.com wrote:
+>> From: Frank Li <Frank.Li@freescale.com>
+>>
+>> Add i.MX7D clk tree support.
+>>
+>> +
+>> +     clk_register_clkdev(clks[IMX7D_GPT1_ROOT_CLK], "ipg", "imx-gpt.0");
+>> +     clk_register_clkdev(clks[IMX7D_GPT_3M_CLK], "gpt_3m", "imx-gpt.0");
 
-On Tuesday 21 April 2015 02:45 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Mon, Apr 20, 2015 at 06:24:16PM +0530, Laxman Dewangan wrote:
->> If platform data has dvs-gpio value 0 as default/unset then
->> make this as invalid gpio so that function gpio_is_valid()
->> can return false on this case.
-> OK, so this handles the problem with the first patch - it should have
-> been the first patch to help with review.
->
-Yaah, I realized after reading your comment on patch 1 that I should 
-have on different sequence.
+This patch just list all clock root in RM.
+all clock refine have to wait for Dong Aisheng's RFC clock framework
+change's patch.
 
-Thanks for accepting the patches.
+>
+> What are these good for? These shouldn't be here.
+>
+>> +
+>> +     for (i = 0; i < IMX7D_END_CLK; i++)
+>> +             clk_prepare_enable(clks[i]);
+>
+> Hey, no. You enable *all* clocks here which is certainly wrong. They
+> will never be turned off.
+
+Yes. This patches's purpose is bring up mx7.
+Because imx7 clock design change,  Dong Aisheng send out RFC patch to
+change a little bit framework.
+After that,  we can enable only necessary clock here. Otherwise system
+will halt and block the other part
+upstream.
+
+>
+>> @@ -309,12 +316,20 @@ struct clk *imx_clk_pllv3(enum imx_pllv3_type type, const char *name,
+>>       case IMX_PLLV3_ENET:
+>>               ops = &clk_pllv3_enet_ops;
+>>               break;
+>> +     case IMX_PLLV3_SYSV2:
+>> +             ops = &clk_pllv3_ops;
+>> +             break;
+>>       default:
+>>               ops = &clk_pllv3_ops;
+>>       }
+>>       pll->base = base;
+>>       pll->div_mask = div_mask;
+>>
+>> +     if (cpu_is_imx7d() && strcmp(name, "pll_enet_main") == 0)
+>> +             pll->powerdown = ENET_PLL_POWER;
+>> +     else
+>> +             pll->powerdown = BM_PLL_POWER;
+>
+> You should probably add a new PLL type, like IMX_PLLV3_ENET_IMX7 or such
+> instead of using cpu_is_ and strcmp.
+
+Okay I will update it.
+
+>
+> Sascha
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
