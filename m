@@ -1,42 +1,29 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 8/9] ARM: Add MAINTAINERS for 2836.
-Date: Tue, 21 Apr 2015 11:09:55 -0700
-Message-ID: <1429639796-2169-9-git-send-email-eric@anholt.net>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429639796-2169-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [RFC PATCH v2 0/1] ARM: cpuidle: heterogeneous systems extension
+Date: Tue, 21 Apr 2015 11:24:54 -0700
+Message-ID: <CAMAWPa_fMhgFfL8krDxT9h42mydVogkaYQt1Me1qJTsKeH5dSA@mail.gmail.com>
+References: <1429200617-9546-1-git-send-email-lorenzo.pieralisi@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1429200617-9546-1-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Howard Chen <howard.chen@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Thu, Apr 16, 2015 at 9:10 AM, Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ddc5a8c..1e3f1f1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2128,6 +2128,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rpi/linux-rpi.git
- S:	Maintained
- N:	bcm2835
- 
-+BROADCOM BCM2836 ARM ARCHITECTURE
-+M:	Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-+L:	linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rpi/linux-rpi.git
-+S:	Maintained
-+N:	bcm2836
-+
- BROADCOM BCM33XX MIPS ARCHITECTURE
- M:	Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
--- 
-2.1.4
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patch sets the maximum number of static CPUidle drivers allowed to
+> two, since it is hard to foresee systems with more than two sets of CPUs
+> having different idle states
+
+It's not hard to forsee anymore:
+
+   http://www.cnx-software.com/2015/04/21/mediatek-helio-x20-deca-core-processor/
+   https://liliputing.com/2015/04/closer-look-at-mediateks-upcoming-10-core-helio-x20-processor.html
+
+Kevin
