@@ -1,58 +1,39 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] clocksource: st_lpc: Add LPC timer as a
- clocksource.
-Date: Tue, 21 Apr 2015 11:56:06 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1504211153580.13914@nanos>
-References: <1429267823-8879-1-git-send-email-peter.griffin@linaro.org> <1429267823-8879-2-git-send-email-peter.griffin@linaro.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 07/11] ARM: imx: add msl support for imx7d
+Date: Tue, 21 Apr 2015 10:55:43 +0100
+Message-ID: <20150421095543.GQ12732@n2100.arm.linux.org.uk>
+References: <1429563933-3129-1-git-send-email-Frank.Li@freescale.com>
+ <1429563933-3129-8-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429267823-8879-2-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1429563933-3129-8-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: lznuaa@gmail.com, shawn.guo@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, Anson Huang <b20788@freescale.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2015, Peter Griffin wrote:
-> +/* Low Power Timer */
-> +#define LPC_LPT_LSB_OFF		0x400
-> +#define LPC_LPT_MSB_OFF		0x404
-> +#define LPC_LPT_START_OFF	0x408
-> +
-> +struct st_lpc {
-> +	struct clk *clk;
-> +	void __iomem *iomem_cs;
-> +};
-> +
-> +static struct st_lpc *st_lpc;
-> +
-> +static u64 notrace st_lpc_counter_read(void)
+This looks a lot better, thanks - just one remaining comment:
+
+On Tue, Apr 21, 2015 at 05:05:29AM +0800, Frank.Li@freescale.com wrote:
+> +static void __init imx7d_map_io(void)
 > +{
-> +	u64 counter;
-> +	u32 lower;
-> +	u32 upper, old_upper;
-> +
-> +	upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
-> +	do {
-> +		old_upper = upper;
-> +		lower = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_LSB_OFF);
-> +		upper = readl_relaxed(st_lpc->iomem_cs + LPC_LPT_MSB_OFF);
-> +	} while (upper != old_upper);
-> +
-> +	counter = upper;
-> +	counter <<= 32;
-> +	counter |= lower;
-> +	return counter;
+> +	debug_ll_io_init();
+> +}
 
+If that's all that you need here, please get rid of it; the generic code
+will make that call for you if you don't provide a .map_io method below:
 
-What's the point of this exercise? The kernel can handle 32bit
-clocksources nicely. So why do you want to artificially expand them to
-64bit by adding useless loops and hoops to a hotpath?
+> +DT_MACHINE_START(IMX7D, "Freescale i.MX7 Dual (Device Tree)")
+> +	.map_io		= imx7d_map_io,
+> +	.smp            = smp_ops(imx_ca7_smp_ops),
+> +	.init_irq	= imx7d_init_irq,
+> +	.init_machine	= imx7d_init_machine,
+> +	.dt_compat	= imx7d_dt_compat,
+> +	.restart	= mxc_restart,
+> +MACHINE_END
 
-Thanks,
-
-	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
