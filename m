@@ -1,296 +1,78 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 24/37] devicetree: add Ingenic CGU binding
- documentation
-Date: Tue, 21 Apr 2015 22:47:36 +0100
-Message-ID: <20150421214736.GB10157@jhogan-linux.le.imgtec.org>
-References: <1429627624-30525-1-git-send-email-paul.burton@imgtec.com>
- <1429627624-30525-25-git-send-email-paul.burton@imgtec.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/2 v2] of/platform: Use platform_device interface
+Date: Tue, 21 Apr 2015 18:01:00 -0500
+Message-ID: <CAL_JsqKV-+A196XaiGTGdx6tr1DStWYca5JnHR-QgBbMUyOiRA@mail.gmail.com>
+References: <1429604702-14157-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1429604702-14157-2-git-send-email-ricardo.ribalda@gmail.com>
+ <CAL_Jsq+ux9aCNUNVH+Vwy_j9oeV0CLbruPN4arkuCBPxvgrzhw@mail.gmail.com> <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429627624-30525-25-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPybu_0C=iAGY9cFgxOt7YgCRG+xvKo1YBJfWent5+xord-xmg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Vivek Goyal <vgoyal@redhat.com>, Jakub Sitnicki <jsitnicki@gmail.com>, Mike Travis <travis@sgi.com>, Jiang Liu <jiang.liu@linux.intel.com>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---V88s5gaDVPzZ0KCq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 21, 2015 at 4:09 PM, Ricardo Ribalda Delgado
+<ricardo.ribalda@gmail.com> wrote:
+> Hello Rob
+>
+> On Tue, Apr 21, 2015 at 10:13 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> On Tue, Apr 21, 2015 at 3:25 AM, Ricardo Ribalda Delgado
+>> <ricardo.ribalda@gmail.com> wrote:
+>>> of_platform_device_create_pdata() was using of_device_add() to create
+>>> the devices, but of_platform_device_destroy was using
+>>> of_platform_device_destroy().
+>>>
+>>> of_device_add(), do not call insert_resource(), which initializes the
+>>> parent field of the resource structure, needed by release_resource(),
+>>> called by of_platform_device_destroy().
+>>
+>> This is because some DTs have overlapping resources and doing this
+>> would break things. If you look at the git history, this was fixed and
+>> then reverted by Grant.
+>
+> I cannot find that commit sorry, could you give me the hash or a link
+> to the mailing list?
+>
+> ricardo@pilix:~/linux$ git shortlog drivers/of/platform.c | grep -i Revert
+>       Revert "drivers: of: add initialization code for dma reserved memory"
 
-On Tue, Apr 21, 2015 at 03:46:51PM +0100, Paul Burton wrote:
-> Document the devicetree binding for Ingenic SoC CGUs, and add headers
-> defining the clock specifiers for clocks provided by the JZ4740 & JZ4780
-> CGU blocks.
->=20
-> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Changes in v3:
->   - Merge binding documentation for various Ingenic SoCs which differ only
->     by compatible strings.
->=20
-> Changes in v2:
->   - None.
-> ---
->  .../devicetree/bindings/clock/ingenic,cgu.txt      | 53 +++++++++++++
->  include/dt-bindings/clock/jz4740-cgu.h             | 37 +++++++++
->  include/dt-bindings/clock/jz4780-cgu.h             | 88 ++++++++++++++++=
-++++++
->  3 files changed, 178 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ingenic,cgu.t=
-xt
->  create mode 100644 include/dt-bindings/clock/jz4740-cgu.h
->  create mode 100644 include/dt-bindings/clock/jz4780-cgu.h
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt b/Do=
-cumentation/devicetree/bindings/clock/ingenic,cgu.txt
-> new file mode 100644
-> index 0000000..7421f8c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
-> @@ -0,0 +1,53 @@
-> +Ingenic SoC CGU binding
-> +
-> +The CGU in an Ingenic SoC provides all the clocks generated on-chip. It
-> +typically includes a variety of PLLs, multiplexers, dividers & gates in =
-order
-> +to provide many different clock signals derived from only 2 external sou=
-rce
-> +clocks.
-> +
-> +Required properties:
-> +- compatible : Should be "ingenic,<soctype>-cgu".
-> +  For example "ingenic,jz4740-cgu" or "ingenic,jz4780-cgu".
-> +- reg : The address & length of the CGU registers.
-> +- clocks : List of phandle & clock specifiers for clocks external to the=
- TCU.
+commit 02bbde7849e68e193cefaa1885fe0df0f03c9fcd
+Author: Grant Likely <grant.likely@secretlab.ca>
+Date:   Sun Feb 17 20:03:27 2013 +0000
 
-Suspect TCU is a typo for CGU.
+    Revert "of: use platform_device_add"
 
-Cheers
-James
+    This reverts commit aac73f34542bc7ae4317928d2eabfeb21d247323. That
+    commit causes two kinds of breakage; it breaks registration of AMBA
+    devices when one of the parent nodes already contains overlapping
+    resource regions, and it breaks calls to request_region() by device
+    drivers in certain conditions where there are overlapping memory
+    regions. Both of these problems can probably be fixed, but it is better
+    to back out the commit and get a proper fix designed before trying again.
 
-> +  Two such external clocks should be specified - first the external crys=
-tal
-> +  "ext" and second the RTC clock source "rtc".
-> +- clock-names : List of name strings for the external clocks.
-> +- #clock-cells: Should be 1.
-> +  Clock consumers specify this argument to identify a clock. The valid v=
-alues
-> +  may be found in <dt-bindings/clock/<soctype>-cgu.h>.
-> +
-> +Example SoC include file:
-> +
-> +/ {
-> +	cgu: jz4740-cgu {
-> +		compatible =3D "ingenic,jz4740-cgu";
-> +		reg =3D <0x10000000 0x100>;
-> +		#clock-cells =3D <1>;
-> +	};
-> +
-> +	uart0: serial@10030000 {
-> +		clocks =3D <&cgu JZ4740_CLK_UART0>;
-> +	};
-> +};
-> +
-> +Example board file:
-> +
-> +/ {
-> +	ext: clock@0 {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <12000000>;
-> +	};
-> +
-> +	rtc: clock@1 {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <32768>;
-> +	};
-> +
-> +	&cgu {
-> +		clocks =3D <&ext> <&rtc>;
-> +		clock-names: "ext", "rtc";
-> +	};
-> +};
-> diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings=
-/clock/jz4740-cgu.h
-> new file mode 100644
-> index 0000000..43153d3
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/jz4740-cgu.h
-> @@ -0,0 +1,37 @@
-> +/*
-> + * This header provides clock numbers for the ingenic,jz4740-cgu DT bind=
-ing.
-> + *
-> + * They are roughly ordered as:
-> + *   - external clocks
-> + *   - PLLs
-> + *   - muxes/dividers in the order they appear in the jz4740 programmers=
- manual
-> + *   - gates in order of their bit in the CLKGR* registers
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_JZ4740_CGU_H__
-> +#define __DT_BINDINGS_CLOCK_JZ4740_CGU_H__
-> +
-> +#define JZ4740_CLK_EXT		0
-> +#define JZ4740_CLK_RTC		1
-> +#define JZ4740_CLK_PLL		2
-> +#define JZ4740_CLK_PLL_HALF	3
-> +#define JZ4740_CLK_CCLK		4
-> +#define JZ4740_CLK_HCLK		5
-> +#define JZ4740_CLK_PCLK		6
-> +#define JZ4740_CLK_MCLK		7
-> +#define JZ4740_CLK_LCD		8
-> +#define JZ4740_CLK_LCD_PCLK	9
-> +#define JZ4740_CLK_I2S		10
-> +#define JZ4740_CLK_SPI		11
-> +#define JZ4740_CLK_MMC		12
-> +#define JZ4740_CLK_UHC		13
-> +#define JZ4740_CLK_UDC		14
-> +#define JZ4740_CLK_UART0	15
-> +#define JZ4740_CLK_UART1	16
-> +#define JZ4740_CLK_DMA		17
-> +#define JZ4740_CLK_IPU		18
-> +#define JZ4740_CLK_ADC		19
-> +#define JZ4740_CLK_I2C		20
-> +#define JZ4740_CLK_AIC		21
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
-> diff --git a/include/dt-bindings/clock/jz4780-cgu.h b/include/dt-bindings=
-/clock/jz4780-cgu.h
-> new file mode 100644
-> index 0000000..467165e
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/jz4780-cgu.h
-> @@ -0,0 +1,88 @@
-> +/*
-> + * This header provides clock numbers for the ingenic,jz4780-cgu DT bind=
-ing.
-> + *
-> + * They are roughly ordered as:
-> + *   - external clocks
-> + *   - PLLs
-> + *   - muxes/dividers in the order they appear in the jz4780 programmers=
- manual
-> + *   - gates in order of their bit in the CLKGR* registers
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_JZ4780_CGU_H__
-> +#define __DT_BINDINGS_CLOCK_JZ4780_CGU_H__
-> +
-> +#define JZ4780_CLK_EXCLK	0
-> +#define JZ4780_CLK_RTCLK	1
-> +#define JZ4780_CLK_APLL		2
-> +#define JZ4780_CLK_MPLL		3
-> +#define JZ4780_CLK_EPLL		4
-> +#define JZ4780_CLK_VPLL		5
-> +#define JZ4780_CLK_OTGPHY	6
-> +#define JZ4780_CLK_SCLKA	7
-> +#define JZ4780_CLK_CPUMUX	8
-> +#define JZ4780_CLK_CPU		9
-> +#define JZ4780_CLK_L2CACHE	10
-> +#define JZ4780_CLK_AHB0		11
-> +#define JZ4780_CLK_AHB2PMUX	12
-> +#define JZ4780_CLK_AHB2		13
-> +#define JZ4780_CLK_PCLK		14
-> +#define JZ4780_CLK_DDR		15
-> +#define JZ4780_CLK_VPU		16
-> +#define JZ4780_CLK_I2SPLL	17
-> +#define JZ4780_CLK_I2S		18
-> +#define JZ4780_CLK_LCD0PIXCLK	19
-> +#define JZ4780_CLK_LCD1PIXCLK	20
-> +#define JZ4780_CLK_MSCMUX	21
-> +#define JZ4780_CLK_MSC0		22
-> +#define JZ4780_CLK_MSC1		23
-> +#define JZ4780_CLK_MSC2		24
-> +#define JZ4780_CLK_UHC		25
-> +#define JZ4780_CLK_SSIPLL	26
-> +#define JZ4780_CLK_SSI		27
-> +#define JZ4780_CLK_CIMMCLK	28
-> +#define JZ4780_CLK_PCMPLL	29
-> +#define JZ4780_CLK_PCM		30
-> +#define JZ4780_CLK_GPU		31
-> +#define JZ4780_CLK_HDMI		32
-> +#define JZ4780_CLK_BCH		33
-> +#define JZ4780_CLK_NEMC		34
-> +#define JZ4780_CLK_OTG0		35
-> +#define JZ4780_CLK_SSI0		36
-> +#define JZ4780_CLK_SMB0		37
-> +#define JZ4780_CLK_SMB1		38
-> +#define JZ4780_CLK_SCC		39
-> +#define JZ4780_CLK_AIC		40
-> +#define JZ4780_CLK_TSSI0	41
-> +#define JZ4780_CLK_OWI		42
-> +#define JZ4780_CLK_KBC		43
-> +#define JZ4780_CLK_SADC		44
-> +#define JZ4780_CLK_UART0	45
-> +#define JZ4780_CLK_UART1	46
-> +#define JZ4780_CLK_UART2	47
-> +#define JZ4780_CLK_UART3	48
-> +#define JZ4780_CLK_SSI1		49
-> +#define JZ4780_CLK_SSI2		50
-> +#define JZ4780_CLK_PDMA		51
-> +#define JZ4780_CLK_GPS		52
-> +#define JZ4780_CLK_MAC		53
-> +#define JZ4780_CLK_SMB2		54
-> +#define JZ4780_CLK_CIM		55
-> +#define JZ4780_CLK_LCD		56
-> +#define JZ4780_CLK_TVE		57
-> +#define JZ4780_CLK_IPU		58
-> +#define JZ4780_CLK_DDR0		59
-> +#define JZ4780_CLK_DDR1		60
-> +#define JZ4780_CLK_SMB3		61
-> +#define JZ4780_CLK_TSSI1	62
-> +#define JZ4780_CLK_COMPRESS	63
-> +#define JZ4780_CLK_AIC1		64
-> +#define JZ4780_CLK_GPVLC	65
-> +#define JZ4780_CLK_OTG1		66
-> +#define JZ4780_CLK_UART4	67
-> +#define JZ4780_CLK_AHBMON	68
-> +#define JZ4780_CLK_SMB4		69
-> +#define JZ4780_CLK_DES		70
-> +#define JZ4780_CLK_X2D		71
-> +#define JZ4780_CLK_CORE1	72
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_JZ4780_CGU_H__ */
-> --=20
-> 2.3.5
->=20
->=20
+    Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 
---V88s5gaDVPzZ0KCq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>
+>
+> To give a litte context to this patch, the issue started with this
+> conversaion with Bjorn:
+> https://lkml.org/lkml/2015/4/20/435
+>
+>
+> What we have today is also wrong, it leads to a null pointer deference
+> (and therefore a whole crash).
+>
+> If we cannot use platform_device_add, then we cannot use
+> platform_device_destroy :)
+>
+> Shall I prepare a patch replacing platform_device_destroy()?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Perhaps we make inserting resource failure non-fatal so by default we
+can have resources inserted but not break the cases Grant mentioned.
+Ideally we want to not have new platforms with overlapping resources
+in the DT.
 
-iQIcBAEBAgAGBQJVNsV4AAoJEGwLaZPeOHZ6gBAP/3tOYBV6DTrpdQn1URGLJ3H9
-8yW1Dw/ANHZ7daYi2ZP3xea8V3m8W3NjIlssuJLoiL5V9rME0g3DiHdMHmMfnrYI
-4LvSzAR7xbuhT8fzuBud7WS3or//g+Xw5Px6z6JYtJGuu+0ftSux9UkjShCYwsWR
-vr/2Ny5Mcp6UqWA7oAr5l+ZBlwxINdYCdu8HxBWRksetATe5dQ4NktF3LBjDGYCm
-ShNI/PidwUNWHltmzJtTOmHPdOS4DCsLTF1ltaf1wSc6XM4skJAihWh13hiFSZYR
-In9Ks6vOINBfPq/gl/R8a3gja9OUD1zfcqdkIXX8Q7/e3mC/MPnLPSPEEMxahAKV
-yfpScMx5qYd84Y4xyMtDis4lSdXSnpP7Dj9sS9uWPRc6AGcSCWD0YLeBGQJdQNPC
-/DPs+msfn2OHpDBeKnXKIDi4EhZ1vwRoIUulJXLR63ZgG/EiMJMYuIjupN8378XT
-uCaRyUxPfSjydJXBBspdcKOPhAdjQ0aQfCBcNR7pcRq5MsJOq4tlSt3nqdFypWOW
-DoN1BUwa+W30iYTAbF2+R4L3eujNVgU3HX2dcwpuPnbF7tmN2ZaoUzgYgaMWpu5H
-AcQ1nQQksnhcVvJO0rnmJtn72qB8UYMwrDmLgbV89zFgPMm9X5KduUrtqDU4oyKN
-ZrGDXuajmoWRE+rVZ+XG
-=wjiS
------END PGP SIGNATURE-----
-
---V88s5gaDVPzZ0KCq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
