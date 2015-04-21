@@ -1,7 +1,7 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 3/9] ARM: Make a copy of the 2835 dts for the 2836.
-Date: Tue, 21 Apr 2015 11:09:50 -0700
-Message-ID: <1429639796-2169-4-git-send-email-eric@anholt.net>
+Subject: [PATCH 7/9] ARM: Add Kconfig support for bcm2836.
+Date: Tue, 21 Apr 2015 11:09:54 -0700
+Message-ID: <1429639796-2169-8-git-send-email-eric@anholt.net>
 References: <1429639796-2169-1-git-send-email-eric@anholt.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1429639796-2169-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
@@ -10,151 +10,105 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is not hooked up to anything yet, but it means that our later
-2836-specific changes will be more obvious.  The bcm2836-rpi-2-b.dts
-actually comes from bcm2835-rpi-2-b-plus, which apparently is the
-closest.
+This port to the Raspberry Pi 2 comes up with SD card and network
+working.  It doesn't yet support SMP, the ARM local timer, or PMU
+events, and serial is fixed in a follow-on patch.
 
 Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts | 30 +++++++++++++++++++++
- arch/arm/boot/dts/bcm2836-rpi.dtsi    | 51 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm2836.dtsi        | 31 +++++++++++++++++++++
- 3 files changed, 112 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm2836-rpi-2-b.dts
- create mode 100644 arch/arm/boot/dts/bcm2836-rpi.dtsi
- create mode 100644 arch/arm/boot/dts/bcm2836.dtsi
+ arch/arm/Kconfig.debug     |  8 +++++++-
+ arch/arm/boot/dts/Makefile |  2 ++
+ arch/arm/mach-bcm/Kconfig  | 18 +++++++++++++-----
+ 3 files changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-new file mode 100644
-index 0000000..668442b
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -0,0 +1,30 @@
-+/dts-v1/;
-+#include "bcm2835-rpi.dtsi"
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 970de75..7da2061 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -137,6 +137,11 @@ choice
+ 		depends on ARCH_BCM2835
+ 		select DEBUG_UART_PL01X
+ 
++	config DEBUG_BCM2836
++		bool "Kernel low-level debugging on BCM2836 PL011 UART"
++		depends on ARCH_BCM2836
++		select DEBUG_UART_PL01X
 +
-+/ {
-+	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-+	model = "Raspberry Pi Model B+";
+ 	config DEBUG_BCM_5301X
+ 		bool "Kernel low-level debugging on BCM5301X UART1"
+ 		depends on ARCH_BCM_5301X
+@@ -1369,6 +1374,7 @@ config DEBUG_UART_PHYS
+ 	default 0x20064000 if DEBUG_RK29_UART1 || DEBUG_RK3X_UART2
+ 	default 0x20068000 if DEBUG_RK29_UART2 || DEBUG_RK3X_UART3
+ 	default 0x20201000 if DEBUG_BCM2835
++	default 0x3f201000 if DEBUG_BCM2836
+ 	default 0x3e000000 if DEBUG_BCM_KONA_UART
+ 	default 0x4000e400 if DEBUG_LL_UART_EFM32
+ 	default 0x40090000 if ARCH_LPC32XX
+@@ -1450,7 +1456,7 @@ config DEBUG_UART_VIRT
+ 	default 0xf0000be0 if ARCH_EBSA110
+ 	default 0xf0010000 if DEBUG_ASM9260_UART
+ 	default 0xf01fb000 if DEBUG_NOMADIK_UART
+-	default 0xf0201000 if DEBUG_BCM2835
++	default 0xf0201000 if DEBUG_BCM2835 || DEBUG_BCM2836
+ 	default 0xf1000300 if DEBUG_BCM_5301X
+ 	default 0xf1002000 if DEBUG_MT8127_UART0
+ 	default 0xf1006000 if DEBUG_MT6589_UART0
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a1c776b..72b476d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -52,6 +52,8 @@ dtb-$(CONFIG_ARCH_AXXIA) += \
+ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b.dtb \
+ 	bcm2835-rpi-b-plus.dtb
++dtb-$(CONFIG_ARCH_BCM2836) += \
++	bcm2836-rpi-2-b.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4708-buffalo-wzr-1750dhp.dtb \
+ 	bcm4708-luxul-xwc-1000.dtb \
+diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+index 7c438b2..751ea08 100644
+--- a/arch/arm/mach-bcm/Kconfig
++++ b/arch/arm/mach-bcm/Kconfig
+@@ -109,6 +109,12 @@ comment "Other Architectures"
+ 
+ config ARCH_BCM283X
+ 	bool
++	select ARCH_REQUIRE_GPIOLIB
++	select ARM_AMBA
++	select PINCTRL
++	select PINCTRL_BCM2835
++	select CLKSRC_OF
++	select CLKSRC_MMIO
+ 	help
+ 	  This option should be selected by the 2835 and 2836 chips to
+ 	  enable common platform features.
+@@ -116,17 +122,19 @@ config ARCH_BCM283X
+ config ARCH_BCM2835
+ 	bool "Broadcom BCM2835 family" if ARCH_MULTI_V6
+ 	select ARCH_BCM283X
+-	select ARCH_REQUIRE_GPIOLIB
+-	select ARM_AMBA
+ 	select ARM_ERRATA_411920
+ 	select ARM_TIMER_SP804
+-	select CLKSRC_OF
+-	select PINCTRL
+-	select PINCTRL_BCM2835
+ 	help
+ 	  This enables support for the Broadcom BCM2835 SoC. This SoC is
+ 	  used in the Raspberry Pi and Roku 2 devices.
+ 
++config ARCH_BCM2836
++	bool "Broadcom BCM2836 family" if ARCH_MULTI_V7
++	select ARCH_BCM283X
++	help
++	  This enables support for the Broadcom BCM2836 SoC. This SoC is
++	  used in the Raspberry Pi 2
 +
-+	leds {
-+		act {
-+			gpios = <&gpio 47 0>;
-+		};
-+
-+		pwr {
-+			label = "PWR";
-+			gpios = <&gpio 35 0>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+};
-+
-+&gpio {
-+	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-+
-+	/* I2S interface */
-+	i2s_alt0: i2s_alt0 {
-+		brcm,pins = <18 19 20 21>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm2836-rpi.dtsi b/arch/arm/boot/dts/bcm2836-rpi.dtsi
-new file mode 100644
-index 0000000..46780bb
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2836-rpi.dtsi
-@@ -0,0 +1,51 @@
-+#include "bcm2835.dtsi"
-+
-+/ {
-+	memory {
-+		reg = <0 0x10000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		act {
-+			label = "ACT";
-+			default-state = "keep";
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+&gpio {
-+	pinctrl-names = "default";
-+
-+	gpioout: gpioout {
-+		brcm,pins = <6>;
-+		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
-+	};
-+
-+	alt0: alt0 {
-+		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+
-+	alt3: alt3 {
-+		brcm,pins = <48 49 50 51 52 53>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&sdhci {
-+	status = "okay";
-+	bus-width = <4>;
-+};
-diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
-new file mode 100644
-index 0000000..bdf9993
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2836.dtsi
-@@ -0,0 +1,31 @@
-+#include <dt-bindings/pinctrl/bcm2835.h>
-+#include "skeleton.dtsi"
-+#include "bcm283x-common.dtsi"
-+
-+/ {
-+	compatible = "brcm,bcm2835";
-+	model = "BCM2835";
-+	interrupt-parent = <&intc>;
-+
-+	chosen {
-+		bootargs = "earlyprintk console=ttyAMA0";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x7e000000 0x20000000 0x02000000>;
-+
-+		timer@7e003000 {
-+			compatible = "brcm,bcm2835-system-timer";
-+			reg = <0x7e003000 0x1000>;
-+			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
-+			clock-frequency = <1000000>;
-+		};
-+
-+		arm-pmu {
-+			compatible = "arm,arm1176-pmu";
-+		};
-+	};
-+};
+ config ARCH_BCM_63XX
+ 	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
+ 	depends on MMU
 -- 
 2.1.4
 
