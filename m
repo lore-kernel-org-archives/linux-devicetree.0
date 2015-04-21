@@ -1,45 +1,66 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 13/14] of: Add vendor prefix for TP-Link Technologies Co. Ltd
-Date: Tue, 21 Apr 2015 09:26:34 -0500
-Message-ID: <CAL_JsqJJnkMH7Tk6TxvtESEJisCeUVxcSPc7d8W-_AnLvZYfuw@mail.gmail.com>
-References: <1429280669-2986-1-git-send-email-albeu@free.fr>
- <1429373607-9226-1-git-send-email-albeu@free.fr> <1429373607-9226-2-git-send-email-albeu@free.fr>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4 09/11] ARM: imx: add imx7d clk tree support
+Date: Tue, 21 Apr 2015 16:27:47 +0200
+Message-ID: <20150421142747.GD6325@pengutronix.de>
+References: <1429563933-3129-1-git-send-email-Frank.Li@freescale.com>
+ <1429563933-3129-10-git-send-email-Frank.Li@freescale.com>
+ <20150421102255.GW6325@pengutronix.de>
+ <CAHrpEqSuJbAEBDBfVMXdFk-p-xwtwfmHbSw3OsN-2sa9fNmA=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429373607-9226-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqSuJbAEBDBfVMXdFk-p-xwtwfmHbSw3OsN-2sa9fNmA=A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, Adrian Alonso <aalonso@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 18, 2015 at 11:13 AM, Alban Bedel <albeu-GANU6spQydw@public.gmane.org> wrote:
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b13aa55..9e965b6 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -185,6 +185,7 @@ tbs TBS Technologies
->  thine  THine Electronics, Inc.
->  ti     Texas Instruments
->  tlm    Trusted Logic Mobility
-> +tplink TP-LINK Technologies Co., Ltd.
+On Tue, Apr 21, 2015 at 09:15:36AM -0500, Zhi Li wrote:
+> On Tue, Apr 21, 2015 at 5:22 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Tue, Apr 21, 2015 at 05:05:31AM +0800, Frank.Li@freescale.com wrote:
+> >> From: Frank Li <Frank.Li@freescale.com>
+> >>
+> >> Add i.MX7D clk tree support.
+> >>
+> >> +
+> >> +     clk_register_clkdev(clks[IMX7D_GPT1_ROOT_CLK], "ipg", "imx-gpt.0");
+> >> +     clk_register_clkdev(clks[IMX7D_GPT_3M_CLK], "gpt_3m", "imx-gpt.0");
+> 
+> This patch just list all clock root in RM.
 
-Alphabetical order please.
+Maybe, still the two lines above are unused. The timer code only does a
+of_clk_get_by_name which will never return the clocks you register
+above.
 
-Rob
+> all clock refine have to wait for Dong Aisheng's RFC clock framework
+> change's patch.
+> 
+> >
+> > What are these good for? These shouldn't be here.
+> >
+> >> +
+> >> +     for (i = 0; i < IMX7D_END_CLK; i++)
+> >> +             clk_prepare_enable(clks[i]);
+> >
+> > Hey, no. You enable *all* clocks here which is certainly wrong. They
+> > will never be turned off.
+> 
+> Yes. This patches's purpose is bring up mx7.
+> Because imx7 clock design change,  Dong Aisheng send out RFC patch to
+> change a little bit framework.
+> After that,  we can enable only necessary clock here. Otherwise system
+> will halt and block the other part
+> upstream.
 
->  toradex        Toradex AG
->  toshiba        Toshiba Corporation
->  toumaz Toumaz
-> --
-> 2.0.0
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If that's the case you should state that in the commit message, add a
+comment to the code that it needs fixing once Dongs patch is in and
+provide a reference to the patch you need.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
