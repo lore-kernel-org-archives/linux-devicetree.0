@@ -1,52 +1,115 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
-Date: Wed, 22 Apr 2015 09:22:43 +0200
-Message-ID: <2080047.TSLc2kVvn8@wuerfel>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <60195891.q3RtUhgfkn@wuerfel> <87bnihhypw.fsf@eliezer.anholt.net>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v5 0/8] dmaengine/dra7x: DMA router (crossbar support)
+Date: Wed, 22 Apr 2015 10:38:27 +0300
+Message-ID: <55374FF3.1030003@ti.com>
+References: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87bnihhypw.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, tony@atomide.com, linux@arm.linux.org.uk
+Cc: grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com, arnd@arndb.de, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 April 2015 16:02:19 Eric Anholt wrote:
-> > Hard to know. Does anything reference BCM2835_PERIPH_VIRT? Does it work
-> > if you remove it?
-> Well, that's clear enough. It dies early with:
-> 
-> Uncompressing Linux... done, booting the kernel.
-> [    0.000000] Booting Linux on physical CPU 0xf00
-> [    0.000000] Initializing cgroup subsys cpu
-> [    0.000000] Initializing cgroup subsys cpuacct
-> [    0.000000] Linux version 4.0.0-rc1-v7+ (anholt@eliezer) (gcc version 4.9.2 ( 4.9.2-10) ) #487 SMP PREEMPT Tue Apr 21 15:58:29 PDT 2015
-> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> [    0.000000] Machine model: Raspberry Pi 2 Model B+
-> [    0.000000] bootconsole [earlycon0] enabled
-> [    0.000000] cma: Reserved 64 MiB at 0x37000000
-> [    0.000000] Memory policy: Data cache writealloc
-> 
-> (hung)
-> 
-> The only thing I see using this 0xf0000000 range is DEBUG_BCM2836's
-> serial stuff, though.
-> 
+On 04/09/2015 12:35 PM, Peter Ujfalusi wrote:
+> Vinod: is it OK if I send the Documnetation/dmanegine/ update a bit l=
+ater when
+> I have finished it?
+>=20
+> Changes since v4:
+> - Comments from Maxime Ripard addressed:
+>  - long line fixed in of-dma.c
+>  - node leaks has been fixed in ti-dma-crossbar
+>  - Using devm_ioremap_resource() in ti-dma-crossbar
+>  - u16 casting has been addressed
+> - Router drivers are expected to return with ERR_PTR in case their
+>   of_dma_route_allocate() callback fails.
 
-Ok. Just to be clear: by removing that mapping, I meant removing the
-".map_io = bcm2835_map_io" line as well, so the default debug_ll_io_init()
-function gets called. If you have a map_io function that does not call
-debug_ll_io_init() or something equivalent, you cannot use DEBUG_LL.
+Are there more comments I need to address with this series?
 
-It's possible that this mapping was just added for supporting DEBUG_LL,
-using the default debug_ll_io_init() is a better way to do that.
+Thanks,
+P=E9ter
 
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Changes since v3:
+> - Comments from Russell:
+>  - Warnings removed in case of non DT boot when taking the DMA reques=
+t number
+>  - Reduced the number of channels presented to DMAengine
+>  - removed the dma_sig parameter from omap_dma_chan_init()
+> - Comments from Arnd:
+>  - dma-device property renamed to dma-masters
+>  - Allow list of phandes in dma-masters
+>=20
+> Changes since v2:
+> - not using regmap for the TI crossbar driver.
+>=20
+> Changes since v1:
+> - Comments from Russell King and  Paul Bolle addressed:
+>  - Use the added defined in the omap-dma changes
+>  - MODULE_* removed from the ti-dma-crossbar driver.
+> - DMA router documentation: do not limit the #dma-cells to be the sam=
+e as the
+>   dma controller's #dma-cells. It might be possible to have a router =
+which needs
+>   more information than the DMA controller (direct request pairing fo=
+r example)
+> - Use defines in the ti-dma-crossbar driver
+> - Binding document for the ti-dma-crossbar driver
+>=20
+> Intro mail from v1:
+>=20
+> The series adds support for DMA router type of devices. They are used=
+ in SoCs
+> which has more peripherals with DMA request lines than the DMA contro=
+ller can
+> handle.
+> The router itself is not part of the DMA controller and it's operatio=
+n should be
+> transparent (as it is in the HW) for the SW stack.
+>=20
+> This series takes into accound the comments Sricharan received for hi=
+s version
+> of the crossbar driver:
+> https://lkml.org/lkml/2014/3/7/199
+>=20
+> This implementation is not tied to any DMA driver so it is possible t=
+o use the
+> framework by other vendors, also ACPI version of binding can be easy =
+enough to
+> be added.
+>=20
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (8):
+>   dmaengine: of_dma: Support for DMA routers
+>   Documentation: devicetree: dma: Binding documentation for TI DMA
+>     crossbar
+>   dmaengine: Add driver for TI DMA crossbar on DRA7x
+>   dmaengine: omap-dma: Use defines for dma channels and request count
+>   dmaengine: omap-dma: Take DMA request number from DT if it is
+>     available
+>   dmaengine: omap-dma: Remove mapping between virtual channels and
+>     requests
+>   dmaengine: omap-dma: Reduce the number of virtual channels
+>   ARM: DTS: dra7x: Integrate sDMA crossbar
+>=20
+>  Documentation/devicetree/bindings/dma/dma.txt      |  28 +++
+>  .../devicetree/bindings/dma/ti-dma-crossbar.txt    |  52 ++++++
+>  arch/arm/boot/dts/dra7.dtsi                        |  57 ++++---
+>  drivers/dma/Kconfig                                |   4 +
+>  drivers/dma/Makefile                               |   1 +
+>  drivers/dma/dmaengine.c                            |   7 +
+>  drivers/dma/of-dma.c                               |  89 ++++++++++
+>  drivers/dma/omap-dma.c                             |  29 +++-
+>  drivers/dma/ti-dma-crossbar.c                      | 188 +++++++++++=
+++++++++++
+>  include/linux/dmaengine.h                          |  17 ++
+>  include/linux/of_dma.h                             |  21 +++
+>  11 files changed, 463 insertions(+), 30 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti-dma-cros=
+sbar.txt
+>  create mode 100644 drivers/dma/ti-dma-crossbar.c
+>=20
