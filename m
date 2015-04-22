@@ -1,43 +1,31 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
-Date: Wed, 22 Apr 2015 18:41:33 -0400 (EDT)
-Message-ID: <20150422.184133.132510003688162502.davem@davemloft.net>
-References: <553814F0.40405@cogentembedded.com>
-	<20150422.181813.1931455043058560592.davem@davemloft.net>
-	<553821F8.8050300@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <553821F8.8050300@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: mitsuhiro.kimura.kc@renesas.com, f.fainelli@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, masaru.nagai.vx@renesas.com
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH] coresight: binding for ETMv4 coresight drivers
+Date: Wed, 22 Apr 2015 16:43:57 -0600
+Message-ID: <1429742637-12337-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Date: Thu, 23 Apr 2015 01:34:32 +0300
+Adding compatible string for new coresight ETMv4 tracer.
 
->    Sigh... I'm seeing no way out of that then, only copying. :-(
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/coresight.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-What exactly is the device's restriction?
-
-Any reasonable modern chip allows one of two things.
-
-Either it allows arbitrary alignment of the start of the TX
-frame when DMA'ing.
-
-_or_
-
-It allows a variable number of pad bytes to be inserted by the
-driver before giving it to the card, which do not go onto the
-wire, in order to meet the device's DMA restrictions.
-
-For example, if the packet is only 2 byte aligned, you set the "ignore
-offset" to 2 and push two zero bytes in front of the ethernet frame
-before giving it to the card.
-
-If a chip made in this day and era cannot do one of those two things,
-this is beyond disappointing and is a massive engineering failure.
-Whoever designed this chip made no investigation into how their
-hardware is going to be actually used.
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index 88602b75418e..f4d6a86738a4 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -17,6 +17,7 @@ its hardware characteristcs.
+ 		- "arm,coresight-tmc", "arm,primecell";
+ 		- "arm,coresight-funnel", "arm,primecell";
+ 		- "arm,coresight-etm3x", "arm,primecell";
++		- "arm,coresight-etm4x", "arm,primecell";
+ 
+ 	* reg: physical base address and length of the register
+ 	  set(s) of the component.
+-- 
+1.9.1
