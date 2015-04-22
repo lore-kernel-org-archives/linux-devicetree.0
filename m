@@ -1,66 +1,49 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/4] Fix null pointer deference when calling of_platform_depopulate
-Date: Wed, 22 Apr 2015 18:14:17 +0200
-Message-ID: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH v3 1/4] kernel/resource: Invalid memory access in __release_resource
+Date: Wed, 22 Apr 2015 18:14:18 +0200
+Message-ID: <1429719261-18024-2-git-send-email-ricardo.ribalda@gmail.com>
+References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jakub Sitnicki <jsitnicki@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mike Travis <travis@sgi.com>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-of_platform_depopulate can lead to a kernel error when calling release_resource()
+When a resource is initialized via of_platform_populate.
+resource->parent is initialized to NULL via kzalloc.
+(of_platform_populate->of_device_alloc->of_address_to_resource)
 
-of_platform_depopulate()
-      of_platform_device_destroy()
-        platform_device_unregister(platform_device *pdev)
-	  platform_device_del(platform_device *pdev)
-	    for (i = 0; i < pdev->num_resources; i++)
-	    	      release_resource()
+If of_platform_depopulate is called later, resource->parent is
+accessed (Offset 0x30 of address 0), causing a kernel error.
 
-The reason is that it is trying to release a resource that was not allocated
-via insert_resource
+This patch evaluates resouce->parent before accessing it. If it
+is not initialized, -EACCESS is returned.
 
-of_platform_populate()
-      ...
-      	of_device_alloc()
-	  pdev = platform_device_alloc()
-	  # set pdev->resource, similar to platform_device_add_resources()
-	  of_device_add(platform_device *pdev)
-	    # similar to platform_device_add(), but note there's no
-	    # insert_resource() in this path
-	    device_add(&pdev->dev)
+Also a WARN is thrown, so the developer can have a hint about what
+needs to be fixed.
 
-This set of patches modifies release_resource to check for
-resource->parent==NULL and throw a warning if there is an error.
+Fixes:
+BUG: unable to handle kernel NULL pointer deference at 0000000000000030
+IP: release_resource+0x26/0x90
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+---
+ kernel/resource.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-base/platform has been fixed for an hypothetical condition where parent is
-set but the platform is neither MEM or IO.
-
-Then platform_device_alloc has been modified so it supports of and amba 
-devices.
-
-Finally of_device_add has been modified to use platform_device_add().
-
-v1: https://lkml.org/lkml/2015/4/20/435
-
-v2: https://lkml.org/lkml/2015/4/21/99
-    https://lkml.org/lkml/2015/4/21/100
-
-Ricardo Ribalda Delgado (4):
-  kernel/resource: Invalid memory access in __release_resource
-  base/platform: Only insert MEM and IO resources
-  base/platform: Continue on insert_resource() error
-  of/platform: Use platform_device interface
-
- drivers/base/platform.c | 20 ++++++++++++--------
- drivers/of/platform.c   |  3 ++-
- kernel/resource.c       |  3 +++
- 3 files changed, 17 insertions(+), 9 deletions(-)
-
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 90552aa..b7b270f 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -237,6 +237,9 @@ static int __release_resource(struct resource *old)
+ {
+ 	struct resource *tmp, **p;
+ 
++	if (WARN_ON(!old->parent))
++		return -EINVAL;
++
+ 	p = &old->parent->child;
+ 	for (;;) {
+ 		tmp = *p;
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
