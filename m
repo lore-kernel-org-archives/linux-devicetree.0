@@ -1,59 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 05/11] ARM: dts: add imx7d soc dtsi file
-Date: Wed, 22 Apr 2015 10:12:32 +0100
-Message-ID: <20150422091231.GA27345@leverpostej>
-References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
- <1429628007-8892-6-git-send-email-Frank.Li@freescale.com>
- <20150421172834.GF10164@leverpostej>
- <CAHrpEqTCMgaAx_bUG1JEtS-2_DrkwM_EbWphu_j=6YZuebcoSw@mail.gmail.com>
- <CAHrpEqRqUJ2h2dXiwR3rcugWvszKwt10axy8jGsAJAH6Quafbg@mail.gmail.com>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 6/8] extcon: arizona: Add support for WM8998 and WM1814
+Date: Wed, 22 Apr 2015 10:19:41 +0100
+Message-ID: <20150422091941.GA4303@opensource.wolfsonmicro.com>
+References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com> <1429619636-25478-7-git-send-email-rf@opensource.wolfsonmicro.com> <55373766.6060106@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqRqUJ2h2dXiwR3rcugWvszKwt10axy8jGsAJAH6Quafbg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
+In-Reply-To: <55373766.6060106@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 08:34:45PM +0100, Zhi Li wrote:
-> >>> +
-> >>> +       clocks {
-> >>> +               #address-cells = <1>;
-> >>> +               #size-cells = <0>;
-> >>> +
-> >>> +               ckil: clock@0 {
-> >>> +                       compatible = "fixed-clock";
-> >>> +                       reg = <0>;
-> >>> +                       #clock-cells = <0>;
-> >>> +                       clock-frequency = <32768>;
-> >>> +                       clock-output-names = "ckil";
-> >>> +               };
-> >>> +
-> >>> +               osc: clock@1 {
-> >>> +                       compatible = "fixed-clock";
-> >>> +                       reg = <1>;
-> >>> +                       #clock-cells = <0>;
-> >>> +                       clock-frequency = <24000000>;
-> >>> +                       clock-output-names = "osc";
-> >>> +               };
-> >>> +
-> >>> +       };
-> >>
-> >> Get rid of the clocks container node, and put these under the root.
-> >
-> > Okay.
+On Wed, Apr 22, 2015 at 02:53:42PM +0900, Chanwoo Choi wrote:
+> Hi Richard,
 > 
-> After remove clocks node.
-> There will be warning
+> > @@ -1176,6 +1182,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+> >  			break;
+> >  		}
+> >  		break;
+> > +	case WM8998:
+> > +	case WM1814:
+> > +		info->micd_clamp = true;
+> > +		info->hpdet_ip = 2;
 > 
-> Warning (reg_format): "reg" property in /clock@0 has invalid length (4
-> bytes) (#address-cells == 1, #size-cells == 1)
-> Warning (reg_format): "reg" property in /clock@1 has invalid length (4
-> bytes) (#address-cells == 1, #size-cells == 1)
+> What is meaning of '2'? I prefer to use the definition for '2'.
+> 
 
-The reg property is meainingless, so just remove it and give the clocks
-different names.
+'2' is the version number of the hpdet ip block in silicon. We're already using
+it as a raw number '0', '1' or '2' all over extcon-arizona.c so changing it here
+would mean making other patches to the file that aren't really part of adding
+WM8998 support, so I'd prefer not to change that as a side-effect of adding WM8998.
 
-Mark.
+
+> Except for upper one comment, looks good to me.
+> 
+> Thanks,
+> Chanwoo Choi
