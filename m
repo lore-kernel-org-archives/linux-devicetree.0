@@ -1,58 +1,82 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Wed, 22 Apr 2015 09:40:19 +0200
-Message-ID: <20150422074019.GA1511@katana>
-References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: A question on device initialization ordering
+Date: Wed, 22 Apr 2015 10:09:37 +0200
+Message-ID: <CAMuHMdUiCHLDk=tn=3TsFj_0Cv3C8ZVFXMNEtJ1V2q9RGn7EgQ@mail.gmail.com>
+References: <5535EC16.4030609@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422083789-18905-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5535EC16.4030609-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Scott <Joshua.Scott-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Joshua,
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 21, 2015 at 8:20 AM, Joshua Scott
+<Joshua.Scott-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
+> I have a question about the order in which devices are initialized.
+>
+> The simpler case is this: A device X needs to be taken out of reset by
+> another device Y before it can be used.
+>
+> To get this to work, one option is to modify the driver for Y to use
+> arch_initcall instead of device_initcall. This results in it being run
+> first, so that the other device X is out of reset by the time it is
+> initialized.
+>
+> Is it possible within the devicetree to specify that one device must be
+> initialized before attempting to initialize another (to avoid needing to
+> modify the driver)?
+>
+>
+>
+> A chicken-and-egg case: What if two devices use a common driver, but one
+> must first be used to bring the other out of reset? Eg: A GPIO expander
+> that is held in reset by another GPIO expander.
+>
+> The goal would be to:
+>   1. Initialize the first GPIO expander
+>   2. Run a driver that takes the second expander out of reset using the
+> first
+>   3. Initialize the second GPIO expander (which uses the same driver as
+> the first).
+>
+> In this case, because the drivers for step 1 and step 3 are the same
+> driver, it is not possible to adjust the _initcall of the driver for
+> step 2 to be in-between them.
+>
+> Is there a way to describe this situation in a devicetree such that the
+> driver for step 2 gets run in-between when the first and second GPIO
+> expanders are initialized?
 
-On Sat, Jan 24, 2015 at 09:16:29AM +0200, Pantelis Antoniou wrote:
-> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
-> This is required to avoid multi probing when using I2C and device
-> overlays containing a mux.
-> This patch is also more careful with the release of the adapter device
-> which caused a deadlock with muxes, and does not break the build
-> on !OF since the node flag accessors are not defined then.
->=20
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+If the devices that need to be initialized last are on a child bus, you have to
+describe that child bus in DT, and it should just work.
 
-Now, that the dependency is upstream: applied to for-current, thanks!
+If all devices are on the same bus, you could add a phandle pointing to
+the node for device Y to the node for device X. The driver checks the
+phandle, and returns -EPROBE_DEFER if it doesn't point to an initialized
+device yet. That does impact the binding of device X, and requires code
+changes to the driver for device X.
 
+If this is a generic feature that's required on several devices, it doesn't
+make sense to change the bindings and driver code for all affected drivers
+(the driver may be used on another SoC that doesn't have the requirement), you
+have to group the devices somehow and handle it in a more generic way.
+Perhaps using PM Domains?
 
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+                        Geert
 
-iQIcBAEBAgAGBQJVN1BjAAoJEBQN5MwUoCm2BpcQAJFIyyKQohNqnCruePHQHKJQ
-Ogdei8do3/ZTmGmLbI807YwflQOIxkMlJqhaA5h4+joGXCRKIQ2ebmkg3y/iPAkh
-rtaM4wvpCxxbk3Q49k5d9zCtTGpNxnpY8jm4co5fw1Dvfq0bQra0jJWjy10hiPH+
-5NxdN+6qCmFBdLz6Qy9vH/iEG+nY7usKUlAJpkBgCtTaXPFsGykFP92DoFBr5FyI
-Ky0RN63VPwIEcYIZ2aR5Ys8x2eCJMW8qBr4YAQU5nXwyZil9JFohUprHHu/Oumpd
-auDQ67gREEXE962G5V2rwI2/NK9VkLMTeVDWDJmTNlxKiKC0NzTKFVbbSP3XNmiV
-BTQIowSNWHxSo6mztHqlBxP8u8/hiph6emfp0XfUN4PnekVa3UK226xs6XskK9Rp
-I3lziBdwcSv7uxeKrp9OJuw9B0j/J0Trpa2kmOB1dtJlIp4FdcvfiXU5NC6wPUoC
-6jBHVnRJxOlPOfXbGu+VbH08v6NRy9UzaJAEVIoSN/HuLzd55AFGqHF6dnam/gS7
-+oZ3r2Roa/gkPvsTheEB5f9I+DmHppv4RxqZBbdWR5bimnN7XUpQl9JLYCLjMxmX
-BDKAxHj/wXhfK7sNEE6G1Sj3kSrXzvZWLZ3CaHQ7+9AoPwCCmJ4oMfWEPoWYchho
-KRm+L6d0qsxbxCz+y0/m
-=pEzW
------END PGP SIGNATURE-----
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
---ikeVEW9yuYc//A+q--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
