@@ -1,115 +1,58 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v5 0/8] dmaengine/dra7x: DMA router (crossbar support)
-Date: Wed, 22 Apr 2015 10:38:27 +0300
-Message-ID: <55374FF3.1030003@ti.com>
-References: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Wed, 22 Apr 2015 09:40:19 +0200
+Message-ID: <20150422074019.GA1511@katana>
+References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428572154-3548-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, tony@atomide.com, linux@arm.linux.org.uk
-Cc: grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com, arnd@arndb.de, maxime.ripard@free-electrons.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422083789-18905-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2015 12:35 PM, Peter Ujfalusi wrote:
-> Vinod: is it OK if I send the Documnetation/dmanegine/ update a bit l=
-ater when
-> I have finished it?
->=20
-> Changes since v4:
-> - Comments from Maxime Ripard addressed:
->  - long line fixed in of-dma.c
->  - node leaks has been fixed in ti-dma-crossbar
->  - Using devm_ioremap_resource() in ti-dma-crossbar
->  - u16 casting has been addressed
-> - Router drivers are expected to return with ERR_PTR in case their
->   of_dma_route_allocate() callback fails.
 
-Are there more comments I need to address with this series?
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-P=E9ter
+On Sat, Jan 24, 2015 at 09:16:29AM +0200, Pantelis Antoniou wrote:
+> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
+> This is required to avoid multi probing when using I2C and device
+> overlays containing a mux.
+> This patch is also more careful with the release of the adapter device
+> which caused a deadlock with muxes, and does not break the build
+> on !OF since the node flag accessors are not defined then.
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-> Changes since v3:
-> - Comments from Russell:
->  - Warnings removed in case of non DT boot when taking the DMA reques=
-t number
->  - Reduced the number of channels presented to DMAengine
->  - removed the dma_sig parameter from omap_dma_chan_init()
-> - Comments from Arnd:
->  - dma-device property renamed to dma-masters
->  - Allow list of phandes in dma-masters
->=20
-> Changes since v2:
-> - not using regmap for the TI crossbar driver.
->=20
-> Changes since v1:
-> - Comments from Russell King and  Paul Bolle addressed:
->  - Use the added defined in the omap-dma changes
->  - MODULE_* removed from the ti-dma-crossbar driver.
-> - DMA router documentation: do not limit the #dma-cells to be the sam=
-e as the
->   dma controller's #dma-cells. It might be possible to have a router =
-which needs
->   more information than the DMA controller (direct request pairing fo=
-r example)
-> - Use defines in the ti-dma-crossbar driver
-> - Binding document for the ti-dma-crossbar driver
->=20
-> Intro mail from v1:
->=20
-> The series adds support for DMA router type of devices. They are used=
- in SoCs
-> which has more peripherals with DMA request lines than the DMA contro=
-ller can
-> handle.
-> The router itself is not part of the DMA controller and it's operatio=
-n should be
-> transparent (as it is in the HW) for the SW stack.
->=20
-> This series takes into accound the comments Sricharan received for hi=
-s version
-> of the crossbar driver:
-> https://lkml.org/lkml/2014/3/7/199
->=20
-> This implementation is not tied to any DMA driver so it is possible t=
-o use the
-> framework by other vendors, also ACPI version of binding can be easy =
-enough to
-> be added.
->=20
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (8):
->   dmaengine: of_dma: Support for DMA routers
->   Documentation: devicetree: dma: Binding documentation for TI DMA
->     crossbar
->   dmaengine: Add driver for TI DMA crossbar on DRA7x
->   dmaengine: omap-dma: Use defines for dma channels and request count
->   dmaengine: omap-dma: Take DMA request number from DT if it is
->     available
->   dmaengine: omap-dma: Remove mapping between virtual channels and
->     requests
->   dmaengine: omap-dma: Reduce the number of virtual channels
->   ARM: DTS: dra7x: Integrate sDMA crossbar
->=20
->  Documentation/devicetree/bindings/dma/dma.txt      |  28 +++
->  .../devicetree/bindings/dma/ti-dma-crossbar.txt    |  52 ++++++
->  arch/arm/boot/dts/dra7.dtsi                        |  57 ++++---
->  drivers/dma/Kconfig                                |   4 +
->  drivers/dma/Makefile                               |   1 +
->  drivers/dma/dmaengine.c                            |   7 +
->  drivers/dma/of-dma.c                               |  89 ++++++++++
->  drivers/dma/omap-dma.c                             |  29 +++-
->  drivers/dma/ti-dma-crossbar.c                      | 188 +++++++++++=
-++++++++++
->  include/linux/dmaengine.h                          |  17 ++
->  include/linux/of_dma.h                             |  21 +++
->  11 files changed, 463 insertions(+), 30 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti-dma-cros=
-sbar.txt
->  create mode 100644 drivers/dma/ti-dma-crossbar.c
->=20
+Now, that the dependency is upstream: applied to for-current, thanks!
+
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVN1BjAAoJEBQN5MwUoCm2BpcQAJFIyyKQohNqnCruePHQHKJQ
+Ogdei8do3/ZTmGmLbI807YwflQOIxkMlJqhaA5h4+joGXCRKIQ2ebmkg3y/iPAkh
+rtaM4wvpCxxbk3Q49k5d9zCtTGpNxnpY8jm4co5fw1Dvfq0bQra0jJWjy10hiPH+
+5NxdN+6qCmFBdLz6Qy9vH/iEG+nY7usKUlAJpkBgCtTaXPFsGykFP92DoFBr5FyI
+Ky0RN63VPwIEcYIZ2aR5Ys8x2eCJMW8qBr4YAQU5nXwyZil9JFohUprHHu/Oumpd
+auDQ67gREEXE962G5V2rwI2/NK9VkLMTeVDWDJmTNlxKiKC0NzTKFVbbSP3XNmiV
+BTQIowSNWHxSo6mztHqlBxP8u8/hiph6emfp0XfUN4PnekVa3UK226xs6XskK9Rp
+I3lziBdwcSv7uxeKrp9OJuw9B0j/J0Trpa2kmOB1dtJlIp4FdcvfiXU5NC6wPUoC
+6jBHVnRJxOlPOfXbGu+VbH08v6NRy9UzaJAEVIoSN/HuLzd55AFGqHF6dnam/gS7
++oZ3r2Roa/gkPvsTheEB5f9I+DmHppv4RxqZBbdWR5bimnN7XUpQl9JLYCLjMxmX
+BDKAxHj/wXhfK7sNEE6G1Sj3kSrXzvZWLZ3CaHQ7+9AoPwCCmJ4oMfWEPoWYchho
+KRm+L6d0qsxbxCz+y0/m
+=pEzW
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
