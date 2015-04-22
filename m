@@ -1,87 +1,181 @@
-From: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND RFC PATCH 1/3] ASoC: mediatek: Add binding support for
- AFE driver
-Date: Wed, 22 Apr 2015 11:17:20 +0800
-Message-ID: <1429672640.14162.55.camel@mtksdaap41>
-References: <1428653649-38200-1-git-send-email-koro.chen@mediatek.com>
-	 <1428653649-38200-2-git-send-email-koro.chen@mediatek.com>
-	 <20150418173407.GE26185@sirena.org.uk>
-	 <20150420043747.GH6325@pengutronix.de>
-	 <20150420204849.GJ14892@sirena.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/37] JZ4780 & CI20 support
+Date: Tue, 21 Apr 2015 23:06:11 -0500
+Message-ID: <CAL_Jsq+Eri73Pk5rsVgd5bhnb4n27fVZUJ1Qtt2Soqp-bGa0dg@mail.gmail.com>
+References: <1429627624-30525-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150420204849.GJ14892-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1429627624-30525-1-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-04-20 at 21:48 +0100, Mark Brown wrote:
-> On Mon, Apr 20, 2015 at 06:37:47AM +0200, Sascha Hauer wrote:
-> > On Sat, Apr 18, 2015 at 06:34:07PM +0100, Mark Brown wrote:
-> > > On Fri, Apr 10, 2015 at 04:14:07PM +0800, Koro Chen wrote:
-> 
-> > > > +Each external interface (called "IO" in this driver) is presented as a
-> > > > +DAI to ASoC. An IO must be connected via the interconnect to a memif.
-> > > > +The connection paths are configured through the device tree.
-> 
-> > > Why are these connection paths configured via device tree?  I would
-> > > expect that either there would be runtime configurability of these
-> > > things (particularly if loopback configurations within the hardware are
-> > > possible) or we'd just allocate memory interfaces to DAIs automatically
-> > > as DAIs come into use.
-> 
-> > There is a crossbar switch between the memory interfaces and the DAIs.
-> > Not every connection is possible, so not every memory interface can be
-> > used for every DAI. An algorithm choosing a suitable memory interface
-> > must be quite clever, complicated and also SoC dependent (the same but
-> > different hardware is used on MT8135 aswell), so I thought offering a
-> > static configuration via device tree is a good start. Should there be
-> > runtime configuration possible later the device tree settings could
-> > provide a good default.
-> 
-> What exactly do the restrictions look like and how often do they vary in
-> practice (can we get away with just doing a single static setup in the
-> driver)?  I'd have thought it should be fairly straightforward to have a
-> table of valid mappings and just pick the first free memory interface?
-> I'd rather not get stuck with the tables in the DT.  It's partly to
-> avoid setting bad precendents, we really don't want everyone coming
-> along hard coding this stuff, and partly because the hardware you
-> described didn't seem that hard to handle.
-> 
-If using DPCM, it seems the most suitable FE DAIs will be memif, and
-external interface like I2S should be BE DAIs. Do you think it is
-suitable for our memif to be FE DAIs? Then which memif to used can be
-described in a machine driver's FE DAIs. But I think this has a problem
-that our memif is one-direction, playback or capture. So the binded pcm
-device cannot have playback and capture capability together. May it
-cause trouble for user space apps that assumes there will be pcmC0D0p,
-pcmC0D0c?
+On Tue, Apr 21, 2015 at 9:46 AM, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> This series introduces initial support for the Ingenic JZ4780 SoC and
+> the Imagination Technologies MIPS Creator CI20 board which is built
+> around it. In the process the existing JZ4740 & qi_lb60 code gains
+> initial support for using DeviceTree such that much of the existing
+> platform code under arch/mips/jz4740 can be shared.
+>
+> The series has undergone quite a bit of restructure since v2. Each
+> patch contains a changelog indicating its differences, but a rough
+> overview for changes across the series would be:
+>
+>   - s/jz47xx/ingenic/ in various places, to reflect the fact that
+>     Ingenic have changed the naming scheme for their newest SoCs
+>     (now Mxxx).
+>
+>   - Restructure the Kconfig entries to provide a MACH_INGENIC
+>     indicating and Ingenic SoC, and have boards select the
+>     appropriate SoC symbol.
+>
+>   - Merge DT binding documentation where SoC bindings differ only
+>     by compatible strings.
+>
+>   - Capitalise "JZ" in SoC names, where not identifiers in code,
+>     to match the way Ingenic write them.
+>
+>   - Further clean up the Ingenic SoC interrupt controller driver
+>     and move it under drivers/irqchip/.
+>
+> Review appreciated, and hopefully this can make it into v4.2.
+>
+> Thanks,
+>     Paul
+>
+> Paul Burton (37):
+>   devicetree/bindings: add Ingenic Semiconductor vendor prefix
+>   devicetree/bindings: add Qi Hardware vendor prefix
+>   MIPS: JZ4740: introduce CONFIG_MACH_INGENIC
+>   MIPS: ingenic: add newer vendor IDs
+>   MIPS: JZ4740: require & include DT
+>   MIPS: irq_cpu: declare irqchip table entry
+>   MIPS: JZ4740: probe CPU interrupt controller via DT
+>   MIPS: JZ4740: use generic plat_irq_dispatch
+>   MIPS: JZ4740: move arch_init_irq out of arch/mips/jz4740/irq.c
+>   devicetree: document Ingenic SoC interrupt controller binding
 
-> > > > +- mem-interface-playback:
-> > > > +  mem-interface-capture: property of memif, format is: <memif irq use_sram>;
-> > > > +	                 memif: which memif to be used
-> > > > +			        (defined in include/dt-bindings/sound/mtk-afe.h)
-> > > > +		         irq: which irq to be used
-> > > > +			      (defined in include/dt-bindings/sound/mtk-afe.h)
-> > > > +		         use_sram: 1 is yes, 0 is no
-> 
-> > > Again, this looks like stuff we should be able to figure out at runtime
-> > > - the use of SRAM in particular looks like something we might want to
-> > > change depending on use case.  Assuming it adds buffering then for a
-> > > VoIP application we might not want to use SRAM to minimize latency but
-> > > during music playback we might want to enable SRAM to minimize power
-> > > consumption.
-> 
-> > That's exactly the usecase. How could such a runtime configurability
-> > look like? sysfs? Or something based on the buffer sizes?
-> 
-> Yeah, one of those :) but probably an ALSA control is going to be the
-> easiest for applications.
+For patches 1, 2, and 10:
 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+>   MIPS: JZ4740: probe interrupt controller via DT
+>   MIPS: JZ4740: parse SoC interrupt controller parent IRQ from DT
+>   MIPS: JZ4740: register an irq_domain for the interrupt controller
+>   MIPS: JZ4740: drop intc debugfs code
+>   MIPS: JZ4740: remove jz_intc_base global
+>   MIPS: JZ4740: support >32 interrupts
+>   MIPS: JZ4740: define IRQ numbers based on number of intc IRQs
+>   MIPS: JZ4740: read intc base address from DT
+>   MIPS: JZ4740: avoid JZ4740-specific naming
+>   MIPS: JZ4740: support newer SoC interrupt controllers
+>   irqchip: move Ingenic SoC intc driver to drivers/irqchip
+>   MIPS: JZ4740: call jz4740_clock_init earlier
+>   MIPS: JZ4740: replace use of jz4740_clock_bdata
+>   devicetree: add Ingenic CGU binding documentation
+>   clk: ingenic: add driver for Ingenic SoC CGU clocks
+>   MIPS,clk: migrate JZ4740 to common clock framework
+>   MIPS,clk: move jz4740_clock_set_wait_mode to jz4740-cgu
+>   MIPS,clk: move jz4740 UDC auto suspend functions to jz4740-cgu
+>   MIPS,clk: move jz4740 clock suspend,resume functions to jz4740-cgu
+>   clk: ingenic: add JZ4780 CGU support
+>   MIPS: JZ4740: remove clock.h
+>   MIPS: JZ4740: only detect RAM size if not specified in DT
+>   devicetree: document Ingenic SoC UART binding
+>   serial: 8250_ingenic: support for Ingenic SoC UARTs
+>   MIPS: JZ4740: use Ingenic SoC UART driver
+>   MIPS: ingenic: initial JZ4780 support
+>   MIPS: ingenic: initial MIPS Creator CI20 support
+>
+>  .../devicetree/bindings/clock/ingenic,cgu.txt      |  53 ++
+>  .../bindings/interrupt-controller/ingenic,intc.txt |  25 +
+>  .../devicetree/bindings/serial/ingenic,uart.txt    |  22 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+>  arch/mips/Kconfig                                  |  11 +-
+>  arch/mips/boot/dts/Makefile                        |   1 +
+>  arch/mips/boot/dts/ingenic/Makefile                |  10 +
+>  arch/mips/boot/dts/ingenic/ci20.dts                |  21 +
+>  arch/mips/boot/dts/ingenic/jz4740.dtsi             |  68 ++
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi             | 101 +++
+>  arch/mips/boot/dts/ingenic/qi_lb60.dts             |  15 +
+>  arch/mips/configs/ci20_defconfig                   | 169 ++++
+>  arch/mips/configs/qi_lb60_defconfig                |   3 +-
+>  arch/mips/include/asm/cpu-type.h                   |   2 +-
+>  arch/mips/include/asm/cpu.h                        |   6 +-
+>  arch/mips/include/asm/mach-jz4740/clock.h          |   3 +
+>  .../asm/mach-jz4740/cpu-feature-overrides.h        |   3 -
+>  arch/mips/include/asm/mach-jz4740/irq.h            |  14 +-
+>  arch/mips/include/asm/mach-jz4740/platform.h       |   2 -
+>  arch/mips/jz4740/Kconfig                           |  17 +-
+>  arch/mips/jz4740/Makefile                          |   8 +-
+>  arch/mips/jz4740/Platform                          |   8 +-
+>  arch/mips/jz4740/board-qi_lb60.c                   |   7 -
+>  arch/mips/jz4740/clock-debugfs.c                   | 108 ---
+>  arch/mips/jz4740/clock.c                           | 924 ---------------------
+>  arch/mips/jz4740/clock.h                           |  76 --
+>  arch/mips/jz4740/gpio.c                            |   7 +-
+>  arch/mips/jz4740/irq.c                             | 162 ----
+>  arch/mips/jz4740/platform.c                        |  38 +-
+>  arch/mips/jz4740/pm.c                              |   2 -
+>  arch/mips/jz4740/prom.c                            |  13 -
+>  arch/mips/jz4740/reset.c                           |  13 +-
+>  arch/mips/jz4740/serial.c                          |  33 -
+>  arch/mips/jz4740/serial.h                          |  23 -
+>  arch/mips/jz4740/setup.c                           |  36 +-
+>  arch/mips/jz4740/time.c                            |  19 +-
+>  arch/mips/kernel/cpu-probe.c                       |   4 +-
+>  arch/mips/kernel/irq_cpu.c                         |   3 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/ingenic/Makefile                       |   3 +
+>  drivers/clk/ingenic/cgu.c                          | 711 ++++++++++++++++
+>  drivers/clk/ingenic/cgu.h                          | 223 +++++
+>  drivers/clk/ingenic/jz4740-cgu.c                   | 301 +++++++
+>  drivers/clk/ingenic/jz4780-cgu.c                   | 732 ++++++++++++++++
+>  drivers/irqchip/Kconfig                            |   5 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-ingenic.c                      | 171 ++++
+>  drivers/tty/serial/8250/8250_ingenic.c             | 261 ++++++
+>  drivers/tty/serial/8250/Kconfig                    |   9 +
+>  drivers/tty/serial/8250/Makefile                   |   3 +
+>  include/dt-bindings/clock/jz4740-cgu.h             |  37 +
+>  include/dt-bindings/clock/jz4780-cgu.h             |  88 ++
+>  .../irq.h => include/linux/irqchip/ingenic.h       |   8 +-
+>  53 files changed, 3162 insertions(+), 1424 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/ingenic,uart.txt
+>  create mode 100644 arch/mips/boot/dts/ingenic/Makefile
+>  create mode 100644 arch/mips/boot/dts/ingenic/ci20.dts
+>  create mode 100644 arch/mips/boot/dts/ingenic/jz4740.dtsi
+>  create mode 100644 arch/mips/boot/dts/ingenic/jz4780.dtsi
+>  create mode 100644 arch/mips/boot/dts/ingenic/qi_lb60.dts
+>  create mode 100644 arch/mips/configs/ci20_defconfig
+>  delete mode 100644 arch/mips/jz4740/clock-debugfs.c
+>  delete mode 100644 arch/mips/jz4740/clock.c
+>  delete mode 100644 arch/mips/jz4740/clock.h
+>  delete mode 100644 arch/mips/jz4740/irq.c
+>  delete mode 100644 arch/mips/jz4740/serial.c
+>  delete mode 100644 arch/mips/jz4740/serial.h
+>  create mode 100644 drivers/clk/ingenic/Makefile
+>  create mode 100644 drivers/clk/ingenic/cgu.c
+>  create mode 100644 drivers/clk/ingenic/cgu.h
+>  create mode 100644 drivers/clk/ingenic/jz4740-cgu.c
+>  create mode 100644 drivers/clk/ingenic/jz4780-cgu.c
+>  create mode 100644 drivers/irqchip/irq-ingenic.c
+>  create mode 100644 drivers/tty/serial/8250/8250_ingenic.c
+>  create mode 100644 include/dt-bindings/clock/jz4740-cgu.h
+>  create mode 100644 include/dt-bindings/clock/jz4780-cgu.h
+>  rename arch/mips/jz4740/irq.h => include/linux/irqchip/ingenic.h (74%)
+>
+> --
+> 2.3.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
