@@ -1,129 +1,175 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] Documentation: Add device tree bindings for
- Freescale i.MX GPC
-Date: Wed, 22 Apr 2015 12:34:04 +0200
-Message-ID: <1429698844.2883.8.camel@pengutronix.de>
-References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
-	 <1424713215-3357-2-git-send-email-p.zabel@pengutronix.de>
-	 <20150303023531.GF20455@dragon>
+From: "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [v3] dt/bindings: qoriq-clock: Add binding for FMan clock mux
+Date: Wed, 22 Apr 2015 10:47:10 +0000
+Message-ID: <DM2PR03MB383C35FA5959662DD48D00BE6EE0@DM2PR03MB383.namprd03.prod.outlook.com>
+References: <1429008968-24707-1-git-send-email-igal.liberman@freescale.com>
+	 <1429119357.22867.724.camel@freescale.com>
+	 <DM2PR03MB38330DBBFFD1BC45D58F447E6E40@DM2PR03MB383.namprd03.prod.outlook.com>
+	 <1429249281.32545.52.camel@freescale.com>
+	  <DM2PR03MB383E5F67C358CCE2E38EA71E6E00@DM2PR03MB383.namprd03.prod.outlook.com>
+ <1429577504.4352.67.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150303023531.GF20455@dragon>
+In-Reply-To: <1429577504.4352.67.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 03.03.2015, 10:35 +0800 schrieb Shawn Guo:
-> On Mon, Feb 23, 2015 at 06:40:11PM +0100, Philipp Zabel wrote:
-> > The i.MX6 contains a power controller that controls power gating and
-> > sequencing for the SoC's power domains.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> The patch (series) looks fine to me.  Can we get DT maintainer's ACK on
-> this, so that I can apply the series for 4.1?
-> 
-> Shawn
-> 
-I'm formally NACKing this series.
-
-I've talked to Philipp and we decided to change the DT binding slightly
-to better accommodate SoCs with multiple domains like the imx6sx.
-
-I will send a new version of this series shortly.
-
-Regards,
-Lucas
-
-> > ---
-> > Changes since v8:
-> >  - Updated example with IRQ_TYPE_... and IMX6QDL_CLK_... defines
-> > ---
-> >  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 59 ++++++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > new file mode 100644
-> > index 0000000..65cc034
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > @@ -0,0 +1,59 @@
-> > +Freescale i.MX General Power Controller
-> > +=======================================
-> > +
-> > +The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> > +counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> > +domains.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
-> > +- reg: should be register base and length as documented in the
-> > +  datasheet
-> > +- interrupts: Should contain GPC interrupt request 1
-> > +- pu-supply: Link to the LDO regulator powering the PU power domain
-> > +- clocks: Clock phandles to devices in the PU power domain that need
-> > +	  to be enabled during domain power-up for reset propagation.
-> > +- #power-domain-cells: Should be 1, see below:
-> > +
-> > +The gpc node is a power-controller as documented by the generic power domain
-> > +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-> > +
-> > +Example:
-> > +
-> > +	gpc: gpc@020dc000 {
-> > +		compatible = "fsl,imx6q-gpc";
-> > +		reg = <0x020dc000 0x4000>;
-> > +		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> > +		pu-supply = <&reg_pu>;
-> > +		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> > +			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> > +			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> > +			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> > +			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> > +			 <&clks IMX6QDL_CLK_VPU_AXI>;
-> > +		#power-domain-cells = <1>;
-> > +	};
-> > +
-> > +
-> > +Specifying power domain for IP modules
-> > +======================================
-> > +
-> > +IP cores belonging to a power domain should contain a 'power-domains' property
-> > +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-> > +the power domain the device belongs to.
-> > +
-> > +Example of a device that is part of the PU power domain:
-> > +
-> > +	vpu: vpu@02040000 {
-> > +		reg = <0x02040000 0x3c000>;
-> > +		/* ... */
-> > +		power-domains = <&gpc 1>;
-> > +		/* ... */
-> > +	};
-> > +
-> > +The following DOMAIN_INDEX values are valid for i.MX6Q:
-> > +ARM_DOMAIN     0
-> > +PU_DOMAIN      1
-> > +The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-> > +DISPLAY_DOMAIN 2
-> > -- 
-> > 2.1.4
-> > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDIx
+LCAyMDE1IDM6NTIgQU0NCj4gVG86IExpYmVybWFuIElnYWwtQjMxOTUwDQo+IENjOiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IFRhbmcN
+Cj4gWXVhbnRpYW4tQjI5OTgzDQo+IFN1YmplY3Q6IFJlOiBbdjNdIGR0L2JpbmRpbmdzOiBxb3Jp
+cS1jbG9jazogQWRkIGJpbmRpbmcgZm9yIEZNYW4gY2xvY2sgbXV4DQo+IA0KPiBPbiBNb24sIDIw
+MTUtMDQtMjAgYXQgMDY6NDAgLTA1MDAsIExpYmVybWFuIElnYWwtQjMxOTUwIHdyb3RlOg0KPiA+
+DQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IElnYWwgTGliZXJtYW4uDQo+ID4NCj4gPiA+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0K
+PiA+ID4gU2VudDogTW9uZGF5LCBBcHJpbCAyMCwgMjAxNSAyOjA3IFBNDQo+ID4gPiBUbzogV29v
+ZCBTY290dC1CMDc0MjENCj4gPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gPiA+IFN1YmplY3Q6IFJFOiBbdjNdIGR0L2Jp
+bmRpbmdzOiBxb3JpcS1jbG9jazogQWRkIGJpbmRpbmcgZm9yIEZNYW4NCj4gPiA+IGNsb2NrIG11
+eA0KPiA+ID4NCj4gPiA+DQo+ID4gPg0KPiA+ID4gUmVnYXJkcywNCj4gPiA+IElnYWwgTGliZXJt
+YW4uDQo+ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBG
+cm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gPiBTZW50OiBGcmlkYXksIEFwcmlsIDE3LCAy
+MDE1IDg6NDEgQU0NCj4gPiA+ID4gVG86IExpYmVybWFuIElnYWwtQjMxOTUwDQo+ID4gPiA+IENj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
+cmcNCj4gPiA+ID4gU3ViamVjdDogUmU6IFt2M10gZHQvYmluZGluZ3M6IHFvcmlxLWNsb2NrOiBB
+ZGQgYmluZGluZyBmb3IgRk1hbg0KPiA+ID4gPiBjbG9jayBtdXgNCj4gPiA+ID4NCj4gPiA+ID4g
+T24gVGh1LCAyMDE1LTA0LTE2IGF0IDAxOjExIC0wNTAwLCBMaWJlcm1hbiBJZ2FsLUIzMTk1MCB3
+cm90ZToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gUmVnYXJkcywNCj4gPiA+ID4g
+PiBJZ2FsIExpYmVybWFuLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+ID4gPiA+ID4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gPiA+ID4g
+PiA+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwgMTUsIDIwMTUgODozNiBQTQ0KPiA+ID4gPiA+ID4g
+VG86IExpYmVybWFuIElnYWwtQjMxOTUwDQo+ID4gPiA+ID4gPiBDYzogZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+ID4gPiA+ID4gPiBT
+dWJqZWN0OiBSZTogW3YzXSBkdC9iaW5kaW5nczogcW9yaXEtY2xvY2s6IEFkZCBiaW5kaW5nIGZv
+cg0KPiA+ID4gPiA+ID4gRk1hbiBjbG9jayBtdXgNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBP
+biBUdWUsIDIwMTUtMDQtMTQgYXQgMTM6NTYgKzAzMDAsIElnYWwuTGliZXJtYW4gd3JvdGU6DQo+
+ID4gPiA+ID4gPiA+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5AZnJlZXNjYWxl
+LmNvbT4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gdjM6IEFkZHJlc3NlZCBmZWVkYmFj
+ayBmcm9tIFNjb3R0Og0KPiA+ID4gPiA+ID4gPiAJLSBSZW1vdmVkIGNsb2NrIHNwZWNpZmllciBk
+ZXNjcmlwdGlvbi4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gdjI6IEFkZHJlc3NlZCBm
+ZWVkYmFjayBmcm9tIFNjb3R0Og0KPiA+ID4gPiA+ID4gPiAJLSBNb3ZlZCB0aGUgImZtYW4tY2xr
+LW11eCIgY2xvY2sgcHJvdmlkZXIgZGV0YWlscw0KPiA+ID4gPiA+ID4gPiAJICB1bmRlciAiY2xv
+Y2tzIiBwcm9wZXJ0eS4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1i
+eTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiA+
+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fv
+cmlxLWNsb2NrLnR4dCAgICAgIHwgICAxNw0KPiA+ID4gPiArKysrKysrKysrKysrKystLQ0KPiA+
+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gPiA+
+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2su
+dHh0DQo+ID4gPiA+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ns
+b2NrL3FvcmlxLWNsb2NrLnR4dA0KPiA+ID4gPiA+ID4gPiBpbmRleCBiMGQ3YjczLi4yYmIzYjM4
+IDEwMDY0NA0KPiA+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0DQo+ID4gPiA+ID4gPiA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9j
+ay50eA0KPiA+ID4gPiA+ID4gPiArKysgdA0KPiA+ID4gPiA+ID4gPiBAQCAtNjUsOSArNjUsMTAg
+QEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ID4gPiA+ID4gIAkJSXQgdGFrZXMgcGFyZW50
+J3MgY2xvY2stZnJlcXVlbmN5IGFzIGl0cyBjbG9jay4NCj4gPiA+ID4gPiA+ID4gIAkqICJmc2ws
+cW9yaXEtcGxhdGZvcm0tcGxsLTEuMCIgZm9yIHRoZSBwbGF0Zm9ybSBQTEwgY2xvY2sgKHYxLjAp
+DQo+ID4gPiA+ID4gPiA+ICAJKiAiZnNsLHFvcmlxLXBsYXRmb3JtLXBsbC0yLjAiIGZvciB0aGUg
+cGxhdGZvcm0gUExMIGNsb2NrDQo+ID4gPiA+ID4gPiA+ICh2Mi4wKQ0KPiA+ID4gPiA+ID4gPiAr
+CSogImZzbCxmbWFuLWNsay1tdXgiIGZvciB0aGUgRnJhbWUgTWFuYWdlciBjbG9jay4NCj4gPiA+
+ID4gPiA+ID4gIC0gI2Nsb2NrLWNlbGxzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLiBUaGUg
+bnVtYmVyIG9mIGNlbGxzIGluDQo+IGENCj4gPiA+ID4gPiA+ID4gLQljbG9jay1zcGVjaWZpZXIu
+IFNob3VsZCBiZSA8MD4gZm9yICJmc2wscW9yaXEtc3lzY2xrLVsxLDJdLjAiDQo+ID4gPiA+ID4g
+PiA+IC0JY2xvY2tzLCBvciA8MT4gZm9yICJmc2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xv
+Y2tzLg0KPiA+ID4gPiA+ID4gPiArCWNsb2NrLXNwZWNpZmllci4gU2hvdWxkIGJlIDwwPiBmb3Ig
+ImZzbCxxb3JpcS1zeXNjbGstWzEsMl0uMCINCj4gPiA+IGFuZA0KPiA+ID4gPiA+ID4gPiArCSJm
+c2wsZm1hbi1jbGstbXV4IiBjbG9ja3Mgb3IgPDE+IGZvciAiZnNsLHFvcmlxLWNvcmUtcGxsLQ0K
+PiA+ID4gWzEsMl0uMCIuDQo+ID4gPiA+ID4gPiA+ICAJRm9yICJmc2wscW9yaXEtY29yZS1wbGwt
+MS4wIiBjbG9ja3MsIHRoZSBzaW5nbGUNCj4gPiA+ID4gPiA+ID4gIAljbG9jay1zcGVjaWZpZXIg
+Y2VsbCBtYXkgdGFrZSB0aGUgZm9sbG93aW5nIHZhbHVlczoNCj4gPiA+ID4gPiA+ID4gIAkqIDAg
+LSBlcXVhbCB0byB0aGUgUExMIGZyZXF1ZW5jeSBAQCAtMTQ1LDYgKzE0NiwxOCBAQA0KPiA+ID4g
+RXhhbXBsZQ0KPiA+ID4gPiA+ID4gPiBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHByb3ZpZGVy
+Og0KPiA+ID4gPiA+ID4gPiAgCQkJY2xvY2tzID0gPCZzeXNjbGs+Ow0KPiA+ID4gPiA+ID4gPiAg
+CQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsYXRmb3JtLXBsbCIsDQo+ID4gPiAicGxhdGZvcm0t
+cGxsLQ0KPiA+ID4gPiA+ID4gZGl2MiI7DQo+ID4gPiA+ID4gPiA+ICAJCX07DQo+ID4gPiA+ID4g
+PiA+ICsNCj4gPiA+ID4gPiA+ID4gKwkJZm0wY2xrOiBmbTAtY2xrLW11eCB7DQo+ID4gPiA+ID4g
+PiA+ICsJCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+ID4gPiA+ID4gPiA+ICsJCQlyZWcgPSA8MHgx
+MCA0Pg0KPiA+ID4gPiA+ID4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1jbGstbXV4IjsN
+Cj4gPiA+ID4gPiA+ID4gKwkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAg
+Mj4sDQo+ID4gPiA8JnBsbDAgMz4sDQo+ID4gPiA+ID4gPiA+ICsJCQkJIDwmcGxhdGZvcm1fcGxs
+IDA+LCA8JnBsbDEgMT4sIDwmcGxsMQ0KPiA+ID4gMj47DQo+ID4gPiA+ID4gPiA+ICsJCQljbG9j
+ay1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiIsICJwbGwwLWRpdjMiLA0KPiA+ID4gPiA+ID4g
+PiArCQkJCSAgICAgICJwbGwwLWRpdjQiLCAicGxhdGZvcm0tcGxsIiwgInBsbDEtDQo+ID4gPiBk
+aXYyIiwNCj4gPiA+ID4gPiA+ID4gKwkJCQkgICAgICAicGxsMS1kaXYzIjsNCj4gPiA+ID4gPiA+
+ID4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJmbTAtY2xrIjsNCj4gPiA+ID4gPiA+ID4gKwkJ
+fTsNCj4gPiA+ID4gPiA+ID4gIAl9Ow0KPiA+ID4gPiA+ID4gPiAgfTsNCj4gPiA+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBJIGRvbid0IHNlZSB0aGlzIHJlZ2lzdGVyIGluIHRo
+ZSBtYW51YWxzIGZvciBvbGRlciBEUEFBIGNoaXBzLA0KPiA+ID4gPiA+ID4gc3VjaCBhcw0KPiA+
+ID4gPiA+ID4gcDQwODAgb3IgcDMwNDEuICBJcyBpdCBwcmVzZW50IGJ1dCB1bmRvY3VtZW50ZWQ/
+ICBTaG91bGQgSSBiZQ0KPiA+ID4gPiA+ID4gbG9va2luZyBzb21ld2hlcmUgb3RoZXIgdGhhbiAi
+Q2xvY2tpbmcgTWVtb3J5IE1hcCI/DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+SXQncyBhdmFpbGFibGUgb25seSBpbiBwYXJ0IG9mIHRoZSBuZXcgY2hpcHMgKFQ0LCBUMiwgQjQp
+Lg0KPiA+ID4gPiA+IEluIFQxMDI0L1QxMDQwIHRoZXJlJ3Mgb25seSBvbmUgb3B0aW9uIGZvciBG
+TWFuIGNsb2NrIHNvIHRoaXMNCj4gPiA+ID4gPiByZWdpc3RlciBpcyBub3QNCj4gPiA+ID4gYXZh
+aWxhYmxlLg0KPiA+ID4gPg0KPiA+ID4gPiBTbyBpdCdzIHBhcnQgb2YgdGhlIDIuMCBjaGFzc2lz
+PyAgSSdkIHN0aWNrIGEgMi4wIGluIHRoZXJlLCB0aGVuLg0KPiA+ID4gPiBXaG8ga25vd3Mgd2hh
+dCB3ZSBtYXkgc2VlIGluIHRoZSBmdXR1cmUuDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gT0ssDQo+
+ID4gPiBXZSBjYW4gZ28gd2l0aCAiZnNsLGZtYW4tY2xrLW11eC0xLzItMC4iLg0KPiA+ID4gSW4g
+dGhhdCBjYXNlLCB3ZSBuZWVkIHRvIHVwZGF0ZSBGTWFuIG5vZGVzIGFuZCB0aGUgY2xvY2sgZHJp
+dmVyOg0KPiA+ID4gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC80NDM5NzMvDQo+
+ID4gPiBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzQ2MTgxMy8NCj4gPiA+IEkg
+d2lsbCB1cGRhdGUgdGhvc2UgcGF0Y2hlcyBzZXBhcmF0ZWx5Lg0KPiA+ID4NCj4gPg0KPiA+IFNj
+b3R0LA0KPiA+IFRoZXJlIGFyZSAyIG9wdGlvbnM6DQo+ID4gVXNlICJmc2wsZm1hbi1jbGstbXV4
+LTEuMCIgZm9yIFNvQyB3aXRob3V0IENMS0NHbkhXQUNTUiByZWdpc3Rlci4NCj4gPiBVc2UgImZz
+bCxmbWFuLWNsay1tdXgtMi4wIiBmb3IgU29DIHdpdGggQ0xLQ0duSFdBQ1NSIHJlZ2lzdGVyLg0K
+PiA+IE9yDQo+ID4gVXNlICJmc2wsZm1hbi1jbGstbXV4LTEuMCIgZm9yIFNvQyB3aGljaCBzdXBw
+b3J0IEZNYW4gVjIgKFB4eHh4KSBVc2UNCj4gPiAiZnNsLGZtYW4tY2xrLW11eC0yLjAiIGZvciBT
+b0Mgd2hpY2ggc3VwcG9ydCBGTWFuIFYzIChCL1QpDQo+IA0KPiAxLjAvMi4wIGluIHRoZSBjbG9j
+a2dlbiBub2RlIHJlZmVycyB0byBjaGFzc2lzIHZlcnNpb24uICBJdCBoYXMgbm90aGluZyB0byBk
+bw0KPiB3aXRoIEZNYW4gdmVyc2lvbi4NCj4gDQoNCkkga25vdy4gSG93ZXZlciB0aGVyZSdzIGEg
+bWF0Y2g6IDEuMCBjaGFzc2lzIHVzZWQgaW4gU29DIHdpdGggRk1hbiB2MiBhbmQgMi4wIGNoYXNz
+aXMgaW4gU29DIHdpdGggRk1hbiB2My4NCg0KPiBJbiBmYWN0LCBmbWFuIHNob3VsZCBub3QgYmUg
+aW4gdGhlIGNvbXBhdGlibGUgYmVjYXVzZSwgbm93IHRoYXQgSSBmb3VuZCB0aGUNCj4gZG9jdW1l
+bnRhdGlvbiBmb3IgdGhpcywgSSBzZWUgdGhhdCBpdCdzIG1vcmUgZ2VuZXJpYyB0aGFuIHRoYXQu
+DQo+ICJmbWFuLWNsay1tdXgiIHNob3VsZCBiZSByZXBsYWNlZCB3aXRoICJxb3JpcS1od2Fjc3Ii
+Lg0KPiANCj4gPiBVc2luZyB0aGUgMXN0IG9wdGlvbiBtaWdodCBiZSBjb25mdXNpbmcgYmVjYXVz
+ZSBjb3JlIHBsbC9tdXggMi4wDQo+IHJlcHJlc2VudHMgQi9UIGRldmljZXMgYW5kIDEuMCByZXBy
+ZXNlbnQgUHh4eHguDQo+ID4gSW4gdGhpcyBjYXNlLCBUMTA0MCB1c2VzICJmc2wscW9yaXEtY29y
+ZS1wbGwvbXV4LTIuMCIgYW5kICJmc2wsZm1hbi1jbGstbXV4LQ0KPiAxLjAiLg0KPiA+IE9uIHRo
+ZSBvdGhlciBoYW5kLCB0aGUgc2Vjb25kIG9wdGlvbiBkb2Vzbid0IGRpc3Rpbmd1aXNoZXMgYmV0
+d2VlbiBUNA0KPiBhbmQgVDEgKGZvciBleGFtcGxlKSwgYXMgVDEgZG9lc24ndCBoYXZlIHJlZyBw
+cm9wZXJ0eSB3aGlsZSBUNCBoYXMuDQo+IA0KPiBIb3cgd291bGQgdDEwNDAgaGF2ZSBhIHNvLWNh
+bGxlZCAiZm1hbi1jbGstbXV4IiBub2RlIGF0IGFsbCBpZiBpdCBkb2Vzbid0DQo+IGhhdmUgdGhp
+cyByZWdpc3Rlcj8NCj4gDQo+IEkgdGhpbmsgd2UndmUgbWFkZSBhIG1lc3Mgb2YgdGhlIGNsb2Nr
+IGJpbmRpbmdzIGFuZCB0aGlzIGlzIG9ubHkgZ29pbmcgdG8gbWFrZQ0KPiBpdCB3b3JzZS4gIFdl
+IG5lZWQgdG8gc3RheSBjb21wYXRpYmxlIHdpdGggdGhlIG1lc3Mgd2UndmUgbWFkZSwgYnV0IEkn
+bQ0KPiBpbmNsaW5lZCB0byBzYXkgdGhhdCB3ZSBzaG91bGRuJ3QgYWRkIG1vcmUgbm9kZXMgdG8g
+aXQuDQo+IA0KPiBJbnN0ZWFkLCBoYXZlIHRoZSB0b3BsZXZlbCBjbG9ja2dlbiBub2RlIGhhdmUg
+YSBjaGlwLWJhc2VkIGNvbXBhdGlibGUgaW4NCj4gYWRkaXRpb24gdG8gdmVyc2lvbiAoZS5nLiBj
+b21wYXRpYmxlID0gImZzbCx0NDI0MC1jbG9ja2dlbiIsDQo+ICJmc2wscW9yaXEtY2xvY2tnZW4t
+Mi4wIikgYW5kIGhhdmUgdGhlIHRvcGxldmVsIG5vZGUgZXhwb3J0IHdoYXRldmVyIGNsb2Nrcw0K
+PiBhcmUgbmVlZGVkLiAgUHV0IHRoZSBsb2dpYyB0byBkZWFsIHdpdGggYWxsIHRoZSBkaWZmZXJl
+bnQgZGl2aWRlcnMsIHJlZ2lzdGVyDQo+IHZhbHVlcywgYW5kIHN1Y2ggaW4gY29kZSwgbm90IHRo
+ZSBkZXZpY2UgdHJlZS4gIFRoZSBiaW5kaW5nIHNob3VsZCBiZSBmb2N1c2VkDQo+IG9uIGhvdyB0
+byBlbmNvZGUgdGhlIHNwZWNpZmllciBvZiB0aGUgZXhwb3J0ZWQgY2xvY2tzLg0KPiANCg0KV2Ug
+aGF2ZSAyIGNhc2VzOg0KCS0gRGV2aWNlcyAoVDIvVDQvQjQpIHdpdGggQ0xLQ0cxSFdBQ1NSIHJl
+Z2lzdGVyLg0KCS0gRGV2aWNlcyAoUHh4eHgsIFQxKSB3aXRob3V0IENMS0NHMUhXQUNTUiByZWdp
+c3RlciAoUHh4eHggZGV2aWNlcyBoYXZlIG1hbnkgb3B0aW9ucywgVDEgaGFzIG9ubHkgb25lIG9w
+dGlvbikNCg0KRm9yIHRoZSBmaXJzdCBncm91cCwgd2UgY2FuIGhhdmUgIiBxb3JpcS1od2Fjc3Ii
+IHByb3BlcnR5IGluIHRoZSBjbG9jayBub2RlLg0KQ3VycmVudGx5IFQ0IEZNYW4gY2xvY2sgbXV4
+IG5vZGUgaXMgdGhlIGZvbGxvd2luZzoNCglmbTFjbGs6IGZtMS1jbGstbXV4IHsNCgkJI2Nsb2Nr
+LWNlbGxzID0gPDA+Ow0KCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWNsay1tdXgiOw0KCQljbG9j
+a3MgPSA8JnBsbDEgMT4sIDwmcGxsMSAyPiwgPCZwbGwxIDM+LA0KCQkJIDwmcGxhdGZvcm1fcGxs
+IDA+LCA8JnBsbDAgMT4sIDwmcGxsMCAyPjsNCgkJY2xvY2stbmFtZXMgPSAicGxsMS1kaXYyIiwg
+InBsbDEtZGl2MyIsICJwbGwxLWRpdjQiLA0KCQkJICAgICAgInBsYXRmb3JtLXBsbCIsICJwbGww
+LWRpdjIiLCAicGxsMC1kaXYzIjsNCgkJY2xvY2stb3V0cHV0LW5hbWVzID0gImZtMS1jbGsiOw0K
+CX07DQpBcyBmYXIgYXMgSSB1bmRlcnN0YW5kIHdlIG5lZWQgdG8gbW92ZSB0aGUgbm9kZSB0byB0
+aGUgdG9wIGxldmVsIGNsb2NrIG5vZGUuDQpJbiBhZGRpdGlvbiB3ZSBuZWVkIHRvIGFkZCByZWcg
+cHJvcGVydHkgYW5kIGNoYW5nZSB0aGUgbmFtZSBvZiB0aGUgbm9kZSBhbmQgdGhlIGNvbXBhdGli
+bGUuDQpJbiB0aGF0IGNhc2UsIHRoZSBkcml2ZXIgY2FuIHJlYWQgdGhpcyByZWdpc3RlciBpbnN0
+ZWFkIG9mIHBhcnNpbmcgdGhlIFJDVy4NCg0KV2hhdCBhYm91dCB0aGUgZGV2aWNlcyBvZiB0aGUg
+c2Vjb25kIGdyb3VwPw0KSW4gdGhpcyBjYXNlIHdlIGRvbid0IGhhdmUgYSByZWdpc3RlciB0byBk
+ZXRlcm1pbmUgdGhlIHNvdXJjZSBjbG9jay4gU28gd2UgbmVlZCBhY2Nlc3MgdG8gZ3V0cyByZWdp
+c3RlcnMsIGxpa2Ugd2UgaGF2ZSBjdXJyZW50bHkuDQpUaGUgc3VnZ2VzdGlvbiBhYm92ZSBkb2Vz
+buKAmXQgc3VpdCBmb3IgdGhvc2UgZGV2aWNlcy4gDQoNCj4gLVNjb3R0DQo+IA0KDQpJZ2FsDQoN
+Cg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
