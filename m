@@ -1,264 +1,51 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] coresight: Add support for Juno platform
-Date: Wed, 22 Apr 2015 16:46:42 -0600
-Message-ID: <1429742802-13089-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
+Date: Thu, 23 Apr 2015 01:50:40 +0300
+Message-ID: <553825C0.2040600@cogentembedded.com>
+References: <553814F0.40405@cogentembedded.com>	<20150422.181813.1931455043058560592.davem@davemloft.net>	<553821F8.8050300@cogentembedded.com> <20150422.184133.132510003688162502.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150422.184133.132510003688162502.davem@davemloft.net>
+Sender: linux-sh-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: mitsuhiro.kimura.kc@renesas.com, f.fainelli@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, masaru.nagai.vx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for ARM's juno platform.  More
-specifically it has definitions for the A53/57 tracers, the
-A53/57 cluster funnels, the main funnel and the ETF in
-circular buffer mode.
+On 04/23/2015 01:41 AM, David Miller wrote:
 
-Support for the replicator, TPIU, ETR, CTI, CTM, ATM along with
-all the coresight IP blocks found in the SPC sub-system have
-not been addressed.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/arm/juno.dts | 222 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 222 insertions(+)
+>>     Sigh... I'm seeing no way out of that then, only copying. :-(
 
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index 133ee59de2d7..0d0a9cbbb193 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -200,6 +200,228 @@
- 		clock-names = "apb_pclk";
- 	};
- 
-+	etf@20010000 {
-+		compatible = "arm,coresight-tmc", "arm,primecell";
-+		reg = <0 0x20010000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etf_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&main_funnel_out_port>;
-+			};
-+		};
-+	};
-+
-+	main_funnel@20040000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x20040000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				main_funnel_out_port: endpoint {
-+					remote-endpoint =
-+						<&etf_in_port>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <0>;
-+				main_funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint =
-+							<&A57_funnel_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				main_funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A53_etm0_out_port>;
-+				};
-+			};
-+
-+		};
-+	};
-+
-+	A57_funnel@220c0000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x220c0000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				A57_funnel_out_port: endpoint {
-+					remote-endpoint =
-+						<&main_funnel_in_port0>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <0>;
-+				A57_funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A57_etm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				A57_funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A57_etm1_out_port>;
-+				};
-+			};
-+		};
-+	};
-+
-+	A53_funnel@220c0000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x230c0000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				A53_funnel_out_port: endpoint {
-+					remote-endpoint =
-+						<&main_funnel_in_port1>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <0>;
-+				A53_funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A53_etm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				A53_funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A53_etm1_out_port>;
-+				};
-+			};
-+			port@3 {
-+				reg = <2>;
-+				A53_funnel_in_port2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A53_etm2_out_port>;
-+				};
-+			};
-+			port@4 {
-+				reg = <3>;
-+				A53_funnel_in_port3: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&A53_etm3_out_port>;
-+				};
-+			};
-+		};
-+	};
-+
-+	etm@22040000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0 0x22040000 0 0x1000>;
-+
-+		cpu = <&A57_0>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			A57_etm0_out_port: endpoint {
-+				remote-endpoint = <&A57_funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	etm@22140000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0 0x22140000 0 0x1000>;
-+
-+		cpu = <&A57_1>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			A57_etm1_out_port: endpoint {
-+				remote-endpoint = <&A57_funnel_in_port1>;
-+			};
-+		};
-+	};
-+
-+	etm@23040000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0 0x23040000 0 0x1000>;
-+
-+		cpu = <&A53_0>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			A53_etm0_out_port: endpoint {
-+				remote-endpoint = <&A53_funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	etm@23140000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0 0x23140000 0 0x1000>;
-+
-+		cpu = <&A53_1>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			A53_etm1_out_port: endpoint {
-+				remote-endpoint = <&A53_funnel_in_port1>;
-+			};
-+		};
-+	};
-+
-+	etm@23240000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0 0x23240000 0 0x1000>;
-+
-+		cpu = <&A53_2>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			A53_etm2_out_port: endpoint {
-+				remote-endpoint = <&A53_funnel_in_port2>;
-+			};
-+		};
-+	};
-+
-+	etm@23340000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0 0x23340000 0 0x1000>;
-+
-+		cpu = <&A53_3>;
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		port {
-+			A53_etm3_out_port: endpoint {
-+				remote-endpoint = <&A53_funnel_in_port3>;
-+			};
-+		};
-+	};
-+
- 	smb {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
--- 
-1.9.1
+> What exactly is the device's restriction?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    The frame data must be aligned on 32-bit boundary.
+
+> Any reasonable modern chip allows one of two things.
+
+> Either it allows arbitrary alignment of the start of the TX
+> frame when DMA'ing.
+
+> _or_
+
+> It allows a variable number of pad bytes to be inserted by the
+> driver before giving it to the card, which do not go onto the
+> wire, in order to meet the device's DMA restrictions.
+
+> For example, if the packet is only 2 byte aligned, you set the "ignore
+> offset" to 2 and push two zero bytes in front of the ethernet frame
+> before giving it to the card.
+
+    I'm not seeing any padding logic on the TX path, only on the RX path (but 
+it counts in 4-byte words, so seems quite useless).
+
+> If a chip made in this day and era cannot do one of those two things,
+> this is beyond disappointing and is a massive engineering failure.
+> Whoever designed this chip made no investigation into how their
+> hardware is going to be actually used.
+
+    Too nad the Renesas SoC designers are not reading that. :-)
+
+WBR, Sergei
+
