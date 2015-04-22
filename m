@@ -1,39 +1,59 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH v2 0/1] ARM: cpuidle: heterogeneous systems extension
-Date: Wed, 22 Apr 2015 09:55:07 +0100
-Message-ID: <20150422085507.GA22601@red-moon>
-References: <1429200617-9546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <CAMAWPa_fMhgFfL8krDxT9h42mydVogkaYQt1Me1qJTsKeH5dSA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 05/11] ARM: dts: add imx7d soc dtsi file
+Date: Wed, 22 Apr 2015 10:12:32 +0100
+Message-ID: <20150422091231.GA27345@leverpostej>
+References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
+ <1429628007-8892-6-git-send-email-Frank.Li@freescale.com>
+ <20150421172834.GF10164@leverpostej>
+ <CAHrpEqTCMgaAx_bUG1JEtS-2_DrkwM_EbWphu_j=6YZuebcoSw@mail.gmail.com>
+ <CAHrpEqRqUJ2h2dXiwR3rcugWvszKwt10axy8jGsAJAH6Quafbg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMAWPa_fMhgFfL8krDxT9h42mydVogkaYQt1Me1qJTsKeH5dSA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Howard Chen <howard.chen@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>
+In-Reply-To: <CAHrpEqRqUJ2h2dXiwR3rcugWvszKwt10axy8jGsAJAH6Quafbg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 07:24:54PM +0100, Kevin Hilman wrote:
-> On Thu, Apr 16, 2015 at 9:10 AM, Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
+On Tue, Apr 21, 2015 at 08:34:45PM +0100, Zhi Li wrote:
+> >>> +
+> >>> +       clocks {
+> >>> +               #address-cells = <1>;
+> >>> +               #size-cells = <0>;
+> >>> +
+> >>> +               ckil: clock@0 {
+> >>> +                       compatible = "fixed-clock";
+> >>> +                       reg = <0>;
+> >>> +                       #clock-cells = <0>;
+> >>> +                       clock-frequency = <32768>;
+> >>> +                       clock-output-names = "ckil";
+> >>> +               };
+> >>> +
+> >>> +               osc: clock@1 {
+> >>> +                       compatible = "fixed-clock";
+> >>> +                       reg = <1>;
+> >>> +                       #clock-cells = <0>;
+> >>> +                       clock-frequency = <24000000>;
+> >>> +                       clock-output-names = "osc";
+> >>> +               };
+> >>> +
+> >>> +       };
+> >>
+> >> Get rid of the clocks container node, and put these under the root.
+> >
+> > Okay.
 > 
-> [...]
+> After remove clocks node.
+> There will be warning
 > 
-> > This patch sets the maximum number of static CPUidle drivers allowed to
-> > two, since it is hard to foresee systems with more than two sets of CPUs
-> > having different idle states
-> 
-> It's not hard to forsee anymore:
-> 
->    http://www.cnx-software.com/2015/04/21/mediatek-helio-x20-deca-core-processor/
->    https://liliputing.com/2015/04/closer-look-at-mediateks-upcoming-10-core-helio-x20-processor.html
+> Warning (reg_format): "reg" property in /clock@0 has invalid length (4
+> bytes) (#address-cells == 1, #size-cells == 1)
+> Warning (reg_format): "reg" property in /clock@1 has invalid length (4
+> bytes) (#address-cells == 1, #size-cells == 1)
 
-Eheh I stand corrected :). Not a big deal, drivers can be allocated
-dynamically; it seems that the designs above leave us no choice, the
-idle states are the only differentiating factor when it comes
-to CPUidle driver logical cpumask creation, happy to hear more
-opinions on this, but I do not really see what we can use instead.
+The reg property is meainingless, so just remove it and give the clocks
+different names.
 
-Thanks,
-Lorenzo
+Mark.
