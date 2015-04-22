@@ -1,97 +1,52 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 6/8] extcon: arizona: Add support for WM8998 and WM1814
-Date: Wed, 22 Apr 2015 14:53:42 +0900
-Message-ID: <55373766.6060106@samsung.com>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1429619636-25478-7-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: BCM2836: Add io map initialization for bcm2836.
+Date: Wed, 22 Apr 2015 09:22:43 +0200
+Message-ID: <2080047.TSLc2kVvn8@wuerfel>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <60195891.q3RtUhgfkn@wuerfel> <87bnihhypw.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <1429619636-25478-7-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87bnihhypw.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
-
-On 04/21/2015 09:33 PM, Richard Fitzgerald wrote:
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> ---
->  drivers/extcon/extcon-arizona.c |   33 ++++++++++++++++++++++-----------
->  1 files changed, 22 insertions(+), 11 deletions(-)
+On Tuesday 21 April 2015 16:02:19 Eric Anholt wrote:
+> > Hard to know. Does anything reference BCM2835_PERIPH_VIRT? Does it work
+> > if you remove it?
+> Well, that's clear enough. It dies early with:
 > 
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> index a0ed35b..0e60787 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1,7 +1,7 @@
->  /*
->   * extcon-arizona.c - Extcon driver Wolfson Arizona devices
->   *
-> - *  Copyright (C) 2012 Wolfson Microelectronics plc
-> + *  Copyright (C) 2012-2014 Wolfson Microelectronics plc
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License as published by
-> @@ -140,10 +140,14 @@ static void arizona_extcon_hp_clamp(struct arizona_extcon_info *info,
->  				    bool clamp)
->  {
->  	struct arizona *arizona = info->arizona;
-> -	unsigned int mask = 0, val = 0;
-> +	unsigned int mask, val = 0;
->  	int ret;
->  
->  	switch (arizona->type) {
-> +	case WM8998:
-> +	case WM1814:
-> +		mask = 0;
-> +		break;
->  	case WM5110:
->  		mask = ARIZONA_HP1L_SHRTO | ARIZONA_HP1L_FLWR |
->  		       ARIZONA_HP1L_SHRTI;
-> @@ -175,17 +179,19 @@ static void arizona_extcon_hp_clamp(struct arizona_extcon_info *info,
->  				 ret);
->  	}
->  
-> -	ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1L,
-> -				 mask, val);
-> -	if (ret != 0)
-> -		dev_warn(arizona->dev, "Failed to do clamp: %d\n",
-> +	if (mask) {
-> +		ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1L,
-> +					 mask, val);
-> +		if (ret != 0)
-> +			dev_warn(arizona->dev, "Failed to do clamp: %d\n",
->  				 ret);
->  
-> -	ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1R,
-> -				 mask, val);
-> -	if (ret != 0)
-> -		dev_warn(arizona->dev, "Failed to do clamp: %d\n",
-> -			 ret);
-> +		ret = regmap_update_bits(arizona->regmap, ARIZONA_HP_CTRL_1R,
-> +					 mask, val);
-> +		if (ret != 0)
-> +			dev_warn(arizona->dev, "Failed to do clamp: %d\n",
-> +				 ret);
-> +	}
->  
->  	/* Restore the desired state while not doing the clamp */
->  	if (!clamp) {
-> @@ -1176,6 +1182,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
->  			break;
->  		}
->  		break;
-> +	case WM8998:
-> +	case WM1814:
-> +		info->micd_clamp = true;
-> +		info->hpdet_ip = 2;
+> Uncompressing Linux... done, booting the kernel.
+> [    0.000000] Booting Linux on physical CPU 0xf00
+> [    0.000000] Initializing cgroup subsys cpu
+> [    0.000000] Initializing cgroup subsys cpuacct
+> [    0.000000] Linux version 4.0.0-rc1-v7+ (anholt@eliezer) (gcc version 4.9.2 ( 4.9.2-10) ) #487 SMP PREEMPT Tue Apr 21 15:58:29 PDT 2015
+> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
+> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> [    0.000000] Machine model: Raspberry Pi 2 Model B+
+> [    0.000000] bootconsole [earlycon0] enabled
+> [    0.000000] cma: Reserved 64 MiB at 0x37000000
+> [    0.000000] Memory policy: Data cache writealloc
+> 
+> (hung)
+> 
+> The only thing I see using this 0xf0000000 range is DEBUG_BCM2836's
+> serial stuff, though.
+> 
 
-What is meaning of '2'? I prefer to use the definition for '2'.
+Ok. Just to be clear: by removing that mapping, I meant removing the
+".map_io = bcm2835_map_io" line as well, so the default debug_ll_io_init()
+function gets called. If you have a map_io function that does not call
+debug_ll_io_init() or something equivalent, you cannot use DEBUG_LL.
 
-Except for upper one comment, looks good to me.
+It's possible that this mapping was just added for supporting DEBUG_LL,
+using the default debug_ll_io_init() is a better way to do that.
 
-Thanks,
-Chanwoo Choi
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
