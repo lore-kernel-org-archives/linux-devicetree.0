@@ -1,51 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
-Date: Thu, 23 Apr 2015 01:50:40 +0300
-Message-ID: <553825C0.2040600@cogentembedded.com>
-References: <553814F0.40405@cogentembedded.com>	<20150422.181813.1931455043058560592.davem@davemloft.net>	<553821F8.8050300@cogentembedded.com> <20150422.184133.132510003688162502.davem@davemloft.net>
+From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Subject: [PATCH v3 0/3] USB PHY driver for Broadcom's Cygnus chipset
+Date: Wed, 22 Apr 2015 16:14:36 -0700
+Message-ID: <1429744479-10410-1-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150422.184133.132510003688162502.davem@davemloft.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: mitsuhiro.kimura.kc@renesas.com, f.fainelli@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, masaru.nagai.vx@renesas.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2015 01:41 AM, David Miller wrote:
+This patchset adds the USB phy driver and documentation 
+for Broadom's Cygnus chipset. The phy is configurable from device tree
+and is capable of both device and host functions. It also provides
+a clock and reset to the host controller
 
+History:
+v1:
+    - Included Dmitry Torokhov's patch that addresed Kishon Vijay Abraham's 
+    comments on multiple phy model
+    - Inlucded Dmitry Torokhov's patch to use phy regulator
+    - Addressed Arnd Bergmann's comments on usage of this phy driver by
+    ehci-platform and ohci-platform driver in a separate patchset. 
+v2:
+    - Addressed Kishon's comments on documentation and function names
+    - Dmitry Addressed Kishon's comments on per port phy regulators
+v3:
+    - Addressed Kishon's comments on error code in phy driver and multi level
+    if else statements
+    - Corrected documentation to use defines for constants
+    - Corrected commit log for phy regulator patch
 
->>     Sigh... I'm seeing no way out of that then, only copying. :-(
+Arun Ramamurthy (3):
+  phy: phy-core: allow specifying supply at port level
+  Phy: DT binding documentation for Broadcom Cygnus USB PHY driver
+  phy: cygnus-usbphy: Add Broadcom Cygnus USB phy driver
 
-> What exactly is the device's restriction?
+ .../bindings/phy/brcm,cygnus-usb-phy.txt           |  69 +++
+ drivers/phy/Kconfig                                |  12 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-cygnus-usb.c                   | 504 +++++++++++++++++++++
+ drivers/phy/phy-core.c                             |  23 +-
+ include/dt-bindings/phy/phy.h                      |   2 +
+ 6 files changed, 598 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-cygnus-usb.c
 
-    The frame data must be aligned on 32-bit boundary.
-
-> Any reasonable modern chip allows one of two things.
-
-> Either it allows arbitrary alignment of the start of the TX
-> frame when DMA'ing.
-
-> _or_
-
-> It allows a variable number of pad bytes to be inserted by the
-> driver before giving it to the card, which do not go onto the
-> wire, in order to meet the device's DMA restrictions.
-
-> For example, if the packet is only 2 byte aligned, you set the "ignore
-> offset" to 2 and push two zero bytes in front of the ethernet frame
-> before giving it to the card.
-
-    I'm not seeing any padding logic on the TX path, only on the RX path (but 
-it counts in 4-byte words, so seems quite useless).
-
-> If a chip made in this day and era cannot do one of those two things,
-> this is beyond disappointing and is a massive engineering failure.
-> Whoever designed this chip made no investigation into how their
-> hardware is going to be actually used.
-
-    Too nad the Renesas SoC designers are not reading that. :-)
-
-WBR, Sergei
-
+-- 
+2.3.4
