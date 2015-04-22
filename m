@@ -1,63 +1,66 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
-Date: Wed, 22 Apr 2015 11:36:54 -0400 (EDT)
-Message-ID: <20150422.113654.1169277303695917496.davem@davemloft.net>
-References: <552C4554.2070608@gmail.com>
-	<552D8898.3060905@cogentembedded.com>
-	<SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: mitsuhiro.kimura.kc@renesas.com
-Cc: sergei.shtylyov@cogentembedded.com, f.fainelli@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, masaru.nagai.vx@renesas.com
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/4] Fix null pointer deference when calling of_platform_depopulate
+Date: Wed, 22 Apr 2015 18:14:17 +0200
+Message-ID: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: MITSUHIRO KIMURA <mitsuhiro.kimura.kc@renesas.com>
-Date: Wed, 22 Apr 2015 05:04:13 +0000
+of_platform_depopulate can lead to a kernel error when calling release_resource()
 
-> Hello Sergei.
-> 
->  (2015/04/15 6:37:28), Sergei Shtylyov wrote:
->> >> +		if (!ravb_tx_free(ndev, q)) {
->> >> +			netif_warn(priv, tx_queued, ndev, "TX FD exhausted.\n");
->> >> +			netif_stop_queue(ndev);
->> >> +			spin_unlock_irqrestore(&priv->lock, flags);
->> >> +			return NETDEV_TX_BUSY;
->> >> +		}
->> >> +	}
->> >> +	entry = priv->cur_tx[q] % priv->num_tx_ring[q];
->> >> +	priv->cur_tx[q]++;
->> >> +	spin_unlock_irqrestore(&priv->lock, flags);
->> >> +
->> >> +	if (skb_put_padto(skb, ETH_ZLEN))
->> >> +		return NETDEV_TX_OK;
->> >> +
->> >> +	priv->tx_skb[q][entry] = skb;
->> >> +	buffer = PTR_ALIGN(priv->tx_buffers[q][entry], RAVB_ALIGN);
->> >> +	memcpy(buffer, skb->data, skb->len);
->> 
->> > ~1500 bytes memcpy(), not good...
->> 
->>     I'm looking in the manual and not finding the hard requirement to have the
->> buffer address aligned to 128 bytes (RAVB_ALIGN), sigh... Kimura-san?
-> 
-> There are the hardware requirement that the frame data must be aligned with
-> a 32-bit boundary in the URAM, see section 45A.3.3.1 Data Representation
-> in the manual.
-> I think that the original skb->data is almost aligned with 2 bytes boundary
-> by NET_IP_ALING, so we copied original skb->data to the local aligned buffer.
-> 
-> In addition, see section 45A.3.3.12 Tips for Optimizing Performance in Handling
-> Descriptors, it mentioned that frame data is accessed in blocks up to 128 bytes
-> and the number of 128 byte borders (addresses H'xxx00 and H'xxx80) and frame data
-> inside should be minimized.
-> So we set RAVB_ALIGN to 128 bytes.
+of_platform_depopulate()
+      of_platform_device_destroy()
+        platform_device_unregister(platform_device *pdev)
+	  platform_device_del(platform_device *pdev)
+	    for (i = 0; i < pdev->num_resources; i++)
+	    	      release_resource()
 
-There is no way that copying is going to be faster than finding an adequate way
-to transmit directly out of the SKB memory.
+The reason is that it is trying to release a resource that was not allocated
+via insert_resource
 
-In this day and age there is simply no excuse for something like this, you will
-have to find a way.
+of_platform_populate()
+      ...
+      	of_device_alloc()
+	  pdev = platform_device_alloc()
+	  # set pdev->resource, similar to platform_device_add_resources()
+	  of_device_add(platform_device *pdev)
+	    # similar to platform_device_add(), but note there's no
+	    # insert_resource() in this path
+	    device_add(&pdev->dev)
+
+This set of patches modifies release_resource to check for
+resource->parent==NULL and throw a warning if there is an error.
+
+base/platform has been fixed for an hypothetical condition where parent is
+set but the platform is neither MEM or IO.
+
+Then platform_device_alloc has been modified so it supports of and amba 
+devices.
+
+Finally of_device_add has been modified to use platform_device_add().
+
+v1: https://lkml.org/lkml/2015/4/20/435
+
+v2: https://lkml.org/lkml/2015/4/21/99
+    https://lkml.org/lkml/2015/4/21/100
+
+Ricardo Ribalda Delgado (4):
+  kernel/resource: Invalid memory access in __release_resource
+  base/platform: Only insert MEM and IO resources
+  base/platform: Continue on insert_resource() error
+  of/platform: Use platform_device interface
+
+ drivers/base/platform.c | 20 ++++++++++++--------
+ drivers/of/platform.c   |  3 ++-
+ kernel/resource.c       |  3 +++
+ 3 files changed, 17 insertions(+), 9 deletions(-)
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
