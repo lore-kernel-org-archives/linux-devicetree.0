@@ -1,80 +1,35 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: [PATCH v3 1/3] phy: phy-core: allow specifying supply at port level
-Date: Wed, 22 Apr 2015 16:14:37 -0700
-Message-ID: <1429744479-10410-2-git-send-email-arun.ramamurthy@broadcom.com>
-References: <1429744479-10410-1-git-send-email-arun.ramamurthy@broadcom.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] Add DTE driver for Cygnus
+Date: Wed, 22 Apr 2015 16:22:01 -0700
+Message-ID: <1429744923-2007-1-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429744479-10410-1-git-send-email-arun.ramamurthy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@chromium.org>, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Darren Edamura <dedamura-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Torokhov <dtor@chromium.org>
+This patchset includes the Digital Timing Engine (DTE) driver for Cygnus SoC's.
 
-Multi-port phys may have per port power supplies. Let's change phy
-core to look for supply at the port level when multiple ports are
-specified. To keep compatibility with the existing device tree board
-descriptions for single-port phys we will continue looking up the
-power supply at the parent node level
+Jonathan Richardson (2):
+  misc: Add DT binding for cygnus Digital Timing Engine (DTE) driver.
+  misc: Add initial Digital Timing Engine (DTE) driver for cygnus
 
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- drivers/phy/phy-core.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ .../bindings/arm/bcm/brcm,cygnus-dte.txt           |   24 +
+ drivers/misc/Kconfig                               |   11 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/bcm_cygnus_dte.c                      |  927 ++++++++++++++++++++
+ include/linux/bcm_cygnus_dte.h                     |   99 +++
+ 5 files changed, 1062 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,cygnus-dte.txt
+ create mode 100644 drivers/misc/bcm_cygnus_dte.c
+ create mode 100644 include/linux/bcm_cygnus_dte.h
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 3791838..c7aa297 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -651,16 +651,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 		goto free_phy;
- 	}
- 
--	/* phy-supply */
--	phy->pwr = regulator_get_optional(dev, "phy");
--	if (IS_ERR(phy->pwr)) {
--		if (PTR_ERR(phy->pwr) == -EPROBE_DEFER) {
--			ret = -EPROBE_DEFER;
--			goto free_ida;
--		}
--		phy->pwr = NULL;
--	}
--
- 	device_initialize(&phy->dev);
- 	mutex_init(&phy->mutex);
- 
-@@ -674,6 +664,16 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 	if (ret)
- 		goto put_dev;
- 
-+	/* phy-supply */
-+	phy->pwr = regulator_get_optional(&phy->dev, "phy");
-+	if (IS_ERR(phy->pwr)) {
-+		ret = PTR_ERR(phy->pwr);
-+		if (ret == -EPROBE_DEFER)
-+			goto put_dev;
-+
-+		phy->pwr = NULL;
-+	}
-+
- 	ret = device_add(&phy->dev);
- 	if (ret)
- 		goto put_dev;
-@@ -689,9 +689,6 @@ put_dev:
- 	put_device(&phy->dev);  /* calls phy_release() which frees resources */
- 	return ERR_PTR(ret);
- 
--free_ida:
--	ida_simple_remove(&phy_ida, phy->id);
--
- free_phy:
- 	kfree(phy);
- 	return ERR_PTR(ret);
 -- 
-2.3.4
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
