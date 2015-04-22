@@ -1,119 +1,78 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH 1/3] iio: core: Introduce IIO_CHAN_INFO_CALIBREPETITIONS
-Date: Wed, 22 Apr 2015 11:33:46 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F19A5B355@irsmsx105.ger.corp.intel.com>
-References: <1429267830-13681-1-git-send-email-irina.tirdea@intel.com>
- <1429267830-13681-2-git-send-email-irina.tirdea@intel.com>
- <55328A92.9020807@kernel.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH RFC v9 11/20] drm/bridge: Add Synopsys DesignWare MIPI DSI
+ host controller driver
+Date: Wed, 22 Apr 2015 14:13:53 +0200
+Message-ID: <54991164.nrScLQEecU@diego>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <20150409084353.GD12103@ulmo> <552F4B2E.2000209@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55328A92.9020807@kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Jonathan Cameron' <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <552F4B2E.2000209@codeaurora.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Jonathan Cameron [mailto:jic23@kernel.org]
-> Sent: 18 April, 2015 19:47
-> To: Tirdea, Irina; linux-iio@vger.kernel.org; devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org; Hartmut Knaack; Lars-Peter Clausen; Peter Meerwald; Rob Herring; Pawel Moll; Mark Rutland; Ian
-> Campbell; Kumar Gala
-> Subject: Re: [PATCH 1/3] iio: core: Introduce IIO_CHAN_INFO_CALIBREPETITIONS
-> 
-> On 17/04/15 11:50, Irina Tirdea wrote:
-> > Some magnetometers can perform a number of repetitions in HW
-> > for each measurement to increase accuracy. One example is
-> > Bosch BMC150:
-> > http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS000-04.pdf.
-> >
-> > Introduce an interface to set the number of repetitions
-> > for these devices.
-> >
-> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-iio | 10 ++++++++++
-> >  drivers/iio/industrialio-core.c         |  1 +
-> >  include/linux/iio/iio.h                 |  1 +
-> >  3 files changed, 12 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > index 866b4ec..74c1444 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > @@ -1375,3 +1375,13 @@ Description:
-> >  		The emissivity ratio of the surface in the field of view of the
-> >  		contactless temperature sensor.  Emissivity varies from 0 to 1,
-> >  		with 1 being the emissivity of a black body.
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/in_magn_x_calibrepetitions
-> > +What:		/sys/bus/iio/devices/iio:deviceX/in_magn_y_calibrepetitions
-> > +What:		/sys/bus/iio/devices/iio:deviceX/in_magn_z_calibrepetitions
-> > +KernelVersion:	4.2
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Hardware applied number of repetitions for acquiring one
-> > +		data point. The HW will do <type>[_name]_calibrepetitions
-> > +		measurements and return the average value as output data.
-> This is an interesting way of naming what is often referred to as oversampling.
-> I'd like to get some other opinions on naming before we go with the ABI for this..
-> 
-> We do have one driver in staging exporting oversampling_ratio which is probably
-> the same thing, but that ABI was never standardized so I have no problem with
-> ignoring that one case.  A couple of other drivers provide oversampling control
-> via platform data.   We must make sure we give a sensible default for this.
-> 
-I didn't know about the oversampling_ratio. I used "repetitions" because Bosch calls them so
-in the datasheet.
-However, I think oversampling_ratio is a better name since it suggests a
-connection with sampling. I will change it to oversampling_ratio in v2 and then
-wait for more opinions on this.
-
-> There is also the interesting question of whether sampling_frequency applies
-> before or after this...  I'd argue after, but again would like more opinions
-> before we dictate that.  However, whatever we choose should definitely be
-> documented here!
-> 
-The HW sees the sampling_frequency as the frequency the user sees, so it does not take into
-account the oversampling_ratio: each value resulted after oversampling_ratio repetitions is
-considered one sample for the sampling_frequency. However, I am not sure how other
-devices handle this so more opinions on this would be useful.
-
-Looking more into the oversampling ratio from BMC150, seems there are some
-sampling limitations I missed the first time: when setting a certain value for x/y/z repetitions,
-not all sampling rates are available.  I am going to fix this in v2 by not allowing invalid
-sampling rates once a certain value for oversampling_ratio is set.
-
-Thanks,
-Irina
-
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > index 7c98bc1..9e0da7f 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
-> > @@ -129,6 +129,7 @@ static const char * const iio_chan_info_postfix[] = {
-> >  	[IIO_CHAN_INFO_DEBOUNCE_COUNT] = "debounce_count",
-> >  	[IIO_CHAN_INFO_DEBOUNCE_TIME] = "debounce_time",
-> >  	[IIO_CHAN_INFO_CALIBEMISSIVITY] = "calibemissivity",
-> > +	[IIO_CHAN_INFO_CALIBREPETITIONS] = "calibrepetitions",
-> >  };
-> >
-> >  /**
-> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > index b1e46ae..07fbfb2 100644
-> > --- a/include/linux/iio/iio.h
-> > +++ b/include/linux/iio/iio.h
-> > @@ -44,6 +44,7 @@ enum iio_chan_info_enum {
-> >  	IIO_CHAN_INFO_DEBOUNCE_COUNT,
-> >  	IIO_CHAN_INFO_DEBOUNCE_TIME,
-> >  	IIO_CHAN_INFO_CALIBEMISSIVITY,
-> > +	IIO_CHAN_INFO_CALIBREPETITIONS,
-> >  };
-> >
-> >  enum iio_shared_by {
-> >
+QW0gRG9ubmVyc3RhZywgMTYuIEFwcmlsIDIwMTUsIDExOjA5OjU4IHNjaHJpZWIgQXJjaGl0IFRh
+bmVqYToKPiBPbiAwNC8wOS8yMDE1IDAyOjEzIFBNLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiA+
+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAyOjAxOjM0UE0gKzA4MDAsIExpdSBZaW5nIHdyb3Rl
+Ogo+ID4gWy4uLl0KPiA+IAo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2R3X21pcGlfZHNpLmMKPiA+PiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfbWlwaV9kc2ku
+Yz4gCj4gPiBbLi4uXQo+ID4gCj4gPj4gK3N0cnVjdCBkd19taXBpX2RzaSB7Cj4gPj4gKwlzdHJ1
+Y3QgbWlwaV9kc2lfaG9zdCBkc2lfaG9zdDsKPiA+PiArCXN0cnVjdCBkcm1fY29ubmVjdG9yIGNv
+bm5lY3RvcjsKPiA+PiArCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcjsKPiA+PiArCXN0cnVj
+dCBkcm1fYnJpZGdlICpicmlkZ2U7Cj4gPj4gKwlzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbDsKPiA+
+PiArCXN0cnVjdCBkZXZpY2UgKmRldjsKPiA+PiArCj4gPj4gKwl2b2lkIF9faW9tZW0gKmJhc2U7
+Cj4gPj4gKwo+ID4+ICsJc3RydWN0IGNsayAqcGxscmVmX2NsazsKPiA+PiArCXN0cnVjdCBjbGsg
+KmNmZ19jbGs7Cj4gPj4gKwlzdHJ1Y3QgY2xrICpwY2xrOwo+ID4+ICsKPiA+PiArCXVuc2lnbmVk
+IGludCBsYW5lX21icHM7IC8qIHBlciBsYW5lICovCj4gPj4gKwl1MzIgY2hhbm5lbDsKPiA+PiAr
+CXUzMiBsYW5lczsKPiA+PiArCXUzMiBmb3JtYXQ7Cj4gPj4gKwlzdHJ1Y3QgZHJtX2Rpc3BsYXlf
+bW9kZSAqbW9kZTsKPiA+PiArCj4gPj4gKwljb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9k
+YXRhICpwZGF0YTsKPiA+PiArCj4gPj4gKwlib29sIGVuYWJsZWQ7Cj4gPj4gK307Cj4gPiAKPiA+
+IFdoaWxlIHJldmlld2luZyB0aGlzIEkga2VwdCB0aGlua2luZyB3aGV0aGVyIHRoaXMgaXMgcmVh
+bGx5IHRoZSByaWdodAo+ID4gYXJjaGl0ZWN0dXJhbCBkZXNpZ24uIFRoaXMgZHJpdmVyIGlzIGEg
+TUlQSSBEU0kgaG9zdCwgYSBjb25uZWN0b3IgYW5kCj4gPiBhIGJyaWRnZSwgYWxsIGluIG9uZS4g
+QnV0IGl0IHNlZW1zIHRvIG1lIGxpa2UgaXQgc2hvdWxkIHJlYWxseSBiZSBhbgo+ID4gZW5jb2Rl
+ci9jb25uZWN0b3IgYW5kIGEgTUlQSSBEU0kgaG9zdC4gV2h5IHRoZSBuZWVkIGZvciBhIGJyaWRn
+ZT8gVGhlCj4gPiBicmlkZ2UgYWJzdHJhY3Rpb24gdGFyZ2V0cyBibG9ja3Mgb3V0c2lkZSBvZiB0
+aGUgU29DLCBidXQgaXQgaXMgbXkKPiA+IHVuZGVyc3RhbmRpbmcgdGhhdCB0aGVzZSBEZXNpZ25X
+YXJlIElQIGJsb2NrcyBhcmUgZGVzaWduZWQgaW50byBTb0NzLgo+IAo+IFRoZSBtc20gZHJpdmVy
+IHVzZXMgYnJpZGdlcyBmb3IgYmxvY2tzIHdpdGhpbiB0aGUgU29DIHRvby4gV2UgaGF2ZSB0b28K
+PiBtYW55IHN1YiBibG9ja3MgaW4gdGhlIGRpc3BsYXkgY29udHJvbGxlciB0aGF0IHVzZSB1cCBj
+cnRjcyBhbmQgZW5jb2Rlcgo+IGVudGl0aWVzLiBBIGJyaWRnZSBpcyB0aGUgb25seSBvcHRpb24g
+b25lIGhhcyBpZiBhbiBlbmNvZGVyIGluIHRoZQo+IGRpc3BsYXkgY2hhaW4gaXMgYWxyZWFkeSB0
+YWtlbi4KPiAKPiBJbiB0aGUgYWJvdmUgZGVzaWdud2FyZSBjb25maWd1cmF0aW9uLCBpZiBzb21l
+IG9uZSBjcmVhdGVkIGEgYm9hcmQgdGhhdAo+IHVzZWQgYW4gZXh0ZXJuYWwgY2hpcCB0byBmdXJ0
+aGVyIGNvbnZlcnQgRFNJIHRvIHNvbWUgb3RoZXIgb3V0cHV0Cj4gZm9ybWF0LCB0aGVuIHdlIHdv
+dWxkIGJlIGNvbXBsZXRlbHkgZXhoYXVzdGVkIG9mIGFsbCBlbnRpdGllcy4KPiAKPiBJIHBvc3Rl
+ZCBhIHBhdGNoIHRoYXQgYWxsb3dzIHVzIHRvIGNyZWF0ZSBhIGNoYWluIG9mIGJyaWRnZXMgZm9y
+IHN1Y2gKPiBjYXNlcy4gSXQgc2VlbXMgdG8gd29yayB3ZWxsIGFzIGFuIGludGVyaW0gc29sdXRp
+b24uIElkZWFsbHksIGl0IHdvdWxkCj4gYmUgYmV0dGVyIGlmIHdlIGNvdWxkIG1ha2UgYnJpZGdl
+IGEgc3BlY2lhbCBjYXNlIG9mIGFuIGVuY29kZXIsIGFuZCBsZXQKPiBvbmUgZW5jb2RlciBjb25u
+ZWN0IHRvIGFub3RoZXIgZW5jb2Rlci4KPiAKPiBTdWNoIGEgdGhpbmcgd291bGQgYWxzbyBoZWxw
+IHVzIHVuaWZ5IGkyYyBzbGF2ZSBlbmNvZGVycyBhbmQgYnJpZGdlCj4gZHJpdmVycyB0b28uIEEg
+Y2hpcCBkZXNpZ25lZCBhcyBhbiBpMmMgc2xhdmUgZW5jb2RlciB3b3VsZCB3b3JrIHdlbGwKPiB3
+aXRoIGEgZHJtIGRyaXZlciB0aGF0IGRvZXNuJ3QgaGF2ZSBhbiBlbmNvZGVyLCBidXQgd29uJ3Qg
+d29yayBmb3IgU29Dcwo+IFNvQ3MgdGhhdCBhbHJlYWR5IGhhdmUgYW4gZW5jb2RlciBhbmQgd2Vy
+ZSBleHBlY3RpbmcgYSBicmlkZ2UgZW50aXR5Cj4gaW5zdGVhZC4KClllYWgsIGhhdmluZyBlbmNv
+ZGVyLWFmdGVyLWVuY29kZXIgY2hhaW5zIHdvdWxkIGJlIGdyZWF0LiBJIGhhdmUgdGhlIHNhbWUg
+Cmlzc3VlIG9uIFJvY2tjaGlwIHdoZXJlIG9uIHRoZSByazMyODggdGhlIGx2ZHMtSVAgaG9ncyB0
+aGUgbGNkLXBpbnMgb2YgdGhlIHNvYyAKd2hpY2ggYXJlIHVzZWQgYm90aCBmb3IgcGFuZWxzIGFz
+IHdlbGwgYXMgZXh0ZXJuYWwgZW5jb2RlcnMsIHdoaWxlIG9uIHRoZSAKb2xkZXIgUm9ja2NoaXAg
+U29DcyB0aGVzZSBwaW5zIGFyZSB1c2VkIGJ5IGV4dGVybmFsIGVuY29kZXJzIGRpcmVjdGx5LgoK
+U28gaW4gbXkgY3VycmVudCAocGVuZGluZyByZXZpZXcpIHBhdGNoc2V0IHRoZSBsdmRzIGFjdHMg
+YXMgZW5jb2RlciBmb3IgcGFuZWxzIAphbmQgYXMgYnJpZGdlIGlmIGV4dGVybmFsIGVuY29kZXJz
+IGFyZSBpbiB1c2UuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
