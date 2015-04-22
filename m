@@ -1,7 +1,7 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v3 1/4] kernel/resource: Invalid memory access in __release_resource
-Date: Wed, 22 Apr 2015 18:14:18 +0200
-Message-ID: <1429719261-18024-2-git-send-email-ricardo.ribalda@gmail.com>
+Subject: [PATCH v3 2/4] base/platform: Only insert MEM and IO resources
+Date: Wed, 22 Apr 2015 18:14:19 +0200
+Message-ID: <1429719261-18024-3-git-send-email-ricardo.ribalda@gmail.com>
 References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
@@ -10,40 +10,49 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@
 Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-When a resource is initialized via of_platform_populate.
-resource->parent is initialized to NULL via kzalloc.
-(of_platform_populate->of_device_alloc->of_address_to_resource)
+platform_device_del only checks the type of the resource in order to
+call release_resource.
 
-If of_platform_depopulate is called later, resource->parent is
-accessed (Offset 0x30 of address 0), causing a kernel error.
+On the other hand, platform_device_add calls insert_resource for any
+resource that has a parent.
 
-This patch evaluates resouce->parent before accessing it. If it
-is not initialized, -EACCESS is returned.
+Make both code branches balanced.
 
-Also a WARN is thrown, so the developer can have a hint about what
-needs to be fixed.
-
-Fixes:
-BUG: unable to handle kernel NULL pointer deference at 0000000000000030
-IP: release_resource+0x26/0x90
 Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
- kernel/resource.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/platform.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 90552aa..b7b270f 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -237,6 +237,9 @@ static int __release_resource(struct resource *old)
- {
- 	struct resource *tmp, **p;
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index ebf034b..6028681 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -341,19 +341,23 @@ int platform_device_add(struct platform_device *pdev)
  
-+	if (WARN_ON(!old->parent))
-+		return -EINVAL;
+ 	for (i = 0; i < pdev->num_resources; i++) {
+ 		struct resource *p, *r = &pdev->resource[i];
++		unsigned long type = resource_type(r);
+ 
+ 		if (r->name == NULL)
+ 			r->name = dev_name(&pdev->dev);
+ 
++		if (!(type == IORESOURCE_MEM || type == IORESOURCE_IO))
++			continue;
 +
- 	p = &old->parent->child;
- 	for (;;) {
- 		tmp = *p;
+ 		p = r->parent;
+ 		if (!p) {
+-			if (resource_type(r) == IORESOURCE_MEM)
++			if (type == IORESOURCE_MEM)
+ 				p = &iomem_resource;
+-			else if (resource_type(r) == IORESOURCE_IO)
++			else if (type == IORESOURCE_IO)
+ 				p = &ioport_resource;
+ 		}
+ 
+-		if (p && insert_resource(p, r)) {
++		if (insert_resource(p, r)) {
+ 			dev_err(&pdev->dev, "failed to claim resource %d\n", i);
+ 			ret = -EBUSY;
+ 			goto failed;
 -- 
 2.1.4
