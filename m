@@ -1,7 +1,7 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v3 4/4] of/platform: Use platform_device interface
-Date: Wed, 22 Apr 2015 18:14:21 +0200
-Message-ID: <1429719261-18024-5-git-send-email-ricardo.ribalda@gmail.com>
+Subject: [PATCH v3 3/4] base/platform: Continue on insert_resource() error
+Date: Wed, 22 Apr 2015 18:14:20 +0200
+Message-ID: <1429719261-18024-4-git-send-email-ricardo.ribalda@gmail.com>
 References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
@@ -10,37 +10,71 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@
 Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-of_platform_device_create_pdata() was using of_device_add() to create
-the devices, but of_platform_device_destroy was using
-of_platform_device_destroy().
+insert_resource() can fail when the resource added  overlaps
+(partially or fully) with another.
 
-of_device_add(), do not call insert_resource(), which initializes the
-parent field of the resource structure, needed by release_resource(),
-called by of_platform_device_destroy().
+Device tree and AMBA devices may contain resources that overlap, so they
+could not call platform_device_add (Revert "of: use platform_device_add"
+02bbde7849e68e193cefaa1885fe0df0f03c9fcd )
 
-This leads to a NULL pointer deference.
+On the other hand, device trees are released using
+platform_device_unregister(). This function calls platform_device_del(),
+which calls release_resource(), that crashes when the resource has not
+been added with with insert_resource. This was not an issue when the
+device tree could not be modified online, but this is not the case
+anymore.
 
-This patch, replaces of_device_add() with platform_device_data().
+This patch let the flow continue when there is an insert error, after
+notifying the user with a dev_err(). r->parent is set to NULL, so the
+device_del knows that the resource was not added, and therefore it
+should not be released.
 
 Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
- drivers/of/platform.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/platform.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index a01f57c..f011f57 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -183,8 +183,9 @@ static struct platform_device *of_platform_device_create_pdata(
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 	of_dma_configure(&dev->dev, dev->dev.of_node);
-+	dev->name = dev_name(&dev->dev);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 6028681..8cce2a3 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -359,8 +359,7 @@ int platform_device_add(struct platform_device *pdev)
  
--	if (of_device_add(dev) != 0) {
-+	if (platform_device_add(dev) != 0) {
- 		of_dma_deconfigure(&dev->dev);
- 		platform_device_put(dev);
- 		goto err_clear_flag;
+ 		if (insert_resource(p, r)) {
+ 			dev_err(&pdev->dev, "failed to claim resource %d\n", i);
+-			ret = -EBUSY;
+-			goto failed;
++			r->parent = NULL;
+ 		}
+ 	}
+ 
+@@ -371,7 +370,6 @@ int platform_device_add(struct platform_device *pdev)
+ 	if (ret == 0)
+ 		return ret;
+ 
+- failed:
+ 	if (pdev->id_auto) {
+ 		ida_simple_remove(&platform_devid_ida, pdev->id);
+ 		pdev->id = PLATFORM_DEVID_AUTO;
+@@ -381,7 +379,8 @@ int platform_device_add(struct platform_device *pdev)
+ 		struct resource *r = &pdev->resource[i];
+ 		unsigned long type = resource_type(r);
+ 
+-		if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
++		if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
++				r->parent)
+ 			release_resource(r);
+ 	}
+ 
+@@ -414,7 +413,8 @@ void platform_device_del(struct platform_device *pdev)
+ 			struct resource *r = &pdev->resource[i];
+ 			unsigned long type = resource_type(r);
+ 
+-			if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
++			if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
++					r->parent)
+ 				release_resource(r);
+ 		}
+ 	}
 -- 
 2.1.4
