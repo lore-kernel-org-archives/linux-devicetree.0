@@ -1,76 +1,45 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 33/37] devicetree: document Ingenic SoC UART binding
-Date: Tue, 21 Apr 2015 23:12:13 -0500
-Message-ID: <CAL_JsqLdeN4K0Gru2PXuts=MSTwAWr81-Caa+0rUJmsDqeLtPw@mail.gmail.com>
-References: <1429627624-30525-1-git-send-email-paul.burton@imgtec.com> <1429627624-30525-34-git-send-email-paul.burton@imgtec.com>
+From: MITSUHIRO KIMURA <mitsuhiro.kimura.kc@renesas.com>
+Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
+Date: Wed, 22 Apr 2015 05:04:13 +0000
+Message-ID: <SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
+References: <32501816.HtkLenWQpn@wasted.cogentembedded.com>
+ <552C4554.2070608@gmail.com> <552D8898.3060905@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429627624-30525-34-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <552D8898.3060905@cogentembedded.com>
+Content-Language: ja-JP
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, MASARU NAGAI <masaru.nagai.vx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 9:47 AM, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Add binding documentation for the UARTs found in Ingenic SoCs.
->
-> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-And for this one too:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> ---
-> Changes in v3:
->   - Merge binding documentation for Ingenic SoCs whose bindings differ
->     only by their compatible strings.
->
-> Changes in v2:
->   - None.
-> ---
->  .../devicetree/bindings/serial/ingenic,uart.txt    | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/ingenic,uart.txt
->
-> diff --git a/Documentation/devicetree/bindings/serial/ingenic,uart.txt b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-> new file mode 100644
-> index 0000000..c2d3b3a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-> @@ -0,0 +1,22 @@
-> +* Ingenic SoC UART
-> +
-> +Required properties:
-> +- compatible : "ingenic,jz4740-uart" or "ingenic,jz4780-uart"
-> +- reg : offset and length of the register set for the device.
-> +- interrupts : should contain uart interrupt.
-> +- clocks : phandles to the module & baud clocks.
-> +- clock-names: tuple listing input clock names.
-> +       Required elements: "baud", "module"
-> +
-> +Example:
-> +
-> +uart0: serial@10030000 {
-> +       compatible = "ingenic,jz4740-uart";
-> +       reg = <0x10030000 0x100>;
-> +
-> +       interrupt-parent = <&intc>;
-> +       interrupts = <9>;
-> +
-> +       clocks = <&ext>, <&cgu JZ4740_CLK_UART0>;
-> +       clock-names = "baud", "module";
-> +};
-> --
-> 2.3.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gU2VyZ2VpLg0KDQogKDIwMTUvMDQvMTUgNjozNzoyOCksIFNlcmdlaSBTaHR5bHlvdiB3
+cm90ZToNCj4gPj4gKwkJaWYgKCFyYXZiX3R4X2ZyZWUobmRldiwgcSkpIHsNCj4gPj4gKwkJCW5l
+dGlmX3dhcm4ocHJpdiwgdHhfcXVldWVkLCBuZGV2LCAiVFggRkQgZXhoYXVzdGVkLlxuIik7DQo+
+ID4+ICsJCQluZXRpZl9zdG9wX3F1ZXVlKG5kZXYpOw0KPiA+PiArCQkJc3Bpbl91bmxvY2tfaXJx
+cmVzdG9yZSgmcHJpdi0+bG9jaywgZmxhZ3MpOw0KPiA+PiArCQkJcmV0dXJuIE5FVERFVl9UWF9C
+VVNZOw0KPiA+PiArCQl9DQo+ID4+ICsJfQ0KPiA+PiArCWVudHJ5ID0gcHJpdi0+Y3VyX3R4W3Fd
+ICUgcHJpdi0+bnVtX3R4X3JpbmdbcV07DQo+ID4+ICsJcHJpdi0+Y3VyX3R4W3FdKys7DQo+ID4+
+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmcHJpdi0+bG9jaywgZmxhZ3MpOw0KPiA+PiArDQo+
+ID4+ICsJaWYgKHNrYl9wdXRfcGFkdG8oc2tiLCBFVEhfWkxFTikpDQo+ID4+ICsJCXJldHVybiBO
+RVRERVZfVFhfT0s7DQo+ID4+ICsNCj4gPj4gKwlwcml2LT50eF9za2JbcV1bZW50cnldID0gc2ti
+Ow0KPiA+PiArCWJ1ZmZlciA9IFBUUl9BTElHTihwcml2LT50eF9idWZmZXJzW3FdW2VudHJ5XSwg
+UkFWQl9BTElHTik7DQo+ID4+ICsJbWVtY3B5KGJ1ZmZlciwgc2tiLT5kYXRhLCBza2ItPmxlbik7
+DQo+IA0KPiA+IH4xNTAwIGJ5dGVzIG1lbWNweSgpLCBub3QgZ29vZC4uLg0KPiANCj4gICAgIEkn
+bSBsb29raW5nIGluIHRoZSBtYW51YWwgYW5kIG5vdCBmaW5kaW5nIHRoZSBoYXJkIHJlcXVpcmVt
+ZW50IHRvIGhhdmUgdGhlDQo+IGJ1ZmZlciBhZGRyZXNzIGFsaWduZWQgdG8gMTI4IGJ5dGVzIChS
+QVZCX0FMSUdOKSwgc2lnaC4uLiBLaW11cmEtc2FuPw0KDQpUaGVyZSBhcmUgdGhlIGhhcmR3YXJl
+IHJlcXVpcmVtZW50IHRoYXQgdGhlIGZyYW1lIGRhdGEgbXVzdCBiZSBhbGlnbmVkIHdpdGgNCmEg
+MzItYml0IGJvdW5kYXJ5IGluIHRoZSBVUkFNLCBzZWUgc2VjdGlvbiA0NUEuMy4zLjEgRGF0YSBS
+ZXByZXNlbnRhdGlvbg0KaW4gdGhlIG1hbnVhbC4NCkkgdGhpbmsgdGhhdCB0aGUgb3JpZ2luYWwg
+c2tiLT5kYXRhIGlzIGFsbW9zdCBhbGlnbmVkIHdpdGggMiBieXRlcyBib3VuZGFyeQ0KYnkgTkVU
+X0lQX0FMSU5HLCBzbyB3ZSBjb3BpZWQgb3JpZ2luYWwgc2tiLT5kYXRhIHRvIHRoZSBsb2NhbCBh
+bGlnbmVkIGJ1ZmZlci4NCg0KSW4gYWRkaXRpb24sIHNlZSBzZWN0aW9uIDQ1QS4zLjMuMTIgVGlw
+cyBmb3IgT3B0aW1pemluZyBQZXJmb3JtYW5jZSBpbiBIYW5kbGluZw0KRGVzY3JpcHRvcnMsIGl0
+IG1lbnRpb25lZCB0aGF0IGZyYW1lIGRhdGEgaXMgYWNjZXNzZWQgaW4gYmxvY2tzIHVwIHRvIDEy
+OCBieXRlcw0KYW5kIHRoZSBudW1iZXIgb2YgMTI4IGJ5dGUgYm9yZGVycyAoYWRkcmVzc2VzIEgn
+eHh4MDAgYW5kIEgneHh4ODApIGFuZCBmcmFtZSBkYXRhDQppbnNpZGUgc2hvdWxkIGJlIG1pbmlt
+aXplZC4NClNvIHdlIHNldCBSQVZCX0FMSUdOIHRvIDEyOCBieXRlcy4NCg0KQmVzdCBSZWdhcmRz
+LA0KTWl0c3VoaXJvIEtpbXVyYQ0KDQo=
