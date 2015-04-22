@@ -1,45 +1,130 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 6/8] extcon: arizona: Add support for WM8998 and WM1814
-Date: Wed, 22 Apr 2015 19:20:09 +0900
-Message-ID: <553775D9.9080606@samsung.com>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1429619636-25478-7-git-send-email-rf@opensource.wolfsonmicro.com>
- <55373766.6060106@samsung.com>
- <20150422091941.GA4303@opensource.wolfsonmicro.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v9 1/5] Documentation: Add device tree bindings for
+ Freescale i.MX GPC
+Date: Wed, 22 Apr 2015 12:34:04 +0200
+Message-ID: <1429698844.2883.8.camel@pengutronix.de>
+References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
+	 <1424713215-3357-2-git-send-email-p.zabel@pengutronix.de>
+	 <20150303023531.GF20455@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <20150422091941.GA4303@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150303023531.GF20455@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/2015 06:19 PM, Richard Fitzgerald wrote:
-> On Wed, Apr 22, 2015 at 02:53:42PM +0900, Chanwoo Choi wrote:
->> Hi Richard,
->>
->>> @@ -1176,6 +1182,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
->>>  			break;
->>>  		}
->>>  		break;
->>> +	case WM8998:
->>> +	case WM1814:
->>> +		info->micd_clamp = true;
->>> +		info->hpdet_ip = 2;
->>
->> What is meaning of '2'? I prefer to use the definition for '2'.
->>
+Am Dienstag, den 03.03.2015, 10:35 +0800 schrieb Shawn Guo:
+> On Mon, Feb 23, 2015 at 06:40:11PM +0100, Philipp Zabel wrote:
+> > The i.MX6 contains a power controller that controls power gating and
+> > sequencing for the SoC's power domains.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> '2' is the version number of the hpdet ip block in silicon. We're already using
-> it as a raw number '0', '1' or '2' all over extcon-arizona.c so changing it here
-> would mean making other patches to the file that aren't really part of adding
-> WM8998 support, so I'd prefer not to change that as a side-effect of adding WM8998.
+> The patch (series) looks fine to me.  Can we get DT maintainer's ACK on
+> this, so that I can apply the series for 4.1?
+> 
+> Shawn
+> 
+I'm formally NACKing this series.
 
-I think that just you can define following definitions and use HPDET_IP_VER_V2 instead of '2'.
+I've talked to Philipp and we decided to change the DT binding slightly
+to better accommodate SoCs with multiple domains like the imx6sx.
 
-	#define HPDET_IP_VER_V0		0
-	#define HPDET_IP_VER_V1		1
-	#define HPDET_IP_VER_V2		2
+I will send a new version of this series shortly.
 
+Regards,
+Lucas
+
+> > ---
+> > Changes since v8:
+> >  - Updated example with IRQ_TYPE_... and IMX6QDL_CLK_... defines
+> > ---
+> >  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 59 ++++++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> > new file mode 100644
+> > index 0000000..65cc034
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> > @@ -0,0 +1,59 @@
+> > +Freescale i.MX General Power Controller
+> > +=======================================
+> > +
+> > +The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
+> > +counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
+> > +domains.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
+> > +- reg: should be register base and length as documented in the
+> > +  datasheet
+> > +- interrupts: Should contain GPC interrupt request 1
+> > +- pu-supply: Link to the LDO regulator powering the PU power domain
+> > +- clocks: Clock phandles to devices in the PU power domain that need
+> > +	  to be enabled during domain power-up for reset propagation.
+> > +- #power-domain-cells: Should be 1, see below:
+> > +
+> > +The gpc node is a power-controller as documented by the generic power domain
+> > +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> > +
+> > +Example:
+> > +
+> > +	gpc: gpc@020dc000 {
+> > +		compatible = "fsl,imx6q-gpc";
+> > +		reg = <0x020dc000 0x4000>;
+> > +		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
+> > +		pu-supply = <&reg_pu>;
+> > +		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> > +			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> > +			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> > +			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> > +			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> > +			 <&clks IMX6QDL_CLK_VPU_AXI>;
+> > +		#power-domain-cells = <1>;
+> > +	};
+> > +
+> > +
+> > +Specifying power domain for IP modules
+> > +======================================
+> > +
+> > +IP cores belonging to a power domain should contain a 'power-domains' property
+> > +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+> > +the power domain the device belongs to.
+> > +
+> > +Example of a device that is part of the PU power domain:
+> > +
+> > +	vpu: vpu@02040000 {
+> > +		reg = <0x02040000 0x3c000>;
+> > +		/* ... */
+> > +		power-domains = <&gpc 1>;
+> > +		/* ... */
+> > +	};
+> > +
+> > +The following DOMAIN_INDEX values are valid for i.MX6Q:
+> > +ARM_DOMAIN     0
+> > +PU_DOMAIN      1
+> > +The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> > +DISPLAY_DOMAIN 2
+> > -- 
+> > 2.1.4
+> > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
