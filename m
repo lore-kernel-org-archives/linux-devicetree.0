@@ -1,47 +1,58 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [alsa-devel] [PATCH 8/8] Documentation: Add WM8998/WM1814
-	device tree bindings
-Date: Thu, 23 Apr 2015 15:46:15 +0100
-Message-ID: <20150423144615.GC17323@opensource.wolfsonmicro.com>
-References: <1429619636-25478-9-git-send-email-rf@opensource.wolfsonmicro.com> <0D842736-8A6E-4462-9690-C9BD60690A7C@cirrus.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0D842736-8A6E-4462-9690-C9BD60690A7C@cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Austin, Brian" <Brian.Austin@cirrus.com>
-Cc: "Fitzgerald, Richard" <Richard.Fitzgerald@cirrus.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "ckeepax@opensource.wolfsonmicro.com" <ckeepax@opensource.wolfsonmicro.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun5i: Utoo P66 add uart node and aliases
+Date: Thu, 23 Apr 2015 18:36:48 +0200
+Message-ID: <1429807008-7041-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2015 at 02:05:18AM +0000, Austin, Brian wrote:
-> 
-> 
-> > On Apr 21, 2015, at 07:38, Richard Fitzgerald <rf@opensource.wolfsonmicro.com> wrote:
-> > 
-> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> > ---
-> > Documentation/devicetree/bindings/mfd/arizona.txt |    3 +++
-> > 1 files changed, 3 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > index 7665aa9..a3cb34b 100644
-> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > @@ -10,6 +10,9 @@ Required properties:
-> >         "wlf,wm5110"
-> >         "wlf,wm8280"
-> >         "wlf,wm8997"
-> > +        "wlf,WM8998"
-> > +        "wlf,wm1814"
-> > +
-> Is there a reason for caps on the 8998? 
-> 
-> -Brian 
+Like on most non devel-boards it is still possible to get an uart on
+the Utoo P66 tablet by soldering some wires to the right pads on the PCB,
+add support for this to the dts, like we do with all sunxi boards.
 
-Yes, it's called "lack of attention to detail". Will be fixed in the respin.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-a13-utoo-p66.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+index 00bdf28..bb8d61a 100644
+--- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
++++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+@@ -57,6 +57,14 @@
+ 	model = "Utoo P66";
+ 	compatible = "utoo,p66", "allwinner,sun5i-a13";
+ 
++	aliases {
++		serial0 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
+ 	i2c_lcd: i2c@0 {
+ 		/* The lcd panel i2c interface is hooked up via gpios */
+ 		compatible = "i2c-gpio";
+@@ -238,6 +246,12 @@
+ 	status = "okay";
+ };
+ 
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins_b>;
++	status = "okay";
++};
++
+ &usb_otg {
+ 	dr_mode = "otg";
+ 	status = "okay";
+-- 
+2.3.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
