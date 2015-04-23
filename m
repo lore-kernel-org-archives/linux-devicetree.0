@@ -1,81 +1,47 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 7/8] ASoC: wm8998: Initial WM8998 codec driver
-Date: Thu, 23 Apr 2015 15:28:23 +0100
-Message-ID: <20150423142823.GB17323@opensource.wolfsonmicro.com>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com> <1429619636-25478-8-git-send-email-rf@opensource.wolfsonmicro.com> <20150422110030.GQ22845@sirena.org.uk>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [alsa-devel] [PATCH 8/8] Documentation: Add WM8998/WM1814
+	device tree bindings
+Date: Thu, 23 Apr 2015 15:46:15 +0100
+Message-ID: <20150423144615.GC17323@opensource.wolfsonmicro.com>
+References: <1429619636-25478-9-git-send-email-rf@opensource.wolfsonmicro.com> <0D842736-8A6E-4462-9690-C9BD60690A7C@cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150422110030.GQ22845-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <0D842736-8A6E-4462-9690-C9BD60690A7C@cirrus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Austin, Brian" <Brian.Austin@cirrus.com>
+Cc: "Fitzgerald, Richard" <Richard.Fitzgerald@cirrus.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "ckeepax@opensource.wolfsonmicro.com" <ckeepax@opensource.wolfsonmicro.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2015 at 12:00:30PM +0100, Mark Brown wrote:
-> On Tue, Apr 21, 2015 at 01:33:55PM +0100, Richard Fitzgerald wrote:
+On Thu, Apr 23, 2015 at 02:05:18AM +0000, Austin, Brian wrote:
 > 
-> > +static int wm8998_in1mux_ev(struct snd_soc_dapm_widget *w,
-> > +				struct snd_kcontrol *kcontrol,
-> > +				int event)
-> > +{
-> > +	struct snd_soc_codec *codec = snd_soc_dapm_to_codec(w->dapm);
-> > +	struct arizona *arizona = dev_get_drvdata(codec->dev->parent);
-> > +	unsigned int left_mux, right_mux, in1mode, old;
+> 
+> > On Apr 21, 2015, at 07:38, Richard Fitzgerald <rf@opensource.wolfsonmicro.com> wrote:
+> > 
+> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> > ---
+> > Documentation/devicetree/bindings/mfd/arizona.txt |    3 +++
+> > 1 files changed, 3 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > index 7665aa9..a3cb34b 100644
+> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > @@ -10,6 +10,9 @@ Required properties:
+> >         "wlf,wm5110"
+> >         "wlf,wm8280"
+> >         "wlf,wm8997"
+> > +        "wlf,WM8998"
+> > +        "wlf,wm1814"
 > > +
-> > +	switch (event) {
-> > +	case SND_SOC_DAPM_PRE_PMU:
-> > +		/* Validate the mux configuration */
-> > +		left_mux = snd_soc_read(codec, ARIZONA_ADC_DIGITAL_VOLUME_1L) &
-> > +				  ARIZONA_IN1L_SRC_MASK;
-> > +		right_mux = snd_soc_read(codec, ARIZONA_ADC_DIGITAL_VOLUME_1R) &
-> > +				  ARIZONA_IN1R_SRC_MASK;
-> > +
-> > +		/* Only IN1A can be digital, IN1B is always analogue */
-> > +		in1mode = (arizona->pdata.inmode[0] & 2)
-> > +				<< (ARIZONA_IN1_MODE_SHIFT - 1);
-> > +
-> > +		if (in1mode != 0) {
-> > +			/* if IN1A is digital, the only valid mux configs
-> > +			 * are both channels A or both channels B.
-> > +			 */
-> > +			if (left_mux != right_mux) {
-> > +				dev_err(arizona->dev,
-> > +					"IN1=DMIC and IN1L Mux != IN1R Mux");
-> > +				return -EINVAL;
-> > +			}
+> Is there a reason for caps on the 8998? 
 > 
-> This (or at least some of it) seems like something we should be doing by
-> registering different widgets and routing at device probe time.
+> -Brian 
 
-I'm not sure this is really a routing or widget problem. Problem is that
-if the muxed inputs are analogue we need to provide separate ALSA controls
-for the left and right mux because it is allowed to use them as two
-independant mono channels with separate muxing. But if they are
-configured as digital the mux controls are ganged so must be set the
-same. I don't feel good about registering a single mux control if its
-digital and two if its analogue because that means the codec's control
-list depends on a pdata option. I could implement the control pair
-so that if the input is digital changing one control always changes
-the other so they will always be forced to the same setting. Any
-better options?
+Yes, it's called "lack of attention to detail". Will be fixed in the respin.
 
-> 
-> > +		old = snd_soc_read(codec, ARIZONA_IN1L_CONTROL) &
-> > +					ARIZONA_IN1_MODE_MASK;
-> 
-> > +		if (old != in1mode)
-> > +			snd_soc_update_bits(codec, ARIZONA_IN1L_CONTROL,
-> > +						ARIZONA_IN1_MODE_MASK, in1mode);
-> 
-> Why bother with the read into old here?  Suppressing redundant updates
-> is part of the point of snd_soc_update_bits().
-
-Agreed, probably a legacy of an earlier implementation that's now redundant.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
