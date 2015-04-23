@@ -1,427 +1,325 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH v5] dmaengine: xgene-dma: Fix sparse wannings warnings
-Date: Thu, 23 Apr 2015 17:26:45 +0530
-Message-ID: <1429790205-13571-1-git-send-email-rsahu@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] of: overlay: Add sysfs attributes
+Date: Thu, 23 Apr 2015 15:00:03 +0300
+Message-ID: <6E391B8F-936A-4FD1-B8CC-C9B5FCE0B291@konsulko.com>
+References: <1428434632-13789-1-git-send-email-pantelis.antoniou@konsulko.com> <1428434632-13789-4-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqLMVBfQpmSjg9qfOvtM3RXMY3Dm+knN8h54gDCzx513-g@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLMVBfQpmSjg9qfOvtM3RXMY3Dm+knN8h54gDCzx513-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-v5 changes:
-	* Re-pull v3 changes that I missed in v4
+Hi Rob,
 
-v4 changes:
-	* Re-generate patch on top of latest for-linux git
+> On Apr 15, 2015, at 04:27 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
+:
+>=20
+> On Tue, Apr 7, 2015 at 2:23 PM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> Implement a number of sysfs attributes for overlays.
+>>=20
+>> * A throw once master enable switch to protect against any
+>> further overlay applications if the administrator desires so.
+>=20
+> This one should be a separate patch.
+>=20
 
-v3 changes:
-	* Minor changes in length setting in DMA descriptor
+OK.
 
-v2 changes:
-	* Code cleanup
-	* Changed way of setting DMA descriptors for big-endian
+>> * A per overlay targets sysfs attribute listing the targets of
+>> the installed overlay.
+>=20
+> What are targets? "targets lists targets" does not help me. The
+> documentation doesn't help me either.
+>=20
 
-This patch fixes compilation sparse warnings like incorrect type in assignment
-(different base types), cast to restricted __le64, symbol
-'__UNIQUE_ID_author__COUNTER__' has multiple initializers etc.
+It lists the targets of the overlay that has been applied. What do
+you need in order to be helped? I mean what do you want listed?
 
-This patch is based on slave-dma / for-linus branch.
-(commit: 11ebe4c067c7f95adff73594cb5c23f7a5c6d69e
-	dmaengine: fix platform_no_drv_owner.cocci warnings
+>> * A per overlay can_remove sysfs attribute that reports whether
+>> the overlay can be removed or not due to another overlapping overlay=
+=2E
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> ---
+>> drivers/of/overlay.c | 167 +++++++++++++++++++++++++++++++++++++++++=
++++++++++-
+>> 1 file changed, 166 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index f17f5ef..c54d097 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -21,6 +21,7 @@
+>> #include <linux/err.h>
+>> #include <linux/idr.h>
+>> #include <linux/sysfs.h>
+>> +#include <linux/atomic.h>
+>>=20
+>> #include "of_private.h"
+>>=20
+>> @@ -55,8 +56,12 @@ struct of_overlay {
+>>        struct kobject kobj;
+>> };
+>>=20
+>> +/* master enable switch; once set to 0 can't be re-enabled */
+>> +static atomic_t ov_enable =3D ATOMIC_INIT(1);
+>> +
+>> static int of_overlay_apply_one(struct of_overlay *ov,
+>>                struct device_node *target, const struct device_node =
+*overlay);
+>> +static int overlay_removal_is_ok(struct of_overlay *ov);
+>>=20
+>> static int of_overlay_apply_single_property(struct of_overlay *ov,
+>>                struct device_node *target, struct property *prop)
+>> @@ -345,6 +350,144 @@ static struct kobj_type of_overlay_ktype =3D {
+>>=20
+>> static struct kset *ov_kset;
+>>=20
+>> +static ssize_t enable_read(struct file *filp, struct kobject *kobj,
+>> +               struct bin_attribute *bin_attr, char *buf,
+>> +               loff_t offset, size_t count)
+>> +{
+>> +       char tbuf[3];
+>> +
+>> +       if (offset < 0)
+>> +               return -EINVAL;
+>> +
+>> +       if (offset >=3D sizeof(tbuf))
+>> +               return 0;
+>> +
+>> +       if (count > sizeof(tbuf) - offset)
+>> +               count =3D sizeof(tbuf) - offset;
+>> +
+>> +       /* fill in temp */
+>> +       tbuf[0] =3D '0' + atomic_read(&ov_enable);
+>> +       tbuf[1] =3D '\n';
+>> +       tbuf[2] =3D '\0';
+>> +
+>> +       /* copy to buffer */
+>> +       memcpy(buf, tbuf + offset, count);
+>> +
+>> +       return count;
+>> +}
+>> +
+>> +static ssize_t enable_write(struct file *filp, struct kobject *kobj=
+,
+>> +               struct bin_attribute *bin_attr, char *buf,
+>> +               loff_t off, size_t count)
+>> +{
+>> +       unsigned int new_enable;
+>> +
+>> +       if (off !=3D 0 || (buf[0] !=3D '0' && buf[0] !=3D '1'))
+>> +               return -EINVAL;
+>> +
+>> +       new_enable =3D (unsigned int)(buf[0] - '0');
+>> +       if (new_enable > 1)
+>> +               return -EINVAL;
+>> +
+>> +       /* NOP for same value */
+>> +       if (new_enable =3D=3D atomic_read(&ov_enable))
+>> +               return count;
+>> +
+>> +       /* if we've disabled it, no going back */
+>> +       if (atomic_read(&ov_enable) =3D=3D 0)
+>> +               return -EPERM;
+>> +
+>> +       atomic_set(&ov_enable, new_enable);
+>> +       return count;
+>> +}
+>> +
+>> +/* just a single char + '\n' + '\0' */
+>> +static BIN_ATTR_RW(enable, 3);
+>=20
+> Why are you using bin attribute? You are complicating the
+> implementation needlessly.
+>=20
 
-Reported-by: kbuild test robot <fengguang.wu@intel.com>
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/dma/xgene-dma.c | 174 ++++++++++++++++++------------------------------
- 1 file changed, 66 insertions(+), 108 deletions(-)
+It=E2=80=99s the same reason that the device tree core is using it.
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index f52e3750..856610c 100755
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -124,32 +124,8 @@
- #define XGENE_DMA_DESC_ELERR_POS		46
- #define XGENE_DMA_DESC_RTYPE_POS		56
- #define XGENE_DMA_DESC_LERR_POS			60
--#define XGENE_DMA_DESC_FLYBY_POS		4
- #define XGENE_DMA_DESC_BUFLEN_POS		48
- #define XGENE_DMA_DESC_HOENQ_NUM_POS		48
--
--#define XGENE_DMA_DESC_NV_SET(m)		\
--	(((u64 *)(m))[0] |= XGENE_DMA_DESC_NV_BIT)
--#define XGENE_DMA_DESC_IN_SET(m)		\
--	(((u64 *)(m))[0] |= XGENE_DMA_DESC_IN_BIT)
--#define XGENE_DMA_DESC_RTYPE_SET(m, v)		\
--	(((u64 *)(m))[0] |= ((u64)(v) << XGENE_DMA_DESC_RTYPE_POS))
--#define XGENE_DMA_DESC_BUFADDR_SET(m, v)	\
--	(((u64 *)(m))[0] |= (v))
--#define XGENE_DMA_DESC_BUFLEN_SET(m, v)		\
--	(((u64 *)(m))[0] |= ((u64)(v) << XGENE_DMA_DESC_BUFLEN_POS))
--#define XGENE_DMA_DESC_C_SET(m)			\
--	(((u64 *)(m))[1] |= XGENE_DMA_DESC_C_BIT)
--#define XGENE_DMA_DESC_FLYBY_SET(m, v)		\
--	(((u64 *)(m))[2] |= ((v) << XGENE_DMA_DESC_FLYBY_POS))
--#define XGENE_DMA_DESC_MULTI_SET(m, v, i)	\
--	(((u64 *)(m))[2] |= ((u64)(v) << (((i) + 1) * 8)))
--#define XGENE_DMA_DESC_DR_SET(m)		\
--	(((u64 *)(m))[2] |= XGENE_DMA_DESC_DR_BIT)
--#define XGENE_DMA_DESC_DST_ADDR_SET(m, v)	\
--	(((u64 *)(m))[3] |= (v))
--#define XGENE_DMA_DESC_H0ENQ_NUM_SET(m, v)	\
--	(((u64 *)(m))[3] |= ((u64)(v) << XGENE_DMA_DESC_HOENQ_NUM_POS))
- #define XGENE_DMA_DESC_ELERR_RD(m)		\
- 	(((m) >> XGENE_DMA_DESC_ELERR_POS) & 0x3)
- #define XGENE_DMA_DESC_LERR_RD(m)		\
-@@ -158,14 +134,7 @@
- 	(((elerr) << 4) | (lerr))
+Believe it or not, this is the simplest way to do it.
+If you take a look at the sysfs attribute implementation, the binary
+implementation is the one that=E2=80=99s using the least amount of code=
+=2E
 
- /* X-Gene DMA descriptor empty s/w signature */
--#define XGENE_DMA_DESC_EMPTY_INDEX		0
- #define XGENE_DMA_DESC_EMPTY_SIGNATURE		~0ULL
--#define XGENE_DMA_DESC_SET_EMPTY(m)		\
--	(((u64 *)(m))[XGENE_DMA_DESC_EMPTY_INDEX] =	\
--	 XGENE_DMA_DESC_EMPTY_SIGNATURE)
--#define XGENE_DMA_DESC_IS_EMPTY(m)		\
--	(((u64 *)(m))[XGENE_DMA_DESC_EMPTY_INDEX] ==	\
--	 XGENE_DMA_DESC_EMPTY_SIGNATURE)
+To use a non-binary method we have to register per ktype sysfs_ops
+and duplicate the way the non-binary attribute works.
 
- /* X-Gene DMA configurable parameters defines */
- #define XGENE_DMA_RING_NUM		512
-@@ -184,7 +153,7 @@
- #define XGENE_DMA_XOR_ALIGNMENT		6	/* 64 Bytes */
- #define XGENE_DMA_MAX_XOR_SRC		5
- #define XGENE_DMA_16K_BUFFER_LEN_CODE	0x0
--#define XGENE_DMA_INVALID_LEN_CODE	0x7800
-+#define XGENE_DMA_INVALID_LEN_CODE	0x7800000000000000ULL
+=46or the gory details look at sysfs_add_file_mode_ns() in fs/sysfs/fil=
+e.c
 
- /* X-Gene DMA descriptor error codes */
- #define ERR_DESC_AXI			0x01
-@@ -214,10 +183,10 @@
- #define ERR_DESC_SRC_INT		0xB
+I can add the sysfs_ops but that=E2=80=99s going to be more complicated=
+ not less.
 
- /* X-Gene DMA flyby operation code */
--#define FLYBY_2SRC_XOR			0x8
--#define FLYBY_3SRC_XOR			0x9
--#define FLYBY_4SRC_XOR			0xA
--#define FLYBY_5SRC_XOR			0xB
-+#define FLYBY_2SRC_XOR			0x80
-+#define FLYBY_3SRC_XOR			0x90
-+#define FLYBY_4SRC_XOR			0xA0
-+#define FLYBY_5SRC_XOR			0xB0
+>> +
+>> +static ssize_t targets_read(struct file *filp, struct kobject *kobj=
+,
+>> +               struct bin_attribute *bin_attr, char *buf,
+>> +               loff_t offset, size_t count)
+>> +{
+>> +       struct of_overlay *ov =3D kobj_to_overlay(kobj);
+>> +       struct of_overlay_info *ovinfo;
+>> +       char *tmpbuf, *s, *e;
+>> +       const char *name;
+>> +       ssize_t ret;
+>> +       int i, len;
+>> +
+>> +       /* allocate work buffer; we know that PAGE_SIZE is enough */
+>> +       tmpbuf =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
+>> +       if (tmpbuf =3D=3D NULL)
+>> +               return -ENOMEM;
+>> +
+>> +       s =3D tmpbuf;
+>> +       e =3D tmpbuf + PAGE_SIZE;
+>> +
+>> +       mutex_lock(&of_mutex);
+>> +
+>> +       /* targets */
+>> +       for (i =3D 0; i < ov->count; i++) {
+>> +               ovinfo =3D &ov->ovinfo_tab[i];
+>> +
+>> +               name =3D of_node_full_name(ovinfo->target);
+>> +               len =3D strlen(name);
+>> +               if (s + len + 1 >=3D e)
+>> +                       return -ENOMEM;
+>=20
+> Leaking memory here and holding the mutex.
+>=20
 
- /* X-Gene DMA SW descriptor flags */
- #define XGENE_DMA_FLAG_64B_DESC		BIT(0)
-@@ -238,10 +207,10 @@
- 	dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
+OK
 
- struct xgene_dma_desc_hw {
--	u64 m0;
--	u64 m1;
--	u64 m2;
--	u64 m3;
-+	__le64 m0;
-+	__le64 m1;
-+	__le64 m2;
-+	__le64 m3;
- };
+>> +               memcpy(s, name, len);
+>> +               s +=3D len;
+>> +               *s++ =3D '\n';
+>> +       }
+>> +       if (s + 1 >=3D e)
+>> +               return -ENOMEM;
 
- enum xgene_dma_ring_cfgsize {
-@@ -388,18 +357,11 @@ static bool is_pq_enabled(struct xgene_dma *pdma)
- 	return !(val & XGENE_DMA_PQ_DISABLE_MASK);
- }
+> And here.
+>=20
 
--static void xgene_dma_cpu_to_le64(u64 *desc, int count)
--{
--	int i;
--
--	for (i = 0; i < count; i++)
--		desc[i] = cpu_to_le64(desc[i]);
--}
--
--static u16 xgene_dma_encode_len(u32 len)
-+static u64 xgene_dma_encode_len(size_t len)
- {
- 	return (len < XGENE_DMA_MAX_BYTE_CNT) ?
--		len : XGENE_DMA_16K_BUFFER_LEN_CODE;
-+		((u64)len << XGENE_DMA_DESC_BUFLEN_POS) :
-+		XGENE_DMA_16K_BUFFER_LEN_CODE;
- }
+OK
 
- static u8 xgene_dma_encode_xor_flyby(u32 src_cnt)
-@@ -424,34 +386,50 @@ static u32 xgene_dma_ring_desc_cnt(struct xgene_dma_ring *ring)
- 	return XGENE_DMA_RING_DESC_CNT(ring_state);
- }
+>> +       *s++ =3D '\0';
+>> +
+>> +       /* the buffer is zero terminated */
+>> +       len =3D s - tmpbuf;
+>> +
+>> +       mutex_unlock(&of_mutex);
+>> +
+>> +       /* perform the read */
+>> +       ret =3D memory_read_from_buffer(buf, count, &offset, tmpbuf,=
+ len);
+>> +
+>> +       /* free the temporary buffer */
+>> +       kfree(tmpbuf);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +/* targets property */
+>> +static BIN_ATTR_RO(targets, PAGE_SIZE);
+>> +
+>> +static ssize_t can_remove_read(struct file *filp, struct kobject *k=
+obj,
+>> +               struct bin_attribute *bin_attr, char *buf,
+>> +               loff_t offset, size_t count)
+>> +{
+>> +       struct of_overlay *ov =3D kobj_to_overlay(kobj);
+>> +       char tbuf[3];
+>> +
+>> +       if (offset < 0)
+>> +               return -EINVAL;
+>> +
+>> +       if (offset >=3D sizeof(tbuf))
+>> +               return 0;
+>> +
+>> +       if (count > sizeof(tbuf) - offset)
+>> +               count =3D sizeof(tbuf) - offset;
+>> +
+>> +       /* fill in temp */
+>> +       tbuf[0] =3D '0' + overlay_removal_is_ok(ov);
+>> +       tbuf[1] =3D '\n';
+>> +       tbuf[2] =3D '\0';
+>> +
+>> +       /* copy to buffer */
+>> +       memcpy(buf, tbuf + offset, count);
+>> +
+>> +       return count;
+>> +}
+>> +
+>> +/* can_remove property */
+>> +static BIN_ATTR_RO(can_remove, 3);
+>=20
+> Same question about bin attr here.
+>=20
 
--static void xgene_dma_set_src_buffer(void *ext8, size_t *len,
-+static void xgene_dma_set_src_buffer(__le64 *ext8, size_t *len,
- 				     dma_addr_t *paddr)
- {
- 	size_t nbytes = (*len < XGENE_DMA_MAX_BYTE_CNT) ?
- 			*len : XGENE_DMA_MAX_BYTE_CNT;
+Same answer as above.
 
--	XGENE_DMA_DESC_BUFADDR_SET(ext8, *paddr);
--	XGENE_DMA_DESC_BUFLEN_SET(ext8, xgene_dma_encode_len(nbytes));
-+	*ext8 |= cpu_to_le64(*paddr);
-+	*ext8 |= cpu_to_le64(xgene_dma_encode_len(nbytes));
- 	*len -= nbytes;
- 	*paddr += nbytes;
- }
+>> +
+>> /**
+>>  * of_overlay_create() - Create and apply an overlay
+>>  * @tree:      Device node containing all the overlays
+>> @@ -360,6 +503,10 @@ int of_overlay_create(struct device_node *tree)
+>>        struct of_overlay *ov;
+>>        int err, id;
+>>=20
+>> +       /* administratively disabled */
+>> +       if (!atomic_read(&ov_enable))
+>> +               return -EPERM;
+>> +
+>>        /* allocate the overlay structure */
+>>        ov =3D kzalloc(sizeof(*ov), GFP_KERNEL);
+>>        if (ov =3D=3D NULL)
+>> @@ -416,6 +563,22 @@ int of_overlay_create(struct device_node *tree)
+>>                goto err_cancel_overlay;
+>>        }
+>>=20
+>> +       /* create targets file */
+>> +       err =3D sysfs_create_bin_file(&ov->kobj, &bin_attr_targets);
+>> +       if (err !=3D 0) {
+>> +               pr_err("%s: sysfs_create_bin_file() failed for tree@=
+%s\n",
+>> +                               __func__, tree->full_name);
+>> +               goto err_cancel_overlay;
+>> +       }
+>> +
+>> +       /* create can_remove file */
+>> +       err =3D sysfs_create_bin_file(&ov->kobj, &bin_attr_can_remov=
+e);
+>> +       if (err !=3D 0) {
+>> +               pr_err("%s: sysfs_create_bin_file() failed for tree@=
+%s\n",
+>> +                               __func__, tree->full_name);
+>> +               goto err_cancel_overlay;
+>> +       }
+>> +
+>>        /* add to the tail of the overlay list */
+>>        list_add_tail(&ov->node, &ov_list);
+>>=20
+>> @@ -596,5 +759,7 @@ int of_overlay_init(void)
+>>        if (!ov_kset)
+>>                return -ENOMEM;
+>>=20
+>> -       return 0;
+>> +       rc =3D sysfs_create_bin_file(&ov_kset->kobj, &bin_attr_enabl=
+e);
+>> +       WARN(rc, "%s: error adding enable attribute\n", __func__);
+>> +       return rc;
+>> }
+>> --
+>> 1.7.12
 
--static void xgene_dma_invalidate_buffer(void *ext8)
-+static void xgene_dma_invalidate_buffer(__le64 *ext8)
- {
--	XGENE_DMA_DESC_BUFLEN_SET(ext8, XGENE_DMA_INVALID_LEN_CODE);
-+	*ext8 |= cpu_to_le64(XGENE_DMA_INVALID_LEN_CODE);
- }
+Regards
 
--static void *xgene_dma_lookup_ext8(u64 *desc, int idx)
-+static __le64 *xgene_dma_lookup_ext8(struct xgene_dma_desc_hw *desc, int idx)
- {
--	return (idx % 2) ? (desc + idx - 1) : (desc + idx + 1);
-+	switch (idx) {
-+	case 0:
-+		return &desc->m1;
-+	case 1:
-+		return &desc->m0;
-+	case 2:
-+		return &desc->m3;
-+	case 3:
-+		return &desc->m2;
-+	default:
-+		pr_err("Invalid dma descriptor index\n");
-+	}
-+
-+	return NULL;
- }
+=E2=80=94 Pantelis
 
--static void xgene_dma_init_desc(void *desc, u16 dst_ring_num)
-+static void xgene_dma_init_desc(struct xgene_dma_desc_hw *desc,
-+				u16 dst_ring_num)
- {
--	XGENE_DMA_DESC_C_SET(desc); /* Coherent IO */
--	XGENE_DMA_DESC_IN_SET(desc);
--	XGENE_DMA_DESC_H0ENQ_NUM_SET(desc, dst_ring_num);
--	XGENE_DMA_DESC_RTYPE_SET(desc, XGENE_DMA_RING_OWNER_DMA);
-+	desc->m0 |= cpu_to_le64(XGENE_DMA_DESC_IN_BIT);
-+	desc->m0 |= cpu_to_le64((u64)XGENE_DMA_RING_OWNER_DMA <<
-+				XGENE_DMA_DESC_RTYPE_POS);
-+	desc->m1 |= cpu_to_le64(XGENE_DMA_DESC_C_BIT);
-+	desc->m3 |= cpu_to_le64((u64)dst_ring_num <<
-+				XGENE_DMA_DESC_HOENQ_NUM_POS);
- }
-
- static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
-@@ -459,7 +437,7 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
- 				    dma_addr_t dst, dma_addr_t src,
- 				    size_t len)
- {
--	void *desc1, *desc2;
-+	struct xgene_dma_desc_hw *desc1, *desc2;
- 	int i;
-
- 	/* Get 1st descriptor */
-@@ -467,23 +445,21 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
- 	xgene_dma_init_desc(desc1, chan->tx_ring.dst_ring_num);
-
- 	/* Set destination address */
--	XGENE_DMA_DESC_DR_SET(desc1);
--	XGENE_DMA_DESC_DST_ADDR_SET(desc1, dst);
-+	desc1->m2 |= cpu_to_le64(XGENE_DMA_DESC_DR_BIT);
-+	desc1->m3 |= cpu_to_le64(dst);
-
- 	/* Set 1st source address */
--	xgene_dma_set_src_buffer(desc1 + 8, &len, &src);
-+	xgene_dma_set_src_buffer(&desc1->m1, &len, &src);
-
--	if (len <= 0) {
--		desc2 = NULL;
--		goto skip_additional_src;
--	}
-+	if (!len)
-+		return;
-
- 	/*
- 	 * We need to split this source buffer,
- 	 * and need to use 2nd descriptor
- 	 */
- 	desc2 = &desc_sw->desc2;
--	XGENE_DMA_DESC_NV_SET(desc1);
-+	desc1->m0 |= cpu_to_le64(XGENE_DMA_DESC_NV_BIT);
-
- 	/* Set 2nd to 5th source address */
- 	for (i = 0; i < 4 && len; i++)
-@@ -496,12 +472,6 @@ static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
-
- 	/* Updated flag that we have prepared 64B descriptor */
- 	desc_sw->flags |= XGENE_DMA_FLAG_64B_DESC;
--
--skip_additional_src:
--	/* Hardware stores descriptor in little endian format */
--	xgene_dma_cpu_to_le64(desc1, 4);
--	if (desc2)
--		xgene_dma_cpu_to_le64(desc2, 4);
- }
-
- static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
-@@ -510,7 +480,7 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
- 				    u32 src_cnt, size_t *nbytes,
- 				    const u8 *scf)
- {
--	void *desc1, *desc2;
-+	struct xgene_dma_desc_hw *desc1, *desc2;
- 	size_t len = *nbytes;
- 	int i;
-
-@@ -521,28 +491,24 @@ static void xgene_dma_prep_xor_desc(struct xgene_dma_chan *chan,
- 	xgene_dma_init_desc(desc1, chan->tx_ring.dst_ring_num);
-
- 	/* Set destination address */
--	XGENE_DMA_DESC_DR_SET(desc1);
--	XGENE_DMA_DESC_DST_ADDR_SET(desc1, *dst);
-+	desc1->m2 |= cpu_to_le64(XGENE_DMA_DESC_DR_BIT);
-+	desc1->m3 |= cpu_to_le64(*dst);
-
- 	/* We have multiple source addresses, so need to set NV bit*/
--	XGENE_DMA_DESC_NV_SET(desc1);
-+	desc1->m0 |= cpu_to_le64(XGENE_DMA_DESC_NV_BIT);
-
- 	/* Set flyby opcode */
--	XGENE_DMA_DESC_FLYBY_SET(desc1, xgene_dma_encode_xor_flyby(src_cnt));
-+	desc1->m2 |= cpu_to_le64(xgene_dma_encode_xor_flyby(src_cnt));
-
- 	/* Set 1st to 5th source addresses */
- 	for (i = 0; i < src_cnt; i++) {
- 		len = *nbytes;
--		xgene_dma_set_src_buffer((i == 0) ? (desc1 + 8) :
-+		xgene_dma_set_src_buffer((i == 0) ? &desc1->m1 :
- 					 xgene_dma_lookup_ext8(desc2, i - 1),
- 					 &len, &src[i]);
--		XGENE_DMA_DESC_MULTI_SET(desc1, scf[i], i);
-+		desc1->m2 |= cpu_to_le64((scf[i] << ((i + 1) * 8)));
- 	}
-
--	/* Hardware stores descriptor in little endian format */
--	xgene_dma_cpu_to_le64(desc1, 4);
--	xgene_dma_cpu_to_le64(desc2, 4);
--
- 	/* Update meta data */
- 	*nbytes = len;
- 	*dst += XGENE_DMA_MAX_BYTE_CNT;
-@@ -738,7 +704,7 @@ static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
-  * xgene_chan_xfer_ld_pending - push any pending transactions to hw
-  * @chan : X-Gene DMA channel
-  *
-- * LOCKING: must hold chan->desc_lock
-+ * LOCKING: must hold chan->lock
-  */
- static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
- {
-@@ -808,7 +774,8 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
- 		desc_hw = &ring->desc_hw[ring->head];
-
- 		/* Check if this descriptor has been completed */
--		if (unlikely(XGENE_DMA_DESC_IS_EMPTY(desc_hw)))
-+		if (unlikely(le64_to_cpu(desc_hw->m0) ==
-+			     XGENE_DMA_DESC_EMPTY_SIGNATURE))
- 			break;
-
- 		if (++ring->head == ring->slots)
-@@ -842,7 +809,7 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
- 		iowrite32(-1, ring->cmd);
-
- 		/* Mark this hw descriptor as processed */
--		XGENE_DMA_DESC_SET_EMPTY(desc_hw);
-+		desc_hw->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
-
- 		xgene_dma_run_tx_complete_actions(chan, desc_sw);
-
-@@ -889,7 +856,7 @@ static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
-  * @chan: X-Gene DMA channel
-  * @list: the list to free
-  *
-- * LOCKING: must hold chan->desc_lock
-+ * LOCKING: must hold chan->lock
-  */
- static void xgene_dma_free_desc_list(struct xgene_dma_chan *chan,
- 				     struct list_head *list)
-@@ -900,15 +867,6 @@ static void xgene_dma_free_desc_list(struct xgene_dma_chan *chan,
- 		xgene_dma_clean_descriptor(chan, desc);
- }
-
--static void xgene_dma_free_tx_desc_list(struct xgene_dma_chan *chan,
--					struct list_head *list)
--{
--	struct xgene_dma_desc_sw *desc, *_desc;
--
--	list_for_each_entry_safe(desc, _desc, list, node)
--		xgene_dma_clean_descriptor(chan, desc);
--}
--
- static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
- {
- 	struct xgene_dma_chan *chan = to_dma_chan(dchan);
-@@ -985,7 +943,7 @@ fail:
- 	if (!first)
- 		return NULL;
-
--	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
-+	xgene_dma_free_desc_list(chan, &first->tx_list);
- 	return NULL;
- }
-
-@@ -1093,7 +1051,7 @@ fail:
- 	if (!first)
- 		return NULL;
-
--	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
-+	xgene_dma_free_desc_list(chan, &first->tx_list);
- 	return NULL;
- }
-
-@@ -1141,7 +1099,7 @@ fail:
- 	if (!first)
- 		return NULL;
-
--	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
-+	xgene_dma_free_desc_list(chan, &first->tx_list);
- 	return NULL;
- }
-
-@@ -1218,7 +1176,7 @@ fail:
- 	if (!first)
- 		return NULL;
-
--	xgene_dma_free_tx_desc_list(chan, &first->tx_list);
-+	xgene_dma_free_desc_list(chan, &first->tx_list);
- 	return NULL;
- }
-
-@@ -1316,7 +1274,6 @@ static void xgene_dma_setup_ring(struct xgene_dma_ring *ring)
- {
- 	void *ring_cfg = ring->state;
- 	u64 addr = ring->desc_paddr;
--	void *desc;
- 	u32 i, val;
-
- 	ring->slots = ring->size / XGENE_DMA_RING_WQ_DESC_SIZE;
-@@ -1358,8 +1315,10 @@ static void xgene_dma_setup_ring(struct xgene_dma_ring *ring)
-
- 	/* Set empty signature to DMA Rx ring descriptors */
- 	for (i = 0; i < ring->slots; i++) {
-+		struct xgene_dma_desc_hw *desc;
-+
- 		desc = &ring->desc_hw[i];
--		XGENE_DMA_DESC_SET_EMPTY(desc);
-+		desc->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
- 	}
-
- 	/* Enable DMA Rx ring interrupt */
-@@ -2084,6 +2043,5 @@ module_platform_driver(xgene_dma_driver);
-
- MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
- MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
--MODULE_AUTHOR("Loc Ho <lho@apm.com>");
- MODULE_LICENSE("GPL");
- MODULE_VERSION("1.0");
 --
-1.8.2.1
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
