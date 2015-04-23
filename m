@@ -1,66 +1,73 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] ARM: sunxi: dt: Add DT bindings
- documentation for SUNXI Security System
-Date: Thu, 23 Apr 2015 21:35:38 +0200
-Message-ID: <20150423193538.GF28007@lukather>
-References: <1429771523-2936-1-git-send-email-clabbe.montjoie@gmail.com>
- <1429771523-2936-3-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Josh Cartwright <joshc@ni.com>
+Subject: Re: [PATCH v6 1/2] Devicetree: Add pl353 smc controller devicetree
+ binding information
+Date: Thu, 23 Apr 2015 14:50:43 -0500
+Message-ID: <20150423195043.GS27115@jcartwri.amer.corp.natinst.com>
+References: <1428941512-26411-1-git-send-email-punnaia@xilinx.com>
+ <e3a73fa0-9159-4fbe-b042-4737dc9b041f@BN1BFFO11FD010.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XIiC+We3v3zHqZ6Z"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE4V4WUQKGQE4V2K2IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="UlsYxwg8UDQn+EKZ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e3a73fa0-9159-4fbe-b042-4737dc9b041f@BN1BFFO11FD010.protection.gbl>
 Content-Disposition: inline
-In-Reply-To: <1429771523-2936-3-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
---XIiC+We3v3zHqZ6Z
-Content-Type: text/plain; charset=UTF-8
+
+--UlsYxwg8UDQn+EKZ
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Apr 23, 2015 at 08:45:21AM +0200, LABBE Corentin wrote:
-> This patch adds documentation for Device-Tree bindings for the Security System cryptographic accelerator driver.
-> 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> new file mode 100644
-> index 0000000..a566803
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> @@ -0,0 +1,9 @@
-> +* Allwinner Security System found on A20 SoC
+Hey Punnaiah-
+
+A few nitpicks here, in case you'll be spinning up a new version of your
+patchset.
+
+On Mon, Apr 13, 2015 at 09:41:51PM +0530, Punnaiah Choudary Kalluri wrote:
+> Add pl353 static memory controller devicetree binding information.
+>
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+[..]
+> @@ -0,0 +1,37 @@
+> +Device tree bindings for ARM PL353 static memory controller
+> +
+> +PL353 static memory controller supports two kinds of memory
+> +interfaces. i.e NAND and SRAM/NOR interfaces.
+> +The actual devices are instantiated from the child nodes of pl353 smc node.
 > +
 > +Required properties:
-> +- compatible : Should be "allwinner,sun7i-a20-crypto".
-> +- reg: Should contain the Security System register location and length.
-> +- interrupts: Should contain the IRQ line for the Security System.
-> +- clocks : A phandle to the functional clock node of the Security System module
+> +- compatible		: Should be "arm,pl353-smc-r2p1"
+> +- reg			: Controller registers map and length.
+> +- clock-names		: List of input clock names - "memclk", "aclk"
+> +			  (See clock bindings for details).
+> +- clocks		: Clock phandles (see clock bindings for details).
 
-You actually need two clock references, not just a single phandle.
+Technically not clock phandles, but clock specifiers.
 
-> +- clock-names : Name of the functional clock, should be "ahb" and "mod".
+> +- address-cells	: Address cells, must be 1.
+> +- size-cells		: Size cells. Must be 1.
 
-And we usually have an example after too.
+These should have the leading '#' as in '#address-cells' and
+'#size-cells'.
 
-Thanks!
-Maxime
+  Josh
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---XIiC+We3v3zHqZ6Z--
+--UlsYxwg8UDQn+EKZ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABCAAGBQJVOU0OAAoJEKp7ZBKwQFArRsoH/jqayKE/frgryBvVuVL0NglS
+6XHfvrHFZLA56uC5ourwK1L88F6lg0lJK73uPLy7e5ag2buXgbe1r0CVqn9QrszT
+fFpTAehqnvPRm7uUa4CKo8de6iI3G6GetEaToEsIBzPrP+I3zk91/legfVwEE81O
+92FAvLgOT73rUoC700Zp5bPmEqPCzjw01CFhh6aKomIWgG3GJDO0dqgwN/WPOsN9
+IMqMZpjTPhJXu2HjVk6JYQUi6kFfmWxGJtde7o8HKEB/lJp66dDn5weJNNQF3eaF
+tsky9+z9AkfdGlfJGzA3nsMuz8pVY1JobONszH/wWGN16o4MC+d7lJ+dWRFrWI0=
+=fjRC
+-----END PGP SIGNATURE-----
+
+--UlsYxwg8UDQn+EKZ--
