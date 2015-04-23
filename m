@@ -1,58 +1,43 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND] Documentation: DT bindings: add doc for Altera's
- SoCFPGA platform
-Date: Wed, 22 Apr 2015 23:09:39 -0500
-Message-ID: <CAL_JsqJ_PgWVd97TDssXqqT3EO773zkv0Or3EcCwTGWDK0tg6Q@mail.gmail.com>
-References: <1429541747-20479-1-git-send-email-dinguyen@opensource.altera.com>
+Subject: Re: [PATCH] of: base: improve of_get_next_child() kernel-doc
+Date: Wed, 22 Apr 2015 23:10:50 -0500
+Message-ID: <CAL_Jsq+M-KWU1Ld=zpd=0NrKrSPVFwtWAJuoxQ2L-UsJSLhT-w@mail.gmail.com>
+References: <360c70ee4131ea8048b193bfff359360bb854fe3.1426766621.git.baruch@tkos.co.il>
+ <CAL_JsqKvEYC9NUB2ZNgAgr7KrimT9ZmvGdxjJhNE+5uF9n+nkQ@mail.gmail.com>
+ <20150328202939.GA12479@tarshish> <20150416164631.GL30380@tarshish>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429541747-20479-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <20150416164631.GL30380@tarshish>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2015 at 9:55 AM,  <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Thu, Apr 16, 2015 at 11:46 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> Hi Rob,
 >
-> Document "altr,socfpga-cyclone5", "altr,socfpga-arria5", and
-> "altr,socfpga-arria10".
+> On Sat, Mar 28, 2015 at 11:29:39PM +0300, Baruch Siach wrote:
+>> On Tue, Mar 24, 2015 at 11:45:16PM -0500, Rob Herring wrote:
+>> > On Thu, Mar 19, 2015 at 7:03 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+>> > > Add two new facts to of_get_next_child() documentation:
+>> > >
+>> > >    * of_get_next_child() returns NULL when there is not next child
+>> > >
+>> > >    * of_get_next_child() decrements the refcount of prev
+>> > >
+>> > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+>> >
+>> > Applied. Thanks.
+>>
+>> Thanks. Which tree is this patch going through? I don't see it in current
+>> -next (next-20150327).
 >
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Ping?
 
-Applied for 4.1. Thanks.
+Somehow I dropped this. Anyway, now it is applied and sent to Linus.
 
 Rob
-
-> ---
->  Documentation/devicetree/bindings/arm/altera.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/altera.txt b/Documentation/devicetree/bindings/arm/altera.txt
-> new file mode 100644
-> index 0000000..558735a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera.txt
-> @@ -0,0 +1,14 @@
-> +Altera's SoCFPGA platform device tree bindings
-> +---------------------------------------------
-> +
-> +Boards with Cyclone 5 SoC:
-> +Required root node properties:
-> +compatible = "altr,socfpga-cyclone5", "altr,socfpga";
-> +
-> +Boards with Arria 5 SoC:
-> +Required root node properties:
-> +compatible = "altr,socfpga-arria5", "altr,socfpga";
-> +
-> +Boards with Arria 10 SoC:
-> +Required root node properties:
-> +compatible = "altr,socfpga-arria10", "altr,socfpga";
-> --
-> 2.2.1
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
