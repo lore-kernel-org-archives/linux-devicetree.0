@@ -1,156 +1,81 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: Re: [PATCH 2/2] misc: Add initial Digital Timing Engine (DTE) driver
- for cygnus
-Date: Thu, 23 Apr 2015 11:07:39 -0700
-Message-ID: <553934EB.4050701@broadcom.com>
-References: <1429744923-2007-1-git-send-email-jonathar@broadcom.com> <1429744923-2007-3-git-send-email-jonathar@broadcom.com> <6346218.3x3hbSlxMs@wuerfel>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: Allow OF to be enabled if COMPILE_TEST to
+ increase coverage
+Date: Thu, 23 Apr 2015 13:22:25 -0500
+Message-ID: <CAL_JsqKZQMquF+kBACp90naLDvng3npU0gGgiaxp3VVKDFNcZw@mail.gmail.com>
+References: <1428245965-19618-1-git-send-email-geert@linux-m68k.org>
+ <1428245965-19618-2-git-send-email-geert@linux-m68k.org> <CAL_JsqLQrNEpqWnqP4uDV0x87wERLC50FO-06fYBwLbyYsChpQ@mail.gmail.com>
+ <0C5158C3-2BD3-4EC6-B1AC-B669F30B4C34@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6346218.3x3hbSlxMs@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Scott Branden <sbranden@broadcom.com>, Darren Edamura <dedamura@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0C5158C3-2BD3-4EC6-B1AC-B669F30B4C34-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thu, Apr 23, 2015 at 7:03 AM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
+>
+>> On Apr 6, 2015, at 16:13 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
+:
+>>
+>> +Pantelis
+>>
+>> On Sun, Apr 5, 2015 at 9:59 AM, Geert Uytterhoeven <geert@linux-m68k=
+=2Eorg> wrote:
+>>> Currently the OF configuration symbol is explicitly selected on
+>>> architectures that support device trees and/or Open Firmware.
+>>> However, there's no technical reason to limit the device tree
+>>> infrastructure to these architectures. Hence allow OF to be enabled=
+ when
+>>> compile testing, to increase compile coverage.
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>> ---
+>>> drivers/of/Kconfig | 6 +++++-
+>>> 1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+>>> index 7bcaeec876c0c3a5..4c98f14694458794 100644
+>>> --- a/drivers/of/Kconfig
+>>> +++ b/drivers/of/Kconfig
+>>> @@ -2,7 +2,11 @@ config DTC
+>>>        bool
+>>>
+>>> config OF
+>>> -       bool
+>>> +       bool "Device Tree and Open Firmware support" if COMPILE_TES=
+T
+>>
+>> Actually, I think we want to just make this always visible. There ar=
+e
+>> now use cases with overlays where we may want to enable DT even if t=
+he
+>> architecture is not booting with DT. However, there may be more work
+>> needed to do that.
+>>
+>
+> We have to decouple the notion of CONFIG_OF of the following two diff=
+erent things.
+>
+> 1. I=E2=80=99m booting using a device tree blob.
+> 2. I=E2=80=99m using the in-kernel live device tree to represent my h=
+ardware device state.
+>
+> so CONFIG_OF_DTB_BLOB for the first case, and CONFIG_OF for the secon=
+d.
+>
+> Up to now we bundle those two together.
 
-Thanks for the initial feedback. I'll investigate your suggestions and
-get back to you if I have any questions before making some of the API
-changes you've suggested.
+They are separate already with CONFIG_OF_EARLY_FLATTREE
 
-On 15-04-23 01:04 AM, Arnd Bergmann wrote:
-> On Wednesday 22 April 2015 16:22:03 Jonathan Richardson wrote:
->> Reviewed-by: Scott Branden <sbranden@broadcom.com>
->> Tested-by: Scott Branden <sbranden@broadcom.com>
->> Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
-> 
-> No description at all?
-> 
-> You are introducing a new subsystem here, which means you get to put
-> a lot of thought into the API design, to ensure that it works with
-> other drivers of the same type, and that we don't already have
-> a subsystem that does what you need here.
-> 
-> Please write a few pages of text about the tradeoffs that went into
-> the internal and user-facing API design, and explain the differences
-> to the existing infrastructure we have for the clocksource, clockevent,
-> k_clock, posix timers, posix timers, timerfd, rtc, and ptp frameworks,
-> in particular why your hardware cannot fit into the existing frameworks
-> and has to have a new one.
-> 
->> +struct bcm_cygnus_dte *dte_get_dev_from_devname(const char *devname)
->> +{
->> +	struct bcm_cygnus_dte *cygnus_dte = NULL;
->> +	bool found = false;
->> +
->> +	if (!devname)
->> +		return NULL;
->> +
->> +	list_for_each_entry(cygnus_dte, &dtedev_list, node) {
->> +		if (!strcmp(dev_name(&cygnus_dte->pdev->dev), devname)) {
->> +			/* Matched on device name */
->> +			found = true;
->> +			break;
->> +		}
->> +	}
->> +
->> +	return found ? cygnus_dte : NULL;
->> +}
->> +EXPORT_SYMBOL(dte_get_dev_from_devname);
-> 
-> No, don't match on a device name. If you must have a reference, use
-> a phandle in DT.
-> 
->> +int dte_get_timestamp(
->> +		struct bcm_cygnus_dte *cygnus_dte,
->> +		enum dte_client client,
->> +		struct timespec *ts)
-> 
-> Please use timespec64 or ktime_t for internal interfaces.
-> 
->> +	case DTE_IOCTL_SET_DIVIDER:
-> 
-> For the IOCTLs, please write a documentation in man-page form. No need
-> for troff formatting, plain text is fine.
-> 
->> +/**
->> + * DTE Client
->> + */
->> +enum dte_client {
->> +	DTE_CLIENT_MIN = 0,
->> +	DTE_CLIENT_I2S0_BITCLOCK = 0,
->> +	DTE_CLIENT_I2S1_BITCLOCK,
->> +	DTE_CLIENT_I2S2_BITCLOCK,
->> +	DTE_CLIENT_I2S0_WORDCLOCK,
->> +	DTE_CLIENT_I2S1_WORDCLOCK,
->> +	DTE_CLIENT_I2S2_WORDCLOCK,
->> +	DTE_CLIENT_LCD_CLFP,
->> +	DTE_CLIENT_LCD_CLLP,
->> +	DTE_CLIENT_GPIO14,
->> +	DTE_CLIENT_GPIO15,
->> +	DTE_CLIENT_GPIO22,
->> +	DTE_CLIENT_GPIO23,
->> +	DTE_CLIENT_MAX,
->> +};
-> 
-> Make this more abstract, so we can reuse the API for other vendors.
-> 
->> +#define DTE_IOCTL_BASE          'd'
->> +#define DTE_IO(nr)              _IO(DTE_IOCTL_BASE, nr)
->> +#define DTE_IOR(nr, type)       _IOR(DTE_IOCTL_BASE, nr, type)
->> +#define DTE_IOW(nr, type)       _IOW(DTE_IOCTL_BASE, nr, type)
->> +#define DTE_IOWR(nr, type)      _IOWR(DTE_IOCTL_BASE, nr, type)
->> +
->> +#define DTE_IOCTL_SET_DIVIDER       DTE_IOW(0x00, struct dte_data)
->> +#define DTE_IOCTL_ENABLE_TIMESTAMP  DTE_IOW(0x01, struct dte_data)
->> +#define DTE_IOCTL_SET_IRQ_INTERVAL  DTE_IOW(0x02, struct dte_data)
->> +#define DTE_IOCTL_GET_TIMESTAMP     DTE_IOWR(0x03, struct dte_timestamp)
->> +#define DTE_IOCTL_SET_TIME          DTE_IOW(0x04, struct timespec)
->> +#define DTE_IOCTL_GET_TIME          DTE_IOR(0x05, struct timespec)
-> 
-> Instead of timespec, use a pair of '__u64' values, or alternatively
-> just a '__u64' for nanoseconds if the API does not have to cover
-> times before 1970 or after 2262.
-> 
->> +#define DTE_IOCTL_ADJ_TIME          DTE_IOW(0x06, int64_t)
->> +#define DTE_IOCTL_ADJ_FREQ          DTE_IOW(0x07, int32_t)
-> 
-> Maybe 'struct timex' for the adjustment?
-> 
-> Also, how about adding new syscalls along the lines of
-> the timerfd stuff instead of using ioctl?
-> 
->> +struct dte_data {
->> +	enum dte_client client;
->> +	unsigned int data;
->> +};
-> 
-> No 'enum' in ioctl data, always use '__u32' etc.
-> 
->> +
->> +struct dte_timestamp {
->> +	enum dte_client client;
->> +	struct timespec ts;
->> +};
-> 
-> Instead of timespec, use a pair of '__u64' values, or alternatively
-> just a '__u64' for nanoseconds if the API does not have to cover
-> times before 1970 or after 2262.
-> 
->> +struct bcm_cygnus_dte;
->> +
->> +extern struct bcm_cygnus_dte *dte_get_dev_from_devname(
->> +		const char *devname);
->> +extern int dte_enable_timestamp(
->> +		struct bcm_cygnus_dte *cygnus_dte,
->> +		enum dte_client client,
->> +		int enable);
-> 
-> 
-> Put the internal declarations into one header in include/linux, and the
-> user space facing ones in another one in include/uapi/linux.
-> 
-> 	Arnd
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
