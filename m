@@ -1,35 +1,84 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 3/4] base/platform: Continue on insert_resource() error
-Date: Thu, 23 Apr 2015 08:26:37 -0500
-Message-ID: <20150423132637.GK20701@google.com>
-References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429719261-18024-4-git-send-email-ricardo.ribalda@gmail.com>
- <20150422164457.GI20701@google.com>
- <CAPybu_3Wfngh_gh_pa33dWF_nfUh0He1GKe26kJ49w-Sdn604Q@mail.gmail.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] coresight: Add support for Juno platform
+Date: Thu, 23 Apr 2015 07:41:39 -0600
+Message-ID: <CANLsYkzbKiCyU5ZYknTF6hzkPAbz2oMYaW3m8Xa6=W67w_N_EA@mail.gmail.com>
+References: <1429742802-13089-1-git-send-email-mathieu.poirier@linaro.org>
+	<20150423092032.GA16238@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPybu_3Wfngh_gh_pa33dWF_nfUh0He1GKe26kJ49w-Sdn604Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jakub Sitnicki <jsitnicki@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mike Travis <travis@sgi.com>, Thierry Reding <treding@nvidia.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150423092032.GA16238@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2015 at 09:55:13AM +0200, Ricardo Ribalda Delgado wrote:
-> Hi Bjorn:
-> 
-> On Wed, Apr 22, 2015 at 6:44 PM, Bjorn Helgaas <bhelgaas@google.com> wrote:
-> 
-> > Usual style for referencing a commit is "(see 02bbde7849e6 ('Revert "of:
-> > use platform_device_add"'))".
-> 
-> Do you make that reference manually or there is a magic git command
-> for printing it in that style?
+On 23 April 2015 at 03:20, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Matthieu,
+>
+>> +     main_funnel@20040000 {
+>> +             compatible = "arm,coresight-funnel", "arm,primecell";
+>> +             reg = <0 0x20040000 0 0x1000>;
+>> +
+>> +             clocks = <&soc_smc50mhz>;
+>> +             clock-names = "apb_pclk";
+>> +             ports {
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +
+>> +                     port@0 {
+>> +                             reg = <0>;
+>> +                             main_funnel_out_port: endpoint {
+>> +                                     remote-endpoint =
+>> +                                             <&etf_in_port>;
+>> +                             };
+>> +                     };
+>> +
+>> +                     port@1 {
+>> +                             reg = <0>;
+>> +                             main_funnel_in_port0: endpoint {
+>> +                                     slave-mode;
+>> +                                     remote-endpoint =
+>> +                                                     <&A57_funnel_out_port>;
+>> +                             };
+>> +                     };
+>> +
+>> +                     port@2 {
+>> +                             reg = <1>;
+>> +                             main_funnel_in_port1: endpoint {
+>> +                                     slave-mode;
+>> +                                     remote-endpoint = <&A53_etm0_out_port>;
+>> +                             };
+>> +                     };
+>
+> What's going on with these reg properties? They aren't matched with
+> their nodes' unit-addresses, and the same reg is reused by multiple
+> nodes. That doesn't make sense to me.
+>
+> Is the mismatch deliberate (against DT conventions), or is this
+> mistaken?
 
-I used to do it mostly by hand, but thanks to your prompting, I fiddled
-around and came up with this alias:
+Thanks for the review.
 
-gsr is aliased to `git show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+Coresight blocks have input and output ports and I use (and used [1])
+the reg property to label the physical ports as found on device
+itself.  Above, "port@0" doesn't have a "slave-mode" property and as
+such is output port "0".
 
-Bjorn
+"port@1" and "port@2" have a "slave-mode" property and thus are input
+port "0" and "1", as indicated by their reg properly.
+
+[1]. http://lxr.free-electrons.com/source/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts#L426
+
+Mathieu
+
+>
+> Likewise for the other funnels.
+
+
+>
+> Mark
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
