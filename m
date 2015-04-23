@@ -1,48 +1,58 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] kernel/resource: Invalid memory access in __release_resource
-Date: Thu, 23 Apr 2015 10:06:36 +0200
-Message-ID: <CAPybu_2rTee+cJvFXNwoovHGywEf1CM3j_JMVaSy_nxj8uNS1g@mail.gmail.com>
-References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
- <1429719261-18024-2-git-send-email-ricardo.ribalda@gmail.com> <20150422164701.GJ20701@google.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
+Date: Thu, 23 Apr 2015 10:33:23 +0200
+Message-ID: <20150423083322.GA15071@katana>
+References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de>
+ <AEA6F5CA-D520-4F34-BE6B-EF2839501089@konsulko.com>
+ <20150414132709.GA1375@katana>
+ <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150422164701.GJ20701-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn
 
-On Wed, Apr 22, 2015 at 6:47 PM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> I'm not really a fan of this.  The NULL pointer oops is a very good clue
-> all by itself, and it doesn't require any extra code here.
 
-It is a pointer to 0x30.
+> Sorry for the non-prompt reply; but just for kicks, can you try the attac=
+hed patch?
+>=20
+> I have a hunch this might be the problem.
 
-For some reason my platform can handle a couple of oops, but if I get
-a fair amount of them in a short period of time, the whole thing
-crashes and debugging gets complicated. (no access to dmesg or remote
-debugging).
+Yeah, this even makes my more complex driver work \o/ I will post it
+once -rc1 is out. Thanks a lot for your help, much appreciated!
 
-Therefore this particular bug gave me a bad time. Now that we have
-located the root of the problem and solved the problem from the root,
-this particular error will never be hit. I just wanted to save
-somebody else's time with this patch.
 
-All that said, if the other patches are applied, my platform works
-completely fine. So it is completely your call to accept this or not
-:)
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I will resend the patchset without this patch
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Thanks!
--- 
-Ricardo Ribalda
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJVOK5SAAoJEBQN5MwUoCm2h1YP/RnQwe76BabWg/J5PXCaYz3Y
+ZBEswSlb9HElazCdxyRBqONgd56c+/+RiX8Y5+eIMKZSxR+8c9PXJiWHkUFUEvf5
+s3dN1B/i+SLDn7hyDhexwtKOhYSPEkVoNJlV24783O/EUAqrk4aIukbSD+/RofU8
+dFg94TPYm/OfsT96SXvj7ZoeVO3ixnevW6ak/t6NKofhdWolcb+dkB3it+LI8qDM
+VArqhITQNyqiETxO8fwMApyJP6+klvHcV7lBiCFuWr6hPSNgmH9YXpI5Ptzsouu2
+jKk5xvrwj5RQ7UOQDFBJoPdXjbC6yqhn+d5BKGoGEG/kGMr4xGNcDBS3jziSkmNK
+qkme/fwyY4jr1ntOtiQ0miilrMdJos6Y0G2+6NB89uMx09eIAvnF4wcWjUqhyuKE
+yNU++E40xcKLSgrc5oyafK+xMzaHL72LSAD7+tSD3zIXDPK3FM+y3svpfMwOMj9s
+IF5sQk6M4mcpKYUZKx8Krsxs1CnUDcnzmRA5AKWgSnOcGpzFELwlfCcGc3N+24+0
+tGyZlyrEypFjHE8kWR2HsBqWAI5dSp5dZ1coLKProMGve7Ewizvi8dPzgJgnxupf
+6oR7OeCxyBaWsjsnYd5iNHGhhphGU2f1MSVpiem+CPSulpZfrrzlUXOkQD8WN5p+
+ktuzg9SAVTa1AXp133iH
+=Ri7d
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
