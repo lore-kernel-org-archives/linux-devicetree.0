@@ -1,265 +1,183 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun7i: Add dts file for the
- Jesurun Q5 top set box
-Date: Thu, 23 Apr 2015 14:26:50 +0200
-Message-ID: <1429792010-22359-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] of: overlay: Add sysfs attributes
+Date: Thu, 23 Apr 2015 14:33:46 +0200
+Message-ID: <20150423123346.GA19166@kroah.com>
+References: <1428434632-13789-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1428434632-13789-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <CAL_JsqLMVBfQpmSjg9qfOvtM3RXMY3Dm+knN8h54gDCzx513-g@mail.gmail.com>
+ <6E391B8F-936A-4FD1-B8CC-C9B5FCE0B291@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEOK4OUQKGQEPVW64VA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6E391B8F-936A-4FD1-B8CC-C9B5FCE0B291-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Jesurun Q5 has a black plastic casing with the approximate dimensions
-of 100mm x 100mm x 24mm with rounded edges. In terms of hardware it
-features an Allwinner A10 SoC with 1GB RAM and 8GB of NAND flash. The
-external connectors are: 2x USB-A female supporting USB2.0, 3.5mm female
-jack for audio, HDMI female, SPDIF, RJ45 LAN and Power. In addition the
-device has 1x red LED (hard wired to power) and an programmable green led.
-On the board there is also an unpopulated IR receiver and the UART.
-The devices is equipped with an AXP209 PMU.
+On Thu, Apr 23, 2015 at 03:00:03PM +0300, Pantelis Antoniou wrote:
+> Hi Rob,
+>=20
+> > On Apr 15, 2015, at 04:27 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
+te:
+> >=20
+> > On Tue, Apr 7, 2015 at 2:23 PM, Pantelis Antoniou
+> > <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> >> Implement a number of sysfs attributes for overlays.
+> >>=20
+> >> * A throw once master enable switch to protect against any
+> >> further overlay applications if the administrator desires so.
+> >=20
+> > This one should be a separate patch.
+> >=20
+>=20
+> OK.
+>=20
+> >> * A per overlay targets sysfs attribute listing the targets of
+> >> the installed overlay.
+> >=20
+> > What are targets? "targets lists targets" does not help me. The
+> > documentation doesn't help me either.
+> >=20
+>=20
+> It lists the targets of the overlay that has been applied. What do
+> you need in order to be helped? I mean what do you want listed?
+>=20
+> >> * A per overlay can_remove sysfs attribute that reports whether
+> >> the overlay can be removed or not due to another overlapping overl=
+ay.
+> >>=20
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >> drivers/of/overlay.c | 167 +++++++++++++++++++++++++++++++++++++++=
++++++++++++-
+> >> 1 file changed, 166 insertions(+), 1 deletion(-)
+> >>=20
+> >> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> >> index f17f5ef..c54d097 100644
+> >> --- a/drivers/of/overlay.c
+> >> +++ b/drivers/of/overlay.c
+> >> @@ -21,6 +21,7 @@
+> >> #include <linux/err.h>
+> >> #include <linux/idr.h>
+> >> #include <linux/sysfs.h>
+> >> +#include <linux/atomic.h>
+> >>=20
+> >> #include "of_private.h"
+> >>=20
+> >> @@ -55,8 +56,12 @@ struct of_overlay {
+> >>        struct kobject kobj;
+> >> };
+> >>=20
+> >> +/* master enable switch; once set to 0 can't be re-enabled */
+> >> +static atomic_t ov_enable =3D ATOMIC_INIT(1);
+> >> +
+> >> static int of_overlay_apply_one(struct of_overlay *ov,
+> >>                struct device_node *target, const struct device_nod=
+e *overlay);
+> >> +static int overlay_removal_is_ok(struct of_overlay *ov);
+> >>=20
+> >> static int of_overlay_apply_single_property(struct of_overlay *ov,
+> >>                struct device_node *target, struct property *prop)
+> >> @@ -345,6 +350,144 @@ static struct kobj_type of_overlay_ktype =3D=
+ {
+> >>=20
+> >> static struct kset *ov_kset;
+> >>=20
+> >> +static ssize_t enable_read(struct file *filp, struct kobject *kob=
+j,
+> >> +               struct bin_attribute *bin_attr, char *buf,
+> >> +               loff_t offset, size_t count)
+> >> +{
+> >> +       char tbuf[3];
+> >> +
+> >> +       if (offset < 0)
+> >> +               return -EINVAL;
+> >> +
+> >> +       if (offset >=3D sizeof(tbuf))
+> >> +               return 0;
+> >> +
+> >> +       if (count > sizeof(tbuf) - offset)
+> >> +               count =3D sizeof(tbuf) - offset;
+> >> +
+> >> +       /* fill in temp */
+> >> +       tbuf[0] =3D '0' + atomic_read(&ov_enable);
+> >> +       tbuf[1] =3D '\n';
+> >> +       tbuf[2] =3D '\0';
+> >> +
+> >> +       /* copy to buffer */
+> >> +       memcpy(buf, tbuf + offset, count);
+> >> +
+> >> +       return count;
+> >> +}
+> >> +
+> >> +static ssize_t enable_write(struct file *filp, struct kobject *ko=
+bj,
+> >> +               struct bin_attribute *bin_attr, char *buf,
+> >> +               loff_t off, size_t count)
+> >> +{
+> >> +       unsigned int new_enable;
+> >> +
+> >> +       if (off !=3D 0 || (buf[0] !=3D '0' && buf[0] !=3D '1'))
+> >> +               return -EINVAL;
+> >> +
+> >> +       new_enable =3D (unsigned int)(buf[0] - '0');
+> >> +       if (new_enable > 1)
+> >> +               return -EINVAL;
+> >> +
+> >> +       /* NOP for same value */
+> >> +       if (new_enable =3D=3D atomic_read(&ov_enable))
+> >> +               return count;
+> >> +
+> >> +       /* if we've disabled it, no going back */
+> >> +       if (atomic_read(&ov_enable) =3D=3D 0)
+> >> +               return -EPERM;
+> >> +
+> >> +       atomic_set(&ov_enable, new_enable);
+> >> +       return count;
+> >> +}
+> >> +
+> >> +/* just a single char + '\n' + '\0' */
+> >> +static BIN_ATTR_RW(enable, 3);
+> >=20
+> > Why are you using bin attribute? You are complicating the
+> > implementation needlessly.
+> >=20
+>=20
+> It=E2=80=99s the same reason that the device tree core is using it.
 
-For more details see: http://linux-sunxi.org/Jesurun_Q5
+It is doing that for "raw" device tree files, not individual attributes=
+,
+right?
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Add missing serial0 alias and stdout-path
----
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts | 194 +++++++++++++++++++++++++=
-++++
- 2 files changed, 195 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
+> Believe it or not, this is the simplest way to do it.
+> If you take a look at the sysfs attribute implementation, the binary
+> implementation is the one that=E2=80=99s using the least amount of co=
+de.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 13de5d6..29883fe 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -518,6 +518,7 @@ dtb-$(CONFIG_MACH_SUN4I) +=3D \
- 	sun4i-a10-hackberry.dtb \
- 	sun4i-a10-hyundai-a7hd.dtb \
- 	sun4i-a10-inet97fv2.dtb \
-+	sun4i-a10-jesurun-q5.dtb \
- 	sun4i-a10-marsboard.dtb \
- 	sun4i-a10-mini-xplus.dtb \
- 	sun4i-a10-mk802.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts b/arch/arm/boot/dts=
-/sun4i-a10-jesurun-q5.dts
-new file mode 100644
-index 0000000..1b0452f
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-@@ -0,0 +1,194 @@
-+/*
-+ * Copyright 2015 G=C3=A1bor Nyers
-+ *
-+ * G=C3=A1bor Nyers <gabor.nyers-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model =3D "Jesurun Q5";
-+	compatible =3D "jesurun,q5", "allwinner,sun4i-a10";
-+
-+	aliases {
-+		serial0 =3D &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path =3D "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&led_pins_q5>;
-+
-+		green {
-+			label =3D "q5:green:usr";
-+			gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>;  /* PH20 */
-+		};
-+
-+	};
-+
-+	reg_emac_3v3: emac-3v3 {
-+		compatible =3D "regulator-fixed";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&emac_power_pin_q5>;
-+		regulator-name =3D "emac-3v3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		enable-active-high;
-+		gpio =3D <&pio 7 19 GPIO_ACTIVE_HIGH>;   /* PH19 */
-+	};
-+};
-+
-+&ahci {
-+	status =3D "okay";
-+};
-+
-+&ehci0 {
-+	status =3D "okay";
-+};
-+
-+&ehci1 {
-+	status =3D "okay";
-+};
-+
-+&emac {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&emac_pins_a>;
-+	phy =3D <&phy1>;
-+	status =3D "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&i2c0_pins_a>;
-+	status =3D "okay";
-+
-+	axp209: pmic@34 {
-+		compatible =3D "x-powers,axp209";
-+		reg =3D <0x34>;
-+		interrupts =3D <0>;
-+
-+		interrupt-controller;
-+		#interrupt-cells =3D <1>;
-+	};
-+};
-+
-+&ir0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&ir0_pins_a>;
-+	status =3D "okay";
-+};
-+
-+&mdio {
-+	phy-supply =3D <&reg_emac_3v3>;
-+	status =3D "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg =3D <1>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply =3D <&reg_vcc3v3>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status =3D "okay";
-+};
-+
-+&ohci0 {
-+	status =3D "okay";
-+};
-+
-+&ohci1 {
-+	status =3D "okay";
-+};
-+
-+&pio {
-+	emac_power_pin_q5: emac_power_pin@0 {
-+		allwinner,pins =3D "PH19";
-+		allwinner,function =3D "gpio_out";
-+		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	led_pins_q5: led_pins@0 {
-+		allwinner,pins =3D "PH20";
-+		allwinner,function =3D "gpio_out";
-+		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&reg_usb1_vbus {
-+	status =3D "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status =3D "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&uart0_pins_a>;
-+	status =3D "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply =3D <&reg_usb1_vbus>;
-+	usb2_vbus-supply =3D <&reg_usb2_vbus>;
-+	status =3D "okay";
-+};
---=20
-2.3.5
+Then something is really wrong here.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> To use a non-binary method we have to register per ktype sysfs_ops
+> and duplicate the way the non-binary attribute works.
+
+really?  Again, something must be wrong.
+
+> For the gory details look at sysfs_add_file_mode_ns() in fs/sysfs/fil=
+e.c
+>=20
+> I can add the sysfs_ops but that=E2=80=99s going to be more complicat=
+ed not less.
+
+Only use binary sysfs files if you are accepting binary data directly
+from userspace and using it as a "pass-through" to the kernel.
+
+Otherwise just use a "normal" sysfs file.  I don't understand the
+problem here, sysfs shouldn't be hard to use for simple attributes, tha=
+t
+was not the goal here at all.
+
+thanks,
+
+greg k-h
