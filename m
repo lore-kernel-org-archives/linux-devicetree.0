@@ -1,51 +1,35 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH v2 3/4] of: overlay: Add sysfs attributes
-Date: Thu, 23 Apr 2015 15:04:09 +0200
-Message-ID: <20150423130409.GA4437@kroah.com>
-References: <1428434632-13789-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1428434632-13789-4-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_JsqLMVBfQpmSjg9qfOvtM3RXMY3Dm+knN8h54gDCzx513-g@mail.gmail.com>
- <6E391B8F-936A-4FD1-B8CC-C9B5FCE0B291@konsulko.com>
- <20150423123346.GA19166@kroah.com>
- <98237E9E-04CB-4CD5-8B2F-63F070B54459@konsulko.com>
- <20150423125441.GA32303@kroah.com>
- <5F0BA9FB-8345-4296-8595-0E4CD1C816AA@konsulko.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH v7 1/3] of: Add vendor prefix for Kinetic technologies
+Date: Thu, 23 Apr 2015 22:18:03 +0900
+Message-ID: <1429795085-22171-2-git-send-email-ingi2.kim@samsung.com>
+References: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5F0BA9FB-8345-4296-8595-0E4CD1C816AA@konsulko.com>
+In-reply-to: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Andrew Morton <akpm@linux-foundation.org>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+To: cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, varkabhadram@gmail.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2015 at 03:59:02PM +0300, Pantelis Antoniou wrote:
-> >>>> It=E2=80=99s the same reason that the device tree core is using =
-it.
-> >>>=20
-> >>> It is doing that for "raw" device tree files, not individual attr=
-ibutes,
-> >>> right?
-> >>>=20
-> >>=20
-> >> Each property of a device tree is a binary attribute.
-> >=20
-> > Because they export binary data, right?  I don't have access to a
-> > machine that uses device tree at the moment to check this...
-> >=20
-> > Any specific file/function you are referring to?
-> >=20
->=20
-> Yes, they export binary data. It works because the device tree nodes
-> are raw kobjs.
+This patch adds vendor prefix for Kinetic technologies
 
-Great, then the device tree is doing this correctly :)
+Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-=46or text files, use real attribute files, that's the proper way to
-handle sysfs from kobjects.
-
-thanks,
-
-greg k-h
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index fae26d0..90a4be1 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -100,6 +100,7 @@ isee	ISEE 2007 S.L.
+ isil	Intersil
+ karo	Ka-Ro electronics GmbH
+ keymile	Keymile GmbH
++kinetic Kinetic Technologies
+ lacie	LaCie
+ lantiq	Lantiq Semiconductor
+ lenovo	Lenovo Group Ltd.
+-- 
+2.0.5
