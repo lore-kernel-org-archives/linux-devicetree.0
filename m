@@ -1,49 +1,52 @@
-From: "Austin, Brian" <Brian.Austin@cirrus.com>
-Subject: Re: [PATCH 8/8] Documentation: Add WM8998/WM1814
- device	tree bindings
-Date: Thu, 23 Apr 2015 02:05:18 +0000
-Message-ID: <0D842736-8A6E-4462-9690-C9BD60690A7C@cirrus.com>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>,
- <1429619636-25478-9-git-send-email-rf@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1429619636-25478-9-git-send-email-rf@opensource.wolfsonmicro.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Fitzgerald, Richard" <Richard.Fitzgerald@cirrus.com>
-Cc: "gnurou@gmail.com" <gnurou@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "ckeepax@opensource.wolfsonmicro.com" <ckeepax@opensource.wolfsonmicro.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: [PATCH v2 0/5] AHCI and SATA PHY support for Broadcom STB SoCs
+Date: Wed, 22 Apr 2015 19:59:05 -0700
+Message-ID: <1429757950-28789-1-git-send-email-computersforpeace@gmail.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+Here are my updates based on everyone's feedback. I'll try to include most of
+the changelog info in each patch, but a few summary points for v1 -> v2:
 
-> On Apr 21, 2015, at 07:38, Richard Fitzgerald <rf@opensource.wolfsonmicro.com> wrote:
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> ---
-> Documentation/devicetree/bindings/mfd/arizona.txt |    3 +++
-> 1 files changed, 3 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index 7665aa9..a3cb34b 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -10,6 +10,9 @@ Required properties:
->         "wlf,wm5110"
->         "wlf,wm8280"
->         "wlf,wm8997"
-> +        "wlf,WM8998"
-> +        "wlf,wm1814"
-> +
-Is there a reason for caps on the 8998? 
+ - reworked the PHY DT binding so that we don't need do any custom xlate in the
+   PHY driver
 
--Brian 
+ - moved all handling of the 'SATA_TOP_CTRL' block into the SATA driver,
+   instead of sharing it between SATA and PHY drivers. This means we have to do
+   a little extra work in sata_brcmstb.c to decide which ports to power on, but
+   at least this way, we're really describing the hardware, not just how the SW
+   frameworks want to use the hardware.
+
+Enjoy,
+Brian
+
+Brian Norris (5):
+  Documentation: devicetree: add Broadcom SATA binding
+  Documentation: devicetree: add Broadcom SATA PHY binding
+  ata: add Broadcom AHCI SATA3 driver for STB chips
+  phy: add Broadcom SATA3 PHY driver for Broadcom STB SoCs
+  ARM: dts: brcmstb: add nodes for SATA controller and PHY
+
+ .../devicetree/bindings/ata/brcm,sata-brcmstb.txt  |  35 +++
+ .../bindings/phy/brcm,brcmstb-sata-phy.txt         |  40 +++
+ arch/arm/boot/dts/bcm7445.dtsi                     |  37 +++
+ drivers/ata/Kconfig                                |   9 +
+ drivers/ata/Makefile                               |   1 +
+ drivers/ata/sata_brcmstb.c                         | 285 +++++++++++++++++++++
+ drivers/phy/Kconfig                                |   9 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-brcmstb-sata.c                     | 216 ++++++++++++++++
+ 9 files changed, 632 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt
+ create mode 100644 drivers/ata/sata_brcmstb.c
+ create mode 100644 drivers/phy/phy-brcmstb-sata.c
+
+-- 
+1.9.1
+
