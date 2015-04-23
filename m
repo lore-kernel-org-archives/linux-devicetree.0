@@ -1,95 +1,51 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for SMEM
-Date: Thu, 23 Apr 2015 14:01:28 -0600
-Message-ID: <55394F98.3060600@codeaurora.org>
-References: <1428795178-24312-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun7i: Add dts file for the
+ Jesurun Q5 top set box
+Date: Thu, 23 Apr 2015 22:30:24 +0200
+Message-ID: <20150423203024.GG28007@lukather>
+References: <1429792010-22359-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1428795178-24312-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andry Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XRI2XbIfl/05pQwm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB55O4WUQKGQE47TWHZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429792010-22359-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/11/2015 5:32 PM, Bjorn Andersson wrote:
-> Add device tree binding documentation for the Qualcom Shared Memory
-> manager.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->
-> Changes since v1:
-> - None
->
->   .../devicetree/bindings/soc/qcom/qcom,smem.txt     | 49 ++++++++++++++++++++++
->   1 file changed, 49 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
->
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
-> new file mode 100644
-> index 0000000..d90f839
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
-> @@ -0,0 +1,49 @@
-> +Qualcomm Shared Memory binding
-> +
-> +This binding describes the Qualcomm Shared Memory, used to share data between
-> +various subsystems and OSes in Qualcomm platforms.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be:
-> +		    "qcom,smem"
-> +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: handle to memory reservation for main smem memory region.
-> +
-> +- reg:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address and size pair for any additional memory areas
-> +		    of the shared memory.
-> +
-> +- hwspinlocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: reference to a hwspinlock used to protect allocations from
-> +		    the shared memory
-> +
-> += EXAMPLE
-> +
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		smem_region: smem@fa00000 {
-> +			reg = <0xfa00000 0x200000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	smem@fa00000 {
-> +		compatible = "qcom,smem";
-> +
-> +		memory-region = <&smem_region>;
-> +		reg = <0xfc428000 0x4000>;
-> +
-> +		hwlocks = <&tcsr_mutex 3>;
-> +	};
->
+--XRI2XbIfl/05pQwm
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-For my information, is there any intention to support the relocatable 
-smem_region by looking it up at init time?  It does not seem like it 
-would be possible to support that with this binding.
+On Thu, Apr 23, 2015 at 02:26:50PM +0200, Hans de Goede wrote:
+> The Jesurun Q5 has a black plastic casing with the approximate dimensions
+> of 100mm x 100mm x 24mm with rounded edges. In terms of hardware it
+> features an Allwinner A10 SoC with 1GB RAM and 8GB of NAND flash. The
+> external connectors are: 2x USB-A female supporting USB2.0, 3.5mm female
+> jack for audio, HDMI female, SPDIF, RJ45 LAN and Power. In addition the
+> device has 1x red LED (hard wired to power) and an programmable green led.
+> On the board there is also an unpopulated IR receiver and the UART.
+> The devices is equipped with an AXP209 PMU.
+> 
+> For more details see: http://linux-sunxi.org/Jesurun_Q5
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Queued for 4.2, thanks!
+
+Maxime
 
 -- 
-Jeffrey Hugo
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, a Linux Foundation Collaborative Project
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--XRI2XbIfl/05pQwm--
