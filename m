@@ -1,63 +1,77 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/4] base/platform: Only insert MEM and IO resources
-Date: Thu, 23 Apr 2015 15:58:11 +0200
-Message-ID: <1429797494-29242-2-git-send-email-ricardo.ribalda@gmail.com>
-References: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429797494-29242-1-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 6/8] extcon: arizona: Add support
+	for	WM8998 and WM1814
+Date: Thu, 23 Apr 2015 15:15:40 +0100
+Message-ID: <20150423141540.GA17323@opensource.wolfsonmicro.com>
+References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1429619636-25478-7-git-send-email-rf@opensource.wolfsonmicro.com>
+ <55373766.6060106@samsung.com>
+ <20150422091941.GA4303@opensource.wolfsonmicro.com>
+ <553775D9.9080606@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <553775D9.9080606@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, myungjoo.ham@samsung.com, ckeepax@opensource.wolfsonmicro.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-platform_device_del only checks the type of the resource in order to
-call release_resource.
+On Wed, Apr 22, 2015 at 07:20:09PM +0900, Chanwoo Choi wrote:
+> On 04/22/2015 06:19 PM, Richard Fitzgerald wrote:
+> > On Wed, Apr 22, 2015 at 02:53:42PM +0900, Chanwoo Choi wrote:
+> >> Hi Richard,
+> >>
+> >>> @@ -1176,6 +1182,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+> >>>  			break;
+> >>>  		}
+> >>>  		break;
+> >>> +	case WM8998:
+> >>> +	case WM1814:
+> >>> +		info->micd_clamp = true;
+> >>> +		info->hpdet_ip = 2;
+> >>
+> >> What is meaning of '2'? I prefer to use the definition for '2'.
+> >>
+> > 
+> > '2' is the version number of the hpdet ip block in silicon. We're already using
+> > it as a raw number '0', '1' or '2' all over extcon-arizona.c so changing it here
+> > would mean making other patches to the file that aren't really part of adding
+> > WM8998 support, so I'd prefer not to change that as a side-effect of adding WM8998.
+> 
+> I think that just you can define following definitions and use HPDET_IP_VER_V2 instead of '2'.
+> 
+> 	#define HPDET_IP_VER_V0		0
+> 	#define HPDET_IP_VER_V1		1
+> 	#define HPDET_IP_VER_V2		2
+> 
 
-On the other hand, platform_device_add calls insert_resource for any
-resource that has a parent.
+Can we deal with that as a separate patch from this series? Like I said,
+the code already uses '0' '1' and '2' for the existing codecs so making a
+change to use #define means patching the code for the other codecs. That
+is not part of adding WM8998 support and I don't like patches that make
+unexpected extra side-effect changes that are not relevant to the actual
+functionality being added by the patch. It's specially annoying when
+cherry-picking or reverting those patches if they included some extra
+code change.
 
-Make both code branches balanced.
+If we can get this series submitted I can look at making a later patch
+to improve readbility, but since this really is just a version number I
+think it would be enough to rename the variable to hpdet_ip_version rather
+than effectively doing #define TWO 2
 
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/base/platform.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index ebf034b..6028681 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -341,19 +341,23 @@ int platform_device_add(struct platform_device *pdev)
- 
- 	for (i = 0; i < pdev->num_resources; i++) {
- 		struct resource *p, *r = &pdev->resource[i];
-+		unsigned long type = resource_type(r);
- 
- 		if (r->name == NULL)
- 			r->name = dev_name(&pdev->dev);
- 
-+		if (!(type == IORESOURCE_MEM || type == IORESOURCE_IO))
-+			continue;
-+
- 		p = r->parent;
- 		if (!p) {
--			if (resource_type(r) == IORESOURCE_MEM)
-+			if (type == IORESOURCE_MEM)
- 				p = &iomem_resource;
--			else if (resource_type(r) == IORESOURCE_IO)
-+			else if (type == IORESOURCE_IO)
- 				p = &ioport_resource;
- 		}
- 
--		if (p && insert_resource(p, r)) {
-+		if (insert_resource(p, r)) {
- 			dev_err(&pdev->dev, "failed to claim resource %d\n", i);
- 			ret = -EBUSY;
- 			goto failed;
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
