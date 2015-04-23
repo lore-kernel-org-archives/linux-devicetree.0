@@ -1,83 +1,37 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] coresight: Add support for Juno platform
-Date: Thu, 23 Apr 2015 07:41:39 -0600
-Message-ID: <CANLsYkzbKiCyU5ZYknTF6hzkPAbz2oMYaW3m8Xa6=W67w_N_EA@mail.gmail.com>
-References: <1429742802-13089-1-git-send-email-mathieu.poirier@linaro.org>
-	<20150423092032.GA16238@leverpostej>
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] of/platform: Use platform_device interface
+Date: Thu, 23 Apr 2015 15:49:59 +0200
+Message-ID: <CAPybu_1wn-XaySHZ4Bhu9ZwLpetmcGm7N8Qm59O09f=E-2bbCQ@mail.gmail.com>
+References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1429719261-18024-5-git-send-email-ricardo.ribalda@gmail.com>
+ <CAL_JsqKYkNyfY+4RPY=FD1=wBxc2EJXaSsJ8D+0T84JK_65E4Q@mail.gmail.com> <CAPybu_3Ej2ecFDTiJVL9TfE=ZLFN2wLKE_nFL2WjMQtk+4LO_A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150423092032.GA16238@leverpostej>
+In-Reply-To: <CAPybu_3Ej2ecFDTiJVL9TfE=ZLFN2wLKE_nFL2WjMQtk+4LO_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 April 2015 at 03:20, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Matthieu,
+Hello Rob
+
+On Thu, Apr 23, 2015 at 9:28 AM, Ricardo Ribalda Delgado
+<ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
->> +     main_funnel@20040000 {
->> +             compatible = "arm,coresight-funnel", "arm,primecell";
->> +             reg = <0 0x20040000 0 0x1000>;
->> +
->> +             clocks = <&soc_smc50mhz>;
->> +             clock-names = "apb_pclk";
->> +             ports {
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +
->> +                     port@0 {
->> +                             reg = <0>;
->> +                             main_funnel_out_port: endpoint {
->> +                                     remote-endpoint =
->> +                                             <&etf_in_port>;
->> +                             };
->> +                     };
->> +
->> +                     port@1 {
->> +                             reg = <0>;
->> +                             main_funnel_in_port0: endpoint {
->> +                                     slave-mode;
->> +                                     remote-endpoint =
->> +                                                     <&A57_funnel_out_port>;
->> +                             };
->> +                     };
->> +
->> +                     port@2 {
->> +                             reg = <1>;
->> +                             main_funnel_in_port1: endpoint {
->> +                                     slave-mode;
->> +                                     remote-endpoint = <&A53_etm0_out_port>;
->> +                             };
->> +                     };
->
-> What's going on with these reg properties? They aren't matched with
-> their nodes' unit-addresses, and the same reg is reused by multiple
-> nodes. That doesn't make sense to me.
->
-> Is the mismatch deliberate (against DT conventions), or is this
-> mistaken?
+> I think it can also use platform_device_add. I will prepare a patch to
+> finally remove of_device_add()
 
-Thanks for the review.
+I will post right away an updated version of this patchset, and then I
+will prepare another one to remove of_device_add() completely. I
+already have two patches, but I have to figure out a proper way to
+test it.
 
-Coresight blocks have input and output ports and I use (and used [1])
-the reg property to label the physical ports as found on device
-itself.  Above, "port@0" doesn't have a "slave-mode" property and as
-such is output port "0".
-
-"port@1" and "port@2" have a "slave-mode" property and thus are input
-port "0" and "1", as indicated by their reg properly.
-
-[1]. http://lxr.free-electrons.com/source/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts#L426
-
-Mathieu
-
->
-> Likewise for the other funnels.
+Thanks!
 
 
->
-> Mark
+-- 
+Ricardo Ribalda
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
