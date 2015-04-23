@@ -1,105 +1,66 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Thu, 23 Apr 2015 13:48:32 -0500
-Message-ID: <CAL_JsqLyoEOw-Xzr2_QC-qbVW50CBEintD4hAtiY=_xwR5EBgw@mail.gmail.com>
-References: <1426573821-1937-1-git-send-email-lho@apm.com> <1426573821-1937-2-git-send-email-lho@apm.com>
- <1426573821-1937-3-git-send-email-lho@apm.com> <1426573821-1937-4-git-send-email-lho@apm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v8 2/4] ARM: sunxi: dt: Add DT bindings
+ documentation for SUNXI Security System
+Date: Thu, 23 Apr 2015 21:35:38 +0200
+Message-ID: <20150423193538.GF28007@lukather>
+References: <1429771523-2936-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1429771523-2936-3-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1426573821-1937-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XIiC+We3v3zHqZ6Z"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE4V4WUQKGQE4V2K2IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1429771523-2936-3-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2015 at 1:30 AM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
-> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
->
-> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+--XIiC+We3v3zHqZ6Z
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Apr 23, 2015 at 08:45:21AM +0200, LABBE Corentin wrote:
+> This patch adds documentation for Device-Tree bindings for the Security System cryptographic accelerator driver.
+> 
+> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   82 ++++++++++++++++++++
->  1 files changed, 82 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->
-> diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>  Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
 > new file mode 100644
-> index 0000000..db8c1c4
+> index 0000000..a566803
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
-> @@ -0,0 +1,82 @@
-> +* APM X-Gene SoC EDAC nodes
-> +
-> +EDAC nodes are defined to describe on-chip error detection and correction.
-> +There are four types of EDAC:
-> +
-> +  memory controller    - Memory controller
-> +  PMD (L1/L2)          - Processor module unit (PMD) L1/L2 cache
-> +  L3                   - CPU L3 cache
-> +  SoC                  - SoC IP such as SATA, Ethernet, and etc
-> +
-> +The following section describes the memory controller DT node binding.
+> +++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+> @@ -0,0 +1,9 @@
+> +* Allwinner Security System found on A20 SoC
 > +
 > +Required properties:
-> +- compatible           : Shall be "apm,xgene-edac-mc".
-> +- reg                  : First resource shall be the PCP resource.
-> +                         Second resource shall be the CSW resource.
-> +                         Third resource shall be the MCB-A resource.
-> +                         Fourth resource shall be the MCB-B resource.
-> +                         Fifth resource shall be the MCU resource.
-> +- interrupts            : Interrupt-specifier for MCU error IRQ(s).
-> +
-> +The following section describes the L1/L2 DT node binding.
-> +
-> +- compatible           : Shall be "apm,xgene-edac-pmd".
-> +- reg                  : First resource shall be the PCP resource.
-> +                         Second resource shall be the PMD resource.
-> +                         Third resource shall be the PMD efuse resource.
-> +- interrupts            : Interrupt-specifier for PMD error IRQ(s).
-> +
-> +The following section describes the L3 DT node binding.
-> +
-> +- compatible           : Shall be "apm,xgene-edac-l3".
-> +- reg                  : First resource shall be the PCP resource.
-> +                         Second resource shall be the L3 resource.
-> +- interrupts            : Interrupt-specifier for L3 error IRQ(s).
-> +
-> +The following section describes the SoC DT node binding.
-> +
-> +- compatible           : Shall be "apm,xgene-edac-soc"".
-> +- reg                  : First resource shall be the PCP resource.
-> +                         Second resource shall be the SoC resource.
-> +                         Third resource shall be the register bus resource.
-> +- interrupts           : Interrupt-specifier for SoC error IRQ(s).
-> +
-> +Example:
-> +       edacmc0: edacmc0@7e800000 {
-> +               compatible = "apm,xgene-edac-mc";
-> +               reg = <0x0 0x78800000 0x0 0x1000>,
-> +                     <0x0 0x7e200000 0x0 0x1000>,
-> +                     <0x0 0x7e700000 0x0 0x1000>,
-> +                     <0x0 0x7e720000 0x0 0x1000>,
-> +                     <0x0 0x7e800000 0x0 0x1000>;
-> +               interrupts = <0x0 0x20 0x4>,
-> +                            <0x0 0x21 0x4>;
-> +       };
-> +
-> +       edacl3: edacl3@7e600000 {
-> +               compatible = "apm,xgene-edac-l3";
-> +               reg = <0x0 0x78800000 0x0 0x1000>,
+> +- compatible : Should be "allwinner,sun7i-a20-crypto".
+> +- reg: Should contain the Security System register location and length.
+> +- interrupts: Should contain the IRQ line for the Security System.
+> +- clocks : A phandle to the functional clock node of the Security System module
 
-You are defining overlapping resources. Don't do that.
+You actually need two clock references, not just a single phandle.
 
-It looks to me like you are creating nodes based on driver functions,
-not h/w blocks. I would expect to see a memory controller node which
-contains ECC related registers. If you have blocks with multiple
-unrelated functions, then you should be using syscon to divide up the
-functions to different subsystems like EDAC.
+> +- clock-names : Name of the functional clock, should be "ahb" and "mod".
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And we usually have an example after too.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--XIiC+We3v3zHqZ6Z--
