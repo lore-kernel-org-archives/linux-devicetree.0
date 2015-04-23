@@ -1,167 +1,76 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v2 3/5] ata: add Broadcom AHCI SATA3 driver for STB chips
-Date: Thu, 23 Apr 2015 09:46:11 -0700
-Message-ID: <20150423164611.GZ32500@ld-irv-0074>
-References: <1429757950-28789-1-git-send-email-computersforpeace@gmail.com>
- <1429757950-28789-4-git-send-email-computersforpeace@gmail.com>
- <3096499.KSW6zqWKEA@wuerfel>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] base/platform: Continue on insert_resource() error
+Date: Thu, 23 Apr 2015 18:54:41 +0200
+Message-ID: <20150423165439.GA2455@ulmo.nvidia.com>
+References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1429719261-18024-4-git-send-email-ricardo.ribalda@gmail.com>
+ <20150422164457.GI20701@google.com>
+ <CAPybu_3Wfngh_gh_pa33dWF_nfUh0He1GKe26kJ49w-Sdn604Q@mail.gmail.com>
+ <20150423132637.GK20701@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150423132637.GK20701-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3096499.KSW6zqWKEA@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, bcm-kernel-feedback-list@broadcom.com
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 23, 2015 at 09:43:55AM +0200, Arnd Bergmann wrote:
-> On Wednesday 22 April 2015 19:59:08 Brian Norris wrote:
-> > Pretty straightforward driver, using the nice library-ization of the
-> > generic ahci_platform driver.
-> > 
-> > Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> 
-> There is an alternative way to do this, by writing a separate phy driver
-> for drivers/phy and using the generic ahci-platform driver. Have you
-> considered that as well? I don't know which approach works better here,
-> but in general we should try to have the generic driver handle as many
-> chips as possible.
+On Thu, Apr 23, 2015 at 08:26:37AM -0500, Bjorn Helgaas wrote:
+> On Thu, Apr 23, 2015 at 09:55:13AM +0200, Ricardo Ribalda Delgado wrote:
+> > Hi Bjorn:
+> >=20
+> > On Wed, Apr 22, 2015 at 6:44 PM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> >=20
+> > > Usual style for referencing a commit is "(see 02bbde7849e6 ('Revert "=
+of:
+> > > use platform_device_add"'))".
+> >=20
+> > Do you make that reference manually or there is a magic git command
+> > for printing it in that style?
+>=20
+> I used to do it mostly by hand, but thanks to your prompting, I fiddled
+> around and came up with this alias:
+>=20
+> gsr is aliased to `git show -s --abbrev-commit --abbrev=3D12 --pretty=3Df=
+ormat:"%h (\"%s\")%n"'
 
-Did you read v1 [1]? There was discussion all over the place, with each
-person recommending their own favorite Right Way. It was suggested in
-various ways that code be moved into drivers/ata/ or drivers/phy/ at
-various points. In the end, I couldn't follow all suggestions and
-instead came up with this:
+There's also git log --format=3Dfixes, though that includes the "Fixes: "
+prefix. That works with git show as well.
 
-1. SATA_TOP_CTRL deals with AHCI-related registers and some high-level
-PHY bits (power on or off the PHY).
-2. There is another discrete bit of hardware that handles analog aspects
-of the PHY
-3. The device tree should describe hardware, not how software wants to
-use it
-4. Software should avoid sharing register ranges
+Thierry
 
-So, this suggested we should have two DT nodes; one for #1 and one for
-#2. It seemed natural that because #1 modifies the AHCI core (e.g., the
-endianness of it), that it belongs in a 'SATA' driver. So I use
-libahci_platform instead of using the generic driver. The bits from #2
-go in drivers/phy/.
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature
 
-So we have a PHY driver, but it doesn't cover everything. Did you want
-me to write a second PHY driver?? I'm not sure how that'd work...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> > diff --git a/drivers/ata/sata_brcmstb.c b/drivers/ata/sata_brcmstb.c
-> > new file mode 100644
-> > index 000000000000..ab8d2261fa96
-> > --- /dev/null
-> > +++ b/drivers/ata/sata_brcmstb.c
-> > @@ -0,0 +1,285 @@
-> > +/*
-> > + * Broadcom SATA3 AHCI Controller Driver
-> 
-> Is this AHCI or not? Most AHCI drivers are called ahci_*.c, not sata_*.c
+iQIcBAABCAAGBQJVOSPMAAoJEN0jrNd/PrOh/d0QAKjybxruo4v/zDm4pbwGvzvY
+eCsA7pCmQWzxMNYxeAXAqlO60xK4BAyoAAgHqBBHqwbCk9PN4EvWp5FzwlnMX4WN
+aAfYFMaF8mVymvGEVgOfH7qmluSaIQ1pgWvPdHAYasHhbXvVuIynudX8EYM9BEc/
+q4gkkEl8UpxHuB/xSJ4NLwQGBDuoFVX7P7Eifg03SGcjBAqNUEPvTLoUNGX2C3nT
+dth35MalMOpmQer09cH/jocPgbR0iXCcQkgobT6N7FHsU65TDE4ZlChRVr9/5569
+npjYM13lZU886E8vrn1D5znsNWQxgTJ41+xGqyKFGbulkZaoEqP0Yh9PP9nqo3+/
+uPJkJKs2EXICEcB70T4Q0LyuB7LLTwemkQOpQM3afceGHDPGwDj129w4Bw/X/M+D
+GQ38fOSsnJ4gpULaZOI+jzJURECVpXPLkgDBrzitKNjCc4EXl7uM51ytt1O+YyK/
+9H0GwWD6QD7LRK1XPMynFZlw1J0tPHpPj8vsj12UihsZZ+DqCQqFK9TO/vc07Ovu
+15OFeA7zxrSLEI8ewG8bzDK4wc7Vlb+48OLVhH9pkMAPEpC6tzM+9eoPuCmgRIMT
+atOVOisCbJ3U65eGw7/18IZkJCEjQqbhFyv6xNOj+TpBHllAh2XEMhAQoZHY+ZGo
+YpABqCf8opsRBWOBQdoS
+=9j/s
+-----END PGP SIGNATURE-----
 
-It is AHCI. I can rename if necessary...
-
-If you're wondering about the comment there, SATA3 is left to indicate
-the difference between earlier (non-AHCI) SATA cores that only supported
-up to Gen2 SATA.
-
-> > +#ifdef __BIG_ENDIAN
-> > +#define DATA_ENDIAN			 2 /* AHCI->DDR inbound accesses */
-> > +#define MMIO_ENDIAN			 2 /* CPU->AHCI outbound accesses */
-> > +#else
-> > +#define DATA_ENDIAN			 0
-> > +#define MMIO_ENDIAN			 0
-> > +#endif
-> 
-> Is this for MIPS or ARM based chips or both?
-
-Both. (This particular iteration of the driver was only tested on
-ARM, but this particular code has been the same on MIPS.)
-
-> ARM SoCs should never care
-> about the endianess of the CPU,
-
-Why do you say that? What makes ARM different than MIPS here? If
-somebody were using ARM BE, then they would (just like in MIPS) need to
-configure our AHCI core to pretend like it's in LE mode, as that's what
-libahci.c assumes.
-
-> so I'd expect something like
-> 
-> #if defined(__BIG_ENDIAN) && defined(CONFIG_MIPS)
-> /* mips big-endian stuff */
-> #else
-> /* all other combinations */
-> #endif
-> 
-> > +static void brcm_sata_phy_enable(struct brcm_ahci_priv *priv, int port)
-> > +{
-> > +	void __iomem *phyctrl = priv->top_ctrl + SATA_TOP_CTRL_PHY_CTRL +
-> > +				(port * SATA_TOP_CTRL_PHY_OFFS);
-> > +	void __iomem *p;
-> > +	u32 reg;
-> > +
-> > +	/* clear PHY_DEFAULT_POWER_STATE */
-> > +	p = phyctrl + SATA_TOP_CTRL_PHY_CTRL_1;
-> > +	reg = __raw_readl(p);
-> > +	reg &= ~SATA_TOP_CTRL_1_PHY_DEFAULT_POWER_STATE;
-> > +	__raw_writel(reg, p);
-> 
-> Similarly, the use of __raw_readl() is broken on ARM here and won't
-> work on big-endian kernels. Better use a driver specific helper
-> function that does the right thing based on the architecture and
-> endianess. You can use the same conditional as above and do
-> 
-> #if defined(__BIG_ENDIAN) && defined(CONFIG_MIPS)
-> 
-> static inline brcm_sata_phy_read(struct brcm_ahci_phy *priv, int port int reg)
-> {
-> 	void __iomem *phyctrl = priv->regs;
-> 
-> 	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(__BIG_ENDIAN))
-> 		return __raw_readl(regs->reg);
-> 
-> 	return readl_relaxed(regs->reg);
-> }
-
-Huh? I'm fine with a driver-specific helper to abstract this out, but
-why the MIPS fiddling? I'm fairly confident that in *all*
-configurations, this piece of the IP is wired up to work in native
-endianness, so it should never be doing an endian swap. The
-readl_relaxed() you're adding looks like it would just break the
-(theoretical) ARM BE case.
-
-I understand that you don't like bare __raw_{read,write}l(), but some IP
-is just wired this way.
-
-> > +static const struct of_device_id ahci_of_match[] = {
-> > +	{.compatible = "brcm,sata3-ahci"},
-> > +	{},
-> 
-> This sounds awefully generic. Can you guarantee that no part of Broadcom
-> has produced another ahci-like SATA3 controller in the past, or will
-> have one in the future?
-
-I know this controller is used by several chips across Broadcom, though
-I can't guarantee there are not others at the moment. I can look into
-that.
-
-> If not, please be more specific here, and use the internal specifier for
-> this version of the IP block. If you can't find out what that is, use the
-> identifier for the oldest chip you know that has it.
-
-The binding documentation already notes "brcm,bcm7445-ahci", but we just
-don't bind against it here yet, since that hasn't been necessary. I
-suppose I can include the revision number, though; I forgot this block
-had one. (EDIT: in checking two random chips, I see that two cores both
-say v0.1 but have slightly different register layouts. Chip guys suck
-sometimes. So I'll stick to chip-based matching instead.)
-
-Brian
-
-[1] https://lkml.org/lkml/2015/3/18/940
+--SLDf9lqlvOQaIe6s--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
