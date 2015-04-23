@@ -1,59 +1,35 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 7/8] ASoC: wm8998: Initial WM8998 codec driver
-Date: Thu, 23 Apr 2015 18:54:55 +0100
-Message-ID: <20150423175455.GY22845@sirena.org.uk>
-References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1429619636-25478-8-git-send-email-rf@opensource.wolfsonmicro.com>
- <20150422110030.GQ22845@sirena.org.uk>
- <20150423142823.GB17323@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TX8FgYyhBart40Z+"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150423142823.GB17323@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V3 0/4] i2c: busses: xgene: I2C proxy driver for X-Gene
+Date: Thu, 23 Apr 2015 11:07:06 -0700
+Message-ID: <1429812430-31631-1-git-send-email-fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: patches@apm.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+This is a proxy I2C driver for APM X-Gene SoC. It uses the mailbox driver
+to tunnel i2c transactions via the SLIMpro processor.
 
---TX8FgYyhBart40Z+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+V3 Change:
+	- Add ACPI support
+	- Fix previous comments.
 
-On Thu, Apr 23, 2015 at 03:28:23PM +0100, Richard Fitzgerald wrote:
+Feng Kan (4):
+  i2c: busses: add SLIMpro I2C device driver on APM X-Gene platform
+  i2c: busses: xgene: add acpi support for i2c xgene SLIMpro driver
+  Documentation: i2c: Add APM X-Gene platform SLIMpro I2C driver
+    documentation
+  arm64: dts: add proxy I2C device driver on APM X-Gene platform
 
-> I'm not sure this is really a routing or widget problem. Problem is that
-> if the muxed inputs are analogue we need to provide separate ALSA controls
-> for the left and right mux because it is allowed to use them as two
-> independant mono channels with separate muxing. But if they are
-> configured as digital the mux controls are ganged so must be set the
+ .../devicetree/bindings/i2c/i2c-xgene-slimpro.txt  |  15 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   5 +
+ drivers/i2c/busses/Kconfig                         |   9 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-xgene-slimpro.c             | 469 +++++++++++++++++++++
+ 5 files changed, 499 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-xgene-slimpro.txt
+ create mode 100644 drivers/i2c/busses/i2c-xgene-slimpro.c
 
-I understand this, it's what prompted my comment.
-
-> same. I don't feel good about registering a single mux control if its
-> digital and two if its analogue because that means the codec's control
-> list depends on a pdata option. I could implement the control pair
-
-I don't see that as a problem, it's not like the disallowed options
-would ever meaningfully exist for users on an affected system.  Why do
-you see this as a problem?
-
---TX8FgYyhBart40Z+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVOTHuAAoJECTWi3JdVIfQPscH/itnC07LTHlo6gvYaA46XSug
-4wry1mJnZLiKa/RzlgDJ61FJ2njbelIGZ6GN5Z5Ryr5qzjjnh24SvhXIjlOTLqII
-Ve4r6Ngtjxqz/fjdlNcwIxAW8+9SYcJhrWZy5Qj0ghBA+7VECR9PS1I/z+yAGGr2
-Xe4IQUsUaRINY6/NdryzCp9gnKujaCHDAuTnt/t5JNB6D0H5SOLB0cp+Mvq/AeqL
-cf/hlD65ZC9dXGrbGqv8uuDcySma0/AjFL+6z11OddD7ZowZbT3bH+69nyZLEtzO
-YFpK6fWMKossCBw0Y1fpZwyZlZm8HlYs438S+64uA9ztyJmOUwJdRadqftK2MRk=
-=y6ka
------END PGP SIGNATURE-----
-
---TX8FgYyhBart40Z+--
+-- 
+1.9.1
