@@ -1,47 +1,50 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v8 2/4] ARM: sunxi: dt: Add DT bindings
- documentation for SUNXI Security System
-Date: Thu, 23 Apr 2015 08:45:21 +0200
-Message-ID: <1429771523-2936-3-git-send-email-clabbe.montjoie@gmail.com>
-References: <1429771523-2936-1-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH v3 4/4] of/platform: Use platform_device interface
+Date: Thu, 23 Apr 2015 09:28:39 +0200
+Message-ID: <CAPybu_3Ej2ecFDTiJVL9TfE=ZLFN2wLKE_nFL2WjMQtk+4LO_A@mail.gmail.com>
+References: <1429719261-18024-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1429719261-18024-5-git-send-email-ricardo.ribalda@gmail.com> <CAL_JsqKYkNyfY+4RPY=FD1=wBxc2EJXaSsJ8D+0T84JK_65E4Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBFFK4KUQKGQERCS2XGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1429771523-2936-1-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKYkNyfY+4RPY=FD1=wBxc2EJXaSsJ8D+0T84JK_65E4Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jakub Sitnicki <jsitnicki@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mike Travis <travis@sgi.com>, Thierry Reding <treding@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the Security System cryptographic accelerator driver.
+Hello Rob
 
-Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+On Wed, Apr 22, 2015 at 6:25 PM, Rob Herring <robherring2@gmail.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-new file mode 100644
-index 0000000..a566803
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-@@ -0,0 +1,9 @@
-+* Allwinner Security System found on A20 SoC
-+
-+Required properties:
-+- compatible : Should be "allwinner,sun7i-a20-crypto".
-+- reg: Should contain the Security System register location and length.
-+- interrupts: Should contain the IRQ line for the Security System.
-+- clocks : A phandle to the functional clock node of the Security System module
-+- clock-names : Name of the functional clock, should be "ahb" and "mod".
-+
+>> This patch, replaces of_device_add() with platform_device_data().
+>
+> This doesn't match the change.
+
+Thanks for catching it up. Will fix it and resend
+
+>> -       if (of_device_add(dev) != 0) {
+>> +       if (platform_device_add(dev) != 0) {
+>
+> Can't we now remove of_device_add?
+
+Now it is only used by ibmebus
+
+
+ricardo@neopili:~/linux-upstream$ git grep of_device_add
+arch/powerpc/kernel/ibmebus.c:  ret = of_device_add(dev);
+drivers/of/device.c:int of_device_add(struct platform_device *ofdev)
+drivers/of/device.c:    return of_device_add(pdev);
+include/linux/of_device.h:extern int of_device_add(struct
+platform_device *pdev);
+
+I think it can also use platform_device_add. I will prepare a patch to
+finally remove of_device_add()
+
+Thanks!
+
+
+
+
 -- 
-2.0.5
+Ricardo Ribalda
