@@ -1,74 +1,59 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun5i: Utoo P66 add uart node and aliases
-Date: Thu, 23 Apr 2015 19:11:33 +0200
-Message-ID: <553927C5.7090809@redhat.com>
-References: <1429807008-7041-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/8] ASoC: wm8998: Initial WM8998 codec driver
+Date: Thu, 23 Apr 2015 18:54:55 +0100
+Message-ID: <20150423175455.GY22845@sirena.org.uk>
+References: <1429619636-25478-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1429619636-25478-8-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20150422110030.GQ22845@sirena.org.uk>
+ <20150423142823.GB17323@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBS6P4SUQKGQEORJHCUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1429807008-7041-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TX8FgYyhBart40Z+"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150423142823.GB17323@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, ckeepax@opensource.wolfsonmicro.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 23-04-15 18:36, Hans de Goede wrote:
-> Like on most non devel-boards it is still possible to get an uart on
-> the Utoo P66 tablet by soldering some wires to the right pads on the PCB,
-> add support for this to the dts, like we do with all sunxi boards.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+--TX8FgYyhBart40Z+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This one is no good, the uart cannot be used as it shares a pin with the
-lcd-panel, self-NACK.
+On Thu, Apr 23, 2015 at 03:28:23PM +0100, Richard Fitzgerald wrote:
 
-Regards,
+> I'm not sure this is really a routing or widget problem. Problem is that
+> if the muxed inputs are analogue we need to provide separate ALSA controls
+> for the left and right mux because it is allowed to use them as two
+> independant mono channels with separate muxing. But if they are
+> configured as digital the mux controls are ganged so must be set the
 
-Hans
+I understand this, it's what prompted my comment.
 
-> ---
->   arch/arm/boot/dts/sun5i-a13-utoo-p66.dts | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-> index 00bdf28..bb8d61a 100644
-> --- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-> +++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-> @@ -57,6 +57,14 @@
->   	model = "Utoo P66";
->   	compatible = "utoo,p66", "allwinner,sun5i-a13";
->
-> +	aliases {
-> +		serial0 = &uart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->   	i2c_lcd: i2c@0 {
->   		/* The lcd panel i2c interface is hooked up via gpios */
->   		compatible = "i2c-gpio";
-> @@ -238,6 +246,12 @@
->   	status = "okay";
->   };
->
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1_pins_b>;
-> +	status = "okay";
-> +};
-> +
->   &usb_otg {
->   	dr_mode = "otg";
->   	status = "okay";
->
+> same. I don't feel good about registering a single mux control if its
+> digital and two if its analogue because that means the codec's control
+> list depends on a pdata option. I could implement the control pair
+
+I don't see that as a problem, it's not like the disallowed options
+would ever meaningfully exist for users on an affected system.  Why do
+you see this as a problem?
+
+--TX8FgYyhBart40Z+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVOTHuAAoJECTWi3JdVIfQPscH/itnC07LTHlo6gvYaA46XSug
+4wry1mJnZLiKa/RzlgDJ61FJ2njbelIGZ6GN5Z5Ryr5qzjjnh24SvhXIjlOTLqII
+Ve4r6Ngtjxqz/fjdlNcwIxAW8+9SYcJhrWZy5Qj0ghBA+7VECR9PS1I/z+yAGGr2
+Xe4IQUsUaRINY6/NdryzCp9gnKujaCHDAuTnt/t5JNB6D0H5SOLB0cp+Mvq/AeqL
+cf/hlD65ZC9dXGrbGqv8uuDcySma0/AjFL+6z11OddD7ZowZbT3bH+69nyZLEtzO
+YFpK6fWMKossCBw0Y1fpZwyZlZm8HlYs438S+64uA9ztyJmOUwJdRadqftK2MRk=
+=y6ka
+-----END PGP SIGNATURE-----
+
+--TX8FgYyhBart40Z+--
