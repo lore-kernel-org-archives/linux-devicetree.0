@@ -1,86 +1,44 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 1/3] of: Allow OF to be enabled if COMPILE_TEST to increase coverage
-Date: Thu, 23 Apr 2015 21:28:46 +0300
-Message-ID: <D499921A-70D8-48AA-9125-1C0D29270736@konsulko.com>
-References: <1428245965-19618-1-git-send-email-geert@linux-m68k.org> <1428245965-19618-2-git-send-email-geert@linux-m68k.org> <CAL_JsqLQrNEpqWnqP4uDV0x87wERLC50FO-06fYBwLbyYsChpQ@mail.gmail.com> <0C5158C3-2BD3-4EC6-B1AC-B669F30B4C34@konsulko.com> <CAL_JsqKZQMquF+kBACp90naLDvng3npU0gGgiaxp3VVKDFNcZw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKZQMquF+kBACp90naLDvng3npU0gGgiaxp3VVKDFNcZw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] Add support for BMC150 magnetometer
+Date: Thu, 23 Apr 2015 21:34:04 +0300
+Message-ID: <1429814048-22808-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This is the second version for adding support for Bosch BMC150
+magnetometer. It mostly contains fixes suggested by Jonathan.
 
-> On Apr 23, 2015, at 21:22 , Rob Herring <robherring2@gmail.com> wrote=
-:
->=20
-> On Thu, Apr 23, 2015 at 7:03 AM, Pantelis Antoniou
-> <pantelis.antoniou@konsulko.com> wrote:
->> Hi Rob,
->>=20
->>> On Apr 6, 2015, at 16:13 , Rob Herring <robherring2@gmail.com> wrot=
-e:
->>>=20
->>> +Pantelis
->>>=20
->>> On Sun, Apr 5, 2015 at 9:59 AM, Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->>>> Currently the OF configuration symbol is explicitly selected on
->>>> architectures that support device trees and/or Open Firmware.
->>>> However, there's no technical reason to limit the device tree
->>>> infrastructure to these architectures. Hence allow OF to be enable=
-d when
->>>> compile testing, to increase compile coverage.
->>>>=20
->>>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>>> ---
->>>> drivers/of/Kconfig | 6 +++++-
->>>> 1 file changed, 5 insertions(+), 1 deletion(-)
->>>>=20
->>>> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
->>>> index 7bcaeec876c0c3a5..4c98f14694458794 100644
->>>> --- a/drivers/of/Kconfig
->>>> +++ b/drivers/of/Kconfig
->>>> @@ -2,7 +2,11 @@ config DTC
->>>>       bool
->>>>=20
->>>> config OF
->>>> -       bool
->>>> +       bool "Device Tree and Open Firmware support" if COMPILE_TE=
-ST
->>>=20
->>> Actually, I think we want to just make this always visible. There a=
-re
->>> now use cases with overlays where we may want to enable DT even if =
-the
->>> architecture is not booting with DT. However, there may be more wor=
-k
->>> needed to do that.
->>>=20
->>=20
->> We have to decouple the notion of CONFIG_OF of the following two dif=
-ferent things.
->>=20
->> 1. I=E2=80=99m booting using a device tree blob.
->> 2. I=E2=80=99m using the in-kernel live device tree to represent my =
-hardware device state.
->>=20
->> so CONFIG_OF_DTB_BLOB for the first case, and CONFIG_OF for the seco=
-nd.
->>=20
->> Up to now we bundle those two together.
->=20
-> They are separate already with CONFIG_OF_EARLY_FLATTREE
->=20
+Changes in v2:
+ - renamed IIO_CHAN_INFO_CALIBREPETITIONS to IIO_CHAN_INFO_OVERSAMPLING_RATIO
+ - split the main patch in two patches: one that adds main functionality and
+another that adds oversampling_ratio
+ - fixed driver code and device tree bindings according to Jonathan's review
+ - updated the available sampling frequencies depending on oversampling_ratio
 
-A bit cryptically named, no?
+Irina Tirdea (4):
+  iio: magn: Add support for BMC150 magnetometer
+  iio: magn: bmc150_magn: Add devicetree binding documentation
+  iio: core: Introduce IIO_CHAN_INFO_OVERSAMPLING_RATIO
+  iio: magn: bmc150_magn: add oversampling ratio
 
-> Rob
+ Documentation/ABI/testing/sysfs-bus-iio            |   12 +
+ .../bindings/iio/magnetometer/bmc150_magn.txt      |   22 +
+ drivers/iio/industrialio-core.c                    |    1 +
+ drivers/iio/magnetometer/Kconfig                   |   14 +
+ drivers/iio/magnetometer/Makefile                  |    2 +
+ drivers/iio/magnetometer/bmc150_magn.c             | 1111 ++++++++++++++++++++
+ include/linux/iio/iio.h                            |    1 +
+ 7 files changed, 1163 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+ create mode 100644 drivers/iio/magnetometer/bmc150_magn.c
 
-Regards
+-- 
+1.9.1
 
-=E2=80=94 Pantelis
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
