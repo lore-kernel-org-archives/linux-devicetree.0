@@ -1,108 +1,80 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v4 4/4] base/platform: Remove code duplication
-Date: Thu, 23 Apr 2015 15:58:14 +0200
-Message-ID: <1429797494-29242-5-git-send-email-ricardo.ribalda@gmail.com>
-References: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
+Subject: [PATCH v4 0/4] Fix null pointer deference when calling of_platform_depopulate
+Date: Thu, 23 Apr 2015 15:58:10 +0200
+Message-ID: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429797494-29242-1-git-send-email-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jakub Sitnicki <jsitnicki@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Jiang Liu <jiang.liu@linux.intel.com>, Mike Travis <travis@sgi.com>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Failure path of platform_device_add was almost the same as
-platform_device_del. Refactor same code in a function.
+of_platform_depopulate can lead to a kernel error when calling release_resource()
 
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
----
- drivers/base/platform.c | 60 +++++++++++++++++++++----------------------------
- 1 file changed, 25 insertions(+), 35 deletions(-)
+The reason is that it is trying to release a resource that was not allocated
+via insert_resource()
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 2e7e904..152d84d 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -298,6 +298,25 @@ int platform_device_add_data(struct platform_device *pdev, const void *data,
- }
- EXPORT_SYMBOL_GPL(platform_device_add_data);
- 
-+static void platform_device_cleanout(struct platform_device *pdev, int n_res)
-+{
-+	int i;
-+
-+	if (pdev->id_auto) {
-+		ida_simple_remove(&platform_devid_ida, pdev->id);
-+		pdev->id = PLATFORM_DEVID_AUTO;
-+	}
-+
-+	for (i = 0; i < n_res; i++) {
-+		struct resource *r = &pdev->resource[i];
-+		unsigned long type = resource_type(r);
-+
-+		if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
-+				r->parent)
-+			release_resource(r);
-+	}
-+}
-+
- /**
-  * platform_device_add - add a platform device to device hierarchy
-  * @pdev: platform device we're adding
-@@ -371,23 +390,8 @@ int platform_device_add(struct platform_device *pdev)
- 		 dev_name(&pdev->dev), dev_name(pdev->dev.parent));
- 
- 	ret = device_add(&pdev->dev);
--	if (ret == 0)
--		return ret;
--
--	/* Failure path */
--	if (pdev->id_auto) {
--		ida_simple_remove(&platform_devid_ida, pdev->id);
--		pdev->id = PLATFORM_DEVID_AUTO;
--	}
--
--	while (--i >= 0) {
--		struct resource *r = &pdev->resource[i];
--		unsigned long type = resource_type(r);
--
--		if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
--				r->parent)
--			release_resource(r);
--	}
-+	if (ret)
-+		platform_device_cleanout(pdev, i);
- 
- 	return ret;
- }
-@@ -403,25 +407,11 @@ EXPORT_SYMBOL_GPL(platform_device_add);
-  */
- void platform_device_del(struct platform_device *pdev)
- {
--	int i;
--
--	if (pdev) {
--		device_del(&pdev->dev);
--
--		if (pdev->id_auto) {
--			ida_simple_remove(&platform_devid_ida, pdev->id);
--			pdev->id = PLATFORM_DEVID_AUTO;
--		}
--
--		for (i = 0; i < pdev->num_resources; i++) {
--			struct resource *r = &pdev->resource[i];
--			unsigned long type = resource_type(r);
-+	if (!pdev)
-+		return;
- 
--			if ((type == IORESOURCE_MEM || type == IORESOURCE_IO) &&
--					r->parent)
--				release_resource(r);
--		}
--	}
-+	device_del(&pdev->dev);
-+	platform_device_cleanout(pdev, pdev->num_resources);
- }
- EXPORT_SYMBOL_GPL(platform_device_del);
- 
+of_platform_depopulate()
+      of_platform_device_destroy()
+        platform_device_unregister(platform_device *pdev)
+	  platform_device_del(platform_device *pdev)
+	    for (i = 0; i < pdev->num_resources; i++)
+	    	      release_resource()
+
+of_platform_populate()
+      ...
+      	of_device_alloc()
+	  pdev = platform_device_alloc()
+	  # set pdev->resource, similar to platform_device_add_resources()
+	  of_device_add(platform_device *pdev)
+	    # similar to platform_device_add(), but note there's no
+	    # insert_resource() in this path
+	    device_add(&pdev->dev)
+
+On this patchset:
+
+base/platform has been fixed for an hypothetical condition where parent is
+set but the platform is neither MEM or IO.
+
+Then platform_device_alloc has been modified so it supports of and amba
+devices.
+
+Finally of_device_add has been modified to use platform_device_add().
+
+v1: https://lkml.org/lkml/2015/4/20/435
+
+v2: From: Bjorn Helgaas <bhelgaas@google.com>
+     -Fix caller, not callee
+
+    https://lkml.org/lkml/2015/4/21/99
+    https://lkml.org/lkml/2015/4/21/100
+
+v3: From: Rob Herring <robherring2@gmail.com>
+      - Modify plaform_device_alloc to support of and ambda devices
+
+    https://lkml.org/lkml/2015/4/22/369
+    https://lkml.org/lkml/2015/4/22/370
+    https://lkml.org/lkml/2015/4/22/371
+    https://lkml.org/lkml/2015/4/22/374
+    https://lkml.org/lkml/2015/4/22/373
+
+v4: From: Bjorn Helgaas <bhelgaas@google.com>
+     -Remove WARN() patch
+     -Show conflicting resources
+     -Code Style
+     -Fix descriptions
+
+    From: Rob Herring <robherring2@gmail.com>
+       -Fix descriptions
+
+Ricardo Ribalda Delgado (4):
+  base/platform: Only insert MEM and IO resources
+  base/platform: Continue on insert_resource() error
+  of/platform: Use platform_device interface
+  base/platform: Remove code duplication
+
+ drivers/base/platform.c | 84 ++++++++++++++++++++++++-------------------------
+ drivers/of/platform.c   |  3 +-
+ 2 files changed, 43 insertions(+), 44 deletions(-)
+
 -- 
 2.1.4
