@@ -1,118 +1,239 @@
-From: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH] NFC: trf7970a: Handle extra byte in response to Type 5 RMB commands
-Date: Fri, 24 Apr 2015 10:37:22 -0700
-Message-ID: <1429897042-21430-1-git-send-email-mgreer@animalcreek.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH] bus: omap_l3_noc: Fix master id address decoding for OMAP5
+Date: Fri, 24 Apr 2015 12:54:20 -0500
+Message-ID: <1429898060-51944-1-git-send-email-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The current versions of the trf7970a has an erratum where it returns
-an extra byte in the response to 'Read Multiple Block' (RMB) commands.
-This command is issued to Type 5 tags (i.e., ISO/IEC 15693 tags) by
-the neard daemon.
+The L3 Error handling on OMAP5 for the most part is very similar
+to that of OMAP4, and had leveraged common data structures and
+register layout definitions so far. Upon closer inspection, there
+are a few minor differences causing an incorrect decoding and
+reporting of the master NIU upon an error:
 
-To handle this, define a new Device Tree property,
-'t5t-rmb-extra-byte-quirk', which indicates that the associated
-trf7970a device has this erratum.  The trf7970a device driver
-will then ensure that the response length to RMB commands is
-reduced by one byte (for devices with the erratum).
+  1. The L3_TARG_STDERRLOG_MSTADDR.STDERRLOG_MSTADDR occupies
+     11 bits on OMAP5 as against 8 bits on OMAP4, with the master
+     NIU connID encoded in the 6 MSBs of the STDERRLOG_MSTADDR
+     field.
+  2. The CLK3 FlagMux component has 1 input source on OMAP4 and 3
+     input sources on OMAP5. The common DEBUGSS source is at a
+     different input on each SoC.
 
-Signed-off-by: Mark A. Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Fix the above issues by using a OMAP5-specific compatible property
+and using SoC-specific data where there are differences.
+
+Cc: Nishanth Menon <nm@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++++
- drivers/nfc/trf7970a.c                             | 23 ++++++++++++++++++----
- 2 files changed, 23 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-index 7c89ca2..32b35a0 100644
---- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-@@ -18,6 +18,9 @@ Optional SoC Specific Properties:
-   "IRQ Status Read" erratum.
- - en2-rf-quirk: Specify that the trf7970a being used has the "EN2 RF"
-   erratum.
-+- t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
-+  where an extra byte is returned by Read Multiple Block commands issued
-+  to Type 5 tags.
+Some validation traces by adding couple of traces and intentionally
+creating L3 errors from DSP & IPU by accessing invalid Timers
+
+Before Patch:
+OMAP4 [Correct]
+IPU accessing Timer4
+[   46.548095] flagmux = 1, err_reg = 0x8000 err_src = 0xf
+[   46.553344] mstaddr = 0x44 mask = 0xfc masterid = 0x11
+[   46.553955] ------------[ cut here ]------------
+[   46.563171] WARNING: CPU: 0 PID: 4 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
+[   46.564941] 44000000.ocp:L3 Custom Error: MASTER DucatiM3 TARGET L4PER3 (Idle): Data Access in User mode during 
+Functional access
+
+DSP accessing Timer5:
+[  114.018524] flagmux = 0, err_reg = 0x4 err_src = 0x2
+[  114.023498] mstaddr = 0x20 mask = 0xfc masterid = 0x8
+[  114.028564] ------------[ cut here ]------------
+[  114.033233] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
+[  114.042572] 44000000.ocp:L3 Custom Error: MASTER DSP TARGET ABE (Idle): Data Access in Supervisor mode during Functional 
+access
+
+OMAP5 [Incorrect]
+IPU accessing Timer4:
+[   29.579306] flagmux = 1, err_reg = 0x8000 err_src = 0xf
+[   29.584550] mstaddr = 0x220 mask = 0xfc masterid = 0x8
+[   29.589705] ------------[ cut here ]------------
+[   29.594345] WARNING: CPU: 0 PID: 61 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
+[   29.603774] 44000000.ocp:L3 Custom Error: MASTER DSP TARGET L4PER3 (Idle): Data Access in User mode during Functional 
+access
+
+DSP accessing Timer5:
+[   21.347105] flagmux = 0, err_reg = 0x4 err_src = 0x2
+[   21.352091] mstaddr = 0x100 mask = 0xfc masterid = 0x0
+[   21.357250] ------------[ cut here ]------------
+[   21.361896] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
+[   21.371242] 44000000.ocp:L3 Custom Error: MASTER MPU TARGET ABE (Idle): Data Access in Supervisor mode during Functional 
+access
+
+After Patch:
+OMAP4 same as above
+
+OMAP5 [Corrected]
+IPU accessing Timer4
+[   67.896693] flagmux = 1, err_reg = 0x8000 err_src = 0xf
+[   67.901940] mstaddr = 0x220 mask = 0x7e0 masterid = 0x11
+[   67.907275] ------------[ cut here ]------------
+[   67.911924] WARNING: CPU: 0 PID: 61 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
+[   67.921357] 44000000.ocp:L3 Custom Error: MASTER DucatiM3 TARGET L4PER3 (Idle): Data Access in User mode during 
+Functional access
+
+DSP accessing Timer5
+[   24.452565] flagmux = 0, err_reg = 0x4 err_src = 0x2
+[   24.457552] mstaddr = 0x100 mask = 0x7e0 masterid = 0x8
+[   24.462798] ------------[ cut here ]------------
+[   24.467449] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
+[   24.476795] 44000000.ocp:L3 Custom Error: MASTER DSP TARGET ABE (Idle): Data Access in Supervisor mode during Functional
+ access
+
+
+ .../devicetree/bindings/arm/omap/l3-noc.txt        |  1 +
+ arch/arm/boot/dts/omap5.dtsi                       |  2 +-
+ drivers/bus/omap_l3_noc.c                          |  5 ++-
+ drivers/bus/omap_l3_noc.h                          | 52 ++++++++++++++++------
+ 4 files changed, 44 insertions(+), 16 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/omap/l3-noc.txt b/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
+index 974624ea68f6..161448da959d 100644
+--- a/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
++++ b/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
+@@ -6,6 +6,7 @@ provided by Arteris.
+ Required properties:
+ - compatible : Should be "ti,omap3-l3-smx" for OMAP3 family
+                Should be "ti,omap4-l3-noc" for OMAP4 family
++               Should be "ti,omap5-l3-noc" for OMAP5 family
+ 	       Should be "ti,dra7-l3-noc" for DRA7 family
+                Should be "ti,am4372-l3-noc" for AM43 family
+ - reg:	Contains L3 register address range for each noc domain.
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index efe5f737f39b..7d24ae0306b5 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -128,7 +128,7 @@
+ 	 * hierarchy.
+ 	 */
+ 	ocp {
+-		compatible = "ti,omap4-l3-noc", "simple-bus";
++		compatible = "ti,omap5-l3-noc", "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
+index 11f7982cbdb3..ebee57d715d2 100644
+--- a/drivers/bus/omap_l3_noc.c
++++ b/drivers/bus/omap_l3_noc.c
+@@ -1,7 +1,7 @@
+ /*
+  * OMAP L3 Interconnect error handling driver
+  *
+- * Copyright (C) 2011-2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011-2015 Texas Instruments Incorporated - http://www.ti.com/
+  *	Santosh Shilimkar <santosh.shilimkar@ti.com>
+  *	Sricharan <r.sricharan@ti.com>
+  *
+@@ -233,7 +233,8 @@ static irqreturn_t l3_interrupt_handler(int irq, void *_l3)
+ }
  
- Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 
-@@ -39,6 +42,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 		autosuspend-delay = <30000>;
- 		irq-status-read-quirk;
- 		en2-rf-quirk;
-+		t5t-rmb-extra-byte-quirk;
- 		status = "okay";
- 	};
+ static const struct of_device_id l3_noc_match[] = {
+-	{.compatible = "ti,omap4-l3-noc", .data = &omap_l3_data},
++	{.compatible = "ti,omap4-l3-noc", .data = &omap4_l3_data},
++	{.compatible = "ti,omap5-l3-noc", .data = &omap5_l3_data},
+ 	{.compatible = "ti,dra7-l3-noc", .data = &dra_l3_data},
+ 	{.compatible = "ti,am4372-l3-noc", .data = &am4372_l3_data},
+ 	{},
+diff --git a/drivers/bus/omap_l3_noc.h b/drivers/bus/omap_l3_noc.h
+index 95254585db86..3ba40db7380b 100644
+--- a/drivers/bus/omap_l3_noc.h
++++ b/drivers/bus/omap_l3_noc.h
+@@ -1,7 +1,7 @@
+ /*
+  * OMAP L3 Interconnect  error handling driver header
+  *
+- * Copyright (C) 2011-2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011-2015 Texas Instruments Incorporated - http://www.ti.com/
+  *	Santosh Shilimkar <santosh.shilimkar@ti.com>
+  *	sricharan <r.sricharan@ti.com>
+  *
+@@ -175,16 +175,14 @@ static struct l3_flagmux_data omap_l3_flagmux_clk2 = {
  };
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index aa6a333..85b4d86 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -149,6 +149,7 @@
-  */
- #define TRF7970A_QUIRK_IRQ_STATUS_READ		BIT(0)
- #define TRF7970A_QUIRK_EN2_MUST_STAY_LOW	BIT(1)
-+#define TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE	BIT(2)
  
- /* Direct commands */
- #define TRF7970A_CMD_IDLE			0x00
-@@ -446,6 +447,7 @@ struct trf7970a {
- 	u8				md_rf_tech;
- 	u8				tx_cmd;
- 	bool				issue_eof;
-+	bool				adjust_resp_len;
- 	int				en2_gpio;
- 	int				en_gpio;
- 	struct mutex			lock;
-@@ -626,6 +628,11 @@ static void trf7970a_send_upstream(struct trf7970a *trf)
- 		trf->aborting = false;
- 	}
  
-+	if (trf->adjust_resp_len) {
-+		skb_trim(trf->rx_skb, trf->rx_skb->len - 1);
-+		trf->adjust_resp_len = false;
-+	}
+-static struct l3_target_data omap_l3_target_data_clk3[] = {
+-	{0x0100, "EMUSS",},
+-	{0x0300, "DEBUG SOURCE",},
+-	{0x0,	"HOST CLK3",},
++static struct l3_target_data omap4_l3_target_data_clk3[] = {
++	{0x0100, "DEBUGSS",},
+ };
+ 
+-static struct l3_flagmux_data omap_l3_flagmux_clk3 = {
++static struct l3_flagmux_data omap4_l3_flagmux_clk3 = {
+ 	.offset = 0x0200,
+-	.l3_targ = omap_l3_target_data_clk3,
+-	.num_targ_data = ARRAY_SIZE(omap_l3_target_data_clk3),
++	.l3_targ = omap4_l3_target_data_clk3,
++	.num_targ_data = ARRAY_SIZE(omap4_l3_target_data_clk3),
+ };
+ 
+ static struct l3_masters_data omap_l3_masters[] = {
+@@ -215,21 +213,49 @@ static struct l3_masters_data omap_l3_masters[] = {
+ 	{ 0x32, "USBHOSTFS"}
+ };
+ 
+-static struct l3_flagmux_data *omap_l3_flagmux[] = {
++static struct l3_flagmux_data *omap4_l3_flagmux[] = {
+ 	&omap_l3_flagmux_clk1,
+ 	&omap_l3_flagmux_clk2,
+-	&omap_l3_flagmux_clk3,
++	&omap4_l3_flagmux_clk3,
+ };
+ 
+-static const struct omap_l3 omap_l3_data = {
+-	.l3_flagmux = omap_l3_flagmux,
+-	.num_modules = ARRAY_SIZE(omap_l3_flagmux),
++static const struct omap_l3 omap4_l3_data = {
++	.l3_flagmux = omap4_l3_flagmux,
++	.num_modules = ARRAY_SIZE(omap4_l3_flagmux),
+ 	.l3_masters = omap_l3_masters,
+ 	.num_masters = ARRAY_SIZE(omap_l3_masters),
+ 	/* The 6 MSBs of register field used to distinguish initiator */
+ 	.mst_addr_mask = 0xFC,
+ };
+ 
++/* OMAP5 data */
++static struct l3_target_data omap5_l3_target_data_clk3[] = {
++	{0x0100, "L3INSTR",},
++	{0x0300, "DEBUGSS",},
++	{0x0,	 "HOSTCLK3",},
++};
 +
- 	trf->cb(trf->ddev, trf->cb_arg, trf->rx_skb);
- 
- 	trf->rx_skb = NULL;
-@@ -1429,10 +1436,15 @@ static int trf7970a_per_cmd_config(struct trf7970a *trf, struct sk_buff *skb)
- 			trf->iso_ctrl = iso_ctrl;
- 		}
- 
--		if ((trf->framing == NFC_DIGITAL_FRAMING_ISO15693_T5T) &&
--				trf7970a_is_iso15693_write_or_lock(req[1]) &&
--				(req[0] & ISO15693_REQ_FLAG_OPTION))
--			trf->issue_eof = true;
-+		if (trf->framing == NFC_DIGITAL_FRAMING_ISO15693_T5T) {
-+			if (trf7970a_is_iso15693_write_or_lock(req[1]) &&
-+					(req[0] & ISO15693_REQ_FLAG_OPTION))
-+				trf->issue_eof = true;
-+			else if ((trf->quirks &
-+					TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE) &&
-+				 (req[1] == ISO15693_CMD_READ_MULTIPLE_BLOCK))
-+				trf->adjust_resp_len = true;
-+		}
- 	}
- 
- 	return 0;
-@@ -1992,6 +2004,9 @@ static int trf7970a_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
-+	if (of_property_read_bool(np, "t5t-rmb-extra-byte-quirk"))
-+		trf->quirks |= TRF7970A_QUIRK_T5T_RMB_EXTRA_BYTE;
++static struct l3_flagmux_data omap5_l3_flagmux_clk3 = {
++	.offset = 0x0200,
++	.l3_targ = omap5_l3_target_data_clk3,
++	.num_targ_data = ARRAY_SIZE(omap5_l3_target_data_clk3),
++};
 +
- 	if (of_property_read_bool(np, "irq-status-read-quirk"))
- 		trf->quirks |= TRF7970A_QUIRK_IRQ_STATUS_READ;
- 
++static struct l3_flagmux_data *omap5_l3_flagmux[] = {
++	&omap_l3_flagmux_clk1,
++	&omap_l3_flagmux_clk2,
++	&omap5_l3_flagmux_clk3,
++};
++
++static const struct omap_l3 omap5_l3_data = {
++	.l3_flagmux = omap5_l3_flagmux,
++	.num_modules = ARRAY_SIZE(omap5_l3_flagmux),
++	.l3_masters = omap_l3_masters,
++	.num_masters = ARRAY_SIZE(omap_l3_masters),
++	/* The 6 MSBs of register field used to distinguish initiator */
++	.mst_addr_mask = 0x7E0,
++};
++
+ /* DRA7 data */
+ static struct l3_target_data dra_l3_target_data_clk1[] = {
+ 	{0x2a00, "AES1",},
 -- 
-2.2.1
+2.3.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
