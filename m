@@ -1,132 +1,305 @@
-From: Catalin Crenguta <catalin.crenguta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6: Add Embest MarS Board
-Date: Fri, 24 Apr 2015 15:22:31 +0300
-Message-ID: <CABH3fy_YWYoQZL4E_i1FWaY+rOgidxBVcUNo15GrXfcoS2or0A@mail.gmail.com>
-References: <1427875809-10444-1-git-send-email-vianney.leclement@essensium.com>
-	<1427876156.24886.1.camel@pengutronix.de>
-	<1427877126.2449.0@mail.essensium.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427877126.2449.0-ZoYdQ1qa4hNshLDXf1BNyNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Vianney_le_Cl=C3=A9ment?= <vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATCH v3 12/12] MIPS: Add basic support for the TL-WR1043ND version 1
+Date: Fri, 24 Apr 2015 14:26:35 +0200
+Message-ID: <1429878395-15554-1-git-send-email-albeu@free.fr>
+References: <1429875679-14973-1-git-send-email-albeu@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429875679-14973-1-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is still not working on 4.0 with this devicetree and eMMC enabled.
+Add a DTS for TL-WR1043ND version 1 and allow to have it built in the
+kernel to circumvent the broken u-boot found on these boards.
+Currently only the UART, LEDs and buttons are supported.
 
-[    1.467617] Driver 'mmcblk' needs updating - please use bus_type met=
-hods
-[    1.474581] sdhci: Secure Digital Host Controller Interface driver
-[    1.480776] sdhci: Copyright(c) Pierre Ossman
-[    1.485229] sdhci-pltfm: SDHCI platform and OF driver helper
-[    1.491920] sdhci-esdhc-imx 2194000.usdhc: could not get ultra high
-speed state, work on normal mode
-[    1.502624] sdhci-esdhc-imx 2194000.usdhc: No vqmmc regulator found
-[    1.553863] mmc0: SDHCI controller on 2194000.usdhc [2194000.usdhc]
-using ADMA
-[    1.562020] sdhci-esdhc-imx 2198000.usdhc: could not get ultra high
-speed state, work on normal mode
-[    1.572519] sdhci-esdhc-imx 2198000.usdhc: No vqmmc regulator found
-[    1.623290] mmc1: SDHCI controller on 2198000.usdhc [2198000.usdhc]
-using ADMA
-[    1.632466] usbcore: registered new interface driver usbhid
-[    1.638080] usbhid: USB HID core driver
-[    1.648923] TCP: cubic registered
-[    1.653864] NET: Registered protocol family 10
-[    1.661093] sit: IPv6 over IPv4 tunneling driver
-[    1.667826] NET: Registered protocol family 17
-[    1.672323] can: controller area network core (rev 20120528 abi 9)
-[    1.678754] NET: Registered protocol family 29
-[    1.683259] can: raw protocol (rev 20120528)
-[    1.683659] usb 1-1: new high-speed USB device number 2 using ci_hdr=
-c
-[    1.694117] can: broadcast manager protocol (rev 20120528 t)
-[    1.699821] can: netlink gateway (rev 20130117) max_hops=3D1
-[    1.705994] Key type dns_resolver registered
-[    1.715425] Registering SWP/SWPB emulation handler
-[    1.728171] snvs_rtc 20cc034.snvs-rtc-lp: setting system clock to
-1970-01-01 00:00:00 UTC (0)
-[    1.773338] usb_otg_vbus: disabling
-[    1.776858] 2P5V: disabling
-[    1.780066] ALSA device list:
-[    1.783043]   No soundcards found.
-[    1.787866] Waiting for root device /dev/mmcblk0p1...
-[    1.836367] hub 1-1:1.0: USB hub found
-[    1.840349] hub 1-1:1.0: 4 ports detected
-[    1.879136] mmc1: MAN_BKOPS_EN bit is not set
-[    1.893823] mmc1: new high speed MMC card at address 0001
-[    1.901285] mmcblk0: mmc1:0001 NCard  3.71 GiB
-[    1.906172] mmcblk0boot0: mmc1:0001 NCard  partition 1 2.00 MiB
-[    1.912424] mmcblk0boot1: mmc1:0001 NCard  partition 2 2.00 MiB
-[    1.918676] mmcblk0rpmb: mmc1:0001 NCard  partition 3 128 KiB
-[    1.928406]  mmcblk0: p1
-[   12.033443] mmc1: Timeout waiting for hardware interrupt.
-[   12.039193] mmcblk0: error -110 transferring data, sector 20482, nr
-2, cmd response 0x900, card status 0xb00
-[   12.049118] mmc1: tried to reset card
-[   12.052804] mmcblk0: retrying using single block read
-[   22.073257] mmc1: Timeout waiting for hardware interrupt.
-[   22.078969] mmcblk0: error -110 transferring data, sector 20480, nr
-8, cmd response 0x900, card status 0xb00
-[   22.088897] mmc1: tried to reset card
-[   22.092585] mmcblk0: retrying using single block read
-[   22.100654] EXT3-fs (mmcblk0p1): error: magic mismatch
-[   32.113294] mmc1: Timeout waiting for hardware interrupt.
-[   32.119153] mmcblk0: error -110 transferring data, sector 20482, nr
-2, cmd response 0x900, card status 0xb00
-[   32.129070] mmc1: tried to reset card
-[   32.132758] mmcblk0: retrying using single block read
-[   32.138719] EXT2-fs (mmcblk0p1): error: couldn't mount because of
-unsupported optional features (4)
+Signed-off-by: Alban Bedel <albeu@free.fr>
+---
+v2: * Rebased for the new vendor directory structure
+    * Merged the 2 separate patch for SoC dtsi and board DTS in a
+      single one
+    * Fixed the node names to use ePAPR standardized names
+v3: * Moved adding the Kconfig Builtin devicetree menu to this patch
+    * Set the Kconfig builtin DTB menu as optional, removed config
+      DTB_ATH79_NONE and slightly improved the menu name and help
+      message.
+---
+ arch/mips/ath79/Kconfig                          |  12 +++
+ arch/mips/boot/dts/Makefile                      |   1 +
+ arch/mips/boot/dts/qca/Makefile                  |   9 ++
+ arch/mips/boot/dts/qca/ar9132.dtsi               | 121 +++++++++++++++++++++++
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts |  83 ++++++++++++++++
+ 5 files changed, 226 insertions(+)
+ create mode 100644 arch/mips/boot/dts/qca/Makefile
+ create mode 100644 arch/mips/boot/dts/qca/ar9132.dtsi
+ create mode 100644 arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
 
-On Wed, Apr 1, 2015 at 11:32 AM, Vianney le Cl=C3=A9ment
-<vianney.leclement-buIOx9BAs4sybS5Ee8rs3A@public.gmane.org> wrote:
-> On Wed, Apr 1, 2015 at 10:15 , Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> w=
-rote:
->>
->> Am Mittwoch, den 01.04.2015, 10:10 +0200 schrieb Vianney le Cl=C3=A9=
-ment de
->> Saint-Marcq:
->>>
->>>  Add device tree for the Embest/Element 14 MarS Board [1], an i.MX6=
- Dual
->>>  based development board.
->>>
->>>  The e-MMC chip is disabled because initialization fails (error -11=
-0).
->>>  A possible cause is described in [2].
->>
->>
->> So if the problem is that there are only 4 connected data lines one =
-the
->> board, couldn't you simply add the property bus-width =3D <4>; to th=
-e emmc
->> node?
->
->
-> It is already the case (imx6qdl.dtsi, line 929), but to no avail.  Th=
-at is
-> why I wrote "possible" cause as I did not find any evidence of the de=
-scribed
-> behaviour in my (admittedly limited) investigations.
->
->
-> Vianney le Cl=C3=A9ment de Saint-Marcq
-> Embedded Software Developper =C2=B7 +32 485 84 55 05
-> Essensium, Mind division =C2=B7 www.mind.be
-> GPG: 727B CFE9 355F 1B02 0820 EE1C 9042 3E07 A804 0316
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
+index dfc6020..13c04cf 100644
+--- a/arch/mips/ath79/Kconfig
++++ b/arch/mips/ath79/Kconfig
+@@ -71,6 +71,18 @@ config ATH79_MACH_UBNT_XM
+ 	  Say 'Y' here if you want your kernel to support the
+ 	  Ubiquiti Networks XM (rev 1.0) board.
+ 
++choice
++	prompt "Build a DTB in the kernel"
++	optional
++	help
++	  Select a devicetree that should be built into the kernel.
++
++	config DTB_TL_WR1043ND_V1
++		bool "TL-WR1043ND Version 1"
++		select BUILTIN_DTB
++		select SOC_AR913X
++endchoice
++
+ endmenu
+ 
+ config SOC_AR71XX
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 5d95e4b..9975485 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -3,6 +3,7 @@ dts-dirs	+= cavium-octeon
+ dts-dirs	+= lantiq
+ dts-dirs	+= mti
+ dts-dirs	+= netlogic
++dts-dirs	+= qca
+ dts-dirs	+= ralink
+ 
+ obj-y		:= $(addsuffix /, $(dts-dirs))
+diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
+new file mode 100644
+index 0000000..5f02aa6
+--- /dev/null
++++ b/arch/mips/boot/dts/qca/Makefile
+@@ -0,0 +1,9 @@
++dtb-$(CONFIG_DTB_TL_WR1043ND_V1)	+= ar9132_tl_wr1043nd_v1.dtb
++
++obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
++
++# Force kbuild to make empty built-in.o if necessary
++obj-				+= dummy.o
++
++always				:= $(dtb-y)
++clean-files			:= *.dtb *.dtb.S
+diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
+new file mode 100644
+index 0000000..c05b65c2
+--- /dev/null
++++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+@@ -0,0 +1,121 @@
++/ {
++	compatible = "qca,ar9132";
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "mips,mips24Kc";
++			reg = <0>;
++		};
++	};
++
++	cpuintc: interrupt-controller {
++		compatible = "qca,ar9132-cpu-intc", "qca,ar7100-cpu-intc";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		qca,ddr-wb-channel-interrupts = <2>, <3>, <4>, <5>;
++		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>,
++					<&ddr_ctrl 0>, <&ddr_ctrl 1>;
++	};
++
++	ahb {
++		compatible = "simple-bus";
++		ranges;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		interrupt-parent = <&cpuintc>;
++
++		apb {
++			compatible = "simple-bus";
++			ranges;
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			interrupt-parent = <&miscintc>;
++
++			ddr_ctrl: memory-controller@18000000 {
++				compatible = "qca,ar9132-ddr-controller",
++						"qca,ar7240-ddr-controller";
++				reg = <0x18000000 0x100>;
++
++				#qca,ddr-wb-channel-cells = <1>;
++			};
++
++			uart@18020000 {
++				compatible = "ns8250";
++				reg = <0x18020000 0x20>;
++				interrupts = <3>;
++
++				clocks = <&pll 2>;
++				clock-names = "uart";
++
++				reg-io-width = <4>;
++				reg-shift = <2>;
++				no-loopback-test;
++
++				status = "disabled";
++			};
++
++			gpio: gpio@18040000 {
++				compatible = "qca,ar9132-gpio",
++						"qca,ar7100-gpio";
++				reg = <0x18040000 0x30>;
++				interrupts = <2>;
++
++				ngpios = <22>;
++
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			pll: pll-controller@18050000 {
++				compatible = "qca,ar9132-ppl",
++						"qca,ar9130-pll";
++				reg = <0x18050000 0x20>;
++
++				clock-names = "ref";
++				/* The board must provides the ref clock */
++
++				#clock-cells = <1>;
++				clock-output-names = "cpu", "ddr", "ahb";
++			};
++
++			wdt@18060008 {
++				compatible = "qca,ar7130-wdt";
++				reg = <0x18060008 0x8>;
++
++				interrupts = <4>;
++
++				clocks = <&pll 2>;
++				clock-names = "wdt";
++			};
++
++			miscintc: interrupt-controller@18060010 {
++				compatible = "qca,ar9132-misc-intc",
++					   "qca,ar7100-misc-intc";
++				reg = <0x18060010 0x4>;
++
++				interrupt-parent = <&cpuintc>;
++				interrupts = <6>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++
++		};
++	};
++};
+diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+new file mode 100644
+index 0000000..ab36c7c
+--- /dev/null
++++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+@@ -0,0 +1,83 @@
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++#include "ar9132.dtsi"
++
++/ {
++	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
++	model = "TP-Link TL-WR1043ND Version 1";
++
++	alias {
++		serial0 = "/ahb/apb/uart@18020000";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x2000000>;
++	};
++
++	extosc: oscillator {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <40000000>;
++	};
++
++	ahb {
++		apb {
++			uart@18020000 {
++				status = "okay";
++			};
++
++			pll-controller@18050000 {
++				clocks = <&extosc>;
++			};
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		poll-interval = <20>;
++		button@0 {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
++			debounce-interval = <60>;
++		};
++
++		button@1 {
++			label = "qss";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&gpio 7 GPIO_ACTIVE_LOW>;
++			debounce-interval = <60>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		led@0 {
++			label = "tp-link:green:usb";
++			gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
++		};
++
++		led@1 {
++			label = "tp-link:green:system";
++			gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led@2 {
++			label = "tp-link:green:qss";
++			gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
++		};
++
++		led@3 {
++			label = "tp-link:green:wlan";
++			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
+-- 
+2.0.0
