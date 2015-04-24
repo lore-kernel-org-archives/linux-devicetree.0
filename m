@@ -1,40 +1,43 @@
-From: Kevin Cernekee <cernekee@chromium.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power amplifiers
-Date: Fri, 24 Apr 2015 06:52:01 -0700
-Message-ID: <CAJzqFtZ3wMHHoAesUZws0b4csArsjeZTKeB7FbU7OSSbmCT1nA@mail.gmail.com>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org> <20150418113632.GE26185@sirena.org.uk>
- <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
- <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com> <20150424092839.GI22845@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150424092839.GI22845@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Subject: [PATCH 0/4] spi: spi-ath79: Devicetree support and misc fixes
+Date: Fri, 24 Apr 2015 16:19:20 +0200
+Message-ID: <1429885164-28501-1-git-send-email-albeu@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2015 at 2:28 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Apr 23, 2015 at 05:47:49PM -0700, Kevin Cernekee wrote:
->
->> This is mostly working OK, but regcache_sync() assumes that the
->> hardware registers have been reset back to the default values.  The
->> "pdn" GPIO doesn't actually reset the state of the tas571x; it just
->> makes I2C inaccessible and inhibits audio output.  So if the factory
->> default for mute is 0, corner cases like this fail:
->
-> ...
->
->> Aside from unnecessarily pulsing the reset GPIO when transitioning
->> back from SND_SOC_BIAS_OFF or overriding regcache_default_sync(), can
->> you think of a way to work around this?
->
-> Do you need to work around it?  If the register map is being perserved
-> you don't need to sync so just don't do it - it's just that the normal
-> expectation would be that power down would cause the register map to be
-> reset.
+Hello all,
 
-How do I tell regcache to write out any updates that happened while
-the hardware was inaccessible?  I see that regmap->cache_dirty is 1,
-but nothing flushes it automatically when exiting cache_only mode.
+this serie add a DT support for the ATH79 SPI controller and fix a few
+trivial bugs. While adding DT support we also remove the unused custom
+controller data in favor of the generic GPIO based chip select.
+
+The clock patch add the missing clk_un/prepare to fix the warnings once
+the platform is moved to the generic clock framework.
+
+Finally the last patch is to ensure that CS_HIGH chips using CS0 get the
+proper CS level before the first transfer.
+
+Alban
+
+Alban Bedel (4):
+  devicetree: add binding documentation for the AR7100 SPI controller
+  spi: spi-ath79: Add device tree support
+  spi: spi-ath79: Use clk_prepare_enable and clk_disable_unprepare
+  spi: spi-ath79: Set the initial state of CS0
+
+ .../devicetree/bindings/spi/spi-ath79.txt          | 24 +++++++++++++++
+ .../include/asm/mach-ath79/ath79_spi_platform.h    |  4 ---
+ drivers/spi/spi-ath79.c                            | 34 ++++++++++++++--------
+ 3 files changed, 46 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-ath79.txt
+
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
