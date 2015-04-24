@@ -1,82 +1,81 @@
-From: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
-Subject: [PATCHv2 1/2] i.MX6-SabreAuto: DTS: use gpio-hog to enable WEIM-NOR at boot
-Date: Fri, 24 Apr 2015 01:00:20 -0700
-Message-ID: <1429862420-15434-2-git-send-email-alison_chaiken@mentor.com>
-References: <20150423063127.GJ6325@pengutronix.de>
- <1429862420-15434-1-git-send-email-alison_chaiken@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429862420-15434-1-git-send-email-alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v14 1/3] dt-bindings: add document of Rockchip power domain
+Date: Fri, 24 Apr 2015 16:07:46 +0800
+Message-ID: <1429862868-14218-2-git-send-email-wxt@rock-chips.com>
+References: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: heiko@sntech.de, khilman@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: linus.walleij@linaro.org, tomasz.figa@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, Caesar Wang <wxt@rock-chips.com>, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+This add the necessary binding documentation for the power domain
+found on Rockchip Socs.
 
-Create an imx6qdl-sabreauto-weim-nor.dtsi file whose inclusion in
-a DTS file sets GPIO5 to the level at boot that the WEIM-NOR
-device requires.  The GPIO is set via the gpio-hogging mechanism.
-Devices whose pinmux needs conflict with those of NOR are disabled.
-
-Signed-off-by: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi | 43 +++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi
+ .../bindings/arm/rockchip/power_domain.txt         | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt b/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
 new file mode 100644
-index 0000000..a126335
+index 0000000..3e74e6d
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto-weim-nor.dtsi
-@@ -0,0 +1,43 @@
-+/*
-+ * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ * Copyright (c) 2015 Mentor Graphics Inc.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++++ b/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+@@ -0,0 +1,48 @@
++* Rockchip Power Domains
 +
-+&gpio5 {
-+	weim_nor {
-+		gpio-hog;
-+		gpios = <4 0>;
-+		output-low;
-+		line-name = "weim-nor-gpio";
++Rockchip processors include support for multiple power domains which can be
++powered up/down by software based on different application scenes to save power.
++
++Required properties for power domain controller:
++- compatible: should be one of the following.
++    * rockchip,rk3288-power-controller - for rk3288 type power domain.
++- #power-domain-cells: Number of cells in a power-domain specifier.
++		       should be 1.
++- rockchip,pmu: phandle referencing a syscon providing the pmu registers
++- #address-cells: should be 1.
++- #size-cells: should be 0.
++
++Required properties for power domain sub nodes:
++- reg: index of the power domain, should use macros in:
++    *  include/dt-bindings/power-domain/rk3288.h - for rk3288 type power domain.
++- clocks (optional): phandles to clocks which need to be enabled while power domain
++          switches state.
++
++Example:
++
++	power: power-controller {
++	       compatible = "rockchip,rk3288-power-controller";
++	       #power-domain-cells = <1>;
++	       rockchip,pmu = <&pmu>;
++               #address-cells = <1>;
++               #size-cells = <0>;
++
++	       pd_gpu {
++	               reg = <RK3288_PD_GPU>;
++	               clocks = <&cru ACLK_GPU>;
++	       };
 +	};
-+};
 +
-+&weim {
-+	status = "okay";
-+};
++Node of a device using power domains must have a power-domains property,
++containing a phandle to the power device node and an index specifying which
++power domain to use.
++The index should use macros in:
++   * include/dt-bindings/power-domain/rk3288.h - for rk3288 type power domain.
 +
-+/* Disable devices that have pinmux conflicts with WEIM */
++Example of the node using power domain:
 +
-+&i2c3 {
-+	status = "disabled";
-+};
-+
-+&uart3 {
-+	status = "disabled";
-+};
-+
-+&ecspi1 {
-+	status = "disabled";
-+};
-+
-+&usdhc3 {
-+	status = "disabled";
-+};
++	node {
++		/* ... */
++		power-domains = <&power RK3288_PD_GPU>;
++		/* ... */
++	};
 -- 
-2.1.4
+1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
