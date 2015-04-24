@@ -1,33 +1,48 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v5 09/11] ARM: imx: add imx7d clk tree support
-Date: Fri, 24 Apr 2015 16:28:14 +0800
-Message-ID: <20150424082812.GA25323@dragon>
-References: <1429628007-8892-1-git-send-email-Frank.Li@freescale.com>
- <1429628007-8892-10-git-send-email-Frank.Li@freescale.com>
- <CAL_Jsq+V+q78e1QqtZJK2inCDv+rRjWnzcUgRKXComnJ2O3myg@mail.gmail.com>
- <CAHrpEqTNNn1=g6X9-iYDmWdLp58SOYWMerccy-BR++E7TU4M-Q@mail.gmail.com>
- <CAL_JsqLsLBxH+SKTeHV0c+WerXzD1u0KSYKUEFAoLiKKgLvn_g@mail.gmail.com>
- <CAHrpEqQLik0vqKVOxcTpo00A+bMyN-QgXyZxLPJUP04ewnseLg@mail.gmail.com>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH v3] Renesas Ethernet AVB driver
+Date: Fri, 24 Apr 2015 09:03:42 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CB24BB5@AcuExch.aculab.com>
+References: <SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
+	<20150422.113654.1169277303695917496.davem@davemloft.net>
+	<553804CA.1030605@cogentembedded.com>
+ <20150422.164242.2185477513394713122.davem@davemloft.net>
+ <553814F0.40405@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqQLik0vqKVOxcTpo00A+bMyN-QgXyZxLPJUP04ewnseLg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, Adrian Alonso <aalonso@freescale.com>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <553814F0.40405@cogentembedded.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: 'Sergei Shtylyov' <sergei.shtylyov@cogentembedded.com>, David Miller <davem@davemloft.net>
+Cc: "mitsuhiro.kimura.kc@renesas.com" <mitsuhiro.kimura.kc@renesas.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "masaru.nagai.vx@renesas.com" <masaru.nagai.vx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2015 at 03:51:04PM -0500, Zhi Li wrote:
-> >
-> > If it was going in my tree, no. But it is not, so it is not my call.
-> > However, I would not let you continue to add stuff if you have not
-> > done the clean-up that has been done for almost every other modern
-> > platform.
+From: Sergei Shtylyov
+> Sent: 22 April 2015 22:39
+> On 04/22/2015 11:42 PM, David Miller wrote:
 > 
-> Shawn:
->       What's your opinion?
+> >>     Hmm, I've been digging in the net core, and was unable to see where TX
+> >>     skb's get their NET_IP_ALIGN bytes reserved. Have I missed something?
+> >>     Probably need to print out skb's fields...
+> 
+> > NET_IP_ALIGN is for receive, not transmit.
+> 
+>     But when I print 'skb->data' from the ndo_start_xmit() method (in the
+> 'sh_eth' driver), all addresses end with 2, so it looks like NET_IP_ALIGN gets
+> added somewhere...
 
-Let's do it right now, I would say.
+For a locally generated message:
+The TCP userdata is likely to be 4 byte aligned.
+The TCP and IP headers are multiples of 4 bytes.
+The MAC header is 14 bytes.
+So you end up with a buffer that starts on a 4n+2 boundary or an initial
+short fragment that is 4n+2 bytes long.
 
-Shawn
+If a message is being forwarded the alignment probably depends on where
+it came from.
+
+If you have ethernet hardware that requires tx or rx buffers to be on
+4n boundaries you should send it back as 'not fit for purpose'.
+
+	David
