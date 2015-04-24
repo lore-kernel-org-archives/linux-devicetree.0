@@ -1,60 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power
- amplifiers
-Date: Fri, 24 Apr 2015 17:50:38 +0100
-Message-ID: <20150424165038.GS22845@sirena.org.uk>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org>
- <20150418113632.GE26185@sirena.org.uk>
- <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
- <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com>
- <20150424092839.GI22845@sirena.org.uk>
- <CAJzqFtZ3wMHHoAesUZws0b4csArsjeZTKeB7FbU7OSSbmCT1nA@mail.gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
+Date: Fri, 24 Apr 2015 18:53:39 +0200
+Message-ID: <1429894419.2927.61.camel@x220>
+References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
+	 <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
+	 <1429343726.16771.129.camel@x220>
+	 <6ED8E3B22081A4459DAC7699F3695FB7014B217581@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xXOpbbhANqpLO4rK"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJzqFtZ3wMHHoAesUZws0b4csArsjeZTKeB7FbU7OSSbmCT1nA@mail.gmail.com>
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B217581@SW-EX-MBX02.diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2015-04-24 at 13:45 +0000, Opensource [Steve Twiss] wrote:
+> That seems to be a fairly common mistake in the kernel. 
 
---xXOpbbhANqpLO4rK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It's an easy mistake to make. And as long as people pick an ident that
+passes license_is_gpl_compatible() the module will build and load just
+fine.
 
-On Fri, Apr 24, 2015 at 06:52:01AM -0700, Kevin Cernekee wrote:
-> On Fri, Apr 24, 2015 at 2:28 AM, Mark Brown <broonie@kernel.org> wrote:
+> When I did a
+> straw-poll,  around 10% of files came up with "GPL v2" and contained
+>  "any later version" text.
 
-> > Do you need to work around it?  If the register map is being perserved
-> > you don't need to sync so just don't do it - it's just that the normal
-> > expectation would be that power down would cause the register map to be
-> > reset.
+That seems plausible.
 
-> How do I tell regcache to write out any updates that happened while
-> the hardware was inaccessible?  I see that regmap->cache_dirty is 1,
-> but nothing flushes it automatically when exiting cache_only mode.
+I'm inclined to think the difference between "GPL" and "GPL v2" is
+mainly an accident of history (see https://lkml.org/lkml/2015/3/11/188
+for some background). But apparently were stuck with these two idents.
+Anyhow, in the last two months I've not come up with a better plan than
+regularly check patches for mismatches like the one you made. If you
+have a better idea, I'll be all ears.
 
-Oh, I see.  A sync will be required, yes.  Probably resetting the device
-is easiest.
+Thanks,
 
---xXOpbbhANqpLO4rK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVOnReAAoJECTWi3JdVIfQyV4H/Rc+qlL/5Rmaa/GfMAUa2anO
-YhbRfHYMz4mOdRIthVAieiwQ/2VPJ68ofs9SQBXuzO4qqNJjkbZbWmxgvkdAD7DF
-X2QGIXWK+OfNLF4KfS3FvYOuGkoDp6Q5p7a9E0WSXr5OpakAcjNxYAtsgW7rEhby
-ATJf9COr+oGgn1SwfZ5maRXlHU6XePhAnT0Y8WCPbjvrl6De3MEAAflPcKFH6GXm
-4dYlq7v7+MA+RRlmOyTbW55pzRjcS58EbPnlhgiUpN7yWdv2ihB0QjebF8jNDWC1
-c+jT8n0ZrnVXPr0HbsSSbc8JgixsGiu2YhBqGiq41rNTIjHIc8gfAwOM9m+FJvA=
-=eRkH
------END PGP SIGNATURE-----
-
---xXOpbbhANqpLO4rK--
+Paul Bolle
