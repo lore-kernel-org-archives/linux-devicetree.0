@@ -1,51 +1,175 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun7i: Add dts file for the
- Jesurun Q5 top set box
-Date: Thu, 23 Apr 2015 22:30:24 +0200
-Message-ID: <20150423203024.GG28007@lukather>
-References: <1429792010-22359-1-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] Documentation: Add documentation for the APM
+ X-Gene SoC EDAC DTS binding
+Date: Thu, 23 Apr 2015 17:15:04 -0700
+Message-ID: <CAPw-ZTma9C6QhaCseWEOPn5nmym=TSU=GgBigSL2uc3xMUeUPQ@mail.gmail.com>
+References: <1426573821-1937-1-git-send-email-lho@apm.com>
+	<1426573821-1937-2-git-send-email-lho@apm.com>
+	<1426573821-1937-3-git-send-email-lho@apm.com>
+	<1426573821-1937-4-git-send-email-lho@apm.com>
+	<CAL_JsqLyoEOw-Xzr2_QC-qbVW50CBEintD4hAtiY=_xwR5EBgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XRI2XbIfl/05pQwm"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB55O4WUQKGQE47TWHZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1429792010-22359-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLyoEOw-Xzr2_QC-qbVW50CBEintD4hAtiY=_xwR5EBgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---XRI2XbIfl/05pQwm
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Rob,
 
-On Thu, Apr 23, 2015 at 02:26:50PM +0200, Hans de Goede wrote:
-> The Jesurun Q5 has a black plastic casing with the approximate dimensions
-> of 100mm x 100mm x 24mm with rounded edges. In terms of hardware it
-> features an Allwinner A10 SoC with 1GB RAM and 8GB of NAND flash. The
-> external connectors are: 2x USB-A female supporting USB2.0, 3.5mm female
-> jack for audio, HDMI female, SPDIF, RJ45 LAN and Power. In addition the
-> device has 1x red LED (hard wired to power) and an programmable green led.
-> On the board there is also an unpopulated IR receiver and the UART.
-> The devices is equipped with an AXP209 PMU.
-> 
-> For more details see: http://linux-sunxi.org/Jesurun_Q5
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
+>>
+>> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   82 ++++++++++++++++++++
+>>  1 files changed, 82 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>> new file mode 100644
+>> index 0000000..db8c1c4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>> @@ -0,0 +1,82 @@
+>> +* APM X-Gene SoC EDAC nodes
+>> +
+>> +EDAC nodes are defined to describe on-chip error detection and correction.
+>> +There are four types of EDAC:
+>> +
+>> +  memory controller    - Memory controller
+>> +  PMD (L1/L2)          - Processor module unit (PMD) L1/L2 cache
+>> +  L3                   - CPU L3 cache
+>> +  SoC                  - SoC IP such as SATA, Ethernet, and etc
+>> +
+>> +The following section describes the memory controller DT node binding.
+>> +
+>> +Required properties:
+>> +- compatible           : Shall be "apm,xgene-edac-mc".
+>> +- reg                  : First resource shall be the PCP resource.
+>> +                         Second resource shall be the CSW resource.
+>> +                         Third resource shall be the MCB-A resource.
+>> +                         Fourth resource shall be the MCB-B resource.
+>> +                         Fifth resource shall be the MCU resource.
+>> +- interrupts            : Interrupt-specifier for MCU error IRQ(s).
+>> +
+>> +The following section describes the L1/L2 DT node binding.
+>> +
+>> +- compatible           : Shall be "apm,xgene-edac-pmd".
+>> +- reg                  : First resource shall be the PCP resource.
+>> +                         Second resource shall be the PMD resource.
+>> +                         Third resource shall be the PMD efuse resource.
+>> +- interrupts            : Interrupt-specifier for PMD error IRQ(s).
+>> +
+>> +The following section describes the L3 DT node binding.
+>> +
+>> +- compatible           : Shall be "apm,xgene-edac-l3".
+>> +- reg                  : First resource shall be the PCP resource.
+>> +                         Second resource shall be the L3 resource.
+>> +- interrupts            : Interrupt-specifier for L3 error IRQ(s).
+>> +
+>> +The following section describes the SoC DT node binding.
+>> +
+>> +- compatible           : Shall be "apm,xgene-edac-soc"".
+>> +- reg                  : First resource shall be the PCP resource.
+>> +                         Second resource shall be the SoC resource.
+>> +                         Third resource shall be the register bus resource.
+>> +- interrupts           : Interrupt-specifier for SoC error IRQ(s).
+>> +
+>> +Example:
+>> +       edacmc0: edacmc0@7e800000 {
+>> +               compatible = "apm,xgene-edac-mc";
+>> +               reg = <0x0 0x78800000 0x0 0x1000>,
+>> +                     <0x0 0x7e200000 0x0 0x1000>,
+>> +                     <0x0 0x7e700000 0x0 0x1000>,
+>> +                     <0x0 0x7e720000 0x0 0x1000>,
+>> +                     <0x0 0x7e800000 0x0 0x1000>;
+>> +               interrupts = <0x0 0x20 0x4>,
+>> +                            <0x0 0x21 0x4>;
+>> +       };
+>> +
+>> +       edacl3: edacl3@7e600000 {
+>> +               compatible = "apm,xgene-edac-l3";
+>> +               reg = <0x0 0x78800000 0x0 0x1000>,
+>
+> You are defining overlapping resources. Don't do that.
+>
+> It looks to me like you are creating nodes based on driver functions,
+> not h/w blocks. I would expect to see a memory controller node which
+> contains ECC related registers. If you have blocks with multiple
+> unrelated functions, then you should be using syscon to divide up the
+> functions to different subsystems like EDAC.
+>
 
-Queued for 4.2, thanks!
+How about these bindings:
 
-Maxime
+efuse: efuse@1054a000 {
+        compatible = "syscon";
+        reg = <0x0 0x1054a000 0x0 0x20>;
+};
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---XRI2XbIfl/05pQwm--
+pcperror: pcperror@78800000 {
+        compatible = "syscon";
+        reg = <0x0 0x78800000 0x0 0x100>;
+};
+
+csw: csw@7e200000 {
+        compatible = "syscon";
+        reg = <0x0 0x7e200000 0x0 0x1000>;
+};
+
+mcba: mcba@7e700000 {
+        compatible = "syscon";
+        reg = <0x0 0x7e700000 0x0 0x1000>;
+}
+
+mcbb: mcbb@7e720000 {
+        compatible = "syscon";
+        reg = <0x0 0x7e720000 0x0 0x1000>;
+}
+
+edacmc0: edacmc0@7e800000 {
+        compatible = "apm,xgene-edac-mc";
+        pcpmap = <&pcperror>;
+        cswmap = <&csw>;
+        mcbamap = <&mcba>;
+        mcbbmap = <&mcbb>;
+        reg = <0x0 0x7e800000 0x0 0x1000>;
+        interrupts = <0x0 0x20 0x4>,
+                         <0x0 0x21 0x4>;
+};
+
+edacpmd0: edacpmd0@7c000000 {
+        compatible = "apm,xgene-edac-pmd";
+        regmap = <&pcperror>;
+        efusemap = <&efuse>;
+        reg = <0x0 0x7c000000 0x0 0x200000>;
+        interrupts = <0x0 0x20 0x4>,
+                         <0x0 0x21 0x4>;
+};
+
+edacl3: edacl3@7e600000 {
+        compatible = "apm,xgene-edac-l3";
+        pcpmap = <&pcperror>;
+        reg = <0x0 0x7e600000 0x0 0x1000>;
+        interrupts = <0x0 0x20 0x4>,
+                         <0x0 0x21 0x4>;
+};
+
+edacsoc: edacsoc@7e930000 {
+        compatible = "apm,xgene-edac-soc";
+        pcpmap = <&pcperror>;
+        reg = <0x0 0x7e930000 0x0 0x1000>,
+                 <0x0 0x7e000000 0x0 0x1000>;
+        interrupts = <0x0 0x20 0x4>,
+                         <0x0 0x21 0x4>,
+                         <0x0 0x27 0x4>;
+};
+
+-Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
