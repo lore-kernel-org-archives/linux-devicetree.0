@@ -1,57 +1,66 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V4 2/4] i2c: busses: xgene: add acpi support for i2c xgene SLIMpro driver
-Date: Fri, 24 Apr 2015 10:11:31 -0700
-Message-ID: <1429895493-30176-3-git-send-email-fkan@apm.com>
-References: <1429895493-30176-1-git-send-email-fkan@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429895493-30176-1-git-send-email-fkan@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: patches@apm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] devicetree: add binding documentation for the AR7100
+ SPI controller
+Date: Fri, 24 Apr 2015 20:37:38 +0300
+Message-ID: <553A7F62.80108@cogentembedded.com>
+References: <1429885164-28501-1-git-send-email-albeu@free.fr> <1429885164-28501-2-git-send-email-albeu@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429885164-28501-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for ACPI for the APM X-Gene I2C SLIMpro proxy
-driver.
+Hello.
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- drivers/i2c/busses/i2c-xgene-slimpro.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On 04/24/2015 05:19 PM, Alban Bedel wrote:
 
-diff --git a/drivers/i2c/busses/i2c-xgene-slimpro.c b/drivers/i2c/busses/i2c-xgene-slimpro.c
-index afe4cf2..f1caa29 100644
---- a/drivers/i2c/busses/i2c-xgene-slimpro.c
-+++ b/drivers/i2c/busses/i2c-xgene-slimpro.c
-@@ -22,6 +22,7 @@
-  * using the APM X-Gene SLIMpro mailbox driver.
-  *
-  */
-+#include <linux/acpi.h>
- #include <linux/dma-mapping.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
-@@ -442,12 +443,21 @@ static const struct of_device_id xgene_slimpro_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(of, xgene_slimpro_i2c_dt_ids);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id xgene_slimpro_i2c_acpi_ids[] = {
-+	{"APMC0D40", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, slimpro_acpi_ids);
-+#endif
-+
- static struct platform_driver xgene_slimpro_i2c_driver = {
- 	.probe	= xgene_slimpro_i2c_probe,
- 	.remove	= xgene_slimpro_i2c_remove,
- 	.driver	= {
- 		.name	= "xgene-slimpro-i2c",
--		.of_match_table = of_match_ptr(xgene_slimpro_i2c_id)
-+		.of_match_table = of_match_ptr(xgene_slimpro_i2c_id),
-+		.acpi_match_table = ACPI_PTR(xgene_slimpro_i2c_acpi_ids)
- 	},
- };
- 
--- 
-1.9.1
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> ---
+>   .../devicetree/bindings/spi/spi-ath79.txt          | 24 ++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/spi/spi-ath79.txt
+
+> diff --git a/Documentation/devicetree/bindings/spi/spi-ath79.txt b/Documentation/devicetree/bindings/spi/spi-ath79.txt
+> new file mode 100644
+> index 0000000..f1ad9c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-ath79.txt
+> @@ -0,0 +1,24 @@
+> +Binding for Qualcomm Atheros AR7xxx/AR9xxx SPI controller
+> +
+> +Required properties:
+> +- compatible: has to be "qca,<soc-type>-spi", "qca,ar7100-spi" as fallback.
+> +- reg: Base address and size of the controllers memory area
+> +- clocks: phandle to the AHB clock.
+
+    s/to/of/?
+
+> +- clock-names: has to be "ahb".
+> +- #address-cells: <1>, as required by generic SPI binding.
+> +- #size-cells: <0>, also as required by generic SPI binding.
+> +
+> +Child nodes as per the generic SPI binding.
+> +
+> +Example:
+> +
+> +	spi@1F000000 {
+
+    All lowercase, please.
+
+> +		compatible = "qca,ar9132-spi", "qca,ar7100-spi";
+> +		reg = <0x1F000000 0x10>;
+
+    Likewise.
+
+[...]
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
