@@ -1,39 +1,57 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for SMEM
-Date: Thu, 23 Apr 2015 20:28:19 -0700
-Message-ID: <CAJAp7Oj8RsQA6ntRQOiHbmcL8PyZEYhvjSYAeXrbFsH0Rc3KQg@mail.gmail.com>
-References: <1428795178-24312-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<55394F98.3060600@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 7/9] ARM: Add Kconfig support for bcm2836.
+Date: Thu, 23 Apr 2015 21:30:03 -0600
+Message-ID: <5539B8BB.3090905@wwwdotorg.org>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <1429639796-2169-8-git-send-email-eric@anholt.net> <13864545.foFMzEn7Xk@wuerfel> <87lhhl9pzf.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55394F98.3060600-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <87lhhl9pzf.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andry Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2015 at 1:01 PM, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 4/11/2015 5:32 PM, Bjorn Andersson wrote:
->>
->> Add device tree binding documentation for the Qualcom Shared Memory
->> manager.
->>
-[..]
->
-> For my information, is there any intention to support the relocatable
-> smem_region by looking it up at init time?  It does not seem like it would
-> be possible to support that with this binding.
->
+On 04/21/2015 02:38 PM, Eric Anholt wrote:
+> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+>> On Tuesday 21 April 2015 11:09:54 Eric Anholt wrote:
+>>> @@ -116,17 +122,19 @@ config ARCH_BCM283X config ARCH_BCM2835 
+>>> bool "Broadcom BCM2835 family" if ARCH_MULTI_V6 select
+>>> ARCH_BCM283X -       select ARCH_REQUIRE_GPIOLIB -       select
+>>> ARM_AMBA select ARM_ERRATA_411920 select ARM_TIMER_SP804 -
+>>> select CLKSRC_OF -       select PINCTRL -       select
+>>> PINCTRL_BCM2835 help This enables support for the Broadcom
+>>> BCM2835 SoC. This SoC is used in the Raspberry Pi and Roku 2
+>>> devices.
+>>> 
+>>> +config ARCH_BCM2836 +       bool "Broadcom BCM2836 family" if
+>>> ARCH_MULTI_V7 +       select ARCH_BCM283X +       help +
+>>> This enables support for the Broadcom BCM2836 SoC. This SoC is 
+>>> +         used in the Raspberry Pi 2 +
+>> 
+>> The description for the first one says "Broadcom BCM2835 family",
+>> and I guess they are both in the same family. How about leaving
+>> the CONFIG_BCM2835 symbol to mean one of them, and just
+>> duplicating the DEBUG_LL symbols?
+>> 
+>> You could do something like
+>> 
+>> config ARCH_BCM2835 bool "Broadcom BCM2835 family" if
+>> ARCH_MULTI_V6 || ARCH_MULTI_V7 select ARCH_BCM283X select
+>> ARCH_REQUIRE_GPIOLIB select ARM_AMBA select ARM_ERRATA_411920 if
+>> ARCH_MULTI_V6 select ARM_TIMER_SP804 if ARCH_MULTI_V6 select
+>> CLKSRC_OF select PINCTRL select PINCTRL_BCM2835 help This enables
+>> support for the Broadcom BCM2835 and BCM2836 SoCs. These SoCs is
+>> used in the Raspberry Pi and Roku 2 devices.
+>> 
+>> That should make it less confusing to the user, because they
+>> don't have to know which specific SoC they are building for,
+>> other than enabling the right architecture level.
+> 
+> Seems reasonable to me.  What do the 2835 maintainers think?
 
-I haven't been able to grasp the purpose of making the smem addresses
-completely dynamic. As far as I can see there might be use cases where
-certain devices needs to move the smem region from the default area.
-But even so, it's not dynamically choosen so it's in essence static -
-so we can just encode it in the individual dts files.
-
-Regards,
-Bjorn
+Yes, sounds reasonable to me.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
