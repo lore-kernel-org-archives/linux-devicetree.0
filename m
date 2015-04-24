@@ -1,50 +1,58 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V1 1/6] mfd: da9062: DA9062 MFD core driver
-Date: Fri, 24 Apr 2015 14:47:27 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2175F5@SW-EX-MBX02.diasemi.com>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
- <b3bb4bc09cd94b0b13c713d98dd64576722123c1.1429280614.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <b3bb4bc09cd94b0b13c713d98dd64576722123c1.1429280614.git.stwiss.opensource@diasemi.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: LINUXKERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [RFC 00/12] On-demand device registration
+Date: Fri, 24 Apr 2015 16:47:16 +0200
+Message-ID: <1429886848-5843-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Alexander Holler <holler@ahsoftware.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
-
-On 17 April 2015 15:24 Steve Twiss wrote.
-
-> Subject: [PATCH V1 1/6] mfd: da9062: DA9062 MFD core driver
-> From: S Twiss <stwiss.opensource@diasemi.com>
-> 
-> Add MFD core driver support for DA9062
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> ---
-> 
-> This patch applies against linux-next and v4.0
-> 
->  drivers/mfd/Kconfig                  |   12 +
->  drivers/mfd/Makefile                 |    3 +-
->  drivers/mfd/da9062-core.c            |  611 +++++++++++++++++++
->  include/linux/mfd/da9062/core.h      |   61 ++
->  include/linux/mfd/da9062/registers.h | 1108
 
 Hi,
 
-Due to changes in the regulator driver, I am going to alter this with 
-moving the static irqreturn_t da9062_vdd_warn_event(int irq, void *data)
-function from the regulators and into the core.
+while reading the thread [0] that Alexander Holler started with his series to make probing order deterministic, it occurred to me that it should be possible to achieve the same by probing devices as they are referenced by other devices.
 
-The VDD_WARN applies to the system voltage and is not specific to regulators.
-So it would make more sense for this to exist in the core driver instead
+This basically reuses the information that is already embedded in the probe() implementations, saving us from refactoring existing drivers or adding information to DTBs.
 
-I'll resend this in PATCH V2 soon
+The main issue I see is that the registration code path in some subsystems may not be reentrant, so some refactoring of the locking will be needed. In my testing I have found this problem with regulators, as the supply of a regulator might end up being registered during the registration of the first one.
+
+Something I'm not completely happy with is that I have had to move the population of the device tree after all platform drivers have been registered. Otherwise I don't see how I could register drivers on demand as we don't have yet each driver's compatible strings.
+
+I have done my testing on a Tegra124-based Chromebook, and these patches were enough to eliminate all the deferred probes.
 
 Regards,
-Steve
 
+Tomeu
+
+[0] https://lkml.org/lkml/2014/5/12/452
+
+Tomeu Vizoso (12):
+  ARM: tegra: Register drivers before devices
+  ARM: tegra: Add gpio-ranges property
+  of/platform: add of_platform_device_ensure()
+  gpio: Probe GPIO drivers on demand
+  gpio: Probe pinctrl devices on demand
+  regulator: core: Probe regulators on demand
+  drm: Probe panels on demand
+  drm/tegra: Probe dpaux devices on demand
+  i2c: core: Probe i2c master devices on demand
+  pwm: Probe PWM chip devices on demand
+  backlight: Probe backlight devices on demand
+  usb: phy: Probe phy devices on demand
+
+ arch/arm/boot/dts/tegra124.dtsi     |  1 +
+ arch/arm/mach-tegra/tegra.c         | 21 ++++++++-------------
+ drivers/gpio/gpiolib-of.c           |  5 +++++
+ drivers/gpu/drm/drm_panel.c         |  3 +++
+ drivers/gpu/drm/tegra/dpaux.c       |  3 +++
+ drivers/i2c/i2c-core.c              |  3 +++
+ drivers/of/platform.c               | 28 ++++++++++++++++++++++++++++
+ drivers/pwm/core.c                  |  3 +++
+ drivers/regulator/core.c            |  2 ++
+ drivers/usb/phy/phy.c               |  3 +++
+ drivers/video/backlight/backlight.c |  3 +++
+ include/linux/of_platform.h         |  2 ++
+ 12 files changed, 64 insertions(+), 13 deletions(-)
+
+-- 
+2.3.6
