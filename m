@@ -1,89 +1,51 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [PATCH 02/14] MIPS: ath79: Add basic device tree support
-Date: Fri, 24 Apr 2015 11:39:40 +0200
-Message-ID: <20150424113940.132ac92c@tock>
-References: <1429280669-2986-1-git-send-email-albeu@free.fr>
-	<1429280669-2986-3-git-send-email-albeu@free.fr>
-	<1429340752.16771.120.camel@x220>
-	<20150418183149.69c0795b@tock>
-	<1429523456.14597.23.camel@x220>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH] of: Move OF flags to be visible even when !CONFIG_OF
+Date: Fri, 24 Apr 2015 12:41:56 +0300
+Message-ID: <1429868516-19519-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429523456.14597.23.camel@x220>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Aban Bedel <albeu@free.fr>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2015 11:50:56 +0200
-Paul Bolle <pebolle@tiscali.nl> wrote:
+We need those to be visible even when compiling with CONFIG_OF
+disabled, since even the empty of_node_*_flag() method use the
+flag.
 
-> On Sat, 2015-04-18 at 18:31 +0200, Alban wrote:
-> > On Sat, 18 Apr 2015 09:05:52 +0200
-> > Paul Bolle <pebolle@tiscali.nl> wrote:
-> > 
-> > > On Fri, 2015-04-17 at 16:24 +0200, Alban Bedel wrote:
-> > > 
-> > > > --- a/arch/mips/ath79/Kconfig
-> > > > +++ b/arch/mips/ath79/Kconfig
-> > > >  
-> > > > +choice
-> > > > +	prompt "Builtin devicetree selection"
-> > > > +	default DTB_ATH79_NONE
-> > > > +	help
-> > > > +	  Select the devicetree.
-> > > > +
-> > > > +	config DTB_ATH79_NONE
-> > > > +		bool "None"
-> > > > +endchoice
-> > > 
-> > > This adds a choice block with one config entry. So what this
-> > > achieves is that DTB_ATH79_NONE will always be 'y', right?
-> > > Besides I didn't notice on a user of CONFIG_DTB_ATH79_NONE. So as
-> > > far as I can see this choice has no effect on the build.
-> > > 
-> > > Why was this choice entry added?
-> > 
-> > This menu is for boards that need a built-in DTB, as MIPS currently
-> > doesn't support appended DTBs it is the only way to load a DTB on
-> > boards stuck with a broken boot loader. But as no board has been
-> > added yet it only contain the entry for boards that don't need a
-> > built-in DTB, which do nothing as you pointed out.
-> > 
-> > A board is then added in this menu in patch 14, for some reasons git
-> > send-email didn't send the whole serie at once :(
-> 
-> I saw 14/14 fly by now. (And I saw 12/12 of v2, which basically
-> replaces 14/14.) That makes things clear.
-> 
-> Perhaps, if you're going to send a v3, you might move this change into
-> 12/12. At least, I see little reason to add this choice block in two
-> separate steps in this series.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ include/linux/of.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Ok, I'll do that.
-
-> (Side note: you _might_ be able to drop config DTB_ATH79_NONE entirely
-> if you also replace
-> 	default DTB_ATH79_NONE
-> 
-> with
-> 	optional
-> 
-> optional is a little used option for choice blocks. I haven't tested
-> this, so this suggestion could end up wasting your time. And even then
-> this all looks like a complicated way to set just DTB_TL_WR1043ND_V1.
-
-I'll try that.
-
-> I suppose you expect to add things to this choice block in the
-> future.)
-
-This is the only ATH79 board I currently have access to. However
-openwrt has patches to add support for quiet a few, so I hope more
-boards will be submitted once we have DT support in. Most of these
-boards are appliance stuck with old bootloaders, so they will need this
-too. 
-
-Alban
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 5f124f6..53d6bbdc 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -120,6 +120,12 @@ extern struct device_node *of_aliases;
+ extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
+ 
++/* flag descriptions (need to be visible even when !CONFIG_OF) */
++#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
++#define OF_DETACHED	2 /* node has been detached from the device tree */
++#define OF_POPULATED	3 /* device already created for the node */
++#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
++
+ #ifdef CONFIG_OF
+ static inline bool is_of_node(struct fwnode_handle *fwnode)
+ {
+@@ -217,12 +223,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
+ #endif
+ 
+-/* flag descriptions */
+-#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+-#define OF_DETACHED	2 /* node has been detached from the device tree */
+-#define OF_POPULATED	3 /* device already created for the node */
+-#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
+-
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+ 
+-- 
+1.7.12
