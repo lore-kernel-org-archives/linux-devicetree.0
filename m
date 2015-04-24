@@ -1,42 +1,62 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH iio] imu: inv_mpu6050: adds device tree bindings
-Date: Fri, 24 Apr 2015 14:53:07 +0530
-Message-ID: <1429867387-10219-1-git-send-email-varkab@cdac.in>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power
+ amplifiers
+Date: Fri, 24 Apr 2015 10:28:39 +0100
+Message-ID: <20150424092839.GI22845@sirena.org.uk>
+References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
+ <1429134141-17924-2-git-send-email-cernekee@chromium.org>
+ <20150418113632.GE26185@sirena.org.uk>
+ <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
+ <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="y+dl6OcicAkN96vR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
 
-Signed-off-by: Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
----
- .../devicetree/bindings/iio/imu/inv_mpu6050.txt    |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+--y+dl6OcicAkN96vR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-new file mode 100644
-index 0000000..e4d8f1c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -0,0 +1,17 @@
-+InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS MotionTracking Device
-+
-+http://www.invensense.com/mems/gyro/mpu6050.html
-+
-+Required properties:
-+ - compatible : should be "invensense,mpu6050"
-+ - reg : the I2C address of the sensor
-+ - interrupt-parent : should be the phandle for the interrupt controller
-+ - interrupts : interrupt mapping for GPIO IRQ
-+
-+Example:
-+	mpu6050@68 {
-+		compatible = "invensense,mpu6050";
-+		reg = <0x68>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <18 1>;
-+	};
--- 
-1.7.9.5
+On Thu, Apr 23, 2015 at 05:47:49PM -0700, Kevin Cernekee wrote:
+
+> This is mostly working OK, but regcache_sync() assumes that the
+> hardware registers have been reset back to the default values.  The
+> "pdn" GPIO doesn't actually reset the state of the tas571x; it just
+> makes I2C inaccessible and inhibits audio output.  So if the factory
+> default for mute is 0, corner cases like this fail:
+
+...
+
+> Aside from unnecessarily pulsing the reset GPIO when transitioning
+> back from SND_SOC_BIAS_OFF or overriding regcache_default_sync(), can
+> you think of a way to work around this?
+
+Do you need to work around it?  If the register map is being perserved
+you don't need to sync so just don't do it - it's just that the normal
+expectation would be that power down would cause the register map to be
+reset.
+
+--y+dl6OcicAkN96vR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVOgzHAAoJECTWi3JdVIfQ7hkH/1+Yd8imLUyeL3ROffmFUfAn
+fN7AhxP5HE/fmyFrUHx09FT18qpPfcP/ijQdiey0YE0UhEITWnzE1jWZ8YB9PNU6
+iMDKQ561LCIw6xThw16Y9PGWkaqnpqXZjVy3i1QVdh7f6eclrbL6hxihxxkw/5kX
+6IoYzFB0TMKBpLo9/CfLDK9ZjBBRdxsaCx7EZrP1y6qT7u0NMPSinVMNEfvwvvuY
+Q3L92jFNEAd8Tj5xycPBd5nMBgyltMTLUQngjEkXfqGVJkwxpzhN/oqtkIRXBzmI
+zdvr/VSEo6HWCwBV3h6fXQ0uHGU6A/wpMneqqP4OtSY3jFan25DNB+oNwupV1Ck=
+=f0W7
+-----END PGP SIGNATURE-----
+
+--y+dl6OcicAkN96vR--
