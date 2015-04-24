@@ -1,77 +1,46 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [RFC 03/12] of/platform: add of_platform_device_ensure()
-Date: Fri, 24 Apr 2015 16:47:19 +0200
-Message-ID: <1429886848-5843-4-git-send-email-tomeu.vizoso@collabora.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [RFC 08/12] drm/tegra: Probe dpaux devices on demand
+Date: Fri, 24 Apr 2015 16:47:24 +0200
+Message-ID: <1429886848-5843-9-git-send-email-tomeu.vizoso@collabora.com>
 References: <1429886848-5843-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429886848-5843-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Alexander Holler <holler@ahsoftware.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1429886848-5843-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This function ensures that the device that encloses the passed device
-node is registered, and thus probed if the corresponding driver has been
-registered already.
-
-This function can be used by drivers to ensure that a dependency is
-fulfilled.
+When looking up a dpaux device through its DT node, ensure that the
+corresponding device has been registered.
 ---
- drivers/of/platform.c       | 28 ++++++++++++++++++++++++++++
- include/linux/of_platform.h |  2 ++
- 2 files changed, 30 insertions(+)
+ drivers/gpu/drm/tegra/dpaux.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index a01f57c..a71c36e 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -214,6 +214,34 @@ struct platform_device *of_platform_device_create(struct device_node *np,
- }
- EXPORT_SYMBOL(of_platform_device_create);
+diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
+index d6b55e3..10bba41 100644
+--- a/drivers/gpu/drm/tegra/dpaux.c
++++ b/drivers/gpu/drm/tegra/dpaux.c
+@@ -12,6 +12,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/of_gpio.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ #include <linux/regulator/consumer.h>
+@@ -397,6 +398,8 @@ struct tegra_dpaux *tegra_dpaux_find_by_of_node(struct device_node *np)
+ {
+ 	struct tegra_dpaux *dpaux;
  
-+/**
-+ * of_platform_device_ensure - Ensure that device has been registered
-+ * @np: pointer to node to create device for
-+ *
-+ * Ensures that a device has been registered for the given node.
-+ */
-+void of_platform_device_ensure(struct device_node *np)
-+{
-+	struct device_node *node;
-+	struct platform_device *pdev;
++	of_platform_device_ensure(np);
 +
-+	/* Get the device that contains this node */
-+	for(node = np;
-+	    node && !of_get_property(node, "compatible", NULL);
-+	    node = node->parent);
-+
-+	/* If it's in a non-simple bus, probe that one instead */
-+	if (node->parent &&
-+	    !of_node_is_root(node->parent) &&
-+	    !of_match_node(of_default_bus_match_table, node->parent))
-+		node = node->parent;
-+
-+	pdev = of_platform_device_create(node, NULL, NULL);
-+	if (IS_ERR(pdev))
-+		pr_debug("%s: creation of platform device failed\n", np->full_name);
-+}
-+EXPORT_SYMBOL_GPL(of_platform_device_ensure);
-+
- #ifdef CONFIG_ARM_AMBA
- static struct amba_device *of_amba_device_create(struct device_node *node,
- 						 const char *bus_id,
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 611a691..ee6fa45 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -67,6 +67,8 @@ extern struct platform_device *of_platform_device_create(struct device_node *np,
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
- 				 struct device *parent);
-+
-+extern void of_platform_device_ensure(struct device_node *np);
- #ifdef CONFIG_OF_ADDRESS
- extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
+ 	mutex_lock(&dpaux_lock);
+ 
+ 	list_for_each_entry(dpaux, &dpaux_list, list)
 -- 
 2.3.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
