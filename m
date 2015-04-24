@@ -1,48 +1,42 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v3] Renesas Ethernet AVB driver
-Date: Fri, 24 Apr 2015 09:03:42 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CB24BB5@AcuExch.aculab.com>
-References: <SIXPR06MB03142A49C392C39922DC2BDA3EE0@SIXPR06MB031.apcprd06.prod.outlook.com>
-	<20150422.113654.1169277303695917496.davem@davemloft.net>
-	<553804CA.1030605@cogentembedded.com>
- <20150422.164242.2185477513394713122.davem@davemloft.net>
- <553814F0.40405@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <553814F0.40405@cogentembedded.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: 'Sergei Shtylyov' <sergei.shtylyov@cogentembedded.com>, David Miller <davem@davemloft.net>
-Cc: "mitsuhiro.kimura.kc@renesas.com" <mitsuhiro.kimura.kc@renesas.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "masaru.nagai.vx@renesas.com" <masaru.nagai.vx@renesas.com>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH iio] imu: inv_mpu6050: adds device tree bindings
+Date: Fri, 24 Apr 2015 14:53:07 +0530
+Message-ID: <1429867387-10219-1-git-send-email-varkab@cdac.in>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov
-> Sent: 22 April 2015 22:39
-> On 04/22/2015 11:42 PM, David Miller wrote:
-> 
-> >>     Hmm, I've been digging in the net core, and was unable to see where TX
-> >>     skb's get their NET_IP_ALIGN bytes reserved. Have I missed something?
-> >>     Probably need to print out skb's fields...
-> 
-> > NET_IP_ALIGN is for receive, not transmit.
-> 
->     But when I print 'skb->data' from the ndo_start_xmit() method (in the
-> 'sh_eth' driver), all addresses end with 2, so it looks like NET_IP_ALIGN gets
-> added somewhere...
 
-For a locally generated message:
-The TCP userdata is likely to be 4 byte aligned.
-The TCP and IP headers are multiples of 4 bytes.
-The MAC header is 14 bytes.
-So you end up with a buffer that starts on a 4n+2 boundary or an initial
-short fragment that is 4n+2 bytes long.
+Signed-off-by: Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
+---
+ .../devicetree/bindings/iio/imu/inv_mpu6050.txt    |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
 
-If a message is being forwarded the alignment probably depends on where
-it came from.
-
-If you have ethernet hardware that requires tx or rx buffers to be on
-4n boundaries you should send it back as 'not fit for purpose'.
-
-	David
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+new file mode 100644
+index 0000000..e4d8f1c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -0,0 +1,17 @@
++InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS MotionTracking Device
++
++http://www.invensense.com/mems/gyro/mpu6050.html
++
++Required properties:
++ - compatible : should be "invensense,mpu6050"
++ - reg : the I2C address of the sensor
++ - interrupt-parent : should be the phandle for the interrupt controller
++ - interrupts : interrupt mapping for GPIO IRQ
++
++Example:
++	mpu6050@68 {
++		compatible = "invensense,mpu6050";
++		reg = <0x68>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <18 1>;
++	};
+-- 
+1.7.9.5
