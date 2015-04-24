@@ -1,40 +1,48 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm)
- platform
-Date: Fri, 24 Apr 2015 15:31:24 +0200
-Message-ID: <20150424133124.GB11729@amd>
-References: <20150407121247.GA29497@amd>
- <552660C7.4020805@ti.com>
- <552663C2.70308@ti.com>
- <2137270.OOdtDiT2H4@wuerfel>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
+Date: Fri, 24 Apr 2015 13:36:22 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B21756B@SW-EX-MBX02.diasemi.com>
+References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
+ <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
+ <20150417161555.GB27440@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2137270.OOdtDiT2H4@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shc_work-JGs/UdohzUI@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150417161555.GB27440@dtor-ws>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+On 17 April 2015 17:16 Dmitry Torokhov wrote
 
-> > The difference is probably caused by memcpy() vs memcpy_fromio(). The
-> > comment above memcpy_fromio() says "This needs to be optimized". I think
-> > generally speaking memcpy_fromio() is correct for a framebuffer.
-> > 
-> > That said, if the fb is in RAM, and is only written by the CPU, I think
-> > a normal memcpy() for fb_memcpy_fromfb() should be fine...
+> On Fri, Apr 17, 2015 at 01:03:20PM +0100, S Twiss wrote:
+> > From: Steve Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add OnKey driver support for DA9063
+> >
 > 
-> Could memcpy() cause alignment traps here if the fb pointer is unaligned
-> and uncached?
+> Isn't this almost to the letter identical to da9062 that I just looked
+> at? Please find a way to not make a brand new driver for the slightest
+> variation of the chip...
+> 
 
-Original commit did not comment on any failure, so I expect that is
-not a problem here...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Dmitry 
+
+Well, the two chips DA9063 and DA9062 are very different even though their
+numbers are sequentially 62 and 63. They are different chips and not a simple
+variation. However the OnKey components to these chips *are* functionally
+similar which is why I am using the same code.  In this case the 62 OnKey driver
+works the same way as 63 OnKey driver. 
+
+Has the combined approach been done before? Are there any examples of this
+that you would like me to follow?
+
+I guess I'll drop the OnKey patch for 62 and just concentrate on your comments for
+63 instead. After 63 is in a good state then I will work at getting 62 to use a combined
+driver.
+
+Regards,
+Steve
