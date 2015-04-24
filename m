@@ -1,253 +1,78 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] bus: omap_l3_noc: Fix master id address decoding for
- OMAP5
-Date: Fri, 24 Apr 2015 13:33:12 -0500
-Message-ID: <553A8C68.5080903@ti.com>
-References: <1429898060-51944-1-git-send-email-s-anna@ti.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: BCM2836 (Raspberry Pi 2) port
+Date: Fri, 24 Apr 2015 11:41:38 -0700
+Message-ID: <87pp6tweql.fsf@eliezer.anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <5539C5A4.5070409@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1429898060-51944-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5539C5A4.5070409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2015 12:54 PM, Suman Anna wrote:
-> The L3 Error handling on OMAP5 for the most part is very similar
-> to that of OMAP4, and had leveraged common data structures and
-> register layout definitions so far. Upon closer inspection, there
-> are a few minor differences causing an incorrect decoding and
-> reporting of the master NIU upon an error:
-> 
->   1. The L3_TARG_STDERRLOG_MSTADDR.STDERRLOG_MSTADDR occupies
->      11 bits on OMAP5 as against 8 bits on OMAP4, with the master
->      NIU connID encoded in the 6 MSBs of the STDERRLOG_MSTADDR
->      field.
->   2. The CLK3 FlagMux component has 1 input source on OMAP4 and 3
->      input sources on OMAP5. The common DEBUGSS source is at a
->      different input on each SoC.
-> 
-> Fix the above issues by using a OMAP5-specific compatible property
-> and using SoC-specific data where there are differences.
-> 
-> Cc: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> 
-> Some validation traces by adding couple of traces and intentionally
-> creating L3 errors from DSP & IPU by accessing invalid Timers
-> 
-> Before Patch:
-> OMAP4 [Correct]
-> IPU accessing Timer4
-> [   46.548095] flagmux = 1, err_reg = 0x8000 err_src = 0xf
-> [   46.553344] mstaddr = 0x44 mask = 0xfc masterid = 0x11
-> [   46.553955] ------------[ cut here ]------------
-> [   46.563171] WARNING: CPU: 0 PID: 4 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
-> [   46.564941] 44000000.ocp:L3 Custom Error: MASTER DucatiM3 TARGET L4PER3 (Idle): Data Access in User mode during 
-> Functional access
-> 
-> DSP accessing Timer5:
-> [  114.018524] flagmux = 0, err_reg = 0x4 err_src = 0x2
-> [  114.023498] mstaddr = 0x20 mask = 0xfc masterid = 0x8
-> [  114.028564] ------------[ cut here ]------------
-> [  114.033233] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
-> [  114.042572] 44000000.ocp:L3 Custom Error: MASTER DSP TARGET ABE (Idle): Data Access in Supervisor mode during Functional 
-> access
-> 
-> OMAP5 [Incorrect]
-> IPU accessing Timer4:
-> [   29.579306] flagmux = 1, err_reg = 0x8000 err_src = 0xf
-> [   29.584550] mstaddr = 0x220 mask = 0xfc masterid = 0x8
-> [   29.589705] ------------[ cut here ]------------
-> [   29.594345] WARNING: CPU: 0 PID: 61 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
-> [   29.603774] 44000000.ocp:L3 Custom Error: MASTER DSP TARGET L4PER3 (Idle): Data Access in User mode during Functional 
-> access
-> 
-> DSP accessing Timer5:
-> [   21.347105] flagmux = 0, err_reg = 0x4 err_src = 0x2
-> [   21.352091] mstaddr = 0x100 mask = 0xfc masterid = 0x0
-> [   21.357250] ------------[ cut here ]------------
-> [   21.361896] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
-> [   21.371242] 44000000.ocp:L3 Custom Error: MASTER MPU TARGET ABE (Idle): Data Access in Supervisor mode during Functional 
-> access
-> 
-> After Patch:
-> OMAP4 same as above
-> 
-> OMAP5 [Corrected]
-> IPU accessing Timer4
-> [   67.896693] flagmux = 1, err_reg = 0x8000 err_src = 0xf
-> [   67.901940] mstaddr = 0x220 mask = 0x7e0 masterid = 0x11
-> [   67.907275] ------------[ cut here ]------------
-> [   67.911924] WARNING: CPU: 0 PID: 61 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
-> [   67.921357] 44000000.ocp:L3 Custom Error: MASTER DucatiM3 TARGET L4PER3 (Idle): Data Access in User mode during 
-> Functional access
-> 
-> DSP accessing Timer5
-> [   24.452565] flagmux = 0, err_reg = 0x4 err_src = 0x2
-> [   24.457552] mstaddr = 0x100 mask = 0x7e0 masterid = 0x8
-> [   24.462798] ------------[ cut here ]------------
-> [   24.467449] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:149 l3_interrupt_handler+0x280/0x388()
-> [   24.476795] 44000000.ocp:L3 Custom Error: MASTER DSP TARGET ABE (Idle): Data Access in Supervisor mode during Functional
->  access
-> 
-> 
->  .../devicetree/bindings/arm/omap/l3-noc.txt        |  1 +
->  arch/arm/boot/dts/omap5.dtsi                       |  2 +-
->  drivers/bus/omap_l3_noc.c                          |  5 ++-
->  drivers/bus/omap_l3_noc.h                          | 52 ++++++++++++++++------
->  4 files changed, 44 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/l3-noc.txt b/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
-> index 974624ea68f6..161448da959d 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
-> @@ -6,6 +6,7 @@ provided by Arteris.
->  Required properties:
->  - compatible : Should be "ti,omap3-l3-smx" for OMAP3 family
->                 Should be "ti,omap4-l3-noc" for OMAP4 family
-> +               Should be "ti,omap5-l3-noc" for OMAP5 family
->  	       Should be "ti,dra7-l3-noc" for DRA7 family
->                 Should be "ti,am4372-l3-noc" for AM43 family
->  - reg:	Contains L3 register address range for each noc domain.
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index efe5f737f39b..7d24ae0306b5 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -128,7 +128,7 @@
->  	 * hierarchy.
->  	 */
->  	ocp {
-> -		compatible = "ti,omap4-l3-noc", "simple-bus";
-> +		compatible = "ti,omap5-l3-noc", "simple-bus";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		ranges;
-> diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
-> index 11f7982cbdb3..ebee57d715d2 100644
-> --- a/drivers/bus/omap_l3_noc.c
-> +++ b/drivers/bus/omap_l3_noc.c
-> @@ -1,7 +1,7 @@
->  /*
->   * OMAP L3 Interconnect error handling driver
->   *
-> - * Copyright (C) 2011-2014 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2011-2015 Texas Instruments Incorporated - http://www.ti.com/
->   *	Santosh Shilimkar <santosh.shilimkar@ti.com>
->   *	Sricharan <r.sricharan@ti.com>
->   *
-> @@ -233,7 +233,8 @@ static irqreturn_t l3_interrupt_handler(int irq, void *_l3)
->  }
->  
->  static const struct of_device_id l3_noc_match[] = {
-> -	{.compatible = "ti,omap4-l3-noc", .data = &omap_l3_data},
-> +	{.compatible = "ti,omap4-l3-noc", .data = &omap4_l3_data},
-> +	{.compatible = "ti,omap5-l3-noc", .data = &omap5_l3_data},
->  	{.compatible = "ti,dra7-l3-noc", .data = &dra_l3_data},
->  	{.compatible = "ti,am4372-l3-noc", .data = &am4372_l3_data},
->  	{},
-> diff --git a/drivers/bus/omap_l3_noc.h b/drivers/bus/omap_l3_noc.h
-> index 95254585db86..3ba40db7380b 100644
-> --- a/drivers/bus/omap_l3_noc.h
-> +++ b/drivers/bus/omap_l3_noc.h
-> @@ -1,7 +1,7 @@
->  /*
->   * OMAP L3 Interconnect  error handling driver header
->   *
-> - * Copyright (C) 2011-2014 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2011-2015 Texas Instruments Incorporated - http://www.ti.com/
->   *	Santosh Shilimkar <santosh.shilimkar@ti.com>
->   *	sricharan <r.sricharan@ti.com>
->   *
-> @@ -175,16 +175,14 @@ static struct l3_flagmux_data omap_l3_flagmux_clk2 = {
->  };
->  
->  
-> -static struct l3_target_data omap_l3_target_data_clk3[] = {
-> -	{0x0100, "EMUSS",},
-> -	{0x0300, "DEBUG SOURCE",},
-> -	{0x0,	"HOST CLK3",},
-> +static struct l3_target_data omap4_l3_target_data_clk3[] = {
-> +	{0x0100, "DEBUGSS",},
->  };
->  
-> -static struct l3_flagmux_data omap_l3_flagmux_clk3 = {
-> +static struct l3_flagmux_data omap4_l3_flagmux_clk3 = {
->  	.offset = 0x0200,
-> -	.l3_targ = omap_l3_target_data_clk3,
-> -	.num_targ_data = ARRAY_SIZE(omap_l3_target_data_clk3),
-> +	.l3_targ = omap4_l3_target_data_clk3,
-> +	.num_targ_data = ARRAY_SIZE(omap4_l3_target_data_clk3),
->  };
->  
->  static struct l3_masters_data omap_l3_masters[] = {
-> @@ -215,21 +213,49 @@ static struct l3_masters_data omap_l3_masters[] = {
->  	{ 0x32, "USBHOSTFS"}
->  };
->  
-> -static struct l3_flagmux_data *omap_l3_flagmux[] = {
-> +static struct l3_flagmux_data *omap4_l3_flagmux[] = {
->  	&omap_l3_flagmux_clk1,
->  	&omap_l3_flagmux_clk2,
-> -	&omap_l3_flagmux_clk3,
-> +	&omap4_l3_flagmux_clk3,
->  };
->  
-> -static const struct omap_l3 omap_l3_data = {
-> -	.l3_flagmux = omap_l3_flagmux,
-> -	.num_modules = ARRAY_SIZE(omap_l3_flagmux),
-> +static const struct omap_l3 omap4_l3_data = {
-> +	.l3_flagmux = omap4_l3_flagmux,
-> +	.num_modules = ARRAY_SIZE(omap4_l3_flagmux),
->  	.l3_masters = omap_l3_masters,
->  	.num_masters = ARRAY_SIZE(omap_l3_masters),
->  	/* The 6 MSBs of register field used to distinguish initiator */
->  	.mst_addr_mask = 0xFC,
->  };
->  
-> +/* OMAP5 data */
-> +static struct l3_target_data omap5_l3_target_data_clk3[] = {
-> +	{0x0100, "L3INSTR",},
-> +	{0x0300, "DEBUGSS",},
-> +	{0x0,	 "HOSTCLK3",},
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-"HOST CLK"
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-> +};
-> +
-> +static struct l3_flagmux_data omap5_l3_flagmux_clk3 = {
-> +	.offset = 0x0200,
-> +	.l3_targ = omap5_l3_target_data_clk3,
-> +	.num_targ_data = ARRAY_SIZE(omap5_l3_target_data_clk3),
-> +};
-> +
-> +static struct l3_flagmux_data *omap5_l3_flagmux[] = {
-> +	&omap_l3_flagmux_clk1,
-> +	&omap_l3_flagmux_clk2,
-> +	&omap5_l3_flagmux_clk3,
-> +};
-> +
-> +static const struct omap_l3 omap5_l3_data = {
-> +	.l3_flagmux = omap5_l3_flagmux,
-> +	.num_modules = ARRAY_SIZE(omap5_l3_flagmux),
-> +	.l3_masters = omap_l3_masters,
-> +	.num_masters = ARRAY_SIZE(omap_l3_masters),
-> +	/* The 6 MSBs of register field used to distinguish initiator */
-> +	.mst_addr_mask = 0x7E0,
-> +};
-> +
->  /* DRA7 data */
->  static struct l3_target_data dra_l3_target_data_clk1[] = {
->  	{0x2a00, "AES1",},
-> 
+> On 04/21/2015 12:09 PM, Eric Anholt wrote:
+>> This is my first submission of a Raspberry Pi 2 port.  It can be found
+>> at https://github.com/anholt/linux/tree/bcm2836
+>>=20
+>> I'm using the 2835 interrupt controller support, without adding the
+>> checks for ARM local interrupts first.  That means no support for IPIs
+>> (and thus no SMP), no PMU events, and no local timer (I'm using the
+>> same 2835 peripheral one).
+>>=20
+>> It supports a similar featureset to Pi 1 at this point.  Serial and SD
+>> cards work.  Just one CPU supported.  USB (ethernet) works if you use
+>> U-Boot, or my mailbox series
+>> (https://github.com/anholt/linux/tree/bcm2836-mbox).
+>
+> I can't quite get this to work. I think what's happening is that U-Boot
+> is over-writing the location of the code/data that the CPU1..3 pin loop
+> uses. Do you know what that address is so I can confirm that?
+>
+> I suspect this because when I load the kernel/DT in U-Boot, or when I
+> jump to the kernel to boot it, I see lots of extra duplicated characters
+> on the UART, like all 4 CPUs are booting Linux. For example:
 
-If tony does not mind dts+driver patch, then except for the above comment:
+Oops, I was just extrapolating that U-Boot would work.  I've quit using
+it because of the extra configuration work (particularly the compiled
+text files for the boot scripts).
 
-Acked-by: Nishanth Menon <nm@ti.com>
+I haven't looked into how SMP works, because I don't have the interrupt
+support necessary yet (bcm2836-irq branch for hacks in that direction).
 
--- 
-Regards,
-Nishanth Menon
+And in further testing, the USB is actually not working and I'm not sure
+what gave me the idea that it was.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVOo5iAAoJELXWKTbR/J7oKNMP/3r55opxy/4zajESxXUChWT/
+Gfy76wK29wDsChDDFhwW0Seo0vwLq8J1+K3DtTUzFEUaxoDopL+t+M7CGxGBt9ZZ
+ji1lBpfVHlyQ0TUtEnW2Q1M4PY+vUgQCZfCNtyL5GZOWM7JH6X5XUkaM18ZCLJz6
+4ptA2MNr16lZEotkJ9xfyaYWRVtXe7vZ0wtDYBPztKi1Y3KelDpbqcjPyTvRAcGW
+wrfGMG5mngFDUwQOtSJPATYdsQJ48aLWSRdjueTaV40y2KRlmvwvgH03d2zIB9YK
+JqbjGtZY00l1DfN/iGPX/7A0Ckw6dfD1xWN1YtQKO1GOsyGEsvwnLwQy6c0fkHKB
+RzgqOcp7hg5lAtdWMhXHMetzcCFJWd485n6F/3ATbig+Ho9FmJp9tKjvGQD8WOfY
+WjoASH/w9KY+Ej+1XNa6v+wWkONLvCv2YDMMMx5NRfiZ+r8/uMARXquycCao/jJA
+twh2vHJBKUo3GpX6XHnFENvpWOxrv7sP692MfGSJmYNJn8CJJ6OjPw8wnhybxbuI
+UXM9JojxGQsqwKT+4wWHfS4J1sGeJ9vTGQh/N5LyoYZHbkzTPIYG6ivheOXrTQVc
+ubef53oIrIbaOKLqZ5AZjma1FdhrjBuqf/qPQ4siYfPgjl0+1hOnAy92Ka5BfqcN
+i29u3Xf5MvIHFrNfjBtX
+=152N
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
