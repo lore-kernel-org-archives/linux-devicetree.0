@@ -1,39 +1,88 @@
-From: Haikun Wang <haikun.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v1] Documentation: fsl-quadspi: Add an entry for the ls1 compatible string
-Date: Fri, 24 Apr 2015 18:24:26 +0800
-Message-ID: <1429871066-36552-1-git-send-email-haikun.wang@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Haikun Wang <haikun.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATCH v3 00/12] MIPS: ath79: Add OF support and DTS for TL-WR1043ND
+Date: Fri, 24 Apr 2015 13:41:07 +0200
+Message-ID: <1429875679-14973-1-git-send-email-albeu@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-"fsl,ls1-qspi" is also a valid compatible string, so add an entry for it.
+This series add OF bindings and code support for the interrupt
+controllers, clocks and GPIOs. However it was only tested on a
+TL-WR1043ND with an AR9132, others SoCs are untested, and a few are
+not supported at all.
 
-Signed-off-by: Haikun Wang <haikun.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Most code changes base on the previous bug fix series:
+[PATCH v2 0/5] MIPS: ath79: Various small fix to prepare OF support
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-index 4461dc7..81478ec 100644
---- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-@@ -1,7 +1,7 @@
- * Freescale Quad Serial Peripheral Interface(QuadSPI)
- 
- Required properties:
--  - compatible : Should be "fsl,vf610-qspi" or "fsl,imx6sx-qspi"
-+  - compatible : Should be "fsl,vf610-qspi", "fsl,ls1-qspi" or "fsl,imx6sx-qspi"
-   - reg : the first contains the register location and length,
-           the second contains the memory mapping address and length
-   - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+The requested patch to move the GPIO driver to drivers/gpio is ready and
+will follow once it is clearer if this serie get merged.
+
+ChangeLog:
+v2: * Fixed the OF bindings and DTS to use ePAPR standardized names
+    * Fixed the typos in the OF bindings
+    * Added an ngpios property to the GPIO binding and driver
+    * Removed all the soc_is_xxx() calls out of the GPIO driver probe()
+    * Updated the DTS patches to the new directory structure and merged both
+      in one. Having 3 patches to add Makefile, SoC dtsi and board DTS seemed
+      a bit overkill.
+    * Moved the patch to use the common clk API to the bug fix serie to keep
+      this one cleaner.
+
+v3: * Moved the builtin DTB menu to the patch adding the TL-WR1043ND DTS
+    * Made the builtin DTB menu optional
+    * Fixed more typos
+    * Really fixed the DDR controller binding example to use ePAPR names
+    * Fixed the qca9550 compatible string in the PLL bindings and driver
+    * Fixed the example in the GPIO controller binding
+    * Moved the new vendor entry to the correct place
+
+Alban Bedel (12):
+  devicetree: Add bindings for the SoC of the ATH79 family
+  MIPS: ath79: Add basic device tree support
+  devicetree: Add bindings for the ATH79 DDR controllers
+  devicetree: Add bindings for the ATH79 interrupt controllers
+  devicetree: Add bindings for the ATH79 MISC interrupt controllers
+  MIPS: ath79: Add OF support to the IRQ controllers
+  devicetree: Add bindings for the ATH79 PLL controllers
+  MIPS: ath79: Add OF support to the clocks
+  devicetree: Add bindings for the ATH79 GPIO controllers
+  MIPS: ath79: Add OF support to the GPIO driver
+  of: Add vendor prefix for TP-Link Technologies Co. Ltd
+  MIPS: Add basic support for the TL-WR1043ND version 1
+
+ .../devicetree/bindings/clock/qca,ath79-pll.txt    |  33 ++++++
+ .../devicetree/bindings/gpio/gpio-ath79.txt        |  38 +++++++
+ .../interrupt-controller/qca,ath79-cpu-intc.txt    |  44 ++++++++
+ .../interrupt-controller/qca,ath79-misc-intc.txt   |  30 +++++
+ .../memory-controllers/ath79-ddr-controller.txt    |  35 ++++++
+ .../devicetree/bindings/mips/ath79-soc.txt         |  21 ++++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/mips/Kconfig                                  |   1 +
+ arch/mips/ath79/Kconfig                            |  12 ++
+ arch/mips/ath79/clock.c                            |  63 +++++++----
+ arch/mips/ath79/dev-common.c                       |  51 +++++++++
+ arch/mips/ath79/gpio.c                             |  79 ++++++++++----
+ arch/mips/ath79/irq.c                              |  87 ++++++++++++++-
+ arch/mips/ath79/machtypes.h                        |   1 +
+ arch/mips/ath79/setup.c                            |  27 ++++-
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/qca/Makefile                    |   9 ++
+ arch/mips/boot/dts/qca/ar9132.dtsi                 | 121 +++++++++++++++++++++
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts   |  83 ++++++++++++++
+ include/linux/platform_data/gpio-ath79.h           |  19 ++++
+ 20 files changed, 713 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-ath79.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-cpu-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/ath79-soc.txt
+ create mode 100644 arch/mips/boot/dts/qca/Makefile
+ create mode 100644 arch/mips/boot/dts/qca/ar9132.dtsi
+ create mode 100644 arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+ create mode 100644 include/linux/platform_data/gpio-ath79.h
+
 -- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.0
