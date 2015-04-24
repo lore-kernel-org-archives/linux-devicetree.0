@@ -1,78 +1,137 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: BCM2836 (Raspberry Pi 2) port
-Date: Fri, 24 Apr 2015 11:41:38 -0700
-Message-ID: <87pp6tweql.fsf@eliezer.anholt.net>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <5539C5A4.5070409@wwwdotorg.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] Renesas Ethernet AVB driver
+Date: Fri, 24 Apr 2015 21:53:23 +0300
+Message-ID: <553A9123.3010906@cogentembedded.com>
+References: <32501816.HtkLenWQpn@wasted.cogentembedded.com> <552C4554.2070608@gmail.com> <552D8898.3060905@cogentembedded.com> <55382D4E.5070708@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5539C5A4.5070409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <55382D4E.5070708@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com
+Cc: linux-sh@vger.kernel.org, Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>, Ben Hutchings <ben.hutchings@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 04/23/2015 02:22 AM, Florian Fainelli wrote:
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+[...]
 
-> On 04/21/2015 12:09 PM, Eric Anholt wrote:
->> This is my first submission of a Raspberry Pi 2 port.  It can be found
->> at https://github.com/anholt/linux/tree/bcm2836
->>=20
->> I'm using the 2835 interrupt controller support, without adding the
->> checks for ARM local interrupts first.  That means no support for IPIs
->> (and thus no SMP), no PMU events, and no local timer (I'm using the
->> same 2835 peripheral one).
->>=20
->> It supports a similar featureset to Pi 1 at this point.  Serial and SD
->> cards work.  Just one CPU supported.  USB (ethernet) works if you use
->> U-Boot, or my mailbox series
->> (https://github.com/anholt/linux/tree/bcm2836-mbox).
->
-> I can't quite get this to work. I think what's happening is that U-Boot
-> is over-writing the location of the code/data that the CPU1..3 pin loop
-> uses. Do you know what that address is so I can confirm that?
->
-> I suspect this because when I load the kernel/DT in U-Boot, or when I
-> jump to the kernel to boot it, I see lots of extra duplicated characters
-> on the UART, like all 4 CPUs are booting Linux. For example:
+>>>> +    if (ecmd->duplex == DUPLEX_FULL)
+>>>> +        priv->duplex = 1;
+>>>> +    else
+>>>> +        priv->duplex = 0;
 
-Oops, I was just extrapolating that U-Boot would work.  I've quit using
-it because of the extra configuration work (particularly the compiled
-text files for the boot scripts).
+>>> Why not use what priv->phydev->duplex has cached for you?
 
-I haven't looked into how SMP works, because I don't have the interrupt
-support necessary yet (bcm2836-irq branch for hacks in that direction).
+>>     Because we compare 'priv->duplex' with 'priv->phydev->duplex' in
+>> ravb_adjust_link(). Or what did you mean?
 
-And in further testing, the USB is actually not working and I'm not sure
-what gave me the idea that it was.
+> Oh I see how you are using this now, but it does not look like it is
+> necessary, since you use phy_ethtool_sset() using phydev->duplex
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+   It only writes to it, doesn't use it AFAICS...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> directly ought to be enough anywhere in your driver?
 
-iQIcBAEBCgAGBQJVOo5iAAoJELXWKTbR/J7oKNMP/3r55opxy/4zajESxXUChWT/
-Gfy76wK29wDsChDDFhwW0Seo0vwLq8J1+K3DtTUzFEUaxoDopL+t+M7CGxGBt9ZZ
-ji1lBpfVHlyQ0TUtEnW2Q1M4PY+vUgQCZfCNtyL5GZOWM7JH6X5XUkaM18ZCLJz6
-4ptA2MNr16lZEotkJ9xfyaYWRVtXe7vZ0wtDYBPztKi1Y3KelDpbqcjPyTvRAcGW
-wrfGMG5mngFDUwQOtSJPATYdsQJ48aLWSRdjueTaV40y2KRlmvwvgH03d2zIB9YK
-JqbjGtZY00l1DfN/iGPX/7A0Ckw6dfD1xWN1YtQKO1GOsyGEsvwnLwQy6c0fkHKB
-RzgqOcp7hg5lAtdWMhXHMetzcCFJWd485n6F/3ATbig+Ho9FmJp9tKjvGQD8WOfY
-WjoASH/w9KY+Ej+1XNa6v+wWkONLvCv2YDMMMx5NRfiZ+r8/uMARXquycCao/jJA
-twh2vHJBKUo3GpX6XHnFENvpWOxrv7sP692MfGSJmYNJn8CJJ6OjPw8wnhybxbuI
-UXM9JojxGQsqwKT+4wWHfS4J1sGeJ9vTGQh/N5LyoYZHbkzTPIYG6ivheOXrTQVc
-ubef53oIrIbaOKLqZ5AZjma1FdhrjBuqf/qPQ4siYfPgjl0+1hOnAy92Ka5BfqcN
-i29u3Xf5MvIHFrNfjBtX
-=152N
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    'priv->phydev' is NULL when the device is closed, so I just can't call 
+phy_ethtool_sset().
+
+> Unless there is a
+> mode where you are running PHY-less, and not using a fixed PHY to
+> emulate a PHY...
+
+    No such mode.
+
+>> [...]
+
+>>>> +static int ravb_nway_reset(struct net_device *ndev)
+>>>> +{
+>>>> +    struct ravb_private *priv = netdev_priv(ndev);
+>>>> +    int error = -ENODEV;
+>>>> +    unsigned long flags;
+>>>> +
+>>>> +    if (priv->phydev) {
+
+>>> Is checking against priv->phydev really necessary, it does not look like
+>>> the driver will work or accept an invalid PHY device at all anyway?
+
+    This check was copied from sh_eth that was fixed by Ben ot to crash due to
+'ethtool' being called on closed device, see:
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/net/ethernet/renesas/sh_eth.c?id=4f9dce230b32eec45cec8c28cae61efdfa2f7d57
+
+    That commit refers to a dangling pointer, not sure what does this mean...
+The PHy device doesn't seem to be freed by phy_disconnect(). Ben?
+
+>>     You still can run 'ethtool' on a closed network device.
+
+> Sure, but that does not mean that priv->phydev becomes NULL, even if you
+
+    It does with 'sh_eth' and hence with 'ravb' too.
+
+> have called phy_disconnect() in your ndo_close() function, you should
+> still have a correct priv->phydev reference to the PHY device, no?
+
+    PHY device is returned by of_phy_connect() each time the device is opened, 
+see ravb_phy_init().
+    We could indeed remove NULLifying 'priv->phydev' from ravb_close() though, 
+needs testing...
+
+[...]
+
+>>>> +static int ravb_start_xmit(struct sk_buff *skb, struct net_device
+>>>> *ndev)
+>>>> +{
+>>>> +    struct ravb_private *priv = netdev_priv(ndev);
+>>>> +    struct ravb_tstamp_skb *ts_skb = NULL;
+>>>> +    struct ravb_tx_desc *desc;
+>>>> +    unsigned long flags;
+>>>> +    void *buffer;
+>>>> +    u32 entry;
+>>>> +    u32 tccr;
+>>>> +    int q;
+>>>> +
+>>>> +    /* If skb needs TX timestamp, it is handled in network control
+>>>> queue */
+>>>> +    q = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) ? RAVB_NC :
+>>>> RAVB_BE;
+>>>> +
+>>>> +    spin_lock_irqsave(&priv->lock, flags);
+>>>> +    if (priv->cur_tx[q] - priv->dirty_tx[q] >= priv->num_tx_ring[q]
+>>>> - 4) {
+
+>>> What's so special about 4 here, you don't seem to be using 4 descriptors
+
+>>     Not sure, this was clearly copied from sh_eth.c. Perhaps it's just a
+>> threshold for calling ravb_tx_free()...
+
+> Then 1 inclusive or 0 exclusive is probably what you should be comparing
+> to, otherwise you may just stop the tx queue earlier than needed.
+
+    Will look into this...
+
+[...]
+
+>>>> +    desc->ds = skb->len;
+>>>> +    desc->dptr = dma_map_single(&ndev->dev, buffer, skb->len,
+>>>> +                    DMA_TO_DEVICE);
+>>>> +    if (dma_mapping_error(&ndev->dev, desc->dptr)) {
+>>>> +        dev_kfree_skb_any(skb);
+>>>> +        priv->tx_skb[q][entry] = NULL;
+
+>>> Don't you need to make sure this NULL is properly seen by ravb_tx_free()?
+
+>>     You mean doing this before releasing the spinlock? Or what?
+
+> Yes, the locking your transmit function seems to open windows during
+> which it is possible for the interrupt handler running on another CPU to
+> mess up with the data you are using here.
+
+    Will look into that too...
+
+> --
+> Florian
+
+WBR, Sergei
+
