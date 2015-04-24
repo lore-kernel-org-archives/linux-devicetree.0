@@ -1,175 +1,107 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Thu, 23 Apr 2015 17:15:04 -0700
-Message-ID: <CAPw-ZTma9C6QhaCseWEOPn5nmym=TSU=GgBigSL2uc3xMUeUPQ@mail.gmail.com>
-References: <1426573821-1937-1-git-send-email-lho@apm.com>
-	<1426573821-1937-2-git-send-email-lho@apm.com>
-	<1426573821-1937-3-git-send-email-lho@apm.com>
-	<1426573821-1937-4-git-send-email-lho@apm.com>
-	<CAL_JsqLyoEOw-Xzr2_QC-qbVW50CBEintD4hAtiY=_xwR5EBgw@mail.gmail.com>
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [PATCH 2/2] mtd: nand: Add support for Arasan Nand Flash Controller
+Date: Fri, 24 Apr 2015 06:08:09 +0530
+Message-ID: <CAGnW=BbqL3pVm=W3S7QqEtEqMmkihOfpbZ4HKjyhcHUFXWitWA@mail.gmail.com>
+References: <1429192597-23519-1-git-send-email-punnaia@xilinx.com>
+	<6ba05766-d8b9-436d-a953-447edc24b179@BN1BFFO11FD051.protection.gbl>
+	<5538EA69.2080702@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLyoEOw-Xzr2_QC-qbVW50CBEintD4hAtiY=_xwR5EBgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5538EA69.2080702@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, Alexandre Courbot <acourbot@nvidia.co>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
->> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
+On Thu, Apr 23, 2015 at 6:19 PM, Michal Simek <monstr@monstr.eu> wrote:
+> On 04/16/2015 03:56 PM, Punnaiah Choudary Kalluri wrote:
+>> Added the basic driver for Arasan Nand Flash Controller used in
+>> Zynq UltraScale+ MPSoC. It supports only Hw Ecc and upto 24bit
+>> correction.
 >>
->> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
->> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 >> ---
->>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   82 ++++++++++++++++++++
->>  1 files changed, 82 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>>  drivers/mtd/nand/Kconfig      |    7 +
+>>  drivers/mtd/nand/Makefile     |    1 +
+>>  drivers/mtd/nand/arasan_nfc.c |  861 +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 869 insertions(+), 0 deletions(-)
+>>  create mode 100644 drivers/mtd/nand/arasan_nfc.c
 >>
->> diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+>> index 5897d8d..64e497c 100644
+>> --- a/drivers/mtd/nand/Kconfig
+>> +++ b/drivers/mtd/nand/Kconfig
+>> @@ -530,4 +530,11 @@ config MTD_NAND_HISI504
+>>       help
+>>         Enables support for NAND controller on Hisilicon SoC Hip04.
+>>
+>> +config MTD_NAND_ARASAN
+>> +     tristate "Support for Arasan Nand Flash controller"
+>> +     depends on MTD_NAND
+>> +     help
+>> +       Enables the driver for the Arasan Nand Flash controller on
+>> +       Zynq UltraScale+ MPSoC.
+>> +
+>>  endif # MTD_NAND
+>> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+>> index 582bbd05..fd863ea 100644
+>> --- a/drivers/mtd/nand/Makefile
+>> +++ b/drivers/mtd/nand/Makefile
+>> @@ -52,5 +52,6 @@ obj-$(CONFIG_MTD_NAND_XWAY)         += xway_nand.o
+>>  obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH) += bcm47xxnflash/
+>>  obj-$(CONFIG_MTD_NAND_SUNXI)         += sunxi_nand.o
+>>  obj-$(CONFIG_MTD_NAND_HISI504)               += hisi504_nand.o
+>> +obj-$(CONFIG_MTD_NAND_ARASAN)                += arasan_nfc.o
+>>
+>>  nand-objs := nand_base.o nand_bbt.o nand_timings.o
+>> diff --git a/drivers/mtd/nand/arasan_nfc.c b/drivers/mtd/nand/arasan_nfc.c
 >> new file mode 100644
->> index 0000000..db8c1c4
+>> index 0000000..a4b407b
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->> @@ -0,0 +1,82 @@
->> +* APM X-Gene SoC EDAC nodes
+>> +++ b/drivers/mtd/nand/arasan_nfc.c
+>> @@ -0,0 +1,861 @@
+>> +/*
+>> + * Arasan Nand Flash Controller Driver
+>> + *
+>> + * Copyright (C) 2014 - 2015 Xilinx, Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it under
+>> + * the terms of the GNU General Public License version 2 as published by the
+>> + * Free Software Foundation; either version 2 of the License, or (at your
+>> + * option) any later version.
+>> + */
 >> +
->> +EDAC nodes are defined to describe on-chip error detection and correction.
->> +There are four types of EDAC:
->> +
->> +  memory controller    - Memory controller
->> +  PMD (L1/L2)          - Processor module unit (PMD) L1/L2 cache
->> +  L3                   - CPU L3 cache
->> +  SoC                  - SoC IP such as SATA, Ethernet, and etc
->> +
->> +The following section describes the memory controller DT node binding.
->> +
->> +Required properties:
->> +- compatible           : Shall be "apm,xgene-edac-mc".
->> +- reg                  : First resource shall be the PCP resource.
->> +                         Second resource shall be the CSW resource.
->> +                         Third resource shall be the MCB-A resource.
->> +                         Fourth resource shall be the MCB-B resource.
->> +                         Fifth resource shall be the MCU resource.
->> +- interrupts            : Interrupt-specifier for MCU error IRQ(s).
->> +
->> +The following section describes the L1/L2 DT node binding.
->> +
->> +- compatible           : Shall be "apm,xgene-edac-pmd".
->> +- reg                  : First resource shall be the PCP resource.
->> +                         Second resource shall be the PMD resource.
->> +                         Third resource shall be the PMD efuse resource.
->> +- interrupts            : Interrupt-specifier for PMD error IRQ(s).
->> +
->> +The following section describes the L3 DT node binding.
->> +
->> +- compatible           : Shall be "apm,xgene-edac-l3".
->> +- reg                  : First resource shall be the PCP resource.
->> +                         Second resource shall be the L3 resource.
->> +- interrupts            : Interrupt-specifier for L3 error IRQ(s).
->> +
->> +The following section describes the SoC DT node binding.
->> +
->> +- compatible           : Shall be "apm,xgene-edac-soc"".
->> +- reg                  : First resource shall be the PCP resource.
->> +                         Second resource shall be the SoC resource.
->> +                         Third resource shall be the register bus resource.
->> +- interrupts           : Interrupt-specifier for SoC error IRQ(s).
->> +
->> +Example:
->> +       edacmc0: edacmc0@7e800000 {
->> +               compatible = "apm,xgene-edac-mc";
->> +               reg = <0x0 0x78800000 0x0 0x1000>,
->> +                     <0x0 0x7e200000 0x0 0x1000>,
->> +                     <0x0 0x7e700000 0x0 0x1000>,
->> +                     <0x0 0x7e720000 0x0 0x1000>,
->> +                     <0x0 0x7e800000 0x0 0x1000>;
->> +               interrupts = <0x0 0x20 0x4>,
->> +                            <0x0 0x21 0x4>;
->> +       };
->> +
->> +       edacl3: edacl3@7e600000 {
->> +               compatible = "apm,xgene-edac-l3";
->> +               reg = <0x0 0x78800000 0x0 0x1000>,
+>> +#include <linux/delay.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mtd/mtd.h>
+>> +#include <linux/mtd/nand.h>
+>> +#include <linux/mtd/partitions.h>
 >
-> You are defining overlapping resources. Don't do that.
+> For !CONFIG_OF_MTD here should be also. Kbuild system just reported this
+> problem.
 >
-> It looks to me like you are creating nodes based on driver functions,
-> not h/w blocks. I would expect to see a memory controller node which
-> contains ECC related registers. If you have blocks with multiple
-> unrelated functions, then you should be using syscon to divide up the
-> functions to different subsystems like EDAC.
+> #include <linux/of.h>
 >
+> For the rest
+> Tested-by: Michal Simek <michal.simek@xilinx.com>
 
-How about these bindings:
+Ok. I will check and update this.
 
-efuse: efuse@1054a000 {
-        compatible = "syscon";
-        reg = <0x0 0x1054a000 0x0 0x20>;
-};
+Thanks
+Punnaiah
 
-pcperror: pcperror@78800000 {
-        compatible = "syscon";
-        reg = <0x0 0x78800000 0x0 0x100>;
-};
-
-csw: csw@7e200000 {
-        compatible = "syscon";
-        reg = <0x0 0x7e200000 0x0 0x1000>;
-};
-
-mcba: mcba@7e700000 {
-        compatible = "syscon";
-        reg = <0x0 0x7e700000 0x0 0x1000>;
-}
-
-mcbb: mcbb@7e720000 {
-        compatible = "syscon";
-        reg = <0x0 0x7e720000 0x0 0x1000>;
-}
-
-edacmc0: edacmc0@7e800000 {
-        compatible = "apm,xgene-edac-mc";
-        pcpmap = <&pcperror>;
-        cswmap = <&csw>;
-        mcbamap = <&mcba>;
-        mcbbmap = <&mcbb>;
-        reg = <0x0 0x7e800000 0x0 0x1000>;
-        interrupts = <0x0 0x20 0x4>,
-                         <0x0 0x21 0x4>;
-};
-
-edacpmd0: edacpmd0@7c000000 {
-        compatible = "apm,xgene-edac-pmd";
-        regmap = <&pcperror>;
-        efusemap = <&efuse>;
-        reg = <0x0 0x7c000000 0x0 0x200000>;
-        interrupts = <0x0 0x20 0x4>,
-                         <0x0 0x21 0x4>;
-};
-
-edacl3: edacl3@7e600000 {
-        compatible = "apm,xgene-edac-l3";
-        pcpmap = <&pcperror>;
-        reg = <0x0 0x7e600000 0x0 0x1000>;
-        interrupts = <0x0 0x20 0x4>,
-                         <0x0 0x21 0x4>;
-};
-
-edacsoc: edacsoc@7e930000 {
-        compatible = "apm,xgene-edac-soc";
-        pcpmap = <&pcperror>;
-        reg = <0x0 0x7e930000 0x0 0x1000>,
-                 <0x0 0x7e000000 0x0 0x1000>;
-        interrupts = <0x0 0x20 0x4>,
-                         <0x0 0x21 0x4>,
-                         <0x0 0x27 0x4>;
-};
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+> Michal
+>
+> --
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+>
+>
