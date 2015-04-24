@@ -1,62 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power
- amplifiers
-Date: Fri, 24 Apr 2015 10:28:39 +0100
-Message-ID: <20150424092839.GI22845@sirena.org.uk>
-References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
- <1429134141-17924-2-git-send-email-cernekee@chromium.org>
- <20150418113632.GE26185@sirena.org.uk>
- <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
- <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v7 0/3] Add ktd2692 Flash LED driver using LED Flash class
+Date: Fri, 24 Apr 2015 15:00:35 +0530
+Message-ID: <553A0D3B.2060101@gmail.com>
+References: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y+dl6OcicAkN96vR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/23/2015 06:48 PM, Ingi Kim wrote:
+> This patch adds ktd2692 Flash LED driver with LED Flash class
+>
+> Change in v7:
+> 	- Add flash-max-microamp property for Flash LED
+> 	- Change gpio-legacy interface to gpio consumer interface
+>
+> Change in v6 resend:
+> 	- Adjust indent using checkpatch.pl script with strict option
+>
+> Change in v6:
+> 	- Change goto label to if-else
+> 	- Change DT binding style for LED device binding
+>
+> Change in v5:
+> 	- Clean up the code
+> 	- Fix help message of Kconfig
+> 	- Fix issue related with regulator and mutex usage
+> 	- Remove tab spaces in bindings
+>
+> Change in v4:
+> 	- Clean up the code
+> 	- Modify binding documentation of ktd2692
+>
+> Change in v3:
+> 	- Clean up the code
+> 	- Add aux gpio pin to control Flash LED
+>
+> Change in v2:
+> 	- Introduction of LED Flash class as Jacek's comment
+> 	- Supplement of binding documentation
+> 	- Rename gpio control pin and remove unused pin
+> 	- Add regulator for the Flash LED
+>
+> Ingi Kim (3):
+>   of: Add vendor prefix for Kinetic technologies
+>   leds: ktd2692: add device tree bindings for ktd2692
+>   leds: Add ktd2692 flash LED driver
+>
+>  .../devicetree/bindings/leds/leds-ktd2692.txt      |  47 +++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  drivers/leds/Kconfig                               |   9 +
+>  drivers/leds/Makefile                              |   1 +
+>  drivers/leds/leds-ktd2692.c                        | 435 +++++++++++++++++++++
+>  5 files changed, 493 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+>  create mode 100644 drivers/leds/leds-ktd2692.c
+>
+Reviewed-by: Varka Bhadram <varkabhadram@gmail.com>
 
---y+dl6OcicAkN96vR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks
 
-On Thu, Apr 23, 2015 at 05:47:49PM -0700, Kevin Cernekee wrote:
-
-> This is mostly working OK, but regcache_sync() assumes that the
-> hardware registers have been reset back to the default values.  The
-> "pdn" GPIO doesn't actually reset the state of the tas571x; it just
-> makes I2C inaccessible and inhibits audio output.  So if the factory
-> default for mute is 0, corner cases like this fail:
-
-...
-
-> Aside from unnecessarily pulsing the reset GPIO when transitioning
-> back from SND_SOC_BIAS_OFF or overriding regcache_default_sync(), can
-> you think of a way to work around this?
-
-Do you need to work around it?  If the register map is being perserved
-you don't need to sync so just don't do it - it's just that the normal
-expectation would be that power down would cause the register map to be
-reset.
-
---y+dl6OcicAkN96vR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVOgzHAAoJECTWi3JdVIfQ7hkH/1+Yd8imLUyeL3ROffmFUfAn
-fN7AhxP5HE/fmyFrUHx09FT18qpPfcP/ijQdiey0YE0UhEITWnzE1jWZ8YB9PNU6
-iMDKQ561LCIw6xThw16Y9PGWkaqnpqXZjVy3i1QVdh7f6eclrbL6hxihxxkw/5kX
-6IoYzFB0TMKBpLo9/CfLDK9ZjBBRdxsaCx7EZrP1y6qT7u0NMPSinVMNEfvwvvuY
-Q3L92jFNEAd8Tj5xycPBd5nMBgyltMTLUQngjEkXfqGVJkwxpzhN/oqtkIRXBzmI
-zdvr/VSEo6HWCwBV3h6fXQ0uHGU6A/wpMneqqP4OtSY3jFan25DNB+oNwupV1Ck=
-=f0W7
------END PGP SIGNATURE-----
-
---y+dl6OcicAkN96vR--
+-- 
+Varka Bhadram
