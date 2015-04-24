@@ -1,69 +1,89 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v7 0/3] Add ktd2692 Flash LED driver using LED Flash class
-Date: Fri, 24 Apr 2015 15:00:35 +0530
-Message-ID: <553A0D3B.2060101@gmail.com>
-References: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH 02/14] MIPS: ath79: Add basic device tree support
+Date: Fri, 24 Apr 2015 11:39:40 +0200
+Message-ID: <20150424113940.132ac92c@tock>
+References: <1429280669-2986-1-git-send-email-albeu@free.fr>
+	<1429280669-2986-3-git-send-email-albeu@free.fr>
+	<1429340752.16771.120.camel@x220>
+	<20150418183149.69c0795b@tock>
+	<1429523456.14597.23.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1429795085-22171-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: sakari.ailus@iki.fi, j.anaszewski@samsung.com, joe@perches.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1429523456.14597.23.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Aban Bedel <albeu@free.fr>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2015 06:48 PM, Ingi Kim wrote:
-> This patch adds ktd2692 Flash LED driver with LED Flash class
->
-> Change in v7:
-> 	- Add flash-max-microamp property for Flash LED
-> 	- Change gpio-legacy interface to gpio consumer interface
->
-> Change in v6 resend:
-> 	- Adjust indent using checkpatch.pl script with strict option
->
-> Change in v6:
-> 	- Change goto label to if-else
-> 	- Change DT binding style for LED device binding
->
-> Change in v5:
-> 	- Clean up the code
-> 	- Fix help message of Kconfig
-> 	- Fix issue related with regulator and mutex usage
-> 	- Remove tab spaces in bindings
->
-> Change in v4:
-> 	- Clean up the code
-> 	- Modify binding documentation of ktd2692
->
-> Change in v3:
-> 	- Clean up the code
-> 	- Add aux gpio pin to control Flash LED
->
-> Change in v2:
-> 	- Introduction of LED Flash class as Jacek's comment
-> 	- Supplement of binding documentation
-> 	- Rename gpio control pin and remove unused pin
-> 	- Add regulator for the Flash LED
->
-> Ingi Kim (3):
->   of: Add vendor prefix for Kinetic technologies
->   leds: ktd2692: add device tree bindings for ktd2692
->   leds: Add ktd2692 flash LED driver
->
->  .../devicetree/bindings/leds/leds-ktd2692.txt      |  47 +++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  drivers/leds/Kconfig                               |   9 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-ktd2692.c                        | 435 +++++++++++++++++++++
->  5 files changed, 493 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->  create mode 100644 drivers/leds/leds-ktd2692.c
->
-Reviewed-by: Varka Bhadram <varkabhadram@gmail.com>
+On Mon, 20 Apr 2015 11:50:56 +0200
+Paul Bolle <pebolle@tiscali.nl> wrote:
 
-Thanks
+> On Sat, 2015-04-18 at 18:31 +0200, Alban wrote:
+> > On Sat, 18 Apr 2015 09:05:52 +0200
+> > Paul Bolle <pebolle@tiscali.nl> wrote:
+> > 
+> > > On Fri, 2015-04-17 at 16:24 +0200, Alban Bedel wrote:
+> > > 
+> > > > --- a/arch/mips/ath79/Kconfig
+> > > > +++ b/arch/mips/ath79/Kconfig
+> > > >  
+> > > > +choice
+> > > > +	prompt "Builtin devicetree selection"
+> > > > +	default DTB_ATH79_NONE
+> > > > +	help
+> > > > +	  Select the devicetree.
+> > > > +
+> > > > +	config DTB_ATH79_NONE
+> > > > +		bool "None"
+> > > > +endchoice
+> > > 
+> > > This adds a choice block with one config entry. So what this
+> > > achieves is that DTB_ATH79_NONE will always be 'y', right?
+> > > Besides I didn't notice on a user of CONFIG_DTB_ATH79_NONE. So as
+> > > far as I can see this choice has no effect on the build.
+> > > 
+> > > Why was this choice entry added?
+> > 
+> > This menu is for boards that need a built-in DTB, as MIPS currently
+> > doesn't support appended DTBs it is the only way to load a DTB on
+> > boards stuck with a broken boot loader. But as no board has been
+> > added yet it only contain the entry for boards that don't need a
+> > built-in DTB, which do nothing as you pointed out.
+> > 
+> > A board is then added in this menu in patch 14, for some reasons git
+> > send-email didn't send the whole serie at once :(
+> 
+> I saw 14/14 fly by now. (And I saw 12/12 of v2, which basically
+> replaces 14/14.) That makes things clear.
+> 
+> Perhaps, if you're going to send a v3, you might move this change into
+> 12/12. At least, I see little reason to add this choice block in two
+> separate steps in this series.
 
--- 
-Varka Bhadram
+Ok, I'll do that.
+
+> (Side note: you _might_ be able to drop config DTB_ATH79_NONE entirely
+> if you also replace
+> 	default DTB_ATH79_NONE
+> 
+> with
+> 	optional
+> 
+> optional is a little used option for choice blocks. I haven't tested
+> this, so this suggestion could end up wasting your time. And even then
+> this all looks like a complicated way to set just DTB_TL_WR1043ND_V1.
+
+I'll try that.
+
+> I suppose you expect to add things to this choice block in the
+> future.)
+
+This is the only ATH79 board I currently have access to. However
+openwrt has patches to add support for quiet a few, so I hope more
+boards will be submitted once we have DT support in. Most of these
+boards are appliance stuck with old bootloaders, so they will need this
+too. 
+
+Alban
