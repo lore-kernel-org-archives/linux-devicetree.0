@@ -1,36 +1,57 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
-Date: Fri, 24 Apr 2015 13:45:55 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B217581@SW-EX-MBX02.diasemi.com>
-References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
-	 <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
- <1429343726.16771.129.camel@x220>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
+Date: Fri, 24 Apr 2015 15:46:56 +0200
+Message-ID: <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
+References: <20150407121247.GA29497@amd>
+	<CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
+	<20150409110634.GA27407@amd>
+	<552660C7.4020805@ti.com>
+	<552663C2.70308@ti.com>
+	<55277650.8070607@codeaurora.org>
+	<20150424132923.GA11729@amd>
+	<553A47D3.2070107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1429343726.16771.129.camel@x220>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <553A47D3.2070107@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, Russell King <linux@arm.linux.org.uk>, H Hartley Sweeten <hsweeten@visionengravers.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTggQXByaWwgMjAxNSAwODo1NSBQYXVsIEJvbGxlIHdyb3RlOg0KDQo+IFRoZXJlJ3Mgc3Rp
-bGwgYSBsaWNlbnNlIG1pc21hdGNoIGxlZnQgKGl0IHByb2JhYmx5IGdvdCBsb3N0IGluIHRoZSBu
-b2lzZQ0KPiB3aGVuIEkgZmluYWxseSBub3RpY2VkIHRoYXQgdGhlIGhlYWRlciBjb21tZW50IG1l
-bnRpb25lZCB0aGUgTEdQTCBpbg0KPiBWMSkuDQo+IA0KPiBPbiBGcmksIDIwMTUtMDQtMTcgYXQg
-MTM6MDMgKzAxMDAsIFMgVHdpc3Mgd3JvdGU6DQo+ID4gKyAqIGFzIHB1Ymxpc2hlZCBieSB0aGUg
-RnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyDQo+ID4gKyAqIG9mIHRo
-ZSBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiANCj4g
-VGhpcyBzdGF0ZXMgdGhlIGxpY2Vuc2UgaXMgR1BMIHYyIG9yIGxhdGVyLg0KPiANCj4gPiArTU9E
-VUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiANCj4gQW5kLCBhY2NvcmRpbmcgdG8gaW5jbHVkZS9s
-aW51eC9tb2R1bGUuaCwgdGhpcyBzdGF0ZXMgdGhlIGxpY2Vuc2UgaXMNCj4ganVzdCBHUEwgdjIu
-IFNvIEkgdGhpbmsgZWl0aGVyIHRoZSBsaWNlbnNlIGNvbW1lbnQgb3IgdGhlIGxpY2Vuc2UgaWRl
-bnQNCj4gdXNlZCBpbiB0aGUgTU9EVUxFX0xJQ0VOU0UoKSBtYWNybyBuZWVkcyB0byBjaGFuZ2Uu
-DQo+IA0KDQpHb3QgaXQuIFRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NCkkgaGF2ZSBhbHRlcmVk
-IHRoZSBNT0RVTEVfTElDRU5TRSgpIHRvIGJlICJHUEwiIGluc3RlYWQgb2YgIkdQTCB2MiIuDQpU
-aGF0IHNob3VsZCBmaXggaXQuDQoNClRoYXQgc2VlbXMgdG8gYmUgYSBmYWlybHkgY29tbW9uIG1p
-c3Rha2UgaW4gdGhlIGtlcm5lbC4gV2hlbiBJIGRpZCBhDQpzdHJhdy1wb2xsLCAgYXJvdW5kIDEw
-JSBvZiBmaWxlcyBjYW1lIHVwIHdpdGggIkdQTCB2MiIgYW5kIGNvbnRhaW5lZA0KICJhbnkgbGF0
-ZXIgdmVyc2lvbiIgdGV4dC4NCg0KUmVnYXJkcywNClN0ZXZlLg0KDQo=
+On Fri, Apr 24, 2015 at 3:40 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 24/04/15 16:29, Pavel Machek wrote:
+>> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
+>>>> That said, if the fb is in RAM, and is only written by the CPU, I think
+>>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
+>>>
+>>> I didn't test for performance regressions when I posted this patch.
+>>>
+>>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is used
+>>> all the time, even when the source and destination addresses are aligned for
+>>> larger reads to be possible. Other archs seem to use readl() or readq() when
+>>> they can. Maybe that makes memcpy_fromio slower than the implementation of
+>>> memcpy on arm?
+>>
+>> Ok, can you prepare a patch for me to try? Or should we just revert
+>> the original commit?
+>
+> The old way worked fine, afaik, so maybe we can revert. But still, isn't
+> it more correct to use memcpy_fromio? It's (possibly) io memory we have
+> here.
+
+Yes it is.
+
+So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
+That will benefit other drivers on ARM, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
