@@ -1,57 +1,40 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
-Date: Fri, 24 Apr 2015 15:46:56 +0200
-Message-ID: <CAMuHMdV+-VcZD5TMswUjwW0fk=-76oYimeKJ_P9QC5Md4De-JA@mail.gmail.com>
-References: <20150407121247.GA29497@amd>
-	<CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com>
-	<20150409110634.GA27407@amd>
-	<552660C7.4020805@ti.com>
-	<552663C2.70308@ti.com>
-	<55277650.8070607@codeaurora.org>
-	<20150424132923.GA11729@amd>
-	<553A47D3.2070107@ti.com>
+From: Kevin Cernekee <cernekee@chromium.org>
+Subject: Re: [PATCH 2/3] ASoC: tas571x: New driver for TI TAS571x power amplifiers
+Date: Fri, 24 Apr 2015 06:52:01 -0700
+Message-ID: <CAJzqFtZ3wMHHoAesUZws0b4csArsjeZTKeB7FbU7OSSbmCT1nA@mail.gmail.com>
+References: <1429134141-17924-1-git-send-email-cernekee@chromium.org>
+ <1429134141-17924-2-git-send-email-cernekee@chromium.org> <20150418113632.GE26185@sirena.org.uk>
+ <CAJzqFtYVd+jHesoNnG47ftoK9SWYUmXwDXpf2==s3Rv1ewpsYg@mail.gmail.com>
+ <CAJzqFtYZ8=k7ETGyXYoDTpjNdPQ7oRrMxO+kG++3diFif6Ox1g@mail.gmail.com> <20150424092839.GI22845@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <553A47D3.2070107@ti.com>
+In-Reply-To: <20150424092839.GI22845@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexander Shiyan <shc_work@mail.ru>, Russell King <linux@arm.linux.org.uk>, H Hartley Sweeten <hsweeten@visionengravers.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, dgreid@chromium.org, Andrew Bresticker <abrestic@chromium.org>, Olof Johansson <olofj@chromium.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2015 at 3:40 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> On 24/04/15 16:29, Pavel Machek wrote:
->> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
->>>> That said, if the fb is in RAM, and is only written by the CPU, I think
->>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
->>>
->>> I didn't test for performance regressions when I posted this patch.
->>>
->>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is used
->>> all the time, even when the source and destination addresses are aligned for
->>> larger reads to be possible. Other archs seem to use readl() or readq() when
->>> they can. Maybe that makes memcpy_fromio slower than the implementation of
->>> memcpy on arm?
->>
->> Ok, can you prepare a patch for me to try? Or should we just revert
->> the original commit?
+On Fri, Apr 24, 2015 at 2:28 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Apr 23, 2015 at 05:47:49PM -0700, Kevin Cernekee wrote:
 >
-> The old way worked fine, afaik, so maybe we can revert. But still, isn't
-> it more correct to use memcpy_fromio? It's (possibly) io memory we have
-> here.
+>> This is mostly working OK, but regcache_sync() assumes that the
+>> hardware registers have been reset back to the default values.  The
+>> "pdn" GPIO doesn't actually reset the state of the tas571x; it just
+>> makes I2C inaccessible and inhibits audio output.  So if the factory
+>> default for mute is 0, corner cases like this fail:
+>
+> ...
+>
+>> Aside from unnecessarily pulsing the reset GPIO when transitioning
+>> back from SND_SOC_BIAS_OFF or overriding regcache_default_sync(), can
+>> you think of a way to work around this?
+>
+> Do you need to work around it?  If the register map is being perserved
+> you don't need to sync so just don't do it - it's just that the normal
+> expectation would be that power down would cause the register map to be
+> reset.
 
-Yes it is.
-
-So please optimize ARM's _memcpy_fromio(), _memcpy_toio(), and _memset_io().
-That will benefit other drivers on ARM, too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+How do I tell regcache to write out any updates that happened while
+the hardware was inaccessible?  I see that regmap->cache_dirty is 1,
+but nothing flushes it automatically when exiting cache_only mode.
