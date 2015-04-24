@@ -1,58 +1,189 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V1 2/6] regulator: da9062: DA9062 regulator driver
-Date: Fri, 24 Apr 2015 16:24:45 +0100
-Message-ID: <20150424152445.GR22845@sirena.org.uk>
-References: <cover.1429280614.git.stwiss.opensource@diasemi.com>
- <7acb2e683450a608adf81e6b820e62b523429101.1429280614.git.stwiss.opensource@diasemi.com>
- <20150418114828.GG26185@sirena.org.uk>
- <6ED8E3B22081A4459DAC7699F3695FB7014B2175E5@SW-EX-MBX02.diasemi.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="PeBQ4doskhxk04X/"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B2175E5-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+From: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Subject: [PATCH] power_supply: Add ACPI support to bq2415x battery charger
+Date: Fri, 24 Apr 2015 19:13:48 +0300
+Message-ID: <1429892028-19926-1-git-send-email-anda-maria.nicolae@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Replace of_property_read_u32() function call with device_property_read_u32(),
+which is a wrapper over ACPI and devicetree enumeration methods.
 
---PeBQ4doskhxk04X/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fix minor existing coding style issues reported by checkpatch.pl.
 
-On Fri, Apr 24, 2015 at 02:47:06PM +0000, Opensource [Steve Twiss] wrote:
-> On 18 April 2015 12:48 Mark Brown wrote:
+Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+---
+ drivers/power/bq2415x_charger.c |   76 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 56 insertions(+), 20 deletions(-)
 
-> Okay. I think I am getting this.
-> As of v3.18 there are  newer parts to regulator_desc from the commit=20
-> a0c7b16 "regulator: of: Provide simplified DT parsing method"
-> The search function is now in the core.=20
-
-> Am I on on the right track with this one?
-
-Yes.
-
---PeBQ4doskhxk04X/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVOmA8AAoJECTWi3JdVIfQoU0H/1d6VpxbZu02WyPC4lLH7equ
-l9ntoiG1Sbb+xhBQN/tci3wqw2tAIqt5NzgM2bOj51qutEN5Wd8+zVGGQDkYsLOW
-vziBRlhwsLEhR/F2c/t9teKwzpfNSpJquVFqi5gXSmaagWr+fb4oBK4O9oCCHKjn
-LGNV9C4328KqgUrSm4od6283oLSvXgU5OueH0wjcRQVKyr+6I36QZOMy9cRD8mra
-rqBKS3GNFNMlWbtr7upOviksH6YmgVuUg8I3kdThYaz+JknNpWoMXFo6SMW66KGE
-xNWcXawiDShyHlvZCjFOHhVGwWHldoiMLqxk4NeHOzlxSfUT32sXYlYEEh5N6Ho=
-=e1Qu
------END PGP SIGNATURE-----
-
---PeBQ4doskhxk04X/--
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/power/bq2415x_charger.c b/drivers/power/bq2415x_charger.c
+index 6c534dc..38c2ad3 100644
+--- a/drivers/power/bq2415x_charger.c
++++ b/drivers/power/bq2415x_charger.c
+@@ -35,6 +35,7 @@
+ #include <linux/idr.h>
+ #include <linux/i2c.h>
+ #include <linux/slab.h>
++#include <linux/acpi.h>
+ 
+ #include <linux/power/bq2415x_charger.h>
+ 
+@@ -1530,13 +1531,15 @@ static int bq2415x_probe(struct i2c_client *client,
+ {
+ 	int ret;
+ 	int num;
+-	char *name;
++	char *name = NULL;
+ 	struct bq2415x_device *bq;
+ 	struct device_node *np = client->dev.of_node;
+ 	struct bq2415x_platform_data *pdata = client->dev.platform_data;
++	const struct acpi_device_id *acpi_id = NULL;
++	struct device *dev = &client->dev;
+ 
+-	if (!np && !pdata) {
+-		dev_err(&client->dev, "platform data missing\n");
++	if (!np && !pdata && !ACPI_HANDLE(dev)) {
++		dev_err(dev, "Neither devicetree, nor platform data, nor ACPI support\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1547,22 +1550,27 @@ static int bq2415x_probe(struct i2c_client *client,
+ 	if (num < 0)
+ 		return num;
+ 
+-	name = kasprintf(GFP_KERNEL, "%s-%d", id->name, num);
++	if (id)
++		name = kasprintf(GFP_KERNEL, "%s-%d", id->name, num);
++	else if (ACPI_HANDLE(dev)) {
++		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
++		name = kasprintf(GFP_KERNEL, "%s-%d", acpi_id->id, num);
++	}
+ 	if (!name) {
+-		dev_err(&client->dev, "failed to allocate device name\n");
++		dev_err(dev, "failed to allocate device name\n");
+ 		ret = -ENOMEM;
+ 		goto error_1;
+ 	}
+ 
+-	bq = devm_kzalloc(&client->dev, sizeof(*bq), GFP_KERNEL);
++	bq = devm_kzalloc(dev, sizeof(*bq), GFP_KERNEL);
+ 	if (!bq) {
+-		dev_err(&client->dev, "failed to allocate device data\n");
+ 		ret = -ENOMEM;
+ 		goto error_2;
+ 	}
+ 
+ 	if (np) {
+-		bq->notify_psy = power_supply_get_by_phandle(np, "ti,usb-charger-detection");
++		bq->notify_psy =
++		    power_supply_get_by_phandle(np, "ti,usb-charger-detection");
+ 
+ 		if (IS_ERR(bq->notify_psy)) {
+ 			dev_info(&client->dev,
+@@ -1573,8 +1581,7 @@ static int bq2415x_probe(struct i2c_client *client,
+ 			ret = -EPROBE_DEFER;
+ 			goto error_2;
+ 		}
+-	}
+-	else if (pdata->notify_device)
++	} else if (pdata && pdata->notify_device)
+ 		bq->notify_psy = power_supply_get_by_name(pdata->notify_device);
+ 	else
+ 		bq->notify_psy = NULL;
+@@ -1582,36 +1589,45 @@ static int bq2415x_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, bq);
+ 
+ 	bq->id = num;
+-	bq->dev = &client->dev;
+-	bq->chip = id->driver_data;
++	bq->dev = dev;
++	if (id)
++		bq->chip = id->driver_data;
++	else if (ACPI_HANDLE(dev))
++		bq->chip = acpi_id->driver_data;
+ 	bq->name = name;
+ 	bq->mode = BQ2415X_MODE_OFF;
+ 	bq->reported_mode = BQ2415X_MODE_OFF;
+ 	bq->autotimer = 0;
+ 	bq->automode = 0;
+ 
+-	if (np) {
+-		ret = of_property_read_u32(np, "ti,current-limit",
++	if (np || ACPI_HANDLE(bq->dev)) {
++		ret = device_property_read_u32(bq->dev,
++				"ti,current-limit",
+ 				&bq->init_data.current_limit);
+ 		if (ret)
+ 			goto error_3;
+-		ret = of_property_read_u32(np, "ti,weak-battery-voltage",
++		ret = device_property_read_u32(bq->dev,
++				"ti,weak-battery-voltage",
+ 				&bq->init_data.weak_battery_voltage);
+ 		if (ret)
+ 			goto error_3;
+-		ret = of_property_read_u32(np, "ti,battery-regulation-voltage",
++		ret = device_property_read_u32(bq->dev,
++				"ti,battery-regulation-voltage",
+ 				&bq->init_data.battery_regulation_voltage);
+ 		if (ret)
+ 			goto error_3;
+-		ret = of_property_read_u32(np, "ti,charge-current",
++		ret = device_property_read_u32(bq->dev,
++				"ti,charge-current",
+ 				&bq->init_data.charge_current);
+ 		if (ret)
+ 			goto error_3;
+-		ret = of_property_read_u32(np, "ti,termination-current",
++		ret = device_property_read_u32(bq->dev,
++				"ti,termination-current",
+ 				&bq->init_data.termination_current);
+ 		if (ret)
+ 			goto error_3;
+-		ret = of_property_read_u32(np, "ti,resistor-sense",
++		ret = device_property_read_u32(bq->dev,
++				"ti,resistor-sense",
+ 				&bq->init_data.resistor_sense);
+ 		if (ret)
+ 			goto error_3;
+@@ -1648,7 +1664,8 @@ static int bq2415x_probe(struct i2c_client *client,
+ 		}
+ 
+ 		/* Query for initial reported_mode and set it */
+-		bq2415x_notifier_call(&bq->nb, PSY_EVENT_PROP_CHANGED, bq->notify_psy);
++		bq2415x_notifier_call(&bq->nb, PSY_EVENT_PROP_CHANGED,
++				      bq->notify_psy);
+ 		bq2415x_set_mode(bq, bq->reported_mode);
+ 
+ 		bq->automode = 1;
+@@ -1727,9 +1744,28 @@ static const struct i2c_device_id bq2415x_i2c_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, bq2415x_i2c_id_table);
+ 
++static const struct acpi_device_id bq2415x_i2c_acpi_match[] = {
++	{ "BQ2415X", BQUNKNOWN },
++	{ "BQ241500", BQ24150 },
++	{ "BQA24150", BQ24150A },
++	{ "BQ241510", BQ24151 },
++	{ "BQA24151", BQ24151A },
++	{ "BQ241520", BQ24152 },
++	{ "BQ241530", BQ24153 },
++	{ "BQA24153", BQ24153A },
++	{ "BQ241550", BQ24155 },
++	{ "BQ241560", BQ24156 },
++	{ "BQA24156", BQ24156A },
++	{ "BQS24157", BQ24157S },
++	{ "BQ241580", BQ24158 },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, bq2415x_i2c_acpi_match);
++
+ static struct i2c_driver bq2415x_driver = {
+ 	.driver = {
+ 		.name = "bq2415x-charger",
++		.acpi_match_table = ACPI_PTR(bq2415x_i2c_acpi_match),
+ 	},
+ 	.probe = bq2415x_probe,
+ 	.remove = bq2415x_remove,
+-- 
+1.7.9.5
