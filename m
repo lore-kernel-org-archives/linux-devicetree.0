@@ -1,42 +1,62 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
-Date: Fri, 24 Apr 2015 18:53:39 +0200
-Message-ID: <1429894419.2927.61.camel@x220>
-References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
-	 <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
-	 <1429343726.16771.129.camel@x220>
-	 <6ED8E3B22081A4459DAC7699F3695FB7014B217581@SW-EX-MBX02.diasemi.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 8/9] ARM: Add MAINTAINERS for 2836.
+Date: Fri, 24 Apr 2015 10:03:42 -0700
+Message-ID: <87y4lhwj9t.fsf@eliezer.anholt.net>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <1429639796-2169-9-git-send-email-eric@anholt.net> <5539C8C9.1010705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B217581@SW-EX-MBX02.diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5539C8C9.1010705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-04-24 at 13:45 +0000, Opensource [Steve Twiss] wrote:
-> That seems to be a fairly common mistake in the kernel. 
+--=-=-=
+Content-Type: text/plain
 
-It's an easy mistake to make. And as long as people pick an ident that
-passes license_is_gpl_compatible() the module will build and load just
-fine.
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-> When I did a
-> straw-poll,  around 10% of files came up with "GPL v2" and contained
->  "any later version" text.
+> On 04/21/2015 12:09 PM, Eric Anholt wrote:
+>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>
+>> +BROADCOM BCM2836 ARM ARCHITECTURE
+>> +M:	Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> +L:	linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rpi/linux-rpi.git
+>> +S:	Maintained
+>> +N:	bcm2836
+>
+> I'm tempted to suggest just adding this to the existing bcm2835 entry,
+> since they're almost the same SoC.
 
-That seems plausible.
+Yeah, I'd started out with more changes and as the diff has kept
+getting, I actually dropped the patch from my series yesterday.
 
-I'm inclined to think the difference between "GPL" and "GPL v2" is
-mainly an accident of history (see https://lkml.org/lkml/2015/3/11/188
-for some background). But apparently were stuck with these two idents.
-Anyhow, in the last two months I've not come up with a better plan than
-regularly check patches for mismatches like the one you made. If you
-have a better idea, I'll be all ears.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-
-Paul Bolle
+iQIcBAEBCgAGBQJVOnduAAoJELXWKTbR/J7oRQEQAI6P1LummZbu9wkXga78/7rx
+/IFMBYSHyXKTkMb/+FkIWT8JteNUEjnhGYzuFv1Wm8hvnPt/vxk+0y//+LqHn7lx
+oxqIJ2Jv/gvwCScfNV1FuXRNyCSDaDnOdfwysEzxBE1IUuABReCXS5tDLPtKX+cZ
+bO3WVNwGlKJr35PR3vq6njFOXdDZXT0JJ5nPf8NcS3oTGXe5Q4CZAXfvwbA1iF1f
++BrxnbCZpUl7tkI282tZlTbLqbmnsza2vK3sVvJzmzVtsqKRkfi2xFqI7DM0L0a7
+3Bb/vAe8CaPx1BlCeT3mEhfA42mClw/nVKo1Bz82c/osR5JzaSxTVcAGmpzMncK0
+OCoZ2iprzGNrZ3q8+zlSyLnAhNYLELQ9dAjxXTpca7AbWmH07c4nSeIOb5ARZ70n
+Kc7Mso+ENZ6NuE0vklqNlDHMrvCe17QyHU19T9XgzkeSTENZ3k2oef4gB7i8V6gu
+7xT7CswZGriJISEOJk0EHJU7Kh4ktsmDgiAMJFc8OTP5Tdr123sQHpy4M4TWkFSX
+J9coklVm57g5nYbZTYyX7nUrE0rlSUtnydabqh51aBKs7OHOC9EWfzwwsbxwKqkx
+YgOG9AzxJ+H2IqcZDZ9yG9DyBZbXqQriC9qIZeToFQx8nVlwLEpUzj5fK5sYXZ38
+gwNkSMbpRApPMctt32kl
+=xctC
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
