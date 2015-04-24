@@ -1,39 +1,40 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: Make a copy of the 2835 dts for the 2836.
-Date: Thu, 23 Apr 2015 22:35:59 -0600
-Message-ID: <5539C82F.7000002@wwwdotorg.org>
-References: <1429639796-2169-1-git-send-email-eric@anholt.net> <1429639796-2169-4-git-send-email-eric@anholt.net>
+Subject: Re: [PATCH 4/9] ARM: Update the device trees for 2836.
+Date: Thu, 23 Apr 2015 22:36:05 -0600
+Message-ID: <5539C835.1000109@wwwdotorg.org>
+References: <1429639796-2169-1-git-send-email-eric@anholt.net> <1429639796-2169-5-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1429639796-2169-4-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <1429639796-2169-5-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 04/21/2015 12:09 PM, Eric Anholt wrote:
-> This is not hooked up to anything yet, but it means that our later
-> 2836-specific changes will be more obvious.  The bcm2836-rpi-2-b.dts
-> actually comes from bcm2835-rpi-2-b-plus, which apparently is the
-> closest.
+> The bus address for peripherals comes from the platform.h diff between
+> 2708 and 2709, and the CPU's DT definition is based on the 2709 DT.
 
->  arch/arm/boot/dts/bcm2836-rpi-2-b.dts | 30 +++++++++++++++++++++
->  arch/arm/boot/dts/bcm2836-rpi.dtsi    | 51 +++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/bcm2836.dtsi        | 31 +++++++++++++++++++++
+I would suggest squashing this with the previous commit. I was puzzled
+why patch 3 added bcm2836-rpi.dtsi, yet in that patch,
+bcm2836-rpi-2-b.dts included bcm2835-rpi.dtsi instead.
 
-So we obviously need a new top-level bcm2836-rpi-2-b.dts for the new
-board, and a new bcm2836.dtsi for the new SoC. However, do we really
-need to duplicate bcm2836-rpi.dtsi? It should be identical between the
-bcm2835/6 RPis, so I'd expect to just rename it to bcm283x-rpi.dtsi and
-share it? The include of the SoC .dtsi file could be moved one level up
-since that's the one difference?
+git should still show that patch as a copy+edit assuming the files are
+similar enough.
 
-Eventually, I'd like to get around to revamping the bcm283x DTs so
-there's a DT for each separate board model, which would match the DT
-filenames that U-Boot is looking for. Still, that's separate from these
-patches.
+> diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
+
+> +	__overrides__ {
+> +		arm_freq = <&v7_cpu0>, "clock-frequency:0";
+> +	};
+>  };
+
+We don't have any DT override/overlay/... support in the bcm2835 files
+yet. Does it make sense not to only add it to bcm2836 files when we add
+the equivalent everywhere?
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
