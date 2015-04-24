@@ -1,48 +1,75 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V2 1/2] input: misc: da9063: OnKey driver
-Date: Fri, 24 Apr 2015 13:36:22 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B21756B@SW-EX-MBX02.diasemi.com>
-References: <cover.1429272200.git.stwiss.opensource@diasemi.com>
- <b9068c6e41a08b620c9e1674e17e508ab0d76d55.1429272200.git.stwiss.opensource@diasemi.com>
- <20150417161555.GB27440@dtor-ws>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: simple framebuffer slower by factor of 20, on socfpga (arm) platform
+Date: Fri, 24 Apr 2015 16:40:35 +0300
+Message-ID: <553A47D3.2070107@ti.com>
+References: <20150407121247.GA29497@amd> <CAMuHMdXWRx7bKWhQuWH05CbPTXPy5imCUcW1xUf2E8f7BtF9NQ@mail.gmail.com> <20150409110634.GA27407@amd> <552660C7.4020805@ti.com> <552663C2.70308@ti.com> <55277650.8070607@codeaurora.org> <20150424132923.GA11729@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="klwRfHd3PBXfSr1Lid5AjRKreBdEVEFsx"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150417161555.GB27440@dtor-ws>
-Content-Language: en-US
+In-Reply-To: <20150424132923.GA11729@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, INPUT <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Pavel Machek <pavel@ucw.cz>, Archit Taneja <architt@codeaurora.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Marek Vasut <marek.vasut@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, shc_work@mail.ru, linux@arm.linux.org.uk, hsweeten@visionengravers.com
 List-Id: devicetree@vger.kernel.org
 
-On 17 April 2015 17:16 Dmitry Torokhov wrote
+--klwRfHd3PBXfSr1Lid5AjRKreBdEVEFsx
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-> On Fri, Apr 17, 2015 at 01:03:20PM +0100, S Twiss wrote:
-> > From: Steve Twiss <stwiss.opensource@diasemi.com>
-> >
-> > Add OnKey driver support for DA9063
-> >
-> 
-> Isn't this almost to the letter identical to da9062 that I just looked
-> at? Please find a way to not make a brand new driver for the slightest
-> variation of the chip...
-> 
+On 24/04/15 16:29, Pavel Machek wrote:
+> Hi!
+>=20
+> On Fri 2015-04-10 12:35:52, Archit Taneja wrote:
+>>> That said, if the fb is in RAM, and is only written by the CPU, I thi=
+nk
+>>> a normal memcpy() for fb_memcpy_fromfb() should be fine...
+>>
+>> I didn't test for performance regressions when I posted this patch.
+>>
+>> A look at _memcpy_fromio in arch/arm/kernel/io.c shows that readb() is=
+ used
+>> all the time, even when the source and destination addresses are align=
+ed for
+>> larger reads to be possible. Other archs seem to use readl() or readq(=
+) when
+>> they can. Maybe that makes memcpy_fromio slower than the implementatio=
+n of
+>> memcpy on arm?
+>=20
+> Ok, can you prepare a patch for me to try? Or should we just revert
+> the original commit?
 
-Hi Dmitry 
+The old way worked fine, afaik, so maybe we can revert. But still, isn't
+it more correct to use memcpy_fromio? It's (possibly) io memory we have
+here.
 
-Well, the two chips DA9063 and DA9062 are very different even though their
-numbers are sequentially 62 and 63. They are different chips and not a simple
-variation. However the OnKey components to these chips *are* functionally
-similar which is why I am using the same code.  In this case the 62 OnKey driver
-works the same way as 63 OnKey driver. 
+ Tomi
 
-Has the combined approach been done before? Are there any examples of this
-that you would like me to follow?
 
-I guess I'll drop the OnKey patch for 62 and just concentrate on your comments for
-63 instead. After 63 is in a good state then I will work at getting 62 to use a combined
-driver.
 
-Regards,
-Steve
+--klwRfHd3PBXfSr1Lid5AjRKreBdEVEFsx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJVOkfTAAoJEPo9qoy8lh71eYIQAJ509Sy/MlGlLPXAlAp8Q4BV
+SQYHOtLMcMbUykUHks7oXsEtK6lAv8qRLrByTWiIHShTR36GwwLVEyd6jgv1bNjJ
+BxWViPbdO3BX6KTCHunxPZwQjDFgj+fcW21HpFfahUm9CkptmH+mZsWl2xDo70iD
+wp2KcQGIYTcJlx2Hgy6u+ADDEbcK+v7G2USH9pwt4EPmqKMFQ/XPpIiTZ/VF9N7b
+mjbPLC/D+hwS+Cu9gaGABl1q3aEErQO07itjqzohqkTbTED5g/r05iSDKvhGX1eK
+JQ0sybBElJj7NMHfRDDY7PJ/yDFZj3F6e10vG+c8sf9GzzusIOYIvIk7yBlFKaxM
+ZNHSTnP8S4oky0FDUUpiKlokEunDk97iqdT1h3Gy80IXsvPw9esF0xif7n/Dml8z
+x2SUSSFP6rTq9PPIgypQ4FhZ556c6lGve6wQJuKIhFuOSY27F8cpRw0suRnfcShk
+bUt8HkxXqFKWKSrOySi/R6AllBBi1Szt567j6azfT/I/aVgPe9bGr11ndWSqIz1q
+DRzeRY1HnMNIv6vhrZwDJhaNbiWh2Jbi3qv09l86mRYy5eqWDk1ll5wxImImEcyJ
+q+f7IZGAUx//AruUYVIHyt7L/Y4N6syO3s/37LiKbJj7Y+QrOwwJHlvrKqOgA0Nv
+4ACqjfaUwr2pV2rzIRXt
+=XViN
+-----END PGP SIGNATURE-----
+
+--klwRfHd3PBXfSr1Lid5AjRKreBdEVEFsx--
